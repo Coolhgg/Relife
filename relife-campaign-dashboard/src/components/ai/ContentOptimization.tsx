@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,16 +19,20 @@ import {
   RefreshCw,
   Copy,
   TrendingUp,
+  Target,
   Eye,
+  BarChart3,
   Zap,
   MessageSquare,
   Type,
   Wand2,
+  CheckCircle,
   AlertTriangle,
   ArrowRight,
   ThumbsUp,
   ThumbsDown,
   History,
+  A
 } from 'lucide-react';
 
 interface ContentOptimization {
@@ -62,9 +60,7 @@ interface ContentOptimizationProps {
 }
 
 export function ContentOptimization({ className }: ContentOptimizationProps) {
-  const [subjectLine, setSubjectLine] = useState(
-    'Save 2 hours daily with smarter wake-ups'
-  );
+  const [subjectLine, setSubjectLine] = useState('Save 2 hours daily with smarter wake-ups');
   const [emailBody, setEmailBody] = useState(`Hi {firstName},
 
 Are you tired of hitting snooze 5 times every morning?
@@ -78,51 +74,19 @@ Our users save an average of 2 hours daily by optimizing their wake-up routine w
 Ready to transform your mornings?`);
 
   const [selectedPersona, setSelectedPersona] = useState('busy_ben');
-  const [optimizationGoal, setOptimizationGoal] = useState<
-    'engagement' | 'conversion' | 'retention' | 'activation'
-  >('conversion');
+  const [optimizationGoal, setOptimizationGoal] = useState<'engagement' | 'conversion' | 'retention' | 'activation'>('conversion');
   const [isOptimizing, setIsOptimizing] = useState(false);
-  const [optimizedContent, setOptimizedContent] = useState<ContentOptimization | null>(
-    null
-  );
-  const [subjectLineVariations, setSubjectLineVariations] = useState<
-    SubjectLineVariation[]
-  >([]);
-  const [optimizationHistory, setOptimizationHistory] = useState<ContentOptimization[]>(
-    []
-  );
+  const [optimizedContent, setOptimizedContent] = useState<ContentOptimization | null>(null);
+  const [subjectLineVariations, setSubjectLineVariations] = useState<SubjectLineVariation[]>([]);
+  const [optimizationHistory, setOptimizationHistory] = useState<ContentOptimization[]>([]);
 
   const personas = [
-    {
-      value: 'struggling_sam',
-      label: 'Struggling Sam',
-      description: 'Needs motivation and encouragement',
-    },
-    {
-      value: 'busy_ben',
-      label: 'Busy Ben',
-      description: 'Values time efficiency and ROI',
-    },
-    {
-      value: 'professional_paula',
-      label: 'Professional Paula',
-      description: 'Data-driven, feature-focused',
-    },
-    {
-      value: 'enterprise_emma',
-      label: 'Enterprise Emma',
-      description: 'Decision maker, team benefits',
-    },
-    {
-      value: 'student_sarah',
-      label: 'Student Sarah',
-      description: 'Budget-conscious, casual tone',
-    },
-    {
-      value: 'lifetime_larry',
-      label: 'Lifetime Larry',
-      description: 'Loyalty rewards, exclusive benefits',
-    },
+    { value: 'struggling_sam', label: 'Struggling Sam', description: 'Needs motivation and encouragement' },
+    { value: 'busy_ben', label: 'Busy Ben', description: 'Values time efficiency and ROI' },
+    { value: 'professional_paula', label: 'Professional Paula', description: 'Data-driven, feature-focused' },
+    { value: 'enterprise_emma', label: 'Enterprise Emma', description: 'Decision maker, team benefits' },
+    { value: 'student_sarah', label: 'Student Sarah', description: 'Budget-conscious, casual tone' },
+    { value: 'lifetime_larry', label: 'Lifetime Larry', description: 'Loyalty rewards, exclusive benefits' }
   ];
 
   const generateSubjectLineVariations = async () => {
@@ -137,29 +101,29 @@ Ready to transform your mornings?`);
         text: 'ROI Calculator: Your sleep is costing you $2,847/year',
         score: 92,
         category: 'Urgency + Value',
-        predictedPerformance: { openRate: 42.3, clickRate: 8.9 },
+        predictedPerformance: { openRate: 42.3, clickRate: 8.9 }
       },
       {
         id: 'var-2',
         text: 'Ben, stop losing 2 hours every morning (5-min fix inside)',
         score: 88,
         category: 'Personalized + Solution',
-        predictedPerformance: { openRate: 39.7, clickRate: 7.2 },
+        predictedPerformance: { openRate: 39.7, clickRate: 7.2 }
       },
       {
         id: 'var-3',
         text: 'The $47 productivity hack successful professionals swear by',
         score: 85,
         category: 'Social Proof + Value',
-        predictedPerformance: { openRate: 37.4, clickRate: 6.8 },
+        predictedPerformance: { openRate: 37.4, clickRate: 6.8 }
       },
       {
         id: 'var-4',
         text: '2-hour morning routine → 15-minute power start',
         score: 82,
         category: 'Transformation + Benefit',
-        predictedPerformance: { openRate: 35.1, clickRate: 6.2 },
-      },
+        predictedPerformance: { openRate: 35.1, clickRate: 6.2 }
+      }
     ];
 
     setSubjectLineVariations(variations);
@@ -174,25 +138,21 @@ Ready to transform your mornings?`);
 
     const optimization: ContentOptimization = {
       original: subjectLine,
-      optimized:
-        selectedPersona === 'busy_ben'
-          ? 'ROI Alert: Your inefficient mornings are costing you $156/week'
-          : selectedPersona === 'struggling_sam'
-            ? 'Sam, you are not broken - your alarm is (here is the fix)'
-            : 'Transform your mornings in just 3 minutes (data inside)',
+      optimized: selectedPersona === 'busy_ben'
+        ? 'ROI Alert: Your inefficient mornings are costing you $156/week'
+        : selectedPersona === 'struggling_sam'
+        ? 'Sam, you're not broken - your alarm is (here's the fix)'
+        : 'Transform your mornings in just 3 minutes (data inside)',
       improvements: [
         'Added personalization with recipient name',
         'Included specific monetary value for ROI focus',
         'Shortened subject line for mobile optimization',
         'Added urgency indicator for better open rates',
-        'Aligned tone with persona preference (professional/direct)',
+        'Aligned tone with persona preference (professional/direct)'
       ],
       score: 89,
-      tone:
-        selectedPersona === 'busy_ben'
-          ? 'Professional & Direct'
-          : 'Encouraging & Supportive',
-      readability: 8.2,
+      tone: selectedPersona === 'busy_ben' ? 'Professional & Direct' : 'Encouraging & Supportive',
+      readability: 8.2
     };
 
     setOptimizedContent(optimization);
@@ -275,10 +235,7 @@ Ready to transform your mornings?`);
 
                   <div>
                     <Label htmlFor="goal-select">Optimization Goal</Label>
-                    <Select
-                      value={optimizationGoal}
-                      onValueChange={(value: any) => setOptimizationGoal(value)}
-                    >
+                    <Select value={optimizationGoal} onValueChange={(value: any) => setOptimizationGoal(value)}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -296,7 +253,7 @@ Ready to transform your mornings?`);
                     <Input
                       id="subject-line"
                       value={subjectLine}
-                      onChange={e => setSubjectLine(e.target.value)}
+                      onChange={(e) => setSubjectLine(e.target.value)}
                       placeholder="Enter your subject line..."
                     />
                     <div className="text-xs text-gray-500 mt-1">
@@ -309,7 +266,7 @@ Ready to transform your mornings?`);
                     <Textarea
                       id="email-body"
                       value={emailBody}
-                      onChange={e => setEmailBody(e.target.value)}
+                      onChange={(e) => setEmailBody(e.target.value)}
                       rows={8}
                       placeholder="Enter your email content..."
                     />
@@ -424,10 +381,7 @@ Ready to transform your mornings?`);
                           <Copy className="h-4 w-4 mr-2" />
                           Use This Version
                         </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => setOptimizedContent(null)}
-                        >
+                        <Button variant="outline" onClick={() => setOptimizedContent(null)}>
                           Try Again
                         </Button>
                       </div>
@@ -527,10 +481,8 @@ Ready to transform your mornings?`);
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <Type className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                  <h3 className="font-medium text-gray-900 mb-2">
-                    No variations generated yet
-                  </h3>
+                  <A className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                  <h3 className="font-medium text-gray-900 mb-2">No variations generated yet</h3>
                   <p className="text-gray-500 mb-4">
                     Generate AI-powered subject line alternatives for A/B testing
                   </p>

@@ -1,5 +1,6 @@
-import { renderHook, act } from '@testing-library/react';
-import { usePWA, useInstallPrompt, useServiceWorkerUpdate } from '../../usePWA';
+import { expect, test, jest } from "@jest/globals";
+import { renderHook, act } from "@testing-library/react";
+import { usePWA, useInstallPrompt, useServiceWorkerUpdate } from "../../usePWA";
 
 // Mock PWA Manager Service
 jest.mock('../../../services/pwa-manager', () => ({
@@ -12,9 +13,9 @@ jest.mock('../../../services/pwa-manager', () => ({
       checkForUpdates: jest.fn(),
       updateServiceWorker: jest.fn(),
       on: jest.fn(),
-      off: jest.fn(),
-    }),
-  },
+      off: jest.fn()
+    })
+  }
 }));
 
 describe('PWA Hooks Edge Cases and Stress Tests', () => {
@@ -61,7 +62,7 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
         const promises = [
           result.current.install(),
           result.current.install(),
-          result.current.install(),
+          result.current.install()
         ];
 
         await Promise.allSettled(promises);
@@ -80,8 +81,8 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
       // Mock service worker registration failure
       Object.defineProperty(navigator, 'serviceWorker', {
         value: {
-          register: jest.fn().mockRejectedValue(new Error('Registration failed')),
-        },
+          register: jest.fn().mockRejectedValue(new Error('Registration failed'))
+        }
       });
 
       const { result } = renderHook(() => useServiceWorkerUpdate());
@@ -93,9 +94,7 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
       expect(result.current.error).toContain('failed');
 
       // Restore
-      Object.defineProperty(navigator, 'serviceWorker', {
-        value: originalServiceWorker,
-      });
+      Object.defineProperty(navigator, 'serviceWorker', { value: originalServiceWorker });
     });
 
     it('should handle rapid service worker update checks', async () => {
@@ -112,9 +111,9 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
 
       await act(async () => {
         // Fire 50 rapid update checks
-        const promises = Array(50)
-          .fill(null)
-          .map(() => result.current.checkForUpdates());
+        const promises = Array(50).fill(null).map(() =>
+          result.current.checkForUpdates()
+        );
 
         await Promise.allSettled(promises);
       });
@@ -147,8 +146,8 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
       Object.defineProperty(global, 'caches', {
         value: {
           open: jest.fn().mockRejectedValue(new Error('Cache corrupted')),
-          delete: jest.fn().mockResolvedValue(true),
-        },
+          delete: jest.fn().mockResolvedValue(true)
+        }
       });
 
       const { result } = renderHook(() => usePWA());

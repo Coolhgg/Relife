@@ -9,10 +9,7 @@ import AnalyticsService from '../services/analytics';
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || '';
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || '';
 
-const webhookHandler = new StripeWebhookHandler(
-  STRIPE_SECRET_KEY,
-  STRIPE_WEBHOOK_SECRET
-);
+const webhookHandler = new StripeWebhookHandler(STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET);
 
 export interface WebhookRequest {
   body: string | Buffer;
@@ -34,9 +31,7 @@ export interface WebhookResponse {
  * Main webhook endpoint handler
  * This can be deployed as a serverless function or regular API endpoint
  */
-export async function handleStripeWebhook(
-  request: WebhookRequest
-): Promise<WebhookResponse> {
+export async function handleStripeWebhook(request: WebhookRequest): Promise<WebhookResponse> {
   const startTime = Date.now();
 
   try {
@@ -59,7 +54,7 @@ export async function handleStripeWebhook(
     } catch (error) {
       ErrorHandler.logError(error as Error, {
         context: 'webhook_signature_verification',
-        signature: signature.substring(0, 20) + '...', // Log partial signature for debugging
+        signature: signature.substring(0, 20) + '...' // Log partial signature for debugging
       });
       return createErrorResponse(400, 'Invalid webhook signature');
     }
@@ -83,26 +78,24 @@ export async function handleStripeWebhook(
       eventType: event.type,
       eventId: event.id,
       processingTime,
-      success: true,
+      success: true
     });
 
-    console.log(
-      `Successfully processed webhook ${event.type} (${event.id}) in ${processingTime}ms`
-    );
+    console.log(`Successfully processed webhook ${event.type} (${event.id}) in ${processingTime}ms`);
     return createSuccessResponse('Webhook processed successfully');
+
   } catch (error) {
     const processingTime = Date.now() - startTime;
 
     ErrorHandler.logError(error as Error, {
       context: 'webhook_processing_error',
       processingTime,
-      body:
-        typeof request.body === 'string' ? request.body.substring(0, 1000) : '[Buffer]',
+      body: typeof request.body === 'string' ? request.body.substring(0, 1000) : '[Buffer]'
     });
 
     AnalyticsService.getInstance().track('webhook_failed', {
       processingTime,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error.message : 'Unknown error'
     });
 
     // Return 500 to trigger Stripe's retry mechanism
@@ -123,8 +116,7 @@ async function checkIfEventProcessed(eventId: string): Promise<boolean> {
       .eq('status', 'success')
       .single();
 
-    if (error && error.code !== 'PGRST116') {
-      // PGRST116 = no rows found
+    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
       throw error;
     }
 
@@ -141,12 +133,14 @@ async function checkIfEventProcessed(eventId: string): Promise<boolean> {
 async function markEventAsProcessed(eventId: string, eventType: string): Promise<void> {
   try {
     const { supabase } = await import('../services/supabase');
-    await supabase.from('webhook_logs').upsert({
-      stripeEventId: eventId,
-      eventType,
-      status: 'success',
-      processedAt: new Date(),
-    });
+    await supabase
+      .from('webhook_logs')
+      .upsert({
+        stripeEventId: eventId,
+        eventType,
+        status: 'success',
+        processedAt: new Date()
+      });
   } catch (error) {
     console.error('Error marking event as processed:', error);
     // Don't throw here as the main processing was successful
@@ -160,12 +154,12 @@ function createSuccessResponse(message: string): WebhookResponse {
   return {
     statusCode: 200,
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       success: true,
-      message,
-    }),
+      message
+    })
   };
 }
 
@@ -176,12 +170,12 @@ function createErrorResponse(statusCode: number, message: string): WebhookRespon
   return {
     statusCode,
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       error: true,
-      message,
-    }),
+      message
+    })
   };
 }
 
@@ -193,8 +187,8 @@ export function createExpressWebhookHandler() {
         body: req.body,
         headers: {
           'stripe-signature': req.headers['stripe-signature'],
-          'content-type': req.headers['content-type'],
-        },
+          'content-type': req.headers['content-type']
+        }
       };
 
       const response = await handleStripeWebhook(webhookRequest);
@@ -204,6 +198,7 @@ export function createExpressWebhookHandler() {
         res.set(key, value);
       });
       res.send(response.body);
+
     } catch (error) {
       console.error('Express webhook handler error:', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -230,8 +225,8 @@ export function createServerlessWebhookHandler() {
         body: req.body,
         headers: {
           'stripe-signature': req.headers['stripe-signature'],
-          'content-type': req.headers['content-type'],
-        },
+          'content-type': req.headers['content-type']
+        }
       };
 
       const response = await handleStripeWebhook(webhookRequest);
@@ -241,6 +236,7 @@ export function createServerlessWebhookHandler() {
         res.setHeader(key, value);
       });
       res.end(response.body);
+
     } catch (error) {
       console.error('Serverless webhook handler error:', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -262,8 +258,8 @@ export function createNextJSWebhookHandler() {
         body: req.body,
         headers: {
           'stripe-signature': req.headers['stripe-signature'],
-          'content-type': req.headers['content-type'],
-        },
+          'content-type': req.headers['content-type']
+        }
       };
 
       const response = await handleStripeWebhook(webhookRequest);
@@ -273,6 +269,7 @@ export function createNextJSWebhookHandler() {
         res.setHeader(key, value);
       });
       res.end(response.body);
+
     } catch (error) {
       console.error('Next.js webhook handler error:', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -285,13 +282,13 @@ export async function handleHealthCheck(): Promise<WebhookResponse> {
   return {
     statusCode: 200,
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       status: 'healthy',
       timestamp: new Date().toISOString(),
-      service: 'stripe-webhook-handler',
-    }),
+      service: 'stripe-webhook-handler'
+    })
   };
 }
 
@@ -300,5 +297,5 @@ export default {
   createExpressWebhookHandler,
   createServerlessWebhookHandler,
   createNextJSWebhookHandler,
-  handleHealthCheck,
+  handleHealthCheck
 };

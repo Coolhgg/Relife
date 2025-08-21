@@ -1,14 +1,8 @@
+/// <reference lib="dom" />
 // Advanced Animation Hooks for Relife Smart Alarm
 // Powerful hooks for creating smooth, delightful animations
 
-import {
-  useAnimation,
-  useMotionValue,
-  useTransform,
-  useSpring,
-  useInView,
-  useScroll,
-} from 'framer-motion';
+import { useAnimation, useMotionValue, useTransform, useSpring, useInView, useScroll } from 'framer-motion';
 import { useEffect, useRef, useState, useMemo } from 'react';
 
 // ================================================================
@@ -33,7 +27,7 @@ export const animationPresets = {
   easeOut: [0, 0, 0.2, 1] as [number, number, number, number],
   easeIn: [0.4, 0, 1, 1] as [number, number, number, number],
   backOut: [0.175, 0.885, 0.32, 1.275] as [number, number, number, number],
-  anticipate: [0.68, -0.55, 0.265, 1.55] as [number, number, number, number],
+  anticipate: [0.68, -0.55, 0.265, 1.55] as [number, number, number, number]
 };
 
 // ================================================================
@@ -55,13 +49,13 @@ export const useEntranceAnimation = (
       left: { x: distance, y: 0 },
       right: { x: -distance, y: 0 },
       scale: { scale: 0.8, x: 0, y: 0 },
-      fade: { x: 0, y: 0 },
+      fade: { x: 0, y: 0 }
     };
 
     return {
       hidden: {
         opacity: 0,
-        ...directionMaps[direction],
+        ...directionMaps[direction]
       },
       visible: {
         opacity: 1,
@@ -70,17 +64,17 @@ export const useEntranceAnimation = (
         scale: 1,
         transition: {
           ...animationPresets.gentle,
-          delay,
-        },
-      },
+          delay
+        }
+      }
     };
   }, [delay, direction, distance]);
 
   return {
     ref,
     variants,
-    initial: 'hidden',
-    animate: isInView ? 'visible' : 'hidden',
+    initial: "hidden",
+    animate: isInView ? "visible" : "hidden"
   };
 };
 
@@ -95,7 +89,13 @@ export const useHoverAnimation = (config: {
   glow?: boolean;
   lift?: boolean;
 }) => {
-  const { scale = 1.02, y = -2, rotate = 0, glow = false, lift = true } = config;
+  const {
+    scale = 1.02,
+    y = -2,
+    rotate = 0,
+    glow = false,
+    lift = true
+  } = config;
 
   const hoverVariants = {
     initial: {
@@ -103,18 +103,18 @@ export const useHoverAnimation = (config: {
       y: 0,
       rotate: 0,
       boxShadow: glow
-        ? '0 4px 20px rgba(0, 0, 0, 0.1)'
-        : '0 4px 20px rgba(0, 0, 0, 0.1)',
+        ? "0 4px 20px rgba(0, 0, 0, 0.1)"
+        : "0 4px 20px rgba(0, 0, 0, 0.1)"
     },
     hover: {
       scale,
       y: lift ? y : 0,
       rotate,
       boxShadow: glow
-        ? '0 20px 40px rgba(59, 130, 246, 0.2)'
-        : '0 20px 40px rgba(0, 0, 0, 0.15)',
-      transition: animationPresets.gentle,
-    },
+        ? "0 20px 40px rgba(59, 130, 246, 0.2)"
+        : "0 20px 40px rgba(0, 0, 0, 0.15)",
+      transition: animationPresets.gentle
+    }
   };
 
   return hoverVariants;
@@ -131,9 +131,9 @@ export const useStaggerChildren = (delayBetweenChildren: number = 0.1) => {
       opacity: 1,
       transition: {
         staggerChildren: delayBetweenChildren,
-        delayChildren: 0.1,
-      },
-    },
+        delayChildren: 0.1
+      }
+    }
   };
 
   const itemVariants = {
@@ -141,8 +141,8 @@ export const useStaggerChildren = (delayBetweenChildren: number = 0.1) => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: animationPresets.gentle,
-    },
+      transition: animationPresets.gentle
+    }
   };
 
   return { containerVariants, itemVariants };
@@ -160,7 +160,7 @@ export const useScrollAnimation = (
   const isInView = useInView(ref, {
     amount: threshold,
     once: triggerOnce,
-    margin: '-10% 0px -10% 0px',
+    margin: "-10% 0px -10% 0px"
   });
 
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -175,7 +175,7 @@ export const useScrollAnimation = (
     ref,
     isInView,
     hasAnimated,
-    shouldAnimate: triggerOnce ? hasAnimated : isInView,
+    shouldAnimate: triggerOnce ? hasAnimated : isInView
   };
 };
 
@@ -183,7 +183,7 @@ export const useParallaxScroll = (offset: number = 50) => {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start end', 'end start'],
+    offset: ["start end", "end start"]
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [0, offset]);
@@ -195,20 +195,17 @@ export const useParallaxScroll = (offset: number = 50) => {
 // MOUSE TRACKING ANIMATIONS
 // ================================================================
 
-export const useMouseTracking = (strength: number = 1, damping: number = 0.1) => {
+export const useMouseTracking = (
+  strength: number = 1,
+  damping: number = 0.1
+) => {
   const ref = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
   const springConfig = { damping: damping * 100, stiffness: 300 };
-  const rotateX = useSpring(
-    useTransform(mouseY, [-0.5, 0.5], [7.5, -7.5]),
-    springConfig
-  );
-  const rotateY = useSpring(
-    useTransform(mouseX, [-0.5, 0.5], [-7.5, 7.5]),
-    springConfig
-  );
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [7.5, -7.5]), springConfig);
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-7.5, 7.5]), springConfig);
 
   useEffect(() => {
     const element = ref.current;
@@ -244,8 +241,8 @@ export const useMouseTracking = (strength: number = 1, damping: number = 0.1) =>
     style: {
       rotateX,
       rotateY,
-      transformStyle: 'preserve-3d' as const,
-    },
+      transformStyle: "preserve-3d" as const
+    }
   };
 };
 
@@ -294,7 +291,7 @@ export const useTypingAnimation = (
     displayedText,
     isComplete,
     restart,
-    progress: text.length > 0 ? currentIndex / text.length : 0,
+    progress: text.length > 0 ? currentIndex / text.length : 0
   };
 };
 
@@ -368,7 +365,7 @@ export const useCounterAnimation = (
     isAnimating,
     start,
     reset,
-    progress: target > 0 ? current / target : 0,
+    progress: target > 0 ? current / target : 0
   };
 };
 
@@ -384,21 +381,21 @@ export const useGestureAnimation = () => {
     idle: {
       scale: 1,
       rotate: 0,
-      transition: animationPresets.gentle,
+      transition: animationPresets.gentle
     },
     hover: {
       scale: 1.02,
-      transition: animationPresets.gentle,
+      transition: animationPresets.gentle
     },
     press: {
       scale: 0.95,
-      transition: animationPresets.fast,
+      transition: animationPresets.fast
     },
     drag: {
       scale: 1.05,
       rotate: 5,
-      transition: animationPresets.gentle,
-    },
+      transition: animationPresets.gentle
+    }
   };
 
   const getVariant = () => {
@@ -415,7 +412,7 @@ export const useGestureAnimation = () => {
     onDragStart: () => setIsDragging(true),
     onDragEnd: () => setIsDragging(false),
     onTapStart: () => setIsPressing(true),
-    onTap: () => setIsPressing(false),
+    onTap: () => setIsPressing(false)
   };
 };
 
@@ -428,7 +425,7 @@ export const useNotificationAnimation = () => {
     hidden: {
       x: '100%',
       opacity: 0,
-      scale: 0.8,
+      scale: 0.8
     },
     visible: {
       x: 0,
@@ -437,8 +434,8 @@ export const useNotificationAnimation = () => {
       transition: {
         type: 'spring' as const,
         stiffness: 300,
-        damping: 30,
-      },
+        damping: 30
+      }
     },
     exit: {
       x: '100%',
@@ -446,9 +443,9 @@ export const useNotificationAnimation = () => {
       scale: 0.8,
       transition: {
         duration: 0.2,
-        ease: 'easeInOut',
-      },
-    },
+        ease: 'easeInOut'
+      }
+    }
   };
 
   const stackVariants = {
@@ -456,9 +453,9 @@ export const useNotificationAnimation = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-      },
-    },
+        staggerChildren: 0.1
+      }
+    }
   };
 
   return { slideVariants, stackVariants };
@@ -473,13 +470,13 @@ export const useLoadingAnimation = (isLoading: boolean) => {
     loading: {
       opacity: 0.7,
       pointerEvents: 'none' as const,
-      transition: animationPresets.fast,
+      transition: animationPresets.fast
     },
     loaded: {
       opacity: 1,
       pointerEvents: 'auto' as const,
-      transition: animationPresets.normal,
-    },
+      transition: animationPresets.normal
+    }
   };
 
   const spinnerVariants = {
@@ -488,9 +485,9 @@ export const useLoadingAnimation = (isLoading: boolean) => {
       transition: {
         duration: 1,
         repeat: Infinity,
-        ease: 'linear',
-      },
-    },
+        ease: 'linear'
+      }
+    }
   };
 
   const pulseVariants = {
@@ -500,16 +497,16 @@ export const useLoadingAnimation = (isLoading: boolean) => {
       transition: {
         duration: 1.5,
         repeat: Infinity,
-        ease: 'easeInOut',
-      },
-    },
+        ease: 'easeInOut'
+      }
+    }
   };
 
   return {
     contentVariants: loadingVariants,
     spinnerVariants,
     pulseVariants,
-    animate: isLoading ? 'loading' : 'loaded',
+    animate: isLoading ? 'loading' : 'loaded'
   };
 };
 
@@ -557,7 +554,7 @@ export const useAnimationSequence = (
     currentStep,
     isPlaying,
     playSequence,
-    stopSequence,
+    stopSequence
   };
 };
 
@@ -574,5 +571,5 @@ export default {
   useNotificationAnimation,
   useLoadingAnimation,
   useAnimationSequence,
-  animationPresets,
+  animationPresets
 };

@@ -1,15 +1,17 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import RootErrorBoundary from '../RootErrorBoundary';
+import { expect, test, jest } from "@jest/globals";
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import RootErrorBoundary from "../RootErrorBoundary";
 import {
   AnalyticsErrorBoundary,
   MediaErrorBoundary,
   AIErrorBoundary,
   APIErrorBoundary,
   DataErrorBoundary,
-  FormErrorBoundary,
+  FormErrorBoundary
 } from '../SpecializedErrorBoundaries';
+
 
 import { testUtils } from '../../test-setup';
 
@@ -17,7 +19,7 @@ import { testUtils } from '../../test-setup';
 jest.mock('../../services/error-handler', () => ({
   ErrorHandler: {
     handleError: jest.fn(() => 'test-error-id-123'),
-  },
+  }
 }));
 
 // Test component that throws errors
@@ -25,7 +27,11 @@ const ThrowError: React.FC<{
   shouldThrow?: boolean;
   errorMessage?: string;
   errorType?: string;
-}> = ({ shouldThrow = false, errorMessage = 'Test error', errorType = 'generic' }) => {
+}> = ({
+  shouldThrow = false,
+  errorMessage = 'Test error',
+  errorType = 'generic'
+}) => {
   if (shouldThrow) {
     const error = new Error(errorMessage);
     (error as any).type = errorType;
@@ -113,7 +119,7 @@ describe('RootErrorBoundary', () => {
         expect.objectContaining({
           context: 'RootErrorBoundary',
           severity: 'high',
-          componentStack: expect.any(String),
+          componentStack: expect.any(String)
         })
       );
     });
@@ -298,9 +304,7 @@ describe('AnalyticsErrorBoundary', () => {
       </AnalyticsErrorBoundary>
     );
 
-    expect(
-      screen.getByRole('button', { name: /continue without analytics/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /continue without analytics/i })).toBeInTheDocument();
   });
 
   test('reports error with analytics context', () => {
@@ -317,7 +321,7 @@ describe('AnalyticsErrorBoundary', () => {
       expect.objectContaining({
         context: 'Analytics',
         severity: 'low',
-        category: 'analytics',
+        category: 'analytics'
       })
     );
   });
@@ -348,9 +352,7 @@ describe('MediaErrorBoundary', () => {
       </MediaErrorBoundary>
     );
 
-    expect(
-      screen.getByRole('button', { name: /use default audio/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /use default audio/i })).toBeInTheDocument();
   });
 });
 
@@ -368,9 +370,7 @@ describe('AIErrorBoundary', () => {
     );
 
     expect(screen.getByText('AI Features Temporarily Unavailable')).toBeInTheDocument();
-    expect(
-      screen.getByText(/smart features are currently unavailable/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/smart features are currently unavailable/i)).toBeInTheDocument();
     expect(screen.getByText(/basic alarm functionality/i)).toBeInTheDocument();
   });
 
@@ -381,9 +381,7 @@ describe('AIErrorBoundary', () => {
       </AIErrorBoundary>
     );
 
-    expect(
-      screen.getByRole('button', { name: /continue in manual mode/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /continue in manual mode/i })).toBeInTheDocument();
   });
 });
 
@@ -412,9 +410,7 @@ describe('APIErrorBoundary', () => {
       </APIErrorBoundary>
     );
 
-    expect(
-      screen.getByRole('button', { name: /continue offline/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /continue offline/i })).toBeInTheDocument();
   });
 
   test('shows retry connection option', () => {
@@ -424,9 +420,7 @@ describe('APIErrorBoundary', () => {
       </APIErrorBoundary>
     );
 
-    expect(
-      screen.getByRole('button', { name: /retry connection/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /retry connection/i })).toBeInTheDocument();
   });
 });
 

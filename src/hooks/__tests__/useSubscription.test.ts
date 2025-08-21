@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for useSubscription hook
  * Tests subscription management, feature access, billing operations, and premium functionality
@@ -5,14 +6,9 @@
 
 import { renderHook, act, waitFor } from '@testing-library/react';
 import useSubscription from '../useSubscription';
-import {
-  renderHookWithProviders,
-  createMockSubscription,
-  clearAllMocks,
-} from '../../__tests__/utils/hook-testing-utils';
+import { renderHookWithProviders, createMockSubscription, clearAllMocks } from '../../__tests__/utils/hook-testing-utils';
 import type {
   SubscriptionPlan,
-  SubscriptionTier,
   FeatureAccess,
   BillingUsage,
   PaymentMethod,
@@ -20,7 +16,7 @@ import type {
   Trial,
   CreateSubscriptionRequest,
   UpdateSubscriptionRequest,
-  CancelSubscriptionRequest,
+  CancelSubscriptionRequest
 } from '../../types/premium';
 
 // Mock services
@@ -151,7 +147,6 @@ describe('useSubscription Hook', () => {
     const mockSubscriptionService = {
       getSubscriptionDashboard: jest.fn().mockResolvedValue(mockDashboardData),
       getFeatureAccess: jest.fn().mockResolvedValue(mockFeatureAccess),
-      getUserTier: jest.fn().mockResolvedValue('premium' as SubscriptionTier),
       createSubscription: jest.fn().mockResolvedValue({
         success: true,
         subscription: mockSubscription,
@@ -213,8 +208,7 @@ describe('useSubscription Hook', () => {
     });
 
     it('should handle initialization errors', async () => {
-      const SubscriptionService =
-        require('../../services/subscription-service').default;
+      const SubscriptionService = require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
       mockService.getSubscriptionDashboard.mockRejectedValue(new Error('API Error'));
 
@@ -226,14 +220,14 @@ describe('useSubscription Hook', () => {
         expect(result.current.isInitialized).toBe(true);
       });
 
-      expect(result.current.error).toBe(
-        'Failed to load subscription data. Please refresh the page.'
-      );
+      expect(result.current.error).toBe('Failed to load subscription data. Please refresh the page.');
       expect(result.current.subscription).toBeNull();
     });
 
     it('should not initialize without userId', () => {
-      const { result } = renderHookWithProviders(() => useSubscription({ userId: '' }));
+      const { result } = renderHookWithProviders(() =>
+        useSubscription({ userId: '' })
+      );
 
       expect(result.current.isLoading).toBe(false);
       expect(result.current.isInitialized).toBe(false);
@@ -269,8 +263,7 @@ describe('useSubscription Hook', () => {
     });
 
     it('should handle subscription creation with payment action required', async () => {
-      const SubscriptionService =
-        require('../../services/subscription-service').default;
+      const SubscriptionService = require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
       mockService.createSubscription.mockResolvedValue({
         success: true,
@@ -305,8 +298,7 @@ describe('useSubscription Hook', () => {
     });
 
     it('should handle subscription creation errors', async () => {
-      const SubscriptionService =
-        require('../../services/subscription-service').default;
+      const SubscriptionService = require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
       mockService.createSubscription.mockResolvedValue({
         success: false,
@@ -363,8 +355,7 @@ describe('useSubscription Hook', () => {
     });
 
     it('should handle update without active subscription', async () => {
-      const SubscriptionService =
-        require('../../services/subscription-service').default;
+      const SubscriptionService = require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
       mockService.getSubscriptionDashboard.mockResolvedValue({
         ...mockDashboardData,
@@ -419,8 +410,7 @@ describe('useSubscription Hook', () => {
     });
 
     it('should handle cancellation with retention offer', async () => {
-      const SubscriptionService =
-        require('../../services/subscription-service').default;
+      const SubscriptionService = require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
       const retentionOffer = {
         discountPercentage: 50,
@@ -488,8 +478,7 @@ describe('useSubscription Hook', () => {
         },
       };
 
-      const SubscriptionService =
-        require('../../services/subscription-service').default;
+      const SubscriptionService = require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
       mockService.getFeatureAccess.mockResolvedValue(limitedFeatureAccess);
 
@@ -517,8 +506,7 @@ describe('useSubscription Hook', () => {
         await result.current.trackFeatureUsage('advanced-alarms', 2);
       });
 
-      const SubscriptionService =
-        require('../../services/subscription-service').default;
+      const SubscriptionService = require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
       expect(mockService.trackFeatureUsage).toHaveBeenCalledWith(
         mockUserId,
@@ -630,8 +618,7 @@ describe('useSubscription Hook', () => {
     });
 
     it('should handle invalid discount code', async () => {
-      const SubscriptionService =
-        require('../../services/subscription-service').default;
+      const SubscriptionService = require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
       mockService.validateDiscountCode.mockResolvedValue({
         valid: false,
@@ -670,8 +657,7 @@ describe('useSubscription Hook', () => {
         },
       };
 
-      const SubscriptionService =
-        require('../../services/subscription-service').default;
+      const SubscriptionService = require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
       mockService.getSubscriptionDashboard.mockResolvedValue({
         ...mockDashboardData,
@@ -723,8 +709,7 @@ describe('useSubscription Hook', () => {
         expect(result.current.isInitialized).toBe(true);
       });
 
-      const SubscriptionService =
-        require('../../services/subscription-service').default;
+      const SubscriptionService = require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
 
       // Clear previous calls
@@ -752,8 +737,7 @@ describe('useSubscription Hook', () => {
         expect(result.current.isInitialized).toBe(true);
       });
 
-      const SubscriptionService =
-        require('../../services/subscription-service').default;
+      const SubscriptionService = require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
 
       // Clear previous calls
@@ -779,8 +763,7 @@ describe('useSubscription Hook', () => {
         expect(result.current.isInitialized).toBe(true);
       });
 
-      const SubscriptionService =
-        require('../../services/subscription-service').default;
+      const SubscriptionService = require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
 
       // Clear previous calls

@@ -23,19 +23,13 @@ export class VoiceService {
     }
   }
 
-  static async generateAlarmMessage(
-    alarm: Alarm,
-    userId?: string
-  ): Promise<string | null> {
+  static async generateAlarmMessage(alarm: Alarm, userId?: string): Promise<string | null> {
     await this.initialize();
 
     // If userId is provided, try premium voice service first
     if (userId) {
       try {
-        const premiumMessage = await PremiumVoiceService.generatePremiumAlarmMessage(
-          alarm,
-          userId
-        );
+        const premiumMessage = await PremiumVoiceService.generatePremiumAlarmMessage(alarm, userId);
         if (premiumMessage) {
           return premiumMessage;
         }
@@ -74,33 +68,33 @@ export class VoiceService {
       'drill-sergeant': [
         `WAKE UP SOLDIER! It's ${time}! ${label}! NO EXCUSES!`,
         `DROP AND GIVE ME TWENTY! It's ${time} and time for ${label}!`,
-        `MOVE IT MOVE IT! ${time} means ${label} time! GET UP NOW!`,
+        `MOVE IT MOVE IT! ${time} means ${label} time! GET UP NOW!`
       ],
       'sweet-angel': [
         `Good morning sunshine! It's ${time} and time for ${label}. Have a beautiful day!`,
         `Rise and shine, dear! It's ${time}. Time to start your wonderful day with ${label}.`,
-        `Sweet dreams are over! It's ${time} and your ${label} awaits. You've got this!`,
+        `Sweet dreams are over! It's ${time} and your ${label} awaits. You've got this!`
       ],
       'anime-hero': [
         `The power of friendship compels you! It's ${time}! Time for ${label}! Believe in yourself!`,
         `Your destiny awaits! It's ${time} and ${label} is calling! Never give up!`,
-        `Transform and roll out! It's ${time}! Time to conquer ${label} with the power of determination!`,
+        `Transform and roll out! It's ${time}! Time to conquer ${label} with the power of determination!`
       ],
       'savage-roast': [
         `Oh look, sleeping beauty finally decided to join us. It's ${time} and your ${label} is waiting.`,
         `Well well well, it's ${time}. Time for ${label}. Hope you enjoyed your beauty sleep because you need it.`,
-        `Rise and grind, sunshine. It's ${time} and ${label} won't do itself. Time to adult.`,
+        `Rise and grind, sunshine. It's ${time} and ${label} won't do itself. Time to adult.`
       ],
-      motivational: [
+      'motivational': [
         `Champions rise early! It's ${time} and time for ${label}! Today is your day to shine!`,
         `Success starts now! It's ${time}! Your ${label} is the first step to greatness!`,
-        `Winners don't snooze! It's ${time}! Time to crush ${label} and own this day!`,
+        `Winners don't snooze! It's ${time}! Time to crush ${label} and own this day!`
       ],
-      gentle: [
+      'gentle': [
         `Good morning! It's ${time}. Take your time, but please remember ${label} when you're ready.`,
         `Gentle wake-up call: it's ${time}. Your ${label} is waiting, but no rush.`,
-        `Sweet morning! It's ${time} and time for ${label}. Hope you slept well.`,
-      ],
+        `Sweet morning! It's ${time} and time for ${label}. Hope you slept well.`
+      ]
     };
 
     const moodTemplates = templates[alarm.voiceMood] || templates['motivational'];
@@ -109,10 +103,7 @@ export class VoiceService {
     return moodTemplates[randomIndex];
   }
 
-  private static async textToSpeech(
-    text: string,
-    voiceMood: VoiceMood
-  ): Promise<string | null> {
+  private static async textToSpeech(text: string, voiceMood: VoiceMood): Promise<string | null> {
     if (!('speechSynthesis' in window)) {
       return null;
     }
@@ -123,6 +114,8 @@ export class VoiceService {
 
         // Configure voice based on mood
         this.configureVoiceForMood(utterance, voiceMood);
+
+
 
         utterance.onstart = () => {
           console.log('Speech synthesis started');
@@ -135,7 +128,7 @@ export class VoiceService {
           resolve(null);
         };
 
-        utterance.onerror = event => {
+        utterance.onerror = (event) => {
           console.error('Speech synthesis error:', event);
           resolve(null);
         };
@@ -146,6 +139,7 @@ export class VoiceService {
         setTimeout(() => {
           resolve(null);
         }, 10000);
+
       } catch (error) {
         console.error('Error in text-to-speech:', error);
         resolve(null);
@@ -153,10 +147,7 @@ export class VoiceService {
     });
   }
 
-  private static configureVoiceForMood(
-    utterance: SpeechSynthesisUtterance,
-    mood: VoiceMood
-  ): void {
+  private static configureVoiceForMood(utterance: SpeechSynthesisUtterance, mood: VoiceMood): void {
     const voices = speechSynthesis.getVoices();
 
     // Configure based on mood
@@ -171,11 +162,10 @@ export class VoiceService {
         utterance.pitch = 1.2;
         utterance.volume = 0.8;
         // Prefer female voice if available
-        const femaleVoice = voices.find(
-          voice =>
-            voice.name.toLowerCase().includes('female') ||
-            voice.name.toLowerCase().includes('woman') ||
-            voice.name.toLowerCase().includes('samantha')
+        const femaleVoice = voices.find(voice =>
+          voice.name.toLowerCase().includes('female') ||
+          voice.name.toLowerCase().includes('woman') ||
+          voice.name.toLowerCase().includes('samantha')
         );
         if (femaleVoice) utterance.voice = femaleVoice;
         break;
@@ -248,7 +238,7 @@ export class VoiceService {
       voiceMood: mood,
       snoozeCount: 0,
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     };
 
     const message = this.generateMessageText(testAlarm);

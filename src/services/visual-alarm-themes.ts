@@ -7,17 +7,7 @@ export interface VisualAlarmTheme {
   id: string;
   name: string;
   description: string;
-  category:
-    | 'gentle'
-    | 'energetic'
-    | 'nature'
-    | 'abstract'
-    | 'cinematic'
-    | 'minimal'
-    | 'fantasy'
-    | 'cosmic'
-    | 'horror'
-    | 'workout';
+  category: 'gentle' | 'energetic' | 'nature' | 'abstract' | 'cinematic' | 'minimal' | 'fantasy' | 'cosmic' | 'horror' | 'workout';
 
   // Color Palette
   colors: {
@@ -33,28 +23,8 @@ export interface VisualAlarmTheme {
 
   // Animation Settings
   animations: {
-    entrance:
-      | 'fade'
-      | 'slide'
-      | 'zoom'
-      | 'bounce'
-      | 'pulse'
-      | 'rotate'
-      | 'shake'
-      | 'wave'
-      | 'spiral'
-      | 'explode';
-    loop:
-      | 'pulse'
-      | 'breathe'
-      | 'glow'
-      | 'rotate'
-      | 'float'
-      | 'shake'
-      | 'ripple'
-      | 'none'
-      | 'particles'
-      | 'matrix';
+    entrance: 'fade' | 'slide' | 'zoom' | 'bounce' | 'pulse' | 'rotate' | 'shake' | 'wave' | 'spiral' | 'explode';
+    loop: 'pulse' | 'breathe' | 'glow' | 'rotate' | 'float' | 'shake' | 'ripple' | 'none' | 'particles' | 'matrix';
     duration: number; // milliseconds
     intensity: 'subtle' | 'moderate' | 'intense' | 'extreme';
   };
@@ -84,23 +54,8 @@ export interface VisualAlarmTheme {
 
   // Background Pattern
   background: {
-    type:
-      | 'solid'
-      | 'gradient'
-      | 'pattern'
-      | 'image'
-      | 'video'
-      | 'animated'
-      | 'particles';
-    pattern?:
-      | 'dots'
-      | 'lines'
-      | 'grid'
-      | 'waves'
-      | 'circles'
-      | 'hexagons'
-      | 'triangles'
-      | 'noise';
+    type: 'solid' | 'gradient' | 'pattern' | 'image' | 'video' | 'animated' | 'particles';
+    pattern?: 'dots' | 'lines' | 'grid' | 'waves' | 'circles' | 'hexagons' | 'triangles' | 'noise';
     opacity: number;
     blur: number;
   };
@@ -118,15 +73,7 @@ export interface VisualAlarmTheme {
 
   // Interactive Elements
   interaction: {
-    hapticPattern?:
-      | 'light'
-      | 'medium'
-      | 'heavy'
-      | 'success'
-      | 'warning'
-      | 'error'
-      | 'selection'
-      | 'impact';
+    hapticPattern?: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' | 'selection' | 'impact';
     touchRipple: boolean;
     parallax: boolean;
     tilt3d: boolean;
@@ -236,13 +183,13 @@ class VisualAlarmThemesService {
         gradientStart: '#FFE4B5',
         gradientEnd: '#FFA500',
         text: '#8B4513',
-        shadow: '#D2691E',
+        shadow: '#D2691E'
       },
       animations: {
         entrance: 'fade',
         loop: 'glow',
         duration: 3000,
-        intensity: 'moderate',
+        intensity: 'moderate'
       },
       effects: {
         blur: false,
@@ -254,19 +201,19 @@ class VisualAlarmThemesService {
         vignette: true,
         scanlines: false,
         glitch: false,
-        waves: false,
+        waves: false
       },
       typography: {
         fontFamily: 'Inter, sans-serif',
         fontSize: 'large',
         fontWeight: 'normal',
         letterSpacing: 0.5,
-        textShadow: true,
+        textShadow: true
       },
       background: {
         type: 'gradient',
         opacity: 0.8,
-        blur: 0,
+        blur: 0
       },
       screen: {
         brightness: 120,
@@ -275,14 +222,14 @@ class VisualAlarmThemesService {
         hue: 30,
         flashEnabled: false,
         flashColor: '#FFD700',
-        flashInterval: 2000,
+        flashInterval: 2000
       },
       interaction: {
         hapticPattern: 'light',
         touchRipple: true,
         parallax: true,
-        tilt3d: false,
-      },
+        tilt3d: false
+      }
     });
 
     this.themes.set('morning_mist', {
@@ -298,13 +245,13 @@ class VisualAlarmThemesService {
         gradientStart: '#E6F3FF',
         gradientEnd: '#B0E0E6',
         text: '#4682B4',
-        shadow: '#778899',
+        shadow: '#778899'
       },
       animations: {
         entrance: 'fade',
         loop: 'float',
         duration: 4000,
-        intensity: 'subtle',
+        intensity: 'subtle'
       },
       effects: {
         blur: true,
@@ -316,19 +263,19 @@ class VisualAlarmThemesService {
         vignette: true,
         scanlines: false,
         glitch: false,
-        waves: true,
+        waves: true
       },
       typography: {
         fontFamily: 'Nunito, sans-serif',
         fontSize: 'medium',
         fontWeight: 'light',
         letterSpacing: 1,
-        textShadow: false,
+        textShadow: false
       },
       background: {
         type: 'animated',
         opacity: 0.6,
-        blur: 5,
+        blur: 5
       },
       screen: {
         brightness: 100,
@@ -337,14 +284,14 @@ class VisualAlarmThemesService {
         hue: 200,
         flashEnabled: false,
         flashColor: '#87CEEB',
-        flashInterval: 3000,
+        flashInterval: 3000
       },
       interaction: {
         hapticPattern: 'light',
         touchRipple: true,
         parallax: true,
-        tilt3d: true,
-      },
+        tilt3d: true
+      }
     });
 
     // Energetic Themes
@@ -361,13 +308,13 @@ class VisualAlarmThemesService {
         gradientStart: '#FF0080',
         gradientEnd: '#00FFFF',
         text: '#FFFFFF',
-        shadow: '#FF00FF',
+        shadow: '#FF00FF'
       },
       animations: {
         entrance: 'explode',
         loop: 'pulse',
         duration: 800,
-        intensity: 'extreme',
+        intensity: 'extreme'
       },
       effects: {
         blur: false,
@@ -379,20 +326,20 @@ class VisualAlarmThemesService {
         vignette: false,
         scanlines: true,
         glitch: true,
-        waves: false,
+        waves: false
       },
       typography: {
         fontFamily: 'Orbitron, monospace',
         fontSize: 'extra-large',
         fontWeight: 'bold',
         letterSpacing: 2,
-        textShadow: true,
+        textShadow: true
       },
       background: {
         type: 'pattern',
         pattern: 'grid',
         opacity: 0.3,
-        blur: 0,
+        blur: 0
       },
       screen: {
         brightness: 150,
@@ -401,14 +348,14 @@ class VisualAlarmThemesService {
         hue: 300,
         flashEnabled: true,
         flashColor: '#00FFFF',
-        flashInterval: 500,
+        flashInterval: 500
       },
       interaction: {
         hapticPattern: 'heavy',
         touchRipple: true,
         parallax: false,
-        tilt3d: false,
-      },
+        tilt3d: false
+      }
     });
 
     this.themes.set('lightning_bolt', {
@@ -424,13 +371,13 @@ class VisualAlarmThemesService {
         gradientStart: '#4B0082',
         gradientEnd: '#000080',
         text: '#FFFFFF',
-        shadow: '#00BFFF',
+        shadow: '#00BFFF'
       },
       animations: {
         entrance: 'shake',
         loop: 'shake',
         duration: 200,
-        intensity: 'extreme',
+        intensity: 'extreme'
       },
       effects: {
         blur: false,
@@ -442,19 +389,19 @@ class VisualAlarmThemesService {
         vignette: true,
         scanlines: false,
         glitch: true,
-        waves: false,
+        waves: false
       },
       typography: {
         fontFamily: 'Rajdhani, sans-serif',
         fontSize: 'extra-large',
         fontWeight: 'extra-bold',
         letterSpacing: 1.5,
-        textShadow: true,
+        textShadow: true
       },
       background: {
         type: 'animated',
         opacity: 0.9,
-        blur: 0,
+        blur: 0
       },
       screen: {
         brightness: 200,
@@ -463,14 +410,14 @@ class VisualAlarmThemesService {
         hue: 240,
         flashEnabled: true,
         flashColor: '#FFFFFF',
-        flashInterval: 150,
+        flashInterval: 150
       },
       interaction: {
         hapticPattern: 'impact',
         touchRipple: true,
         parallax: false,
-        tilt3d: false,
-      },
+        tilt3d: false
+      }
     });
 
     // Nature Themes
@@ -487,13 +434,13 @@ class VisualAlarmThemesService {
         gradientStart: '#90EE90',
         gradientEnd: '#006400',
         text: '#2F4F4F',
-        shadow: '#556B2F',
+        shadow: '#556B2F'
       },
       animations: {
         entrance: 'wave',
         loop: 'float',
         duration: 5000,
-        intensity: 'subtle',
+        intensity: 'subtle'
       },
       effects: {
         blur: true,
@@ -505,20 +452,20 @@ class VisualAlarmThemesService {
         vignette: true,
         scanlines: false,
         glitch: false,
-        waves: true,
+        waves: true
       },
       typography: {
         fontFamily: 'Crimson Text, serif',
         fontSize: 'large',
         fontWeight: 'normal',
         letterSpacing: 0.5,
-        textShadow: true,
+        textShadow: true
       },
       background: {
         type: 'pattern',
         pattern: 'dots',
         opacity: 0.4,
-        blur: 2,
+        blur: 2
       },
       screen: {
         brightness: 110,
@@ -527,14 +474,14 @@ class VisualAlarmThemesService {
         hue: 120,
         flashEnabled: false,
         flashColor: '#ADFF2F',
-        flashInterval: 4000,
+        flashInterval: 4000
       },
       interaction: {
         hapticPattern: 'medium',
         touchRipple: true,
         parallax: true,
-        tilt3d: true,
-      },
+        tilt3d: true
+      }
     });
 
     // Space/Cosmic Themes
@@ -551,13 +498,13 @@ class VisualAlarmThemesService {
         gradientStart: '#191970',
         gradientEnd: '#4B0082',
         text: '#FFFFFF',
-        shadow: '#8A2BE2',
+        shadow: '#8A2BE2'
       },
       animations: {
         entrance: 'spiral',
         loop: 'rotate',
         duration: 8000,
-        intensity: 'moderate',
+        intensity: 'moderate'
       },
       effects: {
         blur: true,
@@ -569,19 +516,19 @@ class VisualAlarmThemesService {
         vignette: true,
         scanlines: false,
         glitch: false,
-        waves: false,
+        waves: false
       },
       typography: {
         fontFamily: 'Space Grotesk, sans-serif',
         fontSize: 'large',
         fontWeight: 'bold',
         letterSpacing: 1,
-        textShadow: true,
+        textShadow: true
       },
       background: {
         type: 'particles',
         opacity: 0.8,
-        blur: 0,
+        blur: 0
       },
       screen: {
         brightness: 90,
@@ -590,14 +537,14 @@ class VisualAlarmThemesService {
         hue: 280,
         flashEnabled: false,
         flashColor: '#FF1493',
-        flashInterval: 3000,
+        flashInterval: 3000
       },
       interaction: {
         hapticPattern: 'medium',
         touchRipple: true,
         parallax: true,
-        tilt3d: true,
-      },
+        tilt3d: true
+      }
     });
 
     // Minimal Themes
@@ -614,13 +561,13 @@ class VisualAlarmThemesService {
         gradientStart: '#FFFFFF',
         gradientEnd: '#F0F0F0',
         text: '#333333',
-        shadow: '#D3D3D3',
+        shadow: '#D3D3D3'
       },
       animations: {
         entrance: 'fade',
         loop: 'breathe',
         duration: 4000,
-        intensity: 'subtle',
+        intensity: 'subtle'
       },
       effects: {
         blur: false,
@@ -632,19 +579,19 @@ class VisualAlarmThemesService {
         vignette: false,
         scanlines: false,
         glitch: false,
-        waves: false,
+        waves: false
       },
       typography: {
         fontFamily: 'Helvetica Neue, sans-serif',
         fontSize: 'large',
         fontWeight: 'light',
         letterSpacing: 0,
-        textShadow: false,
+        textShadow: false
       },
       background: {
         type: 'solid',
         opacity: 1,
-        blur: 0,
+        blur: 0
       },
       screen: {
         brightness: 100,
@@ -653,14 +600,14 @@ class VisualAlarmThemesService {
         hue: 0,
         flashEnabled: false,
         flashColor: '#FFFFFF',
-        flashInterval: 0,
+        flashInterval: 0
       },
       interaction: {
         hapticPattern: 'light',
         touchRipple: false,
         parallax: false,
-        tilt3d: false,
-      },
+        tilt3d: false
+      }
     });
 
     // Horror Theme
@@ -677,13 +624,13 @@ class VisualAlarmThemesService {
         gradientStart: '#2F0000',
         gradientEnd: '#8B0000',
         text: '#FFFFFF',
-        shadow: '#8B0000',
+        shadow: '#8B0000'
       },
       animations: {
         entrance: 'fade',
         loop: 'pulse',
         duration: 2000,
-        intensity: 'intense',
+        intensity: 'intense'
       },
       effects: {
         blur: true,
@@ -695,20 +642,20 @@ class VisualAlarmThemesService {
         vignette: true,
         scanlines: false,
         glitch: true,
-        waves: false,
+        waves: false
       },
       typography: {
         fontFamily: 'Creepster, cursive',
         fontSize: 'extra-large',
         fontWeight: 'bold',
         letterSpacing: 2,
-        textShadow: true,
+        textShadow: true
       },
       background: {
         type: 'pattern',
         pattern: 'noise',
         opacity: 0.3,
-        blur: 3,
+        blur: 3
       },
       screen: {
         brightness: 80,
@@ -717,14 +664,14 @@ class VisualAlarmThemesService {
         hue: 0,
         flashEnabled: true,
         flashColor: '#8B0000',
-        flashInterval: 1500,
+        flashInterval: 1500
       },
       interaction: {
         hapticPattern: 'warning',
         touchRipple: true,
         parallax: false,
-        tilt3d: false,
-      },
+        tilt3d: false
+      }
     });
 
     // Add more themes...
@@ -769,11 +716,9 @@ class VisualAlarmThemesService {
         --text-color: ${colors.text};
         --shadow-color: ${colors.shadow};
 
-        background: ${
-          background.type === 'gradient'
-            ? `linear-gradient(135deg, var(--gradient-start), var(--gradient-end))`
-            : `var(--background-color)`
-        };
+        background: ${background.type === 'gradient' ?
+          `linear-gradient(135deg, var(--gradient-start), var(--gradient-end))` :
+          `var(--background-color)`};
         color: var(--text-color);
         font-family: ${typography.fontFamily};
         font-size: ${this.getFontSize(typography.fontSize)};
@@ -892,16 +837,11 @@ class VisualAlarmThemesService {
 
   private getFontSize(size: string): string {
     switch (size) {
-      case 'small':
-        return '1.5rem';
-      case 'medium':
-        return '2rem';
-      case 'large':
-        return '3rem';
-      case 'extra-large':
-        return '4rem';
-      default:
-        return '2rem';
+      case 'small': return '1.5rem';
+      case 'medium': return '2rem';
+      case 'large': return '3rem';
+      case 'extra-large': return '4rem';
+      default: return '2rem';
     }
   }
 
@@ -1013,16 +953,16 @@ class VisualAlarmThemesService {
   // Integration with existing sound themes
   getRecommendedVisualTheme(soundTheme: string): VisualAlarmThemeId {
     const soundToVisual: Record<string, VisualAlarmThemeId> = {
-      nature: 'forest_canopy',
-      electronic: 'neon_pulse',
-      retro: 'clean_white', // Add retro visual theme later
-      ambient: 'morning_mist',
-      energetic: 'lightning_bolt',
-      calm: 'sunrise_glow',
-      meditation: 'galaxy_spiral',
-      workout: 'lightning_bolt',
-      horror: 'blood_moon',
-      default: 'sunrise_glow',
+      'nature': 'forest_canopy',
+      'electronic': 'neon_pulse',
+      'retro': 'clean_white', // Add retro visual theme later
+      'ambient': 'morning_mist',
+      'energetic': 'lightning_bolt',
+      'calm': 'sunrise_glow',
+      'meditation': 'galaxy_spiral',
+      'workout': 'lightning_bolt',
+      'horror': 'blood_moon',
+      'default': 'sunrise_glow'
     };
 
     return soundToVisual[soundTheme] || 'sunrise_glow';

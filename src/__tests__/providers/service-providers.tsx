@@ -50,12 +50,12 @@ export interface MockBattleService {
   getBattle: jest.MockedFunction<(id: string) => Promise<any | null>>;
   startBattle: jest.MockedFunction<(battleId: string) => Promise<void>>;
   endBattle: jest.MockedFunction<(battleId: string) => Promise<any>>;
-  submitAnswer: jest.MockedFunction<
-    (battleId: string, answer: any) => Promise<boolean>
-  >;
+  submitAnswer: jest.MockedFunction<(battleId: string, answer: any) => Promise<boolean>>;
   getLeaderboard: jest.MockedFunction<() => Promise<any[]>>;
   getUserStats: jest.MockedFunction<(userId: string) => Promise<any>>;
-  inviteToB;
+  inviteToB
+
+
 
   attle: jest.MockedFunction<(battleId: string, userIds: string[]) => Promise<void>>;
   spectate: jest.MockedFunction<(battleId: string) => Promise<void>>;
@@ -66,9 +66,7 @@ export interface MockSubscriptionService {
   getSubscriptions: jest.MockedFunction<() => Promise<any[]>>;
   subscribe: jest.MockedFunction<(tier: string, paymentMethod?: any) => Promise<any>>;
   cancelSubscription: jest.MockedFunction<(subscriptionId: string) => Promise<void>>;
-  updateSubscription: jest.MockedFunction<
-    (subscriptionId: string, updates: any) => Promise<any>
-  >;
+  updateSubscription: jest.MockedFunction<(subscriptionId: string, updates: any) => Promise<any>>;
   resumeSubscription: jest.MockedFunction<(subscriptionId: string) => Promise<void>>;
   getFeatures: jest.MockedFunction<(tier?: string) => string[]>;
   checkAccess: jest.MockedFunction<(feature: string, tier?: string) => boolean>;
@@ -86,27 +84,17 @@ export interface MockVoiceService {
   getVoices: jest.MockedFunction<(userId?: string) => Promise<any[]>>;
   getVoice: jest.MockedFunction<(voiceId: string) => Promise<any | null>>;
   processVoice: jest.MockedFunction<(voiceId: string) => Promise<void>>;
-  synthesizeVoice: jest.MockedFunction<
-    (voiceId: string, text: string) => Promise<string>
-  >;
+  synthesizeVoice: jest.MockedFunction<(voiceId: string, text: string) => Promise<string>>;
   cloneVoice: jest.MockedFunction<(sourceId: string, name: string) => Promise<any>>;
-  trainVoiceModel: jest.MockedFunction<
-    (voiceId: string, samples: File[]) => Promise<void>
-  >;
-  getVoicePreview: jest.MockedFunction<
-    (voiceId: string, text?: string) => Promise<string>
-  >;
+  trainVoiceModel: jest.MockedFunction<(voiceId: string, samples: File[]) => Promise<void>>;
+  getVoicePreview: jest.MockedFunction<(voiceId: string, text?: string) => Promise<string>>;
   analyzeVoice: jest.MockedFunction<(voiceId: string) => Promise<any>>;
 }
 
 export interface MockNotificationService {
   requestPermission: jest.MockedFunction<() => Promise<NotificationPermission>>;
-  showNotification: jest.MockedFunction<
-    (title: string, options?: any) => Promise<void>
-  >;
-  scheduleNotification: jest.MockedFunction<
-    (id: string, notification: any, when: Date) => Promise<void>
-  >;
+  showNotification: jest.MockedFunction<(title: string, options?: any) => Promise<void>>;
+  scheduleNotification: jest.MockedFunction<(id: string, notification: any, when: Date) => Promise<void>>;
   cancelNotification: jest.MockedFunction<(id: string) => Promise<void>>;
   cancelAllNotifications: jest.MockedFunction<() => Promise<void>>;
   getScheduledNotifications: jest.MockedFunction<() => Promise<any[]>>;
@@ -153,18 +141,12 @@ export interface MockSecurityService {
   decrypt: jest.MockedFunction<(encryptedData: string, key?: string) => Promise<any>>;
   hash: jest.MockedFunction<(data: string, algorithm?: string) => Promise<string>>;
   verify: jest.MockedFunction<(data: string, hash: string) => Promise<boolean>>;
-  generateToken: jest.MockedFunction<
-    (payload?: any, expiresIn?: string) => Promise<string>
-  >;
+  generateToken: jest.MockedFunction<(payload?: any, expiresIn?: string) => Promise<string>>;
   validateToken: jest.MockedFunction<(token: string) => Promise<boolean>>;
   generateSecureId: jest.MockedFunction<() => string>;
-  generateKeyPair: jest.MockedFunction<
-    () => Promise<{ publicKey: string; privateKey: string }>
-  >;
+  generateKeyPair: jest.MockedFunction<() => Promise<{ publicKey: string; privateKey: string }>>;
   signData: jest.MockedFunction<(data: any, privateKey: string) => Promise<string>>;
-  verifySignature: jest.MockedFunction<
-    (data: any, signature: string, publicKey: string) => Promise<boolean>
-  >;
+  verifySignature: jest.MockedFunction<(data: any, signature: string, publicKey: string) => Promise<boolean>>;
 }
 
 // ===============================
@@ -182,12 +164,10 @@ const createMockAlarmService = (): MockAlarmService => ({
   snoozeAlarm: jest.fn().mockResolvedValue(undefined),
   stopAlarm: jest.fn().mockResolvedValue(undefined),
   validateAlarmTime: jest.fn().mockReturnValue(true),
-  getNextAlarmTime: jest
-    .fn()
-    .mockReturnValue(new Date(Date.now() + 24 * 60 * 60 * 1000)),
+  getNextAlarmTime: jest.fn().mockReturnValue(new Date(Date.now() + 24 * 60 * 60 * 1000)),
   syncAlarms: jest.fn().mockResolvedValue(undefined),
   exportAlarms: jest.fn().mockResolvedValue(JSON.stringify([])),
-  importAlarms: jest.fn().mockResolvedValue(0),
+  importAlarms: jest.fn().mockResolvedValue(0)
 });
 
 const createMockAnalyticsService = (): MockAnalyticsService => ({
@@ -201,7 +181,7 @@ const createMockAnalyticsService = (): MockAnalyticsService => ({
   getAnalyticsData: jest.fn().mockResolvedValue({}),
   setUserProperties: jest.fn(),
   trackConversion: jest.fn(),
-  trackError: jest.fn(),
+  trackError: jest.fn()
 });
 
 const createMockBattleService = (): MockBattleService => ({
@@ -216,7 +196,7 @@ const createMockBattleService = (): MockBattleService => ({
   getLeaderboard: jest.fn().mockResolvedValue([]),
   getUserStats: jest.fn().mockResolvedValue({ wins: 0, losses: 0, score: 0 }),
   inviteToBattle: jest.fn().mockResolvedValue(undefined),
-  spectate: jest.fn().mockResolvedValue(undefined),
+  spectate: jest.fn().mockResolvedValue(undefined)
 });
 
 const createMockSubscriptionService = (): MockSubscriptionService => ({
@@ -232,7 +212,7 @@ const createMockSubscriptionService = (): MockSubscriptionService => ({
   getLimit: jest.fn().mockReturnValue(100),
   trackUsage: jest.fn().mockResolvedValue(undefined),
   getBillingHistory: jest.fn().mockResolvedValue([]),
-  updatePaymentMethod: jest.fn().mockResolvedValue(undefined),
+  updatePaymentMethod: jest.fn().mockResolvedValue(undefined)
 });
 
 const createMockVoiceService = (): MockVoiceService => ({
@@ -246,7 +226,7 @@ const createMockVoiceService = (): MockVoiceService => ({
   cloneVoice: jest.fn().mockResolvedValue({ id: 'cloned-voice-123' }),
   trainVoiceModel: jest.fn().mockResolvedValue(undefined),
   getVoicePreview: jest.fn().mockResolvedValue('mock-preview-url'),
-  analyzeVoice: jest.fn().mockResolvedValue({ quality: 'good', duration: 30 }),
+  analyzeVoice: jest.fn().mockResolvedValue({ quality: 'good', duration: 30 })
 });
 
 const createMockNotificationService = (): MockNotificationService => ({
@@ -259,7 +239,7 @@ const createMockNotificationService = (): MockNotificationService => ({
   updateNotificationSettings: jest.fn().mockResolvedValue(undefined),
   getNotificationSettings: jest.fn().mockResolvedValue({ enabled: true }),
   registerDevice: jest.fn().mockResolvedValue(undefined),
-  unregisterDevice: jest.fn().mockResolvedValue(undefined),
+  unregisterDevice: jest.fn().mockResolvedValue(undefined)
 });
 
 const createMockAudioService = (): MockAudioService => ({
@@ -275,7 +255,7 @@ const createMockAudioService = (): MockAudioService => ({
   getCurrentTime: jest.fn().mockResolvedValue(0),
   seekTo: jest.fn().mockResolvedValue(undefined),
   createSoundGroup: jest.fn(),
-  deleteSound: jest.fn().mockResolvedValue(undefined),
+  deleteSound: jest.fn().mockResolvedValue(undefined)
 });
 
 const createMockStorageService = (): MockStorageService => ({
@@ -291,7 +271,7 @@ const createMockStorageService = (): MockStorageService => ({
   removeMultiple: jest.fn().mockResolvedValue(undefined),
   sync: jest.fn().mockResolvedValue(undefined),
   backup: jest.fn().mockResolvedValue(JSON.stringify({})),
-  restore: jest.fn().mockResolvedValue(undefined),
+  restore: jest.fn().mockResolvedValue(undefined)
 });
 
 const createMockSecurityService = (): MockSecurityService => ({
@@ -304,10 +284,10 @@ const createMockSecurityService = (): MockSecurityService => ({
   generateSecureId: jest.fn().mockReturnValue('secure-id-123'),
   generateKeyPair: jest.fn().mockResolvedValue({
     publicKey: 'public-key',
-    privateKey: 'private-key',
+    privateKey: 'private-key'
   }),
   signData: jest.fn().mockResolvedValue('signature-123'),
-  verifySignature: jest.fn().mockResolvedValue(true),
+  verifySignature: jest.fn().mockResolvedValue(true)
 });
 
 // ===============================
@@ -315,26 +295,14 @@ const createMockSecurityService = (): MockSecurityService => ({
 // ===============================
 
 const AlarmServiceContext = createContext<MockAlarmService>(createMockAlarmService());
-const AnalyticsServiceContext = createContext<MockAnalyticsService>(
-  createMockAnalyticsService()
-);
-const BattleServiceContext = createContext<MockBattleService>(
-  createMockBattleService()
-);
-const SubscriptionServiceContext = createContext<MockSubscriptionService>(
-  createMockSubscriptionService()
-);
+const AnalyticsServiceContext = createContext<MockAnalyticsService>(createMockAnalyticsService());
+const BattleServiceContext = createContext<MockBattleService>(createMockBattleService());
+const SubscriptionServiceContext = createContext<MockSubscriptionService>(createMockSubscriptionService());
 const VoiceServiceContext = createContext<MockVoiceService>(createMockVoiceService());
-const NotificationServiceContext = createContext<MockNotificationService>(
-  createMockNotificationService()
-);
+const NotificationServiceContext = createContext<MockNotificationService>(createMockNotificationService());
 const AudioServiceContext = createContext<MockAudioService>(createMockAudioService());
-const StorageServiceContext = createContext<MockStorageService>(
-  createMockStorageService()
-);
-const SecurityServiceContext = createContext<MockSecurityService>(
-  createMockSecurityService()
-);
+const StorageServiceContext = createContext<MockStorageService>(createMockStorageService());
+const SecurityServiceContext = createContext<MockSecurityService>(createMockSecurityService());
 
 // ===============================
 // SERVICE PROVIDERS
@@ -361,20 +329,14 @@ export const ServiceTestProviders: React.FC<{
   notificationService = {},
   audioService = {},
   storageService = {},
-  securityService = {},
+  securityService = {}
 }) => {
   const mockAlarmService = { ...createMockAlarmService(), ...alarmService };
   const mockAnalyticsService = { ...createMockAnalyticsService(), ...analyticsService };
   const mockBattleService = { ...createMockBattleService(), ...battleService };
-  const mockSubscriptionService = {
-    ...createMockSubscriptionService(),
-    ...subscriptionService,
-  };
+  const mockSubscriptionService = { ...createMockSubscriptionService(), ...subscriptionService };
   const mockVoiceService = { ...createMockVoiceService(), ...voiceService };
-  const mockNotificationService = {
-    ...createMockNotificationService(),
-    ...notificationService,
-  };
+  const mockNotificationService = { ...createMockNotificationService(), ...notificationService };
   const mockAudioService = { ...createMockAudioService(), ...audioService };
   const mockStorageService = { ...createMockStorageService(), ...storageService };
   const mockSecurityService = { ...createMockSecurityService(), ...securityService };
@@ -406,65 +368,68 @@ export const ServiceTestProviders: React.FC<{
 // HOOK UTILITIES
 // ===============================
 
-export const useAlarmServiceTest = () => useContext(AlarmServiceContext);
-export const useAnalyticsServiceTest = () => useContext(AnalyticsServiceContext);
-export const useBattleServiceTest = () => useContext(BattleServiceContext);
-export const useSubscriptionServiceTest = () => useContext(SubscriptionServiceContext);
-export const useVoiceServiceTest = () => useContext(VoiceServiceContext);
-export const useNotificationServiceTest = () => useContext(NotificationServiceContext);
-export const useAudioServiceTest = () => useContext(AudioServiceContext);
-export const useStorageServiceTest = () => useContext(StorageServiceContext);
-export const useSecurityServiceTest = () => useContext(SecurityServiceContext);
+export const _useAlarmServiceTest = () => useContext(AlarmServiceContext);
+export const _useAnalyticsServiceTest = () =>
+  useContext(AnalyticsServiceContext);
+export const _useBattleServiceTest = () => useContext(BattleServiceContext);
+export const _useSubscriptionServiceTest = () =>
+  useContext(SubscriptionServiceContext);
+export const _useVoiceServiceTest = () => useContext(VoiceServiceContext);
+export const _useNotificationServiceTest = () =>
+  useContext(NotificationServiceContext);
+export const _useAudioServiceTest = () => useContext(AudioServiceContext);
+export const _useStorageServiceTest = () => useContext(StorageServiceContext);
+export const _useSecurityServiceTest = () => useContext(SecurityServiceContext);
 
 // ===============================
 // SERVICE SCENARIOS
 // ===============================
 
-export const serviceScenarios = {
+export const _serviceScenarios = {
   // Alarm Service Scenarios
   alarmServiceScenarios: {
     withAlarms: {
       getAlarms: jest.fn().mockResolvedValue([
         { id: 'alarm-1', time: '07:00', enabled: true },
-        { id: 'alarm-2', time: '08:30', enabled: false },
-      ]),
+        { id: 'alarm-2', time: '08:30', enabled: false }
+      ])
     },
     noAlarms: {
-      getAlarms: jest.fn().mockResolvedValue([]),
+      getAlarms: jest.fn().mockResolvedValue([])
     },
     createError: {
-      createAlarm: jest.fn().mockRejectedValue(new Error('Failed to create alarm')),
+      createAlarm: jest.fn().mockRejectedValue(new Error('Failed to create alarm'))
     },
     syncError: {
-      syncAlarms: jest.fn().mockRejectedValue(new Error('Sync failed')),
-    },
+      syncAlarms: jest.fn().mockRejectedValue(new Error('Sync failed'))
+    }
   },
 
   // Analytics Service Scenarios
   analyticsServiceScenarios: {
     trackingEnabled: {
       track: jest.fn(),
-      identify: jest.fn(),
+      identify: jest.fn()
     },
     trackingDisabled: {
       track: jest.fn(),
-      identify: jest.fn(),
-    },
+      identify: jest.fn()
+    }
   },
 
   // Battle Service Scenarios
   battleServiceScenarios: {
     activeBattles: {
-      getBattles: jest
-        .fn()
-        .mockResolvedValue([{ id: 'battle-1', status: 'active', participants: 2 }]),
+      getBattles: jest.fn().mockResolvedValue([
+        { id: 'battle-1', status: 'active', participants: 2 }
+      ])
     },
     noBattles: {
-      getBattles: jest.fn().mockResolvedValue([]),
+      getBattles: jest.fn().mockResolvedValue([])
     },
     joinError: {
-      joinBattle: jest.fn().mockRejectedValue(new Error('Battle is full')),
-    },
+      joinBattle: jest.fn().mockRejectedValue(new Error('Battle is full'))
+    }
   },
 
   // Subscription Service Scenarios
@@ -472,55 +437,55 @@ export const serviceScenarios = {
     freeUser: {
       getSubscription: jest.fn().mockResolvedValue(null),
       checkAccess: jest.fn((feature: string) => feature === 'basic_alarms'),
-      getFeatures: jest.fn().mockReturnValue(['basic_alarms']),
+      getFeatures: jest.fn().mockReturnValue(['basic_alarms'])
     },
     premiumUser: {
       getSubscription: jest.fn().mockResolvedValue({
         tier: 'premium',
-        status: 'active',
+        status: 'active'
       }),
       checkAccess: jest.fn(() => true),
-      getFeatures: jest
-        .fn()
-        .mockReturnValue(['unlimited_alarms', 'custom_voices', 'themes']),
+      getFeatures: jest.fn().mockReturnValue([
+        'unlimited_alarms', 'custom_voices', 'themes'
+      ])
     },
     expiredSubscription: {
       getSubscription: jest.fn().mockResolvedValue({
         tier: 'premium',
-        status: 'past_due',
+        status: 'past_due'
       }),
-      checkAccess: jest.fn((feature: string) => feature === 'basic_alarms'),
-    },
+      checkAccess: jest.fn((feature: string) => feature === 'basic_alarms')
+    }
   },
 
   // Audio Service Scenarios
   audioServiceScenarios: {
     soundsLoaded: {
       loadSound: jest.fn().mockResolvedValue({ loaded: true }),
-      playSound: jest.fn().mockResolvedValue(undefined),
+      playSound: jest.fn().mockResolvedValue(undefined)
     },
     loadError: {
-      loadSound: jest.fn().mockRejectedValue(new Error('Failed to load sound')),
+      loadSound: jest.fn().mockRejectedValue(new Error('Failed to load sound'))
     },
     playbackError: {
-      playSound: jest.fn().mockRejectedValue(new Error('Playback failed')),
-    },
+      playSound: jest.fn().mockRejectedValue(new Error('Playback failed'))
+    }
   },
 
   // Storage Service Scenarios
   storageServiceScenarios: {
     dataExists: {
       get: jest.fn().mockResolvedValue({ data: 'test' }),
-      has: jest.fn().mockResolvedValue(true),
+      has: jest.fn().mockResolvedValue(true)
     },
     noData: {
       get: jest.fn().mockResolvedValue(null),
-      has: jest.fn().mockResolvedValue(false),
+      has: jest.fn().mockResolvedValue(false)
     },
     storageError: {
-      set: jest.fn().mockRejectedValue(new Error('Storage quota exceeded')),
-    },
-  },
+      set: jest.fn().mockRejectedValue(new Error('Storage quota exceeded'))
+    }
+  }
 };
 
 export default {
@@ -534,5 +499,5 @@ export default {
   useAudioServiceTest,
   useStorageServiceTest,
   useSecurityServiceTest,
-  serviceScenarios,
+  serviceScenarios
 };

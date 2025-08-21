@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // Advanced Alarm Backup and Redundancy Service
 // Provides comprehensive backup management, redundancy, and disaster recovery for alarm data
 
@@ -81,7 +82,7 @@ export class AlarmBackupRedundancyService {
       type: 'local',
       priority: 1,
       available: true,
-      lastSync: null,
+      lastSync: null
     });
 
     this.backupLocations.set('local_secure', {
@@ -89,7 +90,7 @@ export class AlarmBackupRedundancyService {
       type: 'secure_local',
       priority: 2,
       available: true,
-      lastSync: null,
+      lastSync: null
     });
 
     this.backupLocations.set('redundant_cache', {
@@ -97,7 +98,7 @@ export class AlarmBackupRedundancyService {
       type: 'redundant',
       priority: 3,
       available: true,
-      lastSync: null,
+      lastSync: null
     });
 
     console.log('[BackupRedundancy] Initialized backup locations');
@@ -106,10 +107,7 @@ export class AlarmBackupRedundancyService {
   /**
    * Create comprehensive backup with redundancy
    */
-  async createBackup(
-    type: 'manual' | 'scheduled' | 'emergency' = 'manual',
-    userId?: string
-  ): Promise<string> {
+  async createBackup(type: 'manual' | 'scheduled' | 'emergency' = 'manual', userId?: string): Promise<string> {
     if (this.backupInProgress) {
       console.warn('[BackupRedundancy] Backup already in progress, skipping');
       return '';
@@ -133,7 +131,7 @@ export class AlarmBackupRedundancyService {
         type,
         verified: false,
         checksum: '',
-        location: this.getPrimaryBackupLocation(),
+        location: this.getPrimaryBackupLocation()
       };
 
       // Create backup data structure
@@ -143,7 +141,7 @@ export class AlarmBackupRedundancyService {
         events,
         signature: '',
         encrypted: true,
-        version: '2.0.0',
+        version: '2.0.0'
       };
 
       // Generate checksum and signature
@@ -172,13 +170,12 @@ export class AlarmBackupRedundancyService {
         type,
         alarmCount: alarms.length,
         locations: backupResults.length,
-        verified,
+        verified
       });
 
-      console.log(
-        `[BackupRedundancy] Created backup ${backupId} with ${backupResults.length} redundant copies`
-      );
+      console.log(`[BackupRedundancy] Created backup ${backupId} with ${backupResults.length} redundant copies`);
       return backupId;
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
@@ -194,10 +191,7 @@ export class AlarmBackupRedundancyService {
   /**
    * Store backup across multiple locations with redundancy
    */
-  private async storeBackupWithRedundancy(
-    backupId: string,
-    backupData: BackupData
-  ): Promise<string[]> {
+  private async storeBackupWithRedundancy(backupId: string, backupData: BackupData): Promise<string[]> {
     const storedLocations: string[] = [];
     const encryptedBackup = SecurityService.encryptData(backupData);
 
@@ -213,7 +207,7 @@ export class AlarmBackupRedundancyService {
 
         await Preferences.set({
           key: backupKey,
-          value: encryptedBackup,
+          value: encryptedBackup
         });
 
         location.lastSync = new Date();
@@ -221,10 +215,7 @@ export class AlarmBackupRedundancyService {
 
         console.log(`[BackupRedundancy] Stored backup in location: ${locationId}`);
       } catch (error) {
-        console.error(
-          `[BackupRedundancy] Failed to store backup in ${locationId}:`,
-          error
-        );
+        console.error(`[BackupRedundancy] Failed to store backup in ${locationId}:`, error);
         location.available = false; // Mark as unavailable
       }
     }
@@ -258,47 +249,35 @@ export class AlarmBackupRedundancyService {
 
         // Verify backup integrity
         if (!SecurityService.verifyDataSignature(backupData, backupData.signature)) {
-          console.error(
-            `[BackupRedundancy] Invalid signature in backup ${backupId} from ${locationId}`
-          );
+          console.error(`[BackupRedundancy] Invalid signature in backup ${backupId} from ${locationId}`);
           continue;
         }
 
         // Verify checksum
         const calculatedChecksum = this.calculateBackupChecksum(backupData);
         if (backupData.metadata.checksum !== calculatedChecksum) {
-          console.error(
-            `[BackupRedundancy] Checksum mismatch in backup ${backupId} from ${locationId}`
-          );
+          console.error(`[BackupRedundancy] Checksum mismatch in backup ${backupId} from ${locationId}`);
           continue;
         }
 
-        console.log(
-          `[BackupRedundancy] Successfully retrieved backup ${backupId} from ${locationId}`
-        );
+        console.log(`[BackupRedundancy] Successfully retrieved backup ${backupId} from ${locationId}`);
         return backupData;
+
       } catch (error) {
-        console.error(
-          `[BackupRedundancy] Failed to retrieve backup from ${locationId}:`,
-          error
-        );
+        console.error(`[BackupRedundancy] Failed to retrieve backup from ${locationId}:`, error);
         location.available = false;
         continue;
       }
     }
 
-    console.error(
-      `[BackupRedundancy] Failed to retrieve backup ${backupId} from any location`
-    );
+    console.error(`[BackupRedundancy] Failed to retrieve backup ${backupId} from any location`);
     return null;
   }
 
   /**
    * Perform comprehensive disaster recovery
    */
-  async performDisasterRecovery(
-    userId?: string
-  ): Promise<{ success: boolean; recoveredAlarms: Alarm[]; source: string }> {
+  async performDisasterRecovery(userId?: string): Promise<{ success: boolean; recoveredAlarms: Alarm[]; source: string }> {
     console.log('[BackupRedundancy] Starting disaster recovery process...');
 
     try {
@@ -322,25 +301,16 @@ export class AlarmBackupRedundancyService {
           }
 
           // Validate user ownership
-          if (
-            userId &&
-            backupData.metadata.userId &&
-            backupData.metadata.userId !== userId
-          ) {
+          if (userId && backupData.metadata.userId && backupData.metadata.userId !== userId) {
             continue;
           }
 
           // Restore alarms
-          await SecureAlarmStorageService.getInstance().storeAlarms(
-            backupData.alarms,
-            userId
-          );
+          await SecureAlarmStorageService.getInstance().storeAlarms(backupData.alarms, userId);
 
           // Restore events if available
           if (backupData.events && backupData.events.length > 0) {
-            await SecureAlarmStorageService.getInstance().storeAlarmEvents(
-              backupData.events
-            );
+            await SecureAlarmStorageService.getInstance().storeAlarmEvents(backupData.events);
           }
 
           // Log recovery event
@@ -348,28 +318,25 @@ export class AlarmBackupRedundancyService {
             backupId: backup.id,
             alarmCount: backupData.alarms.length,
             userId,
-            source: backup.location.type,
+            source: backup.location.type
           });
 
-          console.log(
-            `[BackupRedundancy] Disaster recovery successful from backup ${backup.id}`
-          );
+          console.log(`[BackupRedundancy] Disaster recovery successful from backup ${backup.id}`);
           return {
             success: true,
             recoveredAlarms: backupData.alarms,
-            source: `${backup.location.type} (${backup.id})`,
+            source: `${backup.location.type} (${backup.id})`
           };
+
         } catch (error) {
-          console.error(
-            `[BackupRedundancy] Failed to recover from backup ${backup.id}:`,
-            error
-          );
+          console.error(`[BackupRedundancy] Failed to recover from backup ${backup.id}:`, error);
           continue;
         }
       }
 
       console.error('[BackupRedundancy] All disaster recovery attempts failed');
       return { success: false, recoveredAlarms: [], source: 'failed' };
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
@@ -463,7 +430,7 @@ export class AlarmBackupRedundancyService {
         total: backups.length,
         verified: 0,
         corrupted: 0,
-        inaccessible: 0,
+        inaccessible: 0
       };
 
       for (const backup of backups) {
@@ -476,20 +443,16 @@ export class AlarmBackupRedundancyService {
           console.warn(`[BackupRedundancy] Corrupted backup detected: ${backup.id}`);
 
           // Emit event for UI notification
-          window.dispatchEvent(
-            new CustomEvent('backup-corruption-detected', {
-              detail: { backupId: backup.id, metadata: backup },
-            })
-          );
+          window.dispatchEvent(new CustomEvent('backup-corruption-detected', {
+            detail: { backupId: backup.id, metadata: backup }
+          }));
         }
       }
 
       // Log verification results
       this.logBackupEvent('backup_verification_completed', results);
 
-      console.log(
-        `[BackupRedundancy] Verification completed: ${results.verified}/${results.total} valid`
-      );
+      console.log(`[BackupRedundancy] Verification completed: ${results.verified}/${results.total} valid`);
     } catch (error) {
       console.error('[BackupRedundancy] Backup verification error:', error);
     }
@@ -501,7 +464,7 @@ export class AlarmBackupRedundancyService {
   async getAvailableBackups(userId?: string): Promise<BackupMetadata[]> {
     try {
       const { value } = await Preferences.get({
-        key: AlarmBackupRedundancyService.METADATA_KEY,
+        key: AlarmBackupRedundancyService.METADATA_KEY
       });
 
       if (!value) {
@@ -514,7 +477,7 @@ export class AlarmBackupRedundancyService {
         .filter(backup => !userId || !backup.userId || backup.userId === userId)
         .map(backup => ({
           ...backup,
-          created: new Date(backup.created),
+          created: new Date(backup.created)
         }));
     } catch (error) {
       console.error('[BackupRedundancy] Failed to get available backups:', error);
@@ -525,18 +488,14 @@ export class AlarmBackupRedundancyService {
   /**
    * Create recovery point snapshot
    */
-  private async createRecoveryPoint(
-    backupId: string,
-    alarmCount: number,
-    backupCount: number
-  ): Promise<void> {
+  private async createRecoveryPoint(backupId: string, alarmCount: number, backupCount: number): Promise<void> {
     const recoveryPoint: RecoveryPoint = {
       id: backupId,
       timestamp: new Date(),
       alarmCount,
       backupCount,
       status: 'healthy',
-      recoverable: true,
+      recoverable: true
     };
 
     this.recoveryPoints.unshift(recoveryPoint);
@@ -561,19 +520,14 @@ export class AlarmBackupRedundancyService {
     try {
       const backups = await this.getAvailableBackups();
       const verifiedBackups = backups.filter(b => b.verified).length;
-      const lastBackup =
-        backups.length > 0
-          ? backups.reduce(
-              (latest, backup) => (backup.created > latest ? backup.created : latest),
-              backups[0].created
-            )
-          : null;
+      const lastBackup = backups.length > 0
+        ? backups.reduce((latest, backup) =>
+            backup.created > latest ? backup.created : latest, backups[0].created)
+        : null;
 
       // Calculate redundancy level
       let redundancyLevel: 'none' | 'low' | 'medium' | 'high' = 'none';
-      const activeLocations = Array.from(this.backupLocations.values()).filter(
-        l => l.available
-      ).length;
+      const activeLocations = Array.from(this.backupLocations.values()).filter(l => l.available).length;
 
       if (activeLocations >= 3 && verifiedBackups >= 5) {
         redundancyLevel = 'high';
@@ -591,13 +545,8 @@ export class AlarmBackupRedundancyService {
       if (verifiedBackups < backups.length) {
         recommendations.push('Some backups failed verification - check data integrity');
       }
-      if (
-        !lastBackup ||
-        new Date().getTime() - lastBackup.getTime() > 24 * 60 * 60 * 1000
-      ) {
-        recommendations.push(
-          'Recent backup not found - consider creating a new backup'
-        );
+      if (!lastBackup || (new Date().getTime() - lastBackup.getTime()) > 24 * 60 * 60 * 1000) {
+        recommendations.push('Recent backup not found - consider creating a new backup');
       }
 
       return {
@@ -606,7 +555,7 @@ export class AlarmBackupRedundancyService {
         lastBackup,
         recoveryPoints: this.recoveryPoints.length,
         redundancyLevel,
-        recommendations,
+        recommendations
       };
     } catch (error) {
       console.error('[BackupRedundancy] Failed to get recovery status:', error);
@@ -616,7 +565,7 @@ export class AlarmBackupRedundancyService {
         lastBackup: null,
         recoveryPoints: 0,
         redundancyLevel: 'none',
-        recommendations: ['Unable to assess backup status due to error'],
+        recommendations: ['Unable to assess backup status due to error']
       };
     }
   }
@@ -630,14 +579,11 @@ export class AlarmBackupRedundancyService {
       existing.unshift(metadata);
 
       // Keep only recent backups in metadata
-      const recentMetadata = existing.slice(
-        0,
-        AlarmBackupRedundancyService.MAX_LOCAL_BACKUPS
-      );
+      const recentMetadata = existing.slice(0, AlarmBackupRedundancyService.MAX_LOCAL_BACKUPS);
 
       await Preferences.set({
         key: AlarmBackupRedundancyService.METADATA_KEY,
-        value: JSON.stringify(recentMetadata),
+        value: JSON.stringify(recentMetadata)
       });
     } catch (error) {
       console.error('[BackupRedundancy] Failed to update backup metadata:', error);
@@ -659,16 +605,12 @@ export class AlarmBackupRedundancyService {
         return;
       }
 
-      const keysToRemove = backupKeys.slice(
-        AlarmBackupRedundancyService.MAX_LOCAL_BACKUPS
-      );
+      const keysToRemove = backupKeys.slice(AlarmBackupRedundancyService.MAX_LOCAL_BACKUPS);
       for (const key of keysToRemove) {
         await Preferences.remove({ key });
       }
 
-      console.log(
-        `[BackupRedundancy] Cleaned up ${keysToRemove.length} old backup files`
-      );
+      console.log(`[BackupRedundancy] Cleaned up ${keysToRemove.length} old backup files`);
     } catch (error) {
       console.error('[BackupRedundancy] Failed to cleanup old backups:', error);
     }
@@ -691,8 +633,8 @@ export class AlarmBackupRedundancyService {
       version: backupData.version,
       metadata: {
         ...backupData.metadata,
-        checksum: '', // Exclude checksum from checksum calculation
-      },
+        checksum: '' // Exclude checksum from checksum calculation
+      }
     };
 
     const dataString = JSON.stringify(checksumData, Object.keys(checksumData).sort());
@@ -710,10 +652,7 @@ export class AlarmBackupRedundancyService {
    * Get primary backup location
    */
   private getPrimaryBackupLocation(): BackupLocation {
-    return (
-      this.backupLocations.get('local_primary') ||
-      this.backupLocations.values().next().value
-    );
+    return this.backupLocations.get('local_primary') || this.backupLocations.values().next().value;
   }
 
   /**
@@ -724,17 +663,15 @@ export class AlarmBackupRedundancyService {
       event,
       details,
       timestamp: new Date().toISOString(),
-      source: 'AlarmBackupRedundancyService',
+      source: 'AlarmBackupRedundancyService'
     };
 
     console.log('[BACKUP LOG]', logEntry);
 
     // Emit custom event for monitoring
-    window.dispatchEvent(
-      new CustomEvent('backup-event', {
-        detail: logEntry,
-      })
-    );
+    window.dispatchEvent(new CustomEvent('backup-event', {
+      detail: logEntry
+    }));
   }
 
   /**
@@ -769,12 +706,10 @@ export class AlarmBackupRedundancyService {
       }
 
       // Test location availability
-      const availableLocations = Array.from(this.backupLocations.values()).filter(
-        l => l.available
-      );
+      const availableLocations = Array.from(this.backupLocations.values()).filter(l => l.available);
       testResults.locationAvailability = {
         available: availableLocations.length,
-        total: this.backupLocations.size,
+        total: this.backupLocations.size
       };
 
       return {
@@ -782,8 +717,9 @@ export class AlarmBackupRedundancyService {
         locationsTotal: this.backupLocations.size,
         canCreateBackup: testResults.backupCreation === 'success',
         canRecoverData: testResults.backupRetrieval === 'success',
-        testResults,
+        testResults
       };
+
     } catch (error) {
       console.error('[BackupRedundancy] Backup system test failed:', error);
       return {
@@ -791,7 +727,7 @@ export class AlarmBackupRedundancyService {
         locationsTotal: this.backupLocations.size,
         canCreateBackup: false,
         canRecoverData: false,
-        testResults: { error: error.message },
+        testResults: { error: error.message }
       };
     }
   }

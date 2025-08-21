@@ -62,7 +62,7 @@ interface UserPreferences {
 }
 
 // Storage Mocking Utilities
-export const storageMocks = {
+export const _storageMocks = {
   /**
    * Create a mock storage implementation
    */
@@ -84,7 +84,7 @@ export const storageMocks = {
       get length() {
         return Object.keys(store).length;
       },
-      ...store,
+      ...store
     };
   },
 
@@ -95,7 +95,7 @@ export const storageMocks = {
     const mockStorage = this.createMockStorage();
     Object.defineProperty(window, 'localStorage', {
       value: mockStorage,
-      writable: true,
+      writable: true
     });
     return mockStorage;
   },
@@ -107,7 +107,7 @@ export const storageMocks = {
     const mockStorage = this.createMockStorage();
     Object.defineProperty(window, 'sessionStorage', {
       value: mockStorage,
-      writable: true,
+      writable: true
     });
     return mockStorage;
   },
@@ -121,13 +121,13 @@ export const storageMocks = {
   } {
     return {
       localStorage: this.mockLocalStorage(),
-      sessionStorage: this.mockSessionStorage(),
+      sessionStorage: this.mockSessionStorage()
     };
-  },
+  }
 };
 
 // IndexedDB Mocking Utilities
-export const indexedDBMocks = {
+export const _indexedDBMocks = {
   /**
    * Mock IndexedDB with basic operations
    */
@@ -140,7 +140,7 @@ export const indexedDBMocks = {
       onsuccess: null,
       onerror: null,
       onupgradeneeded: null,
-      readyState: 'pending',
+      readyState: 'pending'
     };
 
     const mockOpen = jest.fn((name: string, version?: number) => {
@@ -162,10 +162,10 @@ export const indexedDBMocks = {
                 get: jest.fn(),
                 delete: jest.fn(),
                 clear: jest.fn(),
-                createIndex: jest.fn(),
+                createIndex: jest.fn()
               };
             }),
-            deleteObjectStore: jest.fn(),
+            deleteObjectStore: jest.fn()
           };
           mockDatabases.set(name, db);
         }
@@ -182,9 +182,9 @@ export const indexedDBMocks = {
       value: {
         open: mockOpen,
         deleteDatabase: jest.fn(),
-        databases: jest.fn(() => Promise.resolve([])),
+        databases: jest.fn(() => Promise.resolve([]))
       },
-      writable: true,
+      writable: true
     });
   },
 
@@ -222,13 +222,13 @@ export const indexedDBMocks = {
       }),
       getAllAlarms: jest.fn(() => {
         return Promise.resolve(Array.from(alarms.values()));
-      }),
+      })
     };
-  },
+  }
 };
 
 // Cache API Mocking Utilities
-export const cacheMocks = {
+export const _cacheMocks = {
   /**
    * Mock Cache API for PWA testing
    */
@@ -264,7 +264,7 @@ export const cacheMocks = {
           }),
           keys: jest.fn(() => {
             return Promise.resolve(Array.from(cache.keys()));
-          }),
+          })
         });
       }),
       has: jest.fn((cacheName: string) => {
@@ -282,20 +282,20 @@ export const cacheMocks = {
           if (response) return Promise.resolve(response);
         }
         return Promise.resolve(null);
-      }),
+      })
     };
 
     Object.defineProperty(window, 'caches', {
       value: mockCacheStorage,
-      writable: true,
+      writable: true
     });
 
     return mockCacheStorage;
-  },
+  }
 };
 
 // Storage Testing Utilities
-export const storageUtils = {
+export const _storageUtils = {
   /**
    * Test localStorage operations
    */
@@ -408,18 +408,18 @@ export const storageUtils = {
       key: 'test_key',
       oldValue: 'old_value',
       newValue: 'new_value',
-      storageArea: localStorage,
+      storageArea: localStorage
     });
 
     window.dispatchEvent(storageEvent);
     expect(storageEventListener).toHaveBeenCalledWith(storageEvent);
 
     window.removeEventListener('storage', storageEventListener);
-  },
+  }
 };
 
 // Cleanup Utilities
-export const storageCleanup = {
+export const _storageCleanup = {
   /**
    * Clear all storage mocks
    */
@@ -449,11 +449,11 @@ export const storageCleanup = {
    */
   cleanupCacheAPI(): void {
     delete (window as any).caches;
-  },
+  }
 };
 
 // Data Factory for Testing
-export const storageDataFactory = {
+export const _storageDataFactory = {
   /**
    * Create test alarm data
    */
@@ -468,7 +468,7 @@ export const storageDataFactory = {
       repeat: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
       snoozeEnabled: true,
       snoozeInterval: 5,
-      ...overrides,
+      ...overrides
     };
   },
 
@@ -484,14 +484,14 @@ export const storageDataFactory = {
       sounds: {
         defaultAlarm: 'classic-alarm',
         notification: 'gentle-chime',
-        snooze: 'soft-beep',
+        snooze: 'soft-beep'
       },
       notifications: {
         enabled: true,
         sound: true,
-        vibration: true,
+        vibration: true
       },
-      ...overrides,
+      ...overrides
     };
   },
 
@@ -503,14 +503,14 @@ export const storageDataFactory = {
       this.createAlarmData({
         id: `alarm-${index + 1}`,
         time: `0${7 + index}:00`,
-        label: `Alarm ${index + 1}`,
+        label: `Alarm ${index + 1}`
       })
     );
-  },
+  }
 };
 
 // Complete Test Suite for Storage
-export const createStorageTestSuite = () => ({
+export const _createStorageTestSuite = () => ({
   /**
    * Test basic localStorage operations
    */
@@ -583,7 +583,7 @@ export const createStorageTestSuite = () => ({
     expect(() => {
       localStorage.setItem('test', 'value');
     }).toThrow('QuotaExceededError');
-  },
+  }
 });
 
 export default {
@@ -593,5 +593,5 @@ export default {
   storageUtils,
   storageCleanup,
   storageDataFactory,
-  createStorageTestSuite,
+  createStorageTestSuite
 };

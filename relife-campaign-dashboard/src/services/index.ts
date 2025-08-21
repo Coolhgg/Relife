@@ -220,7 +220,7 @@ class EmailPlatformManager {
           subject: broadcast.subject,
           status: broadcast.published_at ? 'sent' : 'draft',
           created_at: broadcast.created_at,
-          sent_at: broadcast.published_at || undefined,
+          sent_at: broadcast.published_at,
           recipients: broadcast.stats.recipients,
           opens: Math.round(
             broadcast.stats.recipients * (broadcast.stats.open_rate / 100)
@@ -363,3 +363,10 @@ export const emailPlatformManager = new EmailPlatformManager();
 
 // Export services individually
 export { mailchimpService, convertKitService, activeCampaignService, aiService };
+
+// Export types
+export type {
+  EmailPlatformStatus,
+  CampaignMetrics,
+  UnifiedCampaign
+};

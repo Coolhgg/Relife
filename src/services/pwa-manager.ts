@@ -81,18 +81,14 @@ export class PWAManager {
     this.capabilities = {
       serviceWorker: 'serviceWorker' in navigator,
       pushNotifications: 'PushManager' in window && 'Notification' in window,
-      backgroundSync:
-        'serviceWorker' in navigator &&
-        'sync' in window.ServiceWorkerRegistration.prototype,
+      backgroundSync: 'serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype,
       offlineStorage: 'localStorage' in window && 'indexedDB' in window,
-      installPrompt:
-        'BeforeInstallPromptEvent' in window ||
-        navigator.userAgent.includes('Chrome') ||
-        navigator.userAgent.includes('Edge'),
-      standalone:
-        window.matchMedia('(display-mode: standalone)').matches ||
-        window.matchMedia('(display-mode: fullscreen)').matches ||
-        (window.navigator as any).standalone === true,
+      installPrompt: 'BeforeInstallPromptEvent' in window ||
+                    navigator.userAgent.includes('Chrome') ||
+                    navigator.userAgent.includes('Edge'),
+      standalone: window.matchMedia('(display-mode: standalone)').matches ||
+                 window.matchMedia('(display-mode: fullscreen)').matches ||
+                 (window.navigator as any).standalone === true,
     };
   }
 
@@ -104,13 +100,10 @@ export class PWAManager {
     }
 
     try {
-      const registration = await navigator.serviceWorker.register(
-        '/sw-mobile-enhanced.js',
-        {
-          scope: '/',
-          updateViaCache: 'none', // Always check for updates
-        }
-      );
+      const registration = await navigator.serviceWorker.register('/sw-mobile-enhanced.js', {
+        scope: '/',
+        updateViaCache: 'none', // Always check for updates
+      });
 
       this.serviceWorkerRegistration = registration;
 
@@ -133,6 +126,7 @@ export class PWAManager {
 
       console.log('[PWA] Service Worker registered successfully');
       this.emit('sw-registered', { registration });
+
     } catch (error) {
       console.error('[PWA] Service Worker registration failed:', error);
       this.emit('sw-registration-failed', { error });
@@ -141,7 +135,7 @@ export class PWAManager {
 
   // Setup install prompt handling
   private setupInstallPrompt() {
-    window.addEventListener('beforeinstallprompt', event => {
+    window.addEventListener('beforeinstallprompt', (event) => {
       console.log('[PWA] Install prompt available');
       event.preventDefault();
 
@@ -175,7 +169,7 @@ export class PWAManager {
   private setupServiceWorkerMessaging() {
     if (!this.capabilities.serviceWorker) return;
 
-    navigator.serviceWorker.addEventListener('message', event => {
+    navigator.serviceWorker.addEventListener('message', (event) => {
       const { type, data } = event.data;
 
       switch (type) {
@@ -233,9 +227,9 @@ export class PWAManager {
 
   // Check if install prompt should be shown
   shouldShowInstallPrompt(): boolean {
-    return (
-      this.state.isInstallable && !this.state.hasShownPrompt && !this.state.isInstalled
-    );
+    return this.state.isInstallable &&
+           !this.state.hasShownPrompt &&
+           !this.state.isInstalled;
   }
 
   // Force service worker update
@@ -375,8 +369,10 @@ export class PWAManager {
 
   // Utility functions
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/\-/g, '+')
+      .replace(/_/g, '/');
 
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);

@@ -1,5 +1,9 @@
-import { useEffect, useRef, useCallback } from 'react';
-import { mobileTouchService, TouchGestureOptions } from '../services/mobile-touch';
+/// <reference lib="dom" />
+import { useEffect, useRef, useCallback } from "react";
+import {
+  mobileTouchService,
+  TouchGestureOptions,
+} from "../services/mobile-touch";
 
 // Hook for touch gestures
 export function useTouchGestures(options: Omit<TouchGestureOptions, 'element'>) {
@@ -37,14 +41,9 @@ export function useEnhancedButton(hapticType: 'light' | 'medium' | 'heavy' = 'li
 
 // Hook for haptic feedback
 export function useHaptic() {
-  return useCallback(
-    (
-      type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
-    ) => {
-      mobileTouchService.triggerHaptic(type);
-    },
-    []
-  );
+  return useCallback((type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light') => {
+    mobileTouchService.triggerHaptic(type);
+  }, []);
 }
 
 // Hook for pull-to-refresh

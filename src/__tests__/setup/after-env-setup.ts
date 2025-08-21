@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import { vi } from "vitest";
 // After environment setup - runs after each test environment is created
 import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
@@ -35,20 +36,10 @@ if (typeof global !== 'undefined') {
 
   // File and FileReader polyfills for upload testing
   global.File = class MockFile {
-    constructor(
-      public chunks: BlobPart[],
-      public name: string,
-      public options?: FilePropertyBag
-    ) {}
-    get size() {
-      return this.chunks.reduce((acc, chunk) => acc + (chunk as any).length, 0);
-    }
-    get type() {
-      return this.options?.type || '';
-    }
-    get lastModified() {
-      return this.options?.lastModified || Date.now();
-    }
+    constructor(public chunks: BlobPart[], public name: string, public options?: FilePropertyBag) {}
+    get size() { return this.chunks.reduce((acc, chunk) => acc + (chunk as any).length, 0); }
+    get type() { return this.options?.type || ''; }
+    get lastModified() { return this.options?.lastModified || Date.now(); }
   } as any;
 
   global.FileReader = class MockFileReader {
@@ -58,11 +49,9 @@ if (typeof global !== 'undefined') {
     onload: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
     onerror: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
     onabort: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
-    onloadstart: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null =
-      null;
+    onloadstart: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
     onloadend: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
-    onprogress: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null =
-      null;
+    onprogress: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
 
     readAsText(file: Blob) {
       this.readyState = 1;
@@ -104,35 +93,18 @@ if (typeof global !== 'undefined') {
     }
 
     removeEventListener() {}
-    dispatchEvent() {
-      return true;
-    }
+    dispatchEvent() { return true; }
   } as any;
 
   // Blob polyfill
   global.Blob = class MockBlob {
-    constructor(
-      public parts: BlobPart[] = [],
-      public options: BlobPropertyBag = {}
-    ) {}
-    get size() {
-      return this.parts.reduce((acc, part) => acc + (part as any).length, 0);
-    }
-    get type() {
-      return this.options.type || '';
-    }
-    slice() {
-      return new MockBlob();
-    }
-    stream() {
-      return new ReadableStream();
-    }
-    text() {
-      return Promise.resolve('mocked blob text');
-    }
-    arrayBuffer() {
-      return Promise.resolve(new ArrayBuffer(8));
-    }
+    constructor(public parts: BlobPart[] = [], public options: BlobPropertyBag = {}) {}
+    get size() { return this.parts.reduce((acc, part) => acc + (part as any).length, 0); }
+    get type() { return this.options.type || ''; }
+    slice() { return new MockBlob(); }
+    stream() { return new ReadableStream(); }
+    text() { return Promise.resolve('mocked blob text'); }
+    arrayBuffer() { return Promise.resolve(new ArrayBuffer(8)); }
   } as any;
 
   // FormData polyfill for file upload testing
@@ -190,9 +162,9 @@ if (typeof global !== 'undefined') {
         return arr;
       },
       randomUUID: () => {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-          const r = (Math.random() * 16) | 0;
-          const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          const r = Math.random() * 16 | 0;
+          const v = c === 'x' ? r : (r & 0x3 | 0x8);
           return v.toString(16);
         });
       },
@@ -208,48 +180,46 @@ if (typeof global !== 'undefined') {
         deriveBits: jest.fn(() => Promise.resolve(new ArrayBuffer(32))),
         deriveKey: jest.fn(() => Promise.resolve({})),
         wrapKey: jest.fn(() => Promise.resolve(new ArrayBuffer(32))),
-        unwrapKey: jest.fn(() => Promise.resolve({})),
-      },
+        unwrapKey: jest.fn(() => Promise.resolve({}))
+      }
     } as any;
   }
 
   // Navigator polyfills for PWA testing
   Object.defineProperty(global.navigator, 'serviceWorker', {
     value: {
-      register: jest.fn(() =>
-        Promise.resolve({
-          installing: null,
-          waiting: null,
-          active: {
-            postMessage: jest.fn(),
-            state: 'activated',
-          },
-          update: jest.fn(() => Promise.resolve()),
-          unregister: jest.fn(() => Promise.resolve(true)),
-          addEventListener: jest.fn(),
-          removeEventListener: jest.fn(),
-        })
-      ),
+      register: jest.fn(() => Promise.resolve({
+        installing: null,
+        waiting: null,
+        active: {
+          postMessage: jest.fn(),
+          state: 'activated'
+        },
+        update: jest.fn(() => Promise.resolve()),
+        unregister: jest.fn(() => Promise.resolve(true)),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn()
+      })),
       ready: Promise.resolve({
         installing: null,
         waiting: null,
         active: {
           postMessage: jest.fn(),
-          state: 'activated',
+          state: 'activated'
         },
         update: jest.fn(() => Promise.resolve()),
         unregister: jest.fn(() => Promise.resolve(true)),
         addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
+        removeEventListener: jest.fn()
       }),
       controller: null,
       getRegistration: jest.fn(() => Promise.resolve(undefined)),
       getRegistrations: jest.fn(() => Promise.resolve([])),
       addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
+      removeEventListener: jest.fn()
     },
     writable: true,
-    configurable: true,
+    configurable: true
   });
 
   // Enhanced geolocation mock for location-based features
@@ -264,24 +234,24 @@ if (typeof global !== 'undefined') {
             altitude: null,
             altitudeAccuracy: null,
             heading: null,
-            speed: null,
+            speed: null
           },
-          timestamp: Date.now(),
+          timestamp: Date.now()
         };
         success(position);
       }),
       watchPosition: jest.fn(() => 1),
-      clearWatch: jest.fn(),
+      clearWatch: jest.fn()
     },
     writable: true,
-    configurable: true,
+    configurable: true
   });
 
   // Device memory mock for performance testing
   Object.defineProperty(global.navigator, 'deviceMemory', {
     value: 8,
     writable: true,
-    configurable: true,
+    configurable: true
   });
 
   // Connection API mock for network testing
@@ -292,39 +262,37 @@ if (typeof global !== 'undefined') {
       downlink: 10,
       saveData: false,
       addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
+      removeEventListener: jest.fn()
     },
     writable: true,
-    configurable: true,
+    configurable: true
   });
 
   // Share API mock for PWA testing
   Object.defineProperty(global.navigator, 'share', {
     value: jest.fn(() => Promise.resolve()),
     writable: true,
-    configurable: true,
+    configurable: true
   });
 
   // Permissions API mock
   Object.defineProperty(global.navigator, 'permissions', {
     value: {
-      query: jest.fn(() =>
-        Promise.resolve({
-          state: 'granted',
-          addEventListener: jest.fn(),
-          removeEventListener: jest.fn(),
-        })
-      ),
+      query: jest.fn(() => Promise.resolve({
+        state: 'granted',
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn()
+      }))
     },
     writable: true,
-    configurable: true,
+    configurable: true
   });
 
   // Vibration API mock for haptics testing
   Object.defineProperty(global.navigator, 'vibrate', {
     value: jest.fn(() => true),
     writable: true,
-    configurable: true,
+    configurable: true
   });
 }
 
@@ -357,47 +325,41 @@ if (typeof window !== 'undefined') {
     }
 
     removeEventListener() {}
-    dispatchEvent() {
-      return true;
-    }
+    dispatchEvent() { return true; }
   };
 
   // Screen Wake Lock API mock
   (window.navigator as any).wakeLock = {
-    request: jest.fn(() =>
-      Promise.resolve({
-        type: 'screen',
-        released: false,
-        release: jest.fn(() => Promise.resolve()),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-      })
-    ),
+    request: jest.fn(() => Promise.resolve({
+      type: 'screen',
+      released: false,
+      release: jest.fn(() => Promise.resolve()),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn()
+    }))
   };
 
   // Battery API mock
-  (window.navigator as any).getBattery = jest.fn(() =>
-    Promise.resolve({
-      charging: true,
-      chargingTime: 0,
-      dischargingTime: Infinity,
-      level: 1.0,
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-    })
-  );
+  (window.navigator as any).getBattery = jest.fn(() => Promise.resolve({
+    charging: true,
+    chargingTime: 0,
+    dischargingTime: Infinity,
+    level: 1.0,
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn()
+  }));
 
   // Page Visibility API mock
   Object.defineProperty(document, 'visibilityState', {
     value: 'visible',
     writable: true,
-    configurable: true,
+    configurable: true
   });
 
   Object.defineProperty(document, 'hidden', {
     value: false,
     writable: true,
-    configurable: true,
+    configurable: true
   });
 
   // Fullscreen API mock
@@ -406,7 +368,7 @@ if (typeof window !== 'undefined') {
   Object.defineProperty(document, 'fullscreenElement', {
     value: null,
     writable: true,
-    configurable: true,
+    configurable: true
   });
 
   // Clipboard API mock
@@ -415,10 +377,10 @@ if (typeof window !== 'undefined') {
       writeText: jest.fn(() => Promise.resolve()),
       readText: jest.fn(() => Promise.resolve('mocked clipboard text')),
       write: jest.fn(() => Promise.resolve()),
-      read: jest.fn(() => Promise.resolve([])),
+      read: jest.fn(() => Promise.resolve([]))
     },
     writable: true,
-    configurable: true,
+    configurable: true
   });
 
   // Enhanced media queries mock
@@ -430,7 +392,7 @@ if (typeof window !== 'undefined') {
     removeListener: jest.fn(),
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    dispatchEvent: jest.fn()
   }));
 
   // Web Audio API mock for sound testing
@@ -447,7 +409,7 @@ if (typeof window !== 'undefined') {
         start: jest.fn(),
         stop: jest.fn(),
         frequency: { value: 440 },
-        type: 'sine',
+        type: 'sine'
       };
     }
 
@@ -455,7 +417,7 @@ if (typeof window !== 'undefined') {
       return {
         connect: jest.fn(),
         disconnect: jest.fn(),
-        gain: { value: 1 },
+        gain: { value: 1 }
       };
     }
 
@@ -464,7 +426,7 @@ if (typeof window !== 'undefined') {
         connect: jest.fn(),
         disconnect: jest.fn(),
         getByteFrequencyData: jest.fn(),
-        getByteTimeDomainData: jest.fn(),
+        getByteTimeDomainData: jest.fn()
       };
     }
 
@@ -483,18 +445,14 @@ if (typeof window !== 'undefined') {
 
   // Payment Request API mock
   (window as any).PaymentRequest = class MockPaymentRequest {
-    constructor(
-      public methodData: any[],
-      public details: any,
-      public options?: any
-    ) {}
+    constructor(public methodData: any[], public details: any, public options?: any) {}
 
     show() {
       return Promise.resolve({
         requestId: 'mock-request-id',
         methodName: 'https://example.com/pay',
         details: {},
-        complete: jest.fn(() => Promise.resolve()),
+        complete: jest.fn(() => Promise.resolve())
       });
     }
 
@@ -521,13 +479,13 @@ const mockPerformance = {
   getEntriesByName: jest.fn(() => []),
   getEntriesByType: jest.fn(() => []),
   now: jest.fn(() => Date.now()),
-  timeOrigin: Date.now(),
+  timeOrigin: Date.now()
 };
 
 Object.defineProperty(global, 'performance', {
   value: mockPerformance,
   writable: true,
-  configurable: true,
+  configurable: true
 });
 
 // Console customization for cleaner test output

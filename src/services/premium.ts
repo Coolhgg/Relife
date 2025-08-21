@@ -1,19 +1,23 @@
-import { supabase } from './supabase';
-import type { User } from '../types';
-import { ErrorHandler } from './error-handler';
+import { supabase } from "./supabase";
+import type { User } from "../types";
+import { ErrorHandler } from "./error-handler";
 
-export type SubscriptionTier = 'free' | 'premium' | 'ultimate';
+  | "free"
+  | "basic"
+  | "student"
+  | "premium"
+  | "pro"
+  | "ultimate"
+  | "lifetime";
 
 export interface PremiumFeature {
   id: string;
   name: string;
   description: string;
-  requiredTier: SubscriptionTier;
-  category: 'alarm' | 'voice' | 'analytics' | 'customization' | 'ai';
+  category: "alarm" | "voice" | "analytics" | "customization" | "ai";
 }
 
 export interface SubscriptionPlan {
-  tier: SubscriptionTier;
   name: string;
   description: string;
   monthlyPrice: number;
@@ -40,10 +44,9 @@ export class PremiumService {
     {
       id: 'nuclear_mode',
       name: 'Nuclear Mode',
-      description:
-        'Extreme difficulty alarm challenges that are nearly impossible to ignore',
+      description: 'Extreme difficulty alarm challenges that are nearly impossible to ignore',
       requiredTier: 'premium',
-      category: 'alarm',
+      category: 'alarm'
     },
 
     // Custom Voices
@@ -52,59 +55,58 @@ export class PremiumService {
       name: 'Custom Voice Library',
       description: 'Access to premium AI-generated voices and celebrity-style voices',
       requiredTier: 'premium',
-      category: 'voice',
+      category: 'voice'
     },
     {
       id: 'voice_cloning',
       name: 'Voice Cloning',
       description: 'Clone your own voice or upload custom voice recordings',
       requiredTier: 'ultimate',
-      category: 'voice',
+      category: 'voice'
     },
     {
       id: 'extra_personalities',
       name: 'Extra Personalities',
       description: 'Access to 20+ additional alarm personalities and mood variations',
       requiredTier: 'premium',
-      category: 'voice',
+      category: 'voice'
     },
 
     // Advanced Features
     {
       id: 'advanced_analytics',
       name: 'Advanced Analytics',
-      description:
-        'Detailed sleep insights, performance tracking, and AI recommendations',
+      description: 'Detailed sleep insights, performance tracking, and AI recommendations',
       requiredTier: 'premium',
-      category: 'analytics',
+      category: 'analytics'
     },
     {
       id: 'unlimited_alarms',
       name: 'Unlimited Alarms',
       description: 'Create unlimited alarms (free users limited to 10)',
       requiredTier: 'premium',
-      category: 'alarm',
+      category: 'alarm'
     },
     {
       id: 'smart_scheduling',
       name: 'AI Smart Scheduling',
       description: 'AI-powered optimal wake time suggestions based on sleep patterns',
       requiredTier: 'premium',
-      category: 'ai',
+      category: 'ai'
     },
     {
       id: 'theme_store',
       name: 'Premium Themes',
       description: 'Access to premium themes and unlimited customization options',
       requiredTier: 'premium',
-      category: 'customization',
+      category: 'customization'
     },
     {
       id: 'priority_support',
       name: 'Priority Support',
       description: '24/7 premium support with faster response times',
       requiredTier: 'premium',
-      category: 'ai',
+      category: 'ai'
     },
 
     // Ultimate Features
@@ -113,15 +115,15 @@ export class PremiumService {
       name: 'White Label',
       description: 'Remove branding and customize the app for your organization',
       requiredTier: 'ultimate',
-      category: 'customization',
+      category: 'customization'
     },
     {
       id: 'api_access',
       name: 'API Access',
       description: 'Full API access for integrations and custom automations',
       requiredTier: 'ultimate',
-      category: 'ai',
-    },
+      category: 'ai'
+    }
   ];
 
   // Subscription plans
@@ -137,8 +139,8 @@ export class PremiumService {
         'Basic voice moods',
         'Standard themes',
         'Basic analytics',
-        'Community support',
-      ],
+        'Community support'
+      ]
     },
     {
       tier: 'premium',
@@ -156,8 +158,8 @@ export class PremiumService {
         'AI smart scheduling',
         'Premium themes',
         'Priority support',
-        'All free features',
-      ],
+        'All free features'
+      ]
     },
     {
       tier: 'ultimate',
@@ -171,16 +173,15 @@ export class PremiumService {
         'API access',
         'Custom integrations',
         'Dedicated support',
-        'All premium features',
-      ],
-    },
+        'All premium features'
+      ]
+    }
   ];
 
   /**
    * Check if user has access to a specific feature
    */
-  hasFeatureAccess(userTier: SubscriptionTier, featureId: string): boolean {
-    const feature = this.premiumFeatures.find(f => f.id === featureId);
+    const feature = this.premiumFeatures.find((f) => f.id === featureId);
     if (!feature) {
       return true; // If feature doesn't exist in our premium list, it's free
     }
@@ -191,8 +192,8 @@ export class PremiumService {
   /**
    * Check if user has minimum required subscription tier
    */
-  hasMinimumTier(userTier: SubscriptionTier, requiredTier: SubscriptionTier): boolean {
-    const tierHierarchy: Record<SubscriptionTier, number> = {
+  hasMinimumTier(
+  ): boolean {
       free: 0,
       premium: 1,
       ultimate: 2,
@@ -204,7 +205,6 @@ export class PremiumService {
   /**
    * Get user's current subscription tier
    */
-  async getUserTier(userId: string): Promise<SubscriptionTier> {
     try {
       const { data, error } = await supabase
         .from('users')
@@ -230,13 +230,15 @@ export class PremiumService {
   /**
    * Update user's subscription tier
    */
-  async updateUserTier(userId: string, newTier: SubscriptionTier): Promise<boolean> {
+  async updateUserTier(
+    userId: string,
+  ): Promise<boolean> {
     try {
       const { error } = await supabase
         .from('users')
         .update({
           subscription_tier: newTier,
-          updated_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         })
         .eq('id', userId);
 
@@ -258,18 +260,16 @@ export class PremiumService {
   /**
    * Get available features for a subscription tier
    */
-  getFeaturesForTier(tier: SubscriptionTier): PremiumFeature[] {
-    return this.premiumFeatures.filter(feature =>
-      this.hasMinimumTier(tier, feature.requiredTier)
+    return this.premiumFeatures.filter((feature) =>
+      this.hasMinimumTier(tier, feature.requiredTier),
     );
   }
 
   /**
    * Get locked features for a subscription tier
    */
-  getLockedFeatures(tier: SubscriptionTier): PremiumFeature[] {
     return this.premiumFeatures.filter(
-      feature => !this.hasMinimumTier(tier, feature.requiredTier)
+      (feature) => !this.hasMinimumTier(tier, feature.requiredTier),
     );
   }
 
@@ -283,8 +283,7 @@ export class PremiumService {
   /**
    * Get specific subscription plan
    */
-  getSubscriptionPlan(tier: SubscriptionTier): SubscriptionPlan | undefined {
-    return this.subscriptionPlans.find(plan => plan.tier === tier);
+    return this.subscriptionPlans.find((plan) => plan.tier === tier);
   }
 
   /**
@@ -292,11 +291,10 @@ export class PremiumService {
    */
   async canPerformAction(
     userId: string,
-    action: 'create_alarm' | 'use_voice' | 'access_analytics'
+    action: "create_alarm" | "use_voice" | "access_analytics",
   ): Promise<{
     allowed: boolean;
     reason?: string;
-    upgradeRequired?: SubscriptionTier;
   }> {
     const userTier = await this.getUserTier(userId);
 
@@ -317,7 +315,7 @@ export class PremiumService {
             return {
               allowed: false,
               reason: 'Free users are limited to 10 alarms',
-              upgradeRequired: 'premium',
+              upgradeRequired: 'premium'
             };
           }
         }
@@ -334,7 +332,7 @@ export class PremiumService {
           return {
             allowed: false,
             reason: 'Advanced analytics require Premium subscription',
-            upgradeRequired: 'premium',
+            upgradeRequired: 'premium'
           };
         }
         return { allowed: true };
@@ -349,9 +347,7 @@ export class PremiumService {
    * Generate upgrade URL for payment processing
    */
   generateUpgradeUrl(
-    currentTier: SubscriptionTier,
-    targetTier: SubscriptionTier,
-    userId: string
+    userId: string,
   ): string {
     // In a real app, this would integrate with Stripe, Paddle, or similar
     const plan = this.getSubscriptionPlan(targetTier);
@@ -366,13 +362,8 @@ export class PremiumService {
   /**
    * Check feature access and return upgrade info if needed
    */
-  async checkFeatureAccess(
-    userId: string,
-    featureId: string
-  ): Promise<{
+  async checkFeatureAccess(userId: string, featureId: string): Promise<{
     hasAccess: boolean;
-    userTier: SubscriptionTier;
-    requiredTier?: SubscriptionTier;
     upgradeUrl?: string;
     feature?: PremiumFeature;
   }> {
@@ -386,14 +377,14 @@ export class PremiumService {
         userTier,
         requiredTier: feature.requiredTier,
         upgradeUrl: this.generateUpgradeUrl(userTier, feature.requiredTier, userId),
-        feature,
+        feature
       };
     }
 
     return {
       hasAccess: true,
       userTier,
-      feature,
+      feature
     };
   }
 
@@ -401,7 +392,6 @@ export class PremiumService {
    * Get user's subscription status and limits
    */
   async getSubscriptionStatus(userId: string): Promise<{
-    tier: SubscriptionTier;
     plan: SubscriptionPlan;
     limits: {
       alarmCount: { current: number; max: number | null };
@@ -431,16 +421,16 @@ export class PremiumService {
       limits: {
         alarmCount: {
           current: alarmCount,
-          max: maxAlarms,
+          max: maxAlarms
         },
         voicesAccess: {
           basic: true,
           premium: this.hasMinimumTier(tier, 'premium'),
-          ultimate: this.hasMinimumTier(tier, 'ultimate'),
+          ultimate: this.hasMinimumTier(tier, 'ultimate')
         },
         featuresUnlocked: unlockedFeatures.map(f => f.id),
-        featuresLocked: lockedFeatures.map(f => f.id),
-      },
+        featuresLocked: lockedFeatures.map(f => f.id)
+      }
     };
   }
 }

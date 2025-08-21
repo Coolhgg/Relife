@@ -1,14 +1,12 @@
+/// <reference lib="dom" />
+import * as React from "react";
 /**
  * Keyboard Navigation Hook
  * React integration for the enhanced keyboard navigation system
  */
 
 import { useEffect, useState, useCallback } from 'react';
-import {
-  KeyboardNavigationService,
-  KeyboardShortcut,
-  NavigationState,
-} from '../utils/keyboard-navigation';
+import { KeyboardNavigationService, KeyboardShortcut, NavigationState } from '../utils/keyboard-navigation';
 import { useAccessibilityPreferences } from './useAccessibilityPreferences';
 
 interface KeyboardNavigationHookReturn {
@@ -54,7 +52,7 @@ export function useKeyboardNavigation(): KeyboardNavigationHookReturn {
     preferences.enhancedFocusRings,
     preferences.focusRingColor,
     preferences.screenReaderOptimized,
-    navigationService,
+    navigationService
   ]);
 
   // Listen for navigation state changes
@@ -77,21 +75,15 @@ export function useKeyboardNavigation(): KeyboardNavigationHookReturn {
     };
   }, [navigationService]);
 
-  const addShortcut = useCallback(
-    (id: string, shortcut: KeyboardShortcut) => {
-      navigationService.addShortcut(id, shortcut);
-      setShortcuts(navigationService.getShortcuts());
-    },
-    [navigationService]
-  );
+  const addShortcut = useCallback((id: string, shortcut: KeyboardShortcut) => {
+    navigationService.addShortcut(id, shortcut);
+    setShortcuts(navigationService.getShortcuts());
+  }, [navigationService]);
 
-  const removeShortcut = useCallback(
-    (key: string, modifiers: string[]) => {
-      navigationService.removeShortcut(key, modifiers);
-      setShortcuts(navigationService.getShortcuts());
-    },
-    [navigationService]
-  );
+  const removeShortcut = useCallback((key: string, modifiers: string[]) => {
+    navigationService.removeShortcut(key, modifiers);
+    setShortcuts(navigationService.getShortcuts());
+  }, [navigationService]);
 
   const refreshIntegration = useCallback(() => {
     navigationService.refreshAccessibilityIntegration();
@@ -139,24 +131,15 @@ export function useKeyboardNavigationEvents() {
       console.log('Help requested via keyboard');
     };
 
-    document.addEventListener(
-      'keyboard-navigate',
-      handleKeyboardNavigate as EventListener
-    );
+    document.addEventListener('keyboard-navigate', handleKeyboardNavigate as EventListener);
     document.addEventListener('alarm-action', handleAlarmAction as EventListener);
     document.addEventListener('show-shortcuts', handleShowShortcuts as EventListener);
     document.addEventListener('show-help', handleShowHelp);
 
     return () => {
-      document.removeEventListener(
-        'keyboard-navigate',
-        handleKeyboardNavigate as EventListener
-      );
+      document.removeEventListener('keyboard-navigate', handleKeyboardNavigate as EventListener);
       document.removeEventListener('alarm-action', handleAlarmAction as EventListener);
-      document.removeEventListener(
-        'show-shortcuts',
-        handleShowShortcuts as EventListener
-      );
+      document.removeEventListener('show-shortcuts', handleShowShortcuts as EventListener);
       document.removeEventListener('show-help', handleShowHelp);
     };
   }, [preferences.keyboardNavigation]);
@@ -165,10 +148,7 @@ export function useKeyboardNavigationEvents() {
 /**
  * Hook for managing focus trapping
  */
-export function useKeyboardFocusTrap(
-  containerRef: React.RefObject<HTMLElement>,
-  active: boolean = true
-) {
+export function useKeyboardFocusTrap(containerRef: React.RefObject<HTMLElement>, active: boolean = true) {
   const { preferences } = useAccessibilityPreferences();
 
   useEffect(() => {
@@ -189,10 +169,11 @@ export function useKeyboardFocusTrap(
     `;
 
     const getFocusableElements = () => {
-      return Array.from(container.querySelectorAll(focusableSelector)).filter(el => {
-        const rect = el.getBoundingClientRect();
-        return rect.width > 0 && rect.height > 0;
-      }) as HTMLElement[];
+      return Array.from(container.querySelectorAll(focusableSelector))
+        .filter(el => {
+          const rect = el.getBoundingClientRect();
+          return rect.width > 0 && rect.height > 0;
+        }) as HTMLElement[];
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -206,19 +187,13 @@ export function useKeyboardFocusTrap(
 
       if (event.shiftKey) {
         // Shift + Tab (backward)
-        if (
-          document.activeElement === firstElement ||
-          !container.contains(document.activeElement)
-        ) {
+        if (document.activeElement === firstElement || !container.contains(document.activeElement)) {
           event.preventDefault();
           lastElement.focus();
         }
       } else {
         // Tab (forward)
-        if (
-          document.activeElement === lastElement ||
-          !container.contains(document.activeElement)
-        ) {
+        if (document.activeElement === lastElement || !container.contains(document.activeElement)) {
           event.preventDefault();
           firstElement.focus();
         }
@@ -282,8 +257,7 @@ export function useRovingFocus(
             break;
           case 'ArrowLeft':
             event.preventDefault();
-            nextIndex =
-              (currentIndex - 1 + focusableElements.length) % focusableElements.length;
+            nextIndex = (currentIndex - 1 + focusableElements.length) % focusableElements.length;
             break;
           case 'Home':
             event.preventDefault();
@@ -302,8 +276,7 @@ export function useRovingFocus(
             break;
           case 'ArrowUp':
             event.preventDefault();
-            nextIndex =
-              (currentIndex - 1 + focusableElements.length) % focusableElements.length;
+            nextIndex = (currentIndex - 1 + focusableElements.length) % focusableElements.length;
             break;
           case 'Home':
             event.preventDefault();

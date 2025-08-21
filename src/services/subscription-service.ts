@@ -4,7 +4,6 @@
 import type {
   Subscription,
   SubscriptionPlan,
-  SubscriptionTier,
   FeatureAccess,
   BillingUsage,
   Trial,
@@ -16,7 +15,7 @@ import type {
   UpdateSubscriptionRequest,
   CancelSubscriptionRequest,
   SubscriptionDashboardData,
-  RevenueMetrics,
+  RevenueMetrics
 } from '../types/premium';
 import type { User } from '../types';
 import StripeService from './stripe-service';
@@ -133,7 +132,6 @@ class SubscriptionService {
   /**
    * Get user's subscription tier
    */
-  public async getUserTier(userId: string): Promise<SubscriptionTier> {
     try {
       const subscription = await this.getUserSubscription(userId);
 
@@ -158,12 +156,7 @@ class SubscriptionService {
   public async createSubscription(
     userId: string,
     request: CreateSubscriptionRequest
-  ): Promise<{
-    success: boolean;
-    subscription?: Subscription;
-    error?: string;
-    clientSecret?: string;
-  }> {
+  ): Promise<{ success: boolean; subscription?: Subscription; error?: string; clientSecret?: string }> {
     try {
       const analytics = AnalyticsService.getInstance();
 
@@ -181,15 +174,9 @@ class SubscriptionService {
 
       // Validate discount code if provided
       if (request.discountCode) {
-        const discountValidation = await this.validateDiscountCode(
-          userId,
-          request.discountCode
-        );
+        const discountValidation = await this.validateDiscountCode(userId, request.discountCode);
         if (!discountValidation.valid) {
-          return {
-            success: false,
-            error: discountValidation.error || 'Invalid discount code',
-          };
+          return { success: false, error: discountValidation.error || 'Invalid discount code' };
         }
       }
 
@@ -197,15 +184,11 @@ class SubscriptionService {
       const result = await this.stripeService.createSubscription(userId, request);
 
       if (result.error) {
-        analytics.trackError(
-          new Error(result.error.message),
-          'subscription_creation_failed',
-          {
-            userId,
-            planId: request.planId,
-            errorCode: result.error.code,
-          }
-        );
+        analytics.trackError(new Error(result.error.message), 'subscription_creation_failed', {
+          userId,
+          planId: request.planId,
+          errorCode: result.error.code
+        });
         return { success: false, error: result.error.userFriendlyMessage };
       }
 
@@ -221,13 +204,13 @@ class SubscriptionService {
         userId,
         tier: result.subscription.tier,
         planId: request.planId,
-        billingInterval: request.billingInterval,
+        billingInterval: request.billingInterval
       });
 
       return {
         success: true,
         subscription: result.subscription,
-        clientSecret: result.clientSecret,
+        clientSecret: result.clientSecret
       };
     } catch (error) {
       ErrorHandler.handleError(
@@ -235,10 +218,7 @@ class SubscriptionService {
         'Failed to create subscription',
         { context: 'create_subscription', metadata: { userId, request } }
       );
-      return {
-        success: false,
-        error: 'An unexpected error occurred. Please try again.',
-      };
+      return { success: false, error: 'An unexpected error occurred. Please try again.' };
     }
   }
 
@@ -262,10 +242,7 @@ class SubscriptionService {
       }
 
       // Update subscription via Stripe
-      const result = await this.stripeService.updateSubscription(
-        subscriptionId,
-        request
-      );
+      const result = await this.stripeService.updateSubscription(subscriptionId, request);
 
       if (result.error) {
         return { success: false, error: result.error.userFriendlyMessage };
@@ -277,26 +254,20 @@ class SubscriptionService {
       analytics.trackFeatureUsage('subscription_updated', undefined, {
         userId,
         subscriptionId,
-        changeType: request.planId ? 'plan_change' : 'billing_change',
+        changeType: request.planId ? 'plan_change' : 'billing_change'
       });
 
       return {
         success: true,
-        subscription: result.subscription,
+        subscription: result.subscription
       };
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         'Failed to update subscription',
-        {
-          context: 'update_subscription',
-          metadata: { userId, subscriptionId, request },
-        }
+        { context: 'update_subscription', metadata: { userId, subscriptionId, request } }
       );
-      return {
-        success: false,
-        error: 'An unexpected error occurred. Please try again.',
-      };
+      return { success: false, error: 'An unexpected error occurred. Please try again.' };
     }
   }
 
@@ -307,20 +278,12 @@ class SubscriptionService {
     userId: string,
     subscriptionId: string,
     request: CancelSubscriptionRequest
-  ): Promise<{
-    success: boolean;
-    subscription?: Subscription;
-    error?: string;
-    retentionOffer?: any;
-  }> {
+  ): Promise<{ success: boolean; subscription?: Subscription; error?: string; retentionOffer?: any }> {
     try {
       const analytics = AnalyticsService.getInstance();
 
       // Cancel subscription via Stripe
-      const result = await this.stripeService.cancelSubscription(
-        subscriptionId,
-        request
-      );
+      const result = await this.stripeService.cancelSubscription(subscriptionId, request);
 
       if (result.error) {
         return { success: false, error: result.error.userFriendlyMessage };
@@ -333,27 +296,21 @@ class SubscriptionService {
         userId,
         subscriptionId,
         reason: request.reason,
-        immediate: request.cancelImmediately,
+        immediate: request.cancelImmediately
       });
 
       return {
         success: true,
         subscription: result.subscription,
-        retentionOffer: result.retentionOffer,
+        retentionOffer: result.retentionOffer
       };
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         'Failed to cancel subscription',
-        {
-          context: 'cancel_subscription',
-          metadata: { userId, subscriptionId, request },
-        }
+        { context: 'cancel_subscription', metadata: { userId, subscriptionId, request } }
       );
-      return {
-        success: false,
-        error: 'An unexpected error occurred. Please try again.',
-      };
+      return { success: false, error: 'An unexpected error occurred. Please try again.' };
     }
   }
 
@@ -419,7 +376,7 @@ class SubscriptionService {
             usageLimit: featureUsage?.limit,
             usageCount: featureUsage?.used,
             resetDate: featureUsage?.resetDate,
-            upgradeRequired: hasAccess ? undefined : feature.required_tier,
+            upgradeRequired: hasAccess ? undefined : feature.required_tier
           };
         }
       }
@@ -428,7 +385,7 @@ class SubscriptionService {
         userId,
         subscriptionTier: userTier,
         features,
-        lastUpdated: new Date(),
+        lastUpdated: new Date()
       };
 
       // Cache the result
@@ -447,7 +404,7 @@ class SubscriptionService {
         userId,
         subscriptionTier: 'free',
         features: {},
-        lastUpdated: new Date(),
+        lastUpdated: new Date()
       };
     }
   }
@@ -455,11 +412,7 @@ class SubscriptionService {
   /**
    * Track feature usage
    */
-  public async trackFeatureUsage(
-    userId: string,
-    featureId: string,
-    amount: number = 1
-  ): Promise<void> {
+  public async trackFeatureUsage(userId: string, featureId: string, amount: number = 1): Promise<void> {
     try {
       const now = new Date();
       const resetDate = new Date(now.getFullYear(), now.getMonth() + 1, 1); // First day of next month
@@ -468,7 +421,7 @@ class SubscriptionService {
         p_user_id: userId,
         p_feature: featureId,
         p_usage_amount: amount,
-        p_reset_date: resetDate.toISOString(),
+        p_reset_date: resetDate.toISOString()
       });
 
       // Clear cache to force refresh
@@ -499,9 +452,7 @@ class SubscriptionService {
         .lte('reset_date', periodEnd.toISOString());
 
       const subscription = await this.getUserSubscription(userId);
-      const plan = subscription
-        ? await this.getSubscriptionPlan(subscription.planId || '')
-        : null;
+      const plan = subscription ? await this.getSubscriptionPlan(subscription.planId || '') : null;
 
       const usage: BillingUsage['usage'] = {};
       const limits = plan?.limits || this.getFreeTierLimits();
@@ -512,7 +463,7 @@ class SubscriptionService {
         usage[item.feature] = {
           used: item.usage_count,
           limit,
-          percentage: limit > 0 ? Math.min((item.usage_count / limit) * 100, 100) : 0,
+          percentage: limit > 0 ? Math.min((item.usage_count / limit) * 100, 100) : 0
         };
       });
 
@@ -521,11 +472,11 @@ class SubscriptionService {
         subscriptionId: subscription?.id || '',
         period: {
           start: periodStart,
-          end: periodEnd,
+          end: periodEnd
         },
         usage,
         overageCharges: [], // Implement overage logic if needed
-        totalOverageAmount: 0,
+        totalOverageAmount: 0
       };
     } catch (error) {
       ErrorHandler.handleError(
@@ -541,7 +492,7 @@ class SubscriptionService {
         period: { start: new Date(), end: new Date() },
         usage: {},
         overageCharges: [],
-        totalOverageAmount: 0,
+        totalOverageAmount: 0
       };
     }
   }
@@ -549,10 +500,7 @@ class SubscriptionService {
   /**
    * Start free trial
    */
-  public async startFreeTrial(
-    userId: string,
-    planId: string
-  ): Promise<{ success: boolean; trial?: Trial; error?: string }> {
+  public async startFreeTrial(userId: string, planId: string): Promise<{ success: boolean; trial?: Trial; error?: string }> {
     try {
       const plan = await this.getSubscriptionPlan(planId);
       if (!plan || !plan.trialDays) {
@@ -572,9 +520,7 @@ class SubscriptionService {
       }
 
       const startDate = new Date();
-      const endDate = new Date(
-        startDate.getTime() + plan.trialDays * 24 * 60 * 60 * 1000
-      );
+      const endDate = new Date(startDate.getTime() + (plan.trialDays * 24 * 60 * 60 * 1000));
 
       const { data: trialData, error } = await supabase
         .from('trials')
@@ -584,7 +530,7 @@ class SubscriptionService {
           tier: plan.tier,
           start_date: startDate.toISOString(),
           end_date: endDate.toISOString(),
-          status: 'active',
+          status: 'active'
         })
         .select()
         .single();
@@ -603,7 +549,7 @@ class SubscriptionService {
         userId,
         planId,
         tier: plan.tier,
-        trialDays: plan.trialDays,
+        trialDays: plan.trialDays
       });
 
       return { success: true, trial };
@@ -620,10 +566,7 @@ class SubscriptionService {
   /**
    * Validate discount code
    */
-  public async validateDiscountCode(
-    userId: string,
-    code: string
-  ): Promise<{ valid: boolean; discount?: Discount; error?: string }> {
+  public async validateDiscountCode(userId: string, code: string): Promise<{ valid: boolean; discount?: Discount; error?: string }> {
     try {
       const { data: discount, error } = await supabase
         .from('discounts')
@@ -667,16 +610,13 @@ class SubscriptionService {
           .single();
 
         if (existingSubscription) {
-          return {
-            valid: false,
-            error: 'This discount is only available for first-time customers',
-          };
+          return { valid: false, error: 'This discount is only available for first-time customers' };
         }
       }
 
       return {
         valid: true,
-        discount: this.mapDatabaseDiscount(discount),
+        discount: this.mapDatabaseDiscount(discount)
       };
     } catch (error) {
       ErrorHandler.handleError(
@@ -691,9 +631,7 @@ class SubscriptionService {
   /**
    * Get subscription dashboard data
    */
-  public async getSubscriptionDashboard(
-    userId: string
-  ): Promise<SubscriptionDashboardData> {
+  public async getSubscriptionDashboard(userId: string): Promise<SubscriptionDashboardData> {
     try {
       const [
         subscription,
@@ -702,7 +640,7 @@ class SubscriptionService {
         plans,
         usage,
         userDiscounts,
-        referralStats,
+        referralStats
       ] = await Promise.all([
         this.getUserSubscription(userId),
         this.stripeService.getPaymentMethods(userId),
@@ -710,15 +648,11 @@ class SubscriptionService {
         this.getSubscriptionPlans(),
         this.getUserUsage(userId),
         this.getUserDiscounts(userId),
-        this.getReferralStats(userId),
+        this.getReferralStats(userId)
       ]);
 
-      const currentPlan = subscription
-        ? await this.getSubscriptionPlan(subscription.planId || '')
-        : null;
-      const upcomingInvoice = subscription
-        ? await this.stripeService.getUpcomingInvoice(subscription.id)
-        : null;
+      const currentPlan = subscription ? await this.getSubscriptionPlan(subscription.planId || '') : null;
+      const upcomingInvoice = subscription ? await this.stripeService.getUpcomingInvoice(subscription.id) : null;
 
       return {
         subscription,
@@ -729,7 +663,7 @@ class SubscriptionService {
         invoiceHistory: invoices,
         availablePlans: plans,
         discountCodes: userDiscounts,
-        referralStats,
+        referralStats
       };
     } catch (error) {
       ErrorHandler.handleError(
@@ -752,8 +686,8 @@ class SubscriptionService {
           code: '',
           referrals: 0,
           rewards: 0,
-          pendingRewards: 0,
-        },
+          pendingRewards: 0
+        }
       };
     }
   }
@@ -780,15 +714,12 @@ class SubscriptionService {
   }
 
   private checkTierAccess(
-    userTier: SubscriptionTier,
-    requiredTier: SubscriptionTier
   ): boolean {
-    const tierHierarchy: SubscriptionTier[] = [
-      'free',
-      'basic',
-      'premium',
-      'pro',
-      'enterprise',
+      "free",
+      "basic",
+      "premium",
+      "pro",
+      "enterprise",
     ];
     const userLevel = tierHierarchy.indexOf(userTier);
     const requiredLevel = tierHierarchy.indexOf(requiredTier);
@@ -803,40 +734,36 @@ class SubscriptionService {
       maxVoiceProfiles: 1,
       maxThemes: 2,
       supportTier: 'community',
-      advancedAnalytics: false,
+      advancedAnalytics: false
     };
   }
 
   private async recordDiscountUsage(userId: string, code: string): Promise<void> {
     await supabase.rpc('record_discount_usage', {
       p_user_id: userId,
-      p_discount_code: code,
+      p_discount_code: code
     });
   }
 
   private async getUserDiscounts(userId: string): Promise<UserDiscount[]> {
     const { data } = await supabase
       .from('user_discounts')
-      .select(
-        `
+      .select(`
         *,
         discounts (*)
-      `
-      )
+      `)
       .eq('user_id', userId);
 
-    return (
-      data?.map(item => ({
-        id: item.id,
-        userId: item.user_id,
-        discountId: item.discount_id,
-        discount: this.mapDatabaseDiscount(item.discounts),
-        usedCount: item.used_count,
-        firstUsedAt: item.first_used_at ? new Date(item.first_used_at) : undefined,
-        lastUsedAt: item.last_used_at ? new Date(item.last_used_at) : undefined,
-        createdAt: new Date(item.created_at),
-      })) || []
-    );
+    return data?.map(item => ({
+      id: item.id,
+      userId: item.user_id,
+      discountId: item.discount_id,
+      discount: this.mapDatabaseDiscount(item.discounts),
+      usedCount: item.used_count,
+      firstUsedAt: item.first_used_at ? new Date(item.first_used_at) : undefined,
+      lastUsedAt: item.last_used_at ? new Date(item.last_used_at) : undefined,
+      createdAt: new Date(item.created_at)
+    })) || [];
   }
 
   private async getReferralStats(userId: string): Promise<any> {
@@ -854,7 +781,7 @@ class SubscriptionService {
       code: `REF-${userId.slice(-8).toUpperCase()}`, // Generate referral code
       referrals,
       rewards,
-      pendingRewards,
+      pendingRewards
     };
   }
 
@@ -880,7 +807,7 @@ class SubscriptionService {
       setupFee: data.setup_fee || 0,
       discountEligible: data.discount_eligible || false,
       createdAt: new Date(data.created_at),
-      updatedAt: new Date(data.updated_at),
+      updatedAt: new Date(data.updated_at)
     };
   }
 
@@ -896,7 +823,7 @@ class SubscriptionService {
       convertedToSubscriptionId: data.converted_to_subscription_id,
       remindersSent: data.reminders_sent || 0,
       createdAt: new Date(data.created_at),
-      updatedAt: new Date(data.updated_at),
+      updatedAt: new Date(data.updated_at)
     };
   }
 
@@ -921,7 +848,7 @@ class SubscriptionService {
       stackable: data.stackable || false,
       isActive: data.is_active || false,
       createdAt: new Date(data.created_at),
-      updatedAt: new Date(data.updated_at),
+      updatedAt: new Date(data.updated_at)
     };
   }
 }

@@ -20,7 +20,7 @@ declare global {
 
 export interface PWAInstallEvent extends Event {
   prompt(): Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+  userChoice: Promise<{outcome: 'accepted' | 'dismissed'}>;
 }
 
 export const PWAUtils = {
@@ -45,9 +45,8 @@ export const PWAUtils = {
 
     try {
       // Use existing registration from ServiceWorkerManager instead of registering again
-      const registration =
-        (await navigator.serviceWorker.getRegistration()) ||
-        (await navigator.serviceWorker.register('/sw-unified.js'));
+      const registration = await navigator.serviceWorker.getRegistration() ||
+        await navigator.serviceWorker.register('/sw-unified.js');
       console.log('Service Worker registered successfully:', registration);
       return registration;
     } catch (error) {
@@ -88,9 +87,9 @@ export const PWAUtils = {
           instructions: [
             'Tap the Share button at the bottom of your screen',
             'Scroll down and tap "Add to Home Screen"',
-            'Tap "Add" to install Smart Alarm',
-          ],
-        },
+            'Tap "Add" to install Smart Alarm'
+          ]
+        }
       });
       window.dispatchEvent(event);
     }
@@ -100,7 +99,9 @@ export const PWAUtils = {
   async clearCache(): Promise<void> {
     if ('caches' in window) {
       const cacheNames = await caches.keys();
-      await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
+      await Promise.all(
+        cacheNames.map(cacheName => caches.delete(cacheName))
+      );
     }
   },
 
@@ -121,10 +122,7 @@ export const PWAUtils = {
 
   // Background sync registration
   async registerBackgroundSync(tag: string): Promise<void> {
-    if (
-      'serviceWorker' in navigator &&
-      'sync' in window.ServiceWorkerRegistration.prototype
-    ) {
+    if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
       const registration = await navigator.serviceWorker.ready;
       const syncManager = registration.sync;
       if (syncManager) {
@@ -144,12 +142,12 @@ export const PWAUtils = {
   },
 
   // Get storage usage
-  async getStorageUsage(): Promise<{ used: number; total: number } | null> {
+  async getStorageUsage(): Promise<{used: number; total: number} | null> {
     if ('storage' in navigator && 'estimate' in navigator.storage) {
       const estimate = await navigator.storage.estimate();
       return {
         used: estimate.usage || 0,
-        total: estimate.quota || 0,
+        total: estimate.quota || 0
       };
     }
     return null;
@@ -206,7 +204,7 @@ export const PWAUtils = {
       await wakeLock.release();
       console.log('Wake lock released');
     }
-  },
+  }
 };
 
 // Global wake lock interface

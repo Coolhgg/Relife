@@ -20,15 +20,7 @@ export interface CustomSound {
   isPreloaded?: boolean;
 }
 
-export type SoundCategory =
-  | 'nature'
-  | 'music'
-  | 'voice'
-  | 'mechanical'
-  | 'ambient'
-  | 'energetic'
-  | 'calm'
-  | 'custom';
+export type SoundCategory = 'nature' | 'music' | 'voice' | 'mechanical' | 'ambient' | 'energetic' | 'calm' | 'custom';
 
 export interface Playlist {
   id: string;
@@ -73,15 +65,7 @@ export interface MotivationalQuote {
   uses: number;
 }
 
-export type QuoteCategory =
-  | 'motivation'
-  | 'inspiration'
-  | 'success'
-  | 'health'
-  | 'productivity'
-  | 'mindfulness'
-  | 'humor'
-  | 'custom';
+export type QuoteCategory = 'motivation' | 'inspiration' | 'success' | 'health' | 'productivity' | 'mindfulness' | 'humor' | 'custom';
 
 // Audio loading and optimization interfaces
 export interface AudioLoadOptions {
@@ -176,70 +160,14 @@ export interface AudioFormat {
 }
 
 export const SUPPORTED_AUDIO_FORMATS: AudioFormat[] = [
-  {
-    extension: 'mp3',
-    mimeType: 'audio/mpeg',
-    supported: true,
-    compressionSupport: true,
-    streamingSupport: true,
-    quality: 'high',
-  },
-  {
-    extension: 'wav',
-    mimeType: 'audio/wav',
-    supported: true,
-    compressionSupport: false,
-    streamingSupport: true,
-    quality: 'lossless',
-  },
-  {
-    extension: 'ogg',
-    mimeType: 'audio/ogg',
-    supported: true,
-    compressionSupport: true,
-    streamingSupport: true,
-    quality: 'high',
-  },
-  {
-    extension: 'm4a',
-    mimeType: 'audio/mp4',
-    supported: true,
-    compressionSupport: true,
-    streamingSupport: true,
-    quality: 'high',
-  },
-  {
-    extension: 'aac',
-    mimeType: 'audio/aac',
-    supported: true,
-    compressionSupport: true,
-    streamingSupport: true,
-    quality: 'high',
-  },
-  {
-    extension: 'flac',
-    mimeType: 'audio/flac',
-    supported: false,
-    compressionSupport: false,
-    streamingSupport: false,
-    quality: 'lossless',
-  },
-  {
-    extension: 'opus',
-    mimeType: 'audio/opus',
-    supported: true,
-    compressionSupport: true,
-    streamingSupport: true,
-    quality: 'high',
-  },
-  {
-    extension: 'weba',
-    mimeType: 'audio/webm',
-    supported: true,
-    compressionSupport: true,
-    streamingSupport: true,
-    quality: 'high',
-  },
+  { extension: 'mp3', mimeType: 'audio/mpeg', supported: true, compressionSupport: true, streamingSupport: true, quality: 'high' },
+  { extension: 'wav', mimeType: 'audio/wav', supported: true, compressionSupport: false, streamingSupport: true, quality: 'lossless' },
+  { extension: 'ogg', mimeType: 'audio/ogg', supported: true, compressionSupport: true, streamingSupport: true, quality: 'high' },
+  { extension: 'm4a', mimeType: 'audio/mp4', supported: true, compressionSupport: true, streamingSupport: true, quality: 'high' },
+  { extension: 'aac', mimeType: 'audio/aac', supported: true, compressionSupport: true, streamingSupport: true, quality: 'high' },
+  { extension: 'flac', mimeType: 'audio/flac', supported: false, compressionSupport: false, streamingSupport: false, quality: 'lossless' },
+  { extension: 'opus', mimeType: 'audio/opus', supported: true, compressionSupport: true, streamingSupport: true, quality: 'high' },
+  { extension: 'weba', mimeType: 'audio/webm', supported: true, compressionSupport: true, streamingSupport: true, quality: 'high' }
 ];
 
 // Progressive loading states

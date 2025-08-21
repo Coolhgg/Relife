@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Advanced Frame Rate Management and Animation Optimization
  * Provides adaptive frame rate control, animation quality adjustment, and performance monitoring
@@ -107,7 +108,7 @@ class FrameRateManager {
     try {
       this.performanceObserver = new PerformanceObserver(list => {
         const entries = list.getEntries();
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.entryType === 'paint') {
             if (entry.name === 'first-contentful-paint') {
               this.currentMetrics.renderTime = entry.startTime;
@@ -121,7 +122,7 @@ class FrameRateManager {
       });
 
       this.performanceObserver.observe({
-        entryTypes: ['paint', 'measure', 'navigation'],
+        entryTypes: ['paint', 'measure', 'navigation']
       });
     } catch (error) {
       console.warn('PerformanceObserver not supported:', error);
@@ -137,7 +138,7 @@ class FrameRateManager {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.config.reducedMotion = mediaQuery.matches;
 
-    mediaQuery.addEventListener('change', e => {
+    mediaQuery.addEventListener('change', (e) => {
       this.config.reducedMotion = e.matches;
       this.notifyObservers();
     });
@@ -166,7 +167,7 @@ class FrameRateManager {
     }
 
     // Count dropped frames (>33ms = dropped frame for 30fps, >16.67ms for 60fps)
-    const frameThreshold = (1000 / this.config.target) * 1.5;
+    const frameThreshold = 1000 / this.config.target * 1.5;
     if (frameTime > frameThreshold) {
       this.currentMetrics.droppedFrames++;
     }
@@ -179,13 +180,12 @@ class FrameRateManager {
     if (this.frameTimes.length === 0) return;
 
     const recentFrames = this.frameTimes.slice(-30); // Last 30 frames
-    const averageFrameTime =
-      recentFrames.reduce((a, b) => a + b, 0) / recentFrames.length;
+    const averageFrameTime = recentFrames.reduce((a, b) => a + b, 0) / recentFrames.length;
 
     this.currentMetrics.fps = Math.round(1000 / averageFrameTime);
-    this.currentMetrics.averageFps = Math.round(
-      1000 / (this.frameTimes.reduce((a, b) => a + b, 0) / this.frameTimes.length)
-    );
+    this.currentMetrics.averageFps = Math.round(1000 / (
+      this.frameTimes.reduce((a, b) => a + b, 0) / this.frameTimes.length
+    ));
     this.currentMetrics.frameTimeMs = averageFrameTime;
 
     // Calculate performance score (0-100)
@@ -261,7 +261,7 @@ class FrameRateManager {
   private optimizeAnimationConfig(config: AnimationConfig): AnimationConfig {
     const quality = this.getOptimalAnimationQuality();
 
-    const optimized = { ...config };
+    let optimized = { ...config };
 
     // Adjust duration based on quality level
     switch (quality.level) {
@@ -378,7 +378,7 @@ class FrameRateManager {
    */
   getOptimizedAnimationStyles(baseStyles: React.CSSProperties): React.CSSProperties {
     const quality = this.getOptimalAnimationQuality();
-    const styles = { ...baseStyles };
+    let styles = { ...baseStyles };
 
     // Remove expensive properties on low-performance devices
     if (!quality.enableFilters) {
@@ -531,8 +531,8 @@ export function useFrameRate() {
  */
 export function useOptimizedAnimation(animationId: string, config: AnimationConfig) {
   const [isActive, setIsActive] = React.useState(false);
-  const animationQuality = React.useMemo(
-    () => frameRateManager.getOptimalAnimationQuality(),
+  const animationQuality = React.useMemo(() =>
+    frameRateManager.getOptimalAnimationQuality(),
     [frameRateManager.getMetrics().performanceScore]
   );
 
@@ -583,15 +583,12 @@ export function usePerformanceAwareRender() {
     setShouldReduceComplexity(shouldReduce);
   }, [metrics.performanceScore, metrics.averageFps]);
 
-  const optimizeRenderCount = React.useCallback(
-    (baseCount: number): number => {
-      if (shouldReduceComplexity) {
-        return Math.min(baseCount, 10); // Limit items on poor performance
-      }
-      return baseCount;
-    },
-    [shouldReduceComplexity]
-  );
+  const optimizeRenderCount = React.useCallback((baseCount: number): number => {
+    if (shouldReduceComplexity) {
+      return Math.min(baseCount, 10); // Limit items on poor performance
+    }
+    return baseCount;
+  }, [shouldReduceComplexity]);
 
   const shouldSkipExpensiveRender = React.useCallback((): boolean => {
     return metrics.performanceScore < 40;

@@ -13,7 +13,7 @@ export {
   testScenarios,
   useTestContext,
   createMockServices,
-  type TestProvidersOptions,
+  type TestProvidersOptions
 } from './test-providers';
 
 // Context-specific providers
@@ -37,7 +37,7 @@ export {
   type MockLanguageContextValue,
   type MockAlarmContextValue,
   type MockThemeContextValue,
-  type ContextTestOptions,
+  type ContextTestOptions
 } from './context-providers';
 
 // Service-specific providers
@@ -61,7 +61,7 @@ export {
   type MockNotificationService,
   type MockAudioService,
   type MockStorageService,
-  type MockSecurityService,
+  type MockSecurityService
 } from './service-providers';
 
 // Integration provider
@@ -69,11 +69,11 @@ export {
   IntegrationTestProvider,
   renderWithIntegration,
   integrationScenarios,
-  type IntegrationTestOptions,
+  type IntegrationTestOptions
 } from './integration-provider';
 
 // Utility functions for common test patterns
-export const createTestSuite = (name: string, tests: () => void) => {
+export const _createTestSuite = (name: string, tests: () => void) => {
   describe(name, () => {
     beforeEach(() => {
       jest.clearAllMocks();
@@ -87,7 +87,7 @@ export const createTestSuite = (name: string, tests: () => void) => {
   });
 };
 
-export const createAsyncTestSuite = (name: string, tests: () => void) => {
+export const _createAsyncTestSuite = (name: string, tests: () => void) => {
   describe(name, () => {
     beforeEach(async () => {
       jest.clearAllMocks();
@@ -106,7 +106,7 @@ export const createAsyncTestSuite = (name: string, tests: () => void) => {
 };
 
 // Common test utilities
-export const testUtils = {
+export const _testUtils = {
   /**
    * Wait for async operations to complete
    */
@@ -128,11 +128,7 @@ export const testUtils = {
   /**
    * Create a mock promise that resolves/rejects after a delay
    */
-  createDelayedPromise: <T>(
-    value: T,
-    delay: number = 100,
-    shouldReject: boolean = false
-  ) => {
+  createDelayedPromise: <T>(value: T, delay: number = 100, shouldReject: boolean = false) => {
     return new Promise<T>((resolve, reject) => {
       setTimeout(() => {
         if (shouldReject) {
@@ -153,7 +149,7 @@ export const testUtils = {
       email: 'test@example.com',
       name: 'Test User',
       createdAt: new Date().toISOString(),
-      ...overrides,
+      ...overrides
     }),
 
     alarm: (overrides: any = {}) => ({
@@ -164,7 +160,7 @@ export const testUtils = {
       days: [1, 2, 3, 4, 5],
       sound: 'classic',
       createdAt: new Date().toISOString(),
-      ...overrides,
+      ...overrides
     }),
 
     battle: (overrides: any = {}) => ({
@@ -172,13 +168,13 @@ export const testUtils = {
       status: 'pending',
       participants: [],
       createdAt: new Date().toISOString(),
-      ...overrides,
-    }),
-  },
+      ...overrides
+    })
+  }
 };
 
 // Performance testing utilities
-export const performanceUtils = {
+export const _performanceUtils = {
   /**
    * Measure component render time
    */
@@ -211,19 +207,21 @@ export const performanceUtils = {
     return () => {
       global.fetch = originalFetch;
     };
-  },
+  }
 };
 
 // Accessibility testing utilities
-export const a11yUtils = {
+export const _a11yUtils = {
   /**
    * Check for required ARIA attributes
    */
   checkAriaAttributes: (element: HTMLElement, requiredAttributes: string[]) => {
-    const missing = requiredAttributes.filter(attr => !element.hasAttribute(attr));
+    const missing = requiredAttributes.filter(attr =>
+      !element.hasAttribute(attr)
+    );
     return {
       hasAll: missing.length === 0,
-      missing,
+      missing
     };
   },
 
@@ -234,7 +232,7 @@ export const a11yUtils = {
     // Simplified contrast check - in real tests you'd use a proper library
     return {
       ratio: 4.5, // Mock ratio
-      isAccessible: true,
+      isAccessible: true
     };
   },
 
@@ -247,13 +245,13 @@ export const a11yUtils = {
     );
     return {
       count: focusableElements.length,
-      elements: Array.from(focusableElements),
+      elements: Array.from(focusableElements)
     };
-  },
+  }
 };
 
 // Mobile testing utilities
-export const mobileUtils = {
+export const _mobileUtils = {
   /**
    * Simulate mobile viewport
    */
@@ -261,12 +259,12 @@ export const mobileUtils = {
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
-      value: 375,
+      value: 375
     });
     Object.defineProperty(window, 'innerHeight', {
       writable: true,
       configurable: true,
-      value: 667,
+      value: 667
     });
     window.dispatchEvent(new Event('resize'));
   },
@@ -278,12 +276,12 @@ export const mobileUtils = {
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
-      value: 768,
+      value: 768
     });
     Object.defineProperty(window, 'innerHeight', {
       writable: true,
       configurable: true,
-      value: 1024,
+      value: 1024
     });
     window.dispatchEvent(new Event('resize'));
   },
@@ -295,15 +293,15 @@ export const mobileUtils = {
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
-      value: 1200,
+      value: 1200
     });
     Object.defineProperty(window, 'innerHeight', {
       writable: true,
       configurable: true,
-      value: 800,
+      value: 800
     });
     window.dispatchEvent(new Event('resize'));
-  },
+  }
 };
 
 // Common test constants
@@ -331,7 +329,7 @@ export const TEST_IDS = {
   LEADERBOARD: 'leaderboard',
   USER_PROFILE: 'user-profile',
   SUBSCRIPTION_CARD: 'subscription-card',
-  UPGRADE_BUTTON: 'upgrade-button',
+  UPGRADE_BUTTON: 'upgrade-button'
 } as const;
 
 export default {
@@ -341,5 +339,5 @@ export default {
   performanceUtils,
   a11yUtils,
   mobileUtils,
-  TEST_IDS,
+  TEST_IDS
 };

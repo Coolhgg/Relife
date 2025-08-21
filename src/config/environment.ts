@@ -140,23 +140,17 @@ export function createEnvironmentConfig(): EnvironmentConfig {
         org: import.meta.env.VITE_SENTRY_ORG || undefined,
         project: import.meta.env.VITE_SENTRY_PROJECT || undefined,
       },
-      amplitude: import.meta.env.VITE_AMPLITUDE_API_KEY
-        ? {
-            apiKey: import.meta.env.VITE_AMPLITUDE_API_KEY,
-          }
-        : undefined,
-      datadog: import.meta.env.VITE_DATADOG_CLIENT_TOKEN
-        ? {
-            clientToken: import.meta.env.VITE_DATADOG_CLIENT_TOKEN,
-            applicationId: import.meta.env.VITE_DATADOG_APP_ID || undefined,
-          }
-        : undefined,
-      newRelic: import.meta.env.VITE_NEW_RELIC_ACCOUNT_ID
-        ? {
-            accountId: import.meta.env.VITE_NEW_RELIC_ACCOUNT_ID,
-            licenseKey: import.meta.env.VITE_NEW_RELIC_LICENSE_KEY || undefined,
-          }
-        : undefined,
+      amplitude: import.meta.env.VITE_AMPLITUDE_API_KEY ? {
+        apiKey: import.meta.env.VITE_AMPLITUDE_API_KEY,
+      } : undefined,
+      datadog: import.meta.env.VITE_DATADOG_CLIENT_TOKEN ? {
+        clientToken: import.meta.env.VITE_DATADOG_CLIENT_TOKEN,
+        applicationId: import.meta.env.VITE_DATADOG_APP_ID || undefined,
+      } : undefined,
+      newRelic: import.meta.env.VITE_NEW_RELIC_ACCOUNT_ID ? {
+        accountId: import.meta.env.VITE_NEW_RELIC_ACCOUNT_ID,
+        licenseKey: import.meta.env.VITE_NEW_RELIC_LICENSE_KEY || undefined,
+      } : undefined,
     },
 
     performance: {
@@ -259,15 +253,11 @@ export function validateEnvironmentConfig(): { isValid: boolean; errors: string[
 
   if (config.performance.enabled) {
     if (!config.performance.endpoint) {
-      errors.push(
-        'VITE_PERFORMANCE_ENDPOINT is required when performance monitoring is enabled'
-      );
+      errors.push('VITE_PERFORMANCE_ENDPOINT is required when performance monitoring is enabled');
     }
 
     if (!config.performance.analyticsEndpoint) {
-      errors.push(
-        'VITE_ANALYTICS_ENDPOINT is required when performance monitoring is enabled'
-      );
+      errors.push('VITE_ANALYTICS_ENDPOINT is required when performance monitoring is enabled');
     }
   }
 
@@ -302,9 +292,7 @@ export function getPerformanceThresholds() {
   return config.performance.thresholds;
 }
 
-export function isFeatureEnabled(
-  feature: keyof EnvironmentConfig['features']
-): boolean {
+export function isFeatureEnabled(feature: keyof EnvironmentConfig['features']): boolean {
   return config.features[feature];
 }
 

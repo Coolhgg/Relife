@@ -2,16 +2,7 @@
 // Comprehensive view of subscription status, billing, and feature usage
 
 import React, { useState } from 'react';
-import {
-  Calendar,
-  CreditCard,
-  TrendingUp,
-  AlertTriangle,
-  Gift,
-  Settings,
-  Crown,
-  Zap,
-} from 'lucide-react';
+import { Calendar, CreditCard, TrendingUp, AlertTriangle, Gift, Settings, Crown, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Progress } from '../ui/progress';
@@ -23,9 +14,8 @@ import BillingHistory from './BillingHistory';
 import PricingTable from './PricingTable';
 import type {
   SubscriptionDashboardData,
-  SubscriptionTier,
   SubscriptionStatus,
-  BillingInterval,
+  BillingInterval
 } from '../../types/premium';
 
 interface SubscriptionDashboardProps {
@@ -38,10 +28,7 @@ interface SubscriptionDashboardProps {
   onAddPaymentMethod: () => Promise<void>;
   onRemovePaymentMethod: (paymentMethodId: string) => Promise<void>;
   onSetDefaultPaymentMethod: (paymentMethodId: string) => Promise<void>;
-  onUpdateBillingDetails: (
-    paymentMethodId: string,
-    billingDetails: any
-  ) => Promise<void>;
+  onUpdateBillingDetails: (paymentMethodId: string, billingDetails: any) => Promise<void>;
   className?: string;
 }
 
@@ -56,7 +43,7 @@ export function SubscriptionDashboard({
   onRemovePaymentMethod,
   onSetDefaultPaymentMethod,
   onUpdateBillingDetails,
-  className = '',
+  className = ''
 }: SubscriptionDashboardProps) {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -66,18 +53,17 @@ export function SubscriptionDashboard({
     return new Intl.DateTimeFormat('en-US', {
       month: 'long',
       day: 'numeric',
-      year: 'numeric',
+      year: 'numeric'
     }).format(new Date(date));
   };
 
   const formatCurrency = (amount: number, currency: string = 'usd') => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency.toUpperCase(),
+      currency: currency.toUpperCase()
     }).format(amount / 100);
   };
 
-  const getTierIcon = (tier: SubscriptionTier) => {
     switch (tier) {
       case 'basic':
         return <Zap className="w-5 h-5 text-blue-600" />;
@@ -118,16 +104,8 @@ export function SubscriptionDashboard({
     try {
       setActionLoading('plan-change');
 
-      const currentTierIndex = [
-        'free',
-        'basic',
-        'premium',
-        'pro',
-        'enterprise',
-      ].indexOf(data.subscription?.tier || 'free');
-      const newTierIndex = ['free', 'basic', 'premium', 'pro', 'enterprise'].indexOf(
-        plan.tier
-      );
+      const currentTierIndex = ['free', 'basic', 'premium', 'pro', 'enterprise'].indexOf(data.subscription?.tier || 'free');
+      const newTierIndex = ['free', 'basic', 'premium', 'pro', 'enterprise'].indexOf(plan.tier);
 
       if (newTierIndex > currentTierIndex) {
         await onUpgrade(plan.id, billingInterval);
@@ -190,8 +168,7 @@ export function SubscriptionDashboard({
         <Alert className="border-orange-200 bg-orange-50">
           <AlertTriangle className="h-4 w-4 text-orange-600" />
           <AlertDescription className="text-orange-600">
-            Your subscription payment is past due. Please update your payment method to
-            continue using premium features.
+            Your subscription payment is past due. Please update your payment method to continue using premium features.
           </AlertDescription>
         </Alert>
       )}
@@ -200,10 +177,7 @@ export function SubscriptionDashboard({
         <Alert className="border-blue-200 bg-blue-50">
           <AlertTriangle className="h-4 w-4 text-blue-600" />
           <AlertDescription className="text-blue-600 flex items-center justify-between">
-            <span>
-              Your subscription will end on{' '}
-              {formatDate(data.subscription.currentPeriodEnd)}.
-            </span>
+            <span>Your subscription will end on {formatDate(data.subscription.currentPeriodEnd)}.</span>
             <Button
               variant="outline"
               size="sm"
@@ -241,10 +215,7 @@ export function SubscriptionDashboard({
                   <>
                     {getStatusBadge(data.subscription.status)}
                     <p className="text-xs text-gray-600 mt-2">
-                      {data.subscription.billingInterval === 'year'
-                        ? 'Yearly'
-                        : 'Monthly'}{' '}
-                      billing
+                      {data.subscription.billingInterval === 'year' ? 'Yearly' : 'Monthly'} billing
                     </p>
                   </>
                 )}
@@ -261,10 +232,7 @@ export function SubscriptionDashboard({
                 {data.subscription && data.subscription.tier !== 'free' ? (
                   <>
                     <div className="text-2xl font-bold">
-                      {formatCurrency(
-                        data.subscription.amount,
-                        data.subscription.currency
-                      )}
+                      {formatCurrency(data.subscription.amount, data.subscription.currency)}
                     </div>
                     <p className="text-xs text-gray-600">
                       Due {formatDate(data.subscription.currentPeriodEnd)}
@@ -286,12 +254,11 @@ export function SubscriptionDashboard({
                 {data.usage ? (
                   <>
                     <div className="text-2xl font-bold">
-                      {Object.values(data.usage.features).reduce(
-                        (sum, feature) => sum + feature.used,
-                        0
-                      )}
+                      {Object.values(data.usage.features).reduce((sum, feature) => sum + feature.used, 0)}
                     </div>
-                    <p className="text-xs text-gray-600">This month</p>
+                    <p className="text-xs text-gray-600">
+                      This month
+                    </p>
                   </>
                 ) : (
                   <div className="text-2xl font-bold text-gray-400">—</div>
@@ -314,11 +281,7 @@ export function SubscriptionDashboard({
                   Your free trial ends on {formatDate(data.activeTrial.endDate)}.
                 </p>
                 <p className="text-sm">
-                  Days remaining:{' '}
-                  {Math.ceil(
-                    (new Date(data.activeTrial.endDate).getTime() - Date.now()) /
-                      (1000 * 60 * 60 * 24)
-                  )}
+                  Days remaining: {Math.ceil((new Date(data.activeTrial.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))}
                 </p>
                 <Button className="mt-4" onClick={() => setShowUpgradeModal(true)}>
                   Choose a Plan
@@ -341,20 +304,16 @@ export function SubscriptionDashboard({
                   Change Plan
                 </Button>
 
-                {data.subscription &&
-                  data.subscription.tier !== 'free' &&
-                  !data.subscription.cancelAtPeriodEnd && (
-                    <Button
-                      variant="outline"
-                      onClick={handleCancelSubscription}
-                      disabled={actionLoading === 'cancel'}
-                      className="text-red-600 border-red-200 hover:bg-red-50"
-                    >
-                      {actionLoading === 'cancel'
-                        ? 'Processing...'
-                        : 'Cancel Subscription'}
-                    </Button>
-                  )}
+                {data.subscription && data.subscription.tier !== 'free' && !data.subscription.cancelAtPeriodEnd && (
+                  <Button
+                    variant="outline"
+                    onClick={handleCancelSubscription}
+                    disabled={actionLoading === 'cancel'}
+                    className="text-red-600 border-red-200 hover:bg-red-50"
+                  >
+                    {actionLoading === 'cancel' ? 'Processing...' : 'Cancel Subscription'}
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -365,14 +324,8 @@ export function SubscriptionDashboard({
           {data.usage && data.currentPlan ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {Object.entries(data.usage.features).map(([featureKey, featureUsage]) => {
-                const limit =
-                  data.currentPlan?.limits?.[
-                    featureKey as keyof typeof data.currentPlan.limits
-                  ] || 0;
-                const usedPercentage =
-                  typeof limit === 'number'
-                    ? Math.min((featureUsage.used / limit) * 100, 100)
-                    : 0;
+                const limit = data.currentPlan?.limits?.[featureKey as keyof typeof data.currentPlan.limits] || 0;
+                const usedPercentage = typeof limit === 'number' ? Math.min((featureUsage.used / limit) * 100, 100) : 0;
 
                 return (
                   <Card key={featureKey}>

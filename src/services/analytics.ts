@@ -110,7 +110,7 @@ export const ANALYTICS_EVENTS = {
   // Business metrics
   SUBSCRIPTION_STARTED: 'subscription_started',
   SUBSCRIPTION_CANCELLED: 'subscription_cancelled',
-  REVENUE_EVENT: 'revenue_event',
+  REVENUE_EVENT: 'revenue_event'
 } as const;
 
 class AnalyticsService {
@@ -151,7 +151,7 @@ class AnalyticsService {
       enableSessionRecording: config.features.sessionRecording,
       enableHeatmaps: config.features.heatmaps,
       disableInDevelopment: false, // We handle this here
-      ...customConfig,
+      ...customConfig
     };
 
     // Don't initialize if no API key is provided
@@ -179,7 +179,7 @@ class AnalyticsService {
 
         // Feature flags
         bootstrap: {
-          distinctId: this.generateSessionId(),
+          distinctId: this.generateSessionId()
         },
 
         // Autocapture settings
@@ -189,7 +189,7 @@ class AnalyticsService {
         session_recording: {
           maskAllInputs: true,
           maskAllText: false,
-          recordCrossOriginIframes: false,
+          recordCrossOriginIframes: false
         },
 
         // Heatmaps
@@ -205,7 +205,7 @@ class AnalyticsService {
           'auth',
           'credential',
           'ssn',
-          'credit_card',
+          'credit_card'
         ],
 
         // Environment-specific performance settings
@@ -215,9 +215,9 @@ class AnalyticsService {
             app_environment: config.env,
             app_version: config.version,
             app_build_time: config.buildTime,
-            performance_monitoring_enabled: config.performance.enabled,
+            performance_monitoring_enabled: config.performance.enabled
           });
-        },
+        }
       });
 
       // Start session tracking
@@ -235,8 +235,9 @@ class AnalyticsService {
         features_enabled: Object.entries(config.features)
           .filter(([_, enabled]) => enabled)
           .map(([feature]) => feature),
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString()
       });
+
     } catch (error) {
       // Track initialization failure - silently fail in production
       // Error is already logged by the underlying PostHog library if needed
@@ -258,7 +259,7 @@ class AnalyticsService {
       is_subscribed: properties.isSubscribed,
       device_type: this.getDeviceType(),
       preferred_wake_time: properties.preferredWakeTime,
-      ...this.getSystemProperties(),
+      ...this.getSystemProperties()
     });
   }
 
@@ -286,7 +287,7 @@ class AnalyticsService {
       session_id: this.sessionId,
       session_duration: this.getSessionDuration(),
       source: properties.source || 'web',
-      ...this.getContextualProperties(),
+      ...this.getContextualProperties()
     };
 
     posthog.capture(eventName, enhancedProperties);
@@ -301,7 +302,7 @@ class AnalyticsService {
     posthog.people.set({
       device_type: this.getDeviceType(),
       ...properties,
-      ...this.getSystemProperties(),
+      ...this.getSystemProperties()
     });
   }
 
@@ -312,7 +313,7 @@ class AnalyticsService {
     if (!this.isInitialized) return;
 
     posthog.people.increment({
-      [property]: value,
+      [property]: value
     });
   }
 
@@ -327,7 +328,7 @@ class AnalyticsService {
       page_url: window.location.href,
       page_path: window.location.pathname,
       referrer: document.referrer,
-      ...properties,
+      ...properties
     };
 
     this.track('$pageview', pageProperties);
@@ -336,32 +337,23 @@ class AnalyticsService {
   /**
    * Track feature usage
    */
-  trackFeatureUsage(
-    featureName: string,
-    action: string,
-    properties: EventProperties = {}
-  ): void {
+  trackFeatureUsage(featureName: string, action: string, properties: EventProperties = {}): void {
     this.track('feature_used', {
       feature_name: featureName,
       action,
-      ...properties,
+      ...properties
     });
   }
 
   /**
    * Track performance metrics
    */
-  trackPerformance(
-    metricName: string,
-    value: number,
-    unit: string = 'ms',
-    properties: EventProperties = {}
-  ): void {
+  trackPerformance(metricName: string, value: number, unit: string = 'ms', properties: EventProperties = {}): void {
     this.track(ANALYTICS_EVENTS.PAGE_LOAD_TIME, {
       metric_name: metricName,
       value,
       unit,
-      ...properties,
+      ...properties
     });
   }
 
@@ -373,22 +365,18 @@ class AnalyticsService {
       error_message: error.message,
       error_stack: error.stack?.substring(0, 500), // Truncate for performance
       error_name: error.name,
-      ...context,
+      ...context
     });
   }
 
   /**
    * Track conversion events
    */
-  trackConversion(
-    conversionType: string,
-    value?: number,
-    properties: EventProperties = {}
-  ): void {
+  trackConversion(conversionType: string, value?: number, properties: EventProperties = {}): void {
     this.track('conversion', {
       conversion_type: conversionType,
       value,
-      ...properties,
+      ...properties
     });
   }
 
@@ -408,30 +396,22 @@ class AnalyticsService {
   /**
    * Capture user feedback
    */
-  captureFeedback(
-    rating: number,
-    comment: string,
-    properties: EventProperties = {}
-  ): void {
+  captureFeedback(rating: number, comment: string, properties: EventProperties = {}): void {
     this.track('feedback_submitted', {
       rating,
       comment,
-      ...properties,
+      ...properties
     });
   }
 
   /**
    * Track experiment participation
    */
-  trackExperiment(
-    experimentName: string,
-    variant: string,
-    properties: EventProperties = {}
-  ): void {
+  trackExperiment(experimentName: string, variant: string, properties: EventProperties = {}): void {
     this.track('experiment_participation', {
       experiment_name: experimentName,
       variant,
-      ...properties,
+      ...properties
     });
   }
 
@@ -466,7 +446,7 @@ class AnalyticsService {
     this.sessionStartTime = Date.now();
 
     this.track(ANALYTICS_EVENTS.SESSION_STARTED, {
-      session_id: this.sessionId,
+      session_id: this.sessionId
     });
   }
 
@@ -477,7 +457,7 @@ class AnalyticsService {
     if (this.sessionId && this.sessionStartTime) {
       this.track(ANALYTICS_EVENTS.SESSION_ENDED, {
         session_id: this.sessionId,
-        session_duration: this.getSessionDuration(),
+        session_duration: this.getSessionDuration()
       });
     }
 
@@ -509,15 +489,9 @@ class AnalyticsService {
     const screenWidth = window.screen.width;
 
     // Enhanced mobile detection
-    if (
-      /mobile|android|ios|iphone/.test(userAgent) ||
-      (hasTouch && screenWidth < 768)
-    ) {
+    if (/mobile|android|ios|iphone/.test(userAgent) || (hasTouch && screenWidth < 768)) {
       return 'mobile';
-    } else if (
-      /tablet|ipad/.test(userAgent) ||
-      (hasTouch && screenWidth >= 768 && screenWidth < 1024)
-    ) {
+    } else if (/tablet|ipad/.test(userAgent) || (hasTouch && screenWidth >= 768 && screenWidth < 1024)) {
       return 'tablet';
     } else {
       return 'desktop';
@@ -562,7 +536,7 @@ class AnalyticsService {
       // App environment context
       app_environment: config.env,
       app_version: config.version,
-      performance_monitoring: config.performance.enabled,
+      performance_monitoring: config.performance.enabled
     };
   }
 
@@ -598,7 +572,7 @@ class AnalyticsService {
       // Feature flags
       features_enabled: Object.entries(config.features)
         .filter(([_, enabled]) => enabled)
-        .map(([feature]) => feature),
+        .map(([feature]) => feature)
     };
   }
 
@@ -612,7 +586,7 @@ class AnalyticsService {
       isInitialized: this.isInitialized,
       eventsTracked: 0, // Would track this in real implementation
       userProperties: {},
-      lastEventTime: new Date().toISOString(),
+      lastEventTime: new Date().toISOString()
     };
   }
 
@@ -625,9 +599,9 @@ class AnalyticsService {
       session: {
         id: this.sessionId,
         duration: this.getSessionDuration(),
-        startTime: this.sessionStartTime?.toISOString(),
+        startTime: this.sessionStartTime?.toISOString()
       },
-      exportTime: new Date().toISOString(),
+      exportTime: new Date().toISOString()
     };
   }
 
@@ -644,9 +618,7 @@ class AnalyticsService {
 }
 
 // Environment-aware analytics initialization
-export function initializeAnalytics(
-  customConfig?: Partial<AnalyticsConfig>
-): AnalyticsService {
+export function initializeAnalytics(customConfig?: Partial<AnalyticsConfig>): AnalyticsService {
   const analytics = AnalyticsService.getInstance();
   analytics.initialize(customConfig);
   return analytics;
@@ -663,7 +635,7 @@ export function createAnalyticsConfig(environment?: string): AnalyticsConfig {
     debug: env === 'development',
     enableSessionRecording: env !== 'development',
     enableHeatmaps: true,
-    disableInDevelopment: false,
+    disableInDevelopment: false
   };
 }
 
@@ -671,7 +643,7 @@ export function createAnalyticsConfig(environment?: string): AnalyticsConfig {
 export const defaultAnalyticsConfigs = {
   development: createAnalyticsConfig('development'),
   staging: createAnalyticsConfig('staging'),
-  production: createAnalyticsConfig('production'),
+  production: createAnalyticsConfig('production')
 };
 
 // Enhanced analytics methods for production monitoring
@@ -679,41 +651,25 @@ export interface ProductionAnalytics {
   trackDeployment(version: string, environment: string): void;
   trackPerformanceBudget(metric: string, value: number, budget: number): void;
   trackFeatureFlag(flag: string, enabled: boolean, variant?: string): void;
-  trackBusinessMetric(
-    metric: string,
-    value: number,
-    metadata?: Record<string, any>
-  ): void;
-  trackSLAViolation(
-    service: string,
-    metric: string,
-    threshold: number,
-    actual: number
-  ): void;
+  trackBusinessMetric(metric: string, value: number, metadata?: Record<string, any>): void;
+  trackSLAViolation(service: string, metric: string, threshold: number, actual: number): void;
 }
 
 // Extend AnalyticsService with production-specific methods
-AnalyticsService.prototype.trackDeployment = function (
-  version: string,
-  environment: string
-) {
+AnalyticsService.prototype.trackDeployment = function(version: string, environment: string) {
   this.track('deployment_completed', {
     version,
     environment,
     timestamp: new Date().toISOString(),
     previous_version: localStorage.getItem('app_version'),
-    deployment_type: version.includes('hotfix') ? 'hotfix' : 'release',
+    deployment_type: version.includes('hotfix') ? 'hotfix' : 'release'
   });
 
   // Store current version for next deployment
   localStorage.setItem('app_version', version);
 };
 
-AnalyticsService.prototype.trackPerformanceBudget = function (
-  metric: string,
-  value: number,
-  budget: number
-) {
+AnalyticsService.prototype.trackPerformanceBudget = function(metric: string, value: number, budget: number) {
   const exceedsbudget = value > budget;
   const percentage = (value / budget) * 100;
 
@@ -723,7 +679,7 @@ AnalyticsService.prototype.trackPerformanceBudget = function (
     budget,
     exceeds_budget: exceedsbudget,
     percentage,
-    environment: config.env,
+    environment: config.env
   });
 
   if (exceedsbudget) {
@@ -732,45 +688,32 @@ AnalyticsService.prototype.trackPerformanceBudget = function (
       value,
       budget,
       overage: value - budget,
-      percentage,
+      percentage
     });
   }
 };
 
-AnalyticsService.prototype.trackFeatureFlag = function (
-  flag: string,
-  enabled: boolean,
-  variant?: string
-) {
+AnalyticsService.prototype.trackFeatureFlag = function(flag: string, enabled: boolean, variant?: string) {
   this.track('feature_flag_evaluation', {
     flag,
     enabled,
     variant,
     environment: config.env,
-    user_segment: this.getUserSegment(),
+    user_segment: this.getUserSegment()
   });
 };
 
-AnalyticsService.prototype.trackBusinessMetric = function (
-  metric: string,
-  value: number,
-  metadata?: Record<string, any>
-) {
+AnalyticsService.prototype.trackBusinessMetric = function(metric: string, value: number, metadata?: Record<string, any>) {
   this.track('business_metric', {
     metric,
     value,
     environment: config.env,
     timestamp: new Date().toISOString(),
-    ...metadata,
+    ...metadata
   });
 };
 
-AnalyticsService.prototype.trackSLAViolation = function (
-  service: string,
-  metric: string,
-  threshold: number,
-  actual: number
-) {
+AnalyticsService.prototype.trackSLAViolation = function(service: string, metric: string, threshold: number, actual: number) {
   this.track('sla_violation', {
     service,
     metric,
@@ -778,21 +721,18 @@ AnalyticsService.prototype.trackSLAViolation = function (
     actual,
     violation_percentage: ((actual - threshold) / threshold) * 100,
     environment: config.env,
-    severity: this.calculateSeverity(actual, threshold),
+    severity: this.calculateSeverity(actual, threshold)
   });
 };
 
 // Helper method for user segmentation
-AnalyticsService.prototype.getUserSegment = function (): string {
+AnalyticsService.prototype.getUserSegment = function(): string {
   // Implement user segmentation logic based on your needs
   return 'default';
 };
 
 // Helper method for SLA violation severity
-AnalyticsService.prototype.calculateSeverity = function (
-  actual: number,
-  threshold: number
-): 'low' | 'medium' | 'high' | 'critical' {
+AnalyticsService.prototype.calculateSeverity = function(actual: number, threshold: number): 'low' | 'medium' | 'high' | 'critical' {
   const ratio = actual / threshold;
   if (ratio < 1.2) return 'low';
   if (ratio < 1.5) return 'medium';

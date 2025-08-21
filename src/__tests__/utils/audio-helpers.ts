@@ -1,8 +1,8 @@
 /// <reference lib="dom" />
-import { waitFor, act } from '@testing-library/react';
+import { waitFor, act } from "@testing-library/react";
 
 // Audio element mocking
-export const audioMocks = {
+export const _audioMocks = {
   createMockAudio: (src?: string) => {
     const mockAudio = {
       src: src || '',
@@ -26,7 +26,7 @@ export const audioMocks = {
       crossOrigin: null,
       preload: 'auto',
       autoplay: false,
-      controls: false,
+      controls: false
     };
 
     // Mock common event listeners
@@ -68,7 +68,7 @@ export const audioMocks = {
     // Mock HTMLAudioElement
     Object.defineProperty(global, 'HTMLAudioElement', {
       writable: true,
-      value: jest.fn().mockImplementation(() => mockAudio),
+      value: jest.fn().mockImplementation(() => mockAudio)
     });
 
     return mockAudio;
@@ -109,12 +109,12 @@ export const audioMocks = {
     timeUpdate: (currentTime: number) => {
       audio.currentTime = currentTime;
       audio.dispatchEvent(new Event('timeupdate'));
-    },
-  }),
+    }
+  })
 };
 
 // Web Audio API mocking
-export const webAudioMocks = {
+export const _webAudioMocks = {
   mockAudioContext: () => {
     const mockContext = {
       state: 'running' as AudioContextState,
@@ -123,7 +123,7 @@ export const webAudioMocks = {
       destination: {
         channelCount: 2,
         channelCountMode: 'max',
-        channelInterpretation: 'speakers',
+        channelInterpretation: 'speakers'
       },
       listener: {
         positionX: { value: 0 },
@@ -134,7 +134,7 @@ export const webAudioMocks = {
         forwardZ: { value: -1 },
         upX: { value: 0 },
         upY: { value: 1 },
-        upZ: { value: 0 },
+        upZ: { value: 0 }
       },
       createOscillator: jest.fn().mockReturnValue({
         type: 'sine',
@@ -145,12 +145,12 @@ export const webAudioMocks = {
         connect: jest.fn(),
         disconnect: jest.fn(),
         addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
+        removeEventListener: jest.fn()
       }),
       createGain: jest.fn().mockReturnValue({
         gain: { value: 1 },
         connect: jest.fn(),
-        disconnect: jest.fn(),
+        disconnect: jest.fn()
       }),
       createBuffer: jest.fn(),
       createBufferSource: jest.fn().mockReturnValue({
@@ -162,7 +162,7 @@ export const webAudioMocks = {
         start: jest.fn(),
         stop: jest.fn(),
         connect: jest.fn(),
-        disconnect: jest.fn(),
+        disconnect: jest.fn()
       }),
       createAnalyser: jest.fn().mockReturnValue({
         fftSize: 2048,
@@ -175,30 +175,30 @@ export const webAudioMocks = {
         getFloatTimeDomainData: jest.fn(),
         getByteTimeDomainData: jest.fn(),
         connect: jest.fn(),
-        disconnect: jest.fn(),
+        disconnect: jest.fn()
       }),
       decodeAudioData: jest.fn().mockResolvedValue({}),
       resume: jest.fn().mockResolvedValue(undefined),
       suspend: jest.fn().mockResolvedValue(undefined),
-      close: jest.fn().mockResolvedValue(undefined),
+      close: jest.fn().mockResolvedValue(undefined)
     };
 
     Object.defineProperty(global, 'AudioContext', {
       writable: true,
-      value: jest.fn().mockImplementation(() => mockContext),
+      value: jest.fn().mockImplementation(() => mockContext)
     });
 
     Object.defineProperty(global, 'webkitAudioContext', {
       writable: true,
-      value: jest.fn().mockImplementation(() => mockContext),
+      value: jest.fn().mockImplementation(() => mockContext)
     });
 
     return mockContext;
-  },
+  }
 };
 
 // Notification sound testing
-export const notificationMocks = {
+export const _notificationMocks = {
   mockNotificationSound: () => {
     const mockNotification = {
       title: 'Test Notification',
@@ -210,31 +210,34 @@ export const notificationMocks = {
       vibrate: [200, 100, 200],
       close: jest.fn(),
       addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
+      removeEventListener: jest.fn()
     };
 
     Object.defineProperty(global, 'Notification', {
       writable: true,
-      value: jest.fn().mockImplementation(() => mockNotification),
+      value: jest.fn().mockImplementation(() => mockNotification)
     });
 
     Object.defineProperty(Notification, 'permission', {
       writable: true,
-      value: 'granted',
+      value: 'granted'
     });
 
     Object.defineProperty(Notification, 'requestPermission', {
       writable: true,
-      value: jest.fn().mockResolvedValue('granted'),
+      value: jest.fn().mockResolvedValue('granted')
     });
 
     return mockNotification;
-  },
+  }
 };
 
 // Volume and audio state utilities
-export const volumeUtils = {
-  testVolumeControl: async (audioElement: HTMLAudioElement, targetVolume: number) => {
+export const _volumeUtils = {
+  testVolumeControl: async (
+    audioElement: HTMLAudioElement,
+    targetVolume: number,
+  ) => {
     act(() => {
       audioElement.volume = targetVolume;
     });
@@ -268,11 +271,11 @@ export const volumeUtils = {
     expect(audioElement.muted).toBe(false);
     expect(audioElement.volume).toBe(originalVolume);
     audioElement.dispatchEvent(new Event('volumechange'));
-  },
+  }
 };
 
 // Audio playback testing utilities
-export const playbackUtils = {
+export const _playbackUtils = {
   simulateAudioPlayback: async (audio: any, duration: number = 1000) => {
     const events = audioMocks.simulateAudioEvents(audio);
 
@@ -282,7 +285,7 @@ export const playbackUtils = {
     // Simulate time updates
     const intervals = Math.floor(duration / 100);
     for (let i = 0; i <= intervals; i++) {
-      const currentTime = ((i / intervals) * duration) / 1000;
+      const currentTime = (i / intervals) * duration / 1000;
       events.timeUpdate(currentTime);
       await new Promise(resolve => setTimeout(resolve, 100));
     }
@@ -304,11 +307,11 @@ export const playbackUtils = {
     } else {
       events.error(4); // MEDIA_ELEMENT_ERROR
     }
-  },
+  }
 };
 
 // Audio format and codec testing
-export const codecUtils = {
+export const _codecUtils = {
   mockAudioFormats: () => {
     const formatSupport = {
       'audio/mp3': 'probably',
@@ -317,7 +320,7 @@ export const codecUtils = {
       'audio/ogg': 'maybe',
       'audio/mp4': 'probably',
       'audio/aac': 'probably',
-      'audio/webm': 'maybe',
+      'audio/webm': 'maybe'
     };
 
     const mockCanPlayType = jest.fn((type: string) => {
@@ -338,11 +341,11 @@ export const codecUtils = {
       support[format] = audio.canPlayType(format);
     });
     return support;
-  },
+  }
 };
 
 // Alarm-specific audio utilities
-export const alarmAudioUtils = {
+export const _alarmAudioUtils = {
   createAlarmTestSuite: (alarmSound: HTMLAudioElement) => ({
     testAlarmStart: async () => {
       expect(alarmSound.paused).toBe(true);
@@ -383,21 +386,17 @@ export const alarmAudioUtils = {
       expect(alarmSound.play).toHaveBeenCalled();
     },
 
-    testVolumeGradual: async (
-      startVolume: number = 0.1,
-      endVolume: number = 1,
-      steps: number = 5
-    ) => {
+    testVolumeGradual: async (startVolume: number = 0.1, endVolume: number = 1, steps: number = 5) => {
       const volumeStep = (endVolume - startVolume) / steps;
 
       for (let i = 0; i <= steps; i++) {
-        const currentVolume = startVolume + volumeStep * i;
+        const currentVolume = startVolume + (volumeStep * i);
         alarmSound.volume = Math.min(currentVolume, 1);
 
         await new Promise(resolve => setTimeout(resolve, 10));
         expect(alarmSound.volume).toBeCloseTo(Math.min(currentVolume, 1), 2);
       }
-    },
+    }
   }),
 
   mockAlarmSounds: () => {
@@ -405,19 +404,19 @@ export const alarmAudioUtils = {
       'gentle-chime.mp3',
       'classic-alarm.mp3',
       'nature-sounds.mp3',
-      'progressive-beep.mp3',
+      'progressive-beep.mp3'
     ];
 
     return alarmSounds.map(sound => ({
       name: sound,
       audio: audioMocks.createMockAudio(`/sounds/${sound}`),
-      duration: 30 + Math.random() * 120, // Random duration between 30-150 seconds
+      duration: 30 + Math.random() * 120 // Random duration between 30-150 seconds
     }));
-  },
+  }
 };
 
 // Audio testing helpers
-export const audioHelpers = {
+export const _audioHelpers = {
   expectAudioToPlay: async (audio: HTMLAudioElement) => {
     const playPromise = audio.play();
     expect(audio.play).toHaveBeenCalled();
@@ -430,16 +429,10 @@ export const audioHelpers = {
     expect(audio.paused).toBe(true);
   },
 
-  waitForAudioEvent: async (
-    audio: HTMLAudioElement,
-    eventType: string,
-    timeout: number = 5000
-  ) => {
+  waitForAudioEvent: async (audio: HTMLAudioElement, eventType: string, timeout: number = 5000) => {
     return new Promise<void>((resolve, reject) => {
       const timer = setTimeout(() => {
-        reject(
-          new Error(`Audio event '${eventType}' did not fire within ${timeout}ms`)
-        );
+        reject(new Error(`Audio event '${eventType}' did not fire within ${timeout}ms`));
       }, timeout);
 
       audio.addEventListener(eventType, () => {
@@ -464,7 +457,7 @@ export const audioHelpers = {
         await events.play();
       }
     }
-  },
+  }
 };
 
 // Export all utilities
@@ -476,5 +469,5 @@ export default {
   playbackUtils,
   codecUtils,
   alarmAudioUtils,
-  audioHelpers,
+  audioHelpers
 };

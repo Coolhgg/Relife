@@ -24,9 +24,7 @@ const lazyWithPreload = <T extends ComponentType<any>>(
     importFunc();
   }
 
-  return LazyComponent as LazyExoticComponent<T> & {
-    preload: () => Promise<{ default: T }>;
-  };
+  return LazyComponent as LazyExoticComponent<T> & { preload: () => Promise<{ default: T }> };
 };
 
 // Lazy loaded components
@@ -79,7 +77,9 @@ export const withLazyLoading = <P extends object>(
   errorFallback?: React.ReactNode
 ) => {
   return memo((props: P) => (
-    <Suspense fallback={fallback || <LoadingSpinner />}>
+    <Suspense
+      fallback={fallback || <LoadingSpinner />}
+    >
       <LazyComponent {...props} />
     </Suspense>
   ));
@@ -92,7 +92,7 @@ export const preloadRoute = (routePath: string) => {
     '/sleep': () => SleepTracker.preload(),
     '/settings': () => SmartAlarmSettings.preload(),
     '/voice': () => VoiceSettings.preload(),
-    '/analytics': () => SleepAnalytics.preload(),
+    '/analytics': () => SleepAnalytics.preload()
   };
 
   const preloadFn = preloadMap[routePath];
@@ -116,7 +116,7 @@ export const useInteractionPreloading = () => {
       'sleep-tracker': () => SleepTracker.preload(),
       'voice-settings': () => VoiceSettings.preload(),
       'smart-settings': () => SmartAlarmSettings.preload(),
-      'sleep-analytics': () => SleepAnalytics.preload(),
+      'sleep-analytics': () => SleepAnalytics.preload()
     };
 
     const preloadFn = preloadMap[componentName];
@@ -173,5 +173,5 @@ export default {
   useRoutePreloading,
   useInteractionPreloading,
   usePerformantRender,
-  useMemoryCleanup,
+  useMemoryCleanup
 };

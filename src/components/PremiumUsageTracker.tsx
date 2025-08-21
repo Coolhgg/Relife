@@ -7,7 +7,7 @@ import {
   TrendingUp,
   AlertCircle,
   Sparkles,
-  RefreshCw,
+  RefreshCw
 } from 'lucide-react';
 import { PremiumVoiceService } from '../services/premium-voice';
 import { SubscriptionService } from '../services/subscription';
@@ -29,14 +29,14 @@ interface UsageData {
 
 export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
   userId,
-  className = '',
+  className = ''
 }) => {
   const [usageData, setUsageData] = useState<UsageData>({
     tier: 'free',
     elevenlabsUsage: { current: 0, limit: 0, percentage: 0 },
     customMessagesUsage: { current: 0, limit: 0, percentage: 0 },
     hasUnlimitedAccess: false,
-    isLoading: true,
+    isLoading: true
   });
 
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
@@ -52,41 +52,33 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
       const summary = await PremiumVoiceService.getUsageSummary(userId);
       setUsageData({
         ...summary,
-        isLoading: false,
+        isLoading: false
       });
       setLastRefresh(new Date());
     } catch (error) {
       setUsageData(prev => ({
         ...prev,
         isLoading: false,
-        error: error instanceof Error ? error.message : 'Failed to load usage data',
+        error: error instanceof Error ? error.message : 'Failed to load usage data'
       }));
     }
   };
 
   const getTierColor = (tier: string) => {
     switch (tier) {
-      case 'premium':
-        return 'from-amber-500 to-orange-500';
-      case 'pro':
-        return 'from-purple-500 to-pink-500';
-      case 'lifetime':
-        return 'from-emerald-500 to-teal-500';
-      default:
-        return 'from-gray-500 to-gray-600';
+      case 'premium': return 'from-amber-500 to-orange-500';
+      case 'pro': return 'from-purple-500 to-pink-500';
+      case 'lifetime': return 'from-emerald-500 to-teal-500';
+      default: return 'from-gray-500 to-gray-600';
     }
   };
 
   const getTierIcon = (tier: string) => {
     switch (tier) {
-      case 'premium':
-        return Crown;
-      case 'pro':
-        return Sparkles;
-      case 'lifetime':
-        return Crown;
-      default:
-        return Crown;
+      case 'premium': return Crown;
+      case 'pro': return Sparkles;
+      case 'lifetime': return Crown;
+      default: return Crown;
     }
   };
 
@@ -166,9 +158,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
     >
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
-          <div
-            className={`w-10 h-10 rounded-lg bg-gradient-to-br ${getTierColor(usageData.tier)} flex items-center justify-center`}
-          >
+          <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${getTierColor(usageData.tier)} flex items-center justify-center`}>
             <TierIcon className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -187,9 +177,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
           className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
           title="Refresh usage data"
         >
-          <RefreshCw
-            className={`w-4 h-4 ${usageData.isLoading ? 'animate-spin' : ''}`}
-          />
+          <RefreshCw className={`w-4 h-4 ${usageData.isLoading ? 'animate-spin' : ''}`} />
         </motion.button>
       </div>
 
@@ -219,14 +207,12 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
           <div className="pt-4 border-t border-gray-200">
             <div className="flex items-center justify-between text-xs text-gray-500">
               <span>Last updated: {lastRefresh.toLocaleTimeString()}</span>
-              {(usageData.elevenlabsUsage.percentage > 75 ||
-                usageData.customMessagesUsage.percentage > 75) &&
-                !usageData.hasUnlimitedAccess && (
-                  <div className="flex items-center space-x-1 text-amber-600">
-                    <TrendingUp className="w-3 h-3" />
-                    <span>Consider upgrading</span>
-                  </div>
-                )}
+              {(usageData.elevenlabsUsage.percentage > 75 || usageData.customMessagesUsage.percentage > 75) && !usageData.hasUnlimitedAccess && (
+                <div className="flex items-center space-x-1 text-amber-600">
+                  <TrendingUp className="w-3 h-3" />
+                  <span>Consider upgrading</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

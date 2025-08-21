@@ -1,5 +1,7 @@
-import type { Alarm, VoiceMood } from '../types';
-import { formatTime } from '../utils';
+/// <reference types="node" />
+/// <reference lib="dom" />
+import type { Alarm, VoiceMood } from "../types";
+import { formatTime } from "../utils";
 
 // Enhanced voice configuration types
 export interface VoiceProvider {
@@ -67,116 +69,53 @@ export class VoiceProService {
       name: 'Browser Speech',
       type: 'web-speech',
       premium: false,
-      languages: [
-        'en-US',
-        'en-GB',
-        'es-ES',
-        'fr-FR',
-        'de-DE',
-        'it-IT',
-        'ja-JP',
-        'ko-KR',
-        'zh-CN',
-      ],
-      voices: [], // Populated dynamically
+      languages: ['en-US', 'en-GB', 'es-ES', 'fr-FR', 'de-DE', 'it-IT', 'ja-JP', 'ko-KR', 'zh-CN'],
+      voices: [] // Populated dynamically
     },
     {
       id: 'elevenlabs',
       name: 'ElevenLabs',
       type: 'elevenlabs',
       premium: true,
-      languages: [
-        'en-US',
-        'en-GB',
-        'es-ES',
-        'fr-FR',
-        'de-DE',
-        'it-IT',
-        'pl-PL',
-        'pt-BR',
-      ],
+      languages: ['en-US', 'en-GB', 'es-ES', 'fr-FR', 'de-DE', 'it-IT', 'pl-PL', 'pt-BR'],
       voices: [
-        {
-          id: '21m00Tcm4TlvDq8ikWAM',
-          name: 'Rachel',
-          gender: 'female',
-          quality: 'premium',
-          category: 'natural',
-        },
-        {
-          id: 'AZnzlk1XvdvUeBnXmlld',
-          name: 'Domi',
-          gender: 'female',
-          quality: 'premium',
-          category: 'expressive',
-        },
-        {
-          id: 'EXAVITQu4vr4xnSDxMaL',
-          name: 'Bella',
-          gender: 'female',
-          quality: 'premium',
-          category: 'professional',
-        },
-        {
-          id: 'ErXwobaYiN019PkySvjV',
-          name: 'Antoni',
-          gender: 'male',
-          quality: 'premium',
-          category: 'natural',
-        },
-        {
-          id: 'VR6AewLTigWG4xSOukaG',
-          name: 'Arnold',
-          gender: 'male',
-          quality: 'premium',
-          category: 'expressive',
-        },
-        {
-          id: 'pNInz6obpgDQGcFmaJgB',
-          name: 'Adam',
-          gender: 'male',
-          quality: 'premium',
-          category: 'professional',
-        },
-        {
-          id: 'yoZ06aMxZJJ28mfd3POQ',
-          name: 'Sam',
-          gender: 'neutral',
-          quality: 'premium',
-          category: 'casual',
-        },
-      ],
-    },
+        { id: '21m00Tcm4TlvDq8ikWAM', name: 'Rachel', gender: 'female', quality: 'premium', category: 'natural' },
+        { id: 'AZnzlk1XvdvUeBnXmlld', name: 'Domi', gender: 'female', quality: 'premium', category: 'expressive' },
+        { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Bella', gender: 'female', quality: 'premium', category: 'professional' },
+        { id: 'ErXwobaYiN019PkySvjV', name: 'Antoni', gender: 'male', quality: 'premium', category: 'natural' },
+        { id: 'VR6AewLTigWG4xSOukaG', name: 'Arnold', gender: 'male', quality: 'premium', category: 'expressive' },
+        { id: 'pNInz6obpgDQGcFmaJgB', name: 'Adam', gender: 'male', quality: 'premium', category: 'professional' },
+        { id: 'yoZ06aMxZJJ28mfd3POQ', name: 'Sam', gender: 'neutral', quality: 'premium', category: 'casual' }
+      ]
+    }
   ];
 
   // Voice mood to voice ID mapping for different providers
-  private static moodVoiceMappings: {
-    [mood in VoiceMood]: { [provider: string]: string };
-  } = {
+  private static moodVoiceMappings: { [mood in VoiceMood]: { [provider: string]: string } } = {
     'drill-sergeant': {
-      elevenlabs: 'VR6AewLTigWG4xSOukaG', // Arnold - expressive male
-      'web-speech': 'male',
+      'elevenlabs': 'VR6AewLTigWG4xSOukaG', // Arnold - expressive male
+      'web-speech': 'male'
     },
     'sweet-angel': {
-      elevenlabs: '21m00Tcm4TlvDq8ikWAM', // Rachel - natural female
-      'web-speech': 'female',
+      'elevenlabs': '21m00Tcm4TlvDq8ikWAM', // Rachel - natural female
+      'web-speech': 'female'
     },
     'anime-hero': {
-      elevenlabs: 'AZnzlk1XvdvUeBnXmlld', // Domi - expressive female
-      'web-speech': 'female',
+      'elevenlabs': 'AZnzlk1XvdvUeBnXmlld', // Domi - expressive female
+      'web-speech': 'female'
     },
     'savage-roast': {
-      elevenlabs: 'ErXwobaYiN019PkySvjV', // Antoni - natural male
-      'web-speech': 'male',
+      'elevenlabs': 'ErXwobaYiN019PkySvjV', // Antoni - natural male
+      'web-speech': 'male'
     },
-    motivational: {
-      elevenlabs: 'pNInz6obpgDQGcFmaJgB', // Adam - professional male
-      'web-speech': 'male',
+    'motivational': {
+      'elevenlabs': 'pNInz6obpgDQGcFmaJgB', // Adam - professional male
+      'web-speech': 'male'
     },
-    gentle: {
-      elevenlabs: 'EXAVITQu4vr4xnSDxMaL', // Bella - professional female
-      'web-speech': 'female',
-    },
+    'gentle': {
+      'elevenlabs': 'EXAVITQu4vr4xnSDxMaL', // Bella - professional female
+      'web-speech': 'female'
+    }
   };
 
   static async initialize(): Promise<void> {
@@ -219,9 +158,7 @@ export class VoiceProService {
             setTimeout(checkVoices, 100);
           }
         };
-        speechSynthesis.addEventListener('voiceschanged', () => resolve(), {
-          once: true,
-        });
+        speechSynthesis.addEventListener('voiceschanged', () => resolve(), { once: true });
         checkVoices();
       });
     }
@@ -235,23 +172,14 @@ export class VoiceProService {
         name: voice.name,
         gender: this.detectGender(voice.name),
         quality: voice.localService ? 'high' : 'standard',
-        category: 'natural' as const,
+        category: 'natural' as const
       }));
     }
   }
 
   private static detectGender(voiceName: string): 'male' | 'female' | 'neutral' {
     const name = voiceName.toLowerCase();
-    const femaleIndicators = [
-      'female',
-      'woman',
-      'samantha',
-      'victoria',
-      'karen',
-      'zira',
-      'susan',
-      'fiona',
-    ];
+    const femaleIndicators = ['female', 'woman', 'samantha', 'victoria', 'karen', 'zira', 'susan', 'fiona'];
     const maleIndicators = ['male', 'man', 'david', 'mark', 'daniel', 'alex', 'james'];
 
     if (femaleIndicators.some(indicator => name.includes(indicator))) return 'female';
@@ -263,8 +191,8 @@ export class VoiceProService {
     try {
       const response = await fetch('https://api.elevenlabs.io/v1/user', {
         headers: {
-          'xi-api-key': apiKey,
-        },
+          'xi-api-key': apiKey
+        }
       });
       return response.ok;
     } catch (error) {
@@ -279,8 +207,7 @@ export class VoiceProService {
       return;
     }
 
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.recognition = new SpeechRecognition();
 
     this.recognition.continuous = true;
@@ -308,10 +235,7 @@ export class VoiceProService {
     }
   }
 
-  static async generateAlarmMessage(
-    alarm: Alarm,
-    forceRegenerate = false
-  ): Promise<string | null> {
+  static async generateAlarmMessage(alarm: Alarm, forceRegenerate = false): Promise<string | null> {
     await this.initialize();
 
     const cacheKey = this.getCacheKey(alarm.id, alarm.voiceMood);
@@ -348,7 +272,7 @@ export class VoiceProService {
               createdAt: new Date(),
               expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
               provider: providerId,
-              settings,
+              settings
             };
 
             this.audioCache.set(cacheKey, cachedMessage);
@@ -368,11 +292,7 @@ export class VoiceProService {
     return null;
   }
 
-  private static async generateSpeech(
-    text: string,
-    settings: VoiceSettings,
-    providerId: string
-  ): Promise<string | null> {
+  private static async generateSpeech(text: string, settings: VoiceSettings, providerId: string): Promise<string | null> {
     switch (providerId) {
       case 'elevenlabs':
         return await this.generateElevenLabsSpeech(text, settings);
@@ -383,37 +303,31 @@ export class VoiceProService {
     }
   }
 
-  private static async generateElevenLabsSpeech(
-    text: string,
-    settings: VoiceSettings
-  ): Promise<string | null> {
+  private static async generateElevenLabsSpeech(text: string, settings: VoiceSettings): Promise<string | null> {
     const apiKey = localStorage.getItem('elevenlabs_api_key');
     if (!apiKey) {
       throw new Error('ElevenLabs API key not found');
     }
 
     try {
-      const response = await fetch(
-        `https://api.elevenlabs.io/v1/text-to-speech/${settings.voiceId}`,
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'audio/mpeg',
-            'Content-Type': 'application/json',
-            'xi-api-key': apiKey,
-          },
-          body: JSON.stringify({
-            text,
-            model_id: 'eleven_monolingual_v1',
-            voice_settings: {
-              stability: settings.stability || 0.5,
-              similarity_boost: settings.clarity || 0.5,
-              style: settings.style || 0.0,
-              use_speaker_boost: true,
-            },
-          }),
-        }
-      );
+      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${settings.voiceId}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'audio/mpeg',
+          'Content-Type': 'application/json',
+          'xi-api-key': apiKey
+        },
+        body: JSON.stringify({
+          text,
+          model_id: 'eleven_monolingual_v1',
+          voice_settings: {
+            stability: settings.stability || 0.5,
+            similarity_boost: settings.clarity || 0.5,
+            style: settings.style || 0.0,
+            use_speaker_boost: true
+          }
+        })
+      });
 
       if (!response.ok) {
         throw new Error(`ElevenLabs API error: ${response.status}`);
@@ -427,10 +341,7 @@ export class VoiceProService {
     }
   }
 
-  private static async generateWebSpeech(
-    text: string,
-    settings: VoiceSettings
-  ): Promise<string | null> {
+  private static async generateWebSpeech(text: string, settings: VoiceSettings): Promise<string | null> {
     if (!('speechSynthesis' in window)) {
       return null;
     }
@@ -514,10 +425,7 @@ export class VoiceProService {
     }
   }
 
-  static async startRepeatingAlarmMessage(
-    alarm: Alarm,
-    intervalMs: number = 30000
-  ): Promise<() => void> {
+  static async startRepeatingAlarmMessage(alarm: Alarm, intervalMs: number = 30000): Promise<() => void> {
     await this.initialize();
 
     let isActive = true;
@@ -566,43 +474,43 @@ export class VoiceProService {
         `DROP AND GIVE ME TWENTY! It's ${time} and time for ${label}!`,
         `MOVE IT MOVE IT! ${time} means ${label} time! GET UP NOW!`,
         `ATTENTION! ${time} HOURS! Time for ${label}! MOVE YOUR BODY!`,
-        `RISE AND GRIND WARRIOR! It's ${time}! ${label} awaits! NO SNOOZING!`,
+        `RISE AND GRIND WARRIOR! It's ${time}! ${label} awaits! NO SNOOZING!`
       ],
       'sweet-angel': [
         `Good morning sunshine! It's ${time} and time for ${label}. Have a beautiful day!`,
         `Rise and shine, dear! It's ${time}. Time to start your wonderful day with ${label}.`,
         `Sweet dreams are over! It's ${time} and your ${label} awaits. You've got this!`,
         `Hello beautiful! It's ${time}. Time to embrace the day with ${label}. Sending you love!`,
-        `Wake up sweetie! It's ${time} and ${label} is calling. You're amazing!`,
+        `Wake up sweetie! It's ${time} and ${label} is calling. You're amazing!`
       ],
       'anime-hero': [
         `The power of friendship compels you! It's ${time}! Time for ${label}! Believe in yourself!`,
         `Your destiny awaits! It's ${time} and ${label} is calling! Never give up!`,
         `Transform and roll out! It's ${time}! Time to conquer ${label} with the power of determination!`,
         `The world needs you! It's ${time}! ${label} is your quest! Fight on!`,
-        `Unlock your true potential! It's ${time}! ${label} will make you stronger! Plus ultra!`,
+        `Unlock your true potential! It's ${time}! ${label} will make you stronger! Plus ultra!`
       ],
       'savage-roast': [
         `Oh look, sleeping beauty finally decided to join us. It's ${time} and your ${label} is waiting.`,
         `Well well well, it's ${time}. Time for ${label}. Hope you enjoyed your beauty sleep because you need it.`,
         `Rise and grind, sunshine. It's ${time} and ${label} won't do itself. Time to adult.`,
         `Congratulations on being fashionably late to ${time}. Your ${label} is judging you.`,
-        `Hey sleepyhead, it's ${time}. ${label} called, it wants to know if you're still interested.`,
+        `Hey sleepyhead, it's ${time}. ${label} called, it wants to know if you're still interested.`
       ],
-      motivational: [
+      'motivational': [
         `Champions rise early! It's ${time} and time for ${label}! Today is your day to shine!`,
         `Success starts now! It's ${time}! Your ${label} is the first step to greatness!`,
         `Winners don't snooze! It's ${time}! Time to crush ${label} and own this day!`,
         `Every legend started with an alarm! It's ${time}! ${label} is your moment!`,
-        `The grind starts now! It's ${time}! ${label} is calling your name! Let's go!`,
+        `The grind starts now! It's ${time}! ${label} is calling your name! Let's go!`
       ],
-      gentle: [
+      'gentle': [
         `Good morning! It's ${time}. Take your time, but please remember ${label} when you're ready.`,
         `Gentle wake-up call: it's ${time}. Your ${label} is waiting, but no rush.`,
         `Sweet morning! It's ${time} and time for ${label}. Hope you slept well.`,
         `Peaceful morning! It's ${time}. ${label} is gently calling. Rest well, then rise.`,
-        `Soft reminder: it's ${time}. ${label} is here when you're ready. Take care.`,
-      ],
+        `Soft reminder: it's ${time}. ${label} is here when you're ready. Take care.`
+      ]
     };
 
     const moodTemplates = templates[alarm.voiceMood] || templates['motivational'];
@@ -641,7 +549,7 @@ export class VoiceProService {
           confidence,
           isFinal: result.isFinal,
           intent: this.parseIntent(transcript),
-          entities: this.extractEntities(transcript),
+          entities: this.extractEntities(transcript)
         };
 
         onResult(recognitionResult);
@@ -685,24 +593,8 @@ export class VoiceProService {
   }
 
   private static parseIntent(transcript: string): 'dismiss' | 'snooze' | 'unknown' {
-    const dismissWords = [
-      'stop',
-      'dismiss',
-      'turn off',
-      'shut up',
-      'quiet',
-      'cancel',
-      'end',
-      'off',
-    ];
-    const snoozeWords = [
-      'snooze',
-      'five more minutes',
-      'later',
-      'wait',
-      'sleep',
-      'more time',
-    ];
+    const dismissWords = ['stop', 'dismiss', 'turn off', 'shut up', 'quiet', 'cancel', 'end', 'off'];
+    const snoozeWords = ['snooze', 'five more minutes', 'later', 'wait', 'sleep', 'more time'];
 
     if (dismissWords.some(word => transcript.includes(word))) {
       return 'dismiss';
@@ -732,61 +624,57 @@ export class VoiceProService {
         pitch: 0.7,
         volume: 1.0,
         stability: 0.8,
-        clarity: 0.9,
+        clarity: 0.9
       },
       'sweet-angel': {
         speed: 0.9,
         pitch: 1.3,
         volume: 0.8,
         stability: 0.6,
-        clarity: 0.8,
+        clarity: 0.8
       },
       'anime-hero': {
         speed: 1.2,
         pitch: 1.2,
         volume: 1.0,
         stability: 0.4,
-        clarity: 0.9,
+        clarity: 0.9
       },
       'savage-roast': {
         speed: 1.0,
         pitch: 0.9,
         volume: 0.9,
         stability: 0.7,
-        clarity: 0.7,
+        clarity: 0.7
       },
-      motivational: {
+      'motivational': {
         speed: 1.1,
         pitch: 1.0,
         volume: 1.0,
         stability: 0.8,
-        clarity: 0.9,
+        clarity: 0.9
       },
-      gentle: {
+      'gentle': {
         speed: 0.8,
         pitch: 1.1,
         volume: 0.6,
         stability: 0.9,
-        clarity: 0.6,
-      },
+        clarity: 0.6
+      }
     };
 
-    const defaultProvider =
-      localStorage.getItem('preferred_voice_provider') || 'elevenlabs';
+    const defaultProvider = localStorage.getItem('preferred_voice_provider') || 'elevenlabs';
     const voiceMapping = this.moodVoiceMappings[mood];
     const voiceId = voiceMapping[defaultProvider] || voiceMapping['elevenlabs'];
 
     return {
       provider: defaultProvider,
       voiceId,
-      ...baseSettings[mood],
+      ...baseSettings[mood]
     } as VoiceSettings;
   }
 
-  private static configureWebSpeechUtterance(
-    utterance: SpeechSynthesisUtterance,
-    settings: VoiceSettings
-  ): void {
+  private static configureWebSpeechUtterance(utterance: SpeechSynthesisUtterance, settings: VoiceSettings): void {
     const voices = speechSynthesis.getVoices();
 
     utterance.rate = settings.speed;
@@ -794,14 +682,8 @@ export class VoiceProService {
     utterance.volume = settings.volume;
 
     // Try to find the preferred voice
-    if (
-      settings.voiceId &&
-      settings.voiceId !== 'male' &&
-      settings.voiceId !== 'female'
-    ) {
-      const voice = voices.find(
-        v => v.voiceURI === settings.voiceId || v.name === settings.voiceId
-      );
+    if (settings.voiceId && settings.voiceId !== 'male' && settings.voiceId !== 'female') {
+      const voice = voices.find(v => v.voiceURI === settings.voiceId || v.name === settings.voiceId);
       if (voice) {
         utterance.voice = voice;
         return;
@@ -811,12 +693,14 @@ export class VoiceProService {
     // Fallback to gender-based selection
     const gender = settings.voiceId as 'male' | 'female';
     if (gender === 'female') {
-      const femaleVoice = voices.find(
-        voice => this.detectGender(voice.name) === 'female'
+      const femaleVoice = voices.find(voice =>
+        this.detectGender(voice.name) === 'female'
       );
       if (femaleVoice) utterance.voice = femaleVoice;
     } else if (gender === 'male') {
-      const maleVoice = voices.find(voice => this.detectGender(voice.name) === 'male');
+      const maleVoice = voices.find(voice =>
+        this.detectGender(voice.name) === 'male'
+      );
       if (maleVoice) utterance.voice = maleVoice;
     }
   }
@@ -845,7 +729,7 @@ export class VoiceProService {
       voiceMood: mood,
       snoozeCount: 0,
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     };
 
     await this.playAlarmMessage(testAlarm);

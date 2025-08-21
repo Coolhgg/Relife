@@ -3,7 +3,7 @@
 import { TestUser, TestAlarm, TestTheme, testConsole } from './index';
 
 // Reset all mocks to clean state
-export const resetAllMocks = () => {
+export const _resetAllMocks = () => {
   jest.clearAllMocks();
   jest.clearAllTimers();
 
@@ -31,7 +31,7 @@ export const resetAllMocks = () => {
 };
 
 // Mock localStorage with data
-export const mockLocalStorage = (data: Record<string, string> = {}) => {
+export const _mockLocalStorage = (data: Record<string, string> = {}) => {
   const storage: Record<string, string> = { ...data };
 
   Object.defineProperty(window, 'localStorage', {
@@ -47,27 +47,27 @@ export const mockLocalStorage = (data: Record<string, string> = {}) => {
         Object.keys(storage).forEach(key => delete storage[key]);
       }),
       length: Object.keys(storage).length,
-      key: jest.fn((index: number) => Object.keys(storage)[index] || null),
+      key: jest.fn((index: number) => Object.keys(storage)[index] || null)
     },
-    writable: true,
+    writable: true
   });
 
   return storage;
 };
 
 // Mock timers for testing
-export const mockTimers = () => {
+export const _mockTimers = () => {
   jest.useFakeTimers();
   return {
     advanceBy: (ms: number) => jest.advanceTimersByTime(ms),
     runAll: () => jest.runAllTimers(),
-    restore: () => jest.useRealTimers(),
+    restore: () => jest.useRealTimers()
   };
 };
 
 // Mock fetch with responses
-export const mockFetch = (
-  responses: Array<{ url: string; response: any; status?: number }>
+export const _mockFetch = (
+  responses: Array<{ url: string; response: any; status?: number }>,
 ) => {
   (global.fetch as jest.Mock) = jest.fn((url: string) => {
     const match = responses.find(r => url.includes(r.url));
@@ -76,7 +76,7 @@ export const mockFetch = (
         ok: (match.status || 200) < 400,
         status: match.status || 200,
         json: () => Promise.resolve(match.response),
-        text: () => Promise.resolve(JSON.stringify(match.response)),
+        text: () => Promise.resolve(JSON.stringify(match.response))
       });
     }
     return Promise.reject(new Error(`Unmocked fetch: ${url}`));
@@ -84,7 +84,7 @@ export const mockFetch = (
 };
 
 // Mock console methods
-export const mockConsole = () => {
+export const _mockConsole = () => {
   const originalConsole = { ...console };
 
   console.log = jest.fn();
@@ -99,6 +99,6 @@ export const mockConsole = () => {
     },
     getLogs: () => (console.log as jest.Mock).mock.calls,
     getWarnings: () => (console.warn as jest.Mock).mock.calls,
-    getErrors: () => (console.error as jest.Mock).mock.calls,
+    getErrors: () => (console.error as jest.Mock).mock.calls
   };
 };

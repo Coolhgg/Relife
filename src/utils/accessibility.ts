@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Accessibility utilities for Smart Alarm App
 // Provides color contrast checking and accessibility helpers
 
@@ -13,13 +14,11 @@ export interface ColorContrastResult {
  */
 export const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
-    : null;
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
 };
 
 /**
@@ -74,7 +73,7 @@ export const checkContrastAccessibility = (
   const requiredAAA = fontSize === 'large' ? largeAAA : normalAAA;
 
   let level: ColorContrastResult['level'] = 'FAIL';
-  const recommendations: string[] = [];
+  let recommendations: string[] = [];
 
   if (ratio >= requiredAAA) {
     level = 'AAA';
@@ -83,23 +82,19 @@ export const checkContrastAccessibility = (
   } else if (ratio >= 3.0) {
     level = 'A';
     recommendations.push('Consider using a darker foreground or lighter background');
-    recommendations.push(
-      'Current contrast meets minimum requirements but not recommended standards'
-    );
+    recommendations.push('Current contrast meets minimum requirements but not recommended standards');
   } else {
     level = 'FAIL';
     recommendations.push('Insufficient contrast - text may be difficult to read');
     recommendations.push('Use a darker foreground or lighter background color');
-    recommendations.push(
-      `Current ratio: ${ratio.toFixed(2)}, Required: ${requiredAA.toFixed(1)}`
-    );
+    recommendations.push(`Current ratio: ${ratio.toFixed(2)}, Required: ${requiredAA.toFixed(1)}`);
   }
 
   return {
     ratio: parseFloat(ratio.toFixed(2)),
     level,
     isAccessible: ratio >= requiredAA,
-    recommendations: recommendations.length > 0 ? recommendations : undefined,
+    recommendations: recommendations.length > 0 ? recommendations : undefined
   };
 };
 
@@ -124,7 +119,7 @@ export const getContrastImprovedColors = (
   const darkerForeground = {
     r: Math.max(0, fgRgb.r - 50),
     g: Math.max(0, fgRgb.g - 50),
-    b: Math.max(0, fgRgb.b - 50),
+    b: Math.max(0, fgRgb.b - 50)
   };
 
   const fgHex = `#${darkerForeground.r.toString(16).padStart(2, '0')}${darkerForeground.g.toString(16).padStart(2, '0')}${darkerForeground.b.toString(16).padStart(2, '0')}`;
@@ -137,7 +132,7 @@ export const getContrastImprovedColors = (
   const lighterBackground = {
     r: Math.min(255, bgRgb.r + 50),
     g: Math.min(255, bgRgb.g + 50),
-    b: Math.min(255, bgRgb.b + 50),
+    b: Math.min(255, bgRgb.b + 50)
   };
 
   const bgHex = `#${lighterBackground.r.toString(16).padStart(2, '0')}${lighterBackground.g.toString(16).padStart(2, '0')}${lighterBackground.b.toString(16).padStart(2, '0')}`;
@@ -317,7 +312,7 @@ export const addAccessibleTooltip = (
     position?: 'top' | 'bottom' | 'left' | 'right';
     delay?: number;
   } = {}
-): (() => void) => {
+): () => void => {
   const { position = 'top', delay = 300 } = options;
   let tooltip: HTMLElement | null = null;
   let timeoutId: number | null = null;
@@ -418,5 +413,5 @@ export default {
   announcePageChange,
   isHighContrastMode,
   prefersReducedMotion,
-  addAccessibleTooltip,
+  addAccessibleTooltip
 };

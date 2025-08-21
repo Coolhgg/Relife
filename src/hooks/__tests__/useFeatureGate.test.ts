@@ -1,20 +1,22 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for useFeatureGate hook
  * Tests feature access control, upgrade prompts, and business logic
  */
 
-import { renderHook, act, waitFor } from '@testing-library/react';
-import useFeatureGate from '../useFeatureGate';
+import { renderHook, act, waitFor } from "@testing-library/react";
+import { FeatureService } from "../../services/feature";
+import useFeatureGate from "../useFeatureGate";
+import { FeatureService } from "../../services/feature";
 import {
   renderHookWithProviders,
   createMockSubscription,
   clearAllMocks,
-} from '../../__tests__/utils/hook-testing-utils';
-import type { SubscriptionTier, FeatureAccess } from '../../types/premium';
+} from "../../__tests__/utils/hook-testing-utils";
+import { FeatureService } from "../../services/feature";
 
 // Mock useSubscription hook
 const mockSubscription = {
-  userTier: 'free' as SubscriptionTier,
   featureAccess: null as FeatureAccess | null,
   hasFeatureAccess: jest.fn(() => false),
   isLoading: false,
@@ -38,7 +40,7 @@ const mockSubscription = {
     showUpgradeModal: false,
     errors: {},
     currentStep: 'plan_selection',
-    paymentIntent: undefined,
+    paymentIntent: undefined
   },
   createSubscription: jest.fn(),
   updateSubscription: jest.fn(),
@@ -214,9 +216,7 @@ describe('useFeatureGate Hook', () => {
       expect(result.current.isGated).toBe(true);
       expect(result.current.usageLimit).toBe(10);
       expect(result.current.usageRemaining).toBe(0);
-      expect(result.current.upgradeMessage).toContain(
-        'reached your alarm battles limit'
-      );
+      expect(result.current.upgradeMessage).toContain('reached your alarm battles limit');
     });
 
     it('should calculate usage remaining correctly', () => {
@@ -650,20 +650,17 @@ describe('useFeatureGate Hook', () => {
       {
         feature: 'unlimited_alarms',
         requiredTier: 'basic',
-        message:
-          'Upgrade to Basic to set unlimited alarms and never miss an important wake-up call!',
+        message: 'Upgrade to Basic to set unlimited alarms and never miss an important wake-up call!',
       },
       {
         feature: 'smart_scheduling',
         requiredTier: 'premium',
-        message:
-          'Upgrade to Premium to unlock AI-powered smart scheduling and optimize your sleep cycles!',
+        message: 'Upgrade to Premium to unlock AI-powered smart scheduling and optimize your sleep cycles!',
       },
       {
         feature: 'team_features',
         requiredTier: 'pro',
-        message:
-          'Upgrade to Pro to create team battles and collaborate with colleagues!',
+        message: 'Upgrade to Pro to create team battles and collaborate with colleagues!',
       },
     ];
 
@@ -678,7 +675,6 @@ describe('useFeatureGate Hook', () => {
               hasAccess: false,
               usageLimit: null,
               usageCount: undefined,
-              upgradeRequired: requiredTier as SubscriptionTier,
             },
           },
           lastUpdated: new Date(),

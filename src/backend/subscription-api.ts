@@ -11,7 +11,7 @@ import type {
   Subscription,
   PaymentMethod,
   Invoice,
-  Discount,
+  Discount
 } from '../types/premium';
 
 interface StripeEnv {
@@ -28,8 +28,8 @@ function getStripe(env: StripeEnv): Stripe {
     appInfo: {
       name: 'Relife Alarm App',
       version: '1.0.0',
-      url: 'https://relife-alarm.com',
-    },
+      url: 'https://relife-alarm.com'
+    }
   });
 }
 
@@ -42,24 +42,23 @@ async function createSupabaseClient(env: StripeEnv) {
 // Helper function for CORS headers
 function corsHeaders(origin: string): HeadersInit {
   return {
-    'Access-Control-Allow-Origin': origin || '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Content-Type': 'application/json',
+    "Access-Control-Allow-Origin": origin || "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Content-Type": "application/json",
   };
 }
 
 // Error response helper
-function errorResponse(
-  message: string,
-  status: number = 400,
-  origin: string = '*'
-): Response {
-  return Response.json({ error: message }, { status, headers: corsHeaders(origin) });
+function errorResponse(message: string, status: number = 400, origin: string = "*"): Response {
+  return Response.json(
+    { error: message },
+    { status, headers: corsHeaders(origin) }
+  );
 }
 
 // Success response helper
-function successResponse(data: any, origin: string = '*'): Response {
+function successResponse(data: any, origin: string = "*"): Response {
   return Response.json(data, { headers: corsHeaders(origin) });
 }
 
@@ -80,100 +79,91 @@ export class SubscriptionAPIHandler {
 
     const url = new URL(request.url);
     const method = request.method;
-    const origin = request.headers.get('Origin') || '*';
+    const origin = request.headers.get("Origin") || "*";
 
     // Handle CORS preflight
-    if (method === 'OPTIONS') {
+    if (method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders(origin) });
     }
 
     try {
       // Subscription Plans
-      if (url.pathname === '/api/stripe/plans' && method === 'GET') {
+      if (url.pathname === "/api/stripe/plans" && method === "GET") {
         return await this.getSubscriptionPlans(origin);
       }
 
       // Create Stripe Customer
-      if (url.pathname === '/api/stripe/customers' && method === 'POST') {
+      if (url.pathname === "/api/stripe/customers" && method === "POST") {
         return await this.createCustomer(request, origin);
       }
 
       // Subscription Management
-      if (url.pathname === '/api/stripe/subscriptions' && method === 'POST') {
+      if (url.pathname === "/api/stripe/subscriptions" && method === "POST") {
         return await this.createSubscription(request, origin);
       }
 
-      const subscriptionMatch = url.pathname.match(
-        /^\/api\/stripe\/subscriptions\/([^/]+)$/
-      );
-      if (subscriptionMatch && method === 'PUT') {
+      const subscriptionMatch = url.pathname.match(/^\/api\/stripe\/subscriptions\/([^/]+)$/);
+      if (subscriptionMatch && method === "PUT") {
         return await this.updateSubscription(subscriptionMatch[1], request, origin);
       }
 
-      const cancelMatch = url.pathname.match(
-        /^\/api\/stripe\/subscriptions\/([^/]+)\/cancel$/
-      );
-      if (cancelMatch && method === 'POST') {
+      const cancelMatch = url.pathname.match(/^\/api\/stripe\/subscriptions\/([^/]+)\/cancel$/);
+      if (cancelMatch && method === "POST") {
         return await this.cancelSubscription(cancelMatch[1], request, origin);
       }
 
-      const upcomingInvoiceMatch = url.pathname.match(
-        /^\/api\/stripe\/subscriptions\/([^/]+)\/upcoming-invoice$/
-      );
-      if (upcomingInvoiceMatch && method === 'GET') {
+      const upcomingInvoiceMatch = url.pathname.match(/^\/api\/stripe\/subscriptions\/([^/]+)\/upcoming-invoice$/);
+      if (upcomingInvoiceMatch && method === "GET") {
         return await this.getUpcomingInvoice(upcomingInvoiceMatch[1], origin);
       }
 
       // Payment Methods
-      if (url.pathname === '/api/stripe/payment-methods' && method === 'POST') {
+      if (url.pathname === "/api/stripe/payment-methods" && method === "POST") {
         return await this.addPaymentMethod(request, origin);
       }
 
-      const removePaymentMethodMatch = url.pathname.match(
-        /^\/api\/stripe\/payment-methods\/([^/]+)$/
-      );
-      if (removePaymentMethodMatch && method === 'DELETE') {
+      const removePaymentMethodMatch = url.pathname.match(/^\/api\/stripe\/payment-methods\/([^/]+)$/);
+      if (removePaymentMethodMatch && method === "DELETE") {
         return await this.removePaymentMethod(removePaymentMethodMatch[1], origin);
       }
 
       // Payment Intents
-      if (url.pathname === '/api/stripe/payment-intents' && method === 'POST') {
+      if (url.pathname === "/api/stripe/payment-intents" && method === "POST") {
         return await this.createPaymentIntent(request, origin);
       }
 
       // Discount Validation
-      if (url.pathname === '/api/stripe/coupons/validate' && method === 'POST') {
+      if (url.pathname === "/api/stripe/coupons/validate" && method === "POST") {
         return await this.validateDiscountCode(request, origin);
       }
 
       // Webhooks
-      if (url.pathname === '/api/stripe/webhooks' && method === 'POST') {
+      if (url.pathname === "/api/stripe/webhooks" && method === "POST") {
         return await this.handleWebhook(request, origin);
       }
 
       // Feature Access Check
-      if (url.pathname === '/api/subscription/feature-access' && method === 'POST') {
+      if (url.pathname === "/api/subscription/feature-access" && method === "POST") {
         return await this.checkFeatureAccess(request, origin);
       }
 
       // Usage Tracking
-      if (url.pathname === '/api/subscription/track-usage' && method === 'POST') {
+      if (url.pathname === "/api/subscription/track-usage" && method === "POST") {
         return await this.trackFeatureUsage(request, origin);
       }
 
       // Subscription Dashboard
-      const dashboardMatch = url.pathname.match(
-        /^\/api\/subscription\/dashboard\/([^/]+)$/
-      );
-      if (dashboardMatch && method === 'GET') {
+      const dashboardMatch = url.pathname.match(/^\/api\/subscription\/dashboard\/([^/]+)$/);
+      if (dashboardMatch && method === "GET") {
         return await this.getSubscriptionDashboard(dashboardMatch[1], origin);
       }
 
-      return errorResponse('Not Found', 404, origin);
+      return errorResponse("Not Found", 404, origin);
+
     } catch (error) {
-      console.error('Subscription API Error:', error);
+      console.error("Subscription API Error:", error);
       return errorResponse(
-        error instanceof Error ? error.message : 'Internal Server Error',
+        error instanceof Error ? error.message : "Internal Server Error",
         500,
         origin
       );
@@ -189,7 +179,7 @@ export class SubscriptionAPIHandler {
       .order('sort_order');
 
     if (error) {
-      return errorResponse('Failed to fetch subscription plans', 500, origin);
+      return errorResponse("Failed to fetch subscription plans", 500, origin);
     }
 
     return successResponse({ plans }, origin);
@@ -200,7 +190,7 @@ export class SubscriptionAPIHandler {
     const { userId, email, name, metadata } = await request.json();
 
     if (!userId || !email) {
-      return errorResponse('UserId and email are required', 400, origin);
+      return errorResponse("UserId and email are required", 400, origin);
     }
 
     try {
@@ -209,8 +199,8 @@ export class SubscriptionAPIHandler {
         name,
         metadata: {
           userId,
-          ...metadata,
-        },
+          ...metadata
+        }
       });
 
       // Update user record with customer ID
@@ -220,22 +210,26 @@ export class SubscriptionAPIHandler {
         .eq('id', userId);
 
       return successResponse({ customerId: customer.id }, origin);
+
     } catch (error) {
-      console.error('Failed to create customer:', error);
-      return errorResponse('Failed to create customer', 500, origin);
+      console.error("Failed to create customer:", error);
+      return errorResponse("Failed to create customer", 500, origin);
     }
   }
 
   // Create Subscription
-  private async createSubscription(
-    request: Request,
-    origin: string
-  ): Promise<Response> {
-    const { customerId, priceId, paymentMethodId, discountCode, trialDays, metadata } =
-      await request.json();
+  private async createSubscription(request: Request, origin: string): Promise<Response> {
+    const {
+      customerId,
+      priceId,
+      paymentMethodId,
+      discountCode,
+      trialDays,
+      metadata
+    } = await request.json();
 
     if (!customerId || !priceId) {
-      return errorResponse('CustomerId and priceId are required', 400, origin);
+      return errorResponse("CustomerId and priceId are required", 400, origin);
     }
 
     try {
@@ -245,7 +239,7 @@ export class SubscriptionAPIHandler {
         payment_behavior: 'default_incomplete',
         payment_settings: { save_default_payment_method: 'on_subscription' },
         expand: ['latest_invoice.payment_intent'],
-        metadata,
+        metadata
       };
 
       if (paymentMethodId) {
@@ -269,20 +263,17 @@ export class SubscriptionAPIHandler {
       // Save subscription to database
       await this.saveSubscriptionToDatabase(subscription);
 
-      return successResponse(
-        {
-          subscription,
-          client_secret: subscription.latest_invoice?.payment_intent?.client_secret,
-          requires_action:
-            subscription.latest_invoice?.payment_intent?.status === 'requires_action',
-        },
-        origin
-      );
-    } catch (error: unknown) {
-      console.error('Failed to create subscription:', error);
+      return successResponse({
+        subscription,
+        client_secret: subscription.latest_invoice?.payment_intent?.client_secret,
+        requires_action: subscription.latest_invoice?.payment_intent?.status === 'requires_action'
+      }, origin);
 
-      let errorMessage = 'Failed to create subscription';
-      let errorCode = 'subscription_creation_failed';
+    } catch (error: unknown) {
+      console.error("Failed to create subscription:", error);
+
+      let errorMessage = "Failed to create subscription";
+      let errorCode = "subscription_creation_failed";
 
       if (error instanceof Stripe.errors.StripeError) {
         errorMessage = error.message;
@@ -291,32 +282,23 @@ export class SubscriptionAPIHandler {
         errorMessage = error.message;
       }
 
-      return Response.json(
-        {
-          error: {
-            code: errorCode,
-            message: errorMessage,
-            retryable: false,
-            userFriendlyMessage:
-              'Unable to create subscription. Please check your payment method and try again.',
-          },
-        },
-        {
-          status: 400,
-          headers: corsHeaders(origin),
+      return Response.json({
+        error: {
+          code: errorCode,
+          message: errorMessage,
+          retryable: false,
+          userFriendlyMessage: "Unable to create subscription. Please check your payment method and try again."
         }
-      );
+      }, {
+        status: 400,
+        headers: corsHeaders(origin)
+      });
     }
   }
 
   // Update Subscription
-  private async updateSubscription(
-    subscriptionId: string,
-    request: Request,
-    origin: string
-  ): Promise<Response> {
-    const { planId, billingInterval, cancelAtPeriodEnd, prorationBehavior } =
-      await request.json();
+  private async updateSubscription(subscriptionId: string, request: Request, origin: string): Promise<Response> {
+    const { planId, billingInterval, cancelAtPeriodEnd, prorationBehavior } = await request.json();
 
     try {
       const updateData: any = {};
@@ -330,17 +312,16 @@ export class SubscriptionAPIHandler {
           .single();
 
         if (!plan) {
-          return errorResponse('Invalid plan ID', 400, origin);
+          return errorResponse("Invalid plan ID", 400, origin);
         }
 
         const pricing = plan.pricing;
-        const priceId =
-          billingInterval === 'year'
-            ? pricing.yearly?.stripePriceId
-            : pricing.monthly?.stripePriceId;
+        const priceId = billingInterval === 'year'
+          ? pricing.yearly?.stripePriceId
+          : pricing.monthly?.stripePriceId;
 
         if (!priceId) {
-          return errorResponse('Invalid billing interval for plan', 400, origin);
+          return errorResponse("Invalid billing interval for plan", 400, origin);
         }
 
         updateData.items = [{ id: subscriptionId, price: priceId }];
@@ -351,34 +332,25 @@ export class SubscriptionAPIHandler {
         updateData.cancel_at_period_end = cancelAtPeriodEnd;
       }
 
-      const subscription = await this.stripe.subscriptions.update(
-        subscriptionId,
-        updateData
-      );
+      const subscription = await this.stripe.subscriptions.update(subscriptionId, updateData);
 
       // Update subscription in database
       await this.updateSubscriptionInDatabase(subscription);
 
-      return successResponse(
-        {
-          subscription,
-          proration_amount: 0, // Calculate actual proration if needed
-          effective_date: new Date().toISOString(),
-        },
-        origin
-      );
+      return successResponse({
+        subscription,
+        proration_amount: 0, // Calculate actual proration if needed
+        effective_date: new Date().toISOString()
+      }, origin);
+
     } catch (error) {
-      console.error('Failed to update subscription:', error);
-      return errorResponse('Failed to update subscription', 500, origin);
+      console.error("Failed to update subscription:", error);
+      return errorResponse("Failed to update subscription", 500, origin);
     }
   }
 
   // Cancel Subscription
-  private async cancelSubscription(
-    subscriptionId: string,
-    request: Request,
-    origin: string
-  ): Promise<Response> {
+  private async cancelSubscription(subscriptionId: string, request: Request, origin: string): Promise<Response> {
     const { reason, feedback, cancelImmediately, surveyData } = await request.json();
 
     try {
@@ -391,8 +363,8 @@ export class SubscriptionAPIHandler {
           cancel_at_period_end: true,
           metadata: {
             cancellation_reason: reason,
-            cancellation_feedback: feedback,
-          },
+            cancellation_feedback: feedback
+          }
         });
       }
 
@@ -401,30 +373,28 @@ export class SubscriptionAPIHandler {
 
       // Save cancellation survey if provided
       if (surveyData) {
-        await this.supabase.from('cancellation_surveys').insert({
-          subscription_id: subscriptionId,
-          user_id: surveyData.userId,
-          ...surveyData,
-        });
+        await this.supabase
+          .from('cancellation_surveys')
+          .insert({
+            subscription_id: subscriptionId,
+            user_id: surveyData.userId,
+            ...surveyData
+          });
       }
 
       // Check if user qualifies for retention offer
       const retentionOffer = await this.generateRetentionOffer(subscriptionId);
 
-      return successResponse(
-        {
-          subscription,
-          refund_amount: 0, // Calculate if partial refund applies
-          effective_date: cancelImmediately
-            ? new Date().toISOString()
-            : subscription.current_period_end,
-          retention_offer: retentionOffer,
-        },
-        origin
-      );
+      return successResponse({
+        subscription,
+        refund_amount: 0, // Calculate if partial refund applies
+        effective_date: cancelImmediately ? new Date().toISOString() : subscription.current_period_end,
+        retention_offer: retentionOffer
+      }, origin);
+
     } catch (error) {
-      console.error('Failed to cancel subscription:', error);
-      return errorResponse('Failed to cancel subscription', 500, origin);
+      console.error("Failed to cancel subscription:", error);
+      return errorResponse("Failed to cancel subscription", 500, origin);
     }
   }
 
@@ -433,54 +403,49 @@ export class SubscriptionAPIHandler {
     const { customerId, paymentMethodId, setAsDefault } = await request.json();
 
     if (!customerId || !paymentMethodId) {
-      return errorResponse('CustomerId and paymentMethodId are required', 400, origin);
+      return errorResponse("CustomerId and paymentMethodId are required", 400, origin);
     }
 
     try {
       // Attach payment method to customer
       const paymentMethod = await this.stripe.paymentMethods.attach(paymentMethodId, {
-        customer: customerId,
+        customer: customerId
       });
 
       if (setAsDefault) {
         await this.stripe.customers.update(customerId, {
           invoice_settings: {
-            default_payment_method: paymentMethodId,
-          },
+            default_payment_method: paymentMethodId
+          }
         });
       }
 
       return successResponse({ paymentMethod }, origin);
+
     } catch (error) {
-      console.error('Failed to add payment method:', error);
-      return errorResponse('Failed to add payment method', 500, origin);
+      console.error("Failed to add payment method:", error);
+      return errorResponse("Failed to add payment method", 500, origin);
     }
   }
 
   // Remove Payment Method
-  private async removePaymentMethod(
-    paymentMethodId: string,
-    origin: string
-  ): Promise<Response> {
+  private async removePaymentMethod(paymentMethodId: string, origin: string): Promise<Response> {
     try {
       await this.stripe.paymentMethods.detach(paymentMethodId);
       return successResponse({ success: true }, origin);
+
     } catch (error) {
-      console.error('Failed to remove payment method:', error);
-      return errorResponse('Failed to remove payment method', 500, origin);
+      console.error("Failed to remove payment method:", error);
+      return errorResponse("Failed to remove payment method", 500, origin);
     }
   }
 
   // Create Payment Intent
-  private async createPaymentIntent(
-    request: Request,
-    origin: string
-  ): Promise<Response> {
-    const { amount, currency, customerId, metadata, automaticPaymentMethods } =
-      await request.json();
+  private async createPaymentIntent(request: Request, origin: string): Promise<Response> {
+    const { amount, currency, customerId, metadata, automaticPaymentMethods } = await request.json();
 
     if (!amount || !currency) {
-      return errorResponse('Amount and currency are required', 400, origin);
+      return errorResponse("Amount and currency are required", 400, origin);
     }
 
     try {
@@ -489,48 +454,41 @@ export class SubscriptionAPIHandler {
         currency,
         customer: customerId,
         metadata,
-        automatic_payment_methods: automaticPaymentMethods,
+        automatic_payment_methods: automaticPaymentMethods
       });
 
-      return successResponse(
-        {
-          client_secret: paymentIntent.client_secret,
-          id: paymentIntent.id,
-        },
-        origin
-      );
+      return successResponse({
+        client_secret: paymentIntent.client_secret,
+        id: paymentIntent.id
+      }, origin);
+
     } catch (error) {
-      console.error('Failed to create payment intent:', error);
-      return errorResponse('Failed to create payment intent', 500, origin);
+      console.error("Failed to create payment intent:", error);
+      return errorResponse("Failed to create payment intent", 500, origin);
     }
   }
 
   // Get Upcoming Invoice
-  private async getUpcomingInvoice(
-    subscriptionId: string,
-    origin: string
-  ): Promise<Response> {
+  private async getUpcomingInvoice(subscriptionId: string, origin: string): Promise<Response> {
     try {
       const invoice = await this.stripe.invoices.retrieveUpcoming({
-        subscription: subscriptionId,
+        subscription: subscriptionId
       });
 
       return successResponse({ invoice }, origin);
+
     } catch (error) {
-      console.error('Failed to get upcoming invoice:', error);
-      return errorResponse('Failed to get upcoming invoice', 500, origin);
+      console.error("Failed to get upcoming invoice:", error);
+      return errorResponse("Failed to get upcoming invoice", 500, origin);
     }
   }
 
   // Validate Discount Code
-  private async validateDiscountCode(
-    request: Request,
-    origin: string
-  ): Promise<Response> {
+  private async validateDiscountCode(request: Request, origin: string): Promise<Response> {
     const { customerId, code } = await request.json();
 
     if (!code) {
-      return errorResponse('Discount code is required', 400, origin);
+      return errorResponse("Discount code is required", 400, origin);
     }
 
     try {
@@ -566,37 +524,37 @@ export class SubscriptionAPIHandler {
       } catch {
         return successResponse({ valid: false }, origin);
       }
+
     } catch (error) {
-      console.error('Failed to validate discount code:', error);
+      console.error("Failed to validate discount code:", error);
       return successResponse({ valid: false }, origin);
     }
   }
 
   // Feature Access Check
-  private async checkFeatureAccess(
-    request: Request,
-    origin: string
-  ): Promise<Response> {
+  private async checkFeatureAccess(request: Request, origin: string): Promise<Response> {
     const { userId, featureId } = await request.json();
 
     if (!userId || !featureId) {
-      return errorResponse('UserId and featureId are required', 400, origin);
+      return errorResponse("UserId and featureId are required", 400, origin);
     }
 
     try {
-      const { data, error } = await this.supabase.rpc('check_feature_access', {
-        user_uuid: userId,
-        feature_id: featureId,
-      });
+      const { data, error } = await this.supabase
+        .rpc('check_feature_access', {
+          user_uuid: userId,
+          feature_id: featureId
+        });
 
       if (error) {
         throw error;
       }
 
       return successResponse({ hasAccess: data }, origin);
+
     } catch (error) {
-      console.error('Failed to check feature access:', error);
-      return errorResponse('Failed to check feature access', 500, origin);
+      console.error("Failed to check feature access:", error);
+      return errorResponse("Failed to check feature access", 500, origin);
     }
   }
 
@@ -605,7 +563,7 @@ export class SubscriptionAPIHandler {
     const { userId, featureId, amount } = await request.json();
 
     if (!userId || !featureId) {
-      return errorResponse('UserId and featureId are required', 400, origin);
+      return errorResponse("UserId and featureId are required", 400, origin);
     }
 
     try {
@@ -616,28 +574,26 @@ export class SubscriptionAPIHandler {
         p_user_id: userId,
         p_feature: featureId,
         p_usage_amount: amount || 1,
-        p_reset_date: resetDate.toISOString(),
+        p_reset_date: resetDate.toISOString()
       });
 
       return successResponse({ success: true }, origin);
+
     } catch (error) {
-      console.error('Failed to track feature usage:', error);
-      return errorResponse('Failed to track feature usage', 500, origin);
+      console.error("Failed to track feature usage:", error);
+      return errorResponse("Failed to track feature usage", 500, origin);
     }
   }
 
   // Subscription Dashboard
-  private async getSubscriptionDashboard(
-    userId: string,
-    origin: string
-  ): Promise<Response> {
+  private async getSubscriptionDashboard(userId: string, origin: string): Promise<Response> {
     try {
       const [
         { data: subscription },
         { data: paymentMethods },
         { data: invoices },
         { data: plans },
-        { data: usage },
+        { data: usage }
       ] = await Promise.all([
         this.supabase
           .from('subscriptions')
@@ -645,7 +601,10 @@ export class SubscriptionAPIHandler {
           .eq('user_id', userId)
           .eq('status', 'active')
           .single(),
-        this.supabase.from('payment_methods').select('*').eq('user_id', userId),
+        this.supabase
+          .from('payment_methods')
+          .select('*')
+          .eq('user_id', userId),
         this.supabase
           .from('invoices')
           .select('*')
@@ -657,22 +616,23 @@ export class SubscriptionAPIHandler {
           .select('*')
           .eq('is_active', true)
           .order('sort_order'),
-        this.supabase.from('feature_usage').select('*').eq('user_id', userId),
+        this.supabase
+          .from('feature_usage')
+          .select('*')
+          .eq('user_id', userId)
       ]);
 
-      return successResponse(
-        {
-          subscription,
-          paymentMethods: paymentMethods || [],
-          invoices: invoices || [],
-          plans: plans || [],
-          usage: usage || [],
-        },
-        origin
-      );
+      return successResponse({
+        subscription,
+        paymentMethods: paymentMethods || [],
+        invoices: invoices || [],
+        plans: plans || [],
+        usage: usage || []
+      }, origin);
+
     } catch (error) {
-      console.error('Failed to get subscription dashboard:', error);
-      return errorResponse('Failed to get subscription dashboard', 500, origin);
+      console.error("Failed to get subscription dashboard:", error);
+      return errorResponse("Failed to get subscription dashboard", 500, origin);
     }
   }
 
@@ -681,7 +641,7 @@ export class SubscriptionAPIHandler {
     const signature = request.headers.get('stripe-signature');
 
     if (!signature) {
-      return errorResponse('Missing stripe-signature header', 400, origin);
+      return errorResponse("Missing stripe-signature header", 400, origin);
     }
 
     try {
@@ -693,19 +653,22 @@ export class SubscriptionAPIHandler {
       );
 
       // Log webhook event
-      await this.supabase.from('webhook_events').insert({
-        stripe_event_id: event.id,
-        event_type: event.type,
-        processed: false,
-      });
+      await this.supabase
+        .from('webhook_events')
+        .insert({
+          stripe_event_id: event.id,
+          event_type: event.type,
+          processed: false
+        });
 
       // Process webhook
       await this.processWebhookEvent(event);
 
       return successResponse({ received: true }, origin);
+
     } catch (error) {
-      console.error('Webhook processing failed:', error);
-      return errorResponse('Webhook processing failed', 400, origin);
+      console.error("Webhook processing failed:", error);
+      return errorResponse("Webhook processing failed", 400, origin);
     }
   }
 
@@ -716,25 +679,16 @@ export class SubscriptionAPIHandler {
       stripe_subscription_id: stripeSubscription.id,
       stripe_customer_id: stripeSubscription.customer,
       status: stripeSubscription.status,
-      billing_interval:
-        stripeSubscription.items.data[0].price.recurring?.interval || 'month',
+      billing_interval: stripeSubscription.items.data[0].price.recurring?.interval || 'month',
       amount: stripeSubscription.items.data[0].price.unit_amount || 0,
       currency: stripeSubscription.currency,
       current_period_start: new Date(stripeSubscription.current_period_start * 1000),
       current_period_end: new Date(stripeSubscription.current_period_end * 1000),
-      trial_start: stripeSubscription.trial_start
-        ? new Date(stripeSubscription.trial_start * 1000)
-        : null,
-      trial_end: stripeSubscription.trial_end
-        ? new Date(stripeSubscription.trial_end * 1000)
-        : null,
+      trial_start: stripeSubscription.trial_start ? new Date(stripeSubscription.trial_start * 1000) : null,
+      trial_end: stripeSubscription.trial_end ? new Date(stripeSubscription.trial_end * 1000) : null,
       cancel_at_period_end: stripeSubscription.cancel_at_period_end,
-      canceled_at: stripeSubscription.canceled_at
-        ? new Date(stripeSubscription.canceled_at * 1000)
-        : null,
-      ended_at: stripeSubscription.ended_at
-        ? new Date(stripeSubscription.ended_at * 1000)
-        : null,
+      canceled_at: stripeSubscription.canceled_at ? new Date(stripeSubscription.canceled_at * 1000) : null,
+      ended_at: stripeSubscription.ended_at ? new Date(stripeSubscription.ended_at * 1000) : null
     };
 
     await this.supabase
@@ -745,19 +699,14 @@ export class SubscriptionAPIHandler {
   private async updateSubscriptionInDatabase(stripeSubscription: any): Promise<void> {
     const updateData = {
       status: stripeSubscription.status,
-      billing_interval:
-        stripeSubscription.items.data[0].price.recurring?.interval || 'month',
+      billing_interval: stripeSubscription.items.data[0].price.recurring?.interval || 'month',
       amount: stripeSubscription.items.data[0].price.unit_amount || 0,
       current_period_start: new Date(stripeSubscription.current_period_start * 1000),
       current_period_end: new Date(stripeSubscription.current_period_end * 1000),
       cancel_at_period_end: stripeSubscription.cancel_at_period_end,
-      canceled_at: stripeSubscription.canceled_at
-        ? new Date(stripeSubscription.canceled_at * 1000)
-        : null,
-      ended_at: stripeSubscription.ended_at
-        ? new Date(stripeSubscription.ended_at * 1000)
-        : null,
-      updated_at: new Date(),
+      canceled_at: stripeSubscription.canceled_at ? new Date(stripeSubscription.canceled_at * 1000) : null,
+      ended_at: stripeSubscription.ended_at ? new Date(stripeSubscription.ended_at * 1000) : null,
+      updated_at: new Date()
     };
 
     await this.supabase
@@ -772,7 +721,7 @@ export class SubscriptionAPIHandler {
     return {
       discountPercentage: 20,
       durationMonths: 3,
-      description: 'Stay with us and get 20% off for the next 3 months!',
+      description: "Stay with us and get 20% off for the next 3 months!"
     };
   }
 

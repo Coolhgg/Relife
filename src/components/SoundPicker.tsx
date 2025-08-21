@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+/// <reference lib="dom" />
+import React, { useState, useRef } from "react";
 import {
   Play,
   Pause,
@@ -10,34 +11,38 @@ import {
   Search,
   Filter,
   ChevronDown,
-} from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Badge } from './ui/badge';
-import { ScrollArea } from './ui/scroll-area';
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Badge } from "./ui/badge";
+import { ScrollArea } from "./ui/scroll-area";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from "./ui/select";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
-import { soundEffectsService, SoundEffectId } from '../services/sound-effects';
+} from "./ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "./ui/collapsible";
+import { soundEffectsService, SoundEffectId } from "../services/sound-effects";
 import type {
   CustomSound,
   CustomSoundAssignment,
   CustomSoundType,
-  SoundCategory,
+  SoundCategory
 } from '../types/custom-sound-themes';
 
 interface SoundPickerProps {
@@ -68,7 +73,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
   availableCustomSounds = [],
   allowedSoundTypes = ['uploaded', 'builtin', 'generated', 'url'],
   category,
-  className = '',
+  className = ''
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<CustomSoundType>('uploaded');
@@ -78,7 +83,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
   const [generatedSoundConfig, setGeneratedSoundConfig] = useState({
     type: 'sine_wave' as const,
     frequency: 440,
-    duration: 2,
+    duration: 2
   });
   const [urlInput, setUrlInput] = useState('');
 
@@ -91,27 +96,24 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
       id: sound.id as SoundEffectId,
       name: sound.name,
       category: sound.category,
-      url: sound.url,
+      url: sound.url
     }));
   }, []);
 
   // Filter sounds based on search and category
   const filteredCustomSounds = availableCustomSounds.filter(sound => {
-    const matchesSearch =
-      sound.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sound.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sound.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesSearch = sound.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         sound.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         sound.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    const matchesCategory =
-      filterCategory === 'all' || sound.category === filterCategory;
+    const matchesCategory = filterCategory === 'all' || sound.category === filterCategory;
 
     return matchesSearch && matchesCategory;
   });
 
   const filteredBuiltInSounds = builtInSounds.filter(sound => {
     const matchesSearch = sound.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      filterCategory === 'all' || sound.category === filterCategory;
+    const matchesCategory = filterCategory === 'all' || sound.category === filterCategory;
 
     return matchesSearch && matchesCategory;
   });
@@ -154,7 +156,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
       type: 'uploaded',
       source: sound.fileUrl,
       volume: 0.8,
-      customSound: sound,
+      customSound: sound
     };
     onSoundSelected(assignment);
     setIsOpen(false);
@@ -166,7 +168,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
       type: 'builtin',
       source: sound.url,
       volume: 0.8,
-      builtInSoundId: sound.id,
+      builtInSoundId: sound.id
     };
     onSoundSelected(assignment);
     setIsOpen(false);
@@ -179,7 +181,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
     const assignment: CustomSoundAssignment = {
       type: 'url',
       source: urlInput.trim(),
-      volume: 0.8,
+      volume: 0.8
     };
     onSoundSelected(assignment);
     setIsOpen(false);
@@ -195,10 +197,10 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
       generatedConfig: {
         type: generatedSoundConfig.type,
         parameters: {
-          frequency: generatedSoundConfig.frequency,
+          frequency: generatedSoundConfig.frequency
         },
-        duration: generatedSoundConfig.duration,
-      },
+        duration: generatedSoundConfig.duration
+      }
     };
     onSoundSelected(assignment);
     setIsOpen(false);
@@ -214,16 +216,11 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
 
   const getSoundTypeIcon = (type: CustomSoundType) => {
     switch (type) {
-      case 'uploaded':
-        return <Upload className="w-4 h-4" />;
-      case 'builtin':
-        return <Music className="w-4 h-4" />;
-      case 'generated':
-        return <Volume2 className="w-4 h-4" />;
-      case 'url':
-        return <Volume2 className="w-4 h-4" />;
-      default:
-        return <Volume2 className="w-4 h-4" />;
+      case 'uploaded': return <Upload className="w-4 h-4" />;
+      case 'builtin': return <Music className="w-4 h-4" />;
+      case 'generated': return <Volume2 className="w-4 h-4" />;
+      case 'url': return <Volume2 className="w-4 h-4" />;
+      default: return <Volume2 className="w-4 h-4" />;
     }
   };
 
@@ -262,11 +259,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                 variant="outline"
                 onClick={() => playSound('selected', selectedSound.source)}
               >
-                {playingSound === 'selected' ? (
-                  <Pause className="w-4 h-4" />
-                ) : (
-                  <Play className="w-4 h-4" />
-                )}
+                {playingSound === 'selected' ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               </Button>
               {onClear && (
                 <Button size="sm" variant="outline" onClick={onClear}>
@@ -278,7 +271,9 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
 
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button size="sm">{selectedSound ? 'Change' : 'Select Sound'}</Button>
+              <Button size="sm">
+                {selectedSound ? 'Change' : 'Select Sound'}
+              </Button>
             </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[80vh]">
               <DialogHeader>
@@ -315,10 +310,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                 </div>
 
                 {/* Sound Type Tabs */}
-                <Tabs
-                  value={activeTab}
-                  onValueChange={value => setActiveTab(value as CustomSoundType)}
-                >
+                <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as CustomSoundType)}>
                   <TabsList>
                     {allowedSoundTypes.includes('uploaded') && (
                       <TabsTrigger value="uploaded">
@@ -373,18 +365,12 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                                   </Badge>
                                 </div>
                                 {sound.description && (
-                                  <p className="text-sm text-gray-600 truncate">
-                                    {sound.description}
-                                  </p>
+                                  <p className="text-sm text-gray-600 truncate">{sound.description}</p>
                                 )}
                                 <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
                                   <span>{formatFileSize(sound.fileSize || 0)}</span>
                                   <span>•</span>
-                                  <span>
-                                    {sound.duration
-                                      ? `${Math.round(sound.duration)}s`
-                                      : 'Unknown'}
-                                  </span>
+                                  <span>{sound.duration ? `${Math.round(sound.duration)}s` : 'Unknown'}</span>
                                   {sound.tags && sound.tags.length > 0 && (
                                     <>
                                       <span>•</span>
@@ -402,11 +388,10 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                                   playSound(sound.id, sound.fileUrl);
                                 }}
                               >
-                                {playingSound === sound.id ? (
-                                  <Pause className="w-4 h-4" />
-                                ) : (
+                                {playingSound === sound.id ?
+                                  <Pause className="w-4 h-4" /> :
                                   <Play className="w-4 h-4" />
-                                )}
+                                }
                               </Button>
                             </div>
                           ))}
@@ -444,11 +429,10 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                                 playSound(sound.id, sound.url);
                               }}
                             >
-                              {playingSound === sound.id ? (
-                                <Pause className="w-4 h-4" />
-                              ) : (
+                              {playingSound === sound.id ?
+                                <Pause className="w-4 h-4" /> :
                                 <Play className="w-4 h-4" />
-                              )}
+                              }
                             </Button>
                           </div>
                         ))}
@@ -465,17 +449,10 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                         </CardHeader>
                         <CardContent className="space-y-4">
                           <div>
-                            <label className="block text-sm font-medium mb-2">
-                              Wave Type
-                            </label>
+                            <label className="block text-sm font-medium mb-2">Wave Type</label>
                             <Select
                               value={generatedSoundConfig.type}
-                              onValueChange={(value: any) =>
-                                setGeneratedSoundConfig(prev => ({
-                                  ...prev,
-                                  type: value,
-                                }))
-                              }
+                              onValueChange={(value: any) => setGeneratedSoundConfig(prev => ({ ...prev, type: value }))}
                             >
                               <SelectTrigger>
                                 <SelectValue />
@@ -483,12 +460,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               <SelectContent>
                                 <SelectItem value="sine_wave">Sine Wave</SelectItem>
                                 <SelectItem value="square_wave">Square Wave</SelectItem>
-                                <SelectItem value="sawtooth_wave">
-                                  Sawtooth Wave
-                                </SelectItem>
-                                <SelectItem value="triangle_wave">
-                                  Triangle Wave
-                                </SelectItem>
+                                <SelectItem value="sawtooth_wave">Sawtooth Wave</SelectItem>
+                                <SelectItem value="triangle_wave">Triangle Wave</SelectItem>
                                 <SelectItem value="noise">White Noise</SelectItem>
                               </SelectContent>
                             </Select>
@@ -503,12 +476,10 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               min="100"
                               max="2000"
                               value={generatedSoundConfig.frequency}
-                              onChange={e =>
-                                setGeneratedSoundConfig(prev => ({
-                                  ...prev,
-                                  frequency: parseInt(e.target.value),
-                                }))
-                              }
+                              onChange={(e) => setGeneratedSoundConfig(prev => ({
+                                ...prev,
+                                frequency: parseInt(e.target.value)
+                              }))}
                               className="w-full"
                             />
                           </div>
@@ -523,12 +494,10 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               max="10"
                               step="0.5"
                               value={generatedSoundConfig.duration}
-                              onChange={e =>
-                                setGeneratedSoundConfig(prev => ({
-                                  ...prev,
-                                  duration: parseFloat(e.target.value),
-                                }))
-                              }
+                              onChange={(e) => setGeneratedSoundConfig(prev => ({
+                                ...prev,
+                                duration: parseFloat(e.target.value)
+                              }))}
                               className="w-full"
                             />
                           </div>
@@ -554,9 +523,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                       </CardHeader>
                       <CardContent className="space-y-4">
                         <div>
-                          <label className="block text-sm font-medium mb-2">
-                            Audio URL
-                          </label>
+                          <label className="block text-sm font-medium mb-2">Audio URL</label>
                           <Input
                             placeholder="https://example.com/sound.mp3"
                             value={urlInput}
@@ -565,18 +532,10 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                         </div>
 
                         <div className="flex gap-2">
-                          <Button
-                            variant="outline"
-                            className="flex-1"
-                            disabled={!urlInput.trim()}
-                          >
+                          <Button variant="outline" className="flex-1" disabled={!urlInput.trim()}>
                             Preview
                           </Button>
-                          <Button
-                            onClick={selectUrlSound}
-                            className="flex-1"
-                            disabled={!urlInput.trim()}
-                          >
+                          <Button onClick={selectUrlSound} className="flex-1" disabled={!urlInput.trim()}>
                             Use URL Sound
                           </Button>
                         </div>

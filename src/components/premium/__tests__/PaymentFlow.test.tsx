@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * PaymentFlow Component Tests
  *
@@ -11,7 +12,7 @@ import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '../../../__tests__/utils/render-helpers';
 import {
   createTestSubscriptionPlan,
-  createTestPaymentMethod,
+  createTestPaymentMethod
 } from '../../../__tests__/factories/premium-factories';
 import { PaymentFlow } from '../PaymentFlow';
 import type { PaymentMethod, CreateSubscriptionRequest } from '../../../types/premium';
@@ -21,11 +22,11 @@ const mockStripe = {
   createToken: jest.fn(),
   createPaymentMethod: jest.fn(),
   confirmCardSetup: jest.fn(),
-  confirmCardPayment: jest.fn(),
+  confirmCardPayment: jest.fn()
 };
 
 jest.mock('../../../lib/stripe', () => ({
-  getStripe: () => Promise.resolve(mockStripe),
+  getStripe: () => Promise.resolve(mockStripe)
 }));
 
 describe('PaymentFlow', () => {
@@ -39,8 +40,8 @@ describe('PaymentFlow', () => {
     displayName: 'Premium Plan',
     pricing: {
       monthly: { amount: 999, currency: 'usd' },
-      yearly: { amount: 9999, currency: 'usd' },
-    },
+      yearly: { amount: 9999, currency: 'usd' }
+    }
   });
 
   const testPaymentMethods: PaymentMethod[] = [
@@ -50,8 +51,8 @@ describe('PaymentFlow', () => {
         brand: 'visa',
         last4: '4242',
         expMonth: 12,
-        expYear: 2025,
-      },
+        expYear: 2025
+      }
     }),
     createTestPaymentMethod({
       id: 'pm_test_456',
@@ -59,9 +60,9 @@ describe('PaymentFlow', () => {
         brand: 'mastercard',
         last4: '5555',
         expMonth: 6,
-        expYear: 2026,
-      },
-    }),
+        expYear: 2026
+      }
+    })
   ];
 
   const defaultProps = {
@@ -70,20 +71,20 @@ describe('PaymentFlow', () => {
     onPaymentSuccess: mockOnPaymentSuccess,
     onPaymentError: mockOnPaymentError,
     onCancel: mockOnCancel,
-    onCreateSubscription: mockOnCreateSubscription,
+    onCreateSubscription: mockOnCreateSubscription
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
     mockOnCreateSubscription.mockResolvedValue({
       clientSecret: 'pi_test_secret',
-      subscriptionId: 'sub_test_123',
+      subscriptionId: 'sub_test_123'
     });
     mockStripe.createPaymentMethod.mockResolvedValue({
-      paymentMethod: { id: 'pm_new_123' },
+      paymentMethod: { id: 'pm_new_123' }
     });
     mockStripe.confirmCardPayment.mockResolvedValue({
-      paymentIntent: { status: 'succeeded' },
+      paymentIntent: { status: 'succeeded' }
     });
   });
 
@@ -97,14 +98,18 @@ describe('PaymentFlow', () => {
     });
 
     it('shows trial information when available', () => {
-      renderWithProviders(<PaymentFlow {...defaultProps} trialDays={14} />);
+      renderWithProviders(
+        <PaymentFlow {...defaultProps} trialDays={14} />
+      );
 
       expect(screen.getByText('14-day free trial')).toBeInTheDocument();
-      expect(screen.getByText("You won't be charged until")).toBeInTheDocument();
+      expect(screen.getByText('You won\'t be charged until')).toBeInTheDocument();
     });
 
     it('displays discount when discount code is applied', () => {
-      renderWithProviders(<PaymentFlow {...defaultProps} discountCode="SAVE20" />);
+      renderWithProviders(
+        <PaymentFlow {...defaultProps} discountCode="SAVE20" />
+      );
 
       expect(screen.getByText('Discount (SAVE20)')).toBeInTheDocument();
     });
@@ -176,9 +181,7 @@ describe('PaymentFlow', () => {
     it('validates required fields', async () => {
       const user = userEvent.setup();
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       expect(screen.getByText('Card number is required')).toBeInTheDocument();
@@ -191,9 +194,7 @@ describe('PaymentFlow', () => {
       const cardInput = screen.getByLabelText(/card number/i);
       await user.type(cardInput, '1234');
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       expect(screen.getByText('Invalid card number')).toBeInTheDocument();
@@ -205,9 +206,7 @@ describe('PaymentFlow', () => {
       const expiryInput = screen.getByLabelText(/expiry date/i);
       await user.type(expiryInput, '13/25'); // Invalid month
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       expect(screen.getByText('Invalid expiry date')).toBeInTheDocument();
@@ -219,9 +218,7 @@ describe('PaymentFlow', () => {
       const cvcInput = screen.getByLabelText(/cvc/i);
       await user.type(cvcInput, '12'); // Too short
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       expect(screen.getByText('Invalid CVC')).toBeInTheDocument();
@@ -233,9 +230,7 @@ describe('PaymentFlow', () => {
       const emailInput = screen.getByLabelText(/email/i);
       await user.type(emailInput, 'invalid-email');
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       expect(screen.getByText('Invalid email address')).toBeInTheDocument();
@@ -256,9 +251,7 @@ describe('PaymentFlow', () => {
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       expect(screen.getByText('Address is required')).toBeInTheDocument();
@@ -292,9 +285,7 @@ describe('PaymentFlow', () => {
 
       await fillValidForm(user);
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       // Should show loading state
@@ -310,16 +301,14 @@ describe('PaymentFlow', () => {
       const user = userEvent.setup();
 
       mockStripe.confirmCardPayment.mockResolvedValue({
-        error: { message: 'Your card was declined.' },
+        error: { message: 'Your card was declined.' }
       });
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       await fillValidForm(user);
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       await waitFor(() => {
@@ -330,17 +319,13 @@ describe('PaymentFlow', () => {
     it('handles subscription creation failure', async () => {
       const user = userEvent.setup();
 
-      mockOnCreateSubscription.mockRejectedValue(
-        new Error('Subscription creation failed')
-      );
+      mockOnCreateSubscription.mockRejectedValue(new Error('Subscription creation failed'));
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       await fillValidForm(user);
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       await waitFor(() => {
@@ -355,9 +340,7 @@ describe('PaymentFlow', () => {
 
       await fillValidForm(user);
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       await waitFor(() => {
@@ -365,7 +348,7 @@ describe('PaymentFlow', () => {
           expect.objectContaining({
             planId: testPlan.id,
             billingInterval: 'month',
-            paymentMethodId: 'pm_new_123',
+            paymentMethodId: 'pm_new_123'
           })
         );
       });
@@ -389,15 +372,13 @@ describe('PaymentFlow', () => {
       const saveCheckbox = screen.getByLabelText(/save payment method/i);
       await user.click(saveCheckbox);
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       await waitFor(() => {
         expect(mockOnCreateSubscription).toHaveBeenCalledWith(
           expect.objectContaining({
-            savePaymentMethod: true,
+            savePaymentMethod: true
           })
         );
       });
@@ -423,9 +404,7 @@ describe('PaymentFlow', () => {
 
       await fillValidForm(user);
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       // Try to cancel while processing
@@ -449,9 +428,7 @@ describe('PaymentFlow', () => {
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       const errorSummary = screen.getByRole('alert');
@@ -504,9 +481,7 @@ describe('PaymentFlow', () => {
 
       await fillValidForm(user);
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
@@ -517,9 +492,7 @@ describe('PaymentFlow', () => {
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
-      const submitButton = screen.getByRole('button', {
-        name: /complete subscription/i,
-      });
+      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
       const errorAlert = screen.getByRole('alert');

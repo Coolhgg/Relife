@@ -6,11 +6,10 @@ import type {
   VoicePersonality,
   VoiceCloneRequest,
   Alarm,
-  SubscriptionTier,
-} from '../types';
-import { PremiumService } from './premium';
-import { VoiceService } from './voice';
-import { supabase } from './supabase';
+} from "../types";
+import { PremiumService } from "./premium";
+import { VoiceService } from "./voice";
+import { supabase } from "./supabase";
 
 export class PremiumVoiceService {
   private static instance: PremiumVoiceService;
@@ -22,7 +21,7 @@ export class PremiumVoiceService {
     'demon-lord',
     'ai-robot',
     'comedian',
-    'philosopher',
+    'philosopher'
   ];
 
   /**
@@ -40,10 +39,7 @@ export class PremiumVoiceService {
     premium: VoiceMood[];
     hasAccess: { [mood in VoiceMood]?: boolean };
   }> {
-    const hasPremiumPersonalities = await SubscriptionService.hasFeatureAccess(
-      userId,
-      'premiumPersonalities'
-    );
+    const hasPremiumPersonalities = await SubscriptionService.hasFeatureAccess(userId, 'premiumPersonalities');
 
     const freePersonalities: VoiceMood[] = [
       'drill-sergeant',
@@ -51,7 +47,7 @@ export class PremiumVoiceService {
       'anime-hero',
       'savage-roast',
       'motivational',
-      'gentle',
+      'gentle'
     ];
 
     const hasAccess: { [mood in VoiceMood]?: boolean } = {};
@@ -69,7 +65,7 @@ export class PremiumVoiceService {
     return {
       free: freePersonalities,
       premium: this.PREMIUM_PERSONALITIES,
-      hasAccess,
+      hasAccess
     };
   }
 
@@ -85,14 +81,9 @@ export class PremiumVoiceService {
     const isPremiumPersonality = this.isPremiumPersonality(alarm.voiceMood);
 
     if (isPremiumPersonality) {
-      const hasPremiumPersonalities = await SubscriptionService.hasFeatureAccess(
-        userId,
-        'premiumPersonalities'
-      );
+      const hasPremiumPersonalities = await SubscriptionService.hasFeatureAccess(userId, 'premiumPersonalities');
       if (!hasPremiumPersonalities) {
-        console.warn(
-          `Premium personality ${alarm.voiceMood} requires Pro subscription, falling back to motivational`
-        );
+        console.warn(`Premium personality ${alarm.voiceMood} requires Pro subscription, falling back to motivational`);
         // Create a modified alarm with fallback personality
         const fallbackAlarm = { ...alarm, voiceMood: 'motivational' as VoiceMood };
         return await this.generateAlarmSpeech(fallbackAlarm, userId, customMessage);
@@ -100,10 +91,7 @@ export class PremiumVoiceService {
     }
 
     // Check if user has access to premium voice features
-    const hasElevenLabsAccess = await SubscriptionService.hasFeatureAccess(
-      userId,
-      'elevenlabsVoices'
-    );
+    const hasElevenLabsAccess = await SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices');
 
     if (!hasElevenLabsAccess) {
       // Fall back to web speech API for free users
@@ -117,11 +105,8 @@ export class PremiumVoiceService {
 
       // In a real app, this would call ElevenLabs API
       // For now, fall back to enhanced web speech with personality
-      return await VoiceService.generateAlarmSpeech(
-        alarm,
-        enhancedMessage,
-        'enhanced-web-speech'
-      );
+      return await VoiceService.generateAlarmSpeech(alarm, enhancedMessage, 'enhanced-web-speech');
+
     } catch (error) {
       console.error('Premium voice generation failed:', error);
       // Fallback to regular voice service
@@ -142,22 +127,14 @@ export class PremiumVoiceService {
     const isPremiumPersonality = this.isPremiumPersonality(mood);
 
     if (isPremiumPersonality) {
-      const hasPremiumPersonalities = await SubscriptionService.hasFeatureAccess(
-        userId,
-        'premiumPersonalities'
-      );
+      const hasPremiumPersonalities = await SubscriptionService.hasFeatureAccess(userId, 'premiumPersonalities');
       if (!hasPremiumPersonalities) {
-        throw new Error(
-          `${mood} personality requires a Pro subscription. Upgrade to unlock premium personalities.`
-        );
+        throw new Error(`${mood} personality requires a Pro subscription. Upgrade to unlock premium personalities.`);
       }
     }
 
     // Check if user has access to custom voice messages
-    const hasCustomVoiceAccess = await SubscriptionService.hasFeatureAccess(
-      userId,
-      'customVoiceMessages'
-    );
+    const hasCustomVoiceAccess = await SubscriptionService.hasFeatureAccess(userId, 'customVoiceMessages');
 
     if (!hasCustomVoiceAccess) {
       throw new Error('Custom voice messages require a premium subscription');
@@ -168,12 +145,7 @@ export class PremiumVoiceService {
 
     try {
       // In real app, this would use ElevenLabs or similar premium TTS
-      return await VoiceService.generateCustomMessage(
-        enhancedMessage,
-        mood,
-        'enhanced-web-speech',
-        settings
-      );
+      return await VoiceService.generateCustomMessage(enhancedMessage, mood, 'enhanced-web-speech', settings);
     } catch (error) {
       console.error('Custom voice generation failed:', error);
       throw error;
@@ -208,10 +180,7 @@ export class PremiumVoiceService {
   /**
    * Enhance message with personality characteristics
    */
-  private static enhanceMessageWithPersonality(
-    message: string,
-    mood: VoiceMood
-  ): string {
+  private static enhanceMessageWithPersonality(message: string, mood: VoiceMood): string {
     switch (mood) {
       case 'demon-lord':
         return `SILENCE! ${message.toUpperCase()}! YOUR DARK MASTER COMMANDS IT!`;
@@ -238,15 +207,15 @@ export class PremiumVoiceService {
     const voiceMapping: Record<VoiceMood, string> = {
       'demon-lord': 'voice_dark_intimidating_001',
       'ai-robot': 'voice_robotic_systematic_002',
-      comedian: 'voice_funny_energetic_003',
-      philosopher: 'voice_wise_contemplative_004',
+      'comedian': 'voice_funny_energetic_003',
+      'philosopher': 'voice_wise_contemplative_004',
       // Free voices use default web speech
       'drill-sergeant': 'default',
       'sweet-angel': 'default',
       'anime-hero': 'default',
       'savage-roast': 'default',
-      motivational: 'default',
-      gentle: 'default',
+      'motivational': 'default',
+      'gentle': 'default'
     };
 
     return voiceMapping[mood] || 'default';
@@ -272,14 +241,14 @@ export class PremiumVoiceService {
       customMessagesCheck,
       hasPremiumPersonalities,
       hasNuclearMode,
-      hasVoiceCloning,
+      hasVoiceCloning
     ] = await Promise.all([
       SubscriptionService.getUserTier(userId),
       SubscriptionService.checkFeatureUsage(userId, 'elevenlabsApiCalls'),
       SubscriptionService.checkFeatureUsage(userId, 'customVoiceMessages'),
       SubscriptionService.hasFeatureAccess(userId, 'premiumPersonalities'),
       SubscriptionService.hasFeatureAccess(userId, 'nuclearMode'),
-      SubscriptionService.hasFeatureAccess(userId, 'voiceCloning'),
+      SubscriptionService.hasFeatureAccess(userId, 'voiceCloning')
     ]);
 
     const calculatePercentage = (current: number, limit: number): number => {
@@ -292,25 +261,19 @@ export class PremiumVoiceService {
       elevenlabsUsage: {
         current: elevenlabsCheck.currentUsage || 0,
         limit: elevenlabsCheck.limit || 0,
-        percentage: calculatePercentage(
-          elevenlabsCheck.currentUsage || 0,
-          elevenlabsCheck.limit || 0
-        ),
+        percentage: calculatePercentage(elevenlabsCheck.currentUsage || 0, elevenlabsCheck.limit || 0)
       },
       customMessagesUsage: {
         current: customMessagesCheck.currentUsage || 0,
         limit: customMessagesCheck.limit || 0,
-        percentage: calculatePercentage(
-          customMessagesCheck.currentUsage || 0,
-          customMessagesCheck.limit || 0
-        ),
+        percentage: calculatePercentage(customMessagesCheck.currentUsage || 0, customMessagesCheck.limit || 0)
       },
       hasUnlimitedAccess: tier === 'lifetime' || tier === 'pro',
       premiumFeatures: {
         premiumPersonalities: hasPremiumPersonalities,
         nuclearMode: hasNuclearMode,
-        voiceCloning: hasVoiceCloning,
-      },
+        voiceCloning: hasVoiceCloning
+      }
     };
   }
 
@@ -325,10 +288,7 @@ export class PremiumVoiceService {
   ): Promise<string | null> {
     // Allow free preview for all users, but limit to web-speech for non-premium
     if (provider === 'elevenlabs') {
-      const hasAccess = await SubscriptionService.hasFeatureAccess(
-        userId,
-        'elevenlabsVoices'
-      );
+      const hasAccess = await SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices');
       if (!hasAccess) {
         provider = 'web-speech';
       }
@@ -347,9 +307,12 @@ export class PremiumVoiceService {
     reasons: string[];
     benefits: string[];
   }> {
-    const [tier, usage] = await Promise.all([
+    const [
+      tier,
+      usage
+    ] = await Promise.all([
       SubscriptionService.getUserTier(userId),
-      this.getUsageSummary(userId),
+      this.getUsageSummary(userId)
     ]);
 
     const reasons: string[] = [];
@@ -367,9 +330,7 @@ export class PremiumVoiceService {
       benefits.push('Premium themes and customization');
       benefits.push('Ad-free experience');
     } else if (tier === 'premium') {
-      const shouldUpgradeForUsage =
-        usage.elevenlabsUsage.percentage > 80 ||
-        usage.customMessagesUsage.percentage > 80;
+      const shouldUpgradeForUsage = usage.elevenlabsUsage.percentage > 80 || usage.customMessagesUsage.percentage > 80;
       const wantsPremiumFeatures = true; // Could be based on user behavior
 
       if (shouldUpgradeForUsage || wantsPremiumFeatures) {
@@ -377,7 +338,7 @@ export class PremiumVoiceService {
         recommendedTier = 'pro';
 
         if (shouldUpgradeForUsage) {
-          reasons.push("You're approaching your monthly limits");
+          reasons.push('You\'re approaching your monthly limits');
         }
 
         reasons.push('Unlock exclusive premium personalities');
@@ -386,9 +347,7 @@ export class PremiumVoiceService {
         benefits.push('500 premium voice calls per month');
         benefits.push('20 custom voice messages per day');
         benefits.push('Voice cloning feature');
-        benefits.push(
-          'Premium personalities: Demon Lord, AI Robot, Comedian, Philosopher'
-        );
+        benefits.push('Premium personalities: Demon Lord, AI Robot, Comedian, Philosopher');
         benefits.push('Nuclear Mode: Ultimate wake-up challenge');
         benefits.push('Unlimited customization');
         benefits.push('Priority support');
@@ -399,7 +358,7 @@ export class PremiumVoiceService {
       shouldUpgrade,
       recommendedTier,
       reasons,
-      benefits,
+      benefits
     };
   }
 
@@ -412,19 +371,13 @@ export class PremiumVoiceService {
     challengeType: string
   ): Promise<string | null> {
     // Check nuclear mode access
-    const hasNuclearAccess = await SubscriptionService.hasFeatureAccess(
-      userId,
-      'nuclearMode'
-    );
+    const hasNuclearAccess = await SubscriptionService.hasFeatureAccess(userId, 'nuclearMode');
     if (!hasNuclearAccess) {
       throw new Error('Nuclear Mode requires a Pro subscription');
     }
 
     // Check if user has premium voice access for enhanced nuclear experience
-    const hasElevenLabsAccess = await SubscriptionService.hasFeatureAccess(
-      userId,
-      'elevenlabsVoices'
-    );
+    const hasElevenLabsAccess = await SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices');
     const provider = hasElevenLabsAccess ? 'elevenlabs' : 'web-speech';
 
     // Create nuclear-specific voice settings
@@ -433,7 +386,7 @@ export class PremiumVoiceService {
       pitch: 0.7, // Lower pitch for intimidation
       volume: 1.0, // Maximum volume
       intensity: 'maximum',
-      effects: ['reverb', 'distortion'], // Audio effects for nuclear theme
+      effects: ['reverb', 'distortion'] // Audio effects for nuclear theme
     };
 
     // Generate nuclear-themed message
@@ -449,11 +402,7 @@ export class PremiumVoiceService {
     } catch (error) {
       console.error('Nuclear mode voice generation failed:', error);
       // Fallback to regular demon-lord voice without effects
-      return await VoiceService.generateCustomMessage(
-        nuclearMessage,
-        'demon-lord',
-        provider
-      );
+      return await VoiceService.generateCustomMessage(nuclearMessage, 'demon-lord', provider);
     }
   }
 
@@ -466,7 +415,7 @@ export class PremiumVoiceService {
       'MELTDOWN IMMINENT:',
       'NUCLEAR PROTOCOL ACTIVATED:',
       'CONTAINMENT BREACH:',
-      'DEFCON 1 ALERT:',
+      'DEFCON 1 ALERT:'
     ];
 
     const nuclearSuffixes = [
@@ -474,7 +423,7 @@ export class PremiumVoiceService {
       'THE REACTOR DEPENDS ON YOU!',
       'PREVENT TOTAL MELTDOWN!',
       'SAVE THE WORLD!',
-      'TIME IS RUNNING OUT!',
+      'TIME IS RUNNING OUT!'
     ];
 
     const prefix = nuclearPrefixes[Math.floor(Math.random() * nuclearPrefixes.length)];

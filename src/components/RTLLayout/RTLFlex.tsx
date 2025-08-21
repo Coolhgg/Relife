@@ -73,9 +73,7 @@ export const RTLFlex: React.FC<RTLFlexProps> = ({
   // Handle RTL-aware justify content
   const getJustifyClass = () => {
     if (justify === 'start' || justify === 'end') {
-      return justifyClasses[
-        flex.justifyContent[justify] as keyof typeof justifyClasses
-      ];
+      return justifyClasses[flex.justifyContent[justify] as keyof typeof justifyClasses];
     }
     return justifyClasses[justify];
   };

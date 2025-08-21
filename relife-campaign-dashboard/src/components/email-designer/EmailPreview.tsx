@@ -19,14 +19,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import {
   Eye,
   Send,
@@ -38,8 +31,10 @@ import {
   X,
   AlertTriangle,
   Clock,
+  Users,
+  Target,
   Zap,
-  RefreshCw,
+  RefreshCw
 } from 'lucide-react';
 
 interface EmailTemplate {

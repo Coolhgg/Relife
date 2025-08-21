@@ -39,15 +39,9 @@ type StrugglingSamAction =
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | null }
   | { type: 'SET_USER_STREAK'; payload: UserStreak }
-  | {
-      type: 'UPDATE_STREAK';
-      payload: { currentStreak: number; longestStreak?: number };
-    }
+  | { type: 'UPDATE_STREAK'; payload: { currentStreak: number; longestStreak?: number } }
   | { type: 'ADD_ACHIEVEMENT'; payload: SamAchievement }
-  | {
-      type: 'UPDATE_ACHIEVEMENT';
-      payload: { id: string; updates: Partial<SamAchievement> };
-    }
+  | { type: 'UPDATE_ACHIEVEMENT'; payload: { id: string; updates: Partial<SamAchievement> } }
   | { type: 'SET_ACHIEVEMENTS'; payload: SamAchievement[] }
   | { type: 'SET_ACTIVE_CHALLENGES'; payload: SocialChallenge[] }
   | { type: 'JOIN_CHALLENGE'; payload: string }
@@ -61,10 +55,7 @@ type StrugglingSamAction =
   | { type: 'SET_AB_TEST_GROUP'; payload: ABTestGroup }
   | { type: 'SET_USER_AB_TEST'; payload: UserABTest }
   | { type: 'TRACK_CONVERSION'; payload: { testId: string; userId: string } }
-  | {
-      type: 'TRACK_ENGAGEMENT';
-      payload: { testId: string; userId: string; action: string };
-    };
+  | { type: 'TRACK_ENGAGEMENT'; payload: { testId: string; userId: string; action: string } };
 
 // Initial state
 const initialState: StrugglingSamState = {
@@ -103,8 +94,7 @@ const strugglingSamReducer = (
           ? {
               ...state.userStreak,
               currentStreak: action.payload.currentStreak,
-              longestStreak:
-                action.payload.longestStreak || state.userStreak.longestStreak,
+              longestStreak: action.payload.longestStreak || state.userStreak.longestStreak,
               updatedAt: new Date(),
             }
           : null,
@@ -149,9 +139,7 @@ const strugglingSamReducer = (
     case 'DISMISS_UPGRADE_PROMPT':
       return {
         ...state,
-        upgradePrompts: state.upgradePrompts.filter(
-          prompt => prompt.id !== action.payload
-        ),
+        upgradePrompts: state.upgradePrompts.filter((prompt) => prompt.id !== action.payload),
       };
 
     case 'SET_COMMUNITY_STATS':
@@ -170,7 +158,7 @@ const strugglingSamReducer = (
       return {
         ...state,
         pendingCelebrations: state.pendingCelebrations.filter(
-          celebration => celebration.id !== action.payload
+          (celebration) => celebration.id !== action.payload
         ),
       };
 
@@ -218,9 +206,7 @@ interface StrugglingSamContextType extends StrugglingSamState, ABTestContext {
 }
 
 // Create contexts
-const StrugglingSamContext = createContext<StrugglingSamContextType | undefined>(
-  undefined
-);
+const StrugglingSamContext = createContext<StrugglingSamContextType | undefined>(undefined);
 
 // Context provider component
 export const StrugglingSamProvider: React.FC<{
@@ -274,10 +260,10 @@ export const StrugglingSamProvider: React.FC<{
           shared: false,
           progress: { current: 5, target: 5, percentage: 100 },
           requirements: [
-            { type: 'streak_days', value: 5, description: 'Maintain 5-day streak' },
+            { type: 'streak_days', value: 5, description: 'Maintain 5-day streak' }
           ],
-          socialProofText: 'Just unlocked the Early Bird achievement! 🌅',
-        },
+          socialProofText: 'Just unlocked the Early Bird achievement! 🌅'
+        }
       ];
 
       dispatch({ type: 'SET_ACHIEVEMENTS', payload: mockAchievements });
@@ -310,16 +296,16 @@ export const StrugglingSamProvider: React.FC<{
             type: 'achievement_unlocked',
             message: 'Sarah just unlocked Morning Champion! 🏆',
             timestamp: new Date(Date.now() - 2 * 60 * 1000), // 2 minutes ago
-            anonymous: false,
+            anonymous: false
           },
           {
             id: '2',
             type: 'streak_started',
             message: 'Mike started a new 7-day streak! 🔥',
             timestamp: new Date(Date.now() - 5 * 60 * 1000), // 5 minutes ago
-            anonymous: false,
-          },
-        ],
+            anonymous: false
+          }
+        ]
       };
 
       dispatch({ type: 'SET_COMMUNITY_STATS', payload: mockCommunityStats });
@@ -338,9 +324,9 @@ export const StrugglingSamProvider: React.FC<{
             clicks: 89,
             shares: 12,
             conversionRate: 0.15,
-            lastUpdated: new Date(),
-          },
-        },
+            lastUpdated: new Date()
+          }
+        }
       ];
 
       dispatch({ type: 'SET_SOCIAL_PROOF_DATA', payload: mockSocialProofData });
@@ -350,10 +336,7 @@ export const StrugglingSamProvider: React.FC<{
   };
 
   // Update streak
-  const updateStreak = (streakData: {
-    currentStreak: number;
-    longestStreak?: number;
-  }) => {
+  const updateStreak = (streakData: { currentStreak: number; longestStreak?: number }) => {
     dispatch({ type: 'UPDATE_STREAK', payload: streakData });
 
     // Check for milestone celebrations
@@ -368,7 +351,7 @@ export const StrugglingSamProvider: React.FC<{
         trigger: {
           type: 'streak_reached',
           value: currentStreak,
-          context: { streakDays: currentStreak },
+          context: { streakDays: currentStreak }
         },
         title: `${currentStreak}-Day Streak!`,
         message: `Congratulations! You've reached a ${currentStreak}-day streak! 🎉`,
@@ -376,24 +359,24 @@ export const StrugglingSamProvider: React.FC<{
           type: 'confetti',
           duration: 3000,
           intensity: 'moderate',
-          colors: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1'],
+          colors: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1']
         },
         rewards: [
           {
             type: 'badge',
             value: `${currentStreak}-Day Warrior`,
             description: `Earned for reaching ${currentStreak} consecutive days`,
-            immediate: true,
-          },
+            immediate: true
+          }
         ],
         socialShare: {
           enabled: true,
           defaultMessage: `I just reached a ${currentStreak}-day morning routine streak with Relife! 🔥`,
           hashtags: ['#MorningHabit', '#StreakSuccess', '#Relife'],
-          platforms: ['twitter', 'facebook'],
+          platforms: ['twitter', 'facebook']
         },
         isShown: false,
-        createdAt: new Date(),
+        createdAt: new Date()
       };
 
       dispatch({ type: 'ADD_CELEBRATION', payload: celebration });
@@ -412,7 +395,7 @@ export const StrugglingSamProvider: React.FC<{
       trigger: {
         type: 'achievement_earned',
         value: 1,
-        context: { achievementType: achievement.achievementType },
+        context: { achievementType: achievement.achievementType }
       },
       title: 'Achievement Unlocked!',
       message: `You've unlocked: ${achievement.title}! ${achievement.iconUrl}`,
@@ -420,24 +403,24 @@ export const StrugglingSamProvider: React.FC<{
         type: 'fireworks',
         duration: 4000,
         intensity: 'intense',
-        colors: ['#FFD700', '#FFA500', '#FF69B4'],
+        colors: ['#FFD700', '#FFA500', '#FF69B4']
       },
       rewards: [
         {
           type: 'badge',
           value: achievement.title,
           description: achievement.description,
-          immediate: true,
-        },
+          immediate: true
+        }
       ],
       socialShare: {
         enabled: true,
         defaultMessage: `Just unlocked the ${achievement.title} achievement in Relife! ${achievement.iconUrl}`,
         hashtags: ['#Achievement', '#Relife', '#MorningSuccess'],
-        platforms: ['twitter', 'facebook', 'linkedin'],
+        platforms: ['twitter', 'facebook', 'linkedin']
       },
       isShown: false,
-      createdAt: new Date(),
+      createdAt: new Date()
     };
 
     dispatch({ type: 'ADD_CELEBRATION', payload: celebration });
@@ -447,7 +430,7 @@ export const StrugglingSamProvider: React.FC<{
   const shareAchievement = (achievementId: string) => {
     dispatch({
       type: 'UPDATE_ACHIEVEMENT',
-      payload: { id: achievementId, updates: { shared: true } },
+      payload: { id: achievementId, updates: { shared: true } }
     });
   };
 
@@ -485,18 +468,14 @@ export const StrugglingSamProvider: React.FC<{
   const isFeatureEnabled = (featureId: string): boolean => {
     if (!state.currentTestGroup || !state.userABTest) return false;
 
-    const feature = state.currentTestGroup.features.find(
-      f => f.featureId === featureId
-    );
+    const feature = state.currentTestGroup.features.find(f => f.featureId === featureId);
     return feature?.enabled || false;
   };
 
   const getFeatureVariant = (featureId: string): string | null => {
     if (!state.currentTestGroup) return null;
 
-    const feature = state.currentTestGroup.features.find(
-      f => f.featureId === featureId
-    );
+    const feature = state.currentTestGroup.features.find(f => f.featureId === featureId);
     return feature?.variant || null;
   };
 

@@ -1,12 +1,11 @@
 import type {
-  AdvancedAlarm,
   User,
   SleepPattern,
   WakeUpBehavior,
   LearningData,
   AIOptimization,
   Location,
-  WeatherData,
+  WeatherData
 } from '../types/index';
 import { Preferences } from '@capacitor/preferences';
 import { Geolocation } from '@capacitor/geolocation';
@@ -27,12 +26,7 @@ interface MLConfig {
 interface UserBehaviorPattern {
   id: string;
   userId: string;
-  patternType:
-    | 'wake_time'
-    | 'snooze_behavior'
-    | 'dismiss_method'
-    | 'sleep_quality'
-    | 'location';
+  patternType: 'wake_time' | 'snooze_behavior' | 'dismiss_method' | 'sleep_quality' | 'location';
   data: Record<string, any>;
   confidence: number;
   lastUpdated: Date;
@@ -61,14 +55,7 @@ export class MLAlarmOptimizer {
     minDataPoints: 5,
     confidenceThreshold: 0.7,
     adaptationSpeed: 'medium',
-    features: [
-      'wake_time',
-      'sleep_duration',
-      'snooze_count',
-      'mood',
-      'weather',
-      'day_of_week',
-    ],
+    features: ['wake_time', 'sleep_duration', 'snooze_count', 'mood', 'weather', 'day_of_week']
   };
 
   private static behaviorData: Map<string, UserBehaviorPattern[]> = new Map();
@@ -129,7 +116,7 @@ export class MLAlarmOptimizer {
           data: {},
           confidence: 0,
           lastUpdated: new Date(),
-          occurrences: 0,
+          occurrences: 0
         };
         patterns.push(pattern);
       }
@@ -151,16 +138,14 @@ export class MLAlarmOptimizer {
       }
 
       // Update confidence based on data points
-      pattern.confidence = Math.min(
-        0.95,
-        pattern.occurrences / (this.config.minDataPoints * 2)
-      );
+      pattern.confidence = Math.min(0.95, pattern.occurrences / (this.config.minDataPoints * 2));
 
       this.behaviorData.set(userId, patterns);
       await this.saveBehaviorData();
 
       // Clear prediction cache for this user
       this.clearUserPredictionCache(userId);
+
     } catch (error) {
       console.error('Error recording user behavior:', error);
     }
@@ -168,8 +153,7 @@ export class MLAlarmOptimizer {
 
   static async predictOptimalWakeTime(
     userId: string,
-    alarm: AdvancedAlarm,
-    targetDate: Date
+    targetDate: Date,
   ): Promise<PredictionResult> {
     try {
       const cacheKey = `${userId}_${alarm.id}_${targetDate.toDateString()}`;
@@ -194,13 +178,14 @@ export class MLAlarmOptimizer {
         confidence,
         reasoning: this.generateReasoning(factors),
         adjustmentMinutes: adjustment,
-        factors,
+        factors
       };
 
       // Cache the prediction
       this.predictionCache.set(cacheKey, result);
 
       return result;
+
     } catch (error) {
       console.error('Error predicting optimal wake time:', error);
       return {
@@ -208,7 +193,7 @@ export class MLAlarmOptimizer {
         confidence: 0,
         reasoning: ['Prediction failed, using original time'],
         adjustmentMinutes: 0,
-        factors: [],
+        factors: []
       };
     }
   }
@@ -217,8 +202,7 @@ export class MLAlarmOptimizer {
 
   private static async analyzePredictionFactors(
     userId: string,
-    alarm: AdvancedAlarm,
-    targetDate: Date
+    targetDate: Date,
   ): Promise<PredictionFactor[]> {
     const factors: PredictionFactor[] = [];
 
@@ -245,8 +229,7 @@ export class MLAlarmOptimizer {
 
   private static async analyzeSleepCycleFactor(
     userId: string,
-    alarm: AdvancedAlarm,
-    targetDate: Date
+    targetDate: Date,
   ): Promise<PredictionFactor> {
     const patterns = this.behaviorData.get(userId) || [];
     const sleepPattern = patterns.find(p => p.patternType === 'sleep_quality');
@@ -264,8 +247,7 @@ export class MLAlarmOptimizer {
       const [hours, minutes] = alarm.time.split(':').map(Number);
       const currentWakeMinutes = hours * 60 + minutes;
 
-      const nearestCycleEnd =
-        Math.round(currentWakeMinutes / cycleLength) * cycleLength;
+      const nearestCycleEnd = Math.round(currentWakeMinutes / cycleLength) * cycleLength;
       impact = (nearestCycleEnd - currentWakeMinutes) / 60; // Convert to hours
       impact = Math.max(-0.5, Math.min(0.5, impact)); // Limit to ±30 minutes
 
@@ -277,7 +259,7 @@ export class MLAlarmOptimizer {
       type: 'sleep_cycle',
       impact,
       confidence,
-      description,
+      description
     };
   }
 
@@ -311,20 +293,19 @@ export class MLAlarmOptimizer {
       type: 'historical',
       impact,
       confidence,
-      description,
+      description
     };
   }
 
   private static async analyzeWeatherFactor(
-    alarm: AdvancedAlarm,
-    targetDate: Date
+    targetDate: Date,
   ): Promise<PredictionFactor> {
     try {
       // Simulate weather API call - in production, integrate with weather service
       const weather = await this.getWeatherForecast(targetDate);
 
       let impact = 0;
-      const confidence = 0.6;
+      let confidence = 0.6;
       let description = 'Weather conditions normal';
 
       if (weather) {
@@ -333,10 +314,7 @@ export class MLAlarmOptimizer {
         if (weather.condition.includes('rain') || weather.condition.includes('snow')) {
           impact = 0.17; // +10 minutes
           description = 'Rainy weather - suggesting slightly later wake time';
-        } else if (
-          weather.condition.includes('sunny') ||
-          weather.condition.includes('clear')
-        ) {
+        } else if (weather.condition.includes('sunny') || weather.condition.includes('clear')) {
           impact = -0.08; // -5 minutes
           description = 'Clear weather - optimal for early wake';
         }
@@ -352,22 +330,22 @@ export class MLAlarmOptimizer {
         type: 'weather',
         impact,
         confidence,
-        description,
+        description
       };
+
     } catch (error) {
       return {
         type: 'weather',
         impact: 0,
         confidence: 0,
-        description: 'Weather data unavailable',
+        description: 'Weather data unavailable'
       };
     }
   }
 
   private static async analyzeCalendarFactor(
     userId: string,
-    alarm: AdvancedAlarm,
-    targetDate: Date
+    targetDate: Date,
   ): Promise<PredictionFactor> {
     try {
       // Simulate calendar integration - in production, integrate with calendar APIs
@@ -403,22 +381,22 @@ export class MLAlarmOptimizer {
         type: 'calendar',
         impact,
         confidence,
-        description,
+        description
       };
+
     } catch (error) {
       return {
         type: 'calendar',
         impact: 0,
         confidence: 0,
-        description: 'Calendar integration unavailable',
+        description: 'Calendar integration unavailable'
       };
     }
   }
 
   private static async analyzeLocationFactor(
     userId: string,
-    alarm: AdvancedAlarm,
-    targetDate: Date
+    targetDate: Date,
   ): Promise<PredictionFactor> {
     try {
       const position = await Geolocation.getCurrentPosition();
@@ -434,22 +412,14 @@ export class MLAlarmOptimizer {
       let description = 'Location-based optimization';
 
       if (locationPattern && locationPattern.data.homeLocation) {
-        const { latitude: homeLat, longitude: homeLon } =
-          locationPattern.data.homeLocation;
-        const distanceFromHome = this.calculateDistance(
-          currentLat,
-          currentLon,
-          homeLat,
-          homeLon
-        );
+        const { latitude: homeLat, longitude: homeLon } = locationPattern.data.homeLocation;
+        const distanceFromHome = this.calculateDistance(currentLat, currentLon, homeLat, homeLon);
 
-        if (distanceFromHome > 10) {
-          // More than 10km from home
+        if (distanceFromHome > 10) { // More than 10km from home
           impact = 0.17; // +10 minutes for travel/unfamiliar location
           description = `Away from home location - suggesting buffer time`;
           confidence = 0.7;
-        } else if (distanceFromHome < 1) {
-          // Very close to home
+        } else if (distanceFromHome < 1) { // Very close to home
           impact = -0.05; // -3 minutes, familiar environment
           description = `Home location - slight optimization possible`;
           confidence = 0.5;
@@ -460,14 +430,15 @@ export class MLAlarmOptimizer {
         type: 'location',
         impact,
         confidence,
-        description,
+        description
       };
+
     } catch (error) {
       return {
         type: 'location',
         impact: 0,
         confidence: 0,
-        description: 'Location services unavailable',
+        description: 'Location services unavailable'
       };
     }
   }
@@ -509,7 +480,7 @@ export class MLAlarmOptimizer {
       type: 'health',
       impact,
       confidence,
-      description,
+      description
     };
   }
 
@@ -535,8 +506,7 @@ export class MLAlarmOptimizer {
   private static calculatePredictionConfidence(factors: PredictionFactor[]): number {
     if (factors.length === 0) return 0;
 
-    const avgConfidence =
-      factors.reduce((sum, f) => sum + f.confidence, 0) / factors.length;
+    const avgConfidence = factors.reduce((sum, f) => sum + f.confidence, 0) / factors.length;
     const factorBonus = Math.min(0.2, factors.length * 0.05); // Bonus for more factors
 
     return Math.min(0.95, avgConfidence + factorBonus);
@@ -551,35 +521,19 @@ export class MLAlarmOptimizer {
 
   // ===== UTILITY METHODS =====
 
-  private static calculateDistance(
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number
-  ): number {
+  private static calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371; // Earth's radius in km
-    const dLat = ((lat2 - lat1) * Math.PI) / 180;
-    const dLon = ((lon2 - lon1) * Math.PI) / 180;
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     return R * c;
   }
 
   private static getDayName(dayOfWeek: number): string {
-    const days = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ];
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return days[dayOfWeek];
   }
 
@@ -600,7 +554,7 @@ export class MLAlarmOptimizer {
       const dataObject = Object.fromEntries(this.behaviorData);
       await Preferences.set({
         key: USER_BEHAVIOR_DATA_KEY,
-        value: JSON.stringify(dataObject),
+        value: JSON.stringify(dataObject)
       });
     } catch (error) {
       console.error('Error saving behavior data:', error);
@@ -609,12 +563,9 @@ export class MLAlarmOptimizer {
 
   private static async startLearningProcess(): Promise<void> {
     // Start background learning process
-    setInterval(
-      () => {
-        this.processLearningQueue();
-      },
-      5 * 60 * 1000
-    ); // Every 5 minutes
+    setInterval(() => {
+      this.processLearningQueue();
+    }, 5 * 60 * 1000); // Every 5 minutes
   }
 
   private static async processLearningQueue(): Promise<void> {
@@ -634,25 +585,20 @@ export class MLAlarmOptimizer {
       windSpeed: Math.round(Math.random() * 20),
       forecast: [],
       location: 'Current Location',
-      lastUpdated: new Date().toISOString(),
+      lastUpdated: new Date().toISOString()
     };
   }
 
-  private static async getCalendarEvents(
-    userId: string,
-    date: Date
-  ): Promise<any[] | null> {
+  private static async getCalendarEvents(userId: string, date: Date): Promise<any[] | null> {
     // Mock calendar data - replace with real calendar API
     const mockEvents = [
       { time: '09:00', title: 'Morning Meeting', duration: 60 },
       { time: '14:00', title: 'Project Review', duration: 90 },
-      { time: '16:30', title: 'Team Standup', duration: 30 },
+      { time: '16:30', title: 'Team Standup', duration: 30 }
     ];
 
     // Return random event or empty for simulation
-    return Math.random() > 0.3
-      ? [mockEvents[Math.floor(Math.random() * mockEvents.length)]]
-      : [];
+    return Math.random() > 0.3 ? [mockEvents[Math.floor(Math.random() * mockEvents.length)]] : [];
   }
 
   // ===== PUBLIC API =====
@@ -672,7 +618,7 @@ export class MLAlarmOptimizer {
           confidence: pattern.confidence,
           impact: 'medium',
           createdAt: new Date(),
-          isEnabled: true,
+          isEnabled: true
         });
       }
     }
@@ -697,7 +643,7 @@ export class MLAlarmOptimizer {
     this.config.enabled = enabled;
     await Preferences.set({
       key: ML_CONFIG_KEY,
-      value: JSON.stringify(this.config),
+      value: JSON.stringify(this.config)
     });
   }
 
@@ -706,22 +652,18 @@ export class MLAlarmOptimizer {
   }
 
   static getMLStats(): { patterns: number; predictions: number; accuracy: number } {
-    const totalPatterns = Array.from(this.behaviorData.values()).reduce(
-      (sum, patterns) => sum + patterns.length,
-      0
-    );
+    const totalPatterns = Array.from(this.behaviorData.values()).reduce((sum, patterns) => sum + patterns.length, 0);
     const totalPredictions = this.predictionCache.size;
-    const avgConfidence =
-      totalPatterns > 0
-        ? Array.from(this.behaviorData.values())
-            .flat()
-            .reduce((sum, p) => sum + p.confidence, 0) / totalPatterns
-        : 0;
+    const avgConfidence = totalPatterns > 0
+      ? Array.from(this.behaviorData.values())
+          .flat()
+          .reduce((sum, p) => sum + p.confidence, 0) / totalPatterns
+      : 0;
 
     return {
       patterns: totalPatterns,
       predictions: totalPredictions,
-      accuracy: Math.round(avgConfidence * 100),
+      accuracy: Math.round(avgConfidence * 100)
     };
   }
 }

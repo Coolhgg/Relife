@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  BarChart3,
-  Users,
-  Clock,
-  TrendingUp,
-  Activity,
-  Eye,
-  Target,
-  Zap,
-} from 'lucide-react';
+import { BarChart3, Users, Clock, TrendingUp, Activity, Eye, Target, Zap } from 'lucide-react';
 import { useAnalyticsContext } from './AnalyticsProvider';
 
 interface AnalyticsMetric {
@@ -41,14 +32,14 @@ const AnalyticsDashboard: React.FC = () => {
     totalAlarms: 0,
     engagementScore: 0,
     retentionRate: 0,
-    errorRate: 0,
+    errorRate: 0
   });
   const [timeRange, setTimeRange] = useState<'day' | 'week' | 'month'>('week');
 
   useEffect(() => {
     trackPageView('analytics-dashboard', {
       user_role: 'admin', // This would be dynamic based on user permissions
-      time_range: timeRange,
+      time_range: timeRange
     });
 
     // Load analytics data from localStorage (in real app, this would be from API)
@@ -66,7 +57,7 @@ const AnalyticsDashboard: React.FC = () => {
       totalAlarms: Math.floor(Math.random() * 200) + 50,
       engagementScore: Math.floor(Math.random() * 40) + 60, // 60-100%
       retentionRate: Math.floor(Math.random() * 30) + 70, // 70-100%
-      errorRate: Math.floor(Math.random() * 5) + 1, // 1-5%
+      errorRate: Math.floor(Math.random() * 5) + 1 // 1-5%
     };
 
     setUsageData(simulatedData);
@@ -96,7 +87,7 @@ const AnalyticsDashboard: React.FC = () => {
       change: '+12.5%',
       trend: 'up',
       icon: <Users className="h-5 w-5" />,
-      color: 'bg-blue-500',
+      color: 'bg-blue-500'
     },
     {
       name: 'Avg Session Duration',
@@ -104,7 +95,7 @@ const AnalyticsDashboard: React.FC = () => {
       change: '+8.2%',
       trend: 'up',
       icon: <Clock className="h-5 w-5" />,
-      color: 'bg-green-500',
+      color: 'bg-green-500'
     },
     {
       name: 'Page Views',
@@ -112,7 +103,7 @@ const AnalyticsDashboard: React.FC = () => {
       change: '+15.3%',
       trend: 'up',
       icon: <Eye className="h-5 w-5" />,
-      color: 'bg-purple-500',
+      color: 'bg-purple-500'
     },
     {
       name: 'Features Used',
@@ -120,7 +111,7 @@ const AnalyticsDashboard: React.FC = () => {
       change: '+6.1%',
       trend: 'up',
       icon: <Target className="h-5 w-5" />,
-      color: 'bg-orange-500',
+      color: 'bg-orange-500'
     },
     {
       name: 'Total Alarms',
@@ -128,7 +119,7 @@ const AnalyticsDashboard: React.FC = () => {
       change: '+22.8%',
       trend: 'up',
       icon: <Activity className="h-5 w-5" />,
-      color: 'bg-indigo-500',
+      color: 'bg-indigo-500'
     },
     {
       name: 'Engagement Score',
@@ -136,7 +127,7 @@ const AnalyticsDashboard: React.FC = () => {
       change: '+4.2%',
       trend: 'up',
       icon: <TrendingUp className="h-5 w-5" />,
-      color: 'bg-emerald-500',
+      color: 'bg-emerald-500'
     },
     {
       name: 'Retention Rate',
@@ -144,7 +135,7 @@ const AnalyticsDashboard: React.FC = () => {
       change: '+1.8%',
       trend: 'up',
       icon: <Zap className="h-5 w-5" />,
-      color: 'bg-yellow-500',
+      color: 'bg-yellow-500'
     },
     {
       name: 'Error Rate',
@@ -152,8 +143,8 @@ const AnalyticsDashboard: React.FC = () => {
       change: '-0.5%',
       trend: 'down',
       icon: <BarChart3 className="h-5 w-5" />,
-      color: 'bg-red-500',
-    },
+      color: 'bg-red-500'
+    }
   ];
 
   const handleTimeRangeChange = (range: 'day' | 'week' | 'month') => {
@@ -161,7 +152,7 @@ const AnalyticsDashboard: React.FC = () => {
     track('analytics_time_range_changed', {
       previous_range: timeRange,
       new_range: range,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     });
     loadAnalyticsData(); // Reload data for new time range
   };
@@ -170,19 +161,17 @@ const AnalyticsDashboard: React.FC = () => {
     track('analytics_data_exported', {
       time_range: timeRange,
       metrics_count: metrics.length,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     });
 
     // Simulate data export
     const exportData = {
       timeRange,
       generatedAt: new Date().toISOString(),
-      metrics: usageData,
+      metrics: usageData
     };
 
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: 'application/json',
-    });
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -210,7 +199,7 @@ const AnalyticsDashboard: React.FC = () => {
         <div className="flex items-center gap-4">
           {/* Time Range Selector */}
           <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-            {(['day', 'week', 'month'] as const).map(range => (
+            {(['day', 'week', 'month'] as const).map((range) => (
               <button
                 key={range}
                 onClick={() => handleTimeRangeChange(range)}
@@ -248,20 +237,16 @@ const AnalyticsDashboard: React.FC = () => {
                 {metric.icon}
               </div>
               {metric.change && (
-                <div
-                  className={`flex items-center text-sm font-medium ${
-                    metric.trend === 'up'
-                      ? 'text-green-600 dark:text-green-400'
-                      : metric.trend === 'down'
-                        ? 'text-red-600 dark:text-red-400'
-                        : 'text-gray-600 dark:text-gray-400'
-                  }`}
-                >
-                  <TrendingUp
-                    className={`h-4 w-4 mr-1 ${
-                      metric.trend === 'down' ? 'rotate-180' : ''
-                    }`}
-                  />
+                <div className={`flex items-center text-sm font-medium ${
+                  metric.trend === 'up'
+                    ? 'text-green-600 dark:text-green-400'
+                    : metric.trend === 'down'
+                    ? 'text-red-600 dark:text-red-400'
+                    : 'text-gray-600 dark:text-gray-400'
+                }`}>
+                  <TrendingUp className={`h-4 w-4 mr-1 ${
+                    metric.trend === 'down' ? 'rotate-180' : ''
+                  }`} />
                   {metric.change}
                 </div>
               )}
@@ -294,25 +279,17 @@ const AnalyticsDashboard: React.FC = () => {
             </h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Session Quality
-                </span>
-                <span className="text-sm font-medium text-green-600 dark:text-green-400">
-                  High
-                </span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Session Quality</span>
+                <span className="text-sm font-medium text-green-600 dark:text-green-400">High</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Feature Adoption
-                </span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Feature Adoption</span>
                 <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
                   {Math.round((usageData.uniqueFeatures / 20) * 100)}%
                 </span>
               </div>
               <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  User Retention
-                </span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">User Retention</span>
                 <span className="text-sm font-medium text-purple-600 dark:text-purple-400">
                   {usageData.retentionRate}%
                 </span>
@@ -327,36 +304,24 @@ const AnalyticsDashboard: React.FC = () => {
             </h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Error Rate
-                </span>
-                <span
-                  className={`text-sm font-medium ${
-                    usageData.errorRate < 2
-                      ? 'text-green-600 dark:text-green-400'
-                      : usageData.errorRate < 5
-                        ? 'text-yellow-600 dark:text-yellow-400'
-                        : 'text-red-600 dark:text-red-400'
-                  }`}
-                >
+                <span className="text-sm text-gray-600 dark:text-gray-400">Error Rate</span>
+                <span className={`text-sm font-medium ${
+                  usageData.errorRate < 2
+                    ? 'text-green-600 dark:text-green-400'
+                    : usageData.errorRate < 5
+                    ? 'text-yellow-600 dark:text-yellow-400'
+                    : 'text-red-600 dark:text-red-400'
+                }`}>
                   {usageData.errorRate}%
                 </span>
               </div>
               <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Load Performance
-                </span>
-                <span className="text-sm font-medium text-green-600 dark:text-green-400">
-                  Excellent
-                </span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Load Performance</span>
+                <span className="text-sm font-medium text-green-600 dark:text-green-400">Excellent</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  PWA Score
-                </span>
-                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                  92%
-                </span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">PWA Score</span>
+                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">92%</span>
               </div>
             </div>
           </div>
@@ -371,21 +336,15 @@ const AnalyticsDashboard: React.FC = () => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-            <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-              Feature Discovery
-            </h4>
+            <h4 className="font-medium text-gray-900 dark:text-white mb-2">Feature Discovery</h4>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Consider adding feature highlights to increase usage of underutilized
-              features.
+              Consider adding feature highlights to increase usage of underutilized features.
             </p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-            <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-              User Onboarding
-            </h4>
+            <h4 className="font-medium text-gray-900 dark:text-white mb-2">User Onboarding</h4>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Extended session durations suggest users are engaged - optimize onboarding
-              flow.
+              Extended session durations suggest users are engaged - optimize onboarding flow.
             </p>
           </div>
         </div>

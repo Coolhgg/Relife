@@ -2,14 +2,7 @@
 // Main page component that integrates all premium subscription functionality
 
 import React, { useState, useEffect } from 'react';
-import {
-  Crown,
-  CreditCard,
-  BarChart3,
-  Settings,
-  AlertCircle,
-  CheckCircle,
-} from 'lucide-react';
+import { Crown, CreditCard, BarChart3, Settings, AlertCircle, CheckCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
@@ -30,7 +23,7 @@ interface SubscriptionPageProps {
 
 export function SubscriptionPage({
   className = '',
-  initialTab = 'overview',
+  initialTab = 'overview'
 }: SubscriptionPageProps) {
   const { user } = useAuth();
   const subscription = useSubscription({ userId: user?.id || '', autoRefresh: true });
@@ -59,10 +52,7 @@ export function SubscriptionPage({
     }
   }, [error, success]);
 
-  const handlePlanSelect = async (
-    plan: SubscriptionPlan,
-    billingInterval: BillingInterval
-  ) => {
+  const handlePlanSelect = async (plan: SubscriptionPlan, billingInterval: BillingInterval) => {
     setSelectedPlan(plan);
     setSelectedInterval(billingInterval);
     setShowPaymentFlow(true);
@@ -73,7 +63,7 @@ export function SubscriptionPage({
       await subscription.updateSubscription({
         planId,
         billingInterval,
-        prorate: true,
+        prorate: true
       });
       setSuccess('Subscription upgraded successfully!');
       setActiveTab('overview');
@@ -87,7 +77,7 @@ export function SubscriptionPage({
       await subscription.updateSubscription({
         planId,
         billingInterval,
-        prorate: false, // Usually downgrades are effective at period end
+        prorate: false // Usually downgrades are effective at period end
       });
       setSuccess('Subscription will be changed at the end of your billing period');
       setActiveTab('overview');
@@ -129,7 +119,9 @@ export function SubscriptionPage({
             <p className="text-gray-600 mb-6">
               Sign in to access premium subscription features and manage your account.
             </p>
-            <Button size="lg">Sign In</Button>
+            <Button size="lg">
+              Sign In
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -207,10 +199,9 @@ export function SubscriptionPage({
               </span>
             </div>
             <p className="text-sm text-gray-600">
-              {subscription.subscription.cancelAtPeriodEnd ? 'Ends' : 'Renews'}{' '}
-              {new Date(
-                subscription.subscription.currentPeriodEnd
-              ).toLocaleDateString()}
+              {subscription.subscription.cancelAtPeriodEnd
+                ? 'Ends'
+                : 'Renews'} {new Date(subscription.subscription.currentPeriodEnd).toLocaleDateString()}
             </p>
           </div>
         )}
@@ -220,7 +211,9 @@ export function SubscriptionPage({
       {error && (
         <Alert className="border-red-200 bg-red-50">
           <AlertCircle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-600">{error}</AlertDescription>
+          <AlertDescription className="text-red-600">
+            {error}
+          </AlertDescription>
         </Alert>
       )}
 
@@ -265,7 +258,7 @@ export function SubscriptionPage({
                 paymentMethods: subscription.paymentMethods,
                 invoiceHistory: subscription.invoiceHistory,
                 upcomingInvoice: subscription.upcomingInvoice,
-                activeTrial: subscription.activeTrial,
+                activeTrial: subscription.activeTrial
               }}
               isLoading={subscription.isLoading}
               onUpgrade={handleUpgrade}
@@ -308,12 +301,7 @@ export function SubscriptionPage({
                     Try premium features risk-free for 14 days
                   </p>
                   <Button
-                    onClick={() =>
-                      handleStartTrial(
-                        subscription.availablePlans.find(p => p.tier === 'premium')
-                          ?.id || ''
-                      )
-                    }
+                    onClick={() => handleStartTrial(subscription.availablePlans.find(p => p.tier === 'premium')?.id || '')}
                     disabled={subscription.isLoading}
                     className="bg-blue-600 hover:bg-blue-700"
                   >
@@ -338,7 +326,7 @@ export function SubscriptionPage({
                 paymentMethods: subscription.paymentMethods,
                 invoiceHistory: subscription.invoiceHistory,
                 upcomingInvoice: subscription.upcomingInvoice,
-                activeTrial: subscription.activeTrial,
+                activeTrial: subscription.activeTrial
               }}
               isLoading={subscription.isLoading}
               onUpgrade={handleUpgrade}
@@ -373,10 +361,7 @@ export function SubscriptionPage({
       {/* Footer */}
       <div className="text-center pt-6 border-t">
         <p className="text-sm text-gray-500">
-          Questions about billing?{' '}
-          <Button variant="link" className="p-0 h-auto">
-            Contact Support
-          </Button>
+          Questions about billing? <Button variant="link" className="p-0 h-auto">Contact Support</Button>
         </p>
       </div>
     </div>

@@ -13,7 +13,7 @@ interface UseTabProtectionAnnouncementsProps {
 export const useTabProtectionAnnouncements = ({
   activeAlarm,
   enabledAlarms,
-  settings,
+  settings
 }: UseTabProtectionAnnouncementsProps) => {
   const previousActiveAlarm = useRef<Alarm | null>(null);
   const previousEnabledCount = useRef<number>(0);
@@ -30,11 +30,7 @@ export const useTabProtectionAnnouncements = ({
     }
 
     // Announce when an alarm starts ringing
-    if (
-      activeAlarm &&
-      !previousActiveAlarm.current &&
-      settings.protectionTiming.activeAlarmWarning
-    ) {
+    if (activeAlarm && !previousActiveAlarm.current && settings.protectionTiming.activeAlarmWarning) {
       const message = formatProtectionMessage(
         settings.customMessages.accessibilityMessages.protectionActive,
         { reason: `alarm "${activeAlarm.label}" is ringing` }
@@ -45,11 +41,7 @@ export const useTabProtectionAnnouncements = ({
 
     // Announce when alarm stops ringing
     else if (!activeAlarm && previousActiveAlarm.current) {
-      const hasUpcomingAlarms =
-        getUpcomingAlarmsCount(
-          enabledAlarms,
-          settings.protectionTiming.upcomingAlarmThreshold
-        ) > 0;
+      const hasUpcomingAlarms = getUpcomingAlarmsCount(enabledAlarms, settings.protectionTiming.upcomingAlarmThreshold) > 0;
 
       if (hasUpcomingAlarms && settings.protectionTiming.upcomingAlarmWarning) {
         const message = formatProtectionMessage(
@@ -72,10 +64,7 @@ export const useTabProtectionAnnouncements = ({
     // Announce when enabled alarms count changes significantly
     else if (!activeAlarm && settings.protectionTiming.enabledAlarmWarning) {
       const currentEnabledCount = enabledAlarms.length;
-      const upcomingCount = getUpcomingAlarmsCount(
-        enabledAlarms,
-        settings.protectionTiming.upcomingAlarmThreshold
-      );
+      const upcomingCount = getUpcomingAlarmsCount(enabledAlarms, settings.protectionTiming.upcomingAlarmThreshold);
 
       if (currentEnabledCount !== previousEnabledCount.current) {
         if (currentEnabledCount > 0 && previousEnabledCount.current === 0) {
@@ -117,15 +106,12 @@ export const useTabProtectionAnnouncements = ({
         );
         AccessibilityUtils.createAriaAnnouncement(message, 'polite');
       } else if (settings.protectionTiming.upcomingAlarmWarning) {
-        const upcomingCount = getUpcomingAlarmsCount(
-          enabledAlarms,
-          settings.protectionTiming.upcomingAlarmThreshold
-        );
+        const upcomingCount = getUpcomingAlarmsCount(enabledAlarms, settings.protectionTiming.upcomingAlarmThreshold);
         if (upcomingCount > 0) {
           const message = formatProtectionMessage(
             settings.customMessages.accessibilityMessages.protectionActive,
             {
-              reason: `${upcomingCount} upcoming alarm${upcomingCount > 1 ? 's' : ''} within ${formatTimeframe(settings.protectionTiming.upcomingAlarmThreshold)}`,
+              reason: `${upcomingCount} upcoming alarm${upcomingCount > 1 ? 's' : ''} within ${formatTimeframe(settings.protectionTiming.upcomingAlarmThreshold)}`
             }
           );
           AccessibilityUtils.createAriaAnnouncement(message, 'polite');
@@ -143,10 +129,7 @@ export const useTabProtectionAnnouncements = ({
         'assertive'
       );
     } else if (settings.protectionTiming.upcomingAlarmWarning) {
-      const upcomingCount = getUpcomingAlarmsCount(
-        enabledAlarms,
-        settings.protectionTiming.upcomingAlarmThreshold
-      );
+      const upcomingCount = getUpcomingAlarmsCount(enabledAlarms, settings.protectionTiming.upcomingAlarmThreshold);
       if (upcomingCount > 0) {
         const message = formatProtectionMessage(
           settings.customMessages.accessibilityMessages.upcomingAlarmWarning,
@@ -158,15 +141,12 @@ export const useTabProtectionAnnouncements = ({
   };
 
   return {
-    announceProtectionWarning,
+    announceProtectionWarning
   };
 };
 
 // Helper function to count upcoming alarms within the configurable threshold
-function getUpcomingAlarmsCount(
-  enabledAlarms: Alarm[],
-  thresholdMinutes: number
-): number {
+function getUpcomingAlarmsCount(enabledAlarms: Alarm[], thresholdMinutes: number): number {
   const now = new Date();
   const thresholdFromNow = new Date(now.getTime() + thresholdMinutes * 60 * 1000);
 

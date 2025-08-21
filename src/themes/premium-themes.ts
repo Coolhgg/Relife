@@ -26,7 +26,7 @@ export const oceanBreezeTheme: ThemeConfig = {
       700: '#0e7490',
       800: '#155e75',
       900: '#164e63',
-      950: '#083344',
+      950: '#083344'
     },
     secondary: {
       50: '#f0f9ff',
@@ -39,7 +39,7 @@ export const oceanBreezeTheme: ThemeConfig = {
       700: '#0369a1',
       800: '#075985',
       900: '#0c4a6e',
-      950: '#082f49',
+      950: '#082f49'
     },
     accent: {
       50: '#fff7ed',
@@ -52,7 +52,7 @@ export const oceanBreezeTheme: ThemeConfig = {
       700: '#c2410c',
       800: '#9a3412',
       900: '#7c2d12',
-      950: '#431407',
+      950: '#431407'
     },
     neutral: {
       50: '#fafafa',
@@ -65,7 +65,7 @@ export const oceanBreezeTheme: ThemeConfig = {
       700: '#3f3f46',
       800: '#27272a',
       900: '#18181b',
-      950: '#09090b',
+      950: '#09090b'
     },
     background: {
       primary: '#f8fcff',
@@ -74,7 +74,7 @@ export const oceanBreezeTheme: ThemeConfig = {
       elevated: '#ffffff',
       overlay: 'rgba(6, 182, 212, 0.05)',
       glass: 'rgba(255, 255, 255, 0.9)',
-      gradient: 'linear-gradient(135deg, #f8fcff 0%, #e0f2fe 100%)',
+      gradient: 'linear-gradient(135deg, #f8fcff 0%, #e0f2fe 100%)'
     },
     text: {
       primary: '#0c4a6e',
@@ -82,7 +82,7 @@ export const oceanBreezeTheme: ThemeConfig = {
       tertiary: '#0891b2',
       inverse: '#ffffff',
       muted: '#64748b',
-      disabled: '#94a3b8',
+      disabled: '#94a3b8'
     },
     border: {
       primary: '#e0f2fe',
@@ -90,15 +90,15 @@ export const oceanBreezeTheme: ThemeConfig = {
       focus: '#06b6d4',
       error: '#ef4444',
       success: '#10b981',
-      warning: '#f59e0b',
-    },
+      warning: '#f59e0b'
+    }
   },
   typography: {
     fontFamily: {
       sans: '"Inter", system-ui, -apple-system, sans-serif',
       serif: '"Playfair Display", Georgia, serif',
       mono: '"JetBrains Mono", Consolas, monospace',
-      display: '"Cal Sans", "Inter", sans-serif',
+      display: '"Cal Sans", "Inter", sans-serif'
     },
     fontSize: {
       xs: '0.75rem',
@@ -110,7 +110,7 @@ export const oceanBreezeTheme: ThemeConfig = {
       '3xl': '1.875rem',
       '4xl': '2.25rem',
       '5xl': '3rem',
-      '6xl': '3.75rem',
+      '6xl': '3.75rem'
     },
     fontWeight: {
       thin: 100,
@@ -121,19 +121,19 @@ export const oceanBreezeTheme: ThemeConfig = {
       semibold: 600,
       bold: 700,
       extrabold: 800,
-      black: 900,
+      black: 900
     },
     lineHeight: {
       tight: 1.25,
       normal: 1.5,
       relaxed: 1.625,
-      loose: 2,
+      loose: 2
     },
     letterSpacing: {
       tight: '-0.025em',
       normal: '0em',
-      wide: '0.025em',
-    },
+      wide: '0.025em'
+    }
   },
   spacing: {
     scale: 1,
@@ -155,7 +155,7 @@ export const oceanBreezeTheme: ThemeConfig = {
       40: '10rem',
       48: '12rem',
       56: '14rem',
-      64: '16rem',
+      64: '16rem'
     },
     borderRadius: {
       none: '0px',
@@ -166,15 +166,15 @@ export const oceanBreezeTheme: ThemeConfig = {
       xl: '1rem',
       '2xl': '1.5rem',
       '3xl': '2rem',
-      full: '9999px',
-    },
+      full: '9999px'
+    }
   },
   animations: {
     enabled: true,
     duration: {
       fast: '200ms',
       normal: '350ms',
-      slow: '500ms',
+      slow: '500ms'
     },
     easing: {
       linear: 'linear',
@@ -183,9 +183,9 @@ export const oceanBreezeTheme: ThemeConfig = {
       easeOut: 'cubic-bezier(0, 0, 0.2, 1)',
       easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
       bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-      elastic: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      elastic: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
     },
-    scale: 1.1,
+    scale: 1.1
   },
   effects: {
     shadows: {
@@ -196,7 +196,7 @@ export const oceanBreezeTheme: ThemeConfig = {
       xl: '0 20px 25px -5px rgba(6, 182, 212, 0.1), 0 8px 10px -6px rgba(6, 182, 212, 0.1)',
       '2xl': '0 25px 50px -12px rgba(6, 182, 212, 0.25)',
       inner: 'inset 0 2px 4px 0 rgba(6, 182, 212, 0.1)',
-      none: '0 0 #0000',
+      none: '0 0 #0000'
     },
     blur: {
       sm: '4px',
@@ -205,22 +205,21 @@ export const oceanBreezeTheme: ThemeConfig = {
       lg: '16px',
       xl: '24px',
       '2xl': '40px',
-      '3xl': '64px',
+      '3xl': '64px'
     },
     opacity: {
       disabled: 0.5,
       hover: 0.9,
       focus: 0.95,
-      overlay: 0.95,
+      overlay: 0.95
     },
     gradients: {
       primary: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%)',
       secondary: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%)',
       accent: 'linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)',
       background: 'linear-gradient(135deg, #f8fcff 0%, #e0f2fe 50%, #bae6fd 100%)',
-      surface:
-        'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(224,242,254,0.6) 100%)',
-    },
+      surface: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(224,242,254,0.6) 100%)'
+    }
   },
   accessibility: {
     focusRingWidth: '2px',
@@ -229,8 +228,8 @@ export const oceanBreezeTheme: ThemeConfig = {
     focusRingOpacity: 0.5,
     contrastMode: 'normal',
     reducedMotion: false,
-    preferColorScheme: 'light',
-  },
+    preferColorScheme: 'light'
+  }
 };
 
 // Premium Theme: Sunset Glow - Warm oranges and purples
@@ -254,7 +253,7 @@ export const sunsetGlowTheme: ThemeConfig = {
       700: '#c2410c',
       800: '#9a3412',
       900: '#7c2d12',
-      950: '#431407',
+      950: '#431407'
     },
     secondary: {
       50: '#fdf4ff',
@@ -267,7 +266,7 @@ export const sunsetGlowTheme: ThemeConfig = {
       700: '#a21caf',
       800: '#86198f',
       900: '#701a75',
-      950: '#4a044e',
+      950: '#4a044e'
     },
     accent: {
       50: '#fff1f2',
@@ -280,7 +279,7 @@ export const sunsetGlowTheme: ThemeConfig = {
       700: '#be123c',
       800: '#9f1239',
       900: '#881337',
-      950: '#4c0519',
+      950: '#4c0519'
     },
     neutral: {
       50: '#fafaf9',
@@ -293,7 +292,7 @@ export const sunsetGlowTheme: ThemeConfig = {
       700: '#44403c',
       800: '#292524',
       900: '#1c1917',
-      950: '#0c0a09',
+      950: '#0c0a09'
     },
     background: {
       primary: '#fffbf8',
@@ -302,7 +301,7 @@ export const sunsetGlowTheme: ThemeConfig = {
       elevated: '#ffffff',
       overlay: 'rgba(249, 115, 22, 0.05)',
       glass: 'rgba(255, 255, 255, 0.85)',
-      gradient: 'linear-gradient(135deg, #fffbf8 0%, #fef7f0 50%, #fed7aa 100%)',
+      gradient: 'linear-gradient(135deg, #fffbf8 0%, #fef7f0 50%, #fed7aa 100%)'
     },
     text: {
       primary: '#7c2d12',
@@ -310,7 +309,7 @@ export const sunsetGlowTheme: ThemeConfig = {
       tertiary: '#c2410c',
       inverse: '#ffffff',
       muted: '#78716c',
-      disabled: '#a8a29e',
+      disabled: '#a8a29e'
     },
     border: {
       primary: '#fed7aa',
@@ -318,15 +317,15 @@ export const sunsetGlowTheme: ThemeConfig = {
       focus: '#f97316',
       error: '#ef4444',
       success: '#10b981',
-      warning: '#f59e0b',
-    },
+      warning: '#f59e0b'
+    }
   },
   typography: {
     fontFamily: {
       sans: '"Poppins", system-ui, -apple-system, sans-serif',
       serif: '"Crimson Text", Georgia, serif',
       mono: '"Source Code Pro", Consolas, monospace',
-      display: '"Playfair Display", serif',
+      display: '"Playfair Display", serif'
     },
     fontSize: {
       xs: '0.75rem',
@@ -338,7 +337,7 @@ export const sunsetGlowTheme: ThemeConfig = {
       '3xl': '1.875rem',
       '4xl': '2.25rem',
       '5xl': '3rem',
-      '6xl': '3.75rem',
+      '6xl': '3.75rem'
     },
     fontWeight: {
       thin: 100,
@@ -349,19 +348,19 @@ export const sunsetGlowTheme: ThemeConfig = {
       semibold: 600,
       bold: 700,
       extrabold: 800,
-      black: 900,
+      black: 900
     },
     lineHeight: {
       tight: 1.25,
       normal: 1.5,
       relaxed: 1.625,
-      loose: 2,
+      loose: 2
     },
     letterSpacing: {
       tight: '-0.025em',
       normal: '0em',
-      wide: '0.05em',
-    },
+      wide: '0.05em'
+    }
   },
   spacing: {
     scale: 1.1,
@@ -383,7 +382,7 @@ export const sunsetGlowTheme: ThemeConfig = {
       40: '10rem',
       48: '12rem',
       56: '14rem',
-      64: '16rem',
+      64: '16rem'
     },
     borderRadius: {
       none: '0px',
@@ -394,15 +393,15 @@ export const sunsetGlowTheme: ThemeConfig = {
       xl: '1.25rem',
       '2xl': '1.75rem',
       '3xl': '2.5rem',
-      full: '9999px',
-    },
+      full: '9999px'
+    }
   },
   animations: {
     enabled: true,
     duration: {
       fast: '150ms',
       normal: '300ms',
-      slow: '600ms',
+      slow: '600ms'
     },
     easing: {
       linear: 'linear',
@@ -411,9 +410,9 @@ export const sunsetGlowTheme: ThemeConfig = {
       easeOut: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
       easeInOut: 'cubic-bezier(0.445, 0.05, 0.55, 0.95)',
       bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-      elastic: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+      elastic: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
     },
-    scale: 1.05,
+    scale: 1.05
   },
   effects: {
     shadows: {
@@ -424,7 +423,7 @@ export const sunsetGlowTheme: ThemeConfig = {
       xl: '0 20px 25px -5px rgba(249, 115, 22, 0.15), 0 8px 10px -6px rgba(249, 115, 22, 0.1)',
       '2xl': '0 25px 50px -12px rgba(249, 115, 22, 0.3)',
       inner: 'inset 0 2px 4px 0 rgba(249, 115, 22, 0.1)',
-      none: '0 0 #0000',
+      none: '0 0 #0000'
     },
     blur: {
       sm: '4px',
@@ -433,23 +432,21 @@ export const sunsetGlowTheme: ThemeConfig = {
       lg: '16px',
       xl: '24px',
       '2xl': '40px',
-      '3xl': '64px',
+      '3xl': '64px'
     },
     opacity: {
       disabled: 0.4,
       hover: 0.85,
       focus: 0.9,
-      overlay: 0.9,
+      overlay: 0.9
     },
     gradients: {
       primary: 'linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)',
       secondary: 'linear-gradient(135deg, #d946ef 0%, #c026d3 50%, #a21caf 100%)',
       accent: 'linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%)',
-      background:
-        'linear-gradient(135deg, #fffbf8 0%, #fef7f0 30%, #fed7aa 70%, #fdba74 100%)',
-      surface:
-        'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(254,247,240,0.8) 100%)',
-    },
+      background: 'linear-gradient(135deg, #fffbf8 0%, #fef7f0 30%, #fed7aa 70%, #fdba74 100%)',
+      surface: 'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(254,247,240,0.8) 100%)'
+    }
   },
   accessibility: {
     focusRingWidth: '2px',
@@ -458,8 +455,8 @@ export const sunsetGlowTheme: ThemeConfig = {
     focusRingOpacity: 0.6,
     contrastMode: 'normal',
     reducedMotion: false,
-    preferColorScheme: 'light',
-  },
+    preferColorScheme: 'light'
+  }
 };
 
 // Premium Theme: Forest Dream - Nature-inspired greens
@@ -483,7 +480,7 @@ export const forestDreamTheme: ThemeConfig = {
       700: '#15803d',
       800: '#166534',
       900: '#14532d',
-      950: '#052e16',
+      950: '#052e16'
     },
     secondary: {
       50: '#f7fee7',
@@ -496,7 +493,7 @@ export const forestDreamTheme: ThemeConfig = {
       700: '#4d7c0f',
       800: '#3f6212',
       900: '#365314',
-      950: '#1a2e05',
+      950: '#1a2e05'
     },
     accent: {
       50: '#fefce8',
@@ -509,7 +506,7 @@ export const forestDreamTheme: ThemeConfig = {
       700: '#a16207',
       800: '#854d0e',
       900: '#713f12',
-      950: '#422006',
+      950: '#422006'
     },
     neutral: {
       50: '#fafaf9',
@@ -522,7 +519,7 @@ export const forestDreamTheme: ThemeConfig = {
       700: '#44403c',
       800: '#292524',
       900: '#1c1917',
-      950: '#0c0a09',
+      950: '#0c0a09'
     },
     background: {
       primary: '#fdfffe',
@@ -531,7 +528,7 @@ export const forestDreamTheme: ThemeConfig = {
       elevated: '#ffffff',
       overlay: 'rgba(34, 197, 94, 0.03)',
       glass: 'rgba(240, 253, 244, 0.9)',
-      gradient: 'linear-gradient(135deg, #fdfffe 0%, #f0fdf4 50%, #dcfce7 100%)',
+      gradient: 'linear-gradient(135deg, #fdfffe 0%, #f0fdf4 50%, #dcfce7 100%)'
     },
     text: {
       primary: '#14532d',
@@ -539,7 +536,7 @@ export const forestDreamTheme: ThemeConfig = {
       tertiary: '#15803d',
       inverse: '#ffffff',
       muted: '#78716c',
-      disabled: '#a8a29e',
+      disabled: '#a8a29e'
     },
     border: {
       primary: '#dcfce7',
@@ -547,15 +544,15 @@ export const forestDreamTheme: ThemeConfig = {
       focus: '#22c55e',
       error: '#ef4444',
       success: '#22c55e',
-      warning: '#eab308',
-    },
+      warning: '#eab308'
+    }
   },
   typography: {
     fontFamily: {
       sans: '"Nunito Sans", system-ui, -apple-system, sans-serif',
       serif: '"Lora", Georgia, serif',
       mono: '"Fira Code", Consolas, monospace',
-      display: '"Fredoka One", cursive',
+      display: '"Fredoka One", cursive'
     },
     fontSize: {
       xs: '0.75rem',
@@ -567,7 +564,7 @@ export const forestDreamTheme: ThemeConfig = {
       '3xl': '1.875rem',
       '4xl': '2.25rem',
       '5xl': '3rem',
-      '6xl': '3.75rem',
+      '6xl': '3.75rem'
     },
     fontWeight: {
       thin: 100,
@@ -578,19 +575,19 @@ export const forestDreamTheme: ThemeConfig = {
       semibold: 600,
       bold: 700,
       extrabold: 800,
-      black: 900,
+      black: 900
     },
     lineHeight: {
       tight: 1.3,
       normal: 1.6,
       relaxed: 1.75,
-      loose: 2.1,
+      loose: 2.1
     },
     letterSpacing: {
       tight: '-0.02em',
       normal: '0em',
-      wide: '0.03em',
-    },
+      wide: '0.03em'
+    }
   },
   spacing: {
     scale: 1,
@@ -612,7 +609,7 @@ export const forestDreamTheme: ThemeConfig = {
       40: '10rem',
       48: '12rem',
       56: '14rem',
-      64: '16rem',
+      64: '16rem'
     },
     borderRadius: {
       none: '0px',
@@ -623,15 +620,15 @@ export const forestDreamTheme: ThemeConfig = {
       xl: '1.125rem',
       '2xl': '1.5rem',
       '3xl': '2.25rem',
-      full: '9999px',
-    },
+      full: '9999px'
+    }
   },
   animations: {
     enabled: true,
     duration: {
       fast: '180ms',
       normal: '320ms',
-      slow: '480ms',
+      slow: '480ms'
     },
     easing: {
       linear: 'linear',
@@ -640,9 +637,9 @@ export const forestDreamTheme: ThemeConfig = {
       easeOut: 'cubic-bezier(0.33, 1, 0.68, 1)',
       easeInOut: 'cubic-bezier(0.65, 0, 0.35, 1)',
       bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-      elastic: 'cubic-bezier(0.68, 0, 0.265, 1.55)',
+      elastic: 'cubic-bezier(0.68, 0, 0.265, 1.55)'
     },
-    scale: 1.03,
+    scale: 1.03
   },
   effects: {
     shadows: {
@@ -653,7 +650,7 @@ export const forestDreamTheme: ThemeConfig = {
       xl: '0 20px 25px -5px rgba(34, 197, 94, 0.12), 0 8px 10px -6px rgba(34, 197, 94, 0.08)',
       '2xl': '0 25px 50px -12px rgba(34, 197, 94, 0.25)',
       inner: 'inset 0 2px 4px 0 rgba(34, 197, 94, 0.08)',
-      none: '0 0 #0000',
+      none: '0 0 #0000'
     },
     blur: {
       sm: '4px',
@@ -662,23 +659,21 @@ export const forestDreamTheme: ThemeConfig = {
       lg: '16px',
       xl: '24px',
       '2xl': '40px',
-      '3xl': '64px',
+      '3xl': '64px'
     },
     opacity: {
       disabled: 0.45,
       hover: 0.88,
       focus: 0.93,
-      overlay: 0.92,
+      overlay: 0.92
     },
     gradients: {
       primary: 'linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%)',
       secondary: 'linear-gradient(135deg, #84cc16 0%, #65a30d 50%, #4d7c0f 100%)',
       accent: 'linear-gradient(135deg, #eab308 0%, #ca8a04 50%, #a16207 100%)',
-      background:
-        'linear-gradient(135deg, #fdfffe 0%, #f0fdf4 40%, #dcfce7 80%, #bbf7d0 100%)',
-      surface:
-        'linear-gradient(135deg, rgba(240,253,244,0.9) 0%, rgba(220,252,231,0.7) 100%)',
-    },
+      background: 'linear-gradient(135deg, #fdfffe 0%, #f0fdf4 40%, #dcfce7 80%, #bbf7d0 100%)',
+      surface: 'linear-gradient(135deg, rgba(240,253,244,0.9) 0%, rgba(220,252,231,0.7) 100%)'
+    }
   },
   accessibility: {
     focusRingWidth: '2px',
@@ -687,8 +682,8 @@ export const forestDreamTheme: ThemeConfig = {
     focusRingOpacity: 0.7,
     contrastMode: 'normal',
     reducedMotion: false,
-    preferColorScheme: 'light',
-  },
+    preferColorScheme: 'light'
+  }
 };
 
 // Premium Theme: Midnight Cosmos - Deep space theme
@@ -712,7 +707,7 @@ export const midnightCosmosTheme: ThemeConfig = {
       700: '#4338ca',
       800: '#3730a3',
       900: '#312e81',
-      950: '#1e1b4b',
+      950: '#1e1b4b'
     },
     secondary: {
       50: '#f0f9ff',
@@ -725,7 +720,7 @@ export const midnightCosmosTheme: ThemeConfig = {
       700: '#0369a1',
       800: '#075985',
       900: '#0c4a6e',
-      950: '#082f49',
+      950: '#082f49'
     },
     accent: {
       50: '#fdf4ff',
@@ -738,7 +733,7 @@ export const midnightCosmosTheme: ThemeConfig = {
       700: '#a21caf',
       800: '#86198f',
       900: '#701a75',
-      950: '#4a044e',
+      950: '#4a044e'
     },
     neutral: {
       50: '#f8fafc',
@@ -751,7 +746,7 @@ export const midnightCosmosTheme: ThemeConfig = {
       700: '#334155',
       800: '#1e293b',
       900: '#0f172a',
-      950: '#020617',
+      950: '#020617'
     },
     background: {
       primary: '#020617',
@@ -760,7 +755,7 @@ export const midnightCosmosTheme: ThemeConfig = {
       elevated: '#334155',
       overlay: 'rgba(99, 102, 241, 0.08)',
       glass: 'rgba(15, 23, 42, 0.8)',
-      gradient: 'linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e293b 100%)',
+      gradient: 'linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e293b 100%)'
     },
     text: {
       primary: '#f8fafc',
@@ -768,7 +763,7 @@ export const midnightCosmosTheme: ThemeConfig = {
       tertiary: '#cbd5e1',
       inverse: '#020617',
       muted: '#94a3b8',
-      disabled: '#64748b',
+      disabled: '#64748b'
     },
     border: {
       primary: '#334155',
@@ -776,15 +771,15 @@ export const midnightCosmosTheme: ThemeConfig = {
       focus: '#6366f1',
       error: '#ef4444',
       success: '#10b981',
-      warning: '#f59e0b',
-    },
+      warning: '#f59e0b'
+    }
   },
   typography: {
     fontFamily: {
       sans: '"Space Grotesk", system-ui, -apple-system, sans-serif',
       serif: '"Merriweather", Georgia, serif',
       mono: '"JetBrains Mono", Consolas, monospace',
-      display: '"Orbitron", monospace',
+      display: '"Orbitron", monospace'
     },
     fontSize: {
       xs: '0.75rem',
@@ -796,7 +791,7 @@ export const midnightCosmosTheme: ThemeConfig = {
       '3xl': '1.875rem',
       '4xl': '2.25rem',
       '5xl': '3rem',
-      '6xl': '3.75rem',
+      '6xl': '3.75rem'
     },
     fontWeight: {
       thin: 100,
@@ -807,19 +802,19 @@ export const midnightCosmosTheme: ThemeConfig = {
       semibold: 600,
       bold: 700,
       extrabold: 800,
-      black: 900,
+      black: 900
     },
     lineHeight: {
       tight: 1.25,
       normal: 1.5,
       relaxed: 1.625,
-      loose: 2,
+      loose: 2
     },
     letterSpacing: {
       tight: '-0.025em',
       normal: '0em',
-      wide: '0.025em',
-    },
+      wide: '0.025em'
+    }
   },
   spacing: {
     scale: 1,
@@ -841,7 +836,7 @@ export const midnightCosmosTheme: ThemeConfig = {
       40: '10rem',
       48: '12rem',
       56: '14rem',
-      64: '16rem',
+      64: '16rem'
     },
     borderRadius: {
       none: '0px',
@@ -852,15 +847,15 @@ export const midnightCosmosTheme: ThemeConfig = {
       xl: '0.75rem',
       '2xl': '1rem',
       '3xl': '1.5rem',
-      full: '9999px',
-    },
+      full: '9999px'
+    }
   },
   animations: {
     enabled: true,
     duration: {
       fast: '200ms',
       normal: '400ms',
-      slow: '600ms',
+      slow: '600ms'
     },
     easing: {
       linear: 'linear',
@@ -869,9 +864,9 @@ export const midnightCosmosTheme: ThemeConfig = {
       easeOut: 'cubic-bezier(0, 0, 0.2, 1)',
       easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
       bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-      elastic: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      elastic: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
     },
-    scale: 1.08,
+    scale: 1.08
   },
   effects: {
     shadows: {
@@ -883,7 +878,7 @@ export const midnightCosmosTheme: ThemeConfig = {
       '2xl': '0 25px 50px -12px rgba(99, 102, 241, 0.35)',
       inner: 'inset 0 2px 4px 0 rgba(99, 102, 241, 0.1)',
       none: '0 0 #0000',
-      glow: '0 0 20px rgba(99, 102, 241, 0.4)',
+      glow: '0 0 20px rgba(99, 102, 241, 0.4)'
     },
     blur: {
       sm: '4px',
@@ -892,25 +887,22 @@ export const midnightCosmosTheme: ThemeConfig = {
       lg: '16px',
       xl: '24px',
       '2xl': '40px',
-      '3xl': '64px',
+      '3xl': '64px'
     },
     opacity: {
       disabled: 0.3,
       hover: 0.9,
       focus: 0.95,
-      overlay: 0.85,
+      overlay: 0.85
     },
     gradients: {
       primary: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #4338ca 100%)',
       secondary: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%)',
       accent: 'linear-gradient(135deg, #d946ef 0%, #c026d3 50%, #a21caf 100%)',
-      background:
-        'linear-gradient(135deg, #020617 0%, #0f172a 30%, #1e293b 70%, #334155 100%)',
-      surface:
-        'linear-gradient(135deg, rgba(15,23,42,0.8) 0%, rgba(30,41,59,0.6) 100%)',
-      cosmic:
-        'radial-gradient(ellipse at center, rgba(99,102,241,0.15) 0%, rgba(15,23,42,0.8) 70%)',
-    },
+      background: 'linear-gradient(135deg, #020617 0%, #0f172a 30%, #1e293b 70%, #334155 100%)',
+      surface: 'linear-gradient(135deg, rgba(15,23,42,0.8) 0%, rgba(30,41,59,0.6) 100%)',
+      cosmic: 'radial-gradient(ellipse at center, rgba(99,102,241,0.15) 0%, rgba(15,23,42,0.8) 70%)'
+    }
   },
   accessibility: {
     focusRingWidth: '2px',
@@ -919,8 +911,8 @@ export const midnightCosmosTheme: ThemeConfig = {
     focusRingOpacity: 0.8,
     contrastMode: 'high',
     reducedMotion: false,
-    preferColorScheme: 'dark',
-  },
+    preferColorScheme: 'dark'
+  }
 };
 
 // Export all premium themes
@@ -928,7 +920,7 @@ export const PREMIUM_THEMES = {
   'ocean-breeze': oceanBreezeTheme,
   'sunset-glow': sunsetGlowTheme,
   'forest-dream': forestDreamTheme,
-  'midnight-cosmos': midnightCosmosTheme,
+  'midnight-cosmos': midnightCosmosTheme
 } as const;
 
 export const PREMIUM_THEME_PRESETS = [
@@ -943,12 +935,12 @@ export const PREMIUM_THEME_PRESETS = [
       backgroundColor: '#f8fcff',
       textColor: '#0c4a6e',
       cardColor: '#ffffff',
-      accentColor: '#f97316',
+      accentColor: '#f97316'
     },
     tags: ['premium', 'calm', 'professional'],
     isDefault: false,
     isPremium: true,
-    popularityScore: 85,
+    popularityScore: 85
   },
   {
     id: 'sunset-glow',
@@ -961,12 +953,12 @@ export const PREMIUM_THEME_PRESETS = [
       backgroundColor: '#fffbf8',
       textColor: '#7c2d12',
       cardColor: '#fef7f0',
-      accentColor: '#d946ef',
+      accentColor: '#d946ef'
     },
     tags: ['premium', 'warm', 'energetic'],
     isDefault: false,
     isPremium: true,
-    popularityScore: 92,
+    popularityScore: 92
   },
   {
     id: 'forest-dream',
@@ -979,12 +971,12 @@ export const PREMIUM_THEME_PRESETS = [
       backgroundColor: '#fdfffe',
       textColor: '#14532d',
       cardColor: '#f0fdf4',
-      accentColor: '#eab308',
+      accentColor: '#eab308'
     },
     tags: ['premium', 'nature', 'peaceful'],
     isDefault: false,
     isPremium: true,
-    popularityScore: 78,
+    popularityScore: 78
   },
   {
     id: 'midnight-cosmos',
@@ -997,11 +989,11 @@ export const PREMIUM_THEME_PRESETS = [
       backgroundColor: '#020617',
       textColor: '#f8fafc',
       cardColor: '#0f172a',
-      accentColor: '#d946ef',
+      accentColor: '#d946ef'
     },
     tags: ['premium', 'dark', 'cosmic', 'mysterious'],
     isDefault: false,
     isPremium: true,
-    popularityScore: 88,
-  },
+    popularityScore: 88
+  }
 ] as ThemePreset[];

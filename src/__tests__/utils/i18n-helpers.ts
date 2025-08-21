@@ -44,7 +44,7 @@ const mockTranslations: Record<string, TranslationData> = {
       done: 'Done',
       loading: 'Loading...',
       error: 'Error occurred',
-      retry: 'Retry',
+      retry: 'Retry'
     },
     alarm: {
       title: 'Alarm',
@@ -65,13 +65,13 @@ const mockTranslations: Record<string, TranslationData> = {
         thursday: 'Thursday',
         friday: 'Friday',
         saturday: 'Saturday',
-        sunday: 'Sunday',
+        sunday: 'Sunday'
       },
       notifications: {
         alarmSet: 'Alarm set for {{time}}',
         alarmDeleted: 'Alarm deleted',
-        alarmRinging: 'Alarm is ringing!',
-      },
+        alarmRinging: 'Alarm is ringing!'
+      }
     },
     settings: {
       title: 'Settings',
@@ -80,8 +80,8 @@ const mockTranslations: Record<string, TranslationData> = {
       timeFormat: 'Time Format',
       notifications: 'Notifications',
       sounds: 'Sounds',
-      about: 'About',
-    },
+      about: 'About'
+    }
   },
   es: {
     common: {
@@ -95,7 +95,7 @@ const mockTranslations: Record<string, TranslationData> = {
       done: 'Hecho',
       loading: 'Cargando...',
       error: 'Ocurrió un error',
-      retry: 'Reintentar',
+      retry: 'Reintentar'
     },
     alarm: {
       title: 'Alarma',
@@ -116,13 +116,13 @@ const mockTranslations: Record<string, TranslationData> = {
         thursday: 'Jueves',
         friday: 'Viernes',
         saturday: 'Sábado',
-        sunday: 'Domingo',
+        sunday: 'Domingo'
       },
       notifications: {
         alarmSet: 'Alarma configurada para {{time}}',
         alarmDeleted: 'Alarma eliminada',
-        alarmRinging: '¡La alarma está sonando!',
-      },
+        alarmRinging: '¡La alarma está sonando!'
+      }
     },
     settings: {
       title: 'Configuración',
@@ -131,8 +131,8 @@ const mockTranslations: Record<string, TranslationData> = {
       timeFormat: 'Formato de Hora',
       notifications: 'Notificaciones',
       sounds: 'Sonidos',
-      about: 'Acerca de',
-    },
+      about: 'Acerca de'
+    }
   },
   fr: {
     common: {
@@ -146,15 +146,15 @@ const mockTranslations: Record<string, TranslationData> = {
       done: 'Terminé',
       loading: 'Chargement...',
       error: 'Une erreur est survenue',
-      retry: 'Réessayer',
+      retry: 'Réessayer'
     },
     alarm: {
       title: 'Alarme',
       setAlarm: 'Définir une Alarme',
-      editAlarm: "Modifier l'Alarme",
-      deleteAlarm: "Supprimer l'Alarme",
-      alarmTime: "Heure de l'Alarme",
-      alarmLabel: "Libellé de l'Alarme",
+      editAlarm: 'Modifier l\'Alarme',
+      deleteAlarm: 'Supprimer l\'Alarme',
+      alarmTime: 'Heure de l\'Alarme',
+      alarmLabel: 'Libellé de l\'Alarme',
       repeat: 'Répéter',
       sound: 'Son',
       volume: 'Volume',
@@ -167,23 +167,23 @@ const mockTranslations: Record<string, TranslationData> = {
         thursday: 'Jeudi',
         friday: 'Vendredi',
         saturday: 'Samedi',
-        sunday: 'Dimanche',
+        sunday: 'Dimanche'
       },
       notifications: {
         alarmSet: 'Alarme définie pour {{time}}',
         alarmDeleted: 'Alarme supprimée',
-        alarmRinging: "L'alarme sonne!",
-      },
+        alarmRinging: 'L\'alarme sonne!'
+      }
     },
     settings: {
       title: 'Paramètres',
       language: 'Langue',
       theme: 'Thème',
-      timeFormat: "Format de l'Heure",
+      timeFormat: 'Format de l\'Heure',
       notifications: 'Notifications',
       sounds: 'Sons',
-      about: 'À propos',
-    },
+      about: 'À propos'
+    }
   },
   ar: {
     common: {
@@ -197,7 +197,7 @@ const mockTranslations: Record<string, TranslationData> = {
       done: 'تم',
       loading: 'جاري التحميل...',
       error: 'حدث خطأ',
-      retry: 'إعادة المحاولة',
+      retry: 'إعادة المحاولة'
     },
     alarm: {
       title: 'المنبه',
@@ -218,13 +218,13 @@ const mockTranslations: Record<string, TranslationData> = {
         thursday: 'الخميس',
         friday: 'الجمعة',
         saturday: 'السبت',
-        sunday: 'الأحد',
+        sunday: 'الأحد'
       },
       notifications: {
         alarmSet: 'تم ضبط المنبه على {{time}}',
         alarmDeleted: 'تم حذف المنبه',
-        alarmRinging: 'المنبه يرن!',
-      },
+        alarmRinging: 'المنبه يرن!'
+      }
     },
     settings: {
       title: 'الإعدادات',
@@ -233,9 +233,9 @@ const mockTranslations: Record<string, TranslationData> = {
       timeFormat: 'صيغة الوقت',
       notifications: 'الإشعارات',
       sounds: 'الأصوات',
-      about: 'حول',
-    },
-  },
+      about: 'حول'
+    }
+  }
 };
 
 // Locale Configuration
@@ -248,8 +248,8 @@ const localeConfigs: Record<string, LocaleConfig> = {
     timeFormat: '12h',
     numberFormat: {
       decimal: '.',
-      thousands: ',',
-    },
+      thousands: ','
+    }
   },
   es: {
     code: 'es',
@@ -259,8 +259,8 @@ const localeConfigs: Record<string, LocaleConfig> = {
     timeFormat: '24h',
     numberFormat: {
       decimal: ',',
-      thousands: '.',
-    },
+      thousands: '.'
+    }
   },
   fr: {
     code: 'fr',
@@ -270,8 +270,8 @@ const localeConfigs: Record<string, LocaleConfig> = {
     timeFormat: '24h',
     numberFormat: {
       decimal: ',',
-      thousands: ' ',
-    },
+      thousands: ' '
+    }
   },
   ar: {
     code: 'ar',
@@ -281,13 +281,13 @@ const localeConfigs: Record<string, LocaleConfig> = {
     timeFormat: '12h',
     numberFormat: {
       decimal: '.',
-      thousands: ',',
-    },
-  },
+      thousands: ','
+    }
+  }
 };
 
 // I18n Mocking Utilities
-export const i18nMocks = {
+export const _i18nMocks = {
   /**
    * Create mock i18n context
    */
@@ -319,7 +319,7 @@ export const i18nMocks = {
       t,
       changeLanguage: jest.fn(),
       dir: localeConfigs[locale]?.direction || 'ltr',
-      ready: true,
+      ready: true
     };
   },
 
@@ -336,8 +336,7 @@ export const i18nMocks = {
       }),
       t: (key: string, options: any = {}) => {
         const keys = key.split('.');
-        let value: any =
-          mockTranslations[mockI18n.language] || mockTranslations[defaultLocale];
+        let value: any = mockTranslations[mockI18n.language] || mockTranslations[defaultLocale];
 
         for (const k of keys) {
           if (value && typeof value === 'object') {
@@ -369,28 +368,18 @@ export const i18nMocks = {
         }
 
         return typeof value === 'string';
-      },
+      }
     };
 
     jest.mock('react-i18next', () => ({
       useTranslation: () => ({
         t: mockI18n.t,
-        i18n: mockI18n,
+        i18n: mockI18n
       }),
-      Trans: ({
-        children,
-        i18nKey,
-      }: {
-        children: React.ReactNode;
-        i18nKey: string;
-      }) => {
-        return React.createElement(
-          'span',
-          { 'data-testid': `trans-${i18nKey}` },
-          children
-        );
+      Trans: ({ children, i18nKey }: { children: React.ReactNode; i18nKey: string }) => {
+        return React.createElement('span', { 'data-testid': `trans-${i18nKey}` }, children);
       },
-      I18nextProvider: ({ children }: { children: React.ReactNode }) => children,
+      I18nextProvider: ({ children }: { children: React.ReactNode }) => children
     }));
   },
 
@@ -400,12 +389,12 @@ export const i18nMocks = {
   mockBrowserLanguage(languages: string[]): void {
     Object.defineProperty(navigator, 'languages', {
       value: languages,
-      writable: true,
+      writable: true
     });
 
     Object.defineProperty(navigator, 'language', {
       value: languages[0],
-      writable: true,
+      writable: true
     });
   },
 
@@ -423,7 +412,7 @@ export const i18nMocks = {
           return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
         }
       }),
-      resolvedOptions: () => ({ locale }),
+      resolvedOptions: () => ({ locale })
     }));
 
     // Mock Intl.NumberFormat
@@ -431,14 +420,11 @@ export const i18nMocks = {
       format: jest.fn((number: number) => {
         const config = localeConfigs[locale];
         const parts = number.toString().split('.');
-        const integerPart = parts[0].replace(
-          /\B(?=(\d{3})+(?!\d))/g,
-          config.numberFormat.thousands
-        );
+        const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, config.numberFormat.thousands);
         const decimalPart = parts[1] ? config.numberFormat.decimal + parts[1] : '';
         return integerPart + decimalPart;
       }),
-      resolvedOptions: () => ({ locale }),
+      resolvedOptions: () => ({ locale })
     }));
 
     // Mock Intl.RelativeTimeFormat
@@ -453,13 +439,13 @@ export const i18nMocks = {
         }
         return `in ${Math.abs(value)} ${unit}${Math.abs(value) !== 1 ? 's' : ''}`;
       }),
-      resolvedOptions: () => ({ locale }),
+      resolvedOptions: () => ({ locale })
     }));
-  },
+  }
 };
 
 // I18n Testing Utilities
-export const i18nUtils = {
+export const _i18nUtils = {
   /**
    * Test translation key existence
    */
@@ -489,11 +475,7 @@ export const i18nUtils = {
   /**
    * Test interpolation in translations
    */
-  testTranslationInterpolation(
-    key: string,
-    variables: Record<string, string>,
-    locale: string = 'en'
-  ): void {
+  testTranslationInterpolation(key: string, variables: Record<string, string>, locale: string = 'en'): void {
     const mockContext = i18nMocks.createMockI18nContext(locale);
     const translated = mockContext.t(key, variables);
 
@@ -540,7 +522,7 @@ export const i18nUtils = {
     const formatter = new Intl.DateTimeFormat(locale, {
       hour: 'numeric',
       minute: '2-digit',
-      hour12: config.timeFormat === '12h',
+      hour12: config.timeFormat === '12h'
     });
 
     const formattedTime = formatter.format(time);
@@ -563,11 +545,11 @@ export const i18nUtils = {
 
     expect(formattedNumber).toBeDefined();
     expect(typeof formattedNumber).toBe('string');
-  },
+  }
 };
 
 // Render Helpers with I18n Context
-export const i18nRenderHelpers = {
+export const _i18nRenderHelpers = {
   /**
    * Render component with I18n context
    */
@@ -585,9 +567,9 @@ export const i18nRenderHelpers = {
         i18n: {
           language: locale,
           changeLanguage: mockI18nContext.changeLanguage,
-          dir: () => mockI18nContext.dir,
-        },
-      }),
+          dir: () => mockI18nContext.dir
+        }
+      })
     }));
 
     const Wrapper = ({ children }: { children: React.ReactNode }) => {
@@ -601,7 +583,7 @@ export const i18nRenderHelpers = {
 
     return render(ui, {
       wrapper: Wrapper,
-      ...renderOptions,
+      ...renderOptions
     });
   },
 
@@ -623,11 +605,11 @@ export const i18nRenderHelpers = {
         testFn(locale);
       });
     });
-  },
+  }
 };
 
 // Alarm-specific I18n Utilities
-export const alarmI18nUtils = {
+export const _alarmI18nUtils = {
   /**
    * Test alarm time formatting
    */
@@ -636,7 +618,7 @@ export const alarmI18nUtils = {
     const formatter = new Intl.DateTimeFormat(locale, {
       hour: 'numeric',
       minute: '2-digit',
-      hour12: config.timeFormat === '12h',
+      hour12: config.timeFormat === '12h'
     });
 
     const formattedTime = formatter.format(time);
@@ -654,15 +636,7 @@ export const alarmI18nUtils = {
    * Test weekday names localization
    */
   testWeekdayLocalization(locale: string): void {
-    const weekdays = [
-      'monday',
-      'tuesday',
-      'wednesday',
-      'thursday',
-      'friday',
-      'saturday',
-      'sunday',
-    ];
+    const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     const mockContext = i18nMocks.createMockI18nContext(locale);
 
     weekdays.forEach(weekday => {
@@ -680,9 +654,7 @@ export const alarmI18nUtils = {
     const mockContext = i18nMocks.createMockI18nContext(locale);
 
     // Test alarm set notification
-    const alarmSetMessage = mockContext.t('alarm.notifications.alarmSet', {
-      time: '7:00 AM',
-    });
+    const alarmSetMessage = mockContext.t('alarm.notifications.alarmSet', { time: '7:00 AM' });
     expect(alarmSetMessage).toContain('7:00 AM');
     expect(alarmSetMessage).not.toContain('{{time}}');
 
@@ -695,24 +667,27 @@ export const alarmI18nUtils = {
     const alarmRingingMessage = mockContext.t('alarm.notifications.alarmRinging');
     expect(alarmRingingMessage).toBeDefined();
     expect(alarmRingingMessage.length).toBeGreaterThan(0);
-  },
+  }
 };
 
 // Complete I18n Test Suite
-export const createI18nTestSuite = () => ({
+export const _createI18nTestSuite = () => ({
   /**
    * Test basic translation functionality
    */
   testBasicTranslation(component: React.ReactElement): void {
-    i18nRenderHelpers.testInMultipleLocales(component, locale => {
-      const { getByText } = i18nRenderHelpers.renderWithI18n(component, locale);
-      const mockContext = i18nMocks.createMockI18nContext(locale);
+    i18nRenderHelpers.testInMultipleLocales(
+      component,
+      (locale) => {
+        const { getByText } = i18nRenderHelpers.renderWithI18n(component, locale);
+        const mockContext = i18nMocks.createMockI18nContext(locale);
 
-      // Test common translations
-      expect(mockContext.t('common.save')).toBeDefined();
-      expect(mockContext.t('common.cancel')).toBeDefined();
-      expect(mockContext.t('common.delete')).toBeDefined();
-    });
+        // Test common translations
+        expect(mockContext.t('common.save')).toBeDefined();
+        expect(mockContext.t('common.cancel')).toBeDefined();
+        expect(mockContext.t('common.delete')).toBeDefined();
+      }
+    );
   },
 
   /**
@@ -753,11 +728,11 @@ export const createI18nTestSuite = () => ({
     const result = mockContext.t(nonExistentKey);
 
     expect(result).toBe(nonExistentKey);
-  },
+  }
 });
 
 // Cleanup Utilities
-export const i18nCleanup = {
+export const _i18nCleanup = {
   /**
    * Reset all I18n mocks
    */
@@ -788,7 +763,7 @@ export const i18nCleanup = {
     if (global.Intl.RelativeTimeFormat.mockRestore) {
       (global.Intl.RelativeTimeFormat as jest.Mock).mockRestore();
     }
-  },
+  }
 };
 
 export default {
@@ -799,5 +774,5 @@ export default {
   createI18nTestSuite,
   i18nCleanup,
   mockTranslations,
-  localeConfigs,
+  localeConfigs
 };

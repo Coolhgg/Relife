@@ -4,10 +4,9 @@
 import { supabase } from './supabase';
 import AnalyticsService from './analytics';
 import type {
-  SubscriptionTier,
   BillingInterval,
   SubscriptionStatus,
-  PaymentStatus,
+  PaymentStatus
 } from '../types/premium';
 
 export interface RevenueMetrics {
@@ -20,7 +19,6 @@ export interface RevenueMetrics {
     [key: string]: number;
   };
   tierDistribution: {
-    [key in SubscriptionTier]: number;
   };
   cohortAnalysis: CohortData[];
 }
@@ -37,19 +35,16 @@ export interface UserJourney {
   events: Array<{
     type: 'signup' | 'trial_start' | 'conversion' | 'upgrade' | 'downgrade' | 'churn';
     timestamp: Date;
-    tier?: SubscriptionTier;
     amount?: number;
     metadata?: Record<string, any>;
   }>;
   totalValue: number;
   daysActive: number;
-  currentTier: SubscriptionTier;
 }
 
 export interface FeatureAdoptionMetrics {
   feature: string;
   adoptionRate: number;
-  tierCorrelation: Record<SubscriptionTier, number>;
   engagementScore: number;
   conversionImpact: number;
 }
@@ -69,9 +64,7 @@ export class RevenueAnalyticsService {
   /**
    * Get overall revenue metrics
    */
-  public async getRevenueMetrics(
-    timeRange: '7d' | '30d' | '90d' | '1y' = '30d'
-  ): Promise<RevenueMetrics> {
+  public async getRevenueMetrics(timeRange: '7d' | '30d' | '90d' | '1y' = '30d'): Promise<RevenueMetrics> {
     const cacheKey = `revenue_metrics_${timeRange}`;
     const cached = this.getCachedData(cacheKey);
     if (cached) return cached;
@@ -112,11 +105,12 @@ export class RevenueAnalyticsService {
         conversionRate,
         upgradePath,
         tierDistribution,
-        cohortAnalysis,
+        cohortAnalysis
       };
 
       this.setCachedData(cacheKey, metrics);
       return metrics;
+
     } catch (error) {
       console.error('Error calculating revenue metrics:', error);
       throw error;
@@ -137,10 +131,9 @@ export class RevenueAnalyticsService {
 
     let totalMRR = 0;
     data?.forEach(subscription => {
-      const monthlyAmount =
-        subscription.billingInterval === 'year'
-          ? subscription.amount / 12
-          : subscription.amount;
+      const monthlyAmount = subscription.billingInterval === 'year'
+        ? subscription.amount / 12
+        : subscription.amount;
       totalMRR += monthlyAmount;
     });
 
@@ -192,10 +185,7 @@ export class RevenueAnalyticsService {
   /**
    * Calculate trial to paid conversion rate
    */
-  private async calculateConversionRate(
-    startDate?: Date,
-    endDate?: Date
-  ): Promise<number> {
+  private async calculateConversionRate(startDate?: Date, endDate?: Date): Promise<number> {
     const start = startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const end = endDate || new Date();
 
@@ -227,10 +217,7 @@ export class RevenueAnalyticsService {
   /**
    * Get upgrade/downgrade paths
    */
-  private async getUpgradePath(
-    startDate: Date,
-    endDate: Date
-  ): Promise<Record<string, number>> {
+  private async getUpgradePath(startDate: Date, endDate: Date): Promise<Record<string, number>> {
     const { data, error } = await supabase
       .from('subscription_changes')
       .select('previousTier, newTier')
@@ -251,7 +238,8 @@ export class RevenueAnalyticsService {
   /**
    * Get current tier distribution
    */
-  private async getTierDistribution(): Promise<Record<SubscriptionTier, number>> {
+  private async getTierDistribution(): Promise<
+  > {
     const { data, error } = await supabase
       .from('subscriptions')
       .select('tier')
@@ -259,16 +247,14 @@ export class RevenueAnalyticsService {
 
     if (error) throw error;
 
-    const distribution: Record<SubscriptionTier, number> = {
       free: 0,
       basic: 0,
       premium: 0,
       pro: 0,
-      enterprise: 0,
+      enterprise: 0
     };
 
-    data?.forEach(subscription => {
-      distribution[subscription.tier as SubscriptionTier]++;
+    data?.forEach((subscription) => {
     });
 
     return distribution;
@@ -305,7 +291,7 @@ export class RevenueAnalyticsService {
       'voice_commands',
       'team_battles',
       'advanced_analytics',
-      'location_alarms',
+      'location_alarms'
     ];
 
     const metrics: FeatureAdoptionMetrics[] = [];
@@ -333,17 +319,16 @@ export class RevenueAnalyticsService {
 
     const journey: UserJourney = {
       userId,
-      events:
-        events?.map(event => ({
-          type: event.type,
-          timestamp: new Date(event.timestamp),
-          tier: event.tier,
-          amount: event.amount,
-          metadata: event.metadata,
-        })) || [],
+      events: events?.map(event => ({
+        type: event.type,
+        timestamp: new Date(event.timestamp),
+        tier: event.tier,
+        amount: event.amount,
+        metadata: event.metadata
+      })) || [],
       totalValue: 0,
       daysActive: 0,
-      currentTier: 'free',
+      currentTier: 'free'
     };
 
     // Calculate metrics
@@ -354,13 +339,13 @@ export class RevenueAnalyticsService {
     if (journey.events.length > 0) {
       const firstEvent = journey.events[0].timestamp;
       const lastEvent = journey.events[journey.events.length - 1].timestamp;
-      journey.daysActive = Math.floor(
-        (lastEvent.getTime() - firstEvent.getTime()) / (1000 * 60 * 60 * 24)
-      );
+      journey.daysActive = Math.floor((lastEvent.getTime() - firstEvent.getTime()) / (1000 * 60 * 60 * 24));
     }
 
     // Get current tier
-    const currentEvent = journey.events.filter(e => e.tier).reverse()[0];
+    const currentEvent = journey.events
+      .filter(e => e.tier)
+      .reverse()[0];
     journey.currentTier = currentEvent?.tier || 'free';
 
     return journey;
@@ -373,7 +358,6 @@ export class RevenueAnalyticsService {
     userId: string;
     type: string;
     amount?: number;
-    tier?: SubscriptionTier;
     billingInterval?: BillingInterval;
     metadata?: Record<string, any>;
   }): Promise<void> {
@@ -385,7 +369,7 @@ export class RevenueAnalyticsService {
       tier: event.tier,
       billingInterval: event.billingInterval,
       metadata: event.metadata,
-      timestamp: new Date(),
+      timestamp: new Date()
     });
 
     // Send to analytics service
@@ -394,7 +378,7 @@ export class RevenueAnalyticsService {
       amount: event.amount,
       tier: event.tier,
       billingInterval: event.billingInterval,
-      ...event.metadata,
+      ...event.metadata
     });
 
     // Clear relevant caches
@@ -416,7 +400,7 @@ export class RevenueAnalyticsService {
       generatedAt: new Date(),
       summary: metrics,
       featureAdoption: featureMetrics,
-      insights: this.generateInsights(metrics, featureMetrics),
+      insights: this.generateInsights(metrics, featureMetrics)
     };
 
     if (format === 'csv') {
@@ -440,7 +424,7 @@ export class RevenueAnalyticsService {
     if (!data?.length) return 0;
 
     const totalRevenue = data.reduce((sum, sub) => sum + sub.amount, 0);
-    return totalRevenue / data.length / 100; // Convert from cents
+    return (totalRevenue / data.length) / 100; // Convert from cents
   }
 
   private async getCohortData(month: string): Promise<CohortData> {
@@ -449,13 +433,11 @@ export class RevenueAnalyticsService {
       cohort: month,
       size: 100,
       revenue: 5000,
-      retentionByMonth: [100, 85, 72, 65, 58, 52, 48, 45, 42, 40, 38, 36],
+      retentionByMonth: [100, 85, 72, 65, 58, 52, 48, 45, 42, 40, 38, 36]
     };
   }
 
-  private async getFeatureAdoptionData(
-    feature: string
-  ): Promise<FeatureAdoptionMetrics> {
+  private async getFeatureAdoptionData(feature: string): Promise<FeatureAdoptionMetrics> {
     const { data: usage, error } = await supabase
       .from('feature_usage')
       .select('userId, tier')
@@ -469,7 +451,7 @@ export class RevenueAnalyticsService {
 
     if (totalError) throw totalError;
 
-    const adoptionRate = usage?.length ? usage.length / (totalUsers?.length || 1) : 0;
+    const adoptionRate = usage?.length ? (usage.length / (totalUsers?.length || 1)) : 0;
 
     return {
       feature,
@@ -479,10 +461,10 @@ export class RevenueAnalyticsService {
         basic: 0.3,
         premium: 0.7,
         pro: 0.9,
-        enterprise: 1.0,
+        enterprise: 1.0
       },
       engagementScore: Math.random() * 100, // Placeholder
-      conversionImpact: Math.random() * 0.5, // Placeholder
+      conversionImpact: Math.random() * 0.5 // Placeholder
     };
   }
 
@@ -517,10 +499,7 @@ export class RevenueAnalyticsService {
     return months.reverse();
   }
 
-  private generateInsights(
-    metrics: RevenueMetrics,
-    features: FeatureAdoptionMetrics[]
-  ): string[] {
+  private generateInsights(metrics: RevenueMetrics, features: FeatureAdoptionMetrics[]): string[] {
     const insights: string[] = [];
 
     if (metrics.churnRate > 0.05) {
@@ -533,9 +512,7 @@ export class RevenueAnalyticsService {
 
     const topFeature = features.sort((a, b) => b.adoptionRate - a.adoptionRate)[0];
     if (topFeature) {
-      insights.push(
-        `${topFeature.feature} has the highest adoption rate at ${(topFeature.adoptionRate * 100).toFixed(1)}%`
-      );
+      insights.push(`${topFeature.feature} has the highest adoption rate at ${(topFeature.adoptionRate * 100).toFixed(1)}%`);
     }
 
     return insights;

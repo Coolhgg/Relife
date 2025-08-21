@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import '@testing-library/jest-dom';
 import { vi, afterEach, beforeAll, afterAll } from 'vitest';
 import { cleanup } from '@testing-library/react';
@@ -307,11 +308,7 @@ if (typeof global !== 'undefined') {
 }
 
 // Helper functions for integration tests
-export const mockApiError = (
-  endpoint: string,
-  status: number = 500,
-  message: string = 'Server Error'
-) => {
+export const mockApiError = (endpoint: string, status: number = 500, message: string = 'Server Error') => {
   const { http, HttpResponse } = require('msw');
 
   server.use(

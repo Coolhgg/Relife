@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Enhanced Focus Management for Smart Alarm App
 // Provides advanced focus indicators and management
 
@@ -56,7 +57,7 @@ export class EnhancedFocusService {
       skipToContentEnabled: true,
       announceOnFocus: false,
       announceFocusChanges: false,
-      isEnabled: true,
+      isEnabled: true
     };
 
     this.initialize();
@@ -194,13 +195,8 @@ export class EnhancedFocusService {
 
   private handleKeyDown(event: KeyboardEvent): void {
     // Show focus rings only when navigating with keyboard
-    if (
-      event.key === 'Tab' ||
-      event.key === 'ArrowUp' ||
-      event.key === 'ArrowDown' ||
-      event.key === 'ArrowLeft' ||
-      event.key === 'ArrowRight'
-    ) {
+    if (event.key === 'Tab' || event.key === 'ArrowUp' || event.key === 'ArrowDown' ||
+        event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       this.isKeyboardNavigating = true;
       document.body.classList.add('keyboard-navigation');
     }
@@ -242,8 +238,8 @@ export class EnhancedFocusService {
       const offset = this.settings.focusRingOffset;
       this.focusIndicator.style.top = `${rect.top + scrollTop - offset}px`;
       this.focusIndicator.style.left = `${rect.left + scrollLeft - offset}px`;
-      this.focusIndicator.style.width = `${rect.width + offset * 2}px`;
-      this.focusIndicator.style.height = `${rect.height + offset * 2}px`;
+      this.focusIndicator.style.width = `${rect.width + (offset * 2)}px`;
+      this.focusIndicator.style.height = `${rect.height + (offset * 2)}px`;
       this.focusIndicator.style.opacity = '1';
     } catch (error) {
       // Handle getBoundingClientRect errors gracefully
@@ -271,7 +267,7 @@ export class EnhancedFocusService {
       focusRingWidth: this.settings.focusRingWidth,
       focusRingOffset: this.settings.focusRingOffset,
       highlightFocusableElements: this.settings.highlightFocusableElements,
-      announceFocusChanges: this.settings.announceFocusChanges,
+      announceFocusChanges: this.settings.announceFocusChanges
     };
   }
 
@@ -291,8 +287,8 @@ export class EnhancedFocusService {
         const event = new CustomEvent('focus-announcement', {
           detail: {
             element,
-            text: `Focused on ${label}`,
-          },
+            text: `Focused on ${label}`
+          }
         });
         document.dispatchEvent(event);
       }
@@ -328,12 +324,10 @@ export class EnhancedFocusService {
     }
 
     // Use text content or placeholder
-    return (
-      element.textContent ||
-      (element as HTMLInputElement).placeholder ||
-      element.getAttribute('title') ||
-      element.tagName.toLowerCase()
-    );
+    return element.textContent ||
+           (element as HTMLInputElement).placeholder ||
+           element.getAttribute('title') ||
+           element.tagName.toLowerCase();
   }
 
   createSkipLink(href: string, text: string): void {
@@ -397,17 +391,15 @@ export class EnhancedFocusService {
       [role="tab"]:not([disabled])
     `;
 
-    return Array.from(document.querySelectorAll(selector)).filter(el => {
-      const element = el as HTMLElement;
-      const rect = element.getBoundingClientRect();
-      return rect.width > 0 && rect.height > 0;
-    }) as HTMLElement[];
+    return Array.from(document.querySelectorAll(selector))
+      .filter(el => {
+        const element = el as HTMLElement;
+        const rect = element.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+      }) as HTMLElement[];
   }
 
-  createCustomFocusIndicator(
-    element: HTMLElement,
-    options: FocusIndicatorOptions
-  ): void {
+  createCustomFocusIndicator(element: HTMLElement, options: FocusIndicatorOptions): void {
     if (!element) return;
 
     const indicator = document.createElement('div');

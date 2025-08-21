@@ -1,4 +1,5 @@
-import React from 'react';
+/// <reference lib="dom" />
+import React from "react";
 // Screen Reader Initialization Component
 // Ensures screen reader service is properly initialized and manages state changes
 import { useEffect, useRef } from 'react';
@@ -13,7 +14,7 @@ interface ScreenReaderProviderProps {
 export function ScreenReaderProvider({
   children,
   enabled = true,
-  verbosity = 'medium',
+  verbosity = 'medium'
 }: ScreenReaderProviderProps) {
   const isInitialized = useRef(false);
   const screenReaderService = useRef<ScreenReaderService>();
@@ -27,7 +28,7 @@ export function ScreenReaderProvider({
       screenReaderService.current.updateSettings({
         isEnabled: enabled,
         verbosityLevel: verbosity,
-        autoAnnounceChanges: true,
+        autoAnnounceChanges: true
       });
 
       // Announce app initialization
@@ -48,10 +49,8 @@ export function ScreenReaderProvider({
 
         // Announce critical errors to screen reader users
         const errorMessage = args.join(' ');
-        if (
-          errorMessage.toLowerCase().includes('error') ||
-          errorMessage.toLowerCase().includes('failed')
-        ) {
+        if (errorMessage.toLowerCase().includes('error') ||
+            errorMessage.toLowerCase().includes('failed')) {
           screenReaderService.current?.announce(
             'An error occurred. Please check your connection and try again.',
             'assertive'
@@ -60,7 +59,7 @@ export function ScreenReaderProvider({
       };
 
       // Setup global focus management
-      document.addEventListener('focusin', event => {
+      document.addEventListener('focusin', (event) => {
         if (screenReaderService.current?.getState().verbosityLevel === 'high') {
           const target = event.target as HTMLElement;
           if (target && target.getAttribute) {
@@ -68,12 +67,10 @@ export function ScreenReaderProvider({
             const role = target.getAttribute('role');
             const tagName = target.tagName.toLowerCase();
 
-            if (
-              ariaLabel ||
-              ['button', 'link', 'input', 'select', 'textarea'].includes(tagName)
-            ) {
-              const elementDescription =
-                ariaLabel || target.textContent?.slice(0, 50) || `${tagName} element`;
+            if (ariaLabel || ['button', 'link', 'input', 'select', 'textarea'].includes(tagName)) {
+              const elementDescription = ariaLabel ||
+                target.textContent?.slice(0, 50) ||
+                `${tagName} element`;
 
               screenReaderService.current?.announce(
                 `Focused: ${elementDescription}`,
@@ -100,7 +97,7 @@ export function ScreenReaderProvider({
     if (screenReaderService.current) {
       screenReaderService.current.updateSettings({
         isEnabled: enabled,
-        verbosityLevel: verbosity,
+        verbosityLevel: verbosity
       });
     }
   }, [enabled, verbosity]);
@@ -119,24 +116,26 @@ export function useScreenReaderLifecycle(componentName: string) {
 
     // Announce component mount
     if (screenReaderRef.current.getState().verbosityLevel === 'high') {
-      screenReaderRef.current.announce(`${componentName} loaded`, 'polite', {
-        delay: 500,
-      });
+      screenReaderRef.current.announce(
+        `${componentName} loaded`,
+        'polite',
+        { delay: 500 }
+      );
     }
 
     return () => {
       mountedRef.current = false;
       // Announce component unmount for high verbosity
       if (screenReaderRef.current?.getState().verbosityLevel === 'high') {
-        screenReaderRef.current.announce(`${componentName} closed`, 'polite');
+        screenReaderRef.current.announce(
+          `${componentName} closed`,
+          'polite'
+        );
       }
     };
   }, [componentName]);
 
-  const announceIfMounted = (
-    message: string,
-    priority: 'polite' | 'assertive' = 'polite'
-  ) => {
+  const announceIfMounted = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
     if (mountedRef.current && screenReaderRef.current) {
       screenReaderRef.current.announce(message, priority);
     }
@@ -153,7 +152,7 @@ export function ScreenReaderTester() {
     { message: 'This is a polite announcement', priority: 'polite' as const },
     { message: 'This is an assertive announcement', priority: 'assertive' as const },
     { message: 'Testing alarm creation announcement', priority: 'polite' as const },
-    { message: 'Testing navigation announcement', priority: 'polite' as const },
+    { message: 'Testing navigation announcement', priority: 'polite' as const }
   ];
 
   const runTest = (index: number) => {

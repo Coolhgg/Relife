@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Premium Theme Animation Service
  * Advanced animation features for premium themes
@@ -245,9 +246,7 @@ class PremiumThemeAnimationService {
       }, 1000);
     };
 
-    const interactiveElements = document.querySelectorAll(
-      'button, .clickable, [role="button"]'
-    );
+    const interactiveElements = document.querySelectorAll('button, .clickable, [role="button"]');
     interactiveElements.forEach(element => {
       element.addEventListener('click', addRipple);
     });
@@ -582,15 +581,13 @@ class PremiumThemeAnimationService {
   /**
    * Apply animation intensity
    */
-  setAnimationIntensity(
-    intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic'
-  ): void {
+  setAnimationIntensity(intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic'): void {
     const root = document.documentElement;
     const intensityMap = {
       subtle: '0.5',
       moderate: '1',
       dynamic: '1.5',
-      dramatic: '2',
+      dramatic: '2'
     };
 
     root.style.setProperty('--animation-intensity', intensityMap[intensity]);
@@ -617,7 +614,7 @@ class PremiumThemeAnimationService {
           backgroundMorphing: false,
           liquidMotion: false,
           clickWave: false,
-          mouseGlow: false,
+          mouseGlow: false
         };
 
       case 'sunset-glow':
@@ -636,7 +633,7 @@ class PremiumThemeAnimationService {
           backgroundMorphing: false,
           liquidMotion: false,
           clickWave: false,
-          mouseGlow: false,
+          mouseGlow: false
         };
 
       case 'forest-dream':
@@ -655,7 +652,7 @@ class PremiumThemeAnimationService {
           galaxyBackground: false,
           backgroundMorphing: false,
           scrollParallax: false,
-          clickWave: false,
+          clickWave: false
         };
 
       case 'midnight-cosmos':
@@ -674,7 +671,7 @@ class PremiumThemeAnimationService {
           lightRay: false,
           liquidMotion: false,
           scrollParallax: false,
-          mouseGlow: false,
+          mouseGlow: false
         };
 
       default:

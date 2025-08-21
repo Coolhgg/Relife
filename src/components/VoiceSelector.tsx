@@ -28,7 +28,7 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
   isLocked,
   onSelect,
   onTest,
-  onUpgrade,
+  onUpgrade
 }) => {
   const [isTestingVoice, setIsTestingVoice] = useState(false);
 
@@ -50,15 +50,15 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
 
   const getCharacteristicColor = (characteristic: string): string => {
     const colors: Record<string, string> = {
-      energetic: 'bg-orange-100 text-orange-700',
-      gentle: 'bg-pink-100 text-pink-700',
-      wise: 'bg-purple-100 text-purple-700',
-      commanding: 'bg-red-100 text-red-700',
-      peaceful: 'bg-green-100 text-green-700',
-      fun: 'bg-yellow-100 text-yellow-700',
-      mysterious: 'bg-indigo-100 text-indigo-700',
-      caring: 'bg-blue-100 text-blue-700',
-      motivating: 'bg-emerald-100 text-emerald-700',
+      'energetic': 'bg-orange-100 text-orange-700',
+      'gentle': 'bg-pink-100 text-pink-700',
+      'wise': 'bg-purple-100 text-purple-700',
+      'commanding': 'bg-red-100 text-red-700',
+      'peaceful': 'bg-green-100 text-green-700',
+      'fun': 'bg-yellow-100 text-yellow-700',
+      'mysterious': 'bg-indigo-100 text-indigo-700',
+      'caring': 'bg-blue-100 text-blue-700',
+      'motivating': 'bg-emerald-100 text-emerald-700'
     };
     return colors[characteristic] || 'bg-gray-100 text-gray-700';
   };
@@ -86,13 +86,10 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
   };
 
   return (
-    <div
-      className={`relative bg-white rounded-xl border-2 transition-all duration-300 hover:shadow-lg ${
-        isSelected
-          ? 'border-blue-500 shadow-lg'
-          : 'border-gray-200 hover:border-gray-300'
-      } ${isLocked ? 'opacity-75' : ''}`}
-    >
+    <div className={`relative bg-white rounded-xl border-2 transition-all duration-300 hover:shadow-lg ${
+      isSelected ? 'border-blue-500 shadow-lg' : 'border-gray-200 hover:border-gray-300'
+    } ${isLocked ? 'opacity-75' : ''}`}>
+
       {getTierBadge()}
 
       <div className="p-4">
@@ -122,7 +119,7 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
         {personality && personality.characteristics.length > 0 && (
           <div className="mb-3">
             <div className="flex flex-wrap gap-1">
-              {personality.characteristics.slice(0, 3).map(characteristic => (
+              {personality.characteristics.slice(0, 3).map((characteristic) => (
                 <span
                   key={characteristic}
                   className={`px-2 py-1 rounded-full text-xs font-medium ${getCharacteristicColor(characteristic)}`}
@@ -185,14 +182,12 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
   selectedVoice,
   onVoiceChange,
   user,
-  showUpgradePrompts = true,
+  showUpgradePrompts = true
 }) => {
   const [availableVoices, setAvailableVoices] = useState<VoiceMoodConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'free' | 'premium' | 'ultimate'>('all');
-  const [showPersonalityDetails, setShowPersonalityDetails] = useState<string | null>(
-    null
-  );
+  const [showPersonalityDetails, setShowPersonalityDetails] = useState<string | null>(null);
 
   useEffect(() => {
     loadAvailableVoices();
@@ -262,17 +257,17 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
 
   const getCategoryTitle = (category: string): string => {
     const titles: Record<string, string> = {
-      basic: 'Basic Voices',
-      fitness: 'Fitness & Health',
-      wellness: 'Wellness & Mindfulness',
-      entertainment: 'Entertainment',
-      adventure: 'Adventure & Fantasy',
-      tech: 'Tech & Sci-Fi',
-      wisdom: 'Wisdom & Guidance',
-      lifestyle: 'Lifestyle',
-      nature: 'Nature & Outdoors',
+      'basic': 'Basic Voices',
+      'fitness': 'Fitness & Health',
+      'wellness': 'Wellness & Mindfulness',
+      'entertainment': 'Entertainment',
+      'adventure': 'Adventure & Fantasy',
+      'tech': 'Tech & Sci-Fi',
+      'wisdom': 'Wisdom & Guidance',
+      'lifestyle': 'Lifestyle',
+      'nature': 'Nature & Outdoors',
       'personal-development': 'Personal Development',
-      fun: 'Fun & Playful',
+      'fun': 'Fun & Playful'
     };
     return titles[category] || category.charAt(0).toUpperCase() + category.slice(1);
   };
@@ -299,9 +294,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Choose Your Voice</h2>
-        <p className="text-gray-600">
-          Select the perfect personality to wake you up each morning
-        </p>
+        <p className="text-gray-600">Select the perfect personality to wake you up each morning</p>
       </div>
 
       {/* Filter tabs */}
@@ -311,7 +304,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
             { key: 'all', label: 'All Voices', icon: Volume2 },
             { key: 'free', label: 'Free', icon: Heart },
             { key: 'premium', label: 'Premium', icon: Crown },
-            { key: 'ultimate', label: 'Ultimate', icon: Star },
+            { key: 'ultimate', label: 'Ultimate', icon: Star }
           ].map(({ key, label, icon: Icon }) => (
             <button
               key={key}
@@ -334,9 +327,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
         {Object.entries(voicesByCategory).map(([category, voices]) => (
           <div key={category}>
             <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">
-                {getCategoryTitle(category)}
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900">{getCategoryTitle(category)}</h3>
               <div className="bg-gray-200 text-gray-600 px-2 py-1 rounded-full text-xs font-medium">
                 {voices.length} voice{voices.length !== 1 ? 's' : ''}
               </div>
@@ -345,8 +336,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {voices.map(voice => {
                 const personality = PremiumVoiceService.getVoicePersonality(voice.id);
-                const isLocked =
-                  personality && !availableVoices.some(av => av.id === voice.id);
+                const isLocked = personality && !availableVoices.some(av => av.id === voice.id);
 
                 return (
                   <VoiceCard
@@ -374,9 +364,8 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
             <h3 className="text-xl font-bold">Unlock Premium Voices</h3>
           </div>
           <p className="mb-4 text-orange-100">
-            Get access to {availableVoices.length - 6}+ premium voice personalities,
-            including celebrity chefs, zen masters, robot companions, and more! Plus
-            voice cloning with Ultimate tier.
+            Get access to {availableVoices.length - 6}+ premium voice personalities, including celebrity chefs,
+            zen masters, robot companions, and more! Plus voice cloning with Ultimate tier.
           </p>
           <button
             onClick={handleUpgrade}

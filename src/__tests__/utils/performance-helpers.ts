@@ -41,7 +41,7 @@ export interface PerformanceBenchmark {
 }
 
 // Core performance measurement utilities
-export const performanceCore = {
+export const _performanceCore = {
   // Enhanced performance marking with metadata
   mark: (name: string, metadata?: Record<string, any>): PerformanceMark => {
     const startTime = performance.now();
@@ -50,7 +50,7 @@ export const performanceCore = {
     return {
       name,
       startTime,
-      metadata,
+      metadata
     };
   },
 
@@ -124,9 +124,7 @@ export const performanceCore = {
     const maxTime = Math.max(...validTimes);
 
     // Calculate standard deviation
-    const variance =
-      validTimes.reduce((sum, time) => sum + Math.pow(time - averageTime, 2), 0) /
-      validTimes.length;
+    const variance = validTimes.reduce((sum, time) => sum + Math.pow(time - averageTime, 2), 0) / validTimes.length;
     const standardDeviation = Math.sqrt(variance);
 
     return {
@@ -137,7 +135,7 @@ export const performanceCore = {
       minTime,
       maxTime,
       standardDeviation,
-      successRate: successCount / iterations,
+      successRate: successCount / iterations
     };
   },
 
@@ -152,11 +150,11 @@ export const performanceCore = {
       performance.clearMarks();
       performance.clearMeasures();
     }
-  },
+  }
 };
 
 // React component performance testing
-export const reactPerformance = {
+export const _reactPerformance = {
   // Measure component render performance
   measureRender: async (
     renderComponent: () => void | Promise<void>,
@@ -169,7 +167,7 @@ export const reactPerformance = {
 
     let mountTime = 0;
     let updateTime = 0;
-    const unmountTime = 0;
+    let unmountTime = 0;
     let rerenderCount = 0;
 
     // Measure initial mount
@@ -202,7 +200,7 @@ export const reactPerformance = {
       updateTime,
       unmountTime,
       totalTime,
-      rerenderCount,
+      rerenderCount
     };
   },
 
@@ -224,7 +222,7 @@ export const reactPerformance = {
       iterations = 50,
       concurrency = 1,
       maxRenderTime = 16, // 60fps target
-      label = 'stress-test',
+      label = 'stress-test'
     } = options;
 
     const violations: Array<{ iteration: number; time: number }> = [];
@@ -248,19 +246,19 @@ export const reactPerformance = {
     return {
       passed: violations.length === 0 && results.averageTime <= maxRenderTime,
       results,
-      violations,
+      violations
     };
-  },
+  }
 };
 
 // Memory testing utilities
-export const memoryTesting = {
+export const _memoryTesting = {
   // Take memory snapshot
   snapshot: (label?: string): MemorySnapshot => {
     const memory = (performance as any).memory || {
       usedJSHeapSize: 0,
       totalJSHeapSize: 0,
-      jsHeapSizeLimit: 0,
+      jsHeapSizeLimit: 0
     };
 
     return {
@@ -268,7 +266,7 @@ export const memoryTesting = {
       totalJSHeapSize: memory.totalJSHeapSize,
       jsHeapSizeLimit: memory.jsHeapSizeLimit,
       timestamp: Date.now(),
-      label,
+      label
     };
   },
 
@@ -283,8 +281,8 @@ export const memoryTesting = {
       totalHeapDelta: totalDiff,
       timeDelta: timeDiff,
       usedHeapRate: usedDiff / timeDiff, // bytes per ms
-      hasMemoryLeak: usedDiff > 0 && usedDiff / before.usedJSHeapSize > 0.1, // 10% increase threshold
-      percentageIncrease: (usedDiff / before.usedJSHeapSize) * 100,
+      hasMemoryLeak: usedDiff > 0 && (usedDiff / before.usedJSHeapSize) > 0.1, // 10% increase threshold
+      percentageIncrease: (usedDiff / before.usedJSHeapSize) * 100
     };
   },
 
@@ -330,7 +328,7 @@ export const memoryTesting = {
       hasLeak,
       snapshots,
       leakRate,
-      totalIncrease: comparison.usedHeapDelta,
+      totalIncrease: comparison.usedHeapDelta
     };
   },
 
@@ -353,33 +351,29 @@ export const memoryTesting = {
         }
       }, interval);
     });
-  },
+  }
 };
 
 // Bundle size and loading performance
-export const bundlePerformance = {
+export const _bundlePerformance = {
   // Measure resource loading times
-  measureResourceLoading: (): Promise<
-    Array<{
-      name: string;
-      type: string;
-      size: number;
-      duration: number;
-      startTime: number;
-    }>
-  > => {
-    return new Promise(resolve => {
+  measureResourceLoading: (): Promise<Array<{
+    name: string;
+    type: string;
+    size: number;
+    duration: number;
+    startTime: number;
+  }>> => {
+    return new Promise((resolve) => {
       window.addEventListener('load', () => {
-        const resources = performance.getEntriesByType(
-          'resource'
-        ) as PerformanceResourceTiming[];
+        const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
 
         const resourceMetrics = resources.map(resource => ({
           name: resource.name,
           type: resource.initiatorType,
           size: resource.transferSize || 0,
           duration: resource.duration,
-          startTime: resource.startTime,
+          startTime: resource.startTime
         }));
 
         resolve(resourceMetrics);
@@ -388,13 +382,11 @@ export const bundlePerformance = {
   },
 
   // Analyze bundle performance
-  analyzeBundleSize: (
-    thresholds: {
-      maxTotalSize?: number;
-      maxIndividualSize?: number;
-      maxLoadTime?: number;
-    } = {}
-  ): Promise<{
+  analyzeBundleSize: (thresholds: {
+    maxTotalSize?: number;
+    maxIndividualSize?: number;
+    maxLoadTime?: number;
+  } = {}): Promise<{
     passed: boolean;
     totalSize: number;
     largestResource: { name: string; size: number };
@@ -403,34 +395,28 @@ export const bundlePerformance = {
     const {
       maxTotalSize = 1024 * 1024, // 1MB
       maxIndividualSize = 256 * 1024, // 256KB
-      maxLoadTime = 3000, // 3 seconds
+      maxLoadTime = 3000 // 3 seconds
     } = thresholds;
 
     return bundlePerformance.measureResourceLoading().then(resources => {
       const violations: string[] = [];
       const totalSize = resources.reduce((sum, resource) => sum + resource.size, 0);
-      const largestResource = resources.reduce(
-        (largest, resource) => (resource.size > largest.size ? resource : largest),
+      const largestResource = resources.reduce((largest, resource) =>
+        resource.size > largest.size ? resource : largest,
         { name: '', size: 0 }
       );
 
       if (totalSize > maxTotalSize) {
-        violations.push(
-          `Total bundle size (${totalSize} bytes) exceeds limit (${maxTotalSize} bytes)`
-        );
+        violations.push(`Total bundle size (${totalSize} bytes) exceeds limit (${maxTotalSize} bytes)`);
       }
 
       resources.forEach(resource => {
         if (resource.size > maxIndividualSize) {
-          violations.push(
-            `Resource ${resource.name} (${resource.size} bytes) exceeds individual size limit`
-          );
+          violations.push(`Resource ${resource.name} (${resource.size} bytes) exceeds individual size limit`);
         }
 
         if (resource.duration > maxLoadTime) {
-          violations.push(
-            `Resource ${resource.name} took ${resource.duration}ms to load (limit: ${maxLoadTime}ms)`
-          );
+          violations.push(`Resource ${resource.name} took ${resource.duration}ms to load (limit: ${maxLoadTime}ms)`);
         }
       });
 
@@ -438,20 +424,16 @@ export const bundlePerformance = {
         passed: violations.length === 0,
         totalSize,
         largestResource,
-        violations,
+        violations
       };
     });
-  },
+  }
 };
 
 // Performance testing assertions
-export const performanceAssertions = {
+export const _performanceAssertions = {
   // Assert render time is within limit
-  expectRenderTimeWithin: (
-    actualTime: number,
-    maxTime: number,
-    componentName?: string
-  ) => {
+  expectRenderTimeWithin: (actualTime: number, maxTime: number, componentName?: string) => {
     const message = componentName
       ? `${componentName} render time (${actualTime.toFixed(2)}ms) should be within ${maxTime}ms`
       : `Render time (${actualTime.toFixed(2)}ms) should be within ${maxTime}ms`;
@@ -460,14 +442,10 @@ export const performanceAssertions = {
   },
 
   // Assert no memory leaks
-  expectNoMemoryLeak: (
-    leakTest: Awaited<ReturnType<typeof memoryTesting.testMemoryLeak>>
-  ) => {
+  expectNoMemoryLeak: (leakTest: Awaited<ReturnType<typeof memoryTesting.testMemoryLeak>>) => {
     expect(leakTest.hasLeak).toBe(false);
     if (leakTest.hasLeak) {
-      console.warn(
-        `Memory leak detected: ${leakTest.totalIncrease} bytes increase (${leakTest.leakRate} bytes/iteration)`
-      );
+      console.warn(`Memory leak detected: ${leakTest.totalIncrease} bytes increase (${leakTest.leakRate} bytes/iteration)`);
     }
   },
 
@@ -491,16 +469,16 @@ export const performanceAssertions = {
     if (maxStandardDeviation) {
       expect(benchmark.standardDeviation).toBeLessThanOrEqual(maxStandardDeviation);
     }
-  },
+  }
 };
 
 // Export grouped utilities
-export const performanceHelpers = {
+export const _performanceHelpers = {
   core: performanceCore,
   react: reactPerformance,
   memory: memoryTesting,
   bundle: bundlePerformance,
-  assertions: performanceAssertions,
+  assertions: performanceAssertions
 };
 
 // Export individual modules for convenience
@@ -509,7 +487,7 @@ export {
   reactPerformance,
   memoryTesting,
   bundlePerformance,
-  performanceAssertions,
+  performanceAssertions
 };
 
 // Export as default

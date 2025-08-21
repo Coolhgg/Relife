@@ -1,4 +1,5 @@
-import React from 'react';
+/// <reference lib="dom" />
+import React from "react";
 import {
   createContext,
   useContext,
@@ -8,7 +9,7 @@ import {
   useMemo,
   ReactNode,
   useRef,
-} from 'react';
+} from "react";
 import {
   Theme,
   ThemeConfig,
@@ -16,15 +17,20 @@ import {
   ThemePreset,
   ThemeUsageAnalytics,
   CustomThemeConfig,
-} from '../types';
-import CloudSyncService, { CloudSyncStatus } from '../services/CloudSyncService';
-import ThemePersistenceService from '../services/theme-persistence';
-import ThemePerformanceService from '../services/theme-performance';
-import ThemeAccessibilityService from '../services/theme-accessibility';
-import { PREMIUM_THEMES, PREMIUM_THEME_PRESETS } from '../themes/premium-themes';
+} from "../types";
+import CloudSyncService, {
+  CloudSyncStatus,
+} from "../services/CloudSyncService";
+import ThemePersistenceService from "../services/theme-persistence";
+import ThemePerformanceService from "../services/theme-performance";
+import ThemeAccessibilityService from "../services/theme-accessibility";
+import {
+  PREMIUM_THEMES,
+  PREMIUM_THEME_PRESETS,
+} from "../themes/premium-themes";
 import PremiumThemeAnimationService, {
   PremiumAnimationEffects,
-} from '../services/premium-theme-animations';
+} from "../services/premium-theme-animations";
 
 export interface ThemeContextValue {
   // Current theme state
@@ -50,10 +56,7 @@ export interface ThemeContextValue {
 
   // Theme presets and customization
   availableThemes: ThemePreset[];
-  createCustomTheme: (
-    baseTheme: Theme,
-    customizations: any
-  ) => Promise<CustomThemeConfig>;
+  createCustomTheme: (baseTheme: Theme, customizations: any) => Promise<CustomThemeConfig>;
   saveThemePreset: (preset: ThemePreset) => Promise<void>;
   loadThemePreset: (presetId: string) => Promise<void>;
 
@@ -77,43 +80,19 @@ export interface ThemeContextValue {
   getCSSVariables: () => Record<string, string>;
   getThemeClasses: () => string[];
   isAccessibleContrast: (foreground: string, background: string) => boolean;
-  applyThemeWithPerformance: (options?: {
-    animate?: boolean;
-    duration?: number;
-    immediate?: boolean;
-  }) => Promise<void>;
+  applyThemeWithPerformance: (options?: { animate?: boolean; duration?: number; immediate?: boolean }) => Promise<void>;
   preloadTheme: (targetTheme: Theme) => void;
 
   // Accessibility functions
-  testThemeAccessibility: () => {
-    overallScore: number;
-    issues: string[];
-    recommendations: string[];
-  };
-  getAccessibilityStatus: () => {
-    hasHighContrast: boolean;
-    hasReducedMotion: boolean;
-    hasScreenReaderOptimizations: boolean;
-    hasSkipLinks: boolean;
-    focusVisible: boolean;
-  };
+  testThemeAccessibility: () => { overallScore: number; issues: string[]; recommendations: string[] };
+  getAccessibilityStatus: () => { hasHighContrast: boolean; hasReducedMotion: boolean; hasScreenReaderOptimizations: boolean; hasSkipLinks: boolean; focusVisible: boolean };
   announceThemeChange: (themeName: string, previousTheme?: string) => void;
-  calculateContrastRatio: (
-    foreground: string,
-    background: string
-  ) => { ratio: number; level: string; isAccessible: boolean };
-  simulateColorBlindness: (color: string) => {
-    protanopia: string;
-    deuteranopia: string;
-    tritanopia: string;
-    achromatopsia: string;
-  };
+  calculateContrastRatio: (foreground: string, background: string) => { ratio: number; level: string; isAccessible: boolean };
+  simulateColorBlindness: (color: string) => { protanopia: string; deuteranopia: string; tritanopia: string; achromatopsia: string };
 
   // Premium animation functions
   initializePremiumAnimations: (effects?: PremiumAnimationEffects) => void;
-  setAnimationIntensity: (
-    intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic'
-  ) => void;
+  setAnimationIntensity: (intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic') => void;
   setAnimationsEnabled: (enabled: boolean) => void;
   getDefaultAnimationEffects: () => PremiumAnimationEffects;
 }
@@ -144,7 +123,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#0369a1',
         800: '#075985',
         900: '#0c4a6e',
-        950: '#082f49',
+        950: '#082f49'
       },
       secondary: {
         50: '#f8fafc',
@@ -157,7 +136,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#334155',
         800: '#1e293b',
         900: '#0f172a',
-        950: '#020617',
+        950: '#020617'
       },
       accent: {
         50: '#fef2f2',
@@ -170,7 +149,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#b91c1c',
         800: '#991b1b',
         900: '#7f1d1d',
-        950: '#450a0a',
+        950: '#450a0a'
       },
       neutral: {
         50: '#fafafa',
@@ -183,7 +162,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#3f3f46',
         800: '#27272a',
         900: '#18181b',
-        950: '#09090b',
+        950: '#09090b'
       },
       success: {
         50: '#f0fdf4',
@@ -196,7 +175,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#15803d',
         800: '#166534',
         900: '#14532d',
-        950: '#052e16',
+        950: '#052e16'
       },
       warning: {
         50: '#fffbeb',
@@ -209,7 +188,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#b45309',
         800: '#92400e',
         900: '#78350f',
-        950: '#451a03',
+        950: '#451a03'
       },
       error: {
         50: '#fef2f2',
@@ -222,7 +201,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#b91c1c',
         800: '#991b1b',
         900: '#7f1d1d',
-        950: '#450a0a',
+        950: '#450a0a'
       },
       info: {
         50: '#eff6ff',
@@ -235,7 +214,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#1d4ed8',
         800: '#1e40af',
         900: '#1e3a8a',
-        950: '#172554',
+        950: '#172554'
       },
       background: {
         primary: '#ffffff',
@@ -243,7 +222,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         tertiary: '#f1f5f9',
         overlay: 'rgba(0, 0, 0, 0.5)',
         modal: '#ffffff',
-        card: '#ffffff',
+        card: '#ffffff'
       },
       text: {
         primary: '#0f172a',
@@ -251,27 +230,27 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         tertiary: '#64748b',
         inverse: '#ffffff',
         disabled: '#94a3b8',
-        link: '#0ea5e9',
+        link: '#0ea5e9'
       },
       border: {
         primary: '#e2e8f0',
         secondary: '#cbd5e1',
         focus: '#0ea5e9',
         hover: '#94a3b8',
-        active: '#0284c7',
+        active: '#0284c7'
       },
       surface: {
         elevated: '#ffffff',
         depressed: '#f1f5f9',
         interactive: '#f8fafc',
-        disabled: '#f4f4f5',
-      },
+        disabled: '#f4f4f5'
+      }
     },
     typography: {
       fontFamily: {
         primary: 'Inter, system-ui, sans-serif',
         secondary: 'Inter, system-ui, sans-serif',
-        monospace: 'Monaco, Consolas, monospace',
+        monospace: 'Monaco, Consolas, monospace'
       },
       fontSize: {
         xs: '0.75rem',
@@ -282,7 +261,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         '2xl': '1.5rem',
         '3xl': '1.875rem',
         '4xl': '2.25rem',
-        '5xl': '3rem',
+        '5xl': '3rem'
       },
       fontWeight: {
         light: 300,
@@ -290,19 +269,19 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         medium: 500,
         semibold: 600,
         bold: 700,
-        extrabold: 800,
+        extrabold: 800
       },
       lineHeight: {
         tight: 1.25,
         normal: 1.5,
         relaxed: 1.625,
-        loose: 2,
+        loose: 2
       },
       letterSpacing: {
         tight: '-0.025em',
         normal: '0em',
-        wide: '0.025em',
-      },
+        wide: '0.025em'
+      }
     },
     spacing: {
       scale: 1,
@@ -324,7 +303,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         40: '10rem',
         48: '12rem',
         56: '14rem',
-        64: '16rem',
+        64: '16rem'
       },
       borderRadius: {
         none: '0px',
@@ -335,15 +314,15 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         xl: '0.75rem',
         '2xl': '1rem',
         '3xl': '1.5rem',
-        full: '9999px',
-      },
+        full: '9999px'
+      }
     },
     animations: {
       enabled: true,
       duration: {
         fast: '150ms',
         normal: '300ms',
-        slow: '500ms',
+        slow: '500ms'
       },
       easing: {
         linear: 'linear',
@@ -352,9 +331,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         easeOut: 'ease-out',
         easeInOut: 'ease-in-out',
         bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        elastic: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+        elastic: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
       },
-      scale: 1,
+      scale: 1
     },
     effects: {
       shadows: {
@@ -365,7 +344,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         xl: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
         '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
         inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
-        none: '0 0 #0000',
+        none: '0 0 #0000'
       },
       blur: {
         sm: '4px',
@@ -374,20 +353,20 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         lg: '16px',
         xl: '24px',
         '2xl': '40px',
-        '3xl': '64px',
+        '3xl': '64px'
       },
       opacity: {
         disabled: 0.5,
         hover: 0.8,
         focus: 0.9,
-        overlay: 0.75,
+        overlay: 0.75
       },
       gradients: {
         primary: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
         secondary: 'linear-gradient(135deg, #64748b 0%, #475569 100%)',
         accent: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-      },
+        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'
+      }
     },
     accessibility: {
       contrastRatio: 'AA',
@@ -395,8 +374,8 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
       highContrast: false,
       largeFonts: false,
       focusVisible: true,
-      reducedTransparency: false,
-    },
+      reducedTransparency: false
+    }
   },
   dark: {
     id: 'dark',
@@ -418,7 +397,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#7dd3fc',
         800: '#bae6fd',
         900: '#e0f2fe',
-        950: '#f0f9ff',
+        950: '#f0f9ff'
       },
       secondary: {
         50: '#020617',
@@ -431,7 +410,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#cbd5e1',
         800: '#e2e8f0',
         900: '#f1f5f9',
-        950: '#f8fafc',
+        950: '#f8fafc'
       },
       accent: {
         50: '#450a0a',
@@ -444,7 +423,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#fca5a5',
         800: '#fecaca',
         900: '#fee2e2',
-        950: '#fef2f2',
+        950: '#fef2f2'
       },
       neutral: {
         50: '#09090b',
@@ -457,7 +436,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#d4d4d8',
         800: '#e4e4e7',
         900: '#f4f4f5',
-        950: '#fafafa',
+        950: '#fafafa'
       },
       success: {
         50: '#052e16',
@@ -470,7 +449,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#86efac',
         800: '#bbf7d0',
         900: '#dcfce7',
-        950: '#f0fdf4',
+        950: '#f0fdf4'
       },
       warning: {
         50: '#451a03',
@@ -483,7 +462,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#fcd34d',
         800: '#fde68a',
         900: '#fef3c7',
-        950: '#fffbeb',
+        950: '#fffbeb'
       },
       error: {
         50: '#450a0a',
@@ -496,7 +475,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#fca5a5',
         800: '#fecaca',
         900: '#fee2e2',
-        950: '#fef2f2',
+        950: '#fef2f2'
       },
       info: {
         50: '#172554',
@@ -509,7 +488,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#93c5fd',
         800: '#bfdbfe',
         900: '#dbeafe',
-        950: '#eff6ff',
+        950: '#eff6ff'
       },
       background: {
         primary: '#0f172a',
@@ -517,7 +496,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         tertiary: '#334155',
         overlay: 'rgba(0, 0, 0, 0.8)',
         modal: '#1e293b',
-        card: '#1e293b',
+        card: '#1e293b'
       },
       text: {
         primary: '#f8fafc',
@@ -525,27 +504,27 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         tertiary: '#cbd5e1',
         inverse: '#0f172a',
         disabled: '#64748b',
-        link: '#38bdf8',
+        link: '#38bdf8'
       },
       border: {
         primary: '#334155',
         secondary: '#475569',
         focus: '#38bdf8',
         hover: '#64748b',
-        active: '#7dd3fc',
+        active: '#7dd3fc'
       },
       surface: {
         elevated: '#334155',
         depressed: '#1e293b',
         interactive: '#475569',
-        disabled: '#334155',
-      },
+        disabled: '#334155'
+      }
     },
     typography: {
       fontFamily: {
         primary: 'Inter, system-ui, sans-serif',
         secondary: 'Inter, system-ui, sans-serif',
-        monospace: 'Monaco, Consolas, monospace',
+        monospace: 'Monaco, Consolas, monospace'
       },
       fontSize: {
         xs: '0.75rem',
@@ -556,7 +535,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         '2xl': '1.5rem',
         '3xl': '1.875rem',
         '4xl': '2.25rem',
-        '5xl': '3rem',
+        '5xl': '3rem'
       },
       fontWeight: {
         light: 300,
@@ -564,19 +543,19 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         medium: 500,
         semibold: 600,
         bold: 700,
-        extrabold: 800,
+        extrabold: 800
       },
       lineHeight: {
         tight: 1.25,
         normal: 1.5,
         relaxed: 1.625,
-        loose: 2,
+        loose: 2
       },
       letterSpacing: {
         tight: '-0.025em',
         normal: '0em',
-        wide: '0.025em',
-      },
+        wide: '0.025em'
+      }
     },
     spacing: {
       scale: 1,
@@ -598,7 +577,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         40: '10rem',
         48: '12rem',
         56: '14rem',
-        64: '16rem',
+        64: '16rem'
       },
       borderRadius: {
         none: '0px',
@@ -609,15 +588,15 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         xl: '0.75rem',
         '2xl': '1rem',
         '3xl': '1.5rem',
-        full: '9999px',
-      },
+        full: '9999px'
+      }
     },
     animations: {
       enabled: true,
       duration: {
         fast: '150ms',
         normal: '300ms',
-        slow: '500ms',
+        slow: '500ms'
       },
       easing: {
         linear: 'linear',
@@ -626,9 +605,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         easeOut: 'ease-out',
         easeInOut: 'ease-in-out',
         bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        elastic: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+        elastic: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
       },
-      scale: 1,
+      scale: 1
     },
     effects: {
       shadows: {
@@ -639,7 +618,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         xl: '0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4)',
         '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.5)',
         inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.3)',
-        none: '0 0 #0000',
+        none: '0 0 #0000'
       },
       blur: {
         sm: '4px',
@@ -648,20 +627,20 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         lg: '16px',
         xl: '24px',
         '2xl': '40px',
-        '3xl': '64px',
+        '3xl': '64px'
       },
       opacity: {
         disabled: 0.5,
         hover: 0.8,
         focus: 0.9,
-        overlay: 0.9,
+        overlay: 0.9
       },
       gradients: {
         primary: 'linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%)',
         secondary: 'linear-gradient(135deg, #64748b 0%, #94a3b8 100%)',
         accent: 'linear-gradient(135deg, #ef4444 0%, #f87171 100%)',
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-      },
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'
+      }
     },
     accessibility: {
       contrastRatio: 'AA',
@@ -669,8 +648,8 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
       highContrast: false,
       largeFonts: false,
       focusVisible: true,
-      reducedTransparency: false,
-    },
+      reducedTransparency: false
+    }
   },
   auto: {
     id: 'auto',
@@ -681,11 +660,11 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     isCustom: false,
     isPremium: false,
     // Auto theme uses light theme as base, actual theme switching happens in CSS
-    ...(DEFAULT_THEMES?.light || ({} as ThemeConfig)),
+    ...DEFAULT_THEMES?.light || {} as ThemeConfig,
     id: 'auto',
     name: 'auto',
     displayName: 'Auto',
-    description: 'Follows system preference',
+    description: 'Follows system preference'
   },
   system: {
     id: 'system',
@@ -696,11 +675,11 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     isCustom: false,
     isPremium: false,
     // System theme uses light theme as base, actual theme switching happens in CSS
-    ...(DEFAULT_THEMES?.light || ({} as ThemeConfig)),
+    ...DEFAULT_THEMES?.light || {} as ThemeConfig,
     id: 'system',
     name: 'system',
     displayName: 'System',
-    description: 'Follows system preference',
+    description: 'Follows system preference'
   },
   'high-contrast': {
     id: 'high-contrast',
@@ -722,7 +701,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#000000',
         800: '#000000',
         900: '#000000',
-        950: '#000000',
+        950: '#000000'
       },
       secondary: {
         50: '#ffffff',
@@ -735,7 +714,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#ffffff',
         800: '#ffffff',
         900: '#ffffff',
-        950: '#ffffff',
+        950: '#ffffff'
       },
       accent: {
         50: '#ff0000',
@@ -748,7 +727,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#ff0000',
         800: '#ff0000',
         900: '#ff0000',
-        950: '#ff0000',
+        950: '#ff0000'
       },
       neutral: {
         50: '#000000',
@@ -761,7 +740,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#b3b3b3',
         800: '#cccccc',
         900: '#e6e6e6',
-        950: '#ffffff',
+        950: '#ffffff'
       },
       success: {
         50: '#00ff00',
@@ -774,7 +753,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#00ff00',
         800: '#00ff00',
         900: '#00ff00',
-        950: '#00ff00',
+        950: '#00ff00'
       },
       warning: {
         50: '#ffff00',
@@ -787,7 +766,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#ffff00',
         800: '#ffff00',
         900: '#ffff00',
-        950: '#ffff00',
+        950: '#ffff00'
       },
       error: {
         50: '#ff0000',
@@ -800,7 +779,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#ff0000',
         800: '#ff0000',
         900: '#ff0000',
-        950: '#ff0000',
+        950: '#ff0000'
       },
       info: {
         50: '#0000ff',
@@ -813,7 +792,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#0000ff',
         800: '#0000ff',
         900: '#0000ff',
-        950: '#0000ff',
+        950: '#0000ff'
       },
       background: {
         primary: '#ffffff',
@@ -821,7 +800,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         tertiary: '#ffffff',
         overlay: 'rgba(0, 0, 0, 0.9)',
         modal: '#ffffff',
-        card: '#ffffff',
+        card: '#ffffff'
       },
       text: {
         primary: '#000000',
@@ -829,27 +808,27 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         tertiary: '#000000',
         inverse: '#ffffff',
         disabled: '#666666',
-        link: '#0000ff',
+        link: '#0000ff'
       },
       border: {
         primary: '#000000',
         secondary: '#000000',
         focus: '#ff0000',
         hover: '#000000',
-        active: '#000000',
+        active: '#000000'
       },
       surface: {
         elevated: '#ffffff',
         depressed: '#ffffff',
         interactive: '#ffffff',
-        disabled: '#cccccc',
-      },
+        disabled: '#cccccc'
+      }
     },
     typography: {
       fontFamily: {
         primary: 'Arial, sans-serif',
         secondary: 'Arial, sans-serif',
-        monospace: 'Courier, monospace',
+        monospace: 'Courier, monospace'
       },
       fontSize: {
         xs: '0.875rem',
@@ -860,7 +839,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         '2xl': '1.75rem',
         '3xl': '2rem',
         '4xl': '2.5rem',
-        '5xl': '3rem',
+        '5xl': '3rem'
       },
       fontWeight: {
         light: 400,
@@ -868,19 +847,19 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         medium: 700,
         semibold: 700,
         bold: 800,
-        extrabold: 900,
+        extrabold: 900
       },
       lineHeight: {
         tight: 1.375,
         normal: 1.625,
         relaxed: 1.75,
-        loose: 2.25,
+        loose: 2.25
       },
       letterSpacing: {
         tight: '0em',
         normal: '0.025em',
-        wide: '0.05em',
-      },
+        wide: '0.05em'
+      }
     },
     spacing: {
       scale: 1.25,
@@ -902,7 +881,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         40: '12.5rem',
         48: '15rem',
         56: '17.5rem',
-        64: '20rem',
+        64: '20rem'
       },
       borderRadius: {
         none: '0px',
@@ -913,15 +892,15 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         xl: '0px',
         '2xl': '0px',
         '3xl': '0px',
-        full: '0px',
-      },
+        full: '0px'
+      }
     },
     animations: {
       enabled: false,
       duration: {
         fast: '0ms',
         normal: '0ms',
-        slow: '0ms',
+        slow: '0ms'
       },
       easing: {
         linear: 'linear',
@@ -930,9 +909,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         easeOut: 'linear',
         easeInOut: 'linear',
         bounce: 'linear',
-        elastic: 'linear',
+        elastic: 'linear'
       },
-      scale: 0,
+      scale: 0
     },
     effects: {
       shadows: {
@@ -943,7 +922,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         xl: 'none',
         '2xl': 'none',
         inner: 'none',
-        none: 'none',
+        none: 'none'
       },
       blur: {
         sm: '0px',
@@ -952,20 +931,20 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         lg: '0px',
         xl: '0px',
         '2xl': '0px',
-        '3xl': '0px',
+        '3xl': '0px'
       },
       opacity: {
         disabled: 1,
         hover: 1,
         focus: 1,
-        overlay: 1,
+        overlay: 1
       },
       gradients: {
         primary: '#000000',
         secondary: '#ffffff',
         accent: '#ff0000',
-        background: '#ffffff',
-      },
+        background: '#ffffff'
+      }
     },
     accessibility: {
       contrastRatio: 'AAA',
@@ -973,8 +952,8 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
       highContrast: true,
       largeFonts: true,
       focusVisible: true,
-      reducedTransparency: true,
-    },
+      reducedTransparency: true
+    }
   },
   minimalist: {
     id: 'minimalist',
@@ -1003,9 +982,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#374151',
         800: '#1f2937',
         900: '#111827',
-        950: '#030712',
-      },
-    },
+        950: '#030712'
+      }
+    }
   },
   colorful: {
     id: 'colorful',
@@ -1033,7 +1012,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#be185d',
         800: '#9d174d',
         900: '#831843',
-        950: '#500724',
+        950: '#500724'
       },
       accent: {
         50: '#f0f9ff',
@@ -1046,8 +1025,8 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#0369a1',
         800: '#075985',
         900: '#0c4a6e',
-        950: '#082f49',
-      },
+        950: '#082f49'
+      }
     },
     effects: {
       ...DEFAULT_THEMES.light.effects,
@@ -1055,9 +1034,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         primary: 'linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #38bdf8 100%)',
         secondary: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%)',
         accent: 'linear-gradient(135deg, #06b6d4 0%, #0ea5e9 50%, #3b82f6 100%)',
-        background: 'linear-gradient(135deg, #fdf2f8 0%, #f0f9ff 100%)',
-      },
-    },
+        background: 'linear-gradient(135deg, #fdf2f8 0%, #f0f9ff 100%)'
+      }
+    }
   },
   nature: {
     id: 'nature',
@@ -1085,7 +1064,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#15803d',
         800: '#166534',
         900: '#14532d',
-        950: '#052e16',
+        950: '#052e16'
       },
       secondary: {
         50: '#fefce8',
@@ -1098,9 +1077,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#b45309',
         800: '#92400e',
         900: '#78350f',
-        950: '#451a03',
-      },
-    },
+        950: '#451a03'
+      }
+    }
   },
   ocean: {
     id: 'ocean',
@@ -1128,9 +1107,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#0e7490',
         800: '#155e75',
         900: '#164e63',
-        950: '#083344',
-      },
-    },
+        950: '#083344'
+      }
+    }
   },
   sunset: {
     id: 'sunset',
@@ -1151,9 +1130,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         primary: 'linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)',
         secondary: 'linear-gradient(135deg, #ff6a6b 0%, #ffa726 100%)',
         accent: 'linear-gradient(135deg, #ff5722 0%, #ff9800 100%)',
-        background: 'linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%)',
-      },
-    },
+        background: 'linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%)'
+      }
+    }
   },
   forest: {
     id: 'forest',
@@ -1176,9 +1155,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         tertiary: '#047857',
         overlay: 'rgba(6, 78, 59, 0.9)',
         modal: '#065f46',
-        card: '#065f46',
-      },
-    },
+        card: '#065f46'
+      }
+    }
   },
   cosmic: {
     id: 'cosmic',
@@ -1199,9 +1178,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         primary: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         secondary: 'linear-gradient(135deg, #8360c3 0%, #2ebf91 100%)',
         accent: 'linear-gradient(135deg, #fc466b 0%, #3f5efb 100%)',
-        background: 'linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%)',
-      },
-    },
+        background: 'linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%)'
+      }
+    }
   },
   gradient: {
     id: 'gradient',
@@ -1222,9 +1201,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         primary: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         secondary: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
         accent: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-        background: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-      },
-    },
+        background: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'
+      }
+    }
   },
   neon: {
     id: 'neon',
@@ -1252,9 +1231,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#00cccc',
         800: '#00b3b3',
         900: '#009999',
-        950: '#008080',
-      },
-    },
+        950: '#008080'
+      }
+    }
   },
   pastel: {
     id: 'pastel',
@@ -1282,9 +1261,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#be185d',
         800: '#9d174d',
         900: '#831843',
-        950: '#500724',
-      },
-    },
+        950: '#500724'
+      }
+    }
   },
   monochrome: {
     id: 'monochrome',
@@ -1312,9 +1291,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#616161',
         800: '#424242',
         900: '#212121',
-        950: '#000000',
-      },
-    },
+        950: '#000000'
+      }
+    }
   },
   gaming: {
     id: 'gaming',
@@ -1342,7 +1321,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#009954',
         800: '#006b3c',
         900: '#004d2a',
-        950: '#003319',
+        950: '#003319'
       },
       accent: {
         50: '#fff0f7',
@@ -1355,7 +1334,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#cc005d',
         800: '#b30052',
         900: '#990047',
-        950: '#800040',
+        950: '#800040'
       },
       secondary: {
         50: '#f0f0ff',
@@ -1368,8 +1347,8 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#2929cc',
         800: '#2020b3',
         900: '#1a1a99',
-        950: '#151580',
-      },
+        950: '#151580'
+      }
     },
     effects: {
       ...DEFAULT_THEMES.dark.effects,
@@ -1379,15 +1358,15 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         lg: '0 10px 15px -3px rgba(0, 255, 136, 0.1), 0 4px 6px -2px rgba(0, 255, 136, 0.05)',
         xl: '0 20px 25px -5px rgba(0, 255, 136, 0.1), 0 10px 10px -5px rgba(0, 255, 136, 0.04)',
         '2xl': '0 25px 50px -12px rgba(0, 255, 136, 0.25)',
-        inner: 'inset 0 2px 4px 0 rgba(0, 255, 136, 0.06)',
+        inner: 'inset 0 2px 4px 0 rgba(0, 255, 136, 0.06)'
       },
       gradients: {
         primary: 'linear-gradient(135deg, #00ff88 0%, #4040ff 100%)',
         secondary: 'linear-gradient(135deg, #ff007f 0%, #00ff88 100%)',
         accent: 'linear-gradient(135deg, #4040ff 0%, #ff007f 100%)',
-        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a1a0a 100%)',
-      },
-    },
+        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a1a0a 100%)'
+      }
+    }
   },
   professional: {
     id: 'professional',
@@ -1415,7 +1394,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#1e293b',
         800: '#0f172a',
         900: '#020617',
-        950: '#000000',
+        950: '#000000'
       },
       accent: {
         50: '#f0fdf4',
@@ -1428,14 +1407,13 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#15803d',
         800: '#166534',
         900: '#14532d',
-        950: '#0a2e19',
-      },
+        950: '#0a2e19'
+      }
     },
     typography: {
       ...DEFAULT_THEMES.light.typography,
-      fontFamily:
-        'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    },
+      fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    }
   },
   retro: {
     id: 'retro',
@@ -1463,7 +1441,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#cc1068',
         800: '#b30e57',
         900: '#990c49',
-        950: '#800a3d',
+        950: '#800a3d'
       },
       secondary: {
         50: '#f0f9ff',
@@ -1476,7 +1454,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#0077aa',
         800: '#005588',
         900: '#003d66',
-        950: '#002544',
+        950: '#002544'
       },
       accent: {
         50: '#fff7ed',
@@ -1489,8 +1467,8 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#cc4400',
         800: '#b33300',
         900: '#992200',
-        950: '#801100',
-      },
+        950: '#801100'
+      }
     },
     effects: {
       ...DEFAULT_THEMES.dark.effects,
@@ -1498,9 +1476,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         primary: 'linear-gradient(135deg, #ff1493 0%, #00bfff 100%)',
         secondary: 'linear-gradient(135deg, #ff6600 0%, #ff1493 100%)',
         accent: 'linear-gradient(135deg, #00bfff 0%, #ff6600 100%)',
-        background: 'linear-gradient(135deg, #1a0033 0%, #330066 50%, #001133 100%)',
-      },
-    },
+        background: 'linear-gradient(135deg, #1a0033 0%, #330066 50%, #001133 100%)'
+      }
+    }
   },
   cyberpunk: {
     id: 'cyberpunk',
@@ -1528,7 +1506,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#00cc00',
         800: '#00b300',
         900: '#009900',
-        950: '#008000',
+        950: '#008000'
       },
       secondary: {
         50: '#fff0ff',
@@ -1541,7 +1519,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#cc00cc',
         800: '#b300b3',
         900: '#990099',
-        950: '#800080',
+        950: '#800080'
       },
       accent: {
         50: '#f0ffff',
@@ -1554,7 +1532,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#00cccc',
         800: '#00b3b3',
         900: '#009999',
-        950: '#008080',
+        950: '#008080'
       },
       background: {
         primary: '#000011',
@@ -1562,8 +1540,8 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         tertiary: '#220033',
         overlay: 'rgba(0, 0, 17, 0.95)',
         modal: '#000011',
-        card: '#110022',
-      },
+        card: '#110022'
+      }
     },
     effects: {
       ...DEFAULT_THEMES.dark.effects,
@@ -1573,15 +1551,15 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         lg: '0 10px 15px -3px rgba(0, 255, 0, 0.3), 0 4px 6px -2px rgba(255, 0, 255, 0.2)',
         xl: '0 20px 25px -5px rgba(0, 255, 0, 0.3), 0 10px 10px -5px rgba(0, 255, 255, 0.2)',
         '2xl': '0 25px 50px -12px rgba(0, 255, 0, 0.5)',
-        inner: 'inset 0 2px 4px 0 rgba(0, 255, 0, 0.2)',
+        inner: 'inset 0 2px 4px 0 rgba(0, 255, 0, 0.2)'
       },
       gradients: {
         primary: 'linear-gradient(135deg, #00ff00 0%, #ff00ff 100%)',
         secondary: 'linear-gradient(135deg, #00ffff 0%, #00ff00 100%)',
         accent: 'linear-gradient(135deg, #ff00ff 0%, #00ffff 100%)',
-        background: 'linear-gradient(135deg, #000011 0%, #110022 50%, #220011 100%)',
-      },
-    },
+        background: 'linear-gradient(135deg, #000011 0%, #110022 50%, #220011 100%)'
+      }
+    }
   },
   spring: {
     id: 'spring',
@@ -1609,7 +1587,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#15803d',
         800: '#166534',
         900: '#14532d',
-        950: '#0a2e19',
+        950: '#0a2e19'
       },
       secondary: {
         50: '#fefce8',
@@ -1622,7 +1600,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#a16207',
         800: '#854d0e',
         900: '#713f12',
-        950: '#422006',
+        950: '#422006'
       },
       accent: {
         50: '#fdf2f8',
@@ -1635,9 +1613,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#be185d',
         800: '#9d174d',
         900: '#831843',
-        950: '#500724',
-      },
-    },
+        950: '#500724'
+      }
+    }
   },
   summer: {
     id: 'summer',
@@ -1665,7 +1643,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#0369a1',
         800: '#075985',
         900: '#0c4a6e',
-        950: '#082f49',
+        950: '#082f49'
       },
       secondary: {
         50: '#fff7ed',
@@ -1678,7 +1656,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#c2410c',
         800: '#9a3412',
         900: '#7c2d12',
-        950: '#431407',
+        950: '#431407'
       },
       accent: {
         50: '#fefce8',
@@ -1691,9 +1669,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#a16207',
         800: '#854d0e',
         900: '#713f12',
-        950: '#422006',
-      },
-    },
+        950: '#422006'
+      }
+    }
   },
   autumn: {
     id: 'autumn',
@@ -1721,7 +1699,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#bb420c',
         800: '#963512',
         900: '#782e12',
-        950: '#411505',
+        950: '#411505'
       },
       secondary: {
         50: '#fdf8f6',
@@ -1734,7 +1712,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#977669',
         800: '#846358',
         900: '#43302b',
-        950: '#292017',
+        950: '#292017'
       },
       accent: {
         50: '#fefce8',
@@ -1747,9 +1725,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#a16207',
         800: '#854d0e',
         900: '#713f12',
-        950: '#422006',
-      },
-    },
+        950: '#422006'
+      }
+    }
   },
   winter: {
     id: 'winter',
@@ -1777,7 +1755,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#334155',
         800: '#1e293b',
         900: '#0f172a',
-        950: '#020617',
+        950: '#020617'
       },
       secondary: {
         50: '#f0f9ff',
@@ -1790,7 +1768,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#0369a1',
         800: '#075985',
         900: '#0c4a6e',
-        950: '#082f49',
+        950: '#082f49'
       },
       accent: {
         50: '#f0fdfa',
@@ -1803,9 +1781,9 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#0f766e',
         800: '#115e59',
         900: '#134e4a',
-        950: '#042f2e',
-      },
-    },
+        950: '#042f2e'
+      }
+    }
   },
   focus: {
     id: 'focus',
@@ -1833,7 +1811,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#3f3f46',
         800: '#27272a',
         900: '#18181b',
-        950: '#09090b',
+        950: '#09090b'
       },
       secondary: {
         50: '#fafafa',
@@ -1846,7 +1824,7 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#3f3f46',
         800: '#27272a',
         900: '#18181b',
-        950: '#09090b',
+        950: '#09090b'
       },
       accent: {
         50: '#f0f9ff',
@@ -1859,15 +1837,15 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
         700: '#0369a1',
         800: '#075985',
         900: '#0c4a6e',
-        950: '#082f49',
-      },
+        950: '#082f49'
+      }
     },
     animations: {
       enabled: false, // Disabled for focus
       duration: 'fast',
       easing: 'ease',
-      scale: 0.5,
-    },
+      scale: 0.5
+    }
   },
   custom: {
     id: 'custom',
@@ -1881,8 +1859,8 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     id: 'custom',
     name: 'custom',
     displayName: 'Custom',
-    description: 'User-defined theme',
-  },
+    description: 'User-defined theme'
+  }
 };
 
 // Default personalization settings
@@ -1895,7 +1873,7 @@ const DEFAULT_PERSONALIZATION: PersonalizationSettings = {
     highContrastMode: false,
     saturationLevel: 100,
     brightnessLevel: 100,
-    warmthLevel: 50,
+    warmthLevel: 50
   },
   typographyPreferences: {
     preferredFontSize: 'medium',
@@ -1904,7 +1882,7 @@ const DEFAULT_PERSONALIZATION: PersonalizationSettings = {
     lineHeightPreference: 'comfortable',
     letterSpacingPreference: 'normal',
     fontWeight: 'normal',
-    dyslexiaFriendly: false,
+    dyslexiaFriendly: false
   },
   motionPreferences: {
     enableAnimations: true,
@@ -1913,7 +1891,7 @@ const DEFAULT_PERSONALIZATION: PersonalizationSettings = {
     preferCrossfade: false,
     enableParallax: true,
     enableHoverEffects: true,
-    enableFocusAnimations: true,
+    enableFocusAnimations: true
   },
   soundPreferences: {
     enableSounds: true,
@@ -1922,7 +1900,7 @@ const DEFAULT_PERSONALIZATION: PersonalizationSettings = {
     customSounds: {},
     muteOnFocus: false,
     hapticFeedback: true,
-    spatialAudio: false,
+    spatialAudio: false
   },
   layoutPreferences: {
     density: 'comfortable',
@@ -1933,7 +1911,7 @@ const DEFAULT_PERSONALIZATION: PersonalizationSettings = {
     showIcons: true,
     iconSize: 'medium',
     gridColumns: 2,
-    listSpacing: 'normal',
+    listSpacing: 'normal'
   },
   accessibilityPreferences: {
     screenReaderOptimized: false,
@@ -1945,10 +1923,10 @@ const DEFAULT_PERSONALIZATION: PersonalizationSettings = {
     underlineLinks: false,
     flashingElementsReduced: false,
     colorOnlyIndicators: false,
-    focusIndicatorStyle: 'outline',
+    focusIndicatorStyle: 'outline'
   },
   lastUpdated: new Date(),
-  syncAcrossDevices: true,
+  syncAcrossDevices: true
 };
 
 // Theme provider hook
@@ -1972,22 +1950,18 @@ export function ThemeProvider({
   children,
   defaultTheme = 'light',
   storageKey = 'relife-theme',
-  enableSystem = true,
+  enableSystem = true
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
-  const [themeConfig, setThemeConfig] = useState<ThemeConfig>(
-    DEFAULT_THEMES[defaultTheme]
-  );
-  const [personalization, setPersonalizationState] = useState<PersonalizationSettings>(
-    DEFAULT_PERSONALIZATION
-  );
+  const [themeConfig, setThemeConfig] = useState<ThemeConfig>(DEFAULT_THEMES[defaultTheme]);
+  const [personalization, setPersonalizationState] = useState<PersonalizationSettings>(DEFAULT_PERSONALIZATION);
   const [cloudSyncStatus, setCloudSyncStatus] = useState<CloudSyncStatus>({
     isOnline: navigator.onLine,
     isSyncing: false,
     lastSyncTime: null,
     hasConflicts: false,
     pendingChanges: 0,
-    error: null,
+    error: null
   });
   const cloudSyncServiceRef = useRef<CloudSyncService | null>(null);
   const syncListenersRef = useRef<((status: CloudSyncStatus) => void)[]>([]);
@@ -2004,12 +1978,12 @@ export function ThemeProvider({
         backgroundColor: '#ffffff',
         textColor: '#0f172a',
         cardColor: '#ffffff',
-        accentColor: '#ef4444',
+        accentColor: '#ef4444'
       },
       tags: ['system', 'default'],
       isDefault: true,
       isPremium: false,
-      popularityScore: 100,
+      popularityScore: 100
     },
     {
       id: 'dark',
@@ -2022,12 +1996,12 @@ export function ThemeProvider({
         backgroundColor: '#0f172a',
         textColor: '#f8fafc',
         cardColor: '#1e293b',
-        accentColor: '#f87171',
+        accentColor: '#f87171'
       },
       tags: ['system', 'default'],
       isDefault: true,
       isPremium: false,
-      popularityScore: 95,
+      popularityScore: 95
     },
     {
       id: 'high-contrast',
@@ -2040,15 +2014,15 @@ export function ThemeProvider({
         backgroundColor: '#ffffff',
         textColor: '#000000',
         cardColor: '#ffffff',
-        accentColor: '#ff0000',
+        accentColor: '#ff0000'
       },
       tags: ['accessibility'],
       isDefault: false,
       isPremium: false,
-      popularityScore: 60,
+      popularityScore: 60
     },
     // Include premium themes
-    ...PREMIUM_THEME_PRESETS,
+    ...PREMIUM_THEME_PRESETS
   ]);
   const [themeAnalytics] = useState<ThemeUsageAnalytics>({
     mostUsedThemes: [],
@@ -2056,7 +2030,7 @@ export function ThemeProvider({
     switchFrequency: 0,
     favoriteColors: [],
     accessibilityFeatureUsage: [],
-    customizationActivity: [],
+    customizationActivity: []
   });
 
   // Initialize theme from enhanced persistence service
@@ -2073,46 +2047,30 @@ export function ThemeProvider({
         // Set theme from stored data or system preference
         let selectedTheme = themeData.theme;
         if (enableSystem && (!themeData.theme || themeData.theme === 'system')) {
-          selectedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-            ? 'dark'
-            : 'light';
+          selectedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
 
-        if (
-          selectedTheme &&
-          Object.keys(DEFAULT_THEMES).includes(selectedTheme) &&
-          selectedTheme !== theme
-        ) {
+        if (selectedTheme && Object.keys(DEFAULT_THEMES).includes(selectedTheme) && selectedTheme !== theme) {
           setThemeState(selectedTheme);
           setThemeConfig(themeData.themeConfig || DEFAULT_THEMES[selectedTheme]);
         }
 
         // Load personalization settings
-        if (
-          themeData.personalization &&
-          Object.keys(themeData.personalization).length > 0
-        ) {
-          setPersonalizationState({
-            ...DEFAULT_PERSONALIZATION,
-            ...themeData.personalization,
-          });
+        if (themeData.personalization && Object.keys(themeData.personalization).length > 0) {
+          setPersonalizationState({ ...DEFAULT_PERSONALIZATION, ...themeData.personalization });
         }
       } catch (error) {
         console.error('Failed to initialize theme data:', error);
 
         // Fallback to old localStorage method
         const storedTheme = localStorage.getItem(storageKey);
-        const storedPersonalization = localStorage.getItem(
-          `${storageKey}-personalization`
-        );
+        const storedPersonalization = localStorage.getItem(`${storageKey}-personalization`);
 
         if (storedTheme && Object.keys(DEFAULT_THEMES).includes(storedTheme as Theme)) {
           setThemeState(storedTheme as Theme);
           setThemeConfig(DEFAULT_THEMES[storedTheme as Theme]);
         } else if (enableSystem) {
-          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-            ? 'dark'
-            : 'light';
+          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
           setThemeState(systemTheme);
           setThemeConfig(DEFAULT_THEMES[systemTheme]);
         }
@@ -2122,10 +2080,7 @@ export function ThemeProvider({
             const parsed = JSON.parse(storedPersonalization);
             setPersonalizationState({ ...DEFAULT_PERSONALIZATION, ...parsed });
           } catch (parseError) {
-            console.warn(
-              'Failed to parse stored personalization settings:',
-              parseError
-            );
+            console.warn('Failed to parse stored personalization settings:', parseError);
           }
         }
       }
@@ -2149,27 +2104,17 @@ export function ThemeProvider({
     });
 
     // Apply accessibility preferences
-    if (
-      personalization.accessibilityPreferences.reduceMotion ||
-      personalization.motionPreferences.reduceMotion
-    ) {
+    if (personalization.accessibilityPreferences.reduceMotion || personalization.motionPreferences.reduceMotion) {
       root.style.setProperty('--animation-duration-multiplier', '0');
     } else {
-      const speedMultiplier =
-        personalization.motionPreferences.animationSpeed === 'slow'
-          ? '1.5'
-          : personalization.motionPreferences.animationSpeed === 'fast'
-            ? '0.5'
-            : '1';
+      const speedMultiplier = personalization.motionPreferences.animationSpeed === 'slow' ? '1.5' :
+                              personalization.motionPreferences.animationSpeed === 'fast' ? '0.5' : '1';
       root.style.setProperty('--animation-duration-multiplier', speedMultiplier);
     }
 
     // Apply font size scale
     if (personalization.typographyPreferences.fontSizeScale !== 1) {
-      root.style.setProperty(
-        '--font-size-scale',
-        personalization.typographyPreferences.fontSizeScale.toString()
-      );
+      root.style.setProperty('--font-size-scale', personalization.typographyPreferences.fontSizeScale.toString());
     }
   }, [theme, themeConfig, personalization]);
 
@@ -2223,7 +2168,7 @@ export function ThemeProvider({
       personalization,
       lastModified: new Date(),
       deviceId: syncService.getDeviceId(),
-      version: Date.now(),
+      version: Date.now()
     };
 
     // Debounce sync to avoid too frequent calls
@@ -2236,31 +2181,25 @@ export function ThemeProvider({
     return () => clearTimeout(timeoutId);
   }, [theme, personalization]);
 
-  const setTheme = useCallback(
-    (newTheme: Theme) => {
-      if (!Object.keys(DEFAULT_THEMES).includes(newTheme)) {
-        console.error(`Unknown theme: ${newTheme}`);
-        return;
-      }
+  const setTheme = useCallback((newTheme: Theme) => {
+    if (!Object.keys(DEFAULT_THEMES).includes(newTheme)) {
+      console.error(`Unknown theme: ${newTheme}`);
+      return;
+    }
 
-      setThemeState(newTheme);
-      setThemeConfig(DEFAULT_THEMES[newTheme]);
-      localStorage.setItem(storageKey, newTheme);
+    setThemeState(newTheme);
+    setThemeConfig(DEFAULT_THEMES[newTheme]);
+    localStorage.setItem(storageKey, newTheme);
 
-      // Update personalization theme
-      const updatedPersonalization = {
-        ...personalization,
-        theme: newTheme,
-        lastUpdated: new Date(),
-      };
-      setPersonalizationState(updatedPersonalization);
-      localStorage.setItem(
-        `${storageKey}-personalization`,
-        JSON.stringify(updatedPersonalization)
-      );
-    },
-    [storageKey, personalization]
-  );
+    // Update personalization theme
+    const updatedPersonalization = {
+      ...personalization,
+      theme: newTheme,
+      lastUpdated: new Date()
+    };
+    setPersonalizationState(updatedPersonalization);
+    localStorage.setItem(`${storageKey}-personalization`, JSON.stringify(updatedPersonalization));
+  }, [storageKey, personalization]);
 
   const toggleTheme = useCallback(() => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -2273,140 +2212,110 @@ export function ThemeProvider({
     localStorage.removeItem(`${storageKey}-personalization`);
   }, [defaultTheme, setTheme, storageKey]);
 
-  const updatePersonalization = useCallback(
-    (updates: Partial<PersonalizationSettings>) => {
-      const updatedPersonalization = {
-        ...personalization,
-        ...updates,
-        lastUpdated: new Date(),
-      };
-      setPersonalizationState(updatedPersonalization);
+  const updatePersonalization = useCallback((updates: Partial<PersonalizationSettings>) => {
+    const updatedPersonalization = {
+      ...personalization,
+      ...updates,
+      lastUpdated: new Date()
+    };
+    setPersonalizationState(updatedPersonalization);
 
-      // Save to enhanced persistence service
-      if (persistenceServiceRef.current) {
-        persistenceServiceRef.current.saveThemeData({
-          personalization: updatedPersonalization,
-        });
+    // Save to enhanced persistence service
+    if (persistenceServiceRef.current) {
+      persistenceServiceRef.current.saveThemeData({
+        personalization: updatedPersonalization
+      });
+    }
+
+    // Fallback to localStorage
+    localStorage.setItem(`${storageKey}-personalization`, JSON.stringify(updatedPersonalization));
+  }, [personalization, storageKey]);
+
+  const updateColorPreference = useCallback((property: string, value: any) => {
+    updatePersonalization({
+      colorPreferences: {
+        ...personalization.colorPreferences,
+        [property]: value
       }
+    });
+  }, [personalization, updatePersonalization]);
 
-      // Fallback to localStorage
-      localStorage.setItem(
-        `${storageKey}-personalization`,
-        JSON.stringify(updatedPersonalization)
-      );
-    },
-    [personalization, storageKey]
-  );
+  const updateTypographyPreference = useCallback((property: string, value: any) => {
+    updatePersonalization({
+      typographyPreferences: {
+        ...personalization.typographyPreferences,
+        [property]: value
+      }
+    });
+  }, [personalization, updatePersonalization]);
 
-  const updateColorPreference = useCallback(
-    (property: string, value: any) => {
-      updatePersonalization({
-        colorPreferences: {
-          ...personalization.colorPreferences,
-          [property]: value,
-        },
-      });
-    },
-    [personalization, updatePersonalization]
-  );
+  const updateMotionPreference = useCallback((property: string, value: any) => {
+    updatePersonalization({
+      motionPreferences: {
+        ...personalization.motionPreferences,
+        [property]: value
+      }
+    });
+  }, [personalization, updatePersonalization]);
 
-  const updateTypographyPreference = useCallback(
-    (property: string, value: any) => {
-      updatePersonalization({
-        typographyPreferences: {
-          ...personalization.typographyPreferences,
-          [property]: value,
-        },
-      });
-    },
-    [personalization, updatePersonalization]
-  );
+  const updateSoundPreference = useCallback((property: string, value: any) => {
+    updatePersonalization({
+      soundPreferences: {
+        ...personalization.soundPreferences,
+        [property]: value
+      }
+    });
+  }, [personalization, updatePersonalization]);
 
-  const updateMotionPreference = useCallback(
-    (property: string, value: any) => {
-      updatePersonalization({
-        motionPreferences: {
-          ...personalization.motionPreferences,
-          [property]: value,
-        },
-      });
-    },
-    [personalization, updatePersonalization]
-  );
+  const updateLayoutPreference = useCallback((property: string, value: any) => {
+    updatePersonalization({
+      layoutPreferences: {
+        ...personalization.layoutPreferences,
+        [property]: value
+      }
+    });
+  }, [personalization, updatePersonalization]);
 
-  const updateSoundPreference = useCallback(
-    (property: string, value: any) => {
-      updatePersonalization({
-        soundPreferences: {
-          ...personalization.soundPreferences,
-          [property]: value,
-        },
-      });
-    },
-    [personalization, updatePersonalization]
-  );
+  const updateAccessibilityPreference = useCallback((property: string, value: any) => {
+    updatePersonalization({
+      accessibilityPreferences: {
+        ...personalization.accessibilityPreferences,
+        [property]: value
+      }
+    });
+  }, [personalization, updatePersonalization]);
 
-  const updateLayoutPreference = useCallback(
-    (property: string, value: any) => {
-      updatePersonalization({
-        layoutPreferences: {
-          ...personalization.layoutPreferences,
-          [property]: value,
-        },
-      });
-    },
-    [personalization, updatePersonalization]
-  );
+  const createCustomTheme = useCallback(async (baseTheme: Theme, customizations: any): Promise<CustomThemeConfig> => {
+    // This would integrate with a backend service in a real app
+    const customTheme: CustomThemeConfig = {
+      ...DEFAULT_THEMES[baseTheme],
+      id: `custom-${Date.now()}`,
+      name: `custom-${Date.now()}`,
+      displayName: `Custom Theme ${Date.now()}`,
+      description: 'User-created custom theme',
+      baseTheme,
+      customizations,
+      isShared: false,
+      isCustom: true
+    };
 
-  const updateAccessibilityPreference = useCallback(
-    (property: string, value: any) => {
-      updatePersonalization({
-        accessibilityPreferences: {
-          ...personalization.accessibilityPreferences,
-          [property]: value,
-        },
-      });
-    },
-    [personalization, updatePersonalization]
-  );
-
-  const createCustomTheme = useCallback(
-    async (baseTheme: Theme, customizations: any): Promise<CustomThemeConfig> => {
-      // This would integrate with a backend service in a real app
-      const customTheme: CustomThemeConfig = {
-        ...DEFAULT_THEMES[baseTheme],
-        id: `custom-${Date.now()}`,
-        name: `custom-${Date.now()}`,
-        displayName: `Custom Theme ${Date.now()}`,
-        description: 'User-created custom theme',
-        baseTheme,
-        customizations,
-        isShared: false,
-        isCustom: true,
-      };
-
-      return customTheme;
-    },
-    []
-  );
+    return customTheme;
+  }, []);
 
   const saveThemePreset = useCallback(async (preset: ThemePreset): Promise<void> => {
     // This would save to backend in a real app
     console.log('Saving theme preset:', preset);
   }, []);
 
-  const loadThemePreset = useCallback(
-    async (presetId: string): Promise<void> => {
-      const preset = availableThemes.find(t => t.id === presetId);
-      if (preset) {
-        setTheme(preset.theme);
-        if (preset.personalization) {
-          updatePersonalization(preset.personalization);
-        }
+  const loadThemePreset = useCallback(async (presetId: string): Promise<void> => {
+    const preset = availableThemes.find(t => t.id === presetId);
+    if (preset) {
+      setTheme(preset.theme);
+      if (preset.personalization) {
+        updatePersonalization(preset.personalization);
       }
-    },
-    [availableThemes, setTheme, updatePersonalization]
-  );
+    }
+  }, [availableThemes, setTheme, updatePersonalization]);
 
   const getThemeRecommendations = useCallback((): ThemePreset[] => {
     // This would use AI/ML in a real app
@@ -2426,44 +2335,41 @@ export function ThemeProvider({
       personalization,
       metadata: {
         appVersion: '1.0.0',
-        platform: 'web',
-      },
+        platform: 'web'
+      }
     };
     return JSON.stringify(exportData, null, 2);
   }, [personalization]);
 
-  const importThemes = useCallback(
-    async (data: string): Promise<boolean> => {
-      if (persistenceServiceRef.current) {
-        const success = await persistenceServiceRef.current.importThemes(data);
-        if (success) {
-          // Reload theme data after successful import
-          const themeData = await persistenceServiceRef.current.loadThemeData();
-          if (themeData.theme) {
-            setThemeState(themeData.theme);
-            setThemeConfig(themeData.themeConfig || DEFAULT_THEMES[themeData.theme]);
-          }
-          if (themeData.personalization) {
-            setPersonalizationState(themeData.personalization);
-          }
+  const importThemes = useCallback(async (data: string): Promise<boolean> => {
+    if (persistenceServiceRef.current) {
+      const success = await persistenceServiceRef.current.importThemes(data);
+      if (success) {
+        // Reload theme data after successful import
+        const themeData = await persistenceServiceRef.current.loadThemeData();
+        if (themeData.theme) {
+          setThemeState(themeData.theme);
+          setThemeConfig(themeData.themeConfig || DEFAULT_THEMES[themeData.theme]);
         }
-        return success;
+        if (themeData.personalization) {
+          setPersonalizationState(themeData.personalization);
+        }
       }
+      return success;
+    }
 
-      // Fallback to basic import
-      try {
-        const importData = JSON.parse(data);
-        if (importData.personalization) {
-          updatePersonalization(importData.personalization);
-        }
-        return true;
-      } catch (error) {
-        console.error('Failed to import themes:', error);
-        return false;
+    // Fallback to basic import
+    try {
+      const importData = JSON.parse(data);
+      if (importData.personalization) {
+        updatePersonalization(importData.personalization);
       }
-    },
-    [updatePersonalization]
-  );
+      return true;
+    } catch (error) {
+      console.error('Failed to import themes:', error);
+      return false;
+    }
+  }, [updatePersonalization]);
 
   const syncThemes = useCallback(async (): Promise<void> => {
     if (!cloudSyncServiceRef.current) {
@@ -2485,7 +2391,7 @@ export function ThemeProvider({
         personalization,
         lastModified: new Date().toISOString(),
         deviceId: cloudSyncServiceRef.current.getStatus().isOnline ? 'web' : 'offline',
-        version: 1,
+        version: 1
       });
 
       // Perform the sync
@@ -2497,21 +2403,16 @@ export function ThemeProvider({
         await persistenceServiceRef.current.saveThemeData({
           theme: updatedPreferences.theme,
           themeConfig: updatedPreferences.themeConfig,
-          personalization: updatedPreferences.personalization,
+          personalization: updatedPreferences.personalization
         });
 
         // Update local state if data changed from cloud
         if (updatedPreferences.theme !== theme) {
           setThemeState(updatedPreferences.theme);
-          setThemeConfig(
-            updatedPreferences.themeConfig || DEFAULT_THEMES[updatedPreferences.theme]
-          );
+          setThemeConfig(updatedPreferences.themeConfig || DEFAULT_THEMES[updatedPreferences.theme]);
         }
         if (updatedPreferences.personalization) {
-          setPersonalizationState({
-            ...DEFAULT_PERSONALIZATION,
-            ...updatedPreferences.personalization,
-          });
+          setPersonalizationState({ ...DEFAULT_PERSONALIZATION, ...updatedPreferences.personalization });
         }
       }
     } catch (error) {
@@ -2526,7 +2427,7 @@ export function ThemeProvider({
     const syncService = cloudSyncServiceRef.current;
     syncService.setOptions({
       ...syncService.getOptions(),
-      autoSync: enabled,
+      autoSync: enabled
     });
 
     if (enabled) {
@@ -2569,20 +2470,17 @@ export function ThemeProvider({
     }
   }, [defaultTheme, storageKey]);
 
-  const onCloudSyncStatusChange = useCallback(
-    (listener: (status: CloudSyncStatus) => void) => {
-      syncListenersRef.current.push(listener);
+  const onCloudSyncStatusChange = useCallback((listener: (status: CloudSyncStatus) => void) => {
+    syncListenersRef.current.push(listener);
 
-      // Return unsubscribe function
-      return () => {
-        const index = syncListenersRef.current.indexOf(listener);
-        if (index > -1) {
-          syncListenersRef.current.splice(index, 1);
-        }
-      };
-    },
-    []
-  );
+    // Return unsubscribe function
+    return () => {
+      const index = syncListenersRef.current.indexOf(listener);
+      if (index > -1) {
+        syncListenersRef.current.splice(index, 1);
+      }
+    };
+  }, []);
 
   // Memoized CSS variables with performance optimization
   const getCSSVariables = useMemo((): Record<string, string> => {
@@ -2604,7 +2502,7 @@ export function ThemeProvider({
       '--theme-text-primary': themeConfig.colors.text.primary,
       '--theme-text-secondary': themeConfig.colors.text.secondary,
       '--theme-primary': themeConfig.colors.primary[500],
-      '--theme-border': themeConfig.colors.border.primary,
+      '--theme-border': themeConfig.colors.border.primary
     };
 
     Object.assign(vars, criticalVars);
@@ -2614,7 +2512,7 @@ export function ThemeProvider({
       ['primary', themeConfig.colors.primary],
       ['secondary', themeConfig.colors.secondary],
       ['accent', themeConfig.colors.accent],
-      ['neutral', themeConfig.colors.neutral],
+      ['neutral', themeConfig.colors.neutral]
     ] as const;
 
     colorSections.forEach(([section, colors]) => {
@@ -2641,10 +2539,9 @@ export function ThemeProvider({
     // Typography variables with personalization
     const fontSizeScale = personalization.typographyPreferences.fontSizeScale || 1;
     Object.entries(themeConfig.typography.fontSize).forEach(([key, value]) => {
-      const scaledValue =
-        typeof value === 'string' && value.includes('rem')
-          ? `${parseFloat(value) * fontSizeScale}rem`
-          : value;
+      const scaledValue = typeof value === 'string' && value.includes('rem')
+        ? `${parseFloat(value) * fontSizeScale}rem`
+        : value;
       vars[`--font-size-${key}`] = scaledValue;
     });
 
@@ -2661,10 +2558,9 @@ export function ThemeProvider({
     // Animation variables with motion preferences
     const animationScale = personalization.motionPreferences.enableAnimations ? 1 : 0;
     Object.entries(themeConfig.animations.duration).forEach(([key, value]) => {
-      const scaledValue =
-        typeof value === 'string' && value.includes('ms')
-          ? `${parseFloat(value) * animationScale}ms`
-          : value;
+      const scaledValue = typeof value === 'string' && value.includes('ms')
+        ? `${parseFloat(value) * animationScale}ms`
+        : value;
       vars[`--duration-${key}`] = scaledValue;
     });
 
@@ -2679,8 +2575,7 @@ export function ThemeProvider({
     }
 
     if (personalization.colorPreferences.brightnessLevel !== 100) {
-      vars['--theme-brightness'] =
-        `${personalization.colorPreferences.brightnessLevel}%`;
+      vars['--theme-brightness'] = `${personalization.colorPreferences.brightnessLevel}%`;
     }
 
     // Cache the result for future use
@@ -2699,10 +2594,7 @@ export function ThemeProvider({
       classes.push('high-contrast');
     }
 
-    if (
-      personalization.motionPreferences.reduceMotion ||
-      personalization.accessibilityPreferences.flashingElementsReduced
-    ) {
+    if (personalization.motionPreferences.reduceMotion || personalization.accessibilityPreferences.flashingElementsReduced) {
       classes.push('reduce-motion');
     }
 
@@ -2712,9 +2604,7 @@ export function ThemeProvider({
 
     // Font preferences
     if (personalization.typographyPreferences.fontSizeScale !== 1) {
-      classes.push(
-        `font-scale-${Math.round(personalization.typographyPreferences.fontSizeScale * 100)}`
-      );
+      classes.push(`font-scale-${Math.round(personalization.typographyPreferences.fontSizeScale * 100)}`);
     }
 
     // Color preferences
@@ -2741,27 +2631,28 @@ export function ThemeProvider({
   }, [theme, personalization]);
 
   // Performance-optimized theme application
-  const applyThemeWithPerformance = useCallback(
-    async (options?: { animate?: boolean; duration?: number; immediate?: boolean }) => {
-      const performanceService = ThemePerformanceService.getInstance();
-      const variables = getCSSVariables;
-      const classes = getThemeClasses;
+  const applyThemeWithPerformance = useCallback(async (options?: {
+    animate?: boolean;
+    duration?: number;
+    immediate?: boolean;
+  }) => {
+    const performanceService = ThemePerformanceService.getInstance();
+    const variables = getCSSVariables;
+    const classes = getThemeClasses;
 
-      if (options?.immediate) {
-        await performanceService.applyTheme(variables, classes, {
-          animate: false,
-          skipIfSame: true,
-        });
-      } else {
-        performanceService.debouncedApplyTheme(variables, classes, 16, {
-          animate: options?.animate || false,
-          duration: options?.duration || 300,
-          skipIfSame: true,
-        });
-      }
-    },
-    [getCSSVariables, getThemeClasses]
-  );
+    if (options?.immediate) {
+      await performanceService.applyTheme(variables, classes, {
+        animate: false,
+        skipIfSame: true
+      });
+    } else {
+      performanceService.debouncedApplyTheme(variables, classes, 16, {
+        animate: options?.animate || false,
+        duration: options?.duration || 300,
+        skipIfSame: true
+      });
+    }
+  }, [getCSSVariables, getThemeClasses]);
 
   // Preload theme for better performance
   const preloadTheme = useCallback((targetTheme: Theme) => {
@@ -2776,7 +2667,7 @@ export function ThemeProvider({
         '--theme-text-primary': targetConfig.colors.text.primary,
         '--theme-text-secondary': targetConfig.colors.text.secondary,
         '--theme-primary': targetConfig.colors.primary[500],
-        '--theme-border': targetConfig.colors.border.primary,
+        '--theme-border': targetConfig.colors.border.primary
       };
 
       const tempClasses = [`theme-${targetTheme}`];
@@ -2784,17 +2675,11 @@ export function ThemeProvider({
     }
   }, []);
 
-  const isAccessibleContrast = useCallback(
-    (foreground: string, background: string): boolean => {
-      const accessibilityService = ThemeAccessibilityService.getInstance();
-      const result = accessibilityService.calculateContrastRatio(
-        foreground,
-        background
-      );
-      return result.isAccessible;
-    },
-    []
-  );
+  const isAccessibleContrast = useCallback((foreground: string, background: string): boolean => {
+    const accessibilityService = ThemeAccessibilityService.getInstance();
+    const result = accessibilityService.calculateContrastRatio(foreground, background);
+    return result.isAccessible;
+  }, []);
 
   // Accessibility functions
   const testThemeAccessibility = useCallback(() => {
@@ -2808,25 +2693,19 @@ export function ThemeProvider({
     return accessibilityService.getAccessibilityStatus();
   }, []);
 
-  const announceThemeChange = useCallback(
-    (themeName: string, previousTheme?: string) => {
-      const accessibilityService = ThemeAccessibilityService.getInstance();
-      accessibilityService.announceThemeChange(themeName, {
-        includePreviousTheme: !!previousTheme,
-        previousTheme,
-        priority: 'polite',
-      });
-    },
-    []
-  );
+  const announceThemeChange = useCallback((themeName: string, previousTheme?: string) => {
+    const accessibilityService = ThemeAccessibilityService.getInstance();
+    accessibilityService.announceThemeChange(themeName, {
+      includePreviousTheme: !!previousTheme,
+      previousTheme,
+      priority: 'polite'
+    });
+  }, []);
 
-  const calculateContrastRatio = useCallback(
-    (foreground: string, background: string) => {
-      const accessibilityService = ThemeAccessibilityService.getInstance();
-      return accessibilityService.calculateContrastRatio(foreground, background);
-    },
-    []
-  );
+  const calculateContrastRatio = useCallback((foreground: string, background: string) => {
+    const accessibilityService = ThemeAccessibilityService.getInstance();
+    return accessibilityService.calculateContrastRatio(foreground, background);
+  }, []);
 
   const simulateColorBlindness = useCallback((color: string) => {
     const accessibilityService = ThemeAccessibilityService.getInstance();
@@ -2840,23 +2719,16 @@ export function ThemeProvider({
   }, [personalization]);
 
   // Premium animation functions
-  const initializePremiumAnimations = useCallback(
-    (effects?: PremiumAnimationEffects) => {
-      const animationService = PremiumThemeAnimationService.getInstance();
-      const effectsToApply =
-        effects || PremiumThemeAnimationService.getDefaultEffects(theme);
-      animationService.initializePremiumAnimations(theme, effectsToApply);
-    },
-    [theme]
-  );
+  const initializePremiumAnimations = useCallback((effects?: PremiumAnimationEffects) => {
+    const animationService = PremiumThemeAnimationService.getInstance();
+    const effectsToApply = effects || PremiumThemeAnimationService.getDefaultEffects(theme);
+    animationService.initializePremiumAnimations(theme, effectsToApply);
+  }, [theme]);
 
-  const setAnimationIntensity = useCallback(
-    (intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic') => {
-      const animationService = PremiumThemeAnimationService.getInstance();
-      animationService.setAnimationIntensity(intensity);
-    },
-    []
-  );
+  const setAnimationIntensity = useCallback((intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic') => {
+    const animationService = PremiumThemeAnimationService.getInstance();
+    animationService.setAnimationIntensity(intensity);
+  }, []);
 
   const setAnimationsEnabled = useCallback((enabled: boolean) => {
     const animationService = PremiumThemeAnimationService.getInstance();
@@ -2881,10 +2753,8 @@ export function ThemeProvider({
       return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
     // For other themes, determine based on background color
-    return (
-      themeConfig.colors.background.primary.includes('#') &&
-      parseInt(themeConfig.colors.background.primary.slice(1), 16) < 0x808080
-    );
+    return themeConfig.colors.background.primary.includes('#') &&
+           parseInt(themeConfig.colors.background.primary.slice(1), 16) < 0x808080;
   }, [theme, themeConfig]);
 
   const isSystemTheme = useMemo(() => {
@@ -2940,10 +2810,14 @@ export function ThemeProvider({
     initializePremiumAnimations,
     setAnimationIntensity,
     setAnimationsEnabled,
-    getDefaultAnimationEffects,
+    getDefaultAnimationEffects
   };
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>
+      {children}
+    </ThemeContext.Provider>
+  );
 }
 
 export default useTheme;

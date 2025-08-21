@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Test Mocks and Utilities
  * 

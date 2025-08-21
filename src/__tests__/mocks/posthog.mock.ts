@@ -31,7 +31,7 @@ const mockPostHog = {
       console.log('📊 Mock PostHog people.increment', properties);
     }),
     delete: jest.fn(),
-    union: jest.fn(),
+    union: jest.fn()
   },
 
   // Group analytics
@@ -151,7 +151,7 @@ const mockPostHog = {
 
   persistence: {
     remove: jest.fn(),
-    clear: jest.fn(),
+    clear: jest.fn()
   },
 
   // Internal methods for testing
@@ -176,14 +176,14 @@ const mockPostHog = {
       if (f === flag) return value;
       return mockPostHog.getFeatureFlag.getMockImplementation()?.(f) || false;
     });
-  }),
+  })
 };
 
 // Create a factory function for creating fresh mocks
-export const createMockPostHog = () => ({
+export const _createMockPostHog = () => ({
   ...mockPostHog,
   people: { ...mockPostHog.people },
-  persistence: { ...mockPostHog.persistence },
+  persistence: { ...mockPostHog.persistence }
 });
 
 export default mockPostHog;

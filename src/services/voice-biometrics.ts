@@ -79,8 +79,7 @@ class VoiceBiometricsService {
    */
   private async initializeAudioContext(): Promise<void> {
     try {
-      this.audioContext = new (window.AudioContext ||
-        (window as any).webkitAudioContext)();
+      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
 
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
@@ -108,7 +107,7 @@ class VoiceBiometricsService {
         quality: 0,
         duration: 0,
         completedAt: new Date(),
-        improvements: [],
+        improvements: []
       };
 
       // Initialize training session
@@ -120,9 +119,11 @@ class VoiceBiometricsService {
 
       return sessionId;
     } catch (error) {
-      ErrorHandler.handleError(error as Error, 'Failed to start voice training', {
-        userId,
-      });
+      ErrorHandler.handleError(
+        error as Error,
+        'Failed to start voice training',
+        { userId }
+      );
       throw error;
     }
   }
@@ -146,13 +147,13 @@ class VoiceBiometricsService {
             channelCount: 1,
             echoCancellation: true,
             noiseSuppression: true,
-            autoGainControl: false,
-          },
+            autoGainControl: false
+          }
         });
 
         const chunks: Blob[] = [];
         this.mediaRecorder = new MediaRecorder(stream, {
-          mimeType: 'audio/webm;codecs=opus',
+          mimeType: 'audio/webm;codecs=opus'
         });
 
         this.mediaRecorder.ondataavailable = event => {
@@ -184,6 +185,7 @@ class VoiceBiometricsService {
             this.isRecording = false;
           }
         }, duration);
+
       } catch (error) {
         reject(error);
       }
@@ -193,10 +195,7 @@ class VoiceBiometricsService {
   /**
    * Analyze voice sample and extract biometric features
    */
-  async analyzeVoiceSample(
-    audioBuffer: AudioBuffer,
-    userId: string
-  ): Promise<VoicePrint> {
+  async analyzeVoiceSample(audioBuffer: AudioBuffer, userId: string): Promise<VoicePrint> {
     try {
       const startTime = performance.now();
 
@@ -208,10 +207,7 @@ class VoiceBiometricsService {
       const sampleRate = audioBuffer.sampleRate;
 
       // Extract voice features
-      const fundamentalFrequency = this.extractFundamentalFrequency(
-        audioData,
-        sampleRate
-      );
+      const fundamentalFrequency = this.extractFundamentalFrequency(audioData, sampleRate);
       const formants = this.extractFormants(audioData, sampleRate);
       const spectralCentroid = this.extractSpectralCentroid(audioData, sampleRate);
       const mfcc = this.extractMFCC(audioData, sampleRate);
@@ -231,13 +227,13 @@ class VoiceBiometricsService {
           formants,
           spectralCentroid,
           mfcc,
-          voiceQuality,
+          voiceQuality
         },
         confidence: this.calculateConfidence(audioData),
         recordedAt: new Date(),
         language,
         accent,
-        emotion,
+        emotion
       };
 
       // Store voice print
@@ -258,8 +254,13 @@ class VoiceBiometricsService {
       this.performanceMonitor.trackCustomMetric('voice_analysis_duration', duration);
 
       return voicePrint;
+
     } catch (error) {
-      ErrorHandler.handleError(error as Error, 'Voice analysis failed', { userId });
+      ErrorHandler.handleError(
+        error as Error,
+        'Voice analysis failed',
+        { userId }
+      );
       throw error;
     }
   }
@@ -267,10 +268,7 @@ class VoiceBiometricsService {
   /**
    * Authenticate user using voice biometrics
    */
-  async authenticateUser(
-    audioBuffer: AudioBuffer,
-    expectedUserId: string
-  ): Promise<VoiceAuthentication> {
+  async authenticateUser(audioBuffer: AudioBuffer, expectedUserId: string): Promise<VoiceAuthentication> {
     try {
       const voicePrint = await this.analyzeVoiceSample(audioBuffer, expectedUserId);
       const storedPrints = this.voicePrints.get(expectedUserId) || [];
@@ -282,17 +280,14 @@ class VoiceBiometricsService {
           confidence: 0,
           matchedFeatures: [],
           riskLevel: 'high',
-          timestamp: new Date(),
+          timestamp: new Date()
         };
       }
 
       // Compare with stored voice prints
-      const similarities = storedPrints.map(stored =>
-        this.compareVoicePrints(voicePrint, stored)
-      );
+      const similarities = storedPrints.map(stored => this.compareVoicePrints(voicePrint, stored));
       const maxSimilarity = Math.max(...similarities);
-      const averageSimilarity =
-        similarities.reduce((sum, sim) => sum + sim, 0) / similarities.length;
+      const averageSimilarity = similarities.reduce((sum, sim) => sum + sim, 0) / similarities.length;
 
       const matchedFeatures = this.identifyMatchedFeatures(voicePrint, storedPrints);
 
@@ -308,7 +303,7 @@ class VoiceBiometricsService {
         confidence,
         matchedFeatures,
         riskLevel,
-        timestamp: new Date(),
+        timestamp: new Date()
       };
 
       // Log authentication attempt
@@ -317,10 +312,13 @@ class VoiceBiometricsService {
       this.performanceMonitor.trackCustomMetric('voice_authentication_attempt', 1);
 
       return authentication;
+
     } catch (error) {
-      ErrorHandler.handleError(error as Error, 'Voice authentication failed', {
-        userId: expectedUserId,
-      });
+      ErrorHandler.handleError(
+        error as Error,
+        'Voice authentication failed',
+        { userId: expectedUserId }
+      );
       throw error;
     }
   }
@@ -349,19 +347,16 @@ class VoiceBiometricsService {
       const stressLevel = this.calculateStressLevel(audioData, sampleRate);
 
       // Generate recommendations
-      const recommendations = this.generateMoodRecommendations(
-        detectedMood,
-        energy,
-        stressLevel
-      );
+      const recommendations = this.generateMoodRecommendations(detectedMood, energy, stressLevel);
 
       return {
         detectedMood,
         confidence,
         energyLevel: energy,
         stressLevel,
-        recommendations,
+        recommendations
       };
+
     } catch (error) {
       console.error('Mood analysis failed:', error);
       return {
@@ -369,7 +364,7 @@ class VoiceBiometricsService {
         confidence: 0,
         energyLevel: 0.5,
         stressLevel: 0.5,
-        recommendations: ['Unable to analyze mood at this time'],
+        recommendations: ['Unable to analyze mood at this time']
       };
     }
   }
@@ -390,9 +385,7 @@ class VoiceBiometricsService {
 
       const sessionsCompleted = sessions.length;
       const totalSamples = voicePrints.length;
-      const averageQuality =
-        voicePrints.reduce((sum, print) => sum + print.confidence, 0) / totalSamples ||
-        0;
+      const averageQuality = voicePrints.reduce((sum, print) => sum + print.confidence, 0) / totalSamples || 0;
 
       const allImprovements = sessions.flatMap(session => session.improvements);
       const improvements = [...new Set(allImprovements)];
@@ -404,8 +397,9 @@ class VoiceBiometricsService {
         totalSamples,
         averageQuality,
         improvements,
-        nextSteps,
+        nextSteps
       };
+
     } catch (error) {
       console.error('Failed to get training progress:', error);
       return {
@@ -413,7 +407,7 @@ class VoiceBiometricsService {
         totalSamples: 0,
         averageQuality: 0,
         improvements: [],
-        nextSteps: ['Start voice training to improve accuracy'],
+        nextSteps: ['Start voice training to improve accuracy']
       };
     }
   }
@@ -421,10 +415,7 @@ class VoiceBiometricsService {
   /**
    * Extract fundamental frequency (pitch)
    */
-  private extractFundamentalFrequency(
-    audioData: Float32Array,
-    sampleRate: number
-  ): number[] {
+  private extractFundamentalFrequency(audioData: Float32Array, sampleRate: number): number[] {
     const windowSize = 1024;
     const hopSize = 512;
     const frequencies: number[] = [];
@@ -432,8 +423,7 @@ class VoiceBiometricsService {
     for (let i = 0; i < audioData.length - windowSize; i += hopSize) {
       const window = audioData.slice(i, i + windowSize);
       const frequency = this.autocorrelationPitch(window, sampleRate);
-      if (frequency > 50 && frequency < 800) {
-        // Valid vocal range
+      if (frequency > 50 && frequency < 800) { // Valid vocal range
         frequencies.push(frequency);
       }
     }
@@ -446,7 +436,7 @@ class VoiceBiometricsService {
    */
   private autocorrelationPitch(buffer: Float32Array, sampleRate: number): number {
     const minPeriod = Math.floor(sampleRate / 800); // 800 Hz max
-    const maxPeriod = Math.floor(sampleRate / 50); // 50 Hz min
+    const maxPeriod = Math.floor(sampleRate / 50);  // 50 Hz min
 
     let bestPeriod = 0;
     let bestCorrelation = 0;
@@ -507,10 +497,7 @@ class VoiceBiometricsService {
   /**
    * Analyze voice quality metrics
    */
-  private analyzeVoiceQuality(
-    audioData: Float32Array,
-    sampleRate: number
-  ): {
+  private analyzeVoiceQuality(audioData: Float32Array, sampleRate: number): {
     jitter: number;
     shimmer: number;
     harmonicsRatio: number;
@@ -518,17 +505,13 @@ class VoiceBiometricsService {
     const pitch = this.extractFundamentalFrequency(audioData, sampleRate);
 
     // Calculate jitter (pitch period variation)
-    const jitter =
-      pitch.length > 1
-        ? this.calculateStandardDeviation(pitch) / this.calculateMean(pitch)
-        : 0;
+    const jitter = pitch.length > 1 ?
+      this.calculateStandardDeviation(pitch) / this.calculateMean(pitch) : 0;
 
     // Calculate shimmer (amplitude variation)
     const amplitudes = this.extractAmplitudeEnvelope(audioData);
-    const shimmer =
-      amplitudes.length > 1
-        ? this.calculateStandardDeviation(amplitudes) / this.calculateMean(amplitudes)
-        : 0;
+    const shimmer = amplitudes.length > 1 ?
+      this.calculateStandardDeviation(amplitudes) / this.calculateMean(amplitudes) : 0;
 
     // Calculate harmonics-to-noise ratio
     const harmonicsRatio = this.calculateHarmonicsRatio(audioData, sampleRate);
@@ -544,10 +527,7 @@ class VoiceBiometricsService {
     let weights = 0;
 
     // Compare fundamental frequency
-    if (
-      print1.features.fundamentalFrequency.length > 0 &&
-      print2.features.fundamentalFrequency.length > 0
-    ) {
+    if (print1.features.fundamentalFrequency.length > 0 && print2.features.fundamentalFrequency.length > 0) {
       const f1Mean = this.calculateMean(print1.features.fundamentalFrequency);
       const f2Mean = this.calculateMean(print2.features.fundamentalFrequency);
       const freqSimilarity = 1 - Math.abs(f1Mean - f2Mean) / Math.max(f1Mean, f2Mean);
@@ -557,10 +537,7 @@ class VoiceBiometricsService {
 
     // Compare MFCC features
     if (print1.features.mfcc.length > 0 && print2.features.mfcc.length > 0) {
-      const mfccSimilarity = this.compareMFCCFeatures(
-        print1.features.mfcc,
-        print2.features.mfcc
-      );
+      const mfccSimilarity = this.compareMFCCFeatures(print1.features.mfcc, print2.features.mfcc);
       similarity += mfccSimilarity * 0.4;
       weights += 0.4;
     }
@@ -581,16 +558,16 @@ class VoiceBiometricsService {
    */
   private getDefaultTrainingPhrases(): string[] {
     return [
-      'Good morning, this is my voice training session.',
-      'My name is unique and this is how I sound.',
-      'I am recording my voice for biometric authentication.',
-      'The quick brown fox jumps over the lazy dog.',
-      'She sells seashells by the seashore.',
-      'How much wood would a woodchuck chuck if a woodchuck could chuck wood?',
-      'Peter Piper picked a peck of pickled peppers.',
-      'Red leather, yellow leather, repeat rapidly.',
-      'Unique New York, truly rural, toy boat.',
-      'I need to wake up on time every morning.',
+      "Good morning, this is my voice training session.",
+      "My name is unique and this is how I sound.",
+      "I am recording my voice for biometric authentication.",
+      "The quick brown fox jumps over the lazy dog.",
+      "She sells seashells by the seashore.",
+      "How much wood would a woodchuck chuck if a woodchuck could chuck wood?",
+      "Peter Piper picked a peck of pickled peppers.",
+      "Red leather, yellow leather, repeat rapidly.",
+      "Unique New York, truly rural, toy boat.",
+      "I need to wake up on time every morning."
     ];
   }
 
@@ -599,9 +576,7 @@ class VoiceBiometricsService {
   }
 
   private calculateConfidence(audioData: Float32Array): number {
-    const rms = Math.sqrt(
-      audioData.reduce((sum, sample) => sum + sample * sample, 0) / audioData.length
-    );
+    const rms = Math.sqrt(audioData.reduce((sum, sample) => sum + sample * sample, 0) / audioData.length);
     const snr = this.estimateSignalToNoiseRatio(audioData);
     const duration = audioData.length / 44100;
 
@@ -631,19 +606,13 @@ class VoiceBiometricsService {
     return 'en-US';
   }
 
-  private async detectAccent(
-    audioData: Float32Array,
-    language: string
-  ): Promise<string> {
+  private async detectAccent(audioData: Float32Array, language: string): Promise<string> {
     // Simplified accent detection
     // In production, this would use ML models
     return 'General American';
   }
 
-  private analyzeEmotion(
-    audioData: Float32Array,
-    sampleRate: number
-  ): VoicePrint['emotion'] {
+  private analyzeEmotion(audioData: Float32Array, sampleRate: number): VoicePrint['emotion'] {
     const energy = this.calculateEnergyLevel(audioData);
     const pitch = this.extractFundamentalFrequency(audioData, sampleRate);
     const pitchMean = pitch.length > 0 ? this.calculateMean(pitch) : 0;
@@ -669,11 +638,7 @@ class VoiceBiometricsService {
     return [500, 1500, 2500, 3500]; // Placeholder formant values
   }
 
-  private computeMFCC(
-    window: Float32Array,
-    sampleRate: number,
-    numMFCC: number
-  ): number[] {
+  private computeMFCC(window: Float32Array, sampleRate: number, numMFCC: number): number[] {
     // Simplified MFCC computation
     return new Array(numMFCC).fill(0).map(() => Math.random() * 0.1 - 0.05);
   }
@@ -684,9 +649,7 @@ class VoiceBiometricsService {
 
     for (let i = 0; i < audioData.length - windowSize; i += windowSize) {
       const window = audioData.slice(i, i + windowSize);
-      const rms = Math.sqrt(
-        window.reduce((sum, sample) => sum + sample * sample, 0) / window.length
-      );
+      const rms = Math.sqrt(window.reduce((sum, sample) => sum + sample * sample, 0) / window.length);
       envelope.push(rms);
     }
 
@@ -701,16 +664,13 @@ class VoiceBiometricsService {
   }
 
   private calculateMean(values: number[]): number {
-    return values.length > 0
-      ? values.reduce((sum, val) => sum + val, 0) / values.length
-      : 0;
+    return values.length > 0 ? values.reduce((sum, val) => sum + val, 0) / values.length : 0;
   }
 
   private calculateStandardDeviation(values: number[]): number {
     if (values.length === 0) return 0;
     const mean = this.calculateMean(values);
-    const variance =
-      values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;
+    const variance = values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;
     return Math.sqrt(variance);
   }
 
@@ -721,9 +681,7 @@ class VoiceBiometricsService {
   }
 
   private calculateEnergyLevel(audioData: Float32Array): number {
-    const rms = Math.sqrt(
-      audioData.reduce((sum, sample) => sum + sample * sample, 0) / audioData.length
-    );
+    const rms = Math.sqrt(audioData.reduce((sum, sample) => sum + sample * sample, 0) / audioData.length);
     return Math.min(1.0, rms * 10); // Normalized energy level
   }
 
@@ -734,8 +692,7 @@ class VoiceBiometricsService {
 
     for (let i = 0; i < audioData.length - windowSize; i += windowSize) {
       const window = audioData.slice(i, i + windowSize);
-      const energy =
-        window.reduce((sum, sample) => sum + sample * sample, 0) / window.length;
+      const energy = window.reduce((sum, sample) => sum + sample * sample, 0) / window.length;
       energies.push(energy);
     }
 
@@ -747,22 +704,16 @@ class VoiceBiometricsService {
     return {
       spectralCentroid: this.extractSpectralCentroid(audioData, sampleRate),
       spectralRolloff: this.calculateSpectralRolloff(audioData, sampleRate),
-      spectralFlux: this.calculateSpectralFlux(audioData, sampleRate),
+      spectralFlux: this.calculateSpectralFlux(audioData, sampleRate)
     };
   }
 
-  private extractSpectralCentroid(
-    audioData: Float32Array,
-    sampleRate: number
-  ): number[] {
+  private extractSpectralCentroid(audioData: Float32Array, sampleRate: number): number[] {
     // Simplified spectral centroid calculation
     return [1500, 1600, 1400, 1550]; // Placeholder values
   }
 
-  private calculateSpectralRolloff(
-    audioData: Float32Array,
-    sampleRate: number
-  ): number {
+  private calculateSpectralRolloff(audioData: Float32Array, sampleRate: number): number {
     return 3000; // Placeholder value
   }
 
@@ -777,16 +728,11 @@ class VoiceBiometricsService {
     return {
       pitchVariation: pitch.length > 1 ? this.calculateStandardDeviation(pitch) : 0,
       energyVariation: energy.length > 1 ? this.calculateStandardDeviation(energy) : 0,
-      speakingRate: this.estimateSpeakingRate(audioData, sampleRate),
+      speakingRate: this.estimateSpeakingRate(audioData, sampleRate)
     };
   }
 
-  private classifyMood(
-    energy: number,
-    pitch: number[],
-    spectralFeatures: any,
-    prosody: any
-  ): VoiceMoodAnalysis['detectedMood'] {
+  private classifyMood(energy: number, pitch: number[], spectralFeatures: any, prosody: any): VoiceMoodAnalysis['detectedMood'] {
     const avgPitch = this.calculateMean(pitch);
     const pitchVariation = prosody.pitchVariation;
 
@@ -799,16 +745,9 @@ class VoiceBiometricsService {
     return 'neutral';
   }
 
-  private calculateMoodConfidence(
-    energy: number,
-    pitch: number[],
-    spectralFeatures: any
-  ): number {
+  private calculateMoodConfidence(energy: number, pitch: number[], spectralFeatures: any): number {
     // Simple confidence calculation based on feature clarity
-    const pitchStability =
-      pitch.length > 1
-        ? 1 - this.calculateStandardDeviation(pitch) / this.calculateMean(pitch)
-        : 0;
+    const pitchStability = pitch.length > 1 ? 1 - (this.calculateStandardDeviation(pitch) / this.calculateMean(pitch)) : 0;
     const energyLevel = Math.min(1.0, energy);
 
     return (pitchStability * 0.5 + energyLevel * 0.5) * 100;
@@ -817,21 +756,14 @@ class VoiceBiometricsService {
   private calculateStressLevel(audioData: Float32Array, sampleRate: number): number {
     const pitch = this.extractFundamentalFrequency(audioData, sampleRate);
     const energy = this.calculateEnergyLevel(audioData);
-    const pitchVariation =
-      pitch.length > 1
-        ? this.calculateStandardDeviation(pitch) / this.calculateMean(pitch)
-        : 0;
+    const pitchVariation = pitch.length > 1 ? this.calculateStandardDeviation(pitch) / this.calculateMean(pitch) : 0;
 
     // Higher pitch variation and energy typically indicate stress
-    const stressIndicators = pitchVariation * 0.6 + energy * 0.4;
+    const stressIndicators = (pitchVariation * 0.6) + (energy * 0.4);
     return Math.min(1.0, stressIndicators);
   }
 
-  private generateMoodRecommendations(
-    mood: VoiceMoodAnalysis['detectedMood'],
-    energy: number,
-    stress: number
-  ): string[] {
+  private generateMoodRecommendations(mood: VoiceMoodAnalysis['detectedMood'], energy: number, stress: number): string[] {
     const recommendations: string[] = [];
 
     switch (mood) {
@@ -873,10 +805,7 @@ class VoiceBiometricsService {
     return activeSpeech / duration; // Rough estimate of speech activity per second
   }
 
-  private identifyMatchedFeatures(
-    print1: VoicePrint,
-    storedPrints: VoicePrint[]
-  ): string[] {
+  private identifyMatchedFeatures(print1: VoicePrint, storedPrints: VoicePrint[]): string[] {
     const features: string[] = [];
 
     // This would compare specific features and identify matches
@@ -886,10 +815,7 @@ class VoiceBiometricsService {
     return features;
   }
 
-  private assessRiskLevel(
-    confidence: number,
-    matchedFeatures: string[]
-  ): VoiceAuthentication['riskLevel'] {
+  private assessRiskLevel(confidence: number, matchedFeatures: string[]): VoiceAuthentication['riskLevel'] {
     if (confidence > 90 && matchedFeatures.length > 3) return 'low';
     if (confidence > 70 && matchedFeatures.length > 2) return 'medium';
     return 'high';
@@ -901,26 +827,14 @@ class VoiceBiometricsService {
   }
 
   private compareVoiceQuality(quality1: any, quality2: any): number {
-    const jitterSim =
-      1 -
-      Math.abs(quality1.jitter - quality2.jitter) /
-        Math.max(quality1.jitter, quality2.jitter, 0.01);
-    const shimmerSim =
-      1 -
-      Math.abs(quality1.shimmer - quality2.shimmer) /
-        Math.max(quality1.shimmer, quality2.shimmer, 0.01);
-    const harmonicsSim =
-      1 -
-      Math.abs(quality1.harmonicsRatio - quality2.harmonicsRatio) /
-        Math.max(quality1.harmonicsRatio, quality2.harmonicsRatio, 0.01);
+    const jitterSim = 1 - Math.abs(quality1.jitter - quality2.jitter) / Math.max(quality1.jitter, quality2.jitter, 0.01);
+    const shimmerSim = 1 - Math.abs(quality1.shimmer - quality2.shimmer) / Math.max(quality1.shimmer, quality2.shimmer, 0.01);
+    const harmonicsSim = 1 - Math.abs(quality1.harmonicsRatio - quality2.harmonicsRatio) / Math.max(quality1.harmonicsRatio, quality2.harmonicsRatio, 0.01);
 
     return (jitterSim + shimmerSim + harmonicsSim) / 3;
   }
 
-  private generateTrainingNextSteps(
-    sessions: VoiceTrainingSession[],
-    prints: VoicePrint[]
-  ): string[] {
+  private generateTrainingNextSteps(sessions: VoiceTrainingSession[], prints: VoicePrint[]): string[] {
     const steps: string[] = [];
 
     if (sessions.length === 0) {
@@ -938,8 +852,8 @@ class VoiceBiometricsService {
 
   private async storeVoicePrint(voicePrint: VoicePrint): Promise<void> {
     try {
-      const { error } = await SupabaseService.getInstance()
-        .client.from('voice_prints')
+      const { error } = await SupabaseService.getInstance().client
+        .from('voice_prints')
         .insert({
           user_id: voicePrint.userId,
           features: voicePrint.features,
@@ -947,7 +861,7 @@ class VoiceBiometricsService {
           language: voicePrint.language,
           accent: voicePrint.accent,
           emotion: voicePrint.emotion,
-          recorded_at: voicePrint.recordedAt.toISOString(),
+          recorded_at: voicePrint.recordedAt.toISOString()
         });
 
       if (error) throw error;
@@ -958,15 +872,15 @@ class VoiceBiometricsService {
 
   private async logAuthenticationAttempt(auth: VoiceAuthentication): Promise<void> {
     try {
-      const { error } = await SupabaseService.getInstance()
-        .client.from('voice_authentication_logs')
+      const { error } = await SupabaseService.getInstance().client
+        .from('voice_authentication_logs')
         .insert({
           user_id: auth.userId,
           authenticated: auth.authenticated,
           confidence: auth.confidence,
           matched_features: auth.matchedFeatures,
           risk_level: auth.riskLevel,
-          timestamp: auth.timestamp.toISOString(),
+          timestamp: auth.timestamp.toISOString()
         });
 
       if (error) throw error;

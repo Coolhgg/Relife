@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /* eslint-disable react-refresh/only-export-components */
 
 import * as React from "react"

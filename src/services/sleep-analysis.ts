@@ -89,9 +89,7 @@ export class SleepAnalysisService {
   }
 
   // Sleep session tracking
-  static async recordSleepSession(
-    session: Partial<SleepSession>
-  ): Promise<SleepSession | null> {
+  static async recordSleepSession(session: Partial<SleepSession>): Promise<SleepSession | null> {
     if (!this.userId) throw new Error('User not initialized');
 
     try {
@@ -108,7 +106,7 @@ export class SleepAnalysisService {
           sleep_stages: session.sleepStages,
           environment_data: session.environmentData,
           created_at: new Date(),
-          updated_at: new Date(),
+          updated_at: new Date()
         })
         .select()
         .single();
@@ -176,7 +174,7 @@ export class SleepAnalysisService {
         weekdayPattern: this.analyzeDayPattern(weekdaySessions),
         weekendPattern: this.analyzeDayPattern(weekendSessions),
         seasonalVariations: this.analyzeSeasonalVariations(sessions),
-        chronotype: this.determineChronotype(sessions),
+        chronotype: this.determineChronotype(sessions)
       };
 
       // Cache the pattern
@@ -190,9 +188,7 @@ export class SleepAnalysisService {
   }
 
   // Smart alarm recommendations
-  static async getSmartAlarmRecommendation(
-    alarm: Alarm
-  ): Promise<SmartAlarmRecommendation | null> {
+  static async getSmartAlarmRecommendation(alarm: Alarm): Promise<SmartAlarmRecommendation | null> {
     try {
       const pattern = await this.analyzeSleepPatterns();
       if (!pattern) {
@@ -227,20 +223,14 @@ export class SleepAnalysisService {
         recommendedTime: this.minutesToTimeString(bestWakeTime.timeInMinutes),
         reason: this.generateRecommendationReason(bestWakeTime.stage, pattern),
         confidence: this.calculateConfidence(pattern, bestWakeTime),
-        sleepStageAtOriginal: this.predictStageAtTime(
-          predictedSleepStages,
-          originalMinutes
-        ),
+        sleepStageAtOriginal: this.predictStageAtTime(predictedSleepStages, originalMinutes),
         sleepStageAtRecommended: bestWakeTime.stage,
         estimatedSleepQuality: this.estimateSleepQuality(bestWakeTime, pattern),
-        wakeUpDifficulty: this.estimateWakeUpDifficulty(bestWakeTime.stage),
+        wakeUpDifficulty: this.estimateWakeUpDifficulty(bestWakeTime.stage)
       };
 
       // Only recommend if there's a significant improvement
-      if (
-        Math.abs(originalMinutes - bestWakeTime.timeInMinutes) < 5 ||
-        recommendation.confidence < 0.6
-      ) {
+      if (Math.abs(originalMinutes - bestWakeTime.timeInMinutes) < 5 || recommendation.confidence < 0.6) {
         return null;
       }
 
@@ -252,18 +242,14 @@ export class SleepAnalysisService {
   }
 
   // Sleep cycle prediction
-  static async predictSleepStages(
-    alarm: Alarm,
-    pattern: SleepPattern
-  ): Promise<Array<{ time: number; stage: 'light' | 'deep' | 'rem' }>> {
+  static async predictSleepStages(alarm: Alarm, pattern: SleepPattern): Promise<Array<{ time: number; stage: 'light' | 'deep' | 'rem' }>> {
     const isWeekday = this.isWeekday(alarm.days);
     const targetPattern = isWeekday ? pattern.weekdayPattern : pattern.weekendPattern;
 
     // Estimate sleep time based on pattern
     const bedtimeMinutes = this.parseTimeString(targetPattern.bedtime);
     const sleepLatency = pattern.sleepLatency;
-    const sleepStartMinutes =
-      bedtimeMinutes.hours * 60 + bedtimeMinutes.minutes + sleepLatency;
+    const sleepStartMinutes = bedtimeMinutes.hours * 60 + bedtimeMinutes.minutes + sleepLatency;
 
     // Generate sleep cycle based on typical 90-minute cycles
     const cycles: Array<{ time: number; stage: 'light' | 'deep' | 'rem' }> = [];
@@ -274,7 +260,7 @@ export class SleepAnalysisService {
       { stage: 'light' as const, duration: 20 },
       { stage: 'deep' as const, duration: 30 },
       { stage: 'light' as const, duration: 20 },
-      { stage: 'rem' as const, duration: 20 },
+      { stage: 'rem' as const, duration: 20 }
     ];
 
     // Generate 6 cycles (9 hours total)
@@ -282,7 +268,7 @@ export class SleepAnalysisService {
       for (const phase of cyclePattern) {
         cycles.push({
           time: currentTime,
-          stage: phase.stage,
+          stage: phase.stage
         });
         currentTime += phase.duration;
       }
@@ -291,16 +277,13 @@ export class SleepAnalysisService {
     return cycles;
   }
 
-  static findOptimalWakeWindow(
-    alarmTime: { hours: number; minutes: number },
-    sleepStages: Array<{ time: number; stage: 'light' | 'deep' | 'rem' }>
-  ): OptimalWakeWindow | null {
+  static findOptimalWakeWindow(alarmTime: { hours: number; minutes: number }, sleepStages: Array<{ time: number; stage: 'light' | 'deep' | 'rem' }>): OptimalWakeWindow | null {
     const alarmMinutes = alarmTime.hours * 60 + alarmTime.minutes;
     const windowStart = alarmMinutes - 30;
     const windowEnd = alarmMinutes + 5;
 
-    const windowStages = sleepStages.filter(
-      stage => stage.time >= windowStart && stage.time <= windowEnd
+    const windowStages = sleepStages.filter(stage =>
+      stage.time >= windowStart && stage.time <= windowEnd
     );
 
     if (windowStages.length === 0) return null;
@@ -309,13 +292,13 @@ export class SleepAnalysisService {
     const stagesWithQuality = windowStages.map(stage => ({
       time: this.minutesToTimeString(stage.time),
       stage: stage.stage,
-      quality: stage.stage === 'light' ? 10 : stage.stage === 'rem' ? 5 : 1,
+      quality: stage.stage === 'light' ? 10 : stage.stage === 'rem' ? 5 : 1
     }));
 
     return {
       start: this.minutesToTimeString(windowStart),
       end: this.minutesToTimeString(windowEnd),
-      stages: stagesWithQuality,
+      stages: stagesWithQuality
     };
   }
 
@@ -333,7 +316,7 @@ export class SleepAnalysisService {
       sleepStages: data.sleep_stages || [],
       environmentData: data.environment_data || {},
       createdAt: new Date(data.created_at),
-      updatedAt: new Date(data.updated_at),
+      updatedAt: new Date(data.updated_at)
     };
   }
 
@@ -356,13 +339,11 @@ export class SleepAnalysisService {
   }
 
   private static calculateSleepLatency(sessions: SleepSession[]): number {
-    const latencies = sessions
-      .map(session => {
-        const bedtime = session.bedtime.getTime();
-        const sleepTime = session.sleepTime.getTime();
-        return (sleepTime - bedtime) / (1000 * 60); // minutes
-      })
-      .filter(latency => latency > 0 && latency < 120); // Filter outliers
+    const latencies = sessions.map(session => {
+      const bedtime = session.bedtime.getTime();
+      const sleepTime = session.sleepTime.getTime();
+      return (sleepTime - bedtime) / (1000 * 60); // minutes
+    }).filter(latency => latency > 0 && latency < 120); // Filter outliers
 
     return this.calculateAverage(latencies);
   }
@@ -383,7 +364,7 @@ export class SleepAnalysisService {
         bedtime: '22:00',
         wakeTime: '07:00',
         sleepDuration: 480,
-        sleepQuality: 5,
+        sleepQuality: 5
       };
     }
 
@@ -391,19 +372,17 @@ export class SleepAnalysisService {
       bedtime: this.calculateAverageTime(sessions.map(s => s.bedtime)),
       wakeTime: this.calculateAverageTime(sessions.map(s => s.wakeTime)),
       sleepDuration: this.calculateAverage(sessions.map(s => s.sleepDuration)),
-      sleepQuality: this.calculateAverage(sessions.map(s => s.sleepQuality)),
+      sleepQuality: this.calculateAverage(sessions.map(s => s.sleepQuality))
     };
   }
 
-  private static analyzeSeasonalVariations(sessions: SleepSession[]): {
-    [season: string]: Partial<SleepPattern>;
-  } {
+  private static analyzeSeasonalVariations(sessions: SleepSession[]): { [season: string]: Partial<SleepPattern> } {
     // Group sessions by season
     const seasons = {
       spring: sessions.filter(s => [2, 3, 4].includes(s.bedtime.getMonth())),
       summer: sessions.filter(s => [5, 6, 7].includes(s.bedtime.getMonth())),
       autumn: sessions.filter(s => [8, 9, 10].includes(s.bedtime.getMonth())),
-      winter: sessions.filter(s => [11, 0, 1].includes(s.bedtime.getMonth())),
+      winter: sessions.filter(s => [11, 0, 1].includes(s.bedtime.getMonth()))
     };
 
     const variations: { [season: string]: Partial<SleepPattern> } = {};
@@ -412,15 +391,9 @@ export class SleepAnalysisService {
       if (seasonSessions.length > 0) {
         variations[season] = {
           averageBedtime: this.calculateAverageTime(seasonSessions.map(s => s.bedtime)),
-          averageWakeTime: this.calculateAverageTime(
-            seasonSessions.map(s => s.wakeTime)
-          ),
-          averageSleepDuration: this.calculateAverage(
-            seasonSessions.map(s => s.sleepDuration)
-          ),
-          averageSleepQuality: this.calculateAverage(
-            seasonSessions.map(s => s.sleepQuality)
-          ),
+          averageWakeTime: this.calculateAverageTime(seasonSessions.map(s => s.wakeTime)),
+          averageSleepDuration: this.calculateAverage(seasonSessions.map(s => s.sleepDuration)),
+          averageSleepQuality: this.calculateAverage(seasonSessions.map(s => s.sleepQuality))
         };
       }
     });
@@ -428,13 +401,10 @@ export class SleepAnalysisService {
     return variations;
   }
 
-  private static determineChronotype(
-    sessions: SleepSession[]
-  ): 'extreme_early' | 'early' | 'normal' | 'late' | 'extreme_late' {
-    const averageBedtimeMinutes =
-      sessions.reduce((sum, session) => {
-        return sum + (session.bedtime.getHours() * 60 + session.bedtime.getMinutes());
-      }, 0) / sessions.length;
+  private static determineChronotype(sessions: SleepSession[]): 'extreme_early' | 'early' | 'normal' | 'late' | 'extreme_late' {
+    const averageBedtimeMinutes = sessions.reduce((sum, session) => {
+      return sum + (session.bedtime.getHours() * 60 + session.bedtime.getMinutes());
+    }, 0) / sessions.length;
 
     // Convert to 24-hour format (handle midnight crossing)
     const bedtimeHours = averageBedtimeMinutes / 60;
@@ -452,9 +422,7 @@ export class SleepAnalysisService {
     windowEnd: number
   ): { timeInMinutes: number; stage: 'light' | 'deep' | 'rem' } | null {
     const validStages = stages.filter(stage => {
-      const stageMinutes =
-        this.parseTimeString(stage.time).hours * 60 +
-        this.parseTimeString(stage.time).minutes;
+      const stageMinutes = this.parseTimeString(stage.time).hours * 60 + this.parseTimeString(stage.time).minutes;
       return stageMinutes >= windowStart && stageMinutes <= windowEnd;
     });
 
@@ -467,14 +435,11 @@ export class SleepAnalysisService {
 
     return {
       timeInMinutes: bestStageTime.hours * 60 + bestStageTime.minutes,
-      stage: bestStage.stage,
+      stage: bestStage.stage
     };
   }
 
-  private static predictStageAtTime(
-    sleepStages: Array<{ time: number; stage: 'light' | 'deep' | 'rem' }>,
-    timeInMinutes: number
-  ): 'light' | 'deep' | 'rem' | 'unknown' {
+  private static predictStageAtTime(sleepStages: Array<{ time: number; stage: 'light' | 'deep' | 'rem' }>, timeInMinutes: number): 'light' | 'deep' | 'rem' | 'unknown' {
     const closestStage = sleepStages.reduce((closest, stage) => {
       const closestDistance = Math.abs(closest.time - timeInMinutes);
       const stageDistance = Math.abs(stage.time - timeInMinutes);
@@ -484,23 +449,17 @@ export class SleepAnalysisService {
     return closestStage ? closestStage.stage : 'unknown';
   }
 
-  private static generateRecommendationReason(
-    stage: 'light' | 'deep' | 'rem',
-    pattern: SleepPattern
-  ): string {
+  private static generateRecommendationReason(stage: 'light' | 'deep' | 'rem', pattern: SleepPattern): string {
     const reasons = {
       light: `You'll be in light sleep, making it easier to wake up naturally. Based on your ${pattern.chronotype} chronotype.`,
       rem: `You'll be in REM sleep, which allows for easier waking than deep sleep. You may remember your dreams!`,
-      deep: `You'll be in deep sleep. This timing is not ideal for waking up, but it's within your preferred schedule.`,
+      deep: `You'll be in deep sleep. This timing is not ideal for waking up, but it's within your preferred schedule.`
     };
 
     return reasons[stage];
   }
 
-  private static calculateConfidence(
-    pattern: SleepPattern,
-    wakeTime: { stage: 'light' | 'deep' | 'rem' }
-  ): number {
+  private static calculateConfidence(pattern: SleepPattern, wakeTime: { stage: 'light' | 'deep' | 'rem' }): number {
     let confidence = 0.5; // Base confidence
 
     // Higher confidence for light sleep
@@ -513,10 +472,7 @@ export class SleepAnalysisService {
     return Math.min(confidence, 1.0);
   }
 
-  private static estimateSleepQuality(
-    wakeTime: { stage: 'light' | 'deep' | 'rem' },
-    pattern: SleepPattern
-  ): number {
+  private static estimateSleepQuality(wakeTime: { stage: 'light' | 'deep' | 'rem' }, pattern: SleepPattern): number {
     const baseQuality = pattern.averageSleepQuality;
 
     // Adjust based on wake stage
@@ -525,13 +481,11 @@ export class SleepAnalysisService {
     return baseQuality; // REM
   }
 
-  private static estimateWakeUpDifficulty(
-    stage: 'light' | 'deep' | 'rem'
-  ): 'very_easy' | 'easy' | 'normal' | 'hard' | 'very_hard' {
+  private static estimateWakeUpDifficulty(stage: 'light' | 'deep' | 'rem'): 'very_easy' | 'easy' | 'normal' | 'hard' | 'very_hard' {
     const difficulties = {
       light: 'very_easy' as const,
       rem: 'easy' as const,
-      deep: 'hard' as const,
+      deep: 'hard' as const
     };
 
     return difficulties[stage];
@@ -543,7 +497,7 @@ export class SleepAnalysisService {
   }
 
   private static minutesToTimeString(totalMinutes: number): string {
-    const adjustedMinutes = ((totalMinutes % (24 * 60)) + 24 * 60) % (24 * 60);
+    const adjustedMinutes = ((totalMinutes % (24 * 60)) + (24 * 60)) % (24 * 60);
     const hours = Math.floor(adjustedMinutes / 60);
     const minutes = adjustedMinutes % 60;
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
@@ -577,16 +531,10 @@ export class SleepAnalysisService {
   }
 
   // Manual sleep tracking
-  static async trackSleepManually(
-    bedtime: Date,
-    wakeTime: Date,
-    quality: number
-  ): Promise<void> {
-    const sleepTime = new Date(bedtime.getTime() + 15 * 60 * 1000); // Assume 15 min to fall asleep
-    const getUpTime = new Date(wakeTime.getTime() + 10 * 60 * 1000); // Assume 10 min to get up
-    const duration = Math.round(
-      (wakeTime.getTime() - sleepTime.getTime()) / (1000 * 60)
-    );
+  static async trackSleepManually(bedtime: Date, wakeTime: Date, quality: number): Promise<void> {
+    const sleepTime = new Date(bedtime.getTime() + (15 * 60 * 1000)); // Assume 15 min to fall asleep
+    const getUpTime = new Date(wakeTime.getTime() + (10 * 60 * 1000)); // Assume 10 min to get up
+    const duration = Math.round((wakeTime.getTime() - sleepTime.getTime()) / (1000 * 60));
 
     await this.recordSleepSession({
       bedtime,
@@ -596,12 +544,7 @@ export class SleepAnalysisService {
       sleepDuration: duration,
       sleepQuality: quality,
       sleepStages: [], // Will be estimated
-      environmentData: {
-        averageLight: 0,
-        averageNoise: 0,
-        temperature: 20,
-        humidity: 50,
-      },
+      environmentData: { averageLight: 0, averageNoise: 0, temperature: 20, humidity: 50 }
     });
   }
 }

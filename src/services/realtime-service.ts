@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference lib="dom" />
 // Real-time Service for Relife Smart Alarm
 // Handles WebSocket connections, live updates, push notifications, and real-time features
 
@@ -28,12 +30,7 @@ export interface PresenceData {
 }
 
 export interface LiveUpdate {
-  type:
-    | 'alarm_triggered'
-    | 'alarm_dismissed'
-    | 'alarm_created'
-    | 'user_status'
-    | 'recommendation';
+  type: 'alarm_triggered' | 'alarm_dismissed' | 'alarm_created' | 'user_status' | 'recommendation';
   data: any;
   timestamp: Date;
   userId: string;
@@ -74,7 +71,7 @@ class RealtimeService {
       enablePresenceTracking: true,
       heartbeatInterval: 30000, // 30 seconds
       reconnectAttempts: 5,
-      reconnectDelay: 2000, // 2 seconds
+      reconnectDelay: 2000 // 2 seconds
     };
   }
 
@@ -116,6 +113,7 @@ class RealtimeService {
 
       console.info('Real-time service initialized successfully');
       this.performanceMonitor.trackCustomMetric('realtime_service_initialized', 1);
+
     } catch (error) {
       ErrorHandler.handleError(
         error as Error,
@@ -142,9 +140,8 @@ class RealtimeService {
 
       // Register service worker
       // Use existing registration from ServiceWorkerManager instead of registering again
-      this.serviceWorkerRegistration =
-        (await navigator.serviceWorker.getRegistration()) ||
-        (await navigator.serviceWorker.register('/sw-unified.js'));
+      this.serviceWorkerRegistration = await navigator.serviceWorker.getRegistration() ||
+        await navigator.serviceWorker.register('/sw-unified.js');
       console.info('Service Worker registered');
 
       // Request notification permission
@@ -155,6 +152,7 @@ class RealtimeService {
       } else {
         console.warn('Notification permission denied');
       }
+
     } catch (error) {
       console.error('Failed to initialize push notifications:', error);
     }
@@ -173,21 +171,24 @@ class RealtimeService {
         userVisibleOnly: true,
         applicationServerKey: this.urlBase64ToUint8Array(
           process.env.REACT_APP_VAPID_PUBLIC_KEY || ''
-        ),
+        )
       });
 
       // Store subscription in Supabase
-      const { error } = await supabase.from('push_subscriptions').upsert({
-        user_id: (await supabase.auth.getUser()).data.user?.id,
-        subscription: JSON.stringify(subscription),
-        created_at: new Date().toISOString(),
-      });
+      const { error } = await supabase
+        .from('push_subscriptions')
+        .upsert({
+          user_id: (await supabase.auth.getUser()).data.user?.id,
+          subscription: JSON.stringify(subscription),
+          created_at: new Date().toISOString()
+        });
 
       if (error) {
         throw error;
       }
 
       console.info('Push notification subscription created');
+
     } catch (error) {
       console.error('Failed to subscribe to push notifications:', error);
     }
@@ -227,10 +228,11 @@ class RealtimeService {
         this.attemptReconnect(user);
       };
 
-      this.websocket.onerror = error => {
+      this.websocket.onerror = (error) => {
         console.error('WebSocket error:', error);
         this.emit('websocket_error', error);
       };
+
     } catch (error) {
       console.error('Failed to initialize WebSocket:', error);
     }
@@ -250,9 +252,9 @@ class RealtimeService {
             event: '*',
             schema: 'public',
             table: 'alarms',
-            filter: `user_id=eq.${user.id}`,
+            filter: `user_id=eq.${user.id}`
           },
-          payload => {
+          (payload) => {
             this.handleDatabaseChange('alarm', payload);
           }
         )
@@ -262,9 +264,9 @@ class RealtimeService {
             event: '*',
             schema: 'public',
             table: 'alarm_events',
-            filter: `alarm_id=in.(${this.getUserAlarmIds(user.id)})`,
+            filter: `alarm_id=in.(${this.getUserAlarmIds(user.id)})`
           },
-          payload => {
+          (payload) => {
             this.handleDatabaseChange('alarm_event', payload);
           }
         )
@@ -281,9 +283,9 @@ class RealtimeService {
             event: 'INSERT',
             schema: 'public',
             table: 'smart_recommendations',
-            filter: `user_id=eq.${user.id}`,
+            filter: `user_id=eq.${user.id}`
           },
-          payload => {
+          (payload) => {
             this.handleDatabaseChange('recommendation', payload);
           }
         )
@@ -292,6 +294,7 @@ class RealtimeService {
       this.subscriptions.set('recommendations', recommendationChannel);
 
       console.info('Live updates initialized');
+
     } catch (error) {
       console.error('Failed to initialize live updates:', error);
     }
@@ -309,8 +312,8 @@ class RealtimeService {
         deviceInfo: {
           type: this.getDeviceType(),
           platform: navigator.platform,
-          userAgent: navigator.userAgent,
-        },
+          userAgent: navigator.userAgent
+        }
       };
 
       // Track presence using Supabase real-time
@@ -326,7 +329,7 @@ class RealtimeService {
         .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
           this.emit('user_left', { key, leftPresences });
         })
-        .subscribe(async status => {
+        .subscribe(async (status) => {
           if (status === 'SUBSCRIBED') {
             await presenceChannel.track(this.presenceData!);
           }
@@ -350,6 +353,7 @@ class RealtimeService {
           presenceChannel.track(this.presenceData);
         }
       });
+
     } catch (error) {
       console.error('Failed to initialize presence tracking:', error);
     }
@@ -367,7 +371,7 @@ class RealtimeService {
             title: 'Alarm Triggered! ⏰',
             body: data.payload.message || 'Time to wake up!',
             tag: `alarm-${data.payload.alarmId}`,
-            data: data.payload,
+            data: data.payload
           });
           break;
 
@@ -388,8 +392,9 @@ class RealtimeService {
       }
 
       this.performanceMonitor.trackCustomMetric('websocket_message_received', 1, {
-        type: data.type,
+        type: data.type
       });
+
     } catch (error) {
       console.error('Failed to handle WebSocket message:', error);
     }
@@ -404,14 +409,15 @@ class RealtimeService {
         type: this.getUpdateType(table, payload.eventType),
         data: payload,
         timestamp: new Date(),
-        userId: payload.new?.user_id || payload.old?.user_id,
+        userId: payload.new?.user_id || payload.old?.user_id
       };
 
       this.emit('live_update', liveUpdate);
       this.performanceMonitor.trackCustomMetric('database_change_received', 1, {
         table,
-        eventType: payload.eventType,
+        eventType: payload.eventType
       });
+
     } catch (error) {
       console.error('Failed to handle database change:', error);
     }
@@ -431,11 +437,12 @@ class RealtimeService {
         type,
         payload,
         timestamp: new Date().toISOString(),
-        userId: this.presenceData?.userId,
+        userId: this.presenceData?.userId
       };
 
       this.websocket.send(JSON.stringify(message));
       this.performanceMonitor.trackCustomMetric('websocket_message_sent', 1, { type });
+
     } catch (error) {
       console.error('Failed to send WebSocket message:', error);
     }
@@ -464,7 +471,7 @@ class RealtimeService {
         badge: notification.badge || '/icon-72x72.png',
         tag: notification.tag,
         data: notification.data,
-        requireInteraction: true,
+        requireInteraction: true
       });
 
       // Handle notification clicks
@@ -475,6 +482,7 @@ class RealtimeService {
       };
 
       this.performanceMonitor.trackCustomMetric('notification_shown', 1);
+
     } catch (error) {
       console.error('Failed to show notification:', error);
     }
@@ -546,18 +554,13 @@ class RealtimeService {
     }
 
     this.reconnectAttempt++;
-    console.info(
-      `Attempting to reconnect... (${this.reconnectAttempt}/${this.config.reconnectAttempts})`
-    );
+    console.info(`Attempting to reconnect... (${this.reconnectAttempt}/${this.config.reconnectAttempts})`);
 
-    setTimeout(
-      () => {
-        if (!this.isConnected) {
-          this.initializeWebSocket(user);
-        }
-      },
-      this.config.reconnectDelay * Math.pow(2, this.reconnectAttempt - 1)
-    ); // Exponential backoff
+    setTimeout(() => {
+      if (!this.isConnected) {
+        this.initializeWebSocket(user);
+      }
+    }, this.config.reconnectDelay * Math.pow(2, this.reconnectAttempt - 1)); // Exponential backoff
   }
 
   /**
@@ -573,7 +576,7 @@ class RealtimeService {
       websocket: this.isConnected,
       supabase: this.subscriptions.size > 0,
       pushNotifications: Notification.permission === 'granted',
-      presenceTracking: this.presenceData !== null,
+      presenceTracking: this.presenceData !== null
     };
   }
 
@@ -581,7 +584,7 @@ class RealtimeService {
    * Utility functions
    */
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
@@ -653,6 +656,7 @@ class RealtimeService {
       this.eventListeners.clear();
 
       console.info('Real-time service disconnected');
+
     } catch (error) {
       console.error('Error disconnecting real-time service:', error);
     }

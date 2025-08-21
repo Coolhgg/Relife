@@ -1,10 +1,9 @@
 // Feature Gate Components for Relife Alarm App
 // Provides UI components for premium feature access control
 
-import React, { ReactNode } from 'react';
-import { Lock, Crown, Zap, Sparkles } from 'lucide-react';
-import useFeatureGate from '../../hooks/useFeatureGate';
-import type { SubscriptionTier } from '../../types/premium';
+import React, { ReactNode } from "react";
+import { Lock, Crown, Zap, Sparkles } from "lucide-react";
+import useFeatureGate from "../../hooks/useFeatureGate";
 
 interface FeatureGateProps {
   children: ReactNode;
@@ -15,7 +14,6 @@ interface FeatureGateProps {
   softGate?: boolean;
   customMessage?: string;
   className?: string;
-  onUpgradeClick?: (requiredTier: SubscriptionTier) => void;
 }
 
 export function FeatureGate({
@@ -26,14 +24,14 @@ export function FeatureGate({
   showUpgradePrompt = true,
   softGate = false,
   customMessage,
-  className = '',
-  onUpgradeClick,
+  className = "",
+  onUpgradeClick
 }: FeatureGateProps) {
   const featureGate = useFeatureGate({
     userId,
     feature,
     config: { softGate },
-    onUpgradeRequired: onUpgradeClick,
+    onUpgradeRequired: onUpgradeClick
   });
 
   // Track when gate is encountered
@@ -77,7 +75,6 @@ export function FeatureGate({
 
 interface UpgradePromptProps {
   feature: string;
-  requiredTier: SubscriptionTier | null;
   message: string;
   usageRemaining?: number;
   usageLimit?: number;
@@ -96,9 +93,8 @@ function UpgradePrompt({
   canBypass,
   onUpgradeClick,
   onBypass,
-  className = '',
+  className = ""
 }: UpgradePromptProps) {
-  const getTierIcon = (tier: SubscriptionTier | null) => {
     switch (tier) {
       case 'basic':
         return <Zap className="w-5 h-5 text-blue-500" />;
@@ -111,7 +107,6 @@ function UpgradePrompt({
     }
   };
 
-  const getTierColor = (tier: SubscriptionTier | null) => {
     switch (tier) {
       case 'basic':
         return 'border-blue-200 bg-blue-50';
@@ -124,7 +119,6 @@ function UpgradePrompt({
     }
   };
 
-  const getTierName = (tier: SubscriptionTier | null) => {
     switch (tier) {
       case 'basic':
         return 'Basic';
@@ -138,30 +132,30 @@ function UpgradePrompt({
   };
 
   return (
-    <div
-      className={`rounded-lg border-2 ${getTierColor(requiredTier)} p-6 text-center ${className}`}
-    >
-      <div className="flex justify-center mb-4">{getTierIcon(requiredTier)}</div>
+    <div className={`rounded-lg border-2 ${getTierColor(requiredTier)} p-6 text-center ${className}`}>
+      <div className="flex justify-center mb-4">
+        {getTierIcon(requiredTier)}
+      </div>
 
       <h3 className="text-lg font-semibold text-gray-900 mb-2">
         {requiredTier ? `${getTierName(requiredTier)} Feature` : 'Premium Feature'}
       </h3>
 
-      <p className="text-gray-600 mb-4">{message}</p>
+      <p className="text-gray-600 mb-4">
+        {message}
+      </p>
 
       {usageLimit && usageRemaining !== undefined && (
         <div className="mb-4">
           <div className="flex justify-between text-sm text-gray-500 mb-1">
             <span>Usage this month</span>
-            <span>
-              {usageLimit - usageRemaining} / {usageLimit}
-            </span>
+            <span>{usageLimit - usageRemaining} / {usageLimit}</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div
               className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
               style={{
-                width: `${Math.min(100, ((usageLimit - usageRemaining) / usageLimit) * 100)}%`,
+                width: `${Math.min(100, ((usageLimit - usageRemaining) / usageLimit) * 100)}%`
               }}
             />
           </div>
@@ -175,10 +169,10 @@ function UpgradePrompt({
             requiredTier === 'basic'
               ? 'bg-blue-600 hover:bg-blue-700 text-white'
               : requiredTier === 'premium'
-                ? 'bg-purple-600 hover:bg-purple-700 text-white'
-                : requiredTier === 'pro'
-                  ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
-                  : 'bg-gray-600 hover:bg-gray-700 text-white'
+              ? 'bg-purple-600 hover:bg-purple-700 text-white'
+              : requiredTier === 'pro'
+              ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
+              : 'bg-gray-600 hover:bg-gray-700 text-white'
           }`}
         >
           Upgrade to {getTierName(requiredTier)}
@@ -234,7 +228,11 @@ interface FeatureAccessProps {
 export function FeatureAccess({ children, feature, userId }: FeatureAccessProps) {
   const featureGate = useFeatureGate({ userId, feature });
 
-  return <>{children(featureGate.hasAccess, featureGate.showUpgradeModal)}</>;
+  return (
+    <>
+      {children(featureGate.hasAccess, featureGate.showUpgradeModal)}
+    </>
+  );
 }
 
 // Usage limit indicator component
@@ -251,7 +249,7 @@ export function UsageLimitIndicator({
   userId,
   showOnlyWhenNearLimit = true,
   warningThreshold = 80,
-  className = '',
+  className = ""
 }: UsageLimitIndicatorProps) {
   const featureGate = useFeatureGate({ userId, feature });
 
@@ -259,9 +257,7 @@ export function UsageLimitIndicator({
     return null;
   }
 
-  const usagePercentage =
-    ((featureGate.usageLimit - featureGate.usageRemaining) / featureGate.usageLimit) *
-    100;
+  const usagePercentage = ((featureGate.usageLimit - featureGate.usageRemaining) / featureGate.usageLimit) * 100;
 
   if (showOnlyWhenNearLimit && usagePercentage < warningThreshold) {
     return null;
@@ -271,27 +267,24 @@ export function UsageLimitIndicator({
   const isAtLimit = featureGate.usageRemaining === 0;
 
   return (
-    <div
-      className={`rounded-lg p-3 ${isAtLimit ? 'bg-red-50 border border-red-200' : isNearLimit ? 'bg-yellow-50 border border-yellow-200' : 'bg-gray-50 border border-gray-200'} ${className}`}
-    >
+    <div className={`rounded-lg p-3 ${isAtLimit ? 'bg-red-50 border border-red-200' : isNearLimit ? 'bg-yellow-50 border border-yellow-200' : 'bg-gray-50 border border-gray-200'} ${className}`}>
       <div className="flex items-center justify-between mb-2">
-        <span
-          className={`text-sm font-medium ${isAtLimit ? 'text-red-700' : isNearLimit ? 'text-yellow-700' : 'text-gray-700'}`}
-        >
+        <span className={`text-sm font-medium ${isAtLimit ? 'text-red-700' : isNearLimit ? 'text-yellow-700' : 'text-gray-700'}`}>
           {feature.replace('_', ' ')} Usage
         </span>
-        <span
-          className={`text-sm ${isAtLimit ? 'text-red-600' : isNearLimit ? 'text-yellow-600' : 'text-gray-600'}`}
-        >
-          {featureGate.usageLimit - featureGate.usageRemaining} /{' '}
-          {featureGate.usageLimit}
+        <span className={`text-sm ${isAtLimit ? 'text-red-600' : isNearLimit ? 'text-yellow-600' : 'text-gray-600'}`}>
+          {featureGate.usageLimit - featureGate.usageRemaining} / {featureGate.usageLimit}
         </span>
       </div>
 
       <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
         <div
           className={`h-2 rounded-full transition-all duration-300 ${
-            isAtLimit ? 'bg-red-500' : isNearLimit ? 'bg-yellow-500' : 'bg-green-500'
+            isAtLimit
+              ? 'bg-red-500'
+              : isNearLimit
+              ? 'bg-yellow-500'
+              : 'bg-green-500'
           }`}
           style={{ width: `${Math.min(100, usagePercentage)}%` }}
         />

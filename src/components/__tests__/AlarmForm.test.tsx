@@ -1,18 +1,19 @@
-import * as React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import AlarmForm from '../AlarmForm';
-import { testUtils } from '../../test-setup';
-import type { Alarm, VoiceMood } from '../../types';
+import { expect, test, jest } from "@jest/globals";
+import * as React from "react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import AlarmForm from "../AlarmForm";
+import { testUtils } from "../../test-setup";
+import type { Alarm, VoiceMood } from "../../types";
 
-describe('AlarmForm', () => {
+describe("AlarmForm", () => {
   const mockOnSave = jest.fn();
   const mockOnCancel = jest.fn();
 
   const defaultProps = {
     onSave: mockOnSave,
     onCancel: mockOnCancel,
-    userId: 'test-user-id',
+    userId: 'test-user-id'
   };
 
   beforeEach(() => {
@@ -40,7 +41,7 @@ describe('AlarmForm', () => {
         time: '08:30',
         label: 'Work Alarm',
         days: [1, 2, 3, 4, 5],
-        voiceMood: 'drill-sergeant',
+        voiceMood: 'drill-sergeant'
       };
 
       render(<AlarmForm {...defaultProps} alarm={alarm} />);
@@ -179,9 +180,7 @@ describe('AlarmForm', () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/label must be at least 2 characters/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/label must be at least 2 characters/i)).toBeInTheDocument();
       });
 
       expect(mockOnSave).not.toHaveBeenCalled();
@@ -192,8 +191,8 @@ describe('AlarmForm', () => {
       render(<AlarmForm {...defaultProps} />);
 
       // Deselect all weekdays
-      const dayButtons = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(
-        day => screen.getByText(day).closest('button')!
+      const dayButtons = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(day =>
+        screen.getByText(day).closest('button')!
       );
 
       for (const button of dayButtons) {
@@ -204,9 +203,7 @@ describe('AlarmForm', () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/at least one day must be selected/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/at least one day must be selected/i)).toBeInTheDocument();
       });
 
       expect(mockOnSave).not.toHaveBeenCalled();
@@ -243,9 +240,7 @@ describe('AlarmForm', () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/please fix the following issues/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/please fix the following issues/i)).toBeInTheDocument();
         expect(screen.getByText(/time:/i)).toBeInTheDocument();
         expect(screen.getByText(/label:/i)).toBeInTheDocument();
       });
@@ -273,9 +268,7 @@ describe('AlarmForm', () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(
-          screen.queryByText(/hours must be between 0 and 23/i)
-        ).not.toBeInTheDocument();
+        expect(screen.queryByText(/hours must be between 0 and 23/i)).not.toBeInTheDocument();
       });
     });
   });
@@ -304,7 +297,7 @@ describe('AlarmForm', () => {
           time: '08:30',
           label: 'Work Alarm',
           days: [1, 2, 3, 4, 5], // Default weekdays
-          voiceMood: 'drill-sergeant',
+          voiceMood: 'drill-sergeant'
         });
       });
     });
@@ -316,7 +309,7 @@ describe('AlarmForm', () => {
         time: '07:00',
         label: 'Old Label',
         days: [1, 2, 3, 4, 5],
-        voiceMood: 'motivational',
+        voiceMood: 'motivational'
       };
 
       render(<AlarmForm {...defaultProps} alarm={alarm} />);
@@ -334,7 +327,7 @@ describe('AlarmForm', () => {
           time: '07:00',
           label: 'Updated Label',
           days: [1, 2, 3, 4, 5],
-          voiceMood: 'motivational',
+          voiceMood: 'motivational'
         });
       });
     });
@@ -344,8 +337,8 @@ describe('AlarmForm', () => {
       render(<AlarmForm {...defaultProps} />);
 
       // Deselect weekdays and select weekend
-      const weekdayButtons = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(
-        day => screen.getByText(day).closest('button')!
+      const weekdayButtons = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(day =>
+        screen.getByText(day).closest('button')!
       );
 
       for (const button of weekdayButtons) {
@@ -361,7 +354,7 @@ describe('AlarmForm', () => {
       await waitFor(() => {
         expect(mockOnSave).toHaveBeenCalledWith(
           expect.objectContaining({
-            days: [0, 6], // Sunday and Saturday
+            days: [0, 6] // Sunday and Saturday
           })
         );
       });
@@ -383,10 +376,7 @@ describe('AlarmForm', () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
-      const closeButton = screen
-        .getByRole('button')
-        .querySelector('svg')
-        ?.closest('button');
+      const closeButton = screen.getByRole('button').querySelector('svg')?.closest('button');
       await user.click(closeButton!);
 
       expect(mockOnCancel).toHaveBeenCalled();

@@ -17,7 +17,7 @@ import {
   Target,
   Award,
   Timer,
-  BarChart3,
+  BarChart3
 } from 'lucide-react';
 import type { VoiceMood, AlarmDifficulty } from '../../types';
 
@@ -36,7 +36,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
   feature,
   onUpgrade,
   compact = false,
-  className = '',
+  className = ''
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentDemo, setCurrentDemo] = useState(0);
@@ -58,24 +58,24 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
       name: 'Demon Lord',
       icon: <Flame className="w-6 h-6" />,
       color: 'from-red-600 to-orange-600',
-      message: 'MORTAL! Rise from your pathetic slumber!',
-      description: 'Dark, intimidating commands that demand obedience',
+      message: "MORTAL! Rise from your pathetic slumber!",
+      description: "Dark, intimidating commands that demand obedience"
     },
     {
       id: 'ai-robot' as VoiceMood,
       name: 'AI Robot',
       icon: <Robot className="w-6 h-6" />,
       color: 'from-blue-600 to-cyan-600',
-      message: 'SYSTEM ALERT: Wake protocol activated. Compliance required.',
-      description: 'Systematic, precise wake-up procedures',
+      message: "SYSTEM ALERT: Wake protocol activated. Compliance required.",
+      description: "Systematic, precise wake-up procedures"
     },
     {
       id: 'comedian' as VoiceMood,
       name: 'Comedian',
       icon: <Laugh className="w-6 h-6" />,
       color: 'from-yellow-600 to-orange-600',
-      message: 'Why did the alarm cross the road? To wake YOU up!',
-      description: 'Hilarious entertainment to start your day with laughter',
+      message: "Why did the alarm cross the road? To wake YOU up!",
+      description: "Hilarious entertainment to start your day with laughter"
     },
     {
       id: 'philosopher' as VoiceMood,
@@ -83,81 +83,34 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
       icon: <Brain className="w-6 h-6" />,
       color: 'from-purple-600 to-indigo-600',
       message: "What is morning but the universe's daily rebirth?",
-      description: 'Deep, contemplative wisdom for mindful mornings',
-    },
+      description: "Deep, contemplative wisdom for mindful mornings"
+    }
   ];
 
   const nuclearChallenges = [
-    {
-      name: 'Math Sequence',
-      difficulty: 95,
-      icon: '🧮',
-      description: 'Solve complex equations under pressure',
-    },
-    {
-      name: 'Memory Matrix',
-      difficulty: 88,
-      icon: '🧠',
-      description: 'Remember patterns while reactor overheats',
-    },
-    {
-      name: 'Barcode Hunt',
-      difficulty: 92,
-      icon: '📱',
-      description: 'Scan specific items before meltdown',
-    },
-    {
-      name: 'Voice Command',
-      difficulty: 85,
-      icon: '🎤',
-      description: 'Speak nuclear codes correctly',
-    },
-    {
-      name: 'Physical Task',
-      difficulty: 90,
-      icon: '🏃',
-      description: 'Complete movements to prevent disaster',
-    },
+    { name: 'Math Sequence', difficulty: 95, icon: '🧮', description: 'Solve complex equations under pressure' },
+    { name: 'Memory Matrix', difficulty: 88, icon: '🧠', description: 'Remember patterns while reactor overheats' },
+    { name: 'Barcode Hunt', difficulty: 92, icon: '📱', description: 'Scan specific items before meltdown' },
+    { name: 'Voice Command', difficulty: 85, icon: '🎤', description: 'Speak nuclear codes correctly' },
+    { name: 'Physical Task', difficulty: 90, icon: '🏃', description: 'Complete movements to prevent disaster' }
   ];
 
   const analyticsMetrics = [
-    {
-      label: 'Wake Success Rate',
-      value: '94%',
-      trend: '+12%',
-      icon: <Target className="w-5 h-5" />,
-    },
-    {
-      label: 'Average Sleep Quality',
-      value: '8.2/10',
-      trend: '+1.3',
-      icon: <Star className="w-5 h-5" />,
-    },
-    {
-      label: 'Morning Energy Level',
-      value: '87%',
-      trend: '+23%',
-      icon: <Zap className="w-5 h-5" />,
-    },
-    {
-      label: 'Productivity Score',
-      value: '9.1/10',
-      trend: '+2.1',
-      icon: <TrendingUp className="w-5 h-5" />,
-    },
+    { label: 'Wake Success Rate', value: '94%', trend: '+12%', icon: <Target className="w-5 h-5" /> },
+    { label: 'Average Sleep Quality', value: '8.2/10', trend: '+1.3', icon: <Star className="w-5 h-5" /> },
+    { label: 'Morning Energy Level', value: '87%', trend: '+23%', icon: <Zap className="w-5 h-5" /> },
+    { label: 'Productivity Score', value: '9.1/10', trend: '+2.1', icon: <TrendingUp className="w-5 h-5" /> }
   ];
 
   const renderNuclearModePreview = () => (
-    <div
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-900 via-red-800 to-orange-900 text-white ${compact ? 'p-4' : 'p-6'}`}
-    >
+    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-900 via-red-800 to-orange-900 text-white ${compact ? 'p-4' : 'p-6'}`}>
       {/* Animated background */}
       <div className="absolute inset-0 opacity-20">
         <div
           className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400 to-transparent"
           style={{
-            transform: `translateX(${nuclearIntensity * 4 - 200}%)`,
-            transition: 'transform 0.1s ease-out',
+            transform: `translateX(${(nuclearIntensity * 4) - 200}%)`,
+            transition: 'transform 0.1s ease-out'
           }}
         />
       </div>
@@ -170,9 +123,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
               <Flame className="w-6 h-6" />
             </div>
             <div>
-              <h3 className={`font-bold ${compact ? 'text-lg' : 'text-xl'}`}>
-                Nuclear Mode
-              </h3>
+              <h3 className={`font-bold ${compact ? 'text-lg' : 'text-xl'}`}>Nuclear Mode</h3>
               <p className="text-red-200 text-sm">Ultimate Wake-up Challenge</p>
             </div>
           </div>
@@ -223,10 +174,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
       </div>
 
       {/* Overlay for locked state */}
-      <div
-        className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
-        onClick={onUpgrade}
-      >
+      <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer" onClick={onUpgrade}>
         <div className="text-center">
           <Lock className="w-12 h-12 mx-auto mb-2 text-yellow-400" />
           <p className="text-lg font-bold mb-1">Unlock Nuclear Mode</p>
@@ -237,9 +185,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
   );
 
   const renderPersonalitiesPreview = () => (
-    <div
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white ${compact ? 'p-4' : 'p-6'}`}
-    >
+    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white ${compact ? 'p-4' : 'p-6'}`}>
       <div className="relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
@@ -248,9 +194,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
               <Brain className="w-6 h-6" />
             </div>
             <div>
-              <h3 className={`font-bold ${compact ? 'text-lg' : 'text-xl'}`}>
-                Premium Personalities
-              </h3>
+              <h3 className={`font-bold ${compact ? 'text-lg' : 'text-xl'}`}>Premium Personalities</h3>
               <p className="text-purple-200 text-sm">4 Exclusive AI Characters</p>
             </div>
           </div>
@@ -284,9 +228,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
             <Volume2 className="w-4 h-4 text-purple-300" />
             <span className="text-sm text-purple-300">Sample Message:</span>
           </div>
-          <p className="font-medium italic">
-            "{premiumPersonalities[currentDemo]?.message}"
-          </p>
+          <p className="font-medium italic">"{premiumPersonalities[currentDemo]?.message}"</p>
         </div>
 
         {/* Demo controls */}
@@ -295,11 +237,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
             onClick={() => setIsPlaying(!isPlaying)}
             className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 rounded-xl font-medium transition-all"
           >
-            {isPlaying ? (
-              <VolumeX className="w-4 h-4" />
-            ) : (
-              <Volume2 className="w-4 h-4" />
-            )}
+            {isPlaying ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             <span>Preview Voice</span>
           </button>
 
@@ -311,10 +249,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
       </div>
 
       {/* Overlay for locked state */}
-      <div
-        className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
-        onClick={onUpgrade}
-      >
+      <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer" onClick={onUpgrade}>
         <div className="text-center">
           <Crown className="w-12 h-12 mx-auto mb-2 text-yellow-400" />
           <p className="text-lg font-bold mb-1">Unlock Premium Voices</p>
@@ -325,9 +260,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
   );
 
   const renderAnalyticsPreview = () => (
-    <div
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-900 via-emerald-900 to-teal-900 text-white ${compact ? 'p-4' : 'p-6'}`}
-    >
+    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-900 via-emerald-900 to-teal-900 text-white ${compact ? 'p-4' : 'p-6'}`}>
       <div className="relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
@@ -336,9 +269,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
               <BarChart3 className="w-6 h-6" />
             </div>
             <div>
-              <h3 className={`font-bold ${compact ? 'text-lg' : 'text-xl'}`}>
-                Advanced Analytics
-              </h3>
+              <h3 className={`font-bold ${compact ? 'text-lg' : 'text-xl'}`}>Advanced Analytics</h3>
               <p className="text-green-200 text-sm">Deep Sleep Insights</p>
             </div>
           </div>
@@ -350,10 +281,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
         {/* Metrics grid */}
         <div className="grid grid-cols-2 gap-3 mb-4">
           {analyticsMetrics.map((metric, index) => (
-            <div
-              key={metric.label}
-              className="p-3 bg-green-800 bg-opacity-30 border border-green-700 rounded-xl"
-            >
+            <div key={metric.label} className="p-3 bg-green-800 bg-opacity-30 border border-green-700 rounded-xl">
               <div className="flex items-center justify-between mb-2">
                 {metric.icon}
                 <span className="text-xs text-green-300">{metric.trend}</span>
@@ -393,10 +321,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
       </div>
 
       {/* Overlay for locked state */}
-      <div
-        className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
-        onClick={onUpgrade}
-      >
+      <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer" onClick={onUpgrade}>
         <div className="text-center">
           <Award className="w-12 h-12 mx-auto mb-2 text-yellow-400" />
           <p className="text-lg font-bold mb-1">Unlock Analytics</p>
@@ -407,9 +332,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
   );
 
   const renderCustomVoicesPreview = () => (
-    <div
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-900 via-cyan-900 to-teal-900 text-white ${compact ? 'p-4' : 'p-6'}`}
-    >
+    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-900 via-cyan-900 to-teal-900 text-white ${compact ? 'p-4' : 'p-6'}`}>
       <div className="relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
@@ -418,9 +341,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
               <Volume2 className="w-6 h-6" />
             </div>
             <div>
-              <h3 className={`font-bold ${compact ? 'text-lg' : 'text-xl'}`}>
-                Custom Voice Messages
-              </h3>
+              <h3 className={`font-bold ${compact ? 'text-lg' : 'text-xl'}`}>Custom Voice Messages</h3>
               <p className="text-blue-200 text-sm">Personalized TTS & Voice Cloning</p>
             </div>
           </div>
@@ -490,10 +411,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
       </div>
 
       {/* Overlay for locked state */}
-      <div
-        className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
-        onClick={onUpgrade}
-      >
+      <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer" onClick={onUpgrade}>
         <div className="text-center">
           <Sparkles className="w-12 h-12 mx-auto mb-2 text-yellow-400" />
           <p className="text-lg font-bold mb-1">Unlock Custom Voices</p>
@@ -507,7 +425,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
     nuclearMode: renderNuclearModePreview,
     premiumPersonalities: renderPersonalitiesPreview,
     analytics: renderAnalyticsPreview,
-    customVoices: renderCustomVoicesPreview,
+    customVoices: renderCustomVoicesPreview
   };
 
   return <div className={`relative ${className}`}>{previewComponents[feature]()}</div>;

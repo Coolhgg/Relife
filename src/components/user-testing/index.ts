@@ -2,12 +2,7 @@
 export { default as FeedbackModal } from './FeedbackModal';
 export { default as BugReportModal } from './BugReportModal';
 export { default as FeedbackWidget } from './FeedbackWidget';
-export {
-  default as ABTestWrapper,
-  useABTest,
-  withABTest,
-  ABTestProps,
-} from './ABTestWrapper';
+export { default as ABTestWrapper, useABTest, withABTest, ABTestProps } from './ABTestWrapper';
 export { default as UsabilityAnalyticsDashboard } from './UsabilityAnalyticsDashboard';
 
 // Re-export types from the service
@@ -19,7 +14,7 @@ export type {
   ABTestVariant,
   ABTestMetric,
   UsabilityEvent,
-  BugReport,
+  BugReport
 } from '../../services/user-testing';
 
 // Re-export the service

@@ -3,7 +3,7 @@
  *
  * Validates that all factory functions return properly typed objects
  * without unsafe 'as any' type casts, ensuring type safety compliance.
- *
+ * 
  * This test suite specifically validates the fixes made in Phase 3 of
  * the core-factories type safety improvements.
  */
@@ -13,7 +13,7 @@ import {
   createTestUser,
   createTestAlarm,
   createTestBattle,
-  CreateUserOptions,
+  CreateUserOptions
 } from './core-factories';
 import {
   User,
@@ -24,7 +24,7 @@ import {
   SmartAlarmSettings,
   BattleParticipantStats,
   BattleSettings,
-  Theme,
+  Theme
 } from '../../types';
 import { Subscription } from '../../types/premium';
 
@@ -67,47 +67,28 @@ describe('Core Factories Type Safety', () => {
       }
 
       // Verify PersonalizationSettings is properly typed
-      const personalization = user.preferences
-        .personalization as PersonalizationSettings;
+      const personalization = user.preferences.personalization as PersonalizationSettings;
       expect(typeof personalization.theme).toBe('string');
       expect(Array.isArray(personalization.colorPreferences.favoriteColors)).toBe(true);
-      expect(typeof personalization.colorPreferences.colorblindFriendly).toBe(
-        'boolean'
-      );
-      expect(typeof personalization.typographyPreferences.preferredFontSize).toBe(
-        'string'
-      );
-      expect(['small', 'medium', 'large', 'extra-large']).toContain(
-        personalization.typographyPreferences.preferredFontSize
-      );
+      expect(typeof personalization.colorPreferences.colorblindFriendly).toBe('boolean');
+      expect(typeof personalization.typographyPreferences.preferredFontSize).toBe('string');
+      expect(['small', 'medium', 'large', 'extra-large']).toContain(personalization.typographyPreferences.preferredFontSize);
       expect(typeof personalization.motionPreferences.enableAnimations).toBe('boolean');
       expect(typeof personalization.soundPreferences.enableSounds).toBe('boolean');
       expect(typeof personalization.layoutPreferences.density).toBe('string');
-      expect(['compact', 'comfortable', 'spacious']).toContain(
-        personalization.layoutPreferences.density
-      );
-      expect(
-        typeof personalization.accessibilityPreferences.screenReaderOptimized
-      ).toBe('boolean');
+      expect(['compact', 'comfortable', 'spacious']).toContain(personalization.layoutPreferences.density);
+      expect(typeof personalization.accessibilityPreferences.screenReaderOptimized).toBe('boolean');
     });
 
     it('should return proper Theme type for gameTheme', () => {
       const user = createTestUser();
-
+      
       // gameTheme should be a proper Theme string, not ThemeConfig object as any
       const gameTheme = user.preferences.gameTheme as Theme;
       expect(typeof gameTheme).toBe('string');
       expect([
-        'light',
-        'dark',
-        'ocean-breeze',
-        'sunset-glow',
-        'forest-dream',
-        'auto',
-        'system',
-        'high-contrast',
-        'minimalist',
-        'colorful',
+        'light', 'dark', 'ocean-breeze', 'sunset-glow', 'forest-dream',
+        'auto', 'system', 'high-contrast', 'minimalist', 'colorful'
       ]).toContain(gameTheme);
     });
 
@@ -154,7 +135,7 @@ describe('Core Factories Type Safety', () => {
         expect(typeof stats.tasksCompleted).toBe('number');
         expect(typeof stats.snoozeCount).toBe('number');
         expect(typeof stats.score).toBe('number');
-
+        
         if (stats.wakeTime) {
           expect(typeof stats.wakeTime).toBe('string');
         }
@@ -168,11 +149,11 @@ describe('Core Factories Type Safety', () => {
       const settings = battle.settings as BattleSettings;
       expect(typeof settings.duration).toBe('string');
       expect(settings.duration).toMatch(/^P\d+D$/); // ISO duration format
-
+      
       if (settings.maxParticipants !== undefined) {
         expect(typeof settings.maxParticipants).toBe('number');
       }
-
+      
       if (settings.allowLateJoins !== undefined) {
         expect(typeof settings.allowLateJoins).toBe('boolean');
       }
@@ -196,15 +177,15 @@ describe('Core Factories Type Safety', () => {
       // Should be proper BattlePrize object, not custom object as any
       if (battle.prize) {
         expect(typeof battle.prize.experience).toBe('number');
-
+        
         if (battle.prize.title !== undefined) {
           expect(typeof battle.prize.title).toBe('string');
         }
-
+        
         if (battle.prize.badge !== undefined) {
           expect(typeof battle.prize.badge).toBe('string');
         }
-
+        
         if (battle.prize.seasonPoints !== undefined) {
           expect(typeof battle.prize.seasonPoints).toBe('number');
         }
@@ -226,22 +207,22 @@ describe('Core Factories Type Safety', () => {
         preferences: expect.objectContaining({
           personalization: expect.objectContaining({
             colorPreferences: expect.objectContaining({
-              favoriteColors: expect.any(Array),
-            }),
-          }),
-        }),
+              favoriteColors: expect.any(Array)
+            })
+          })
+        })
       });
 
       if (alarm.smartFeatures) {
         expect(alarm.smartFeatures).toMatchObject({
           weatherEnabled: expect.any(Boolean),
           locationEnabled: expect.any(Boolean),
-          fitnessEnabled: expect.any(Boolean),
+          fitnessEnabled: expect.any(Boolean)
         });
       }
 
       expect(battle.settings).toMatchObject({
-        duration: expect.stringMatching(/^P\d+D$/),
+        duration: expect.stringMatching(/^P\d+D$/)
       });
     });
   });

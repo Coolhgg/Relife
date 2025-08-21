@@ -1,16 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { Bell, Clock, Settings, Star, Users } from 'lucide-react';
+import type { Meta, StoryObj } from '@storybook/react'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../components/ui/card'
+import { Button } from '../../components/ui/button'
+import { Badge } from '../../components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar'
+import { Bell, Clock, Settings, Star, Users } from 'lucide-react'
 
 const meta: Meta<typeof Card> = {
   title: 'UI/Card',
@@ -19,16 +12,15 @@ const meta: Meta<typeof Card> = {
     layout: 'centered',
     docs: {
       description: {
-        component:
-          'A flexible card component with header, content, and footer sections. Perfect for organizing related information.',
+        component: 'A flexible card component with header, content, and footer sections. Perfect for organizing related information.',
       },
     },
   },
   tags: ['autodocs'],
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   render: () => (
@@ -42,7 +34,7 @@ export const Default: Story = {
       </CardContent>
     </Card>
   ),
-};
+}
 
 export const WithFooter: Story = {
   render: () => (
@@ -64,13 +56,11 @@ export const WithFooter: Story = {
         </div>
       </CardContent>
       <CardFooter>
-        <Button variant="outline" size="sm">
-          Mark all read
-        </Button>
+        <Button variant="outline" size="sm">Mark all read</Button>
       </CardFooter>
     </Card>
   ),
-};
+}
 
 export const AlarmCard: Story = {
   render: () => (
@@ -91,10 +81,8 @@ export const AlarmCard: Story = {
             <span className="text-2xl font-bold">07:00 AM</span>
           </div>
           <div className="flex flex-wrap gap-1">
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(day => (
-              <Badge key={day} variant="outline" className="text-xs">
-                {day}
-              </Badge>
+            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((day) => (
+              <Badge key={day} variant="outline" className="text-xs">{day}</Badge>
             ))}
           </div>
         </div>
@@ -107,7 +95,7 @@ export const AlarmCard: Story = {
       </CardFooter>
     </Card>
   ),
-};
+}
 
 export const UserProfile: Story = {
   render: () => (
@@ -141,7 +129,7 @@ export const UserProfile: Story = {
       </CardFooter>
     </Card>
   ),
-};
+}
 
 export const FeatureCard: Story = {
   render: () => (
@@ -151,7 +139,9 @@ export const FeatureCard: Story = {
           <Star className="h-5 w-5 text-yellow-500" />
           <CardTitle>Premium Feature</CardTitle>
         </div>
-        <CardDescription>Unlock advanced customization options</CardDescription>
+        <CardDescription>
+          Unlock advanced customization options
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ul className="space-y-2 text-sm">
@@ -174,7 +164,7 @@ export const FeatureCard: Story = {
       </CardFooter>
     </Card>
   ),
-};
+}
 
 export const StatsCard: Story = {
   render: () => (
@@ -191,7 +181,7 @@ export const StatsCard: Story = {
       </CardContent>
     </Card>
   ),
-};
+}
 
 export const CardVariations: Story = {
   render: () => (
@@ -233,9 +223,7 @@ export const CardVariations: Story = {
           </p>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline" size="sm">
-            Cancel
-          </Button>
+          <Button variant="outline" size="sm">Cancel</Button>
           <Button size="sm">Confirm</Button>
         </CardFooter>
       </Card>
@@ -244,4 +232,4 @@ export const CardVariations: Story = {
   parameters: {
     layout: 'fullscreen',
   },
-};
+}

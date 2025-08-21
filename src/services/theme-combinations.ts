@@ -57,31 +57,9 @@ export type ThemeCategory =
   | 'ambient';
 
 export type AlarmIntensity = 'gentle' | 'moderate' | 'intense' | 'extreme';
-export type ThemeMood =
-  | 'peaceful'
-  | 'energizing'
-  | 'dramatic'
-  | 'mystical'
-  | 'scary'
-  | 'motivational'
-  | 'romantic'
-  | 'nostalgic';
-export type TimeOfDay =
-  | 'early-morning'
-  | 'morning'
-  | 'midday'
-  | 'afternoon'
-  | 'evening'
-  | 'night'
-  | 'late-night';
-export type WeatherCondition =
-  | 'sunny'
-  | 'cloudy'
-  | 'rainy'
-  | 'stormy'
-  | 'snowy'
-  | 'foggy'
-  | 'windy';
+export type ThemeMood = 'peaceful' | 'energizing' | 'dramatic' | 'mystical' | 'scary' | 'motivational' | 'romantic' | 'nostalgic';
+export type TimeOfDay = 'early-morning' | 'morning' | 'midday' | 'afternoon' | 'evening' | 'night' | 'late-night';
+export type WeatherCondition = 'sunny' | 'cloudy' | 'rainy' | 'stormy' | 'snowy' | 'foggy' | 'windy';
 
 export interface ThemeCustomizations {
   visualIntensity?: number; // 0-100
@@ -137,8 +115,7 @@ class ThemeCombinationsService {
       {
         id: 'peaceful_sunrise',
         name: 'Peaceful Sunrise',
-        description:
-          'Wake up gently with warm sunrise colors, peaceful nature sounds, and a sweet voice',
+        description: 'Wake up gently with warm sunrise colors, peaceful nature sounds, and a sweet voice',
         category: 'gentle',
         tags: ['morning', 'peaceful', 'nature', 'warm'],
         visual: 'sunrise_glow',
@@ -149,14 +126,13 @@ class ThemeCombinationsService {
         difficulty: 'gentle',
         mood: 'peaceful',
         timeOfDay: ['early-morning', 'morning'],
-        weatherSuitability: ['sunny', 'cloudy'],
+        weatherSuitability: ['sunny', 'cloudy']
       },
 
       {
         id: 'forest_meditation',
         name: 'Forest Meditation',
-        description:
-          'Immerse yourself in a tranquil forest with gentle sounds and mindful voice guidance',
+        description: 'Immerse yourself in a tranquil forest with gentle sounds and mindful voice guidance',
         category: 'meditation',
         tags: ['forest', 'meditation', 'calm', 'mindful'],
         visual: 'forest_canopy',
@@ -167,14 +143,13 @@ class ThemeCombinationsService {
         difficulty: 'gentle',
         mood: 'peaceful',
         timeOfDay: ['morning', 'evening'],
-        weatherSuitability: ['cloudy', 'rainy'],
+        weatherSuitability: ['cloudy', 'rainy']
       },
 
       {
         id: 'misty_morning',
         name: 'Misty Morning',
-        description:
-          'Ethereal mist and ambient sounds create a dreamy wake-up experience',
+        description: 'Ethereal mist and ambient sounds create a dreamy wake-up experience',
         category: 'ambient',
         tags: ['mist', 'ethereal', 'ambient', 'dreamy'],
         visual: 'morning_mist',
@@ -185,15 +160,14 @@ class ThemeCombinationsService {
         difficulty: 'gentle',
         mood: 'mystical',
         timeOfDay: ['early-morning', 'morning'],
-        weatherSuitability: ['foggy', 'cloudy'],
+        weatherSuitability: ['foggy', 'cloudy']
       },
 
       // Energetic Combinations
       {
         id: 'lightning_power',
         name: 'Lightning Power',
-        description:
-          'Electric energy with lightning visuals, electronic beats, and motivational voice',
+        description: 'Electric energy with lightning visuals, electronic beats, and motivational voice',
         category: 'energetic',
         tags: ['electric', 'power', 'energy', 'motivation'],
         visual: 'lightning_bolt',
@@ -204,14 +178,13 @@ class ThemeCombinationsService {
         difficulty: 'intense',
         mood: 'energizing',
         timeOfDay: ['morning', 'midday'],
-        weatherSuitability: ['stormy', 'cloudy'],
+        weatherSuitability: ['stormy', 'cloudy']
       },
 
       {
         id: 'neon_city',
         name: 'Neon City',
-        description:
-          'Cyberpunk cityscape with pulsing neon lights and synthetic sounds',
+        description: 'Cyberpunk cityscape with pulsing neon lights and synthetic sounds',
         category: 'electronic',
         tags: ['cyberpunk', 'neon', 'city', 'futuristic'],
         visual: 'neon_pulse',
@@ -222,14 +195,13 @@ class ThemeCombinationsService {
         difficulty: 'intense',
         mood: 'dramatic',
         timeOfDay: ['night', 'late-night'],
-        weatherSuitability: ['rainy', 'cloudy'],
+        weatherSuitability: ['rainy', 'cloudy']
       },
 
       {
         id: 'workout_beast',
         name: 'Workout Beast',
-        description:
-          'High-intensity workout motivation with powerful visuals and pumping beats',
+        description: 'High-intensity workout motivation with powerful visuals and pumping beats',
         category: 'workout',
         tags: ['workout', 'gym', 'intense', 'motivation'],
         visual: 'lightning_bolt',
@@ -240,15 +212,14 @@ class ThemeCombinationsService {
         difficulty: 'extreme',
         mood: 'motivational',
         timeOfDay: ['early-morning', 'morning'],
-        weatherSuitability: ['sunny', 'cloudy'],
+        weatherSuitability: ['sunny', 'cloudy']
       },
 
       // Fantasy & Mystical Combinations
       {
         id: 'cosmic_journey',
         name: 'Cosmic Journey',
-        description:
-          'Travel through the galaxy with cosmic visuals and ethereal sounds',
+        description: 'Travel through the galaxy with cosmic visuals and ethereal sounds',
         category: 'cosmic',
         tags: ['space', 'galaxy', 'cosmic', 'journey'],
         visual: 'galaxy_spiral',
@@ -259,14 +230,13 @@ class ThemeCombinationsService {
         difficulty: 'moderate',
         mood: 'mystical',
         timeOfDay: ['evening', 'night'],
-        weatherSuitability: ['cloudy', 'stormy'],
+        weatherSuitability: ['cloudy', 'stormy']
       },
 
       {
         id: 'magic_portal',
         name: 'Magic Portal',
-        description:
-          'Step through a magical portal with fantasy visuals and enchanting sounds',
+        description: 'Step through a magical portal with fantasy visuals and enchanting sounds',
         category: 'fantasy',
         tags: ['magic', 'fantasy', 'portal', 'enchanted'],
         visual: 'galaxy_spiral', // Would use 'magic_portal' when available
@@ -277,15 +247,14 @@ class ThemeCombinationsService {
         difficulty: 'moderate',
         mood: 'mystical',
         timeOfDay: ['evening', 'night'],
-        weatherSuitability: ['cloudy', 'foggy'],
+        weatherSuitability: ['cloudy', 'foggy']
       },
 
       // Horror & Intense Combinations
       {
         id: 'nightmare_fuel',
         name: 'Nightmare Fuel',
-        description:
-          'For the brave: dark, spooky visuals with horror sounds and commanding voice',
+        description: 'For the brave: dark, spooky visuals with horror sounds and commanding voice',
         category: 'horror',
         tags: ['horror', 'spooky', 'dark', 'intense'],
         visual: 'blood_moon',
@@ -296,14 +265,13 @@ class ThemeCombinationsService {
         difficulty: 'extreme',
         mood: 'scary',
         timeOfDay: ['late-night', 'night'],
-        weatherSuitability: ['stormy', 'cloudy'],
+        weatherSuitability: ['stormy', 'cloudy']
       },
 
       {
         id: 'haunted_awakening',
         name: 'Haunted Awakening',
-        description:
-          'Ghostly mist and eerie sounds for those who dare to wake up scared',
+        description: 'Ghostly mist and eerie sounds for those who dare to wake up scared',
         category: 'horror',
         tags: ['haunted', 'ghostly', 'eerie', 'mist'],
         visual: 'morning_mist', // Would use 'ghostly_mist' when available
@@ -314,7 +282,7 @@ class ThemeCombinationsService {
         difficulty: 'extreme',
         mood: 'scary',
         timeOfDay: ['night', 'late-night'],
-        weatherSuitability: ['foggy', 'rainy'],
+        weatherSuitability: ['foggy', 'rainy']
       },
 
       // Anime & Pop Culture Combinations
@@ -332,7 +300,7 @@ class ThemeCombinationsService {
         difficulty: 'intense',
         mood: 'dramatic',
         timeOfDay: ['morning', 'midday'],
-        weatherSuitability: ['sunny', 'stormy'],
+        weatherSuitability: ['sunny', 'stormy']
       },
 
       {
@@ -349,15 +317,14 @@ class ThemeCombinationsService {
         difficulty: 'moderate',
         mood: 'nostalgic',
         timeOfDay: ['afternoon', 'evening'],
-        weatherSuitability: ['cloudy', 'rainy'],
+        weatherSuitability: ['cloudy', 'rainy']
       },
 
       // Classical & Elegant Combinations
       {
         id: 'classical_dawn',
         name: 'Classical Dawn',
-        description:
-          'Elegant classical music with refined visuals for a sophisticated wake-up',
+        description: 'Elegant classical music with refined visuals for a sophisticated wake-up',
         category: 'classical',
         tags: ['classical', 'elegant', 'sophisticated', 'refined'],
         visual: 'sunrise_glow',
@@ -368,7 +335,7 @@ class ThemeCombinationsService {
         difficulty: 'gentle',
         mood: 'peaceful',
         timeOfDay: ['morning', 'midday'],
-        weatherSuitability: ['sunny', 'cloudy'],
+        weatherSuitability: ['sunny', 'cloudy']
       },
 
       {
@@ -385,7 +352,7 @@ class ThemeCombinationsService {
         difficulty: 'gentle',
         mood: 'peaceful',
         timeOfDay: ['morning', 'afternoon'],
-        weatherSuitability: ['cloudy', 'rainy'],
+        weatherSuitability: ['cloudy', 'rainy']
       },
 
       // Minimal & Clean Combinations
@@ -403,7 +370,7 @@ class ThemeCombinationsService {
         difficulty: 'gentle',
         mood: 'peaceful',
         timeOfDay: ['morning', 'midday'],
-        weatherSuitability: ['sunny', 'cloudy'],
+        weatherSuitability: ['sunny', 'cloudy']
       },
 
       {
@@ -420,7 +387,7 @@ class ThemeCombinationsService {
         difficulty: 'gentle',
         mood: 'peaceful',
         timeOfDay: ['early-morning', 'night'],
-        weatherSuitability: ['cloudy', 'foggy'],
+        weatherSuitability: ['cloudy', 'foggy']
       },
 
       // Special Occasion Combinations
@@ -438,7 +405,7 @@ class ThemeCombinationsService {
         difficulty: 'intense',
         mood: 'motivational',
         timeOfDay: ['early-morning', 'morning'],
-        weatherSuitability: ['sunny', 'cloudy'],
+        weatherSuitability: ['sunny', 'cloudy']
       },
 
       {
@@ -455,7 +422,7 @@ class ThemeCombinationsService {
         difficulty: 'intense',
         mood: 'energizing',
         timeOfDay: ['morning', 'midday'],
-        weatherSuitability: ['sunny', 'cloudy'],
+        weatherSuitability: ['sunny', 'cloudy']
       },
 
       {
@@ -472,8 +439,8 @@ class ThemeCombinationsService {
         difficulty: 'gentle',
         mood: 'peaceful',
         timeOfDay: ['morning', 'midday'],
-        weatherSuitability: ['sunny', 'cloudy'],
-      },
+        weatherSuitability: ['sunny', 'cloudy']
+      }
     ];
 
     // Add all combinations to the map
@@ -488,30 +455,20 @@ class ThemeCombinationsService {
         id: 'gentle_mornings',
         name: 'Gentle Mornings',
         description: 'Peaceful and calming wake-up experiences',
-        themes: [
-          'peaceful_sunrise',
-          'forest_meditation',
-          'misty_morning',
-          'lazy_sunday',
-        ],
+        themes: ['peaceful_sunrise', 'forest_meditation', 'misty_morning', 'lazy_sunday'],
         premium: false,
         creator: 'system',
-        tags: ['gentle', 'peaceful', 'morning'],
+        tags: ['gentle', 'peaceful', 'morning']
       },
 
       {
         id: 'high_energy',
         name: 'High Energy',
         description: 'Powerful and energizing combinations for maximum motivation',
-        themes: [
-          'lightning_power',
-          'workout_beast',
-          'monday_motivation',
-          'friday_celebration',
-        ],
+        themes: ['lightning_power', 'workout_beast', 'monday_motivation', 'friday_celebration'],
         premium: false,
         creator: 'system',
-        tags: ['energy', 'motivation', 'intense'],
+        tags: ['energy', 'motivation', 'intense']
       },
 
       {
@@ -521,7 +478,7 @@ class ThemeCombinationsService {
         themes: ['cosmic_journey', 'magic_portal'],
         premium: true,
         creator: 'system',
-        tags: ['mystical', 'fantasy', 'cosmic'],
+        tags: ['mystical', 'fantasy', 'cosmic']
       },
 
       {
@@ -531,7 +488,7 @@ class ThemeCombinationsService {
         themes: ['nightmare_fuel', 'haunted_awakening'],
         premium: true,
         creator: 'system',
-        tags: ['horror', 'scary', 'intense'],
+        tags: ['horror', 'scary', 'intense']
       },
 
       {
@@ -541,7 +498,7 @@ class ThemeCombinationsService {
         themes: ['anime_hero_rise', 'retro_arcade'],
         premium: false,
         creator: 'system',
-        tags: ['anime', 'retro', 'culture'],
+        tags: ['anime', 'retro', 'culture']
       },
 
       {
@@ -551,7 +508,7 @@ class ThemeCombinationsService {
         themes: ['classical_dawn', 'jazz_lounge'],
         premium: true,
         creator: 'system',
-        tags: ['classical', 'elegant', 'sophisticated'],
+        tags: ['classical', 'elegant', 'sophisticated']
       },
 
       {
@@ -561,8 +518,8 @@ class ThemeCombinationsService {
         themes: ['pure_white', 'void_meditation'],
         premium: false,
         creator: 'system',
-        tags: ['minimal', 'zen', 'clean'],
-      },
+        tags: ['minimal', 'zen', 'clean']
+      }
     ];
 
     collections.forEach(collection => {
@@ -579,7 +536,7 @@ class ThemeCombinationsService {
   getAllCombinations(): ThemeCombination[] {
     return [
       ...Array.from(this.combinations.values()),
-      ...Array.from(this.userCustomCombinations.values()),
+      ...Array.from(this.userCustomCombinations.values())
     ];
   }
 
@@ -623,7 +580,9 @@ class ThemeCombinationsService {
   }
 
   getFavoriteCombinations(): ThemeCombination[] {
-    return this.getAllCombinations().filter(combo => this.userFavorites.has(combo.id));
+    return this.getAllCombinations().filter(combo =>
+      this.userFavorites.has(combo.id)
+    );
   }
 
   // Collection methods
@@ -716,7 +675,7 @@ class ThemeCombinationsService {
       customizations: options.customizations,
       userTags: options.userTags,
       usageCount: 0,
-      ...options,
+      ...options
     };
 
     this.userCustomCombinations.set(id, customCombination);
@@ -746,12 +705,11 @@ class ThemeCombinationsService {
   // Search and filtering
   searchCombinations(query: string): ThemeCombination[] {
     const searchTerm = query.toLowerCase();
-    return this.getAllCombinations().filter(
-      combo =>
-        combo.name.toLowerCase().includes(searchTerm) ||
-        combo.description.toLowerCase().includes(searchTerm) ||
-        combo.tags.some(tag => tag.toLowerCase().includes(searchTerm)) ||
-        combo.userTags?.some(tag => tag.toLowerCase().includes(searchTerm))
+    return this.getAllCombinations().filter(combo =>
+      combo.name.toLowerCase().includes(searchTerm) ||
+      combo.description.toLowerCase().includes(searchTerm) ||
+      combo.tags.some(tag => tag.toLowerCase().includes(searchTerm)) ||
+      combo.userTags?.some(tag => tag.toLowerCase().includes(searchTerm))
     );
   }
 
@@ -768,14 +726,10 @@ class ThemeCombinationsService {
       if (filters.category && combo.category !== filters.category) return false;
       if (filters.difficulty && combo.difficulty !== filters.difficulty) return false;
       if (filters.mood && combo.mood !== filters.mood) return false;
-      if (filters.premium !== undefined && combo.premium !== filters.premium)
-        return false;
-      if (filters.timeOfDay && !combo.timeOfDay.includes(filters.timeOfDay))
-        return false;
-      if (filters.weather && !combo.weatherSuitability.includes(filters.weather))
-        return false;
-      if (filters.tags && !filters.tags.some(tag => combo.tags.includes(tag)))
-        return false;
+      if (filters.premium !== undefined && combo.premium !== filters.premium) return false;
+      if (filters.timeOfDay && !combo.timeOfDay.includes(filters.timeOfDay)) return false;
+      if (filters.weather && !combo.weatherSuitability.includes(filters.weather)) return false;
+      if (filters.tags && !filters.tags.some(tag => combo.tags.includes(tag))) return false;
 
       return true;
     });
@@ -801,12 +755,8 @@ class ThemeCombinationsService {
 
   private saveUserData(): void {
     try {
-      localStorage.setItem(
-        'theme-favorites',
-        JSON.stringify(Array.from(this.userFavorites))
-      );
-      localStorage.setItem(
-        'custom-theme-combinations',
+      localStorage.setItem('theme-favorites', JSON.stringify(Array.from(this.userFavorites)));
+      localStorage.setItem('custom-theme-combinations',
         JSON.stringify(Object.fromEntries(this.userCustomCombinations))
       );
     } catch (error) {
@@ -866,7 +816,7 @@ class ThemeCombinationsService {
     return JSON.stringify({
       favorites: Array.from(this.userFavorites),
       customCombinations: Object.fromEntries(this.userCustomCombinations),
-      version: '1.0',
+      version: '1.0'
     });
   }
 
@@ -879,9 +829,7 @@ class ThemeCombinationsService {
       }
 
       if (parsed.customCombinations) {
-        this.userCustomCombinations = new Map(
-          Object.entries(parsed.customCombinations)
-        );
+        this.userCustomCombinations = new Map(Object.entries(parsed.customCombinations));
       }
 
       this.saveUserData();

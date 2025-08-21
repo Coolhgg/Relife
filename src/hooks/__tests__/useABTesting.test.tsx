@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for useABTesting hook
  * Tests A/B testing functionality, variant assignments, and feature flags
@@ -20,8 +21,8 @@ jest.mock('../../services/struggling-sam-api', () => {
   return {
     __esModule: true,
     default: {
-      getInstance: () => mockApiService,
-    },
+      getInstance: () => mockApiService
+    }
   };
 });
 
@@ -30,11 +31,11 @@ const localStorageMock = {
   getItem: jest.fn(),
   setItem: jest.fn(),
   removeItem: jest.fn(),
-  clear: jest.fn(),
+  clear: jest.fn()
 };
 
 Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
+  value: localStorageMock
 });
 
 describe('useABTesting', () => {
@@ -47,7 +48,7 @@ describe('useABTesting', () => {
       userId: 'test-user-123',
       testGroup: 'CONTROL' as ABTestGroup,
       assignedAt: new Date().toISOString(),
-      features: STRUGGLING_SAM_FEATURES.CONTROL,
+      features: STRUGGLING_SAM_FEATURES.CONTROL
     });
 
     mockApiService.trackABTestEvent.mockResolvedValue(undefined);
@@ -59,8 +60,8 @@ describe('useABTesting', () => {
       conversionRates: {
         control: 0.15,
         gamification: 0.22,
-        fullOptimization: 0.28,
-      },
+        fullOptimization: 0.28
+      }
     });
   });
 
@@ -91,7 +92,7 @@ describe('useABTesting', () => {
       userId: 'test-user-123',
       testGroup: 'GAMIFICATION' as ABTestGroup,
       assignedAt: new Date().toISOString(),
-      features: STRUGGLING_SAM_FEATURES.GAMIFICATION,
+      features: STRUGGLING_SAM_FEATURES.GAMIFICATION
     });
 
     const { result } = renderHook(() => useABTesting('test-user-123'));
@@ -112,7 +113,7 @@ describe('useABTesting', () => {
       userId: 'test-user-123',
       testGroup: 'FULL_OPTIMIZATION' as ABTestGroup,
       assignedAt: new Date().toISOString(),
-      features: STRUGGLING_SAM_FEATURES.FULL_OPTIMIZATION,
+      features: STRUGGLING_SAM_FEATURES.FULL_OPTIMIZATION
     });
 
     const { result } = renderHook(() => useABTesting('test-user-123'));
@@ -133,7 +134,7 @@ describe('useABTesting', () => {
       userId: 'test-user-123',
       testGroup: 'GAMIFICATION',
       assignedAt: new Date().toISOString(),
-      features: STRUGGLING_SAM_FEATURES.GAMIFICATION,
+      features: STRUGGLING_SAM_FEATURES.GAMIFICATION
     };
 
     localStorageMock.getItem.mockReturnValue(JSON.stringify(cachedAssignment));
@@ -173,7 +174,7 @@ describe('useABTesting', () => {
       userId: 'test-user-123',
       testGroup: 'GAMIFICATION' as ABTestGroup,
       assignedAt: new Date().toISOString(),
-      features: STRUGGLING_SAM_FEATURES.GAMIFICATION,
+      features: STRUGGLING_SAM_FEATURES.GAMIFICATION
     });
 
     const { result } = renderHook(() => useABTesting('test-user-123'));
@@ -225,8 +226,8 @@ describe('useABTesting', () => {
       conversionRates: {
         control: 0.15,
         gamification: 0.22,
-        fullOptimization: 0.28,
-      },
+        fullOptimization: 0.28
+      }
     });
   });
 
@@ -244,7 +245,7 @@ describe('useABTesting', () => {
       userId: 'test-user-123',
       testGroup: 'FULL_OPTIMIZATION' as ABTestGroup,
       assignedAt: new Date().toISOString(),
-      features: STRUGGLING_SAM_FEATURES.FULL_OPTIMIZATION,
+      features: STRUGGLING_SAM_FEATURES.FULL_OPTIMIZATION
     });
 
     await act(async () => {
@@ -307,7 +308,7 @@ describe('useABTesting', () => {
     const promises = [
       result.current.trackEvent('alarm_created', { type: 'morning' }),
       result.current.trackEvent('alarm_snoozed', { count: 1 }),
-      result.current.trackEvent('alarm_dismissed', { duration: 30 }),
+      result.current.trackEvent('alarm_dismissed', { duration: 30 })
     ];
 
     await act(async () => {

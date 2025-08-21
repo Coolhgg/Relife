@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Accessibility Preferences System
  * Comprehensive accessibility settings management with system integration
@@ -136,7 +137,8 @@ class AccessibilityPreferencesService {
     // Multiple methods to detect screen readers
     const indicators = [
       // NVDA, JAWS, etc. often set these
-      navigator.userAgent.includes('NVDA') || navigator.userAgent.includes('JAWS'),
+      navigator.userAgent.includes('NVDA') ||
+      navigator.userAgent.includes('JAWS'),
 
       // Check for common screen reader APIs
       'speechSynthesis' in window && window.speechSynthesis.getVoices().length > 0,
@@ -219,10 +221,7 @@ class AccessibilityPreferencesService {
    */
   private savePreferences(): void {
     try {
-      localStorage.setItem(
-        'accessibility-preferences',
-        JSON.stringify(this.preferences)
-      );
+      localStorage.setItem('accessibility-preferences', JSON.stringify(this.preferences));
     } catch (error) {
       console.warn('Failed to save accessibility preferences:', error);
     }
@@ -238,24 +237,15 @@ class AccessibilityPreferencesService {
     // Apply CSS custom properties
     root.style.setProperty('--a11y-font-scale', this.getFontScale());
     root.style.setProperty('--a11y-focus-ring-color', this.preferences.focusRingColor);
-    root.style.setProperty(
-      '--a11y-long-press-delay',
-      `${this.preferences.longPressDelay}ms`
-    );
+    root.style.setProperty('--a11y-long-press-delay', `${this.preferences.longPressDelay}ms`);
 
     // Apply class-based preferences
     body.classList.toggle('a11y-high-contrast', this.preferences.highContrastMode);
     body.classList.toggle('a11y-reduced-motion', this.preferences.reducedMotion);
-    body.classList.toggle(
-      'a11y-large-touch-targets',
-      this.preferences.largerTouchTargets
-    );
+    body.classList.toggle('a11y-large-touch-targets', this.preferences.largerTouchTargets);
     body.classList.toggle('a11y-enhanced-focus', this.preferences.enhancedFocusRings);
     body.classList.toggle('a11y-screen-reader', this.preferences.screenReaderOptimized);
-    body.classList.toggle(
-      'a11y-color-blind-friendly',
-      this.preferences.colorBlindFriendly
-    );
+    body.classList.toggle('a11y-color-blind-friendly', this.preferences.colorBlindFriendly);
     body.classList.toggle('a11y-skip-links-visible', this.preferences.skipLinksVisible);
     body.classList.toggle('a11y-no-autoplay', !this.preferences.autoplay);
     body.classList.toggle('a11y-no-blinking', !this.preferences.blinkingElements);
@@ -272,9 +262,9 @@ class AccessibilityPreferencesService {
    */
   private getFontScale(): string {
     const scales = {
-      small: '0.875',
-      medium: '1',
-      large: '1.125',
+      'small': '0.875',
+      'medium': '1',
+      'large': '1.125',
       'extra-large': '1.25',
     };
     return scales[this.preferences.fontSize];
@@ -430,10 +420,7 @@ class AccessibilityPreferencesService {
    * Configure speech synthesis settings
    */
   private configureSpeechSynthesis(): void {
-    if (
-      'speechSynthesis' in window &&
-      typeof SpeechSynthesisUtterance !== 'undefined'
-    ) {
+    if ('speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined') {
       try {
         // Set default speech rate
         const utterance = new SpeechSynthesisUtterance('');
@@ -451,9 +438,7 @@ class AccessibilityPreferencesService {
     this.preferences = { ...this.preferences, ...updates };
 
     // Track user overrides
-    const overrides = JSON.parse(
-      localStorage.getItem('accessibility-overrides') || '{}'
-    );
+    const overrides = JSON.parse(localStorage.getItem('accessibility-overrides') || '{}');
     Object.keys(updates).forEach(key => {
       overrides[key] = true;
     });
@@ -480,8 +465,7 @@ class AccessibilityPreferencesService {
       isSystemDarkMode: this.mediaQueries.get('dark-mode')?.matches ?? false,
       isSystemReducedMotion: this.mediaQueries.get('reduced-motion')?.matches ?? false,
       isSystemHighContrast: this.mediaQueries.get('high-contrast')?.matches ?? false,
-      systemFontScale:
-        parseFloat(getComputedStyle(document.documentElement).fontSize) / 16,
+      systemFontScale: parseFloat(getComputedStyle(document.documentElement).fontSize) / 16,
       screenReaderActive: this.preferences.screenReaderOptimized,
       touchDevice: 'ontouchstart' in window,
       hasHover: this.mediaQueries.get('hover')?.matches ?? true,
@@ -528,10 +512,7 @@ class AccessibilityPreferencesService {
   /**
    * Test color contrast
    */
-  testColorContrast(
-    foreground: string,
-    background: string
-  ): { ratio: number; wcagAA: boolean; wcagAAA: boolean } {
+  testColorContrast(foreground: string, background: string): { ratio: number; wcagAA: boolean; wcagAAA: boolean } {
     // Simplified contrast calculation (would use a proper contrast library in production)
     const ratio = 4.5; // Placeholder - implement proper contrast calculation
     return {

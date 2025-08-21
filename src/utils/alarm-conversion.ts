@@ -1,14 +1,10 @@
-import type { Alarm, AdvancedAlarm } from '../types/index';
 
 /**
- * Utility functions for converting between basic Alarm and AdvancedAlarm types
  */
 
 export class AlarmConversionUtil {
   /**
-   * Convert a basic Alarm to an AdvancedAlarm with default advanced features
    */
-  static toAdvancedAlarm(basicAlarm: Alarm): AdvancedAlarm {
     return {
       ...basicAlarm,
       scheduleType: 'daily',
@@ -19,14 +15,12 @@ export class AlarmConversionUtil {
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       seasonalAdjustments: [],
       smartOptimizations: [],
-      dependencies: [],
+      dependencies: []
     };
   }
 
   /**
-   * Convert an AdvancedAlarm back to a basic Alarm (for backwards compatibility)
    */
-  static toBasicAlarm(advancedAlarm: AdvancedAlarm): Alarm {
     const basicAlarm: Alarm = {
       id: advancedAlarm.id,
       userId: advancedAlarm.userId,
@@ -48,7 +42,7 @@ export class AlarmConversionUtil {
       updatedAt: advancedAlarm.updatedAt,
       battleId: advancedAlarm.battleId,
       weatherEnabled: advancedAlarm.weatherEnabled,
-      smartFeatures: advancedAlarm.smartFeatures,
+      smartFeatures: advancedAlarm.smartFeatures
     };
 
     return basicAlarm;
@@ -57,21 +51,17 @@ export class AlarmConversionUtil {
   /**
    * Convert an array of basic alarms to advanced alarms
    */
-  static convertArrayToAdvanced(basicAlarms: Alarm[]): AdvancedAlarm[] {
-    return basicAlarms.map(alarm => this.toAdvancedAlarm(alarm));
   }
 
   /**
    * Convert an array of advanced alarms to basic alarms
    */
-  static convertArrayToBasic(advancedAlarms: AdvancedAlarm[]): Alarm[] {
-    return advancedAlarms.map(alarm => this.toBasicAlarm(alarm));
+    return advancedAlarms.map((alarm) => this.toBasicAlarm(alarm));
   }
 
   /**
    * Check if an alarm has advanced features enabled
    */
-  static hasAdvancedFeatures(alarm: AdvancedAlarm): boolean {
     return !!(
       alarm.scheduleType !== 'daily' ||
       alarm.recurrencePattern ||
@@ -87,7 +77,6 @@ export class AlarmConversionUtil {
   /**
    * Get a summary of advanced features for an alarm
    */
-  static getAdvancedFeaturesSummary(alarm: AdvancedAlarm): string[] {
     const features: string[] = [];
 
     if (alarm.scheduleType !== 'daily') {
@@ -99,15 +88,11 @@ export class AlarmConversionUtil {
     }
 
     if (alarm.conditionalRules && alarm.conditionalRules.length > 0) {
-      features.push(
-        `${alarm.conditionalRules.length} conditional rule${alarm.conditionalRules.length > 1 ? 's' : ''}`
-      );
+      features.push(`${alarm.conditionalRules.length} conditional rule${alarm.conditionalRules.length > 1 ? 's' : ''}`);
     }
 
     if (alarm.locationTriggers && alarm.locationTriggers.length > 0) {
-      features.push(
-        `${alarm.locationTriggers.length} location trigger${alarm.locationTriggers.length > 1 ? 's' : ''}`
-      );
+      features.push(`${alarm.locationTriggers.length} location trigger${alarm.locationTriggers.length > 1 ? 's' : ''}`);
     }
 
     if (alarm.calendarIntegration && alarm.calendarIntegration.isActive) {
@@ -118,19 +103,12 @@ export class AlarmConversionUtil {
       features.push('Seasonal adjustments');
     }
 
-    if (
-      alarm.smartOptimizations &&
-      alarm.smartOptimizations.filter(o => o.isEnabled).length > 0
-    ) {
-      features.push(
-        `${alarm.smartOptimizations.filter(o => o.isEnabled).length} smart optimization${alarm.smartOptimizations.filter(o => o.isEnabled).length > 1 ? 's' : ''}`
-      );
+    if (alarm.smartOptimizations && alarm.smartOptimizations.filter(o => o.isEnabled).length > 0) {
+      features.push(`${alarm.smartOptimizations.filter(o => o.isEnabled).length} smart optimization${alarm.smartOptimizations.filter(o => o.isEnabled).length > 1 ? 's' : ''}`);
     }
 
     if (alarm.dependencies && alarm.dependencies.length > 0) {
-      features.push(
-        `${alarm.dependencies.length} alarm dependenc${alarm.dependencies.length > 1 ? 'ies' : 'y'}`
-      );
+      features.push(`${alarm.dependencies.length} alarm dependenc${alarm.dependencies.length > 1 ? 'ies' : 'y'}`);
     }
 
     return features;
@@ -139,7 +117,6 @@ export class AlarmConversionUtil {
   /**
    * Validate an advanced alarm configuration
    */
-  static validateAdvancedAlarm(alarm: AdvancedAlarm): {
     isValid: boolean;
     errors: string[];
   } {
@@ -164,10 +141,7 @@ export class AlarmConversionUtil {
         errors.push('Recurrence interval must be at least 1');
       }
 
-      if (
-        alarm.recurrencePattern.endDate &&
-        alarm.recurrencePattern.endAfterOccurrences
-      ) {
+      if (alarm.recurrencePattern.endDate && alarm.recurrencePattern.endAfterOccurrences) {
         errors.push('Cannot set both end date and end after occurrences');
       }
     }
@@ -186,23 +160,20 @@ export class AlarmConversionUtil {
     if (alarm.smartOptimizations) {
       for (const optimization of alarm.smartOptimizations) {
         if (optimization.parameters.maxAdjustment < 0) {
-          errors.push(
-            `Smart optimization "${optimization.type}" has invalid max adjustment`
-          );
+          errors.push(`Smart optimization "${optimization.type}" has invalid max adjustment`);
         }
       }
     }
 
     return {
       isValid: errors.length === 0,
-      errors,
+      errors
     };
   }
 
   /**
    * Create a default advanced alarm configuration
    */
-  static createDefaultAdvancedAlarm(userId: string): Partial<AdvancedAlarm> {
     return {
       userId,
       time: '07:00',
@@ -230,11 +201,11 @@ export class AlarmConversionUtil {
             sensitivity: 0.5,
             maxAdjustment: 30,
             learningEnabled: true,
-            preferences: {},
-          },
-        },
+            preferences: {}
+          }
+        }
       ],
-      dependencies: [],
+      dependencies: []
     };
   }
 }

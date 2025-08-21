@@ -7,7 +7,7 @@ export const VOICE_MOODS: VoiceMoodConfig[] = [
     description: 'Aggressive wake-up call',
     icon: '🪖',
     color: 'bg-red-600',
-    sample: 'WAKE UP SOLDIER! No excuses, time to MOVE!',
+    sample: 'WAKE UP SOLDIER! No excuses, time to MOVE!'
   },
   {
     id: 'sweet-angel',
@@ -15,7 +15,7 @@ export const VOICE_MOODS: VoiceMoodConfig[] = [
     description: 'Gentle and caring',
     icon: '😇',
     color: 'bg-pink-500',
-    sample: 'Good morning sunshine! Time to start your beautiful day.',
+    sample: 'Good morning sunshine! Time to start your beautiful day.'
   },
   {
     id: 'anime-hero',
@@ -23,7 +23,7 @@ export const VOICE_MOODS: VoiceMoodConfig[] = [
     description: 'Energetic and inspiring',
     icon: '⚡',
     color: 'bg-yellow-500',
-    sample: 'The power of friendship compels you to wake up!',
+    sample: 'The power of friendship compels you to wake up!'
   },
   {
     id: 'savage-roast',
@@ -31,7 +31,7 @@ export const VOICE_MOODS: VoiceMoodConfig[] = [
     description: 'Brutally honest wake-up',
     icon: '🔥',
     color: 'bg-orange-600',
-    sample: 'Oh look, sleeping beauty finally decided to join the world.',
+    sample: 'Oh look, sleeping beauty finally decided to join the world.'
   },
   {
     id: 'motivational',
@@ -39,7 +39,7 @@ export const VOICE_MOODS: VoiceMoodConfig[] = [
     description: 'Positive and uplifting',
     icon: '💪',
     color: 'bg-blue-600',
-    sample: 'Champions rise early! Today is your day to shine!',
+    sample: 'Champions rise early! Today is your day to shine!'
   },
   {
     id: 'gentle',
@@ -47,8 +47,8 @@ export const VOICE_MOODS: VoiceMoodConfig[] = [
     description: 'Soft and soothing',
     icon: '🌸',
     color: 'bg-purple-500',
-    sample: "Take your time, but please wake up when you're ready.",
-  },
+    sample: 'Take your time, but please wake up when you\'re ready.'
+  }
 ];
 
 export const DAYS_OF_WEEK = [
@@ -58,7 +58,7 @@ export const DAYS_OF_WEEK = [
   { id: 3, short: 'Wed', full: 'Wednesday' },
   { id: 4, short: 'Thu', full: 'Thursday' },
   { id: 5, short: 'Fri', full: 'Friday' },
-  { id: 6, short: 'Sat', full: 'Saturday' },
+  { id: 6, short: 'Sat', full: 'Saturday' }
 ];
 
 export const formatTime = (time: string): string => {
@@ -130,9 +130,7 @@ export const isAlarmTime = (alarm: Alarm): boolean => {
   );
 };
 
-export const getTimeUntilNextAlarm = (
-  alarms: Alarm[]
-): { alarm: Alarm | null; timeUntil: string } => {
+export const getTimeUntilNextAlarm = (alarms: Alarm[]): { alarm: Alarm | null; timeUntil: string } => {
   const enabledAlarms = alarms.filter(a => a.enabled && a.days.length > 0);
 
   if (enabledAlarms.length === 0) {
@@ -162,12 +160,12 @@ export const getTimeUntilNextAlarm = (
   if (hours > 0) {
     return {
       alarm: nextAlarm,
-      timeUntil: `${hours}h ${minutes}m`,
+      timeUntil: `${hours}h ${minutes}m`
     };
   } else {
     return {
       alarm: nextAlarm,
-      timeUntil: `${minutes}m`,
+      timeUntil: `${minutes}m`
     };
   }
 };
@@ -181,11 +179,7 @@ export const playNotificationSound = async (): Promise<void> => {
   }
 };
 
-export const validateAlarmForm = (data: {
-  time: string;
-  label: string;
-  days: number[];
-}): string[] => {
+export const validateAlarmForm = (data: { time: string; label: string; days: number[] }): string[] => {
   const errors: string[] = [];
 
   if (!data.time || !/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(data.time)) {

@@ -1,11 +1,11 @@
 /// <reference lib="dom" />
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
+  DialogDescription
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -38,7 +38,7 @@ import {
   Frown,
   Meh,
   Angry,
-  Laugh,
+  Laugh
 } from 'lucide-react';
 import UserTestingService, { UserFeedback } from '../../services/user-testing';
 import { useTheme } from '../../hooks/useTheme';
@@ -66,9 +66,9 @@ interface FeedbackStep {
 const EMOJI_REACTIONS = [
   { emoji: '😍', label: 'Love it', value: 5, color: 'text-pink-500' },
   { emoji: '😊', label: 'Like it', value: 4, color: 'text-green-500' },
-  { emoji: '😐', label: "It's okay", value: 3, color: 'text-yellow-500' },
+  { emoji: '😐', label: 'It\'s okay', value: 3, color: 'text-yellow-500' },
   { emoji: '😕', label: 'Dislike it', value: 2, color: 'text-orange-500' },
-  { emoji: '😤', label: 'Hate it', value: 1, color: 'text-red-500' },
+  { emoji: '😤', label: 'Hate it', value: 1, color: 'text-red-500' }
 ];
 
 const MOOD_REACTIONS = [
@@ -76,7 +76,7 @@ const MOOD_REACTIONS = [
   { icon: Smile, label: 'Happy', value: 4, color: 'text-green-500' },
   { icon: Meh, label: 'Neutral', value: 3, color: 'text-gray-500' },
   { icon: Frown, label: 'Sad', value: 2, color: 'text-orange-500' },
-  { icon: Angry, label: 'Frustrated', value: 1, color: 'text-red-500' },
+  { icon: Angry, label: 'Frustrated', value: 1, color: 'text-red-500' }
 ];
 
 const DEFAULT_CATEGORIES = [
@@ -88,7 +88,7 @@ const DEFAULT_CATEGORIES = [
   { id: 'accessibility', label: 'Accessibility', icon: '♿', color: 'bg-teal-500' },
   { id: 'themes', label: 'Themes & Design', icon: '🌈', color: 'bg-pink-500' },
   { id: 'alarms', label: 'Alarm Functions', icon: '⏰', color: 'bg-orange-500' },
-  { id: 'general', label: 'General', icon: '💬', color: 'bg-gray-500' },
+  { id: 'general', label: 'General', icon: '💬', color: 'bg-gray-500' }
 ];
 
 export function RedesignedFeedbackModal({
@@ -99,7 +99,7 @@ export function RedesignedFeedbackModal({
   enableGamification = true,
   enableAnonymous = true,
   useMultiStep = true,
-  customCategories = DEFAULT_CATEGORIES,
+  customCategories = DEFAULT_CATEGORIES
 }: RedesignedFeedbackModalProps) {
   const { themeConfig } = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
@@ -115,7 +115,7 @@ export function RedesignedFeedbackModal({
     tags: [] as string[],
     isAnonymous: false,
     priority: 'medium' as UserFeedback['priority'],
-    customFields: {} as Record<string, any>,
+    customFields: {} as Record<string, any>
   });
   const [screenshot, setScreenshot] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -136,55 +136,53 @@ export function RedesignedFeedbackModal({
     return points;
   };
 
-  const steps: FeedbackStep[] = useMultiStep
-    ? [
-        {
-          id: 'type',
-          title: "What's on your mind?",
-          description: "Choose the type of feedback you'd like to share",
-          component: <TypeSelectionStep />,
-          isComplete: feedbackData.type !== null,
-        },
-        {
-          id: 'rating',
-          title: 'How are you feeling?',
-          description: 'Share your overall experience with us',
-          component: <RatingStep />,
-          isComplete: feedbackData.rating > 0 || feedbackData.emojiRating > 0,
-          isOptional: feedbackData.type === 'bug',
-        },
-        {
-          id: 'details',
-          title: 'Tell us more',
-          description: 'Share the details of your feedback',
-          component: <DetailsStep />,
-          isComplete: feedbackData.title.trim() !== '',
-        },
-        {
-          id: 'category',
-          title: 'Categorize your feedback',
-          description: 'Help us route your feedback to the right team',
-          component: <CategoryStep />,
-          isComplete: feedbackData.category !== null,
-        },
-        {
-          id: 'extras',
-          title: 'Add more context',
-          description: 'Optional: Screenshots, tags, and additional details',
-          component: <ExtrasStep />,
-          isComplete: true,
-          isOptional: true,
-        },
-      ]
-    : [
-        {
-          id: 'all',
-          title: 'Share Your Feedback',
-          description: 'Help us improve Relife Alarms',
-          component: <ComprehensiveStep />,
-          isComplete: feedbackData.title.trim() !== '',
-        },
-      ];
+  const steps: FeedbackStep[] = useMultiStep ? [
+    {
+      id: 'type',
+      title: 'What\'s on your mind?',
+      description: 'Choose the type of feedback you\'d like to share',
+      component: <TypeSelectionStep />,
+      isComplete: feedbackData.type !== null
+    },
+    {
+      id: 'rating',
+      title: 'How are you feeling?',
+      description: 'Share your overall experience with us',
+      component: <RatingStep />,
+      isComplete: feedbackData.rating > 0 || feedbackData.emojiRating > 0,
+      isOptional: feedbackData.type === 'bug'
+    },
+    {
+      id: 'details',
+      title: 'Tell us more',
+      description: 'Share the details of your feedback',
+      component: <DetailsStep />,
+      isComplete: feedbackData.title.trim() !== ''
+    },
+    {
+      id: 'category',
+      title: 'Categorize your feedback',
+      description: 'Help us route your feedback to the right team',
+      component: <CategoryStep />,
+      isComplete: feedbackData.category !== null
+    },
+    {
+      id: 'extras',
+      title: 'Add more context',
+      description: 'Optional: Screenshots, tags, and additional details',
+      component: <ExtrasStep />,
+      isComplete: true,
+      isOptional: true
+    }
+  ] : [
+    {
+      id: 'all',
+      title: 'Share Your Feedback',
+      description: 'Help us improve Relife Alarms',
+      component: <ComprehensiveStep />,
+      isComplete: feedbackData.title.trim() !== ''
+    }
+  ];
 
   const currentStepData = steps[currentStep];
   const isLastStep = currentStep === steps.length - 1;
@@ -238,13 +236,12 @@ export function RedesignedFeedbackModal({
       const submissionData: Partial<UserFeedback> = {
         type: feedbackData.type,
         category: feedbackData.category,
-        rating:
-          feedbackData.rating || feedbackData.emojiRating || feedbackData.moodRating,
+        rating: feedbackData.rating || feedbackData.emojiRating || feedbackData.moodRating,
         title: feedbackData.title.trim(),
         description: feedbackData.description.trim(),
         screenshot: feedbackData.screenshot || undefined,
         page: window.location.pathname,
-        action: 'gamified_feedback',
+        action: 'gamified_feedback'
       };
 
       const feedbackId = await userTestingService.submitFeedback(submissionData);
@@ -261,13 +258,11 @@ export function RedesignedFeedbackModal({
       setSubmitted(true);
 
       // Reset form after short delay
-      setTimeout(
-        () => {
-          resetForm();
-          onClose();
-        },
-        enableGamification ? 3000 : 2000
-      );
+      setTimeout(() => {
+        resetForm();
+        onClose();
+      }, enableGamification ? 3000 : 2000);
+
     } catch (error) {
       console.error('Failed to submit feedback:', error);
     } finally {
@@ -288,7 +283,7 @@ export function RedesignedFeedbackModal({
       tags: [],
       isAnonymous: false,
       priority: 'medium',
-      customFields: {},
+      customFields: {}
     });
     setScreenshot(null);
     setSubmitted(false);
@@ -312,8 +307,7 @@ export function RedesignedFeedbackModal({
         description: 'Share your overall satisfaction',
         icon: Star,
         color: 'from-yellow-400 to-orange-500',
-        bgColor:
-          'bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20',
+        bgColor: 'bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20'
       },
       {
         id: 'text',
@@ -321,8 +315,7 @@ export function RedesignedFeedbackModal({
         description: 'Share thoughts and suggestions',
         icon: MessageSquare,
         color: 'from-blue-400 to-purple-500',
-        bgColor:
-          'bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20',
+        bgColor: 'bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20'
       },
       {
         id: 'suggestion',
@@ -330,8 +323,7 @@ export function RedesignedFeedbackModal({
         description: 'Suggest new features or improvements',
         icon: Lightbulb,
         color: 'from-green-400 to-emerald-500',
-        bgColor:
-          'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20',
+        bgColor: 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20'
       },
       {
         id: 'complaint',
@@ -339,8 +331,7 @@ export function RedesignedFeedbackModal({
         description: 'Something bothering you?',
         icon: ThumbsDown,
         color: 'from-orange-400 to-red-500',
-        bgColor:
-          'bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20',
+        bgColor: 'bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20'
       },
       {
         id: 'bug',
@@ -348,9 +339,8 @@ export function RedesignedFeedbackModal({
         description: 'Report technical problems',
         icon: Bug,
         color: 'from-red-400 to-pink-500',
-        bgColor:
-          'bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20',
-      },
+        bgColor: 'bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20'
+      }
     ];
 
     return (
@@ -362,9 +352,7 @@ export function RedesignedFeedbackModal({
           return (
             <button
               key={type.id}
-              onClick={() =>
-                setFeedbackData(prev => ({ ...prev, type: type.id as any }))
-              }
+              onClick={() => setFeedbackData(prev => ({ ...prev, type: type.id as any }))}
               className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
                 isSelected
                   ? `border-primary bg-primary/5 shadow-lg shadow-primary/20`
@@ -372,16 +360,12 @@ export function RedesignedFeedbackModal({
               }`}
             >
               <div className="flex flex-col items-center text-center space-y-3">
-                <div
-                  className={`w-14 h-14 rounded-full bg-gradient-to-br ${type.color} p-3 group-hover:scale-110 transition-transform duration-300`}
-                >
+                <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${type.color} p-3 group-hover:scale-110 transition-transform duration-300`}>
                   <Icon className="w-full h-full text-white" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg">{type.title}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                    {type.description}
-                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{type.description}</p>
                 </div>
                 {isSelected && (
                   <div className="absolute top-3 right-3">
@@ -402,32 +386,24 @@ export function RedesignedFeedbackModal({
       <div className="space-y-8">
         {/* Emoji Rating */}
         <div className="text-center">
-          <h3 className="text-lg font-semibold mb-4">
-            How do you feel about Relife Alarms?
-          </h3>
+          <h3 className="text-lg font-semibold mb-4">How do you feel about Relife Alarms?</h3>
           <div className="flex justify-center space-x-4">
             {EMOJI_REACTIONS.map(reaction => (
               <button
                 key={reaction.value}
-                onClick={() =>
-                  setFeedbackData(prev => ({
-                    ...prev,
-                    emojiRating: reaction.value,
-                    rating: reaction.value,
-                  }))
-                }
+                onClick={() => setFeedbackData(prev => ({
+                  ...prev,
+                  emojiRating: reaction.value,
+                  rating: reaction.value
+                }))}
                 className={`group flex flex-col items-center p-4 rounded-2xl transition-all duration-300 hover:scale-110 ${
                   feedbackData.emojiRating === reaction.value
                     ? 'bg-primary/10 ring-2 ring-primary shadow-lg'
                     : 'hover:bg-gray-50 dark:hover:bg-gray-800'
                 }`}
               >
-                <span className="text-4xl mb-2 group-hover:animate-bounce">
-                  {reaction.emoji}
-                </span>
-                <span className={`text-sm font-medium ${reaction.color}`}>
-                  {reaction.label}
-                </span>
+                <span className="text-4xl mb-2 group-hover:animate-bounce">{reaction.emoji}</span>
+                <span className={`text-sm font-medium ${reaction.color}`}>{reaction.label}</span>
               </button>
             ))}
           </div>
@@ -469,22 +445,18 @@ export function RedesignedFeedbackModal({
               return (
                 <button
                   key={mood.value}
-                  onClick={() =>
-                    setFeedbackData(prev => ({
-                      ...prev,
-                      moodRating: mood.value,
-                      rating: mood.value,
-                    }))
-                  }
+                  onClick={() => setFeedbackData(prev => ({
+                    ...prev,
+                    moodRating: mood.value,
+                    rating: mood.value
+                  }))}
                   className={`flex-1 flex flex-col items-center p-3 rounded-xl transition-all duration-300 ${
                     isSelected
                       ? 'bg-primary/10 ring-2 ring-primary'
                       : 'hover:bg-gray-50 dark:hover:bg-gray-800'
                   }`}
                 >
-                  <Icon
-                    className={`w-8 h-8 ${mood.color} ${isSelected ? 'animate-pulse' : ''}`}
-                  />
+                  <Icon className={`w-8 h-8 ${mood.color} ${isSelected ? 'animate-pulse' : ''}`} />
                   <span className="text-xs mt-1 font-medium">{mood.label}</span>
                 </button>
               );
@@ -506,9 +478,7 @@ export function RedesignedFeedbackModal({
           <Input
             id="title"
             value={feedbackData.title}
-            onChange={e =>
-              setFeedbackData(prev => ({ ...prev, title: e.target.value }))
-            }
+            onChange={(e) => setFeedbackData(prev => ({ ...prev, title: e.target.value }))}
             placeholder="Brief summary of your feedback..."
             className="mt-2 text-lg"
             required
@@ -522,9 +492,7 @@ export function RedesignedFeedbackModal({
           <Textarea
             id="description"
             value={feedbackData.description}
-            onChange={e =>
-              setFeedbackData(prev => ({ ...prev, description: e.target.value }))
-            }
+            onChange={(e) => setFeedbackData(prev => ({ ...prev, description: e.target.value }))}
             placeholder="Tell us more about your experience, what you liked, what could be improved..."
             className="mt-2 min-h-[120px] text-base"
             rows={5}
@@ -551,9 +519,7 @@ export function RedesignedFeedbackModal({
             </div>
             <Switch
               checked={feedbackData.isAnonymous}
-              onCheckedChange={checked =>
-                setFeedbackData(prev => ({ ...prev, isAnonymous: checked }))
-              }
+              onCheckedChange={(checked) => setFeedbackData(prev => ({ ...prev, isAnonymous: checked }))}
             />
           </div>
         )}
@@ -576,9 +542,7 @@ export function RedesignedFeedbackModal({
             return (
               <button
                 key={category.id}
-                onClick={() =>
-                  setFeedbackData(prev => ({ ...prev, category: category.id as any }))
-                }
+                onClick={() => setFeedbackData(prev => ({ ...prev, category: category.id as any }))}
                 className={`group relative p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
                   isSelected
                     ? 'border-primary bg-primary/5 shadow-lg shadow-primary/20'
@@ -586,9 +550,7 @@ export function RedesignedFeedbackModal({
                 }`}
               >
                 <div className="flex flex-col items-center text-center space-y-2">
-                  <div
-                    className={`w-10 h-10 rounded-full ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
-                  >
+                  <div className={`w-10 h-10 rounded-full ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                     <span className="text-xl">{category.icon}</span>
                   </div>
                   <span className="text-sm font-medium">{category.label}</span>
@@ -664,14 +626,7 @@ export function RedesignedFeedbackModal({
         <div>
           <Label className="text-base font-medium">Tags (optional)</Label>
           <div className="flex flex-wrap gap-2 mt-2">
-            {[
-              'Easy to Use',
-              'Beautiful Design',
-              'Fast Performance',
-              'Great Sounds',
-              'Accessibility',
-              'Mobile Friendly',
-            ].map(tag => {
+            {['Easy to Use', 'Beautiful Design', 'Fast Performance', 'Great Sounds', 'Accessibility', 'Mobile Friendly'].map((tag) => {
               const isSelected = feedbackData.tags.includes(tag);
               return (
                 <button
@@ -681,7 +636,7 @@ export function RedesignedFeedbackModal({
                       ...prev,
                       tags: isSelected
                         ? prev.tags.filter(t => t !== tag)
-                        : [...prev.tags, tag],
+                        : [...prev.tags, tag]
                     }));
                   }}
                   className={`px-3 py-1 rounded-full text-sm transition-all duration-300 ${
@@ -749,9 +704,7 @@ export function RedesignedFeedbackModal({
                 <Sparkles className="w-5 h-5 text-primary" />
                 <span className="font-semibold text-primary">Reward Earned!</span>
               </div>
-              <div className="text-3xl font-bold text-primary">
-                {rewardPoints} Points
-              </div>
+              <div className="text-3xl font-bold text-primary">{rewardPoints} Points</div>
               <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                 Added to your Relife Rewards
               </div>
@@ -790,9 +743,7 @@ export function RedesignedFeedbackModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent
-        className={`sm:max-w-2xl max-h-[90vh] overflow-y-auto ${themeConfig.spacing?.borderRadius?.xl ? 'rounded-xl' : 'rounded-lg'}`}
-      >
+      <DialogContent className={`sm:max-w-2xl max-h-[90vh] overflow-y-auto ${themeConfig.spacing?.borderRadius?.xl ? 'rounded-xl' : 'rounded-lg'}`}>
         <DialogHeader className="relative">
           <div className="absolute top-0 left-0 w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
             <div
@@ -820,7 +771,9 @@ export function RedesignedFeedbackModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mt-6">{currentStepData.component}</div>
+        <div className="mt-6">
+          {currentStepData.component}
+        </div>
 
         <div className="flex justify-between items-center gap-4 pt-6 border-t">
           <div className="flex items-center gap-2">
@@ -871,9 +824,7 @@ export function RedesignedFeedbackModal({
                 disabled={!currentStepData.isComplete && !currentStepData.isOptional}
                 className="flex items-center gap-2"
               >
-                {currentStepData.isOptional && !currentStepData.isComplete
-                  ? 'Skip'
-                  : 'Next'}
+                {currentStepData.isOptional && !currentStepData.isComplete ? 'Skip' : 'Next'}
                 <ArrowRight className="w-4 h-4" />
               </Button>
             )}

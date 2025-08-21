@@ -2,26 +2,11 @@
 // Displays invoice history, upcoming payments, and payment receipts
 
 import React, { useState } from 'react';
-import {
-  Receipt,
-  Download,
-  Eye,
-  Calendar,
-  AlertCircle,
-  CheckCircle,
-  Clock,
-} from 'lucide-react';
+import { Receipt, Download, Eye, Calendar, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '../ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Alert, AlertDescription } from '../ui/alert';
 import type { Invoice, PaymentStatus } from '../../types/premium';
 
@@ -42,7 +27,7 @@ export function BillingHistory({
   onDownloadInvoice,
   onViewInvoice,
   onPayInvoice,
-  className = '',
+  className = ''
 }: BillingHistoryProps) {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
@@ -50,14 +35,14 @@ export function BillingHistory({
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric',
+      year: 'numeric'
     }).format(new Date(date));
   };
 
   const formatCurrency = (amount: number, currency: string = 'usd') => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency.toUpperCase(),
+      currency: currency.toUpperCase()
     }).format(amount / 100);
   };
 
@@ -99,7 +84,11 @@ export function BillingHistory({
           </Badge>
         );
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return (
+          <Badge variant="outline">
+            {status}
+          </Badge>
+        );
     }
   };
 
@@ -128,11 +117,7 @@ export function BillingHistory({
   };
 
   const isPastDue = (invoice: Invoice) => {
-    return (
-      invoice.dueDate &&
-      new Date(invoice.dueDate) < new Date() &&
-      invoice.status !== 'succeeded'
-    );
+    return invoice.dueDate && new Date(invoice.dueDate) < new Date() && invoice.status !== 'succeeded';
   };
 
   if (isLoading) {
@@ -144,7 +129,7 @@ export function BillingHistory({
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {[1, 2, 3].map(i => (
+              {[1, 2, 3].map((i) => (
                 <div key={i} className="flex items-center space-x-4 animate-pulse">
                   <div className="h-4 bg-gray-200 rounded w-1/4"></div>
                   <div className="h-4 bg-gray-200 rounded w-1/6"></div>
@@ -203,8 +188,7 @@ export function BillingHistory({
         <Alert className="border-red-200 bg-red-50">
           <AlertCircle className="h-4 w-4 text-red-600" />
           <AlertDescription className="text-red-600">
-            You have failed or past due payments. Please update your payment method or
-            contact support.
+            You have failed or past due payments. Please update your payment method or contact support.
           </AlertDescription>
         </Alert>
       )}
@@ -270,23 +254,20 @@ export function BillingHistory({
                       <TableCell className="text-right">
                         <div className="flex items-center gap-2 justify-end">
                           {/* Pay button for failed/unpaid invoices */}
-                          {(invoice.status === 'failed' ||
-                            invoice.status === 'requires_action' ||
-                            isPastDue(invoice)) &&
-                            onPayInvoice && (
-                              <Button
-                                size="sm"
-                                onClick={() => handlePayInvoice(invoice.id)}
-                                disabled={actionLoading === `pay-${invoice.id}`}
-                                className="bg-blue-600 hover:bg-blue-700"
-                              >
-                                {actionLoading === `pay-${invoice.id}` ? (
-                                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                ) : (
-                                  'Pay Now'
-                                )}
-                              </Button>
-                            )}
+                          {(invoice.status === 'failed' || invoice.status === 'requires_action' || isPastDue(invoice)) && onPayInvoice && (
+                            <Button
+                              size="sm"
+                              onClick={() => handlePayInvoice(invoice.id)}
+                              disabled={actionLoading === `pay-${invoice.id}`}
+                              className="bg-blue-600 hover:bg-blue-700"
+                            >
+                              {actionLoading === `pay-${invoice.id}` ? (
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                'Pay Now'
+                              )}
+                            </Button>
+                          )}
 
                           {/* View invoice */}
                           {onViewInvoice && (
@@ -328,8 +309,8 @@ export function BillingHistory({
       {/* Payment Info */}
       <div className="text-center">
         <p className="text-xs text-gray-500">
-          All payments are processed securely through Stripe. For billing questions,
-          contact our support team.
+          All payments are processed securely through Stripe.
+          For billing questions, contact our support team.
         </p>
       </div>
     </div>

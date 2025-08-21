@@ -1,9 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import {
-  capacitorEnhanced,
-  DeviceFeatures,
-  AlarmNotification,
-} from '../services/capacitor-enhanced';
+import { capacitorEnhanced, DeviceFeatures, AlarmNotification } from '../services/capacitor-enhanced';
 import { AppState } from '@capacitor/app';
 import { ConnectionStatus } from '@capacitor/network';
 
@@ -121,20 +117,17 @@ export function useHapticFeedback() {
     setIsSupported(features?.hasHaptics || false);
   }, []);
 
-  const triggerHaptic = useCallback(
-    async (
-      type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
-    ) => {
-      if (!isSupported) return;
+  const triggerHaptic = useCallback(async (
+    type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
+  ) => {
+    if (!isSupported) return;
 
-      try {
-        await capacitorEnhanced.triggerHapticFeedback(type);
-      } catch (error) {
-        console.warn('Haptic feedback failed:', error);
-      }
-    },
-    [isSupported]
-  );
+    try {
+      await capacitorEnhanced.triggerHapticFeedback(type);
+    } catch (error) {
+      console.warn('Haptic feedback failed:', error);
+    }
+  }, [isSupported]);
 
   return {
     isSupported,

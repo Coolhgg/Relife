@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Integration tests for the complete theme system
  * Tests end-to-end functionality including UI components, persistence, and user interactions
@@ -17,25 +18,13 @@ vi.mock('../services/error-handler');
 
 // Mock UI components that might not be available
 vi.mock('../components/ui/tabs', () => ({
-  Tabs: ({ children, ...props }: any) => (
-    <div data-testid="tabs" {...props}>
-      {children}
-    </div>
-  ),
-  TabsList: ({ children, ...props }: any) => (
-    <div data-testid="tabs-list" {...props}>
-      {children}
-    </div>
-  ),
+  Tabs: ({ children, ...props }: any) => <div data-testid="tabs" {...props}>{children}</div>,
+  TabsList: ({ children, ...props }: any) => <div data-testid="tabs-list" {...props}>{children}</div>,
   TabsTrigger: ({ children, value, ...props }: any) => (
-    <button data-testid={`tab-trigger-${value}`} {...props}>
-      {children}
-    </button>
+    <button data-testid={`tab-trigger-${value}`} {...props}>{children}</button>
   ),
   TabsContent: ({ children, value, ...props }: any) => (
-    <div data-testid={`tab-content-${value}`} {...props}>
-      {children}
-    </div>
+    <div data-testid={`tab-content-${value}`} {...props}>{children}</div>
   ),
 }));
 
@@ -98,12 +87,12 @@ const mockLocalStorage = (() => {
     },
     clear: () => {
       store = {};
-    },
+    }
   };
 })();
 
 Object.defineProperty(window, 'localStorage', {
-  value: mockLocalStorage,
+  value: mockLocalStorage
 });
 
 const mockUser: User = {
@@ -112,7 +101,7 @@ const mockUser: User = {
   name: 'Test User',
   createdAt: new Date().toISOString(),
   level: 1,
-  subscriptionTier: 'free',
+  subscriptionTier: 'free'
 };
 
 const mockAppState: AppState = {
@@ -121,7 +110,7 @@ const mockAppState: AppState = {
   activeAlarm: null,
   permissions: {
     notifications: { granted: false },
-    microphone: { granted: false },
+    microphone: { granted: false }
   },
   isOnboarding: false,
   currentView: 'settings',
@@ -130,7 +119,7 @@ const mockAppState: AppState = {
   achievements: [],
   tournaments: [],
   teams: [],
-  theme: 'light',
+  theme: 'light'
 };
 
 const TestApp = () => {

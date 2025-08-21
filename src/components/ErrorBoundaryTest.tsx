@@ -24,16 +24,12 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
     switch (type) {
       case 'render':
         // This will cause a render error
-        throw new Error(
-          'Test render error - This is intentional for testing error boundaries'
-        );
+        throw new Error('Test render error - This is intentional for testing error boundaries');
 
       case 'async':
         // Simulate async error
         setTimeout(() => {
-          throw new Error(
-            'Test async error - This is intentional for testing error boundaries'
-          );
+          throw new Error('Test async error - This is intentional for testing error boundaries');
         }, 100);
         break;
 
@@ -51,27 +47,19 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
 
       case 'network-simulation':
         // Simulate network error
-        throw new Error(
-          'Network request failed - This is intentional for testing error boundaries'
-        );
+        throw new Error('Network request failed - This is intentional for testing error boundaries');
 
       case 'media-error':
         // Simulate media/audio error
-        throw new Error(
-          'Audio playback failed - This is intentional for testing error boundaries'
-        );
+        throw new Error('Audio playback failed - This is intentional for testing error boundaries');
 
       case 'ai-error':
         // Simulate AI service error
-        throw new Error(
-          'AI service unavailable - This is intentional for testing error boundaries'
-        );
+        throw new Error('AI service unavailable - This is intentional for testing error boundaries');
 
       case 'data-error':
         // Simulate data/storage error
-        throw new Error(
-          'Failed to save data - This is intentional for testing error boundaries'
-        );
+        throw new Error('Failed to save data - This is intentional for testing error boundaries');
 
       default:
         throw new Error(`Unknown test error type: ${type}`);
@@ -80,9 +68,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
 
   const CrashComponent = () => {
     if (errorType === 'render') {
-      throw new Error(
-        'Test render error - This is intentional for testing error boundaries'
-      );
+      throw new Error('Test render error - This is intentional for testing error boundaries');
     }
     return <div>This component would crash with render error</div>;
   };
@@ -101,18 +87,8 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
               className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
             >
               <span className="sr-only">Close</span>
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           )}
@@ -127,8 +103,8 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
                   Development Mode Only
                 </p>
                 <p className="text-yellow-700 dark:text-yellow-300 text-sm mt-1">
-                  These buttons trigger intentional errors to test error boundaries. The
-                  app should gracefully handle these errors without crashing.
+                  These buttons trigger intentional errors to test error boundaries.
+                  The app should gracefully handle these errors without crashing.
                 </p>
               </div>
             </div>
@@ -136,9 +112,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-semibold text-gray-900 dark:text-white text-sm">
-            Test Error Types:
-          </h3>
+          <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Test Error Types:</h3>
 
           <button
             onClick={() => triggerError('render')}
@@ -191,9 +165,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
             <Database className="w-4 h-4" />
             <div className="text-left">
               <div className="font-medium">Data Error</div>
-              <div className="text-xs opacity-75">
-                Simulates database/storage failure
-              </div>
+              <div className="text-xs opacity-75">Simulates database/storage failure</div>
             </div>
           </button>
 

@@ -10,7 +10,7 @@ let mockPaymentState = {
   paymentIntents: new Map(),
   subscriptions: new Map(),
   customers: new Map(),
-  paymentMethods: new Map(),
+  paymentMethods: new Map()
 };
 
 const mockStripe = {
@@ -47,16 +47,14 @@ const mockStripe = {
                   elementType: type,
                   empty: false,
                   complete: true,
-                  error: null,
+                  error: null
                 });
               }
             }, 100);
           }),
 
           off: jest.fn((event: string, handler?: Function) => {
-            console.log(
-              `🔇 Mock Stripe element event listener removed: ${type} - ${event}`
-            );
+            console.log(`🔇 Mock Stripe element event listener removed: ${type} - ${event}`);
           }),
 
           // Element updates
@@ -75,7 +73,7 @@ const mockStripe = {
           // Element clear
           clear: jest.fn(() => {
             console.log(`🧹 Mock Stripe element cleared: ${type}`);
-          }),
+          })
         };
       }),
 
@@ -94,7 +92,7 @@ const mockStripe = {
       fetchUpdates: jest.fn(() => {
         console.log('🔄 Mock Stripe elements fetchUpdates');
         return Promise.resolve({});
-      }),
+      })
     };
 
     return mockElements;
@@ -111,9 +109,9 @@ const mockStripe = {
         amount: 2999,
         currency: 'usd',
         payment_method: 'pm_mock_card',
-        client_secret: 'pi_mock_client_secret',
+        client_secret: 'pi_mock_client_secret'
       },
-      error: null,
+      error: null
     });
   }),
 
@@ -127,9 +125,9 @@ const mockStripe = {
         amount: 2999,
         currency: 'usd',
         payment_method: 'pm_mock_card',
-        client_secret: clientSecret,
+        client_secret: clientSecret
       },
-      error: null,
+      error: null
     });
   }),
 
@@ -142,9 +140,9 @@ const mockStripe = {
         id: `seti_mock_${Math.random().toString(36).substr(2, 9)}`,
         status: 'succeeded',
         payment_method: 'pm_mock_card',
-        client_secret: clientSecret,
+        client_secret: clientSecret
       },
-      error: null,
+      error: null
     });
   }),
 
@@ -161,11 +159,11 @@ const mockStripe = {
           last4: '4242',
           exp_month: 12,
           exp_year: 2025,
-          funding: 'credit',
+          funding: 'credit'
         },
-        billing_details: billing_details || {},
+        billing_details: billing_details || {}
       },
-      error: null,
+      error: null
     });
   }),
 
@@ -182,10 +180,10 @@ const mockStripe = {
           last4: '4242',
           exp_month: 12,
           exp_year: 2025,
-          funding: 'credit',
-        },
+          funding: 'credit'
+        }
       },
-      error: null,
+      error: null
     });
   }),
 
@@ -194,29 +192,29 @@ const mockStripe = {
     console.log('💰 Mock Stripe retrievePrice', priceId);
 
     const mockPrices: Record<string, any> = {
-      price_premium_monthly: {
+      'price_premium_monthly': {
         id: 'price_premium_monthly',
         unit_amount: 999,
         currency: 'usd',
         recurring: { interval: 'month' },
-        product: 'prod_premium',
+        product: 'prod_premium'
       },
-      price_ultimate_monthly: {
+      'price_ultimate_monthly': {
         id: 'price_ultimate_monthly',
         unit_amount: 2999,
         currency: 'usd',
         recurring: { interval: 'month' },
-        product: 'prod_ultimate',
-      },
+        product: 'prod_ultimate'
+      }
     };
 
     return Promise.resolve({
       price: mockPrices[priceId] || {
         id: priceId,
         unit_amount: 999,
-        currency: 'usd',
+        currency: 'usd'
       },
-      error: null,
+      error: null
     });
   }),
 
@@ -236,13 +234,13 @@ const mockStripe = {
               price: {
                 id: 'price_premium_monthly',
                 unit_amount: 999,
-                currency: 'usd',
-              },
-            },
-          ],
-        },
+                currency: 'usd'
+              }
+            }
+          ]
+        }
       },
-      error: null,
+      error: null
     });
   }),
 
@@ -261,10 +259,10 @@ const mockStripe = {
         console.log('⚠️ Mock Stripe radar earlyFraudWarnings.list');
         return Promise.resolve({
           data: [],
-          has_more: false,
+          has_more: false
         });
-      }),
-    },
+      })
+    }
   },
 
   // Webhooks
@@ -277,12 +275,12 @@ const mockStripe = {
         data: {
           object: {
             id: `pi_mock_${Math.random().toString(36).substr(2, 9)}`,
-            status: 'succeeded',
-          },
+            status: 'succeeded'
+          }
         },
-        created: Math.floor(Date.now() / 1000),
+        created: Math.floor(Date.now() / 1000)
       };
-    }),
+    })
   },
 
   // ApplePay and GooglePay
@@ -305,11 +303,11 @@ const mockStripe = {
               paymentMethod: {
                 id: `pm_mock_${Math.random().toString(36).substr(2, 9)}`,
                 type: 'card',
-                card: { brand: 'visa', last4: '4242' },
+                card: { brand: 'visa', last4: '4242' }
               },
               complete: jest.fn((status: string) => {
                 console.log(`✅ Mock Stripe payment complete: ${status}`);
-              }),
+              })
             });
           }, 100);
         }
@@ -321,7 +319,7 @@ const mockStripe = {
 
       update: jest.fn((options: any) => {
         console.log('🔄 Mock Stripe paymentRequest.update', options);
-      }),
+      })
     };
   }),
 
@@ -349,7 +347,7 @@ const mockStripe = {
         this.param = param;
         this.name = 'StripeInvalidRequestError';
       }
-    },
+    }
   },
 
   // Internal methods for testing
@@ -358,7 +356,7 @@ const mockStripe = {
       paymentIntents: new Map(),
       subscriptions: new Map(),
       customers: new Map(),
-      paymentMethods: new Map(),
+      paymentMethods: new Map()
     };
     console.log('🧹 Mock Stripe reset');
   }),
@@ -373,25 +371,23 @@ const mockStripe = {
     console.log(`📋 Mock Stripe subscription set: ${id}`);
   }),
 
-  _mockTriggerError: jest.fn(
-    (errorType: 'card_error' | 'invalid_request_error', message: string) => {
-      console.log(`❌ Mock Stripe error trigger: ${errorType} - ${message}`);
-      if (errorType === 'card_error') {
-        throw new mockStripe.errors.StripeCardError(message, 'card_declined');
-      } else {
-        throw new mockStripe.errors.StripeInvalidRequestError(message);
-      }
+  _mockTriggerError: jest.fn((errorType: 'card_error' | 'invalid_request_error', message: string) => {
+    console.log(`❌ Mock Stripe error trigger: ${errorType} - ${message}`);
+    if (errorType === 'card_error') {
+      throw new mockStripe.errors.StripeCardError(message, 'card_declined');
+    } else {
+      throw new mockStripe.errors.StripeInvalidRequestError(message);
     }
-  ),
+  })
 };
 
 // Factory function for creating Stripe instance
-export const loadStripe = jest.fn((publishableKey: string, options?: any) => {
+export const _loadStripe = vi.fn((publishableKey: string, options?: any) => {
   console.log(`💳 Mock Stripe loaded: ${publishableKey}`, options);
   return Promise.resolve(mockStripe);
 });
 
 // For direct Stripe object mocking
-export const Stripe = mockStripe;
+export const _Stripe = mockStripe;
 
 export default mockStripe;

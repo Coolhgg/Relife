@@ -102,7 +102,7 @@ export const IntegrationTestProvider: React.FC<{
     environment = {},
     network = {},
     router = {},
-    queryClient: queryClientOptions = {},
+    queryClient: queryClientOptions = {}
   } = options;
 
   // Create QueryClient with options
@@ -112,12 +112,12 @@ export const IntegrationTestProvider: React.FC<{
         retry: queryClientOptions.retry ?? false,
         cacheTime: queryClientOptions.cacheTime ?? 0,
         staleTime: queryClientOptions.staleTime ?? 0,
-        refetchOnWindowFocus: queryClientOptions.refetchOnWindowFocus ?? false,
+        refetchOnWindowFocus: queryClientOptions.refetchOnWindowFocus ?? false
       },
       mutations: {
-        retry: false,
-      },
-    },
+        retry: false
+      }
+    }
   });
 
   // Configure context options based on integration options
@@ -140,17 +140,17 @@ export const IntegrationTestProvider: React.FC<{
         return !['basic_alarms', 'basic_themes'].includes(feature);
       }),
       currentTier: user.tier || 'free',
-      premiumFeatures: features.premiumFeatures
-        ? ['unlimited_alarms', 'custom_voices', 'themes', 'battle_mode']
-        : [],
-      ultimateFeatures: ['ai_optimization', 'advanced_analytics', 'priority_support'],
+      premiumFeatures: features.premiumFeatures ? [
+        'unlimited_alarms', 'custom_voices', 'themes', 'battle_mode'
+      ] : [],
+      ultimateFeatures: ['ai_optimization', 'advanced_analytics', 'priority_support']
     },
 
     language: {
       language: app.language || 'en',
       dir: app.language === 'ar' ? 'rtl' : 'ltr',
       isLoading: app.loading || false,
-      error: app.error || null,
+      error: app.error || null
     },
 
     alarm: {
@@ -159,7 +159,7 @@ export const IntegrationTestProvider: React.FC<{
       error: app.error || null,
       getUpcomingAlarms: jest.fn(() =>
         (data.alarms || []).filter((alarm: any) => alarm.enabled)
-      ),
+      )
     },
 
     theme: {
@@ -168,8 +168,8 @@ export const IntegrationTestProvider: React.FC<{
       animations: !environment.mobile, // Reduce animations on mobile
       customThemes: data.themes || [],
       isLoading: app.loading || false,
-      error: app.error || null,
-    },
+      error: app.error || null
+    }
   };
 
   // Configure service options based on integration options
@@ -192,50 +192,48 @@ export const IntegrationTestProvider: React.FC<{
         if (network.intermittent && Math.random() > 0.5) {
           throw new Error('Sync failed - connection timeout');
         }
-      }),
+      })
     },
 
     analyticsService: {
       track: features.analytics ? jest.fn() : jest.fn(),
-      identify: features.analytics ? jest.fn() : jest.fn(),
+      identify: features.analytics ? jest.fn() : jest.fn()
     },
 
     battleService: {
       getBattles: jest.fn().mockResolvedValue(data.battles || []),
       createBattle: features.battleMode
         ? jest.fn().mockResolvedValue({ id: 'battle-123' })
-        : jest.fn().mockRejectedValue(new Error('Battle mode not available')),
+        : jest.fn().mockRejectedValue(new Error('Battle mode not available'))
     },
 
     subscriptionService: {
       getSubscription: jest.fn().mockResolvedValue(
-        user.tier !== 'free'
-          ? {
-              tier: user.tier,
-              status: 'active',
-              features: contextOptions.featureAccess?.premiumFeatures || [],
-            }
-          : null
+        user.tier !== 'free' ? {
+          tier: user.tier,
+          status: 'active',
+          features: contextOptions.featureAccess?.premiumFeatures || []
+        } : null
       ),
-      checkAccess: contextOptions.featureAccess?.hasAccess || jest.fn(() => true),
+      checkAccess: contextOptions.featureAccess?.hasAccess || jest.fn(() => true)
     },
 
     voiceService: {
       getVoices: jest.fn().mockResolvedValue(data.voices || []),
       generateVoice: features.voiceGeneration
         ? jest.fn().mockResolvedValue({ url: 'mock-voice-url' })
-        : jest.fn().mockRejectedValue(new Error('Voice generation not available')),
+        : jest.fn().mockRejectedValue(new Error('Voice generation not available'))
     },
 
     notificationService: {
-      requestPermission: jest
-        .fn()
-        .mockResolvedValue(environment.notifications || 'granted'),
+      requestPermission: jest.fn().mockResolvedValue(
+        environment.notifications || 'granted'
+      ),
       showNotification: jest.fn().mockImplementation(async (title, options) => {
         if (environment.notifications === 'denied') {
           throw new Error('Notifications not permitted');
         }
-      }),
+      })
     },
 
     audioService: {
@@ -247,7 +245,7 @@ export const IntegrationTestProvider: React.FC<{
           throw new Error('Cannot load sound - offline');
         }
         return { id: 'sound-' + Date.now(), loaded: true };
-      }),
+      })
     },
 
     storageService: {
@@ -271,15 +269,15 @@ export const IntegrationTestProvider: React.FC<{
         if (network.slow) {
           await new Promise(resolve => setTimeout(resolve, 500));
         }
-      }),
-    },
+      })
+    }
   };
 
   // Router configuration
   const routerConfig: MemoryRouterProps = {
     initialEntries: router.initialEntries || ['/'],
     initialIndex: router.initialIndex,
-    ...router,
+    ...router
   };
 
   return (
@@ -297,7 +295,7 @@ export const IntegrationTestProvider: React.FC<{
 // INTEGRATION SCENARIOS
 // ===============================
 
-export const integrationScenarios = {
+export const _integrationScenarios = {
   // New user just signed up
   newUser: {
     user: {
@@ -307,21 +305,21 @@ export const integrationScenarios = {
         id: 'new-user-123',
         email: 'newuser@example.com',
         name: 'New User',
-        createdAt: new Date().toISOString(),
-      },
+        createdAt: new Date().toISOString()
+      }
     },
     data: {
       alarms: [],
       battles: [],
       voices: [],
-      themes: [],
+      themes: []
     },
     features: {
       premiumFeatures: false,
       battleMode: false,
       voiceGeneration: false,
-      customThemes: false,
-    },
+      customThemes: false
+    }
   },
 
   // Premium user with data
@@ -332,142 +330,139 @@ export const integrationScenarios = {
       profile: {
         id: 'premium-user-456',
         email: 'premium@example.com',
-        name: 'Premium User',
-      },
+        name: 'Premium User'
+      }
     },
     data: {
       alarms: [
         { id: 'alarm-1', time: '07:00', label: 'Work', enabled: true },
-        { id: 'alarm-2', time: '08:30', label: 'Gym', enabled: false },
+        { id: 'alarm-2', time: '08:30', label: 'Gym', enabled: false }
       ],
-      battles: [{ id: 'battle-1', status: 'active', participants: 3 }],
-      voices: [{ id: 'voice-1', name: 'My Voice', processed: true }],
+      battles: [
+        { id: 'battle-1', status: 'active', participants: 3 }
+      ],
+      voices: [
+        { id: 'voice-1', name: 'My Voice', processed: true }
+      ]
     },
     features: {
       premiumFeatures: true,
       battleMode: true,
       voiceGeneration: true,
-      customThemes: true,
-    },
+      customThemes: true
+    }
   },
 
   // Ultimate user with full access
   ultimateUser: {
     user: {
       authenticated: true,
-      tier: 'ultimate' as const,
+      tier: 'ultimate' as const
     },
     features: {
       premiumFeatures: true,
       battleMode: true,
       voiceGeneration: true,
       customThemes: true,
-      analytics: true,
-    },
+      analytics: true
+    }
   },
 
   // Unauthenticated user
   guestUser: {
     user: {
-      authenticated: false,
+      authenticated: false
     },
     router: {
-      initialEntries: ['/login'],
-    },
+      initialEntries: ['/login']
+    }
   },
 
   // Mobile user
   mobileUser: {
     environment: {
       mobile: true,
-      notifications: 'granted' as const,
+      notifications: 'granted' as const
     },
     app: {
-      theme: 'dark', // Mobile users often prefer dark mode
-    },
+      theme: 'dark' // Mobile users often prefer dark mode
+    }
   },
 
   // Offline user
   offlineUser: {
     network: {
-      offline: true,
+      offline: true
     },
     environment: {
-      offline: true,
-    },
+      offline: true
+    }
   },
 
   // User with slow connection
   slowConnection: {
     network: {
-      slow: true,
-    },
+      slow: true
+    }
   },
 
   // User with intermittent connection
   unstableConnection: {
     network: {
-      intermittent: true,
-    },
+      intermittent: true
+    }
   },
 
   // PWA user
   pwaUser: {
     environment: {
       pwa: true,
-      notifications: 'granted' as const,
-    },
+      notifications: 'granted' as const
+    }
   },
 
   // User with denied notifications
   noNotifications: {
     environment: {
-      notifications: 'denied' as const,
-    },
+      notifications: 'denied' as const
+    }
   },
 
   // RTL language user
   rtlUser: {
     app: {
       language: 'ar',
-      theme: 'light', // RTL users might prefer light themes
-    },
+      theme: 'light' // RTL users might prefer light themes
+    }
   },
 
   // Error state user
   errorState: {
     app: {
       loading: false,
-      error: 'Failed to load user data',
-    },
+      error: 'Failed to load user data'
+    }
   },
 
   // Loading state
   loadingState: {
     app: {
       loading: true,
-      error: null,
-    },
-  },
+      error: null
+    }
+  }
 };
 
 // ===============================
 // INTEGRATION RENDER FUNCTION
 // ===============================
 
-export const renderWithIntegration = (
+export const _renderWithIntegration = (
   ui: React.ReactElement,
   options: IntegrationTestOptions & RenderOptions = {}
 ) => {
   const {
-    user,
-    app,
-    data,
-    features,
-    environment,
-    network,
-    router,
-    queryClient,
+    user, app, data, features, environment, network, router, queryClient,
     ...renderOptions
   } = options;
 
@@ -483,7 +478,7 @@ export const renderWithIntegration = (
 };
 
 // Helper function to render with predefined scenarios
-export const renderWithIntegrationScenario = (
+export const _renderWithIntegrationScenario = (
   ui: React.ReactElement,
   scenario: keyof typeof integrationScenarios,
   additionalOptions: IntegrationTestOptions = {}
@@ -498,7 +493,7 @@ export const renderWithIntegrationScenario = (
     data: { ...scenarioOptions.data, ...additionalOptions.data },
     features: { ...scenarioOptions.features, ...additionalOptions.features },
     environment: { ...scenarioOptions.environment, ...additionalOptions.environment },
-    network: { ...scenarioOptions.network, ...additionalOptions.network },
+    network: { ...scenarioOptions.network, ...additionalOptions.network }
   };
 
   return renderWithIntegration(ui, mergedOptions);
@@ -508,5 +503,5 @@ export default {
   IntegrationTestProvider,
   renderWithIntegration,
   renderWithIntegrationScenario,
-  integrationScenarios,
+  integrationScenarios
 };

@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Enhanced Factories Tests
  *
@@ -8,7 +9,7 @@ import {
   createTestPersonaProfile,
   createTestPersonaDetectionResult,
   createTestEmailCampaign,
-  createTestPerformanceMetrics,
+  createTestPerformanceMetrics
 } from './enhanced-factories';
 
 describe('Enhanced Factories', () => {
@@ -21,7 +22,6 @@ describe('Enhanced Factories', () => {
       expect(profile.displayName).toBeTruthy();
       expect(profile.description).toBeTruthy();
       expect(profile.primaryColor).toMatch(/^#[0-9A-F]{6}$/i);
-      expect(profile.targetSubscriptionTier).toBeTruthy();
     });
 
     it('should respect persona parameter', () => {

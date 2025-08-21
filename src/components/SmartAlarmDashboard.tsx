@@ -16,17 +16,10 @@ import {
   Navigation,
   Moon,
   Sun,
-  Target,
+  Target
 } from 'lucide-react';
-import {
-  EnhancedSmartAlarmScheduler,
-  type EnhancedSmartAlarm,
-  type OptimalTimeSlot,
-} from '../services/enhanced-smart-alarm-scheduler';
-import {
-  RealTimeSmartAdapter,
-  type SmartAlarmStatus,
-} from '../services/real-time-smart-adapter';
+import { EnhancedSmartAlarmScheduler, type EnhancedSmartAlarm, type OptimalTimeSlot } from '../services/enhanced-smart-alarm-scheduler';
+import { RealTimeSmartAdapter, type SmartAlarmStatus } from '../services/real-time-smart-adapter';
 
 interface SmartAlarmDashboardProps {
   alarms: EnhancedSmartAlarm[];
@@ -35,14 +28,10 @@ interface SmartAlarmDashboardProps {
 
 const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
   alarms,
-  onEditAlarm,
+  onEditAlarm
 }) => {
-  const [alarmStatuses, setAlarmStatuses] = useState<Map<string, SmartAlarmStatus>>(
-    new Map()
-  );
-  const [optimalTimes, setOptimalTimes] = useState<Map<string, OptimalTimeSlot[]>>(
-    new Map()
-  );
+  const [alarmStatuses, setAlarmStatuses] = useState<Map<string, SmartAlarmStatus>>(new Map());
+  const [optimalTimes, setOptimalTimes] = useState<Map<string, OptimalTimeSlot[]>>(new Map());
   const [loading, setLoading] = useState(false);
   const [selectedAlarm, setSelectedAlarm] = useState<string | null>(null);
 
@@ -67,8 +56,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
       for (const alarm of alarms.filter(a => a.smartEnabled)) {
         try {
-          const times =
-            await EnhancedSmartAlarmScheduler.calculateOptimalTimeSlots(alarm);
+          const times = await EnhancedSmartAlarmScheduler.calculateOptimalTimeSlots(alarm);
           timesMap.set(alarm.id, times);
         } catch (error) {
           console.error(`Error loading optimal times for alarm ${alarm.id}:`, error);
@@ -115,12 +103,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
     return (
       <div className="bg-white/5 rounded-lg p-6 border border-white/10 text-center">
         <Brain className="w-12 h-12 mx-auto mb-4 text-white/40" />
-        <h3 className="text-lg font-semibold text-white mb-2">
-          No Smart Alarms Active
-        </h3>
-        <p className="text-white/60 mb-4">
-          Enable smart mode on your alarms to see AI-powered optimizations
-        </p>
+        <h3 className="text-lg font-semibold text-white mb-2">No Smart Alarms Active</h3>
+        <p className="text-white/60 mb-4">Enable smart mode on your alarms to see AI-powered optimizations</p>
       </div>
     );
   }
@@ -151,10 +135,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
           <div className="flex items-center justify-between mb-2">
             <Zap className="w-6 h-6 text-yellow-400" />
             <span className="text-2xl font-bold text-white">
-              {Array.from(alarmStatuses.values()).reduce(
-                (sum, s) => sum + s.adaptationCount,
-                0
-              )}
+              {Array.from(alarmStatuses.values()).reduce((sum, s) => sum + s.adaptationCount, 0)}
             </span>
           </div>
           <div className="text-white/80 text-sm">Today's Adaptations</div>
@@ -184,10 +165,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
           const isExpanded = selectedAlarm === alarm.id;
 
           return (
-            <div
-              key={alarm.id}
-              className="bg-white/5 rounded-lg border border-white/10 overflow-hidden"
-            >
+            <div key={alarm.id} className="bg-white/5 rounded-lg border border-white/10 overflow-hidden">
               {/* Alarm Header */}
               <div
                 className="p-4 cursor-pointer hover:bg-white/5 transition-colors"
@@ -214,9 +192,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                       <div className="flex items-center gap-4 mt-1">
                         <span className="text-white/60 text-sm flex items-center gap-1">
                           <Clock className="w-3 h-3" />
-                          {status
-                            ? formatTimeUntil(status.nextTriggerTime)
-                            : 'Inactive'}
+                          {status ? formatTimeUntil(status.nextTriggerTime) : 'Inactive'}
                         </span>
 
                         {alarm.realTimeAdaptation && (
@@ -227,8 +203,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                         {status && status.currentAdjustment !== 0 && (
                           <span className="text-yellow-400 text-xs px-2 py-1 bg-yellow-500/20 rounded">
-                            {status.currentAdjustment > 0 ? '+' : ''}
-                            {status.currentAdjustment}min
+                            {status.currentAdjustment > 0 ? '+' : ''}{status.currentAdjustment}min
                           </span>
                         )}
                       </div>
@@ -256,25 +231,17 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                   {status && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="bg-white/5 rounded-lg p-3">
-                        <div className="text-white/70 text-sm mb-1">
-                          Adaptations Today
-                        </div>
-                        <div className="text-white font-medium">
-                          {status.adaptationCount} / 5
-                        </div>
+                        <div className="text-white/70 text-sm mb-1">Adaptations Today</div>
+                        <div className="text-white font-medium">{status.adaptationCount} / 5</div>
                       </div>
 
                       <div className="bg-white/5 rounded-lg p-3">
-                        <div className="text-white/70 text-sm mb-1">
-                          Last Adaptation
-                        </div>
+                        <div className="text-white/70 text-sm mb-1">Last Adaptation</div>
                         <div className="text-white font-medium">
-                          {status.lastAdaptation
-                            ? new Date(status.lastAdaptation).toLocaleTimeString([], {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })
-                            : 'None'}
+                          {status.lastAdaptation ?
+                            new Date(status.lastAdaptation).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) :
+                            'None'
+                          }
                         </div>
                       </div>
 
@@ -284,18 +251,13 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                           <div className="flex-1 bg-white/20 rounded-full h-2">
                             <div
                               className={`h-2 rounded-full ${
-                                status.confidence >= 0.8
-                                  ? 'bg-green-400'
-                                  : status.confidence >= 0.6
-                                    ? 'bg-yellow-400'
-                                    : 'bg-red-400'
+                                status.confidence >= 0.8 ? 'bg-green-400' :
+                                status.confidence >= 0.6 ? 'bg-yellow-400' : 'bg-red-400'
                               }`}
                               style={{ width: `${status.confidence * 100}%` }}
                             />
                           </div>
-                          <span className="text-white text-sm">
-                            {Math.round(status.confidence * 100)}%
-                          </span>
+                          <span className="text-white text-sm">{Math.round(status.confidence * 100)}%</span>
                         </div>
                       </div>
                     </div>
@@ -310,10 +272,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                       </h5>
                       <div className="space-y-1">
                         {status.factors.map((factor, index) => (
-                          <div
-                            key={index}
-                            className="text-white/70 text-sm flex items-start gap-2"
-                          >
+                          <div key={index} className="text-white/70 text-sm flex items-start gap-2">
                             <div className="w-1 h-1 bg-white/40 rounded-full mt-2 flex-shrink-0" />
                             {factor}
                           </div>
@@ -332,21 +291,14 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                         {optimal.slice(0, 6).map((slot, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"
-                          >
+                          <div key={index} className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
                             <div className="flex items-center gap-2">
                               <span className="font-mono text-white">{slot.time}</span>
-                              <span
-                                className={`text-xs px-1 py-0.5 rounded ${
-                                  slot.sleepStage === 'light'
-                                    ? 'bg-green-500/20 text-green-300'
-                                    : slot.sleepStage === 'rem'
-                                      ? 'bg-blue-500/20 text-blue-300'
-                                      : 'bg-red-500/20 text-red-300'
-                                }`}
-                              >
+                              <span className={`text-xs px-1 py-0.5 rounded ${
+                                slot.sleepStage === 'light' ? 'bg-green-500/20 text-green-300' :
+                                slot.sleepStage === 'rem' ? 'bg-blue-500/20 text-blue-300' :
+                                'bg-red-500/20 text-red-300'
+                              }`}>
                                 {slot.sleepStage.toUpperCase()}
                               </span>
                             </div>
@@ -370,11 +322,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                       <div className="flex items-center gap-2">
                         <RefreshCw className="w-3 h-3 text-white/60" />
                         <span className="text-white/70">Real-time:</span>
-                        <span
-                          className={
-                            alarm.realTimeAdaptation ? 'text-green-400' : 'text-red-400'
-                          }
-                        >
+                        <span className={alarm.realTimeAdaptation ? 'text-green-400' : 'text-red-400'}>
                           {alarm.realTimeAdaptation ? 'ON' : 'OFF'}
                         </span>
                       </div>
@@ -382,11 +330,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                       <div className="flex items-center gap-2">
                         <Activity className="w-3 h-3 text-white/60" />
                         <span className="text-white/70">Dynamic:</span>
-                        <span
-                          className={
-                            alarm.dynamicWakeWindow ? 'text-green-400' : 'text-red-400'
-                          }
-                        >
+                        <span className={alarm.dynamicWakeWindow ? 'text-green-400' : 'text-red-400'}>
                           {alarm.dynamicWakeWindow ? 'ON' : 'OFF'}
                         </span>
                       </div>
@@ -394,56 +338,44 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                       <div className="flex items-center gap-2">
                         <TrendingUp className="w-3 h-3 text-white/60" />
                         <span className="text-white/70">Learning:</span>
-                        <span className="text-white">
-                          {Math.round(alarm.learningFactor * 100)}%
-                        </span>
+                        <span className="text-white">{Math.round(alarm.learningFactor * 100)}%</span>
                       </div>
 
                       <div className="flex items-center gap-2">
                         <Brain className="w-3 h-3 text-white/60" />
                         <span className="text-white/70">Pattern Weight:</span>
-                        <span className="text-white">
-                          {Math.round(alarm.sleepPatternWeight * 100)}%
-                        </span>
+                        <span className="text-white">{Math.round(alarm.sleepPatternWeight * 100)}%</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Active Conditions */}
-                  {alarm.conditionBasedAdjustments &&
-                    alarm.conditionBasedAdjustments.filter(c => c.isEnabled).length >
-                      0 && (
-                      <div className="bg-white/5 rounded-lg p-3">
-                        <h5 className="text-white font-medium mb-3 flex items-center gap-2">
-                          <Eye className="w-4 h-4 text-yellow-400" />
-                          Active Conditions
-                        </h5>
+                  {alarm.conditionBasedAdjustments && alarm.conditionBasedAdjustments.filter(c => c.isEnabled).length > 0 && (
+                    <div className="bg-white/5 rounded-lg p-3">
+                      <h5 className="text-white font-medium mb-3 flex items-center gap-2">
+                        <Eye className="w-4 h-4 text-yellow-400" />
+                        Active Conditions
+                      </h5>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                          {alarm.conditionBasedAdjustments
-                            .filter(c => c.isEnabled)
-                            .map(condition => (
-                              <div
-                                key={condition.id}
-                                className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <span className="text-white/70 text-sm capitalize">
-                                    {condition.type.replace('_', ' ')}
-                                  </span>
-                                  <span className="text-xs text-white/50">
-                                    {condition.adjustment.timeMinutes > 0 ? '+' : ''}
-                                    {condition.adjustment.timeMinutes}min
-                                  </span>
-                                </div>
-                                <div className="text-xs text-white/60">
-                                  {Math.round(condition.effectivenessScore * 100)}%
-                                </div>
-                              </div>
-                            ))}
-                        </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {alarm.conditionBasedAdjustments.filter(c => c.isEnabled).map((condition) => (
+                          <div key={condition.id} className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
+                            <div className="flex items-center gap-2">
+                              <span className="text-white/70 text-sm capitalize">
+                                {condition.type.replace('_', ' ')}
+                              </span>
+                              <span className="text-xs text-white/50">
+                                {condition.adjustment.timeMinutes > 0 ? '+' : ''}{condition.adjustment.timeMinutes}min
+                              </span>
+                            </div>
+                            <div className="text-xs text-white/60">
+                              {Math.round(condition.effectivenessScore * 100)}%
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

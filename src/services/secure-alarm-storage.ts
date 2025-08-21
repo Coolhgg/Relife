@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // Secure Alarm Storage Service
 // Provides encrypted storage and integrity validation for alarm data
 
@@ -64,7 +65,7 @@ export class SecureAlarmStorageService {
         checksum: this.calculateChecksum(sanitizedAlarms),
         timestamp: new Date().toISOString(),
         version: SecureAlarmStorageService.VERSION,
-        userId,
+        userId
       };
 
       // Generate data signature for integrity validation
@@ -74,7 +75,7 @@ export class SecureAlarmStorageService {
       const payload = {
         data: secureData,
         signature,
-        integrity: this.generateIntegrityToken(secureData),
+        integrity: this.generateIntegrityToken(secureData)
       };
 
       // Encrypt the entire payload
@@ -83,7 +84,7 @@ export class SecureAlarmStorageService {
       // Store encrypted data
       await Preferences.set({
         key: SecureAlarmStorageService.ALARMS_KEY,
-        value: encryptedPayload,
+        value: encryptedPayload
       });
 
       // Create backup
@@ -93,20 +94,15 @@ export class SecureAlarmStorageService {
       this.logSecurityEvent('alarms_stored', {
         userId,
         alarmCount: alarms.length,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString()
       });
 
-      console.log(
-        `[SecureAlarmStorage] Successfully stored ${alarms.length} alarms with encryption`
-      );
+      console.log(`[SecureAlarmStorage] Successfully stored ${alarms.length} alarms with encryption`);
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         'Failed to store alarms securely',
-        {
-          context: 'secure_alarm_storage',
-          metadata: { userId, alarmCount: alarms.length },
-        }
+        { context: 'secure_alarm_storage', metadata: { userId, alarmCount: alarms.length } }
       );
       throw new Error('Failed to store alarm data securely');
     }
@@ -119,7 +115,7 @@ export class SecureAlarmStorageService {
     try {
       // Retrieve encrypted data
       const { value } = await Preferences.get({
-        key: SecureAlarmStorageService.ALARMS_KEY,
+        key: SecureAlarmStorageService.ALARMS_KEY
       });
 
       if (!value) {
@@ -132,10 +128,7 @@ export class SecureAlarmStorageService {
       try {
         decryptedPayload = SecurityService.decryptData(value);
       } catch (decryptError) {
-        console.error(
-          '[SecureAlarmStorage] Failed to decrypt alarm data:',
-          decryptError
-        );
+        console.error('[SecureAlarmStorage] Failed to decrypt alarm data:', decryptError);
 
         // Attempt recovery from backup
         const backupData = await this.recoverFromBackup(userId);
@@ -176,7 +169,7 @@ export class SecureAlarmStorageService {
         this.handleTamperDetection('checksum_mismatch', {
           userId,
           stored: data.checksum,
-          calculated: calculatedChecksum,
+          calculated: calculatedChecksum
         });
 
         // Try to recover from backup
@@ -204,12 +197,10 @@ export class SecureAlarmStorageService {
       this.logSecurityEvent('alarms_retrieved', {
         userId,
         alarmCount: validAlarms.length,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString()
       });
 
-      console.log(
-        `[SecureAlarmStorage] Successfully retrieved ${validAlarms.length} alarms`
-      );
+      console.log(`[SecureAlarmStorage] Successfully retrieved ${validAlarms.length} alarms`);
       return validAlarms;
     } catch (error) {
       ErrorHandler.handleError(
@@ -236,7 +227,7 @@ export class SecureAlarmStorageService {
         events,
         checksum: this.calculateChecksum(events),
         timestamp: new Date().toISOString(),
-        version: SecureAlarmStorageService.VERSION,
+        version: SecureAlarmStorageService.VERSION
       };
 
       const signature = SecurityService.generateDataSignature(secureEventData);
@@ -245,7 +236,7 @@ export class SecureAlarmStorageService {
 
       await Preferences.set({
         key: SecureAlarmStorageService.ALARM_EVENTS_KEY,
-        value: encryptedPayload,
+        value: encryptedPayload
       });
 
       console.log(`[SecureAlarmStorage] Stored ${events.length} alarm events securely`);
@@ -265,7 +256,7 @@ export class SecureAlarmStorageService {
   async retrieveAlarmEvents(): Promise<AlarmEvent[]> {
     try {
       const { value } = await Preferences.get({
-        key: SecureAlarmStorageService.ALARM_EVENTS_KEY,
+        key: SecureAlarmStorageService.ALARM_EVENTS_KEY
       });
 
       if (!value) {
@@ -302,7 +293,7 @@ export class SecureAlarmStorageService {
         data,
         signature,
         created: new Date().toISOString(),
-        backupId: SecurityService.generateCSRFToken(), // Use as unique backup ID
+        backupId: SecurityService.generateCSRFToken() // Use as unique backup ID
       };
 
       const encryptedBackup = SecurityService.encryptData(backupData);
@@ -310,7 +301,7 @@ export class SecureAlarmStorageService {
 
       await Preferences.set({
         key: backupKey,
-        value: encryptedBackup,
+        value: encryptedBackup
       });
 
       // Clean up old backups
@@ -345,21 +336,15 @@ export class SecureAlarmStorageService {
           const backupData: AlarmBackupData = SecurityService.decryptData(value);
 
           // Validate backup signature
-          if (
-            !SecurityService.verifyDataSignature(backupData.data, backupData.signature)
-          ) {
-            console.warn(
-              `[SecureAlarmStorage] Invalid signature in backup: ${backupKey}`
-            );
+          if (!SecurityService.verifyDataSignature(backupData.data, backupData.signature)) {
+            console.warn(`[SecureAlarmStorage] Invalid signature in backup: ${backupKey}`);
             continue;
           }
 
           // Validate checksum
           const calculatedChecksum = this.calculateChecksum(backupData.data.alarms);
           if (backupData.data.checksum !== calculatedChecksum) {
-            console.warn(
-              `[SecureAlarmStorage] Invalid checksum in backup: ${backupKey}`
-            );
+            console.warn(`[SecureAlarmStorage] Invalid checksum in backup: ${backupKey}`);
             continue;
           }
 
@@ -372,15 +357,11 @@ export class SecureAlarmStorageService {
           // Valid backup found - restore it
           await this.storeAlarms(backupData.data.alarms, userId);
 
-          console.log(
-            `[SecureAlarmStorage] Successfully recovered from backup: ${backupKey}`
-          );
+          console.log(`[SecureAlarmStorage] Successfully recovered from backup: ${backupKey}`);
           return this.validateAndSanitizeAlarms(backupData.data.alarms);
+
         } catch (backupError) {
-          console.warn(
-            `[SecureAlarmStorage] Failed to process backup ${backupKey}:`,
-            backupError
-          );
+          console.warn(`[SecureAlarmStorage] Failed to process backup ${backupKey}:`, backupError);
           continue;
         }
       }
@@ -445,7 +426,7 @@ export class SecureAlarmStorageService {
   private async performIntegrityCheck(): Promise<void> {
     try {
       const { value } = await Preferences.get({
-        key: SecureAlarmStorageService.ALARMS_KEY,
+        key: SecureAlarmStorageService.ALARMS_KEY
       });
 
       if (!value) {
@@ -466,18 +447,18 @@ export class SecureAlarmStorageService {
         if (data.checksum !== calculatedChecksum) {
           this.handleTamperDetection('integrity_check_checksum_failed', {
             stored: data.checksum,
-            calculated: calculatedChecksum,
+            calculated: calculatedChecksum
           });
           return;
         }
 
         this.lastIntegrityCheck = new Date();
         console.log('[SecureAlarmStorage] Integrity check passed');
+
       } catch (decryptError) {
-        this.handleTamperDetection('integrity_check_decrypt_failed', {
-          error: decryptError.message,
-        });
+        this.handleTamperDetection('integrity_check_decrypt_failed', { error: decryptError.message });
       }
+
     } catch (error) {
       console.error('[SecureAlarmStorage] Integrity check error:', error);
     }
@@ -491,7 +472,7 @@ export class SecureAlarmStorageService {
       type,
       details,
       timestamp: new Date().toISOString(),
-      severity: 'high',
+      severity: 'high'
     };
 
     // Log security event
@@ -507,11 +488,9 @@ export class SecureAlarmStorageService {
     });
 
     // Emit custom event for UI components
-    window.dispatchEvent(
-      new CustomEvent('alarm-tamper-detected', {
-        detail: tamperEvent,
-      })
-    );
+    window.dispatchEvent(new CustomEvent('alarm-tamper-detected', {
+      detail: tamperEvent
+    }));
 
     console.error('[SecureAlarmStorage] TAMPER DETECTED:', tamperEvent);
   }
@@ -539,7 +518,7 @@ export class SecureAlarmStorageService {
       checksum: data.checksum,
       timestamp: data.timestamp,
       version: data.version,
-      alarmCount: data.alarms.length,
+      alarmCount: data.alarms.length
     };
     return SecurityService.hashData(JSON.stringify(tokenData));
   }
@@ -567,17 +546,12 @@ export class SecureAlarmStorageService {
       time: String(alarm.time),
       enabled: Boolean(alarm.enabled),
       isActive: Boolean(alarm.isActive),
-      days: Array.isArray(alarm.days)
-        ? alarm.days.filter(d => typeof d === 'number')
-        : [],
+      days: Array.isArray(alarm.days) ? alarm.days.filter(d => typeof d === 'number') : [],
       voiceMood: alarm.voiceMood,
-      sound: alarm.sound
-        ? SecurityService.sanitizeInput(String(alarm.sound))
-        : 'default',
+      sound: alarm.sound ? SecurityService.sanitizeInput(String(alarm.sound)) : 'default',
       snoozeEnabled: Boolean(alarm.snoozeEnabled),
-      snoozeInterval:
-        typeof alarm.snoozeInterval === 'number' ? alarm.snoozeInterval : 5,
-      snoozeCount: typeof alarm.snoozeCount === 'number' ? alarm.snoozeCount : 0,
+      snoozeInterval: typeof alarm.snoozeInterval === 'number' ? alarm.snoozeInterval : 5,
+      snoozeCount: typeof alarm.snoozeCount === 'number' ? alarm.snoozeCount : 0
     };
   }
 
@@ -594,13 +568,11 @@ export class SecureAlarmStorageService {
       .map(alarm => this.sanitizeAlarmData(alarm))
       .filter(alarm => {
         // Basic validation
-        return (
-          alarm.id &&
-          alarm.time &&
-          alarm.label &&
-          Array.isArray(alarm.days) &&
-          alarm.voiceMood
-        );
+        return alarm.id &&
+               alarm.time &&
+               alarm.label &&
+               Array.isArray(alarm.days) &&
+               alarm.voiceMood;
       });
   }
 
@@ -612,18 +584,16 @@ export class SecureAlarmStorageService {
       event,
       details,
       timestamp: new Date().toISOString(),
-      source: 'SecureAlarmStorageService',
+      source: 'SecureAlarmStorageService'
     };
 
     // Store in a separate security log (you might want to send this to a server)
     console.log('[SECURITY LOG]', logEntry);
 
     // Emit custom event for security monitoring
-    window.dispatchEvent(
-      new CustomEvent('security-event', {
-        detail: logEntry,
-      })
-    );
+    window.dispatchEvent(new CustomEvent('security-event', {
+      detail: logEntry
+    }));
   }
 
   /**
@@ -646,7 +616,7 @@ export class SecureAlarmStorageService {
       }
 
       this.logSecurityEvent('all_data_cleared', {
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString()
       });
 
       console.log('[SecureAlarmStorage] All alarm data cleared');
@@ -674,7 +644,7 @@ export class SecureAlarmStorageService {
         backupCount,
         lastIntegrityCheck: this.lastIntegrityCheck,
         version: SecureAlarmStorageService.VERSION,
-        integrityMonitoringActive: !!this.integrityCheckTimer,
+        integrityMonitoringActive: !!this.integrityCheckTimer
       };
     } catch (error) {
       console.error('[SecureAlarmStorage] Failed to get storage status:', error);
@@ -685,7 +655,7 @@ export class SecureAlarmStorageService {
         lastIntegrityCheck: null,
         version: SecureAlarmStorageService.VERSION,
         integrityMonitoringActive: false,
-        error: error.message,
+        error: error.message
       };
     }
   }

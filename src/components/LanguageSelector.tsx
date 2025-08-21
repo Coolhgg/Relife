@@ -13,14 +13,14 @@ interface LanguageSelectorProps {
 const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   className = '',
   showLabel = true,
-  compact = false,
+  compact = false
 }) => {
   const {
     currentLanguage,
     changeLanguage,
     isLoading,
     autoDetectEnabled,
-    setAutoDetectEnabled,
+    setAutoDetectEnabled
   } = useLanguage();
   const { t } = useI18n('settings');
   const [isOpen, setIsOpen] = useState(false);
@@ -97,9 +97,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                     {currentLangInfo?.name}
                   </div>
                 </div>
-                <ChevronDown
-                  className={`w-5 h-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                />
+                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
               </>
             )}
           </div>
@@ -115,9 +113,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                   type="button"
                   onClick={() => handleLanguageChange(code as SupportedLanguage)}
                   className={`w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 transition-colors ${
-                    code === currentLanguage
-                      ? 'bg-primary-50 dark:bg-primary-900/20'
-                      : ''
+                    code === currentLanguage ? 'bg-primary-50 dark:bg-primary-900/20' : ''
                   }`}
                   role="option"
                   aria-selected={code === currentLanguage}

@@ -1,12 +1,13 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { enhancedCacheManager } from '../services/enhanced-cache-manager';
+/// <reference types="node" />
+import { useState, useEffect, useCallback, useRef } from "react";
+import { enhancedCacheManager } from "../services/enhanced-cache-manager";
 import type {
   CacheStats,
   CachePolicy,
   CacheWarmingConfig,
   CacheEntry,
-} from '../services/enhanced-cache-manager';
-import type { CustomSound } from '../services/types/media';
+} from "../services/enhanced-cache-manager";
+import type { CustomSound } from "../services/types/media";
 
 export interface CacheState {
   stats: CacheStats;
@@ -32,24 +33,20 @@ export function useEnhancedCaching(): {
     isOptimizing: false,
     isWarming: false,
     memoryPressure: 'low',
-    lastOptimization: null,
+    lastOptimization: null
   });
 
   const statsInterval = useRef<NodeJS.Timeout>();
 
   const updateStats = useCallback(() => {
     const stats = enhancedCacheManager.getStats();
-    const memoryPressure =
-      stats.memoryPressure < 0.5
-        ? 'low'
-        : stats.memoryPressure < 0.8
-          ? 'medium'
-          : 'high';
+    const memoryPressure = stats.memoryPressure < 0.5 ? 'low' :
+                          stats.memoryPressure < 0.8 ? 'medium' : 'high';
 
     setCacheState(prev => ({
       ...prev,
       stats,
-      memoryPressure,
+      memoryPressure
     }));
   }, []);
 
@@ -60,7 +57,7 @@ export function useEnhancedCaching(): {
       await enhancedCacheManager.optimize();
       setCacheState(prev => ({
         ...prev,
-        lastOptimization: new Date(),
+        lastOptimization: new Date()
       }));
     } finally {
       setCacheState(prev => ({ ...prev, isOptimizing: false }));
@@ -68,19 +65,16 @@ export function useEnhancedCaching(): {
     }
   }, [updateStats]);
 
-  const warmCache = useCallback(
-    async (sounds: CustomSound[]) => {
-      setCacheState(prev => ({ ...prev, isWarming: true }));
+  const warmCache = useCallback(async (sounds: CustomSound[]) => {
+    setCacheState(prev => ({ ...prev, isWarming: true }));
 
-      try {
-        await enhancedCacheManager.warmCache(sounds);
-      } finally {
-        setCacheState(prev => ({ ...prev, isWarming: false }));
-        updateStats();
-      }
-    },
-    [updateStats]
-  );
+    try {
+      await enhancedCacheManager.warmCache(sounds);
+    } finally {
+      setCacheState(prev => ({ ...prev, isWarming: false }));
+      updateStats();
+    }
+  }, [updateStats]);
 
   const clearCache = useCallback(async () => {
     await enhancedCacheManager.clear();
@@ -114,7 +108,7 @@ export function useEnhancedCaching(): {
     warmCache,
     clearCache,
     updatePolicy,
-    getCacheEntry,
+    getCacheEntry
   };
 }
 
@@ -127,16 +121,14 @@ export function useCachePerformance() {
     averageAccessTime: 0,
     compressionRatio: 0,
     evictionRate: 0,
-    trend: 'stable' as 'improving' | 'stable' | 'degrading',
+    trend: 'stable' as 'improving' | 'stable' | 'degrading'
   });
 
-  const [performanceHistory, setPerformanceHistory] = useState<
-    {
-      timestamp: Date;
-      hitRate: number;
-      accessTime: number;
-    }[]
-  >([]);
+  const [performanceHistory, setPerformanceHistory] = useState<{
+    timestamp: Date;
+    hitRate: number;
+    accessTime: number;
+  }[]>([]);
 
   useEffect(() => {
     const updatePerformance = () => {
@@ -147,7 +139,7 @@ export function useCachePerformance() {
         averageAccessTime: stats.averageAccessTime,
         compressionRatio: stats.compressionRatio,
         evictionRate: stats.evictionCount / Math.max(1, stats.totalEntries),
-        trend: 'stable' as 'improving' | 'stable' | 'degrading',
+        trend: 'stable' as 'improving' | 'stable' | 'degrading'
       };
 
       // Determine trend
@@ -155,10 +147,8 @@ export function useCachePerformance() {
         const recent = performanceHistory.slice(-3);
         const earlier = performanceHistory.slice(-6, -3);
 
-        const recentHitRate =
-          recent.reduce((sum, p) => sum + p.hitRate, 0) / recent.length;
-        const earlierHitRate =
-          earlier.reduce((sum, p) => sum + p.hitRate, 0) / earlier.length;
+        const recentHitRate = recent.reduce((sum, p) => sum + p.hitRate, 0) / recent.length;
+        const earlierHitRate = earlier.reduce((sum, p) => sum + p.hitRate, 0) / earlier.length;
 
         if (recentHitRate > earlierHitRate + 0.05) {
           newPerformance.trend = 'improving';
@@ -174,7 +164,7 @@ export function useCachePerformance() {
         const newEntry = {
           timestamp: new Date(),
           hitRate: newPerformance.hitRate,
-          accessTime: stats.averageAccessTime,
+          accessTime: stats.averageAccessTime
         };
 
         const updated = [...prev, newEntry];
@@ -190,7 +180,7 @@ export function useCachePerformance() {
 
   return {
     performance,
-    performanceHistory,
+    performanceHistory
   };
 }
 
@@ -203,24 +193,21 @@ export function useCacheWarming() {
     scheduleHours: [6, 7, 8, 18, 19, 20],
     maxWarmingEntries: 50,
     warmingBatchSize: 5,
-    priorityCategories: ['nature', 'energetic', 'motivation'],
+    priorityCategories: ['nature', 'energetic', 'motivation']
   });
 
   const [warmingStatus, setWarmingStatus] = useState({
     isActive: false,
     nextScheduledTime: null as Date | null,
     lastWarmingTime: null as Date | null,
-    warmedEntriesCount: 0,
+    warmedEntriesCount: 0
   });
 
-  const updateWarmingConfig = useCallback(
-    (updates: Partial<CacheWarmingConfig>) => {
-      const newConfig = { ...warmingConfig, ...updates };
-      setWarmingConfig(newConfig);
-      enhancedCacheManager.updateWarmingConfig(updates);
-    },
-    [warmingConfig]
-  );
+  const updateWarmingConfig = useCallback((updates: Partial<CacheWarmingConfig>) => {
+    const newConfig = { ...warmingConfig, ...updates };
+    setWarmingConfig(newConfig);
+    enhancedCacheManager.updateWarmingConfig(updates);
+  }, [warmingConfig]);
 
   const scheduleWarming = useCallback(() => {
     const now = new Date();
@@ -240,7 +227,7 @@ export function useCacheWarming() {
 
     setWarmingStatus(prev => ({
       ...prev,
-      nextScheduledTime: nextTime,
+      nextScheduledTime: nextTime
     }));
   }, [warmingConfig.scheduleHours]);
 
@@ -249,7 +236,7 @@ export function useCacheWarming() {
       enabled: true,
       scheduleHours: [6, 7, 8, 18, 19, 20], // Morning and evening
       maxWarmingEntries: 100,
-      warmingBatchSize: 10,
+      warmingBatchSize: 10
     });
   }, [updateWarmingConfig]);
 
@@ -258,7 +245,7 @@ export function useCacheWarming() {
       enabled: true,
       scheduleHours: [2, 3], // During low usage hours
       maxWarmingEntries: 25,
-      warmingBatchSize: 3,
+      warmingBatchSize: 3
     });
   }, [updateWarmingConfig]);
 
@@ -281,7 +268,7 @@ export function useCacheWarming() {
     updateWarmingConfig,
     enableSmartWarming,
     enableBatteryOptimizedWarming,
-    disableWarming,
+    disableWarming
   };
 }
 
@@ -295,17 +282,14 @@ export function useCachePolicy() {
     ttlSeconds: 7 * 24 * 60 * 60, // 7 days
     evictionStrategy: 'intelligent',
     compressionThreshold: 1024 * 1024, // 1MB
-    preloadThreshold: 5,
+    preloadThreshold: 5
   });
 
-  const updatePolicy = useCallback(
-    (updates: Partial<CachePolicy>) => {
-      const newPolicy = { ...policy, ...updates };
-      setPolicy(newPolicy);
-      enhancedCacheManager.updatePolicy(updates);
-    },
-    [policy]
-  );
+  const updatePolicy = useCallback((updates: Partial<CachePolicy>) => {
+    const newPolicy = { ...policy, ...updates };
+    setPolicy(newPolicy);
+    enhancedCacheManager.updatePolicy(updates);
+  }, [policy]);
 
   const setConservativePolicy = useCallback(() => {
     updatePolicy({
@@ -313,7 +297,7 @@ export function useCachePolicy() {
       maxEntries: 300,
       ttlSeconds: 3 * 24 * 60 * 60, // 3 days
       evictionStrategy: 'lru',
-      compressionThreshold: 512 * 1024, // 512KB
+      compressionThreshold: 512 * 1024 // 512KB
     });
   }, [updatePolicy]);
 
@@ -323,7 +307,7 @@ export function useCachePolicy() {
       maxEntries: 2000,
       ttlSeconds: 14 * 24 * 60 * 60, // 14 days
       evictionStrategy: 'intelligent',
-      compressionThreshold: 2 * 1024 * 1024, // 2MB
+      compressionThreshold: 2 * 1024 * 1024 // 2MB
     });
   }, [updatePolicy]);
 
@@ -333,7 +317,7 @@ export function useCachePolicy() {
       maxEntries: 1000,
       ttlSeconds: 7 * 24 * 60 * 60, // 7 days
       evictionStrategy: 'intelligent',
-      compressionThreshold: 1024 * 1024, // 1MB
+      compressionThreshold: 1024 * 1024 // 1MB
     });
   }, [updatePolicy]);
 
@@ -342,7 +326,7 @@ export function useCachePolicy() {
     updatePolicy,
     setConservativePolicy,
     setAggressivePolicy,
-    setBalancedPolicy,
+    setBalancedPolicy
   };
 }
 
@@ -354,7 +338,7 @@ export function useAutoOptimization(enabled: boolean = true) {
     isEnabled: enabled,
     lastOptimization: null as Date | null,
     optimizationCount: 0,
-    averageOptimizationTime: 0,
+    averageOptimizationTime: 0
   });
 
   const optimizationInterval = useRef<NodeJS.Timeout>();
@@ -373,8 +357,7 @@ export function useAutoOptimization(enabled: boolean = true) {
             ...prev,
             lastOptimization: new Date(),
             optimizationCount: prev.optimizationCount + 1,
-            averageOptimizationTime:
-              prev.averageOptimizationTime * 0.8 + optimizationTime * 0.2,
+            averageOptimizationTime: (prev.averageOptimizationTime * 0.8) + (optimizationTime * 0.2)
           }));
         } catch (error) {
           console.error('Auto-optimization failed:', error);
@@ -395,13 +378,13 @@ export function useAutoOptimization(enabled: boolean = true) {
   const toggleAutoOptimization = useCallback(() => {
     setOptimizationStatus(prev => ({
       ...prev,
-      isEnabled: !prev.isEnabled,
+      isEnabled: !prev.isEnabled
     }));
   }, []);
 
   return {
     optimizationStatus,
-    toggleAutoOptimization,
+    toggleAutoOptimization
   };
 }
 
@@ -415,7 +398,7 @@ export function useCacheDebugging() {
     hitRate: 0,
     compressionSavings: 0,
     topAccessedEntries: [] as Array<{ id: string; accessCount: number; size: number }>,
-    recentEvictions: [] as Array<{ id: string; reason: string; timestamp: Date }>,
+    recentEvictions: [] as Array<{ id: string; reason: string; timestamp: Date }>
   });
 
   useEffect(() => {
@@ -427,8 +410,7 @@ export function useCacheDebugging() {
         memoryUsage: stats.memoryUsage,
         diskUsage: stats.totalSize,
         hitRate: stats.hitRate / (stats.hitRate + stats.missRate) || 0,
-        compressionSavings:
-          stats.compressionRatio > 1 ? (1 - 1 / stats.compressionRatio) * 100 : 0,
+        compressionSavings: stats.compressionRatio > 1 ? (1 - 1/stats.compressionRatio) * 100 : 0
         // topAccessedEntries and recentEvictions would need additional tracking
       }));
     };

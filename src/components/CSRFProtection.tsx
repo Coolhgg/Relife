@@ -12,7 +12,7 @@ interface CSRFProtectionProps {
 
 const CSRFProtection: React.FC<CSRFProtectionProps> = ({
   children,
-  onInvalidToken,
+  onInvalidToken
 }) => {
   const { csrfToken: authCsrfToken } = useAuth();
   const [localCsrfToken, setLocalCsrfToken] = useState<string>('');
@@ -49,7 +49,11 @@ const CSRFProtection: React.FC<CSRFProtectionProps> = ({
     return () => clearInterval(validateInterval);
   }, [localCsrfToken, onInvalidToken]);
 
-  return <>{children(localCsrfToken, isValidToken)}</>;
+  return (
+    <>
+      {children(localCsrfToken, isValidToken)}
+    </>
+  );
 };
 
 // Higher-order component for CSRF protection
@@ -58,9 +62,13 @@ export const withCSRFProtection = <P extends object>(
 ) => {
   return React.forwardRef<any, P>((props, ref) => (
     <CSRFProtection>
-      {(csrfToken, isValid) =>
+      {(csrfToken, isValid) => (
         isValid ? (
-          <WrappedComponent {...props} csrfToken={csrfToken} ref={ref} />
+          <WrappedComponent
+            {...props}
+            csrfToken={csrfToken}
+            ref={ref}
+          />
         ) : (
           <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
             <div className="text-red-700 text-sm">
@@ -68,7 +76,7 @@ export const withCSRFProtection = <P extends object>(
             </div>
           </div>
         )
-      }
+      )}
     </CSRFProtection>
   ));
 };
@@ -105,7 +113,7 @@ export const useCSRFProtection = () => {
     csrfToken,
     isValid,
     validateCSRFToken,
-    refreshToken,
+    refreshToken
   };
 };
 

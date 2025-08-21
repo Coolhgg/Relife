@@ -1,24 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+// Select components removed - not used in this component
 import {
   Brain,
   User,
@@ -28,8 +16,9 @@ import {
   Mail,
   Clock,
   DollarSign,
+  Activity,
   AlertCircle,
-  ArrowRight,
+  CheckCircle,
 } from 'lucide-react';
 
 interface PersonaPrediction {
@@ -66,9 +55,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
   const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
   const [prediction, setPrediction] = useState<PersonaPrediction | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [batchPredictions, setBatchPredictions] = useState<
-    Array<{ user: UserData; prediction: PersonaPrediction }>
-  >([]);
+  const [batchPredictions, setBatchPredictions] = useState<Array<{user: UserData, prediction: PersonaPrediction}>>([]);
 
   // Mock user data
   const mockUsers: UserData[] = [
@@ -81,18 +68,18 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
       featureUsage: {
         basic_alarm: 45,
         snooze_count: 23,
-        wake_time_analysis: 2,
+        wake_time_analysis: 2
       },
       engagementMetrics: {
         emailOpenRate: 25.4,
         clickRate: 3.2,
-        appUsageMinutes: 142,
+        appUsageMinutes: 142
       },
       demographics: {
         ageRange: '22-29',
         location: 'New York, NY',
-        deviceType: 'iPhone',
-      },
+        deviceType: 'iPhone'
+      }
     },
     {
       id: 'user-2',
@@ -104,18 +91,18 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
         basic_alarm: 156,
         smart_wake: 89,
         analytics_view: 34,
-        team_features: 12,
+        team_features: 12
       },
       engagementMetrics: {
         emailOpenRate: 47.8,
         clickRate: 12.1,
-        appUsageMinutes: 320,
+        appUsageMinutes: 320
       },
       demographics: {
         ageRange: '30-39',
         location: 'San Francisco, CA',
-        deviceType: 'iPhone',
-      },
+        deviceType: 'iPhone'
+      }
     },
     {
       id: 'user-3',
@@ -128,19 +115,19 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
         smart_wake: 187,
         analytics_view: 67,
         advanced_settings: 23,
-        api_access: 8,
+        api_access: 8
       },
       engagementMetrics: {
         emailOpenRate: 52.3,
         clickRate: 18.7,
-        appUsageMinutes: 485,
+        appUsageMinutes: 485
       },
       demographics: {
         ageRange: '25-35',
         location: 'Austin, TX',
-        deviceType: 'Android',
-      },
-    },
+        deviceType: 'Android'
+      }
+    }
   ];
 
   const personaProfiles = {
@@ -149,74 +136,43 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
       description: 'Free tier user, inconsistent sleep patterns, needs motivation',
       color: 'bg-emerald-100 text-emerald-800',
       icon: '😴',
-      characteristics: [
-        'Free tier',
-        'High snooze rate',
-        'Inconsistent usage',
-        'Needs encouragement',
-      ],
+      characteristics: ['Free tier', 'High snooze rate', 'Inconsistent usage', 'Needs encouragement']
     },
     busy_ben: {
       name: 'Busy Ben',
-      description:
-        'Time-conscious professional, ROI-focused, potential premium upgrade',
+      description: 'Time-conscious professional, ROI-focused, potential premium upgrade',
       color: 'bg-blue-100 text-blue-800',
       icon: '⏰',
-      characteristics: [
-        'Professional tier',
-        'Time-efficient',
-        'ROI-focused',
-        'Quick decisions',
-      ],
+      characteristics: ['Professional tier', 'Time-efficient', 'ROI-focused', 'Quick decisions']
     },
     professional_paula: {
       name: 'Professional Paula',
       description: 'Power user, advanced features, premium subscriber, data-driven',
       color: 'bg-purple-100 text-purple-800',
       icon: '📊',
-      characteristics: [
-        'Premium tier',
-        'High engagement',
-        'Feature explorer',
-        'Data-driven',
-      ],
+      characteristics: ['Premium tier', 'High engagement', 'Feature explorer', 'Data-driven']
     },
     enterprise_emma: {
       name: 'Enterprise Emma',
       description: 'Decision maker, team features, enterprise needs',
       color: 'bg-indigo-100 text-indigo-800',
       icon: '🏢',
-      characteristics: [
-        'Team features',
-        'Decision maker',
-        'Enterprise scale',
-        'Integration needs',
-      ],
+      characteristics: ['Team features', 'Decision maker', 'Enterprise scale', 'Integration needs']
     },
     student_sarah: {
       name: 'Student Sarah',
       description: 'Budget-conscious, late-night usage, discount-sensitive',
       color: 'bg-amber-100 text-amber-800',
       icon: '🎓',
-      characteristics: [
-        'Budget-conscious',
-        'Late-night usage',
-        'Discount-sensitive',
-        'Social features',
-      ],
+      characteristics: ['Budget-conscious', 'Late-night usage', 'Discount-sensitive', 'Social features']
     },
     lifetime_larry: {
       name: 'Lifetime Larry',
       description: 'Long-term user, high engagement, brand advocate',
       color: 'bg-yellow-100 text-yellow-800',
       icon: '⭐',
-      characteristics: [
-        'Long-term user',
-        'High loyalty',
-        'Feature advocate',
-        'Community leader',
-      ],
-    },
+      characteristics: ['Long-term user', 'High loyalty', 'Feature advocate', 'Community leader']
+    }
   };
 
   const predictPersona = async (userData: UserData): Promise<PersonaPrediction> => {
@@ -232,10 +188,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
     let recommendedCampaigns: string[] = [];
 
     const { subscriptionStatus, featureUsage, engagementMetrics } = userData;
-    const totalFeatureUsage = Object.values(featureUsage).reduce(
-      (sum, usage) => sum + usage,
-      0
-    );
+    const totalFeatureUsage = Object.values(featureUsage).reduce((sum, usage) => sum + usage, 0);
 
     if (subscriptionStatus === 'premium' && engagementMetrics.emailOpenRate > 45) {
       predictedPersona = 'professional_paula';
@@ -244,7 +197,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
         'High email engagement (52.3% open rate)',
         'Premium subscription active',
         'Heavy feature usage (485+ minutes)',
-        'Analytics viewing pattern indicates data-driven behavior',
+        'Analytics viewing pattern indicates data-driven behavior'
       ];
       recommendedCampaigns = ['Feature Deep-Dive', 'Advanced Tips', 'Premium Benefits'];
     } else if (subscriptionStatus === 'professional' && featureUsage.team_features) {
@@ -254,7 +207,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
         'Professional subscription tier',
         'Team features usage indicates business context',
         'Moderate engagement shows time-conscious behavior',
-        'Consistent app usage patterns',
+        'Consistent app usage patterns'
       ];
       recommendedCampaigns = ['ROI Calculator', 'Time-Saving Tips', 'Upgrade Benefits'];
     } else if (totalFeatureUsage < 50 && engagementMetrics.emailOpenRate < 30) {
@@ -264,30 +217,19 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
         'Low feature engagement suggests struggles with consistency',
         'Free tier with limited usage',
         'High snooze rate indicates wake-up difficulties',
-        'Below-average email engagement',
+        'Below-average email engagement'
       ];
-      recommendedCampaigns = [
-        'Motivation Series',
-        'Getting Started Guide',
-        'Success Stories',
-      ];
-    } else if (
-      userData.demographics?.ageRange === '22-29' &&
-      subscriptionStatus === 'free'
-    ) {
+      recommendedCampaigns = ['Motivation Series', 'Getting Started Guide', 'Success Stories'];
+    } else if (userData.demographics?.ageRange === '22-29' && subscriptionStatus === 'free') {
       predictedPersona = 'student_sarah';
       confidence = 0.72;
       reasons = [
         'Age demographic matches student profile',
         'Free tier indicates budget consciousness',
         'Usage patterns suggest late-night schedule',
-        'Price-sensitive behavior indicators',
+        'Price-sensitive behavior indicators'
       ];
-      recommendedCampaigns = [
-        'Student Discount',
-        'Budget-Friendly Tips',
-        'Social Features',
-      ];
+      recommendedCampaigns = ['Student Discount', 'Budget-Friendly Tips', 'Social Features'];
     }
 
     setIsAnalyzing(false);
@@ -296,7 +238,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
       persona: predictedPersona,
       confidence,
       reasons,
-      recommendedCampaigns,
+      recommendedCampaigns
     };
   };
 
@@ -308,7 +250,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
 
   const handleBatchAnalysis = async () => {
     setIsAnalyzing(true);
-    const results: Array<{ user: UserData; prediction: PersonaPrediction }> = [];
+    const results = [];
 
     for (const user of mockUsers) {
       const prediction = await predictPersona(user);
@@ -357,13 +299,11 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                 <div className="space-y-4">
                   <h3 className="font-medium">Select User to Analyze</h3>
                   <div className="space-y-2">
-                    {mockUsers.map(user => (
+                    {mockUsers.map((user) => (
                       <Card
                         key={user.id}
                         className={`cursor-pointer transition-colors ${
-                          selectedUser?.id === user.id
-                            ? 'ring-2 ring-blue-500 bg-blue-50'
-                            : 'hover:bg-gray-50'
+                          selectedUser?.id === user.id ? 'ring-2 ring-blue-500 bg-blue-50' : 'hover:bg-gray-50'
                         }`}
                         onClick={() => handleAnalyzeUser(user)}
                       >
@@ -372,15 +312,11 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                             <div>
                               <div className="font-medium">{user.email}</div>
                               <div className="text-sm text-gray-600">
-                                {user.subscriptionStatus} • Joined{' '}
-                                {new Date(user.signupDate).toLocaleDateString()}
+                                {user.subscriptionStatus} • Joined {new Date(user.signupDate).toLocaleDateString()}
                               </div>
                             </div>
                             <div className="text-right text-sm">
-                              <div>
-                                Engagement:{' '}
-                                {user.engagementMetrics.emailOpenRate.toFixed(1)}%
-                              </div>
+                              <div>Engagement: {user.engagementMetrics.emailOpenRate.toFixed(1)}%</div>
                               <div className="text-gray-500">
                                 {user.engagementMetrics.appUsageMinutes}min usage
                               </div>
@@ -402,10 +338,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                         <Brain className="h-8 w-8 text-blue-600 mx-auto mb-4 animate-pulse" />
                         <div className="space-y-2">
                           <div className="font-medium">Analyzing user behavior...</div>
-                          <div className="text-sm text-gray-600">
-                            Processing engagement patterns, feature usage, and
-                            subscription data
-                          </div>
+                          <div className="text-sm text-gray-600">Processing engagement patterns, feature usage, and subscription data</div>
                           <Progress value={75} className="w-full mt-4" />
                         </div>
                       </CardContent>
@@ -419,25 +352,13 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                         <CardContent className="p-6">
                           <div className="text-center mb-4">
                             <div className="text-4xl mb-2">
-                              {
-                                personaProfiles[
-                                  prediction.persona as keyof typeof personaProfiles
-                                ]?.icon
-                              }
+                              {personaProfiles[prediction.persona as keyof typeof personaProfiles]?.icon}
                             </div>
                             <h3 className="text-xl font-semibold mb-2">
-                              {
-                                personaProfiles[
-                                  prediction.persona as keyof typeof personaProfiles
-                                ]?.name
-                              }
+                              {personaProfiles[prediction.persona as keyof typeof personaProfiles]?.name}
                             </h3>
                             <p className="text-gray-600 mb-4">
-                              {
-                                personaProfiles[
-                                  prediction.persona as keyof typeof personaProfiles
-                                ]?.description
-                              }
+                              {personaProfiles[prediction.persona as keyof typeof personaProfiles]?.description}
                             </p>
                             <div className="flex items-center justify-center gap-2">
                               <div className="text-sm font-medium">Confidence:</div>
@@ -445,10 +366,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                                 {Math.round(prediction.confidence * 100)}%
                               </Badge>
                             </div>
-                            <Progress
-                              value={prediction.confidence * 100}
-                              className="mt-2"
-                            />
+                            <Progress value={prediction.confidence * 100} className="mt-2" />
                           </div>
                         </CardContent>
                       </Card>
@@ -462,10 +380,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                           </h4>
                           <ul className="space-y-2">
                             {prediction.reasons.map((reason, index) => (
-                              <li
-                                key={index}
-                                className="flex items-start gap-2 text-sm"
-                              >
+                              <li key={index} className="flex items-start gap-2 text-sm">
                                 <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 flex-shrink-0" />
                                 {reason}
                               </li>
@@ -483,10 +398,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                           </h4>
                           <div className="space-y-2">
                             {prediction.recommendedCampaigns.map((campaign, index) => (
-                              <div
-                                key={index}
-                                className="flex items-center justify-between p-2 bg-gray-50 rounded"
-                              >
+                              <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
                                 <span className="text-sm font-medium">{campaign}</span>
                                 <Button size="sm" variant="outline">
                                   <Mail className="h-3 w-3 mr-1" />
@@ -519,13 +431,8 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {Object.entries(personaProfiles).map(([key, profile]) => {
-                      const count = batchPredictions.filter(
-                        bp => bp.prediction.persona === key
-                      ).length;
-                      const percentage =
-                        batchPredictions.length > 0
-                          ? ((count / batchPredictions.length) * 100).toFixed(1)
-                          : '0';
+                      const count = batchPredictions.filter(bp => bp.prediction.persona === key).length;
+                      const percentage = batchPredictions.length > 0 ? (count / batchPredictions.length * 100).toFixed(1) : '0';
 
                       return (
                         <Card key={key}>
@@ -547,20 +454,12 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                               <div className="text-lg">
-                                {
-                                  personaProfiles[
-                                    prediction.persona as keyof typeof personaProfiles
-                                  ]?.icon
-                                }
+                                {personaProfiles[prediction.persona as keyof typeof personaProfiles]?.icon}
                               </div>
                               <div>
                                 <div className="font-medium">{user.email}</div>
                                 <div className="text-sm text-gray-600">
-                                  {
-                                    personaProfiles[
-                                      prediction.persona as keyof typeof personaProfiles
-                                    ]?.name
-                                  }
+                                  {personaProfiles[prediction.persona as keyof typeof personaProfiles]?.name}
                                 </div>
                               </div>
                             </div>
@@ -581,9 +480,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
               ) : (
                 <div className="text-center py-12">
                   <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                  <h3 className="font-medium text-gray-900 mb-2">
-                    No batch analysis yet
-                  </h3>
+                  <h3 className="font-medium text-gray-900 mb-2">No batch analysis yet</h3>
                   <p className="text-gray-500 mb-4">
                     Run batch analysis to see persona predictions for all users
                   </p>
@@ -645,18 +542,14 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="p-4 bg-green-50 rounded-lg">
                       <Activity className="h-5 w-5 text-green-600 mb-2" />
-                      <div className="font-medium text-green-900">
-                        Engagement Patterns
-                      </div>
+                      <div className="font-medium text-green-900">Engagement Patterns</div>
                       <div className="text-sm text-green-700">
                         Email open rates and app usage time are strong indicators
                       </div>
                     </div>
                     <div className="p-4 bg-blue-50 rounded-lg">
                       <DollarSign className="h-5 w-5 text-blue-600 mb-2" />
-                      <div className="font-medium text-blue-900">
-                        Subscription Behavior
-                      </div>
+                      <div className="font-medium text-blue-900">Subscription Behavior</div>
                       <div className="text-sm text-blue-700">
                         Tier choices and upgrade patterns reveal persona traits
                       </div>

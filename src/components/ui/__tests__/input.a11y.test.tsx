@@ -1,6 +1,7 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Input Component - Accessibility Tests
- *
+ * 
  * Tests WCAG 2.1 AA compliance for the Input component
  * including form labels, error states, and keyboard navigation.
  */
@@ -10,11 +11,7 @@ import { vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import {
-  axeRender,
-  axeRulesets,
-  accessibilityPatterns,
-} from '../../../../tests/utils/a11y-testing-utils';
+import { axeRender, axeRulesets, accessibilityPatterns } from '../../../../tests/utils/a11y-testing-utils';
 import { Input } from '../input';
 
 describe('Input - Accessibility Tests', () => {
@@ -30,16 +27,8 @@ describe('Input - Accessibility Tests', () => {
     });
 
     it('should have no axe violations with different input types', async () => {
-      const inputTypes = [
-        'text',
-        'email',
-        'password',
-        'number',
-        'tel',
-        'url',
-        'search',
-      ];
-
+      const inputTypes = ['text', 'email', 'password', 'number', 'tel', 'url', 'search'];
+      
       for (const type of inputTypes) {
         await axeRender(
           <div>
@@ -80,17 +69,18 @@ describe('Input - Accessibility Tests', () => {
           <Input id="labeled-input" type="email" />
         </div>
       );
-
+      
       const input = screen.getByLabelText('Email Address');
       expect(input).toBeInTheDocument();
       expect(input).toHaveAttribute('type', 'email');
     });
 
     it('should support aria-label when no visible label', async () => {
-      await axeRender(<Input aria-label="Search products" type="search" />, {
-        axeOptions: axeRulesets.forms,
-      });
-
+      await axeRender(
+        <Input aria-label="Search products" type="search" />,
+        { axeOptions: axeRulesets.forms }
+      );
+      
       const input = screen.getByLabelText('Search products');
       expect(input).toBeInTheDocument();
     });
@@ -100,22 +90,25 @@ describe('Input - Accessibility Tests', () => {
         <div>
           <h3 id="password-heading">Create Password</h3>
           <p id="password-help">Must be at least 8 characters</p>
-          <Input type="password" aria-labelledby="password-heading password-help" />
+          <Input 
+            type="password" 
+            aria-labelledby="password-heading password-help"
+          />
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       // Password inputs don't expose textbox role for security, find by query selector
-      const input = document.querySelector('input[type="password"]')!;
-      expect(input).toHaveAttribute(
-        'aria-labelledby',
-        'password-heading password-help'
-      );
+      const input = document.querySelector('input[type="password"]')!
+      expect(input).toHaveAttribute('aria-labelledby', 'password-heading password-help');
     });
 
     it('should fail axe test without accessible name', async () => {
       await expect(async () => {
-        await axeRender(<Input />, { axeOptions: axeRulesets.forms });
+        await axeRender(
+          <Input />,
+          { axeOptions: axeRulesets.forms }
+        );
       }).rejects.toThrow();
     });
   });
@@ -128,7 +121,7 @@ describe('Input - Accessibility Tests', () => {
           <Input id="focus-test" />
         </div>
       );
-
+      
       const input = screen.getByRole('textbox');
       await accessibilityPatterns.testFocusable(input);
     });
@@ -140,10 +133,10 @@ describe('Input - Accessibility Tests', () => {
           <Input id="disabled-focus" disabled />
         </div>
       );
-
+      
       const input = screen.getByRole('textbox');
       expect(input).toBeDisabled();
-
+      
       input.focus();
       expect(document.activeElement).not.toBe(input);
     });
@@ -155,7 +148,7 @@ describe('Input - Accessibility Tests', () => {
           <Input id="focus-indicator" />
         </div>
       );
-
+      
       const input = screen.getByRole('textbox');
       expect(input).toHaveClass('focus-visible:ring-[3px]');
       expect(input).toHaveClass('focus-visible:ring-ring/50');
@@ -172,12 +165,11 @@ describe('Input - Accessibility Tests', () => {
           <Input id="third" data-testid="third" />
         </form>
       );
-
-      await accessibilityPatterns.testKeyboardNavigation(container, [
-        '[data-testid="first"]',
-        '[data-testid="second"]',
-        '[data-testid="third"]',
-      ]);
+      
+      await accessibilityPatterns.testKeyboardNavigation(
+        container,
+        ['[data-testid="first"]', '[data-testid="second"]', '[data-testid="third"]']
+      );
     });
   });
 
@@ -190,7 +182,7 @@ describe('Input - Accessibility Tests', () => {
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('aria-invalid', 'true');
       expect(input).toHaveClass('aria-invalid:ring-destructive/20');
@@ -200,9 +192,9 @@ describe('Input - Accessibility Tests', () => {
       await axeRender(
         <div>
           <label htmlFor="error-input">Email</label>
-          <Input
-            id="error-input"
-            type="email"
+          <Input 
+            id="error-input" 
+            type="email" 
             aria-invalid={true}
             aria-describedby="email-error"
           />
@@ -212,10 +204,10 @@ describe('Input - Accessibility Tests', () => {
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('aria-describedby', 'email-error');
-
+      
       const errorMessage = screen.getByRole('alert');
       expect(errorMessage).toHaveTextContent('Please enter a valid email address');
     });
@@ -224,19 +216,17 @@ describe('Input - Accessibility Tests', () => {
       await axeRender(
         <div>
           <label htmlFor="help-input">Password</label>
-          <Input
-            id="help-input"
+          <Input 
+            id="help-input" 
             type="password"
             aria-describedby="help-text error-text"
           />
           <div id="help-text">Must contain 8+ characters</div>
-          <div id="error-text" role="alert">
-            Password is required
-          </div>
+          <div id="error-text" role="alert">Password is required</div>
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       const input = screen.getByLabelText('Password');
       expect(input).toHaveAttribute('aria-describedby', 'help-text error-text');
     });
@@ -253,7 +243,7 @@ describe('Input - Accessibility Tests', () => {
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       const input = screen.getByRole('textbox');
       expect(input).toBeRequired();
     });
@@ -266,7 +256,7 @@ describe('Input - Accessibility Tests', () => {
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('aria-required', 'true');
     });
@@ -277,10 +267,13 @@ describe('Input - Accessibility Tests', () => {
       await axeRender(
         <div>
           <label htmlFor="placeholder-input">Search</label>
-          <Input id="placeholder-input" placeholder="Enter search terms..." />
+          <Input 
+            id="placeholder-input" 
+            placeholder="Enter search terms..." 
+          />
         </div>
       );
-
+      
       const input = screen.getByPlaceholderText('Enter search terms...');
       expect(input).toBeInTheDocument();
     });
@@ -290,7 +283,11 @@ describe('Input - Accessibility Tests', () => {
       await axeRender(
         <div>
           <label htmlFor="good-placeholder">Email Address</label>
-          <Input id="good-placeholder" type="email" placeholder="user@example.com" />
+          <Input 
+            id="good-placeholder" 
+            type="email"
+            placeholder="user@example.com"
+          />
         </div>,
         { axeOptions: axeRulesets.forms }
       );
@@ -301,11 +298,13 @@ describe('Input - Accessibility Tests', () => {
         <div>
           <label htmlFor="help-input">Username</label>
           <Input id="help-input" aria-describedby="username-help" />
-          <div id="username-help">Username must be 3-20 characters long</div>
+          <div id="username-help">
+            Username must be 3-20 characters long
+          </div>
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       const input = screen.getByLabelText('Username');
       expect(input).toHaveAttribute('aria-describedby', 'username-help');
     });
@@ -319,10 +318,10 @@ describe('Input - Accessibility Tests', () => {
           <Input id="text-input" />
         </div>
       );
-
+      
       const input = screen.getByRole('textbox');
       const user = userEvent.setup();
-
+      
       await user.type(input, 'Hello world');
       expect(input).toHaveValue('Hello world');
     });
@@ -334,13 +333,13 @@ describe('Input - Accessibility Tests', () => {
           <Input id="number-input" type="number" min="0" max="120" />
         </div>
       );
-
+      
       const input = screen.getByRole('spinbutton');
       const user = userEvent.setup();
-
+      
       await user.type(input, '25');
       expect(input).toHaveValue(25); // Number inputs return numeric values
-
+      
       // Test arrow key navigation - clear and type new value
       await user.clear(input);
       await user.type(input, '26');
@@ -348,7 +347,7 @@ describe('Input - Accessibility Tests', () => {
     });
 
     it('should handle Enter key in forms', async () => {
-      const handleSubmit = vi.fn(e => e.preventDefault());
+      const handleSubmit = vi.fn((e) => e.preventDefault());
       await axeRender(
         <form onSubmit={handleSubmit}>
           <label htmlFor="submit-input">Name</label>
@@ -356,13 +355,13 @@ describe('Input - Accessibility Tests', () => {
           <button type="submit">Submit</button>
         </form>
       );
-
+      
       const input = screen.getByRole('textbox');
       const user = userEvent.setup();
-
+      
       await user.type(input, 'John Doe');
       await user.keyboard('{Enter}');
-
+      
       expect(handleSubmit).toHaveBeenCalled();
     });
   });
@@ -377,7 +376,7 @@ describe('Input - Accessibility Tests', () => {
         </div>,
         { testProviderOptions: { language: { dir: 'rtl' } } }
       );
-
+      
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('dir', 'rtl');
     });
@@ -389,7 +388,7 @@ describe('Input - Accessibility Tests', () => {
           <Input id="explicit-rtl" dir="rtl" />
         </div>
       );
-
+      
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('dir', 'rtl');
     });
@@ -401,7 +400,7 @@ describe('Input - Accessibility Tests', () => {
           <Input id="auto-dir" dir="auto" />
         </div>
       );
-
+      
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('dir');
     });
@@ -416,7 +415,7 @@ describe('Input - Accessibility Tests', () => {
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       // Password inputs don't expose their role as textbox for security
       const input = screen.getByLabelText('Password');
       expect(input).toHaveAttribute('type', 'password');
@@ -430,7 +429,7 @@ describe('Input - Accessibility Tests', () => {
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('type', 'email');
     });
@@ -443,7 +442,7 @@ describe('Input - Accessibility Tests', () => {
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('type', 'tel');
     });
@@ -456,7 +455,7 @@ describe('Input - Accessibility Tests', () => {
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       const input = screen.getByRole('searchbox');
       expect(input).toHaveAttribute('type', 'search');
     });
@@ -471,7 +470,7 @@ describe('Input - Accessibility Tests', () => {
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       const input = screen.getByLabelText('Upload File');
       expect(input).toHaveAttribute('type', 'file');
       expect(input).toHaveAttribute('accept', '.jpg,.png');
@@ -485,7 +484,7 @@ describe('Input - Accessibility Tests', () => {
         </div>,
         { axeOptions: axeRulesets.forms }
       );
-
+      
       const input = screen.getByLabelText('Select Multiple Files');
       expect(input).toHaveAttribute('multiple');
     });
@@ -500,7 +499,7 @@ describe('Input - Accessibility Tests', () => {
         </div>,
         { axeOptions: { rules: { 'color-contrast': { enabled: true } } } }
       );
-
+      
       // Axe will automatically check color contrast
       const input = screen.getByRole('textbox');
       expect(input).toBeInTheDocument();
@@ -510,14 +509,14 @@ describe('Input - Accessibility Tests', () => {
       await axeRender(
         <div>
           <label htmlFor="placeholder-contrast">Placeholder Test</label>
-          <Input
-            id="placeholder-contrast"
+          <Input 
+            id="placeholder-contrast" 
             placeholder="Placeholder text should have sufficient contrast"
           />
         </div>,
         { axeOptions: { rules: { 'color-contrast': { enabled: true } } } }
       );
-
+      
       const input = screen.getByRole('textbox');
       expect(input).toBeInTheDocument();
     });

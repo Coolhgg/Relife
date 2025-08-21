@@ -40,7 +40,7 @@ export class OfflineStorage {
       const data = {
         alarms,
         timestamp: new Date().toISOString(),
-        version: this.VERSION,
+        version: this.VERSION
       };
 
       // Encrypt sensitive data before storage
@@ -49,14 +49,11 @@ export class OfflineStorage {
       // Update metadata
       await this.updateMetadata({ lastModified: data.timestamp });
 
-      console.log(
-        '[OfflineStorage] Saved encrypted alarms to local storage:',
-        alarms.length
-      );
+      console.log('[OfflineStorage] Saved encrypted alarms to local storage:', alarms.length);
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to save alarms locally', {
         context: 'OfflineStorage.saveAlarms',
-        alarmsCount: alarms.length,
+        alarmsCount: alarms.length
       });
       throw error;
     }
@@ -74,19 +71,14 @@ export class OfflineStorage {
           return migrated.alarms || [];
         }
 
-        console.log(
-          '[OfflineStorage] Retrieved encrypted alarms from local storage:',
-          encryptedData.alarms?.length || 0
-        );
+        console.log('[OfflineStorage] Retrieved encrypted alarms from local storage:', encryptedData.alarms?.length || 0);
         return encryptedData.alarms || [];
       }
 
       // Fallback: try to get unencrypted data for migration
       const unencryptedData = localStorage.getItem(this.ALARMS_KEY);
       if (unencryptedData) {
-        console.log(
-          '[OfflineStorage] Found unencrypted data, migrating to encrypted storage'
-        );
+        console.log('[OfflineStorage] Found unencrypted data, migrating to encrypted storage');
         const parsed = JSON.parse(unencryptedData);
 
         // Migrate to encrypted storage
@@ -100,7 +92,7 @@ export class OfflineStorage {
       return [];
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to retrieve alarms from local storage', {
-        context: 'OfflineStorage.getAlarms',
+        context: 'OfflineStorage.getAlarms'
       });
       return [];
     }
@@ -117,7 +109,7 @@ export class OfflineStorage {
           id: alarm.id,
           type: 'update',
           data: alarm,
-          timestamp: new Date().toISOString(),
+          timestamp: new Date().toISOString()
         });
       } else {
         alarms.push(alarm);
@@ -125,7 +117,7 @@ export class OfflineStorage {
           id: alarm.id,
           type: 'create',
           data: alarm,
-          timestamp: new Date().toISOString(),
+          timestamp: new Date().toISOString()
         });
       }
 
@@ -134,7 +126,7 @@ export class OfflineStorage {
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to save alarm', {
         context: 'OfflineStorage.saveAlarm',
-        alarmId: alarm.id,
+        alarmId: alarm.id
       });
       throw error;
     }
@@ -149,14 +141,14 @@ export class OfflineStorage {
       await this.addPendingChange({
         id: alarmId,
         type: 'delete',
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString()
       });
 
       console.log('[OfflineStorage] Deleted alarm:', alarmId);
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to delete alarm', {
         context: 'OfflineStorage.deleteAlarm',
-        alarmId,
+        alarmId
       });
       throw error;
     }
@@ -177,16 +169,12 @@ export class OfflineStorage {
       // Request background sync if available
       this.requestBackgroundSync();
 
-      console.log(
-        '[OfflineStorage] Added encrypted pending change:',
-        change.type,
-        change.id
-      );
+      console.log('[OfflineStorage] Added encrypted pending change:', change.type, change.id);
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to add pending change', {
         context: 'OfflineStorage.addPendingChange',
         changeType: change.type,
-        changeId: change.id,
+        changeId: change.id
       });
     }
   }
@@ -212,7 +200,7 @@ export class OfflineStorage {
       return [];
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to get pending changes', {
-        context: 'OfflineStorage.getPendingChanges',
+        context: 'OfflineStorage.getPendingChanges'
       });
       return [];
     }
@@ -225,7 +213,7 @@ export class OfflineStorage {
       console.log('[OfflineStorage] Cleared encrypted pending changes');
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to clear pending changes', {
-        context: 'OfflineStorage.clearPendingChanges',
+        context: 'OfflineStorage.clearPendingChanges'
       });
     }
   }
@@ -237,14 +225,14 @@ export class OfflineStorage {
       const metadata: StorageMetadata = {
         ...existing,
         ...updates,
-        version: this.VERSION,
+        version: this.VERSION
       };
 
       // Encrypt metadata
       SecurityService.secureStorageSet(this.METADATA_KEY, metadata);
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to update metadata', {
-        context: 'OfflineStorage.updateMetadata',
+        context: 'OfflineStorage.updateMetadata'
       });
     }
   }
@@ -270,7 +258,7 @@ export class OfflineStorage {
       const defaultMetadata = {
         version: this.VERSION,
         lastSync: new Date().toISOString(),
-        pendingChanges: [],
+        pendingChanges: []
       };
 
       // Store default metadata encrypted
@@ -278,30 +266,25 @@ export class OfflineStorage {
       return defaultMetadata;
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to get metadata', {
-        context: 'OfflineStorage.getMetadata',
+        context: 'OfflineStorage.getMetadata'
       });
       return {
         version: this.VERSION,
         lastSync: new Date().toISOString(),
-        pendingChanges: [],
+        pendingChanges: []
       };
     }
   }
 
   // Data migration
   private async migrateData(oldData: any): Promise<any> {
-    console.log(
-      '[OfflineStorage] Migrating data from version',
-      oldData.version,
-      'to',
-      this.VERSION
-    );
+    console.log('[OfflineStorage] Migrating data from version', oldData.version, 'to', this.VERSION);
 
     // Add migration logic here as the app evolves
     const migrated = {
       ...oldData,
       version: this.VERSION,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
 
     // Save migrated data with encryption
@@ -313,17 +296,12 @@ export class OfflineStorage {
 
   // Background sync request
   private requestBackgroundSync(): void {
-    if (
-      'serviceWorker' in navigator &&
-      'sync' in window.ServiceWorkerRegistration.prototype
-    ) {
-      navigator.serviceWorker.ready
-        .then(registration => {
-          return registration.sync.register('alarm-sync');
-        })
-        .catch(error => {
-          console.log('[OfflineStorage] Background sync registration failed:', error);
-        });
+    if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
+      navigator.serviceWorker.ready.then(registration => {
+        return registration.sync.register('alarm-sync');
+      }).catch(error => {
+        console.log('[OfflineStorage] Background sync registration failed:', error);
+      });
     }
   }
 
@@ -338,13 +316,13 @@ export class OfflineStorage {
         alarms,
         metadata,
         pendingChanges,
-        exportTimestamp: new Date().toISOString(),
+        exportTimestamp: new Date().toISOString()
       };
 
       return JSON.stringify(exportData, null, 2);
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to export data', {
-        context: 'OfflineStorage.exportData',
+        context: 'OfflineStorage.exportData'
       });
       throw error;
     }
@@ -361,15 +339,12 @@ export class OfflineStorage {
 
       if (data.pendingChanges && Array.isArray(data.pendingChanges)) {
         SecurityService.secureStorageSet(this.PENDING_CHANGES_KEY, data.pendingChanges);
-        console.log(
-          '[OfflineStorage] Imported',
-          data.pendingChanges.length,
-          'encrypted pending changes'
-        );
+        console.log('[OfflineStorage] Imported', data.pendingChanges.length, 'encrypted pending changes');
       }
+
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to import data', {
-        context: 'OfflineStorage.importData',
+        context: 'OfflineStorage.importData'
       });
       throw error;
     }
@@ -395,17 +370,17 @@ export class OfflineStorage {
         alarmsCount: alarms.length,
         pendingChangesCount: pendingChanges.length,
         lastSync: metadata.lastSync,
-        storageUsed,
+        storageUsed
       };
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to get storage stats', {
-        context: 'OfflineStorage.getStorageStats',
+        context: 'OfflineStorage.getStorageStats'
       });
       return {
         alarmsCount: 0,
         pendingChangesCount: 0,
         lastSync: 'Never',
-        storageUsed: '0 KB',
+        storageUsed: '0 KB'
       };
     }
   }
@@ -426,7 +401,7 @@ export class OfflineStorage {
       console.log('[OfflineStorage] Cleared all encrypted data');
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to clear all data', {
-        context: 'OfflineStorage.clearAllData',
+        context: 'OfflineStorage.clearAllData'
       });
       throw error;
     }

@@ -1,4 +1,6 @@
-import AnalyticsService, { ANALYTICS_EVENTS } from '../analytics';
+import { expect, test, jest } from "@jest/globals";
+import AnalyticsService, { ANALYTICS_EVENTS } from "../analytics";
+import { config } from "../../config/environment";
 
 // Mock PostHog
 const mockPostHog = {
@@ -8,12 +10,12 @@ const mockPostHog = {
   capture: jest.fn(),
   people: {
     set: jest.fn(),
-    increment: jest.fn(),
+    increment: jest.fn()
   },
   register: jest.fn(),
   getFeatureFlag: jest.fn(),
   startSessionRecording: jest.fn(),
-  stopSessionRecording: jest.fn(),
+  stopSessionRecording: jest.fn()
 };
 
 jest.mock('posthog-js', () => mockPostHog);
@@ -44,7 +46,7 @@ describe('AnalyticsService', () => {
           respect_dnt: true,
           capture_pageview: true,
           capture_pageleave: true,
-          autocapture: expect.any(Boolean),
+          autocapture: expect.any(Boolean)
         })
       );
     });
@@ -73,7 +75,7 @@ describe('AnalyticsService', () => {
         ANALYTICS_EVENTS.APP_LAUNCHED,
         expect.objectContaining({
           environment: expect.any(String),
-          timestamp: expect.any(String),
+          timestamp: expect.any(String)
         })
       );
     });
@@ -93,7 +95,7 @@ describe('AnalyticsService', () => {
         username: 'testuser',
         createdAt: '2024-01-01T00:00:00Z',
         totalAlarms: 5,
-        isSubscribed: true,
+        isSubscribed: true
       };
 
       analytics.identify(userId, properties);
@@ -105,7 +107,7 @@ describe('AnalyticsService', () => {
           username: properties.username,
           created_at: properties.createdAt,
           total_alarms: properties.totalAlarms,
-          is_subscribed: properties.isSubscribed,
+          is_subscribed: properties.isSubscribed
         })
       );
     });
@@ -127,7 +129,7 @@ describe('AnalyticsService', () => {
       const eventName = 'test_event';
       const properties = {
         category: 'test',
-        value: 100,
+        value: 100
       };
 
       analytics.track(eventName, properties);
@@ -138,7 +140,7 @@ describe('AnalyticsService', () => {
           ...properties,
           timestamp: expect.any(String),
           session_id: expect.any(String),
-          source: 'web',
+          source: 'web'
         })
       );
     });
@@ -155,7 +157,7 @@ describe('AnalyticsService', () => {
           page_name: pageName,
           page_url: expect.any(String),
           page_path: expect.any(String),
-          ...properties,
+          ...properties
         })
       );
     });
@@ -172,7 +174,7 @@ describe('AnalyticsService', () => {
         expect.objectContaining({
           feature_name: featureName,
           action,
-          ...properties,
+          ...properties
         })
       );
     });
@@ -187,7 +189,7 @@ describe('AnalyticsService', () => {
     it('should set user properties', () => {
       const properties = {
         plan: 'premium',
-        totalAlarms: 10,
+        totalAlarms: 10
       };
 
       analytics.setUserProperties(properties);
@@ -204,7 +206,7 @@ describe('AnalyticsService', () => {
       analytics.incrementProperty(property, value);
 
       expect(mockPostHog.people.increment).toHaveBeenCalledWith({
-        [property]: value,
+        [property]: value
       });
     });
   });
@@ -230,7 +232,7 @@ describe('AnalyticsService', () => {
           'performance_marker',
           expect.objectContaining({
             marker_name: markerName,
-            duration: expect.any(Number),
+            duration: expect.any(Number)
           })
         );
       }, 10);
@@ -263,7 +265,7 @@ describe('AnalyticsService', () => {
           error_message: error.message,
           error_stack: error.stack,
           context,
-          metadata,
+          metadata
         })
       );
     });
@@ -278,7 +280,7 @@ describe('AnalyticsService', () => {
         ANALYTICS_EVENTS.ERROR_OCCURRED,
         expect.objectContaining({
           error_message: errorMessage,
-          context,
+          context
         })
       );
     });
@@ -354,10 +356,10 @@ describe('AnalyticsService', () => {
           analytics: {
             posthog: {
               apiKey: '',
-              host: '',
-            },
-          },
-        },
+              host: ''
+            }
+          }
+        }
       }));
 
       analytics.initialize();

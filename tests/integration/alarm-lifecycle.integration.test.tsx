@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Complete Alarm Lifecycle Integration Tests
  * 
