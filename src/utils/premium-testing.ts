@@ -22,7 +22,7 @@ export const TEST_USER_IDS = {
 };
 
 // Mock subscription data for testing
-  {
+export const MOCK_SUBSCRIPTION_DATA = {
     free: null, // Free users don't have subscription records
     premium: {
       id: "sub_premium_123",

@@ -28,6 +28,7 @@ export interface PersonaProfile {
     | "corporate"
     | "youthful"
     | "exclusive";
+  targetPlan:
     | "free"
     | "basic"
     | "premium"

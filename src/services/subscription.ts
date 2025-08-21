@@ -86,6 +86,7 @@ export class SubscriptionService {
   /**
    * Get user's subscription tier
    */
+  static async getUserTier(userId: string): Promise<SubscriptionTier> {
     const subscription = await this.getUserSubscription(userId);
     return subscription?.tier || 'free';
   }
@@ -102,6 +103,8 @@ export class SubscriptionService {
   /**
    * Get user's feature limits
    */
+  static async getFeatureLimits(userId: string): Promise<SubscriptionLimits> {
+    const tier = await this.getUserTier(userId);
     return SUBSCRIPTION_LIMITS[tier];
   }
 
