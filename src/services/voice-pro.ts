@@ -1,5 +1,7 @@
-import type { Alarm, VoiceMood } from '../types';
-import { formatTime } from '../utils';
+/// <reference types="node" />
+/// <reference lib="dom" />
+import type { Alarm, VoiceMood } from "../types";
+import { formatTime } from "../utils";
 
 // Enhanced voice configuration types
 export interface VoiceProvider {

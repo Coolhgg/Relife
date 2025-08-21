@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference lib="dom" />
 // Offline Analytics Service for Relife App
 // Comprehensive offline analytics collection and queuing with intelligent batching
 

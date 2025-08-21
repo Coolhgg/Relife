@@ -1,4 +1,3 @@
-import type { AdvancedAlarm } from '../types';
 
 /**
  * Health Tracker Integration Service
@@ -308,7 +307,6 @@ class HealthTrackerIntegration {
   /**
    * Get health-based alarm recommendations
    */
-  public getHealthBasedRecommendations(alarm: AdvancedAlarm): HealthInsight[] {
     const insights: HealthInsight[] = [];
 
     if (!this.config.enabled) return insights;
@@ -474,17 +472,16 @@ class HealthTrackerIntegration {
     return avg;
   }
 
-  private analyzeSleepCycleAlignment(alarm: AdvancedAlarm): HealthInsight | null {
+  private analyzeSleepCycleAlignment(
+  ): HealthInsight | null {
     // Implementation for sleep cycle analysis
     return null;
   }
 
-  private analyzeRecoveryNeeds(alarm: AdvancedAlarm): HealthInsight | null {
     // Implementation for recovery analysis
     return null;
   }
 
-  private analyzeStressImpact(alarm: AdvancedAlarm): HealthInsight | null {
     // Implementation for stress analysis
     return null;
   }

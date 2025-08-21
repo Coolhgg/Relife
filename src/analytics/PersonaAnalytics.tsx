@@ -1,5 +1,7 @@
-import React, { useEffect, useCallback, useRef } from 'react';
-import { PersonaType, PersonaDetectionFactor } from '../types/index';
+/// <reference types="node" />
+/// <reference lib="dom" />
+import React, { useEffect, useCallback, useRef } from "react";
+import { PersonaType, PersonaDetectionFactor } from "../types/index";
 
 // Define missing types based on what the component needs
 type UserPersona = {

@@ -1,9 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
-import { SupabaseService, supabase } from '../services/supabase';
-import type { User } from '../types';
-import { ErrorHandler } from '../services/error-handler';
-import AnalyticsService from '../services/analytics';
-import SecurityService from '../services/security';
+/// <reference types="node" />
+/// <reference lib="dom" />
+import { useState, useEffect, useRef } from "react";
+import { SupabaseService, supabase } from "../services/supabase";
+import type { User } from "../types";
+import { ErrorHandler } from "../services/error-handler";
+import AnalyticsService from "../services/analytics";
+import SecurityService from "../services/security";
 
 interface AuthState {
   user: User | null;

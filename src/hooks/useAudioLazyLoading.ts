@@ -1,7 +1,15 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { lazyAudioLoader } from '../services/lazy-audio-loader';
-import type { AudioLoadProgress, AudioCacheEntry } from '../services/audio-manager';
-import type { CustomSound, Playlist, LoadingState } from '../services/types/media';
+/// <reference types="node" />
+import { useState, useEffect, useCallback, useRef } from "react";
+import { lazyAudioLoader } from "../services/lazy-audio-loader";
+import type {
+  AudioLoadProgress,
+  AudioCacheEntry,
+} from "../services/audio-manager";
+import type {
+  CustomSound,
+  Playlist,
+  LoadingState,
+} from "../services/types/media";
 
 export interface AudioLoadingState {
   state: LoadingState;

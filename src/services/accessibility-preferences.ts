@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Accessibility Preferences System
  * Comprehensive accessibility settings management with system integration

@@ -15,7 +15,6 @@ import PricingTable from './PricingTable';
 import type {
   Subscription,
   SubscriptionPlan,
-  SubscriptionTier,
   BillingInterval,
   CancelSubscriptionRequest
 } from '../../types/premium';
@@ -77,16 +76,13 @@ export function SubscriptionManagement({
     }).format(amount / 100);
   };
 
-  const getTierHierarchy = (): SubscriptionTier[] => {
-    return ['free', 'basic', 'premium', 'pro', 'enterprise'];
+    return ["free", "basic", "premium", "pro", "enterprise"];
   };
 
-  const isUpgrade = (tier: SubscriptionTier) => {
     const hierarchy = getTierHierarchy();
     return hierarchy.indexOf(tier) > hierarchy.indexOf(subscription.tier);
   };
 
-  const isDowngrade = (tier: SubscriptionTier) => {
     const hierarchy = getTierHierarchy();
     return hierarchy.indexOf(tier) < hierarchy.indexOf(subscription.tier);
   };

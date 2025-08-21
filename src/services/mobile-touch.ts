@@ -1,4 +1,5 @@
-import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
+/// <reference lib="dom" />
+import { Haptics, ImpactStyle, NotificationType } from "@capacitor/haptics";
 
 export interface TouchGestureOptions {
   element: HTMLElement;

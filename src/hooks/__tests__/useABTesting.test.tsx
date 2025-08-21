@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for useABTesting hook
  * Tests A/B testing functionality, variant assignments, and feature flags

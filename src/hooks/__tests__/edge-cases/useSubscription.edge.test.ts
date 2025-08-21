@@ -1,5 +1,6 @@
-import { renderHook, act } from '@testing-library/react';
-import { useSubscription } from '../../useSubscription';
+import { expect, test, jest } from "@jest/globals";
+import { renderHook, act } from "@testing-library/react";
+import { useSubscription } from "../../useSubscription";
 
 // Mock dependencies
 jest.mock('../../../services/subscription-service', () => ({

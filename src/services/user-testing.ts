@@ -1,7 +1,8 @@
-import { v4 as uuidv4 } from 'uuid';
-import { Device } from '@capacitor/device';
-import { Network } from '@capacitor/network';
-import { ErrorHandler } from './error-handler';
+/// <reference lib="dom" />
+import { v4 as uuidv4 } from "uuid";
+import { Device } from "@capacitor/device";
+import { Network } from "@capacitor/network";
+import { ErrorHandler } from "./error-handler";
 
 // Types
 export interface UserTestSession {

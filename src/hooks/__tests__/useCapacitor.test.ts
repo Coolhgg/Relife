@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for useCapacitor hook
  * Tests native mobile integration via Capacitor plugins

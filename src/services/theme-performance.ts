@@ -1,3 +1,4 @@
+/// <reference types="node" />
 /**
  * Theme Performance Optimization Service
  * Handles efficient theme switching, CSS variable caching, and DOM batching

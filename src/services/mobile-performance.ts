@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference lib="dom" />
 // Enhanced Mobile Performance Optimization Service
 export interface PerformanceConfig {
   enableMemoryMonitoring: boolean;

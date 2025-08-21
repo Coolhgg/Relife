@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import type { TabProtectionSettings } from '../types/tabProtection';
+/// <reference lib="dom" />
+import { useState, useEffect, useCallback } from "react";
+import type { TabProtectionSettings } from "../types/tabProtection";
 import {
   getTabProtectionSettings,
   saveTabProtectionSettings,

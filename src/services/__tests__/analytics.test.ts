@@ -1,4 +1,6 @@
-import AnalyticsService, { ANALYTICS_EVENTS } from '../analytics';
+import { expect, test, jest } from "@jest/globals";
+import AnalyticsService, { ANALYTICS_EVENTS } from "../analytics";
+import { config } from "../../config/environment";
 
 // Mock PostHog
 const mockPostHog = {

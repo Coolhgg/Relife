@@ -14,9 +14,26 @@ export interface PersonaProfile {
   displayName: string;
   description: string;
   primaryColor: string;
-  messagingTone: 'supportive' | 'efficient' | 'sophisticated' | 'business_focused' | 'casual' | 'value_focused';
-  ctaStyle: 'friendly' | 'urgent' | 'professional' | 'corporate' | 'youthful' | 'exclusive';
-  targetSubscriptionTier: 'free' | 'basic' | 'premium' | 'pro' | 'student' | 'lifetime';
+  messagingTone:
+    | "supportive"
+    | "efficient"
+    | "sophisticated"
+    | "business_focused"
+    | "casual"
+    | "value_focused";
+  ctaStyle:
+    | "friendly"
+    | "urgent"
+    | "professional"
+    | "corporate"
+    | "youthful"
+    | "exclusive";
+    | "free"
+    | "basic"
+    | "premium"
+    | "pro"
+    | "student"
+    | "lifetime";
   conversionGoals: string[];
   preferredChannels: ('email' | 'push' | 'in_app' | 'sms')[];
 }
@@ -512,69 +529,80 @@ export interface AutomationAction {
 // Export default persona configurations
 export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
   struggling_sam: {
-    id: 'struggling_sam',
-    displayName: 'Struggling Sam',
-    description: 'Price-conscious users who need gentle encouragement and free value',
-    primaryColor: '#10b981',
-    messagingTone: 'supportive',
-    ctaStyle: 'friendly',
-    targetSubscriptionTier: 'free',
-    conversionGoals: ['app_engagement', 'feature_discovery', 'basic_upgrade'],
-    preferredChannels: ['email', 'in_app']
+    id: "struggling_sam",
+    displayName: "Struggling Sam",
+    description:
+      "Price-conscious users who need gentle encouragement and free value",
+    primaryColor: "#10b981",
+    messagingTone: "supportive",
+    ctaStyle: "friendly",
+    conversionGoals: ["app_engagement", "feature_discovery", "basic_upgrade"],
+    preferredChannels: ["email", "in_app"],
   },
   busy_ben: {
-    id: 'busy_ben',
-    displayName: 'Busy Ben',
-    description: 'Efficiency-driven professionals who value time savings and ROI',
-    primaryColor: '#3b82f6',
-    messagingTone: 'efficient',
-    ctaStyle: 'urgent',
-    targetSubscriptionTier: 'basic',
-    conversionGoals: ['trial_conversion', 'time_savings', 'productivity_features'],
-    preferredChannels: ['email', 'push']
+    id: "busy_ben",
+    displayName: "Busy Ben",
+    description:
+      "Efficiency-driven professionals who value time savings and ROI",
+    primaryColor: "#3b82f6",
+    messagingTone: "efficient",
+    ctaStyle: "urgent",
+    conversionGoals: [
+      "trial_conversion",
+      "time_savings",
+      "productivity_features",
+    ],
+    preferredChannels: ["email", "push"],
   },
   professional_paula: {
-    id: 'professional_paula',
-    displayName: 'Professional Paula',
-    description: 'Feature-rich seekers who want advanced functionality and analytics',
-    primaryColor: '#8b5cf6',
-    messagingTone: 'sophisticated',
-    ctaStyle: 'professional',
-    targetSubscriptionTier: 'premium',
-    conversionGoals: ['premium_trial', 'advanced_features', 'analytics_usage'],
-    preferredChannels: ['email', 'in_app', 'push']
+    id: "professional_paula",
+    displayName: "Professional Paula",
+    description:
+      "Feature-rich seekers who want advanced functionality and analytics",
+    primaryColor: "#8b5cf6",
+    messagingTone: "sophisticated",
+    ctaStyle: "professional",
+    conversionGoals: ["premium_trial", "advanced_features", "analytics_usage"],
+    preferredChannels: ["email", "in_app", "push"],
   },
   enterprise_emma: {
-    id: 'enterprise_emma',
-    displayName: 'Enterprise Emma',
-    description: 'Team-oriented decision makers who need comprehensive solutions',
-    primaryColor: '#6366f1',
-    messagingTone: 'business_focused',
-    ctaStyle: 'corporate',
-    targetSubscriptionTier: 'pro',
-    conversionGoals: ['demo_request', 'team_features', 'enterprise_trial'],
-    preferredChannels: ['email', 'in_app']
+    id: "enterprise_emma",
+    displayName: "Enterprise Emma",
+    description:
+      "Team-oriented decision makers who need comprehensive solutions",
+    primaryColor: "#6366f1",
+    messagingTone: "business_focused",
+    ctaStyle: "corporate",
+    conversionGoals: ["demo_request", "team_features", "enterprise_trial"],
+    preferredChannels: ["email", "in_app"],
   },
   student_sarah: {
-    id: 'student_sarah',
-    displayName: 'Student Sarah',
-    description: 'Budget-conscious students who need verification and discounts',
-    primaryColor: '#f59e0b',
-    messagingTone: 'casual',
-    ctaStyle: 'youthful',
-    targetSubscriptionTier: 'student',
-    conversionGoals: ['student_verification', 'discount_usage', 'campus_features'],
-    preferredChannels: ['email', 'push', 'sms']
+    id: "student_sarah",
+    displayName: "Student Sarah",
+    description:
+      "Budget-conscious students who need verification and discounts",
+    primaryColor: "#f59e0b",
+    messagingTone: "casual",
+    ctaStyle: "youthful",
+    conversionGoals: [
+      "student_verification",
+      "discount_usage",
+      "campus_features",
+    ],
+    preferredChannels: ["email", "push", "sms"],
   },
   lifetime_larry: {
-    id: 'lifetime_larry',
-    displayName: 'Lifetime Larry',
-    description: 'Users who prefer one-time payments over subscriptions',
-    primaryColor: '#eab308',
-    messagingTone: 'value_focused',
-    ctaStyle: 'exclusive',
-    targetSubscriptionTier: 'lifetime',
-    conversionGoals: ['lifetime_purchase', 'value_demonstration', 'exclusive_access'],
-    preferredChannels: ['email', 'in_app']
-  }
+    id: "lifetime_larry",
+    displayName: "Lifetime Larry",
+    description: "Users who prefer one-time payments over subscriptions",
+    primaryColor: "#eab308",
+    messagingTone: "value_focused",
+    ctaStyle: "exclusive",
+    conversionGoals: [
+      "lifetime_purchase",
+      "value_demonstration",
+      "exclusive_access",
+    ],
+    preferredChannels: ["email", "in_app"],
+  },
 };

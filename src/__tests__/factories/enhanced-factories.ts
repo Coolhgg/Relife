@@ -42,60 +42,58 @@ const PERSONA_TYPES: PersonaType[] = [
 
 const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
   struggling_sam: {
-    displayName: 'Struggling Sam',
-    description: 'Free-focused users who need basic alarm functionality',
-    primaryColor: '#3B82F6',
-    messagingTone: 'supportive',
-    ctaStyle: 'friendly',
-    targetSubscriptionTier: 'free'
+    displayName: "Struggling Sam",
+    description: "Free-focused users who need basic alarm functionality",
+    primaryColor: "#3B82F6",
+    messagingTone: "supportive",
+    ctaStyle: "friendly",
   },
   busy_ben: {
-    displayName: 'Busy Ben',
-    description: 'Efficiency-driven professionals who value time-saving features',
-    primaryColor: '#F59E0B',
-    messagingTone: 'efficient',
-    ctaStyle: 'urgent',
-    targetSubscriptionTier: 'basic'
+    displayName: "Busy Ben",
+    description:
+      "Efficiency-driven professionals who value time-saving features",
+    primaryColor: "#F59E0B",
+    messagingTone: "efficient",
+    ctaStyle: "urgent",
   },
   professional_paula: {
-    displayName: 'Professional Paula',
-    description: 'Feature-rich seekers who want comprehensive solutions',
-    primaryColor: '#8B5CF6',
-    messagingTone: 'sophisticated',
-    ctaStyle: 'professional',
-    targetSubscriptionTier: 'premium'
+    displayName: "Professional Paula",
+    description: "Feature-rich seekers who want comprehensive solutions",
+    primaryColor: "#8B5CF6",
+    messagingTone: "sophisticated",
+    ctaStyle: "professional",
   },
   enterprise_emma: {
-    displayName: 'Enterprise Emma',
-    description: 'Team-oriented decision makers focused on organization-wide solutions',
-    primaryColor: '#10B981',
-    messagingTone: 'business_focused',
-    ctaStyle: 'corporate',
-    targetSubscriptionTier: 'pro'
+    displayName: "Enterprise Emma",
+    description:
+      "Team-oriented decision makers focused on organization-wide solutions",
+    primaryColor: "#10B981",
+    messagingTone: "business_focused",
+    ctaStyle: "corporate",
   },
   student_sarah: {
-    displayName: 'Student Sarah',
-    description: 'Budget-conscious students who need affordable solutions',
-    primaryColor: '#EC4899',
-    messagingTone: 'casual',
-    ctaStyle: 'youthful',
-    targetSubscriptionTier: 'student'
+    displayName: "Student Sarah",
+    description: "Budget-conscious students who need affordable solutions",
+    primaryColor: "#EC4899",
+    messagingTone: "casual",
+    ctaStyle: "youthful",
   },
   lifetime_larry: {
-    displayName: 'Lifetime Larry',
-    description: 'One-time payment preferrers who dislike subscriptions',
-    primaryColor: '#F97316',
-    messagingTone: 'value_focused',
-    ctaStyle: 'exclusive',
-    targetSubscriptionTier: 'lifetime'
-  }
+    displayName: "Lifetime Larry",
+    description: "One-time payment preferrers who dislike subscriptions",
+    primaryColor: "#F97316",
+    messagingTone: "value_focused",
+    ctaStyle: "exclusive",
+  },
 };
 
 export interface CreatePersonaProfileOptions {
   persona?: PersonaType;
 }
 
-export const createTestPersonaProfile = (options: CreatePersonaProfileOptions = {}): PersonaProfile => {
+export const _createTestPersonaProfile = (
+  options: CreatePersonaProfileOptions = {},
+): PersonaProfile => {
   const { persona = faker.helpers.arrayElement(PERSONA_TYPES) } = options;
   const baseProfile = PERSONA_PROFILES[persona];
 
@@ -111,7 +109,9 @@ export interface CreatePersonaDetectionResultOptions {
   previousPersona?: PersonaType;
 }
 
-export const createTestPersonaDetectionResult = (options: CreatePersonaDetectionResultOptions = {}): PersonaDetectionResult => {
+export const _createTestPersonaDetectionResult = (
+  options: CreatePersonaDetectionResultOptions = {},
+): PersonaDetectionResult => {
   const {
     persona = faker.helpers.arrayElement(PERSONA_TYPES),
     confidence = faker.number.float({ min: 0.6, max: 0.95 }),
@@ -145,7 +145,9 @@ export interface CreateEmailCampaignOptions {
   sequences?: number;
 }
 
-export const createTestEmailCampaign = (options: CreateEmailCampaignOptions = {}): EmailCampaign => {
+export const _createTestEmailCampaign = (
+  options: CreateEmailCampaignOptions = {},
+): EmailCampaign => {
   const {
     persona = faker.helpers.arrayElement(PERSONA_TYPES),
     status = faker.helpers.arrayElement(['draft', 'active', 'paused', 'completed']),
@@ -184,7 +186,9 @@ export interface CreateEmailSequenceOptions {
   persona?: PersonaType;
 }
 
-export const createTestEmailSequence = (options: CreateEmailSequenceOptions = {}): EmailSequence => {
+export const _createTestEmailSequence = (
+  options: CreateEmailSequenceOptions = {},
+): EmailSequence => {
   const {
     campaignId = generateId('campaign'),
     sequenceOrder = 1,
@@ -215,7 +219,9 @@ export interface CreateCampaignMetricsOptions {
   totalSent?: number;
 }
 
-export const createTestCampaignMetrics = (options: CreateCampaignMetricsOptions = {}): CampaignMetrics => {
+export const _createTestCampaignMetrics = (
+  options: CreateCampaignMetricsOptions = {},
+): CampaignMetrics => {
   const {
     campaignId = generateId('campaign'),
     totalSent = faker.number.int({ min: 100, max: 10000 })
@@ -249,7 +255,9 @@ export interface CreatePerformanceMetricsOptions {
   timeRange?: 'hourly' | 'daily' | 'weekly';
 }
 
-export const createTestPerformanceMetrics = (options: CreatePerformanceMetricsOptions = {}): PerformanceMetrics => {
+export const _createTestPerformanceMetrics = (
+  options: CreatePerformanceMetricsOptions = {},
+): PerformanceMetrics => {
   const {
     timeRange = faker.helpers.arrayElement(['hourly', 'daily', 'weekly'])
   } = options;
@@ -270,11 +278,34 @@ export const createTestPerformanceMetrics = (options: CreatePerformanceMetricsOp
 };
 
 // Export all factories for easy testing
-export const enhancedFactories = {
+export const _enhancedFactories = {
   createTestPersonaProfile,
   createTestPersonaDetectionResult,
   createTestEmailCampaign,
   createTestEmailSequence,
   createTestCampaignMetrics,
-  createTestPerformanceMetrics
+  createTestPerformanceMetrics,
+};
+// ===============================
+// ENHANCED PARTIAL OVERRIDE FACTORIES
+// ===============================
+
+/**
+ * Flexible PersonaDetectionResult factory with Partial override support
+ */
+export const _createFlexiblePersonaDetectionResult = (
+  overrides: Partial<PersonaDetectionResult> = {},
+): PersonaDetectionResult => {
+  const base = createTestPersonaDetectionResult();
+  return { ...base, ...overrides };
+};
+
+/**
+ * Flexible EmailCampaign factory with Partial override support
+ */
+export const _createFlexibleEmailCampaign = (
+  overrides: Partial<EmailCampaign> = {},
+): EmailCampaign => {
+  const base = createTestEmailCampaign();
+  return { ...base, ...overrides };
 };

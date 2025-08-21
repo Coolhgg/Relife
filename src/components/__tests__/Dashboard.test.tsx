@@ -1,8 +1,11 @@
-import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import Dashboard from '../Dashboard';
-import { testUtils } from '../../test-setup';
+import { expect, test, jest } from "@jest/globals";
+import React from "react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Dashboard from "../Dashboard";
+import { testUtils } from "../../test-setup";
+import { PerformanceMonitor } from "../../services/performance-monitor";
+import { AppAnalyticsService } from "../../services/app-analytics";
 
 // Mock the services and hooks
 jest.mock('../../services/performance-monitor', () => ({

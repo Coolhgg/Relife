@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // Premium Subscription React Hook for Relife Alarm App
 // Manages subscription state, feature access, and billing operations
 
@@ -5,7 +6,6 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import type {
   Subscription,
   SubscriptionPlan,
-  SubscriptionTier,
   FeatureAccess,
   BillingUsage,
   PaymentMethod,
@@ -26,7 +26,6 @@ interface SubscriptionHookState {
   // Core subscription data
   subscription: Subscription | null;
   currentPlan: SubscriptionPlan | null;
-  userTier: SubscriptionTier;
   featureAccess: FeatureAccess | null;
   usage: BillingUsage | null;
 
@@ -56,7 +55,6 @@ interface SubscriptionHookActions {
   // Feature access
   hasFeatureAccess: (featureId: string) => boolean;
   trackFeatureUsage: (featureId: string, amount?: number) => Promise<void>;
-  getUpgradeRequirement: (featureId: string) => SubscriptionTier | null;
 
   // Payment methods
   addPaymentMethod: (paymentMethodId: string) => Promise<{success: boolean; error?: string}>;
@@ -73,7 +71,8 @@ interface SubscriptionHookActions {
   resetUIState: () => void;
 
   // Plan comparison
-  comparePlans: (currentTier: SubscriptionTier, targetTier: SubscriptionTier) => {
+  comparePlans: (
+  ) => {
     isUpgrade: boolean;
     isDowngrade: boolean;
     priceDifference: number;
@@ -375,8 +374,8 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
     }
   }, [userId, state.featureAccess]);
 
-  const getUpgradeRequirement = useCallback((featureId: string): SubscriptionTier | null => {
-    if (!state.featureAccess) return null;
+  const getUpgradeRequirement = useCallback(
+      if (!state.featureAccess) return null;
 
     const feature = state.featureAccess.features[featureId];
     return feature?.upgradeRequired || null;
@@ -499,25 +498,36 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
   }, []);
 
   // Plan comparison function
-  const comparePlans = useCallback((currentTier: SubscriptionTier, targetTier: SubscriptionTier) => {
-    const tierHierarchy: SubscriptionTier[] = ['free', 'basic', 'premium', 'pro', 'enterprise'];
-    const currentLevel = tierHierarchy.indexOf(currentTier);
-    const targetLevel = tierHierarchy.indexOf(targetTier);
+  const comparePlans = useCallback(
+        "free",
+        "basic",
+        "premium",
+        "pro",
+        "enterprise",
+      ];
+      const currentLevel = tierHierarchy.indexOf(currentTier);
+      const targetLevel = tierHierarchy.indexOf(targetTier);
 
-    const currentPlan = state.availablePlans.find(p => p.tier === currentTier);
-    const targetPlan = state.availablePlans.find(p => p.tier === targetTier);
+      const currentPlan = state.availablePlans.find(
+        (p) => p.tier === currentTier,
+      );
+      const targetPlan = state.availablePlans.find(
+        (p) => p.tier === targetTier,
+      );
 
-    const currentPrice = currentPlan?.pricing.monthly?.amount || 0;
-    const targetPrice = targetPlan?.pricing.monthly?.amount || 0;
+      const currentPrice = currentPlan?.pricing.monthly?.amount || 0;
+      const targetPrice = targetPlan?.pricing.monthly?.amount || 0;
 
-    return {
-      isUpgrade: targetLevel > currentLevel,
-      isDowngrade: targetLevel < currentLevel,
-      priceDifference: targetPrice - currentPrice,
-      newFeatures: [], // Implement feature comparison logic
-      removedFeatures: [] // Implement feature comparison logic
-    };
-  }, [state.availablePlans]);
+      return {
+        isUpgrade: targetLevel > currentLevel,
+        isDowngrade: targetLevel < currentLevel,
+        priceDifference: targetPrice - currentPrice,
+        newFeatures: [], // Implement feature comparison logic
+        removedFeatures: [], // Implement feature comparison logic
+      };
+    },
+    [state.availablePlans],
+  );
 
   return {
     // State

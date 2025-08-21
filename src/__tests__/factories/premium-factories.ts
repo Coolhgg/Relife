@@ -12,6 +12,11 @@
 import { faker } from '@faker-js/faker';
 import type {
   Subscription,
+  SubscriptionStatus,
+  BillingInterval,
+  PremiumFeatureCategory,
+} from "../../types/premium";
+import type {
   PremiumFeature,
   PremiumVoice,
   PremiumAnalytics,
@@ -47,22 +52,22 @@ import {
 // ===============================
 
 export interface CreateSubscriptionOptions {
-  tier?: SubscriptionTier;
   status?: SubscriptionStatus;
   billingInterval?: BillingInterval;
   trial?: boolean;
   userId?: string;
 }
 
-export const createTestSubscription = (options: CreateSubscriptionOptions = {}): Subscription => {
+export const _createTestSubscription = (
+  options: CreateSubscriptionOptions = {},
+): Subscription => {
   const {
     tier = weightedRandom([
-      { item: 'free', weight: 40 },
-      { item: 'basic', weight: 30 },
-      { item: 'premium', weight: 20 },
-      { item: 'pro', weight: 8 },
-      { item: 'enterprise', weight: 2 }
-    ] as Array<{ item: SubscriptionTier; weight: number }>),
+      { item: "free", weight: 40 },
+      { item: "basic", weight: 30 },
+      { item: "premium", weight: 20 },
+      { item: "pro", weight: 8 },
+      { item: "enterprise", weight: 2 },
     status = weightedRandom([
       { item: 'active', weight: 60 },
       { item: 'trialing', weight: 15 },
@@ -91,7 +96,6 @@ export const createTestSubscription = (options: CreateSubscriptionOptions = {}):
   }
 
   // Pricing based on tier and interval
-  const monthlyPricing = {
     free: 0,
     basic: 499, // $4.99
     premium: 999, // $9.99
@@ -132,13 +136,30 @@ export const createTestSubscription = (options: CreateSubscriptionOptions = {}):
   };
 };
 
-export const createTestPremiumFeature = (options: {
-  category?: PremiumFeatureCategory;
-  tier?: SubscriptionTier;
-} = {}): PremiumFeature => {
+export const _createTestPremiumFeature = (
+  options: {
+    category?: PremiumFeatureCategory;
+  } = {},
+): PremiumFeature => {
   const {
-    category = faker.helpers.arrayElement(['voice', 'analytics', 'customization', 'gaming', 'automation']),
-    tier = faker.helpers.arrayElement(['basic', 'premium', 'pro']) as SubscriptionTier
+    category = faker.helpers.arrayElement([
+      "alarms",
+      "battles",
+      "voice",
+      "themes",
+      "integrations",
+      "analytics",
+      "ai",
+      "collaboration",
+      "automation",
+      "customization",
+    ]),
+    tier = faker.helpers.arrayElement([
+      "free",
+      "basic",
+      "premium",
+      "pro",
+      "enterprise",
   } = options;
 
   const features = {
@@ -196,15 +217,21 @@ export const createTestPremiumFeature = (options: {
 
 export interface CreateVoiceOptions {
   mood?: VoiceMood;
-  tier?: SubscriptionTier;
   isCustom?: boolean;
   language?: string;
 }
 
-export const createTestVoice = (options: CreateVoiceOptions = {}): PremiumVoice => {
+export const _createTestVoice = (
+  options: CreateVoiceOptions = {},
+): PremiumVoice => {
   const {
     mood = faker.helpers.arrayElement([...COMMON_DATA.voiceMoods]) as VoiceMood,
-    tier = faker.helpers.arrayElement(['basic', 'premium', 'pro']) as SubscriptionTier,
+    tier = faker.helpers.arrayElement([
+      "free",
+      "basic",
+      "premium",
+      "pro",
+      "enterprise",
     isCustom = faker.datatype.boolean({ probability: 0.1 }),
     language = faker.helpers.arrayElement(['en-US', 'en-GB', 'es-ES', 'fr-FR', 'de-DE', 'ja-JP', 'hi-IN'])
   } = options;
@@ -299,7 +326,9 @@ export interface CreateCustomSoundOptions {
   uploadedBy?: string;
 }
 
-export const createTestCustomSound = (options: CreateCustomSoundOptions = {}): CustomSound => {
+export const _createTestCustomSound = (
+  options: CreateCustomSoundOptions = {},
+): CustomSound => {
   const {
     category = faker.helpers.arrayElement(['nature', 'music', 'voice', 'effects', 'ambient', 'white-noise']),
     isCustom = faker.datatype.boolean({ probability: 0.3 }),
@@ -349,7 +378,9 @@ export interface CreateAnalyticsOptions {
   premium?: boolean;
 }
 
-export const createTestAnalytics = (options: CreateAnalyticsOptions = {}): PremiumAnalytics => {
+export const _createTestAnalytics = (
+  options: CreateAnalyticsOptions = {},
+): PremiumAnalytics => {
   const {
     userId = generateId('user'),
     period = faker.helpers.arrayElement(['day', 'week', 'month', 'quarter', 'year']),

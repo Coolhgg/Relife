@@ -1,7 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
-import { PushNotificationService, type PushNotificationSettings } from '../services/push-notifications';
-import { useAnalytics } from './useAnalytics';
-import type { Alarm } from '../types';
+/// <reference lib="dom" />
+import { useState, useEffect, useCallback } from "react";
+import {
+  PushNotificationService,
+  type PushNotificationSettings,
+} from "../services/push-notifications";
+import { useAnalytics } from "./useAnalytics";
+import type { Alarm } from "../types";
 
 export interface PushNotificationStatus {
   isSupported: boolean;

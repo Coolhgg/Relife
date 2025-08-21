@@ -6,11 +6,10 @@ import type {
   VoicePersonality,
   VoiceCloneRequest,
   Alarm,
-  SubscriptionTier
-} from '../types';
-import { PremiumService } from './premium';
-import { VoiceService } from './voice';
-import { supabase } from './supabase';
+} from "../types";
+import { PremiumService } from "./premium";
+import { VoiceService } from "./voice";
+import { supabase } from "./supabase";
 
 export class PremiumVoiceService {
   private static instance: PremiumVoiceService;

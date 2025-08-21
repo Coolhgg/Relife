@@ -1,13 +1,18 @@
-import type { Alarm, VoiceMood, AlarmEvent } from '../types';
-import { generateAlarmId, getNextAlarmTime } from '../utils';
-import { scheduleLocalNotification, cancelLocalNotification } from './capacitor';
-import { SupabaseService } from './supabase';
-import { Preferences } from '@capacitor/preferences';
-import { CriticalPreloader } from './critical-preloader';
-import { AudioManager } from './audio-manager';
+/// <reference types="node" />
+/// <reference lib="dom" />
+import type { Alarm, VoiceMood, AlarmEvent } from "../types";
+import { generateAlarmId, getNextAlarmTime } from "../utils";
+import {
+  scheduleLocalNotification,
+  cancelLocalNotification,
+} from "./capacitor";
+import { SupabaseService } from "./supabase";
+import { Preferences } from "@capacitor/preferences";
+import { CriticalPreloader } from "./critical-preloader";
+import { AudioManager } from "./audio-manager";
 
-const ALARMS_KEY = 'smart_alarms';
-const ALARM_EVENTS_KEY = 'alarm_events';
+const ALARMS_KEY = "smart_alarms";
+const ALARM_EVENTS_KEY = "alarm_events";
 const ALARM_CHECK_INTERVAL = 30000; // Check every 30 seconds
 const ALARM_TRIGGER_TOLERANCE = 60000; // 1 minute tolerance for missed alarms
 

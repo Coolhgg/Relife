@@ -6,14 +6,13 @@ import type {
   NuclearModeSession,
   NuclearChallengeAttempt,
   NuclearPerformance,
-  SubscriptionTier,
-  User
-} from '../types';
-import { premiumService } from './premium';
-import { supabase } from './supabase';
-import { ErrorHandler } from './error-handler';
-import AppAnalyticsService from './app-analytics';
-import { Preferences } from '@capacitor/preferences';
+  User,
+} from "../types";
+import { premiumService } from "./premium";
+import { supabase } from "./supabase";
+import { ErrorHandler } from "./error-handler";
+import AppAnalyticsService from "./app-analytics";
+import { Preferences } from "@capacitor/preferences";
 
 const NUCLEAR_SESSIONS_KEY = 'nuclear_mode_sessions';
 const NUCLEAR_PERFORMANCE_KEY = 'nuclear_mode_performance';
@@ -234,7 +233,6 @@ export class NuclearModeService {
    */
   async canAccessNuclearMode(userId: string): Promise<{
     hasAccess: boolean;
-    userTier: SubscriptionTier;
     upgradeUrl?: string;
   }> {
     const result = await premiumService.checkFeatureAccess(userId, 'nuclear_mode');

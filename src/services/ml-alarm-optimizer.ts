@@ -1,5 +1,4 @@
 import type {
-  AdvancedAlarm,
   User,
   SleepPattern,
   WakeUpBehavior,
@@ -154,8 +153,7 @@ export class MLAlarmOptimizer {
 
   static async predictOptimalWakeTime(
     userId: string,
-    alarm: AdvancedAlarm,
-    targetDate: Date
+    targetDate: Date,
   ): Promise<PredictionResult> {
     try {
       const cacheKey = `${userId}_${alarm.id}_${targetDate.toDateString()}`;
@@ -204,8 +202,7 @@ export class MLAlarmOptimizer {
 
   private static async analyzePredictionFactors(
     userId: string,
-    alarm: AdvancedAlarm,
-    targetDate: Date
+    targetDate: Date,
   ): Promise<PredictionFactor[]> {
     const factors: PredictionFactor[] = [];
 
@@ -232,8 +229,7 @@ export class MLAlarmOptimizer {
 
   private static async analyzeSleepCycleFactor(
     userId: string,
-    alarm: AdvancedAlarm,
-    targetDate: Date
+    targetDate: Date,
   ): Promise<PredictionFactor> {
     const patterns = this.behaviorData.get(userId) || [];
     const sleepPattern = patterns.find(p => p.patternType === 'sleep_quality');
@@ -302,8 +298,7 @@ export class MLAlarmOptimizer {
   }
 
   private static async analyzeWeatherFactor(
-    alarm: AdvancedAlarm,
-    targetDate: Date
+    targetDate: Date,
   ): Promise<PredictionFactor> {
     try {
       // Simulate weather API call - in production, integrate with weather service
@@ -350,8 +345,7 @@ export class MLAlarmOptimizer {
 
   private static async analyzeCalendarFactor(
     userId: string,
-    alarm: AdvancedAlarm,
-    targetDate: Date
+    targetDate: Date,
   ): Promise<PredictionFactor> {
     try {
       // Simulate calendar integration - in production, integrate with calendar APIs
@@ -402,8 +396,7 @@ export class MLAlarmOptimizer {
 
   private static async analyzeLocationFactor(
     userId: string,
-    alarm: AdvancedAlarm,
-    targetDate: Date
+    targetDate: Date,
   ): Promise<PredictionFactor> {
     try {
       const position = await Geolocation.getCurrentPosition();

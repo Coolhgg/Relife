@@ -1,11 +1,12 @@
-import { PushNotifications } from '@capacitor/push-notifications';
-import { Capacitor } from '@capacitor/core';
-import { Preferences } from '@capacitor/preferences';
-import type { Alarm } from '../types';
-import { NotificationService } from './notification';
-import SecurityService from './security';
-import SecurePushNotificationService from './secure-push-notification';
-import { ErrorHandler } from './error-handler';
+/// <reference lib="dom" />
+import { PushNotifications } from "@capacitor/push-notifications";
+import { Capacitor } from "@capacitor/core";
+import { Preferences } from "@capacitor/preferences";
+import type { Alarm } from "../types";
+import { NotificationService } from "./notification";
+import SecurityService from "./security";
+import SecurePushNotificationService from "./secure-push-notification";
+import { ErrorHandler } from "./error-handler";
 
 export interface PushNotificationPayload {
   title: string;

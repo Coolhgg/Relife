@@ -1,6 +1,8 @@
-import type { Alarm, VoiceMood } from '../types';
-import type { CustomSound, Playlist, PlaylistSound } from './types/media';
-import { formatTime } from '../utils';
+/// <reference types="node" />
+/// <reference lib="dom" />
+import type { Alarm, VoiceMood } from "../types";
+import type { CustomSound, Playlist, PlaylistSound } from "./types/media";
+import { formatTime } from "../utils";
 
 export interface AudioCacheEntry {
   id: string;

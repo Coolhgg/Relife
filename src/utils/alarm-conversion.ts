@@ -1,14 +1,10 @@
-import type { Alarm, AdvancedAlarm } from '../types/index';
 
 /**
- * Utility functions for converting between basic Alarm and AdvancedAlarm types
  */
 
 export class AlarmConversionUtil {
   /**
-   * Convert a basic Alarm to an AdvancedAlarm with default advanced features
    */
-  static toAdvancedAlarm(basicAlarm: Alarm): AdvancedAlarm {
     return {
       ...basicAlarm,
       scheduleType: 'daily',
@@ -24,9 +20,7 @@ export class AlarmConversionUtil {
   }
 
   /**
-   * Convert an AdvancedAlarm back to a basic Alarm (for backwards compatibility)
    */
-  static toBasicAlarm(advancedAlarm: AdvancedAlarm): Alarm {
     const basicAlarm: Alarm = {
       id: advancedAlarm.id,
       userId: advancedAlarm.userId,
@@ -57,21 +51,17 @@ export class AlarmConversionUtil {
   /**
    * Convert an array of basic alarms to advanced alarms
    */
-  static convertArrayToAdvanced(basicAlarms: Alarm[]): AdvancedAlarm[] {
-    return basicAlarms.map(alarm => this.toAdvancedAlarm(alarm));
   }
 
   /**
    * Convert an array of advanced alarms to basic alarms
    */
-  static convertArrayToBasic(advancedAlarms: AdvancedAlarm[]): Alarm[] {
-    return advancedAlarms.map(alarm => this.toBasicAlarm(alarm));
+    return advancedAlarms.map((alarm) => this.toBasicAlarm(alarm));
   }
 
   /**
    * Check if an alarm has advanced features enabled
    */
-  static hasAdvancedFeatures(alarm: AdvancedAlarm): boolean {
     return !!(
       alarm.scheduleType !== 'daily' ||
       alarm.recurrencePattern ||
@@ -87,7 +77,6 @@ export class AlarmConversionUtil {
   /**
    * Get a summary of advanced features for an alarm
    */
-  static getAdvancedFeaturesSummary(alarm: AdvancedAlarm): string[] {
     const features: string[] = [];
 
     if (alarm.scheduleType !== 'daily') {
@@ -128,7 +117,9 @@ export class AlarmConversionUtil {
   /**
    * Validate an advanced alarm configuration
    */
-  static validateAdvancedAlarm(alarm: AdvancedAlarm): { isValid: boolean; errors: string[] } {
+    isValid: boolean;
+    errors: string[];
+  } {
     const errors: string[] = [];
 
     // Basic validation
@@ -183,7 +174,6 @@ export class AlarmConversionUtil {
   /**
    * Create a default advanced alarm configuration
    */
-  static createDefaultAdvancedAlarm(userId: string): Partial<AdvancedAlarm> {
     return {
       userId,
       time: '07:00',

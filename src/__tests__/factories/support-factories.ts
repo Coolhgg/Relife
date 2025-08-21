@@ -42,7 +42,9 @@ export interface CreateEmotionalStateOptions {
   context?: EmotionalContext;
 }
 
-export const createTestEmotionalState = (options: CreateEmotionalStateOptions = {}): EmotionalState => {
+export const _createTestEmotionalState = (
+  options: CreateEmotionalStateOptions = {},
+): EmotionalState => {
   const {
     emotion = faker.helpers.arrayElement([...COMMON_DATA.emotionTypes]) as EmotionType,
     intensity = faker.number.int({ min: 1, max: 10 }),
@@ -63,8 +65,10 @@ export const createTestEmotionalState = (options: CreateEmotionalStateOptions = 
   };
 };
 
-export const createTestUserEmotionalProfile = (userId?: string): UserEmotionalProfile => {
-  const profileUserId = userId || generateId('user');
+export const _createTestUserEmotionalProfile = (
+  userId?: string,
+): UserEmotionalProfile => {
+  const profileUserId = userId || generateId("user");
 
   return {
     userId: profileUserId,
@@ -93,7 +97,9 @@ export interface CreateNotificationOptions {
   read?: boolean;
 }
 
-export const createTestNotification = (options: CreateNotificationOptions = {}) => {
+export const _createTestNotification = (
+  options: CreateNotificationOptions = {},
+) => {
   const {
     type = faker.helpers.arrayElement(['alarm', 'battle', 'achievement', 'social', 'system']),
     priority = weightedRandom([
@@ -160,45 +166,46 @@ export const createTestNotification = (options: CreateNotificationOptions = {}) 
   };
 };
 
-export const createTestNotificationSettings = (): NotificationSettings => ({
-  push: {
-    enabled: faker.datatype.boolean({ probability: 0.8 }),
-    alarms: faker.datatype.boolean({ probability: 0.95 }),
-    battles: faker.datatype.boolean({ probability: 0.8 }),
-    achievements: faker.datatype.boolean({ probability: 0.7 }),
-    social: faker.datatype.boolean({ probability: 0.6 }),
-    marketing: faker.datatype.boolean({ probability: 0.3 })
-  },
-  email: {
-    enabled: faker.datatype.boolean({ probability: 0.6 }),
-    digest: faker.datatype.boolean({ probability: 0.4 }),
-    important: faker.datatype.boolean({ probability: 0.8 }),
-    marketing: faker.datatype.boolean({ probability: 0.2 })
-  },
-  inApp: {
-    enabled: faker.datatype.boolean({ probability: 0.9 }),
-    sound: faker.datatype.boolean({ probability: 0.7 }),
-    vibration: faker.datatype.boolean({ probability: 0.6 }),
-    badge: faker.datatype.boolean({ probability: 0.8 })
-  },
-  quietHours: {
-    enabled: faker.datatype.boolean({ probability: 0.5 }),
-    startTime: '22:00',
-    endTime: '07:00',
-    exceptions: randomSubset(['alarms', 'urgent'], 0, 2)
-  },
-  frequency: {
-    maxPerDay: faker.number.int({ min: 5, max: 50 }),
-    maxPerHour: faker.number.int({ min: 1, max: 10 }),
-    batchSimilar: faker.datatype.boolean({ probability: 0.7 })
-  }
-} as any);
+export const _createTestNotificationSettings = (): NotificationSettings =>
+  ({
+    push: {
+      enabled: faker.datatype.boolean({ probability: 0.8 }),
+      alarms: faker.datatype.boolean({ probability: 0.95 }),
+      battles: faker.datatype.boolean({ probability: 0.8 }),
+      achievements: faker.datatype.boolean({ probability: 0.7 }),
+      social: faker.datatype.boolean({ probability: 0.6 }),
+      marketing: faker.datatype.boolean({ probability: 0.3 }),
+    },
+    email: {
+      enabled: faker.datatype.boolean({ probability: 0.6 }),
+      digest: faker.datatype.boolean({ probability: 0.4 }),
+      important: faker.datatype.boolean({ probability: 0.8 }),
+      marketing: faker.datatype.boolean({ probability: 0.2 }),
+    },
+    inApp: {
+      enabled: faker.datatype.boolean({ probability: 0.9 }),
+      sound: faker.datatype.boolean({ probability: 0.7 }),
+      vibration: faker.datatype.boolean({ probability: 0.6 }),
+      badge: faker.datatype.boolean({ probability: 0.8 }),
+    },
+    quietHours: {
+      enabled: faker.datatype.boolean({ probability: 0.5 }),
+      startTime: "22:00",
+      endTime: "07:00",
+      exceptions: randomSubset(["alarms", "urgent"], 0, 2),
+    },
+    frequency: {
+      maxPerDay: faker.number.int({ min: 5, max: 50 }),
+      maxPerHour: faker.number.int({ min: 1, max: 10 }),
+      batchSimilar: faker.datatype.boolean({ probability: 0.7 }),
+    },
+  }) as any;
 
 // ===============================
 // SETTINGS & CONFIGURATION FACTORIES
 // ===============================
 
-export const createTestAppSettings = (userId?: string): AppSettings => ({
+export const _createTestAppSettings = (userId?: string): AppSettings => ({
   userId: userId || generateId('user'),
   appearance: {
     theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system']),
@@ -250,7 +257,9 @@ export interface CreateMediaAssetOptions {
   isUserGenerated?: boolean;
 }
 
-export const createTestMediaAsset = (options: CreateMediaAssetOptions = {}): MediaAsset => {
+export const _createTestMediaAsset = (
+  options: CreateMediaAssetOptions = {},
+): MediaAsset => {
   const {
     type = faker.helpers.arrayElement(['image', 'audio', 'video', 'document']),
     category,
@@ -319,8 +328,8 @@ const getMimeType = (type: string): string => {
 // EXTERNAL INTEGRATION FACTORIES
 // ===============================
 
-export const createTestExternalIntegration = (
-  service: 'fitness' | 'calendar' | 'weather' | 'music' | 'home' = 'fitness'
+export const _createTestExternalIntegration = (
+  service: "fitness" | "calendar" | "weather" | "music" | "home" = "fitness",
 ): ExternalIntegration => {
   const integrationId = generateId('integration');
 
@@ -388,8 +397,8 @@ export const createTestExternalIntegration = (
 // ACTIVITY & EVENT TRACKING FACTORIES
 // ===============================
 
-export const createTestUserActivity = (userId?: string): UserActivity => {
-  const activityUserId = userId || generateId('user');
+export const _createTestUserActivity = (userId?: string): UserActivity => {
+  const activityUserId = userId || generateId("user");
 
   return {
     id: generateId('activity'),
@@ -418,21 +427,40 @@ export const createTestUserActivity = (userId?: string): UserActivity => {
   } as any;
 };
 
-export const createTestSystemEvent = (): SystemEvent => ({
-  id: generateId('event'),
-  type: faker.helpers.arrayElement([
-    'user_registered', 'subscription_created', 'payment_processed',
-    'error_occurred', 'feature_used', 'performance_alert'
-  ]),
-  level: faker.helpers.arrayElement(['info', 'warning', 'error', 'critical']),
-  message: faker.lorem.sentence(),
-  details: {
-    component: faker.helpers.arrayElement(['auth', 'payment', 'notification', 'database', 'api']),
-    code: faker.string.alphanumeric(8).toUpperCase(),
-    stack: faker.datatype.boolean({ probability: 0.3 }) ? faker.lorem.paragraph() : undefined
-  },
-  userId: faker.datatype.boolean({ probability: 0.7 }) ? generateId('user') : undefined,
-  timestamp: generateTimestamp({ past: 7 }),
-  environment: faker.helpers.arrayElement(['production', 'staging', 'development']),
-  version: faker.system.semver()
-} as any);
+export const _createTestSystemEvent = (): SystemEvent =>
+  ({
+    id: generateId("event"),
+    type: faker.helpers.arrayElement([
+      "user_registered",
+      "subscription_created",
+      "payment_processed",
+      "error_occurred",
+      "feature_used",
+      "performance_alert",
+    ]),
+    level: faker.helpers.arrayElement(["info", "warning", "error", "critical"]),
+    message: faker.lorem.sentence(),
+    details: {
+      component: faker.helpers.arrayElement([
+        "auth",
+        "payment",
+        "notification",
+        "database",
+        "api",
+      ]),
+      code: faker.string.alphanumeric(8).toUpperCase(),
+      stack: faker.datatype.boolean({ probability: 0.3 })
+        ? faker.lorem.paragraph()
+        : undefined,
+    },
+    userId: faker.datatype.boolean({ probability: 0.7 })
+      ? generateId("user")
+      : undefined,
+    timestamp: generateTimestamp({ past: 7 }),
+    environment: faker.helpers.arrayElement([
+      "production",
+      "staging",
+      "development",
+    ]),
+    version: faker.system.semver(),
+  }) as any;

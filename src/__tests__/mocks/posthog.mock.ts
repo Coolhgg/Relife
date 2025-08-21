@@ -180,7 +180,7 @@ const mockPostHog = {
 };
 
 // Create a factory function for creating fresh mocks
-export const createMockPostHog = () => ({
+export const _createMockPostHog = () => ({
   ...mockPostHog,
   people: { ...mockPostHog.people },
   persistence: { ...mockPostHog.persistence }

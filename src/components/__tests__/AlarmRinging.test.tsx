@@ -1,8 +1,12 @@
-import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import AlarmRinging from '../AlarmRinging';
-import { testUtils } from '../../test-setup';
+import { expect, test, jest } from "@jest/globals";
+/// <reference lib="dom" />
+import React from "react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import AlarmRinging from "../AlarmRinging";
+import { testUtils } from "../../test-setup";
+import { vibrate } from "../../services/capacitor";
+import { VoiceService } from "../../services/voice-pro";
 
 // Mock services
 jest.mock('../../services/voice-pro', () => ({

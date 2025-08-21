@@ -1,5 +1,6 @@
-import { Hono } from "hono";
-import { serveStatic } from "hono/deno";
+// @ts-expect-error - Deno global for deployment
+import { Hono } from 'hono';
+import { serveStatic } from 'hono/deno';
 
 const app = new Hono();
 

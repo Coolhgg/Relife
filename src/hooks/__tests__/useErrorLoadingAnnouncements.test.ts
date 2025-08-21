@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for useErrorLoadingAnnouncements hook
  * Tests error and loading state announcements for accessibility

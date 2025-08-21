@@ -1,5 +1,6 @@
-import { renderHook, act } from '@testing-library/react';
-import { useAuth } from '../../useAuth';
+import { expect, test, jest } from "@jest/globals";
+import { renderHook, act } from "@testing-library/react";
+import { useAuth } from "../../useAuth";
 
 // Mock dependencies
 jest.mock('../../../services/supabase-service', () => ({

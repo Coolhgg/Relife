@@ -1,4 +1,5 @@
-import PerformanceMonitor from '../performance-monitor';
+import { expect, test, jest } from "@jest/globals";
+import PerformanceMonitor from "../performance-monitor";
 
 // Mock Web Vitals
 jest.mock('web-vitals', () => ({

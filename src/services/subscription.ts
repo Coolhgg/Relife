@@ -1,7 +1,6 @@
 import { supabase, createClient } from './supabase';
 import type {
   Subscription,
-  SubscriptionTier,
   SubscriptionStatus,
   PremiumFeatureAccess,
   PremiumUsage,
@@ -87,7 +86,6 @@ export class SubscriptionService {
   /**
    * Get user's subscription tier
    */
-  static async getUserTier(userId: string): Promise<SubscriptionTier> {
     const subscription = await this.getUserSubscription(userId);
     return subscription?.tier || 'free';
   }
@@ -104,7 +102,6 @@ export class SubscriptionService {
   /**
    * Get user's feature limits
    */
-  static getFeatureLimits(tier: SubscriptionTier): FeatureLimits {
     return SUBSCRIPTION_LIMITS[tier];
   }
 
@@ -343,7 +340,6 @@ export class SubscriptionService {
    */
   static async getSubscriptionAnalytics(): Promise<{
     totalSubscriptions: number;
-    subscriptionsByTier: Record<SubscriptionTier, number>;
     monthlyRevenue: number;
     churnRate: number;
   } | null> {

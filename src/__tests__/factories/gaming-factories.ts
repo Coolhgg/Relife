@@ -58,7 +58,9 @@ export interface CreateAchievementOptions {
   userId?: string;
 }
 
-export const createTestAchievement = (options: CreateAchievementOptions = {}): Achievement => {
+export const _createTestAchievement = (
+  options: CreateAchievementOptions = {}
+): Achievement => {
   const {
     category = faker.helpers.arrayElement(['alarm', 'battle', 'social', 'consistency', 'premium', 'special']),
     rarity = weightedRandom([
@@ -117,18 +119,24 @@ export const createTestAchievement = (options: CreateAchievementOptions = {}): A
   };
 };
 
-const createTestAchievementProgress = (): AchievementProgress => ({
-  current: faker.number.int({ min: 0, max: 80 }),
-  target: faker.number.int({ min: 50, max: 100 }),
-  percentage: faker.number.float({ min: 0.1, max: 0.9, multipleOf: 0.01 }),
-  milestones: Array.from({ length: faker.number.int({ min: 2, max: 5 }) }, (_, i) => ({
-    value: (i + 1) * 20,
-    completed: faker.datatype.boolean({ probability: 0.5 }),
-    reward: faker.helpers.arrayElement(['xp', 'badge', 'coins', 'unlock'])
-  }))
-} as any);
+export const _createTestAchievementProgress = (): AchievementProgress =>
+  ({
+    current: faker.number.int({ min: 0, max: 80 }),
+    target: faker.number.int({ min: 50, max: 100 }),
+    percentage: faker.number.float({ min: 0.1, max: 0.9, multipleOf: 0.01 }),
+    milestones: Array.from(
+      { length: faker.number.int({ min: 2, max: 5 }) },
+      (_, i) => ({
+        value: (i + 1) * 20,
+        completed: faker.datatype.boolean({ probability: 0.5 }),
+        reward: faker.helpers.arrayElement(['xp', 'badge', 'coins', 'unlock']),
+      })
+    ),
+  });
 
-const createTestAchievementReward = (rarity: AchievementRarity): AchievementReward => {
+export const _createTestAchievementReward = (
+  rarity: AchievementRarity
+): AchievementReward => {
   const baseRewards = {
     common: { xp: 100, coins: 50 },
     uncommon: { xp: 250, coins: 100 },
@@ -145,7 +153,9 @@ const createTestAchievementReward = (rarity: AchievementRarity): AchievementRewa
   } as any;
 };
 
-const createTestAchievementRequirement = (category: AchievementCategory): AchievementRequirement => {
+export const _createTestAchievementRequirement = (
+  category: AchievementCategory
+): AchievementRequirement => {
   const requirementTypes = {
     alarm: ['alarms_set', 'early_wake_ups', 'consistent_days', 'voice_dismissals'],
     battle: ['battles_won', 'tournaments_joined', 'streak_battles', 'battle_participation'],
@@ -175,7 +185,9 @@ export interface CreateTournamentOptions {
   participantCount?: number;
 }
 
-export const createTestTournament = (options: CreateTournamentOptions = {}): Tournament => {
+export const _createTestTournament = (
+  options: CreateTournamentOptions = {}
+): Tournament => {
   const {
     type = faker.helpers.arrayElement(['single-elimination', 'round-robin', 'swiss']),
     status = faker.helpers.arrayElement(['registration', 'active', 'completed']),
@@ -228,24 +240,32 @@ export const createTestTournament = (options: CreateTournamentOptions = {}): Tou
   };
 };
 
-const createTestTournamentParticipant = (): TournamentParticipant => ({
-  userId: generateId('user'),
-  user: createTestUser(),
-  registeredAt: generateTimestamp({ past: 14 }),
-  seed: faker.number.int({ min: 1, max: 64 }),
-  eliminated: faker.datatype.boolean({ probability: 0.6 }),
-  eliminatedRound: faker.datatype.boolean({ probability: 0.6 }) ? faker.number.int({ min: 1, max: 5 }) : undefined,
-  currentRound: faker.number.int({ min: 0, max: 5 }),
-  stats: {
-    wins: faker.number.int({ min: 0, max: 10 }),
-    losses: faker.number.int({ min: 0, max: 5 }),
-    pointsScored: faker.number.int({ min: 0, max: 1000 }),
-    averagePerformance: faker.number.float({ min: 0.5, max: 1.0, multipleOf: 0.01 })
-  }
-} as any);
+export const _createTestTournamentParticipant = (): TournamentParticipant =>
+  ({
+    userId: generateId('user'),
+    user: createTestUser(),
+    registeredAt: generateTimestamp({ past: 14 }),
+    seed: faker.number.int({ min: 1, max: 64 }),
+    eliminated: faker.datatype.boolean({ probability: 0.6 }),
+    eliminatedRound: faker.datatype.boolean({ probability: 0.6 })
+      ? faker.number.int({ min: 1, max: 5 })
+      : undefined,
+    currentRound: faker.number.int({ min: 0, max: 5 }),
+    stats: {
+      wins: faker.number.int({ min: 0, max: 10 }),
+      losses: faker.number.int({ min: 0, max: 5 }),
+      pointsScored: faker.number.int({ min: 0, max: 1000 }),
+      averagePerformance: faker.number.float({
+        min: 0.5,
+        max: 1.0,
+        multipleOf: 0.01,
+      }),
+    },
+  });
 
-const createTestTournamentRounds = (
-  type: 'single-elimination' | 'round-robin' | 'swiss',
+export const _createTestTournamentRounds = (
+export const _createTestTournamentRounds = (
+  type: "single-elimination" | "round-robin" | "swiss",
   participantCount: number,
   status: string
 ): TournamentRound[] => {
@@ -279,11 +299,11 @@ const createTestTournamentRounds = (
   return rounds;
 };
 
-const createTestTournamentMatch = () => ({
-  id: generateId('match'),
-  participant1: generateId('user'),
-  participant2: generateId('user'),
-  winner: faker.helpers.arrayElement([null, 'participant1', 'participant2']),
+export const _createTestTournamentMatch = () => ({
+  id: generateId("match"),
+  participant1: generateId("user"),
+  participant2: generateId("user"),
+  winner: faker.helpers.arrayElement([null, "participant1", "participant2"]),
   score: {
     participant1: faker.number.int({ min: 0, max: 100 }),
     participant2: faker.number.int({ min: 0, max: 100 })
@@ -293,7 +313,8 @@ const createTestTournamentMatch = () => ({
   completedAt: faker.datatype.boolean({ probability: 0.7 }) ? generateTimestamp({ past: 7 }) : undefined
 });
 
-const createTestTournamentPrize = () => ({
+// Tournament prize factory - currently unused but may be needed for future tournament enhancements
+export const _createTestTournamentPrize = () => ({
   rank: faker.number.int({ min: 1, max: 10 }),
   xp: faker.number.int({ min: 500, max: 5000 }),
   coins: faker.number.int({ min: 100, max: 1000 }),
@@ -311,7 +332,7 @@ export interface CreateTeamOptions {
   createdBy?: string;
 }
 
-export const createTestTeam = (options: CreateTeamOptions = {}): Team => {
+export const _createTestTeam = (options: CreateTeamOptions = {}): Team => {
   const {
     memberCount = faker.number.int({ min: 2, max: 20 }),
     isPublic = faker.datatype.boolean({ probability: 0.7 }),
@@ -351,22 +372,30 @@ export const createTestTeam = (options: CreateTeamOptions = {}): Team => {
   } as any;
 };
 
-const createTestTeamMember = (userId?: string): TeamMember => ({
-  userId: userId || generateId('user'),
-  user: createTestUser(),
-  role: faker.helpers.arrayElement(['member', 'moderator', 'admin', 'owner']),
-  joinedAt: generateTimestamp({ past: 60 }),
-  isActive: faker.datatype.boolean({ probability: 0.8 }),
-  stats: {
-    battlesParticipated: faker.number.int({ min: 0, max: 50 }),
-    pointsContributed: faker.number.int({ min: 0, max: 5000 }),
-    averagePerformance: faker.number.float({ min: 0.4, max: 1.0, multipleOf: 0.01 }),
-    teamBattlesWon: faker.number.int({ min: 0, max: 20 })
-  },
-  permissions: faker.helpers.arrayElements(['invite', 'kick', 'edit_team', 'manage_battles'], { min: 0, max: 4 })
-} as any);
+export const _createTestTeamMember = (userId?: string): TeamMember =>
+  ({
+    userId: userId || generateId('user'),
+    user: createTestUser(),
+    role: faker.helpers.arrayElement(['member', 'moderator', 'admin', 'owner']),
+    joinedAt: generateTimestamp({ past: 60 }),
+    isActive: faker.datatype.boolean({ probability: 0.8 }),
+    stats: {
+      battlesParticipated: faker.number.int({ min: 0, max: 50 }),
+      pointsContributed: faker.number.int({ min: 0, max: 5000 }),
+      averagePerformance: faker.number.float({
+        min: 0.4,
+        max: 1.0,
+        multipleOf: 0.01,
+      }),
+      teamBattlesWon: faker.number.int({ min: 0, max: 20 }),
+    },
+    permissions: faker.helpers.arrayElements(
+      ['invite', 'kick', 'edit_team', 'manage_battles'],
+      { min: 0, max: 4 }
+    ),
+  });
 
-const createTestTeamStats = () => ({
+export const _createTestTeamStats = () => ({
   totalMembers: faker.number.int({ min: 2, max: 50 }),
   activeMembers: faker.number.int({ min: 1, max: 30 }),
   totalBattles: faker.number.int({ min: 0, max: 100 }),
@@ -387,7 +416,7 @@ export interface CreateSeasonOptions {
   theme?: string;
 }
 
-export const createTestSeason = (options: CreateSeasonOptions = {}): Season => {
+export const _createTestSeason = (options: CreateSeasonOptions = {}): Season => {
   const {
     status = faker.helpers.arrayElement(['upcoming', 'active', 'ended']),
     theme
@@ -459,10 +488,8 @@ export const createTestSeason = (options: CreateSeasonOptions = {}): Season => {
 // LEADERBOARD FACTORIES
 // ===============================
 
-export const createTestLeaderboard = (entryCount = 100): Leaderboard => {
-  const leaderboardId = generateId('leaderboard');
-
-  const entries: LeaderboardEntry[] = [];
+export const _createTestLeaderboard = (entryCount = 100): ChallengeLeaderboard[] => {
+  const entries: ChallengeLeaderboard[] = [];
   for (let i = 1; i <= entryCount; i++) {
     entries.push(createTestLeaderboardEntry(i));
   }
@@ -482,7 +509,7 @@ export const createTestLeaderboard = (entryCount = 100): Leaderboard => {
   } as any;
 };
 
-const createTestLeaderboardEntry = (rank: number): LeaderboardEntry => ({
+export const _createTestLeaderboardEntry = (rank: number): ChallengeLeaderboard => ({
   rank,
   userId: generateId('user'),
   user: createTestUser(),
@@ -497,7 +524,7 @@ const createTestLeaderboardEntry = (rank: number): LeaderboardEntry => ({
  * Battle Factories
  */
 
-export const createTestBattle = (overrides: Partial<Battle> = {}): Battle => ({
+export const _createTestBattle = (overrides: Partial<Battle> = {}): Battle => ({
   id: overrides.id || generateId('battle'),
   type: overrides.type || faker.helpers.arrayElement(['speed', 'consistency', 'tasks']),
   participants: overrides.participants || [
@@ -518,7 +545,9 @@ export const createTestBattle = (overrides: Partial<Battle> = {}): Battle => ({
   trashTalk: overrides.trashTalk || []
 });
 
-export const createTestBattleParticipant = (overrides: Partial<BattleParticipant> = {}): BattleParticipant => ({
+export const _createTestBattleParticipant = (
+  overrides: Partial<BattleParticipant> = {}
+): BattleParticipant => ({
   userId: overrides.userId || generateId('user'),
   user: overrides.user || createTestUser(),
   joinedAt: overrides.joinedAt || generateTimestamp({ past: 7 }),
@@ -527,27 +556,38 @@ export const createTestBattleParticipant = (overrides: Partial<BattleParticipant
   stats: overrides.stats || createTestBattleParticipantStats()
 });
 
-export const createTestBattleParticipantStats = (overrides: Partial<BattleParticipantStats> = {}): BattleParticipantStats => ({
+export const _createTestBattleParticipantStats = (
+  overrides: Partial<BattleParticipantStats> = {}
+): BattleParticipantStats => ({
   wakeTime: overrides.wakeTime || faker.date.recent().toISOString(),
   tasksCompleted: overrides.tasksCompleted !== undefined ? overrides.tasksCompleted : faker.number.int({ min: 0, max: 10 }),
   snoozeCount: overrides.snoozeCount !== undefined ? overrides.snoozeCount : faker.number.int({ min: 0, max: 5 }),
   score: overrides.score !== undefined ? overrides.score : faker.number.int({ min: 0, max: 1000 })
 });
 
-export const createTestBattleSettings = (overrides: Partial<BattleSettings> = {}): BattleSettings => ({
+export const _createTestBattleSettings = (
+  overrides: Partial<BattleSettings> = {}
+): BattleSettings => ({
   duration: overrides.duration || 'PT24H', // 24 hours
   maxParticipants: overrides.maxParticipants || faker.number.int({ min: 4, max: 20 }),
   difficulty: overrides.difficulty || faker.helpers.arrayElement(['easy', 'medium', 'hard', 'nightmare'])
 });
 
-export const createTestBattlePrize = (overrides: Partial<BattlePrize> = {}): BattlePrize => ({
-  experience: overrides.experience !== undefined ? overrides.experience : faker.number.int({ min: 100, max: 1000 }),
+export const _createTestBattlePrize = (
+  overrides: Partial<BattlePrize> = {}
+): BattlePrize => ({
+  experience:
+    overrides.experience !== undefined
+      ? overrides.experience
+      : faker.number.int({ min: 100, max: 1000 }),
   title: overrides.title || faker.helpers.maybe(() => faker.lorem.words(2)),
   badge: overrides.badge || faker.helpers.maybe(() => faker.lorem.word()),
   seasonPoints: overrides.seasonPoints !== undefined ? overrides.seasonPoints : faker.number.int({ min: 10, max: 100 })
 });
 
-export const createTestTrashTalkMessage = (overrides: Partial<TrashTalkMessage> = {}): TrashTalkMessage => ({
+export const _createTestTrashTalkMessage = (
+  overrides: Partial<TrashTalkMessage> = {}
+): TrashTalkMessage => ({
   id: overrides.id || generateId('trash-talk'),
   battleId: overrides.battleId || generateId('battle'),
   userId: overrides.userId || generateId('user'),
@@ -565,25 +605,26 @@ export const createTestTrashTalkMessage = (overrides: Partial<TrashTalkMessage> 
   timestamp: overrides.timestamp || new Date()
 });
 
-export const createTestRewardSystem = (overrides: Partial<RewardSystem> = {}): RewardSystem => ({
-  userId: overrides.userId || generateId('user'),
-  points: overrides.points !== undefined ? overrides.points : faker.number.int({ min: 100, max: 10000 }),
-  level: overrides.level !== undefined ? overrides.level : faker.number.int({ min: 1, max: 50 }),
-  experience: overrides.experience !== undefined ? overrides.experience : faker.number.int({ min: 0, max: 50000 }),
-  nextLevelPoints: overrides.nextLevelPoints !== undefined ? overrides.nextLevelPoints : faker.number.int({ min: 1000, max: 2000 }),
-  badges: overrides.badges || [
-    {
-      id: generateId('badge'),
-      name: faker.lorem.words(2),
-      description: faker.lorem.sentence(),
-      unlockedAt: generateTimestamp({ past: 30 }),
-      rarity: faker.helpers.arrayElement(['common', 'rare', 'epic', 'legendary'])
-    }
-  ],
-  streaks: overrides.streaks || {
-    current: faker.number.int({ min: 0, max: 30 }),
-    longest: faker.number.int({ min: 0, max: 100 }),
-    category: faker.helpers.arrayElement(['wake-up', 'consistency', 'battles'])
+export const _createTestRewardSystem = (
+  overrides: Partial<RewardSystem> = {}
+): RewardSystem => ({
+  totalPoints: faker.number.int({ min: 100, max: 10000 }),
+  level: faker.number.int({ min: 1, max: 50 }),
+  currentStreak: faker.number.int({ min: 0, max: 30 }),
+  longestStreak: faker.number.int({ min: 0, max: 100 }),
+  unlockedRewards: [],
+  availableRewards: [],
+  habits: [],
+  niche: {
+    primary: 'work',
+    confidence: 0.8,
+    traits: [],
+    preferences: {
+      morningPerson: true,
+      weekendSleeper: false,
+      consistentSchedule: true,
+      voiceMoodPreference: [],
+    },
   },
   achievements: overrides.achievements || [],
   lastUpdated: overrides.lastUpdated || generateTimestamp({ past: 1 })

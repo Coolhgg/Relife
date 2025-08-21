@@ -1,0 +1,7 @@
+=== VIOLATION SUMMARY ===
+no-undef errors:
+368
+unused-vars warnings:
+1423
+react-refresh warnings:
+124

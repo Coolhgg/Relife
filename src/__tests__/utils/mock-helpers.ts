@@ -3,7 +3,7 @@
 import { TestUser, TestAlarm, TestTheme, testConsole } from './index';
 
 // Reset all mocks to clean state
-export const resetAllMocks = () => {
+export const _resetAllMocks = () => {
   jest.clearAllMocks();
   jest.clearAllTimers();
 
@@ -31,7 +31,7 @@ export const resetAllMocks = () => {
 };
 
 // Mock localStorage with data
-export const mockLocalStorage = (data: Record<string, string> = {}) => {
+export const _mockLocalStorage = (data: Record<string, string> = {}) => {
   const storage: Record<string, string> = { ...data };
 
   Object.defineProperty(window, 'localStorage', {
@@ -56,7 +56,7 @@ export const mockLocalStorage = (data: Record<string, string> = {}) => {
 };
 
 // Mock timers for testing
-export const mockTimers = () => {
+export const _mockTimers = () => {
   jest.useFakeTimers();
   return {
     advanceBy: (ms: number) => jest.advanceTimersByTime(ms),
@@ -66,7 +66,9 @@ export const mockTimers = () => {
 };
 
 // Mock fetch with responses
-export const mockFetch = (responses: Array<{ url: string; response: any; status?: number }>) => {
+export const _mockFetch = (
+  responses: Array<{ url: string; response: any; status?: number }>,
+) => {
   (global.fetch as jest.Mock) = jest.fn((url: string) => {
     const match = responses.find(r => url.includes(r.url));
     if (match) {
@@ -82,7 +84,7 @@ export const mockFetch = (responses: Array<{ url: string; response: any; status?
 };
 
 // Mock console methods
-export const mockConsole = () => {
+export const _mockConsole = () => {
   const originalConsole = { ...console };
 
   console.log = jest.fn();

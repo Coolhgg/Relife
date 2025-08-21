@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Mobile-Specific Accessibility for Smart Alarm App
 // Provides touch, gesture, and mobile screen reader optimizations
 

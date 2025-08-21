@@ -1,14 +1,12 @@
 // Feature Gate Hook for Relife Alarm App
 // Provides access control and upgrade prompts for premium features
 
-import { useState, useEffect, useCallback } from 'react';
-import { useSubscription } from './useSubscription';
-import type { SubscriptionTier, FeatureAccess } from '../types/premium';
-import AnalyticsService from '../services/analytics';
+import { useState, useEffect, useCallback } from "react";
+import { useSubscription } from "./useSubscription";
+import AnalyticsService from "../services/analytics";
 
 interface FeatureGateConfig {
   feature: string;
-  fallbackTier?: SubscriptionTier;
   softGate?: boolean; // Show warning but allow usage
   gracePeriodDays?: number;
   customMessage?: string;
@@ -19,7 +17,6 @@ interface FeatureGateConfig {
 interface FeatureGateResult {
   hasAccess: boolean;
   isGated: boolean;
-  requiredTier: SubscriptionTier | null;
   usageRemaining?: number;
   usageLimit?: number;
   upgradeMessage: string;
@@ -39,7 +36,6 @@ interface UseFeatureGateOptions {
   feature: string;
   config?: Partial<FeatureGateConfig>;
   onAccessDenied?: (result: FeatureGateResult) => void;
-  onUpgradeRequired?: (requiredTier: SubscriptionTier) => void;
 }
 
 function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & FeatureGateActions {
@@ -68,13 +64,15 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
   };
 
   // Feature access definitions
-  const featureDefinitions: Record<string, {
-    requiredTier: SubscriptionTier;
-    category: string;
-    description: string;
-    upgradeMessage: string;
-    hasUsageLimit?: boolean;
-  }> = {
+  const featureDefinitions: Record<
+    string,
+    {
+      category: string;
+      description: string;
+      upgradeMessage: string;
+      hasUsageLimit?: boolean;
+    }
+  > = {
     unlimited_alarms: {
       requiredTier: 'basic',
       category: 'alarms',

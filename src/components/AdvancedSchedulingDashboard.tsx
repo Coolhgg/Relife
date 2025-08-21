@@ -1,27 +1,40 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Calendar, Clock, Brain, MapPin, TrendingUp, Zap, Settings,
-  ChevronRight, AlertCircle, CheckCircle, Target, Sun, Moon,
-  BarChart3, Activity, Lightbulb, Bell, Sparkles
-} from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
+  Calendar,
+  Clock,
+  Brain,
+  MapPin,
+  TrendingUp,
+  Zap,
+  Settings,
+  ChevronRight,
+  AlertCircle,
+  CheckCircle,
+  Target,
+  Sun,
+  Moon,
+  BarChart3,
+  Activity,
+  Lightbulb,
+  Bell,
+  Sparkles,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
 
-import MLAlarmOptimizer from '../services/ml-alarm-optimizer';
-import EnhancedLocationService from '../services/enhanced-location-service';
-import PredictiveAnalyticsService from '../services/predictive-analytics-service';
-import type { AdvancedAlarm, User } from '../types/index';
+import MLAlarmOptimizer from "../services/ml-alarm-optimizer";
+import EnhancedLocationService from "../services/enhanced-location-service";
+import PredictiveAnalyticsService from "../services/predictive-analytics-service";
 
 interface AdvancedSchedulingDashboardProps {
-  alarms: AdvancedAlarm[];
   user: User;
-  onUpdateAlarm: (id: string, updates: Partial<AdvancedAlarm>) => void;
-  onCreateAlarm: (alarm: Omit<AdvancedAlarm, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  onCreateAlarm: (
+  ) => void;
 }
 
 export function AdvancedSchedulingDashboard({
@@ -131,7 +144,6 @@ export function AdvancedSchedulingDashboard({
     }
   };
 
-  const generatePrediction = async (alarm: AdvancedAlarm) => {
     if (!mlEnabled) return;
 
     try {

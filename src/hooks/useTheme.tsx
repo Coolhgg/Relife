@@ -1,12 +1,36 @@
-import React from 'react';
-import { createContext, useContext, useEffect, useState, useCallback, useMemo, ReactNode, useRef } from 'react';
-import { Theme, ThemeConfig, PersonalizationSettings, ThemePreset, ThemeUsageAnalytics, CustomThemeConfig } from '../types';
-import CloudSyncService, { CloudSyncStatus } from '../services/CloudSyncService';
-import ThemePersistenceService from '../services/theme-persistence';
-import ThemePerformanceService from '../services/theme-performance';
-import ThemeAccessibilityService from '../services/theme-accessibility';
-import { PREMIUM_THEMES, PREMIUM_THEME_PRESETS } from '../themes/premium-themes';
-import PremiumThemeAnimationService, { PremiumAnimationEffects } from '../services/premium-theme-animations';
+/// <reference lib="dom" />
+import React from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  ReactNode,
+  useRef,
+} from "react";
+import {
+  Theme,
+  ThemeConfig,
+  PersonalizationSettings,
+  ThemePreset,
+  ThemeUsageAnalytics,
+  CustomThemeConfig,
+} from "../types";
+import CloudSyncService, {
+  CloudSyncStatus,
+} from "../services/CloudSyncService";
+import ThemePersistenceService from "../services/theme-persistence";
+import ThemePerformanceService from "../services/theme-performance";
+import ThemeAccessibilityService from "../services/theme-accessibility";
+import {
+  PREMIUM_THEMES,
+  PREMIUM_THEME_PRESETS,
+} from "../themes/premium-themes";
+import PremiumThemeAnimationService, {
+  PremiumAnimationEffects,
+} from "../services/premium-theme-animations";
 
 export interface ThemeContextValue {
   // Current theme state

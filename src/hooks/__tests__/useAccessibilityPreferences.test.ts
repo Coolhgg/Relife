@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for useAccessibilityPreferences hook
  * Tests accessibility preferences management and state synchronization

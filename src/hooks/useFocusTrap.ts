@@ -1,3 +1,5 @@
+/// <reference lib="dom" />
+import * as React from "react";
 /**
  * Focus Trap Hook for Modal Components
  * Provides comprehensive focus management including trapping, restoration, and announcements

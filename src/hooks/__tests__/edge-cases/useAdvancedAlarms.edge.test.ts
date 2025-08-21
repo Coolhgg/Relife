@@ -1,5 +1,5 @@
-import { renderHook, act } from '@testing-library/react';
-import { useAdvancedAlarms } from '../../useAdvancedAlarms';
+import { expect, test, jest } from "@jest/globals";
+import { renderHook, act } from "@testing-library/react";
 
 // Mock dependencies
 jest.mock('../../../services/alarm-service', () => ({
@@ -65,7 +65,6 @@ Object.defineProperty(global.navigator, 'geolocation', {
   writable: true
 });
 
-describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     localStorage.clear();
@@ -96,7 +95,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         { id: 'alarm-4', time: '09:00' } // Missing required fields
       ]);
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -121,7 +119,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         enabled: true
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         await result.current.createAlarm({
@@ -154,7 +151,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
       mockAlarmService.getAllAlarms.mockResolvedValue(largeAlarmCollection);
 
       const startTime = Date.now();
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -185,7 +181,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         });
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         // Create 20 alarms simultaneously
@@ -219,7 +214,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
 
       mockAlarmService.deleteAlarm.mockResolvedValue({ success: true });
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         // Start update
@@ -239,9 +233,8 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
       expect(result.current.error).not.toContain('conflict');
     });
 
-    it('should handle rapid alarm scheduling operations', async () => {
-      const AdvancedAlarmScheduler = require('../../../services/advanced-alarm-scheduler').default;
-      const mockScheduler = AdvancedAlarmScheduler.getInstance();
+    it("should handle rapid alarm scheduling operations", async () => {
+      // Service is now imported at the top
 
       let scheduleCount = 0;
       mockScheduler.scheduleAlarm.mockImplementation(alarm => {
@@ -252,7 +245,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         });
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         // Schedule 100 alarms rapidly
@@ -276,7 +268,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         error({ code: 1, message: 'User denied Geolocation' });
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         await result.current.createAlarm({
@@ -302,7 +293,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         }, 10000);
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         // Try to create location-based alarm
@@ -337,7 +327,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         });
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         await result.current.createAlarm({
@@ -366,7 +355,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         new Error('Invalid file format')
       );
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       const corruptedFile = new File(['corrupted-data-{{{'], 'alarms.json', {
         type: 'application/json'
@@ -396,7 +384,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         });
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       // Create a 10MB file
       const largeContent = JSON.stringify(Array(10000).fill({
@@ -428,7 +415,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         new Error('Network error during export')
       );
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         await result.current.exportAlarms('json');
@@ -450,16 +436,14 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Conditional Rules Edge Cases', () => {
-    it('should handle invalid weather API responses', async () => {
-      const AdvancedAlarmScheduler = require('../../../services/advanced-alarm-scheduler').default;
-      const mockScheduler = AdvancedAlarmScheduler.getInstance();
+  describe("Conditional Rules Edge Cases", () => {
+    it("should handle invalid weather API responses", async () => {
+      // Service is now imported at the top
 
       mockScheduler.checkConditionalRules.mockRejectedValue(
         new Error('Weather API unavailable')
       );
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         await result.current.createAlarm({
@@ -480,8 +464,7 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
       expect(result.current.error).toContain('Weather conditions unavailable');
     });
 
-    it('should handle conflicting conditional rules', async () => {
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
+    it("should handle conflicting conditional rules", async () => {
 
       await act(async () => {
         await result.current.createAlarm({
@@ -506,10 +489,9 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Performance and Memory Stress Tests', () => {
-    it('should handle intensive alarm scheduling without memory leaks', async () => {
-      const AdvancedAlarmScheduler = require('../../../services/advanced-alarm-scheduler').default;
-      const mockScheduler = AdvancedAlarmScheduler.getInstance();
+  describe("Performance and Memory Stress Tests", () => {
+    it("should handle intensive alarm scheduling without memory leaks", async () => {
+      // Service is now imported at the top
 
       let scheduleCallCount = 0;
       mockScheduler.scheduleAlarm.mockImplementation(() => {
@@ -517,7 +499,8 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         return Promise.resolve({ scheduled: true });
       });
 
-      const { result, unmount } = renderHook(() => useAdvancedAlarms('user-123'));
+      const { result, unmount } = renderHook(() =>
+      );
 
       await act(async () => {
         // Create and schedule many alarms
@@ -560,7 +543,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
       mockAlarmService.createAlarm.mockImplementation(() => mockOperation('create'));
       mockAlarmService.deleteAlarm.mockImplementation(() => mockOperation('delete'));
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         // Rapid state changes
@@ -592,10 +574,9 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Timezone and Time Edge Cases', () => {
-    it('should handle timezone changes', async () => {
-      const AdvancedAlarmScheduler = require('../../../services/advanced-alarm-scheduler').default;
-      const mockScheduler = AdvancedAlarmScheduler.getInstance();
+  describe("Timezone and Time Edge Cases", () => {
+    it("should handle timezone changes", async () => {
+      // Service is now imported at the top
 
       // Mock timezone-aware scheduling
       mockScheduler.getNextOccurrence.mockImplementation(alarm => {
@@ -603,7 +584,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         return new Date(Date.now() + 24 * 60 * 60 * 1000); // Next day
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       // Mock timezone change
       Object.defineProperty(Intl.DateTimeFormat.prototype, 'resolvedOptions', {
@@ -622,15 +602,13 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
       expect(result.current.error).not.toContain('timezone');
     });
 
-    it('should handle daylight saving time transitions', async () => {
-      const AdvancedAlarmScheduler = require('../../../services/advanced-alarm-scheduler').default;
-      const mockScheduler = AdvancedAlarmScheduler.getInstance();
+    it("should handle daylight saving time transitions", async () => {
+      // Service is now imported at the top
 
       // Mock DST transition
       const dstTransitionDate = new Date('2024-03-10T07:00:00'); // Spring forward
       mockScheduler.getNextOccurrence.mockReturnValue(dstTransitionDate);
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         await result.current.createAlarm({
@@ -659,7 +637,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
 
       mockAlarmService.getAllAlarms.mockResolvedValue(orderedAlarms);
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         await result.current.refreshAlarms();
@@ -682,7 +659,6 @@ describe('useAdvancedAlarms Edge Cases and Stress Tests', () => {
         enabled: true
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms('user-123'));
 
       await act(async () => {
         await result.current.duplicateAlarm('alarm-1');

@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Integration tests for the complete theme system
  * Tests end-to-end functionality including UI components, persistence, and user interactions

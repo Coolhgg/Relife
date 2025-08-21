@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Enhanced Keyboard Navigation for Smart Alarm App
 // Provides comprehensive keyboard shortcuts and navigation patterns
 // Integrated with accessibility preferences system

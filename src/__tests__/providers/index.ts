@@ -73,7 +73,7 @@ export {
 } from './integration-provider';
 
 // Utility functions for common test patterns
-export const createTestSuite = (name: string, tests: () => void) => {
+export const _createTestSuite = (name: string, tests: () => void) => {
   describe(name, () => {
     beforeEach(() => {
       jest.clearAllMocks();
@@ -87,7 +87,7 @@ export const createTestSuite = (name: string, tests: () => void) => {
   });
 };
 
-export const createAsyncTestSuite = (name: string, tests: () => void) => {
+export const _createAsyncTestSuite = (name: string, tests: () => void) => {
   describe(name, () => {
     beforeEach(async () => {
       jest.clearAllMocks();
@@ -106,7 +106,7 @@ export const createAsyncTestSuite = (name: string, tests: () => void) => {
 };
 
 // Common test utilities
-export const testUtils = {
+export const _testUtils = {
   /**
    * Wait for async operations to complete
    */
@@ -174,7 +174,7 @@ export const testUtils = {
 };
 
 // Performance testing utilities
-export const performanceUtils = {
+export const _performanceUtils = {
   /**
    * Measure component render time
    */
@@ -211,7 +211,7 @@ export const performanceUtils = {
 };
 
 // Accessibility testing utilities
-export const a11yUtils = {
+export const _a11yUtils = {
   /**
    * Check for required ARIA attributes
    */
@@ -251,7 +251,7 @@ export const a11yUtils = {
 };
 
 // Mobile testing utilities
-export const mobileUtils = {
+export const _mobileUtils = {
   /**
    * Simulate mobile viewport
    */

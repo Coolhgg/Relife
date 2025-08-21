@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // Enhanced Screen Reader Hook for automatic state change announcements
 import { useEffect, useRef, useCallback } from 'react';
 import ScreenReaderService, { type AlarmAnnouncement } from '../utils/screen-reader';

@@ -1,4 +1,5 @@
-import React from 'react';
+/// <reference lib="dom" />
+import React from "react";
 // Screen Reader Initialization Component
 // Ensures screen reader service is properly initialized and manages state changes
 import { useEffect, useRef } from 'react';

@@ -9,7 +9,6 @@ import { SubscriptionService } from '../services/subscription';
 import { PremiumVoiceService } from '../services/premium-voice';
 import type {
   Subscription,
-  SubscriptionTier,
   PremiumFeatureAccess,
   PremiumUsage
 } from '../types';
@@ -23,51 +22,51 @@ export const TEST_USER_IDS = {
 };
 
 // Mock subscription data for testing
-export const MOCK_SUBSCRIPTIONS: Record<SubscriptionTier, Subscription | null> = {
-  free: null, // Free users don't have subscription records
-  premium: {
-    id: 'sub_premium_123',
-    userId: TEST_USER_IDS.PREMIUM,
-    tier: 'premium',
-    status: 'active',
-    currentPeriodStart: new Date('2024-01-01'),
-    currentPeriodEnd: new Date('2024-02-01'),
-    cancelAtPeriodEnd: false,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
-    stripeCustomerId: 'cus_premium_123',
-    stripeSubscriptionId: 'sub_stripe_premium_123',
-    stripePriceId: 'price_premium_monthly'
-  },
-  pro: {
-    id: 'sub_pro_456',
-    userId: TEST_USER_IDS.PRO,
-    tier: 'pro',
-    status: 'active',
-    currentPeriodStart: new Date('2024-01-01'),
-    currentPeriodEnd: new Date('2024-02-01'),
-    cancelAtPeriodEnd: false,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
-    stripeCustomerId: 'cus_pro_456',
-    stripeSubscriptionId: 'sub_stripe_pro_456',
-    stripePriceId: 'price_pro_monthly'
-  },
-  lifetime: {
-    id: 'sub_lifetime_789',
-    userId: TEST_USER_IDS.LIFETIME,
-    tier: 'lifetime',
-    status: 'active',
-    currentPeriodStart: new Date('2024-01-01'),
-    currentPeriodEnd: new Date('2099-01-01'), // Far future for lifetime
-    cancelAtPeriodEnd: false,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
-    stripeCustomerId: 'cus_lifetime_789',
-    stripeSubscriptionId: 'sub_stripe_lifetime_789',
-    stripePriceId: 'price_lifetime'
-  }
-};
+  {
+    free: null, // Free users don't have subscription records
+    premium: {
+      id: "sub_premium_123",
+      userId: TEST_USER_IDS.PREMIUM,
+      tier: "premium",
+      status: "active",
+      currentPeriodStart: new Date("2024-01-01"),
+      currentPeriodEnd: new Date("2024-02-01"),
+      cancelAtPeriodEnd: false,
+      createdAt: new Date("2024-01-01"),
+      updatedAt: new Date("2024-01-01"),
+      stripeCustomerId: "cus_premium_123",
+      stripeSubscriptionId: "sub_stripe_premium_123",
+      stripePriceId: "price_premium_monthly",
+    },
+    pro: {
+      id: "sub_pro_456",
+      userId: TEST_USER_IDS.PRO,
+      tier: "pro",
+      status: "active",
+      currentPeriodStart: new Date("2024-01-01"),
+      currentPeriodEnd: new Date("2024-02-01"),
+      cancelAtPeriodEnd: false,
+      createdAt: new Date("2024-01-01"),
+      updatedAt: new Date("2024-01-01"),
+      stripeCustomerId: "cus_pro_456",
+      stripeSubscriptionId: "sub_stripe_pro_456",
+      stripePriceId: "price_pro_monthly",
+    },
+    lifetime: {
+      id: "sub_lifetime_789",
+      userId: TEST_USER_IDS.LIFETIME,
+      tier: "lifetime",
+      status: "active",
+      currentPeriodStart: new Date("2024-01-01"),
+      currentPeriodEnd: new Date("2099-01-01"), // Far future for lifetime
+      cancelAtPeriodEnd: false,
+      createdAt: new Date("2024-01-01"),
+      updatedAt: new Date("2024-01-01"),
+      stripeCustomerId: "cus_lifetime_789",
+      stripeSubscriptionId: "sub_stripe_lifetime_789",
+      stripePriceId: "price_lifetime",
+    },
+  };
 
 // Mock usage data for testing limits
 export const MOCK_USAGE_DATA: Record<string, PremiumUsage> = {
@@ -111,7 +110,6 @@ export class PremiumTester {
   static async testSubscriptionAccess(): Promise<{
     success: boolean;
     results: Array<{
-      tier: SubscriptionTier;
       userId: string;
       hasElevenlabs: boolean;
       hasCustomMessages: boolean;
@@ -139,7 +137,6 @@ export class PremiumTester {
           ]);
 
           results.push({
-            tier: tier.toLowerCase() as SubscriptionTier,
             userId,
             hasElevenlabs,
             hasCustomMessages,
@@ -168,9 +165,16 @@ export class PremiumTester {
     success: boolean;
     results: Array<{
       userId: string;
-      tier: SubscriptionTier;
-      elevenlabsCheck: { hasAccess: boolean; currentUsage?: number; limit?: number };
-      customMessagesCheck: { hasAccess: boolean; currentUsage?: number; limit?: number };
+      elevenlabsCheck: {
+        hasAccess: boolean;
+        currentUsage?: number;
+        limit?: number;
+      };
+      customMessagesCheck: {
+        hasAccess: boolean;
+        currentUsage?: number;
+        limit?: number;
+      };
     }>;
     errors: string[];
   }> {
@@ -189,7 +193,6 @@ export class PremiumTester {
 
           results.push({
             userId,
-            tier: tier.toLowerCase() as SubscriptionTier,
             elevenlabsCheck,
             customMessagesCheck
           });
@@ -215,7 +218,6 @@ export class PremiumTester {
     success: boolean;
     results: Array<{
       userId: string;
-      tier: SubscriptionTier;
       canUseElevenlabs: boolean;
       canCreateCustomMessages: boolean;
       voicePreview: string | null;
@@ -244,7 +246,6 @@ export class PremiumTester {
 
           results.push({
             userId,
-            tier: tier.toLowerCase() as SubscriptionTier,
             canUseElevenlabs,
             canCreateCustomMessages,
             voicePreview
@@ -271,7 +272,6 @@ export class PremiumTester {
     success: boolean;
     results: Array<{
       userId: string;
-      tier: SubscriptionTier;
       recommendation: {
         shouldUpgrade: boolean;
         recommendedTier: string;
@@ -291,8 +291,7 @@ export class PremiumTester {
 
           results.push({
             userId,
-            tier: tier.toLowerCase() as SubscriptionTier,
-            recommendation
+            recommendation,
           });
         } catch (error) {
           errors.push(`Error testing recommendations for ${tier}: ${error instanceof Error ? error.message : String(error)}`);

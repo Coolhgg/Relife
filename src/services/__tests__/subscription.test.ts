@@ -1,9 +1,9 @@
-import { SubscriptionService } from '../subscription';
-import { ErrorHandler } from '../error-handler';
-import { createClient } from '../supabase';
+import { expect, test, jest } from "@jest/globals";
+import { SubscriptionService } from "../subscription";
+import { ErrorHandler } from "../error-handler";
+import { createClient } from "../supabase";
 import type {
   Subscription,
-  SubscriptionTier,
   SubscriptionStatus,
   PremiumFeatureAccess,
   FeatureLimits,
@@ -624,7 +624,6 @@ describe('SubscriptionService', () => {
     it('should update existing subscription successfully', async () => {
       const updatedSubscription = {
         ...mockSubscriptionData[0],
-        tier: 'pro' as SubscriptionTier
       };
 
       mockSupabaseTable.single.mockResolvedValue({

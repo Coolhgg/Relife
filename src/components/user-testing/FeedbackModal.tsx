@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+/// <reference lib="dom" />
+import React, { useState, useRef } from "react";
 import {
   Dialog,
   DialogContent,

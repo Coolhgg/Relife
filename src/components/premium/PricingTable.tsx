@@ -1,14 +1,16 @@
 // Pricing Table Component for Relife Alarm App
 // Displays subscription plans with upgrade/downgrade functionality
 
-import React, { useState } from 'react';
-import { Check, Zap, Star, Crown, ArrowRight } from 'lucide-react';
-import { FeatureBadge } from './FeatureUtils';
-import type { SubscriptionPlan, SubscriptionTier, BillingInterval } from '../../types/premium';
+import React, { useState } from "react";
+import { Check, Zap, Star, Crown, ArrowRight } from "lucide-react";
+import { FeatureBadge } from "./FeatureUtils";
+import type {
+  SubscriptionPlan,
+  BillingInterval,
+} from "../../types/premium";
 
 interface PricingTableProps {
   plans: SubscriptionPlan[];
-  currentTier?: SubscriptionTier;
   billingInterval?: BillingInterval;
   onPlanSelect: (plan: SubscriptionPlan, billingInterval: BillingInterval) => void;
   onBillingIntervalChange?: (interval: BillingInterval) => void;
@@ -57,7 +59,6 @@ export function PricingTable({
     return plan.pricing.yearly.discountPercentage;
   };
 
-  const getPlanIcon = (tier: SubscriptionTier) => {
     switch (tier) {
       case 'basic':
         return <Zap className="w-6 h-6 text-blue-600" />;
@@ -70,16 +71,18 @@ export function PricingTable({
     }
   };
 
-  const isCurrentPlan = (tier: SubscriptionTier) => tier === currentTier;
-  const isUpgrade = (tier: SubscriptionTier) => {
-    const hierarchy: SubscriptionTier[] = ['free', 'basic', 'premium', 'pro', 'enterprise'];
+      "free",
+      "basic",
+      "premium",
+      "pro",
+      "enterprise",
+    ];
     return hierarchy.indexOf(tier) > hierarchy.indexOf(currentTier);
   };
 
-  const getButtonText = (tier: SubscriptionTier) => {
-    if (isCurrentPlan(tier)) return 'Current Plan';
-    if (isUpgrade(tier)) return 'Upgrade';
-    return 'Downgrade';
+    if (isCurrentPlan(tier)) return "Current Plan";
+    if (isUpgrade(tier)) return "Upgrade";
+    return "Downgrade";
   };
 
   return (

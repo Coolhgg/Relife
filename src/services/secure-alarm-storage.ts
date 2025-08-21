@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // Secure Alarm Storage Service
 // Provides encrypted storage and integrity validation for alarm data
 

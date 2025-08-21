@@ -1,5 +1,6 @@
-import { ErrorHandler } from '../error-handler';
-import { testUtils } from '../../test-setup';
+import { expect, test, jest } from "@jest/globals";
+import { ErrorHandler } from "../error-handler";
+import { testUtils } from "../../test-setup";
 
 // Mock Sentry
 jest.mock('@sentry/browser', () => ({

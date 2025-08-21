@@ -216,7 +216,7 @@ const mockSentry = {
 };
 
 // Create a factory function for creating fresh mocks
-export const createMockSentry = () => ({
+export const _createMockSentry = () => ({
   ...mockSentry,
   Integrations: { ...mockSentry.Integrations },
   Severity: { ...mockSentry.Severity }

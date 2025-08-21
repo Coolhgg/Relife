@@ -225,19 +225,19 @@ export const TEST_CONSTANTS = {
 } as const;
 
 // Environment detection utilities
-export const testEnv = {
-  isCI: process.env.CI === 'true',
-  isVerbose: process.env.VERBOSE_TESTS === 'true',
-  isDebug: process.env.DEBUG_TESTS === 'true',
-  isMobile: process.env.TEST_MOBILE === 'true',
-  isVisual: process.env.TEST_VISUAL === 'true',
-  isPerformance: process.env.TEST_PERFORMANCE === 'true',
-  isAccessibility: process.env.TEST_A11Y === 'true',
-  platform: (process.env.TEST_PLATFORM as 'web' | 'ios' | 'android') || 'web'
+export const _testEnv = {
+  isCI: process.env.CI === "true",
+  isVerbose: process.env.VERBOSE_TESTS === "true",
+  isDebug: process.env.DEBUG_TESTS === "true",
+  isMobile: process.env.TEST_MOBILE === "true",
+  isVisual: process.env.TEST_VISUAL === "true",
+  isPerformance: process.env.TEST_PERFORMANCE === "true",
+  isAccessibility: process.env.TEST_A11Y === "true",
+  platform: (process.env.TEST_PLATFORM as "web" | "ios" | "android") || "web",
 };
 
 // Console utilities for tests
-export const testConsole = {
+export const _testConsole = {
   log: (message: string, ...args: any[]) => {
     if (testEnv.isVerbose) {
       console.log(`[TEST] ${message}`, ...args);
@@ -272,7 +272,7 @@ export const testConsole = {
 };
 
 // Test lifecycle helpers
-export const testLifecycle = {
+export const _testLifecycle = {
   beforeEach: (cleanup?: () => void | Promise<void>) => {
     beforeEach(async () => {
       testConsole.debug('Test setup starting');

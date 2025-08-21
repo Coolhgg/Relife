@@ -1,10 +1,9 @@
 // Feature Gate Components for Relife Alarm App
 // Provides UI components for premium feature access control
 
-import React, { ReactNode } from 'react';
-import { Lock, Crown, Zap, Sparkles } from 'lucide-react';
-import useFeatureGate from '../../hooks/useFeatureGate';
-import type { SubscriptionTier } from '../../types/premium';
+import React, { ReactNode } from "react";
+import { Lock, Crown, Zap, Sparkles } from "lucide-react";
+import useFeatureGate from "../../hooks/useFeatureGate";
 
 interface FeatureGateProps {
   children: ReactNode;
@@ -15,7 +14,6 @@ interface FeatureGateProps {
   softGate?: boolean;
   customMessage?: string;
   className?: string;
-  onUpgradeClick?: (requiredTier: SubscriptionTier) => void;
 }
 
 export function FeatureGate({
@@ -77,7 +75,6 @@ export function FeatureGate({
 
 interface UpgradePromptProps {
   feature: string;
-  requiredTier: SubscriptionTier | null;
   message: string;
   usageRemaining?: number;
   usageLimit?: number;
@@ -98,7 +95,6 @@ function UpgradePrompt({
   onBypass,
   className = ""
 }: UpgradePromptProps) {
-  const getTierIcon = (tier: SubscriptionTier | null) => {
     switch (tier) {
       case 'basic':
         return <Zap className="w-5 h-5 text-blue-500" />;
@@ -111,7 +107,6 @@ function UpgradePrompt({
     }
   };
 
-  const getTierColor = (tier: SubscriptionTier | null) => {
     switch (tier) {
       case 'basic':
         return 'border-blue-200 bg-blue-50';
@@ -124,7 +119,6 @@ function UpgradePrompt({
     }
   };
 
-  const getTierName = (tier: SubscriptionTier | null) => {
     switch (tier) {
       case 'basic':
         return 'Basic';

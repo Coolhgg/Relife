@@ -1,6 +1,7 @@
-import { openDB, DBSchema, IDBPDatabase } from 'idb';
-import { supabase } from './supabase';
-import type { Alarm } from '../types';
+/// <reference lib="dom" />
+import { openDB, DBSchema, IDBPDatabase } from "idb";
+import { supabase } from "./supabase";
+import type { Alarm } from "../types";
 
 interface OfflineDB extends DBSchema {
   alarms: {

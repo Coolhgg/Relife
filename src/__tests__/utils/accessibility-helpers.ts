@@ -21,7 +21,7 @@ export interface ColorContrastResult {
 }
 
 // Core accessibility utilities
-export const accessibilityCore = {
+export const _accessibilityCore = {
   // Get all focusable elements
   getFocusableElements: (container: HTMLElement = document.body): HTMLElement[] => {
     const selectors = [
@@ -65,7 +65,7 @@ export const accessibilityCore = {
 };
 
 // ARIA utilities
-export const ariaUtils = {
+export const _ariaUtils = {
   // Validate ARIA attributes
   validateARIA: (element: HTMLElement): AccessibilityViolation[] => {
     const violations: AccessibilityViolation[] = [];
@@ -121,7 +121,7 @@ export const ariaUtils = {
 };
 
 // Color contrast utilities
-export const colorContrast = {
+export const _colorContrast = {
   // Calculate luminance
   getLuminance: (color: string): number => {
     const rgb = colorContrast.parseColor(color);
@@ -189,7 +189,7 @@ export const colorContrast = {
 };
 
 // Keyboard navigation utilities
-export const keyboardNavigation = {
+export const _keyboardNavigation = {
   // Test tab order
   testTabOrder: async (container?: HTMLElement): Promise<{
     focusableElements: HTMLElement[];
@@ -236,7 +236,7 @@ export const keyboardNavigation = {
 };
 
 // Screen reader utilities
-export const screenReader = {
+export const _screenReader = {
   // Check image alt text
   checkImageAltText: (container: HTMLElement = document.body) => {
     const images = Array.from(container.querySelectorAll('img')) as HTMLImageElement[];
@@ -266,7 +266,7 @@ export const screenReader = {
 };
 
 // Accessibility test suite
-export const accessibilityTestSuite = {
+export const _accessibilityTestSuite = {
   // Run comprehensive accessibility audit
   auditElement: (element: HTMLElement): AccessibilityViolation[] => {
     const violations: AccessibilityViolation[] = [];
@@ -306,7 +306,7 @@ export const accessibilityTestSuite = {
 };
 
 // Export grouped utilities
-export const accessibilityHelpers = {
+export const _accessibilityHelpers = {
   core: accessibilityCore,
   aria: ariaUtils,
   colorContrast,

@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Animation Manager Service for Relife Smart Alarm
 // Central animation orchestration and performance optimization
 

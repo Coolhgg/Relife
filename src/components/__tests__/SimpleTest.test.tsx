@@ -1,5 +1,6 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { expect, test, jest } from "@jest/globals";
+import React from "react";
+import { render, screen } from "@testing-library/react";
 
 // Simple test component to verify Jest setup works
 const SimpleComponent = ({ message = "Hello Testing!" }: { message?: string }) => (

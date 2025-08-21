@@ -1,20 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
-import { Checkbox } from './ui/checkbox';
-import { Label } from './ui/label';
-import { Slider } from './ui/slider';
-import { Alert, AlertDescription, AlertTriangle } from './ui/alert';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { Separator } from './ui/separator';
-import { Progress } from './ui/progress';
-import { Switch } from './ui/switch';
-import { Zap, Shield, Brain, Camera, BarChart3, Mic, QrCode, Keyboard, Target, Crown, Lock, AlertTriangle as AlertTriangleIcon } from 'lucide-react';
-import type { NuclearChallengeType, SubscriptionTier } from '../types';
-import { nuclearModeService } from '../services/nuclear-mode';
-import { premiumService } from '../services/premium';
-import { cn } from '../lib/utils';
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
+import { Label } from "./ui/label";
+import { Slider } from "./ui/slider";
+import { Alert, AlertDescription, AlertTriangle } from "./ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Separator } from "./ui/separator";
+import { Progress } from "./ui/progress";
+import { Switch } from "./ui/switch";
+import {
+  Zap,
+  Shield,
+  Brain,
+  Camera,
+  BarChart3,
+  Mic,
+  QrCode,
+  Keyboard,
+  Target,
+  Crown,
+  Lock,
+  AlertTriangle as AlertTriangleIcon,
+} from "lucide-react";
+import { nuclearModeService } from "../services/nuclear-mode";
+import { premiumService } from "../services/premium";
+import { cn } from "../lib/utils";
 
 interface NuclearModeSelectorProps {
   isEnabled: boolean;
@@ -56,7 +82,6 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
   className
 }) => {
   const [hasAccess, setHasAccess] = useState(false);
-  const [userTier, setUserTier] = useState<SubscriptionTier>('free');
   const [upgradeUrl, setUpgradeUrl] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const [challengeTypes, setChallengeTypes] = useState<Array<{

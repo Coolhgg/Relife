@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Accessibility utilities for Smart Alarm App
 // Provides color contrast checking and accessibility helpers
 

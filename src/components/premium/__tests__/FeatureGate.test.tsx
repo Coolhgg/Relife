@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * FeatureGate Component Tests
  *
@@ -5,13 +6,23 @@
  * based on user subscription tier and usage limits.
  */
 
-import React from 'react';
-import { screen, waitFor, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { renderWithProviders, renderWithFeatureAccess } from '../../../__tests__/utils/render-helpers';
-import { createTestSubscription, createTestPremiumFeature } from '../../../__tests__/factories/premium-factories';
-import { FeatureGate, FeatureAccess, UsageLimitIndicator, withFeatureGate } from '../FeatureGate';
-import type { SubscriptionTier } from '../../../types/premium';
+import React from "react";
+import { screen, waitFor, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import {
+  renderWithProviders,
+  renderWithFeatureAccess,
+} from "../../../__tests__/utils/render-helpers";
+import {
+  createTestSubscription,
+  createTestPremiumFeature,
+} from "../../../__tests__/factories/premium-factories";
+import {
+  FeatureGate,
+  FeatureAccess,
+  UsageLimitIndicator,
+  withFeatureGate,
+} from "../FeatureGate";
 
 // Mock the useFeatureGate hook
 const mockUseFeatureGate = {

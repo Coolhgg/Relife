@@ -1,13 +1,13 @@
-import { renderHook, act } from '@testing-library/react';
-import React from 'react';
-import { useAuth } from '../../useAuth';
-import { useFeatureGate } from '../../useFeatureGate';
-import { useAdvancedAlarms } from '../../useAdvancedAlarms';
-import { useSubscription } from '../../useSubscription';
-import { AnalyticsProvider } from '../../../components/AnalyticsProvider';
-import { FeatureAccessProvider } from '../../../contexts/FeatureAccessContext';
-import { LanguageProvider } from '../../../contexts/LanguageContext';
-import { StrugglingSamProvider } from '../../../contexts/StrugglingsamContext';
+import { expect, test, jest } from "@jest/globals";
+import { renderHook, act } from "@testing-library/react";
+import React from "react";
+import { useAuth } from "../../useAuth";
+import { useFeatureGate } from "../../useFeatureGate";
+import { useSubscription } from "../../useSubscription";
+import { AnalyticsProvider } from "../../../components/AnalyticsProvider";
+import { FeatureAccessProvider } from "../../../contexts/FeatureAccessContext";
+import { LanguageProvider } from "../../../contexts/LanguageContext";
+import { StrugglingSamProvider } from "../../../contexts/StrugglingsamContext";
 
 // Mock all services
 jest.mock('../../../services/supabase-service', () => ({
@@ -220,8 +220,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const { result } = renderHook(
         () => ({
           auth: useAuth(),
-          featureGate: useFeatureGate('advanced_alarms'),
-          alarms: useAdvancedAlarms('user-123')
+          featureGate: useFeatureGate("advanced_alarms"),
         }),
         {
           wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
@@ -243,8 +242,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const { result, rerender } = renderHook(
         () => ({
           auth: useAuth(),
-          featureGate: useFeatureGate('advanced_alarms'),
-          alarms: useAdvancedAlarms('user-123')
+          featureGate: useFeatureGate("advanced_alarms"),
         }),
         {
           wrapper: (props) => <FullTestWrapper {...props} userTier="free" />
@@ -266,8 +264,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const { result: newResult } = renderHook(
         () => ({
           auth: useAuth(),
-          featureGate: useFeatureGate('advanced_alarms'),
-          alarms: useAdvancedAlarms('user-123')
+          featureGate: useFeatureGate("advanced_alarms"),
         }),
         {
           wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
@@ -296,10 +293,9 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const { result } = renderHook(
         () => ({
           auth: useAuth(),
-          subscription: useSubscription('user-123'),
-          advancedAlarmsGate: useFeatureGate('advanced_alarms'),
-          premiumThemesGate: useFeatureGate('premium_themes'),
-          alarms: useAdvancedAlarms('user-123')
+          subscription: useSubscription("user-123"),
+          advancedAlarmsGate: useFeatureGate("advanced_alarms"),
+          premiumThemesGate: useFeatureGate("premium_themes"),
         }),
         {
           wrapper: props => (
@@ -329,9 +325,8 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
 
       const { result } = renderHook(
         () => ({
-          subscription: useSubscription('user-123'),
-          featureGate: useFeatureGate('premium_themes'),
-          alarms: useAdvancedAlarms('user-123')
+          subscription: useSubscription("user-123"),
+          featureGate: useFeatureGate("premium_themes"),
         }),
         {
           wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="pro" />
@@ -371,8 +366,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const { result } = renderHook(
         () => ({
           auth: useAuth(),
-          featureGate: useFeatureGate('advanced_alarms'),
-          alarms: useAdvancedAlarms('user-123')
+          featureGate: useFeatureGate("advanced_alarms"),
         }),
         {
           wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
@@ -406,8 +400,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
 
       const { result } = renderHook(
         () => ({
-          featureGate: useFeatureGate('advanced_alarms'),
-          alarms: useAdvancedAlarms('user-123')
+          featureGate: useFeatureGate("advanced_alarms"),
         }),
         {
           wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
@@ -436,8 +429,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
 
       const { result } = renderHook(
         () => ({
-          alarms: useAdvancedAlarms('user-123'),
-          auth: useAuth()
+          auth: useAuth(),
         }),
         {
           wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
@@ -480,8 +472,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
 
       const { result } = renderHook(
         () => ({
-          featureGate: useFeatureGate('advanced_alarms'),
-          alarms: useAdvancedAlarms('user-123')
+          featureGate: useFeatureGate("advanced_alarms"),
         }),
         { wrapper: FullTestWrapper }
       );
@@ -527,9 +518,8 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const { result } = renderHook(
         () => ({
           auth: useAuth(),
-          subscription: useSubscription('user-123'),
-          featureGate: useFeatureGate('advanced_alarms'),
-          alarms: useAdvancedAlarms('user-123')
+          subscription: useSubscription("user-123"),
+          featureGate: useFeatureGate("advanced_alarms"),
         }),
         {
           wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
@@ -561,9 +551,8 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const { result } = renderHook(
         () => ({
           auth: useAuth(),
-          featureGate: useFeatureGate('advanced_alarms'),
-          alarms: useAdvancedAlarms('user-123'),
-          subscription: useSubscription('user-123')
+          featureGate: useFeatureGate("advanced_alarms"),
+          subscription: useSubscription("user-123"),
         }),
         {
           wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />

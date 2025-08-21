@@ -1,17 +1,41 @@
-import React, { useState, useCallback, useRef } from 'react';
-import { Upload, X, Play, Pause, Volume2, FileAudio, AlertCircle, CheckCircle, Loader2, Trash2 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
-import { Badge } from './ui/badge';
-import { Progress } from './ui/progress';
-import { Alert, AlertDescription } from './ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { ScrollArea } from './ui/scroll-area';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { CustomSoundManager } from '../services/custom-sound-manager';
+/// <reference lib="dom" />
+import React, { useState, useCallback, useRef } from "react";
+import {
+  Upload,
+  X,
+  Play,
+  Pause,
+  Volume2,
+  FileAudio,
+  AlertCircle,
+  CheckCircle,
+  Loader2,
+  Trash2,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import { Badge } from "./ui/badge";
+import { Progress } from "./ui/progress";
+import { Alert, AlertDescription } from "./ui/alert";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { ScrollArea } from "./ui/scroll-area";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { CustomSoundManager } from "../services/custom-sound-manager";
 import type {
   CustomSound,
   SoundCategory,

@@ -9,10 +9,14 @@ import {
   Loader2,
   CreditCard,
   Shield,
-  Zap
-} from 'lucide-react';
-import { SUBSCRIPTION_PLANS, type SubscriptionPlan, type PremiumFeatureAccess, type SubscriptionTier } from '../types';
-import { SubscriptionService } from '../services/subscription';
+  Zap,
+} from "lucide-react";
+import {
+  SUBSCRIPTION_PLANS,
+  type SubscriptionPlan,
+  type PremiumFeatureAccess,
+} from "../types";
+import { SubscriptionService } from "../services/subscription";
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -25,7 +29,6 @@ interface ModalState {
   selectedPlan: SubscriptionPlan | null;
   isProcessing: boolean;
   error: string | null;
-  currentTier: SubscriptionTier;
   trialDaysRemaining: number;
 }
 
@@ -97,7 +100,6 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     }
   };
 
-  const getTierIcon = (tier: SubscriptionTier) => {
     switch (tier) {
       case 'premium': return Crown;
       case 'pro': return Sparkles;
@@ -106,7 +108,6 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     }
   };
 
-  const getTierColor = (tier: SubscriptionTier) => {
     switch (tier) {
       case 'premium': return 'from-amber-500 to-orange-500';
       case 'pro': return 'from-purple-500 to-pink-500';

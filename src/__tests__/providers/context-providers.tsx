@@ -52,10 +52,10 @@ export const FeatureAccessTestProvider: React.FC<{
   );
 };
 
-export const useFeatureAccessTest = () => useContext(FeatureAccessTestContext);
+export const _useFeatureAccessTest = () => useContext(FeatureAccessTestContext);
 
 // Feature Access Test Scenarios
-export const featureAccessScenarios = {
+export const _featureAccessScenarios = {
   freeUser: {
     hasAccess: jest.fn((feature: string) =>
       ['basic_alarms', 'basic_themes'].includes(feature)
@@ -138,10 +138,10 @@ export const LanguageTestProvider: React.FC<{
   );
 };
 
-export const useLanguageTest = () => useContext(LanguageTestContext);
+export const _useLanguageTest = () => useContext(LanguageTestContext);
 
 // Language Test Scenarios
-export const languageScenarios = {
+export const _languageScenarios = {
   english: {
     language: 'en',
     dir: 'ltr' as const,
@@ -244,10 +244,10 @@ export const AlarmTestProvider: React.FC<{
   );
 };
 
-export const useAlarmTest = () => useContext(AlarmTestContext);
+export const _useAlarmTest = () => useContext(AlarmTestContext);
 
 // Alarm Test Scenarios
-export const alarmScenarios = {
+export const _alarmScenarios = {
   noAlarms: {
     alarms: [],
     getUpcomingAlarms: jest.fn(() => [])
@@ -358,10 +358,10 @@ export const ThemeTestProvider: React.FC<{
   );
 };
 
-export const useThemeTest = () => useContext(ThemeTestContext);
+export const _useThemeTest = () => useContext(ThemeTestContext);
 
 // Theme Test Scenarios
-export const themeScenarios = {
+export const _themeScenarios = {
   light: {
     theme: 'light',
     isDark: false,
@@ -447,7 +447,7 @@ export const ContextTestProvider: React.FC<{
 };
 
 // Custom render function for context testing
-export const renderWithContexts = (
+export const _renderWithContexts = (
   ui: React.ReactElement,
   options: ContextTestOptions & RenderOptions = {}
 ) => {
@@ -463,7 +463,7 @@ export const renderWithContexts = (
 };
 
 // Pre-configured scenario testing
-export const renderWithScenario = (
+export const _renderWithScenario = (
   ui: React.ReactElement,
   scenarios: {
     featureAccess?: keyof typeof featureAccessScenarios;

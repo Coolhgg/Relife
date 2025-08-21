@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Premium Theme Animation Service
  * Advanced animation features for premium themes

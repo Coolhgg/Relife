@@ -1,9 +1,10 @@
-import { renderHook, act } from '@testing-library/react';
-import React from 'react';
-import { useAuth } from '../../useAuth';
-import { AnalyticsProvider } from '../../../components/AnalyticsProvider';
-import { FeatureAccessProvider } from '../../../contexts/FeatureAccessContext';
-import { LanguageProvider } from '../../../contexts/LanguageContext';
+import { expect, test, jest } from "@jest/globals";
+import { renderHook, act } from "@testing-library/react";
+import React from "react";
+import { useAuth } from "../../useAuth";
+import { AnalyticsProvider } from "../../../components/AnalyticsProvider";
+import { FeatureAccessProvider } from "../../../contexts/FeatureAccessContext";
+import { LanguageProvider } from "../../../contexts/LanguageContext";
 
 // Mock dependencies
 jest.mock('../../../services/supabase-service', () => ({

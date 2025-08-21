@@ -1,3 +1,4 @@
+/// <reference types="node" />
 /**
  * CSS Optimization Utilities
  * Provides utilities for efficient CSS custom property management and style calculations

@@ -1,7 +1,8 @@
-import { audioManager } from './audio-manager';
-import { lazyAudioLoader } from './lazy-audio-loader';
-import type { Alarm, VoiceMood } from '../types';
-import type { CustomSound } from './types/media';
+/// <reference types="node" />
+import { audioManager } from "./audio-manager";
+import { lazyAudioLoader } from "./lazy-audio-loader";
+import type { Alarm, VoiceMood } from "../types";
+import type { CustomSound } from "./types/media";
 
 export interface CriticalAsset {
   id: string;

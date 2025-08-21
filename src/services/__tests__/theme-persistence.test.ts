@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for ThemePersistenceService
  * Tests enhanced theme persistence functionality including backup, restore, and error handling

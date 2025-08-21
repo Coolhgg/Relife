@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+/// <reference lib="dom" />
+import React, { useState, useEffect } from "react";
 import {
   Wifi,
   WifiOff,

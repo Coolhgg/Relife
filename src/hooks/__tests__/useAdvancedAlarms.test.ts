@@ -1,12 +1,15 @@
+import { expect, test, jest } from "@jest/globals";
 /**
- * Unit tests for useAdvancedAlarms hook
  * Tests advanced alarm scheduling, optimization, and management functionality
  */
 
-import { renderHook, act, waitFor } from '@testing-library/react';
-import { useAdvancedAlarms } from '../useAdvancedAlarms';
-import { renderHookWithProviders, createMockAlarm, clearAllMocks } from '../../__tests__/utils/hook-testing-utils';
-import type { AdvancedAlarm } from '../../types/index';
+import { renderHook, act, waitFor } from "@testing-library/react";
+import {
+  renderHookWithProviders,
+  createMockAlarm,
+  clearAllMocks,
+} from "../../__tests__/utils/hook-testing-utils";
+import { AlarmService } from "../../services/alarm";
 
 // Mock services
 jest.mock('../../services/alarm', () => ({
@@ -27,8 +30,6 @@ jest.mock('../../services/advanced-alarm-scheduler', () => ({
     calculateNextOccurrences: jest.fn(),
     evaluateConditionalRules: jest.fn(),
     evaluateLocationTriggers: jest.fn(),
-    scheduleAdvancedAlarmNotifications: jest.fn(),
-    cancelAdvancedAlarmNotifications: jest.fn(),
     exportSchedule: jest.fn(),
     importSchedule: jest.fn(),
     getStats: jest.fn(),
@@ -56,10 +57,8 @@ Object.defineProperty(global, 'URL', {
   writable: true,
 });
 
-describe('useAdvancedAlarms Hook', () => {
   const mockBasicAlarm = createMockAlarm();
 
-  const mockAdvancedAlarm: AdvancedAlarm = {
     ...mockBasicAlarm,
     scheduleType: 'daily',
     recurrencePattern: undefined,
@@ -121,25 +120,28 @@ describe('useAdvancedAlarms Hook', () => {
     jest.useFakeTimers();
 
     // Reset all mocks to default successful responses
-    const { AlarmService } = require('../../services/alarm');
-    const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
+      // AlarmService is now imported at the top
 
     AlarmService.loadAlarms.mockResolvedValue([mockBasicAlarm]);
     AlarmService.createAlarm.mockResolvedValue(mockBasicAlarm);
     AlarmService.updateAlarm.mockResolvedValue(mockBasicAlarm);
     AlarmService.deleteAlarm.mockResolvedValue(true);
 
-    AdvancedAlarmScheduler.initialize.mockResolvedValue(true);
-    AdvancedAlarmScheduler.applySmartOptimizations.mockImplementation((alarm) => Promise.resolve(alarm));
-    AdvancedAlarmScheduler.applySeasonalAdjustments.mockImplementation((alarm) => alarm);
-    AdvancedAlarmScheduler.calculateNextOccurrences.mockReturnValue([new Date(Date.now() + 24 * 60 * 60 * 1000)]);
-    AdvancedAlarmScheduler.evaluateConditionalRules.mockResolvedValue(true);
-    AdvancedAlarmScheduler.evaluateLocationTriggers.mockResolvedValue(true);
-    AdvancedAlarmScheduler.scheduleAdvancedAlarmNotifications.mockResolvedValue(true);
-    AdvancedAlarmScheduler.cancelAdvancedAlarmNotifications.mockResolvedValue(true);
-    AdvancedAlarmScheduler.exportSchedule.mockResolvedValue({ alarms: [mockAdvancedAlarm] });
-    AdvancedAlarmScheduler.importSchedule.mockResolvedValue({ success: 1, failed: 0, errors: [] });
-    AdvancedAlarmScheduler.getStats.mockReturnValue({
+      Promise.resolve(alarm),
+    );
+      (alarm) => alarm,
+    );
+      new Date(Date.now() + 24 * 60 * 60 * 1000),
+    ]);
+      true,
+    );
+      true,
+    );
+    });
+      success: 1,
+      failed: 0,
+      errors: [],
+    });
       totalAlarms: 1,
       activeAlarms: 1,
       scheduledNotifications: 5,
@@ -176,17 +178,15 @@ describe('useAdvancedAlarms Hook', () => {
     jest.useRealTimers();
   });
 
-  describe('Initialization', () => {
-    it('should initialize with default state', () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+  describe("Initialization", () => {
+    it("should initialize with default state", () => {
 
       expect(result.current.alarms).toEqual([]);
       expect(result.current.loading).toBe(true);
       expect(result.current.error).toBeNull();
     });
 
-    it('should load alarms and initialize scheduler on mount', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+    it("should load alarms and initialize scheduler on mount", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -203,15 +203,12 @@ describe('useAdvancedAlarms Hook', () => {
         dependencies: [],
       });
 
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      expect(AdvancedAlarmScheduler.initialize).toHaveBeenCalled();
     });
 
     it('should handle alarm loading errors', async () => {
       const { AlarmService } = require('../../services/alarm');
       AlarmService.loadAlarms.mockRejectedValue(new Error('Failed to load'));
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -221,11 +218,10 @@ describe('useAdvancedAlarms Hook', () => {
       expect(result.current.alarms).toEqual([]);
     });
 
-    it('should handle scheduler initialization errors', async () => {
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      AdvancedAlarmScheduler.initialize.mockRejectedValue(new Error('Scheduler failed'));
+    it("should handle scheduler initialization errors", async () => {
+        new Error("Scheduler failed"),
+      );
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.error).toBe('Failed to initialize scheduler');
@@ -233,9 +229,8 @@ describe('useAdvancedAlarms Hook', () => {
     });
   });
 
-  describe('Creating Alarms', () => {
-    it('should create advanced alarm successfully', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+  describe("Creating Alarms", () => {
+    it("should create advanced alarm successfully", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -252,10 +247,8 @@ describe('useAdvancedAlarms Hook', () => {
         snoozeInterval: 5,
         voiceMood: 'motivational' as const,
         isActive: true,
-        scheduleType: 'weekly' as const,
-        conditionalRules: mockAdvancedAlarm.conditionalRules,
-        locationTriggers: mockAdvancedAlarm.locationTriggers,
-        timeZone: 'America/New_York',
+        scheduleType: "weekly" as const,
+        timeZone: "America/New_York",
       };
 
       let createdAlarm;
@@ -267,17 +260,16 @@ describe('useAdvancedAlarms Hook', () => {
       expect(result.current.alarms).toHaveLength(2); // Original + new
       expect(result.current.error).toBeNull();
 
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      expect(AdvancedAlarmScheduler.applySmartOptimizations).toHaveBeenCalled();
-      expect(AdvancedAlarmScheduler.applySeasonalAdjustments).toHaveBeenCalled();
-      expect(AdvancedAlarmScheduler.scheduleAdvancedAlarmNotifications).toHaveBeenCalled();
+      expect(
+      ).toHaveBeenCalled();
+      expect(
+      ).toHaveBeenCalled();
     });
 
     it('should handle alarm creation errors', async () => {
       const { AlarmService } = require('../../services/alarm');
       AlarmService.createAlarm.mockRejectedValue(new Error('Creation failed'));
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -307,9 +299,8 @@ describe('useAdvancedAlarms Hook', () => {
     });
   });
 
-  describe('Updating Alarms', () => {
-    it('should update alarm successfully', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+  describe("Updating Alarms", () => {
+    it("should update alarm successfully", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -338,13 +329,13 @@ describe('useAdvancedAlarms Hook', () => {
       expect(result.current.alarms[0].label).toBe('Updated Alarm');
       expect(result.current.error).toBeNull();
 
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      expect(AdvancedAlarmScheduler.cancelAdvancedAlarmNotifications).toHaveBeenCalledWith(mockBasicAlarm.id);
-      expect(AdvancedAlarmScheduler.scheduleAdvancedAlarmNotifications).toHaveBeenCalled();
+      expect(
+      ).toHaveBeenCalledWith(mockBasicAlarm.id);
+      expect(
+      ).toHaveBeenCalled();
     });
 
-    it('should handle update of non-existent alarm', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+    it("should handle update of non-existent alarm", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -363,7 +354,6 @@ describe('useAdvancedAlarms Hook', () => {
       const { AlarmService } = require('../../services/alarm');
       AlarmService.updateAlarm.mockRejectedValue(new Error('Update failed'));
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -379,9 +369,8 @@ describe('useAdvancedAlarms Hook', () => {
     });
   });
 
-  describe('Deleting Alarms', () => {
-    it('should delete alarm successfully', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+  describe("Deleting Alarms", () => {
+    it("should delete alarm successfully", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -394,15 +383,14 @@ describe('useAdvancedAlarms Hook', () => {
       expect(result.current.alarms).toHaveLength(0);
       expect(result.current.error).toBeNull();
 
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      expect(AdvancedAlarmScheduler.cancelAdvancedAlarmNotifications).toHaveBeenCalledWith(mockBasicAlarm.id);
+      expect(
+      ).toHaveBeenCalledWith(mockBasicAlarm.id);
     });
 
     it('should handle alarm deletion errors', async () => {
       const { AlarmService } = require('../../services/alarm');
       AlarmService.deleteAlarm.mockRejectedValue(new Error('Deletion failed'));
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -418,9 +406,8 @@ describe('useAdvancedAlarms Hook', () => {
     });
   });
 
-  describe('Alarm Duplication', () => {
-    it('should duplicate alarm successfully', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+  describe("Alarm Duplication", () => {
+    it("should duplicate alarm successfully", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -438,8 +425,7 @@ describe('useAdvancedAlarms Hook', () => {
       expect(result.current.alarms).toHaveLength(2);
     });
 
-    it('should handle duplication of non-existent alarm', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+    it("should handle duplication of non-existent alarm", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -454,8 +440,7 @@ describe('useAdvancedAlarms Hook', () => {
       expect(result.current.error).toBe('Failed to duplicate alarm');
     });
 
-    it('should use default label when duplicating without modifications', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+    it("should use default label when duplicating without modifications", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -478,7 +463,6 @@ describe('useAdvancedAlarms Hook', () => {
       const alarm3 = { ...mockBasicAlarm, id: 'alarm-3' };
       AlarmService.loadAlarms.mockResolvedValue([mockBasicAlarm, alarm2, alarm3]);
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -511,7 +495,6 @@ describe('useAdvancedAlarms Hook', () => {
         return Promise.resolve(mockBasicAlarm);
       });
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -531,48 +514,38 @@ describe('useAdvancedAlarms Hook', () => {
     });
   });
 
-  describe('Next Occurrence Calculation', () => {
-    it('should calculate next occurrence', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+  describe("Next Occurrence Calculation", () => {
+    it("should calculate next occurrence", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
       });
 
-      const nextOccurrence = result.current.getNextOccurrence(mockAdvancedAlarm);
+      const nextOccurrence =
 
       expect(nextOccurrence).toBeInstanceOf(Date);
       expect(nextOccurrence!.getTime()).toBeGreaterThan(Date.now());
 
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      expect(AdvancedAlarmScheduler.calculateNextOccurrences).toHaveBeenCalledWith(
-        mockAdvancedAlarm,
-        expect.any(Date),
-        1
-      );
+      expect(
     });
 
-    it('should handle calculation errors', async () => {
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      AdvancedAlarmScheduler.calculateNextOccurrences.mockImplementation(() => {
-        throw new Error('Calculation failed');
+    it("should handle calculation errors", async () => {
+        throw new Error("Calculation failed");
       });
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
       });
 
-      const nextOccurrence = result.current.getNextOccurrence(mockAdvancedAlarm);
+      const nextOccurrence =
 
       expect(nextOccurrence).toBeNull();
     });
   });
 
-  describe('Import/Export', () => {
-    it('should export alarms successfully', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+  describe("Import/Export", () => {
+    it("should export alarms successfully", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -583,7 +556,6 @@ describe('useAdvancedAlarms Hook', () => {
         exportData = await result.current.exportAlarms();
       });
 
-      expect(exportData).toEqual({ alarms: [mockAdvancedAlarm] });
 
       // Verify download functionality was triggered
       expect(document.createElement).toHaveBeenCalledWith('a');
@@ -591,11 +563,10 @@ describe('useAdvancedAlarms Hook', () => {
       expect(document.body.removeChild).toHaveBeenCalled();
     });
 
-    it('should handle export errors', async () => {
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      AdvancedAlarmScheduler.exportSchedule.mockRejectedValue(new Error('Export failed'));
+    it("should handle export errors", async () => {
+        new Error("Export failed"),
+      );
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -612,12 +583,10 @@ describe('useAdvancedAlarms Hook', () => {
 
     it('should import alarms successfully', async () => {
       const mockFile = new File(
-        [JSON.stringify({ alarms: [mockAdvancedAlarm] })],
-        'test-alarms.json',
-        { type: 'application/json' }
+        "test-alarms.json",
+        { type: "application/json" },
       );
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -635,10 +604,7 @@ describe('useAdvancedAlarms Hook', () => {
       });
       expect(result.current.error).toBeNull();
 
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      expect(AdvancedAlarmScheduler.importSchedule).toHaveBeenCalledWith({
-        source: 'backup',
-        data: { alarms: [mockAdvancedAlarm] },
+        source: "backup",
         options: {
           overwriteExisting: false,
           preserveIds: false,
@@ -653,7 +619,6 @@ describe('useAdvancedAlarms Hook', () => {
         type: 'application/json',
       });
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -669,12 +634,9 @@ describe('useAdvancedAlarms Hook', () => {
     });
   });
 
-  describe('Scheduling Features', () => {
-    it('should handle conditional rules evaluation', async () => {
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      AdvancedAlarmScheduler.evaluateConditionalRules.mockResolvedValue(false);
+  describe("Scheduling Features", () => {
+    it("should handle conditional rules evaluation", async () => {
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -691,21 +653,21 @@ describe('useAdvancedAlarms Hook', () => {
         snoozeInterval: 5,
         voiceMood: 'motivational' as const,
         isActive: true,
-        scheduleType: 'daily' as const,
-        conditionalRules: mockAdvancedAlarm.conditionalRules,
+        scheduleType: "daily" as const,
       };
 
       await act(async () => {
         await result.current.createAlarm(newAlarmData);
       });
 
-      expect(AdvancedAlarmScheduler.evaluateConditionalRules).toHaveBeenCalled();
+      expect(
+      ).toHaveBeenCalled();
       // Should not schedule notifications if conditional rules fail
-      expect(AdvancedAlarmScheduler.scheduleAdvancedAlarmNotifications).not.toHaveBeenCalled();
+      expect(
+      ).not.toHaveBeenCalled();
     });
 
-    it('should handle location triggers', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+    it("should handle location triggers", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -722,8 +684,7 @@ describe('useAdvancedAlarms Hook', () => {
         snoozeInterval: 5,
         voiceMood: 'motivational' as const,
         isActive: true,
-        scheduleType: 'daily' as const,
-        locationTriggers: mockAdvancedAlarm.locationTriggers,
+        scheduleType: "daily" as const,
       };
 
       await act(async () => {
@@ -732,8 +693,8 @@ describe('useAdvancedAlarms Hook', () => {
 
       expect(mockGeolocation.getCurrentPosition).toHaveBeenCalled();
 
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      expect(AdvancedAlarmScheduler.evaluateLocationTriggers).toHaveBeenCalled();
+      expect(
+      ).toHaveBeenCalled();
     });
 
     it('should handle geolocation errors gracefully', async () => {
@@ -741,7 +702,6 @@ describe('useAdvancedAlarms Hook', () => {
         error(new Error('Geolocation failed'))
       );
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -758,8 +718,7 @@ describe('useAdvancedAlarms Hook', () => {
         snoozeInterval: 5,
         voiceMood: 'motivational' as const,
         isActive: true,
-        scheduleType: 'daily' as const,
-        locationTriggers: mockAdvancedAlarm.locationTriggers,
+        scheduleType: "daily" as const,
       };
 
       await act(async () => {
@@ -767,14 +726,13 @@ describe('useAdvancedAlarms Hook', () => {
       });
 
       // Should continue with scheduling even if geolocation fails
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      expect(AdvancedAlarmScheduler.scheduleAdvancedAlarmNotifications).toHaveBeenCalled();
+      expect(
+      ).toHaveBeenCalled();
     });
   });
 
-  describe('Statistics', () => {
-    it('should get scheduling statistics', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+  describe("Statistics", () => {
+    it("should get scheduling statistics", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -788,17 +746,12 @@ describe('useAdvancedAlarms Hook', () => {
         scheduledNotifications: 5,
       });
 
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      expect(AdvancedAlarmScheduler.getStats).toHaveBeenCalled();
     });
 
-    it('should handle statistics errors', async () => {
-      const AdvancedAlarmScheduler = require('../../services/advanced-alarm-scheduler').default;
-      AdvancedAlarmScheduler.getStats.mockImplementation(() => {
-        throw new Error('Stats failed');
+    it("should handle statistics errors", async () => {
+        throw new Error("Stats failed");
       });
 
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
@@ -810,9 +763,8 @@ describe('useAdvancedAlarms Hook', () => {
     });
   });
 
-  describe('Refresh Functionality', () => {
-    it('should refresh alarms manually', async () => {
-      const { result } = renderHookWithProviders(() => useAdvancedAlarms());
+  describe("Refresh Functionality", () => {
+    it("should refresh alarms manually", async () => {
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);

@@ -1,3 +1,5 @@
+/// <reference lib="dom" />
+import * as React from "react";
 /**
  * Keyboard Navigation Hook
  * React integration for the enhanced keyboard navigation system

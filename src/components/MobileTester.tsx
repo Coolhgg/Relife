@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useMobileTouch } from '../hooks/useMobileTouch';
-import { usePWA } from '../hooks/usePWA';
-import { useCapacitor } from '../hooks/useCapacitor';
-import { useMobilePerformance } from '../hooks/useMobilePerformance';
-import { useMobileAccessibilityContext } from './MobileAccessibilityProvider';
+/// <reference lib="dom" />
+import React, { useState, useEffect, useRef } from "react";
+import { useMobileTouch } from "../hooks/useMobileTouch";
+import { usePWA } from "../hooks/usePWA";
+import { useCapacitor } from "../hooks/useCapacitor";
+import { useMobilePerformance } from "../hooks/useMobilePerformance";
+import { useMobileAccessibilityContext } from "./MobileAccessibilityProvider";
 
 interface MobileTesterProps {
   isVisible: boolean;

@@ -1,7 +1,9 @@
-import { PushNotificationService } from '../push-notifications';
-import { Preferences } from '@capacitor/preferences';
-import { PushNotifications } from '@capacitor/push-notifications';
-import { Capacitor } from '@capacitor/core';
+import { expect, test, jest } from "@jest/globals";
+/// <reference lib="dom" />
+import { PushNotificationService } from "../push-notifications";
+import { Preferences } from "@capacitor/preferences";
+import { PushNotifications } from "@capacitor/push-notifications";
+import { Capacitor } from "@capacitor/core";
 
 // Mock Capacitor and its plugins
 jest.mock('@capacitor/core');

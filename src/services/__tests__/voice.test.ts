@@ -1,9 +1,14 @@
-import { VoiceService } from '../voice';
-import { PremiumVoiceService } from '../premium-voice';
-import type { Alarm, VoiceMood } from '../../types';
-import { formatTime } from '../../utils';
-import { createTestAlarm, createTestUser } from '../../__tests__/factories/core-factories';
-import { faker } from '@faker-js/faker';
+import { expect, test, jest } from "@jest/globals";
+/// <reference lib="dom" />
+import { VoiceService } from "../voice";
+import { PremiumVoiceService } from "../premium-voice";
+import type { Alarm, VoiceMood } from "../../types";
+import { formatTime } from "../../utils";
+import {
+  createTestAlarm,
+  createTestUser,
+} from "../../__tests__/factories/core-factories";
+import { faker } from "@faker-js/faker";
 
 // Mock dependencies
 jest.mock('../premium-voice');

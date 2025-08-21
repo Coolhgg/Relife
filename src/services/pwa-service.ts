@@ -1,5 +1,6 @@
-import { OfflineManager } from './offline-manager';
-import { NotificationService } from './notification';
+/// <reference lib="dom" />
+import { OfflineManager } from "./offline-manager";
+import { NotificationService } from "./notification";
 
 export interface PWACapabilities {
   serviceWorker: boolean;

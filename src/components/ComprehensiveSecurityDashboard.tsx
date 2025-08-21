@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Comprehensive Security Dashboard Component
 // Provides a unified interface for monitoring all alarm security features
 // Styled to match the Relife app's design system with glassmorphism and modern effects

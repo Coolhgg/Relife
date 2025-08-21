@@ -1,4 +1,6 @@
-import type { PersonalizationSettings, Theme, ThemeConfig } from '../types';
+/// <reference types="node" />
+/// <reference lib="dom" />
+import type { PersonalizationSettings, Theme, ThemeConfig } from "../types";
 
 export interface CloudSyncPreferences {
   theme: Theme;

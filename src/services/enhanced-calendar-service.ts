@@ -1,4 +1,3 @@
-import type { AdvancedAlarm, CalendarIntegration } from '../types';
 
 /**
  * Enhanced Calendar Integration Service
@@ -188,7 +187,8 @@ class EnhancedCalendarService {
   /**
    * Get smart alarm suggestions based on calendar events
    */
-  public async getSmartAlarmSuggestions(alarm: AdvancedAlarm): Promise<CalendarSuggestion[]> {
+  public async getSmartAlarmSuggestions(
+  ): Promise<CalendarSuggestion[]> {
     if (!this.config.enabled || !this.config.smartSuggestions.enabled) {
       return [];
     }
@@ -235,7 +235,9 @@ class EnhancedCalendarService {
   /**
    * Detect scheduling conflicts
    */
-  private async detectConflicts(alarm: AdvancedAlarm, alarmDate: Date): Promise<CalendarSuggestion[]> {
+  private async detectConflicts(
+    alarmDate: Date,
+  ): Promise<CalendarSuggestion[]> {
     const suggestions: CalendarSuggestion[] = [];
     const allEvents = this.getAllEvents();
 
@@ -284,7 +286,9 @@ class EnhancedCalendarService {
   /**
    * Suggest optimal wake time based on calendar
    */
-  private async suggestOptimalWakeTime(alarm: AdvancedAlarm, alarmDate: Date): Promise<CalendarSuggestion | null> {
+  private async suggestOptimalWakeTime(
+    alarmDate: Date,
+  ): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();
     const todayEvents = allEvents.filter(event => {
       const eventDate = new Date(event.start);
@@ -341,7 +345,9 @@ class EnhancedCalendarService {
   /**
    * Suggest commute-based adjustments
    */
-  private async suggestCommuteAdjustment(alarm: AdvancedAlarm, alarmDate: Date): Promise<CalendarSuggestion | null> {
+  private async suggestCommuteAdjustment(
+    alarmDate: Date,
+  ): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();
     const workEvents = allEvents.filter(event =>
       event.category === 'work' &&
@@ -394,7 +400,9 @@ class EnhancedCalendarService {
   /**
    * Suggest preparation time for important meetings
    */
-  private async suggestPreparationTime(alarm: AdvancedAlarm, alarmDate: Date): Promise<CalendarSuggestion | null> {
+  private async suggestPreparationTime(
+    alarmDate: Date,
+  ): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();
     const importantEvents = allEvents.filter(event =>
       event.importance === 'urgent' || event.importance === 'high'

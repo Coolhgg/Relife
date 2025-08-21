@@ -1,23 +1,29 @@
 // Feature Access Context for Relife Alarm App
 // Provides feature access state and controls throughout the React component tree
 
-import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
-import type { SubscriptionTier, FeatureAccess } from '../types/premium';
-import FeatureGateService from '../services/feature-gate-service';
-import SubscriptionService from '../services/subscription-service';
-import { ErrorHandler } from '../services/error-handler';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useCallback,
+} from "react";
+import FeatureGateService from "../services/feature-gate-service";
+import SubscriptionService from "../services/subscription-service";
+import { ErrorHandler } from "../services/error-handler";
 
 interface FeatureAccessContextValue {
   // State
   featureAccess: FeatureAccess | null;
-  userTier: SubscriptionTier;
   isLoading: boolean;
   error: string | null;
 
   // Feature checking
   hasFeatureAccess: (featureId: string) => boolean;
-  getFeatureUsage: (featureId: string) => { used: number; limit: number; remaining: number } | null;
-  getUpgradeRequirement: (featureId: string) => SubscriptionTier | null;
+  getFeatureUsage: (
+    featureId: string,
+  ) => { used: number; limit: number; remaining: number } | null;
 
   // Actions
   trackFeatureAttempt: (featureId: string, context?: Record<string, any>) => void;
@@ -25,8 +31,12 @@ interface FeatureAccessContextValue {
   grantTemporaryAccess: (featureId: string, durationMinutes: number, reason: string) => void;
 
   // Callbacks
-  onFeatureBlocked?: (featureId: string, requiredTier: SubscriptionTier) => void;
-  onUpgradeRequired?: (featureId: string, requiredTier: SubscriptionTier) => void;
+  onFeatureBlocked?: (
+    featureId: string,
+  ) => void;
+  onUpgradeRequired?: (
+    featureId: string,
+  ) => void;
 }
 
 const FeatureAccessContext = createContext<FeatureAccessContextValue | null>(null);
@@ -34,8 +44,12 @@ const FeatureAccessContext = createContext<FeatureAccessContextValue | null>(nul
 interface FeatureAccessProviderProps {
   children: ReactNode;
   userId: string;
-  onFeatureBlocked?: (featureId: string, requiredTier: SubscriptionTier) => void;
-  onUpgradeRequired?: (featureId: string, requiredTier: SubscriptionTier) => void;
+  onFeatureBlocked?: (
+    featureId: string,
+  ) => void;
+  onUpgradeRequired?: (
+    featureId: string,
+  ) => void;
   autoRefresh?: boolean;
   refreshInterval?: number;
 }
@@ -48,8 +62,9 @@ export function FeatureAccessProvider({
   autoRefresh = true,
   refreshInterval = 300000 // 5 minutes
 }: FeatureAccessProviderProps) {
-  const [featureAccess, setFeatureAccess] = useState<FeatureAccess | null>(null);
-  const [userTier, setUserTier] = useState<SubscriptionTier>('free');
+  const [featureAccess, setFeatureAccess] = useState<FeatureAccess | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -134,8 +149,8 @@ export function FeatureAccessProvider({
     };
   }, [featureAccess]);
 
-  const getUpgradeRequirement = useCallback((featureId: string): SubscriptionTier | null => {
-    if (!featureAccess) return null;
+  const getUpgradeRequirement = useCallback(
+      if (!featureAccess) return null;
 
     const feature = featureAccess.features[featureId];
     return feature?.upgradeRequired || null;
@@ -219,9 +234,13 @@ export function withFeatureAccess<P extends object>(
   WrappedComponent: React.ComponentType<P>,
   userId: string,
   options?: {
-    onFeatureBlocked?: (featureId: string, requiredTier: SubscriptionTier) => void;
-    onUpgradeRequired?: (featureId: string, requiredTier: SubscriptionTier) => void;
-  }
+    onFeatureBlocked?: (
+      featureId: string,
+    ) => void;
+    onUpgradeRequired?: (
+      featureId: string,
+    ) => void;
+  },
 ) {
   return function FeatureAccessWrappedComponent(props: P) {
     return (

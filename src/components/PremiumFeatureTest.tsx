@@ -18,19 +18,18 @@ import {
   RefreshCw,
   Shield,
   Lock,
-  Unlock
-} from 'lucide-react';
-import { cn } from '../lib/utils';
-import { PremiumService } from '../services/premium';
-import { premiumVoiceService } from '../services/premium-voice';
-import { nuclearModeService } from '../services/nuclear-mode';
-import { UpgradePrompt } from './UpgradePrompt';
-import { PremiumFeatureCard } from './PremiumFeatureCard';
-import { SubscriptionStatus } from './SubscriptionStatus';
-import { FeatureLockOverlay } from './FeatureLockOverlay';
-import { VoiceSelector } from './VoiceSelector';
-import { VoiceCloning } from './VoiceCloning';
-import type { SubscriptionTier, User, VoiceMood } from '../types';
+  Unlock,
+} from "lucide-react";
+import { cn } from "../lib/utils";
+import { PremiumService } from "../services/premium";
+import { premiumVoiceService } from "../services/premium-voice";
+import { nuclearModeService } from "../services/nuclear-mode";
+import { UpgradePrompt } from "./UpgradePrompt";
+import { PremiumFeatureCard } from "./PremiumFeatureCard";
+import { SubscriptionStatus } from "./SubscriptionStatus";
+import { FeatureLockOverlay } from "./FeatureLockOverlay";
+import { VoiceSelector } from "./VoiceSelector";
+import { VoiceCloning } from "./VoiceCloning";
 
 interface PremiumFeatureTestProps {
   user: User;
@@ -53,8 +52,6 @@ interface TestSuite {
 export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, className }) => {
   const [testResults, setTestResults] = useState<TestSuite[]>([]);
   const [isRunning, setIsRunning] = useState(false);
-  const [currentTier, setCurrentTier] = useState<SubscriptionTier>('free');
-  const [testTier, setTestTier] = useState<SubscriptionTier>('free');
 
   useEffect(() => {
     loadCurrentTier();
@@ -292,7 +289,6 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
     }
   };
 
-  const changeTierForTesting = async (tier: SubscriptionTier) => {
     try {
       await PremiumService.updateUserTier(user.id, tier);
       setTestTier(tier);
@@ -399,20 +395,21 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
           <div className="space-y-2">
             <h4 className="font-medium text-sm">Test Different Subscription Tiers:</h4>
             <div className="flex gap-2">
-              {(['free', 'premium', 'ultimate'] as SubscriptionTier[]).map((tier) => (
-                <Button
-                  key={tier}
-                  onClick={() => changeTierForTesting(tier)}
-                  variant={testTier === tier ? 'default' : 'outline'}
-                  size="sm"
-                  className="flex items-center gap-2"
-                >
-                  {tier === 'free' && <Shield className="w-3 h-3" />}
-                  {tier === 'premium' && <Crown className="w-3 h-3" />}
-                  {tier === 'ultimate' && <Star className="w-3 h-3" />}
-                  {tier.charAt(0).toUpperCase() + tier.slice(1)}
-                </Button>
-              ))}
+                (tier) => (
+                  <Button
+                    key={tier}
+                    onClick={() => changeTierForTesting(tier)}
+                    variant={testTier === tier ? "default" : "outline"}
+                    size="sm"
+                    className="flex items-center gap-2"
+                  >
+                    {tier === "free" && <Shield className="w-3 h-3" />}
+                    {tier === "premium" && <Crown className="w-3 h-3" />}
+                    {tier === "ultimate" && <Star className="w-3 h-3" />}
+                    {tier.charAt(0).toUpperCase() + tier.slice(1)}
+                  </Button>
+                ),
+              )}
             </div>
           </div>
         </CardContent>

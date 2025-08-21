@@ -1,11 +1,30 @@
 // Premium Subscription Types for Relife Alarm App
 // Comprehensive monetization system with subscription tiers, payments, and feature gating
 
-export type SubscriptionTier = 'free' | 'basic' | 'premium' | 'pro' | 'enterprise';
-export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'unpaid' | 'trialing' | 'incomplete' | 'incomplete_expired';
-export type BillingInterval = 'month' | 'year' | 'lifetime';
-export type PaymentStatus = 'succeeded' | 'pending' | 'failed' | 'canceled' | 'requires_action' | 'processing';
-export type RefundStatus = 'pending' | 'succeeded' | 'failed' | 'canceled';
+  | "free"
+  | "basic"
+  | "student"
+  | "premium"
+  | "pro"
+  | "ultimate"
+  | "lifetime";
+export type SubscriptionStatus =
+  | "active"
+  | "canceled"
+  | "past_due"
+  | "unpaid"
+  | "trialing"
+  | "incomplete"
+  | "incomplete_expired";
+export type BillingInterval = "month" | "year" | "lifetime";
+export type PaymentStatus =
+  | "succeeded"
+  | "pending"
+  | "failed"
+  | "canceled"
+  | "requires_action"
+  | "processing";
+export type RefundStatus = "pending" | "succeeded" | "failed" | "canceled";
 
 // Core Subscription Interface
 export interface Subscription {
@@ -13,7 +32,6 @@ export interface Subscription {
   userId: string;
   stripeSubscriptionId?: string;
   stripeCustomerId?: string;
-  tier: SubscriptionTier;
   status: SubscriptionStatus;
   billingInterval: BillingInterval;
   amount: number; // in cents
@@ -33,7 +51,6 @@ export interface Subscription {
 // Subscription Plans
 export interface SubscriptionPlan {
   id: string;
-  tier: SubscriptionTier;
   name: string;
   displayName: string;
   description: string;
@@ -96,7 +113,6 @@ export interface PremiumFeature {
   description: string;
   category: PremiumFeatureCategory;
   icon: string;
-  requiredTier: SubscriptionTier;
   isCore: boolean; // Core features are always available in the tier
   isAddon?: boolean; // Add-on features can be purchased separately
   addonPrice?: number;
@@ -258,7 +274,6 @@ export interface Discount {
   type: 'percentage' | 'fixed' | 'trial_extension';
   value: number; // percentage (0-100) or fixed amount in cents
   currency?: string;
-  applicableTiers: SubscriptionTier[];
   applicablePlans: string[]; // plan IDs
   minAmount?: number; // minimum purchase amount in cents
   maxUses?: number;
@@ -289,7 +304,6 @@ export interface Trial {
   id: string;
   userId: string;
   planId: string;
-  tier: SubscriptionTier;
   startDate: Date;
   endDate: Date;
   status: 'active' | 'expired' | 'converted' | 'canceled';
@@ -329,7 +343,6 @@ export interface ReferralProgram {
     currency?: string;
   };
   conditions: {
-    minSubscriptionTier: SubscriptionTier;
     validForDays: number;
     requiresPayment: boolean;
   };
@@ -360,9 +373,13 @@ export interface SubscriptionChange {
   id: string;
   subscriptionId: string;
   userId: string;
-  changeType: 'upgrade' | 'downgrade' | 'cancel' | 'reactivate' | 'pause' | 'resume';
-  fromTier: SubscriptionTier;
-  toTier: SubscriptionTier;
+  changeType:
+    | "upgrade"
+    | "downgrade"
+    | "cancel"
+    | "reactivate"
+    | "pause"
+    | "resume";
   fromPlanId: string;
   toPlanId: string;
   prorationAmount?: number; // in cents
@@ -390,14 +407,12 @@ export interface CancellationSurvey {
 // Feature Gating & Access Control
 export interface FeatureAccess {
   userId: string;
-  subscriptionTier: SubscriptionTier;
   features: {
     [featureId: string]: {
       hasAccess: boolean;
       usageLimit?: number;
       usageCount?: number;
       resetDate?: Date;
-      upgradeRequired?: SubscriptionTier;
     };
   };
   lastUpdated: Date;
@@ -405,7 +420,6 @@ export interface FeatureAccess {
 
 export interface FeatureGate {
   featureId: string;
-  requiredTier: SubscriptionTier;
   gracePeriodDays?: number; // Allow usage after downgrade for X days
   softLimit?: boolean; // Show warnings but allow usage
   redirectToUpgrade?: string; // URL to redirect for upgrade
@@ -434,7 +448,6 @@ export interface RevenueMetrics {
     growthRate: number;
   };
   byTier: {
-    [tier in SubscriptionTier]: {
       customers: number;
       revenue: number;
       churnRate: number;
@@ -599,7 +612,6 @@ export interface ApplePayConfig {
 
 // Export all types as a namespace for easy importing
 export namespace Premium {
-  export type Tier = SubscriptionTier;
   export type Status = SubscriptionStatus;
   export type Billing = BillingInterval;
   export type Payment = PaymentStatus;

@@ -20,7 +20,6 @@ import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import type {
-  AdvancedAlarm,
   RecurrencePattern,
   ConditionalRule,
   LocationTrigger,
@@ -28,34 +27,31 @@ import type {
   SeasonalAdjustment,
   CalendarIntegration,
   SchedulingConfig,
-  SunSchedule
-} from '../types/index';
-import AdvancedAlarmScheduler from '../services/advanced-alarm-scheduler';
+  SunSchedule,
+} from "../types/index";
 
-interface AdvancedAlarmSchedulingProps {
-  alarms: AdvancedAlarm[];
-  onCreateAlarm: (alarm: Omit<AdvancedAlarm, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  onUpdateAlarm: (id: string, updates: Partial<AdvancedAlarm>) => void;
+  onCreateAlarm: (
+  ) => void;
   onDeleteAlarm: (id: string) => void;
 }
 
-export function AdvancedAlarmScheduling({
   alarms,
   onCreateAlarm,
   onUpdateAlarm,
-  onDeleteAlarm
-}: AdvancedAlarmSchedulingProps) {
-  const [activeTab, setActiveTab] = useState<'alarms' | 'create' | 'settings' | 'bulk'>('alarms');
-  const [selectedAlarm, setSelectedAlarm] = useState<AdvancedAlarm | null>(null);
+  onDeleteAlarm,
+  const [activeTab, setActiveTab] = useState<
+    "alarms" | "create" | "settings" | "bulk"
+  >("alarms");
+    null,
+  );
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [config, setConfig] = useState<SchedulingConfig | null>(null);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['basic']));
 
   // Form state for creating/editing alarms
-  const [formData, setFormData] = useState<Partial<AdvancedAlarm>>({
-    time: '07:00',
-    label: 'New Advanced Alarm',
-    scheduleType: 'daily',
+    time: "07:00",
+    label: "New Advanced Alarm",
+    scheduleType: "daily",
     isActive: true,
     days: [1, 2, 3, 4, 5], // Weekdays
     sound: 'default',
@@ -71,7 +67,6 @@ export function AdvancedAlarmScheduling({
 
   const loadConfig = async () => {
     try {
-      const currentConfig = AdvancedAlarmScheduler.getConfig();
       setConfig(currentConfig);
     } catch (error) {
       console.error('Error loading config:', error);
@@ -91,7 +86,8 @@ export function AdvancedAlarmScheduling({
   const handleCreateAlarm = async () => {
     try {
       // Apply smart optimizations before creating
-      const optimizedAlarm = await AdvancedAlarmScheduler.applySmartOptimizations(formData as AdvancedAlarm);
+      const optimizedAlarm =
+        );
 
       onCreateAlarm({
         ...optimizedAlarm,
@@ -138,10 +134,12 @@ export function AdvancedAlarmScheduling({
     return types[type as keyof typeof types] || type;
   };
 
-  const getNextOccurrence = (alarm: AdvancedAlarm) => {
     try {
-      const occurrences = AdvancedAlarmScheduler.calculateNextOccurrences(alarm, new Date(), 1);
-      return occurrences[0] ? occurrences[0].toLocaleString() : 'Not scheduled';
+        alarm,
+        new Date(),
+        1,
+      );
+      return occurrences[0] ? occurrences[0].toLocaleString() : "Not scheduled";
     } catch (error) {
       return 'Calculation error';
     }
@@ -975,4 +973,3 @@ export function AdvancedAlarmScheduling({
   );
 }
 
-export default AdvancedAlarmScheduling;

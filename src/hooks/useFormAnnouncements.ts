@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // Form-specific screen reader announcement hook
 import { useCallback, useEffect, useRef } from 'react';
 import { useScreenReaderAnnouncements } from './useScreenReaderAnnouncements';

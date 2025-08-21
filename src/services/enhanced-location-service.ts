@@ -1,7 +1,6 @@
-import type { Location, LocationTrigger, AdvancedAlarm } from '../types/index';
-import { Geolocation, GeolocationPosition } from '@capacitor/geolocation';
-import { Preferences } from '@capacitor/preferences';
-import { scheduleLocalNotification } from './capacitor';
+import { Geolocation, GeolocationPosition } from "@capacitor/geolocation";
+import { Preferences } from "@capacitor/preferences";
+import { scheduleLocalNotification } from "./capacitor";
 
 const LOCATION_CONFIG_KEY = 'enhanced_location_config';
 const GEOFENCES_KEY = 'active_geofences';
@@ -574,7 +573,8 @@ export class EnhancedLocationService {
 
   // ===== LOCATION-BASED ALARM OPTIMIZATION =====
 
-  static async getLocationBasedRecommendations(alarm: AdvancedAlarm): Promise<string[]> {
+  static async getLocationBasedRecommendations(
+  ): Promise<string[]> {
     const recommendations: string[] = [];
 
     try {

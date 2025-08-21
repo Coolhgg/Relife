@@ -1,6 +1,7 @@
-import '@testing-library/jest-dom';
-import { vi, afterEach } from 'vitest';
-import { cleanup } from '@testing-library/react';
+/// <reference lib="dom" />
+import "@testing-library/jest-dom";
+import { vi, afterEach } from "vitest";
+import { cleanup } from "@testing-library/react";
 
 // Import MSW setup for API mocking
 import './__tests__/mocks/msw-setup';

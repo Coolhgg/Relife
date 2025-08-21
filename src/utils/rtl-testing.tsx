@@ -1,3 +1,5 @@
+/// <reference lib="dom" />
+import * as React from "react";
 /**
  * RTL testing utilities for validating direction-aware components
  */

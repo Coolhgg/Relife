@@ -1,11 +1,21 @@
-import type { Alarm, VoiceMood, AlarmEvent, AlarmInstance, User } from '../types';
-import { generateAlarmId, getNextAlarmTime } from '../utils';
-import { scheduleLocalNotification, cancelLocalNotification } from './capacitor';
-import { alarmBattleIntegration } from './alarm-battle-integration';
-import AppAnalyticsService from './app-analytics';
-import SecureAlarmStorageService from './secure-alarm-storage';
-import SecurityService from './security';
-import { ErrorHandler } from './error-handler';
+/// <reference types="node" />
+import type {
+  Alarm,
+  VoiceMood,
+  AlarmEvent,
+  AlarmInstance,
+  User,
+} from "../types";
+import { generateAlarmId, getNextAlarmTime } from "../utils";
+import {
+  scheduleLocalNotification,
+  cancelLocalNotification,
+} from "./capacitor";
+import { alarmBattleIntegration } from "./alarm-battle-integration";
+import AppAnalyticsService from "./app-analytics";
+import SecureAlarmStorageService from "./secure-alarm-storage";
+import SecurityService from "./security";
+import { ErrorHandler } from "./error-handler";
 
 export class AlarmService {
   private static alarms: Alarm[] = [];

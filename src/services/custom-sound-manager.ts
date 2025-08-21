@@ -1,7 +1,8 @@
-import type { CustomSound, SoundCategory } from '../types';
-import { AudioManager } from './audio-manager';
-import { supabase } from './supabase';
-import { ErrorHandler } from './error-handler';
+/// <reference lib="dom" />
+import type { CustomSound, SoundCategory } from "../types";
+import { AudioManager } from "./audio-manager";
+import { supabase } from "./supabase";
+import { ErrorHandler } from "./error-handler";
 
 export interface SoundUploadResult {
   success: boolean;

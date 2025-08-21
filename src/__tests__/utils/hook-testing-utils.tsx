@@ -129,7 +129,7 @@ export interface CustomRenderHookOptions<TProps> extends Omit<RenderHookOptions<
   wrapper?: React.ComponentType<{ children: ReactNode }>;
 }
 
-export function renderHookWithProviders<TResult, TProps>(
+export function _renderHookWithProviders<TResult, TProps>(
   render: (initialProps: TProps) => TResult,
   options: CustomRenderHookOptions<TProps> = {}
 ): RenderHookResult<TResult, TProps> {
@@ -184,7 +184,10 @@ export function renderHookWithProviders<TResult, TProps>(
 /**
  * Wait for hook to finish async operations
  */
-export const waitForHook = async (callback: () => void, timeout = 1000) => {
+export const _waitForHook = async (
+  callback: () => void,
+  timeout: number = 1000,
+) => {
   await act(async () => {
     callback();
     // Allow time for async operations
@@ -195,7 +198,7 @@ export const waitForHook = async (callback: () => void, timeout = 1000) => {
 /**
  * Mock localStorage for testing
  */
-export const mockLocalStorage = (() => {
+export const _mockLocalStorage = (() => {
   let store: Record<string, string> = {};
 
   return {
@@ -222,7 +225,7 @@ export const mockLocalStorage = (() => {
 /**
  * Mock sessionStorage for testing
  */
-export const mockSessionStorage = (() => {
+export const _mockSessionStorage = (() => {
   let store: Record<string, string> = {};
 
   return {
@@ -248,43 +251,48 @@ export const mockSessionStorage = (() => {
 /**
  * Mock geolocation API
  */
-export const mockGeolocation = {
-  getCurrentPosition: jest.fn((success, error) => {
-    success({
-      coords: {
-        latitude: 40.7128,
-        longitude: -74.0060,
-        accuracy: 10,
-        altitude: null,
-        altitudeAccuracy: null,
-        heading: null,
-        speed: null,
-      },
-      timestamp: Date.now(),
-    });
-  }),
-  watchPosition: jest.fn(() => 1),
-  clearWatch: jest.fn(),
+export const _mockGeolocation = {
+  getCurrentPosition: vi.fn(
+    (success: PositionCallback, error?: PositionErrorCallback) => {
+      success({
+        coords: {
+          latitude: 40.7128,
+          longitude: -74.006,
+          accuracy: 10,
+          altitude: null,
+          altitudeAccuracy: null,
+          heading: null,
+          speed: null,
+          toJSON: () => ({}),
+        },
+        timestamp: Date.now(),
+      });
+    },
+  ),
+  watchPosition: vi.fn(() => 1),
+  clearWatch: vi.fn(),
 };
 
 /**
  * Mock notification API
  */
-export const mockNotification = {
-  permission: 'granted' as NotificationPermission,
-  requestPermission: jest.fn(() => Promise.resolve('granted' as NotificationPermission)),
+export const _mockNotification = {
+  permission: "granted" as NotificationPermission,
+  requestPermission: vi.fn(() =>
+    Promise.resolve("granted" as NotificationPermission),
+  ),
 };
 
 /**
  * Mock audio context and audio elements
  */
-export const mockAudio = {
-  AudioContext: jest.fn(() => ({
-    createBuffer: jest.fn(),
-    createBufferSource: jest.fn(() => ({
-      connect: jest.fn(),
-      start: jest.fn(),
-      stop: jest.fn(),
+export const _mockAudio = {
+  AudioContext: vi.fn(() => ({
+    createBuffer: vi.fn(),
+    createBufferSource: vi.fn(() => ({
+      connect: vi.fn(),
+      start: vi.fn(),
+      stop: vi.fn(),
     })),
     decodeAudioData: jest.fn(() => Promise.resolve({})),
     destination: {},
@@ -307,7 +315,7 @@ export const mockAudio = {
 /**
  * Setup all global mocks for testing environment
  */
-export const setupGlobalMocks = () => {
+export const _setupGlobalMocks = () => {
   // Setup storage mocks
   Object.defineProperty(window, 'localStorage', {
     value: mockLocalStorage,
@@ -381,8 +389,8 @@ export const setupGlobalMocks = () => {
 /**
  * Clear all mocks between tests
  */
-export const clearAllMocks = () => {
-  jest.clearAllMocks();
+export const _clearAllMocks = () => {
+  vi.clearAllMocks();
   mockLocalStorage.clear();
   mockSessionStorage.clear();
 
@@ -402,22 +410,22 @@ export const clearAllMocks = () => {
 };
 
 // Test data factories
-export const createMockUser = (overrides = {}) => ({
-  id: 'test-user-123',
-  email: 'test@example.com',
-  name: 'Test User',
-  role: 'user',
+export const _createMockUser = (overrides: Record<string, any> = {}) => ({
+  id: "test-user-123",
+  email: "test@example.com",
+  name: "Test User",
+  role: "user",
   preferences: {},
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
   ...overrides,
 });
 
-export const createMockAlarm = (overrides = {}) => ({
-  id: 'test-alarm-123',
-  userId: 'test-user-123',
-  time: '07:00',
-  label: 'Test Alarm',
+export const _createMockAlarm = (overrides: Record<string, any> = {}) => ({
+  id: "test-alarm-123",
+  userId: "test-user-123",
+  time: "07:00",
+  label: "Test Alarm",
   isActive: true,
   days: [1, 2, 3, 4, 5],
   dayNames: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
@@ -433,9 +441,11 @@ export const createMockAlarm = (overrides = {}) => ({
   ...overrides,
 });
 
-export const createMockSubscription = (overrides = {}) => ({
-  id: 'sub_test123',
-  status: 'active',
+export const _createMockSubscription = (
+  overrides: Record<string, any> = {},
+) => ({
+  id: "sub_test123",
+  status: "active",
   current_period_start: Math.floor(Date.now() / 1000),
   current_period_end: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60),
   plan: {

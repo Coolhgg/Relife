@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Performance Analytics Integration Service
 // Provides comprehensive performance monitoring with Sentry and PostHog integration
 

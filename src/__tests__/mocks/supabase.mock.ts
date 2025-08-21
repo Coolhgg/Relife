@@ -508,7 +508,7 @@ const mockSupabaseClient = {
 };
 
 // Factory function for creating fresh mocks
-export const createMockSupabase = (url: string, anonKey: string) => {
+export const _createMockSupabase = (url: string, anonKey: string) => {
   console.log(`🗄️ Mock Supabase client created: ${url}`);
   return mockSupabaseClient;
 };

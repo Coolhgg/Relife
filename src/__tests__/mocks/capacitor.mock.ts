@@ -61,7 +61,7 @@ let mockDeviceState = {
 };
 
 // Core Capacitor mock
-export const Capacitor = {
+export const _Capacitor = {
   // Platform detection
   getPlatform: jest.fn(() => {
     console.log(`📱 Mock Capacitor getPlatform: ${mockDeviceState.platform}`);
@@ -117,9 +117,9 @@ export const Capacitor = {
 };
 
 // Device plugin
-export const Device = {
-  getInfo: jest.fn(() => {
-    console.log('📱 Mock Device getInfo');
+export const _Device = {
+  getInfo: vi.fn(() => {
+    console.log("📱 Mock Device getInfo");
     return Promise.resolve({
       ...mockDeviceState.deviceInfo,
       name: 'Mock Device',
@@ -220,9 +220,9 @@ export const LocalNotifications = {
 };
 
 // Push Notifications plugin
-export const PushNotifications = {
-  register: jest.fn(() => {
-    console.log('📨 Mock PushNotifications register');
+export const _PushNotifications = {
+  register: vi.fn(() => {
+    console.log("📨 Mock PushNotifications register");
     return Promise.resolve();
   }),
 
@@ -266,9 +266,9 @@ export const PushNotifications = {
 };
 
 // Haptics plugin
-export const Haptics = {
-  impact: jest.fn((options?: { style?: 'LIGHT' | 'MEDIUM' | 'HEAVY' }) => {
-    console.log('📳 Mock Haptics impact', options?.style || 'MEDIUM');
+export const _Haptics = {
+  impact: vi.fn((options?: { style?: "LIGHT" | "MEDIUM" | "HEAVY" }) => {
+    console.log("📳 Mock Haptics impact", options?.style || "MEDIUM");
     return Promise.resolve();
   }),
 
@@ -299,9 +299,9 @@ export const Haptics = {
 };
 
 // Geolocation plugin
-export const Geolocation = {
-  getCurrentPosition: jest.fn((options?: any) => {
-    console.log('🌍 Mock Geolocation getCurrentPosition', options);
+export const _Geolocation = {
+  getCurrentPosition: vi.fn((options?: any) => {
+    console.log("🌍 Mock Geolocation getCurrentPosition", options);
     return Promise.resolve({
       timestamp: Date.now(),
       coords: {
@@ -378,9 +378,9 @@ export const Geolocation = {
 };
 
 // Preferences plugin (for local storage)
-export const Preferences = {
-  configure: jest.fn((options: { group?: string }) => {
-    console.log('⚙️ Mock Preferences configure', options);
+export const _Preferences = {
+  configure: vi.fn((options: { group?: string }) => {
+    console.log("⚙️ Mock Preferences configure", options);
     return Promise.resolve();
   }),
 
@@ -416,8 +416,8 @@ export const Preferences = {
 };
 
 // Status Bar plugin
-export const StatusBar = {
-  setStyle: jest.fn((options: { style: 'LIGHT' | 'DARK' | 'DEFAULT' }) => {
+export const _StatusBar = {
+  setStyle: vi.fn((options: { style: "LIGHT" | "DARK" | "DEFAULT" }) => {
     console.log(`🎨 Mock StatusBar setStyle: ${options.style}`);
     return Promise.resolve();
   }),
@@ -444,9 +444,21 @@ export const StatusBar = {
 };
 
 // Splash Screen plugin
-export const SplashScreen = {
-  show: jest.fn((options?: { showDuration?: number; fadeInDuration?: number; fadeOutDuration?: number; autoHide?: boolean }) => {
-    console.log('💫 Mock SplashScreen show', options);
+export const _SplashScreen = {
+  show: vi.fn(
+    (options?: {
+      showDuration?: number;
+      fadeInDuration?: number;
+      fadeOutDuration?: number;
+      autoHide?: boolean;
+    }) => {
+      console.log("💫 Mock SplashScreen show", options);
+      return Promise.resolve();
+    },
+  ),
+
+  hide: vi.fn((options?: { fadeOutDuration?: number }) => {
+    console.log("🙈 Mock SplashScreen hide", options);
     return Promise.resolve();
   }),
 
@@ -488,9 +500,9 @@ export const _mockCapacitorSetup = {
 };
 
 // Background Mode plugin (for alarm reliability)
-export const BackgroundMode = {
-  enable: jest.fn(() => {
-    console.log('🌙 Mock BackgroundMode enable');
+export const _BackgroundMode = {
+  enable: vi.fn(() => {
+    console.log("🌙 Mock BackgroundMode enable");
     mockBackgroundState.isEnabled = true;
     mockBackgroundState.isActive = true;
     return Promise.resolve();
@@ -525,9 +537,9 @@ export const BackgroundMode = {
 };
 
 // Keep Awake plugin (prevents device sleep during alarms)
-export const KeepAwake = {
-  keepAwake: jest.fn(() => {
-    console.log('👁️ Mock KeepAwake keepAwake');
+export const _KeepAwake = {
+  keepAwake: vi.fn(() => {
+    console.log("👁️ Mock KeepAwake keepAwake");
     mockBackgroundState.keepAwakeActive = true;
     return Promise.resolve();
   }),
@@ -550,17 +562,24 @@ export const KeepAwake = {
 };
 
 // Audio Manager plugin (for alarm sounds and audio playback)
-export const AudioManager = {
-  preload: jest.fn((options: { assetId: string; assetPath: string; audioChannelNum?: number; isUrl?: boolean }) => {
-    console.log(`🎧 Mock AudioManager preload: ${options.assetId}`);
-    mockAudioState.loadedSounds.set(options.assetId, {
-      assetId: options.assetId,
-      assetPath: options.assetPath,
-      duration: 30, // Mock duration
-      isLoaded: true
-    });
-    return Promise.resolve({ assetId: options.assetId });
-  }),
+export const _AudioManager = {
+  preload: vi.fn(
+    (options: {
+      assetId: string;
+      assetPath: string;
+      audioChannelNum?: number;
+      isUrl?: boolean;
+    }) => {
+      console.log(`🎧 Mock AudioManager preload: ${options.assetId}`);
+      mockAudioState.loadedSounds.set(options.assetId, {
+        assetId: options.assetId,
+        assetPath: options.assetPath,
+        duration: 30, // Mock duration
+        isLoaded: true,
+      });
+      return Promise.resolve({ assetId: options.assetId });
+    },
+  ),
 
   play: jest.fn((options: { assetId: string; time?: number }) => {
     console.log(`▶️ Mock AudioManager play: ${options.assetId}`);
@@ -640,13 +659,13 @@ export const AudioManager = {
 };
 
 // Web Audio API mock for browser testing
-export const WebAudioAPI = {
-  createAudioContext: jest.fn(() => ({
-    createOscillator: jest.fn(() => ({
-      connect: jest.fn(),
-      start: jest.fn(),
-      stop: jest.fn(),
-      frequency: { value: 440 }
+export const _WebAudioAPI = {
+  createAudioContext: vi.fn(() => ({
+    createOscillator: vi.fn(() => ({
+      connect: vi.fn(),
+      start: vi.fn(),
+      stop: vi.fn(),
+      frequency: { value: 440 },
     })),
     createGain: jest.fn(() => ({
       connect: jest.fn(),
@@ -747,7 +766,7 @@ const enhancedLocalNotifications = {
 };
 
 // Replace LocalNotifications with enhanced version
-export const LocalNotifications = enhancedLocalNotifications;
+export const _LocalNotifications = enhancedLocalNotifications;
 
 // Global mock setup methods (enhanced)
 export const _mockCapacitorSetup = {

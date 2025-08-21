@@ -1,9 +1,16 @@
-import { renderHook, act } from '@testing-library/react';
-import React from 'react';
-import { usePWA, useInstallPrompt, useServiceWorkerUpdate, usePushNotifications } from '../../usePWA';
-import { AnalyticsProvider } from '../../../components/AnalyticsProvider';
-import { FeatureAccessProvider } from '../../../contexts/FeatureAccessContext';
-import { LanguageProvider } from '../../../contexts/LanguageContext';
+import { expect, test, jest } from "@jest/globals";
+/// <reference lib="dom" />
+import { renderHook, act } from "@testing-library/react";
+import React from "react";
+import {
+  usePWA,
+  useInstallPrompt,
+  useServiceWorkerUpdate,
+  usePushNotifications,
+} from "../../usePWA";
+import { AnalyticsProvider } from "../../../components/AnalyticsProvider";
+import { FeatureAccessProvider } from "../../../contexts/FeatureAccessContext";
+import { LanguageProvider } from "../../../contexts/LanguageContext";
 
 // Mock PWA Manager Service
 jest.mock('../../../services/pwa-manager', () => ({

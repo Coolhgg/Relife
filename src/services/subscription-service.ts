@@ -4,7 +4,6 @@
 import type {
   Subscription,
   SubscriptionPlan,
-  SubscriptionTier,
   FeatureAccess,
   BillingUsage,
   Trial,
@@ -133,7 +132,6 @@ class SubscriptionService {
   /**
    * Get user's subscription tier
    */
-  public async getUserTier(userId: string): Promise<SubscriptionTier> {
     try {
       const subscription = await this.getUserSubscription(userId);
 
@@ -715,8 +713,14 @@ class SubscriptionService {
     });
   }
 
-  private checkTierAccess(userTier: SubscriptionTier, requiredTier: SubscriptionTier): boolean {
-    const tierHierarchy: SubscriptionTier[] = ['free', 'basic', 'premium', 'pro', 'enterprise'];
+  private checkTierAccess(
+  ): boolean {
+      "free",
+      "basic",
+      "premium",
+      "pro",
+      "enterprise",
+    ];
     const userLevel = tierHierarchy.indexOf(userTier);
     const requiredLevel = tierHierarchy.indexOf(requiredTier);
     return userLevel >= requiredLevel;

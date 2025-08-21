@@ -1,16 +1,14 @@
 // Feature Utility Components for Relife Alarm App
 // Additional utility components for feature gating and premium features
 
-import React, { ReactNode } from 'react';
-import { Shield, Star, Lock, TrendingUp, Users, Zap } from 'lucide-react';
-import { useFeatureAccessContext } from '../../contexts/FeatureAccessContext';
-import type { SubscriptionTier } from '../../types/premium';
+import React, { ReactNode } from "react";
+import { Shield, Star, Lock, TrendingUp, Users, Zap } from "lucide-react";
+import { useFeatureAccessContext } from "../../contexts/FeatureAccessContext";
 
 // Feature Badge Component
 interface FeatureBadgeProps {
-  tier: SubscriptionTier;
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'subtle' | 'prominent';
+  size?: "sm" | "md" | "lg";
+  variant?: "subtle" | "prominent";
   className?: string;
 }
 
@@ -77,15 +75,24 @@ export function FeatureBadge({ tier, size = 'md', variant = 'subtle', className 
 
 // Tier Comparison Component
 interface TierComparisonProps {
-  currentTier: SubscriptionTier;
-  targetTier: SubscriptionTier;
   features?: string[];
   className?: string;
 }
 
-export function TierComparison({ currentTier, targetTier, features = [], className = '' }: TierComparisonProps) {
-  const tierHierarchy: SubscriptionTier[] = ['free', 'basic', 'premium', 'pro', 'enterprise'];
-  const isUpgrade = tierHierarchy.indexOf(targetTier) > tierHierarchy.indexOf(currentTier);
+export function TierComparison({
+  currentTier,
+  targetTier,
+  features = [],
+  className = "",
+}: TierComparisonProps) {
+    "free",
+    "basic",
+    "premium",
+    "pro",
+    "enterprise",
+  ];
+  const isUpgrade =
+    tierHierarchy.indexOf(targetTier) > tierHierarchy.indexOf(currentTier);
 
   const getNewFeatures = () => {
     // This would ideally come from a feature service
@@ -194,7 +201,6 @@ interface FeatureHighlightProps {
   title: string;
   description: string;
   icon?: React.ComponentType<{ className?: string }>;
-  tier: SubscriptionTier;
   comingSoon?: boolean;
   onLearnMore?: () => void;
   className?: string;

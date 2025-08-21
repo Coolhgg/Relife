@@ -1,7 +1,12 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { criticalPreloader } from '../services/critical-preloader';
-import type { Alarm } from '../types';
-import type { CriticalAsset, PreloadStats, PreloadStrategy } from '../services/critical-preloader';
+/// <reference types="node" />
+import { useState, useEffect, useCallback, useRef } from "react";
+import { criticalPreloader } from "../services/critical-preloader";
+import type { Alarm } from "../types";
+import type {
+  CriticalAsset,
+  PreloadStats,
+  PreloadStrategy,
+} from "../services/critical-preloader";
 
 export interface CriticalPreloadingState {
   isAnalyzing: boolean;

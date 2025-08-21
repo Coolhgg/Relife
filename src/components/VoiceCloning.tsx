@@ -1,4 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
+/// <reference types="node" />
+import React, { useState, useRef, useCallback } from "react";
 import {
   Mic,
   Upload,

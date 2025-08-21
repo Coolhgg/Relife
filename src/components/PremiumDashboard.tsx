@@ -16,14 +16,13 @@ import {
   ArrowRight,
   Clock,
   Calendar,
-  Users
-} from 'lucide-react';
-import { PremiumUsageTracker } from './PremiumUsageTracker';
-import { PremiumGate } from './PremiumGate';
-import { SubscriptionModal } from './SubscriptionModal';
-import { SubscriptionService } from '../services/subscription';
-import { PremiumVoiceService } from '../services/premium-voice';
-import type { SubscriptionTier, PremiumFeatureAccess } from '../types';
+  Users,
+} from "lucide-react";
+import { PremiumUsageTracker } from "./PremiumUsageTracker";
+import { PremiumGate } from "./PremiumGate";
+import { SubscriptionModal } from "./SubscriptionModal";
+import { SubscriptionService } from "../services/subscription";
+import { PremiumVoiceService } from "../services/premium-voice";
 
 interface PremiumDashboardProps {
   userId: string;
@@ -31,7 +30,6 @@ interface PremiumDashboardProps {
 }
 
 interface DashboardState {
-  tier: SubscriptionTier;
   featureAccess: PremiumFeatureAccess;
   trialDaysRemaining: number;
   isTrialing: boolean;

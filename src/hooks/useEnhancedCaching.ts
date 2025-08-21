@@ -1,7 +1,13 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { enhancedCacheManager } from '../services/enhanced-cache-manager';
-import type { CacheStats, CachePolicy, CacheWarmingConfig, CacheEntry } from '../services/enhanced-cache-manager';
-import type { CustomSound } from '../services/types/media';
+/// <reference types="node" />
+import { useState, useEffect, useCallback, useRef } from "react";
+import { enhancedCacheManager } from "../services/enhanced-cache-manager";
+import type {
+  CacheStats,
+  CachePolicy,
+  CacheWarmingConfig,
+  CacheEntry,
+} from "../services/enhanced-cache-manager";
+import type { CustomSound } from "../services/types/media";
 
 export interface CacheState {
   stats: CacheStats;

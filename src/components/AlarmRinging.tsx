@@ -1,18 +1,33 @@
-import React from 'react';
-import { useState, useEffect, useRef } from 'react';
-import { AlertCircle, Volume2, Mic, MicOff, RotateCcw, Square, Target } from 'lucide-react';
-import type { Alarm, User } from '../types';
-import { formatTime, getVoiceMoodConfig } from '../utils';
-import { vibrate } from '../services/capacitor';
-import { VoiceService } from '../services/voice-pro';
-import { VoiceRecognitionService, type VoiceCommand } from '../services/voice-recognition';
-import { VoiceServiceEnhanced } from '../services/voice-enhanced';
-import { CustomSoundManager } from '../services/custom-sound-manager';
-import { AudioManager } from '../services/audio-manager';
-import { NuclearModeChallenge } from './NuclearModeChallenge';
-import { PremiumService } from '../services/premium';
-import { nuclearModeService } from '../services/nuclear-mode';
-import type { NuclearModeSession, NuclearModeChallenge as Challenge } from '../types';
+/// <reference types="node" />
+import React from "react";
+import { useState, useEffect, useRef } from "react";
+import {
+  AlertCircle,
+  Volume2,
+  Mic,
+  MicOff,
+  RotateCcw,
+  Square,
+  Target,
+} from "lucide-react";
+import type { Alarm, User } from "../types";
+import { formatTime, getVoiceMoodConfig } from "../utils";
+import { vibrate } from "../services/capacitor";
+import { VoiceService } from "../services/voice-pro";
+import {
+  VoiceRecognitionService,
+  type VoiceCommand,
+} from "../services/voice-recognition";
+import { VoiceServiceEnhanced } from "../services/voice-enhanced";
+import { CustomSoundManager } from "../services/custom-sound-manager";
+import { AudioManager } from "../services/audio-manager";
+import { NuclearModeChallenge } from "./NuclearModeChallenge";
+import { PremiumService } from "../services/premium";
+import { nuclearModeService } from "../services/nuclear-mode";
+import type {
+  NuclearModeSession,
+  NuclearModeChallenge as Challenge,
+} from "../types";
 
 // Web Speech API type declarations
 interface SpeechRecognitionEvent extends Event {

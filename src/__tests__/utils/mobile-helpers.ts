@@ -1,8 +1,9 @@
-import { fireEvent, waitFor, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+/// <reference lib="dom" />
+import { fireEvent, waitFor, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 // Device orientation utilities
-export const orientation = {
+export const _orientation = {
   setPortrait: () => {
     Object.defineProperty(screen, 'orientation', {
       writable: true,
@@ -42,8 +43,12 @@ export const orientation = {
 };
 
 // Touch gesture utilities
-export const gestures = {
-  swipe: async (element: HTMLElement, direction: 'left' | 'right' | 'up' | 'down', distance: number = 100) => {
+export const _gestures = {
+  swipe: async (
+    element: HTMLElement,
+    direction: "left" | "right" | "up" | "down",
+    distance: number = 100,
+  ) => {
     const rect = element.getBoundingClientRect();
     const startX = rect.left + rect.width / 2;
     const startY = rect.top + rect.height / 2;
@@ -122,7 +127,7 @@ export const gestures = {
 };
 
 // PWA utilities
-export const pwa = {
+export const _pwa = {
   mockInstallPrompt: () => {
     const mockInstallPrompt = {
       prompt: jest.fn(),
@@ -180,7 +185,7 @@ export const pwa = {
 };
 
 // Device API mocks
-export const deviceAPIs = {
+export const _deviceAPIs = {
   mockVibration: () => {
     const mockVibrate = jest.fn();
     Object.defineProperty(navigator, 'vibrate', {
@@ -243,7 +248,7 @@ export const deviceAPIs = {
 };
 
 // Network condition simulation
-export const network = {
+export const _network = {
   mockSlowConnection: () => {
     Object.defineProperty(navigator, 'connection', {
       writable: true,
@@ -282,7 +287,7 @@ export const network = {
 };
 
 // Mobile viewport utilities
-export const viewport = {
+export const _viewport = {
   setMobileViewport: (width: number = 375, height: number = 667) => {
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
@@ -317,7 +322,7 @@ export const viewport = {
 };
 
 // Mobile-specific testing helpers
-export const mobileHelpers = {
+export const _mobileHelpers = {
   expectResponsiveDesign: async (element: HTMLElement) => {
     const initialStyles = window.getComputedStyle(element);
 

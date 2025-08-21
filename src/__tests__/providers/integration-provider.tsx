@@ -295,7 +295,7 @@ export const IntegrationTestProvider: React.FC<{
 // INTEGRATION SCENARIOS
 // ===============================
 
-export const integrationScenarios = {
+export const _integrationScenarios = {
   // New user just signed up
   newUser: {
     user: {
@@ -457,7 +457,7 @@ export const integrationScenarios = {
 // INTEGRATION RENDER FUNCTION
 // ===============================
 
-export const renderWithIntegration = (
+export const _renderWithIntegration = (
   ui: React.ReactElement,
   options: IntegrationTestOptions & RenderOptions = {}
 ) => {
@@ -478,7 +478,7 @@ export const renderWithIntegration = (
 };
 
 // Helper function to render with predefined scenarios
-export const renderWithIntegrationScenario = (
+export const _renderWithIntegrationScenario = (
   ui: React.ReactElement,
   scenario: keyof typeof integrationScenarios,
   additionalOptions: IntegrationTestOptions = {}

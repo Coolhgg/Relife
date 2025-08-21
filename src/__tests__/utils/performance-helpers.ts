@@ -41,7 +41,7 @@ export interface PerformanceBenchmark {
 }
 
 // Core performance measurement utilities
-export const performanceCore = {
+export const _performanceCore = {
   // Enhanced performance marking with metadata
   mark: (name: string, metadata?: Record<string, any>): PerformanceMark => {
     const startTime = performance.now();
@@ -154,7 +154,7 @@ export const performanceCore = {
 };
 
 // React component performance testing
-export const reactPerformance = {
+export const _reactPerformance = {
   // Measure component render performance
   measureRender: async (
     renderComponent: () => void | Promise<void>,
@@ -252,7 +252,7 @@ export const reactPerformance = {
 };
 
 // Memory testing utilities
-export const memoryTesting = {
+export const _memoryTesting = {
   // Take memory snapshot
   snapshot: (label?: string): MemorySnapshot => {
     const memory = (performance as any).memory || {
@@ -355,7 +355,7 @@ export const memoryTesting = {
 };
 
 // Bundle size and loading performance
-export const bundlePerformance = {
+export const _bundlePerformance = {
   // Measure resource loading times
   measureResourceLoading: (): Promise<Array<{
     name: string;
@@ -431,7 +431,7 @@ export const bundlePerformance = {
 };
 
 // Performance testing assertions
-export const performanceAssertions = {
+export const _performanceAssertions = {
   // Assert render time is within limit
   expectRenderTimeWithin: (actualTime: number, maxTime: number, componentName?: string) => {
     const message = componentName
@@ -473,7 +473,7 @@ export const performanceAssertions = {
 };
 
 // Export grouped utilities
-export const performanceHelpers = {
+export const _performanceHelpers = {
   core: performanceCore,
   react: reactPerformance,
   memory: memoryTesting,

@@ -1,6 +1,10 @@
-import { EnhancedSmartAlarmScheduler, type EnhancedSmartAlarm } from './enhanced-smart-alarm-scheduler';
-import { SleepAnalysisService } from './sleep-analysis';
-import { AlarmService } from './alarm';
+/// <reference types="node" />
+import {
+  EnhancedSmartAlarmScheduler,
+  type EnhancedSmartAlarm,
+} from "./enhanced-smart-alarm-scheduler";
+import { SleepAnalysisService } from "./sleep-analysis";
+import { AlarmService } from "./alarm";
 
 export interface RealTimeAdaptationConfig {
   enabled: boolean;

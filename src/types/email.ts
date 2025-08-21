@@ -12,9 +12,26 @@ export interface PersonaProfile {
   displayName: string;
   description: string;
   primaryColor: string;
-  messagingTone: 'supportive' | 'efficient' | 'sophisticated' | 'business_focused' | 'casual' | 'value_focused';
-  ctaStyle: 'friendly' | 'urgent' | 'professional' | 'corporate' | 'youthful' | 'exclusive';
-  targetSubscriptionTier: 'free' | 'basic' | 'premium' | 'pro' | 'student' | 'lifetime';
+  messagingTone:
+    | "supportive"
+    | "efficient"
+    | "sophisticated"
+    | "business_focused"
+    | "casual"
+    | "value_focused";
+  ctaStyle:
+    | "friendly"
+    | "urgent"
+    | "professional"
+    | "corporate"
+    | "youthful"
+    | "exclusive";
+    | "free"
+    | "basic"
+    | "premium"
+    | "pro"
+    | "student"
+    | "lifetime";
 }
 
 export interface PersonaDetectionResult {

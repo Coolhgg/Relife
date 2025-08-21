@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Enhanced Test Utilities for Critical User Flows
  * 

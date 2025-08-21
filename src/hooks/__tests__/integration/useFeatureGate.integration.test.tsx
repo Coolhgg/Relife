@@ -1,8 +1,9 @@
-import { renderHook, act } from '@testing-library/react';
-import React from 'react';
-import { useFeatureGate } from '../../useFeatureGate';
-import { FeatureAccessProvider } from '../../../contexts/FeatureAccessContext';
-import { AnalyticsProvider } from '../../../components/AnalyticsProvider';
+import { expect, test, jest } from "@jest/globals";
+import { renderHook, act } from "@testing-library/react";
+import React from "react";
+import { useFeatureGate } from "../../useFeatureGate";
+import { FeatureAccessProvider } from "../../../contexts/FeatureAccessContext";
+import { AnalyticsProvider } from "../../../components/AnalyticsProvider";
 
 // Mock dependencies
 jest.mock('../../../services/subscription-service', () => ({

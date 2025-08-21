@@ -68,7 +68,9 @@ interface SubscriptionContextValue {
 }
 
 // Mock Context Implementations
-export const createMockFeatureAccessContext = (overrides: Partial<FeatureAccessContextValue> = {}): FeatureAccessContextValue => ({
+export const _createMockFeatureAccessContext = (
+  overrides: Partial<FeatureAccessContextValue> = {},
+): FeatureAccessContextValue => ({
   hasAccess: jest.fn(() => true),
   checkFeatureAccess: jest.fn(() => true),
   isFeatureEnabled: jest.fn(() => true),
@@ -76,8 +78,10 @@ export const createMockFeatureAccessContext = (overrides: Partial<FeatureAccessC
   ...overrides
 });
 
-export const createMockLanguageContext = (overrides: Partial<LanguageContextValue> = {}): LanguageContextValue => ({
-  language: 'en',
+export const _createMockLanguageContext = (
+  overrides: Partial<LanguageContextValue> = {},
+): LanguageContextValue => ({
+  language: "en",
   setLanguage: jest.fn(),
   t: jest.fn((key: string) => key),
   dir: 'ltr',
@@ -86,7 +90,9 @@ export const createMockLanguageContext = (overrides: Partial<LanguageContextValu
   ...overrides
 });
 
-export const createMockAuthContext = (overrides: Partial<AuthContextValue> = {}): AuthContextValue => ({
+export const _createMockAuthContext = (
+  overrides: Partial<AuthContextValue> = {},
+): AuthContextValue => ({
   user: {
     id: 'test-user-123',
     email: 'test@example.com',
@@ -102,8 +108,10 @@ export const createMockAuthContext = (overrides: Partial<AuthContextValue> = {})
   ...overrides
 });
 
-export const createMockThemeContext = (overrides: Partial<ThemeContextValue> = {}): ThemeContextValue => ({
-  theme: 'dark',
+export const _createMockThemeContext = (
+  overrides: Partial<ThemeContextValue> = {},
+): ThemeContextValue => ({
+  theme: "dark",
   setTheme: jest.fn(),
   isDark: true,
   colors: {
@@ -119,7 +127,9 @@ export const createMockThemeContext = (overrides: Partial<ThemeContextValue> = {
   ...overrides
 });
 
-export const createMockAlarmContext = (overrides: Partial<AlarmContextValue> = {}): AlarmContextValue => ({
+export const _createMockAlarmContext = (
+  overrides: Partial<AlarmContextValue> = {},
+): AlarmContextValue => ({
   alarms: [
     {
       id: 'alarm-1',
@@ -140,7 +150,9 @@ export const createMockAlarmContext = (overrides: Partial<AlarmContextValue> = {
   ...overrides
 });
 
-export const createMockSubscriptionContext = (overrides: Partial<SubscriptionContextValue> = {}): SubscriptionContextValue => ({
+export const _createMockSubscriptionContext = (
+  overrides: Partial<SubscriptionContextValue> = {},
+): SubscriptionContextValue => ({
   subscription: {
     id: 'sub-123',
     tier: 'premium',
@@ -240,7 +252,7 @@ export const MockSubscriptionProvider: React.FC<{
 };
 
 // Service Mocks
-export const createMockServices = () => ({
+export const _createMockServices = () => ({
   alarmService: {
     createAlarm: jest.fn(),
     updateAlarm: jest.fn(),
@@ -427,7 +439,7 @@ export interface TestRenderOptions extends RenderOptions {
   providerOptions?: TestProvidersOptions;
 }
 
-export const renderWithProviders = (
+export const _renderWithProviders = (
   ui: React.ReactElement,
   options: TestRenderOptions = {}
 ) => {
@@ -443,7 +455,7 @@ export const renderWithProviders = (
 };
 
 // Utility Hooks for Testing
-export const useTestContext = () => {
+export const _useTestContext = () => {
   const featureAccess = React.useContext(FeatureAccessContext);
   const language = React.useContext(LanguageContext);
   const auth = React.useContext(AuthContext);
@@ -464,7 +476,7 @@ export const useTestContext = () => {
 };
 
 // Pre-configured Test Scenarios
-export const testScenarios = {
+export const _testScenarios = {
   // Free user scenario
   freeUser: {
     auth: {
@@ -547,7 +559,7 @@ export const testScenarios = {
 };
 
 // Helper function to render with pre-configured scenarios
-export const renderWithScenario = (
+export const _renderWithScenario = (
   ui: React.ReactElement,
   scenario: keyof typeof testScenarios,
   additionalOptions: TestProvidersOptions = {}

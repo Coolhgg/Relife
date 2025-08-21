@@ -5,8 +5,17 @@ import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
 
-import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
+import {
+  SIDEBAR_WIDTH,
+  SIDEBAR_WIDTH_MOBILE,
+  SIDEBAR_WIDTH_ICON,
+} from "@/lib/constants/sidebar-constants"
+import { sidebarMenuButtonVariants } from "@/lib/variants/sidebar-variants"
+import {
+  SidebarProvider,
+  useSidebar,
+} from "@/lib/hooks/use-sidebar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
@@ -53,10 +62,9 @@ function useSidebar() {
   return context
 }
 
-function SidebarProvider({
-  defaultOpen = true,
-  open: openProp,
-  onOpenChange: setOpenProp,
+
+
+function _SidebarWrapper({
   className,
   style,
   children,

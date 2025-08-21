@@ -1,6 +1,12 @@
-import React, { createContext, useContext, useEffect, useRef } from 'react';
-import type { ReactNode } from 'react';
-import { useAnalytics, useEngagementAnalytics, usePerformanceAnalytics, ANALYTICS_EVENTS } from '../hooks/useAnalytics';
+/// <reference lib="dom" />
+import React, { createContext, useContext, useEffect, useRef } from "react";
+import type { ReactNode } from "react";
+import {
+  useAnalytics,
+  useEngagementAnalytics,
+  usePerformanceAnalytics,
+  ANALYTICS_EVENTS,
+} from "../hooks/useAnalytics";
 
 interface AnalyticsContextType {
   track: (eventName: string, properties?: Record<string, any>) => void;

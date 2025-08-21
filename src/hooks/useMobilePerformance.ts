@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { mobilePerformance } from '../services/mobile-performance';
+/// <reference types="node" />
+/// <reference lib="dom" />
+import { useState, useEffect, useRef, useCallback } from "react";
+import { mobilePerformance } from "../services/mobile-performance";
 
 export interface PerformanceMetrics {
   memoryUsage?: number;

@@ -1,11 +1,12 @@
-import * as React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import AlarmForm from '../AlarmForm';
-import { testUtils } from '../../test-setup';
-import type { Alarm, VoiceMood } from '../../types';
+import { expect, test, jest } from "@jest/globals";
+import * as React from "react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import AlarmForm from "../AlarmForm";
+import { testUtils } from "../../test-setup";
+import type { Alarm, VoiceMood } from "../../types";
 
-describe('AlarmForm', () => {
+describe("AlarmForm", () => {
   const mockOnSave = jest.fn();
   const mockOnCancel = jest.fn();
 

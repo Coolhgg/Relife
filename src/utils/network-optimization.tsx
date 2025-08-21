@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Advanced Network Optimization Utilities
  * Provides request batching, intelligent caching, retry logic, and network monitoring

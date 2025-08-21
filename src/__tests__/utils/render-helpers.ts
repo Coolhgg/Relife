@@ -662,7 +662,7 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   customWrapper?: React.ComponentType<{ children: ReactNode }>;
 }
 
-export const renderWithProviders = (
+export const _renderWithProviders = (
   ui: ReactElement,
   options: CustomRenderOptions = {}
 ): RenderResult => {
@@ -738,7 +738,10 @@ export const renderWithProviders = (
 };
 
 // Convenience render functions for common scenarios
-export const renderAsGuest = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderAsGuest = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   return renderWithProviders(ui, {
     ...options,
     user: null,
@@ -747,7 +750,11 @@ export const renderAsGuest = (ui: ReactElement, options: CustomRenderOptions = {
   });
 };
 
-export const renderAsUser = (ui: ReactElement, user?: TestUser, options: CustomRenderOptions = {}) => {
+export const _renderAsUser = (
+  ui: ReactElement,
+  user?: TestUser,
+  options: CustomRenderOptions = {},
+) => {
   const defaultUser: TestUser = user || {
     id: 'test-user-123',
     email: 'test@example.com',
@@ -765,7 +772,10 @@ export const renderAsUser = (ui: ReactElement, user?: TestUser, options: CustomR
   });
 };
 
-export const renderAsPremiumUser = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderAsPremiumUser = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   const premiumUser: TestUser = {
     id: 'test-premium-user-123',
     email: 'premium@example.com',
@@ -788,7 +798,10 @@ export const renderAsPremiumUser = (ui: ReactElement, options: CustomRenderOptio
   });
 };
 
-export const renderAsUltimateUser = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderAsUltimateUser = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   const ultimateUser: TestUser = {
     id: 'test-ultimate-user-123',
     email: 'ultimate@example.com',
@@ -811,7 +824,10 @@ export const renderAsUltimateUser = (ui: ReactElement, options: CustomRenderOpti
   });
 };
 
-export const renderMobile = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderMobile = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   // Set mobile viewport
   Object.defineProperty(window, 'innerWidth', { value: 375, writable: true });
   Object.defineProperty(window, 'innerHeight', { value: 667, writable: true });
@@ -822,7 +838,10 @@ export const renderMobile = (ui: ReactElement, options: CustomRenderOptions = {}
   return renderWithProviders(ui, options);
 };
 
-export const renderTablet = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderTablet = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   // Set tablet viewport
   Object.defineProperty(window, 'innerWidth', { value: 768, writable: true });
   Object.defineProperty(window, 'innerHeight', { value: 1024, writable: true });
@@ -833,7 +852,10 @@ export const renderTablet = (ui: ReactElement, options: CustomRenderOptions = {}
   return renderWithProviders(ui, options);
 };
 
-export const renderDesktop = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderDesktop = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   // Set desktop viewport
   Object.defineProperty(window, 'innerWidth', { value: 1200, writable: true });
   Object.defineProperty(window, 'innerHeight', { value: 800, writable: true });
@@ -844,14 +866,20 @@ export const renderDesktop = (ui: ReactElement, options: CustomRenderOptions = {
   return renderWithProviders(ui, options);
 };
 
-export const renderOffline = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderOffline = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   return renderWithProviders(ui, {
     ...options,
     isOnline: false
   });
 };
 
-export const renderRTL = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderRTL = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   return renderWithProviders(ui, {
     ...options,
     direction: 'rtl',
@@ -860,7 +888,11 @@ export const renderRTL = (ui: ReactElement, options: CustomRenderOptions = {}) =
 };
 
 // Enhanced provider convenience functions
-export const renderWithFeatureAccess = (ui: ReactElement, tier: 'free' | 'premium' | 'ultimate' = 'premium', options: CustomRenderOptions = {}) => {
+export const _renderWithFeatureAccess = (
+  ui: ReactElement,
+  tier: "free" | "premium" | "ultimate" = "premium",
+  options: CustomRenderOptions = {},
+) => {
   return renderWithProviders(ui, {
     ...options,
     tier,
@@ -877,7 +909,11 @@ export const renderWithFeatureAccess = (ui: ReactElement, tier: 'free' | 'premiu
   });
 };
 
-export const renderWithScreenReader = (ui: ReactElement, verbosity: 'low' | 'medium' | 'high' = 'medium', options: CustomRenderOptions = {}) => {
+export const _renderWithScreenReader = (
+  ui: ReactElement,
+  verbosity: "low" | "medium" | "high" = "medium",
+  options: CustomRenderOptions = {},
+) => {
   return renderWithProviders(ui, {
     ...options,
     screenReaderEnabled: true,
@@ -885,7 +921,11 @@ export const renderWithScreenReader = (ui: ReactElement, verbosity: 'low' | 'med
   });
 };
 
-export const renderWithEnhancedTheme = (ui: ReactElement, theme?: TestTheme, options: CustomRenderOptions = {}) => {
+export const _renderWithEnhancedTheme = (
+  ui: ReactElement,
+  theme?: TestTheme,
+  options: CustomRenderOptions = {},
+) => {
   return renderWithProviders(ui, {
     ...options,
     enhancedTheme: true,
@@ -898,7 +938,11 @@ export const renderWithEnhancedTheme = (ui: ReactElement, theme?: TestTheme, opt
   });
 };
 
-export const renderWithPersonaAnalytics = (ui: ReactElement, persona: string = 'struggling_sam', options: CustomRenderOptions = {}) => {
+export const _renderWithPersonaAnalytics = (
+  ui: ReactElement,
+  persona: string = "struggling_sam",
+  options: CustomRenderOptions = {},
+) => {
   return renderWithProviders(ui, {
     ...options,
     personaAnalytics: true,
@@ -906,7 +950,10 @@ export const renderWithPersonaAnalytics = (ui: ReactElement, persona: string = '
   });
 };
 
-export const renderWithAllEnhancements = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderWithAllEnhancements = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   return renderWithProviders(ui, {
     ...options,
     featureAccess: true,
