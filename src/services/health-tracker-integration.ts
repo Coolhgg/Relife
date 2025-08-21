@@ -307,6 +307,7 @@ class HealthTrackerIntegration {
   /**
    * Get health-based alarm recommendations
    */
+  public async getHealthBasedAlarmRecommendations(alarm: Alarm): Promise<HealthInsight[]> {
     const insights: HealthInsight[] = [];
 
     if (!this.config.enabled) return insights;
@@ -473,15 +474,18 @@ class HealthTrackerIntegration {
   }
 
   private analyzeSleepCycleAlignment(
+    alarm: Alarm
   ): HealthInsight | null {
     // Implementation for sleep cycle analysis
     return null;
   }
 
+  private analyzeRecoveryNeeds(alarm: Alarm): HealthInsight | null {
     // Implementation for recovery analysis
     return null;
   }
 
+  private analyzeStressImpact(alarm: Alarm): HealthInsight | null {
     // Implementation for stress analysis
     return null;
   }

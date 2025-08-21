@@ -1,14 +1,7 @@
 import { supabase } from "./supabase";
 import type { User } from "../types";
+import type { SubscriptionTier } from "../types/premium";
 import { ErrorHandler } from "./error-handler";
-
-  | "free"
-  | "basic"
-  | "student"
-  | "premium"
-  | "pro"
-  | "ultimate"
-  | "lifetime";
 
 export interface PremiumFeature {
   id: string;
@@ -181,6 +174,7 @@ export class PremiumService {
   /**
    * Check if user has access to a specific feature
    */
+  hasFeatureAccess(userTier: SubscriptionTier, featureId: string): boolean {
     const feature = this.premiumFeatures.find((f) => f.id === featureId);
     if (!feature) {
       return true; // If feature doesn't exist in our premium list, it's free
@@ -193,7 +187,10 @@ export class PremiumService {
    * Check if user has minimum required subscription tier
    */
   hasMinimumTier(
+    userTier: SubscriptionTier,
+    requiredTier: SubscriptionTier
   ): boolean {
+    const tierHierarchy = {
       free: 0,
       premium: 1,
       ultimate: 2,
@@ -205,6 +202,7 @@ export class PremiumService {
   /**
    * Get user's current subscription tier
    */
+  async getUserTier(userId: string): Promise<SubscriptionTier> {
     try {
       const { data, error } = await supabase
         .from('users')
@@ -260,6 +258,7 @@ export class PremiumService {
   /**
    * Get available features for a subscription tier
    */
+  getAvailableFeatures(tier: SubscriptionTier): PremiumFeature[] {
     return this.premiumFeatures.filter((feature) =>
       this.hasMinimumTier(tier, feature.requiredTier),
     );
@@ -268,6 +267,7 @@ export class PremiumService {
   /**
    * Get locked features for a subscription tier
    */
+  getLockedFeatures(tier: SubscriptionTier): PremiumFeature[] {
     return this.premiumFeatures.filter(
       (feature) => !this.hasMinimumTier(tier, feature.requiredTier),
     );

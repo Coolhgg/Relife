@@ -457,6 +457,8 @@ class FeatureGateService {
   /**
    * Get all features for a subscription tier
    */
+  public getFeaturesForTier(tier: SubscriptionTier): FeatureDefinition[] {
+    const tierHierarchy = [
       "free",
       "basic",
       "premium",
@@ -498,7 +500,10 @@ class FeatureGateService {
    */
 
   private checkTierAccess(
+    userTier: SubscriptionTier,
+    requiredTier: SubscriptionTier
   ): boolean {
+    const tierHierarchy = [
       "free",
       "basic",
       "premium",

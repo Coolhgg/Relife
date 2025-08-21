@@ -1,4 +1,5 @@
 import type {
+  Alarm,
   RecurrencePattern,
   ConditionalRule,
   LocationTrigger,
@@ -81,6 +82,7 @@ export class AdvancedAlarmScheduler {
   // ===== RECURRENCE PATTERN HANDLING =====
 
   static calculateNextOccurrences(
+    alarm: Alarm,
     fromDate: Date = new Date(),
     count: number = 10
   ): Date[] {
@@ -120,7 +122,8 @@ export class AdvancedAlarmScheduler {
   }
 
   private static getNextOccurrence(
-    fromDate: Date,
+    alarm: Alarm,
+    fromDate: Date
   ): Date | null {
     const pattern = alarm.recurrencePattern!;
     const baseTime = this.parseAlarmTime(alarm.time, fromDate);
@@ -268,6 +271,8 @@ export class AdvancedAlarmScheduler {
   // ===== SMART OPTIMIZATIONS =====
 
   static async applySmartOptimizations(
+    alarm: Alarm
+  ): Promise<Alarm> {
     if (!alarm.smartOptimizations || !this.config.enableSmartAdjustments) {
       return alarm;
     }
@@ -286,7 +291,9 @@ export class AdvancedAlarmScheduler {
   }
 
   private static async applyOptimization(
-    optimization: SmartOptimization,
+    alarm: Alarm,
+    optimization: SmartOptimization
+  ): Promise<Alarm> {
     const { type, parameters } = optimization;
     let adjustmentMinutes = 0;
 
@@ -339,7 +346,9 @@ export class AdvancedAlarmScheduler {
   // ===== SEASONAL ADJUSTMENTS =====
 
   static applySeasonalAdjustments(
-    date: Date = new Date(),
+    alarm: Alarm,
+    date: Date = new Date()
+  ): Alarm {
     if (!alarm.seasonalAdjustments || alarm.seasonalAdjustments.length === 0) {
       return alarm;
     }
@@ -369,7 +378,8 @@ export class AdvancedAlarmScheduler {
   // ===== LOCATION-BASED ALARMS =====
 
   static async evaluateLocationTriggers(
-    currentLocation?: GeolocationPosition,
+    alarm: Alarm,
+    currentLocation?: GeolocationPosition
   ): Promise<boolean> {
     if (!alarm.locationTriggers || !currentLocation) {
       return true;
@@ -406,6 +416,7 @@ export class AdvancedAlarmScheduler {
   }
 
   private static async executeLocationAction(
+    alarm: Alarm,
     action: any,
   ): Promise<void> {
     switch (action.type) {
@@ -470,6 +481,8 @@ export class AdvancedAlarmScheduler {
 
   // ===== NOTIFICATION INTEGRATION =====
 
+  static async scheduleAdvancedNotifications(
+    alarm: Alarm
   ): Promise<void> {
     try {
       // Calculate next few occurrences
@@ -524,7 +537,8 @@ export class AdvancedAlarmScheduler {
     }
   }
 
-    alarmId: string,
+  static async cancelAdvancedNotifications(
+    alarmId: string
   ): Promise<void> {
     try {
       const { cancelLocalNotification } = await import('./capacitor');
@@ -542,6 +556,7 @@ export class AdvancedAlarmScheduler {
   }
 
   static async evaluateConditionalRules(
+    alarm: Alarm,
     forDate?: Date,
   ): Promise<boolean> {
     if (!alarm.conditionalRules || alarm.conditionalRules.length === 0) {
@@ -619,6 +634,7 @@ export class AdvancedAlarmScheduler {
   // ===== IMPORT/EXPORT =====
 
   static async exportSchedule(): Promise<ScheduleExport> {
+    const alarms = await import('../services/alarm-service').then(module => module.AlarmService.loadAlarms());
 
     return {
       version: '1.0',
@@ -718,6 +734,7 @@ export class AdvancedAlarmScheduler {
   }
 
   private static getTotalOccurrences(
+    alarm: Alarm,
     fromDate: Date,
   ): number {
     // Count how many times this alarm has occurred since its creation
@@ -766,8 +783,7 @@ export class AdvancedAlarmScheduler {
     return 0; // Spring/Fall: no adjustment
   }
 
-  private static async calculateSleepCycleAdjustment(
-  ): Promise<number> {
+  private static async calculateSleepCycleAdjustment(alarm: Alarm): Promise<number> {
     // Basic sleep cycle optimization - adjust to align with 90-minute sleep cycles
     // In a full implementation, this would analyze user's sleep data
 
@@ -798,8 +814,7 @@ export class AdvancedAlarmScheduler {
     return bestAdjustment;
   }
 
-  private static async calculateSunriseAdjustment(
-  ): Promise<number> {
+  private static async calculateSunriseAdjustment(alarm: Alarm): Promise<number> {
     // Basic sunrise adjustment - earlier in summer, later in winter
     // In a full implementation, this would use actual sunrise/sunset API
 
@@ -830,8 +845,7 @@ export class AdvancedAlarmScheduler {
     return adjustment;
   }
 
-  private static async calculateTrafficAdjustment(
-  ): Promise<number> {
+  private static async calculateTrafficAdjustment(alarm: Alarm): Promise<number> {
     // Basic traffic adjustment simulation
     // In a full implementation, this would call a traffic API like Google Maps
 
@@ -857,8 +871,7 @@ export class AdvancedAlarmScheduler {
     return adjustment;
   }
 
-  private static async calculateWeatherAdjustment(
-  ): Promise<number> {
+  private static async calculateWeatherAdjustment(alarm: Alarm): Promise<number> {
     // Basic weather adjustment simulation
     // In a full implementation, this would call a weather API
 
@@ -890,8 +903,7 @@ export class AdvancedAlarmScheduler {
     return adjustment;
   }
 
-  private static async calculateEnergyLevelAdjustment(
-  ): Promise<number> {
+  private static async calculateEnergyLevelAdjustment(alarm: Alarm): Promise<number> {
     // Basic energy level adjustment based on historical patterns
     // In a full implementation, this would analyze user's historical wake-up success rates
 
