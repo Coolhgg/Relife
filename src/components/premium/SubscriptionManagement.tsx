@@ -76,13 +76,16 @@ export function SubscriptionManagement({
     }).format(amount / 100);
   };
 
+  const getTierHierarchy = () => {
     return ["free", "basic", "premium", "pro", "enterprise"];
   };
 
+  const isUpgrade = (tier: string) => {
     const hierarchy = getTierHierarchy();
     return hierarchy.indexOf(tier) > hierarchy.indexOf(subscription.tier);
   };
 
+  const isDowngrade = (tier: string) => {
     const hierarchy = getTierHierarchy();
     return hierarchy.indexOf(tier) < hierarchy.indexOf(subscription.tier);
   };

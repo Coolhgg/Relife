@@ -584,3 +584,5 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     </div>
   );
 };
+
+export default PricingPage;

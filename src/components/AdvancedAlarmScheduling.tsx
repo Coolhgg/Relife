@@ -967,7 +967,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
       </Dialog>
     </div>
   );
-}
+};
 
 
 export default AdvancedAlarmScheduling;

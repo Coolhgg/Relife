@@ -32,7 +32,7 @@ interface ModalState {
   trialDaysRemaining: number;
 }
 
-export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
+const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   isOpen,
   onClose,
   userId,
@@ -341,3 +341,5 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     </AnimatePresence>
   );
 };
+
+export default SubscriptionModal;

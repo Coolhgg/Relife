@@ -16,7 +16,7 @@ interface FeatureGateProps {
   className?: string;
 }
 
-export function FeatureGate({
+function FeatureGate({
   children,
   feature,
   userId,
@@ -107,6 +107,7 @@ function UpgradePrompt({
     }
   };
 
+  const getTierColor = (tier: string) => {
     switch (tier) {
       case 'basic':
         return 'border-blue-200 bg-blue-50';
@@ -119,6 +120,7 @@ function UpgradePrompt({
     }
   };
 
+  const getTierName = (tier: string) => {
     switch (tier) {
       case 'basic':
         return 'Basic';
@@ -303,4 +305,7 @@ export function UsageLimitIndicator({
       )}
     </div>
   );
-}export default FeatureGate;
+};
+
+export default FeatureGate;
+
