@@ -13,8 +13,25 @@ import type {
   SmartOptimization,
   SeasonalAdjustment,
   OptimizationType,
-  AlarmDependency
+  AlarmDependency,
+  Location,
+  AlarmCondition,
+  AlarmAction
 } from '../types/index';
+import type {
+  NotificationScheduleData,
+  LocationActionParameters,
+  WeatherConditionData,
+  CalendarConditionData,
+  SleepQualityConditionData,
+  TimeSinceLastConditionData,
+  BulkOperationResult,
+  SunTimeData,
+  SleepData,
+  CurrentWeatherData,
+  Season,
+  AdvancedAlarm
+} from '../types/alarm';
 import { AlarmService } from './alarm';
 import { Preferences } from '@capacitor/preferences';
 
@@ -366,7 +383,7 @@ export class AdvancedAlarmScheduler {
     return alarm;
   }
 
-  private static getCurrentSeason(date: Date): 'spring' | 'summer' | 'fall' | 'winter' {
+  private static getCurrentSeason(date: Date): Season {
     const month = date.getMonth() + 1; // 1-12
 
     if (month >= 3 && month <= 5) return 'spring';
@@ -417,7 +434,7 @@ export class AdvancedAlarmScheduler {
 
   private static async executeLocationAction(
     alarm: Alarm,
-    action: any,
+    action: LocationActionParameters
   ): Promise<void> {
     switch (action.type) {
       case 'enable_alarm':
@@ -429,15 +446,15 @@ export class AdvancedAlarmScheduler {
         break;
 
       case 'adjust_time':
-        const adjustmentMinutes = action.parameters.minutes || 0;
+        const adjustmentMinutes = action.parameters?.minutes || 0;
         const newTime = this.adjustTimeByMinutes(alarm.time, adjustmentMinutes);
         await AlarmService.updateAlarm(alarm.id, { time: newTime });
         break;
 
       case 'notification':
         await this.sendNotification(
-          action.parameters.message || 'Location-based alarm triggered',
-          action.parameters
+          action.parameters?.message || 'Location-based alarm triggered',
+          { type: 'location' }
         );
         break;
     }
@@ -466,7 +483,7 @@ export class AdvancedAlarmScheduler {
     }
   }
 
-  private static async getSunTimes(location: any, date: Date): Promise<{ sunrise: Date; sunset: Date }> {
+  private static async getSunTimes(location: Location, date: Date): Promise<SunTimeData> {
     // This would integrate with a sunrise/sunset API
     // For now, return estimated times based on location and date
     const sunrise = new Date(date);
@@ -499,7 +516,7 @@ export class AdvancedAlarmScheduler {
         const notificationId = parseInt(alarm.id.replace(/\D/g, '')) + i;
 
         // Apply conditional rules for this specific occurrence
-        const shouldTrigger = await this.evaluateConditionalRules(alarm, occurrence.time);
+        const shouldTrigger = await this.evaluateConditionalRules(alarm, occurrence);
         if (!shouldTrigger) {
           console.log(`Skipping occurrence due to conditional rules: ${occurrence}`);
           continue;
@@ -520,14 +537,18 @@ export class AdvancedAlarmScheduler {
         }
 
         // Import the notification scheduling function
-        const { scheduleLocalNotification } = await import('./capacitor');
-
-        await scheduleLocalNotification({
-          id: notificationId,
-          title: `🔔 ${alarm.label}${alarm.recurrencePattern ? ' (Advanced)' : ''}`,
-          body: notificationBody,
-          schedule: occurrence
-        });
+        try {
+          const { scheduleLocalNotification } = await import('./capacitor');
+          
+          await scheduleLocalNotification({
+            id: notificationId,
+            title: `🔔 ${alarm.label}${alarm.recurrencePattern ? ' (Advanced)' : ''}`,
+            body: notificationBody,
+            schedule: occurrence
+          });
+        } catch (importError) {
+          console.warn('Failed to import capacitor service:', importError);
+        }
 
         console.log(`Scheduled advanced alarm "${alarm.label}" for ${occurrence.toLocaleString()}`);
       }
@@ -557,7 +578,7 @@ export class AdvancedAlarmScheduler {
 
   static async evaluateConditionalRules(
     alarm: Alarm,
-    forDate?: Date,
+    forDate?: Date
   ): Promise<boolean> {
     if (!alarm.conditionalRules || alarm.conditionalRules.length === 0) {
       return true;
@@ -567,24 +588,24 @@ export class AdvancedAlarmScheduler {
       let conditionMet = false;
 
       try {
-        switch (rule.type) {
+        switch (rule.condition.type) {
           case 'weather':
-            conditionMet = await this.evaluateWeatherCondition(rule.conditions);
+            conditionMet = await this.evaluateWeatherCondition(rule.condition as WeatherConditionData);
             break;
           case 'calendar':
-            conditionMet = await this.evaluateCalendarCondition(rule.conditions);
+            conditionMet = await this.evaluateCalendarCondition(rule.condition as CalendarConditionData);
             break;
           case 'sleep_quality':
-            conditionMet = await this.evaluateSleepQualityCondition(rule.conditions);
+            conditionMet = await this.evaluateSleepQualityCondition(rule.condition as SleepQualityConditionData);
             break;
           case 'day_of_week':
-            conditionMet = await this.evaluateDayOfWeekCondition(rule.conditions);
+            conditionMet = await this.evaluateDayOfWeekCondition(rule.condition as { value: number[] });
             break;
           case 'time_since_last':
-            conditionMet = await this.evaluateTimeSinceLastCondition(rule.conditions);
+            conditionMet = await this.evaluateTimeSinceLastCondition(rule.condition as TimeSinceLastConditionData);
             break;
           default:
-            console.log(`Unknown conditional rule type: ${rule.type}`);
+            console.log(`Unknown conditional rule type: ${rule.condition.type}`);
             conditionMet = true;
             break;
         }
@@ -605,7 +626,7 @@ export class AdvancedAlarmScheduler {
 
   // ===== BULK OPERATIONS =====
 
-  static async executeBulkOperation(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
+  static async executeBulkOperation(operation: BulkScheduleOperation): Promise<BulkOperationResult> {
     const results = { success: 0, failed: 0, errors: [] as string[] };
 
     try {
@@ -633,8 +654,8 @@ export class AdvancedAlarmScheduler {
 
   // ===== IMPORT/EXPORT =====
 
-  static async exportSchedule(): Promise<ScheduleExport> {
-    const alarms = await import('../services/alarm-service').then(module => module.AlarmService.loadAlarms());
+  static async exportSchedule(): Promise<ScheduleExport & { alarms: Alarm[] }> {
+    const alarms = await AlarmService.loadAlarms();
 
     return {
       version: '1.0',
@@ -648,7 +669,7 @@ export class AdvancedAlarmScheduler {
     };
   }
 
-  static async importSchedule(importData: ScheduleImport): Promise<{ success: number; failed: number; errors: string[] }> {
+  static async importSchedule(importData: ScheduleImport): Promise<BulkOperationResult> {
     const results = { success: 0, failed: 0, errors: [] as string[] };
 
     try {
@@ -735,7 +756,7 @@ export class AdvancedAlarmScheduler {
 
   private static getTotalOccurrences(
     alarm: Alarm,
-    fromDate: Date,
+    fromDate: Date
   ): number {
     // Count how many times this alarm has occurred since its creation
     // In a full implementation, this would query a database of alarm history
@@ -744,7 +765,7 @@ export class AdvancedAlarmScheduler {
       return 0;
     }
 
-    const createdAt = new Date(alarm.createdAt);
+    const createdAt = typeof alarm.createdAt === 'string' ? new Date(alarm.createdAt) : alarm.createdAt;
     const occurrences = this.calculateNextOccurrences(alarm, createdAt, 1000); // Get up to 1000 occurrences
 
     // Count how many occurred before fromDate
@@ -948,7 +969,7 @@ export class AdvancedAlarmScheduler {
     return adjustment;
   }
 
-  private static async evaluateWeatherCondition(condition: any): Promise<boolean> {
+  private static async evaluateWeatherCondition(condition: WeatherConditionData): Promise<boolean> {
     // Basic weather condition evaluation
     // In a full implementation, this would call a weather API
 
@@ -957,7 +978,7 @@ export class AdvancedAlarmScheduler {
     }
 
     // Simulate current weather (replace with actual API call)
-    const currentWeather = {
+    const currentWeather: CurrentWeatherData = {
       temperature: Math.floor(Math.random() * 40) + 40, // 40-80°F
       condition: ['sunny', 'cloudy', 'rainy', 'snowy'][Math.floor(Math.random() * 4)],
       humidity: Math.floor(Math.random() * 50) + 30, // 30-80%
@@ -1009,7 +1030,7 @@ export class AdvancedAlarmScheduler {
     }
   }
 
-  private static async evaluateCalendarCondition(condition: any): Promise<boolean> {
+  private static async evaluateCalendarCondition(condition: CalendarConditionData): Promise<boolean> {
     // Basic calendar condition evaluation
     // In a full implementation, this would integrate with calendar APIs
 
@@ -1045,7 +1066,7 @@ export class AdvancedAlarmScheduler {
     }
   }
 
-  private static async evaluateSleepQualityCondition(condition: any): Promise<boolean> {
+  private static async evaluateSleepQualityCondition(condition: SleepQualityConditionData): Promise<boolean> {
     // Basic sleep quality condition evaluation
     // In a full implementation, this would integrate with sleep tracking APIs
 
@@ -1056,7 +1077,7 @@ export class AdvancedAlarmScheduler {
     const { type, value, operator } = condition;
 
     // Simulate sleep quality metrics (replace with actual sleep tracking data)
-    const sleepData = {
+    const sleepData: SleepData = {
       quality: Math.floor(Math.random() * 100), // 0-100
       duration: Math.floor(Math.random() * 4) + 6, // 6-10 hours
       efficiency: Math.floor(Math.random() * 30) + 70, // 70-100%
@@ -1100,12 +1121,12 @@ export class AdvancedAlarmScheduler {
     }
   }
 
-  private static async evaluateDayOfWeekCondition(condition: any): Promise<boolean> {
+  private static async evaluateDayOfWeekCondition(condition: { value: number[] }): Promise<boolean> {
     const today = new Date().getDay();
     return condition.value.includes(today);
   }
 
-  private static async evaluateTimeSinceLastCondition(condition: any): Promise<boolean> {
+  private static async evaluateTimeSinceLastCondition(condition: TimeSinceLastConditionData): Promise<boolean> {
     // Basic time since last alarm condition evaluation
 
     if (!condition || typeof condition !== 'object') {
@@ -1152,17 +1173,20 @@ export class AdvancedAlarmScheduler {
   private static async adjustAlarmTime(alarmId: string, minutes: number): Promise<void> {
     // Adjust alarm time by specified minutes
     try {
-      const alarm = AlarmService.getAlarmById(alarmId);
+      const alarms = await AlarmService.loadAlarms();
+      const alarm = alarms.find(a => a.id === alarmId);
       if (!alarm) {
         console.error(`Alarm ${alarmId} not found`);
         return;
       }
 
       const newTime = this.adjustTimeByMinutes(alarm.time, minutes);
-      await AlarmService.updateAlarm(alarmId, {
-        ...alarm,
-        time: newTime
-      });
+      if (alarm) {
+        await AlarmService.updateAlarm(alarmId, {
+          ...alarm,
+          time: newTime
+        });
+      }
 
       console.log(`Adjusted alarm ${alarmId} by ${minutes} minutes to ${newTime}`);
     } catch (error) {
@@ -1178,7 +1202,7 @@ export class AdvancedAlarmScheduler {
     // Implementation would change alarm difficulty
   }
 
-  private static async sendNotification(message: string, parameters: any): Promise<void> {
+  private static async sendNotification(message: string, parameters: { type?: string }): Promise<void> {
     // Send a notification to the user
     try {
       // In a real implementation, this would use the notification service
@@ -1194,22 +1218,22 @@ export class AdvancedAlarmScheduler {
     }
   }
 
-  private static async bulkCreateAlarms(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
+  private static async bulkCreateAlarms(operation: BulkScheduleOperation): Promise<BulkOperationResult> {
     // Implementation for bulk create
     return { success: 0, failed: 0, errors: [] };
   }
 
-  private static async bulkUpdateAlarms(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
+  private static async bulkUpdateAlarms(operation: BulkScheduleOperation): Promise<BulkOperationResult> {
     // Implementation for bulk update
     return { success: 0, failed: 0, errors: [] };
   }
 
-  private static async bulkDeleteAlarms(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
+  private static async bulkDeleteAlarms(operation: BulkScheduleOperation): Promise<BulkOperationResult> {
     // Implementation for bulk delete
     return { success: 0, failed: 0, errors: [] };
   }
 
-  private static async bulkDuplicateAlarms(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
+  private static async bulkDuplicateAlarms(operation: BulkScheduleOperation): Promise<BulkOperationResult> {
     // Implementation for bulk duplicate
     return { success: 0, failed: 0, errors: [] };
   }
