@@ -3,12 +3,13 @@
  * Configures API mocking for comprehensive hook testing
  */
 
-import { beforeAll, afterEach, afterAll } from '@jest/globals';
+import { beforeAll, afterEach, afterAll } from 'vitest';
 import { setupServer } from 'msw/node';
+import { http, HttpResponse } from 'msw';
 import { handlers } from './msw-handlers';
 
 // Setup MSW server
-export const _server = setupServer(...handlers);
+export const server = setupServer(...handlers);
 
 // Establish API mocking before all tests
 beforeAll(() => {
@@ -29,22 +30,19 @@ afterAll(() => {
 });
 
 // Helper functions for tests
-export const _mockApiError = (
+export const mockApiError = (
   endpoint: string,
   status: number = 500,
-  message: string = "Server Error",
+  message: string = 'Server Error'
 ) => {
   server.use(
     http.all(endpoint, () => {
-      return HttpResponse.json(
-        { error: message },
-        { status }
-      );
+      return HttpResponse.json({ error: message }, { status });
     })
   );
 };
 
-export const _mockApiDelay = (endpoint: string, delay: number = 1000) => {
+export const mockApiDelay = (endpoint: string, delay: number = 1000) => {
   server.use(
     http.all(endpoint, async () => {
       await new Promise(resolve => setTimeout(resolve, delay));
@@ -53,7 +51,7 @@ export const _mockApiDelay = (endpoint: string, delay: number = 1000) => {
   );
 };
 
-export const _mockApiSuccess = (endpoint: string, data: any) => {
+export const mockApiSuccess = (endpoint: string, data: any) => {
   server.use(
     http.all(endpoint, () => {
       return HttpResponse.json(data);

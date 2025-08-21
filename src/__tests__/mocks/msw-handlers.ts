@@ -10,7 +10,7 @@ const SUPABASE_URL = 'https://test-supabase-url.supabase.co';
 const STRIPE_URL = 'https://api.stripe.com';
 const ANALYTICS_URL = 'https://analytics-test.com';
 
-export const _handlers = [
+export const handlers = [
   // Supabase Auth Handlers
   http.post(`${SUPABASE_URL}/auth/v1/token`, ({ request }) => {
     return HttpResponse.json({
@@ -23,7 +23,7 @@ export const _handlers = [
         email: 'test@example.com',
         role: 'authenticated',
         created_at: new Date().toISOString(),
-      }
+      },
     });
   }),
 
@@ -39,13 +39,13 @@ export const _handlers = [
         email_confirmed_at: null,
         role: 'authenticated',
         created_at: new Date().toISOString(),
-      }
+      },
     });
   }),
 
   http.post(`${SUPABASE_URL}/auth/v1/recover`, () => {
     return HttpResponse.json({
-      message: 'Password recovery email sent'
+      message: 'Password recovery email sent',
     });
   }),
 
@@ -59,17 +59,20 @@ export const _handlers = [
         preferences: {},
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-      }
+      },
     ]);
   }),
 
   http.post(`${SUPABASE_URL}/rest/v1/users`, () => {
-    return HttpResponse.json({
-      id: 'test-user-123',
-      email: 'test@example.com',
-      name: 'Test User',
-      created_at: new Date().toISOString(),
-    }, { status: 201 });
+    return HttpResponse.json(
+      {
+        id: 'test-user-123',
+        email: 'test@example.com',
+        name: 'Test User',
+        created_at: new Date().toISOString(),
+      },
+      { status: 201 }
+    );
   }),
 
   http.patch(`${SUPABASE_URL}/rest/v1/users`, () => {
@@ -97,19 +100,22 @@ export const _handlers = [
         snooze_interval: 5,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-      }
+      },
     ]);
   }),
 
   http.post(`${SUPABASE_URL}/rest/v1/alarms`, () => {
-    return HttpResponse.json({
-      id: 'test-alarm-456',
-      user_id: 'test-user-123',
-      time: '08:00',
-      label: 'New Test Alarm',
-      is_active: true,
-      created_at: new Date().toISOString(),
-    }, { status: 201 });
+    return HttpResponse.json(
+      {
+        id: 'test-alarm-456',
+        user_id: 'test-user-123',
+        time: '08:00',
+        label: 'New Test Alarm',
+        is_active: true,
+        created_at: new Date().toISOString(),
+      },
+      { status: 201 }
+    );
   }),
 
   http.patch(`${SUPABASE_URL}/rest/v1/alarms`, () => {
@@ -134,7 +140,7 @@ export const _handlers = [
           object: 'subscription',
           status: 'active',
           current_period_start: Math.floor(Date.now() / 1000),
-          current_period_end: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60),
+          current_period_end: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
           plan: {
             id: 'plan_premium',
             amount: 999,
@@ -142,8 +148,8 @@ export const _handlers = [
             interval: 'month',
           },
           customer: 'cus_test123',
-        }
-      ]
+        },
+      ],
     });
   }),
 
@@ -153,7 +159,7 @@ export const _handlers = [
       object: 'subscription',
       status: 'active',
       current_period_start: Math.floor(Date.now() / 1000),
-      current_period_end: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60),
+      current_period_end: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
     });
   }),
 
@@ -181,8 +187,8 @@ export const _handlers = [
             exp_month: 12,
             exp_year: 2025,
           },
-        }
-      ]
+        },
+      ],
     });
   }),
 
@@ -224,12 +230,12 @@ export const _handlers = [
           theme: 'dark',
           personalization: {
             colorPreferences: {
-              accentColor: '#ff0000'
-            }
-          }
+              accentColor: '#ff0000',
+            },
+          },
         },
         created_at: new Date().toISOString(),
-      }
+      },
     ]);
   }),
 
@@ -281,30 +287,21 @@ export const _handlers = [
       headers: {
         'Content-Type': 'audio/mpeg',
         'Content-Length': '1024',
-      }
+      },
     });
   }),
 
   // Error scenarios for testing error handling
   http.get('/api/error/500', () => {
-    return HttpResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
+    return HttpResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }),
 
   http.get('/api/error/401', () => {
-    return HttpResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
-    );
+    return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }),
 
   http.get('/api/error/429', () => {
-    return HttpResponse.json(
-      { error: 'Rate Limited' },
-      { status: 429 }
-    );
+    return HttpResponse.json({ error: 'Rate Limited' }, { status: 429 });
   }),
 
   // Network timeout simulation
@@ -315,24 +312,18 @@ export const _handlers = [
 ];
 
 // Handlers for specific test scenarios
-export const _errorHandlers = [
+export const errorHandlers = [
   // Override successful handlers with error responses for error testing
   http.post(`${SUPABASE_URL}/auth/v1/token`, () => {
-    return HttpResponse.json(
-      { error: 'Invalid credentials' },
-      { status: 401 }
-    );
+    return HttpResponse.json({ error: 'Invalid credentials' }, { status: 401 });
   }),
 
   http.post(`${STRIPE_URL}/v1/subscriptions`, () => {
-    return HttpResponse.json(
-      { error: { message: 'Payment failed' } },
-      { status: 402 }
-    );
+    return HttpResponse.json({ error: { message: 'Payment failed' } }, { status: 402 });
   }),
 ];
 
-export const _slowHandlers = [
+export const slowHandlers = [
   // Override handlers with slow responses for timeout testing
   http.post(`${SUPABASE_URL}/auth/v1/token`, async () => {
     await new Promise(resolve => setTimeout(resolve, 10000));
