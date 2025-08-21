@@ -639,7 +639,7 @@ export class AdvancedAlarmScheduler {
             break;
         }
       } catch (error) {
-        console.error(`Error evaluating conditional rule ${rule.type}:`, error);
+        console.error(`Error evaluating conditional rule ${rule.condition.type}:`, error);
         conditionMet = true; // Default to allowing the alarm
       }
 
@@ -683,7 +683,7 @@ export class AdvancedAlarmScheduler {
 
   // ===== IMPORT/EXPORT =====
 
-  static async exportSchedule(): Promise<ScheduleExport & { alarms: Alarm[] }> {
+  static async exportSchedule(): Promise<ScheduleExport> {
     const alarms = await AlarmService.loadAlarms();
 
     return {

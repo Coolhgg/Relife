@@ -2539,6 +2539,7 @@ export interface ScheduleFilter {
 export interface ScheduleExport {
   version: string;
   exportDate: string;
+  alarms: Alarm[];
   settings: SchedulingConfig;
   metadata: Record<string, any>;
 }
