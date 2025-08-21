@@ -303,4 +303,4 @@ export function UsageLimitIndicator({
       )}
     </div>
   );
-}
+}export default FeatureGate;

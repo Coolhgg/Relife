@@ -387,4 +387,4 @@ export const SocialProof: React.FC<SocialProofProps> = ({
       </Card>
     </div>
   );
-};
+};export default SocialProof;

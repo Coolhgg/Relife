@@ -438,4 +438,4 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
       </div>
     </div>
   );
-};
+};export default NuclearModeResults;

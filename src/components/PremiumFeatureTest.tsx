@@ -395,7 +395,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
           <div className="space-y-2">
             <h4 className="font-medium text-sm">Test Different Subscription Tiers:</h4>
             <div className="flex gap-2">
-                (tier) => (
+              {["free", "premium", "ultimate"].map((tier) => (
                   <Button
                     key={tier}
                     onClick={() => changeTierForTesting(tier)}

@@ -20,6 +20,8 @@ import { Preferences } from '@capacitor/preferences';
 const ADVANCED_CONFIG_KEY = 'advanced_scheduling_config';
 const SCHEDULING_STATS_KEY = 'scheduling_statistics';
 
+
+export class AdvancedAlarmScheduler {
   private static config: SchedulingConfig = {
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     defaultWakeWindow: 30,

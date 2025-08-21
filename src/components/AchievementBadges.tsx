@@ -418,4 +418,4 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
       </AnimatePresence>
     </div>
   );
-};
+};export default AchievementBadges;

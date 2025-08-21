@@ -394,4 +394,4 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
       </motion.div>
     </AnimatePresence>
   );
-};
+};export default SmartUpgradePrompt;

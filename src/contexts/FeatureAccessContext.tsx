@@ -149,7 +149,7 @@ export function FeatureAccessProvider({
     };
   }, [featureAccess]);
 
-  const getUpgradeRequirement = useCallback(
+  const getUpgradeRequirement = useCallback((featureId: string) => {
       if (!featureAccess) return null;
 
     const feature = featureAccess.features[featureId];
