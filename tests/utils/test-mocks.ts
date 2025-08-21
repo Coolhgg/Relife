@@ -354,6 +354,189 @@ export const mockCrypto = () => {
   });
 };
 
+// Mock WebSocket API for real-time features
+export const mockWebSocket = () => {
+  const mockWS = {
+    send: vi.fn(),
+    close: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    readyState: 1, // WebSocket.OPEN
+    onopen: null,
+    onmessage: null,
+    onclose: null,
+    onerror: null,
+    url: '',
+    protocol: '',
+    extensions: '',
+    bufferedAmount: 0,
+    binaryType: 'blob' as BinaryType,
+    CONNECTING: 0,
+    OPEN: 1,
+    CLOSING: 2,
+    CLOSED: 3,
+    dispatchEvent: vi.fn()
+  };
+
+  global.WebSocket = vi.fn().mockImplementation((url: string) => {
+    mockWS.url = url;
+    return mockWS;
+  }) as any;
+
+  // Add static constants
+  (global.WebSocket as any).CONNECTING = 0;
+  (global.WebSocket as any).OPEN = 1;
+  (global.WebSocket as any).CLOSING = 2;
+  (global.WebSocket as any).CLOSED = 3;
+
+  return mockWS;
+};
+
+// Mock MediaRecorder API for voice recording
+export const mockMediaRecorder = () => {
+  const mockRecorder = {
+    start: vi.fn(),
+    stop: vi.fn(),
+    pause: vi.fn(),
+    resume: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    state: 'inactive',
+    mimeType: 'audio/webm;codecs=opus',
+    stream: null,
+    videoBitsPerSecond: 0,
+    audioBitsPerSecond: 0,
+    ondataavailable: null,
+    onstart: null,
+    onstop: null,
+    onpause: null,
+    onresume: null,
+    onerror: null,
+    dispatchEvent: vi.fn(),
+    requestData: vi.fn(),
+    isTypeSupported: vi.fn().mockReturnValue(true)
+  };
+
+  global.MediaRecorder = vi.fn().mockImplementation(() => mockRecorder) as any;
+  (global.MediaRecorder as any).isTypeSupported = vi.fn().mockReturnValue(true);
+
+  return mockRecorder;
+};
+
+// Mock File API for file uploads
+export const mockFileAPI = () => {
+  const createMockBlob = (data: any, type: string = 'audio/webm') => {
+    const blob = {
+      size: data.length || 1024,
+      type,
+      text: vi.fn().mockResolvedValue(data),
+      arrayBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(1024)),
+      stream: vi.fn(),
+      slice: vi.fn().mockReturnValue(blob)
+    };
+    return blob as Blob;
+  };
+
+  global.Blob = vi.fn().mockImplementation((data: any[], options: any) => {
+    return createMockBlob(data, options?.type);
+  }) as any;
+
+  const createMockFile = (name: string, data: any, type: string) => {
+    const file = Object.assign(createMockBlob(data, type), {
+      name,
+      lastModified: Date.now(),
+      webkitRelativePath: ''
+    });
+    return file as File;
+  };
+
+  global.File = vi.fn().mockImplementation((data: any[], name: string, options: any) => {
+    return createMockFile(name, data, options?.type || 'text/plain');
+  }) as any;
+
+  return { createMockBlob, createMockFile };
+};
+
+// Mock Biometric APIs
+export const mockBiometricAPIs = () => {
+  // Mock Web Authentication API for biometric auth
+  Object.defineProperty(navigator, 'credentials', {
+    value: {
+      create: vi.fn().mockResolvedValue({
+        id: 'mock-credential-id',
+        rawId: new ArrayBuffer(32),
+        response: {
+          clientDataJSON: new ArrayBuffer(32),
+          attestationObject: new ArrayBuffer(32)
+        },
+        type: 'public-key'
+      }),
+      get: vi.fn().mockResolvedValue({
+        id: 'mock-credential-id',
+        rawId: new ArrayBuffer(32),
+        response: {
+          clientDataJSON: new ArrayBuffer(32),
+          authenticatorData: new ArrayBuffer(32),
+          signature: new ArrayBuffer(32),
+          userHandle: new ArrayBuffer(16)
+        },
+        type: 'public-key'
+      }),
+      store: vi.fn().mockResolvedValue(undefined),
+      preventSilentAccess: vi.fn().mockResolvedValue(undefined)
+    },
+    writable: true
+  });
+};
+
+// Mock sleep tracking APIs
+export const mockSleepAPIs = () => {
+  // Mock Accelerometer API (for movement detection)
+  global.Accelerometer = vi.fn().mockImplementation(() => ({
+    start: vi.fn(),
+    stop: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    x: 0,
+    y: 0,
+    z: 9.8,
+    timestamp: Date.now()
+  }));
+
+  // Mock Ambient Light API
+  global.AmbientLightSensor = vi.fn().mockImplementation(() => ({
+    start: vi.fn(),
+    stop: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    illuminance: 300
+  }));
+
+  // Mock Heart Rate API (for wearable integration)
+  Object.defineProperty(navigator, 'bluetooth', {
+    value: {
+      requestDevice: vi.fn().mockResolvedValue({
+        id: 'mock-device-id',
+        name: 'Mock Heart Rate Monitor',
+        gatt: {
+          connect: vi.fn().mockResolvedValue({
+            getPrimaryService: vi.fn().mockResolvedValue({
+              getCharacteristic: vi.fn().mockResolvedValue({
+                readValue: vi.fn().mockResolvedValue(new DataView(new ArrayBuffer(2))),
+                startNotifications: vi.fn(),
+                stopNotifications: vi.fn(),
+                addEventListener: vi.fn()
+              })
+            })
+          })
+        }
+      }),
+      getAvailability: vi.fn().mockResolvedValue(true)
+    },
+    writable: true
+  });
+};
+
 // Setup all mocks
 export const setupAllMocks = () => {
   mockNavigatorAPI();
@@ -365,6 +548,11 @@ export const setupAllMocks = () => {
   mockMediaAPIs();
   mockCrypto();
   mockStripeAPI();
+  mockWebSocket();
+  mockMediaRecorder();
+  mockFileAPI();
+  mockBiometricAPIs();
+  mockSleepAPIs();
 };
 
 // Test Data Generators
@@ -392,6 +580,76 @@ export const generateTestUsers = (count: number): User[] => {
   );
 };
 
+// Generate mock sleep session data
+export const generateMockSleepSession = (date: Date, overrides: any = {}) => {
+  const bedtime = new Date(date);
+  bedtime.setHours(22 + Math.random() * 3, Math.random() * 60); // Random bedtime between 10-1 AM
+  
+  const wakeTime = new Date(bedtime);
+  wakeTime.setTime(wakeTime.getTime() + (6 + Math.random() * 3) * 60 * 60 * 1000); // 6-9 hours later
+  
+  return {
+    id: `sleep-${date.toISOString().split('T')[0]}`,
+    userId: 'test-user-123',
+    date: date.toISOString().split('T')[0],
+    bedtime: bedtime.toISOString(),
+    wakeTime: wakeTime.toISOString(),
+    sleepDuration: wakeTime.getTime() - bedtime.getTime(),
+    sleepStages: {
+      light: Math.random() * 0.5 + 0.3, // 30-80%
+      deep: Math.random() * 0.3 + 0.1,  // 10-40%
+      rem: Math.random() * 0.25 + 0.15, // 15-40%
+      awake: Math.random() * 0.1        // 0-10%
+    },
+    sleepQuality: Math.floor(Math.random() * 40) + 60, // 60-100
+    heartRate: {
+      average: Math.floor(Math.random() * 20) + 50, // 50-70 bpm
+      lowest: Math.floor(Math.random() * 10) + 45   // 45-55 bpm
+    },
+    movement: Math.random() * 50, // movement score
+    environment: {
+      temperature: Math.random() * 6 + 18, // 18-24°C
+      humidity: Math.random() * 30 + 40,   // 40-70%
+      lightExposure: Math.random() * 10,   // lux
+      noise: Math.random() * 40            // dB
+    },
+    ...overrides
+  };
+};
+
+// Generate tournament data
+export const generateMockTournament = (overrides: any = {}) => {
+  return {
+    id: `tournament-${Math.random().toString(36).substr(2, 9)}`,
+    name: 'Test Tournament',
+    type: 'single_elimination',
+    status: 'upcoming',
+    participants: [],
+    maxParticipants: 16,
+    startTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    endTime: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000).toISOString(),
+    prizePool: { coins: 1000, trophies: [] },
+    rounds: [],
+    settings: { difficulty: 'medium', battleType: 'streak' },
+    createdAt: new Date().toISOString(),
+    creatorId: 'system',
+    ...overrides
+  };
+};
+
+// Generate realistic audio blob for voice testing
+export const generateMockAudioBlob = (duration: number = 5000) => {
+  const arrayBuffer = new ArrayBuffer(duration * 16); // Simulate audio data
+  const uint8Array = new Uint8Array(arrayBuffer);
+  
+  // Fill with mock audio data (sine wave pattern)
+  for (let i = 0; i < uint8Array.length; i++) {
+    uint8Array[i] = Math.sin(i * 0.1) * 127 + 128;
+  }
+  
+  return new Blob([uint8Array], { type: 'audio/webm;codecs=opus' });
+};
+
 // Test Assertions Helpers
 export const expectAlarmToBeVisible = (alarmLabel: string, screen: any) => {
   expect(screen.getByText(alarmLabel)).toBeInTheDocument();
@@ -417,4 +675,88 @@ export const measurePerformance = async (fn: () => Promise<void>) => {
 
 export const expectPerformanceWithin = (duration: number, maxMs: number) => {
   expect(duration).toBeLessThan(maxMs);
+};
+
+// Real-time feature test helpers
+export const simulateWebSocketMessage = (mockWS: any, message: any) => {
+  if (mockWS.onmessage) {
+    mockWS.onmessage({ data: JSON.stringify(message) });
+  }
+};
+
+export const simulateWebSocketConnection = (mockWS: any) => {
+  mockWS.readyState = 1; // OPEN
+  if (mockWS.onopen) {
+    mockWS.onopen({});
+  }
+};
+
+export const simulateWebSocketDisconnection = (mockWS: any) => {
+  mockWS.readyState = 3; // CLOSED
+  if (mockWS.onclose) {
+    mockWS.onclose({ code: 1000, reason: 'Normal closure' });
+  }
+};
+
+// Voice recording test helpers
+export const simulateVoiceRecording = (mockRecorder: any, duration: number = 3000) => {
+  mockRecorder.state = 'recording';
+  if (mockRecorder.onstart) {
+    mockRecorder.onstart({});
+  }
+  
+  setTimeout(() => {
+    const audioBlob = generateMockAudioBlob(duration);
+    if (mockRecorder.ondataavailable) {
+      mockRecorder.ondataavailable({ data: audioBlob });
+    }
+    
+    mockRecorder.state = 'inactive';
+    if (mockRecorder.onstop) {
+      mockRecorder.onstop({});
+    }
+  }, 100);
+};
+
+// Sleep data generation for large datasets
+export const generateLargeSleepDataset = (days: number, userId: string = 'test-user-123') => {
+  const sessions = [];
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+  
+  for (let i = 0; i < days; i++) {
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + i);
+    
+    // Create realistic patterns (worse sleep on weekends, seasonal variations)
+    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+    const seasonalFactor = Math.sin((date.getMonth() / 12) * 2 * Math.PI) * 0.3;
+    
+    const session = generateMockSleepSession(date, {
+      userId,
+      sleepQuality: Math.max(40, Math.min(100, 
+        75 + (isWeekend ? -10 : 5) + seasonalFactor * 20 + (Math.random() - 0.5) * 20
+      ))
+    });
+    
+    sessions.push(session);
+  }
+  
+  return sessions;
+};
+
+// Battle progress simulation
+export const simulateBattleProgress = (battleId: string, participants: string[]) => {
+  return participants.map((userId, index) => ({
+    userId,
+    battleId,
+    currentStreak: Math.floor(Math.random() * 10),
+    longestStreak: Math.floor(Math.random() * 20) + 5,
+    totalAlarms: Math.floor(Math.random() * 30) + 10,
+    successfulAlarms: Math.floor(Math.random() * 25) + 8,
+    averageWakeTime: new Date(Date.now() + (7 + index * 0.5) * 60 * 60 * 1000).toTimeString().slice(0, 5),
+    lastActive: new Date(Date.now() - Math.random() * 12 * 60 * 60 * 1000).toISOString(),
+    score: Math.floor(Math.random() * 1000) + 100,
+    rank: index + 1
+  }));
 };
