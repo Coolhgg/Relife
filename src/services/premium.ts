@@ -283,6 +283,7 @@ export class PremiumService {
   /**
    * Get specific subscription plan
    */
+  getSubscriptionPlan(tier: SubscriptionTier): SubscriptionPlan | undefined {
     return this.subscriptionPlans.find((plan) => plan.tier === tier);
   }
 

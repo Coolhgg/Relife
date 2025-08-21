@@ -4,7 +4,9 @@
 
 export class AlarmConversionUtil {
   /**
+   * Convert basic alarm to advanced alarm
    */
+  static convertToAdvanced(basicAlarm: any): any {
     return {
       ...basicAlarm,
       scheduleType: 'daily',
@@ -20,8 +22,10 @@ export class AlarmConversionUtil {
   }
 
   /**
+   * Convert advanced alarm to basic alarm
    */
-    const basicAlarm: Alarm = {
+  static convertToBasic(advancedAlarm: any): any {
+    const basicAlarm: any = {
       id: advancedAlarm.id,
       userId: advancedAlarm.userId,
       time: advancedAlarm.time,
@@ -51,17 +55,21 @@ export class AlarmConversionUtil {
   /**
    * Convert an array of basic alarms to advanced alarms
    */
+  static convertArrayToAdvanced(basicAlarms: any[]): any[] {
+    return basicAlarms.map((alarm) => this.convertToAdvanced(alarm));
   }
 
   /**
    * Convert an array of advanced alarms to basic alarms
    */
-    return advancedAlarms.map((alarm) => this.toBasicAlarm(alarm));
+  static convertArrayToBasic(advancedAlarms: any[]): any[] {
+    return advancedAlarms.map((alarm) => this.convertToBasic(alarm));
   }
 
   /**
    * Check if an alarm has advanced features enabled
    */
+  static hasAdvancedFeatures(alarm: any): boolean {
     return !!(
       alarm.scheduleType !== 'daily' ||
       alarm.recurrencePattern ||
@@ -77,6 +85,7 @@ export class AlarmConversionUtil {
   /**
    * Get a summary of advanced features for an alarm
    */
+  static getFeaturesSummary(alarm: any): string[] {
     const features: string[] = [];
 
     if (alarm.scheduleType !== 'daily') {
@@ -174,6 +183,7 @@ export class AlarmConversionUtil {
   /**
    * Create a default advanced alarm configuration
    */
+  static createDefaultAdvancedAlarm(userId: string): any {
     return {
       userId,
       time: '07:00',

@@ -56,9 +56,7 @@ class PerformanceProfiler {
     actualDuration: number,
     baseDuration: number,
     startTime: number,
-    commitTime: number,
-    interactions: Set<any>,
-    ...args: any[]
+    commitTime: number
   ) => {
     if (!this.enabled) return;
 
@@ -72,7 +70,7 @@ class PerformanceProfiler {
       baseDuration,
       startTime,
       commitTime,
-      interactions,
+      interactions: new Set(), // Placeholder as interactions parameter was removed in newer React
       renderCount,
       totalTime: existing ? existing.totalTime + actualDuration : actualDuration,
       averageTime: existing 
