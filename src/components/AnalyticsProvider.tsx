@@ -263,4 +263,4 @@ export const useComponentAnalytics = (componentName: string) => {
     trackFeature,
     componentName
   };
-};
+};export default AnalyticsProvider;

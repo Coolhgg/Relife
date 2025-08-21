@@ -71,8 +71,7 @@ interface SubscriptionHookActions {
   resetUIState: () => void;
 
   // Plan comparison
-  comparePlans: (
-  ) => {
+  comparePlans: (currentPlanId: string, targetPlanId: string) => {
     isUpgrade: boolean;
     isDowngrade: boolean;
     priceDifference: number;
@@ -94,7 +93,6 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
   const [state, setState] = useState<SubscriptionHookState>({
     subscription: null,
     currentPlan: null,
-    userTier: 'free',
     featureAccess: null,
     usage: null,
     isLoading: false,

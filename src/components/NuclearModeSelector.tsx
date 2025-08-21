@@ -456,4 +456,4 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
       )}
     </Card>
   );
-};
+};export default NuclearModeSelector;

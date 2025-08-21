@@ -720,4 +720,4 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
       </CardContent>
     </Card>
   );
-};
+};export default NuclearModeChallenge;

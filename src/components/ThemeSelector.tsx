@@ -32,4 +32,4 @@ export const ThemeSelector: React.FC = () => {
       </button>
     </div>
   );
-};
+};export default ThemeSelector;

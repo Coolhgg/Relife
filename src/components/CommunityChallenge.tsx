@@ -462,4 +462,4 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
       </Card>
     </div>
   );
-};
+};export default CommunityChallenge;

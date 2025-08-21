@@ -207,4 +207,4 @@ export default function ForgotPasswordForm({
       </form>
     </div>
   );
-}
+}export default ForgotPasswordForm;

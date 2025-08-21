@@ -419,4 +419,4 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
       </AnimatePresence>
     </div>
   );
-};
+};export default PremiumDashboard;
