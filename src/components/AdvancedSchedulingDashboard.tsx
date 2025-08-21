@@ -30,11 +30,13 @@ import { Slider } from "@/components/ui/slider";
 import MLAlarmOptimizer from "../services/ml-alarm-optimizer";
 import EnhancedLocationService from "../services/enhanced-location-service";
 import PredictiveAnalyticsService from "../services/predictive-analytics-service";
+import { User } from "../types/index";
 
 interface AdvancedSchedulingDashboardProps {
+  alarms: any[];
   user: User;
-  onCreateAlarm: (
-  ) => void;
+  onUpdateAlarm: (id: string, updates: any) => void;
+  onCreateAlarm: () => void;
 }
 
 export function AdvancedSchedulingDashboard({

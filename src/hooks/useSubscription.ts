@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import type {
   Subscription,
   SubscriptionPlan,
+  SubscriptionTier,
   FeatureAccess,
   BillingUsage,
   PaymentMethod,
@@ -26,6 +27,7 @@ interface SubscriptionHookState {
   // Core subscription data
   subscription: Subscription | null;
   currentPlan: SubscriptionPlan | null;
+  userTier: SubscriptionTier;
   featureAccess: FeatureAccess | null;
   usage: BillingUsage | null;
 
@@ -55,6 +57,7 @@ interface SubscriptionHookActions {
   // Feature access
   hasFeatureAccess: (featureId: string) => boolean;
   trackFeatureUsage: (featureId: string, amount?: number) => Promise<void>;
+  getUpgradeRequirement: (featureId: string) => SubscriptionTier | null;
 
   // Payment methods
   addPaymentMethod: (paymentMethodId: string) => Promise<{success: boolean; error?: string}>;
@@ -93,6 +96,7 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
   const [state, setState] = useState<SubscriptionHookState>({
     subscription: null,
     currentPlan: null,
+    userTier: 'free',
     featureAccess: null,
     usage: null,
     isLoading: false,
@@ -498,7 +502,7 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
   // Plan comparison function
   const comparePlans = useCallback(
     (currentTier: SubscriptionTier, targetTier: SubscriptionTier) => {
-      const tierHierarchy = [
+      const tierHierarchy: SubscriptionTier[] = [
         "free",
         "basic",
         "premium",
