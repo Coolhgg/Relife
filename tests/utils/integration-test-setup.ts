@@ -9,6 +9,9 @@ import { setupServer } from 'msw/node';
 // Import MSW handlers from the main test setup
 import { handlers } from '../../src/__tests__/mocks/msw-handlers';
 
+// Import enhanced browser API mocks
+import { setupEnhancedBrowserAPIMocks, createIntegrationTestHelpers } from './enhanced-browser-api-mocks';
+
 // Setup MSW server for integration tests
 const server = setupServer(...handlers);
 
@@ -29,6 +32,14 @@ afterEach(() => {
 // Clean up after the tests are finished
 afterAll(() => {
   server.close();
+});
+
+// Setup enhanced browser API mocks globally
+const integrationTestHelpers = createIntegrationTestHelpers();
+
+// Reset enhanced mocks after each test
+afterEach(() => {
+  integrationTestHelpers.resetAll();
 });
 
 // Setup global mocks for integration tests
@@ -339,5 +350,23 @@ export const mockApiSuccess = (endpoint: string, data: any) => {
   );
 };
 
-// Export server for use in specific tests
+// Export server and enhanced test helpers for use in specific tests
 export { server as mswServer };
+export { integrationTestHelpers };
+
+// Export individual mock helpers for convenience
+export const {
+  notifications: notificationHelpers,
+  serviceWorker: serviceWorkerHelpers,
+  wakeLock: wakeLockHelpers,
+  speech: speechHelpers,
+  permissions: permissionHelpers,
+  simulateAlarmNotification,
+  simulateVoiceAlarmDismiss,
+  simulateVoiceSnooze,
+  simulatePushSubscription,
+  simulateScreenWakeLock,
+  verifyNotificationShown,
+  verifyServiceWorkerActive,
+  verifyPushSubscriptionActive
+} = integrationTestHelpers;
