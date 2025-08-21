@@ -57,6 +57,8 @@ export class AlarmConversionUtil {
   /**
    * Convert an array of basic alarms to advanced alarms
    */
+  static convertArrayToAdvanced(basicAlarms: any[]): any[] {
+    return basicAlarms.map((alarm) => this.convertToAdvanced(alarm));
   }
 
   /**
@@ -184,6 +186,7 @@ export class AlarmConversionUtil {
   /**
    * Create a default advanced alarm configuration
    */
+  static createDefaultAdvancedAlarm(userId: string): any {
     return {
       userId,
       time: '07:00',
