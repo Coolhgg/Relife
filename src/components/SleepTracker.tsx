@@ -64,7 +64,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
     setLoading(true);
     try {
       const bedtime = new Date(`${sleepEntry.date}T${sleepEntry.bedtime}`);
-      let wakeTime = new Date(`${sleepEntry.date}T${sleepEntry.wakeTime}`);
+      const wakeTime = new Date(`${sleepEntry.date}T${sleepEntry.wakeTime}`);
 
       // If wake time is before bedtime, assume next day
       if (wakeTime < bedtime) {
@@ -124,7 +124,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
 
   const calculateSleepDuration = (bedtime: string, wakeTime: string): string => {
     const bed = new Date(`2023-01-01T${bedtime}`);
-    let wake = new Date(`2023-01-01T${wakeTime}`);
+    const wake = new Date(`2023-01-01T${wakeTime}`);
 
     if (wake < bed) {
       wake.setDate(wake.getDate() + 1);

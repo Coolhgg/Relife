@@ -124,7 +124,7 @@ class StripeService {
       const startTime = performance.now();
 
       // First, ensure user has a Stripe customer ID
-      let stripeCustomerId = await this.getOrCreateCustomerId(userId);
+      const stripeCustomerId = await this.getOrCreateCustomerId(userId);
 
       const response = await fetch('/api/stripe/subscriptions', {
         method: 'POST',

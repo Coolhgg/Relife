@@ -54,8 +54,8 @@ export class AlarmBackupRedundancyService {
   private static readonly BACKUP_INTERVAL = 4 * 60 * 60 * 1000; // 4 hours
   private static readonly VERIFICATION_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
 
-  private backupTimer: NodeJS.Timeout | null = null;
-  private verificationTimer: NodeJS.Timeout | null = null;
+  private backupTimer: number | null = null;
+  private verificationTimer: number | null = null;
   private backupLocations: Map<string, BackupLocation> = new Map();
   private recoveryPoints: RecoveryPoint[] = [];
   private backupInProgress = false;

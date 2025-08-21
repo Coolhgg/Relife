@@ -59,7 +59,7 @@ export class VoiceProService {
   private static audioCache = new Map<string, CachedVoiceMessage>();
   private static isInitialized = false;
   private static currentUtterance: SpeechSynthesisUtterance | null = null;
-  private static repeatInterval: NodeJS.Timeout | null = null;
+  private static repeatInterval: number | null = null;
   private static recognition: SpeechRecognition | null = null;
 
   // Provider configurations

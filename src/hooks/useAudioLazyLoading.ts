@@ -240,7 +240,7 @@ export function useAlarmSoundPreloading(alarms: any[]) {
  */
 export function useLazyLoadingStats() {
   const [stats, setStats] = useState(lazyAudioLoader.getStats());
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const intervalRef = useRef<number>();
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {

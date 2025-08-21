@@ -1,5 +1,6 @@
 // Custom Jest assertions and matchers for enhanced testing
 
+import { expect } from '@jest/globals';
 import { TestAlarm, TestUser, TestTheme } from './index';
 
 // Extend Jest matchers

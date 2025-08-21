@@ -46,7 +46,7 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
 
     const { type, message, data, priority = 'polite', delay = 0 } = announcement;
 
-    let announcementText = message || '';
+    const announcementText = message || '';
 
     switch (type) {
       case 'alarm-toggle':
@@ -264,7 +264,7 @@ export function useStateChangeAnnouncements<T>(
   const { enabled = true, compareDeep = false, debounceMs = 100, priority = 'polite' } = options;
   const { announce } = useScreenReaderAnnouncements({ enabled });
   const previousValue = useRef<T>();
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<number>();
 
   useEffect(() => {
     if (!enabled) return;

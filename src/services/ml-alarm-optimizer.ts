@@ -305,7 +305,7 @@ export class MLAlarmOptimizer {
       const weather = await this.getWeatherForecast(targetDate);
 
       let impact = 0;
-      let confidence = 0.6;
+      const confidence = 0.6;
       let description = 'Weather conditions normal';
 
       if (weather) {

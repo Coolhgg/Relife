@@ -26,7 +26,7 @@ export class MobilePerformanceService {
   private performanceMetrics: PerformanceMetrics;
   private listeners: Array<(metrics: PerformanceMetrics) => void> = [];
   private config: PerformanceConfig;
-  private monitoringInterval?: NodeJS.Timeout;
+  private monitoringInterval?: number;
   private isLowPowerMode = false;
 
   private defaultConfig: PerformanceConfig = {

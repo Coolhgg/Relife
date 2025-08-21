@@ -1,7 +1,7 @@
 // Async testing utilities for promises, loading states, and time-dependent tests
 
 import { waitFor, screen } from '@testing-library/react';
-import { act } from 'react';
+import React, { act } from 'react';
 import { TEST_CONSTANTS } from './index';
 
 // Generic async utilities
@@ -461,15 +461,13 @@ export const _asyncHelpers = {
   react: reactAsync
 };
 
-// Export individual utilities for convenience
-export {
-  asyncUtils,
-  loadingStates,
-  apiUtils,
-  promiseUtils,
-  timerUtils,
-  reactAsync
-};
+// Alias exports without underscores
+export const asyncUtils = _asyncUtils;
+export const loadingStates = _loadingStates;
+export const apiUtils = _apiUtils;
+export const promiseUtils = _promiseUtils;
+export const timerUtils = _timerUtils;
+export const reactAsync = _reactAsync;
 
 // Export as default
 export default asyncHelpers;

@@ -19,7 +19,7 @@ import { ErrorHandler } from "./error-handler";
 
 export class AlarmService {
   private static alarms: Alarm[] = [];
-  private static checkInterval: NodeJS.Timeout | null = null;
+  private static checkInterval: number | null = null;
 
   static async loadAlarms(userId?: string): Promise<Alarm[]> {
     try {

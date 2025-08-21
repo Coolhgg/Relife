@@ -57,7 +57,7 @@ class RealtimeService {
   private config: RealtimeConfig;
   private isConnected = false;
   private reconnectAttempt = 0;
-  private heartbeatTimer?: NodeJS.Timeout;
+  private heartbeatTimer?: number;
   private subscriptions = new Map<string, any>();
   private presenceData: PresenceData | null = null;
   private eventListeners = new Map<string, Set<Function>>();
