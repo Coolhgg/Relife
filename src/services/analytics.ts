@@ -16,7 +16,7 @@ export interface AnalyticsConfig {
 }
 
 export interface UserProperties {
-  id: string;
+  id?: string;
   email?: string;
   username?: string;
   createdAt?: string;
@@ -179,7 +179,7 @@ class AnalyticsService {
 
         // Feature flags
         bootstrap: {
-          distinctId: this.generateSessionId()
+          distinctID: this.generateSessionId()
         },
 
         // Autocapture settings
@@ -188,12 +188,11 @@ class AnalyticsService {
         // Session recording settings
         session_recording: {
           maskAllInputs: true,
-          maskAllText: false,
           recordCrossOriginIframes: false
         },
 
         // Heatmaps
-        enable_recording_console_log: config.debug || false,
+        enable_recording_console_log: config.features.debugMode || false,
 
         // Custom properties to include with every event
         property_blacklist: [
@@ -312,8 +311,11 @@ class AnalyticsService {
   incrementProperty(property: string, value: number = 1): void {
     if (!this.isInitialized) return;
 
-    posthog.people.increment({
-      [property]: value
+    // PostHog doesn't have people.increment, so we track as an event
+    this.track('property_increment', {
+      property,
+      value,
+      increment: true
     });
   }
 
@@ -599,7 +601,7 @@ class AnalyticsService {
       session: {
         id: this.sessionId,
         duration: this.getSessionDuration(),
-        startTime: this.sessionStartTime?.toISOString()
+        startTime: this.sessionStartTime ? new Date(this.sessionStartTime).toISOString() : undefined
       },
       exportTime: new Date().toISOString()
     };
@@ -613,7 +615,7 @@ class AnalyticsService {
       posthog.reset();
     }
     this.sessionId = this.generateSessionId();
-    this.sessionStartTime = new Date();
+    this.sessionStartTime = Date.now();
   }
 }
 

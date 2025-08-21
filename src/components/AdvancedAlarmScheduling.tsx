@@ -47,6 +47,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
   >("alarms");
   const [config, setConfig] = useState<SchedulingConfig | null>(null);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['basic']));
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [selectedAlarm, setSelectedAlarm] = useState<any>(null);
 
   const [formData, setFormData] = useState({
     time: "07:00",
@@ -129,6 +131,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     return types[type as keyof typeof types] || type;
   };
 
+  const getNextOccurrence = (alarm: any) => {
     try {
       const occurrences = [new Date()]; // TODO: Implement calculateNextOccurrences(
       //   alarm,

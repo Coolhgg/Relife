@@ -55,6 +55,7 @@ export interface SubscriptionPlan {
   name: string;
   displayName: string;
   description: string;
+  tier: SubscriptionTier;
   tagline?: string;
   features: PremiumFeature[];
   limits: PlanLimits;
