@@ -487,16 +487,6 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                       role="img"
                       aria-label={`Step ${index + 1}: ${stepNames[index]} - ${isActive ? 'current' : isCompleted ? 'completed' : 'pending'}`}
                     />
-                    {index < 4 && (
-                      <div
-                        className={`w-8 h-0.5 mx-1 ${
-                          index < currentIndex
-                            ? 'bg-green-500'
-                            : 'bg-gray-300 dark:bg-gray-600'
-                        }`}
-                        aria-hidden="true"
-                      />
-                    )}
                   </li>
                 );
               }

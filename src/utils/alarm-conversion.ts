@@ -1,10 +1,14 @@
+import { Alarm, AdvancedAlarm } from '../types';
 
 /**
+ * Utility class for converting between basic and advanced alarm formats
  */
 
 export class AlarmConversionUtil {
   /**
+   * Convert basic alarm to advanced alarm
    */
+  static convertToAdvanced(basicAlarm: Alarm): AdvancedAlarm {
     return {
       ...basicAlarm,
       scheduleType: 'daily',
@@ -20,7 +24,9 @@ export class AlarmConversionUtil {
   }
 
   /**
+   * Convert advanced alarm to basic alarm
    */
+  static convertToBasic(advancedAlarm: AdvancedAlarm): Alarm {
     const basicAlarm: Alarm = {
       id: advancedAlarm.id,
       userId: advancedAlarm.userId,
@@ -56,12 +62,14 @@ export class AlarmConversionUtil {
   /**
    * Convert an array of advanced alarms to basic alarms
    */
-    return advancedAlarms.map((alarm) => this.toBasicAlarm(alarm));
+  static convertArrayToBasic(advancedAlarms: AdvancedAlarm[]): Alarm[] {
+    return advancedAlarms.map((alarm) => this.convertToBasic(alarm));
   }
 
   /**
    * Check if an alarm has advanced features enabled
    */
+  static hasAdvancedFeatures(alarm: AdvancedAlarm): boolean {
     return !!(
       alarm.scheduleType !== 'daily' ||
       alarm.recurrencePattern ||
@@ -77,6 +85,7 @@ export class AlarmConversionUtil {
   /**
    * Get a summary of advanced features for an alarm
    */
+  static getAdvancedFeaturesSummary(alarm: AdvancedAlarm): string[] {
     const features: string[] = [];
 
     if (alarm.scheduleType !== 'daily') {
