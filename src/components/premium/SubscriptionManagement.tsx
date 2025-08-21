@@ -80,12 +80,12 @@ export function SubscriptionManagement({
     return ["free", "basic", "premium", "pro", "enterprise"];
   };
 
-  const isUpgrade = (tier: string) => {
+  const isUpgrade = (tier: SubscriptionTier) => {
     const hierarchy = getTierHierarchy();
     return hierarchy.indexOf(tier) > hierarchy.indexOf(subscription.tier);
   };
 
-  const isDowngrade = (tier: string) => {
+  const isDowngrade = (tier: SubscriptionTier) => {
     const hierarchy = getTierHierarchy();
     return hierarchy.indexOf(tier) < hierarchy.indexOf(subscription.tier);
   };

@@ -64,6 +64,8 @@ export function SubscriptionDashboard({
     }).format(amount / 100);
   };
 
+
+  const getTierIcon = (tier: SubscriptionTier) => {
     switch (tier) {
       case 'basic':
         return <Zap className="w-5 h-5 text-blue-600" />;

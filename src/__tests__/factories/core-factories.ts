@@ -52,9 +52,11 @@ import {
 // HELPER FACTORIES FOR TYPED OBJECTS
 // ===============================
 
-const createTestSubscription = (tier: string): Subscription => {
+const createTestSubscription = (
+  tier: Subscription['tier'] = 'premium'
+): Subscription => {
   // Map main app tier to premium module tier
-  const premiumTier = tier === 'lifetime' ? 'ultimate' : tier;
+  const premiumTier = tier;
 
   return {
     id: generateId('sub'),
@@ -76,7 +78,7 @@ const createTestSubscription = (tier: string): Subscription => {
   };
 };
 
-const createTestPremiumFeatureAccess = (tier: string): PremiumFeatureAccess => ({
+const createTestPremiumFeatureAccess = (): PremiumFeatureAccess => ({
   // Voice Features
   elevenlabsVoices: tier !== 'free',
   customVoiceMessages: tier !== 'free',

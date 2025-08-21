@@ -16,6 +16,7 @@ interface FeatureLockOverlayProps {
   /** Whether the feature is locked */
   isLocked: boolean;
   /** Required subscription tier */
+  requiredTier?: string;
   /** Feature name */
   featureName: string;
   /** Feature description */
@@ -33,6 +34,7 @@ interface FeatureLockOverlayProps {
   /** Overlay variant */
   variant?: 'overlay' | 'card' | 'banner' | 'minimal';
   /** Callback when upgrade is clicked */
+  onUpgrade?: () => void;
   /** Callback when preview is clicked */
   onPreview?: () => void;
 }
@@ -88,6 +90,8 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
 
   const tierInfo = getTierInfo();
   const TierIcon = tierInfo.icon;
+
+  const handleUpgrade = (tier?: string) => {
 
     if (onUpgrade) {
       onUpgrade(tier || requiredTier);
