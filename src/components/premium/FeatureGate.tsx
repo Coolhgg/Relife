@@ -75,7 +75,6 @@ export function FeatureGate({
 
 interface UpgradePromptProps {
   feature: string;
-  requiredTier: string;
   message: string;
   usageRemaining?: number;
   usageLimit?: number;
@@ -96,7 +95,6 @@ function UpgradePrompt({
   onBypass,
   className = ""
 }: UpgradePromptProps) {
-  const getTierIcon = (tier: string) => {
     switch (tier) {
       case 'basic':
         return <Zap className="w-5 h-5 text-blue-500" />;
@@ -109,7 +107,8 @@ function UpgradePrompt({
     }
   };
 
-  const getTierColor = (tier: string) => {
+
+  const getTierColor = (tier: SubscriptionTier) => {
     switch (tier) {
       case 'basic':
         return 'border-blue-200 bg-blue-50';
@@ -122,7 +121,20 @@ function UpgradePrompt({
     }
   };
 
-  const getTierName = (tier: string) => {
+  const getTierIcon = (tier: SubscriptionTier) => {
+    switch (tier) {
+      case 'basic':
+        return <Zap className="w-5 h-5 text-blue-500" />;
+      case 'premium':
+        return <Sparkles className="w-5 h-5 text-purple-500" />;
+      case 'pro':
+        return <Crown className="w-5 h-5 text-yellow-500" />;
+      default:
+        return <Lock className="w-5 h-5 text-gray-500" />;
+    }
+  };
+
+  const getTierDisplayName = (tier: SubscriptionTier) => {
     switch (tier) {
       case 'basic':
         return 'Basic';
@@ -142,7 +154,7 @@ function UpgradePrompt({
       </div>
 
       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-        {requiredTier ? `${getTierName(requiredTier)} Feature` : 'Premium Feature'}
+        {requiredTier ? `${getTierDisplayName(requiredTier)} Feature` : 'Premium Feature'}
       </h3>
 
       <p className="text-gray-600 mb-4">
@@ -179,7 +191,7 @@ function UpgradePrompt({
               : 'bg-gray-600 hover:bg-gray-700 text-white'
           }`}
         >
-          Upgrade to {getTierName(requiredTier)}
+          Upgrade to {getTierDisplayName(requiredTier)}
         </button>
 
         {canBypass && onBypass && (
@@ -307,4 +319,6 @@ export function UsageLimitIndicator({
       )}
     </div>
   );
-}export default FeatureGate;
+}
+
+export default FeatureGate;

@@ -85,6 +85,7 @@ export function TierComparison({
   features = [],
   className = "",
 }: TierComparisonProps) {
+  const tierHierarchy = [
     "free",
     "basic",
     "premium",

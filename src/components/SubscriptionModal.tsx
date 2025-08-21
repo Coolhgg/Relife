@@ -108,6 +108,8 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     }
   };
 
+
+  const getTierGradient = (tier: SubscriptionTier) => {
     switch (tier) {
       case 'premium': return 'from-amber-500 to-orange-500';
       case 'pro': return 'from-purple-500 to-pink-500';
@@ -341,3 +343,5 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     </AnimatePresence>
   );
 };
+
+export default SubscriptionModal;
