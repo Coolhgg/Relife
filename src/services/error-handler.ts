@@ -70,11 +70,7 @@ class ErrorHandlerService {
   private sentryService: SentryService;
   private analyticsService: AnalyticsService;
   private errorMetrics: ErrorMetrics;
-  private errorQueue: Array<{
-    error: Error;
-    context: ErrorContext;
-    timestamp: number;
-  }> = [];
+  private errorQueue: Array<{error: Error; context: ErrorContext; timestamp: number}> = [];
   private maxQueueSize = 50;
   private rateLimitMap = new Map<string, { count: number; resetTime: number }>();
   private rateLimitWindow = 60000; // 1 minute
@@ -91,7 +87,7 @@ class ErrorHandlerService {
       lastErrorTime: 0,
       totalErrors: 0,
       errorsByType: {},
-      errorsByComponent: {},
+      errorsByComponent: {}
     };
 
     // Load existing metrics from localStorage
@@ -132,16 +128,13 @@ class ErrorHandlerService {
       context,
       timestamp: new Date(timestamp).toISOString(),
       severity,
-      category,
+      category
     };
 
     switch (logLevel) {
       case 'fatal':
       case 'error':
-        console.error(
-          `🚨 [${severity?.toUpperCase() || 'ERROR'}] ${category.toUpperCase()}:`,
-          logData
-        );
+        console.error(`🚨 [${severity?.toUpperCase() || 'ERROR'}] ${category.toUpperCase()}:`, logData);
         break;
       case 'warning':
         console.warn(`⚠️ [WARNING] ${category.toUpperCase()}:`, logData);
@@ -164,13 +157,13 @@ class ErrorHandlerService {
           userAgent: navigator.userAgent,
           url: window.location.href,
           category,
-          severity,
+          severity
         };
 
         this.sentryService.captureException(error, {
           component: context.component || 'unknown',
           action: context.action || 'unknown',
-          metadata: sentryContext,
+          metadata: sentryContext
         });
       } catch (sentryError) {
         console.warn('Failed to send error to Sentry:', sentryError);
@@ -190,7 +183,7 @@ class ErrorHandlerService {
           severity,
           category,
           context: context.context,
-          timestamp: new Date(timestamp).toISOString(),
+          timestamp: new Date(timestamp).toISOString()
         });
       } catch (analyticsError) {
         console.warn('Failed to send error to Analytics:', analyticsError);
@@ -212,7 +205,7 @@ class ErrorHandlerService {
       lastSeen: new Date(timestamp).toISOString(),
       userAgent: navigator.userAgent,
       url: window.location.href,
-      resolved: false,
+      resolved: false
     };
 
     this.storeErrorLocally(errorEntry);
@@ -226,10 +219,7 @@ class ErrorHandlerService {
     return errorId;
   }
 
-  private determineSeverity(
-    error: Error,
-    context: ErrorContext
-  ): 'low' | 'medium' | 'high' | 'critical' {
+  private determineSeverity(error: Error, context: ErrorContext): 'low' | 'medium' | 'high' | 'critical' {
     const level = context.level || 'error';
 
     // Map level to severity if not explicitly provided
@@ -257,27 +247,15 @@ class ErrorHandlerService {
     const contextStr = context.context?.toLowerCase() || '';
     const component = context.component?.toLowerCase() || '';
 
-    if (
-      message.includes('network') ||
-      message.includes('fetch') ||
-      message.includes('timeout')
-    ) {
+    if (message.includes('network') || message.includes('fetch') || message.includes('timeout')) {
       return 'network';
     }
 
-    if (
-      contextStr.includes('auth') ||
-      component.includes('auth') ||
-      message.includes('unauthorized')
-    ) {
+    if (contextStr.includes('auth') || component.includes('auth') || message.includes('unauthorized')) {
       return 'authentication';
     }
 
-    if (
-      message.includes('validation') ||
-      message.includes('invalid') ||
-      message.includes('required')
-    ) {
+    if (message.includes('validation') || message.includes('invalid') || message.includes('required')) {
       return 'validation';
     }
 
@@ -285,11 +263,7 @@ class ErrorHandlerService {
       return 'permission';
     }
 
-    if (
-      contextStr.includes('storage') ||
-      message.includes('localstorage') ||
-      message.includes('indexeddb')
-    ) {
+    if (contextStr.includes('storage') || message.includes('localstorage') || message.includes('indexeddb')) {
       return 'storage';
     }
 
@@ -297,27 +271,15 @@ class ErrorHandlerService {
       return 'service_worker';
     }
 
-    if (
-      contextStr.includes('render') ||
-      component.includes('component') ||
-      contextStr.includes('ui')
-    ) {
+    if (contextStr.includes('render') || component.includes('component') || contextStr.includes('ui')) {
       return 'ui_render';
     }
 
-    if (
-      contextStr.includes('alarm') ||
-      component.includes('alarm') ||
-      contextStr.includes('schedule')
-    ) {
+    if (contextStr.includes('alarm') || component.includes('alarm') || contextStr.includes('schedule')) {
       return 'alarm_logic';
     }
 
-    if (
-      contextStr.includes('voice') ||
-      contextStr.includes('speech') ||
-      contextStr.includes('tts')
-    ) {
+    if (contextStr.includes('voice') || contextStr.includes('speech') || contextStr.includes('tts')) {
       return 'voice_synthesis';
     }
 
@@ -343,7 +305,7 @@ class ErrorHandlerService {
     if (!rateLimit || now > rateLimit.resetTime) {
       this.rateLimitMap.set(fingerprint, {
         count: 1,
-        resetTime: now + this.rateLimitWindow,
+        resetTime: now + this.rateLimitWindow
       });
       return false;
     }
@@ -363,13 +325,11 @@ class ErrorHandlerService {
 
     this.errorMetrics.totalErrors++;
     this.errorMetrics.lastErrorTime = now;
-    this.errorMetrics.errorsByType[errorType] =
-      (this.errorMetrics.errorsByType[errorType] || 0) + 1;
-    this.errorMetrics.errorsByComponent[component] =
-      (this.errorMetrics.errorsByComponent[component] || 0) + 1;
+    this.errorMetrics.errorsByType[errorType] = (this.errorMetrics.errorsByType[errorType] || 0) + 1;
+    this.errorMetrics.errorsByComponent[component] = (this.errorMetrics.errorsByComponent[component] || 0) + 1;
 
     // Calculate error rate (errors per minute over last hour)
-    const oneHourAgo = now - 60 * 60 * 1000;
+    const oneHourAgo = now - (60 * 60 * 1000);
     const recentErrors = this.errorQueue.filter(e => e.timestamp > oneHourAgo).length;
     this.errorMetrics.errorRate = recentErrors / 60; // errors per minute
   }
@@ -399,9 +359,7 @@ class ErrorHandlerService {
       const existingErrors = this.getStoredErrors();
 
       // Check for existing error with same fingerprint
-      const existingIndex = existingErrors.findIndex(
-        e => e.fingerprint === newError.fingerprint
-      );
+      const existingIndex = existingErrors.findIndex(e => e.fingerprint === newError.fingerprint);
 
       if (existingIndex !== -1) {
         // Update existing error
@@ -425,11 +383,7 @@ class ErrorHandlerService {
     }
   }
 
-  private addToBatchQueue(
-    error: Error,
-    context: ErrorContext,
-    timestamp: number
-  ): void {
+  private addToBatchQueue(error: Error, context: ErrorContext, timestamp: number): void {
     const queueEntry = { error, context, timestamp };
     this.errorQueue.push(queueEntry);
 
@@ -466,9 +420,7 @@ class ErrorHandlerService {
     });
   }
 
-  private async sendToRemoteService(
-    errors: Array<{ error: Error; context: ErrorContext; timestamp: number }>
-  ): Promise<void> {
+  private async sendToRemoteService(errors: Array<{error: Error; context: ErrorContext; timestamp: number}>): Promise<void> {
     if (!navigator.onLine) {
       throw new Error('No internet connection');
     }
@@ -479,13 +431,13 @@ class ErrorHandlerService {
         stack: e.error.stack,
         context: e.context,
         timestamp: new Date(e.timestamp).toISOString(),
-        type: e.error.constructor.name,
+        type: e.error.constructor.name
       })),
       timestamp: Date.now(),
       sessionId: this.getSessionId(),
       userAgent: navigator.userAgent,
       url: window.location.href,
-      userId: this.getUserId(),
+      userId: this.getUserId()
     };
 
     // Log for debugging - replace with actual remote service in production
@@ -497,7 +449,7 @@ class ErrorHandlerService {
 
   private setupGlobalErrorHandlers(): void {
     // Catch unhandled JavaScript errors
-    window.addEventListener('error', event => {
+    window.addEventListener('error', (event) => {
       this.handleError(
         new Error(event.message || 'Unknown error'),
         'Global error handler',
@@ -507,14 +459,14 @@ class ErrorHandlerService {
           metadata: {
             filename: event.filename,
             lineno: event.lineno,
-            colno: event.colno,
-          },
+            colno: event.colno
+          }
         }
       );
     });
 
     // Catch unhandled promise rejections
-    window.addEventListener('unhandledrejection', event => {
+    window.addEventListener('unhandledrejection', (event) => {
       this.handleError(
         new Error(event.reason?.toString() || 'Unhandled promise rejection'),
         'Unhandled promise rejection',
@@ -522,34 +474,30 @@ class ErrorHandlerService {
           context: 'unhandled_promise',
           severity: 'high',
           metadata: {
-            reason: event.reason,
-          },
+            reason: event.reason
+          }
         }
       );
     });
 
     // Catch resource loading errors
-    window.addEventListener(
-      'error',
-      event => {
-        if (event.target && event.target !== window) {
-          const target = event.target as HTMLElement;
-          this.handleError(
-            new Error(`Failed to load resource: ${target.tagName}`),
-            'Resource loading error',
-            {
-              context: 'resource_load',
-              severity: 'medium',
-              metadata: {
-                tagName: target.tagName,
-                src: (target as any).src || (target as any).href,
-              },
+    window.addEventListener('error', (event) => {
+      if (event.target && event.target !== window) {
+        const target = event.target as HTMLElement;
+        this.handleError(
+          new Error(`Failed to load resource: ${target.tagName}`),
+          'Resource loading error',
+          {
+            context: 'resource_load',
+            severity: 'medium',
+            metadata: {
+              tagName: target.tagName,
+              src: (target as any).src || (target as any).href
             }
-          );
-        }
-      },
-      true
-    );
+          }
+        );
+      }
+    }, true);
   }
 
   // Wrapper methods for common use cases
@@ -564,10 +512,7 @@ class ErrorHandlerService {
     });
   }
 
-  wrapFunction<T extends (...args: any[]) => any>(
-    fn: T,
-    context: ErrorContext = {}
-  ): T {
+  wrapFunction<T extends (...args: any[]) => any>(fn: T, context: ErrorContext = {}): T {
     return ((...args: any[]) => {
       try {
         const result = fn(...args);
@@ -604,7 +549,7 @@ class ErrorHandlerService {
       lastErrorTime: 0,
       totalErrors: 0,
       errorsByType: {},
-      errorsByComponent: {},
+      errorsByComponent: {}
     };
   }
 
@@ -612,21 +557,15 @@ class ErrorHandlerService {
     const errors = this.getStoredErrors();
     const totalErrors = errors.reduce((sum, error) => sum + error.count, 0);
 
-    const errorsByCategory = errors.reduce(
-      (acc, error) => {
-        acc[error.category] = (acc[error.category] || 0) + error.count;
-        return acc;
-      },
-      {} as Record<ErrorCategory, number>
-    );
+    const errorsByCategory = errors.reduce((acc, error) => {
+      acc[error.category] = (acc[error.category] || 0) + error.count;
+      return acc;
+    }, {} as Record<ErrorCategory, number>);
 
-    const errorsBySeverity = errors.reduce(
-      (acc, error) => {
-        acc[error.severity] = (acc[error.severity] || 0) + error.count;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
+    const errorsBySeverity = errors.reduce((acc, error) => {
+      acc[error.severity] = (acc[error.severity] || 0) + error.count;
+      return acc;
+    }, {} as Record<string, number>);
 
     const topErrors = errors
       .sort((a, b) => b.count - a.count)
@@ -642,7 +581,7 @@ class ErrorHandlerService {
       errorsBySeverity,
       topErrors,
       errorRate,
-      averageErrorsPerSession: errorRate,
+      averageErrorsPerSession: errorRate
     };
   }
 

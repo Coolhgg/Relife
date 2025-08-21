@@ -7,7 +7,7 @@ import ErrorBoundary from '../ErrorBoundary';
 // Test component that throws errors
 const ThrowError: React.FC<{ shouldThrow?: boolean; errorMessage?: string }> = ({
   shouldThrow = false,
-  errorMessage = 'Test error',
+  errorMessage = 'Test error'
 }) => {
   if (shouldThrow) {
     throw new Error(errorMessage);
@@ -29,7 +29,7 @@ const AsyncError: React.FC<{ shouldThrow?: boolean }> = ({ shouldThrow = false }
 describe('ErrorBoundary', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-
+    
     // Suppress console.error for these tests since we're intentionally throwing errors
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -75,9 +75,7 @@ describe('ErrorBoundary', () => {
       );
 
       expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
-      expect(
-        screen.getByText(/we encountered an unexpected error/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/we encountered an unexpected error/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
     });
@@ -139,9 +137,7 @@ describe('ErrorBoundary', () => {
 
   describe('custom fallback UI', () => {
     test('renders custom fallback when provided', () => {
-      const CustomFallback = (
-        <div data-testid="custom-fallback">Custom error message</div>
-      );
+      const CustomFallback = <div data-testid="custom-fallback">Custom error message</div>;
 
       render(
         <ErrorBoundary fallback={CustomFallback}>
@@ -204,7 +200,7 @@ describe('ErrorBoundary', () => {
 
     test('go back button calls onNavigateBack when provided', () => {
       const mockNavigateBack = vi.fn();
-
+      
       render(
         <ErrorBoundary onNavigateBack={mockNavigateBack}>
           <ThrowError shouldThrow={true} />
@@ -222,7 +218,7 @@ describe('ErrorBoundary', () => {
       const mockBack = vi.fn();
       Object.defineProperty(window, 'history', {
         value: { back: mockBack },
-        writable: true,
+        writable: true
       });
 
       render(
@@ -244,8 +240,8 @@ describe('ErrorBoundary', () => {
       const mockHandleError = vi.fn();
       vi.doMock('../../services/error-handler', () => ({
         ErrorHandler: {
-          handleError: mockHandleError,
-        },
+          handleError: mockHandleError
+        }
       }));
 
       render(
@@ -279,10 +275,7 @@ describe('ErrorBoundary', () => {
     test('handles JavaScript errors', () => {
       render(
         <ErrorBoundary>
-          <ThrowError
-            shouldThrow={true}
-            errorMessage="TypeError: Cannot read property"
-          />
+          <ThrowError shouldThrow={true} errorMessage="TypeError: Cannot read property" />
         </ErrorBoundary>
       );
 
@@ -309,7 +302,7 @@ describe('ErrorBoundary', () => {
     test('does not catch async errors in useEffect', () => {
       // Error boundaries do not catch async errors, so this should not trigger the boundary
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation();
-
+      
       render(
         <ErrorBoundary>
           <AsyncError shouldThrow={true} />
@@ -369,9 +362,7 @@ describe('ErrorBoundary', () => {
       );
 
       // The error container should have appropriate ARIA attributes
-      const errorContainer = screen
-        .getByText('Oops! Something went wrong')
-        .closest('div');
+      const errorContainer = screen.getByText('Oops! Something went wrong').closest('div');
       expect(errorContainer).toBeInTheDocument();
     });
   });

@@ -59,9 +59,7 @@ describe('Accessibility Integration Tests', () => {
 
       // Find elements that should be focusable
       const dashboardButton = screen.getByRole('button', { name: /visual & display/i });
-      const testerDialog = screen.getByRole('dialog', {
-        name: /accessibility tester/i,
-      });
+      const testerDialog = screen.getByRole('dialog', { name: /accessibility tester/i });
 
       // Test focus management
       await user.tab();
@@ -139,15 +137,11 @@ describe('Accessibility Integration Tests', () => {
       );
 
       // Enable screen reader mode in dashboard
-      const screenReaderToggle = screen.getByRole('switch', {
-        name: /screen reader support/i,
-      });
+      const screenReaderToggle = screen.getByRole('switch', { name: /screen reader support/i });
       await user.click(screenReaderToggle);
 
       // Navigate to screen reader testing section in tester
-      const screenReaderTestButton = screen.getByRole('button', {
-        name: /screen reader test/i,
-      });
+      const screenReaderTestButton = screen.getByRole('button', { name: /screen reader test/i });
       await user.click(screenReaderTestButton);
 
       // Verify proper ARIA labels are present
@@ -192,7 +186,7 @@ describe('Accessibility Integration Tests', () => {
             touchTargetSize: 'large',
             hapticFeedback: true,
             gestureSupport: true,
-          },
+          }
         }
       );
 
@@ -201,12 +195,8 @@ describe('Accessibility Integration Tests', () => {
       await user.click(touchSection);
 
       // Verify touch-specific controls are available
-      expect(
-        screen.getByRole('slider', { name: /touch target size/i })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('switch', { name: /haptic feedback/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('slider', { name: /touch target size/i })).toBeInTheDocument();
+      expect(screen.getByRole('switch', { name: /haptic feedback/i })).toBeInTheDocument();
     });
   });
 
@@ -220,9 +210,10 @@ describe('Accessibility Integration Tests', () => {
       );
 
       // Test tab order across both components
-      const focusableElements = screen
-        .getAllByRole('button')
-        .concat(screen.getAllByRole('switch'), screen.getAllByRole('slider'));
+      const focusableElements = screen.getAllByRole('button').concat(
+        screen.getAllByRole('switch'),
+        screen.getAllByRole('slider')
+      );
 
       // Navigate through all focusable elements
       for (let i = 0; i < Math.min(focusableElements.length, 10); i++) {
@@ -317,7 +308,9 @@ describe('Accessibility Integration Tests', () => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
 
       // Should not have thrown unhandled errors
-      expect(consoleSpy).not.toHaveBeenCalledWith(expect.stringContaining('Unhandled'));
+      expect(consoleSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining('Unhandled')
+      );
 
       consoleSpy.mockRestore();
     });
@@ -409,9 +402,7 @@ describe('Accessibility Integration Tests', () => {
 
       // Verify settings were reset
       await waitFor(() => {
-        const resetHighContrastToggle = screen.getByRole('switch', {
-          name: /high contrast/i,
-        });
+        const resetHighContrastToggle = screen.getByRole('switch', { name: /high contrast/i });
         expect(resetHighContrastToggle).not.toBeChecked();
       });
     });

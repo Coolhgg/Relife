@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 // Simple test component to verify Jest setup works
-const SimpleComponent = ({ message = 'Hello Testing!' }: { message?: string }) => (
+const SimpleComponent = ({ message = "Hello Testing!" }: { message?: string }) => (
   <div data-testid="simple-component">
     <h1>{message}</h1>
     <p>Jest and React Testing Library are working!</p>
@@ -16,9 +16,7 @@ describe('Simple Test Suite', () => {
     // Test that the component renders
     expect(screen.getByTestId('simple-component')).toBeDefined();
     expect(screen.getByText('Hello Testing!')).toBeDefined();
-    expect(
-      screen.getByText('Jest and React Testing Library are working!')
-    ).toBeDefined();
+    expect(screen.getByText('Jest and React Testing Library are working!')).toBeDefined();
   });
 
   test('renders custom message', () => {

@@ -3,7 +3,7 @@ import { Download, X, Smartphone, Monitor } from 'lucide-react';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+  userChoice: Promise<{outcome: 'accepted' | 'dismissed'}>;
 }
 
 declare global {
@@ -21,18 +21,11 @@ interface PWAInstallPromptProps {
   onDismiss?: () => void;
 }
 
-const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
-  onInstall,
-  onDismiss,
-}) => {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(
-    null
-  );
+const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onInstall, onDismiss }) => {
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
-  const [platform, setPlatform] = useState<'android' | 'ios' | 'desktop' | 'other'>(
-    'other'
-  );
+  const [platform, setPlatform] = useState<'android' | 'ios' | 'desktop' | 'other'>('other');
 
   useEffect(() => {
     // Check if already installed
@@ -121,33 +114,33 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
           steps: [
             'Tap the Share button',
             'Scroll down and tap "Add to Home Screen"',
-            'Tap "Add" to install the app',
+            'Tap "Add" to install the app'
           ],
-          icon: <Smartphone className="w-6 h-6" />,
+          icon: <Smartphone className="w-6 h-6" />
         };
       case 'android':
         return {
           title: 'Install Smart Alarm',
           steps: [
             'Tap "Install" when prompted',
-            'Or use browser menu "Add to Home screen"',
+            'Or use browser menu "Add to Home screen"'
           ],
-          icon: <Smartphone className="w-6 h-6" />,
+          icon: <Smartphone className="w-6 h-6" />
         };
       case 'desktop':
         return {
           title: 'Install Smart Alarm',
           steps: [
             'Click the install button in your browser',
-            'Or check the address bar for install option',
+            'Or check the address bar for install option'
           ],
-          icon: <Monitor className="w-6 h-6" />,
+          icon: <Monitor className="w-6 h-6" />
         };
       default:
         return {
           title: 'Install Smart Alarm',
           steps: ['Use your browser\'s "Add to Home Screen" option'],
-          icon: <Download className="w-6 h-6" />,
+          icon: <Download className="w-6 h-6" />
         };
     }
   };

@@ -12,7 +12,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
     enableCloudSync,
     forceCloudSync,
     resetCloudData,
-    onCloudSyncStatusChange,
+    onCloudSyncStatusChange
   } = useTheme();
 
   const [isEnabled, setIsEnabled] = useState(false);
@@ -133,16 +133,16 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className={`flex items-center space-x-2 ${getStatusColor()}`}>
-                  <div
-                    className={`h-2 w-2 rounded-full ${
-                      isSyncing
-                        ? 'animate-pulse bg-primary-500'
-                        : cloudSyncStatus.isOnline && isEnabled
-                          ? 'bg-green-500'
-                          : 'bg-gray-400'
-                    }`}
-                  />
-                  <span className="text-sm font-medium">{getStatusText()}</span>
+                  <div className={`h-2 w-2 rounded-full ${
+                    isSyncing
+                      ? 'animate-pulse bg-primary-500'
+                      : cloudSyncStatus.isOnline && isEnabled
+                        ? 'bg-green-500'
+                        : 'bg-gray-400'
+                  }`} />
+                  <span className="text-sm font-medium">
+                    {getStatusText()}
+                  </span>
                 </div>
               </div>
               <button
@@ -176,9 +176,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
               {cloudSyncStatus.pendingChanges > 0 && (
                 <div className="flex justify-between">
                   <span>Pending Changes:</span>
-                  <span className="text-yellow-600">
-                    {cloudSyncStatus.pendingChanges}
-                  </span>
+                  <span className="text-yellow-600">{cloudSyncStatus.pendingChanges}</span>
                 </div>
               )}
             </div>
@@ -214,9 +212,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
                   defaultChecked={true}
                   className="h-4 w-4 rounded border-border-primary text-primary-500 focus:ring-primary-500"
                 />
-                <span className="text-sm text-text-secondary">
-                  Auto-sync theme changes
-                </span>
+                <span className="text-sm text-text-secondary">Auto-sync theme changes</span>
               </label>
 
               <label className="flex items-center space-x-3">
@@ -225,9 +221,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
                   defaultChecked={true}
                   className="h-4 w-4 rounded border-border-primary text-primary-500 focus:ring-primary-500"
                 />
-                <span className="text-sm text-text-secondary">
-                  Sync personalization settings
-                </span>
+                <span className="text-sm text-text-secondary">Sync personalization settings</span>
               </label>
 
               <label className="flex items-center space-x-3">
@@ -244,9 +238,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
           {/* Danger Zone */}
           <div className="border-t border-border-primary pt-4">
             <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
-              <h4 className="text-sm font-semibold text-red-800 dark:text-red-200">
-                Danger Zone
-              </h4>
+              <h4 className="text-sm font-semibold text-red-800 dark:text-red-200">Danger Zone</h4>
               <p className="mt-1 text-xs text-red-600 dark:text-red-400">
                 Reset all cloud data and return to default settings
               </p>

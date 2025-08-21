@@ -37,7 +37,7 @@ function useAuth(): AuthHook {
     forgotPasswordSuccess: false,
     sessionExpiry: null,
     csrfToken: null,
-    rateLimitRemaining: 10,
+    rateLimitRemaining: 10
   });
 
   const sessionTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -60,7 +60,7 @@ function useAuth(): AuthHook {
           user,
           isInitialized: true,
           csrfToken,
-          sessionExpiry: user ? new Date(Date.now() + SESSION_TIMEOUT_MS) : null,
+          sessionExpiry: user ? new Date(Date.now() + SESSION_TIMEOUT_MS) : null
         }));
 
         if (user) {
@@ -69,9 +69,7 @@ function useAuth(): AuthHook {
 
         if (user) {
           const analytics = AnalyticsService.getInstance();
-          analytics.trackFeatureUsage('user_session_restored', undefined, {
-            userId: user.id,
-          });
+          analytics.trackFeatureUsage('user_session_restored', undefined, { userId: user.id });
         }
       } catch (error) {
         ErrorHandler.handleError(
@@ -82,7 +80,7 @@ function useAuth(): AuthHook {
         setAuthState(prev => ({
           ...prev,
           isInitialized: true,
-          error: 'Failed to initialize authentication',
+          error: 'Failed to initialize authentication'
         }));
       }
     };
@@ -90,45 +88,43 @@ function useAuth(): AuthHook {
     initializeAuth();
 
     // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event, session?.user?.id);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.id);
 
-      if (event === 'SIGNED_IN' && session?.user) {
-        const userProfile = await SupabaseService.getCurrentUser();
-        const csrfToken = SecurityService.generateCSRFToken();
+        if (event === 'SIGNED_IN' && session?.user) {
+          const userProfile = await SupabaseService.getCurrentUser();
+          const csrfToken = SecurityService.generateCSRFToken();
 
-        setAuthState(prev => ({
-          ...prev,
-          user: userProfile,
-          error: null,
-          csrfToken,
-          sessionExpiry: new Date(Date.now() + SESSION_TIMEOUT_MS),
-          rateLimitRemaining: 10,
-        }));
+          setAuthState(prev => ({
+            ...prev,
+            user: userProfile,
+            error: null,
+            csrfToken,
+            sessionExpiry: new Date(Date.now() + SESSION_TIMEOUT_MS),
+            rateLimitRemaining: 10
+          }));
 
-        startSessionManagement();
+          startSessionManagement();
 
-        const analytics = AnalyticsService.getInstance();
-        analytics.trackFeatureUsage('user_signed_in', undefined, {
-          userId: session.user.id,
-        });
-      } else if (event === 'SIGNED_OUT') {
-        stopSessionManagement();
-        setAuthState(prev => ({
-          ...prev,
-          user: null,
-          error: null,
-          csrfToken: null,
-          sessionExpiry: null,
-          rateLimitRemaining: 10,
-        }));
+          const analytics = AnalyticsService.getInstance();
+          analytics.trackFeatureUsage('user_signed_in', undefined, { userId: session.user.id });
+        } else if (event === 'SIGNED_OUT') {
+          stopSessionManagement();
+          setAuthState(prev => ({
+            ...prev,
+            user: null,
+            error: null,
+            csrfToken: null,
+            sessionExpiry: null,
+            rateLimitRemaining: 10
+          }));
 
-        const analytics = AnalyticsService.getInstance();
-        analytics.trackFeatureUsage('user_signed_out');
+          const analytics = AnalyticsService.getInstance();
+          analytics.trackFeatureUsage('user_signed_out');
+        }
       }
-    });
+    );
 
     return () => {
       subscription.unsubscribe();
@@ -160,13 +156,7 @@ function useAuth(): AuthHook {
     }, 60000); // Check every minute
 
     // Track user activity
-    const activityEvents = [
-      'mousedown',
-      'mousemove',
-      'keypress',
-      'scroll',
-      'touchstart',
-    ];
+    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
     const updateActivity = () => {
       lastActivityRef.current = new Date();
     };
@@ -183,13 +173,7 @@ function useAuth(): AuthHook {
     }
 
     // Remove activity listeners
-    const activityEvents = [
-      'mousedown',
-      'mousemove',
-      'keypress',
-      'scroll',
-      'touchstart',
-    ];
+    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
     const updateActivity = () => {
       lastActivityRef.current = new Date();
     };
@@ -213,7 +197,7 @@ function useAuth(): AuthHook {
         setAuthState(prev => ({
           ...prev,
           sessionExpiry: new Date(Date.now() + SESSION_TIMEOUT_MS),
-          csrfToken: SecurityService.generateCSRFToken(),
+          csrfToken: SecurityService.generateCSRFToken()
         }));
 
         lastActivityRef.current = new Date();
@@ -240,14 +224,10 @@ function useAuth(): AuthHook {
     // This would typically be implemented with a more sophisticated rate limiting system
     // For now, we'll use the SecurityService rate limiting
     try {
-      const canProceed = SecurityService.checkRateLimit(
-        action,
-        5,
-        RATE_LIMIT_WINDOW_MS
-      );
+      const canProceed = SecurityService.checkRateLimit(action, 5, RATE_LIMIT_WINDOW_MS);
       return {
         remaining: canProceed ? authState.rateLimitRemaining - 1 : 0,
-        resetTime: canProceed ? new Date(Date.now() + RATE_LIMIT_WINDOW_MS) : null,
+        resetTime: canProceed ? new Date(Date.now() + RATE_LIMIT_WINDOW_MS) : null
       };
     } catch {
       return { remaining: 0, resetTime: null };
@@ -260,7 +240,7 @@ function useAuth(): AuthHook {
       setAuthState(prev => ({
         ...prev,
         error: 'Too many sign-in attempts. Please try again in 15 minutes.',
-        rateLimitRemaining: 0,
+        rateLimitRemaining: 0
       }));
       return;
     }
@@ -270,7 +250,7 @@ function useAuth(): AuthHook {
       isLoading: true,
       error: null,
       forgotPasswordSuccess: false,
-      rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1),
+      rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1)
     }));
 
     try {
@@ -290,27 +270,24 @@ function useAuth(): AuthHook {
           ...prev,
           user,
           isLoading: false,
-          error: null,
+          error: null
         }));
 
         const duration = performance.now() - startTime;
         analytics.trackFeatureUsage('user_sign_in_success', duration, {
           userId: user.id,
-          method: 'email_password',
+          method: 'email_password'
         });
       } else {
         setAuthState(prev => ({
           ...prev,
           isLoading: false,
-          error: 'Sign in failed. Please try again.',
+          error: 'Sign in failed. Please try again.'
         }));
       }
     } catch (error) {
       const analytics = AnalyticsService.getInstance();
-      analytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
-        'sign_in_error'
-      );
+      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'sign_in_error');
 
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
@@ -321,22 +298,18 @@ function useAuth(): AuthHook {
       setAuthState(prev => ({
         ...prev,
         isLoading: false,
-        error: 'An unexpected error occurred. Please try again.',
+        error: 'An unexpected error occurred. Please try again.'
       }));
     }
   };
 
-  const signUp = async (
-    email: string,
-    password: string,
-    name: string
-  ): Promise<void> => {
+  const signUp = async (email: string, password: string, name: string): Promise<void> => {
     // Rate limiting check
     if (!SecurityService.checkRateLimit('sign_up', 3, RATE_LIMIT_WINDOW_MS)) {
       setAuthState(prev => ({
         ...prev,
         error: 'Too many sign-up attempts. Please try again in 15 minutes.',
-        rateLimitRemaining: 0,
+        rateLimitRemaining: 0
       }));
       return;
     }
@@ -346,7 +319,7 @@ function useAuth(): AuthHook {
       isLoading: true,
       error: null,
       forgotPasswordSuccess: false,
-      rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1),
+      rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1)
     }));
 
     try {
@@ -366,27 +339,24 @@ function useAuth(): AuthHook {
           ...prev,
           user,
           isLoading: false,
-          error: null,
+          error: null
         }));
 
         const duration = performance.now() - startTime;
         analytics.trackFeatureUsage('user_sign_up_success', duration, {
           userId: user.id,
-          method: 'email_password',
+          method: 'email_password'
         });
       } else {
         setAuthState(prev => ({
           ...prev,
           isLoading: false,
-          error: 'Account creation failed. Please try again.',
+          error: 'Account creation failed. Please try again.'
         }));
       }
     } catch (error) {
       const analytics = AnalyticsService.getInstance();
-      analytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
-        'sign_up_error'
-      );
+      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'sign_up_error');
 
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
@@ -397,7 +367,7 @@ function useAuth(): AuthHook {
       setAuthState(prev => ({
         ...prev,
         isLoading: false,
-        error: 'An unexpected error occurred. Please try again.',
+        error: 'An unexpected error occurred. Please try again.'
       }));
     }
   };
@@ -420,16 +390,13 @@ function useAuth(): AuthHook {
         ...prev,
         user: null,
         isLoading: false,
-        error: null,
+        error: null
       }));
 
       analytics.trackFeatureUsage('user_sign_out_success', undefined, { userId });
     } catch (error) {
       const analytics = AnalyticsService.getInstance();
-      analytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
-        'sign_out_error'
-      );
+      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'sign_out_error');
 
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
@@ -440,7 +407,7 @@ function useAuth(): AuthHook {
       setAuthState(prev => ({
         ...prev,
         isLoading: false,
-        error: 'Failed to sign out. Please try again.',
+        error: 'Failed to sign out. Please try again.'
       }));
     }
   };
@@ -451,7 +418,7 @@ function useAuth(): AuthHook {
       setAuthState(prev => ({
         ...prev,
         error: 'Too many password reset attempts. Please try again in 15 minutes.',
-        rateLimitRemaining: 0,
+        rateLimitRemaining: 0
       }));
       return;
     }
@@ -461,14 +428,14 @@ function useAuth(): AuthHook {
       isLoading: true,
       error: null,
       forgotPasswordSuccess: false,
-      rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1),
+      rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1)
     }));
 
     try {
       const analytics = AnalyticsService.getInstance();
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: `${window.location.origin}/reset-password`
       });
 
       if (error) {
@@ -481,16 +448,13 @@ function useAuth(): AuthHook {
         ...prev,
         isLoading: false,
         error: null,
-        forgotPasswordSuccess: true,
+        forgotPasswordSuccess: true
       }));
 
       analytics.trackFeatureUsage('password_reset_requested', undefined, { email });
     } catch (error) {
       const analytics = AnalyticsService.getInstance();
-      analytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
-        'password_reset_error'
-      );
+      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'password_reset_error');
 
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
@@ -501,7 +465,7 @@ function useAuth(): AuthHook {
       setAuthState(prev => ({
         ...prev,
         isLoading: false,
-        error: 'Failed to send reset email. Please try again.',
+        error: 'Failed to send reset email. Please try again.'
       }));
     }
   };
@@ -526,7 +490,7 @@ function useAuth(): AuthHook {
         .update({
           name: updates.name,
           preferences: updates.preferences,
-          updated_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         })
         .eq('id', authState.user.id);
 
@@ -538,26 +502,23 @@ function useAuth(): AuthHook {
       // Update local state
       const updatedUser: User = {
         ...authState.user,
-        ...updates,
+        ...updates
       };
 
       setAuthState(prev => ({
         ...prev,
         user: updatedUser,
         isLoading: false,
-        error: null,
+        error: null
       }));
 
       analytics.trackFeatureUsage('user_profile_updated', undefined, {
         userId: authState.user.id,
-        updatedFields: Object.keys(updates),
+        updatedFields: Object.keys(updates)
       });
     } catch (error) {
       const analytics = AnalyticsService.getInstance();
-      analytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
-        'profile_update_error'
-      );
+      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'profile_update_error');
 
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
@@ -568,7 +529,7 @@ function useAuth(): AuthHook {
       setAuthState(prev => ({
         ...prev,
         isLoading: false,
-        error: 'Failed to update profile. Please try again.',
+        error: 'Failed to update profile. Please try again.'
       }));
     }
   };
@@ -583,7 +544,7 @@ function useAuth(): AuthHook {
     updateUserProfile,
     refreshSession,
     isSessionValid,
-    getRateLimitInfo,
+    getRateLimitInfo
   };
 }
 

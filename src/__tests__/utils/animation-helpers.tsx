@@ -57,26 +57,17 @@ export const animationMocks = {
         animationPlayState: 'running',
         getPropertyValue: jest.fn((property: string) => {
           switch (property) {
-            case 'animation-name':
-              return 'mock-animation';
-            case 'animation-duration':
-              return '0.3s';
-            case 'animation-timing-function':
-              return 'ease-in-out';
-            case 'animation-delay':
-              return '0s';
-            case 'animation-iteration-count':
-              return '1';
-            case 'animation-direction':
-              return 'normal';
-            case 'animation-fill-mode':
-              return 'none';
-            case 'animation-play-state':
-              return 'running';
-            default:
-              return originalStyles.getPropertyValue(property);
+            case 'animation-name': return 'mock-animation';
+            case 'animation-duration': return '0.3s';
+            case 'animation-timing-function': return 'ease-in-out';
+            case 'animation-delay': return '0s';
+            case 'animation-iteration-count': return '1';
+            case 'animation-direction': return 'normal';
+            case 'animation-fill-mode': return 'none';
+            case 'animation-play-state': return 'running';
+            default: return originalStyles.getPropertyValue(property);
           }
-        }),
+        })
       } as CSSStyleDeclaration;
     });
   },
@@ -98,18 +89,13 @@ export const animationMocks = {
         transitionDelay: '0s',
         getPropertyValue: jest.fn((property: string) => {
           switch (property) {
-            case 'transition-property':
-              return 'all';
-            case 'transition-duration':
-              return '0.2s';
-            case 'transition-timing-function':
-              return 'ease';
-            case 'transition-delay':
-              return '0s';
-            default:
-              return originalStyles.getPropertyValue(property);
+            case 'transition-property': return 'all';
+            case 'transition-duration': return '0.2s';
+            case 'transition-timing-function': return 'ease';
+            case 'transition-delay': return '0s';
+            default: return originalStyles.getPropertyValue(property);
           }
-        }),
+        })
       } as CSSStyleDeclaration;
     });
   },
@@ -128,7 +114,7 @@ export const animationMocks = {
       pendingAnimationFrames.set(id, {
         id,
         callback,
-        time: currentTime + 16.67, // ~60fps
+        time: currentTime + 16.67 // ~60fps
       });
       return id;
     });
@@ -162,19 +148,19 @@ export const animationMocks = {
 
     Object.defineProperty(window, 'requestAnimationFrame', {
       value: requestAnimationFrame,
-      writable: true,
+      writable: true
     });
 
     Object.defineProperty(window, 'cancelAnimationFrame', {
       value: cancelAnimationFrame,
-      writable: true,
+      writable: true
     });
 
     return {
       requestAnimationFrame,
       cancelAnimationFrame,
       advanceTime,
-      runAllFrames,
+      runAllFrames
     };
   },
 
@@ -196,11 +182,11 @@ export const animationMocks = {
       oncancel: null,
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
+      dispatchEvent: jest.fn()
     };
 
     Element.prototype.animate = jest.fn(() => mockAnimation);
-  },
+  }
 };
 
 // Animation Testing Utilities
@@ -271,46 +257,34 @@ export const animationUtils = {
       const event = new AnimationEvent('animationstart', {
         animationName,
         elapsedTime: 0,
-        pseudoElement: '',
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
     },
 
-    animationIteration(
-      element: HTMLElement,
-      animationName: string,
-      elapsedTime: number
-    ): void {
+    animationIteration(element: HTMLElement, animationName: string, elapsedTime: number): void {
       const event = new AnimationEvent('animationiteration', {
         animationName,
         elapsedTime,
-        pseudoElement: '',
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
     },
 
-    animationEnd(
-      element: HTMLElement,
-      animationName: string,
-      elapsedTime: number
-    ): void {
+    animationEnd(element: HTMLElement, animationName: string, elapsedTime: number): void {
       const event = new AnimationEvent('animationend', {
         animationName,
         elapsedTime,
-        pseudoElement: '',
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
     },
 
-    animationCancel(
-      element: HTMLElement,
-      animationName: string,
-      elapsedTime: number
-    ): void {
+    animationCancel(element: HTMLElement, animationName: string, elapsedTime: number): void {
       const event = new AnimationEvent('animationcancel', {
         animationName,
         elapsedTime,
-        pseudoElement: '',
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
     },
@@ -319,36 +293,28 @@ export const animationUtils = {
       const event = new TransitionEvent('transitionstart', {
         propertyName,
         elapsedTime: 0,
-        pseudoElement: '',
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
     },
 
-    transitionEnd(
-      element: HTMLElement,
-      propertyName: string,
-      elapsedTime: number
-    ): void {
+    transitionEnd(element: HTMLElement, propertyName: string, elapsedTime: number): void {
       const event = new TransitionEvent('transitionend', {
         propertyName,
         elapsedTime,
-        pseudoElement: '',
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
     },
 
-    transitionCancel(
-      element: HTMLElement,
-      propertyName: string,
-      elapsedTime: number
-    ): void {
+    transitionCancel(element: HTMLElement, propertyName: string, elapsedTime: number): void {
       const event = new TransitionEvent('transitioncancel', {
         propertyName,
         elapsedTime,
-        pseudoElement: '',
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
-    },
+    }
   },
 
   /**
@@ -356,9 +322,7 @@ export const animationUtils = {
    */
   hasAnimation(element: HTMLElement, animationName: string): boolean {
     const computedStyle = window.getComputedStyle(element);
-    const animationNames = computedStyle.animationName
-      .split(',')
-      .map(name => name.trim());
+    const animationNames = computedStyle.animationName.split(',').map(name => name.trim());
     return animationNames.includes(animationName);
   },
 
@@ -367,12 +331,8 @@ export const animationUtils = {
    */
   hasTransition(element: HTMLElement, property: string): boolean {
     const computedStyle = window.getComputedStyle(element);
-    const transitionProperties = computedStyle.transitionProperty
-      .split(',')
-      .map(prop => prop.trim());
-    return (
-      transitionProperties.includes(property) || transitionProperties.includes('all')
-    );
+    const transitionProperties = computedStyle.transitionProperty.split(',').map(prop => prop.trim());
+    return transitionProperties.includes(property) || transitionProperties.includes('all');
   },
 
   /**
@@ -405,7 +365,7 @@ export const animationUtils = {
     }
 
     return 0;
-  },
+  }
 };
 
 // Alarm-specific Animation Utilities
@@ -487,7 +447,7 @@ export const alarmAnimationUtils = {
     // Verify visibility
     const computedStyle = window.getComputedStyle(timePicker);
     expect(computedStyle.opacity).toBe('1');
-  },
+  }
 };
 
 // React Animation Library Helpers
@@ -501,14 +461,14 @@ export const reactAnimationHelpers = {
         div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
         button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
         span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
-        img: ({ children, ...props }: any) => <img {...props}>{children}</img>,
+        img: ({ children, ...props }: any) => <img {...props}>{children}</img>
       },
       AnimatePresence: ({ children }: any) => children,
       useAnimation: () => ({
         start: jest.fn(),
         stop: jest.fn(),
-        set: jest.fn(),
-      }),
+        set: jest.fn()
+      })
     }));
   },
 
@@ -522,7 +482,7 @@ export const reactAnimationHelpers = {
         div: 'div',
         button: 'button',
         span: 'span',
-        img: 'img',
+        img: 'img'
       },
       config: {
         default: {},
@@ -530,8 +490,8 @@ export const reactAnimationHelpers = {
         wobbly: {},
         stiff: {},
         slow: {},
-        molasses: {},
-      },
+        molasses: {}
+      }
     }));
   },
 
@@ -545,10 +505,12 @@ export const reactAnimationHelpers = {
       },
       TransitionGroup: ({ children }: any) => children,
       Transition: ({ children, ...props }: any) => {
-        return typeof children === 'function' ? children('entered') : children;
-      },
+        return typeof children === 'function'
+          ? children('entered')
+          : children;
+      }
     }));
-  },
+  }
 };
 
 // Performance Testing for Animations
@@ -562,7 +524,7 @@ export const animationPerformanceUtils = {
   ): Promise<{ duration: number; frames: number }> {
     return new Promise(resolve => {
       let frameCount = 0;
-      const startTime = performance.now();
+      let startTime = performance.now();
 
       const measureFrame = () => {
         frameCount++;
@@ -573,7 +535,7 @@ export const animationPerformanceUtils = {
           const endTime = performance.now();
           resolve({
             duration: endTime - startTime,
-            frames: frameCount,
+            frames: frameCount
           });
         }
       };
@@ -618,9 +580,9 @@ export const animationPerformanceUtils = {
       cleanup: () => {
         isMonitoring = false;
         jankFrames = [];
-      },
+      }
     };
-  },
+  }
 };
 
 // Cleanup Utilities
@@ -656,7 +618,7 @@ export const animationCleanup = {
     jest.clearAllTimers();
     pendingAnimationFrames.clear();
     currentTime = 0;
-  },
+  }
 };
 
 // Complete Animation Test Suite
@@ -700,13 +662,13 @@ export const createAnimationTestSuite = () => ({
   testResponsiveAnimations(element: HTMLElement): void {
     // Test different screen sizes
     Object.defineProperty(window, 'matchMedia', {
-      value: jest.fn().mockImplementation(query => ({
+      value: jest.fn().mockImplementation((query) => ({
         matches: query.includes('max-width: 768px'),
         media: query,
         onchange: null,
         addListener: jest.fn(),
-        removeListener: jest.fn(),
-      })),
+        removeListener: jest.fn()
+      }))
     });
 
     // Check mobile animation
@@ -716,7 +678,7 @@ export const createAnimationTestSuite = () => ({
     } else {
       expect(animationUtils.hasAnimation(element, 'desktopFadeIn')).toBe(true);
     }
-  },
+  }
 });
 
 export default {
@@ -726,5 +688,5 @@ export default {
   reactAnimationHelpers,
   animationPerformanceUtils,
   animationCleanup,
-  createAnimationTestSuite,
+  createAnimationTestSuite
 };

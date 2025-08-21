@@ -36,7 +36,7 @@ export class ScreenReaderService {
       verbosityLevel: 'medium',
       speechRate: 1.0,
       autoAnnounceChanges: true,
-      preferredVoice: undefined,
+      preferredVoice: undefined
     };
 
     this.initializeLiveRegions();
@@ -74,11 +74,7 @@ export class ScreenReaderService {
     if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) {
       // Check for NVDA, JAWS, or other screen readers
       const userAgent = navigator.userAgent.toLowerCase();
-      if (
-        userAgent.includes('nvda') ||
-        userAgent.includes('jaws') ||
-        userAgent.includes('dragon')
-      ) {
+      if (userAgent.includes('nvda') || userAgent.includes('jaws') || userAgent.includes('dragon')) {
         return true;
       }
     }
@@ -109,8 +105,7 @@ export class ScreenReaderService {
     this.liveRegion.setAttribute('aria-atomic', 'true');
     this.liveRegion.setAttribute('aria-relevant', 'additions text');
     this.liveRegion.className = 'sr-only';
-    this.liveRegion.style.cssText =
-      'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
+    this.liveRegion.style.cssText = 'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
 
     // Ensure the region is inserted after page load
     if (document.readyState === 'loading') {
@@ -128,8 +123,7 @@ export class ScreenReaderService {
     this.statusRegion.setAttribute('aria-atomic', 'true');
     this.statusRegion.setAttribute('aria-relevant', 'additions text');
     this.statusRegion.className = 'sr-only';
-    this.statusRegion.style.cssText =
-      'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
+    this.statusRegion.style.cssText = 'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
 
     // Ensure the region is inserted after page load
     if (document.readyState === 'loading') {
@@ -207,11 +201,7 @@ export class ScreenReaderService {
   ): void {
     if (!this.state.isEnabled || !message.trim()) return;
 
-    const {
-      interrupt = false,
-      verbosity = this.state.verbosityLevel,
-      delay = 0,
-    } = options;
+    const { interrupt = false, verbosity = this.state.verbosityLevel, delay = 0 } = options;
 
     // Check verbosity level
     if (verbosity === 'low' && this.state.verbosityLevel !== 'high') return;
@@ -232,8 +222,7 @@ export class ScreenReaderService {
         this.initializeLiveRegions();
         // Retry announcement after reinitializing
         setTimeout(() => {
-          const retryRegion =
-            priority === 'assertive' ? this.statusRegion : this.liveRegion;
+          const retryRegion = priority === 'assertive' ? this.statusRegion : this.liveRegion;
           if (retryRegion) {
             this.announceToLiveRegion(retryRegion, message);
           }
@@ -251,10 +240,7 @@ export class ScreenReaderService {
   /**
    * Announce alarm information in a structured way
    */
-  announceAlarm(
-    alarm: AlarmAnnouncement,
-    action: 'created' | 'updated' | 'deleted' | 'toggled'
-  ): void {
+  announceAlarm(alarm: AlarmAnnouncement, action: 'created' | 'updated' | 'deleted' | 'toggled'): void {
     if (!this.state.isEnabled) return;
 
     const timeFormatted = this.formatTimeForSpeech(alarm.time);
@@ -350,12 +336,7 @@ export class ScreenReaderService {
   /**
    * Announce state changes with automatic detection
    */
-  announceStateChange(
-    componentName: string,
-    previousState: any,
-    newState: any,
-    customMessage?: string
-  ): void {
+  announceStateChange(componentName: string, previousState: any, newState: any, customMessage?: string): void {
     if (!this.state.isEnabled || !this.state.autoAnnounceChanges) return;
 
     let message = customMessage;
@@ -377,12 +358,7 @@ export class ScreenReaderService {
   /**
    * Announce collection changes (add/remove/update items)
    */
-  announceCollectionChange(
-    collectionName: string,
-    action: 'added' | 'removed' | 'updated',
-    itemCount: number,
-    itemDescription?: string
-  ): void {
+  announceCollectionChange(collectionName: string, action: 'added' | 'removed' | 'updated', itemCount: number, itemDescription?: string): void {
     if (!this.state.isEnabled) return;
 
     const item = itemDescription || 'item';
@@ -390,22 +366,19 @@ export class ScreenReaderService {
 
     switch (action) {
       case 'added':
-        message =
-          itemCount === 1
-            ? `${item} added to ${collectionName}`
-            : `${itemCount} ${item}s added to ${collectionName}`;
+        message = itemCount === 1
+          ? `${item} added to ${collectionName}`
+          : `${itemCount} ${item}s added to ${collectionName}`;
         break;
       case 'removed':
-        message =
-          itemCount === 1
-            ? `${item} removed from ${collectionName}`
-            : `${itemCount} ${item}s removed from ${collectionName}`;
+        message = itemCount === 1
+          ? `${item} removed from ${collectionName}`
+          : `${itemCount} ${item}s removed from ${collectionName}`;
         break;
       case 'updated':
-        message =
-          itemCount === 1
-            ? `${item} updated in ${collectionName}`
-            : `${itemCount} ${item}s updated in ${collectionName}`;
+        message = itemCount === 1
+          ? `${item} updated in ${collectionName}`
+          : `${itemCount} ${item}s updated in ${collectionName}`;
         break;
     }
 
@@ -426,7 +399,7 @@ export class ScreenReaderService {
       'Space to toggle alarms',
       'Enter to edit selected alarm',
       'Delete to remove selected alarm',
-      'Escape to close dialogs',
+      'Escape to close dialogs'
     ];
 
     const message = `Keyboard shortcuts available: ${shortcuts.join(', ')}.`;
@@ -436,11 +409,7 @@ export class ScreenReaderService {
   /**
    * Announce element focus changes with context
    */
-  announceFocusChange(
-    elementType: string,
-    elementLabel: string,
-    additionalContext?: string
-  ): void {
+  announceFocusChange(elementType: string, elementLabel: string, additionalContext?: string): void {
     if (!this.state.isEnabled || this.state.verbosityLevel === 'low') return;
 
     let message = `${elementType}: ${elementLabel}`;
@@ -606,7 +575,7 @@ export class ARIAPatterns {
       };
 
       header.addEventListener('click', handleToggle);
-      header.addEventListener('keydown', e => {
+      header.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           handleToggle();

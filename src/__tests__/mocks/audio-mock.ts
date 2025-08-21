@@ -1,4 +1,3 @@
-/// <reference lib="dom" />
 // Audio file mock for sound assets in tests
 
 /**
@@ -67,19 +66,13 @@ class MockAudio {
   }
 
   // Event system
-  addEventListener(
-    type: string,
-    listener: EventListenerOrEventListenerObject | null
-  ): void {
+  addEventListener(type: string, listener: EventListenerOrEventListenerObject | null): void {
     if (listener && typeof listener === 'function') {
       (this as any)[`on${type}`] = listener;
     }
   }
 
-  removeEventListener(
-    type: string,
-    listener?: EventListenerOrEventListenerObject | null
-  ): void {
+  removeEventListener(type: string, listener?: EventListenerOrEventListenerObject | null): void {
     (this as any)[`on${type}`] = null;
   }
 

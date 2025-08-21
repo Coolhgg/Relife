@@ -9,14 +9,9 @@ import {
   Loader2,
   CreditCard,
   Shield,
-  Zap,
+  Zap
 } from 'lucide-react';
-import {
-  SUBSCRIPTION_PLANS,
-  type SubscriptionPlan,
-  type PremiumFeatureAccess,
-  type SubscriptionTier,
-} from '../types';
+import { SUBSCRIPTION_PLANS, type SubscriptionPlan, type PremiumFeatureAccess, type SubscriptionTier } from '../types';
 import { SubscriptionService } from '../services/subscription';
 
 interface SubscriptionModalProps {
@@ -38,14 +33,14 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   isOpen,
   onClose,
   userId,
-  highlightedFeature,
+  highlightedFeature
 }) => {
   const [state, setState] = useState<ModalState>({
     selectedPlan: null,
     isProcessing: false,
     error: null,
     currentTier: 'free',
-    trialDaysRemaining: 0,
+    trialDaysRemaining: 0
   });
 
   useEffect(() => {
@@ -58,13 +53,13 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     try {
       const [tier, trialDays] = await Promise.all([
         SubscriptionService.getUserTier(userId),
-        SubscriptionService.getTrialDaysRemaining(userId),
+        SubscriptionService.getTrialDaysRemaining(userId)
       ]);
 
       setState(prev => ({
         ...prev,
         currentTier: tier,
-        trialDaysRemaining: trialDays,
+        trialDaysRemaining: trialDays
       }));
     } catch (error) {
       console.error('Error loading user data:', error);
@@ -95,8 +90,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     } catch (error) {
       setState(prev => ({
         ...prev,
-        error:
-          error instanceof Error ? error.message : 'Failed to process subscription',
+        error: error instanceof Error ? error.message : 'Failed to process subscription'
       }));
     } finally {
       setState(prev => ({ ...prev, isProcessing: false }));
@@ -105,27 +99,19 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
   const getTierIcon = (tier: SubscriptionTier) => {
     switch (tier) {
-      case 'premium':
-        return Crown;
-      case 'pro':
-        return Sparkles;
-      case 'lifetime':
-        return Star;
-      default:
-        return Shield;
+      case 'premium': return Crown;
+      case 'pro': return Sparkles;
+      case 'lifetime': return Star;
+      default: return Shield;
     }
   };
 
   const getTierColor = (tier: SubscriptionTier) => {
     switch (tier) {
-      case 'premium':
-        return 'from-amber-500 to-orange-500';
-      case 'pro':
-        return 'from-purple-500 to-pink-500';
-      case 'lifetime':
-        return 'from-emerald-500 to-teal-500';
-      default:
-        return 'from-gray-500 to-gray-600';
+      case 'premium': return 'from-amber-500 to-orange-500';
+      case 'pro': return 'from-purple-500 to-pink-500';
+      case 'lifetime': return 'from-emerald-500 to-teal-500';
+      default: return 'from-gray-500 to-gray-600';
     }
   };
 
@@ -151,8 +137,8 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           isSelected
             ? 'border-blue-500 shadow-lg bg-blue-50'
             : isHighlighted
-              ? 'border-amber-300 shadow-md bg-amber-50'
-              : 'border-gray-200 hover:border-gray-300'
+            ? 'border-amber-300 shadow-md bg-amber-50'
+            : 'border-gray-200 hover:border-gray-300'
         } ${isCurrentTier ? 'opacity-60 cursor-not-allowed' : ''}`}
       >
         {plan.popular && (
@@ -181,9 +167,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div
-              className={`w-10 h-10 rounded-lg bg-gradient-to-br ${getTierColor(plan.tier)} flex items-center justify-center`}
-            >
+            <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${getTierColor(plan.tier)} flex items-center justify-center`}>
               <TierIcon className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -300,10 +284,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   <div>
                     <p className="text-gray-700">{state.selectedPlan.name} Plan</p>
                     <p className="text-sm text-gray-500">
-                      Billed{' '}
-                      {state.selectedPlan.interval === 'lifetime'
-                        ? 'once'
-                        : state.selectedPlan.interval + 'ly'}
+                      Billed {state.selectedPlan.interval === 'lifetime' ? 'once' : state.selectedPlan.interval + 'ly'}
                     </p>
                   </div>
                   <div className="text-right">

@@ -30,12 +30,11 @@ export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) =
                 transition={{
                   duration: 1.5,
                   repeat: Infinity,
-                  ease: 'linear',
+                  ease: 'linear'
                 }}
                 style={{
-                  backgroundImage:
-                    'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
-                  backgroundSize: '200px 100%',
+                  backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
+                  backgroundSize: '200px 100%'
                 }}
               />
               <motion.div
@@ -47,12 +46,11 @@ export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) =
                   duration: 1.5,
                   repeat: Infinity,
                   ease: 'linear',
-                  delay: 0.2,
+                  delay: 0.2
                 }}
                 style={{
-                  backgroundImage:
-                    'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
-                  backgroundSize: '200px 100%',
+                  backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
+                  backgroundSize: '200px 100%'
                 }}
               />
             </div>
@@ -75,7 +73,7 @@ export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) =
                 transition={{
                   duration: 1.2,
                   repeat: Infinity,
-                  delay: dayIndex * 0.1,
+                  delay: dayIndex * 0.1
                 }}
               />
             ))}
@@ -95,12 +93,12 @@ export const AlarmRingingLoader: React.FC = () => {
           className="relative mb-8"
           animate={{
             scale: [1, 1.2, 1],
-            rotate: [0, 5, -5, 0],
+            rotate: [0, 5, -5, 0]
           }}
           transition={{
             duration: 1,
             repeat: Infinity,
-            ease: 'easeInOut',
+            ease: "easeInOut"
           }}
         >
           {/* Multiple concentric circles for ripple effect */}
@@ -113,7 +111,7 @@ export const AlarmRingingLoader: React.FC = () => {
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                delay: i * 0.4,
+                delay: i * 0.4
               }}
             />
           ))}
@@ -147,12 +145,12 @@ export const AlarmRingingLoader: React.FC = () => {
               className="w-2 h-2 bg-white rounded-full"
               animate={{
                 opacity: [0.3, 1, 0.3],
-                scale: [0.8, 1.2, 0.8],
+                scale: [0.8, 1.2, 0.8]
               }}
               transition={{
                 duration: 1.2,
                 repeat: Infinity,
-                delay: i * 0.2,
+                delay: i * 0.2
               }}
             />
           ))}
@@ -202,7 +200,7 @@ export const VoiceListeningIndicator: React.FC<{
                     transition={{
                       duration: 1.5,
                       repeat: Infinity,
-                      delay: i * 0.3,
+                      delay: i * 0.3
                     }}
                   />
                 ))}
@@ -220,8 +218,8 @@ export const VoiceListeningIndicator: React.FC<{
                     transition={{
                       duration: 0.5,
                       repeat: Infinity,
-                      repeatType: 'reverse',
-                      delay: i * 0.1,
+                      repeatType: "reverse",
+                      delay: i * 0.1
                     }}
                   />
                 ))}
@@ -275,12 +273,12 @@ export const VoiceProcessingLoader: React.FC<{
         className="text-2xl"
         animate={{
           rotate: [0, 10, -10, 0],
-          scale: [1, 1.1, 1],
+          scale: [1, 1.1, 1]
         }}
         transition={{
           duration: 2,
           repeat: Infinity,
-          ease: 'easeInOut',
+          ease: "easeInOut"
         }}
       >
         🧠
@@ -296,12 +294,12 @@ export const VoiceProcessingLoader: React.FC<{
               className="w-1.5 h-1.5 bg-blue-500 rounded-full"
               animate={{
                 opacity: [0.3, 1, 0.3],
-                scale: [0.8, 1.2, 0.8],
+                scale: [0.8, 1.2, 0.8]
               }}
               transition={{
                 duration: 1,
                 repeat: Infinity,
-                delay: i * 0.2,
+                delay: i * 0.2
               }}
             />
           ))}
@@ -329,12 +327,11 @@ export const DashboardSkeleton: React.FC = () => {
             transition={{
               duration: 1.5,
               repeat: Infinity,
-              ease: 'linear',
+              ease: 'linear'
             }}
             style={{
-              backgroundImage:
-                'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
-              backgroundSize: '200px 100%',
+              backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
+              backgroundSize: '200px 100%'
             }}
           />
           <motion.div
@@ -346,12 +343,11 @@ export const DashboardSkeleton: React.FC = () => {
               duration: 1.5,
               repeat: Infinity,
               ease: 'linear',
-              delay: 0.2,
+              delay: 0.2
             }}
             style={{
-              backgroundImage:
-                'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
-              backgroundSize: '200px 100%',
+              backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
+              backgroundSize: '200px 100%'
             }}
           />
         </div>
@@ -376,11 +372,7 @@ export const DashboardSkeleton: React.FC = () => {
                   <motion.div
                     className="h-8 bg-gray-200 rounded w-16"
                     animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity,
-                      delay: i * 0.1 + 0.3,
-                    }}
+                    transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 + 0.3 }}
                   />
                 </div>
                 <motion.div
@@ -425,7 +417,7 @@ export const DashboardSkeleton: React.FC = () => {
                       transition={{
                         duration: 1.5,
                         repeat: Infinity,
-                        delay: i * 0.2 + j * 0.1,
+                        delay: i * 0.2 + j * 0.1
                       }}
                     />
                   ))}
@@ -471,7 +463,7 @@ export const SettingsFormSkeleton: React.FC = () => {
                   transition={{
                     duration: 1.5,
                     repeat: Infinity,
-                    delay: sectionIndex * 0.2 + fieldIndex * 0.1,
+                    delay: sectionIndex * 0.2 + fieldIndex * 0.1
                   }}
                 />
                 <motion.div
@@ -480,7 +472,7 @@ export const SettingsFormSkeleton: React.FC = () => {
                   transition={{
                     duration: 1.5,
                     repeat: Infinity,
-                    delay: sectionIndex * 0.2 + fieldIndex * 0.1 + 0.3,
+                    delay: sectionIndex * 0.2 + fieldIndex * 0.1 + 0.3
                   }}
                 />
               </div>
@@ -526,8 +518,8 @@ export const AnalyticsChartSkeleton: React.FC<{
               duration: 0.8,
               delay: i * 0.1,
               repeat: Infinity,
-              repeatType: 'reverse',
-              repeatDelay: 2,
+              repeatType: "reverse",
+              repeatDelay: 2
             }}
           />
         ))}
@@ -543,7 +535,10 @@ export const AnalyticsChartSkeleton: React.FC<{
 export const PageLoader: React.FC<{
   message?: string;
   subMessage?: string;
-}> = ({ message = 'Loading your alarms...', subMessage = "This won't take long" }) => {
+}> = ({
+  message = "Loading your alarms...",
+  subMessage = "This won't take long"
+}) => {
   return (
     <motion.div
       className="fixed inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center z-50"
@@ -557,12 +552,12 @@ export const PageLoader: React.FC<{
           className="mb-8"
           animate={{
             scale: [1, 1.05, 1],
-            rotate: [0, 1, -1, 0],
+            rotate: [0, 1, -1, 0]
           }}
           transition={{
             duration: 3,
             repeat: Infinity,
-            ease: 'easeInOut',
+            ease: "easeInOut"
           }}
         >
           <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-2xl">
@@ -598,12 +593,12 @@ export const PageLoader: React.FC<{
           <motion.div
             className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
             animate={{
-              x: ['-100%', '100%', '-100%'],
+              x: ['-100%', '100%', '-100%']
             }}
             transition={{
               duration: 2,
               repeat: Infinity,
-              ease: 'easeInOut',
+              ease: "easeInOut"
             }}
           />
         </motion.div>
@@ -620,5 +615,5 @@ export default {
   DashboardSkeleton,
   SettingsFormSkeleton,
   AnalyticsChartSkeleton,
-  PageLoader,
+  PageLoader
 };

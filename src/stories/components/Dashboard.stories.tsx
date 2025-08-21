@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
-import Dashboard from '../../components/Dashboard';
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
+import Dashboard from '../../components/Dashboard'
 
 // Mock alarm data
 const mockAlarms = [
@@ -43,7 +43,7 @@ const mockAlarms = [
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
-];
+]
 
 const meta: Meta<typeof Dashboard> = {
   title: 'Components/Dashboard',
@@ -52,8 +52,7 @@ const meta: Meta<typeof Dashboard> = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component:
-          'The main dashboard component showing alarm overview, next alarm, and quick actions. Includes smart insights and optimization suggestions for premium users.',
+        component: 'The main dashboard component showing alarm overview, next alarm, and quick actions. Includes smart insights and optimization suggestions for premium users.',
       },
     },
   },
@@ -81,34 +80,34 @@ const meta: Meta<typeof Dashboard> = {
     onQuickSetup: fn(),
     onNavigateToAdvanced: fn(),
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const WithAlarms: Story = {
   args: {
     alarms: mockAlarms,
   },
-};
+}
 
 export const EmptyState: Story = {
   args: {
     alarms: [],
   },
-};
+}
 
 export const LoadingState: Story = {
   args: {
     alarms: undefined, // This triggers the loading state
   },
-};
+}
 
 export const SingleAlarm: Story = {
   args: {
     alarms: [mockAlarms[0]],
   },
-};
+}
 
 export const OnlyDisabledAlarms: Story = {
   args: {
@@ -123,7 +122,7 @@ export const OnlyDisabledAlarms: Story = {
       },
     ],
   },
-};
+}
 
 export const ManyAlarms: Story = {
   args: {
@@ -171,7 +170,7 @@ export const ManyAlarms: Story = {
       },
     ],
   },
-};
+}
 
 export const ResponsiveDesign: Story = {
   render: args => (
@@ -199,7 +198,7 @@ export const ResponsiveDesign: Story = {
   args: {
     alarms: mockAlarms,
   },
-};
+}
 
 export const DarkMode: Story = {
   args: {
@@ -210,15 +209,13 @@ export const DarkMode: Story = {
       default: 'dark',
     },
   },
-};
+}
 
 export const AccessibilityFocused: Story = {
   render: args => (
     <div className="space-y-4">
       <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-        <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
-          Accessibility Features
-        </h3>
+        <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Accessibility Features</h3>
         <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
           <li>• ARIA labels and live regions for dynamic content</li>
           <li>• Screen reader friendly alarm summaries</li>
@@ -233,7 +230,7 @@ export const AccessibilityFocused: Story = {
   args: {
     alarms: mockAlarms,
   },
-};
+}
 
 export const UserJourneyScenarios: Story = {
   render: () => (
@@ -299,4 +296,4 @@ export const UserJourneyScenarios: Story = {
   parameters: {
     layout: 'fullscreen',
   },
-};
+}

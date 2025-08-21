@@ -72,12 +72,7 @@ export interface AchievementProgress {
 }
 
 export interface AchievementRequirement {
-  type:
-    | 'streak_days'
-    | 'early_wake'
-    | 'consistency'
-    | 'social_activity'
-    | 'challenges_completed';
+  type: 'streak_days' | 'early_wake' | 'consistency' | 'social_activity' | 'challenges_completed';
   value: number;
   description: string;
 }
@@ -401,11 +396,7 @@ export interface CommunityStats {
 
 export interface RealtimeActivity {
   id: string;
-  type:
-    | 'streak_started'
-    | 'achievement_unlocked'
-    | 'challenge_joined'
-    | 'milestone_reached';
+  type: 'streak_started' | 'achievement_unlocked' | 'challenge_joined' | 'milestone_reached';
   message: string;
   timestamp: Date;
   anonymous: boolean;

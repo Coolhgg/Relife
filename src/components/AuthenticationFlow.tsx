@@ -24,7 +24,7 @@ export default function AuthenticationFlow({
   onForgotPassword,
   isLoading,
   error,
-  forgotPasswordSuccess,
+  forgotPasswordSuccess
 }: AuthenticationFlowProps) {
   const [currentView, setCurrentView] = useState<AuthView>('login');
 
@@ -70,10 +70,7 @@ export default function AuthenticationFlow({
         {/* App Branding */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 mx-auto bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mb-4">
-            <Clock
-              className="w-8 h-8 text-primary-600 dark:text-primary-400"
-              aria-hidden="true"
-            />
+            <Clock className="w-8 h-8 text-primary-600 dark:text-primary-400" aria-hidden="true" />
           </div>
           <h2 className="text-lg font-semibold text-gray-600 dark:text-gray-400">
             Smart Alarm
@@ -87,7 +84,9 @@ export default function AuthenticationFlow({
 
         {/* Footer */}
         <div className="text-center mt-6 text-sm text-gray-500 dark:text-gray-400">
-          <p>Your data is encrypted and secure</p>
+          <p>
+            Your data is encrypted and secure
+          </p>
         </div>
       </div>
     </main>

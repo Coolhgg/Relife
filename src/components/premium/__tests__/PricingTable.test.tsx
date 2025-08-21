@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '../../../__tests__/utils/render-helpers';
 import {
   createTestSubscriptionPlan,
-  createTestPricing,
+  createTestPricing
 } from '../../../__tests__/factories/premium-factories';
 import { PricingTable } from '../PricingTable';
 import type { SubscriptionPlan, BillingInterval } from '../../../types/premium';
@@ -26,33 +26,33 @@ describe('PricingTable', () => {
       displayName: 'Free Plan',
       pricing: { monthly: { amount: 0, currency: 'usd' } },
       features: ['Basic alarms', '3 battle modes'],
-      limits: { maxAlarms: 5, maxBattles: 3 },
+      limits: { maxAlarms: 5, maxBattles: 3 }
     }),
     createTestSubscriptionPlan({
       tier: 'premium',
       displayName: 'Premium Plan',
       pricing: {
         monthly: { amount: 999, currency: 'usd' }, // $9.99
-        yearly: { amount: 9999, currency: 'usd' }, // $99.99/year
+        yearly: { amount: 9999, currency: 'usd' }  // $99.99/year
       },
       features: ['Unlimited alarms', 'All battle modes', 'Premium voices'],
-      limits: { maxAlarms: -1, maxBattles: -1 },
+      limits: { maxAlarms: -1, maxBattles: -1 }
     }),
     createTestSubscriptionPlan({
       tier: 'pro',
       displayName: 'Pro Plan',
       pricing: {
         monthly: { amount: 1999, currency: 'usd' }, // $19.99
-        yearly: { amount: 19999, currency: 'usd' }, // $199.99/year
+        yearly: { amount: 19999, currency: 'usd' }  // $199.99/year
       },
       features: ['Everything in Premium', 'Team collaboration', 'Advanced analytics'],
-      limits: { maxAlarms: -1, maxBattles: -1, maxTeamMembers: 10 },
-    }),
+      limits: { maxAlarms: -1, maxBattles: -1, maxTeamMembers: 10 }
+    })
   ];
 
   const defaultProps = {
     plans: testPlans,
-    onPlanSelect: mockOnPlanSelect,
+    onPlanSelect: mockOnPlanSelect
   };
 
   beforeEach(() => {
@@ -77,7 +77,9 @@ describe('PricingTable', () => {
     });
 
     it('shows correct pricing for monthly billing', () => {
-      renderWithProviders(<PricingTable {...defaultProps} billingInterval="month" />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} billingInterval="month" />
+      );
 
       expect(screen.getByText('$0.00 / month')).toBeInTheDocument();
       expect(screen.getByText('$9.99 / month')).toBeInTheDocument();
@@ -85,7 +87,9 @@ describe('PricingTable', () => {
     });
 
     it('shows correct pricing for yearly billing with discount', () => {
-      renderWithProviders(<PricingTable {...defaultProps} billingInterval="year" />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} billingInterval="year" />
+      );
 
       expect(screen.getByText('$0.00 / year')).toBeInTheDocument();
       expect(screen.getByText('$99.99 / year')).toBeInTheDocument();
@@ -93,11 +97,11 @@ describe('PricingTable', () => {
     });
 
     it('highlights current plan', () => {
-      renderWithProviders(<PricingTable {...defaultProps} currentTier="premium" />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} currentTier="premium" />
+      );
 
-      const premiumCard = screen
-        .getByText('Premium Plan')
-        .closest('[data-testid="pricing-card"]');
+      const premiumCard = screen.getByText('Premium Plan').closest('[data-testid="pricing-card"]');
       expect(premiumCard).toHaveClass('ring-2', 'ring-purple-500');
     });
 
@@ -105,12 +109,8 @@ describe('PricingTable', () => {
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       // Premium plan should have popular badge
-      const premiumSection = screen
-        .getByText('Premium Plan')
-        .closest('[data-testid="pricing-card"]');
-      expect(
-        premiumSection?.querySelector('[data-testid="popular-badge"]')
-      ).toBeInTheDocument();
+      const premiumSection = screen.getByText('Premium Plan').closest('[data-testid="pricing-card"]');
+      expect(premiumSection?.querySelector('[data-testid="popular-badge"]')).toBeInTheDocument();
     });
   });
 
@@ -123,7 +123,9 @@ describe('PricingTable', () => {
     });
 
     it('highlights selected billing interval', () => {
-      renderWithProviders(<PricingTable {...defaultProps} billingInterval="year" />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} billingInterval="year" />
+      );
 
       const yearlyButton = screen.getByRole('button', { name: /yearly/i });
       expect(yearlyButton).toHaveClass('bg-purple-600', 'text-white');
@@ -148,10 +150,7 @@ describe('PricingTable', () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <PricingTable
-          {...defaultProps}
-          onBillingIntervalChange={mockOnBillingIntervalChange}
-        />
+        <PricingTable {...defaultProps} onBillingIntervalChange={mockOnBillingIntervalChange} />
       );
 
       await user.click(screen.getByRole('button', { name: /yearly/i }));
@@ -160,7 +159,9 @@ describe('PricingTable', () => {
     });
 
     it('shows savings badge for yearly billing', () => {
-      renderWithProviders(<PricingTable {...defaultProps} billingInterval="year" />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} billingInterval="year" />
+      );
 
       expect(screen.getByText(/save/i)).toBeInTheDocument();
     });
@@ -182,38 +183,35 @@ describe('PricingTable', () => {
     });
 
     it('shows correct button text for each plan type', () => {
-      renderWithProviders(<PricingTable {...defaultProps} currentTier="free" />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} currentTier="free" />
+      );
 
       expect(screen.getByRole('button', { name: /current plan/i })).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: /upgrade to premium/i })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: /upgrade to pro/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /upgrade to premium/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /upgrade to pro/i })).toBeInTheDocument();
     });
 
     it('shows downgrade option when on higher tier', () => {
-      renderWithProviders(<PricingTable {...defaultProps} currentTier="pro" />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} currentTier="pro" />
+      );
 
-      expect(
-        screen.getByRole('button', { name: /downgrade to free/i })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: /downgrade to premium/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /downgrade to free/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /downgrade to premium/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /current plan/i })).toBeInTheDocument();
     });
 
     it('disables buttons when loading', () => {
-      renderWithProviders(<PricingTable {...defaultProps} loading={true} />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} loading={true} />
+      );
 
       const buttons = screen.getAllByRole('button');
-      const planButtons = buttons.filter(
-        button =>
-          button.textContent?.includes('upgrade') ||
-          button.textContent?.includes('downgrade') ||
-          button.textContent?.includes('Current plan')
+      const planButtons = buttons.filter(button =>
+        button.textContent?.includes('upgrade') ||
+        button.textContent?.includes('downgrade') ||
+        button.textContent?.includes('Current plan')
       );
 
       planButtons.forEach(button => {
@@ -313,8 +311,8 @@ describe('PricingTable', () => {
       const plansWithMissingPricing = [
         {
           ...testPlans[0],
-          pricing: undefined,
-        },
+          pricing: undefined
+        }
       ];
 
       renderWithProviders(
@@ -326,7 +324,9 @@ describe('PricingTable', () => {
     });
 
     it('handles empty plans array', () => {
-      renderWithProviders(<PricingTable {...defaultProps} plans={[]} />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} plans={[]} />
+      );
 
       expect(screen.getByText(/no plans available/i)).toBeInTheDocument();
     });
@@ -334,7 +334,9 @@ describe('PricingTable', () => {
     it('shows error state for invalid plans', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
 
-      renderWithProviders(<PricingTable {...defaultProps} plans={null as any} />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} plans={null as any} />
+      );
 
       expect(screen.getByText(/error loading plans/i)).toBeInTheDocument();
 
@@ -348,11 +350,13 @@ describe('PricingTable', () => {
         ...plan,
         pricing: {
           monthly: { amount: 999, currency: 'eur' },
-          yearly: { amount: 9999, currency: 'eur' },
-        },
+          yearly: { amount: 9999, currency: 'eur' }
+        }
       }));
 
-      renderWithProviders(<PricingTable {...defaultProps} plans={euroPlans} />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} plans={euroPlans} />
+      );
 
       expect(screen.getByText('€9.99 / month')).toBeInTheDocument();
     });
@@ -369,23 +373,29 @@ describe('PricingTable', () => {
     it('shows trial information when available', () => {
       const plansWithTrial = testPlans.map(plan => ({
         ...plan,
-        trialDays: plan.tier !== 'free' ? 14 : undefined,
+        trialDays: plan.tier !== 'free' ? 14 : undefined
       }));
 
-      renderWithProviders(<PricingTable {...defaultProps} plans={plansWithTrial} />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} plans={plansWithTrial} />
+      );
 
       expect(screen.getByText(/14-day free trial/i)).toBeInTheDocument();
     });
 
     it('displays discount badges', () => {
-      renderWithProviders(<PricingTable {...defaultProps} billingInterval="year" />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} billingInterval="year" />
+      );
 
       const discountBadges = screen.getAllByTestId('discount-badge');
       expect(discountBadges.length).toBeGreaterThan(0);
     });
 
     it('calculates yearly savings correctly', () => {
-      renderWithProviders(<PricingTable {...defaultProps} billingInterval="year" />);
+      renderWithProviders(
+        <PricingTable {...defaultProps} billingInterval="year" />
+      );
 
       // Should show percentage saved
       expect(screen.getByText(/save \d+%/i)).toBeInTheDocument();

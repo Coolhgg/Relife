@@ -8,17 +8,14 @@
 import React from 'react';
 import { screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {
-  renderWithProviders,
-  renderWithFeatureAccess,
-} from '../../../__tests__/utils/render-helpers';
+import { renderWithProviders, renderWithFeatureAccess } from '../../../__tests__/utils/render-helpers';
 import { createTestPremiumFeature } from '../../../__tests__/factories/premium-factories';
 import {
   FeatureBadge,
   FeatureComparison,
   FeatureHighlight,
   PremiumFeatureTooltip,
-  FeatureUsageBar,
+  FeatureUsageBar
 } from '../FeatureUtils';
 
 describe('FeatureBadge', () => {
@@ -45,9 +42,7 @@ describe('FeatureBadge', () => {
     });
 
     it('applies correct styling for different variants', () => {
-      const { rerender } = renderWithProviders(
-        <FeatureBadge tier="premium" variant="subtle" />
-      );
+      const { rerender } = renderWithProviders(<FeatureBadge tier="premium" variant="subtle" />);
 
       const subtleBadge = screen.getByText('Premium');
       expect(subtleBadge).toHaveClass('bg-purple-100', 'text-purple-700');
@@ -59,9 +54,7 @@ describe('FeatureBadge', () => {
     });
 
     it('applies correct size classes', () => {
-      const { rerender } = renderWithProviders(
-        <FeatureBadge tier="premium" size="sm" />
-      );
+      const { rerender } = renderWithProviders(<FeatureBadge tier="premium" size="sm" />);
 
       let badge = screen.getByText('Premium');
       expect(badge).toHaveClass('text-xs', 'px-2', 'py-1');
@@ -127,28 +120,28 @@ describe('FeatureComparison', () => {
       displayName: 'Unlimited Alarms',
       description: 'Create as many alarms as you need',
       tier: 'premium',
-      category: 'alarms',
+      category: 'alarms'
     }),
     createTestPremiumFeature({
       id: 'team_collaboration',
       displayName: 'Team Collaboration',
       description: 'Share alarms with your team',
       tier: 'pro',
-      category: 'collaboration',
+      category: 'collaboration'
     }),
     createTestPremiumFeature({
       id: 'basic_alarms',
       displayName: 'Basic Alarms',
       description: 'Up to 5 alarms',
       tier: 'free',
-      category: 'alarms',
-    }),
+      category: 'alarms'
+    })
   ];
 
   const defaultProps = {
     features: mockFeatures,
     currentTier: 'free' as const,
-    showUpgradeButtons: true,
+    showUpgradeButtons: true
   };
 
   describe('Rendering', () => {
@@ -176,9 +169,7 @@ describe('FeatureComparison', () => {
     });
 
     it('groups features by category when specified', () => {
-      renderWithProviders(
-        <FeatureComparison {...defaultProps} groupByCategory={true} />
-      );
+      renderWithProviders(<FeatureComparison {...defaultProps} groupByCategory={true} />);
 
       expect(screen.getByText('Alarms')).toBeInTheDocument();
       expect(screen.getByText('Collaboration')).toBeInTheDocument();
@@ -205,9 +196,7 @@ describe('FeatureComparison', () => {
     it('dims inaccessible features', () => {
       renderWithProviders(<FeatureComparison {...defaultProps} />);
 
-      const premiumFeature = screen
-        .getByText('Unlimited Alarms')
-        .closest('[data-testid="feature-item"]');
+      const premiumFeature = screen.getByText('Unlimited Alarms').closest('[data-testid="feature-item"]');
       expect(premiumFeature).toHaveClass('opacity-60');
     });
   });
@@ -216,12 +205,8 @@ describe('FeatureComparison', () => {
     it('shows upgrade buttons for higher tier features', () => {
       renderWithProviders(<FeatureComparison {...defaultProps} />);
 
-      expect(
-        screen.getByRole('button', { name: /upgrade to premium/i })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: /upgrade to pro/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /upgrade to premium/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /upgrade to pro/i })).toBeInTheDocument();
     });
 
     it('hides upgrade buttons when showUpgradeButtons is false', () => {
@@ -229,9 +214,7 @@ describe('FeatureComparison', () => {
         <FeatureComparison {...defaultProps} showUpgradeButtons={false} />
       );
 
-      expect(
-        screen.queryByRole('button', { name: /upgrade/i })
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /upgrade/i })).not.toBeInTheDocument();
     });
 
     it('calls onUpgrade when upgrade button is clicked', async () => {
@@ -255,12 +238,12 @@ describe('FeatureHighlight', () => {
     id: 'premium_voices',
     displayName: 'Premium Voices',
     description: 'Access to high-quality voice options',
-    tier: 'premium',
+    tier: 'premium'
   });
 
   const defaultProps = {
     feature: mockFeature,
-    currentTier: 'free' as const,
+    currentTier: 'free' as const
   };
 
   describe('Rendering', () => {
@@ -268,9 +251,7 @@ describe('FeatureHighlight', () => {
       renderWithProviders(<FeatureHighlight {...defaultProps} />);
 
       expect(screen.getByText('Premium Voices')).toBeInTheDocument();
-      expect(
-        screen.getByText('Access to high-quality voice options')
-      ).toBeInTheDocument();
+      expect(screen.getByText('Access to high-quality voice options')).toBeInTheDocument();
     });
 
     it('shows tier badge', () => {
@@ -280,14 +261,18 @@ describe('FeatureHighlight', () => {
     });
 
     it('highlights new features', () => {
-      renderWithProviders(<FeatureHighlight {...defaultProps} isNew={true} />);
+      renderWithProviders(
+        <FeatureHighlight {...defaultProps} isNew={true} />
+      );
 
       expect(screen.getByText('New')).toBeInTheDocument();
       expect(screen.getByTestId('new-feature-badge')).toBeInTheDocument();
     });
 
     it('shows popular badge when specified', () => {
-      renderWithProviders(<FeatureHighlight {...defaultProps} isPopular={true} />);
+      renderWithProviders(
+        <FeatureHighlight {...defaultProps} isPopular={true} />
+      );
 
       expect(screen.getByText('Popular')).toBeInTheDocument();
     });
@@ -295,7 +280,9 @@ describe('FeatureHighlight', () => {
 
   describe('Interactive Elements', () => {
     it('shows preview button for previewable features', () => {
-      renderWithProviders(<FeatureHighlight {...defaultProps} showPreview={true} />);
+      renderWithProviders(
+        <FeatureHighlight {...defaultProps} showPreview={true} />
+      );
 
       expect(screen.getByRole('button', { name: /preview/i })).toBeInTheDocument();
     });
@@ -331,7 +318,7 @@ describe('PremiumFeatureTooltip', () => {
     id: 'advanced_analytics',
     displayName: 'Advanced Analytics',
     description: 'Detailed insights into your sleep patterns',
-    tier: 'pro',
+    tier: 'pro'
   });
 
   describe('Rendering', () => {
@@ -359,9 +346,7 @@ describe('PremiumFeatureTooltip', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Advanced Analytics')).toBeInTheDocument();
-        expect(
-          screen.getByText('Detailed insights into your sleep patterns')
-        ).toBeInTheDocument();
+        expect(screen.getByText('Detailed insights into your sleep patterns')).toBeInTheDocument();
       });
     });
 
@@ -413,7 +398,7 @@ describe('FeatureUsageBar', () => {
     featureName: 'Custom Alarms',
     used: 7,
     limit: 10,
-    tier: 'premium' as const,
+    tier: 'premium' as const
   };
 
   describe('Rendering', () => {
@@ -438,7 +423,9 @@ describe('FeatureUsageBar', () => {
     });
 
     it('shows unlimited when limit is -1', () => {
-      renderWithProviders(<FeatureUsageBar {...defaultProps} limit={-1} />);
+      renderWithProviders(
+        <FeatureUsageBar {...defaultProps} limit={-1} />
+      );
 
       expect(screen.getByText('7 / Unlimited')).toBeInTheDocument();
     });
@@ -446,7 +433,9 @@ describe('FeatureUsageBar', () => {
 
   describe('Warning States', () => {
     it('shows warning when near limit', () => {
-      renderWithProviders(<FeatureUsageBar {...defaultProps} used={9} limit={10} />);
+      renderWithProviders(
+        <FeatureUsageBar {...defaultProps} used={9} limit={10} />
+      );
 
       const progressBar = screen.getByTestId('usage-progress-bar');
       expect(progressBar).toHaveClass('bg-yellow-500');
@@ -454,7 +443,9 @@ describe('FeatureUsageBar', () => {
     });
 
     it('shows error when at limit', () => {
-      renderWithProviders(<FeatureUsageBar {...defaultProps} used={10} limit={10} />);
+      renderWithProviders(
+        <FeatureUsageBar {...defaultProps} used={10} limit={10} />
+      );
 
       const progressBar = screen.getByTestId('usage-progress-bar');
       expect(progressBar).toHaveClass('bg-red-500');
@@ -462,7 +453,9 @@ describe('FeatureUsageBar', () => {
     });
 
     it('shows upgrade prompt when at limit', () => {
-      renderWithProviders(<FeatureUsageBar {...defaultProps} used={10} limit={10} />);
+      renderWithProviders(
+        <FeatureUsageBar {...defaultProps} used={10} limit={10} />
+      );
 
       expect(screen.getByText(/upgrade for unlimited/i)).toBeInTheDocument();
     });
@@ -475,14 +468,13 @@ describe('FeatureUsageBar', () => {
       const progressBar = screen.getByRole('progressbar');
       expect(progressBar).toHaveAttribute('aria-valuenow', '7');
       expect(progressBar).toHaveAttribute('aria-valuemax', '10');
-      expect(progressBar).toHaveAttribute(
-        'aria-label',
-        'Custom Alarms usage: 7 out of 10'
-      );
+      expect(progressBar).toHaveAttribute('aria-label', 'Custom Alarms usage: 7 out of 10');
     });
 
     it('announces warnings to screen readers', () => {
-      renderWithProviders(<FeatureUsageBar {...defaultProps} used={10} limit={10} />);
+      renderWithProviders(
+        <FeatureUsageBar {...defaultProps} used={10} limit={10} />
+      );
 
       const announcement = screen.getByRole('alert');
       expect(announcement).toHaveTextContent('Usage limit reached for Custom Alarms');
@@ -499,7 +491,12 @@ describe('Edge Cases and Error Handling', () => {
 
   it('handles invalid usage values', () => {
     renderWithProviders(
-      <FeatureUsageBar featureName="Test Feature" used={-1} limit={10} tier="premium" />
+      <FeatureUsageBar
+        featureName="Test Feature"
+        used={-1}
+        limit={10}
+        tier="premium"
+      />
     );
 
     expect(screen.getByText('0 / 10')).toBeInTheDocument(); // Should normalize to 0

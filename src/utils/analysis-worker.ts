@@ -1,13 +1,10 @@
 // Web Worker for heavy sleep analysis computations
 class SleepAnalysisWorker {
   private worker: Worker | null = null;
-  private jobQueue: Map<
-    string,
-    {
-      resolve: (result: any) => void;
-      reject: (error: Error) => void;
-    }
-  > = new Map();
+  private jobQueue: Map<string, {
+    resolve: (result: any) => void;
+    reject: (error: Error) => void;
+  }> = new Map();
 
   constructor() {
     this.initializeWorker();
@@ -181,7 +178,7 @@ class SleepAnalysisWorker {
       }
     };
 
-    this.worker.onerror = error => {
+    this.worker.onerror = (error) => {
       console.error('Worker error:', error);
       // Reject all pending jobs
       this.jobQueue.forEach(job => {
@@ -209,7 +206,7 @@ class SleepAnalysisWorker {
       this.worker!.postMessage({
         type: 'analyzeSleep',
         data: { sessions },
-        jobId,
+        jobId
       });
 
       // Timeout after 30 seconds
@@ -235,7 +232,7 @@ class SleepAnalysisWorker {
       this.worker!.postMessage({
         type: 'predictWakeTime',
         data: { bedtime, cycles },
-        jobId,
+        jobId
       });
 
       setTimeout(() => {
@@ -260,7 +257,7 @@ class SleepAnalysisWorker {
       this.worker!.postMessage({
         type: 'analyzeVoice',
         data: { commands },
-        jobId,
+        jobId
       });
 
       setTimeout(() => {
@@ -277,14 +274,12 @@ class SleepAnalysisWorker {
     console.warn('Running sleep analysis on main thread - performance may be impacted');
     // Simplified main thread implementation
     return {
-      averageDuration:
-        sessions.reduce((sum, s) => sum + s.duration, 0) / sessions.length || 0,
-      averageQuality:
-        sessions.reduce((sum, s) => sum + s.quality, 0) / sessions.length || 0,
+      averageDuration: sessions.reduce((sum, s) => sum + s.duration, 0) / sessions.length || 0,
+      averageQuality: sessions.reduce((sum, s) => sum + s.quality, 0) / sessions.length || 0,
       sleepEfficiency: 85, // Default value
       chronotype: 'normal',
       consistency: 75,
-      recommendations: ['Install Web Worker support for detailed analysis'],
+      recommendations: ['Install Web Worker support for detailed analysis']
     };
   }
 
@@ -293,13 +288,11 @@ class SleepAnalysisWorker {
     const bedtimeMs = new Date(bedtime).getTime();
     const cycleLength = 90 * 60 * 1000;
 
-    return [
-      {
-        time: new Date(bedtimeMs + cycles * cycleLength),
-        cycles,
-        quality: 'optimal',
-      },
-    ];
+    return [{
+      time: new Date(bedtimeMs + (cycles * cycleLength)),
+      cycles,
+      quality: 'optimal'
+    }];
   }
 
   private analyzeVoicePatternsMainThread(commands: any[]): any {
@@ -308,8 +301,8 @@ class SleepAnalysisWorker {
       commandStats: {},
       confidenceStats: {
         average: 0.75,
-        distribution: { high: 0, medium: 0, low: 0 },
-      },
+        distribution: { high: 0, medium: 0, low: 0 }
+      }
     };
   }
 

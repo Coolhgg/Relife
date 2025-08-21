@@ -143,7 +143,7 @@ export default async function globalTeardown() {
       'DATABASE_URL',
       'REDIS_URL',
       'WEBHOOK_SECRET',
-      'JWT_SECRET',
+      'JWT_SECRET'
     ];
 
     // Don't actually delete them as other processes might need them
@@ -153,10 +153,9 @@ export default async function globalTeardown() {
       testEnvVars.forEach(varName => {
         if (process.env[varName]) {
           const value = process.env[varName];
-          const maskedValue =
-            varName.includes('SECRET') || varName.includes('KEY')
-              ? value?.slice(0, 10) + '...'
-              : value;
+          const maskedValue = varName.includes('SECRET') || varName.includes('KEY')
+            ? value?.slice(0, 10) + '...'
+            : value;
           console.log(`  ${varName}: ${maskedValue}`);
         }
       });
@@ -195,6 +194,7 @@ export default async function globalTeardown() {
 
     console.log('🎉 All tests completed successfully!');
     console.log('\n' + '='.repeat(80) + '\n');
+
   } catch (error) {
     console.error('\n❌ Global test teardown failed:');
     console.error(error);

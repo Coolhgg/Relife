@@ -156,19 +156,11 @@ export function isDatabaseUser(obj: unknown): obj is DatabaseUser {
 }
 
 export function isDatabaseAlarm(obj: unknown): obj is DatabaseAlarm {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    'id' in obj &&
-    'user_id' in obj &&
-    'time' in obj
-  );
+  return typeof obj === 'object' && obj !== null && 'id' in obj && 'user_id' in obj && 'time' in obj;
 }
 
 export function isDatabaseAlarmEvent(obj: unknown): obj is DatabaseAlarmEvent {
-  return (
-    typeof obj === 'object' && obj !== null && 'alarm_id' in obj && 'user_id' in obj
-  );
+  return typeof obj === 'object' && obj !== null && 'alarm_id' in obj && 'user_id' in obj;
 }
 
 export function isNumeric(value: unknown): value is number {

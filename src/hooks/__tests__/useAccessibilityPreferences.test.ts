@@ -13,7 +13,7 @@ const mockService = {
   subscribe: jest.fn(),
   updatePreferences: jest.fn(),
   resetToDefaults: jest.fn(),
-  getInstance: jest.fn(),
+  getInstance: jest.fn()
 };
 
 // Mock module
@@ -21,8 +21,8 @@ jest.mock('../../services/accessibility-preferences', () => {
   return {
     __esModule: true,
     default: {
-      getInstance: () => mockService,
-    },
+      getInstance: () => mockService
+    }
   };
 });
 
@@ -36,7 +36,7 @@ describe('useAccessibilityPreferences', () => {
       reducedMotion: false,
       screenReaderSupport: true,
       fontSize: 'medium',
-      colorScheme: 'auto',
+      colorScheme: 'auto'
     });
 
     mockService.getState.mockReturnValue({
@@ -44,7 +44,7 @@ describe('useAccessibilityPreferences', () => {
       hasReducedMotion: false,
       isScreenReaderActive: false,
       currentFontSize: 16,
-      currentColorScheme: 'light',
+      currentColorScheme: 'light'
     });
 
     mockService.subscribe.mockImplementation(callback => {
@@ -61,7 +61,7 @@ describe('useAccessibilityPreferences', () => {
       reducedMotion: false,
       screenReaderSupport: true,
       fontSize: 'medium',
-      colorScheme: 'auto',
+      colorScheme: 'auto'
     });
 
     expect(result.current.state).toEqual({
@@ -69,7 +69,7 @@ describe('useAccessibilityPreferences', () => {
       hasReducedMotion: false,
       isScreenReaderActive: false,
       currentFontSize: 16,
-      currentColorScheme: 'light',
+      currentColorScheme: 'light'
     });
 
     expect(mockService.getPreferences).toHaveBeenCalledTimes(1);
@@ -98,7 +98,7 @@ describe('useAccessibilityPreferences', () => {
       reducedMotion: true,
       screenReaderSupport: true,
       fontSize: 'large',
-      colorScheme: 'dark',
+      colorScheme: 'dark'
     };
 
     const newState = {
@@ -106,7 +106,7 @@ describe('useAccessibilityPreferences', () => {
       hasReducedMotion: true,
       isScreenReaderActive: true,
       currentFontSize: 18,
-      currentColorScheme: 'dark',
+      currentColorScheme: 'dark'
     };
 
     mockService.getState.mockReturnValue(newState);
@@ -129,7 +129,7 @@ describe('useAccessibilityPreferences', () => {
       reducedMotion: false,
       screenReaderSupport: true,
       fontSize: 'large',
-      colorScheme: 'dark',
+      colorScheme: 'dark'
     };
 
     await act(async () => {
@@ -163,7 +163,7 @@ describe('useAccessibilityPreferences', () => {
         reducedMotion: false,
         screenReaderSupport: true,
         fontSize: 'medium',
-        colorScheme: 'auto',
+        colorScheme: 'auto'
       });
     });
 
@@ -246,27 +246,9 @@ describe('useAccessibilityPreferences', () => {
 
     // Fire multiple updates rapidly
     const promises = [
-      result.current.updatePreferences({
-        highContrast: true,
-        reducedMotion: false,
-        screenReaderSupport: true,
-        fontSize: 'medium',
-        colorScheme: 'auto',
-      }),
-      result.current.updatePreferences({
-        highContrast: false,
-        reducedMotion: true,
-        screenReaderSupport: true,
-        fontSize: 'large',
-        colorScheme: 'dark',
-      }),
-      result.current.updatePreferences({
-        highContrast: true,
-        reducedMotion: true,
-        screenReaderSupport: false,
-        fontSize: 'small',
-        colorScheme: 'light',
-      }),
+      result.current.updatePreferences({ highContrast: true, reducedMotion: false, screenReaderSupport: true, fontSize: 'medium', colorScheme: 'auto' }),
+      result.current.updatePreferences({ highContrast: false, reducedMotion: true, screenReaderSupport: true, fontSize: 'large', colorScheme: 'dark' }),
+      result.current.updatePreferences({ highContrast: true, reducedMotion: true, screenReaderSupport: false, fontSize: 'small', colorScheme: 'light' })
     ];
 
     await act(async () => {

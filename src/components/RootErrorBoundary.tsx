@@ -29,14 +29,14 @@ export class RootErrorBoundary extends Component<Props, State> {
       error: null,
       errorInfo: null,
       errorId: null,
-      isRecovering: false,
+      isRecovering: false
     };
   }
 
   static getDerivedStateFromError(error: Error): Partial<State> {
     return {
       hasError: true,
-      error,
+      error
     };
   }
 
@@ -48,13 +48,13 @@ export class RootErrorBoundary extends Component<Props, State> {
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
       url: window.location.href,
-      recoveryAttempts: this.recoveryAttempts,
+      recoveryAttempts: this.recoveryAttempts
     });
 
     this.setState({
       error,
       errorInfo,
-      errorId,
+      errorId
     });
 
     // Try to save critical data before the app becomes unusable
@@ -71,7 +71,7 @@ export class RootErrorBoundary extends Component<Props, State> {
         url: window.location.href,
         userAgent: navigator.userAgent,
         error: this.state.error?.message,
-        stack: this.state.error?.stack,
+        stack: this.state.error?.stack
       };
 
       localStorage.setItem('app_crash_state', JSON.stringify(currentState));
@@ -96,7 +96,7 @@ export class RootErrorBoundary extends Component<Props, State> {
         error: null,
         errorInfo: null,
         errorId: null,
-        isRecovering: false,
+        isRecovering: false
       });
     } else {
       // Too many attempts, force reload
@@ -109,17 +109,14 @@ export class RootErrorBoundary extends Component<Props, State> {
       const subject = encodeURIComponent(`App Error Report - ${this.state.errorId}`);
       const body = encodeURIComponent(
         `Error ID: ${this.state.errorId}\n` +
-          `Error: ${this.state.error?.message}\n` +
-          `URL: ${window.location.href}\n` +
-          `User Agent: ${navigator.userAgent}\n` +
-          `Timestamp: ${new Date().toISOString()}\n\n` +
-          `Please describe what you were doing when this error occurred:`
+        `Error: ${this.state.error?.message}\n` +
+        `URL: ${window.location.href}\n` +
+        `User Agent: ${navigator.userAgent}\n` +
+        `Timestamp: ${new Date().toISOString()}\n\n` +
+        `Please describe what you were doing when this error occurred:`
       );
 
-      window.open(
-        `mailto:support@example.com?subject=${subject}&body=${body}`,
-        '_blank'
-      );
+      window.open(`mailto:support@example.com?subject=${subject}&body=${body}`, '_blank');
     }
   };
 
@@ -138,9 +135,7 @@ export class RootErrorBoundary extends Component<Props, State> {
               {this.state.isRecovering && (
                 <div className="flex items-center justify-center mb-4">
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-600"></div>
-                  <span className="ml-3 text-red-600 dark:text-red-400">
-                    Recovering...
-                  </span>
+                  <span className="ml-3 text-red-600 dark:text-red-400">Recovering...</span>
                 </div>
               )}
             </div>
@@ -152,8 +147,7 @@ export class RootErrorBoundary extends Component<Props, State> {
               </h1>
 
               <p className="text-gray-600 dark:text-gray-400 mb-4">
-                The Smart Alarm app encountered an unexpected error. Don't worry - your
-                alarm data is safe.
+                The Smart Alarm app encountered an unexpected error. Don't worry - your alarm data is safe.
               </p>
 
               {this.state.errorId && (
@@ -177,8 +171,7 @@ export class RootErrorBoundary extends Component<Props, State> {
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   <Zap className="w-5 h-5" />
-                  Try Again ({this.maxRecoveryAttempts - this.recoveryAttempts} attempts
-                  left)
+                  Try Again ({this.maxRecoveryAttempts - this.recoveryAttempts} attempts left)
                 </button>
               ) : (
                 <button
@@ -186,9 +179,7 @@ export class RootErrorBoundary extends Component<Props, State> {
                   disabled={this.state.isRecovering}
                   className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
-                  <RefreshCw
-                    className={`w-5 h-5 ${this.state.isRecovering ? 'animate-spin' : ''}`}
-                  />
+                  <RefreshCw className={`w-5 h-5 ${this.state.isRecovering ? 'animate-spin' : ''}`} />
                   {this.state.isRecovering ? 'Reloading...' : 'Reload App'}
                 </button>
               )}
@@ -238,9 +229,7 @@ export class RootErrorBoundary extends Component<Props, State> {
 
                   {this.state.error.stack && (
                     <div className="mb-3">
-                      <strong className="text-red-800 dark:text-red-200">
-                        Stack Trace:
-                      </strong>
+                      <strong className="text-red-800 dark:text-red-200">Stack Trace:</strong>
                       <pre className="mt-1 text-red-700 dark:text-red-300 overflow-x-auto whitespace-pre-wrap">
                         {this.state.error.stack}
                       </pre>
@@ -249,9 +238,7 @@ export class RootErrorBoundary extends Component<Props, State> {
 
                   {this.state.errorInfo && (
                     <div>
-                      <strong className="text-red-800 dark:text-red-200">
-                        Component Stack:
-                      </strong>
+                      <strong className="text-red-800 dark:text-red-200">Component Stack:</strong>
                       <pre className="mt-1 text-red-700 dark:text-red-300 overflow-x-auto whitespace-pre-wrap">
                         {this.state.errorInfo.componentStack}
                       </pre>

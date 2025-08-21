@@ -4,11 +4,7 @@
 import React, { useState } from 'react';
 import { Check, Zap, Star, Crown, ArrowRight } from 'lucide-react';
 import { FeatureBadge } from './FeatureUtils';
-import type {
-  SubscriptionPlan,
-  SubscriptionTier,
-  BillingInterval,
-} from '../../types/premium';
+import type { SubscriptionPlan, SubscriptionTier, BillingInterval } from '../../types/premium';
 
 interface PricingTableProps {
   plans: SubscriptionPlan[];
@@ -27,10 +23,9 @@ export function PricingTable({
   onPlanSelect,
   onBillingIntervalChange,
   loading = false,
-  className = '',
+  className = ''
 }: PricingTableProps) {
-  const [selectedInterval, setSelectedInterval] =
-    useState<BillingInterval>(billingInterval);
+  const [selectedInterval, setSelectedInterval] = useState<BillingInterval>(billingInterval);
 
   const handleIntervalChange = (interval: BillingInterval) => {
     setSelectedInterval(interval);
@@ -77,13 +72,7 @@ export function PricingTable({
 
   const isCurrentPlan = (tier: SubscriptionTier) => tier === currentTier;
   const isUpgrade = (tier: SubscriptionTier) => {
-    const hierarchy: SubscriptionTier[] = [
-      'free',
-      'basic',
-      'premium',
-      'pro',
-      'enterprise',
-    ];
+    const hierarchy: SubscriptionTier[] = ['free', 'basic', 'premium', 'pro', 'enterprise'];
     return hierarchy.indexOf(tier) > hierarchy.indexOf(currentTier);
   };
 
@@ -128,8 +117,7 @@ export function PricingTable({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {plans.map(plan => {
           const price = getPlanPrice(plan, selectedInterval);
-          const discount =
-            selectedInterval === 'year' ? getDiscountPercentage(plan) : null;
+          const discount = selectedInterval === 'year' ? getDiscountPercentage(plan) : null;
           const isCurrent = isCurrentPlan(plan.tier);
           const isPopular = plan.isPopular;
 
@@ -140,8 +128,8 @@ export function PricingTable({
                 isPopular
                   ? 'border-purple-500 shadow-lg scale-105'
                   : isCurrent
-                    ? 'border-green-500'
-                    : 'border-gray-200'
+                  ? 'border-green-500'
+                  : 'border-gray-200'
               }`}
             >
               {/* Popular Badge */}
@@ -183,7 +171,9 @@ export function PricingTable({
                   )}
                 </div>
 
-                <p className="text-gray-600 text-sm">{plan.description}</p>
+                <p className="text-gray-600 text-sm">
+                  {plan.description}
+                </p>
               </div>
 
               {/* Features List */}
@@ -212,12 +202,12 @@ export function PricingTable({
                   isCurrent
                     ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
                     : isPopular
-                      ? 'bg-purple-600 text-white hover:bg-purple-700'
-                      : plan.tier === 'basic'
-                        ? 'bg-blue-600 text-white hover:bg-blue-700'
-                        : plan.tier === 'pro'
-                          ? 'bg-yellow-600 text-white hover:bg-yellow-700'
-                          : 'bg-gray-600 text-white hover:bg-gray-700'
+                    ? 'bg-purple-600 text-white hover:bg-purple-700'
+                    : plan.tier === 'basic'
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : plan.tier === 'pro'
+                    ? 'bg-yellow-600 text-white hover:bg-yellow-700'
+                    : 'bg-gray-600 text-white hover:bg-gray-700'
                 }`}
               >
                 {loading ? (

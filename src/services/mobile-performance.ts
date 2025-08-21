@@ -77,10 +77,7 @@ export class MobilePerformanceService {
     this.detectDeviceCapabilities();
     this.startPerformanceMonitoring();
 
-    console.log(
-      '[Performance] Mobile optimizations initialized with config:',
-      this.config
-    );
+    console.log('[Performance] Mobile optimizations initialized with config:', this.config);
   }
 
   // Enhanced lazy loading with intersection observer
@@ -91,7 +88,7 @@ export class MobilePerformanceService {
       threshold: this.config.lazyLoadingThreshold,
     };
 
-    const imageObserver = new IntersectionObserver(entries => {
+    const imageObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const img = entry.target as HTMLImageElement;
@@ -102,13 +99,9 @@ export class MobilePerformanceService {
             img.classList.add('lazy-loaded');
 
             // Add load event listener for fade-in effect
-            img.addEventListener(
-              'load',
-              () => {
-                img.style.opacity = '1';
-              },
-              { once: true }
-            );
+            img.addEventListener('load', () => {
+              img.style.opacity = '1';
+            }, { once: true });
           }
 
           imageObserver.unobserve(img);
@@ -116,7 +109,7 @@ export class MobilePerformanceService {
       });
     }, options);
 
-    const contentObserver = new IntersectionObserver(entries => {
+    const contentObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const target = entry.target as HTMLElement;
@@ -200,38 +193,35 @@ export class MobilePerformanceService {
       return;
     }
 
-    (navigator as any)
-      .getBattery()
-      .then((battery: any) => {
-        const updateBatteryStatus = () => {
-          this.performanceMetrics.batteryLevel = battery.level;
-          this.performanceMetrics.batteryCharging = battery.charging;
-          this.performanceMetrics.lastUpdated = Date.now();
+    (navigator as any).getBattery().then((battery: any) => {
+      const updateBatteryStatus = () => {
+        this.performanceMetrics.batteryLevel = battery.level;
+        this.performanceMetrics.batteryCharging = battery.charging;
+        this.performanceMetrics.lastUpdated = Date.now();
 
-          const isLowBattery = battery.level < this.config.batteryLowThreshold;
-          const shouldOptimize = isLowBattery && !battery.charging;
+        const isLowBattery = battery.level < this.config.batteryLowThreshold;
+        const shouldOptimize = isLowBattery && !battery.charging;
 
-          if (shouldOptimize && !this.isLowPowerMode) {
-            this.enableLowPowerMode();
-          } else if (!isLowBattery && this.isLowPowerMode) {
-            this.disableLowPowerMode();
-          }
+        if (shouldOptimize && !this.isLowPowerMode) {
+          this.enableLowPowerMode();
+        } else if (!isLowBattery && this.isLowPowerMode) {
+          this.disableLowPowerMode();
+        }
 
-          this.notifyListeners();
-        };
+        this.notifyListeners();
+      };
 
-        // Initial check
-        updateBatteryStatus();
+      // Initial check
+      updateBatteryStatus();
 
-        // Listen for battery changes
-        battery.addEventListener('chargingchange', updateBatteryStatus);
-        battery.addEventListener('levelchange', updateBatteryStatus);
-        battery.addEventListener('chargingtimechange', updateBatteryStatus);
-        battery.addEventListener('dischargingtimechange', updateBatteryStatus);
-      })
-      .catch((error: any) => {
-        console.warn('[Performance] Battery API error:', error);
-      });
+      // Listen for battery changes
+      battery.addEventListener('chargingchange', updateBatteryStatus);
+      battery.addEventListener('levelchange', updateBatteryStatus);
+      battery.addEventListener('chargingtimechange', updateBatteryStatus);
+      battery.addEventListener('dischargingtimechange', updateBatteryStatus);
+    }).catch((error: any) => {
+      console.warn('[Performance] Battery API error:', error);
+    });
   }
 
   // Enable low power mode optimizations
@@ -329,9 +319,7 @@ export class MobilePerformanceService {
       document.body.classList.add('high-dpi');
     }
 
-    console.log(
-      `[Performance] Device capabilities - Memory: ${deviceMemory}GB, CPU: ${hardwareConcurrency} cores, Performance: ${this.performanceMetrics.devicePerformance}`
-    );
+    console.log(`[Performance] Device capabilities - Memory: ${deviceMemory}GB, CPU: ${hardwareConcurrency} cores, Performance: ${this.performanceMetrics.devicePerformance}`);
   }
 
   // Start performance monitoring
@@ -341,13 +329,10 @@ export class MobilePerformanceService {
     // Monitor performance marks
     if ('PerformanceObserver' in window) {
       try {
-        const observer = new PerformanceObserver(list => {
+        const observer = new PerformanceObserver((list) => {
           list.getEntries().forEach(entry => {
-            if (entry.duration > 16.67) {
-              // Longer than 60fps frame
-              console.warn(
-                `[Performance] Slow operation detected: ${entry.name} took ${entry.duration.toFixed(2)}ms`
-              );
+            if (entry.duration > 16.67) { // Longer than 60fps frame
+              console.warn(`[Performance] Slow operation detected: ${entry.name} took ${entry.duration.toFixed(2)}ms`);
             }
           });
         });
@@ -402,9 +387,7 @@ export class MobilePerformanceService {
 
   // Optimize animations based on device capabilities
   optimizeAnimations(): void {
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isLowPerformance = this.performanceMetrics.devicePerformance === 'low';
 
     if (prefersReducedMotion || isLowPerformance || this.isLowPowerMode) {
@@ -466,14 +449,9 @@ export class MobilePerformanceService {
     this.listeners = [];
 
     document.body.classList.remove(
-      'low-power-mode',
-      'reduce-motion',
-      'battery-saver',
-      'memory-pressure',
-      'slow-network',
-      'low-performance-device',
-      'high-performance-device',
-      'high-dpi'
+      'low-power-mode', 'reduce-motion', 'battery-saver',
+      'memory-pressure', 'slow-network', 'low-performance-device',
+      'high-performance-device', 'high-dpi'
     );
   }
 }

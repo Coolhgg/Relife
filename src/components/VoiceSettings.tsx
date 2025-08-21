@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  VoiceProService,
-  type VoiceProvider,
-  type VoiceOption,
-} from '../services/voice-pro';
+import { VoiceProService, type VoiceProvider, type VoiceOption } from '../services/voice-pro';
 import type { VoiceMood } from '../types';
 
 interface VoiceSettingsProps {
@@ -30,7 +26,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
   isOpen,
   onClose,
   onSave,
-  currentSettings,
+  currentSettings
 }) => {
   const [providers, setProviders] = useState<VoiceProvider[]>([]);
   const [selectedProvider, setSelectedProvider] = useState('elevenlabs');
@@ -39,13 +35,13 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
     'sweet-angel': '',
     'anime-hero': '',
     'savage-roast': '',
-    motivational: '',
-    gentle: '',
+    'motivational': '',
+    'gentle': '',
     // Premium personalities (Pro+ subscription required)
     'demon-lord': '',
     'ai-robot': '',
-    comedian: '',
-    philosopher: '',
+    'comedian': '',
+    'philosopher': ''
   });
   const [apiKeys, setApiKeys] = useState<{ [provider: string]: string }>({});
   const [globalSettings, setGlobalSettings] = useState({
@@ -53,13 +49,11 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
     pitch: 1.0,
     volume: 0.9,
     cacheEnabled: true,
-    offlineMode: false,
+    offlineMode: false
   });
   const [testingVoice, setTestingVoice] = useState<VoiceMood | null>(null);
   const [validatingKey, setValidatingKey] = useState(false);
-  const [keyValidation, setKeyValidation] = useState<{ [provider: string]: boolean }>(
-    {}
-  );
+  const [keyValidation, setKeyValidation] = useState<{ [provider: string]: boolean }>({});
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -76,8 +70,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
           setGlobalSettings(currentSettings.globalSettings);
         } else {
           // Load from localStorage
-          const savedProvider =
-            localStorage.getItem('preferred_voice_provider') || 'elevenlabs';
+          const savedProvider = localStorage.getItem('preferred_voice_provider') || 'elevenlabs';
           setSelectedProvider(savedProvider);
 
           // Note: API keys should not be stored in localStorage for security reasons
@@ -101,14 +94,14 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
   const handleVoiceMoodChange = (mood: VoiceMood, voiceId: string) => {
     setVoiceMappings(prev => ({
       ...prev,
-      [mood]: voiceId,
+      [mood]: voiceId
     }));
   };
 
   const handleApiKeyChange = (provider: string, key: string) => {
     setApiKeys(prev => ({
       ...prev,
-      [provider]: key,
+      [provider]: key
     }));
   };
 
@@ -120,13 +113,13 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
       const isValid = await VoiceProService.setApiKey(provider, key);
       setKeyValidation(prev => ({
         ...prev,
-        [provider]: isValid,
+        [provider]: isValid
       }));
     } catch (error) {
       console.error('Error validating API key:', error);
       setKeyValidation(prev => ({
         ...prev,
-        [provider]: false,
+        [provider]: false
       }));
     } finally {
       setValidatingKey(false);
@@ -149,7 +142,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
       preferredProvider: selectedProvider,
       voiceMappings,
       apiKeys,
-      globalSettings,
+      globalSettings
     };
 
     // Save provider preference only (not API keys for security)
@@ -173,14 +166,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
   if (!isOpen) return null;
 
   const selectedProviderData = providers.find(p => p.id === selectedProvider);
-  const moods: VoiceMood[] = [
-    'drill-sergeant',
-    'sweet-angel',
-    'anime-hero',
-    'savage-roast',
-    'motivational',
-    'gentle',
-  ];
+  const moods: VoiceMood[] = ['drill-sergeant', 'sweet-angel', 'anime-hero', 'savage-roast', 'motivational', 'gentle'];
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -191,18 +177,8 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
             onClick={onClose}
             className="text-white/60 hover:text-white transition-colors"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
@@ -241,9 +217,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
           {/* API Key Configuration */}
           {selectedProviderData?.premium && (
             <div>
-              <h3 className="text-lg font-semibold text-white mb-4">
-                API Configuration
-              </h3>
+              <h3 className="text-lg font-semibold text-white mb-4">API Configuration</h3>
               <div className="space-y-4">
                 <div>
                   <label className="block text-white/80 mb-2">
@@ -253,19 +227,12 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                     <input
                       type="password"
                       value={apiKeys[selectedProvider] || ''}
-                      onChange={e =>
-                        handleApiKeyChange(selectedProvider, e.target.value)
-                      }
+                      onChange={(e) => handleApiKeyChange(selectedProvider, e.target.value)}
                       placeholder="Enter your API key"
                       className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400"
                     />
                     <button
-                      onClick={() =>
-                        validateApiKey(
-                          selectedProvider,
-                          apiKeys[selectedProvider] || ''
-                        )
-                      }
+                      onClick={() => validateApiKey(selectedProvider, apiKeys[selectedProvider] || '')}
                       disabled={validatingKey || !apiKeys[selectedProvider]?.trim()}
                       className="px-4 py-2 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-500 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
                     >
@@ -273,12 +240,8 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                     </button>
                   </div>
                   {keyValidation[selectedProvider] !== undefined && (
-                    <p
-                      className={`mt-2 text-sm ${keyValidation[selectedProvider] ? 'text-green-400' : 'text-red-400'}`}
-                    >
-                      {keyValidation[selectedProvider]
-                        ? '✓ API key is valid'
-                        : '✗ Invalid API key'}
+                    <p className={`mt-2 text-sm ${keyValidation[selectedProvider] ? 'text-green-400' : 'text-red-400'}`}>
+                      {keyValidation[selectedProvider] ? '✓ API key is valid' : '✗ Invalid API key'}
                     </p>
                   )}
                   <p className="text-white/60 text-sm mt-2">
@@ -291,19 +254,14 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
 
           {/* Voice Mood Mappings */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Voice Mood Configuration
-            </h3>
+            <h3 className="text-lg font-semibold text-white mb-4">Voice Mood Configuration</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {moods.map(mood => {
                 const moodVoices = VoiceProService.getVoicesForMood(mood);
                 const currentVoice = voiceMappings[mood];
 
                 return (
-                  <div
-                    key={mood}
-                    className="p-4 bg-white/5 rounded-lg border border-white/10"
-                  >
+                  <div key={mood} className="p-4 bg-white/5 rounded-lg border border-white/10">
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="font-medium text-white capitalize">
                         {mood.replace('-', ' ')}
@@ -319,7 +277,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
 
                     <select
                       value={currentVoice}
-                      onChange={e => handleVoiceMoodChange(mood, e.target.value)}
+                      onChange={(e) => handleVoiceMoodChange(mood, e.target.value)}
                       className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
                     >
                       <option value="">Select voice...</option>
@@ -349,12 +307,10 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   max="2.0"
                   step="0.1"
                   value={globalSettings.speed}
-                  onChange={e =>
-                    setGlobalSettings(prev => ({
-                      ...prev,
-                      speed: parseFloat(e.target.value),
-                    }))
-                  }
+                  onChange={(e) => setGlobalSettings(prev => ({
+                    ...prev,
+                    speed: parseFloat(e.target.value)
+                  }))}
                   className="w-full accent-purple-500"
                 />
               </div>
@@ -369,12 +325,10 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   max="2.0"
                   step="0.1"
                   value={globalSettings.pitch}
-                  onChange={e =>
-                    setGlobalSettings(prev => ({
-                      ...prev,
-                      pitch: parseFloat(e.target.value),
-                    }))
-                  }
+                  onChange={(e) => setGlobalSettings(prev => ({
+                    ...prev,
+                    pitch: parseFloat(e.target.value)
+                  }))}
                   className="w-full accent-purple-500"
                 />
               </div>
@@ -389,12 +343,10 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   max="1.0"
                   step="0.1"
                   value={globalSettings.volume}
-                  onChange={e =>
-                    setGlobalSettings(prev => ({
-                      ...prev,
-                      volume: parseFloat(e.target.value),
-                    }))
-                  }
+                  onChange={(e) => setGlobalSettings(prev => ({
+                    ...prev,
+                    volume: parseFloat(e.target.value)
+                  }))}
                   className="w-full accent-purple-500"
                 />
               </div>
@@ -405,12 +357,10 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                 <input
                   type="checkbox"
                   checked={globalSettings.cacheEnabled}
-                  onChange={e =>
-                    setGlobalSettings(prev => ({
-                      ...prev,
-                      cacheEnabled: e.target.checked,
-                    }))
-                  }
+                  onChange={(e) => setGlobalSettings(prev => ({
+                    ...prev,
+                    cacheEnabled: e.target.checked
+                  }))}
                   className="mr-3 accent-purple-500"
                 />
                 Enable voice caching for faster playback
@@ -420,12 +370,10 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                 <input
                   type="checkbox"
                   checked={globalSettings.offlineMode}
-                  onChange={e =>
-                    setGlobalSettings(prev => ({
-                      ...prev,
-                      offlineMode: e.target.checked,
-                    }))
-                  }
+                  onChange={(e) => setGlobalSettings(prev => ({
+                    ...prev,
+                    offlineMode: e.target.checked
+                  }))}
                   className="mr-3 accent-purple-500"
                 />
                 Prioritize offline voices when available
@@ -439,9 +387,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
             <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
               <div>
                 <p className="text-white font-medium">Voice Cache</p>
-                <p className="text-white/60 text-sm">
-                  Clear cached voice messages to free up storage
-                </p>
+                <p className="text-white/60 text-sm">Clear cached voice messages to free up storage</p>
               </div>
               <button
                 onClick={clearCache}

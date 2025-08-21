@@ -14,25 +14,20 @@ const emailPlatforms = {
     name: 'ConvertKit',
     api_base: 'https://api.convertkit.com/v3',
     setup_url: 'https://app.convertkit.com',
-    features: ['Advanced automation', 'Tagging', 'Custom fields', 'A/B testing'],
+    features: ['Advanced automation', 'Tagging', 'Custom fields', 'A/B testing']
   },
   mailchimp: {
     name: 'Mailchimp',
     api_base: 'https://us1.api.mailchimp.com/3.0',
     setup_url: 'https://mailchimp.com',
-    features: ['Templates', 'Segmentation', 'Analytics', 'Landing pages'],
+    features: ['Templates', 'Segmentation', 'Analytics', 'Landing pages']
   },
   activecampaign: {
     name: 'ActiveCampaign',
     api_base: 'https://yoursubdomain.api-us1.com/api/3',
     setup_url: 'https://activecampaign.com',
-    features: [
-      'Advanced automation',
-      'CRM integration',
-      'Machine learning',
-      'Attribution',
-    ],
-  },
+    features: ['Advanced automation', 'CRM integration', 'Machine learning', 'Attribution']
+  }
 };
 
 class EmailCampaignSetup {
@@ -71,8 +66,8 @@ class EmailCampaignSetup {
         { name: 'confidence_score', type: 'number' },
         { name: 'signup_source', type: 'text' },
         { name: 'trial_start_date', type: 'date' },
-        { name: 'company_name', type: 'text' },
-      ],
+        { name: 'company_name', type: 'text' }
+      ]
     };
 
     // Create forms for each persona
@@ -83,8 +78,8 @@ class EmailCampaignSetup {
         tags: [`persona:${persona}`],
         custom_fields: {
           persona: persona,
-          signup_source: 'website',
-        },
+          signup_source: 'website'
+        }
       };
 
       config.tags.push(`persona:${persona}`);
@@ -100,8 +95,8 @@ class EmailCampaignSetup {
           delay_days: Math.floor(email.delay_hours / 24),
           delay_hours: email.delay_hours % 24,
           template_name: email.template || `${persona}_email_${index + 1}`,
-          actions: email.target_action ? [`Tag: ${email.target_action}`] : [],
-        })),
+          actions: email.target_action ? [`Tag: ${email.target_action}`] : []
+        }))
       };
     });
 
@@ -117,19 +112,21 @@ class EmailCampaignSetup {
           PERSONA: { name: 'Persona Type', type: 'text' },
           CONFIDENCE: { name: 'Detection Confidence', type: 'number' },
           SOURCE: { name: 'Signup Source', type: 'text' },
-          COMPANY: { name: 'Company Name', type: 'text' },
+          COMPANY: { name: 'Company Name', type: 'text' }
         },
         tags: Object.keys(campaignConfig),
-        segments: {},
+        segments: {}
       },
-      automations: {},
+      automations: {}
     };
 
     // Create segments for each persona
     Object.keys(campaignConfig).forEach(persona => {
       config.audience.segments[persona] = {
         name: `${this.getPersonaDisplayName(persona)} Users`,
-        conditions: [{ field: 'PERSONA', op: 'is', value: persona }],
+        conditions: [
+          { field: 'PERSONA', op: 'is', value: persona }
+        ]
       };
     });
 
@@ -139,14 +136,14 @@ class EmailCampaignSetup {
         name: `${this.getPersonaDisplayName(persona)} Welcome Series`,
         trigger: {
           type: 'tag_added',
-          tag: persona,
+          tag: persona
         },
         emails: campaign.sequences.map(email => ({
           subject: email.subject,
           delay: `${email.delay_hours} hours`,
           template: email.template || `${persona}_template`,
-          goals: [email.target_action],
-        })),
+          goals: [email.target_action]
+        }))
       };
     });
 
@@ -160,8 +157,7 @@ class EmailCampaignSetup {
     Object.entries(campaignConfig).forEach(([persona, campaign]) => {
       templates[persona] = campaign.sequences.map((email, index) => {
         const personaColor = templateVariables.persona_specific[persona].primary_color;
-        const messagingTone =
-          templateVariables.persona_specific[persona].messaging_tone;
+        const messagingTone = templateVariables.persona_specific[persona].messaging_tone;
 
         return {
           id: email.id,
@@ -172,8 +168,8 @@ class EmailCampaignSetup {
           variables: {
             persona_color: personaColor,
             messaging_tone: messagingTone,
-            cta_style: templateVariables.persona_specific[persona].cta_style,
-          },
+            cta_style: templateVariables.persona_specific[persona].cta_style
+          }
         };
       });
     });
@@ -251,7 +247,7 @@ Unsubscribe: {{unsubscribe_link}}
       endpoints: {
         pixel: 'https://track.relife.app/pixel',
         click: 'https://track.relife.app/click',
-        webhook: 'https://api.relife.app/webhook/email',
+        webhook: 'https://api.relife.app/webhook/email'
       },
       events: [
         'email_sent',
@@ -259,7 +255,7 @@ Unsubscribe: {{unsubscribe_link}}
         'email_clicked',
         'email_bounced',
         'email_unsubscribed',
-        'user_converted',
+        'user_converted'
       ],
       analytics_integration: {
         google_analytics: {
@@ -269,19 +265,14 @@ Unsubscribe: {{unsubscribe_link}}
             utm_medium: 'campaign',
             utm_campaign: '{{campaign_id}}',
             utm_content: '{{persona}}',
-            utm_term: 'persona_driven',
-          },
+            utm_term: 'persona_driven'
+          }
         },
         mixpanel: {
           project_token: 'MIXPANEL_TOKEN',
-          events_to_track: [
-            'Email Opened',
-            'Email Clicked',
-            'Trial Started',
-            'Subscription Created',
-          ],
-        },
-      },
+          events_to_track: ['Email Opened', 'Email Clicked', 'Trial Started', 'Subscription Created']
+        }
+      }
     };
   }
 
@@ -291,43 +282,41 @@ Unsubscribe: {{unsubscribe_link}}
       persona_targets: {
         struggling_sam: {
           open_rate: { min: 0.25, target: 0.35, excellent: 0.45 },
-          click_rate: { min: 0.03, target: 0.06, excellent: 0.1 },
-          conversion_rate: { min: 0.05, target: 0.12, excellent: 0.18 },
+          click_rate: { min: 0.03, target: 0.06, excellent: 0.10 },
+          conversion_rate: { min: 0.05, target: 0.12, excellent: 0.18 }
         },
         busy_ben: {
-          open_rate: { min: 0.22, target: 0.32, excellent: 0.4 },
-          click_rate: { min: 0.05, target: 0.1, excellent: 0.15 },
-          conversion_rate: { min: 0.15, target: 0.25, excellent: 0.35 },
+          open_rate: { min: 0.22, target: 0.32, excellent: 0.40 },
+          click_rate: { min: 0.05, target: 0.10, excellent: 0.15 },
+          conversion_rate: { min: 0.15, target: 0.25, excellent: 0.35 }
         },
         professional_paula: {
-          open_rate: { min: 0.2, target: 0.3, excellent: 0.38 },
+          open_rate: { min: 0.20, target: 0.30, excellent: 0.38 },
           click_rate: { min: 0.06, target: 0.12, excellent: 0.18 },
-          conversion_rate: { min: 0.18, target: 0.3, excellent: 0.4 },
+          conversion_rate: { min: 0.18, target: 0.30, excellent: 0.40 }
         },
         enterprise_emma: {
           open_rate: { min: 0.25, target: 0.35, excellent: 0.45 },
-          demo_booking_rate: { min: 0.15, target: 0.25, excellent: 0.4 },
-          conversion_rate: { min: 0.2, target: 0.35, excellent: 0.5 },
+          demo_booking_rate: { min: 0.15, target: 0.25, excellent: 0.40 },
+          conversion_rate: { min: 0.20, target: 0.35, excellent: 0.50 }
         },
         student_sarah: {
           open_rate: { min: 0.35, target: 0.45, excellent: 0.55 },
-          verification_rate: { min: 0.45, target: 0.6, excellent: 0.75 },
-          conversion_rate: { min: 0.12, target: 0.2, excellent: 0.28 },
+          verification_rate: { min: 0.45, target: 0.60, excellent: 0.75 },
+          conversion_rate: { min: 0.12, target: 0.20, excellent: 0.28 }
         },
         lifetime_larry: {
           open_rate: { min: 0.28, target: 0.38, excellent: 0.48 },
-          click_rate: { min: 0.08, target: 0.14, excellent: 0.2 },
-          conversion_rate: { min: 0.04, target: 0.08, excellent: 0.15 },
-        },
+          click_rate: { min: 0.08, target: 0.14, excellent: 0.20 },
+          conversion_rate: { min: 0.04, target: 0.08, excellent: 0.15 }
+        }
       },
       monitoring_alerts: {
-        low_open_rate:
-          'Alert if open rate drops below persona minimum for 3 consecutive days',
+        low_open_rate: 'Alert if open rate drops below persona minimum for 3 consecutive days',
         high_unsubscribe: 'Alert if unsubscribe rate exceeds 5% for any campaign',
         low_conversion: 'Alert if conversion rate drops below 50% of target for 7 days',
-        deliverability_issues:
-          'Alert if bounce rate exceeds 3% or spam complaints exceed 0.1%',
-      },
+        deliverability_issues: 'Alert if bounce rate exceeds 3% or spam complaints exceed 0.1%'
+      }
     };
   }
 
@@ -339,7 +328,7 @@ Unsubscribe: {{unsubscribe_link}}
       professional_paula: 'Professional Paula (Feature-Rich)',
       enterprise_emma: 'Enterprise Emma (Team-Oriented)',
       student_sarah: 'Student Sarah (Budget-Conscious)',
-      lifetime_larry: 'Lifetime Larry (One-Time Payment)',
+      lifetime_larry: 'Lifetime Larry (One-Time Payment)'
     };
     return displayNames[persona] || persona;
   }
@@ -359,7 +348,7 @@ Unsubscribe: {{unsubscribe_link}}
       mailchimp: this.generateMailchimpConfig(),
       templates: this.generateEmailTemplates(),
       tracking: this.generateTrackingSetup(),
-      benchmarks: this.generateBenchmarks(),
+      benchmarks: this.generateBenchmarks()
     };
 
     // Save each configuration to a file
@@ -430,16 +419,12 @@ Based on industry benchmarks and persona optimization:
 
 Monitor these KPIs for each persona:
 
-${Object.keys(campaignConfig)
-  .map(
-    persona => `
+${Object.keys(campaignConfig).map(persona => `
 ### ${this.getPersonaDisplayName(persona)}
 - Open Rate Target: ${(this.generateBenchmarks().persona_targets[persona].open_rate.target * 100).toFixed(0)}%
 - Click Rate Target: ${(this.generateBenchmarks().persona_targets[persona].click_rate.target * 100).toFixed(0)}%
 - Conversion Target: ${(this.generateBenchmarks().persona_targets[persona].conversion_rate.target * 100).toFixed(0)}%
-`
-  )
-  .join('')}
+`).join('')}
 
 ## 🚨 Monitoring & Alerts
 
@@ -471,6 +456,7 @@ Your campaigns are ready to launch! 🎉
       console.log('2. Follow the setup-instructions.md guide');
       console.log('3. Import configurations into your email platform');
       console.log('4. Test and launch your campaigns\n');
+
     } catch (error) {
       console.error('❌ Setup failed:', error.message);
       process.exit(1);

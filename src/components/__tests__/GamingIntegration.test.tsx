@@ -14,7 +14,7 @@ import {
   createTestUser,
   createTestBattle,
   createTestRewardSystem,
-  createTestBattleParticipant,
+  createTestBattleParticipant
 } from '../../__tests__/factories/gaming-factories';
 import GamingHub from '../GamingHub';
 
@@ -24,11 +24,11 @@ const mockGamingService = {
   joinBattle: jest.fn(),
   sendTrashTalk: jest.fn(),
   getBattleUpdates: jest.fn(),
-  leaveBattle: jest.fn(),
+  leaveBattle: jest.fn()
 };
 
 jest.mock('../services/gamingService', () => ({
-  gamingService: mockGamingService,
+  gamingService: mockGamingService
 }));
 
 // Mock real-time updates
@@ -36,15 +36,15 @@ const mockWebSocket = {
   addEventListener: jest.fn(),
   removeEventListener: jest.fn(),
   send: jest.fn(),
-  close: jest.fn(),
+  close: jest.fn()
 };
 
 jest.mock('../hooks/useRealTimeUpdates', () => ({
   useRealTimeUpdates: () => ({
     connected: true,
     subscribe: jest.fn(),
-    unsubscribe: jest.fn(),
-  }),
+    unsubscribe: jest.fn()
+  })
 }));
 
 describe('Gaming Integration Tests', () => {
@@ -53,7 +53,7 @@ describe('Gaming Integration Tests', () => {
     username: 'gaming-pro',
     displayName: 'Gaming Pro',
     level: 20,
-    experience: 5000,
+    experience: 5000
   });
 
   const mockFriends = [
@@ -62,22 +62,22 @@ describe('Gaming Integration Tests', () => {
       username: 'speedster',
       displayName: 'Speed Demon',
       level: 18,
-      lastActive: new Date().toISOString(),
+      lastActive: new Date().toISOString()
     }),
     createTestUser({
       id: 'friend-2',
       username: 'consistent',
       displayName: 'Consistency King',
       level: 22,
-      lastActive: new Date(Date.now() - 3600000).toISOString(),
+      lastActive: new Date(Date.now() - 3600000).toISOString()
     }),
     createTestUser({
       id: 'friend-3',
       username: 'taskmaster',
       displayName: 'Task Master',
       level: 15,
-      lastActive: new Date(Date.now() - 86400000).toISOString(),
-    }),
+      lastActive: new Date(Date.now() - 86400000).toISOString()
+    })
   ];
 
   const mockRewardSystem = createTestRewardSystem({
@@ -92,9 +92,9 @@ describe('Gaming Integration Tests', () => {
         name: 'Speed Demon',
         description: 'Win 10 speed battles',
         unlockedAt: new Date().toISOString(),
-        rarity: 'rare',
-      },
-    ],
+        rarity: 'rare'
+      }
+    ]
   });
 
   const mockActiveBattles = [
@@ -107,18 +107,18 @@ describe('Gaming Integration Tests', () => {
         createTestBattleParticipant({
           userId: mockCurrentUser.id,
           user: mockCurrentUser,
-          score: 250,
+          score: 250
         }),
         createTestBattleParticipant({
           userId: mockFriends[0].id,
           user: mockFriends[0],
-          score: 200,
-        }),
+          score: 200
+        })
       ],
       startTime: new Date(Date.now() - 3600000), // 1 hour ago
       endTime: new Date(Date.now() + 3600000), // 1 hour from now
-      trashTalk: [],
-    }),
+      trashTalk: []
+    })
   ];
 
   const defaultProps = {
@@ -129,14 +129,14 @@ describe('Gaming Integration Tests', () => {
     onCreateBattle: jest.fn(),
     onJoinBattle: jest.fn(),
     onSendTrashTalk: jest.fn(),
-    onRefreshRewards: jest.fn(),
+    onRefreshRewards: jest.fn()
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
     mockGamingService.createBattle.mockResolvedValue({
       id: 'new-battle-123',
-      participants: [mockCurrentUser.id],
+      participants: [mockCurrentUser.id]
     });
     mockGamingService.joinBattle.mockResolvedValue({ success: true });
     mockGamingService.sendTrashTalk.mockResolvedValue({ success: true });
@@ -161,13 +161,10 @@ describe('Gaming Integration Tests', () => {
       await user.click(speedBattleCard!);
 
       // Fill out battle form
-      await user.type(
-        screen.getByLabelText(/battle name/i),
-        'Morning Sprint Challenge'
-      );
+      await user.type(screen.getByLabelText(/battle name/i), 'Morning Sprint Challenge');
       await user.type(
         screen.getByLabelText(/description/i),
-        "Let's see who can wake up fastest tomorrow!"
+        'Let\'s see who can wake up fastest tomorrow!'
       );
 
       // Set start time to tomorrow morning
@@ -194,9 +191,9 @@ describe('Gaming Integration Tests', () => {
         expect(defaultProps.onCreateBattle).toHaveBeenCalledWith(
           expect.objectContaining({
             name: 'Morning Sprint Challenge',
-            description: "Let's see who can wake up fastest tomorrow!",
+            description: 'Let\'s see who can wake up fastest tomorrow!',
             type: 'speed',
-            invitedUsers: [mockFriends[0].id, mockFriends[1].id],
+            invitedUsers: [mockFriends[0].id, mockFriends[1].id]
           })
         );
       });
@@ -255,11 +252,8 @@ describe('Gaming Integration Tests', () => {
         status: 'pending',
         creatorId: mockFriends[0].id,
         participants: [
-          createTestBattleParticipant({
-            userId: mockFriends[0].id,
-            user: mockFriends[0],
-          }),
-        ],
+          createTestBattleParticipant({ userId: mockFriends[0].id, user: mockFriends[0] })
+        ]
       });
 
       renderWithProviders(
@@ -297,11 +291,16 @@ describe('Gaming Integration Tests', () => {
         maxParticipants: 2,
         participants: [
           createTestBattleParticipant({ userId: mockFriends[0].id }),
-          createTestBattleParticipant({ userId: mockFriends[1].id }),
-        ],
+          createTestBattleParticipant({ userId: mockFriends[1].id })
+        ]
       });
 
-      renderWithProviders(<GamingHub {...defaultProps} activeBattles={[fullBattle]} />);
+      renderWithProviders(
+        <GamingHub
+          {...defaultProps}
+          activeBattles={[fullBattle]}
+        />
+      );
 
       const battlesTab = screen.getByRole('tab', { name: /battles/i });
       fireEvent.click(battlesTab);
@@ -332,19 +331,19 @@ describe('Gaming Integration Tests', () => {
 
       // Send a message
       const messageInput = screen.getByPlaceholderText(/send a message/i);
-      await user.type(messageInput, "You're going down, Speed Demon!");
+      await user.type(messageInput, 'You\'re going down, Speed Demon!');
 
       const sendButton = screen.getByRole('button', { name: /send/i });
       await user.click(sendButton);
 
       expect(defaultProps.onSendTrashTalk).toHaveBeenCalledWith(
         'active-battle-1',
-        "You're going down, Speed Demon!"
+        'You\'re going down, Speed Demon!'
       );
 
       // Message should appear in chat
       await waitFor(() => {
-        expect(screen.getByText("You're going down, Speed Demon!")).toBeInTheDocument();
+        expect(screen.getByText('You\'re going down, Speed Demon!')).toBeInTheDocument();
       });
     });
 
@@ -372,9 +371,7 @@ describe('Gaming Integration Tests', () => {
       await user.click(sendButton);
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/message contains inappropriate content/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/message contains inappropriate content/i)).toBeInTheDocument();
       });
     });
 
@@ -388,7 +385,7 @@ describe('Gaming Integration Tests', () => {
             userId: mockFriends[0].id,
             user: mockFriends[0],
             message: 'Bring it on!',
-            timestamp: new Date(Date.now() - 300000), // 5 minutes ago
+            timestamp: new Date(Date.now() - 300000) // 5 minutes ago
           },
           {
             id: 'msg-2',
@@ -396,13 +393,16 @@ describe('Gaming Integration Tests', () => {
             userId: mockCurrentUser.id,
             user: mockCurrentUser,
             message: 'You asked for it!',
-            timestamp: new Date(Date.now() - 60000), // 1 minute ago
-          },
-        ],
+            timestamp: new Date(Date.now() - 60000) // 1 minute ago
+          }
+        ]
       };
 
       renderWithProviders(
-        <GamingHub {...defaultProps} activeBattles={[battleWithMessages]} />
+        <GamingHub
+          {...defaultProps}
+          activeBattles={[battleWithMessages]}
+        />
       );
 
       const battlesTab = screen.getByRole('tab', { name: /battles/i });
@@ -437,18 +437,15 @@ describe('Gaming Integration Tests', () => {
         ...mockActiveBattles[0],
         participants: [
           { ...mockActiveBattles[0].participants[0], score: 300 },
-          { ...mockActiveBattles[0].participants[1], score: 280 },
-        ],
+          { ...mockActiveBattles[0].participants[1], score: 280 }
+        ]
       };
 
       // Mock WebSocket message
       act(() => {
-        fireEvent(
-          window,
-          new CustomEvent('battle-score-update', {
-            detail: { battleId: 'active-battle-1', battle: updatedBattle },
-          })
-        );
+        fireEvent(window, new CustomEvent('battle-score-update', {
+          detail: { battleId: 'active-battle-1', battle: updatedBattle }
+        }));
       });
 
       // Scores should update
@@ -472,17 +469,14 @@ describe('Gaming Integration Tests', () => {
         ...mockActiveBattles[0],
         participants: [
           ...mockActiveBattles[0].participants,
-          createTestBattleParticipant({ userId: 'new-participant' }),
-        ],
+          createTestBattleParticipant({ userId: 'new-participant' })
+        ]
       };
 
       act(() => {
-        fireEvent(
-          window,
-          new CustomEvent('battle-participant-joined', {
-            detail: { battleId: 'active-battle-1', battle: updatedBattle },
-          })
-        );
+        fireEvent(window, new CustomEvent('battle-participant-joined', {
+          detail: { battleId: 'active-battle-1', battle: updatedBattle }
+        }));
       });
 
       await waitFor(() => {
@@ -501,20 +495,17 @@ describe('Gaming Integration Tests', () => {
 
       // Simulate battle completion with reward
       act(() => {
-        fireEvent(
-          window,
-          new CustomEvent('battle-completed', {
-            detail: {
-              battleId: 'active-battle-1',
-              winner: mockCurrentUser.id,
-              rewards: {
-                experience: 500,
-                points: 200,
-                badge: 'speed-champion',
-              },
-            },
-          })
-        );
+        fireEvent(window, new CustomEvent('battle-completed', {
+          detail: {
+            battleId: 'active-battle-1',
+            winner: mockCurrentUser.id,
+            rewards: {
+              experience: 500,
+              points: 200,
+              badge: 'speed-champion'
+            }
+          }
+        }));
       });
 
       // Should trigger rewards refresh
@@ -537,9 +528,9 @@ describe('Gaming Integration Tests', () => {
             name: 'Consistency Master',
             description: 'Win 5 consistency battles',
             unlockedAt: new Date().toISOString(),
-            rarity: 'epic' as const,
-          },
-        ],
+            rarity: 'epic' as const
+          }
+        ]
       };
 
       const { rerender } = renderWithProviders(<GamingHub {...defaultProps} />);
@@ -548,7 +539,9 @@ describe('Gaming Integration Tests', () => {
       expect(screen.getByText('Speed Demon')).toBeInTheDocument();
 
       // Update with new badge
-      rerender(<GamingHub {...defaultProps} rewardSystem={updatedRewardSystem} />);
+      rerender(
+        <GamingHub {...defaultProps} rewardSystem={updatedRewardSystem} />
+      );
 
       expect(screen.getByText('Consistency Master')).toBeInTheDocument();
       expect(screen.getByText(/new badge unlocked/i)).toBeInTheDocument();
@@ -581,7 +574,11 @@ describe('Gaming Integration Tests', () => {
 
     it('handles empty states gracefully', () => {
       renderWithProviders(
-        <GamingHub {...defaultProps} activeBattles={[]} friends={[]} />
+        <GamingHub
+          {...defaultProps}
+          activeBattles={[]}
+          friends={[]}
+        />
       );
 
       const battlesTab = screen.getByRole('tab', { name: /battles/i });
@@ -665,12 +662,9 @@ describe('Gaming Integration Tests', () => {
 
       // Simulate battle completion
       act(() => {
-        fireEvent(
-          window,
-          new CustomEvent('battle-completed', {
-            detail: { battleId: 'active-battle-1', winner: mockCurrentUser.id },
-          })
-        );
+        fireEvent(window, new CustomEvent('battle-completed', {
+          detail: { battleId: 'active-battle-1', winner: mockCurrentUser.id }
+        }));
       });
 
       expect(statusRegion).toHaveTextContent(/battle completed/i);

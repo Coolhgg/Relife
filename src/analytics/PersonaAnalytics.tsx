@@ -1,4 +1,3 @@
-/// <reference lib="dom" />
 import React, { useEffect, useCallback, useRef } from 'react';
 import { PersonaType, PersonaDetectionFactor } from '../types/index';
 
@@ -13,14 +12,6 @@ type PersonaDetectionData = {
   factors: PersonaDetectionFactor[];
   confidence: number;
   primaryPersona: PersonaType;
-  // Additional metadata properties for analytics
-  subscriptionTier?: string;
-  ageRange?: string;
-  usagePatterns?: any;
-  priceInteraction?: any;
-  featurePreferences?: any;
-  deviceType?: string;
-  timeOfDay?: string;
 };
 
 // Analytics Events for Persona Tracking
@@ -71,10 +62,7 @@ class PersonaAnalyticsTracker {
   private static instance: PersonaAnalyticsTracker;
   private sessionId: string;
   private userId?: string;
-  private eventQueue: Array<{
-    event: PersonaAnalyticsEvent;
-    data: PersonaAnalyticsData | CampaignPerformanceData;
-  }> = [];
+  private eventQueue: Array<{ event: PersonaAnalyticsEvent; data: PersonaAnalyticsData | CampaignPerformanceData }> = [];
   private flushInterval: NodeJS.Timeout | null = null;
 
   private constructor() {
@@ -110,11 +98,7 @@ class PersonaAnalyticsTracker {
   }
 
   // Core Analytics Methods
-  trackPersonaDetection(
-    persona: UserPersona,
-    detectionData: PersonaDetectionData,
-    confidence: number
-  ): void {
+  trackPersonaDetection(persona: UserPersona, detectionData: PersonaDetectionData, confidence: number): void {
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
       sessionId: this.sessionId,
@@ -131,24 +115,15 @@ class PersonaAnalyticsTracker {
         featurePreferences: detectionData.featurePreferences,
         deviceType: detectionData.deviceType,
         timeOfDay: detectionData.timeOfDay,
-        detectionScore: confidence,
-      },
+        detectionScore: confidence
+      }
     };
 
     this.queueEvent('persona_detected', analyticsData);
-    console.log(
-      '[PersonaAnalytics] Persona detected:',
-      persona,
-      'confidence:',
-      confidence
-    );
+    console.log('[PersonaAnalytics] Persona detected:', persona, 'confidence:', confidence);
   }
 
-  trackPersonaChange(
-    oldPersona: UserPersona,
-    newPersona: UserPersona,
-    reason: string
-  ): void {
+  trackPersonaChange(oldPersona: UserPersona, newPersona: UserPersona, reason: string): void {
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
       sessionId: this.sessionId,
@@ -159,26 +134,15 @@ class PersonaAnalyticsTracker {
       previousPersona: oldPersona,
       metadata: {
         changeReason: reason,
-        changeType: 'automatic',
-      },
+        changeType: 'automatic'
+      }
     };
 
     this.queueEvent('persona_changed', analyticsData);
-    console.log(
-      '[PersonaAnalytics] Persona changed:',
-      oldPersona,
-      '->',
-      newPersona,
-      'reason:',
-      reason
-    );
+    console.log('[PersonaAnalytics] Persona changed:', oldPersona, '->', newPersona, 'reason:', reason);
   }
 
-  trackPersonaPricingInteraction(
-    persona: UserPersona,
-    action: 'view' | 'click' | 'hover',
-    tier?: string
-  ): void {
+  trackPersonaPricingInteraction(persona: UserPersona, action: 'view' | 'click' | 'hover', tier?: string): void {
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
       sessionId: this.sessionId,
@@ -190,19 +154,14 @@ class PersonaAnalyticsTracker {
       metadata: {
         action,
         tier,
-        timestamp: Date.now(),
-      },
+        timestamp: Date.now()
+      }
     };
 
     this.queueEvent('persona_pricing_viewed', analyticsData);
   }
 
-  trackPersonaCTAClick(
-    persona: UserPersona,
-    ctaText: string,
-    tier: string,
-    position: string
-  ): void {
+  trackPersonaCTAClick(persona: UserPersona, ctaText: string, tier: string, position: string): void {
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
       sessionId: this.sessionId,
@@ -215,21 +174,15 @@ class PersonaAnalyticsTracker {
         ctaText,
         tier,
         position,
-        clickedAt: Date.now(),
-      },
+        clickedAt: Date.now()
+      }
     };
 
     this.queueEvent('persona_cta_clicked', analyticsData);
   }
 
-  trackOnboardingProgress(
-    persona: UserPersona,
-    step: number,
-    completed: boolean
-  ): void {
-    const event = completed
-      ? 'persona_onboarding_completed'
-      : 'persona_onboarding_started';
+  trackOnboardingProgress(persona: UserPersona, step: number, completed: boolean): void {
+    const event = completed ? 'persona_onboarding_completed' : 'persona_onboarding_started';
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
       sessionId: this.sessionId,
@@ -241,19 +194,14 @@ class PersonaAnalyticsTracker {
       metadata: {
         step,
         completed,
-        onboardingType: 'persona_driven',
-      },
+        onboardingType: 'persona_driven'
+      }
     };
 
     this.queueEvent(event, analyticsData);
   }
 
-  trackSubscriptionConversion(
-    persona: UserPersona,
-    tier: string,
-    revenue: number,
-    campaignSource?: string
-  ): void {
+  trackSubscriptionConversion(persona: UserPersona, tier: string, revenue: number, campaignSource?: string): void {
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
       sessionId: this.sessionId,
@@ -267,8 +215,8 @@ class PersonaAnalyticsTracker {
         tier,
         revenue,
         conversionTime: Date.now(),
-        lifetimeValue: this.calculateLifetimeValue(tier),
-      },
+        lifetimeValue: this.calculateLifetimeValue(tier)
+      }
     };
 
     this.queueEvent('persona_subscription_converted', analyticsData);
@@ -276,22 +224,11 @@ class PersonaAnalyticsTracker {
 
   trackCampaignPerformance(campaignData: CampaignPerformanceData): void {
     this.queueEvent('campaign_performance_tracked', campaignData);
-    console.log(
-      '[PersonaAnalytics] Campaign performance tracked:',
-      campaignData.campaignId
-    );
+    console.log('[PersonaAnalytics] Campaign performance tracked:', campaignData.campaignId);
   }
 
-  trackMarketingEmailInteraction(
-    persona: UserPersona,
-    campaignId: string,
-    action: 'opened' | 'clicked',
-    linkUrl?: string
-  ): void {
-    const event =
-      action === 'opened'
-        ? 'persona_marketing_email_opened'
-        : 'persona_marketing_email_clicked';
+  trackMarketingEmailInteraction(persona: UserPersona, campaignId: string, action: 'opened' | 'clicked', linkUrl?: string): void {
+    const event = action === 'opened' ? 'persona_marketing_email_opened' : 'persona_marketing_email_clicked';
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
       sessionId: this.sessionId,
@@ -305,8 +242,8 @@ class PersonaAnalyticsTracker {
         campaignId,
         action,
         linkUrl,
-        emailType: 'persona_targeted',
-      },
+        emailType: 'persona_targeted'
+      }
     };
 
     this.queueEvent(event, analyticsData);
@@ -315,19 +252,16 @@ class PersonaAnalyticsTracker {
   // Helper Methods
   private calculateLifetimeValue(tier: string): number {
     const monthlyValues: Record<string, number> = {
-      Basic: 3.99 * 12, // $47.88 annually
-      Premium: 7.99 * 12, // $95.88 annually
-      Pro: 15.99 * 12, // $191.88 annually
-      Student: 1.99 * 12, // $23.88 annually
-      Lifetime: 99, // One-time payment
+      'Basic': 3.99 * 12, // $47.88 annually
+      'Premium': 7.99 * 12, // $95.88 annually
+      'Pro': 15.99 * 12, // $191.88 annually
+      'Student': 1.99 * 12, // $23.88 annually
+      'Lifetime': 99 // One-time payment
     };
     return monthlyValues[tier] || 0;
   }
 
-  private queueEvent(
-    event: PersonaAnalyticsEvent,
-    data: PersonaAnalyticsData | CampaignPerformanceData
-  ): void {
+  private queueEvent(event: PersonaAnalyticsEvent, data: PersonaAnalyticsData | CampaignPerformanceData): void {
     this.eventQueue.push({ event, data });
 
     // Auto-flush if queue gets large
@@ -353,12 +287,7 @@ class PersonaAnalyticsTracker {
     }
   }
 
-  private async sendToAnalyticsEndpoint(
-    events: Array<{
-      event: PersonaAnalyticsEvent;
-      data: PersonaAnalyticsData | CampaignPerformanceData;
-    }>
-  ): Promise<void> {
+  private async sendToAnalyticsEndpoint(events: Array<{ event: PersonaAnalyticsEvent; data: PersonaAnalyticsData | CampaignPerformanceData }>): Promise<void> {
     // Replace with your actual analytics endpoint
     const ANALYTICS_ENDPOINT = '/api/analytics/persona-events';
 
@@ -371,8 +300,8 @@ class PersonaAnalyticsTracker {
         events,
         timestamp: Date.now(),
         sessionId: this.sessionId,
-        userId: this.userId,
-      }),
+        userId: this.userId
+      })
     });
 
     if (!response.ok) {
@@ -385,7 +314,7 @@ class PersonaAnalyticsTracker {
     return {
       sessionId: this.sessionId,
       userId: this.userId,
-      eventsQueued: this.eventQueue.length,
+      eventsQueued: this.eventQueue.length
     };
   }
 }
@@ -394,76 +323,37 @@ class PersonaAnalyticsTracker {
 export const usePersonaAnalytics = () => {
   const tracker = useRef(PersonaAnalyticsTracker.getInstance());
 
-  const trackPersonaDetection = useCallback(
-    (persona: UserPersona, detectionData: PersonaDetectionData, confidence: number) => {
-      tracker.current.trackPersonaDetection(persona, detectionData, confidence);
-    },
-    []
-  );
+  const trackPersonaDetection = useCallback((persona: UserPersona, detectionData: PersonaDetectionData, confidence: number) => {
+    tracker.current.trackPersonaDetection(persona, detectionData, confidence);
+  }, []);
 
-  const trackPersonaChange = useCallback(
-    (oldPersona: UserPersona, newPersona: UserPersona, reason: string) => {
-      tracker.current.trackPersonaChange(oldPersona, newPersona, reason);
-    },
-    []
-  );
+  const trackPersonaChange = useCallback((oldPersona: UserPersona, newPersona: UserPersona, reason: string) => {
+    tracker.current.trackPersonaChange(oldPersona, newPersona, reason);
+  }, []);
 
-  const trackPricingInteraction = useCallback(
-    (persona: UserPersona, action: 'view' | 'click' | 'hover', tier?: string) => {
-      tracker.current.trackPersonaPricingInteraction(persona, action, tier);
-    },
-    []
-  );
+  const trackPricingInteraction = useCallback((persona: UserPersona, action: 'view' | 'click' | 'hover', tier?: string) => {
+    tracker.current.trackPersonaPricingInteraction(persona, action, tier);
+  }, []);
 
-  const trackCTAClick = useCallback(
-    (persona: UserPersona, ctaText: string, tier: string, position: string) => {
-      tracker.current.trackPersonaCTAClick(persona, ctaText, tier, position);
-    },
-    []
-  );
+  const trackCTAClick = useCallback((persona: UserPersona, ctaText: string, tier: string, position: string) => {
+    tracker.current.trackPersonaCTAClick(persona, ctaText, tier, position);
+  }, []);
 
-  const trackOnboardingProgress = useCallback(
-    (persona: UserPersona, step: number, completed: boolean) => {
-      tracker.current.trackOnboardingProgress(persona, step, completed);
-    },
-    []
-  );
+  const trackOnboardingProgress = useCallback((persona: UserPersona, step: number, completed: boolean) => {
+    tracker.current.trackOnboardingProgress(persona, step, completed);
+  }, []);
 
-  const trackSubscriptionConversion = useCallback(
-    (persona: UserPersona, tier: string, revenue: number, campaignSource?: string) => {
-      tracker.current.trackSubscriptionConversion(
-        persona,
-        tier,
-        revenue,
-        campaignSource
-      );
-    },
-    []
-  );
+  const trackSubscriptionConversion = useCallback((persona: UserPersona, tier: string, revenue: number, campaignSource?: string) => {
+    tracker.current.trackSubscriptionConversion(persona, tier, revenue, campaignSource);
+  }, []);
 
-  const trackCampaignPerformance = useCallback(
-    (campaignData: CampaignPerformanceData) => {
-      tracker.current.trackCampaignPerformance(campaignData);
-    },
-    []
-  );
+  const trackCampaignPerformance = useCallback((campaignData: CampaignPerformanceData) => {
+    tracker.current.trackCampaignPerformance(campaignData);
+  }, []);
 
-  const trackEmailInteraction = useCallback(
-    (
-      persona: UserPersona,
-      campaignId: string,
-      action: 'opened' | 'clicked',
-      linkUrl?: string
-    ) => {
-      tracker.current.trackMarketingEmailInteraction(
-        persona,
-        campaignId,
-        action,
-        linkUrl
-      );
-    },
-    []
-  );
+  const trackEmailInteraction = useCallback((persona: UserPersona, campaignId: string, action: 'opened' | 'clicked', linkUrl?: string) => {
+    tracker.current.trackMarketingEmailInteraction(persona, campaignId, action, linkUrl);
+  }, []);
 
   const setUserId = useCallback((userId: string) => {
     tracker.current.setUserId(userId);
@@ -483,14 +373,12 @@ export const usePersonaAnalytics = () => {
     trackCampaignPerformance,
     trackEmailInteraction,
     setUserId,
-    getSessionSummary,
+    getSessionSummary
   };
 };
 
 // Analytics Provider Component
-export const PersonaAnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const PersonaAnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const analytics = usePersonaAnalytics();
 
   useEffect(() => {

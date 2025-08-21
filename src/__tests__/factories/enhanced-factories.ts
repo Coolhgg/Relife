@@ -17,14 +17,14 @@ import type {
   EmailCampaign,
   EmailSequence,
   CampaignMetrics,
-  PerformanceMetrics,
+  PerformanceMetrics
 } from '../../types';
 import {
   generateId,
   generateTimestamp,
   weightedRandom,
   randomSubset,
-  generateRating,
+  generateRating
 } from './factory-utils';
 
 // ===============================
@@ -37,7 +37,7 @@ const PERSONA_TYPES: PersonaType[] = [
   'professional_paula',
   'enterprise_emma',
   'student_sarah',
-  'lifetime_larry',
+  'lifetime_larry'
 ];
 
 const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
@@ -47,7 +47,7 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
     primaryColor: '#3B82F6',
     messagingTone: 'supportive',
     ctaStyle: 'friendly',
-    targetSubscriptionTier: 'free',
+    targetSubscriptionTier: 'free'
   },
   busy_ben: {
     displayName: 'Busy Ben',
@@ -55,7 +55,7 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
     primaryColor: '#F59E0B',
     messagingTone: 'efficient',
     ctaStyle: 'urgent',
-    targetSubscriptionTier: 'basic',
+    targetSubscriptionTier: 'basic'
   },
   professional_paula: {
     displayName: 'Professional Paula',
@@ -63,7 +63,7 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
     primaryColor: '#8B5CF6',
     messagingTone: 'sophisticated',
     ctaStyle: 'professional',
-    targetSubscriptionTier: 'premium',
+    targetSubscriptionTier: 'premium'
   },
   enterprise_emma: {
     displayName: 'Enterprise Emma',
@@ -71,7 +71,7 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
     primaryColor: '#10B981',
     messagingTone: 'business_focused',
     ctaStyle: 'corporate',
-    targetSubscriptionTier: 'pro',
+    targetSubscriptionTier: 'pro'
   },
   student_sarah: {
     displayName: 'Student Sarah',
@@ -79,7 +79,7 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
     primaryColor: '#EC4899',
     messagingTone: 'casual',
     ctaStyle: 'youthful',
-    targetSubscriptionTier: 'student',
+    targetSubscriptionTier: 'student'
   },
   lifetime_larry: {
     displayName: 'Lifetime Larry',
@@ -87,23 +87,21 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
     primaryColor: '#F97316',
     messagingTone: 'value_focused',
     ctaStyle: 'exclusive',
-    targetSubscriptionTier: 'lifetime',
-  },
+    targetSubscriptionTier: 'lifetime'
+  }
 };
 
 export interface CreatePersonaProfileOptions {
   persona?: PersonaType;
 }
 
-export const createTestPersonaProfile = (
-  options: CreatePersonaProfileOptions = {}
-): PersonaProfile => {
+export const createTestPersonaProfile = (options: CreatePersonaProfileOptions = {}): PersonaProfile => {
   const { persona = faker.helpers.arrayElement(PERSONA_TYPES) } = options;
   const baseProfile = PERSONA_PROFILES[persona];
 
   return {
     id: persona,
-    ...baseProfile,
+    ...baseProfile
   };
 };
 
@@ -113,27 +111,19 @@ export interface CreatePersonaDetectionResultOptions {
   previousPersona?: PersonaType;
 }
 
-export const createTestPersonaDetectionResult = (
-  options: CreatePersonaDetectionResultOptions = {}
-): PersonaDetectionResult => {
+export const createTestPersonaDetectionResult = (options: CreatePersonaDetectionResultOptions = {}): PersonaDetectionResult => {
   const {
     persona = faker.helpers.arrayElement(PERSONA_TYPES),
     confidence = faker.number.float({ min: 0.6, max: 0.95 }),
-    previousPersona,
+    previousPersona
   } = options;
 
   const factorCount = faker.number.int({ min: 3, max: 8 });
   const factors: PersonaDetectionFactor[] = Array.from({ length: factorCount }, () => ({
-    factor: faker.helpers.arrayElement([
-      'usage_pattern',
-      'feature_interaction',
-      'payment_behavior',
-      'demographics',
-      'time_of_day',
-    ]),
+    factor: faker.helpers.arrayElement(['usage_pattern', 'feature_interaction', 'payment_behavior', 'demographics', 'time_of_day']),
     value: faker.number.float({ min: 0.1, max: 1.0 }),
     weight: faker.number.float({ min: 0.1, max: 0.5 }),
-    influence: faker.number.float({ min: 0.1, max: 0.9 }),
+    influence: faker.number.float({ min: 0.1, max: 0.9 })
   }));
 
   return {
@@ -141,7 +131,7 @@ export const createTestPersonaDetectionResult = (
     confidence,
     factors,
     updatedAt: new Date(generateTimestamp()),
-    ...(previousPersona && { previousPersona }),
+    ...(previousPersona && { previousPersona })
   };
 };
 
@@ -155,13 +145,11 @@ export interface CreateEmailCampaignOptions {
   sequences?: number;
 }
 
-export const createTestEmailCampaign = (
-  options: CreateEmailCampaignOptions = {}
-): EmailCampaign => {
+export const createTestEmailCampaign = (options: CreateEmailCampaignOptions = {}): EmailCampaign => {
   const {
     persona = faker.helpers.arrayElement(PERSONA_TYPES),
     status = faker.helpers.arrayElement(['draft', 'active', 'paused', 'completed']),
-    sequences = faker.number.int({ min: 1, max: 5 }),
+    sequences = faker.number.int({ min: 1, max: 5 })
   } = options;
 
   const campaignId = generateId('campaign');
@@ -175,20 +163,18 @@ export const createTestEmailCampaign = (
     status,
     createdAt: new Date(generateTimestamp({ past: 30 })),
     updatedAt: new Date(generateTimestamp({ past: 5 })),
-    sequences: Array.from({ length: sequences }, (_, i) =>
-      createTestEmailSequence({
-        campaignId,
-        sequenceOrder: i + 1,
-        persona,
-      })
-    ),
+    sequences: Array.from({ length: sequences }, (_, i) => createTestEmailSequence({
+      campaignId,
+      sequenceOrder: i + 1,
+      persona
+    })),
     metrics: createTestCampaignMetrics({ campaignId }),
     settings: {
       sendTimeOptimization: faker.datatype.boolean(),
       personalizedSubjectLines: faker.datatype.boolean(),
       dynamicContent: faker.datatype.boolean(),
-      abTestEnabled: faker.datatype.boolean(),
-    },
+      abTestEnabled: faker.datatype.boolean()
+    }
   };
 };
 
@@ -198,13 +184,11 @@ export interface CreateEmailSequenceOptions {
   persona?: PersonaType;
 }
 
-export const createTestEmailSequence = (
-  options: CreateEmailSequenceOptions = {}
-): EmailSequence => {
+export const createTestEmailSequence = (options: CreateEmailSequenceOptions = {}): EmailSequence => {
   const {
     campaignId = generateId('campaign'),
     sequenceOrder = 1,
-    persona = faker.helpers.arrayElement(PERSONA_TYPES),
+    persona = faker.helpers.arrayElement(PERSONA_TYPES)
   } = options;
 
   const personaProfile = PERSONA_PROFILES[persona];
@@ -222,7 +206,7 @@ export const createTestEmailSequence = (
     ctaUrl: faker.internet.url(),
     messagingTone: personaProfile.messagingTone,
     ctaStyle: personaProfile.ctaStyle,
-    isActive: faker.datatype.boolean({ probability: 0.8 }),
+    isActive: faker.datatype.boolean({ probability: 0.8 })
   };
 };
 
@@ -231,32 +215,20 @@ export interface CreateCampaignMetricsOptions {
   totalSent?: number;
 }
 
-export const createTestCampaignMetrics = (
-  options: CreateCampaignMetricsOptions = {}
-): CampaignMetrics => {
+export const createTestCampaignMetrics = (options: CreateCampaignMetricsOptions = {}): CampaignMetrics => {
   const {
     campaignId = generateId('campaign'),
-    totalSent = faker.number.int({ min: 100, max: 10000 }),
+    totalSent = faker.number.int({ min: 100, max: 10000 })
   } = options;
 
-  const opened = faker.number.int({
-    min: Math.floor(totalSent * 0.1),
-    max: Math.floor(totalSent * 0.4),
-  });
-  const clicked = faker.number.int({
-    min: Math.floor(opened * 0.1),
-    max: Math.floor(opened * 0.3),
-  });
-  const converted = faker.number.int({
-    min: Math.floor(clicked * 0.1),
-    max: Math.floor(clicked * 0.2),
-  });
+  const opened = faker.number.int({ min: Math.floor(totalSent * 0.1), max: Math.floor(totalSent * 0.4) });
+  const clicked = faker.number.int({ min: Math.floor(opened * 0.1), max: Math.floor(opened * 0.3) });
+  const converted = faker.number.int({ min: Math.floor(clicked * 0.1), max: Math.floor(clicked * 0.2) });
 
   return {
     campaignId,
     totalSent,
-    delivered:
-      totalSent - faker.number.int({ min: 0, max: Math.floor(totalSent * 0.05) }),
+    delivered: totalSent - faker.number.int({ min: 0, max: Math.floor(totalSent * 0.05) }),
     opened,
     clicked,
     converted,
@@ -265,7 +237,7 @@ export const createTestCampaignMetrics = (
     openRate: opened / totalSent,
     clickRate: clicked / totalSent,
     conversionRate: converted / totalSent,
-    lastUpdated: new Date(generateTimestamp({ past: 1 })),
+    lastUpdated: new Date(generateTimestamp({ past: 1 }))
   };
 };
 
@@ -277,11 +249,10 @@ export interface CreatePerformanceMetricsOptions {
   timeRange?: 'hourly' | 'daily' | 'weekly';
 }
 
-export const createTestPerformanceMetrics = (
-  options: CreatePerformanceMetricsOptions = {}
-): PerformanceMetrics => {
-  const { timeRange = faker.helpers.arrayElement(['hourly', 'daily', 'weekly']) } =
-    options;
+export const createTestPerformanceMetrics = (options: CreatePerformanceMetricsOptions = {}): PerformanceMetrics => {
+  const {
+    timeRange = faker.helpers.arrayElement(['hourly', 'daily', 'weekly'])
+  } = options;
 
   return {
     alarmAccuracy: faker.number.float({ min: 85, max: 99 }),
@@ -294,7 +265,7 @@ export const createTestPerformanceMetrics = (
     responseTime: faker.number.float({ min: 100, max: 2000 }),
     memoryUsage: faker.number.float({ min: 50, max: 500 }),
     batteryImpact: faker.number.float({ min: 1, max: 10 }),
-    lastUpdated: new Date(generateTimestamp({ past: 1 })),
+    lastUpdated: new Date(generateTimestamp({ past: 1 }))
   };
 };
 
@@ -305,5 +276,5 @@ export const enhancedFactories = {
   createTestEmailCampaign,
   createTestEmailSequence,
   createTestCampaignMetrics,
-  createTestPerformanceMetrics,
+  createTestPerformanceMetrics
 };

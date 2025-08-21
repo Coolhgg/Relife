@@ -8,7 +8,7 @@ import {
   Star,
   Coffee,
   Moon,
-  Sun,
+  Sun
 } from 'lucide-react';
 import { type WakeUpFeedback } from '../services/enhanced-smart-alarm-scheduler';
 
@@ -26,7 +26,7 @@ const difficultyOptions = [
   { value: 'easy', label: 'Easy', icon: '😌', color: 'text-green-300' },
   { value: 'normal', label: 'Normal', icon: '😐', color: 'text-yellow-400' },
   { value: 'hard', label: 'Hard', icon: '😫', color: 'text-orange-400' },
-  { value: 'very_hard', label: 'Very Hard', icon: '😵', color: 'text-red-400' },
+  { value: 'very_hard', label: 'Very Hard', icon: '😵', color: 'text-red-400' }
 ];
 
 const feelingOptions = [
@@ -34,7 +34,7 @@ const feelingOptions = [
   { value: 'tired', label: 'Tired', icon: '😴', color: 'text-orange-400' },
   { value: 'okay', label: 'Okay', icon: '😐', color: 'text-yellow-400' },
   { value: 'good', label: 'Good', icon: '😊', color: 'text-green-400' },
-  { value: 'excellent', label: 'Excellent', icon: '🤩', color: 'text-green-500' },
+  { value: 'excellent', label: 'Excellent', icon: '🤩', color: 'text-green-500' }
 ];
 
 const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
@@ -43,7 +43,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
   alarmId,
   alarmTime,
   actualWakeTime,
-  onSubmit,
+  onSubmit
 }) => {
   const [feedback, setFeedback] = useState<Partial<WakeUpFeedback>>({
     date: new Date(),
@@ -55,7 +55,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
     timeToFullyAwake: 15,
     wouldPreferEarlier: false,
     wouldPreferLater: false,
-    notes: '',
+    notes: ''
   });
 
   const [submitting, setSubmitting] = useState(false);
@@ -74,7 +74,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
         timeToFullyAwake: 15,
         wouldPreferEarlier: false,
         wouldPreferLater: false,
-        notes: '',
+        notes: ''
       });
       setSubmitted(false);
     }
@@ -132,18 +132,8 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
             onClick={onClose}
             className="text-white/60 hover:text-white transition-colors"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
@@ -154,16 +144,14 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="text-white/70">Alarm Time</span>
-                <div className="text-white font-mono text-lg">
-                  {feedback.originalTime}
-                </div>
+                <div className="text-white font-mono text-lg">{feedback.originalTime}</div>
               </div>
               <div>
                 <span className="text-white/70">Actual Wake Time</span>
                 <input
                   type="time"
                   value={feedback.actualWakeTime}
-                  onChange={e => updateFeedback({ actualWakeTime: e.target.value })}
+                  onChange={(e) => updateFeedback({ actualWakeTime: e.target.value })}
                   className="w-full bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-mono text-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
                 />
               </div>
@@ -231,9 +219,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 min="1"
                 max="10"
                 value={feedback.sleepQuality}
-                onChange={e =>
-                  updateFeedback({ sleepQuality: parseInt(e.target.value) })
-                }
+                onChange={(e) => updateFeedback({ sleepQuality: parseInt(e.target.value) })}
                 className="flex-1 accent-purple-500"
               />
               <span className="text-white/60 text-sm">Excellent</span>
@@ -266,9 +252,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
               max="60"
               step="5"
               value={feedback.timeToFullyAwake}
-              onChange={e =>
-                updateFeedback({ timeToFullyAwake: parseInt(e.target.value) })
-              }
+              onChange={(e) => updateFeedback({ timeToFullyAwake: parseInt(e.target.value) })}
               className="w-full accent-purple-500"
             />
             <div className="flex justify-between text-xs text-white/60 mt-1">
@@ -288,14 +272,10 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="checkbox"
                   checked={feedback.wouldPreferEarlier}
-                  onChange={e =>
-                    updateFeedback({
-                      wouldPreferEarlier: e.target.checked,
-                      wouldPreferLater: e.target.checked
-                        ? false
-                        : feedback.wouldPreferLater,
-                    })
-                  }
+                  onChange={(e) => updateFeedback({
+                    wouldPreferEarlier: e.target.checked,
+                    wouldPreferLater: e.target.checked ? false : feedback.wouldPreferLater
+                  })}
                   className="rounded text-purple-500 focus:ring-purple-400"
                 />
                 <ThumbsUp className="w-4 h-4 text-green-400" />
@@ -306,14 +286,10 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="checkbox"
                   checked={feedback.wouldPreferLater}
-                  onChange={e =>
-                    updateFeedback({
-                      wouldPreferLater: e.target.checked,
-                      wouldPreferEarlier: e.target.checked
-                        ? false
-                        : feedback.wouldPreferEarlier,
-                    })
-                  }
+                  onChange={(e) => updateFeedback({
+                    wouldPreferLater: e.target.checked,
+                    wouldPreferEarlier: e.target.checked ? false : feedback.wouldPreferEarlier
+                  })}
                   className="rounded text-purple-500 focus:ring-purple-400"
                 />
                 <ThumbsDown className="w-4 h-4 text-red-400" />

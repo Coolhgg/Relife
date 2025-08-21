@@ -59,20 +59,12 @@ class RelifeTestSequencer extends Sequencer {
     const relativePath = path.relative(process.cwd(), testPath);
 
     // Critical core functionality tests (highest priority)
-    if (
-      relativePath.includes('alarm') ||
-      relativePath.includes('voice') ||
-      relativePath.includes('subscription')
-    ) {
+    if (relativePath.includes('alarm') || relativePath.includes('voice') || relativePath.includes('subscription')) {
       return 1;
     }
 
     // Unit tests (high priority)
-    if (
-      relativePath.includes('__tests__') &&
-      !relativePath.includes('integration') &&
-      !relativePath.includes('e2e')
-    ) {
+    if (relativePath.includes('__tests__') && !relativePath.includes('integration') && !relativePath.includes('e2e')) {
       return 2;
     }
 
@@ -153,9 +145,7 @@ class RelifeTestSequencer extends Sequencer {
       }
 
       // Check for mock usage
-      const mocks = (
-        content.match(/jest\.mock|mockImplementation|mockReturnValue/g) || []
-      ).length;
+      const mocks = (content.match(/jest\.mock|mockImplementation|mockReturnValue/g) || []).length;
       complexity += mocks * 2;
 
       // Check for DOM operations
@@ -169,11 +159,7 @@ class RelifeTestSequencer extends Sequencer {
       }
 
       // Check for timers
-      if (
-        content.includes('setTimeout') ||
-        content.includes('setInterval') ||
-        content.includes('useFakeTimers')
-      ) {
+      if (content.includes('setTimeout') || content.includes('setInterval') || content.includes('useFakeTimers')) {
         complexity += 25;
       }
 
@@ -240,7 +226,7 @@ class RelifeTestSequencer extends Sequencer {
         duration,
         complexity,
         dependencies,
-        relativePath: path.relative(process.cwd(), test.path),
+        relativePath: path.relative(process.cwd(), test.path)
       };
     });
 
@@ -277,7 +263,8 @@ class RelifeTestSequencer extends Sequencer {
 
     // Log optimization results
     if (process.env.VERBOSE_TESTS || process.env.DEBUG_TEST_SEQUENCER) {
-      console.log('\n📋 Test Execution Order:');
+      console.log('
+📋 Test Execution Order:');
       console.log('========================');
 
       let currentPriority = -1;
@@ -292,19 +279,18 @@ class RelifeTestSequencer extends Sequencer {
             5: 'Component/Utility Tests',
             6: 'Utility Tests',
             7: 'Integration Tests',
-            8: 'E2E Tests',
+            8: 'E2E Tests'
           };
           console.log(`
 🔸 ${priorityNames[currentPriority] || `Priority ${currentPriority}`}:`);
         }
 
         const durationStr = item.duration ? ` (${item.duration}ms)` : '';
-        const sizeStr = item.fileSize
-          ? ` [${(item.fileSize / 1024).toFixed(1)}KB]`
-          : '';
+        const sizeStr = item.fileSize ? ` [${(item.fileSize / 1024).toFixed(1)}KB]` : '';
         console.log(`  ${index + 1}. ${item.relativePath}${durationStr}${sizeStr}`);
       });
-      console.log('\n');
+      console.log('
+');
     }
 
     // Statistics
@@ -313,8 +299,7 @@ class RelifeTestSequencer extends Sequencer {
       criticalTests: sortedTests.filter(t => t.priority === 1).length,
       unitTests: sortedTests.filter(t => t.priority === 2).length,
       integrationTests: sortedTests.filter(t => t.priority >= 7).length,
-      avgComplexity:
-        sortedTests.reduce((sum, t) => sum + t.complexity, 0) / sortedTests.length,
+      avgComplexity: sortedTests.reduce((sum, t) => sum + t.complexity, 0) / sortedTests.length
     };
 
     console.log('📊 Test Suite Statistics:');

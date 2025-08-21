@@ -1,17 +1,9 @@
 import React, { memo, useMemo, useCallback, useRef, useEffect } from 'react';
 import { FixedSizeList as VirtualList, areEqual } from 'react-window';
-import {
-  Clock,
-  MoreVertical,
-  Power as _Power,
-  PowerOff as _PowerOff,
-} from 'lucide-react';
+import { Clock, MoreVertical, Power as _Power, PowerOff as _PowerOff } from 'lucide-react';
 import type { Alarm } from '../types';
 import { formatTime, getVoiceMoodConfig } from '../utils';
-import {
-  usePerformanceOptimizations,
-  useDeviceCapabilities,
-} from '../hooks/useDeviceCapabilities';
+import { usePerformanceOptimizations, useDeviceCapabilities } from '../hooks/useDeviceCapabilities';
 
 interface AdaptiveAlarmListProps {
   alarms: Alarm[];
@@ -31,146 +23,142 @@ interface AlarmItemProps {
 }
 
 // Memoized alarm item component for performance
-const AlarmItem = memo<AlarmItemProps>(
-  ({
-    alarm,
-    onToggleAlarm,
-    onEditAlarm,
-    onDeleteAlarm,
-    isLowEnd,
-    shouldReduceAnimations,
-  }) => {
-    const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
+const AlarmItem = memo<AlarmItemProps>(({
+  alarm,
+  onToggleAlarm,
+  onEditAlarm,
+  onDeleteAlarm,
+  isLowEnd,
+  shouldReduceAnimations
+}) => {
+  const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
-    // Optimize for low-end devices by reducing complex styling
-    const itemClassName = useMemo(() => {
-      const baseClasses = 'bg-white rounded-lg p-4 shadow-sm border border-gray-200';
-      const animationClasses = shouldReduceAnimations
-        ? ''
-        : 'transition-all duration-200 hover:shadow-md hover:border-blue-300';
-      const optimizedClasses = isLowEnd
-        ? 'transform-gpu' // Use GPU acceleration when available
-        : '';
+  // Optimize for low-end devices by reducing complex styling
+  const itemClassName = useMemo(() => {
+    const baseClasses = 'bg-white rounded-lg p-4 shadow-sm border border-gray-200';
+    const animationClasses = shouldReduceAnimations
+      ? ''
+      : 'transition-all duration-200 hover:shadow-md hover:border-blue-300';
+    const optimizedClasses = isLowEnd
+      ? 'transform-gpu' // Use GPU acceleration when available
+      : '';
 
-      return `${baseClasses} ${animationClasses} ${optimizedClasses}`.trim();
-    }, [shouldReduceAnimations, isLowEnd]);
+    return `${baseClasses} ${animationClasses} ${optimizedClasses}`.trim();
+  }, [shouldReduceAnimations, isLowEnd]);
 
-    const handleToggle = useCallback(() => {
-      onToggleAlarm(alarm.id);
-    }, [alarm.id, onToggleAlarm]);
+  const handleToggle = useCallback(() => {
+    onToggleAlarm(alarm.id);
+  }, [alarm.id, onToggleAlarm]);
 
-    const handleEdit = useCallback(() => {
-      onEditAlarm(alarm.id);
-    }, [alarm.id, onEditAlarm]);
+  const handleEdit = useCallback(() => {
+    onEditAlarm(alarm.id);
+  }, [alarm.id, onEditAlarm]);
 
-    const handleDelete = useCallback(() => {
-      onDeleteAlarm(alarm.id);
-    }, [alarm.id, onDeleteAlarm]);
+  const handleDelete = useCallback(() => {
+    onDeleteAlarm(alarm.id);
+  }, [alarm.id, onDeleteAlarm]);
 
-    // Format days display
-    const daysText = useMemo(() => {
-      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      if (alarm.days.length === 7) return 'Every day';
-      if (alarm.days.length === 0) return 'Never';
-      return alarm.days.map(day => dayNames[day]).join(', ');
-    }, [alarm.days]);
+  // Format days display
+  const daysText = useMemo(() => {
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    if (alarm.days.length === 7) return 'Every day';
+    if (alarm.days.length === 0) return 'Never';
+    return alarm.days.map(day => dayNames[day]).join(', ');
+  }, [alarm.days]);
 
-    return (
-      <div className={itemClassName}>
-        <div className="flex items-center justify-between">
-          {/* Time and label */}
-          <div className="flex-1">
-            <div className="flex items-center gap-3">
-              <Clock className="w-5 h-5 text-gray-400" aria-hidden="true" />
-              <div>
-                <div className="text-2xl font-bold text-gray-900">
-                  {formatTime(alarm.time)}
-                </div>
-                <div className="text-sm text-gray-600">{alarm.label}</div>
+  return (
+    <div className={itemClassName}>
+      <div className="flex items-center justify-between">
+        {/* Time and label */}
+        <div className="flex-1">
+          <div className="flex items-center gap-3">
+            <Clock className="w-5 h-5 text-gray-400" aria-hidden="true" />
+            <div>
+              <div className="text-2xl font-bold text-gray-900">
+                {formatTime(alarm.time)}
               </div>
-            </div>
-
-            {/* Days and voice mood - simplified for low-end devices */}
-            <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
-              <span>{daysText}</span>
-              {!isLowEnd && ( // Hide complex elements on low-end devices
-                <span className="flex items-center gap-1">
-                  <span aria-hidden="true">{voiceMoodConfig.icon}</span>
-                  <span>{voiceMoodConfig.name}</span>
-                </span>
-              )}
-              {alarm.snoozeCount > 0 && (
-                <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs">
-                  Snoozed {alarm.snoozeCount}x
-                </span>
-              )}
+              <div className="text-sm text-gray-600">{alarm.label}</div>
             </div>
           </div>
 
-          {/* Controls */}
-          <div className="flex items-center gap-2">
-            {/* Toggle switch */}
-            <button
-              onClick={handleToggle}
-              className={`
+          {/* Days and voice mood - simplified for low-end devices */}
+          <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
+            <span>{daysText}</span>
+            {!isLowEnd && ( // Hide complex elements on low-end devices
+              <span className="flex items-center gap-1">
+                <span aria-hidden="true">{voiceMoodConfig.icon}</span>
+                <span>{voiceMoodConfig.name}</span>
+              </span>
+            )}
+            {alarm.snoozeCount > 0 && (
+              <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs">
+                Snoozed {alarm.snoozeCount}x
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="flex items-center gap-2">
+          {/* Toggle switch */}
+          <button
+            onClick={handleToggle}
+            className={`
               relative inline-flex h-6 w-11 items-center rounded-full
               ${shouldReduceAnimations ? '' : 'transition-colors duration-200'}
-              ${
-                alarm.enabled
-                  ? 'bg-blue-600 focus:ring-blue-500'
-                  : 'bg-gray-200 focus:ring-gray-400'
+              ${alarm.enabled
+                ? 'bg-blue-600 focus:ring-blue-500'
+                : 'bg-gray-200 focus:ring-gray-400'
               }
               focus:outline-none focus:ring-2 focus:ring-offset-2
             `}
-              role="switch"
-              aria-checked={alarm.enabled}
-              aria-label={`${alarm.enabled ? 'Disable' : 'Enable'} alarm ${alarm.label}`}
-            >
-              <span
-                className={`
+            role="switch"
+            aria-checked={alarm.enabled}
+            aria-label={`${alarm.enabled ? 'Disable' : 'Enable'} alarm ${alarm.label}`}
+          >
+            <span
+              className={`
                 inline-block h-4 w-4 rounded-full bg-white shadow transform
                 ${shouldReduceAnimations ? '' : 'transition-transform duration-200'}
                 ${alarm.enabled ? 'translate-x-6' : 'translate-x-1'}
               `}
-              />
-            </button>
+            />
+          </button>
 
-            {/* Menu button - simplified for low-end devices */}
-            {isLowEnd ? (
-              <div className="flex gap-1">
-                <button
-                  onClick={handleEdit}
-                  className="p-2 text-gray-400 hover:text-gray-600 rounded-md"
-                  aria-label={`Edit alarm ${alarm.label}`}
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="p-2 text-red-400 hover:text-red-600 rounded-md"
-                  aria-label={`Delete alarm ${alarm.label}`}
-                >
-                  Del
-                </button>
-              </div>
-            ) : (
-              <div className="relative">
-                <button
-                  className="p-2 text-gray-400 hover:text-gray-600 rounded-md"
-                  aria-label={`More options for alarm ${alarm.label}`}
-                >
-                  <MoreVertical className="w-4 h-4" />
-                </button>
-                {/* Full menu would be implemented here for non-low-end devices */}
-              </div>
-            )}
-          </div>
+          {/* Menu button - simplified for low-end devices */}
+          {isLowEnd ? (
+            <div className="flex gap-1">
+              <button
+                onClick={handleEdit}
+                className="p-2 text-gray-400 hover:text-gray-600 rounded-md"
+                aria-label={`Edit alarm ${alarm.label}`}
+              >
+                Edit
+              </button>
+              <button
+                onClick={handleDelete}
+                className="p-2 text-red-400 hover:text-red-600 rounded-md"
+                aria-label={`Delete alarm ${alarm.label}`}
+              >
+                Del
+              </button>
+            </div>
+          ) : (
+            <div className="relative">
+              <button
+                className="p-2 text-gray-400 hover:text-gray-600 rounded-md"
+                aria-label={`More options for alarm ${alarm.label}`}
+              >
+                <MoreVertical className="w-4 h-4" />
+              </button>
+              {/* Full menu would be implemented here for non-low-end devices */}
+            </div>
+          )}
         </div>
       </div>
-    );
-  },
-  areEqual
-);
+    </div>
+  );
+}, areEqual);
 
 AlarmItem.displayName = 'AlarmItem';
 
@@ -187,14 +175,7 @@ const VirtualAlarmItem = memo<{
     shouldReduceAnimations: boolean;
   };
 }>(({ index, style, data }) => {
-  const {
-    alarms,
-    onToggleAlarm,
-    onEditAlarm,
-    onDeleteAlarm,
-    isLowEnd,
-    shouldReduceAnimations,
-  } = data;
+  const { alarms, onToggleAlarm, onEditAlarm, onDeleteAlarm, isLowEnd, shouldReduceAnimations } = data;
   const alarm = alarms[index];
 
   if (!alarm) return null;
@@ -221,11 +202,10 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
   onToggleAlarm,
   onEditAlarm,
   onDeleteAlarm,
-  className = '',
+  className = ''
 }) => {
   const { shouldUseVirtualScrolling, isLowEnd } = useDeviceCapabilities();
-  const { shouldReduceAnimations, shouldUseMemoization } =
-    usePerformanceOptimizations();
+  const { shouldReduceAnimations, shouldUseMemoization } = usePerformanceOptimizations();
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Memoize expensive operations for performance
@@ -245,33 +225,21 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
   }, [memoizedAlarms]);
 
   // Virtual list data
-  const virtualListData = useMemo(
-    () => ({
-      alarms: sortedAlarms,
-      onToggleAlarm,
-      onEditAlarm,
-      onDeleteAlarm,
-      isLowEnd,
-      shouldReduceAnimations,
-    }),
-    [
-      sortedAlarms,
-      onToggleAlarm,
-      onEditAlarm,
-      onDeleteAlarm,
-      isLowEnd,
-      shouldReduceAnimations,
-    ]
-  );
+  const virtualListData = useMemo(() => ({
+    alarms: sortedAlarms,
+    onToggleAlarm,
+    onEditAlarm,
+    onDeleteAlarm,
+    isLowEnd,
+    shouldReduceAnimations
+  }), [sortedAlarms, onToggleAlarm, onEditAlarm, onDeleteAlarm, isLowEnd, shouldReduceAnimations]);
 
   // Performance monitoring
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       const listType = shouldUseVirtualScrolling ? 'virtual' : 'standard';
       const itemCount = alarms.length;
-      console.log(
-        `AdaptiveAlarmList: Rendering ${itemCount} items using ${listType} list`
-      );
+      console.log(`AdaptiveAlarmList: Rendering ${itemCount} items using ${listType} list`);
     }
   }, [shouldUseVirtualScrolling, alarms.length]);
 
@@ -369,9 +337,7 @@ class AlarmListErrorBoundary extends React.Component<
   }
 }
 
-export const AdaptiveAlarmListWithErrorBoundary: React.FC<
-  AdaptiveAlarmListWrapperProps
-> = props => {
+export const AdaptiveAlarmListWithErrorBoundary: React.FC<AdaptiveAlarmListWrapperProps> = (props) => {
   return (
     <AlarmListErrorBoundary fallback={props.fallback}>
       <AdaptiveAlarmList {...props} />

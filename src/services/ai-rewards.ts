@@ -12,17 +12,12 @@ import type {
   RewardCategory,
   VoiceMood,
   Alarm,
-  AlarmEvent,
+  AlarmEvent
 } from '../types';
 import AnalyticsService from './analytics';
 
 interface BehaviorPattern {
-  type:
-    | 'consistency'
-    | 'time_preference'
-    | 'voice_mood'
-    | 'dismissal_method'
-    | 'frequency';
+  type: 'consistency' | 'time_preference' | 'voice_mood' | 'dismissal_method' | 'frequency';
   strength: number; // 0-1
   data: Record<string, any>;
 }
@@ -77,20 +72,12 @@ export class AIRewardsService {
     const aiInsights = this.generateAIInsights(patterns, personality, habits);
 
     // Generate available rewards
-    const availableRewards = this.generatePersonalizedRewards(
-      personality,
-      niche,
-      habits
-    );
+    const availableRewards = this.generatePersonalizedRewards(personality, niche, habits);
 
     // Calculate current progress
     const currentStreak = this.calculateCurrentStreak(alarmEvents);
     const longestStreak = this.calculateLongestStreak(alarmEvents);
-    const unlockedRewards = this.checkUnlockedRewards(
-      availableRewards,
-      habits,
-      currentStreak
-    );
+    const unlockedRewards = this.checkUnlockedRewards(availableRewards, habits, currentStreak);
     const totalPoints = this.calculateTotalPoints(unlockedRewards);
     const level = Math.floor(totalPoints / 100) + 1;
 
@@ -104,7 +91,7 @@ export class AIRewardsService {
       habits,
       niche,
       aiInsights,
-      lastAnalysis: new Date(),
+      lastAnalysis: new Date()
     };
   }
 
@@ -121,14 +108,7 @@ export class AIRewardsService {
     // Consistency pattern analysis
     const enabledAlarms = alarms.filter(a => a.enabled);
     const dismissalRate = behavior.alarmPatterns.dismissRate || 0;
-    const consistencyScore =
-      dismissalRate > 0.8
-        ? 1
-        : dismissalRate > 0.6
-          ? 0.7
-          : dismissalRate > 0.4
-            ? 0.5
-            : 0.2;
+    const consistencyScore = dismissalRate > 0.8 ? 1 : dismissalRate > 0.6 ? 0.7 : dismissalRate > 0.4 ? 0.5 : 0.2;
 
     patterns.push({
       type: 'consistency',
@@ -136,8 +116,8 @@ export class AIRewardsService {
       data: {
         dismissalRate,
         enabledAlarms: enabledAlarms.length,
-        regularSchedule: this.hasRegularSchedule(alarms),
-      },
+        regularSchedule: this.hasRegularSchedule(alarms)
+      }
     });
 
     // Time preference analysis
@@ -153,29 +133,23 @@ export class AIRewardsService {
     const morningPerson = morningAlarms.length > eveningAlarms.length;
     patterns.push({
       type: 'time_preference',
-      strength:
-        Math.abs(morningAlarms.length - eveningAlarms.length) /
-        Math.max(alarms.length, 1),
+      strength: Math.abs(morningAlarms.length - eveningAlarms.length) / Math.max(alarms.length, 1),
       data: {
         morningPerson,
         morningAlarms: morningAlarms.length,
         eveningAlarms: eveningAlarms.length,
-        mostCommonTime: behavior.alarmPatterns.mostCommonTime,
-      },
+        mostCommonTime: behavior.alarmPatterns.mostCommonTime
+      }
     });
 
     // Voice mood pattern analysis
-    const voiceMoodCounts = alarms.reduce(
-      (acc, alarm) => {
-        acc[alarm.voiceMood] = (acc[alarm.voiceMood] || 0) + 1;
-        return acc;
-      },
-      {} as Record<VoiceMood, number>
-    );
+    const voiceMoodCounts = alarms.reduce((acc, alarm) => {
+      acc[alarm.voiceMood] = (acc[alarm.voiceMood] || 0) + 1;
+      return acc;
+    }, {} as Record<VoiceMood, number>);
 
-    const preferredVoiceMood = Object.entries(voiceMoodCounts).sort(
-      ([, a], [, b]) => b - a
-    )[0]?.[0] as VoiceMood;
+    const preferredVoiceMood = Object.entries(voiceMoodCounts)
+      .sort(([,a], [,b]) => b - a)[0]?.[0] as VoiceMood;
 
     patterns.push({
       type: 'voice_mood',
@@ -183,25 +157,21 @@ export class AIRewardsService {
       data: {
         preferredVoiceMood,
         voiceMoodDistribution: voiceMoodCounts,
-        varietyScore: Object.keys(voiceMoodCounts).length / 6, // out of 6 possible moods
-      },
+        varietyScore: Object.keys(voiceMoodCounts).length / 6 // out of 6 possible moods
+      }
     });
 
     // Dismissal method analysis
     const dismissalMethods = alarmEvents
       .filter(e => e.dismissed)
-      .reduce(
-        (acc, event) => {
-          const method = event.dismissMethod || 'button';
-          acc[method] = (acc[method] || 0) + 1;
-          return acc;
-        },
-        {} as Record<string, number>
-      );
+      .reduce((acc, event) => {
+        const method = event.dismissMethod || 'button';
+        acc[method] = (acc[method] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
 
-    const preferredDismissalMethod =
-      Object.entries(dismissalMethods).sort(([, a], [, b]) => b - a)[0]?.[0] ||
-      'button';
+    const preferredDismissalMethod = Object.entries(dismissalMethods)
+      .sort(([,a], [,b]) => b - a)[0]?.[0] || 'button';
 
     patterns.push({
       type: 'dismissal_method',
@@ -209,8 +179,8 @@ export class AIRewardsService {
       data: {
         preferredDismissalMethod,
         methodDistribution: dismissalMethods,
-        voiceDismissalUsage: dismissalMethods.voice || 0,
-      },
+        voiceDismissalUsage: dismissalMethods.voice || 0
+      }
     });
 
     // Frequency analysis
@@ -223,9 +193,8 @@ export class AIRewardsService {
       data: {
         totalAlarms,
         averagePerDay,
-        frequencyCategory:
-          averagePerDay > 2 ? 'high' : averagePerDay > 0.5 ? 'medium' : 'low',
-      },
+        frequencyCategory: averagePerDay > 2 ? 'high' : averagePerDay > 0.5 ? 'medium' : 'low'
+      }
     });
 
     return patterns;
@@ -293,8 +262,7 @@ export class AIRewardsService {
       confidence: 0.75,
       morningPerson,
       consistencyScore,
-      challengeSeeking:
-        preferredMood === 'drill-sergeant' || preferredMood === 'savage-roast',
+      challengeSeeking: preferredMood === 'drill-sergeant' || preferredMood === 'savage-roast'
     };
   }
 
@@ -321,7 +289,7 @@ export class AIRewardsService {
         consistency: consistencyPattern?.strength || 0.5,
         improvement: this.calculateImprovementTrend('morning'),
         niche: this.inferNicheFromAlarmLabels(morningAlarms),
-        lastAnalyzed: new Date(),
+        lastAnalyzed: new Date()
       });
     }
 
@@ -339,17 +307,16 @@ export class AIRewardsService {
         consistency: consistencyPattern?.strength || 0.5,
         improvement: this.calculateImprovementTrend('evening'),
         niche: this.inferNicheFromAlarmLabels(eveningAlarms),
-        lastAnalyzed: new Date(),
+        lastAnalyzed: new Date()
       });
     }
 
     // Workout time habit (based on labels)
-    const workoutAlarms = alarms.filter(
-      a =>
-        a.label.toLowerCase().includes('gym') ||
-        a.label.toLowerCase().includes('workout') ||
-        a.label.toLowerCase().includes('exercise') ||
-        a.label.toLowerCase().includes('run')
+    const workoutAlarms = alarms.filter(a =>
+      a.label.toLowerCase().includes('gym') ||
+      a.label.toLowerCase().includes('workout') ||
+      a.label.toLowerCase().includes('exercise') ||
+      a.label.toLowerCase().includes('run')
     );
 
     if (workoutAlarms.length > 0) {
@@ -359,13 +326,8 @@ export class AIRewardsService {
         frequency: workoutAlarms.length,
         consistency: consistencyPattern?.strength || 0.5,
         improvement: this.calculateImprovementTrend('workout'),
-        niche: {
-          primary: 'fitness',
-          confidence: 0.9,
-          traits: ['health-conscious'],
-          preferences: {} as any,
-        },
-        lastAnalyzed: new Date(),
+        niche: { primary: 'fitness', confidence: 0.9, traits: ['health-conscious'], preferences: {} as any },
+        lastAnalyzed: new Date()
       });
     }
 
@@ -388,7 +350,7 @@ export class AIRewardsService {
       family: 0,
       health: 0,
       social: 0,
-      spiritual: 0,
+      spiritual: 0
     };
 
     // Score based on habits
@@ -414,10 +376,8 @@ export class AIRewardsService {
     });
 
     // Find primary and secondary niches
-    const sortedNiches = Object.entries(nicheScores).sort(([, a], [, b]) => b - a) as [
-      UserNiche['primary'],
-      number,
-    ][];
+    const sortedNiches = Object.entries(nicheScores)
+      .sort(([,a], [,b]) => b - a) as [UserNiche['primary'], number][];
 
     const primary = sortedNiches[0][0];
     const secondary = sortedNiches[1][1] > 0 ? sortedNiches[1][0] : undefined;
@@ -435,10 +395,8 @@ export class AIRewardsService {
         morningPerson: personality.morningPerson,
         weekendSleeper: !personality.morningPerson,
         consistentSchedule: consistencyPattern?.strength > 0.7,
-        voiceMoodPreference: voicePattern?.data.preferredVoiceMood
-          ? [voicePattern.data.preferredVoiceMood]
-          : [],
-      },
+        voiceMoodPreference: voicePattern?.data.preferredVoiceMood ? [voicePattern.data.preferredVoiceMood] : []
+      }
     };
   }
 
@@ -466,10 +424,10 @@ export class AIRewardsService {
         suggestedActions: [
           'Set buffer time in your alarms',
           'Try a different voice mood',
-          'Review your sleep schedule',
+          'Review your sleep schedule'
         ],
         createdAt: new Date(),
-        priority: 'high',
+        priority: 'high'
       });
     }
 
@@ -485,10 +443,10 @@ export class AIRewardsService {
         actionable: true,
         suggestedActions: [
           `Schedule important tasks in ${timeType}`,
-          'Align your most challenging alarms with your energy peaks',
+          'Align your most challenging alarms with your energy peaks'
         ],
         createdAt: new Date(),
-        priority: 'medium',
+        priority: 'medium'
       });
     }
 
@@ -504,10 +462,10 @@ export class AIRewardsService {
         actionable: true,
         suggestedActions: [
           'Add a new complementary habit',
-          'Share your success to motivate others',
+          'Share your success to motivate others'
         ],
         createdAt: new Date(),
-        priority: 'low',
+        priority: 'low'
       });
     }
 
@@ -540,9 +498,7 @@ export class AIRewardsService {
     }
 
     if (personality.consistencyScore > 0.7) {
-      const consistencyRewards = baseRewards.filter(([key]) =>
-        key.includes('consistency')
-      );
+      const consistencyRewards = baseRewards.filter(([key]) => key.includes('consistency'));
       consistencyRewards.forEach(([key, template]) => {
         rewards.push(this.personalizeReward(template, personality, niche, key));
       });
@@ -575,35 +531,26 @@ export class AIRewardsService {
     key: string
   ): Reward {
     const personalizedMessages = {
-      fitness: 'Your dedication to fitness is inspiring! Keep pushing those limits! 💪',
+      fitness: "Your dedication to fitness is inspiring! Keep pushing those limits! 💪",
       work: "Professional excellence detected! You're building great work habits! 💼",
-      creative:
-        'Your creative spirit shines through your routine! Keep that inspiration flowing! 🎨',
-      morning: personality.morningPerson
-        ? 'Early bird catches the worm! Your morning discipline is admirable! 🌅'
-        : "You're becoming a morning warrior! Every sunrise is a new victory! ⭐",
-      consistency: `${personality.traits.includes('highly disciplined') ? 'Your discipline is legendary!' : 'Building consistency like a champion!'} Keep it up! 🏆`,
+      creative: "Your creative spirit shines through your routine! Keep that inspiration flowing! 🎨",
+      morning: personality.morningPerson ? "Early bird catches the worm! Your morning discipline is admirable! 🌅" : "You're becoming a morning warrior! Every sunrise is a new victory! ⭐",
+      consistency: `${personality.traits.includes('highly disciplined') ? 'Your discipline is legendary!' : 'Building consistency like a champion!'} Keep it up! 🏆`
     };
 
     const aiInsights = {
-      fitness:
-        "Your workout timing patterns suggest you're building sustainable fitness habits.",
-      work: 'Your professional alarm schedule indicates strong time management skills.',
-      creative:
-        'Your creative routine shows you understand the importance of inspiration timing.',
-      morning:
-        'Your morning consistency is linked to higher productivity and better mood throughout the day.',
-      consistency:
-        'Research shows that consistent wake times improve sleep quality by up to 23%.',
+      fitness: "Your workout timing patterns suggest you're building sustainable fitness habits.",
+      work: "Your professional alarm schedule indicates strong time management skills.",
+      creative: "Your creative routine shows you understand the importance of inspiration timing.",
+      morning: "Your morning consistency is linked to higher productivity and better mood throughout the day.",
+      consistency: "Research shows that consistent wake times improve sleep quality by up to 23%."
     };
 
-    const personalizedMessage =
-      Object.entries(personalizedMessages).find(([type]) => key.includes(type))?.[1] ||
-      template.personalizedMessage;
+    const personalizedMessage = Object.entries(personalizedMessages)
+      .find(([type]) => key.includes(type))?.[1] || template.personalizedMessage;
 
-    const aiInsight =
-      Object.entries(aiInsights).find(([type]) => key.includes(type))?.[1] ||
-      template.aiInsight;
+    const aiInsight = Object.entries(aiInsights)
+      .find(([type]) => key.includes(type))?.[1] || template.aiInsight;
 
     return {
       id: `reward_${key}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -616,7 +563,7 @@ export class AIRewardsService {
       points: template.points || 10,
       unlockedAt: new Date(),
       personalizedMessage,
-      aiInsight,
+      aiInsight
     };
   }
 
@@ -630,11 +577,7 @@ export class AIRewardsService {
     return uniqueTimes.length <= enabledAlarms.length * 0.7; // 70% or more alarms at same times
   }
 
-  private inferPrimaryNiche(
-    traits: string[],
-    frequencyData: any,
-    morningPerson: boolean
-  ): UserNiche['primary'] {
+  private inferPrimaryNiche(traits: string[], frequencyData: any, morningPerson: boolean): UserNiche['primary'] {
     if (traits.some(t => t.includes('discipline') || t.includes('goal'))) {
       return morningPerson ? 'work' : 'fitness';
     }
@@ -650,49 +593,17 @@ export class AIRewardsService {
   private inferNicheFromAlarmLabels(alarms: Alarm[]): UserNiche {
     const labels = alarms.map(a => a.label.toLowerCase()).join(' ');
 
-    if (
-      labels.includes('gym') ||
-      labels.includes('workout') ||
-      labels.includes('exercise')
-    ) {
-      return {
-        primary: 'fitness',
-        confidence: 0.8,
-        traits: ['health-conscious'],
-        preferences: {} as any,
-      };
+    if (labels.includes('gym') || labels.includes('workout') || labels.includes('exercise')) {
+      return { primary: 'fitness', confidence: 0.8, traits: ['health-conscious'], preferences: {} as any };
     }
-    if (
-      labels.includes('work') ||
-      labels.includes('meeting') ||
-      labels.includes('office')
-    ) {
-      return {
-        primary: 'work',
-        confidence: 0.8,
-        traits: ['professional'],
-        preferences: {} as any,
-      };
+    if (labels.includes('work') || labels.includes('meeting') || labels.includes('office')) {
+      return { primary: 'work', confidence: 0.8, traits: ['professional'], preferences: {} as any };
     }
-    if (
-      labels.includes('study') ||
-      labels.includes('class') ||
-      labels.includes('exam')
-    ) {
-      return {
-        primary: 'study',
-        confidence: 0.8,
-        traits: ['academic'],
-        preferences: {} as any,
-      };
+    if (labels.includes('study') || labels.includes('class') || labels.includes('exam')) {
+      return { primary: 'study', confidence: 0.8, traits: ['academic'], preferences: {} as any };
     }
 
-    return {
-      primary: 'health',
-      confidence: 0.5,
-      traits: ['routine-focused'],
-      preferences: {} as any,
-    };
+    return { primary: 'health', confidence: 0.5, traits: ['routine-focused'], preferences: {} as any };
   }
 
   private calculateImprovementTrend(type: string): number {
@@ -716,11 +627,9 @@ export class AIRewardsService {
       const eventDate = new Date(event.firedAt);
       eventDate.setHours(0, 0, 0, 0);
 
-      const daysDiff = Math.floor(
-        (currentDate.getTime() - eventDate.getTime()) / (1000 * 60 * 60 * 24)
-      );
+      const daysDiff = Math.floor((currentDate.getTime() - eventDate.getTime()) / (1000 * 60 * 60 * 24));
 
-      if (daysDiff === streak || daysDiff === streak + 1) {
+      if (daysDiff === streak || (daysDiff === streak + 1)) {
         streak++;
         currentDate = eventDate;
       } else {
@@ -749,9 +658,7 @@ export class AIRewardsService {
       if (!lastDate) {
         currentStreak = 1;
       } else {
-        const daysDiff = Math.floor(
-          (eventDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
+        const daysDiff = Math.floor((eventDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
 
         if (daysDiff === 1) {
           currentStreak++;
@@ -799,7 +706,7 @@ export class AIRewardsService {
       family: 'social',
       health: 'wellness',
       social: 'social',
-      spiritual: 'wellness',
+      spiritual: 'wellness'
     };
     return mapping[niche] || 'consistency';
   }
@@ -820,8 +727,8 @@ export class AIRewardsService {
           category: 'consistency' as const,
           rarity: 'common' as const,
           points: 50,
-          progress: { current: 0, target: 5, percentage: 0 },
-        },
+          progress: { current: 0, target: 5, percentage: 0 }
+        }
       },
       {
         key: 'consistency_master',
@@ -833,8 +740,8 @@ export class AIRewardsService {
           category: 'master' as const,
           rarity: 'epic' as const,
           points: 500,
-          progress: { current: 0, target: 30, percentage: 0 },
-        },
+          progress: { current: 0, target: 30, percentage: 0 }
+        }
       },
 
       // Morning person rewards
@@ -848,8 +755,8 @@ export class AIRewardsService {
           category: 'early_riser' as const,
           rarity: 'rare' as const,
           points: 100,
-          progress: { current: 0, target: 7, percentage: 0 },
-        },
+          progress: { current: 0, target: 7, percentage: 0 }
+        }
       },
 
       // Fitness rewards
@@ -862,8 +769,8 @@ export class AIRewardsService {
           icon: '💪',
           category: 'wellness' as const,
           rarity: 'rare' as const,
-          points: 200,
-        },
+          points: 200
+        }
       },
 
       // Work productivity rewards
@@ -876,8 +783,8 @@ export class AIRewardsService {
           icon: '💼',
           category: 'productivity' as const,
           rarity: 'common' as const,
-          points: 75,
-        },
+          points: 75
+        }
       },
 
       // Creative rewards
@@ -890,8 +797,8 @@ export class AIRewardsService {
           icon: '🎨',
           category: 'explorer' as const,
           rarity: 'rare' as const,
-          points: 150,
-        },
+          points: 150
+        }
       },
 
       // Challenge rewards
@@ -904,8 +811,8 @@ export class AIRewardsService {
           icon: '⚔️',
           category: 'challenger' as const,
           rarity: 'epic' as const,
-          points: 300,
-        },
+          points: 300
+        }
       },
 
       // Universal rewards
@@ -918,8 +825,8 @@ export class AIRewardsService {
           icon: '⭐',
           category: 'consistency' as const,
           rarity: 'common' as const,
-          points: 10,
-        },
+          points: 10
+        }
       },
       {
         key: 'universal_explorer',
@@ -930,9 +837,9 @@ export class AIRewardsService {
           icon: '🎭',
           category: 'explorer' as const,
           rarity: 'common' as const,
-          points: 30,
-        },
-      },
+          points: 30
+        }
+      }
     ];
 
     templates.forEach(({ key, template }) => {

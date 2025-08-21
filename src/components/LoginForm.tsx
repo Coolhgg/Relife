@@ -15,15 +15,12 @@ export default function LoginForm({
   onSwitchToSignUp,
   onForgotPassword,
   isLoading,
-  error,
+  error
 }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<{
-    email?: string;
-    password?: string;
-  }>({});
+  const [validationErrors, setValidationErrors] = useState<{ email?: string; password?: string }>({});
 
   const validateForm = (): boolean => {
     const errors: { email?: string; password?: string } = {};
@@ -73,15 +70,14 @@ export default function LoginForm({
           aria-live="polite"
         >
           <div className="flex items-start gap-3">
-            <AlertCircle
-              className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0"
-              aria-hidden="true"
-            />
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
             <div>
               <h3 className="font-medium text-red-800 dark:text-red-200 mb-1">
                 Sign In Failed
               </h3>
-              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+              <p className="text-sm text-red-700 dark:text-red-300">
+                {error}
+              </p>
             </div>
           </div>
         </div>
@@ -106,9 +102,7 @@ export default function LoginForm({
               value={email}
               onChange={e => setEmail(e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                validationErrors.email
-                  ? 'border-red-500'
-                  : 'border-gray-300 dark:border-dark-600'
+                validationErrors.email ? 'border-red-500' : 'border-gray-300 dark:border-dark-600'
               }`}
               placeholder="Enter your email"
               autoComplete="email"
@@ -147,16 +141,12 @@ export default function LoginForm({
               value={password}
               onChange={e => setPassword(e.target.value)}
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                validationErrors.password
-                  ? 'border-red-500'
-                  : 'border-gray-300 dark:border-dark-600'
+                validationErrors.password ? 'border-red-500' : 'border-gray-300 dark:border-dark-600'
               }`}
               placeholder="Enter your password"
               autoComplete="current-password"
               aria-invalid={!!validationErrors.password}
-              aria-describedby={
-                validationErrors.password ? 'password-error' : 'password-toggle-desc'
-              }
+              aria-describedby={validationErrors.password ? 'password-error' : 'password-toggle-desc'}
               required
             />
             <button
@@ -166,11 +156,7 @@ export default function LoginForm({
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               aria-describedby="password-toggle-desc"
             >
-              {showPassword ? (
-                <EyeOff className="w-5 h-5" />
-              ) : (
-                <Eye className="w-5 h-5" />
-              )}
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
             <span id="password-toggle-desc" className="sr-only">
               Click to {showPassword ? 'hide' : 'show'} password characters
@@ -208,10 +194,7 @@ export default function LoginForm({
         >
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
-              <div
-                className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
-                aria-hidden="true"
-              />
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
               Signing In...
             </span>
           ) : (

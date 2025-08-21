@@ -1,23 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Calendar,
-  Clock,
-  Brain,
-  MapPin,
-  TrendingUp,
-  Zap,
-  Settings,
-  ChevronRight,
-  AlertCircle,
-  CheckCircle,
-  Target,
-  Sun,
-  Moon,
-  BarChart3,
-  Activity,
-  Lightbulb,
-  Bell,
-  Sparkles,
+  Calendar, Clock, Brain, MapPin, TrendingUp, Zap, Settings,
+  ChevronRight, AlertCircle, CheckCircle, Target, Sun, Moon,
+  BarChart3, Activity, Lightbulb, Bell, Sparkles
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,11 +28,9 @@ export function AdvancedSchedulingDashboard({
   alarms,
   user,
   onUpdateAlarm,
-  onCreateAlarm,
+  onCreateAlarm
 }: AdvancedSchedulingDashboardProps) {
-  const [activeTab, setActiveTab] = useState<
-    'overview' | 'ml' | 'location' | 'analytics' | 'settings'
-  >('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'ml' | 'location' | 'analytics' | 'settings'>('overview');
   const [mlEnabled, setMlEnabled] = useState(false);
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
@@ -60,29 +43,15 @@ export function AdvancedSchedulingDashboard({
   // Location State
   const [locationPatterns, setLocationPatterns] = useState<any[]>([]);
   const [geofences, setGeofences] = useState<any[]>([]);
-  const [locationStats, setLocationStats] = useState({
-    patterns: 0,
-    geofences: 0,
-    historyPoints: 0,
-    isTracking: false,
-  });
+  const [locationStats, setLocationStats] = useState({ patterns: 0, geofences: 0, historyPoints: 0, isTracking: false });
 
   // Analytics State
   const [detectedPatterns, setDetectedPatterns] = useState<any[]>([]);
   const [predictiveInsights, setPredictiveInsights] = useState<any[]>([]);
-  const [analyticsStats, setAnalyticsStats] = useState({
-    patterns: 0,
-    insights: 0,
-    lastAnalysis: null,
-    isEnabled: false,
-  });
+  const [analyticsStats, setAnalyticsStats] = useState({ patterns: 0, insights: 0, lastAnalysis: null, isEnabled: false });
 
   // Loading States
-  const [loading, setLoading] = useState({
-    ml: false,
-    location: false,
-    analytics: false,
-  });
+  const [loading, setLoading] = useState({ ml: false, location: false, analytics: false });
 
   useEffect(() => {
     loadAdvancedSchedulingData();
@@ -111,6 +80,7 @@ export function AdvancedSchedulingDashboard({
         const suggestions = await MLAlarmOptimizer.getOptimizationSuggestions(user.id);
         setOptimizationSuggestions(suggestions);
       }
+
     } catch (error) {
       console.error('Error loading advanced scheduling data:', error);
     }
@@ -165,18 +135,11 @@ export function AdvancedSchedulingDashboard({
     if (!mlEnabled) return;
 
     try {
-      const prediction = await MLAlarmOptimizer.predictOptimalWakeTime(
-        user.id,
-        alarm,
-        new Date()
-      );
-      setPredictions(prev => [
-        ...prev.filter(p => p.alarmId !== alarm.id),
-        {
-          alarmId: alarm.id,
-          ...prediction,
-        },
-      ]);
+      const prediction = await MLAlarmOptimizer.predictOptimalWakeTime(user.id, alarm, new Date());
+      setPredictions(prev => [...prev.filter(p => p.alarmId !== alarm.id), {
+        alarmId: alarm.id,
+        ...prediction
+      }]);
     } catch (error) {
       console.error('Error generating prediction:', error);
     }
@@ -189,7 +152,7 @@ export function AdvancedSchedulingDashboard({
       await MLAlarmOptimizer.recordUserBehavior(user.id, 'wake_time', {
         appliedOptimization: true,
         originalTime: alarms.find(a => a.id === alarmId)?.time,
-        optimizedTime,
+        optimizedTime
       });
     } catch (error) {
       console.error('Error applying optimization:', error);
@@ -272,15 +235,11 @@ export function AdvancedSchedulingDashboard({
         </CardHeader>
         <CardContent className="space-y-4">
           {optimizationSuggestions.slice(0, 3).map((suggestion, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between p-3 border rounded-lg"
-            >
+            <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
               <div>
                 <div className="font-medium">{suggestion.suggestion}</div>
                 <div className="text-sm text-muted-foreground">
-                  {Math.round(suggestion.confidence * 100)}% confidence •{' '}
-                  {suggestion.impact} impact
+                  {Math.round(suggestion.confidence * 100)}% confidence • {suggestion.impact} impact
                 </div>
               </div>
               <Button size="sm">Apply</Button>
@@ -307,27 +266,18 @@ export function AdvancedSchedulingDashboard({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {predictiveInsights.slice(0, 5).map(insight => (
-              <div
-                key={insight.id}
-                className="flex items-start gap-3 p-3 border rounded-lg"
-              >
-                <div
-                  className={`p-1 rounded-full ${
-                    insight.priority === 'high'
-                      ? 'bg-red-100 text-red-600'
-                      : insight.priority === 'medium'
-                        ? 'bg-yellow-100 text-yellow-600'
-                        : 'bg-blue-100 text-blue-600'
-                  }`}
-                >
+            {predictiveInsights.slice(0, 5).map((insight) => (
+              <div key={insight.id} className="flex items-start gap-3 p-3 border rounded-lg">
+                <div className={`p-1 rounded-full ${
+                  insight.priority === 'high' ? 'bg-red-100 text-red-600' :
+                  insight.priority === 'medium' ? 'bg-yellow-100 text-yellow-600' :
+                  'bg-blue-100 text-blue-600'
+                }`}>
                   <AlertCircle className="h-4 w-4" />
                 </div>
                 <div className="flex-1">
                   <div className="font-medium">{insight.title}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {insight.description}
-                  </div>
+                  <div className="text-sm text-muted-foreground">{insight.description}</div>
                   <div className="flex items-center gap-2 mt-2">
                     <Badge variant="outline" className="text-xs">
                       {insight.category.replace('_', ' ')}
@@ -388,59 +338,45 @@ export function AdvancedSchedulingDashboard({
 
               <div className="space-y-3">
                 <h4 className="font-medium">Alarm Predictions</h4>
-                {alarms
-                  .filter(a => a.enabled)
-                  .map(alarm => {
-                    const prediction = predictions.find(p => p.alarmId === alarm.id);
+                {alarms.filter(a => a.enabled).map((alarm) => {
+                  const prediction = predictions.find(p => p.alarmId === alarm.id);
 
-                    return (
-                      <div
-                        key={alarm.id}
-                        className="flex items-center justify-between p-3 border rounded-lg"
-                      >
-                        <div>
-                          <div className="font-medium">{alarm.label}</div>
-                          <div className="text-sm text-muted-foreground">
-                            Current: {alarm.time}
-                            {prediction && (
-                              <> • Optimal: {prediction.optimalWakeTime}</>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {prediction && prediction.adjustmentMinutes !== 0 && (
-                            <Badge
-                              variant={
-                                prediction.adjustmentMinutes > 0
-                                  ? 'destructive'
-                                  : 'default'
-                              }
-                            >
-                              {prediction.adjustmentMinutes > 0 ? '+' : ''}
-                              {prediction.adjustmentMinutes}min
-                            </Badge>
-                          )}
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => generatePrediction(alarm)}
-                          >
-                            Predict
-                          </Button>
-                          {prediction && prediction.adjustmentMinutes !== 0 && (
-                            <Button
-                              size="sm"
-                              onClick={() =>
-                                applyOptimization(alarm.id, prediction.optimalWakeTime)
-                              }
-                            >
-                              Apply
-                            </Button>
+                  return (
+                    <div key={alarm.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <div className="font-medium">{alarm.label}</div>
+                        <div className="text-sm text-muted-foreground">
+                          Current: {alarm.time}
+                          {prediction && (
+                            <> • Optimal: {prediction.optimalWakeTime}</>
                           )}
                         </div>
                       </div>
-                    );
-                  })}
+                      <div className="flex items-center gap-2">
+                        {prediction && prediction.adjustmentMinutes !== 0 && (
+                          <Badge variant={prediction.adjustmentMinutes > 0 ? "destructive" : "default"}>
+                            {prediction.adjustmentMinutes > 0 ? '+' : ''}{prediction.adjustmentMinutes}min
+                          </Badge>
+                        )}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => generatePrediction(alarm)}
+                        >
+                          Predict
+                        </Button>
+                        {prediction && prediction.adjustmentMinutes !== 0 && (
+                          <Button
+                            size="sm"
+                            onClick={() => applyOptimization(alarm.id, prediction.optimalWakeTime)}
+                          >
+                            Apply
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </>
           )}
@@ -485,9 +421,7 @@ export function AdvancedSchedulingDashboard({
                   <div className="text-sm text-muted-foreground">Geofences</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {locationStats.historyPoints}
-                  </div>
+                  <div className="text-2xl font-bold">{locationStats.historyPoints}</div>
                   <div className="text-sm text-muted-foreground">History Points</div>
                 </div>
                 <div className="text-center">
@@ -500,16 +434,12 @@ export function AdvancedSchedulingDashboard({
 
               <div className="space-y-3">
                 <h4 className="font-medium">Location Patterns</h4>
-                {locationPatterns.map(pattern => (
-                  <div
-                    key={pattern.id}
-                    className="flex items-center justify-between p-3 border rounded-lg"
-                  >
+                {locationPatterns.map((pattern) => (
+                  <div key={pattern.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
                       <div className="font-medium">{pattern.name}</div>
                       <div className="text-sm text-muted-foreground">
-                        {pattern.type} • {pattern.visits} visits •{' '}
-                        {Math.round(pattern.confidence * 100)}% confidence
+                        {pattern.type} • {pattern.visits} visits • {Math.round(pattern.confidence * 100)}% confidence
                       </div>
                     </div>
                     <Badge variant="outline">{pattern.type}</Badge>
@@ -520,9 +450,7 @@ export function AdvancedSchedulingDashboard({
                   <div className="text-center py-8 text-muted-foreground">
                     <MapPin className="h-8 w-8 mx-auto mb-2" />
                     <p>No location patterns detected yet</p>
-                    <p className="text-sm">
-                      Keep location services enabled to build patterns
-                    </p>
+                    <p className="text-sm">Keep location services enabled to build patterns</p>
                   </div>
                 )}
               </div>
@@ -582,11 +510,8 @@ export function AdvancedSchedulingDashboard({
 
               <div className="space-y-3">
                 <h4 className="font-medium">Detected Patterns</h4>
-                {detectedPatterns.map(pattern => (
-                  <div
-                    key={pattern.id}
-                    className="flex items-center justify-between p-3 border rounded-lg"
-                  >
+                {detectedPatterns.map((pattern) => (
+                  <div key={pattern.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
                       <div className="font-medium">{pattern.name}</div>
                       <div className="text-sm text-muted-foreground">
@@ -596,16 +521,10 @@ export function AdvancedSchedulingDashboard({
                         <Badge variant="outline" className="text-xs">
                           {Math.round(pattern.confidence * 100)}% confidence
                         </Badge>
-                        <Badge
-                          variant={
-                            pattern.trend === 'improving'
-                              ? 'default'
-                              : pattern.trend === 'declining'
-                                ? 'destructive'
-                                : 'secondary'
-                          }
-                          className="text-xs"
-                        >
+                        <Badge variant={
+                          pattern.trend === 'improving' ? 'default' :
+                          pattern.trend === 'declining' ? 'destructive' : 'secondary'
+                        } className="text-xs">
                           {pattern.trend}
                         </Badge>
                       </div>
@@ -621,9 +540,7 @@ export function AdvancedSchedulingDashboard({
                   <div className="text-center py-8 text-muted-foreground">
                     <TrendingUp className="h-8 w-8 mx-auto mb-2" />
                     <p>No patterns detected yet</p>
-                    <p className="text-sm">
-                      Use alarms regularly to build pattern data
-                    </p>
+                    <p className="text-sm">Use alarms regularly to build pattern data</p>
                   </div>
                 )}
               </div>
@@ -656,12 +573,8 @@ export function AdvancedSchedulingDashboard({
                     {mlEnabled ? 'Enabled' : 'Disabled'}
                   </Badge>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleMLToggle(!mlEnabled)}
-                >
-                  {mlEnabled ? 'Disable' : 'Enable'}
+                <Button variant="outline" size="sm" onClick={() => handleMLToggle(!mlEnabled)}>
+                  {mlEnabled ? "Disable" : "Enable"}
                 </Button>
               </div>
 
@@ -673,12 +586,8 @@ export function AdvancedSchedulingDashboard({
                     {locationEnabled ? 'Enabled' : 'Disabled'}
                   </Badge>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleLocationToggle(!locationEnabled)}
-                >
-                  {locationEnabled ? 'Disable' : 'Enable'}
+                <Button variant="outline" size="sm" onClick={() => handleLocationToggle(!locationEnabled)}>
+                  {locationEnabled ? "Disable" : "Enable"}
                 </Button>
               </div>
 
@@ -690,12 +599,8 @@ export function AdvancedSchedulingDashboard({
                     {analyticsEnabled ? 'Enabled' : 'Disabled'}
                   </Badge>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleAnalyticsToggle(!analyticsEnabled)}
-                >
-                  {analyticsEnabled ? 'Disable' : 'Enable'}
+                <Button variant="outline" size="sm" onClick={() => handleAnalyticsToggle(!analyticsEnabled)}>
+                  {analyticsEnabled ? "Disable" : "Enable"}
                 </Button>
               </div>
             </div>
@@ -727,8 +632,7 @@ export function AdvancedSchedulingDashboard({
         <div>
           <h1 className="text-3xl font-bold">Advanced Scheduling</h1>
           <p className="text-muted-foreground">
-            AI-powered alarm optimization with location awareness and predictive
-            analytics
+            AI-powered alarm optimization with location awareness and predictive analytics
           </p>
         </div>
         <Button onClick={loadAdvancedSchedulingData}>

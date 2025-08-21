@@ -34,7 +34,7 @@ export {
   findByText,
   findByTestId,
   findByLabelText,
-  act,
+  act
 } from '@testing-library/react';
 
 export { default as userEvent } from '@testing-library/user-event';
@@ -67,22 +67,8 @@ export interface TestAlarm {
   enabled: boolean;
   isActive: boolean;
   days: number[];
-  dayNames: (
-    | 'monday'
-    | 'tuesday'
-    | 'wednesday'
-    | 'thursday'
-    | 'friday'
-    | 'saturday'
-    | 'sunday'
-  )[];
-  voiceMood:
-    | 'gentle'
-    | 'motivational'
-    | 'drill-sergeant'
-    | 'zen'
-    | 'energetic'
-    | 'custom';
+  dayNames: ('monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday')[];
+  voiceMood: 'gentle' | 'motivational' | 'drill-sergeant' | 'zen' | 'energetic' | 'custom';
   sound: string;
   difficulty: 'easy' | 'medium' | 'hard' | 'nuclear';
   snoozeEnabled: boolean;
@@ -188,7 +174,7 @@ export const TEST_CONSTANTS = {
 
   // File size limits
   MAX_AUDIO_SIZE: 10 * 1024 * 1024, // 10MB
-  MAX_IMAGE_SIZE: 5 * 1024 * 1024, // 5MB
+  MAX_IMAGE_SIZE: 5 * 1024 * 1024,  // 5MB
 
   // Premium limits
   FREE_ALARM_LIMIT: 5,
@@ -214,30 +200,19 @@ export const TEST_CONSTANTS = {
   TIERS: {
     FREE: 'free',
     PREMIUM: 'premium',
-    ULTIMATE: 'ultimate',
+    ULTIMATE: 'ultimate'
   } as const,
 
   // Languages
   SUPPORTED_LANGUAGES: [
-    'en',
-    'es',
-    'fr',
-    'de',
-    'it',
-    'pt',
-    'ru',
-    'ar',
-    'hi',
-    'ja',
-    'ko',
-    'zh',
+    'en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ar', 'hi', 'ja', 'ko', 'zh'
   ] as const,
 
   // Device platforms
   PLATFORMS: {
     WEB: 'web',
     IOS: 'ios',
-    ANDROID: 'android',
+    ANDROID: 'android'
   } as const,
 
   // Test viewport sizes
@@ -245,8 +220,8 @@ export const TEST_CONSTANTS = {
     MOBILE: { width: 375, height: 667 },
     TABLET: { width: 768, height: 1024 },
     DESKTOP: { width: 1200, height: 800 },
-    LARGE: { width: 1920, height: 1080 },
-  } as const,
+    LARGE: { width: 1920, height: 1080 }
+  } as const
 } as const;
 
 // Environment detection utilities
@@ -258,7 +233,7 @@ export const testEnv = {
   isVisual: process.env.TEST_VISUAL === 'true',
   isPerformance: process.env.TEST_PERFORMANCE === 'true',
   isAccessibility: process.env.TEST_A11Y === 'true',
-  platform: (process.env.TEST_PLATFORM as 'web' | 'ios' | 'android') || 'web',
+  platform: (process.env.TEST_PLATFORM as 'web' | 'ios' | 'android') || 'web'
 };
 
 // Console utilities for tests
@@ -293,7 +268,7 @@ export const testConsole = {
     if (testEnv.isVerbose) {
       console.groupEnd();
     }
-  },
+  }
 };
 
 // Test lifecycle helpers
@@ -328,5 +303,5 @@ export const testLifecycle = {
         testConsole.groupEnd();
       });
     });
-  },
+  }
 };

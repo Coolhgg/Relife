@@ -82,18 +82,12 @@ export class ServiceWorkerManager {
         // Notify service worker about permission
         await this.sendMessage('REQUEST_NOTIFICATION_PERMISSION');
       } else {
-        console.warn(
-          'ServiceWorkerManager: Notification permission not granted:',
-          permission
-        );
+        console.warn('ServiceWorkerManager: Notification permission not granted:', permission);
       }
 
       return permission;
     } catch (error) {
-      console.error(
-        'ServiceWorkerManager: Error requesting notification permission:',
-        error
-      );
+      console.error('ServiceWorkerManager: Error requesting notification permission:', error);
       return 'denied';
     }
   }
@@ -137,10 +131,7 @@ export class ServiceWorkerManager {
         console.log(`ServiceWorkerManager: Alarm ${alarm.id} scheduled successfully`);
         return true;
       } else {
-        console.error(
-          `ServiceWorkerManager: Failed to schedule alarm ${alarm.id}:`,
-          response.error
-        );
+        console.error(`ServiceWorkerManager: Failed to schedule alarm ${alarm.id}:`, response.error);
         return false;
       }
     } catch (error) {
@@ -164,10 +155,7 @@ export class ServiceWorkerManager {
         console.log(`ServiceWorkerManager: Alarm ${alarmId} cancelled successfully`);
         return true;
       } else {
-        console.error(
-          `ServiceWorkerManager: Failed to cancel alarm ${alarmId}:`,
-          response.error
-        );
+        console.error(`ServiceWorkerManager: Failed to cancel alarm ${alarmId}:`, response.error);
         return false;
       }
     } catch (error) {
@@ -221,20 +209,23 @@ export class ServiceWorkerManager {
         reject(new Error('Service worker message timeout'));
       }, 10000); // 10 second timeout
 
-      messageChannel.port1.onmessage = event => {
+      messageChannel.port1.onmessage = (event) => {
         clearTimeout(timeout);
         resolve(event.data);
       };
 
       // Send message
-      this.registration.active.postMessage({ type, data }, [messageChannel.port2]);
+      this.registration.active.postMessage(
+        { type, data },
+        [messageChannel.port2]
+      );
     });
   }
 
   private setupMessageListeners(): void {
     if (!('serviceWorker' in navigator)) return;
 
-    navigator.serviceWorker.addEventListener('message', event => {
+    navigator.serviceWorker.addEventListener('message', (event) => {
       const { type, data } = event.data;
 
       switch (type) {
@@ -268,7 +259,7 @@ export class ServiceWorkerManager {
   private handleAlarmTriggered(alarm: Alarm): void {
     // Dispatch custom event for the app to handle
     const event = new CustomEvent('serviceWorkerAlarmTriggered', {
-      detail: { alarm },
+      detail: { alarm }
     });
     window.dispatchEvent(event);
   }
@@ -280,12 +271,12 @@ export class ServiceWorkerManager {
       if (document.visibilityState === 'hidden') {
         console.log('ServiceWorkerManager: Tab hidden, syncing alarm state...');
         this.registration.active.postMessage({
-          type: 'SYNC_ALARM_STATE',
+          type: 'SYNC_ALARM_STATE'
         });
       } else if (document.visibilityState === 'visible') {
         console.log('ServiceWorkerManager: Tab visible, performing health check...');
         this.registration.active.postMessage({
-          type: 'HEALTH_CHECK',
+          type: 'HEALTH_CHECK'
         });
       }
     });
@@ -293,7 +284,7 @@ export class ServiceWorkerManager {
     window.addEventListener('beforeunload', () => {
       if (this.registration?.active) {
         this.registration.active.postMessage({
-          type: 'TAB_CLOSING',
+          type: 'TAB_CLOSING'
         });
       }
     });

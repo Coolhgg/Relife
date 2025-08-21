@@ -1,65 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Clock,
-  Calendar,
-  MapPin,
-  Brain,
-  Repeat,
-  Settings,
-  Sun,
-  Moon,
-  Plus,
-  Save,
-  X,
-  Edit3,
-  Copy,
-  Trash2,
-  Download,
-  Upload,
-  ChevronDown,
-  ChevronRight,
-  AlertCircle,
-  CheckCircle,
-  Zap,
-  Target,
-  TrendingUp,
-  Sunrise,
-  Sunset,
-  CloudRain,
-  Navigation,
-  Smartphone,
-  Users,
-  Bell,
-  Eye,
-  EyeOff,
+  Clock, Calendar, MapPin, Brain, Repeat, Settings, Sun, Moon,
+  Plus, Save, X, Edit3, Copy, Trash2, Download, Upload,
+  ChevronDown, ChevronRight, AlertCircle, CheckCircle,
+  Zap, Target, TrendingUp, Sunrise, Sunset, CloudRain,
+  Navigation, Smartphone, Users, Bell, Eye, EyeOff
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -72,7 +28,7 @@ import type {
   SeasonalAdjustment,
   CalendarIntegration,
   SchedulingConfig,
-  SunSchedule,
+  SunSchedule
 } from '../types/index';
 import AdvancedAlarmScheduler from '../services/advanced-alarm-scheduler';
 
@@ -87,17 +43,13 @@ export function AdvancedAlarmScheduling({
   alarms,
   onCreateAlarm,
   onUpdateAlarm,
-  onDeleteAlarm,
+  onDeleteAlarm
 }: AdvancedAlarmSchedulingProps) {
-  const [activeTab, setActiveTab] = useState<'alarms' | 'create' | 'settings' | 'bulk'>(
-    'alarms'
-  );
+  const [activeTab, setActiveTab] = useState<'alarms' | 'create' | 'settings' | 'bulk'>('alarms');
   const [selectedAlarm, setSelectedAlarm] = useState<AdvancedAlarm | null>(null);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [config, setConfig] = useState<SchedulingConfig | null>(null);
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(
-    new Set(['basic'])
-  );
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['basic']));
 
   // Form state for creating/editing alarms
   const [formData, setFormData] = useState<Partial<AdvancedAlarm>>({
@@ -110,7 +62,7 @@ export function AdvancedAlarmScheduling({
     difficulty: 'medium',
     snoozeEnabled: true,
     snoozeInterval: 5,
-    voiceMood: 'motivational',
+    voiceMood: 'motivational'
   });
 
   useEffect(() => {
@@ -139,16 +91,14 @@ export function AdvancedAlarmScheduling({
   const handleCreateAlarm = async () => {
     try {
       // Apply smart optimizations before creating
-      const optimizedAlarm = await AdvancedAlarmScheduler.applySmartOptimizations(
-        formData as AdvancedAlarm
-      );
+      const optimizedAlarm = await AdvancedAlarmScheduler.applySmartOptimizations(formData as AdvancedAlarm);
 
       onCreateAlarm({
         ...optimizedAlarm,
         userId: '1', // Current user
         enabled: formData.isActive || true,
         dayNames: [], // Will be populated from days array
-        snoozeCount: 0,
+        snoozeCount: 0
       });
 
       setShowCreateDialog(false);
@@ -169,32 +119,28 @@ export function AdvancedAlarmScheduling({
       difficulty: 'medium',
       snoozeEnabled: true,
       snoozeInterval: 5,
-      voiceMood: 'motivational',
+      voiceMood: 'motivational'
     });
     setExpandedSections(new Set(['basic']));
   };
 
   const formatScheduleType = (type: string) => {
     const types = {
-      once: 'One Time',
-      daily: 'Daily',
-      weekly: 'Weekly',
-      monthly: 'Monthly',
-      yearly: 'Yearly',
-      custom: 'Custom Pattern',
-      conditional: 'Conditional',
-      dynamic: 'Smart Dynamic',
+      'once': 'One Time',
+      'daily': 'Daily',
+      'weekly': 'Weekly',
+      'monthly': 'Monthly',
+      'yearly': 'Yearly',
+      'custom': 'Custom Pattern',
+      'conditional': 'Conditional',
+      'dynamic': 'Smart Dynamic'
     };
     return types[type as keyof typeof types] || type;
   };
 
   const getNextOccurrence = (alarm: AdvancedAlarm) => {
     try {
-      const occurrences = AdvancedAlarmScheduler.calculateNextOccurrences(
-        alarm,
-        new Date(),
-        1
-      );
+      const occurrences = AdvancedAlarmScheduler.calculateNextOccurrences(alarm, new Date(), 1);
       return occurrences[0] ? occurrences[0].toLocaleString() : 'Not scheduled';
     } catch (error) {
       return 'Calculation error';
@@ -206,9 +152,7 @@ export function AdvancedAlarmScheduling({
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold">Advanced Alarms</h3>
-          <p className="text-sm text-muted-foreground">
-            {alarms.length} active alarms with advanced scheduling
-          </p>
+          <p className="text-sm text-muted-foreground">{alarms.length} active alarms with advanced scheduling</p>
         </div>
         <Button onClick={() => setShowCreateDialog(true)} className="gap-2">
           <Plus size={16} />
@@ -216,11 +160,8 @@ export function AdvancedAlarmScheduling({
         </Button>
       </div>
 
-      {alarms.map(alarm => (
-        <Card
-          key={alarm.id}
-          className={`transition-all ${!alarm.isActive ? 'opacity-60' : ''}`}
-        >
+      {alarms.map((alarm) => (
+        <Card key={alarm.id} className={`transition-all ${!alarm.isActive ? 'opacity-60' : ''}`}>
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div className="flex-1">
@@ -243,30 +184,21 @@ export function AdvancedAlarmScheduling({
                   {alarm.smartOptimizations && alarm.smartOptimizations.length > 0 && (
                     <div className="flex items-center gap-1">
                       <Brain size={12} />
-                      <span>
-                        {alarm.smartOptimizations.filter(o => o.isEnabled).length}{' '}
-                        optimizations
-                      </span>
+                      <span>{alarm.smartOptimizations.filter(o => o.isEnabled).length} optimizations</span>
                     </div>
                   )}
 
                   {alarm.conditionalRules && alarm.conditionalRules.length > 0 && (
                     <div className="flex items-center gap-1">
                       <Zap size={12} />
-                      <span>
-                        {alarm.conditionalRules.filter(r => r.isActive).length}{' '}
-                        conditions
-                      </span>
+                      <span>{alarm.conditionalRules.filter(r => r.isActive).length} conditions</span>
                     </div>
                   )}
 
                   {alarm.locationTriggers && alarm.locationTriggers.length > 0 && (
                     <div className="flex items-center gap-1">
                       <MapPin size={12} />
-                      <span>
-                        {alarm.locationTriggers.filter(t => t.isActive).length}{' '}
-                        locations
-                      </span>
+                      <span>{alarm.locationTriggers.filter(t => t.isActive).length} locations</span>
                     </div>
                   )}
 
@@ -277,35 +209,24 @@ export function AdvancedAlarmScheduling({
                     </div>
                   )}
 
-                  {alarm.seasonalAdjustments &&
-                    alarm.seasonalAdjustments.length > 0 && (
-                      <div className="flex items-center gap-1">
-                        <Sun size={12} />
-                        <span>Seasonal adjustments</span>
-                      </div>
-                    )}
+                  {alarm.seasonalAdjustments && alarm.seasonalAdjustments.length > 0 && (
+                    <div className="flex items-center gap-1">
+                      <Sun size={12} />
+                      <span>Seasonal adjustments</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
                 <Switch
                   checked={alarm.isActive}
-                  onCheckedChange={checked =>
-                    onUpdateAlarm(alarm.id, { isActive: checked })
-                  }
+                  onCheckedChange={(checked) => onUpdateAlarm(alarm.id, { isActive: checked })}
                 />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setSelectedAlarm(alarm)}
-                >
+                <Button variant="outline" size="sm" onClick={() => setSelectedAlarm(alarm)}>
                   <Edit3 size={14} />
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onDeleteAlarm(alarm.id)}
-                >
+                <Button variant="outline" size="sm" onClick={() => onDeleteAlarm(alarm.id)}>
                   <Trash2 size={14} />
                 </Button>
               </div>
@@ -332,11 +253,7 @@ export function AdvancedAlarmScheduling({
         </div>
       </div>
 
-      <Accordion
-        type="multiple"
-        value={Array.from(expandedSections)}
-        className="space-y-4"
-      >
+      <Accordion type="multiple" value={Array.from(expandedSections)} className="space-y-4">
         {/* Basic Settings */}
         <AccordionItem value="basic" className="border rounded-lg px-4">
           <AccordionTrigger
@@ -356,9 +273,7 @@ export function AdvancedAlarmScheduling({
                   id="alarm-time"
                   type="time"
                   value={formData.time}
-                  onChange={e =>
-                    setFormData(prev => ({ ...prev, time: e.target.value }))
-                  }
+                  onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
                 />
               </div>
               <div>
@@ -366,9 +281,7 @@ export function AdvancedAlarmScheduling({
                 <Input
                   id="alarm-label"
                   value={formData.label}
-                  onChange={e =>
-                    setFormData(prev => ({ ...prev, label: e.target.value }))
-                  }
+                  onChange={(e) => setFormData(prev => ({ ...prev, label: e.target.value }))}
                   placeholder="Enter alarm name"
                 />
               </div>
@@ -376,9 +289,7 @@ export function AdvancedAlarmScheduling({
                 <Label htmlFor="schedule-type">Schedule Type</Label>
                 <Select
                   value={formData.scheduleType}
-                  onValueChange={value =>
-                    setFormData(prev => ({ ...prev, scheduleType: value as any }))
-                  }
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, scheduleType: value as any }))}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -399,9 +310,7 @@ export function AdvancedAlarmScheduling({
                 <Label htmlFor="voice-mood">Voice Mood</Label>
                 <Select
                   value={formData.voiceMood}
-                  onValueChange={value =>
-                    setFormData(prev => ({ ...prev, voiceMood: value as any }))
-                  }
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, voiceMood: value as any }))}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -421,9 +330,7 @@ export function AdvancedAlarmScheduling({
             <div className="flex items-center space-x-2">
               <Switch
                 checked={formData.isActive}
-                onCheckedChange={checked =>
-                  setFormData(prev => ({ ...prev, isActive: checked }))
-                }
+                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked }))}
               />
               <Label>Enable alarm</Label>
             </div>
@@ -451,30 +358,26 @@ export function AdvancedAlarmScheduling({
                     min="1"
                     max="365"
                     value={formData.recurrencePattern?.interval || 1}
-                    onChange={e =>
-                      setFormData(prev => ({
-                        ...prev,
-                        recurrencePattern: {
-                          ...prev.recurrencePattern,
-                          interval: parseInt(e.target.value) || 1,
-                          type: prev.recurrencePattern?.type || 'daily',
-                        } as RecurrencePattern,
-                      }))
-                    }
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      recurrencePattern: {
+                        ...prev.recurrencePattern,
+                        interval: parseInt(e.target.value) || 1,
+                        type: prev.recurrencePattern?.type || 'daily'
+                      } as RecurrencePattern
+                    }))}
                     className="w-20"
                   />
                   <Select
                     value={formData.recurrencePattern?.type || 'daily'}
-                    onValueChange={value =>
-                      setFormData(prev => ({
-                        ...prev,
-                        recurrencePattern: {
-                          ...prev.recurrencePattern,
-                          type: value as any,
-                          interval: prev.recurrencePattern?.interval || 1,
-                        } as RecurrencePattern,
-                      }))
-                    }
+                    onValueChange={(value) => setFormData(prev => ({
+                      ...prev,
+                      recurrencePattern: {
+                        ...prev.recurrencePattern,
+                        type: value as any,
+                        interval: prev.recurrencePattern?.interval || 1
+                      } as RecurrencePattern
+                    }))}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -505,8 +408,8 @@ export function AdvancedAlarmScheduling({
                               ...prev.recurrencePattern,
                               endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
                               type: prev.recurrencePattern?.type || 'daily',
-                              interval: prev.recurrencePattern?.interval || 1,
-                            } as RecurrencePattern,
+                              interval: prev.recurrencePattern?.interval || 1
+                            } as RecurrencePattern
                           }));
                         } else {
                           setFormData(prev => ({
@@ -515,8 +418,8 @@ export function AdvancedAlarmScheduling({
                               ...prev.recurrencePattern,
                               endDate: undefined,
                               type: prev.recurrencePattern?.type || 'daily',
-                              interval: prev.recurrencePattern?.interval || 1,
-                            } as RecurrencePattern,
+                              interval: prev.recurrencePattern?.interval || 1
+                            } as RecurrencePattern
                           }));
                         }
                       }}
@@ -526,18 +429,14 @@ export function AdvancedAlarmScheduling({
                   {formData.recurrencePattern?.endDate && (
                     <Input
                       type="date"
-                      value={
-                        formData.recurrencePattern.endDate.toISOString().split('T')[0]
-                      }
-                      onChange={e =>
-                        setFormData(prev => ({
-                          ...prev,
-                          recurrencePattern: {
-                            ...prev.recurrencePattern!,
-                            endDate: new Date(e.target.value),
-                          },
-                        }))
-                      }
+                      value={formData.recurrencePattern.endDate.toISOString().split('T')[0]}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        recurrencePattern: {
+                          ...prev.recurrencePattern!,
+                          endDate: new Date(e.target.value)
+                        }
+                      }))}
                     />
                   )}
                 </div>
@@ -560,93 +459,47 @@ export function AdvancedAlarmScheduling({
           <AccordionContent className="space-y-4 pt-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                {
-                  type: 'sleep_cycle',
-                  icon: Moon,
-                  label: 'Sleep Cycle Optimization',
-                  desc: 'Adjust based on sleep patterns',
-                },
-                {
-                  type: 'sunrise_sunset',
-                  icon: Sunrise,
-                  label: 'Sunrise/Sunset Sync',
-                  desc: 'Align with natural light cycles',
-                },
-                {
-                  type: 'traffic_conditions',
-                  icon: Navigation,
-                  label: 'Traffic Conditions',
-                  desc: 'Account for commute times',
-                },
-                {
-                  type: 'weather_forecast',
-                  icon: CloudRain,
-                  label: 'Weather Forecast',
-                  desc: 'Adjust for weather conditions',
-                },
-                {
-                  type: 'energy_levels',
-                  icon: TrendingUp,
-                  label: 'Energy Level Analysis',
-                  desc: 'Optimize for your energy patterns',
-                },
-                {
-                  type: 'workout_schedule',
-                  icon: Target,
-                  label: 'Workout Integration',
-                  desc: 'Coordinate with fitness schedule',
-                },
+                { type: 'sleep_cycle', icon: Moon, label: 'Sleep Cycle Optimization', desc: 'Adjust based on sleep patterns' },
+                { type: 'sunrise_sunset', icon: Sunrise, label: 'Sunrise/Sunset Sync', desc: 'Align with natural light cycles' },
+                { type: 'traffic_conditions', icon: Navigation, label: 'Traffic Conditions', desc: 'Account for commute times' },
+                { type: 'weather_forecast', icon: CloudRain, label: 'Weather Forecast', desc: 'Adjust for weather conditions' },
+                { type: 'energy_levels', icon: TrendingUp, label: 'Energy Level Analysis', desc: 'Optimize for your energy patterns' },
+                { type: 'workout_schedule', icon: Target, label: 'Workout Integration', desc: 'Coordinate with fitness schedule' }
               ].map(({ type, icon: Icon, label, desc }) => (
-                <div
-                  key={type}
-                  className="flex items-start space-x-3 p-3 border rounded-lg"
-                >
+                <div key={type} className="flex items-start space-x-3 p-3 border rounded-lg">
                   <Icon size={18} className="text-primary mt-1" />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <span className="font-medium text-sm">{label}</span>
                       <Switch
-                        checked={
-                          formData.smartOptimizations?.some(
-                            o => o.type === type && o.isEnabled
-                          ) || false
-                        }
-                        onCheckedChange={checked => {
-                          const currentOptimizations =
-                            formData.smartOptimizations || [];
-                          const existingIndex = currentOptimizations.findIndex(
-                            o => o.type === type
-                          );
+                        checked={formData.smartOptimizations?.some(o => o.type === type && o.isEnabled) || false}
+                        onCheckedChange={(checked) => {
+                          const currentOptimizations = formData.smartOptimizations || [];
+                          const existingIndex = currentOptimizations.findIndex(o => o.type === type);
 
                           let newOptimizations;
                           if (existingIndex >= 0) {
                             newOptimizations = [...currentOptimizations];
                             newOptimizations[existingIndex] = {
                               ...newOptimizations[existingIndex],
-                              isEnabled: checked,
+                              isEnabled: checked
                             };
                           } else if (checked) {
-                            newOptimizations = [
-                              ...currentOptimizations,
-                              {
-                                type: type as any,
-                                isEnabled: true,
-                                parameters: {
-                                  sensitivity: 0.5,
-                                  maxAdjustment: 30,
-                                  learningEnabled: true,
-                                  preferences: {},
-                                },
-                              },
-                            ];
+                            newOptimizations = [...currentOptimizations, {
+                              type: type as any,
+                              isEnabled: true,
+                              parameters: {
+                                sensitivity: 0.5,
+                                maxAdjustment: 30,
+                                learningEnabled: true,
+                                preferences: {}
+                              }
+                            }];
                           } else {
                             newOptimizations = currentOptimizations;
                           }
 
-                          setFormData(prev => ({
-                            ...prev,
-                            smartOptimizations: newOptimizations,
-                          }));
+                          setFormData(prev => ({ ...prev, smartOptimizations: newOptimizations }));
                         }}
                       />
                     </div>
@@ -776,9 +629,7 @@ export function AdvancedAlarmScheduling({
                       <SelectItem value="adjust_time">Adjust Time</SelectItem>
                       <SelectItem value="change_sound">Change Sound</SelectItem>
                       <SelectItem value="skip_alarm">Skip Alarm</SelectItem>
-                      <SelectItem value="change_difficulty">
-                        Change Difficulty
-                      </SelectItem>
+                      <SelectItem value="change_difficulty">Change Difficulty</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -814,7 +665,7 @@ export function AdvancedAlarmScheduling({
                   { season: 'spring', icon: '🌸', adjustment: 0 },
                   { season: 'summer', icon: '☀️', adjustment: 15 },
                   { season: 'fall', icon: '🍁', adjustment: 0 },
-                  { season: 'winter', icon: '❄️', adjustment: -15 },
+                  { season: 'winter', icon: '❄️', adjustment: -15 }
                 ].map(({ season, icon, adjustment }) => (
                   <div key={season} className="border rounded-lg p-3 text-center">
                     <div className="text-2xl mb-2">{icon}</div>
@@ -842,9 +693,7 @@ export function AdvancedAlarmScheduling({
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">Advanced Scheduling Settings</h3>
-        <p className="text-sm text-muted-foreground">
-          Configure global settings for advanced alarm scheduling
-        </p>
+        <p className="text-sm text-muted-foreground">Configure global settings for advanced alarm scheduling</p>
       </div>
 
       {config && (
@@ -862,11 +711,7 @@ export function AdvancedAlarmScheduling({
                   <Label>Default Wake Window (minutes)</Label>
                   <Slider
                     value={[config.defaultWakeWindow]}
-                    onValueChange={value =>
-                      setConfig(prev =>
-                        prev ? { ...prev, defaultWakeWindow: value[0] } : null
-                      )
-                    }
+                    onValueChange={(value) => setConfig(prev => prev ? { ...prev, defaultWakeWindow: value[0] } : null)}
                     max={120}
                     min={5}
                     step={5}
@@ -881,11 +726,7 @@ export function AdvancedAlarmScheduling({
                   <Label>Max Daily Adjustment (minutes)</Label>
                   <Slider
                     value={[config.maxDailyAdjustment]}
-                    onValueChange={value =>
-                      setConfig(prev =>
-                        prev ? { ...prev, maxDailyAdjustment: value[0] } : null
-                      )
-                    }
+                    onValueChange={(value) => setConfig(prev => prev ? { ...prev, maxDailyAdjustment: value[0] } : null)}
                     max={180}
                     min={15}
                     step={15}
@@ -901,68 +742,44 @@ export function AdvancedAlarmScheduling({
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Enable Smart Adjustments</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Allow AI to optimize alarm times
-                    </p>
+                    <p className="text-sm text-muted-foreground">Allow AI to optimize alarm times</p>
                   </div>
                   <Switch
                     checked={config.enableSmartAdjustments}
-                    onCheckedChange={checked =>
-                      setConfig(prev =>
-                        prev ? { ...prev, enableSmartAdjustments: checked } : null
-                      )
-                    }
+                    onCheckedChange={(checked) => setConfig(prev => prev ? { ...prev, enableSmartAdjustments: checked } : null)}
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Learning Mode</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Improve suggestions based on your patterns
-                    </p>
+                    <p className="text-sm text-muted-foreground">Improve suggestions based on your patterns</p>
                   </div>
                   <Switch
                     checked={config.learningMode}
-                    onCheckedChange={checked =>
-                      setConfig(prev =>
-                        prev ? { ...prev, learningMode: checked } : null
-                      )
-                    }
+                    onCheckedChange={(checked) => setConfig(prev => prev ? { ...prev, learningMode: checked } : null)}
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Backup Alarms</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Automatically create backup alarms
-                    </p>
+                    <p className="text-sm text-muted-foreground">Automatically create backup alarms</p>
                   </div>
                   <Switch
                     checked={config.backupAlarms}
-                    onCheckedChange={checked =>
-                      setConfig(prev =>
-                        prev ? { ...prev, backupAlarms: checked } : null
-                      )
-                    }
+                    onCheckedChange={(checked) => setConfig(prev => prev ? { ...prev, backupAlarms: checked } : null)}
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Privacy Mode</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Limit data collection and sharing
-                    </p>
+                    <p className="text-sm text-muted-foreground">Limit data collection and sharing</p>
                   </div>
                   <Switch
                     checked={config.privacyMode}
-                    onCheckedChange={checked =>
-                      setConfig(prev =>
-                        prev ? { ...prev, privacyMode: checked } : null
-                      )
-                    }
+                    onCheckedChange={(checked) => setConfig(prev => prev ? { ...prev, privacyMode: checked } : null)}
                   />
                 </div>
               </div>
@@ -1016,7 +833,9 @@ export function AdvancedAlarmScheduling({
             <p className="text-sm text-muted-foreground">
               Create copies of existing alarms with modifications
             </p>
-            <Button className="w-full">Select Alarms to Duplicate</Button>
+            <Button className="w-full">
+              Select Alarms to Duplicate
+            </Button>
           </CardContent>
         </Card>
 
@@ -1031,7 +850,9 @@ export function AdvancedAlarmScheduling({
             <p className="text-sm text-muted-foreground">
               Modify multiple alarms simultaneously
             </p>
-            <Button className="w-full">Select Alarms to Edit</Button>
+            <Button className="w-full">
+              Select Alarms to Edit
+            </Button>
           </CardContent>
         </Card>
 
@@ -1046,7 +867,9 @@ export function AdvancedAlarmScheduling({
             <p className="text-sm text-muted-foreground">
               Apply changes to alarms in specific date ranges
             </p>
-            <Button className="w-full">Select Date Range</Button>
+            <Button className="w-full">
+              Select Date Range
+            </Button>
           </CardContent>
         </Card>
 
@@ -1079,13 +902,12 @@ export function AdvancedAlarmScheduling({
             Advanced Alarm Scheduling
           </h2>
           <p className="text-muted-foreground">
-            Create intelligent alarms with smart optimizations, conditions, and advanced
-            patterns
+            Create intelligent alarms with smart optimizations, conditions, and advanced patterns
           </p>
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={value => setActiveTab(value as any)}>
+      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)}>
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="alarms" className="flex items-center gap-2">
             <Clock size={16} />
@@ -1105,13 +927,21 @@ export function AdvancedAlarmScheduling({
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="alarms">{renderAlarmsList()}</TabsContent>
+        <TabsContent value="alarms">
+          {renderAlarmsList()}
+        </TabsContent>
 
-        <TabsContent value="create">{renderCreateForm()}</TabsContent>
+        <TabsContent value="create">
+          {renderCreateForm()}
+        </TabsContent>
 
-        <TabsContent value="settings">{renderSettings()}</TabsContent>
+        <TabsContent value="settings">
+          {renderSettings()}
+        </TabsContent>
 
-        <TabsContent value="bulk">{renderBulkOperations()}</TabsContent>
+        <TabsContent value="bulk">
+          {renderBulkOperations()}
+        </TabsContent>
       </Tabs>
 
       {/* Create Alarm Dialog */}

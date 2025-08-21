@@ -16,7 +16,7 @@ export const createMockI18n = (language: SupportedLanguage = 'en') => {
     languages: [language],
     t: (key: string) => key,
     changeLanguage: vi.fn(),
-    dir: () => (['ar', 'he', 'ur', 'fa', 'ku'].includes(language) ? 'rtl' : 'ltr'),
+    dir: () => ['ar', 'he', 'ur', 'fa', 'ku'].includes(language) ? 'rtl' : 'ltr',
     exists: vi.fn(() => true),
     getFixedT: vi.fn(),
     hasResourceBundle: vi.fn(() => true),
@@ -36,7 +36,10 @@ interface RTLRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   i18nOptions?: any;
 }
 
-export const renderWithRTL = (ui: ReactElement, options: RTLRenderOptions = {}) => {
+export const renderWithRTL = (
+  ui: ReactElement,
+  options: RTLRenderOptions = {}
+) => {
   const { language = 'en', ...renderOptions } = options;
 
   // Create wrapper with i18n provider
@@ -65,23 +68,7 @@ export const rtlTestHelpers = {
   /**
    * Get all LTR languages supported by the app
    */
-  getLTRLanguages: (): SupportedLanguage[] => [
-    'en',
-    'es',
-    'fr',
-    'de',
-    'it',
-    'pt',
-    'ru',
-    'ja',
-    'ko',
-    'zh',
-    'hi',
-    'bn',
-    'vi',
-    'th',
-    'id',
-  ],
+  getLTRLanguages: (): SupportedLanguage[] => ['en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ja', 'ko', 'zh', 'hi', 'bn', 'vi', 'th', 'id'],
 
   /**
    * Check if element has correct direction attribute
@@ -100,24 +87,15 @@ export const rtlTestHelpers = {
   /**
    * Check RTL-aware text alignment
    */
-  expectRTLTextAlignment: (
-    element: HTMLElement,
-    isRTL: boolean,
-    alignment: 'start' | 'end' | 'center' = 'start'
-  ) => {
+  expectRTLTextAlignment: (element: HTMLElement, isRTL: boolean, alignment: 'start' | 'end' | 'center' = 'start') => {
     if (alignment === 'center') {
       expect(element).toHaveClass('text-center');
       return;
     }
 
-    const expectedClass =
-      alignment === 'start'
-        ? isRTL
-          ? 'text-right'
-          : 'text-left'
-        : isRTL
-          ? 'text-left'
-          : 'text-right';
+    const expectedClass = alignment === 'start'
+      ? (isRTL ? 'text-right' : 'text-left')
+      : (isRTL ? 'text-left' : 'text-right');
 
     expect(element).toHaveClass(expectedClass);
   },
@@ -136,14 +114,10 @@ export const rtlTestHelpers = {
   /**
    * Check RTL-aware positioning
    */
-  expectRTLPositioning: (
-    element: HTMLElement,
-    isRTL: boolean,
-    side: 'start' | 'end',
-    position: string
-  ) => {
-    const expectedProperty =
-      side === 'start' ? (isRTL ? 'right' : 'left') : isRTL ? 'left' : 'right';
+  expectRTLPositioning: (element: HTMLElement, isRTL: boolean, side: 'start' | 'end', position: string) => {
+    const expectedProperty = side === 'start'
+      ? (isRTL ? 'right' : 'left')
+      : (isRTL ? 'left' : 'right');
 
     const styles = window.getComputedStyle(element);
     expect(styles.getPropertyValue(expectedProperty)).toBe(position);
@@ -152,17 +126,10 @@ export const rtlTestHelpers = {
   /**
    * Check RTL-aware margin/padding
    */
-  expectRTLSpacing: (
-    element: HTMLElement,
-    isRTL: boolean,
-    type: 'margin' | 'padding',
-    side: 'start' | 'end',
-    expectedValue: string
-  ) => {
-    const property =
-      side === 'start'
-        ? `${type}-${isRTL ? 'right' : 'left'}`
-        : `${type}-${isRTL ? 'left' : 'right'}`;
+  expectRTLSpacing: (element: HTMLElement, isRTL: boolean, type: 'margin' | 'padding', side: 'start' | 'end', expectedValue: string) => {
+    const property = side === 'start'
+      ? `${type}-${isRTL ? 'right' : 'left'}`
+      : `${type}-${isRTL ? 'left' : 'right'}`;
 
     const styles = window.getComputedStyle(element);
     expect(styles.getPropertyValue(property)).toBe(expectedValue);
@@ -264,9 +231,7 @@ export const rtlA11yHelpers = {
     elements.forEach((element, index) => {
       const tabIndex = element.getAttribute('tabindex');
       if (tabIndex !== null) {
-        expect(parseInt(tabIndex, 10)).toBe(
-          isRTL ? elements.length - index - 1 : index
-        );
+        expect(parseInt(tabIndex, 10)).toBe(isRTL ? elements.length - index - 1 : index);
       }
     });
   },

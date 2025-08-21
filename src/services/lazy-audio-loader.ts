@@ -36,7 +36,7 @@ export class LazyAudioLoader {
     failedLoads: 0,
     totalBytesLoaded: 0,
     averageLoadTime: 0,
-    cacheHitRate: 0,
+    cacheHitRate: 0
   };
   private loadTimes: number[] = [];
   private cacheHits = 0;
@@ -74,7 +74,7 @@ export class LazyAudioLoader {
       try {
         const existing = await audioManager.loadAudioFile(sound.fileUrl, {
           cacheKey: id,
-          priority: 'low', // Don't re-download, just check cache
+          priority: 'low' // Don't re-download, just check cache
         });
         this.cacheHits++;
         this.totalRequests++;
@@ -96,7 +96,7 @@ export class LazyAudioLoader {
           compression: this.getCompressionLevel(sound),
           cacheKey: id,
           maxSize: 10 * 1024 * 1024, // 10MB max
-          timeout: 30000, // 30 second timeout
+          timeout: 30000 // 30 second timeout
         },
         callbacks: {
           ...callbacks,
@@ -107,8 +107,8 @@ export class LazyAudioLoader {
           onError: error => {
             callbacks?.onError?.(error);
             reject(error);
-          },
-        },
+          }
+        }
       };
 
       this.addToQueue(queueItem);
@@ -134,9 +134,8 @@ export class LazyAudioLoader {
 
     return Promise.allSettled(promises).then(results => {
       return results
-        .filter(
-          (result): result is PromiseFulfilledResult<AudioCacheEntry> =>
-            result.status === 'fulfilled'
+        .filter((result): result is PromiseFulfilledResult<AudioCacheEntry> =>
+          result.status === 'fulfilled'
         )
         .map(result => result.value);
     });
@@ -183,18 +182,16 @@ export class LazyAudioLoader {
   /**
    * Smart preloading based on user behavior and patterns
    */
-  async smartPreload(
-    options: {
-      userHabits?: {
-        favoriteCategories: string[];
-        recentlyPlayed: string[];
-        playlistHistory: string[];
-      };
-      networkSpeed?: 'slow' | 'medium' | 'fast';
-      storageLimit?: number; // bytes
-      timeOfDay?: 'morning' | 'afternoon' | 'evening' | 'night';
-    } = {}
-  ): Promise<void> {
+  async smartPreload(options: {
+    userHabits?: {
+      favoriteCategories: string[];
+      recentlyPlayed: string[];
+      playlistHistory: string[];
+    };
+    networkSpeed?: 'slow' | 'medium' | 'fast';
+    storageLimit?: number; // bytes
+    timeOfDay?: 'morning' | 'afternoon' | 'evening' | 'night';
+  } = {}): Promise<void> {
     const { networkSpeed = 'medium', storageLimit = 50 * 1024 * 1024 } = options;
 
     // Adjust concurrent loads based on network speed
@@ -222,10 +219,7 @@ export class LazyAudioLoader {
 
     if (options.userHabits?.favoriteCategories) {
       // Preload sounds from favorite categories
-      console.log(
-        'Smart preloading based on favorite categories:',
-        options.userHabits.favoriteCategories
-      );
+      console.log('Smart preloading based on favorite categories:', options.userHabits.favoriteCategories);
     }
   }
 
@@ -259,12 +253,10 @@ export class LazyAudioLoader {
   getStats(): LazyLoadStats {
     this.stats.queueSize = this.loadQueue.length;
     this.stats.activeLoads = this.activeLoads.size;
-    this.stats.cacheHitRate =
-      this.totalRequests > 0 ? this.cacheHits / this.totalRequests : 0;
-    this.stats.averageLoadTime =
-      this.loadTimes.length > 0
-        ? this.loadTimes.reduce((sum, time) => sum + time, 0) / this.loadTimes.length
-        : 0;
+    this.stats.cacheHitRate = this.totalRequests > 0 ? this.cacheHits / this.totalRequests : 0;
+    this.stats.averageLoadTime = this.loadTimes.length > 0
+      ? this.loadTimes.reduce((sum, time) => sum + time, 0) / this.loadTimes.length
+      : 0;
 
     return { ...this.stats };
   }
@@ -280,9 +272,9 @@ export class LazyAudioLoader {
       queue: this.loadQueue.map(item => ({
         id: item.id,
         priority: item.priority,
-        url: item.url,
+        url: item.url
       })),
-      active: Array.from(this.activeLoads.keys()),
+      active: Array.from(this.activeLoads.keys())
     };
   }
 
@@ -306,10 +298,7 @@ export class LazyAudioLoader {
   }
 
   private async processQueue(): Promise<void> {
-    if (
-      this.activeLoads.size >= this.maxConcurrentLoads ||
-      this.loadQueue.length === 0
-    ) {
+    if (this.activeLoads.size >= this.maxConcurrentLoads || this.loadQueue.length === 0) {
       // Check again in 1 second
       setTimeout(() => this.processQueue(), 1000);
       return;
@@ -353,24 +342,19 @@ export class LazyAudioLoader {
   private async loadAudioItem(item: LazyLoadQueueItem): Promise<AudioCacheEntry> {
     return await audioManager.loadAudioFile(item.url, {
       ...item.options,
-      onProgress: item.callbacks.onProgress,
+      onProgress: item.callbacks.onProgress
     });
   }
 
-  private getCompressionLevel(
-    sound: CustomSound
-  ): 'none' | 'light' | 'medium' | 'heavy' {
+  private getCompressionLevel(sound: CustomSound): 'none' | 'light' | 'medium' | 'heavy' {
     // Auto-select compression based on file size and type
-    const size = (sound.duration * 128 * 1024) / 8; // Estimate size (128kbps MP3)
+    const size = sound.duration * 128 * 1024 / 8; // Estimate size (128kbps MP3)
 
-    if (size < 1024 * 1024) {
-      // < 1MB
+    if (size < 1024 * 1024) { // < 1MB
       return 'none';
-    } else if (size < 5 * 1024 * 1024) {
-      // < 5MB
+    } else if (size < 5 * 1024 * 1024) { // < 5MB
       return 'light';
-    } else if (size < 10 * 1024 * 1024) {
-      // < 10MB
+    } else if (size < 10 * 1024 * 1024) { // < 10MB
       return 'medium';
     } else {
       return 'heavy';

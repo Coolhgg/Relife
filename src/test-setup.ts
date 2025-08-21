@@ -29,14 +29,14 @@ if (typeof global !== 'undefined') {
   } catch {
     global.localStorage = createMockStorage();
   }
-
+  
   // Check if sessionStorage works, if not mock it
   try {
     global.sessionStorage?.getItem('test');
   } catch {
     global.sessionStorage = createMockStorage();
   }
-
+  
   // Mock window.matchMedia only if it doesn't exist
   if (!global.matchMedia) {
     global.matchMedia = vi.fn().mockImplementation(query => ({
@@ -164,9 +164,7 @@ if (typeof document !== 'undefined' && document.body) {
 // Mock HTMLCanvasElement.prototype.getContext for color contrast checking
 // Replace jsdom's incomplete implementation
 if (typeof HTMLCanvasElement !== 'undefined') {
-  HTMLCanvasElement.prototype.getContext = vi.fn().mockImplementation(function (
-    contextType: string
-  ) {
+  HTMLCanvasElement.prototype.getContext = vi.fn().mockImplementation(function(contextType: string) {
     if (contextType === '2d') {
       return {
         fillText: vi.fn(),
@@ -175,12 +173,12 @@ if (typeof HTMLCanvasElement !== 'undefined') {
         getImageData: vi.fn(() => ({
           data: new Uint8ClampedArray(4).fill(255), // Fill with white pixels
           width: 1,
-          height: 1,
+          height: 1
         })),
         createImageData: vi.fn(() => ({
           data: new Uint8ClampedArray(4).fill(255),
           width: 1,
-          height: 1,
+          height: 1
         })),
         putImageData: vi.fn(),
         drawImage: vi.fn(),
@@ -202,7 +200,7 @@ if (typeof HTMLCanvasElement !== 'undefined') {
         textAlign: 'start',
         textBaseline: 'alphabetic',
         globalAlpha: 1,
-        globalCompositeOperation: 'source-over',
+        globalCompositeOperation: 'source-over'
       };
     }
     // Return null for unsupported context types
@@ -213,75 +211,60 @@ if (typeof HTMLCanvasElement !== 'undefined') {
 // Mock window.getComputedStyle for axe-core color contrast checking
 // Replace jsdom's incomplete implementation
 if (typeof window !== 'undefined') {
-  window.getComputedStyle = vi
-    .fn()
-    .mockImplementation((element: Element, pseudoElt?: string) => {
-      const mockStyle = {
-        color: 'rgb(0, 0, 0)',
-        backgroundColor: 'rgb(255, 255, 255)',
-        fontSize: '16px',
-        fontFamily: 'Arial, sans-serif',
-        display: 'block',
-        visibility: 'visible',
-        opacity: '1',
-        width: '100px',
-        height: '100px',
-        padding: '0px',
-        margin: '0px',
-        border: '0px',
-        borderColor: 'rgb(0, 0, 0)',
-        borderStyle: 'none',
-        borderWidth: '0px',
-        getPropertyValue: vi.fn((prop: string) => {
-          switch (prop) {
-            case 'color':
-              return 'rgb(0, 0, 0)';
-            case 'background-color':
-              return 'rgb(255, 255, 255)';
-            case 'font-size':
-              return '16px';
-            case 'font-family':
-              return 'Arial, sans-serif';
-            case 'width':
-              return '100px';
-            case 'height':
-              return '100px';
-            case 'display':
-              return 'block';
-            case 'visibility':
-              return 'visible';
-            case 'opacity':
-              return '1';
-            case 'border-color':
-              return 'rgb(0, 0, 0)';
-            case 'border-style':
-              return 'none';
-            case 'border-width':
-              return '0px';
-            default:
-              return '';
-          }
-        }),
-        // Add common CSS properties
-        position: 'static',
-        top: 'auto',
-        left: 'auto',
-        right: 'auto',
-        bottom: 'auto',
-        zIndex: 'auto',
-        float: 'none',
-        clear: 'none',
-        textAlign: 'start',
-        textDecoration: 'none',
-        textTransform: 'none',
-        lineHeight: 'normal',
-        letterSpacing: 'normal',
-        wordSpacing: 'normal',
-      };
-
-      // Return a proper CSSStyleDeclaration-like object
-      return mockStyle as CSSStyleDeclaration;
-    });
+  window.getComputedStyle = vi.fn().mockImplementation((element: Element, pseudoElt?: string) => {
+    const mockStyle = {
+      color: 'rgb(0, 0, 0)',
+      backgroundColor: 'rgb(255, 255, 255)',
+      fontSize: '16px',
+      fontFamily: 'Arial, sans-serif',
+      display: 'block',
+      visibility: 'visible',
+      opacity: '1',
+      width: '100px',
+      height: '100px',
+      padding: '0px',
+      margin: '0px',
+      border: '0px',
+      borderColor: 'rgb(0, 0, 0)',
+      borderStyle: 'none',
+      borderWidth: '0px',
+      getPropertyValue: vi.fn((prop: string) => {
+        switch (prop) {
+          case 'color': return 'rgb(0, 0, 0)';
+          case 'background-color': return 'rgb(255, 255, 255)';
+          case 'font-size': return '16px';
+          case 'font-family': return 'Arial, sans-serif';
+          case 'width': return '100px';
+          case 'height': return '100px';
+          case 'display': return 'block';
+          case 'visibility': return 'visible';
+          case 'opacity': return '1';
+          case 'border-color': return 'rgb(0, 0, 0)';
+          case 'border-style': return 'none';
+          case 'border-width': return '0px';
+          default: return '';
+        }
+      }),
+      // Add common CSS properties
+      position: 'static',
+      top: 'auto',
+      left: 'auto',
+      right: 'auto',
+      bottom: 'auto',
+      zIndex: 'auto',
+      float: 'none',
+      clear: 'none',
+      textAlign: 'start',
+      textDecoration: 'none',
+      textTransform: 'none',
+      lineHeight: 'normal',
+      letterSpacing: 'normal',
+      wordSpacing: 'normal'
+    };
+    
+    // Return a proper CSSStyleDeclaration-like object
+    return mockStyle as CSSStyleDeclaration;
+  });
 }
 
 // Mock i18next for tests that need translation
@@ -309,13 +292,7 @@ export const testUtils = {
     enabled: true,
     isActive: true,
     days: [1, 2, 3, 4, 5], // weekdays
-    dayNames: [
-      'monday',
-      'tuesday',
-      'wednesday',
-      'thursday',
-      'friday',
-    ] as import('./types').DayOfWeek[],
+    dayNames: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as import('./types').DayOfWeek[],
     voiceMood: 'motivational' as const,
     sound: 'default-alarm.mp3',
     difficulty: 'medium' as const,
@@ -343,7 +320,7 @@ export const testUtils = {
     mockStorage.removeItem.mockClear();
     mockStorage.clear.mockClear();
   },
-};
+}
 
 // Provide i18next mock globally
 if (typeof global !== 'undefined') {

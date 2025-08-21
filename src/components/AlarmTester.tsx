@@ -2,22 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Play, TestTube, Crown } from 'lucide-react';
 import { ActiveAlarm } from './ActiveAlarm';
-import type {
-  Alarm,
-  AlarmInstance,
-  AlarmDifficulty,
-  VoiceMood,
-  DayOfWeek,
-} from '../types/index';
+import type { Alarm, AlarmInstance, AlarmDifficulty, VoiceMood, DayOfWeek } from '../types/index';
 import { PremiumGate } from './PremiumGate';
 import { SubscriptionService } from '../services/subscription';
 
@@ -27,8 +15,7 @@ interface AlarmTesterProps {
 }
 
 export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps) {
-  const [selectedDifficulty, setSelectedDifficulty] =
-    useState<AlarmDifficulty>('medium');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<AlarmDifficulty>('medium');
   const [hasNuclearMode, setHasNuclearMode] = useState(false);
 
   // Check premium access on component mount
@@ -84,7 +71,7 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
         alarm={testAlarm}
         alarmInstance={testAlarmInstance}
         battleMode={battleMode}
-        onSnooze={count => {
+        onSnooze={(count) => {
           console.log('Snoozed', count);
           handleAlarmResult('snooze');
         }}
@@ -113,10 +100,7 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
           <label className="text-sm font-medium mb-2 block">
             Test Difficulty Level
           </label>
-          <Select
-            value={selectedDifficulty}
-            onValueChange={value => setSelectedDifficulty(value as AlarmDifficulty)}
-          >
+          <Select value={selectedDifficulty} onValueChange={(value) => setSelectedDifficulty(value as AlarmDifficulty)}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -149,385 +133,13 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
                 </div>
               </SelectItem>
               <SelectItem value="extreme">
-                {hasNuclearMode ? (
-                  <SelectItem value="nuclear">
-                    <div className="flex items-center gap-2">
-                      <span>☢️</span>
-                      <div>
-                        <div>Nuclear</div>
-                        <div className="text-xs text-muted-foreground">
-                          Ultimate challenge
-                        </div>
-                      </div>
-                    </div>
-                  </SelectItem>
-                ) : (
-                  <div className="px-2 py-1.5 text-sm">
-                    <PremiumGate
-                      feature="nuclearMode"
-                      userId={userId}
-                      mode="replace"
-                      fallback={
-                        <div className="flex items-center justify-between text-muted-foreground">
-                          <div className="flex items-center gap-2">
-                            <span>☢️</span>
-                            <div>
-                              <div>Nuclear</div>
-                              <div className="text-xs">Ultimate challenge</div>
-                            </div>
-                          </div>
-                          <Crown className="h-4 w-4 text-amber-500" />
-                        </div>
-                      }
-                    >
-                      <SelectItem value="nuclear">
-                        <div className="flex items-center gap-2">
-                          <span>☢️</span>
-                          <div>
-                            <div>Nuclear</div>
-                            <div className="text-xs text-muted-foreground">
-                              Ultimate challenge
-                            </div>
-                          </div>
-                        </div>
-                      </SelectItem>
-                    </PremiumGate>
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  {hasNuclearMode ? (
-                    <SelectItem value="nuclear">
-                      <div className="flex items-center gap-2">
-                        <span>☢️</span>
-                        <div>
-                          <div>Nuclear</div>
-                          <div className="text-xs text-muted-foreground">
-                            Ultimate challenge
-                          </div>
-                        </div>
-                      </div>
-                    </SelectItem>
-                  ) : (
-                    <div className="px-2 py-1.5 text-sm">
-                      <PremiumGate
-                        feature="nuclearMode"
-                        userId={userId}
-                        mode="replace"
-                        fallback={
-                          <div className="flex items-center justify-between text-muted-foreground">
-                            <div className="flex items-center gap-2">
-                              <span>☢️</span>
-                              <div>
-                                <div>Nuclear</div>
-                                <div className="text-xs">Ultimate challenge</div>
-                              </div>
-                            </div>
-                            <Crown className="h-4 w-4 text-amber-500" />
-                          </div>
-                        }
-                      >
-                        <SelectItem value="nuclear">
-                          <div className="flex items-center gap-2">
-                            <span>☢️</span>
-                            <div>
-                              <div>Nuclear</div>
-                              <div className="text-xs text-muted-foreground">
-                                Ultimate challenge
-                              </div>
-                            </div>
-                          </div>
-                        </SelectItem>
-                      </PremiumGate>
-                    </div>
-                  )}
-                  <span>💀</span>
-                  {hasNuclearMode ? (
-                    <SelectItem value="nuclear">
-                      <div className="flex items-center gap-2">
-                        <span>☢️</span>
-                        <div>
-                          <div>Nuclear</div>
-                          <div className="text-xs text-muted-foreground">
-                            Ultimate challenge
-                          </div>
-                        </div>
-                      </div>
-                    </SelectItem>
-                  ) : (
-                    <div className="px-2 py-1.5 text-sm">
-                      <PremiumGate
-                        feature="nuclearMode"
-                        userId={userId}
-                        mode="replace"
-                        fallback={
-                          <div className="flex items-center justify-between text-muted-foreground">
-                            <div className="flex items-center gap-2">
-                              <span>☢️</span>
-                              <div>
-                                <div>Nuclear</div>
-                                <div className="text-xs">Ultimate challenge</div>
-                              </div>
-                            </div>
-                            <Crown className="h-4 w-4 text-amber-500" />
-                          </div>
-                        }
-                      >
-                        <SelectItem value="nuclear">
-                          <div className="flex items-center gap-2">
-                            <span>☢️</span>
-                            <div>
-                              <div>Nuclear</div>
-                              <div className="text-xs text-muted-foreground">
-                                Ultimate challenge
-                              </div>
-                            </div>
-                          </div>
-                        </SelectItem>
-                      </PremiumGate>
-                    </div>
-                  )}
-                  <div>
-                    {hasNuclearMode ? (
-                      <SelectItem value="nuclear">
-                        <div className="flex items-center gap-2">
-                          <span>☢️</span>
-                          <div>
-                            <div>Nuclear</div>
-                            <div className="text-xs text-muted-foreground">
-                              Ultimate challenge
-                            </div>
-                          </div>
-                        </div>
-                      </SelectItem>
-                    ) : (
-                      <div className="px-2 py-1.5 text-sm">
-                        <PremiumGate
-                          feature="nuclearMode"
-                          userId={userId}
-                          mode="replace"
-                          fallback={
-                            <div className="flex items-center justify-between text-muted-foreground">
-                              <div className="flex items-center gap-2">
-                                <span>☢️</span>
-                                <div>
-                                  <div>Nuclear</div>
-                                  <div className="text-xs">Ultimate challenge</div>
-                                </div>
-                              </div>
-                              <Crown className="h-4 w-4 text-amber-500" />
-                            </div>
-                          }
-                        >
-                          <SelectItem value="nuclear">
-                            <div className="flex items-center gap-2">
-                              <span>☢️</span>
-                              <div>
-                                <div>Nuclear</div>
-                                <div className="text-xs text-muted-foreground">
-                                  Ultimate challenge
-                                </div>
-                              </div>
-                            </div>
-                          </SelectItem>
-                        </PremiumGate>
-                      </div>
-                    )}
-                    <div>Extreme</div>
-                    {hasNuclearMode ? (
-                      <SelectItem value="nuclear">
-                        <div className="flex items-center gap-2">
-                          <span>☢️</span>
-                          <div>
-                            <div>Nuclear</div>
-                            <div className="text-xs text-muted-foreground">
-                              Ultimate challenge
-                            </div>
-                          </div>
-                        </div>
-                      </SelectItem>
-                    ) : (
-                      <div className="px-2 py-1.5 text-sm">
-                        <PremiumGate
-                          feature="nuclearMode"
-                          userId={userId}
-                          mode="replace"
-                          fallback={
-                            <div className="flex items-center justify-between text-muted-foreground">
-                              <div className="flex items-center gap-2">
-                                <span>☢️</span>
-                                <div>
-                                  <div>Nuclear</div>
-                                  <div className="text-xs">Ultimate challenge</div>
-                                </div>
-                              </div>
-                              <Crown className="h-4 w-4 text-amber-500" />
-                            </div>
-                          }
-                        >
-                          <SelectItem value="nuclear">
-                            <div className="flex items-center gap-2">
-                              <span>☢️</span>
-                              <div>
-                                <div>Nuclear</div>
-                                <div className="text-xs text-muted-foreground">
-                                  Ultimate challenge
-                                </div>
-                              </div>
-                            </div>
-                          </SelectItem>
-                        </PremiumGate>
-                      </div>
-                    )}
-                    <div className="text-xs text-muted-foreground">
-                      Photo proof + tasks
-                    </div>
-                    {hasNuclearMode ? (
-                      <SelectItem value="nuclear">
-                        <div className="flex items-center gap-2">
-                          <span>☢️</span>
-                          <div>
-                            <div>Nuclear</div>
-                            <div className="text-xs text-muted-foreground">
-                              Ultimate challenge
-                            </div>
-                          </div>
-                        </div>
-                      </SelectItem>
-                    ) : (
-                      <div className="px-2 py-1.5 text-sm">
-                        <PremiumGate
-                          feature="nuclearMode"
-                          userId={userId}
-                          mode="replace"
-                          fallback={
-                            <div className="flex items-center justify-between text-muted-foreground">
-                              <div className="flex items-center gap-2">
-                                <span>☢️</span>
-                                <div>
-                                  <div>Nuclear</div>
-                                  <div className="text-xs">Ultimate challenge</div>
-                                </div>
-                              </div>
-                              <Crown className="h-4 w-4 text-amber-500" />
-                            </div>
-                          }
-                        >
-                          <SelectItem value="nuclear">
-                            <div className="flex items-center gap-2">
-                              <span>☢️</span>
-                              <div>
-                                <div>Nuclear</div>
-                                <div className="text-xs text-muted-foreground">
-                                  Ultimate challenge
-                                </div>
-                              </div>
-                            </div>
-                          </SelectItem>
-                        </PremiumGate>
-                      </div>
-                    )}
-                  </div>
-                  {hasNuclearMode ? (
-                    <SelectItem value="nuclear">
-                      <div className="flex items-center gap-2">
-                        <span>☢️</span>
-                        <div>
-                          <div>Nuclear</div>
-                          <div className="text-xs text-muted-foreground">
-                            Ultimate challenge
-                          </div>
-                        </div>
-                      </div>
-                    </SelectItem>
-                  ) : (
-                    <div className="px-2 py-1.5 text-sm">
-                      <PremiumGate
-                        feature="nuclearMode"
-                        userId={userId}
-                        mode="replace"
-                        fallback={
-                          <div className="flex items-center justify-between text-muted-foreground">
-                            <div className="flex items-center gap-2">
-                              <span>☢️</span>
-                              <div>
-                                <div>Nuclear</div>
-                                <div className="text-xs">Ultimate challenge</div>
-                              </div>
-                            </div>
-                            <Crown className="h-4 w-4 text-amber-500" />
-                          </div>
-                        }
-                      >
-                        <SelectItem value="nuclear">
-                          <div className="flex items-center gap-2">
-                            <span>☢️</span>
-                            <div>
-                              <div>Nuclear</div>
-                              <div className="text-xs text-muted-foreground">
-                                Ultimate challenge
-                              </div>
-                            </div>
-                          </div>
-                        </SelectItem>
-                      </PremiumGate>
-                    </div>
-                  )}
-                </div>
-                {hasNuclearMode ? (
-                  <SelectItem value="nuclear">
-                    <div className="flex items-center gap-2">
-                      <span>☢️</span>
-                      <div>
-                        <div>Nuclear</div>
-                        <div className="text-xs text-muted-foreground">
-                          Ultimate challenge
-                        </div>
-                      </div>
-                    </div>
-                  </SelectItem>
-                ) : (
-                  <div className="px-2 py-1.5 text-sm">
-                    <PremiumGate
-                      feature="nuclearMode"
-                      userId={userId}
-                      mode="replace"
-                      fallback={
-                        <div className="flex items-center justify-between text-muted-foreground">
-                          <div className="flex items-center gap-2">
-                            <span>☢️</span>
-                            <div>
-                              <div>Nuclear</div>
-                              <div className="text-xs">Ultimate challenge</div>
-                            </div>
-                          </div>
-                          <Crown className="h-4 w-4 text-amber-500" />
-                        </div>
-                      }
-                    >
-                      <SelectItem value="nuclear">
-                        <div className="flex items-center gap-2">
-                          <span>☢️</span>
-                          <div>
-                            <div>Nuclear</div>
-                            <div className="text-xs text-muted-foreground">
-                              Ultimate challenge
-                            </div>
-                          </div>
-                        </div>
-                      </SelectItem>
-                    </PremiumGate>
-                  </div>
-                )}
-              </SelectItem>
               {hasNuclearMode ? (
                 <SelectItem value="nuclear">
                   <div className="flex items-center gap-2">
                     <span>☢️</span>
                     <div>
                       <div>Nuclear</div>
-                      <div className="text-xs text-muted-foreground">
-                        Ultimate challenge
-                      </div>
+                      <div className="text-xs text-muted-foreground">Ultimate challenge</div>
                     </div>
                   </div>
                 </SelectItem>
@@ -555,9 +167,343 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
                         <span>☢️</span>
                         <div>
                           <div>Nuclear</div>
-                          <div className="text-xs text-muted-foreground">
-                            Ultimate challenge
+                          <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  </PremiumGate>
+                </div>
+              )}
+                <div className="flex items-center gap-2">
+              {hasNuclearMode ? (
+                <SelectItem value="nuclear">
+                  <div className="flex items-center gap-2">
+                    <span>☢️</span>
+                    <div>
+                      <div>Nuclear</div>
+                      <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                    </div>
+                  </div>
+                </SelectItem>
+              ) : (
+                <div className="px-2 py-1.5 text-sm">
+                  <PremiumGate
+                    feature="nuclearMode"
+                    userId={userId}
+                    mode="replace"
+                    fallback={
+                      <div className="flex items-center justify-between text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <span>☢️</span>
+                          <div>
+                            <div>Nuclear</div>
+                            <div className="text-xs">Ultimate challenge</div>
                           </div>
+                        </div>
+                        <Crown className="h-4 w-4 text-amber-500" />
+                      </div>
+                    }
+                  >
+                    <SelectItem value="nuclear">
+                      <div className="flex items-center gap-2">
+                        <span>☢️</span>
+                        <div>
+                          <div>Nuclear</div>
+                          <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  </PremiumGate>
+                </div>
+              )}
+                  <span>💀</span>
+              {hasNuclearMode ? (
+                <SelectItem value="nuclear">
+                  <div className="flex items-center gap-2">
+                    <span>☢️</span>
+                    <div>
+                      <div>Nuclear</div>
+                      <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                    </div>
+                  </div>
+                </SelectItem>
+              ) : (
+                <div className="px-2 py-1.5 text-sm">
+                  <PremiumGate
+                    feature="nuclearMode"
+                    userId={userId}
+                    mode="replace"
+                    fallback={
+                      <div className="flex items-center justify-between text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <span>☢️</span>
+                          <div>
+                            <div>Nuclear</div>
+                            <div className="text-xs">Ultimate challenge</div>
+                          </div>
+                        </div>
+                        <Crown className="h-4 w-4 text-amber-500" />
+                      </div>
+                    }
+                  >
+                    <SelectItem value="nuclear">
+                      <div className="flex items-center gap-2">
+                        <span>☢️</span>
+                        <div>
+                          <div>Nuclear</div>
+                          <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  </PremiumGate>
+                </div>
+              )}
+                  <div>
+              {hasNuclearMode ? (
+                <SelectItem value="nuclear">
+                  <div className="flex items-center gap-2">
+                    <span>☢️</span>
+                    <div>
+                      <div>Nuclear</div>
+                      <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                    </div>
+                  </div>
+                </SelectItem>
+              ) : (
+                <div className="px-2 py-1.5 text-sm">
+                  <PremiumGate
+                    feature="nuclearMode"
+                    userId={userId}
+                    mode="replace"
+                    fallback={
+                      <div className="flex items-center justify-between text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <span>☢️</span>
+                          <div>
+                            <div>Nuclear</div>
+                            <div className="text-xs">Ultimate challenge</div>
+                          </div>
+                        </div>
+                        <Crown className="h-4 w-4 text-amber-500" />
+                      </div>
+                    }
+                  >
+                    <SelectItem value="nuclear">
+                      <div className="flex items-center gap-2">
+                        <span>☢️</span>
+                        <div>
+                          <div>Nuclear</div>
+                          <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  </PremiumGate>
+                </div>
+              )}
+                    <div>Extreme</div>
+              {hasNuclearMode ? (
+                <SelectItem value="nuclear">
+                  <div className="flex items-center gap-2">
+                    <span>☢️</span>
+                    <div>
+                      <div>Nuclear</div>
+                      <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                    </div>
+                  </div>
+                </SelectItem>
+              ) : (
+                <div className="px-2 py-1.5 text-sm">
+                  <PremiumGate
+                    feature="nuclearMode"
+                    userId={userId}
+                    mode="replace"
+                    fallback={
+                      <div className="flex items-center justify-between text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <span>☢️</span>
+                          <div>
+                            <div>Nuclear</div>
+                            <div className="text-xs">Ultimate challenge</div>
+                          </div>
+                        </div>
+                        <Crown className="h-4 w-4 text-amber-500" />
+                      </div>
+                    }
+                  >
+                    <SelectItem value="nuclear">
+                      <div className="flex items-center gap-2">
+                        <span>☢️</span>
+                        <div>
+                          <div>Nuclear</div>
+                          <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  </PremiumGate>
+                </div>
+              )}
+                    <div className="text-xs text-muted-foreground">Photo proof + tasks</div>
+              {hasNuclearMode ? (
+                <SelectItem value="nuclear">
+                  <div className="flex items-center gap-2">
+                    <span>☢️</span>
+                    <div>
+                      <div>Nuclear</div>
+                      <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                    </div>
+                  </div>
+                </SelectItem>
+              ) : (
+                <div className="px-2 py-1.5 text-sm">
+                  <PremiumGate
+                    feature="nuclearMode"
+                    userId={userId}
+                    mode="replace"
+                    fallback={
+                      <div className="flex items-center justify-between text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <span>☢️</span>
+                          <div>
+                            <div>Nuclear</div>
+                            <div className="text-xs">Ultimate challenge</div>
+                          </div>
+                        </div>
+                        <Crown className="h-4 w-4 text-amber-500" />
+                      </div>
+                    }
+                  >
+                    <SelectItem value="nuclear">
+                      <div className="flex items-center gap-2">
+                        <span>☢️</span>
+                        <div>
+                          <div>Nuclear</div>
+                          <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  </PremiumGate>
+                </div>
+              )}
+                  </div>
+              {hasNuclearMode ? (
+                <SelectItem value="nuclear">
+                  <div className="flex items-center gap-2">
+                    <span>☢️</span>
+                    <div>
+                      <div>Nuclear</div>
+                      <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                    </div>
+                  </div>
+                </SelectItem>
+              ) : (
+                <div className="px-2 py-1.5 text-sm">
+                  <PremiumGate
+                    feature="nuclearMode"
+                    userId={userId}
+                    mode="replace"
+                    fallback={
+                      <div className="flex items-center justify-between text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <span>☢️</span>
+                          <div>
+                            <div>Nuclear</div>
+                            <div className="text-xs">Ultimate challenge</div>
+                          </div>
+                        </div>
+                        <Crown className="h-4 w-4 text-amber-500" />
+                      </div>
+                    }
+                  >
+                    <SelectItem value="nuclear">
+                      <div className="flex items-center gap-2">
+                        <span>☢️</span>
+                        <div>
+                          <div>Nuclear</div>
+                          <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  </PremiumGate>
+                </div>
+              )}
+                </div>
+              {hasNuclearMode ? (
+                <SelectItem value="nuclear">
+                  <div className="flex items-center gap-2">
+                    <span>☢️</span>
+                    <div>
+                      <div>Nuclear</div>
+                      <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                    </div>
+                  </div>
+                </SelectItem>
+              ) : (
+                <div className="px-2 py-1.5 text-sm">
+                  <PremiumGate
+                    feature="nuclearMode"
+                    userId={userId}
+                    mode="replace"
+                    fallback={
+                      <div className="flex items-center justify-between text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <span>☢️</span>
+                          <div>
+                            <div>Nuclear</div>
+                            <div className="text-xs">Ultimate challenge</div>
+                          </div>
+                        </div>
+                        <Crown className="h-4 w-4 text-amber-500" />
+                      </div>
+                    }
+                  >
+                    <SelectItem value="nuclear">
+                      <div className="flex items-center gap-2">
+                        <span>☢️</span>
+                        <div>
+                          <div>Nuclear</div>
+                          <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  </PremiumGate>
+                </div>
+              )}
+              </SelectItem>
+              {hasNuclearMode ? (
+                <SelectItem value="nuclear">
+                  <div className="flex items-center gap-2">
+                    <span>☢️</span>
+                    <div>
+                      <div>Nuclear</div>
+                      <div className="text-xs text-muted-foreground">Ultimate challenge</div>
+                    </div>
+                  </div>
+                </SelectItem>
+              ) : (
+                <div className="px-2 py-1.5 text-sm">
+                  <PremiumGate
+                    feature="nuclearMode"
+                    userId={userId}
+                    mode="replace"
+                    fallback={
+                      <div className="flex items-center justify-between text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <span>☢️</span>
+                          <div>
+                            <div>Nuclear</div>
+                            <div className="text-xs">Ultimate challenge</div>
+                          </div>
+                        </div>
+                        <Crown className="h-4 w-4 text-amber-500" />
+                      </div>
+                    }
+                  >
+                    <SelectItem value="nuclear">
+                      <div className="flex items-center gap-2">
+                        <span>☢️</span>
+                        <div>
+                          <div>Nuclear</div>
+                          <div className="text-xs text-muted-foreground">Ultimate challenge</div>
                         </div>
                       </div>
                     </SelectItem>
@@ -591,16 +537,10 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
           <strong>What you'll experience:</strong>
           <ul className="mt-2 space-y-1 text-xs">
             {selectedDifficulty === 'easy' && <li>• Simple one-tap dismiss</li>}
-            {selectedDifficulty === 'medium' && (
-              <li>• Solve a math problem to dismiss</li>
-            )}
+            {selectedDifficulty === 'medium' && <li>• Solve a math problem to dismiss</li>}
             {selectedDifficulty === 'hard' && <li>• Complete 2 physical tasks</li>}
-            {selectedDifficulty === 'extreme' && (
-              <li>• Complete 3 tasks including photo proof</li>
-            )}
-            {selectedDifficulty === 'nuclear' && (
-              <li>• Nuclear-level challenges with meltdown consequences</li>
-            )}
+            {selectedDifficulty === 'extreme' && <li>• Complete 3 tasks including photo proof</li>}
+            {selectedDifficulty === 'nuclear' && <li>• Nuclear-level challenges with meltdown consequences</li>}
             <li>• 30 second timeout (auto-miss)</li>
             <li>• Snooze option (max 3 times)</li>
           </ul>

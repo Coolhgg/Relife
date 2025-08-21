@@ -22,14 +22,14 @@ Object.defineProperty(window, 'localStorage', {
     getItem: vi.fn(),
     setItem: vi.fn(),
     removeItem: vi.fn(),
-    clear: vi.fn(),
-  },
+    clear: vi.fn()
+  }
 });
 
 Object.defineProperty(navigator, 'geolocation', {
   value: {
-    getCurrentPosition: vi.fn(),
-  },
+    getCurrentPosition: vi.fn()
+  }
 });
 
 describe('Alarm Themes Integration', () => {
@@ -103,8 +103,7 @@ describe('Alarm Themes Integration', () => {
       const natureVisual = visualAlarmThemes.getRecommendedVisualTheme('nature');
       expect(natureVisual).toBe('forest_canopy');
 
-      const electronicVisual =
-        visualAlarmThemes.getRecommendedVisualTheme('electronic');
+      const electronicVisual = visualAlarmThemes.getRecommendedVisualTheme('electronic');
       expect(electronicVisual).toBe('neon_pulse');
     });
 
@@ -127,10 +126,7 @@ describe('Alarm Themes Integration', () => {
       const morningTime = '7:00';
       const testDate = new Date('2023-06-15T07:00:00'); // Thursday morning
 
-      const recommendation = await contextualThemes.getContextualRecommendation(
-        morningTime,
-        testDate
-      );
+      const recommendation = await contextualThemes.getContextualRecommendation(morningTime, testDate);
 
       expect(recommendation).toBeDefined();
       expect(recommendation.visual).toBeDefined();
@@ -163,10 +159,8 @@ describe('Alarm Themes Integration', () => {
 
       expect(earlyMorning.reason).toContain('gentle');
       // Late night should be different from early morning
-      expect(
-        earlyMorning.visual !== lateNight.visual ||
-          earlyMorning.sound !== lateNight.sound
-      ).toBe(true);
+      expect(earlyMorning.visual !== lateNight.visual ||
+             earlyMorning.sound !== lateNight.sound).toBe(true);
     });
   });
 
@@ -307,16 +301,8 @@ describe('Alarm Themes Integration', () => {
 
         // Voice mood should be valid
         const validVoiceMoods = [
-          'drill-sergeant',
-          'sweet-angel',
-          'anime-hero',
-          'savage-roast',
-          'motivational',
-          'gentle',
-          'demon-lord',
-          'ai-robot',
-          'comedian',
-          'philosopher',
+          'drill-sergeant', 'sweet-angel', 'anime-hero', 'savage-roast',
+          'motivational', 'gentle', 'demon-lord', 'ai-robot', 'comedian', 'philosopher'
         ];
         expect(validVoiceMoods).toContain(combo.voice);
       });
@@ -423,13 +409,13 @@ describe('Component Integration', () => {
       snoozeInterval: 5,
       snoozeCount: 0,
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     };
 
     // Should be able to find matching theme combinations
-    const matchingCombos = themeCombinations
-      .getAllCombinations()
-      .filter(combo => combo.voice === mockAlarm.voiceMood);
+    const matchingCombos = themeCombinations.getAllCombinations().filter(combo =>
+      combo.voice === mockAlarm.voiceMood
+    );
 
     expect(matchingCombos.length).toBeGreaterThan(0);
   });

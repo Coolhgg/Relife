@@ -33,28 +33,25 @@ export const supabase: SupabaseClient = createClient(
       persistSession: true,
       detectSessionInUrl: true,
       storage: window.localStorage,
-      storageKey: 'relife-auth',
+      storageKey: 'relife-auth'
     },
     global: {
       headers: {
         'x-application': 'relife-alarm-app',
-        'x-version': '2.0.0',
-      },
+        'x-version': '2.0.0'
+      }
     },
     realtime: {
       params: {
-        eventsPerSecond: 10,
-      },
-    },
+        eventsPerSecond: 10
+      }
+    }
   }
 );
 
 export class SupabaseService {
   private static isAvailable = !!supabaseUrl && !!supabaseAnonKey;
-  private static cache = new Map<
-    string,
-    { data: any; timestamp: number; ttl: number }
-  >();
+  private static cache = new Map<string, { data: any; timestamp: number; ttl: number }>();
   private static performanceMonitor = PerformanceMonitor.getInstance();
   private static activeConnections = 0;
   private static subscriptions = new Map<string, RealtimeChannel>();
@@ -64,12 +61,12 @@ export class SupabaseService {
     maxConnections: 10,
     connectionTimeout: 5000,
     retryAttempts: 3,
-    retryDelay: 1000,
+    retryDelay: 1000
   };
 
   private static readonly cacheConfig: CacheConfig = {
     ttl: 5 * 60 * 1000, // 5 minutes
-    maxSize: 100,
+    maxSize: 100
   };
 
   // Enhanced retry logic with exponential backoff
@@ -86,33 +83,22 @@ export class SupabaseService {
         const result = await Promise.race([
           operation(),
           new Promise<never>((_, reject) =>
-            setTimeout(
-              () => reject(new Error('Operation timeout')),
-              this.connectionPool.connectionTimeout
-            )
-          ),
+            setTimeout(() => reject(new Error('Operation timeout')), this.connectionPool.connectionTimeout)
+          )
         ]);
 
         const duration = performance.now() - startTime;
-        this.performanceMonitor.trackCustomMetric(
-          `supabase_${context}_success`,
-          duration,
-          { attempts: i + 1 }
-        );
+        this.performanceMonitor.trackCustomMetric(`supabase_${context}_success`, duration, { attempts: i + 1 });
 
         return result;
       } catch (error) {
         const duration = performance.now() - startTime;
         const errorMessage = error instanceof Error ? error.message : String(error);
 
-        this.performanceMonitor.trackCustomMetric(
-          `supabase_${context}_error`,
-          duration,
-          {
-            attempt: i + 1,
-            error: errorMessage,
-          }
-        );
+        this.performanceMonitor.trackCustomMetric(`supabase_${context}_error`, duration, {
+          attempt: i + 1,
+          error: errorMessage
+        });
 
         if (i === attempts - 1) {
           ErrorHandler.handleError(
@@ -124,8 +110,7 @@ export class SupabaseService {
         }
 
         // Exponential backoff with jitter
-        const delay =
-          this.connectionPool.retryDelay * Math.pow(2, i) + Math.random() * 1000;
+        const delay = this.connectionPool.retryDelay * Math.pow(2, i) + Math.random() * 1000;
         await new Promise(resolve => setTimeout(resolve, delay));
       } finally {
         this.activeConnections = Math.max(0, this.activeConnections - 1);
@@ -161,20 +146,16 @@ export class SupabaseService {
     this.cache.set(key, {
       data,
       timestamp: Date.now(),
-      ttl: customTtl || this.cacheConfig.ttl,
+      ttl: customTtl || this.cacheConfig.ttl
     });
 
     this.performanceMonitor.trackCustomMetric('cache_set', 1, { key });
   }
 
   private static clearCacheByPattern(pattern: string): void {
-    const keysToDelete = Array.from(this.cache.keys()).filter(key =>
-      key.includes(pattern)
-    );
+    const keysToDelete = Array.from(this.cache.keys()).filter(key => key.includes(pattern));
     keysToDelete.forEach(key => this.cache.delete(key));
-    this.performanceMonitor.trackCustomMetric('cache_clear', keysToDelete.length, {
-      pattern,
-    });
+    this.performanceMonitor.trackCustomMetric('cache_clear', keysToDelete.length, { pattern });
   }
 
   // Connection health check
@@ -189,11 +170,7 @@ export class SupabaseService {
     }
   }
 
-  static async signUp(
-    email: string,
-    password: string,
-    name?: string
-  ): Promise<{ user: AppUser | null; error: string | null }> {
+  static async signUp(email: string, password: string, name?: string): Promise<{ user: AppUser | null; error: string | null }> {
     if (!this.isAvailable) {
       return { user: null, error: 'Supabase not configured' };
     }
@@ -204,9 +181,9 @@ export class SupabaseService {
         password,
         options: {
           data: {
-            name: name || email.split('@')[0],
-          },
-        },
+            name: name || email.split('@')[0]
+          }
+        }
       });
 
       if (error) {
@@ -224,14 +201,11 @@ export class SupabaseService {
       throw new Error('Sign up failed - no user returned');
     }, 'signup').catch(error => ({
       user: null,
-      error: error.message || 'Sign up failed',
+      error: error.message || 'Sign up failed'
     }));
   }
 
-  static async signIn(
-    email: string,
-    password: string
-  ): Promise<{ user: AppUser | null; error: string | null }> {
+  static async signIn(email: string, password: string): Promise<{ user: AppUser | null; error: string | null }> {
     if (!this.isAvailable) {
       return { user: null, error: 'Supabase not configured' };
     }
@@ -239,7 +213,7 @@ export class SupabaseService {
     return await this.withRetry(async () => {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password,
+        password
       });
 
       if (error) {
@@ -254,7 +228,7 @@ export class SupabaseService {
       throw new Error('Sign in failed - no user returned');
     }, 'signin').catch(error => ({
       user: null,
-      error: error.message || 'Sign in failed',
+      error: error.message || 'Sign in failed'
     }));
   }
 
@@ -277,9 +251,7 @@ export class SupabaseService {
     }
 
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         // Try cache first for better performance
         const cacheKey = `user_profile_${user.id}`;
@@ -340,7 +312,7 @@ export class SupabaseService {
         premiumSoundLibrary: false,
         exclusiveContent: false,
         adFree: false,
-        prioritySupport: false,
+        prioritySupport: false
       },
       preferences: {
         personalization: {
@@ -350,33 +322,33 @@ export class SupabaseService {
             accentColor: '#f59e0b',
             backgroundColor: '#ffffff',
             cardColor: '#f9fafb',
-            borderColor: '#e5e7eb',
+            borderColor: '#e5e7eb'
           },
           typography: {
             fontFamily: 'Inter',
             fontSize: 16,
             fontWeight: 'normal',
-            lineHeight: 1.5,
+            lineHeight: 1.5
           },
           layout: {
             compactMode: false,
             sidebarPosition: 'left',
-            cardSpacing: 'normal',
+            cardSpacing: 'normal'
           },
           motion: {
             reducedMotion: false,
-            animationSpeed: 'normal',
+            animationSpeed: 'normal'
           },
           accessibility: {
             highContrast: false,
             largeText: false,
-            screenReaderOptimized: false,
+            screenReaderOptimized: false
           },
           sounds: {
             volume: 0.8,
             enableHaptics: true,
-            soundProfile: 'balanced',
-          },
+            soundProfile: 'balanced'
+          }
         },
         notificationsEnabled: true,
         soundEnabled: true,
@@ -396,15 +368,16 @@ export class SupabaseService {
         smartFeaturesEnabled: true,
         fitnessIntegration: false,
         locationChallenges: false,
-        photoChallenges: false,
+        photoChallenges: false
       },
-      createdAt: new Date(),
+      createdAt: new Date()
     };
 
     // Insert user profile with retry logic
     await this.withRetry(async () => {
-      const { error } = await supabase.from('users').insert([
-        {
+      const { error } = await supabase
+        .from('users')
+        .insert([{
           id: userProfile.id,
           email: userProfile.email,
           name: userProfile.name,
@@ -417,9 +390,8 @@ export class SupabaseService {
           subscription_tier: userProfile.subscriptionTier,
           feature_access: userProfile.featureAccess,
           preferences: userProfile.preferences,
-          created_at: userProfile.createdAt.toISOString(),
-        },
-      ]);
+          created_at: userProfile.createdAt.toISOString()
+        }]);
 
       if (error) {
         throw new Error(`Failed to create user profile: ${error.message}`);
@@ -491,10 +463,10 @@ export class SupabaseService {
             premiumSoundLibrary: false,
             exclusiveContent: false,
             adFree: false,
-            prioritySupport: false,
+            prioritySupport: false
           },
           preferences: data.preferences,
-          createdAt: new Date(data.created_at),
+          createdAt: new Date(data.created_at)
         };
 
         // Cache the result
@@ -519,27 +491,24 @@ export class SupabaseService {
 
     try {
       return await this.withRetry(async () => {
-        const { error } = await supabase.from('alarms').upsert(
-          [
-            {
-              id: alarm.id,
-              user_id: alarm.userId,
-              time: alarm.time,
-              label: alarm.label,
-              enabled: alarm.enabled,
-              days: alarm.days,
-              voice_mood: alarm.voiceMood,
-              snooze_count: alarm.snoozeCount,
-              last_triggered: alarm.lastTriggered?.toISOString(),
-              created_at: alarm.createdAt.toISOString(),
-              updated_at: alarm.updatedAt.toISOString(),
-            },
-          ],
-          {
+        const { error } = await supabase
+          .from('alarms')
+          .upsert([{
+            id: alarm.id,
+            user_id: alarm.userId,
+            time: alarm.time,
+            label: alarm.label,
+            enabled: alarm.enabled,
+            days: alarm.days,
+            voice_mood: alarm.voiceMood,
+            snooze_count: alarm.snoozeCount,
+            last_triggered: alarm.lastTriggered?.toISOString(),
+            created_at: alarm.createdAt.toISOString(),
+            updated_at: alarm.updatedAt.toISOString()
+          }], {
             onConflict: 'id',
-            ignoreDuplicates: false,
-          }
-        );
+            ignoreDuplicates: false
+          });
 
         if (error) {
           throw new Error(`Failed to save alarm: ${error.message}`);
@@ -556,9 +525,7 @@ export class SupabaseService {
     }
   }
 
-  static async loadUserAlarms(
-    userId: string
-  ): Promise<{ alarms: Alarm[]; error: string | null }> {
+  static async loadUserAlarms(userId: string): Promise<{ alarms: Alarm[]; error: string | null }> {
     if (!this.isAvailable) {
       return { alarms: [], error: 'Supabase not configured' };
     }
@@ -594,7 +561,7 @@ export class SupabaseService {
           snoozeCount: row.snooze_count || 0,
           lastTriggered: row.last_triggered ? new Date(row.last_triggered) : undefined,
           createdAt: new Date(row.created_at),
-          updatedAt: new Date(row.updated_at),
+          updatedAt: new Date(row.updated_at)
         }));
 
         // Cache the result
@@ -613,7 +580,10 @@ export class SupabaseService {
     }
 
     try {
-      const { error } = await supabase.from('alarms').delete().eq('id', alarmId);
+      const { error } = await supabase
+        .from('alarms')
+        .delete()
+        .eq('id', alarmId);
 
       return { error: error?.message || null };
     } catch (error) {
@@ -627,17 +597,17 @@ export class SupabaseService {
     }
 
     try {
-      const { error } = await supabase.from('alarm_events').insert([
-        {
+      const { error } = await supabase
+        .from('alarm_events')
+        .insert([{
           id: event.id,
           alarm_id: event.alarmId,
           fired_at: event.firedAt.toISOString(),
           dismissed: event.dismissed,
           snoozed: event.snoozed,
           user_action: event.userAction,
-          dismiss_method: event.dismissMethod,
-        },
-      ]);
+          dismiss_method: event.dismissMethod
+        }]);
 
       return { error: error?.message || null };
     } catch (error) {
@@ -645,9 +615,7 @@ export class SupabaseService {
     }
   }
 
-  static async getAlarmEvents(
-    alarmId: string
-  ): Promise<{ events: AlarmEvent[]; error: string | null }> {
+  static async getAlarmEvents(alarmId: string): Promise<{ events: AlarmEvent[]; error: string | null }> {
     if (!this.isAvailable) {
       return { events: [], error: 'Supabase not configured' };
     }
@@ -671,7 +639,7 @@ export class SupabaseService {
         dismissed: row.dismissed,
         snoozed: row.snoozed,
         userAction: row.user_action,
-        dismissMethod: row.dismiss_method,
+        dismissMethod: row.dismiss_method
       }));
 
       return { events, error: null };
@@ -680,10 +648,7 @@ export class SupabaseService {
     }
   }
 
-  static subscribeToUserAlarms(
-    userId: string,
-    callback: (alarms: Alarm[]) => void
-  ): () => void {
+  static subscribeToUserAlarms(userId: string, callback: (alarms: Alarm[]) => void): () => void {
     if (!this.isAvailable) {
       return () => {};
     }
@@ -705,7 +670,7 @@ export class SupabaseService {
           event: '*',
           schema: 'public',
           table: 'alarms',
-          filter: `user_id=eq.${userId}`,
+          filter: `user_id=eq.${userId}`
         },
         async payload => {
           try {
@@ -718,7 +683,7 @@ export class SupabaseService {
 
             this.performanceMonitor.trackCustomMetric('realtime_alarm_update', 1, {
               event: payload.eventType,
-              userId,
+              userId
             });
           } catch (error) {
             ErrorHandler.handleError(
@@ -729,17 +694,11 @@ export class SupabaseService {
           }
         }
       )
-      .subscribe(status => {
+      .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
-          this.performanceMonitor.trackCustomMetric(
-            'realtime_subscription_success',
-            1,
-            { userId }
-          );
+          this.performanceMonitor.trackCustomMetric('realtime_subscription_success', 1, { userId });
         } else if (status === 'CLOSED') {
-          this.performanceMonitor.trackCustomMetric('realtime_subscription_closed', 1, {
-            userId,
-          });
+          this.performanceMonitor.trackCustomMetric('realtime_subscription_closed', 1, { userId });
         }
       });
 
@@ -772,14 +731,12 @@ export class SupabaseService {
       latency,
       activeConnections: this.activeConnections,
       cacheSize: this.cache.size,
-      subscriptionCount: this.subscriptions.size,
+      subscriptionCount: this.subscriptions.size
     };
   }
 
   // Bulk operations for better performance
-  static async bulkSaveAlarms(
-    alarms: Alarm[]
-  ): Promise<{ success: number; errors: string[] }> {
+  static async bulkSaveAlarms(alarms: Alarm[]): Promise<{ success: number; errors: string[] }> {
     if (!this.isAvailable) {
       return { success: 0, errors: ['Supabase not configured'] };
     }
@@ -794,8 +751,9 @@ export class SupabaseService {
 
       try {
         await this.withRetry(async () => {
-          const { error } = await supabase.from('alarms').upsert(
-            batch.map(alarm => ({
+          const { error } = await supabase
+            .from('alarms')
+            .upsert(batch.map(alarm => ({
               id: alarm.id,
               user_id: alarm.userId,
               time: alarm.time,
@@ -806,13 +764,11 @@ export class SupabaseService {
               snooze_count: alarm.snoozeCount,
               last_triggered: alarm.lastTriggered?.toISOString(),
               created_at: alarm.createdAt.toISOString(),
-              updated_at: alarm.updatedAt.toISOString(),
-            })),
-            {
+              updated_at: alarm.updatedAt.toISOString()
+            })), {
               onConflict: 'id',
-              ignoreDuplicates: false,
-            }
-          );
+              ignoreDuplicates: false
+            });
 
           if (error) {
             throw new Error(error.message);
@@ -825,9 +781,7 @@ export class SupabaseService {
           userIds.forEach(userId => this.clearCacheByPattern(`alarms_${userId}`));
         }, 'bulkSaveAlarms');
       } catch (error) {
-        errors.push(
-          `Batch ${i}-${i + batchSize - 1}: ${error instanceof Error ? error.message : String(error)}`
-        );
+        errors.push(`Batch ${i}-${i + batchSize - 1}: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
 
@@ -853,7 +807,7 @@ export class SupabaseService {
       size: this.cache.size,
       hitRate: 0, // TODO: Calculate hit rate from metrics
       oldestEntry: timestamps.length > 0 ? Math.min(...timestamps) : 0,
-      newestEntry: timestamps.length > 0 ? Math.max(...timestamps) : 0,
+      newestEntry: timestamps.length > 0 ? Math.max(...timestamps) : 0
     };
   }
 

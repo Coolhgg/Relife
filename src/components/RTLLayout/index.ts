@@ -16,7 +16,7 @@ export {
   useRTLFlex,
   useRTLText,
   useRTLAnimation,
-  useRTLForm,
+  useRTLForm
 } from '../../hooks/useRTL';
 
 // Re-export utilities
@@ -27,5 +27,5 @@ export {
   getTextAlign,
   rtlClass,
   rtlClassNames,
-  combineRTLClasses,
+  combineRTLClasses
 } from '../../utils/rtl-utilities';

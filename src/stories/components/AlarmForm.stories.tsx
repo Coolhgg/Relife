@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
-import AlarmForm from '../../components/AlarmForm';
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
+import AlarmForm from '../../components/AlarmForm'
 
 // Mock data and types
 const mockUser = {
@@ -10,20 +10,20 @@ const mockUser = {
   subscription: {
     tier: 'free' as const,
     status: 'active' as const,
-    current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
   },
   created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
-};
+  updated_at: new Date().toISOString()
+}
 
 const mockPremiumUser = {
   ...mockUser,
   subscription: {
     tier: 'premium' as const,
     status: 'active' as const,
-    current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-};
+    current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+  }
+}
 
 const mockAlarm = {
   id: '1',
@@ -39,8 +39,8 @@ const mockAlarm = {
   isActive: true,
   userId: 'test-user-123',
   createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-};
+  updatedAt: new Date().toISOString()
+}
 
 const meta: Meta<typeof AlarmForm> = {
   title: 'Components/AlarmForm',
@@ -49,8 +49,7 @@ const meta: Meta<typeof AlarmForm> = {
     layout: 'centered',
     docs: {
       description: {
-        component:
-          'A comprehensive form for creating and editing alarms with various customization options including voice moods, difficulties, and premium features.',
+        component: 'A comprehensive form for creating and editing alarms with various customization options including voice moods, difficulties, and premium features.',
       },
     },
   },
@@ -82,31 +81,31 @@ const meta: Meta<typeof AlarmForm> = {
     onCancel: fn(),
     userId: 'test-user-123',
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const NewAlarm: Story = {
   args: {
     alarm: null,
     user: mockUser,
   },
-};
+}
 
 export const EditAlarm: Story = {
   args: {
     alarm: mockAlarm,
     user: mockUser,
   },
-};
+}
 
 export const PremiumUser: Story = {
   args: {
     alarm: null,
     user: mockPremiumUser,
   },
-};
+}
 
 export const EditPremiumAlarm: Story = {
   args: {
@@ -119,7 +118,7 @@ export const EditPremiumAlarm: Story = {
     },
     user: mockPremiumUser,
   },
-};
+}
 
 export const WeekendAlarm: Story = {
   args: {
@@ -133,7 +132,7 @@ export const WeekendAlarm: Story = {
     },
     user: mockUser,
   },
-};
+}
 
 export const CustomSoundAlarm: Story = {
   args: {
@@ -145,15 +144,14 @@ export const CustomSoundAlarm: Story = {
     },
     user: mockPremiumUser,
   },
-};
+}
 
 export const FormValidationExample: Story = {
   render: args => (
     <div className="w-full max-w-lg">
       <h3 className="text-lg font-semibold mb-4">Alarm Form with Validation</h3>
       <p className="text-sm text-muted-foreground mb-4">
-        Try submitting the form without filling required fields to see validation
-        errors.
+        Try submitting the form without filling required fields to see validation errors.
       </p>
       <AlarmForm {...args} />
     </div>
@@ -161,16 +159,16 @@ export const FormValidationExample: Story = {
   args: {
     alarm: {
       ...mockAlarm,
-      time: '', // Invalid time to trigger validation
-      label: '', // Empty label to trigger validation
-      days: [], // No days selected to trigger validation
+      time: '',  // Invalid time to trigger validation
+      label: '',  // Empty label to trigger validation
+      days: [],   // No days selected to trigger validation
     },
     user: mockUser,
   },
   parameters: {
     layout: 'fullscreen',
   },
-};
+}
 
 export const ResponsiveDesign: Story = {
   render: args => (
@@ -199,7 +197,7 @@ export const ResponsiveDesign: Story = {
       defaultViewport: 'desktop',
     },
   },
-};
+}
 
 export const DarkMode: Story = {
   args: {
@@ -211,15 +209,13 @@ export const DarkMode: Story = {
       default: 'dark',
     },
   },
-};
+}
 
 export const AccessibilityShowcase: Story = {
   render: args => (
     <div className="w-full max-w-lg">
       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-        <h3 className="font-semibold text-blue-900 dark:text-blue-100">
-          Accessibility Features
-        </h3>
+        <h3 className="font-semibold text-blue-900 dark:text-blue-100">Accessibility Features</h3>
         <ul className="text-sm text-blue-700 dark:text-blue-300 mt-2 space-y-1">
           <li>• Screen reader announcements for form changes</li>
           <li>• Dynamic focus management</li>
@@ -238,7 +234,7 @@ export const AccessibilityShowcase: Story = {
   parameters: {
     layout: 'fullscreen',
   },
-};
+}
 
 // Interactive playground for testing different combinations
 export const InteractivePlayground: Story = {
@@ -277,9 +273,9 @@ export const InteractivePlayground: Story = {
           </div>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     layout: 'fullscreen',
   },
-};
+}

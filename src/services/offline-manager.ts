@@ -123,7 +123,7 @@ export class OfflineManager {
             const settingsStore = db.createObjectStore('settings', { keyPath: 'key' });
             settingsStore.createIndex('syncStatus', 'syncStatus');
           }
-        },
+        }
       });
 
       // Register service worker
@@ -155,13 +155,11 @@ export class OfflineManager {
 
     try {
       // Use existing registration from ServiceWorkerManager instead of registering again
-      const registration =
-        (await navigator.serviceWorker.getRegistration()) ||
-        (await navigator.serviceWorker.register('/sw-unified.js'));
+      const registration = await navigator.serviceWorker.getRegistration() || await navigator.serviceWorker.register('/sw-unified.js');
       console.log('Service Worker registered:', registration);
 
       // Listen for messages from service worker
-      navigator.serviceWorker.addEventListener('message', event => {
+      navigator.serviceWorker.addEventListener('message', (event) => {
         this.handleServiceWorkerMessage(event.data);
       });
 
@@ -189,28 +187,22 @@ export class OfflineManager {
 
   private static schedulePeriodicSync(): void {
     // Sync every 5 minutes when online
-    setInterval(
-      async () => {
-        if (navigator.onLine) {
-          await this.syncPendingOperations();
-        }
-      },
-      5 * 60 * 1000
-    );
+    setInterval(async () => {
+      if (navigator.onLine) {
+        await this.syncPendingOperations();
+      }
+    }, 5 * 60 * 1000);
   }
 
   // Alarm management
-  static async saveAlarmOffline(
-    alarm: Alarm,
-    operation: 'create' | 'update' | 'delete' = 'create'
-  ): Promise<void> {
+  static async saveAlarmOffline(alarm: Alarm, operation: 'create' | 'update' | 'delete' = 'create'): Promise<void> {
     if (!this.db) throw new Error('Offline manager not initialized');
 
     const offlineAlarm = {
       ...alarm,
       syncStatus: 'pending' as const,
       lastModified: Date.now(),
-      operation,
+      operation
     };
 
     await this.db.put('alarms', offlineAlarm);
@@ -271,17 +263,14 @@ export class OfflineManager {
       text,
       duration,
       createdAt: Date.now(),
-      expiresAt: Date.now() + ttlHours * 60 * 60 * 1000,
+      expiresAt: Date.now() + (ttlHours * 60 * 60 * 1000)
     };
 
     await this.db.put('voiceCache', cached);
     console.log(`Voice message cached: ${id}`);
   }
 
-  static async getCachedVoiceMessage(
-    alarmId: string,
-    voiceMood: string
-  ): Promise<{
+  static async getCachedVoiceMessage(alarmId: string, voiceMood: string): Promise<{
     audioBlob: Blob;
     text: string;
     duration: number;
@@ -293,15 +282,16 @@ export class OfflineManager {
       const index = tx.store.index('alarmId');
       const messages = await index.getAll(alarmId);
 
-      const validMessage = messages.find(
-        msg => msg.voiceMood === voiceMood && msg.expiresAt > Date.now()
+      const validMessage = messages.find(msg =>
+        msg.voiceMood === voiceMood &&
+        msg.expiresAt > Date.now()
       );
 
       if (validMessage) {
         return {
           audioBlob: validMessage.audioBlob,
           text: validMessage.text,
-          duration: validMessage.duration,
+          duration: validMessage.duration
         };
       }
 
@@ -326,7 +316,7 @@ export class OfflineManager {
       operation,
       data,
       timestamp: Date.now(),
-      retryCount: 0,
+      retryCount: 0
     };
 
     await this.db.put('syncQueue', queueItem);
@@ -449,7 +439,7 @@ export class OfflineManager {
       key,
       value,
       lastModified: Date.now(),
-      syncStatus: 'pending' as const,
+      syncStatus: 'pending' as const
     };
 
     await this.db.put('settings', setting);
@@ -509,17 +499,16 @@ export class OfflineManager {
 
   // Status and capabilities
   static async getStatus(): Promise<SyncStatus> {
-    const pendingOperations = this.db ? await this.db.count('syncQueue') : 0;
-    const failedOperations = this.db
-      ? (await this.db.getAll('syncQueue')).filter(item => item.retryCount > 0).length
-      : 0;
+    const pendingOperations = this.db ? (await this.db.count('syncQueue')) : 0;
+    const failedOperations = this.db ?
+      (await this.db.getAll('syncQueue')).filter(item => item.retryCount > 0).length : 0;
 
     return {
       isOnline: navigator.onLine,
       lastSync: null, // Would track actual last sync time
       pendingOperations,
       failedOperations,
-      syncInProgress: this.syncInProgress,
+      syncInProgress: this.syncInProgress
     };
   }
 
@@ -528,10 +517,8 @@ export class OfflineManager {
       alarmProcessing: true,
       voicePlayback: !!this.db,
       dataStorage: !!this.db,
-      backgroundSync:
-        'serviceWorker' in navigator &&
-        'sync' in window.ServiceWorkerRegistration.prototype,
-      serviceWorker: 'serviceWorker' in navigator,
+      backgroundSync: 'serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype,
+      serviceWorker: 'serviceWorker' in navigator
     };
   }
 
@@ -580,13 +567,10 @@ export class OfflineManager {
 
     // Post message to main thread if available
     if (typeof window !== 'undefined' && window.postMessage) {
-      window.postMessage(
-        {
-          type: 'BACKGROUND_ALARM',
-          alarm,
-        },
-        window.location.origin
-      );
+      window.postMessage({
+        type: 'BACKGROUND_ALARM',
+        alarm
+      }, window.location.origin);
     }
   }
 
@@ -608,14 +592,14 @@ export class OfflineManager {
       this.db.getAll('alarms'),
       this.db.getAll('sleepSessions'),
       this.db.getAll('settings'),
-      this.db.getAll('voiceCache'),
+      this.db.getAll('voiceCache')
     ]);
 
     return {
       alarms,
       sleepSessions,
       settings,
-      voiceCache: voiceCache.map(({ audioBlob, ...rest }) => rest), // Exclude blobs for export
+      voiceCache: voiceCache.map(({ audioBlob, ...rest }) => rest) // Exclude blobs for export
     };
   }
 
@@ -626,10 +610,7 @@ export class OfflineManager {
   }): Promise<void> {
     if (!this.db) throw new Error('Offline manager not initialized');
 
-    const tx = this.db.transaction(
-      ['alarms', 'sleepSessions', 'settings'],
-      'readwrite'
-    );
+    const tx = this.db.transaction(['alarms', 'sleepSessions', 'settings'], 'readwrite');
 
     if (data.alarms) {
       for (const alarm of data.alarms) {
@@ -656,17 +637,14 @@ export class OfflineManager {
   static async clearAllData(): Promise<void> {
     if (!this.db) return;
 
-    const tx = this.db.transaction(
-      ['alarms', 'sleepSessions', 'settings', 'voiceCache', 'syncQueue'],
-      'readwrite'
-    );
+    const tx = this.db.transaction(['alarms', 'sleepSessions', 'settings', 'voiceCache', 'syncQueue'], 'readwrite');
 
     await Promise.all([
       tx.objectStore('alarms').clear(),
       tx.objectStore('sleepSessions').clear(),
       tx.objectStore('settings').clear(),
       tx.objectStore('voiceCache').clear(),
-      tx.objectStore('syncQueue').clear(),
+      tx.objectStore('syncQueue').clear()
     ]);
 
     await tx.done;

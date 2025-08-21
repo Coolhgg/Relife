@@ -15,7 +15,7 @@ const mockSmartAlarmScheduler = {
   generateSmartRecommendations: jest.fn(),
   adaptToUserFeedback: jest.fn(),
   getOptimizationMetrics: jest.fn(),
-  resetLearningData: jest.fn(),
+  resetLearningData: jest.fn()
 };
 
 const mockAIOptimizer = {
@@ -23,44 +23,44 @@ const mockAIOptimizer = {
   predictWakePreferences: jest.fn(),
   analyzeWakePatterns: jest.fn(),
   generatePersonalizedSuggestions: jest.fn(),
-  updateModelWithFeedback: jest.fn(),
+  updateModelWithFeedback: jest.fn()
 };
 
 const mockBehaviorAnalyzer = {
   trackWakeEvent: jest.fn(),
   analyzeSleepPattern: jest.fn(),
   detectBehaviorChanges: jest.fn(),
-  generateBehaviorReport: jest.fn(),
+  generateBehaviorReport: jest.fn()
 };
 
 // Mock services
 jest.mock('../../services/smart-alarm-scheduler', () => ({
   __esModule: true,
-  default: mockSmartAlarmScheduler,
+  default: mockSmartAlarmScheduler
 }));
 
 jest.mock('../../services/ai-optimizer', () => ({
   __esModule: true,
-  default: mockAIOptimizer,
+  default: mockAIOptimizer
 }));
 
 jest.mock('../../services/behavior-analyzer', () => ({
   __esModule: true,
-  default: mockBehaviorAnalyzer,
+  default: mockBehaviorAnalyzer
 }));
 
 // Mock analytics service
 const mockAnalytics = {
   track: jest.fn(),
   identify: jest.fn(),
-  setUserProperties: jest.fn(),
+  setUserProperties: jest.fn()
 };
 
 jest.mock('../../services/analytics', () => ({
   __esModule: true,
   default: {
-    getInstance: () => mockAnalytics,
-  },
+    getInstance: () => mockAnalytics
+  }
 }));
 
 describe('useEnhancedSmartAlarms', () => {
@@ -73,34 +73,34 @@ describe('useEnhancedSmartAlarms', () => {
       originalTime: '07:00',
       optimizedTime: '06:45',
       confidence: 0.85,
-      reason: 'Better sleep cycle alignment',
+      reason: 'Better sleep cycle alignment'
     });
 
     mockSmartAlarmScheduler.predictOptimalWakeTime.mockResolvedValue({
       recommendedTime: '06:45',
-      confidence: 0.9,
-      factors: ['sleep_cycle', 'historical_data', 'weather'],
+      confidence: 0.90,
+      factors: ['sleep_cycle', 'historical_data', 'weather']
     });
 
     mockSmartAlarmScheduler.analyzeUserBehavior.mockResolvedValue({
       wakeTimePreference: '06:30-07:00',
       averageSnoozeCount: 2,
       mostProductiveDays: ['monday', 'tuesday'],
-      sleepDebtScore: 0.3,
+      sleepDebtScore: 0.3
     });
 
     mockSmartAlarmScheduler.getOptimizationMetrics.mockResolvedValue({
       successRate: 0.85,
       avgOptimizationGain: 15,
-      userSatisfaction: 0.9,
-      totalOptimizations: 42,
+      userSatisfaction: 0.90,
+      totalOptimizations: 42
     });
 
     mockAIOptimizer.predictWakePreferences.mockResolvedValue({
       optimalTimeRange: { start: '06:30', end: '07:00' },
       preferredAlarmType: 'gradual',
       weatherSensitivity: 0.7,
-      workdayPattern: 'consistent',
+      workdayPattern: 'consistent'
     });
   });
 
@@ -135,21 +135,21 @@ describe('useEnhancedSmartAlarms', () => {
       const optimization = await result.current.optimizeAlarm({
         id: 'alarm-1',
         time: '07:00',
-        userId: 'user-123',
+        userId: 'user-123'
       });
 
       expect(optimization).toEqual({
         originalTime: '07:00',
         optimizedTime: '06:45',
         confidence: 0.85,
-        reason: 'Better sleep cycle alignment',
+        reason: 'Better sleep cycle alignment'
       });
     });
 
     expect(mockSmartAlarmScheduler.optimizeAlarmTiming).toHaveBeenCalledWith({
       id: 'alarm-1',
       time: '07:00',
-      userId: 'user-123',
+      userId: 'user-123'
     });
   });
 
@@ -164,20 +164,20 @@ describe('useEnhancedSmartAlarms', () => {
       const prediction = await result.current.predictOptimalWakeTime({
         currentBedtime: '23:00',
         desiredWakeTime: '07:00',
-        userId: 'user-123',
+        userId: 'user-123'
       });
 
       expect(prediction).toEqual({
         recommendedTime: '06:45',
-        confidence: 0.9,
-        factors: ['sleep_cycle', 'historical_data', 'weather'],
+        confidence: 0.90,
+        factors: ['sleep_cycle', 'historical_data', 'weather']
       });
     });
 
     expect(mockSmartAlarmScheduler.predictOptimalWakeTime).toHaveBeenCalledWith({
       currentBedtime: '23:00',
       desiredWakeTime: '07:00',
-      userId: 'user-123',
+      userId: 'user-123'
     });
   });
 
@@ -196,12 +196,10 @@ describe('useEnhancedSmartAlarms', () => {
       wakeTimePreference: '06:30-07:00',
       averageSnoozeCount: 2,
       mostProductiveDays: ['monday', 'tuesday'],
-      sleepDebtScore: 0.3,
+      sleepDebtScore: 0.3
     });
 
-    expect(mockSmartAlarmScheduler.analyzeUserBehavior).toHaveBeenCalledWith(
-      'user-123'
-    );
+    expect(mockSmartAlarmScheduler.analyzeUserBehavior).toHaveBeenCalledWith('user-123');
   });
 
   it('should generate smart recommendations', async () => {
@@ -212,14 +210,14 @@ describe('useEnhancedSmartAlarms', () => {
         type: 'timing',
         message: 'Consider moving your alarm 15 minutes earlier',
         confidence: 0.8,
-        impact: 'high',
+        impact: 'high'
       },
       {
         type: 'bedtime',
         message: 'Your bedtime could be 30 minutes earlier',
         confidence: 0.7,
-        impact: 'medium',
-      },
+        impact: 'medium'
+      }
     ]);
 
     await act(async () => {
@@ -234,12 +232,10 @@ describe('useEnhancedSmartAlarms', () => {
     expect(result.current.recommendations[0]).toMatchObject({
       type: 'timing',
       confidence: 0.8,
-      impact: 'high',
+      impact: 'high'
     });
 
-    expect(mockSmartAlarmScheduler.generateSmartRecommendations).toHaveBeenCalledWith(
-      'user-123'
-    );
+    expect(mockSmartAlarmScheduler.generateSmartRecommendations).toHaveBeenCalledWith('user-123');
   });
 
   it('should handle user feedback and adapt', async () => {
@@ -254,7 +250,7 @@ describe('useEnhancedSmartAlarms', () => {
       rating: 4,
       wakeQuality: 'good',
       actualWakeTime: '06:50',
-      comments: 'Felt rested',
+      comments: 'Felt rested'
     };
 
     await act(async () => {
@@ -279,8 +275,8 @@ describe('useEnhancedSmartAlarms', () => {
     expect(result.current.metrics).toEqual({
       successRate: 0.85,
       avgOptimizationGain: 15,
-      userSatisfaction: 0.9,
-      totalOptimizations: 42,
+      userSatisfaction: 0.90,
+      totalOptimizations: 42
     });
 
     expect(mockSmartAlarmScheduler.getOptimizationMetrics).toHaveBeenCalledTimes(1);
@@ -300,7 +296,7 @@ describe('useEnhancedSmartAlarms', () => {
         optimalTimeRange: { start: '06:30', end: '07:00' },
         preferredAlarmType: 'gradual',
         weatherSensitivity: 0.7,
-        workdayPattern: 'consistent',
+        workdayPattern: 'consistent'
       });
     });
 
@@ -320,7 +316,7 @@ describe('useEnhancedSmartAlarms', () => {
       actualWakeTime: '07:05',
       snoozeCount: 1,
       wakeQuality: 'good',
-      timestamp: new Date(),
+      timestamp: new Date()
     };
 
     await act(async () => {
@@ -337,7 +333,7 @@ describe('useEnhancedSmartAlarms', () => {
       averageWakeTime: '06:45',
       sleepDuration: 7.5,
       sleepEfficiency: 0.85,
-      pattern: 'consistent',
+      pattern: 'consistent'
     });
 
     const { result } = renderHook(() => useEnhancedSmartAlarms());
@@ -355,13 +351,10 @@ describe('useEnhancedSmartAlarms', () => {
       averageWakeTime: '06:45',
       sleepDuration: 7.5,
       sleepEfficiency: 0.85,
-      pattern: 'consistent',
+      pattern: 'consistent'
     });
 
-    expect(mockBehaviorAnalyzer.analyzeSleepPattern).toHaveBeenCalledWith(
-      'user-123',
-      'week'
-    );
+    expect(mockBehaviorAnalyzer.analyzeSleepPattern).toHaveBeenCalledWith('user-123', 'week');
   });
 
   it('should detect behavior changes', async () => {
@@ -369,9 +362,9 @@ describe('useEnhancedSmartAlarms', () => {
       significantChanges: true,
       changes: [
         { type: 'bedtime_shift', magnitude: 0.5, direction: 'later' },
-        { type: 'wake_quality', magnitude: -0.3, direction: 'decline' },
+        { type: 'wake_quality', magnitude: -0.3, direction: 'decline' }
       ],
-      recommendedActions: ['adjust_alarm_timing', 'suggest_earlier_bedtime'],
+      recommendedActions: ['adjust_alarm_timing', 'suggest_earlier_bedtime']
     });
 
     const { result } = renderHook(() => useEnhancedSmartAlarms());
@@ -393,9 +386,7 @@ describe('useEnhancedSmartAlarms', () => {
 
   it('should handle errors gracefully', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    mockSmartAlarmScheduler.optimizeAlarmTiming.mockRejectedValue(
-      new Error('Optimization failed')
-    );
+    mockSmartAlarmScheduler.optimizeAlarmTiming.mockRejectedValue(new Error('Optimization failed'));
 
     const { result } = renderHook(() => useEnhancedSmartAlarms());
 
@@ -407,7 +398,7 @@ describe('useEnhancedSmartAlarms', () => {
       const optimization = await result.current.optimizeAlarm({
         id: 'alarm-1',
         time: '07:00',
-        userId: 'user-123',
+        userId: 'user-123'
       });
 
       expect(optimization).toBeNull();
@@ -453,7 +444,7 @@ describe('useEnhancedSmartAlarms', () => {
       alarmId: 'alarm-1',
       newOptimizedTime: '06:50',
       reason: 'Weather adjustment',
-      confidence: 0.82,
+      confidence: 0.82
     };
 
     // This would typically come from a WebSocket or event listener
@@ -474,7 +465,7 @@ describe('useEnhancedSmartAlarms', () => {
     const alarms = [
       { id: 'alarm-1', time: '07:00', userId: 'user-123' },
       { id: 'alarm-2', time: '07:30', userId: 'user-123' },
-      { id: 'alarm-3', time: '08:00', userId: 'user-123' },
+      { id: 'alarm-3', time: '08:00', userId: 'user-123' }
     ];
 
     mockSmartAlarmScheduler.optimizeAlarmTiming

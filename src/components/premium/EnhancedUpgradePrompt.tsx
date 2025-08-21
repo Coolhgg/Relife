@@ -21,7 +21,7 @@ import {
   TrendingUp,
   ArrowRight,
   Sparkles,
-  Lock,
+  Lock
 } from 'lucide-react';
 import type { PremiumFeature, SubscriptionTier } from '../../types';
 
@@ -61,7 +61,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   currentTier = 'free',
   showSocialProof = true,
   showUrgency = true,
-  ctaText,
+  ctaText
 }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -82,18 +82,15 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   }, [showSocialProof]);
 
   const getFeatureInfo = (featureId: string) => {
-    const featureMap: Record<
-      string,
-      {
-        title: string;
-        description: string;
-        icon: React.ReactNode;
-        benefits: string[];
-        tier: SubscriptionTier;
-        color: string;
-        gradient: string;
-      }
-    > = {
+    const featureMap: Record<string, {
+      title: string;
+      description: string;
+      icon: React.ReactNode;
+      benefits: string[];
+      tier: SubscriptionTier;
+      color: string;
+      gradient: string;
+    }> = {
       nuclearMode: {
         title: 'Nuclear Mode',
         description: 'The ultimate wake-up challenge for unstoppable mornings',
@@ -103,11 +100,11 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
           'Nuclear-themed extreme challenges',
           'Meltdown consequences for failure',
           'Exclusive achievement system',
-          'Dramatic visual effects',
+          'Dramatic visual effects'
         ],
         tier: 'pro',
         color: 'from-red-500 to-orange-600',
-        gradient: 'bg-gradient-to-br from-red-50 to-orange-50',
+        gradient: 'bg-gradient-to-br from-red-50 to-orange-50'
       },
       premiumPersonalities: {
         title: 'Premium Voice Personalities',
@@ -118,11 +115,11 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
           '🤖 AI Robot: Systematic wake protocols',
           '🎭 Comedian: Hilarious entertainment',
           '🧠 Philosopher: Contemplative wisdom',
-          'Never get bored with variety',
+          'Never get bored with variety'
         ],
         tier: 'pro',
         color: 'from-purple-500 to-pink-600',
-        gradient: 'bg-gradient-to-br from-purple-50 to-pink-50',
+        gradient: 'bg-gradient-to-br from-purple-50 to-pink-50'
       },
       customVoices: {
         title: 'Custom Voice Messages',
@@ -133,11 +130,11 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
           'Unlimited custom messages',
           'Voice cloning technology',
           'Emotional voice variations',
-          'Celebrity-style voices',
+          'Celebrity-style voices'
         ],
         tier: 'premium',
         color: 'from-blue-500 to-cyan-600',
-        gradient: 'bg-gradient-to-br from-blue-50 to-cyan-50',
+        gradient: 'bg-gradient-to-br from-blue-50 to-cyan-50'
       },
       analytics: {
         title: 'Advanced Analytics',
@@ -148,46 +145,44 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
           'Productivity correlations',
           'Habit tracking insights',
           'Performance optimization',
-          'Exportable reports',
+          'Exportable reports'
         ],
         tier: 'premium',
         color: 'from-green-500 to-emerald-600',
-        gradient: 'bg-gradient-to-br from-green-50 to-emerald-50',
-      },
+        gradient: 'bg-gradient-to-br from-green-50 to-emerald-50'
+      }
     };
 
-    return (
-      featureMap[featureId] || {
-        title: 'Premium Feature',
-        description: 'Unlock advanced functionality',
-        icon: <Star className="w-8 h-8" />,
-        benefits: ['Enhanced functionality', 'Priority support'],
-        tier: 'premium' as SubscriptionTier,
-        color: 'from-gray-500 to-gray-600',
-        gradient: 'bg-gradient-to-br from-gray-50 to-gray-100',
-      }
-    );
+    return featureMap[featureId] || {
+      title: 'Premium Feature',
+      description: 'Unlock advanced functionality',
+      icon: <Star className="w-8 h-8" />,
+      benefits: ['Enhanced functionality', 'Priority support'],
+      tier: 'premium' as SubscriptionTier,
+      color: 'from-gray-500 to-gray-600',
+      gradient: 'bg-gradient-to-br from-gray-50 to-gray-100'
+    };
   };
 
   const testimonials = [
     {
-      text: 'Nuclear Mode completely changed my morning routine. I actually look forward to waking up now!',
-      author: 'Sarah M.',
-      title: 'Pro User',
-      rating: 5,
+      text: "Nuclear Mode completely changed my morning routine. I actually look forward to waking up now!",
+      author: "Sarah M.",
+      title: "Pro User",
+      rating: 5
     },
     {
       text: "The Demon Lord personality is hilarious but surprisingly effective. Best $9.99 I've spent.",
-      author: 'Mike R.',
-      title: 'Pro User',
-      rating: 5,
+      author: "Mike R.",
+      title: "Pro User",
+      rating: 5
     },
     {
-      text: 'Finally an alarm app that understands psychology. The premium features are game-changing.',
-      author: 'Dr. Lisa K.',
-      title: 'Sleep Specialist',
-      rating: 5,
-    },
+      text: "Finally an alarm app that understands psychology. The premium features are game-changing.",
+      author: "Dr. Lisa K.",
+      title: "Sleep Specialist",
+      rating: 5
+    }
   ];
 
   const featureInfo = getFeatureInfo(feature);
@@ -198,21 +193,18 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
     if (featureInfo.tier === 'pro') {
       return {
         monthly: { price: 9.99, savings: null },
-        yearly: { price: 99.99, savings: 17 },
+        yearly: { price: 99.99, savings: 17 }
       };
     }
     return {
       monthly: { price: 4.99, savings: null },
-      yearly: { price: 49.99, savings: 17 },
+      yearly: { price: 49.99, savings: 17 }
     };
   };
 
   const pricing = getPricingInfo();
 
-  const handleUpgrade = (
-    tier: SubscriptionTier,
-    interval: 'monthly' | 'yearly' = 'monthly'
-  ) => {
+  const handleUpgrade = (tier: SubscriptionTier, interval: 'monthly' | 'yearly' = 'monthly') => {
     // Add smooth transition effect
     setIsAnimating(true);
     setTimeout(() => {
@@ -222,19 +214,15 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
 
   if (variant === 'banner') {
     return (
-      <div
-        className={`
+      <div className={`
         relative overflow-hidden rounded-xl border border-yellow-200
         bg-gradient-to-r from-yellow-50 via-orange-50 to-red-50
         p-4 shadow-sm transition-all duration-300 hover:shadow-md
         ${isAnimating ? 'animate-pulse' : ''}
-      `}
-      >
+      `}>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div
-              className={`p-2 rounded-lg bg-gradient-to-br ${featureInfo.color} text-white`}
-            >
+            <div className={`p-2 rounded-lg bg-gradient-to-br ${featureInfo.color} text-white`}>
               {featureInfo.icon}
             </div>
             <div>
@@ -264,18 +252,14 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
 
   if (variant === 'inline') {
     return (
-      <div
-        className={`
+      <div className={`
         relative rounded-2xl border-2 border-dashed border-gray-200
         p-6 text-center transition-all duration-300 hover:border-gray-300
         ${featureInfo.gradient}
         ${isAnimating ? 'animate-bounce' : ''}
-      `}
-      >
+      `}>
         <div className="mx-auto mb-4">
-          <div
-            className={`inline-flex p-4 rounded-full bg-gradient-to-br ${featureInfo.color} text-white shadow-lg`}
-          >
+          <div className={`inline-flex p-4 rounded-full bg-gradient-to-br ${featureInfo.color} text-white shadow-lg`}>
             {featureInfo.icon}
           </div>
         </div>
@@ -284,10 +268,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
 
         <div className="space-y-2 mb-6">
           {featureInfo.benefits.slice(0, 3).map((benefit, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-center text-sm text-gray-700"
-            >
+            <div key={index} className="flex items-center justify-center text-sm text-gray-700">
               <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
               {benefit}
             </div>
@@ -298,8 +279,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
           onClick={() => handleUpgrade(featureInfo.tier)}
           className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
         >
-          {ctaText ||
-            `Upgrade to ${featureInfo.tier.charAt(0).toUpperCase() + featureInfo.tier.slice(1)}`}
+          {ctaText || `Upgrade to ${featureInfo.tier.charAt(0).toUpperCase() + featureInfo.tier.slice(1)}`}
         </button>
       </div>
     );
@@ -310,18 +290,14 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
-      <div
-        className={`
+      <div className={`
         relative w-full max-w-2xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden
         transform transition-all duration-300
         ${isAnimating ? 'scale-95 opacity-0' : 'scale-100 opacity-100'}
         ${isFullscreen ? 'max-w-4xl max-h-screen' : 'max-h-[90vh]'}
-      `}
-      >
+      `}>
         {/* Header */}
-        <div
-          className={`relative px-8 pt-8 pb-6 bg-gradient-to-br ${featureInfo.color} text-white overflow-hidden`}
-        >
+        <div className={`relative px-8 pt-8 pb-6 bg-gradient-to-br ${featureInfo.color} text-white overflow-hidden`}>
           {/* Background decoration */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white transform translate-x-32 -translate-y-32"></div>
@@ -348,9 +324,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                 {showUrgency && (
                   <div className="flex items-center mt-2">
                     <Sparkles className="w-4 h-4 mr-1" />
-                    <span className="text-sm font-medium opacity-90">
-                      Limited time offer
-                    </span>
+                    <span className="text-sm font-medium opacity-90">Limited time offer</span>
                   </div>
                 )}
               </div>
@@ -363,9 +337,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
         <div className="px-8 py-6">
           {/* Benefits */}
           <div className="mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              What you'll get:
-            </h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">What you'll get:</h3>
             <div className="grid grid-cols-1 gap-3">
               {featureInfo.benefits.map((benefit, index) => (
                 <div
@@ -390,9 +362,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
                   ))}
-                  <span className="text-sm text-gray-600 ml-2">
-                    (4.9/5 from 2,847 users)
-                  </span>
+                  <span className="text-sm text-gray-600 ml-2">(4.9/5 from 2,847 users)</span>
                 </div>
               </div>
               <div className="transition-all duration-500">
@@ -401,8 +371,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                 </blockquote>
                 <div className="flex items-center justify-between">
                   <cite className="text-sm font-medium text-gray-900">
-                    — {testimonials[currentTestimonial].author},{' '}
-                    {testimonials[currentTestimonial].title}
+                    — {testimonials[currentTestimonial].author}, {testimonials[currentTestimonial].title}
                   </cite>
                   <div className="flex space-x-1">
                     {testimonials.map((_, index) => (
@@ -422,18 +391,14 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
           {/* Pricing */}
           {showPricing && (
             <div className="mb-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Choose your plan:
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Choose your plan:</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Monthly */}
                 <div className="relative p-6 border-2 border-gray-200 rounded-2xl hover:border-blue-300 transition-colors">
                   <div className="text-center">
                     <h4 className="font-semibold text-gray-900 mb-2">Monthly</h4>
                     <div className="mb-4">
-                      <span className="text-3xl font-bold text-gray-900">
-                        ${pricing.monthly.price}
-                      </span>
+                      <span className="text-3xl font-bold text-gray-900">${pricing.monthly.price}</span>
                       <span className="text-gray-600">/month</span>
                     </div>
                     <button
@@ -457,18 +422,13 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                   <div className="text-center">
                     <h4 className="font-semibold text-gray-900 mb-2">Yearly</h4>
                     <div className="mb-2">
-                      <span className="text-3xl font-bold text-gray-900">
-                        ${pricing.yearly.price}
-                      </span>
+                      <span className="text-3xl font-bold text-gray-900">${pricing.yearly.price}</span>
                       <span className="text-gray-600">/year</span>
                     </div>
                     <div className="text-sm text-gray-600 mb-4">
-                      <span className="line-through">
-                        ${(pricing.monthly.price * 12).toFixed(2)}
-                      </span>
+                      <span className="line-through">${(pricing.monthly.price * 12).toFixed(2)}</span>
                       <span className="text-green-600 font-medium ml-2">
-                        Save $
-                        {(pricing.monthly.price * 12 - pricing.yearly.price).toFixed(2)}
+                        Save ${((pricing.monthly.price * 12) - pricing.yearly.price).toFixed(2)}
                       </span>
                     </div>
                     <button

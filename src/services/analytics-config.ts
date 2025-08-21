@@ -33,7 +33,7 @@ class AnalyticsConfigService {
     this.initializationStatus = {
       sentry: { initialized: false },
       analytics: { initialized: false },
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
   }
 
@@ -47,9 +47,7 @@ class AnalyticsConfigService {
   /**
    * Initialize analytics services based on environment
    */
-  async initialize(
-    config?: Partial<AnalyticsEnvironmentConfig>
-  ): Promise<InitializationStatus> {
+  async initialize(config?: Partial<AnalyticsEnvironmentConfig>): Promise<InitializationStatus> {
     // Determine environment
     const environment = this.getEnvironment();
 
@@ -60,7 +58,7 @@ class AnalyticsConfigService {
       enableAnalytics: true,
       enableDebugMode: environment === 'development',
       privacyMode: false,
-      ...config,
+      ...config
     };
 
     console.info('Initializing analytics services for environment:', environment);
@@ -72,8 +70,7 @@ class AnalyticsConfigService {
         this.initializationStatus.sentry.initialized = true;
         console.info('✅ Sentry initialized successfully');
       } catch (error) {
-        this.initializationStatus.sentry.error =
-          error instanceof Error ? error.message : String(error);
+        this.initializationStatus.sentry.error = error instanceof Error ? error.message : String(error);
         console.error('❌ Failed to initialize Sentry:', error);
       }
     } else {
@@ -87,8 +84,7 @@ class AnalyticsConfigService {
         this.initializationStatus.analytics.initialized = true;
         console.info('✅ Analytics initialized successfully');
       } catch (error) {
-        this.initializationStatus.analytics.error =
-          error instanceof Error ? error.message : String(error);
+        this.initializationStatus.analytics.error = error instanceof Error ? error.message : String(error);
         console.error('❌ Failed to initialize Analytics:', error);
       }
     } else {
@@ -123,7 +119,7 @@ class AnalyticsConfigService {
       ...defaultConfig,
       dsn,
       debug: this.config!.enableDebugMode,
-      beforeSend: this.config!.privacyMode ? this.createPrivacyFilter() : undefined,
+      beforeSend: this.config!.privacyMode ? this.createPrivacyFilter() : undefined
     };
 
     sentryService.initialize(sentryConfig);
@@ -132,7 +128,7 @@ class AnalyticsConfigService {
     sentryService.addBreadcrumb('Analytics services initialized', 'system', {
       environment: this.config!.environment,
       privacyMode: this.config!.privacyMode,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     });
   }
 
@@ -156,9 +152,8 @@ class AnalyticsConfigService {
       ...defaultConfig,
       apiKey,
       debug: this.config!.enableDebugMode,
-      enableSessionRecording:
-        !this.config!.privacyMode && defaultConfig.enableSessionRecording,
-      host: process.env.REACT_APP_POSTHOG_HOST,
+      enableSessionRecording: !this.config!.privacyMode && defaultConfig.enableSessionRecording,
+      host: process.env.REACT_APP_POSTHOG_HOST
     };
 
     analyticsService.initialize(analyticsConfig);
@@ -177,14 +172,14 @@ class AnalyticsConfigService {
       environment: this.config?.environment,
       privacyMode: this.config?.privacyMode,
       timestamp: new Date().toISOString(),
-      ...properties,
+      ...properties
     };
 
     // Set in Sentry
     if (this.initializationStatus.sentry.initialized) {
       sentryService.setUser({
         id: userId,
-        ...properties,
+        ...properties
       } as any);
     }
 
@@ -193,10 +188,7 @@ class AnalyticsConfigService {
       analyticsService.identify(userId, userProperties as any);
     }
 
-    console.debug('User context set:', {
-      userId,
-      environment: this.config?.environment,
-    });
+    console.debug('User context set:', { userId, environment: this.config?.environment });
   }
 
   /**
@@ -228,10 +220,7 @@ class AnalyticsConfigService {
    * Check if services are ready for use
    */
   isReady(): boolean {
-    return (
-      this.initializationStatus.sentry.initialized ||
-      this.initializationStatus.analytics.initialized
-    );
+    return this.initializationStatus.sentry.initialized || this.initializationStatus.analytics.initialized;
   }
 
   /**
@@ -283,7 +272,7 @@ class AnalyticsConfigService {
         debug_mode: this.config?.enableDebugMode,
         initialization_time: this.initializationStatus.timestamp,
         sentry_error: this.initializationStatus.sentry.error,
-        analytics_error: this.initializationStatus.analytics.error,
+        analytics_error: this.initializationStatus.analytics.error
       });
     }
   }
@@ -318,7 +307,7 @@ class AnalyticsConfigService {
       if (event.user) {
         // Keep only essential user data
         event.user = {
-          id: event.user.id, // Only keep user ID
+          id: event.user.id // Only keep user ID
         };
       }
 
@@ -343,18 +332,12 @@ class AnalyticsConfigService {
    */
   private logInitializationSummary(): void {
     const sentryStatus = this.initializationStatus.sentry.initialized ? '✅' : '❌';
-    const analyticsStatus = this.initializationStatus.analytics.initialized
-      ? '✅'
-      : '❌';
+    const analyticsStatus = this.initializationStatus.analytics.initialized ? '✅' : '❌';
 
     console.group('📊 Analytics Services Initialization Summary');
     console.log(`Environment: ${this.config?.environment}`);
-    console.log(
-      `Sentry: ${sentryStatus} ${this.initializationStatus.sentry.initialized ? 'Ready' : 'Failed'}`
-    );
-    console.log(
-      `Analytics: ${analyticsStatus} ${this.initializationStatus.analytics.initialized ? 'Ready' : 'Failed'}`
-    );
+    console.log(`Sentry: ${sentryStatus} ${this.initializationStatus.sentry.initialized ? 'Ready' : 'Failed'}`);
+    console.log(`Analytics: ${analyticsStatus} ${this.initializationStatus.analytics.initialized ? 'Ready' : 'Failed'}`);
     console.log(`Privacy Mode: ${this.config?.privacyMode ? 'Enabled' : 'Disabled'}`);
     console.log(`Debug Mode: ${this.config?.enableDebugMode ? 'Enabled' : 'Disabled'}`);
 

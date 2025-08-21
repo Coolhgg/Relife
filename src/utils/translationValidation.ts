@@ -21,12 +21,7 @@ export interface ValidationResult {
 }
 
 export interface ValidationIssue {
-  type:
-    | 'missing_key'
-    | 'empty_value'
-    | 'invalid_interpolation'
-    | 'inconsistent_structure'
-    | 'suspicious_translation';
+  type: 'missing_key' | 'empty_value' | 'invalid_interpolation' | 'inconsistent_structure' | 'suspicious_translation';
   key: string;
   message: string;
   severity: 'error' | 'warning' | 'info';
@@ -35,7 +30,7 @@ export interface ValidationIssue {
 // Known interpolation patterns
 const INTERPOLATION_PATTERNS = [
   /\{\{(\w+)\}\}/g, // {{variable}}
-  /\{(\w+)\}/g, // {variable}
+  /\{(\w+)\}/g,     // {variable}
   /\$t\(['"]([\w:.]+)['"]\)/g, // $t('key')
 ];
 
@@ -69,7 +64,7 @@ export class TranslationValidator {
           type: 'missing_key',
           key,
           message: `Missing translation for key: ${key}`,
-          severity: 'error',
+          severity: 'error'
         });
       }
     });
@@ -82,7 +77,7 @@ export class TranslationValidator {
           type: 'empty_value',
           key,
           message: `Empty translation value for key: ${key}`,
-          severity: 'warning',
+          severity: 'warning'
         });
       }
     });
@@ -108,7 +103,7 @@ export class TranslationValidator {
       issues,
       completeness,
       totalKeys,
-      translatedKeys,
+      translatedKeys
     };
   }
 
@@ -126,26 +121,18 @@ export class TranslationValidator {
         const referenceMatches = referenceValue.match(pattern) || [];
 
         // Check if interpolation variables match
-        const translationVars = translationMatches.map(match =>
-          match.replace(pattern, '$1')
-        );
-        const referenceVars = referenceMatches.map(match =>
-          match.replace(pattern, '$1')
-        );
+        const translationVars = translationMatches.map(match => match.replace(pattern, '$1'));
+        const referenceVars = referenceMatches.map(match => match.replace(pattern, '$1'));
 
-        const missingInTranslation = referenceVars.filter(
-          v => !translationVars.includes(v)
-        );
-        const extraInTranslation = translationVars.filter(
-          v => !referenceVars.includes(v)
-        );
+        const missingInTranslation = referenceVars.filter(v => !translationVars.includes(v));
+        const extraInTranslation = translationVars.filter(v => !referenceVars.includes(v));
 
         if (missingInTranslation.length > 0) {
           issues.push({
             type: 'invalid_interpolation',
             key,
             message: `Missing interpolation variables: ${missingInTranslation.join(', ')}`,
-            severity: 'error',
+            severity: 'error'
           });
         }
 
@@ -154,7 +141,7 @@ export class TranslationValidator {
             type: 'invalid_interpolation',
             key,
             message: `Extra interpolation variables: ${extraInTranslation.join(', ')}`,
-            severity: 'warning',
+            severity: 'warning'
           });
         }
       });
@@ -178,21 +165,17 @@ export class TranslationValidator {
           type: 'suspicious_translation',
           key,
           message: 'Translation is the same as the key, might be missing',
-          severity: 'warning',
+          severity: 'warning'
         });
       }
 
       // Check if translation is the same as reference (for non-English languages)
-      if (
-        this.referenceLanguage === 'en' &&
-        value === referenceValue &&
-        value.length > 3
-      ) {
+      if (this.referenceLanguage === 'en' && value === referenceValue && value.length > 3) {
         issues.push({
           type: 'suspicious_translation',
           key,
           message: 'Translation is the same as English, might need localization',
-          severity: 'info',
+          severity: 'info'
         });
       }
     };
@@ -289,8 +272,7 @@ export class TranslationValidator {
 
     // Summary
     const totalLanguages = results.length;
-    const averageCompleteness =
-      results.reduce((sum, r) => sum + r.completeness, 0) / totalLanguages;
+    const averageCompleteness = results.reduce((sum, r) => sum + r.completeness, 0) / totalLanguages;
     const totalIssues = results.reduce((sum, r) => sum + r.issues.length, 0);
 
     report += `## Summary\n`;
@@ -307,12 +289,7 @@ export class TranslationValidator {
 
       if (result.issues.length > 0) {
         result.issues.forEach(issue => {
-          const icon =
-            issue.severity === 'error'
-              ? '❌'
-              : issue.severity === 'warning'
-                ? '⚠️'
-                : 'ℹ️';
+          const icon = issue.severity === 'error' ? '❌' : issue.severity === 'warning' ? '⚠️' : 'ℹ️';
           report += `  ${icon} **${issue.type}** (${issue.key}): ${issue.message}\n`;
         });
         report += '\n';
@@ -339,17 +316,9 @@ export const validateTranslationFile = async (
     const referenceTranslations = {}; // Load from /public/locales/en/{fileName}.json
 
     const validator = new TranslationValidator();
-    return validator.validateTranslation(
-      language,
-      fileName,
-      translations,
-      referenceTranslations
-    );
+    return validator.validateTranslation(language, fileName, translations, referenceTranslations);
   } catch (error) {
-    console.error(
-      `Failed to validate translation file ${fileName} for ${language}:`,
-      error
-    );
+    console.error(`Failed to validate translation file ${fileName} for ${language}:`, error);
     return null;
   }
 };

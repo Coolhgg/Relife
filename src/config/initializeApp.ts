@@ -31,9 +31,7 @@ export const initializeApp = async (): Promise<void> => {
     // For critical failures, you might want to show an error screen
     // but for i18n failures, we can continue with English
     if (error instanceof Error && error.message.includes('i18n')) {
-      console.warn(
-        'Continuing with default language due to i18n initialization failure'
-      );
+      console.warn('Continuing with default language due to i18n initialization failure');
     }
   }
 };

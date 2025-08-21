@@ -9,8 +9,7 @@ import {
   Eye,
   Tags,
   Share,
-  Upload,
-  CheckCircle,
+  Publish,
   ChevronLeft,
   ChevronRight,
   Check,
@@ -18,7 +17,7 @@ import {
   Loader2,
   Save,
   Music,
-  Volume2,
+  Volume2
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
@@ -28,13 +27,7 @@ import { Textarea } from './ui/textarea';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Alert, AlertDescription } from './ui/alert';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Separator } from './ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
@@ -50,7 +43,7 @@ import type {
   CustomSoundAssignment,
   CustomThemeUISounds,
   CustomThemeNotificationSounds,
-  CustomThemeAlarmSounds,
+  CustomThemeAlarmSounds
 } from '../types/custom-sound-themes';
 
 interface CustomSoundThemeCreatorProps {
@@ -67,87 +60,29 @@ const CREATION_STEPS: Array<{
   description: string;
   icon: React.ElementType;
 }> = [
-  {
-    id: 'info',
-    title: 'Basic Info',
-    description: 'Name and describe your theme',
-    icon: Info,
-  },
-  {
-    id: 'sounds',
-    title: 'Upload Sounds',
-    description: 'Add your custom audio files',
-    icon: Upload,
-  },
-  {
-    id: 'assignment',
-    title: 'Assign Sounds',
-    description: 'Map sounds to categories',
-    icon: Settings,
-  },
-  {
-    id: 'customization',
-    title: 'Customize',
-    description: 'Adjust volume and effects',
-    icon: Volume2,
-  },
+  { id: 'info', title: 'Basic Info', description: 'Name and describe your theme', icon: Info },
+  { id: 'sounds', title: 'Upload Sounds', description: 'Add your custom audio files', icon: Upload },
+  { id: 'assignment', title: 'Assign Sounds', description: 'Map sounds to categories', icon: Settings },
+  { id: 'customization', title: 'Customize', description: 'Adjust volume and effects', icon: Volume2 },
   { id: 'preview', title: 'Preview', description: 'Test your theme', icon: Play },
-  {
-    id: 'metadata',
-    title: 'Details',
-    description: 'Add tags and description',
-    icon: Tags,
-  },
-  {
-    id: 'sharing',
-    title: 'Sharing',
-    description: 'Set privacy and sharing options',
-    icon: Share,
-  },
-  { id: 'publish', title: 'Publish', description: 'Save your theme', icon: Upload },
+  { id: 'metadata', title: 'Details', description: 'Add tags and description', icon: Tags },
+  { id: 'sharing', title: 'Sharing', description: 'Set privacy and sharing options', icon: Share },
+  { id: 'publish', title: 'Publish', description: 'Save your theme', icon: Publish }
 ];
 
-const THEME_CATEGORIES: Array<{
-  value: CustomSoundThemeCategory;
-  label: string;
-  description: string;
-}> = [
-  {
-    value: 'ambient',
-    label: 'Ambient',
-    description: 'Atmospheric and background sounds',
-  },
+const THEME_CATEGORIES: Array<{ value: CustomSoundThemeCategory; label: string; description: string }> = [
+  { value: 'ambient', label: 'Ambient', description: 'Atmospheric and background sounds' },
   { value: 'musical', label: 'Musical', description: 'Music and melody-based themes' },
   { value: 'nature', label: 'Nature', description: 'Natural and organic sounds' },
-  {
-    value: 'electronic',
-    label: 'Electronic',
-    description: 'Digital and synthetic sounds',
-  },
+  { value: 'electronic', label: 'Electronic', description: 'Digital and synthetic sounds' },
   { value: 'voice', label: 'Voice', description: 'Vocal and speech-based sounds' },
-  {
-    value: 'experimental',
-    label: 'Experimental',
-    description: 'Unique and creative combinations',
-  },
+  { value: 'experimental', label: 'Experimental', description: 'Unique and creative combinations' },
   { value: 'seasonal', label: 'Seasonal', description: 'Holiday and seasonal themes' },
   { value: 'gaming', label: 'Gaming', description: 'Video game inspired sounds' },
-  {
-    value: 'professional',
-    label: 'Professional',
-    description: 'Business and work environments',
-  },
-  {
-    value: 'relaxation',
-    label: 'Relaxation',
-    description: 'Calming and peaceful sounds',
-  },
-  {
-    value: 'energizing',
-    label: 'Energizing',
-    description: 'Motivating and upbeat sounds',
-  },
-  { value: 'custom', label: 'Custom', description: 'Your own unique category' },
+  { value: 'professional', label: 'Professional', description: 'Business and work environments' },
+  { value: 'relaxation', label: 'Relaxation', description: 'Calming and peaceful sounds' },
+  { value: 'energizing', label: 'Energizing', description: 'Motivating and upbeat sounds' },
+  { value: 'custom', label: 'Custom', description: 'Your own unique category' }
 ];
 
 export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = ({
@@ -155,15 +90,13 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
   onThemeCreated,
   onCancel,
   existingTheme,
-  className = '',
+  className = ''
 }) => {
   const [session, setSession] = useState<CustomSoundThemeCreationSession | null>(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [validationResult, setValidationResult] = useState<ValidationResult | null>(
-    null
-  );
+  const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
   const [uploadedSounds, setUploadedSounds] = useState<CustomSound[]>([]);
   const [showValidationDialog, setShowValidationDialog] = useState(false);
 
@@ -200,9 +133,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
   const validateCurrentStep = async (): Promise<boolean> => {
     if (!session) return false;
 
-    const validation = await soundEffectsService.validateCustomTheme(
-      session.currentTheme
-    );
+    const validation = await soundEffectsService.validateCustomTheme(session.currentTheme);
     setValidationResult(validation);
 
     const currentStep = CREATION_STEPS[currentStepIndex];
@@ -244,10 +175,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
       const nextStep = CREATION_STEPS[nextStepIndex];
       await updateSession({
         currentStep: nextStep.id,
-        completedSteps: [
-          ...(session?.completedSteps || []),
-          CREATION_STEPS[currentStepIndex].id,
-        ],
+        completedSteps: [...(session?.completedSteps || []), CREATION_STEPS[currentStepIndex].id]
       });
     }
   };
@@ -267,9 +195,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
 
     setIsSaving(true);
     try {
-      const validation = await soundEffectsService.validateCustomTheme(
-        session.currentTheme
-      );
+      const validation = await soundEffectsService.validateCustomTheme(session.currentTheme);
 
       if (!validation.isValid) {
         setValidationResult(validation);
@@ -281,10 +207,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
         ...session.currentTheme,
         id: session.currentTheme.id || `custom_${Date.now()}`,
         name: session.currentTheme.name || 'Unnamed Theme',
-        displayName:
-          session.currentTheme.displayName ||
-          session.currentTheme.name ||
-          'Unnamed Theme',
+        displayName: session.currentTheme.displayName || session.currentTheme.name || 'Unnamed Theme',
         description: session.currentTheme.description || '',
         createdBy: userId,
         createdAt: new Date(),
@@ -300,23 +223,17 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
         sounds: session.currentTheme.sounds || {
           ui: {} as CustomThemeUISounds,
           notifications: {} as CustomThemeNotificationSounds,
-          alarms: {} as CustomThemeAlarmSounds,
+          alarms: {} as CustomThemeAlarmSounds
         },
         metadata: {
           totalSounds: uploadedSounds.length,
-          totalDuration: uploadedSounds.reduce(
-            (acc, sound) => acc + (sound.duration || 0),
-            0
-          ),
-          totalFileSize: uploadedSounds.reduce(
-            (acc, sound) => acc + (sound.fileSize || 0),
-            0
-          ),
+          totalDuration: uploadedSounds.reduce((acc, sound) => acc + (sound.duration || 0), 0),
+          totalFileSize: uploadedSounds.reduce((acc, sound) => acc + (sound.fileSize || 0), 0),
           audioQuality: {
             averageBitRate: 0,
             averageSampleRate: 0,
             formatDistribution: {},
-            qualityScore: 8,
+            qualityScore: 8
           },
           compatibility: {
             supportedPlatforms: ['web'],
@@ -326,11 +243,11 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
               firefox: true,
               safari: true,
               edge: true,
-              webAudioAPI: true,
+              webAudioAPI: true
             },
             deviceRequirements: {
-              requiresInternet: false,
-            },
+              requiresInternet: false
+            }
           },
           features: {
             hasGeneratedSounds: false,
@@ -343,21 +260,21 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
             hasAdaptiveSounds: false,
             supportsLoop: true,
             supportsFade: true,
-            supportsVolumeControl: true,
+            supportsVolumeControl: true
           },
           requirements: {
             subscriptionTier: 'free',
             permissions: [],
             features: [],
             maxFileSize: 10 * 1024 * 1024,
-            maxDuration: 300,
-          },
+            maxDuration: 300
+          }
         },
         preview: {
           previewSounds: [],
           demoSequence: [],
           description: session.currentTheme.description || '',
-          highlights: [],
+          highlights: []
         },
         permissions: {
           canView: 'private',
@@ -365,10 +282,10 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
           canShare: 'private',
           canDownload: 'private',
           canRate: 'private',
-          canComment: 'private',
+          canComment: 'private'
         },
         isPremium: false,
-        requiresSubscription: false,
+        requiresSubscription: false
       };
 
       const success = await soundEffectsService.saveCustomTheme(theme);
@@ -390,11 +307,11 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
 
     const updatedTheme = {
       ...session.currentTheme,
-      [field]: value,
+      [field]: value
     };
 
     updateSession({
-      currentTheme: updatedTheme,
+      currentTheme: updatedTheme
     });
   };
 
@@ -423,24 +340,15 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
           />
         );
       case 'customization':
-        return (
-          <CustomizationStep theme={session.currentTheme} onUpdate={updateThemeField} />
-        );
+        return <CustomizationStep theme={session.currentTheme} onUpdate={updateThemeField} />;
       case 'preview':
         return <PreviewStep theme={session.currentTheme} />;
       case 'metadata':
-        return (
-          <MetadataStep theme={session.currentTheme} onUpdate={updateThemeField} />
-        );
+        return <MetadataStep theme={session.currentTheme} onUpdate={updateThemeField} />;
       case 'sharing':
         return <SharingStep theme={session.currentTheme} onUpdate={updateThemeField} />;
       case 'publish':
-        return (
-          <PublishStep
-            theme={session.currentTheme}
-            validationResult={validationResult}
-          />
-        );
+        return <PublishStep theme={session.currentTheme} validationResult={validationResult} />;
       default:
         return <div>Step not implemented</div>;
     }
@@ -459,9 +367,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
       <div className="text-center py-12">
         <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-500" />
         <h3 className="text-lg font-medium mb-2">Failed to Initialize</h3>
-        <p className="text-gray-600 mb-4">
-          Could not start the theme creation session.
-        </p>
+        <p className="text-gray-600 mb-4">Could not start the theme creation session.</p>
         <Button onClick={initializeSession}>Try Again</Button>
       </div>
     );
@@ -501,27 +407,14 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
 
               return (
                 <div key={step.id} className="flex flex-col items-center">
-                  <div
-                    className={`
+                  <div className={`
                     w-8 h-8 rounded-full flex items-center justify-center mb-2
-                    ${
-                      isCompleted
-                        ? 'bg-green-500 text-white'
-                        : isCurrent
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200 text-gray-500'
-                    }
-                  `}
-                  >
-                    {isCompleted ? (
-                      <Check className="w-4 h-4" />
-                    ) : (
-                      <Icon className="w-4 h-4" />
-                    )}
+                    ${isCompleted ? 'bg-green-500 text-white' :
+                      isCurrent ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'}
+                  `}>
+                    {isCompleted ? <Check className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
                   </div>
-                  <p
-                    className={`text-xs text-center ${isCurrent ? 'font-medium' : 'text-gray-500'}`}
-                  >
+                  <p className={`text-xs text-center ${isCurrent ? 'font-medium' : 'text-gray-500'}`}>
                     {step.title}
                   </p>
                 </div>
@@ -540,7 +433,9 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
           </CardTitle>
           <p className="text-gray-600">{currentStep.description}</p>
         </CardHeader>
-        <CardContent>{renderStepContent()}</CardContent>
+        <CardContent>
+          {renderStepContent()}
+        </CardContent>
       </Card>
 
       {/* Navigation */}
@@ -561,11 +456,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
 
           {currentStepIndex === CREATION_STEPS.length - 1 ? (
             <Button onClick={saveTheme} disabled={isSaving}>
-              {isSaving ? (
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              ) : (
-                <Save className="w-4 h-4 mr-2" />
-              )}
+              {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
               Save Theme
             </Button>
           ) : (
@@ -592,19 +483,14 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
                 </Alert>
               ))}
               <div className="flex justify-end gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowValidationDialog(false)}
-                >
+                <Button variant="outline" onClick={() => setShowValidationDialog(false)}>
                   Fix Issues
                 </Button>
                 {validationResult.issues.every(issue => issue.type === 'warning') && (
-                  <Button
-                    onClick={() => {
-                      setShowValidationDialog(false);
-                      nextStep();
-                    }}
-                  >
+                  <Button onClick={() => {
+                    setShowValidationDialog(false);
+                    nextStep();
+                  }}>
                     Continue Anyway
                   </Button>
                 )}
@@ -629,7 +515,7 @@ const InfoStep: React.FC<{
       <Input
         id="theme-name"
         value={theme.name || ''}
-        onChange={e => onUpdate('name', e.target.value)}
+        onChange={(e) => onUpdate('name', e.target.value)}
         placeholder="My Awesome Theme"
       />
     </div>
@@ -639,17 +525,14 @@ const InfoStep: React.FC<{
       <Input
         id="theme-display-name"
         value={theme.displayName || ''}
-        onChange={e => onUpdate('displayName', e.target.value)}
+        onChange={(e) => onUpdate('displayName', e.target.value)}
         placeholder="My Awesome Theme (optional)"
       />
     </div>
 
     <div>
       <Label htmlFor="theme-category">Category *</Label>
-      <Select
-        value={theme.category}
-        onValueChange={(value: CustomSoundThemeCategory) => onUpdate('category', value)}
-      >
+      <Select value={theme.category} onValueChange={(value: CustomSoundThemeCategory) => onUpdate('category', value)}>
         <SelectTrigger>
           <SelectValue placeholder="Select a category" />
         </SelectTrigger>
@@ -668,7 +551,7 @@ const InfoStep: React.FC<{
       <Textarea
         id="theme-description"
         value={theme.description || ''}
-        onChange={e => onUpdate('description', e.target.value)}
+        onChange={(e) => onUpdate('description', e.target.value)}
         placeholder="Describe your theme..."
         rows={4}
       />
@@ -684,10 +567,8 @@ const SoundsStep: React.FC<{
   <div>
     <SoundUploader
       userId={userId}
-      onSoundUploaded={sound => onSoundsUpdated([...uploadedSounds, sound])}
-      onSoundDeleted={soundId =>
-        onSoundsUpdated(uploadedSounds.filter(s => s.id !== soundId))
-      }
+      onSoundUploaded={(sound) => onSoundsUpdated([...uploadedSounds, sound])}
+      onSoundDeleted={(soundId) => onSoundsUpdated(uploadedSounds.filter(s => s.id !== soundId))}
       maxFiles={20}
     />
   </div>
@@ -702,8 +583,7 @@ const AssignmentStep: React.FC<{
     <Alert>
       <Info className="w-4 h-4" />
       <AlertDescription>
-        Assign your uploaded sounds to different categories. Each category needs at
-        least one sound for basic functionality.
+        Assign your uploaded sounds to different categories. Each category needs at least one sound for basic functionality.
       </AlertDescription>
     </Alert>
 
@@ -719,9 +599,7 @@ const AssignmentStep: React.FC<{
         <div className="text-center py-8 text-gray-500">
           <Music className="w-12 h-12 mx-auto mb-4 opacity-50" />
           <p>Sound assignment interface will be implemented</p>
-          <p className="text-sm">
-            This will allow users to assign their uploaded sounds to specific UI actions
-          </p>
+          <p className="text-sm">This will allow users to assign their uploaded sounds to specific UI actions</p>
         </div>
       </TabsContent>
 
@@ -756,9 +634,7 @@ const CustomizationStep: React.FC<{
   <div className="text-center py-12 text-gray-500">
     <Settings className="w-12 h-12 mx-auto mb-4 opacity-50" />
     <p>Sound customization interface will be implemented</p>
-    <p className="text-sm">
-      Volume controls, fade effects, and sound processing options
-    </p>
+    <p className="text-sm">Volume controls, fade effects, and sound processing options</p>
   </div>
 );
 
@@ -768,9 +644,7 @@ const PreviewStep: React.FC<{
   <div className="text-center py-12 text-gray-500">
     <Play className="w-12 h-12 mx-auto mb-4 opacity-50" />
     <p>Theme preview and testing interface will be implemented</p>
-    <p className="text-sm">
-      Play different sounds and test the complete theme experience
-    </p>
+    <p className="text-sm">Play different sounds and test the complete theme experience</p>
   </div>
 );
 
@@ -784,15 +658,7 @@ const MetadataStep: React.FC<{
       <Input
         id="theme-tags"
         value={theme.tags?.join(', ') || ''}
-        onChange={e =>
-          onUpdate(
-            'tags',
-            e.target.value
-              .split(',')
-              .map(tag => tag.trim())
-              .filter(Boolean)
-          )
-        }
+        onChange={(e) => onUpdate('tags', e.target.value.split(',').map(tag => tag.trim()).filter(Boolean))}
         placeholder="relaxing, nature, peaceful"
       />
       <p className="text-sm text-gray-500 mt-1">Separate tags with commas</p>
@@ -828,18 +694,10 @@ const PublishStep: React.FC<{
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          <p>
-            <strong>Name:</strong> {theme.name}
-          </p>
-          <p>
-            <strong>Category:</strong> {theme.category}
-          </p>
-          <p>
-            <strong>Description:</strong> {theme.description || 'No description'}
-          </p>
-          <p>
-            <strong>Tags:</strong> {theme.tags?.join(', ') || 'None'}
-          </p>
+          <p><strong>Name:</strong> {theme.name}</p>
+          <p><strong>Category:</strong> {theme.category}</p>
+          <p><strong>Description:</strong> {theme.description || 'No description'}</p>
+          <p><strong>Tags:</strong> {theme.tags?.join(', ') || 'None'}</p>
         </div>
       </CardContent>
     </Card>
@@ -852,9 +710,7 @@ const PublishStep: React.FC<{
         <CardContent>
           <div className="flex items-center justify-between mb-4">
             <span>Completeness</span>
-            <Badge
-              variant={validationResult.completeness >= 100 ? 'default' : 'secondary'}
-            >
+            <Badge variant={validationResult.completeness >= 100 ? 'default' : 'secondary'}>
               {validationResult.completeness}%
             </Badge>
           </div>

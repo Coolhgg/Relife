@@ -45,9 +45,7 @@ class ThemePerformanceService {
       .map(key => `${key}:${variables[key]}`)
       .join(';');
     const classStr = classes.sort().join(' ');
-    return btoa(variableStr + '|' + classStr)
-      .replace(/[=+/]/g, '')
-      .substring(0, 16);
+    return btoa(variableStr + '|' + classStr).replace(/[=+/]/g, '').substring(0, 16);
   }
 
   /**
@@ -63,16 +61,15 @@ class ThemePerformanceService {
       variables: { ...variables },
       classes: [...classes],
       hash,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     };
 
     this.variableCache.set(themeId, cached);
 
     // Limit cache size to prevent memory leaks
     if (this.variableCache.size > 10) {
-      const oldest = Array.from(this.variableCache.entries()).sort(
-        ([, a], [, b]) => a.timestamp - b.timestamp
-      )[0];
+      const oldest = Array.from(this.variableCache.entries())
+        .sort(([,a], [,b]) => a.timestamp - b.timestamp)[0];
       this.variableCache.delete(oldest[0]);
     }
 
@@ -182,10 +179,7 @@ class ThemePerformanceService {
   /**
    * Efficiently batch CSS variable updates
    */
-  private batchCSSVariables(
-    root: HTMLElement,
-    variables: Record<string, string>
-  ): void {
+  private batchCSSVariables(root: HTMLElement, variables: Record<string, string>): void {
     // Use requestAnimationFrame for optimal timing
     requestAnimationFrame(() => {
       // Group updates to minimize layout thrashing
@@ -207,12 +201,11 @@ class ThemePerformanceService {
     requestAnimationFrame(() => {
       // Get current classes and filter out old theme classes
       const currentClasses = Array.from(element.classList);
-      const filteredClasses = currentClasses.filter(
-        cls =>
-          !cls.startsWith('theme-') &&
-          !cls.startsWith('high-contrast') &&
-          !cls.startsWith('reduce-motion') &&
-          !cls.startsWith('dyslexia-friendly')
+      const filteredClasses = currentClasses.filter(cls =>
+        !cls.startsWith('theme-') &&
+        !cls.startsWith('high-contrast') &&
+        !cls.startsWith('reduce-motion') &&
+        !cls.startsWith('dyslexia-friendly')
       );
 
       // Apply new classes efficiently
@@ -245,11 +238,10 @@ class ThemePerformanceService {
       return;
     }
 
-    this.observer = new MutationObserver(mutations => {
-      const hasStyleMutations = mutations.some(
-        mutation =>
-          mutation.type === 'attributes' &&
-          (mutation.attributeName === 'style' || mutation.attributeName === 'class')
+    this.observer = new MutationObserver((mutations) => {
+      const hasStyleMutations = mutations.some(mutation =>
+        mutation.type === 'attributes' &&
+        (mutation.attributeName === 'style' || mutation.attributeName === 'class')
       );
 
       if (hasStyleMutations) {
@@ -260,7 +252,7 @@ class ThemePerformanceService {
     this.observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['style', 'class'],
-      subtree: false,
+      subtree: false
     });
   }
 
@@ -286,20 +278,13 @@ class ThemePerformanceService {
 
       // Measure paint time if available
       if ('measureUserAgentSpecificMemory' in performance) {
-        (performance as any)
-          .measureUserAgentSpecificMemory?.()
-          .then((result: any) => {
-            if (result.bytes > 50 * 1024 * 1024) {
-              // 50MB threshold
-              console.warn(
-                'High memory usage detected after theme update:',
-                result.bytes
-              );
-            }
-          })
-          .catch(() => {
-            // Silently fail if not supported
-          });
+        (performance as any).measureUserAgentSpecificMemory?.().then((result: any) => {
+          if (result.bytes > 50 * 1024 * 1024) { // 50MB threshold
+            console.warn('High memory usage detected after theme update:', result.bytes);
+          }
+        }).catch(() => {
+          // Silently fail if not supported
+        });
       }
     }
   }
@@ -325,17 +310,12 @@ class ThemePerformanceService {
   /**
    * Preload theme data for smoother transitions
    */
-  preloadTheme(
-    themeId: string,
-    variables: Record<string, string>,
-    classes: string[]
-  ): void {
+  preloadTheme(themeId: string, variables: Record<string, string>, classes: string[]): void {
     this.cacheThemeData(themeId, variables, classes);
 
     // Preload critical CSS properties
-    const criticalVars = Object.entries(variables).filter(
-      ([key]) =>
-        key.includes('background') || key.includes('text') || key.includes('primary')
+    const criticalVars = Object.entries(variables).filter(([key]) =>
+      key.includes('background') || key.includes('text') || key.includes('primary')
     );
 
     // Create invisible element to trigger CSS parsing
@@ -375,7 +355,7 @@ class ThemePerformanceService {
       cacheSize: this.variableCache.size,
       cacheEntries: Array.from(this.variableCache.keys()),
       lastAppliedHash: this.lastAppliedHash,
-      isApplyingTheme: this.isApplyingTheme,
+      isApplyingTheme: this.isApplyingTheme
     };
   }
 

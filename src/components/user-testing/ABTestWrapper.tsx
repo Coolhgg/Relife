@@ -25,7 +25,7 @@ interface ABTestContextType {
 export const ABTestContext = React.createContext<ABTestContextType>({
   variant: null,
   trackConversion: () => {},
-  trackEvent: () => {},
+  trackEvent: () => {}
 });
 
 export function ABTestWrapper({
@@ -34,7 +34,7 @@ export function ABTestWrapper({
   defaultVariant = 'control',
   trackingEvents = {},
   children,
-  className,
+  className
 }: ABTestWrapperProps) {
   const [variant, setVariant] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,8 +64,8 @@ export function ABTestWrapper({
           testId,
           variant: assignedVariant || defaultVariant,
           event: trackingEvents.onView,
-          type: 'ab_test_view',
-        },
+          type: 'ab_test_view'
+        }
       });
     }
   }, [testId, variants, defaultVariant, trackingEvents.onView]);
@@ -85,8 +85,8 @@ export function ABTestWrapper({
           variant,
           event,
           ...metadata,
-          type: 'ab_test_event',
-        },
+          type: 'ab_test_event'
+        }
       });
     }
   };
@@ -100,7 +100,7 @@ export function ABTestWrapper({
   const contextValue: ABTestContextType = {
     variant,
     trackConversion,
-    trackEvent,
+    trackEvent
   };
 
   // Show loading state or fallback
@@ -139,8 +139,9 @@ export function withABTest<P extends object>(
     const userTestingService = UserTestingService.getInstance();
     const variant = userTestingService.getVariant(testId);
 
-    const enhancedProps =
-      variant && variantProps[variant] ? { ...props, ...variantProps[variant] } : props;
+    const enhancedProps = variant && variantProps[variant]
+      ? { ...props, ...variantProps[variant] }
+      : props;
 
     return <Component {...enhancedProps} />;
   };
@@ -160,13 +161,12 @@ export function ABTestProps<T>({
   testId,
   variants,
   defaultVariant = 'control',
-  children,
+  children
 }: ABTestPropsProps<T>) {
   const userTestingService = UserTestingService.getInstance();
   const variant = userTestingService.getVariant(testId) || defaultVariant;
 
-  const variantProps =
-    variants[variant] || variants[defaultVariant] || variants[Object.keys(variants)[0]];
+  const variantProps = variants[variant] || variants[defaultVariant] || variants[Object.keys(variants)[0]];
 
   return <>{children(variantProps)}</>;
 }

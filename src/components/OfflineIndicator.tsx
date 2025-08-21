@@ -14,7 +14,7 @@ import {
   TrendingUp,
   Settings,
   Info,
-  X,
+  X
 } from 'lucide-react';
 
 interface CacheStats {
@@ -24,16 +24,13 @@ interface CacheStats {
     hitRatio: number;
     lastCleanup: string;
   };
-  caches: Record<
-    string,
-    {
-      entries: number;
-      totalSize: number;
-      utilization: number;
-      oldestEntry: string | null;
-      newestEntry: string | null;
-    }
-  >;
+  caches: Record<string, {
+    entries: number;
+    totalSize: number;
+    utilization: number;
+    oldestEntry: string | null;
+    newestEntry: string | null;
+  }>;
 }
 
 interface ServiceWorkerStatus {
@@ -57,15 +54,10 @@ interface OfflineIndicatorProps {
   showDetailed?: boolean;
 }
 
-const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
-  className = '',
-  showDetailed = false,
-}) => {
+const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', showDetailed = false }) => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [showOfflineMessage, setShowOfflineMessage] = useState(false);
-  const [syncStatus, setSyncStatus] = useState<
-    'synced' | 'pending' | 'error' | 'offline'
-  >('synced');
+  const [syncStatus, setSyncStatus] = useState<'synced' | 'pending' | 'error' | 'offline'>('synced');
   const [cacheStats, setCacheStats] = useState<CacheStats | null>(null);
   const [swStatus, setSwStatus] = useState<ServiceWorkerStatus | null>(null);
   const [pendingChanges, setPendingChanges] = useState(0);
@@ -80,20 +72,16 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
         // Get service worker status
         const swResponse = await new Promise<ServiceWorkerStatus>(resolve => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
-          navigator.serviceWorker.controller!.postMessage({ type: 'GET_STATUS' }, [
-            channel.port2,
-          ]);
+          channel.port1.onmessage = (event) => resolve(event.data);
+          navigator.serviceWorker.controller!.postMessage({ type: 'GET_STATUS' }, [channel.port2]);
         });
         setSwStatus(swResponse);
 
         // Get cache statistics
         const cacheResponse = await new Promise<CacheStats>(resolve => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
-          navigator.serviceWorker.controller!.postMessage({ type: 'GET_CACHE_STATS' }, [
-            channel.port2,
-          ]);
+          channel.port1.onmessage = (event) => resolve(event.data);
+          navigator.serviceWorker.controller!.postMessage({ type: 'GET_CACHE_STATS' }, [channel.port2]);
         });
         setCacheStats(cacheResponse);
 
@@ -101,6 +89,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
         setPendingChanges(swResponse.analyticsQueued + swResponse.emotionalQueued);
         // In a real implementation, you would fetch conflicts from EnhancedOfflineStorage
         setConflicts(0);
+
       } catch (error) {
         console.error('Failed to fetch SW stats:', error);
       }
@@ -116,7 +105,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
       // Trigger comprehensive sync when coming back online
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
-          type: 'FORCE_SYNC',
+          type: 'FORCE_SYNC'
         });
       }
 
@@ -178,11 +167,9 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
 
     switch (syncStatus) {
       case 'synced':
-        return conflicts > 0 ? (
-          <AlertCircle className="w-4 h-4 text-orange-500" />
-        ) : (
-          <CheckCircle className="w-4 h-4 text-green-500" />
-        );
+        return conflicts > 0 ?
+          <AlertCircle className="w-4 h-4 text-orange-500" /> :
+          <CheckCircle className="w-4 h-4 text-green-500" />;
       case 'pending':
         return <RefreshCw className="w-4 h-4 text-yellow-500 animate-spin" />;
       case 'error':
@@ -195,8 +182,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
   const getDetailedStatusIcon = () => {
     if (pendingChanges > 0) return <Database className="w-4 h-4" />;
     if (conflicts > 0) return <AlertCircle className="w-4 h-4" />;
-    if (cacheStats && cacheStats.performance.hitRatio > 0.8)
-      return <TrendingUp className="w-4 h-4" />;
+    if (cacheStats && cacheStats.performance.hitRatio > 0.8) return <TrendingUp className="w-4 h-4" />;
     return <Activity className="w-4 h-4" />;
   };
 
@@ -223,13 +209,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     const parts = [];
 
     if (swStatus) {
-      if (
-        swStatus.cacheStats.hitRatio &&
-        parseFloat(swStatus.cacheStats.hitRatio) > 0
-      ) {
-        parts.push(
-          `${Math.round(parseFloat(swStatus.cacheStats.hitRatio) * 100)}% cache hit`
-        );
+      if (swStatus.cacheStats.hitRatio && parseFloat(swStatus.cacheStats.hitRatio) > 0) {
+        parts.push(`${Math.round(parseFloat(swStatus.cacheStats.hitRatio) * 100)}% cache hit`);
       }
       if (swStatus.alarmCount > 0) {
         parts.push(`${swStatus.alarmCount} alarms`);
@@ -237,10 +218,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     }
 
     if (cacheStats && Object.keys(cacheStats.caches).length > 0) {
-      const totalEntries = Object.values(cacheStats.caches).reduce(
-        (sum, cache) => sum + cache.entries,
-        0
-      );
+      const totalEntries = Object.values(cacheStats.caches).reduce((sum, cache) => sum + cache.entries, 0);
       parts.push(`${totalEntries} cached items`);
     }
 
@@ -288,15 +266,10 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
         setSyncStatus('pending');
-        const response = await new Promise<{
-          success: boolean;
-          message: string;
-        }>(resolve => {
+        const response = await new Promise<{success: boolean, message: string}>((resolve) => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
-          navigator.serviceWorker.controller!.postMessage({ type: 'OPTIMIZE_CACHE' }, [
-            channel.port2,
-          ]);
+          channel.port1.onmessage = (event) => resolve(event.data);
+          navigator.serviceWorker.controller!.postMessage({ type: 'OPTIMIZE_CACHE' }, [channel.port2]);
         });
 
         if (response.success) {
@@ -316,15 +289,10 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
         setSyncStatus('pending');
-        const response = await new Promise<{
-          success: boolean;
-          message: string;
-        }>(resolve => {
+        const response = await new Promise<{success: boolean, message: string}>((resolve) => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
-          navigator.serviceWorker.controller!.postMessage({ type: 'CLEAR_CACHE' }, [
-            channel.port2,
-          ]);
+          channel.port1.onmessage = (event) => resolve(event.data);
+          navigator.serviceWorker.controller!.postMessage({ type: 'CLEAR_CACHE' }, [channel.port2]);
         });
 
         if (response.success) {
@@ -383,9 +351,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
           {/* Connection Status */}
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-gray-600 dark:text-gray-400">
-                Connection
-              </span>
+              <span className="text-xs text-gray-600 dark:text-gray-400">Connection</span>
               <div className="flex items-center gap-1">
                 {getStatusIcon()}
                 <span className={`text-xs ${getStatusColor()}`}>{getStatusText()}</span>
@@ -408,28 +374,20 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Hit Ratio:</span>
-                  <span
-                    className={`font-medium ${
-                      cacheStats.performance.hitRatio > 0.8
-                        ? 'text-green-600 dark:text-green-400'
-                        : cacheStats.performance.hitRatio > 0.5
-                          ? 'text-yellow-600 dark:text-yellow-400'
-                          : 'text-red-600 dark:text-red-400'
-                    }`}
-                  >
+                  <span className={`font-medium ${
+                    cacheStats.performance.hitRatio > 0.8 ? 'text-green-600 dark:text-green-400' :
+                    cacheStats.performance.hitRatio > 0.5 ? 'text-yellow-600 dark:text-yellow-400' :
+                    'text-red-600 dark:text-red-400'
+                  }`}>
                     {Math.round(cacheStats.performance.hitRatio * 100)}%
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Cache Hits:</span>
-                  <span className="text-gray-900 dark:text-gray-100">
-                    {cacheStats.performance.hits}
-                  </span>
+                  <span className="text-gray-900 dark:text-gray-100">{cacheStats.performance.hits}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Last Cleanup:
-                  </span>
+                  <span className="text-gray-600 dark:text-gray-400">Last Cleanup:</span>
                   <span className="text-gray-900 dark:text-gray-100">
                     {formatTimeAgo(cacheStats.performance.lastCleanup)}
                   </span>
@@ -441,9 +399,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
           {/* Cache Details */}
           {cacheStats && Object.keys(cacheStats.caches).length > 0 && (
             <div className="mb-4">
-              <h4 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Cache Usage
-              </h4>
+              <h4 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Cache Usage</h4>
               <div className="space-y-1">
                 {Object.entries(cacheStats.caches).map(([name, cache]) => (
                   <div key={name} className="flex justify-between items-center text-xs">
@@ -474,9 +430,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
               <div className="space-y-1 text-xs">
                 {pendingChanges > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">
-                      Pending Changes:
-                    </span>
+                    <span className="text-gray-600 dark:text-gray-400">Pending Changes:</span>
                     <span className="text-yellow-600 dark:text-yellow-400 font-medium">
                       {pendingChanges}
                     </span>
@@ -527,15 +481,9 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
           aria-live="assertive"
         >
           <div className="flex items-center justify-center gap-2 text-sm">
-            <WifiOff
-              className="w-4 h-4 text-yellow-600 dark:text-yellow-400"
-              aria-hidden="true"
-            />
+            <WifiOff className="w-4 h-4 text-yellow-600 dark:text-yellow-400" aria-hidden="true" />
             <span className="text-yellow-800 dark:text-yellow-200 font-medium">
-              You're offline.{' '}
-              {pendingChanges > 0
-                ? `${pendingChanges} changes pending.`
-                : 'Alarms will still work!'}
+              You're offline. {pendingChanges > 0 ? `${pendingChanges} changes pending.` : 'Alarms will still work!'}
             </span>
           </div>
         </div>
@@ -550,10 +498,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
           aria-labelledby="sync-error-title"
         >
           <div className="flex items-start gap-2">
-            <AlertCircle
-              className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"
-              aria-hidden="true"
-            />
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
             <div>
               <h4
                 id="sync-error-title"
@@ -562,9 +507,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
                 Sync Failed
               </h4>
               <p className="text-xs text-red-700 dark:text-red-300 mt-1">
-                Unable to sync your data.{' '}
-                {pendingChanges > 0 && `${pendingChanges} changes pending.`} Will retry
-                automatically.
+                Unable to sync your data. {pendingChanges > 0 && `${pendingChanges} changes pending.`} Will retry automatically.
               </p>
               <button
                 onClick={fetchServiceWorkerStats}
@@ -585,10 +528,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
           aria-live="assertive"
         >
           <div className="flex items-start gap-2">
-            <AlertCircle
-              className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5"
-              aria-hidden="true"
-            />
+            <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
             <div>
               <h4 className="text-sm font-medium text-orange-800 dark:text-orange-200">
                 Data Conflicts Detected

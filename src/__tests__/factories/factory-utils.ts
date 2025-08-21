@@ -58,10 +58,16 @@ export const COMMON_DATA = {
     'demon-lord', // Premium
     'ai-robot', // Premium
     'comedian', // Premium
-    'philosopher', // Premium
+    'philosopher' // Premium
   ] as const,
 
-  subscriptionTiers: ['free', 'basic', 'premium', 'pro', 'enterprise'] as const,
+  subscriptionTiers: [
+    'free',
+    'basic',
+    'premium',
+    'pro',
+    'enterprise'
+  ] as const,
 
   subscriptionStatuses: [
     'active',
@@ -71,7 +77,7 @@ export const COMMON_DATA = {
     'incomplete',
     'incomplete_expired',
     'trialing',
-    'paused',
+    'paused'
   ] as const,
 
   battleTypes: [
@@ -81,7 +87,7 @@ export const COMMON_DATA = {
     'bragging',
     'group',
     'tournament',
-    'team',
+    'team'
   ] as const,
 
   battleStatuses: [
@@ -89,7 +95,7 @@ export const COMMON_DATA = {
     'active',
     'completed',
     'cancelled',
-    'registration',
+    'registration'
   ] as const,
 
   themeCategories: [
@@ -100,12 +106,23 @@ export const COMMON_DATA = {
     'gaming',
     'professional',
     'seasonal',
-    'custom',
+    'custom'
   ] as const,
 
-  alarmDifficulties: ['easy', 'medium', 'hard', 'nightmare'] as const,
+  alarmDifficulties: [
+    'easy',
+    'medium',
+    'hard',
+    'nightmare'
+  ] as const,
 
-  achievementRarities: ['common', 'uncommon', 'rare', 'epic', 'legendary'] as const,
+  achievementRarities: [
+    'common',
+    'uncommon',
+    'rare',
+    'epic',
+    'legendary'
+  ] as const,
 
   emotionTypes: [
     'happy',
@@ -114,10 +131,15 @@ export const COMMON_DATA = {
     'excited',
     'lonely',
     'proud',
-    'sleepy',
+    'sleepy'
   ] as const,
 
-  emotionalTones: ['encouraging', 'playful', 'firm', 'roast'] as const,
+  emotionalTones: [
+    'encouraging',
+    'playful',
+    'firm',
+    'roast'
+  ] as const
 };
 
 // Generate random array subset
@@ -164,10 +186,9 @@ export const generatePriceCents = (min = 99, max = 9999) => {
 export const generateUsername = () => {
   const patterns = [
     () => faker.internet.username().toLowerCase(),
-    () =>
-      `${faker.word.adjective()}${faker.word.noun()}${faker.number.int({ min: 1, max: 999 })}`,
+    () => `${faker.word.adjective()}${faker.word.noun()}${faker.number.int({ min: 1, max: 999 })}`,
     () => `${faker.person.firstName().toLowerCase()}_${faker.word.noun()}`,
-    () => `${faker.word.noun()}_${faker.number.int({ min: 1000, max: 9999 })}`,
+    () => `${faker.word.noun()}_${faker.number.int({ min: 1000, max: 9999 })}`
   ];
 
   return faker.helpers.arrayElement(patterns)();

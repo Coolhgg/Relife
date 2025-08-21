@@ -4,12 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 export const ThemeSelector: React.FC = () => {
   const { t } = useTranslation(['settings']);
-  const {
-    theme: currentTheme,
-    setTheme,
-    availableThemes,
-    resetToLanguageTheme,
-  } = useThemeContext();
+  const { theme: currentTheme, setTheme, availableThemes, resetToLanguageTheme } = useThemeContext();
 
   return (
     <div className="theme-selector">
@@ -32,7 +27,9 @@ export const ThemeSelector: React.FC = () => {
         ))}
       </div>
 
-      <button onClick={resetToLanguageTheme}>Reset to Language Default</button>
+      <button onClick={resetToLanguageTheme}>
+        Reset to Language Default
+      </button>
     </div>
   );
 };

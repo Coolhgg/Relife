@@ -95,58 +95,47 @@ class FallbackManager {
       </div>
     ));
 
-    this.registerFallbackComponent(
-      'simple-button',
-      ({ children, onClick, disabled }: any) => (
-        <button
-          className="px-4 py-2 bg-gray-200 text-gray-800 rounded disabled:opacity-50"
-          onClick={onClick}
-          disabled={disabled}
-        >
-          {children}
-        </button>
-      )
-    );
+    this.registerFallbackComponent('simple-button', ({ children, onClick, disabled }: any) => (
+      <button
+        className="px-4 py-2 bg-gray-200 text-gray-800 rounded disabled:opacity-50"
+        onClick={onClick}
+        disabled={disabled}
+      >
+        {children}
+      </button>
+    ));
 
-    this.registerFallbackComponent(
-      'emergency-alarm-list',
-      ({ alarms, onToggle }: any) => (
-        <div className="space-y-3">
-          {alarms?.map((alarm: any) => (
-            <div
-              key={alarm.id}
-              className="flex items-center justify-between p-3 border rounded"
-            >
-              <div>
-                <div className="font-semibold">{alarm.time}</div>
-                <div className="text-sm text-gray-600">{alarm.label}</div>
-              </div>
-              <button
-                onClick={() => onToggle?.(alarm.id)}
-                className={`px-3 py-1 rounded text-sm ${
-                  alarm.enabled
-                    ? 'bg-green-200 text-green-800'
-                    : 'bg-gray-200 text-gray-600'
-                }`}
-              >
-                {alarm.enabled ? 'ON' : 'OFF'}
-              </button>
+    this.registerFallbackComponent('emergency-alarm-list', ({ alarms, onToggle }: any) => (
+      <div className="space-y-3">
+        {alarms?.map((alarm: any) => (
+          <div key={alarm.id} className="flex items-center justify-between p-3 border rounded">
+            <div>
+              <div className="font-semibold">{alarm.time}</div>
+              <div className="text-sm text-gray-600">{alarm.label}</div>
             </div>
-          ))}
-        </div>
-      )
-    );
+            <button
+              onClick={() => onToggle?.(alarm.id)}
+              className={`px-3 py-1 rounded text-sm ${
+                alarm.enabled ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-600'
+              }`}
+            >
+              {alarm.enabled ? 'ON' : 'OFF'}
+            </button>
+          </div>
+        ))}
+      </div>
+    ));
   }
 
   /**
    * Setup error handling
    */
   private setupErrorHandling() {
-    window.addEventListener('error', event => {
+    window.addEventListener('error', (event) => {
       this.reportError(new Error(event.message));
     });
 
-    window.addEventListener('unhandledrejection', event => {
+    window.addEventListener('unhandledrejection', (event) => {
       this.reportError(new Error(event.reason));
     });
   }
@@ -232,9 +221,7 @@ export class FallbackErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       if (this.props.fallbackComponent) {
-        const FallbackComponent = fallbackManager.getFallbackComponent(
-          this.props.fallbackComponent
-        );
+        const FallbackComponent = fallbackManager.getFallbackComponent(this.props.fallbackComponent);
         if (FallbackComponent) {
           return <FallbackComponent error={this.state.error} />;
         }
@@ -242,9 +229,7 @@ export class FallbackErrorBoundary extends React.Component<
 
       return (
         <div className="p-6 text-center border border-red-200 rounded-lg bg-red-50">
-          <h3 className="text-lg font-medium text-red-900 mb-2">
-            Something went wrong
-          </h3>
+          <h3 className="text-lg font-medium text-red-900 mb-2">Something went wrong</h3>
           <button
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
             onClick={() => this.setState({ hasError: false, error: null })}

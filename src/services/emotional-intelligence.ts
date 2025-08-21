@@ -9,13 +9,13 @@ import type {
   EmotionType,
   EmotionalTone,
   EscalationLevel,
-  EmotionalNotificationPayload,
+  EmotionalNotificationPayload
 } from '../types/emotional';
 import {
   EMOTIONAL_MESSAGE_TEMPLATES,
   getEmotionalMessageTemplate,
   personalizeMessage,
-  MESSAGE_MODIFIERS,
+  MESSAGE_MODIFIERS
 } from '../data/emotional-message-templates';
 import { VOICE_MOOD_TO_EMOTIONAL_TONE } from '../types/emotional';
 
@@ -53,25 +53,17 @@ export class EmotionalIntelligenceService {
   /**
    * Main entry point: Analyze user behavior and generate emotional notification
    */
-  async generateEmotionalNotification(
-    userId: string
-  ): Promise<EmotionalNotificationPayload | null> {
+  async generateEmotionalNotification(userId: string): Promise<EmotionalNotificationPayload | null> {
     try {
       // 1. Gather user behavior data
       const userStats = await this.getUserStats(userId);
       const userProfile = await this.getUserEmotionalProfile(userId);
 
       // 2. Analyze emotional state
-      const emotionalState = await this.analyzeUserEmotionalState(
-        userStats,
-        userProfile
-      );
+      const emotionalState = await this.analyzeUserEmotionalState(userStats, userProfile);
 
       // 3. Check if notification should be sent
-      const shouldSend = await this.shouldSendEmotionalNotification(
-        userId,
-        emotionalState
-      );
+      const shouldSend = await this.shouldSendEmotionalNotification(userId, emotionalState);
       if (!shouldSend) {
         return null;
       }
@@ -80,11 +72,7 @@ export class EmotionalIntelligenceService {
       const message = await this.generatePersonalizedMessage(userStats, emotionalState);
 
       // 5. Create notification payload
-      const payload = await this.createNotificationPayload(
-        userId,
-        emotionalState,
-        message
-      );
+      const payload = await this.createNotificationPayload(userId, emotionalState, message);
 
       // 6. Track analytics
       this.analytics.track('EMOTIONAL_NOTIFICATION_GENERATED', {
@@ -93,15 +81,16 @@ export class EmotionalIntelligenceService {
         tone: emotionalState.recommendedTone,
         intensity: emotionalState.intensity,
         daysSinceLastUse: userStats.daysSinceLastUse,
-        escalationLevel: this.getEscalationLevel(userStats.daysSinceLastUse),
+        escalationLevel: this.getEscalationLevel(userStats.daysSinceLastUse)
       });
 
       return payload;
+
     } catch (error) {
       console.error('Error generating emotional notification:', error);
       this.analytics.track('EMOTIONAL_NOTIFICATION_ERROR', {
         userId,
-        error: error.message,
+        error: error.message
       });
       return null;
     }
@@ -127,7 +116,7 @@ export class EmotionalIntelligenceService {
       context,
       confidence,
       triggers,
-      recommendedTone,
+      recommendedTone
     };
   }
 
@@ -148,17 +137,14 @@ export class EmotionalIntelligenceService {
       sleepPatterns: this.analyzeSleepPatterns(userStats),
       timeOfDay,
       weekday: isWeekday,
-      previousEmotionalResponses: [], // Would be populated from database
+      previousEmotionalResponses: [] // Would be populated from database
     };
   }
 
   /**
    * Determine primary emotion based on context and user history
    */
-  private determineEmotion(
-    context: EmotionalContext,
-    profile: UserEmotionalProfile
-  ): EmotionType {
+  private determineEmotion(context: EmotionalContext, profile: UserEmotionalProfile): EmotionType {
     const { daysSinceLastUse, achievements, brokenStreaks, missedAlarms } = context;
 
     // Recent achievements or milestones
@@ -232,8 +218,8 @@ export class EmotionalIntelligenceService {
     // Use user's voice mood preference if available
     if (profile.preferredTones.length > 0) {
       // Select most effective preferred tone for this emotion
-      const availableTones = profile.preferredTones.filter(
-        tone => EMOTIONAL_MESSAGE_TEMPLATES[emotion][tone]?.length > 0
+      const availableTones = profile.preferredTones.filter(tone =>
+        EMOTIONAL_MESSAGE_TEMPLATES[emotion][tone]?.length > 0
       );
 
       if (availableTones.length > 0) {
@@ -289,7 +275,7 @@ export class EmotionalIntelligenceService {
       missed_alarms: emotionalState.context.missedAlarms,
       achievement: userStats.recentAchievements[0] || 'Morning Champion',
       missed_weeks: Math.ceil(emotionalState.context.daysSinceLastUse / 7),
-      days_to_milestone: this.calculateDaysToMilestone(userStats),
+      days_to_milestone: this.calculateDaysToMilestone(userStats)
     };
 
     // Apply contextual modifiers
@@ -313,7 +299,7 @@ export class EmotionalIntelligenceService {
       personalizedMessage,
       effectiveness: 0, // Will be updated based on user response
       usageCount: 0,
-      lastUsed: new Date(),
+      lastUsed: new Date()
     };
   }
 
@@ -340,8 +326,7 @@ export class EmotionalIntelligenceService {
       const lastNotification = await this.getLastEmotionalNotification(userId);
       if (lastNotification) {
         const hoursSinceLastNotification =
-          (Date.now() - new Date(lastNotification.created_at).getTime()) /
-          (1000 * 60 * 60);
+          (Date.now() - new Date(lastNotification.created_at).getTime()) / (1000 * 60 * 60);
 
         // Minimum 24 hours between emotional notifications
         if (hoursSinceLastNotification < 24) {
@@ -361,6 +346,7 @@ export class EmotionalIntelligenceService {
       }
 
       return true;
+
     } catch (error) {
       console.error('Error checking notification send criteria:', error);
       return false;
@@ -375,9 +361,7 @@ export class EmotionalIntelligenceService {
     emotionalState: EmotionalState,
     message: EmotionalMessage
   ): Promise<EmotionalNotificationPayload> {
-    const escalationLevel = this.getEscalationLevel(
-      emotionalState.context.daysSinceLastUse
-    );
+    const escalationLevel = this.getEscalationLevel(emotionalState.context.daysSinceLastUse);
 
     return {
       userId,
@@ -392,8 +376,8 @@ export class EmotionalIntelligenceService {
       requireInteraction: escalationLevel !== 'gentle',
       metadata: {
         analysisConfidence: emotionalState.confidence,
-        version: '1.0.0',
-      },
+        version: '1.0.0'
+      }
     };
   }
 
@@ -407,16 +391,18 @@ export class EmotionalIntelligenceService {
   ): Promise<void> {
     try {
       // Store response in database
-      await supabase.from('emotional_notification_logs').insert({
-        user_id: userId,
-        message_id: messageId,
-        emotion_type: response.emotion,
-        message_sent: '', // Would store the actual message
-        notification_opened: response.notificationOpened,
-        action_taken: response.actionTaken,
-        effectiveness_rating: response.effectivenessRating,
-        response_time_ms: response.timeToResponse,
-      });
+      await supabase
+        .from('emotional_notification_logs')
+        .insert({
+          user_id: userId,
+          message_id: messageId,
+          emotion_type: response.emotion,
+          message_sent: '', // Would store the actual message
+          notification_opened: response.notificationOpened,
+          action_taken: response.actionTaken,
+          effectiveness_rating: response.effectivenessRating,
+          response_time_ms: response.timeToResponse
+        });
 
       // Update message effectiveness
       await this.updateMessageEffectiveness(messageId, response);
@@ -433,8 +419,9 @@ export class EmotionalIntelligenceService {
         notificationOpened: response.notificationOpened,
         actionTaken: response.actionTaken,
         effectivenessRating: response.effectivenessRating,
-        responseTimeMs: response.timeToResponse,
+        responseTimeMs: response.timeToResponse
       });
+
     } catch (error) {
       console.error('Error tracking emotional response:', error);
     }
@@ -510,8 +497,7 @@ export class EmotionalIntelligenceService {
   }
 
   private calculateDaysToMilestone(userStats: UserStats): number {
-    const nextMilestone =
-      [7, 14, 30, 50, 100].find(m => m > userStats.currentStreak) || 365;
+    const nextMilestone = [7, 14, 30, 50, 100].find(m => m > userStats.currentStreak) || 365;
     return nextMilestone - userStats.currentStreak;
   }
 
@@ -542,7 +528,7 @@ export class EmotionalIntelligenceService {
       worried: [300, 100, 300, 100, 300],
       lonely: [400, 200, 400],
       proud: [100, 50, 100, 50, 100, 50, 200],
-      sleepy: [200, 300, 200],
+      sleepy: [200, 300, 200]
     };
 
     return patterns[emotion] || [200, 100, 200];
@@ -569,10 +555,7 @@ export class EmotionalIntelligenceService {
 
       const lastActivity = recentActivity?.[0];
       const daysSinceLastUse = lastActivity
-        ? Math.floor(
-            (Date.now() - new Date(lastActivity.created_at).getTime()) /
-              (1000 * 60 * 60 * 24)
-          )
+        ? Math.floor((Date.now() - new Date(lastActivity.created_at).getTime()) / (1000 * 60 * 60 * 24))
         : 365;
 
       return {
@@ -585,8 +568,9 @@ export class EmotionalIntelligenceService {
         completionRate: alarmStats?.completion_rate || 0,
         lastActiveTime: lastActivity ? new Date(lastActivity.created_at) : undefined,
         recentAchievements: [], // Would query achievements table
-        weeklyActive: daysSinceLastUse <= 7,
+        weeklyActive: daysSinceLastUse <= 7
       };
+
     } catch (error) {
       console.error('Error getting user stats:', error);
       // Return default stats
@@ -599,7 +583,7 @@ export class EmotionalIntelligenceService {
         totalAlarms: 0,
         completionRate: 1,
         recentAchievements: [],
-        weeklyActive: true,
+        weeklyActive: true
       };
     }
   }
@@ -621,10 +605,10 @@ export class EmotionalIntelligenceService {
           responsePatterns: profile.response_patterns || {
             bestTimeToSend: '08:00',
             averageResponseTime: 300000, // 5 minutes
-            preferredEscalationSpeed: 'medium',
+            preferredEscalationSpeed: 'medium'
           },
           emotionalHistory: [],
-          lastAnalyzed: new Date(profile.last_analyzed),
+          lastAnalyzed: new Date(profile.last_analyzed)
         };
       }
 
@@ -637,11 +621,12 @@ export class EmotionalIntelligenceService {
         responsePatterns: {
           bestTimeToSend: '08:00',
           averageResponseTime: 300000,
-          preferredEscalationSpeed: 'medium',
+          preferredEscalationSpeed: 'medium'
         },
         emotionalHistory: [],
-        lastAnalyzed: new Date(),
+        lastAnalyzed: new Date()
       };
+
     } catch (error) {
       console.error('Error getting emotional profile:', error);
       return {
@@ -652,10 +637,10 @@ export class EmotionalIntelligenceService {
         responsePatterns: {
           bestTimeToSend: '08:00',
           averageResponseTime: 300000,
-          preferredEscalationSpeed: 'medium',
+          preferredEscalationSpeed: 'medium'
         },
         emotionalHistory: [],
-        lastAnalyzed: new Date(),
+        lastAnalyzed: new Date()
       };
     }
   }
@@ -696,18 +681,12 @@ export class EmotionalIntelligenceService {
     return false;
   }
 
-  private async updateMessageEffectiveness(
-    messageId: string,
-    response: EmotionalResponse
-  ): Promise<void> {
+  private async updateMessageEffectiveness(messageId: string, response: EmotionalResponse): Promise<void> {
     // Update message effectiveness based on user response
     // Implementation would track success metrics
   }
 
-  private async updateUserEmotionalProfile(
-    userId: string,
-    response: EmotionalResponse
-  ): Promise<void> {
+  private async updateUserEmotionalProfile(userId: string, response: EmotionalResponse): Promise<void> {
     // Update user's emotional profile based on their response
     // This helps improve future message selection
   }

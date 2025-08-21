@@ -10,14 +10,14 @@ jest.mock('../../services/performance-monitor', () => ({
     startTracking: jest.fn(),
     endTracking: jest.fn(),
     trackUserAction: jest.fn(),
-  },
+  }
 }));
 
 jest.mock('../../services/app-analytics', () => ({
   AppAnalyticsService: {
     trackPageView: jest.fn(),
     trackUserInteraction: jest.fn(),
-  },
+  }
 }));
 
 jest.mock('../../hooks/useAuth', () => ({
@@ -26,7 +26,7 @@ jest.mock('../../hooks/useAuth', () => ({
     user: testUtils.mockUser,
     isAuthenticated: true,
     loading: false,
-  }),
+  })
 }));
 
 describe('Dashboard', () => {
@@ -56,7 +56,8 @@ describe('Dashboard', () => {
 
     test('renders correct greeting based on time of day', () => {
       // Mock different times
-      jest.spyOn(Date.prototype, 'getHours').mockReturnValueOnce(7); // Morning
+      jest.spyOn(Date.prototype, 'getHours')
+        .mockReturnValueOnce(7); // Morning
 
       render(<Dashboard {...mockProps} />);
       expect(screen.getByText(/good morning/i)).toBeInTheDocument();
@@ -73,9 +74,7 @@ describe('Dashboard', () => {
       render(<Dashboard {...mockProps} />);
 
       expect(screen.getByText('Quick Setup')).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: /morning routine/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /morning routine/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /work alarm/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /custom/i })).toBeInTheDocument();
     });
@@ -168,9 +167,7 @@ describe('Dashboard', () => {
       const addButton = screen.getByRole('button', { name: /add alarm/i });
       await user.click(addButton);
 
-      expect(PerformanceMonitor.trackUserAction).toHaveBeenCalledWith(
-        'add-alarm-clicked'
-      );
+      expect(PerformanceMonitor.trackUserAction).toHaveBeenCalledWith('add-alarm-clicked');
     });
   });
 
@@ -239,12 +236,8 @@ describe('Dashboard', () => {
       render(<Dashboard {...mockProps} />);
 
       expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
-      expect(
-        screen.getByRole('heading', { level: 2, name: /quick setup/i })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('heading', { level: 2, name: /recent alarms/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 2, name: /quick setup/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 2, name: /recent alarms/i })).toBeInTheDocument();
     });
 
     test('has proper ARIA labels', () => {

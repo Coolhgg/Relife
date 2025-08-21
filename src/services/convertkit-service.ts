@@ -1,11 +1,7 @@
 // Enhanced ConvertKit Integration Service for Relife
 // Provides comprehensive ConvertKit API integration with authentication, testing, and advanced features
 
-import {
-  PersonaType,
-  EmailPlatformConfig,
-  DEFAULT_PERSONAS,
-} from '../types/email-campaigns';
+import { PersonaType, EmailPlatformConfig, DEFAULT_PERSONAS } from '../types/email-campaigns';
 import { User } from '../types';
 import { ErrorHandler } from './error-handler';
 
@@ -130,26 +126,19 @@ export class ConvertKitService {
     if (!this.config) return false;
 
     try {
-      const response = await fetch(
-        `${this.baseUrl}/account?api_secret=${this.config.apiSecret}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      const response = await fetch(`${this.baseUrl}/account?api_secret=${this.config.apiSecret}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
         }
-      );
+      });
 
       if (response.ok) {
         const data = await response.json();
-        console.log(
-          `✅ ConvertKit authenticated for account: ${data.name} (ID: ${data.account_id})`
-        );
+        console.log(`✅ ConvertKit authenticated for account: ${data.name} (ID: ${data.account_id})`);
         return true;
       } else {
-        console.error(
-          `❌ ConvertKit auth failed: ${response.status} ${response.statusText}`
-        );
+        console.error(`❌ ConvertKit auth failed: ${response.status} ${response.statusText}`);
         return false;
       }
     } catch (error) {
@@ -173,10 +162,8 @@ export class ConvertKitService {
         const displayTagName = `Persona: ${persona.displayName}`;
 
         // Check if persona tag exists
-        if (
-          !existingTagNames.includes(tagName.toLowerCase()) &&
-          !existingTagNames.includes(displayTagName.toLowerCase())
-        ) {
+        if (!existingTagNames.includes(tagName.toLowerCase()) &&
+            !existingTagNames.includes(displayTagName.toLowerCase())) {
           await this.createTag(tagName);
           console.log(`✅ Created ConvertKit tag: ${tagName}`);
         }
@@ -189,11 +176,7 @@ export class ConvertKitService {
   /**
    * Add subscriber to ConvertKit with persona tagging
    */
-  async addSubscriber(
-    user: User,
-    persona: PersonaType,
-    formId?: number
-  ): Promise<ConvertKitSubscriber | null> {
+  async addSubscriber(user: User, persona: PersonaType, formId?: number): Promise<ConvertKitSubscriber | null> {
     if (!this.isAuthenticated || !this.config) {
       console.warn('ConvertKit service not authenticated');
       return null;
@@ -209,9 +192,9 @@ export class ConvertKitService {
           persona: persona,
           subscription_tier: user.subscriptionTier || 'free',
           signup_date: user.createdAt?.toISOString() || new Date().toISOString(),
-          persona_confidence: 0.8, // Default confidence
+          persona_confidence: 0.8 // Default confidence
         },
-        tags: [`persona:${persona}`],
+        tags: [`persona:${persona}`]
       };
 
       // Add form ID if provided
@@ -222,9 +205,9 @@ export class ConvertKitService {
       const response = await fetch(`${this.baseUrl}/subscribers`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(subscriberData),
+        body: JSON.stringify(subscriberData)
       });
 
       if (response.ok) {
@@ -248,11 +231,7 @@ export class ConvertKitService {
   /**
    * Update subscriber persona and fields
    */
-  async updateSubscriberPersona(
-    email: string,
-    persona: PersonaType,
-    confidence: number = 0.8
-  ): Promise<boolean> {
+  async updateSubscriberPersona(email: string, persona: PersonaType, confidence: number = 0.8): Promise<boolean> {
     if (!this.isAuthenticated || !this.config) return false;
 
     try {
@@ -269,16 +248,16 @@ export class ConvertKitService {
         fields: {
           persona: persona,
           persona_confidence: confidence,
-          persona_updated_at: new Date().toISOString(),
-        },
+          persona_updated_at: new Date().toISOString()
+        }
       };
 
       const response = await fetch(`${this.baseUrl}/subscribers/${subscriber.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(updateData),
+        body: JSON.stringify(updateData)
       });
 
       if (response.ok) {
@@ -306,15 +285,15 @@ export class ConvertKitService {
       const response = await fetch(`${this.baseUrl}/tags`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           api_key: this.config.apiKey,
           tag: {
             name: tagName,
-            subscriber_id: subscriberId,
-          },
-        }),
+            subscriber_id: subscriberId
+          }
+        })
       });
 
       return response.ok;
@@ -331,19 +310,16 @@ export class ConvertKitService {
     if (!this.isAuthenticated || !this.config) return false;
 
     try {
-      const response = await fetch(
-        `${this.baseUrl}/sequences/${sequenceId}/subscribe`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            api_key: this.config.apiKey,
-            email: email,
-          }),
-        }
-      );
+      const response = await fetch(`${this.baseUrl}/sequences/${sequenceId}/subscribe`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          api_key: this.config.apiKey,
+          email: email
+        })
+      });
 
       if (response.ok) {
         console.log(`✅ Added ${email} to sequence ${sequenceId}`);
@@ -365,12 +341,9 @@ export class ConvertKitService {
     if (!this.isAuthenticated || !this.config) return null;
 
     try {
-      const response = await fetch(
-        `${this.baseUrl}/subscribers?api_secret=${this.config.apiSecret}&email_address=${encodeURIComponent(email)}`,
-        {
-          method: 'GET',
-        }
-      );
+      const response = await fetch(`${this.baseUrl}/subscribers?api_secret=${this.config.apiSecret}&email_address=${encodeURIComponent(email)}`, {
+        method: 'GET'
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -391,12 +364,9 @@ export class ConvertKitService {
     if (!this.isAuthenticated || !this.config) return [];
 
     try {
-      const response = await fetch(
-        `${this.baseUrl}/tags?api_key=${this.config.apiKey}`,
-        {
-          method: 'GET',
-        }
-      );
+      const response = await fetch(`${this.baseUrl}/tags?api_key=${this.config.apiKey}`, {
+        method: 'GET'
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -420,14 +390,14 @@ export class ConvertKitService {
       const response = await fetch(`${this.baseUrl}/tags`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           api_key: this.config.apiKey,
           tag: {
-            name: name,
-          },
-        }),
+            name: name
+          }
+        })
       });
 
       if (response.ok) {
@@ -449,12 +419,9 @@ export class ConvertKitService {
     if (!this.isAuthenticated || !this.config) return [];
 
     try {
-      const response = await fetch(
-        `${this.baseUrl}/forms?api_key=${this.config.apiKey}`,
-        {
-          method: 'GET',
-        }
-      );
+      const response = await fetch(`${this.baseUrl}/forms?api_key=${this.config.apiKey}`, {
+        method: 'GET'
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -475,12 +442,9 @@ export class ConvertKitService {
     if (!this.isAuthenticated || !this.config) return [];
 
     try {
-      const response = await fetch(
-        `${this.baseUrl}/sequences?api_key=${this.config.apiKey}`,
-        {
-          method: 'GET',
-        }
-      );
+      const response = await fetch(`${this.baseUrl}/sequences?api_key=${this.config.apiKey}`, {
+        method: 'GET'
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -510,7 +474,7 @@ export class ConvertKitService {
         api_secret: this.config.apiSecret,
         subject: subject,
         content: content,
-        public: false,
+        public: false
       };
 
       if (tagIds.length > 0) {
@@ -524,9 +488,9 @@ export class ConvertKitService {
       const response = await fetch(`${this.baseUrl}/broadcasts`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(broadcastData),
+        body: JSON.stringify(broadcastData)
       });
 
       if (response.ok) {
@@ -551,7 +515,7 @@ export class ConvertKitService {
       console.log(`📨 ConvertKit webhook received: ${eventType}`, {
         subscriber: payload.subscriber.email,
         tag: payload.tag?.name,
-        form: payload.form?.name,
+        form: payload.form?.name
       });
 
       // Handle different webhook events
@@ -588,17 +552,13 @@ export class ConvertKitService {
 
   private handleTagAdd(payload: ConvertKitWebhookPayload): void {
     if (payload.tag?.name.startsWith('persona:')) {
-      console.log(
-        `🏷️ Persona tag added: ${payload.subscriber.email} -> ${payload.tag.name}`
-      );
+      console.log(`🏷️ Persona tag added: ${payload.subscriber.email} -> ${payload.tag.name}`);
       // Track persona assignment in analytics
     }
   }
 
   private handleFormSubscribe(payload: ConvertKitWebhookPayload): void {
-    console.log(
-      `📝 Form subscription: ${payload.subscriber.email} -> ${payload.form?.name}`
-    );
+    console.log(`📝 Form subscription: ${payload.subscriber.email} -> ${payload.form?.name}`);
     // Track form subscription in analytics
   }
 
@@ -619,7 +579,7 @@ export class ConvertKitService {
       totalTags: 0,
       totalForms: 0,
       totalSequences: 0,
-      personaTags: [] as string[],
+      personaTags: [] as string[]
     };
 
     if (!this.isAuthenticated) return stats;
@@ -628,7 +588,7 @@ export class ConvertKitService {
       const [tags, forms, sequences] = await Promise.all([
         this.getAllTags(),
         this.getAllForms(),
-        this.getAllSequences(),
+        this.getAllSequences()
       ]);
 
       stats.totalTags = tags.length;
@@ -637,6 +597,7 @@ export class ConvertKitService {
       stats.personaTags = tags
         .filter(tag => tag.name.startsWith('persona:'))
         .map(tag => tag.name);
+
     } catch (error) {
       console.error('Failed to get service stats:', error);
     }

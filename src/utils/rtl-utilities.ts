@@ -22,10 +22,7 @@ export const getTextDirection = (language: SupportedLanguage): 'ltr' | 'rtl' => 
 /**
  * Gets direction-aware flex direction
  */
-export const getFlexDirection = (
-  language: SupportedLanguage,
-  reverse?: boolean
-): 'row' | 'row-reverse' => {
+export const getFlexDirection = (language: SupportedLanguage, reverse?: boolean): 'row' | 'row-reverse' => {
   const isLanguageRTL = isRTL(language);
 
   if (reverse) {
@@ -38,10 +35,7 @@ export const getFlexDirection = (
 /**
  * Gets direction-aware text alignment
  */
-export const getTextAlign = (
-  language: SupportedLanguage,
-  alignment: 'start' | 'end' | 'center' = 'start'
-): 'left' | 'right' | 'center' => {
+export const getTextAlign = (language: SupportedLanguage, alignment: 'start' | 'end' | 'center' = 'start'): 'left' | 'right' | 'center' => {
   if (alignment === 'center') return 'center';
 
   const isLanguageRTL = isRTL(language);
@@ -157,10 +151,7 @@ export const logicalProperties = {
 /**
  * Direction-aware transform utilities
  */
-export const getTransform = (
-  language: SupportedLanguage,
-  baseTransform?: string
-): string => {
+export const getTransform = (language: SupportedLanguage, baseTransform?: string): string => {
   const isLanguageRTL = isRTL(language);
   const scaleX = isLanguageRTL ? 'scaleX(-1)' : '';
 
@@ -197,9 +188,7 @@ export const rtlClassNames = {
 /**
  * Helper to combine RTL-aware classes
  */
-export const combineRTLClasses = (
-  ...classes: (string | undefined | null | false)[]
-): string => {
+export const combineRTLClasses = (...classes: (string | undefined | null | false)[]): string => {
   return classes.filter(Boolean).join(' ');
 };
 

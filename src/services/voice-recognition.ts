@@ -28,84 +28,47 @@ export class VoiceRecognitionService {
     maxAlternatives: 3,
     confidenceThreshold: 0.6,
     noiseReduction: true,
-    adaptiveThreshold: true,
+    adaptiveThreshold: true
   };
 
   // Enhanced command patterns with context awareness
   private static commandPatterns = {
     dismiss: {
       exact: [
-        'stop',
-        'stop alarm',
-        'turn off',
-        'turn off alarm',
-        'dismiss',
-        'dismiss alarm',
-        'shut up',
-        'quiet',
-        'silence',
-        'cancel',
-        'cancel alarm',
-        'end',
-        'end alarm',
-        'off',
-        'alarm off',
-        'no more',
-        'enough',
-        'wake up',
-        'im up',
-        "i'm up",
-        'ok',
-        'okay',
-        'alright',
-        'fine',
-        'done',
-        'finished',
+        'stop', 'stop alarm', 'turn off', 'turn off alarm', 'dismiss', 'dismiss alarm',
+        'shut up', 'quiet', 'silence', 'cancel', 'cancel alarm', 'end', 'end alarm',
+        'off', 'alarm off', 'no more', 'enough', 'wake up', 'im up', "i'm up",
+        'ok', 'okay', 'alright', 'fine', 'done', 'finished'
       ],
       patterns: [
         /^(stop|turn off|shut up|dismiss|cancel|end)\s*(the\s*)?(alarm|ringing)?$/i,
         /^(ok|okay|alright|fine)\s*(i'm?\s*)?(up|awake|ready)$/i,
         /^(enough|no more)\s*(alarm|noise|sound)?$/i,
-        /^(silence|quiet)\s*(please|now)?$/i,
-      ],
+        /^(silence|quiet)\s*(please|now)?$/i
+      ]
     },
     snooze: {
       exact: [
-        'snooze',
-        'snooze alarm',
-        'five more minutes',
-        'five minutes',
-        '5 minutes',
-        'five more',
-        '5 more',
-        'later',
-        'wait',
-        'sleep',
-        'more time',
-        'not yet',
-        'too early',
-        'few more minutes',
-        'bit longer',
-        'little longer',
-        'postpone',
-        'delay',
-        'reschedule',
+        'snooze', 'snooze alarm', 'five more minutes', 'five minutes', '5 minutes',
+        'five more', '5 more', 'later', 'wait', 'sleep', 'more time',
+        'not yet', 'too early', 'few more minutes', 'bit longer', 'little longer',
+        'postpone', 'delay', 'reschedule'
       ],
       patterns: [
         /^(snooze|postpone|delay)\s*(the\s*)?(alarm|for)?$/i,
         /^(\d+|five|ten|fifteen)\s*(more\s*)?(minutes?)$/i,
         /^(later|wait|sleep)\s*(please|a bit|some more)?$/i,
         /^(not yet|too early)\s*(please)?$/i,
-        /^(few|bit|little)\s*(more\s*)?(minutes?|time)$/i,
-      ],
-    },
+        /^(few|bit|little)\s*(more\s*)?(minutes?|time)$/i
+      ]
+    }
   };
 
   // Context-aware thresholds
   private static confidenceThresholds = {
     dismiss: 0.65, // Higher threshold for dismissing
-    snooze: 0.6, // Lower threshold for snoozing
-    unknown: 0.4, // Fallback threshold
+    snooze: 0.60,  // Lower threshold for snoozing
+    unknown: 0.40  // Fallback threshold
   };
 
   // Adaptive learning data
@@ -113,7 +76,7 @@ export class VoiceRecognitionService {
   private static userPreferences = {
     preferredCommands: new Map<string, number>(),
     avgConfidence: new Map<string, number>(),
-    timeOfDayPatterns: new Map<string, string[]>(),
+    timeOfDayPatterns: new Map<string, string[]>()
   };
 
   static async initialize(config?: Partial<RecognitionConfig>): Promise<boolean> {
@@ -191,10 +154,7 @@ export class VoiceRecognitionService {
     }
   }
 
-  private static parseEnhancedCommand(
-    transcript: string,
-    confidence: number
-  ): VoiceCommand {
+  private static parseEnhancedCommand(transcript: string, confidence: number): VoiceCommand {
     const cleanTranscript = transcript.toLowerCase().trim();
 
     // Try exact matches first
@@ -202,17 +162,13 @@ export class VoiceRecognitionService {
       const intentKey = intent as 'dismiss' | 'snooze';
 
       // Check exact matches
-      if (
-        patterns.exact.some(
-          exact => cleanTranscript === exact || cleanTranscript.endsWith(exact)
-        )
-      ) {
+      if (patterns.exact.some(exact => cleanTranscript === exact || cleanTranscript.endsWith(exact))) {
         return {
           command: transcript,
           confidence: Math.min(confidence * 1.1, 1.0), // Boost confidence for exact matches
           intent: intentKey,
           entities: this.extractEntities(cleanTranscript),
-          timestamp: new Date(),
+          timestamp: new Date()
         };
       }
 
@@ -224,7 +180,7 @@ export class VoiceRecognitionService {
             confidence: Math.min(confidence * 1.05, 1.0), // Slight confidence boost for patterns
             intent: intentKey,
             entities: this.extractEntities(cleanTranscript),
-            timestamp: new Date(),
+            timestamp: new Date()
           };
         }
       }
@@ -238,7 +194,7 @@ export class VoiceRecognitionService {
         confidence: confidence * 0.9, // Slightly reduce confidence for fuzzy matches
         intent: fuzzyMatch.intent,
         entities: this.extractEntities(cleanTranscript),
-        timestamp: new Date(),
+        timestamp: new Date()
       };
     }
 
@@ -250,7 +206,7 @@ export class VoiceRecognitionService {
         confidence: confidence * 0.85, // Reduce confidence for historical matches
         intent: historicalMatch,
         entities: this.extractEntities(cleanTranscript),
-        timestamp: new Date(),
+        timestamp: new Date()
       };
     }
 
@@ -259,13 +215,11 @@ export class VoiceRecognitionService {
       confidence,
       intent: 'unknown',
       entities: {},
-      timestamp: new Date(),
+      timestamp: new Date()
     };
   }
 
-  private static performFuzzyMatching(
-    transcript: string
-  ): { intent: 'dismiss' | 'snooze' } | null {
+  private static performFuzzyMatching(transcript: string): { intent: 'dismiss' | 'snooze' } | null {
     const dismissWords = ['stop', 'off', 'end', 'done', 'up', 'awake', 'ready'];
     const snoozeWords = ['more', 'minutes', 'later', 'wait', 'sleep', 'postpone'];
 
@@ -334,18 +288,14 @@ export class VoiceRecognitionService {
     return matrix[str2.length][str1.length];
   }
 
-  private static checkHistoricalPatterns(
-    transcript: string
-  ): 'dismiss' | 'snooze' | null {
+  private static checkHistoricalPatterns(transcript: string): 'dismiss' | 'snooze' | null {
     const userCommands = this.userPreferences.preferredCommands;
     let bestMatch: { intent: 'dismiss' | 'snooze'; score: number } | null = null;
 
     userCommands.forEach((count, command) => {
       const similarity = this.calculateSimilarity(transcript, command);
       if (similarity > 0.8) {
-        const intent = this.commandHistory.find(h =>
-          h.command.toLowerCase().includes(command)
-        )?.intent;
+        const intent = this.commandHistory.find(h => h.command.toLowerCase().includes(command))?.intent;
         if (intent && intent !== 'unknown') {
           const score = similarity * (count / 100); // Weight by usage frequency
           if (!bestMatch || score > bestMatch.score) {
@@ -365,7 +315,7 @@ export class VoiceRecognitionService {
     const timePatterns = [
       /(\d+)\s*(minute|minutes|min|mins)/i,
       /(\d+)\s*(hour|hours|hr|hrs)/i,
-      /(five|ten|fifteen|twenty|thirty)\s*(minutes?|mins?)/i,
+      /(five|ten|fifteen|twenty|thirty)\s*(minutes?|mins?)/i
     ];
 
     timePatterns.forEach(pattern => {
@@ -389,9 +339,7 @@ export class VoiceRecognitionService {
 
     // Extract politeness indicators
     const politenessWords = ['please', 'thanks', 'thank you', 'sorry'];
-    const politeness = politenessWords.some(word =>
-      transcript.toLowerCase().includes(word)
-    );
+    const politeness = politenessWords.some(word => transcript.toLowerCase().includes(word));
     if (politeness) {
       entities.politeness = 'polite';
     }
@@ -407,16 +355,12 @@ export class VoiceRecognitionService {
     }
 
     // Lower threshold for familiar commands
-    const similarCommands = this.commandHistory.filter(
-      cmd =>
-        this.calculateSimilarity(cmd.command.toLowerCase(), transcript.toLowerCase()) >
-        0.8
+    const similarCommands = this.commandHistory.filter(cmd =>
+      this.calculateSimilarity(cmd.command.toLowerCase(), transcript.toLowerCase()) > 0.8
     );
 
     if (similarCommands.length > 0) {
-      const avgHistoricalConfidence =
-        similarCommands.reduce((sum, cmd) => sum + cmd.confidence, 0) /
-        similarCommands.length;
+      const avgHistoricalConfidence = similarCommands.reduce((sum, cmd) => sum + cmd.confidence, 0) / similarCommands.length;
       return Math.max(baseThreshold - 0.1, avgHistoricalConfidence - 0.1);
     }
 
@@ -441,7 +385,7 @@ export class VoiceRecognitionService {
       command: command.command,
       intent: command.intent,
       confidence: command.confidence.toFixed(2),
-      entities: command.entities,
+      entities: command.entities
     });
   }
 
@@ -453,8 +397,7 @@ export class VoiceRecognitionService {
     this.userPreferences.preferredCommands.set(commandKey, currentCount + 1);
 
     // Update average confidence
-    const currentAvg =
-      this.userPreferences.avgConfidence.get(commandKey) || command.confidence;
+    const currentAvg = this.userPreferences.avgConfidence.get(commandKey) || command.confidence;
     const newAvg = (currentAvg + command.confidence) / 2;
     this.userPreferences.avgConfidence.set(commandKey, newAvg);
 
@@ -497,7 +440,7 @@ export class VoiceRecognitionService {
       const data = {
         preferredCommands: Array.from(this.userPreferences.preferredCommands.entries()),
         avgConfidence: Array.from(this.userPreferences.avgConfidence.entries()),
-        timeOfDayPatterns: Array.from(this.userPreferences.timeOfDayPatterns.entries()),
+        timeOfDayPatterns: Array.from(this.userPreferences.timeOfDayPatterns.entries())
       };
       localStorage.setItem('voice_recognition_preferences', JSON.stringify(data));
     } catch (error) {
@@ -512,11 +455,9 @@ export class VoiceRecognitionService {
     intentDistribution: { [intent: string]: number };
   } {
     const totalCommands = this.commandHistory.length;
-    const avgConfidence =
-      totalCommands > 0
-        ? this.commandHistory.reduce((sum, cmd) => sum + cmd.confidence, 0) /
-          totalCommands
-        : 0;
+    const avgConfidence = totalCommands > 0
+      ? this.commandHistory.reduce((sum, cmd) => sum + cmd.confidence, 0) / totalCommands
+      : 0;
 
     // Most used commands
     const commandCounts = new Map<string, number>();
@@ -536,8 +477,7 @@ export class VoiceRecognitionService {
       .map(([command, count]) => ({
         command,
         count,
-        avgConfidence:
-          commandConfidence.get(command)!.reduce((a, b) => a + b, 0) / count,
+        avgConfidence: commandConfidence.get(command)!.reduce((a, b) => a + b, 0) / count
       }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
@@ -552,7 +492,7 @@ export class VoiceRecognitionService {
       totalCommands,
       avgConfidence,
       mostUsedCommands,
-      intentDistribution,
+      intentDistribution
     };
   }
 

@@ -1,31 +1,19 @@
 // Core Email Campaign Types for Relife Application
 export type PersonaType =
-  | 'struggling_sam' // Free-focused users
-  | 'busy_ben' // Efficiency-driven professionals
+  | 'struggling_sam'     // Free-focused users
+  | 'busy_ben'           // Efficiency-driven professionals
   | 'professional_paula' // Feature-rich seekers
-  | 'enterprise_emma' // Team-oriented decision makers
-  | 'student_sarah' // Budget-conscious students
-  | 'lifetime_larry'; // One-time payment preferrers
+  | 'enterprise_emma'    // Team-oriented decision makers
+  | 'student_sarah'      // Budget-conscious students
+  | 'lifetime_larry';    // One-time payment preferrers
 
 export interface PersonaProfile {
   id: PersonaType;
   displayName: string;
   description: string;
   primaryColor: string;
-  messagingTone:
-    | 'supportive'
-    | 'efficient'
-    | 'sophisticated'
-    | 'business_focused'
-    | 'casual'
-    | 'value_focused';
-  ctaStyle:
-    | 'friendly'
-    | 'urgent'
-    | 'professional'
-    | 'corporate'
-    | 'youthful'
-    | 'exclusive';
+  messagingTone: 'supportive' | 'efficient' | 'sophisticated' | 'business_focused' | 'casual' | 'value_focused';
+  ctaStyle: 'friendly' | 'urgent' | 'professional' | 'corporate' | 'youthful' | 'exclusive';
   targetSubscriptionTier: 'free' | 'basic' | 'premium' | 'pro' | 'student' | 'lifetime';
 }
 

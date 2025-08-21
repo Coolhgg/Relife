@@ -11,7 +11,7 @@ import {
   Shield,
   BarChart3,
   Palette,
-  Headphones,
+  Headphones
 } from 'lucide-react';
 import type { PremiumFeature, SubscriptionTier } from '../types';
 
@@ -42,20 +42,17 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
   title,
   description,
   showPricing = true,
-  currentTier = 'free',
+  currentTier = 'free'
 }) => {
   const getFeatureInfo = (featureId: string) => {
-    const featureMap: Record<
-      string,
-      {
-        title: string;
-        description: string;
-        icon: React.ComponentType<any>;
-        tier: SubscriptionTier;
-        benefits: string[];
-      }
-    > = {
-      nuclear_mode: {
+    const featureMap: Record<string, {
+      title: string;
+      description: string;
+      icon: React.ComponentType<any>;
+      tier: SubscriptionTier;
+      benefits: string[];
+    }> = {
+      'nuclear_mode': {
         title: 'Nuclear Mode',
         description: 'Extreme difficulty challenges that guarantee you wake up',
         icon: Target,
@@ -65,10 +62,10 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'Memory challenges',
           'Physical movement detection',
           'Photo proof requirements',
-          'Voice recognition tasks',
-        ],
+          'Voice recognition tasks'
+        ]
       },
-      custom_voices: {
+      'custom_voices': {
         title: 'Premium Voices',
         description: '20+ unique AI personalities to wake you up',
         icon: Mic,
@@ -78,10 +75,10 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'Zen master mindfulness',
           'Robot companion efficiency',
           'Pirate captain adventure',
-          'And 16+ more personalities',
-        ],
+          'And 16+ more personalities'
+        ]
       },
-      voice_cloning: {
+      'voice_cloning': {
         title: 'Voice Cloning',
         description: 'Create a custom AI voice clone of yourself or loved ones',
         icon: Headphones,
@@ -91,10 +88,10 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'AI generates your voice',
           'Personalized wake-up calls',
           'Share with family members',
-          'High-quality speech synthesis',
-        ],
+          'High-quality speech synthesis'
+        ]
       },
-      unlimited_alarms: {
+      'unlimited_alarms': {
         title: 'Unlimited Alarms',
         description: 'Create as many alarms as you need without limits',
         icon: Infinity,
@@ -104,10 +101,10 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'Complex schedules',
           'Multiple time zones',
           'Backup alarms',
-          'Event-specific alarms',
-        ],
+          'Event-specific alarms'
+        ]
       },
-      advanced_analytics: {
+      'advanced_analytics': {
         title: 'Advanced Analytics',
         description: 'Detailed insights into your sleep and wake patterns',
         icon: BarChart3,
@@ -117,10 +114,10 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'Wake time optimization',
           'Performance trends',
           'Personalized insights',
-          'Export data reports',
-        ],
+          'Export data reports'
+        ]
       },
-      priority_support: {
+      'priority_support': {
         title: 'Priority Support',
         description: 'Get help faster with dedicated premium support',
         icon: Shield,
@@ -130,10 +127,10 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'Dedicated support team',
           'Phone support option',
           'Feature request priority',
-          '24/7 availability',
-        ],
+          '24/7 availability'
+        ]
       },
-      theme_store: {
+      'theme_store': {
         title: 'Premium Themes',
         description: 'Beautiful themes and customization options',
         icon: Palette,
@@ -143,32 +140,27 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'Custom color schemes',
           'Animated backgrounds',
           'Dark mode variants',
-          'Seasonal themes',
-        ],
-      },
+          'Seasonal themes'
+        ]
+      }
     };
 
-    return (
-      featureMap[featureId] || {
-        title: 'Premium Feature',
-        description: 'This feature requires a premium subscription',
-        icon: Crown,
-        tier: 'premium' as SubscriptionTier,
-        benefits: ['Enhanced functionality', 'Premium experience', 'Advanced features'],
-      }
-    );
+    return featureMap[featureId] || {
+      title: 'Premium Feature',
+      description: 'This feature requires a premium subscription',
+      icon: Crown,
+      tier: 'premium' as SubscriptionTier,
+      benefits: ['Enhanced functionality', 'Premium experience', 'Advanced features']
+    };
   };
 
-  const featureInfo =
-    typeof feature === 'string'
-      ? getFeatureInfo(feature)
-      : {
-          title: 'Premium Feature',
-          description: 'This feature requires a premium subscription',
-          icon: Crown,
-          tier: 'premium' as SubscriptionTier,
-          benefits: ['Enhanced functionality'],
-        };
+  const featureInfo = typeof feature === 'string' ? getFeatureInfo(feature) : {
+    title: 'Premium Feature',
+    description: 'This feature requires a premium subscription',
+    icon: Crown,
+    tier: 'premium' as SubscriptionTier,
+    benefits: ['Enhanced functionality']
+  };
 
   const Icon = featureInfo.icon;
 
@@ -187,8 +179,8 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         'Unlimited alarms',
         'Advanced analytics',
         'Priority support',
-        'Premium themes',
-      ],
+        'Premium themes'
+      ]
     },
     {
       tier: 'ultimate' as SubscriptionTier,
@@ -204,9 +196,9 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         'White label options',
         'API access',
         'Custom integrations',
-        'Dedicated support',
-      ],
-    },
+        'Dedicated support'
+      ]
+    }
   ];
 
   const getRequiredPlan = () => {
@@ -225,9 +217,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
             </div>
             <div>
               <h3 className="font-semibold">{title || featureInfo.title}</h3>
-              <p className="text-orange-100 text-sm">
-                {description || featureInfo.description}
-              </p>
+              <p className="text-orange-100 text-sm">{description || featureInfo.description}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -255,9 +245,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
     return (
       <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
         <div className="text-center">
-          <div
-            className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-gradient-to-br ${requiredPlan.color}`}
-          >
+          <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-gradient-to-br ${requiredPlan.color}`}>
             <Icon className="h-8 w-8 text-white" />
           </div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -268,10 +256,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
             <div className="text-sm text-gray-500 mb-2">What you'll get:</div>
             <div className="space-y-1">
               {featureInfo.benefits.slice(0, 3).map((benefit, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 text-sm text-gray-700"
-                >
+                <div key={index} className="flex items-center gap-2 text-sm text-gray-700">
                   <Check className="h-4 w-4 text-green-500" />
                   {benefit}
                 </div>
@@ -295,9 +280,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div
-          className={`bg-gradient-to-r ${requiredPlan.color} text-white p-6 rounded-t-xl relative`}
-        >
+        <div className={`bg-gradient-to-r ${requiredPlan.color} text-white p-6 rounded-t-xl relative`}>
           {onDismiss && (
             <button
               onClick={onDismiss}
@@ -342,14 +325,11 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           {/* Pricing plans */}
           {showPricing && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Choose Your Plan:
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Choose Your Plan:</h3>
               <div className="grid gap-4 md:grid-cols-2">
                 {plans.map(plan => {
                   const isRequired = plan.tier === featureInfo.tier;
-                  const isHigherTier =
-                    plan.tier === 'ultimate' && featureInfo.tier === 'premium';
+                  const isHigherTier = plan.tier === 'ultimate' && featureInfo.tier === 'premium';
                   const showPlan = isRequired || isHigherTier;
 
                   if (!showPlan) return null;
@@ -370,24 +350,17 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                       )}
 
                       <div className="text-center">
-                        <div
-                          className={`w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center bg-gradient-to-br ${plan.color}`}
-                        >
+                        <div className={`w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center bg-gradient-to-br ${plan.color}`}>
                           <plan.icon className="h-6 w-6 text-white" />
                         </div>
-                        <h4 className="text-xl font-bold text-gray-900 mb-1">
-                          {plan.name}
-                        </h4>
+                        <h4 className="text-xl font-bold text-gray-900 mb-1">{plan.name}</h4>
                         <div className="text-2xl font-bold mb-4">
                           <span className={plan.textColor}>{plan.price}</span>
                         </div>
 
                         <div className="space-y-2 mb-6">
                           {plan.features.map((feature, index) => (
-                            <div
-                              key={index}
-                              className="flex items-center gap-2 text-sm text-gray-600"
-                            >
+                            <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
                               <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
                               <span>{feature}</span>
                             </div>
@@ -402,9 +375,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                               : `border-2 ${plan.textColor} border-current hover:bg-opacity-10 ${plan.bgColor}`
                           }`}
                         >
-                          {isRequired
-                            ? `Unlock with ${plan.name}`
-                            : `Upgrade to ${plan.name}`}
+                          {isRequired ? `Unlock with ${plan.name}` : `Upgrade to ${plan.name}`}
                         </button>
                       </div>
                     </div>

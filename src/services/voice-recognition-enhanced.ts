@@ -10,20 +10,9 @@ export interface EnhancedVoiceCommand {
   command: string;
   confidence: number;
   intent:
-    | 'dismiss'
-    | 'snooze'
-    | 'create_alarm'
-    | 'delete_alarm'
-    | 'navigate'
-    | 'settings'
-    | 'help'
-    | 'time_query'
-    | 'weather_query'
-    | 'gesture'
-    | 'authentication'
-    | 'language_switch'
-    | 'emergency'
-    | 'unknown';
+    | 'dismiss' | 'snooze' | 'create_alarm' | 'delete_alarm' | 'navigate'
+    | 'settings' | 'help' | 'time_query' | 'weather_query' | 'gesture'
+    | 'authentication' | 'language_switch' | 'emergency' | 'unknown';
   entities: { [key: string]: string };
   language: string;
   emotion: 'neutral' | 'urgent' | 'calm' | 'frustrated' | 'sleepy';
@@ -87,20 +76,10 @@ class VoiceRecognitionEnhancedService {
   private config: AdvancedRecognitionConfig = {
     languages: {
       primaryLanguage: 'en-US',
-      secondaryLanguages: [
-        'es-ES',
-        'fr-FR',
-        'de-DE',
-        'it-IT',
-        'pt-BR',
-        'ru-RU',
-        'ja-JP',
-        'ko-KR',
-        'zh-CN',
-      ],
+      secondaryLanguages: ['es-ES', 'fr-FR', 'de-DE', 'it-IT', 'pt-BR', 'ru-RU', 'ja-JP', 'ko-KR', 'zh-CN'],
       autoDetection: true,
       fallbackLanguage: 'en-US',
-      translationEnabled: true,
+      translationEnabled: true
     },
     gestures: {
       enabled: true,
@@ -109,227 +88,127 @@ class VoiceRecognitionEnhancedService {
         hum: { enabled: true, sensitivity: 0.7 },
         clap: { enabled: true, sensitivity: 0.9 },
         kiss: { enabled: true, sensitivity: 0.6 },
-        snap: { enabled: false, sensitivity: 0.8 },
-      },
+        snap: { enabled: false, sensitivity: 0.8 }
+      }
     },
     biometrics: {
       enabled: true,
       authenticationThreshold: 0.8,
-      voicePrintValidation: true,
+      voicePrintValidation: true
     },
     contextual: {
       timeAwareness: true,
       locationAwareness: false,
       habitLearning: true,
-      emotionDetection: true,
+      emotionDetection: true
     },
     performance: {
       maxRetries: 3,
       processingTimeout: 10000,
       cacheSize: 100,
-      adaptiveThreshold: true,
-    },
+      adaptiveThreshold: true
+    }
   };
 
   // Multi-language command patterns
   private commandPatterns = new Map<string, any>([
-    [
-      'en-US',
-      {
-        dismiss: {
-          exact: [
-            'stop',
-            'stop alarm',
-            'turn off',
-            'turn off alarm',
-            'dismiss',
-            'dismiss alarm',
-            'shut up',
-            'quiet',
-            'silence',
-            'cancel',
-            'cancel alarm',
-            'end',
-            'end alarm',
-            'off',
-            'alarm off',
-            'no more',
-            'enough',
-            'wake up',
-            'im up',
-            "i'm up",
-            'ok',
-            'okay',
-            'alright',
-            'fine',
-            'done',
-            'finished',
-            'disable alarm',
-          ],
-          patterns: [
-            /^(stop|turn off|shut up|dismiss|cancel|end|disable)\s*(the\s*)?(alarm|ringing)?$/i,
-            /^(ok|okay|alright|fine)\s*(i'm?\s*)?(up|awake|ready)$/i,
-            /^(enough|no more)\s*(alarm|noise|sound)?$/i,
-            /^(silence|quiet)\s*(please|now)?$/i,
-          ],
-        },
-        snooze: {
-          exact: [
-            'snooze',
-            'snooze alarm',
-            'five more minutes',
-            'five minutes',
-            '5 minutes',
-            'five more',
-            '5 more',
-            'later',
-            'wait',
-            'sleep',
-            'more time',
-            'not yet',
-          ],
-          patterns: [
-            /^(snooze|postpone|delay)\s*(the\s*)?(alarm|for)?$/i,
-            /^(\d+|five|ten|fifteen)\s*(more\s*)?(minutes?)$/i,
-            /^(later|wait|sleep)\s*(please|a bit|some more)?$/i,
-          ],
-        },
-        navigation: {
-          exact: [
-            'go to dashboard',
-            'go to alarms',
-            'go to settings',
-            'go to performance',
-            'go back',
-            'navigate back',
-            'home',
-            'menu',
-            'main menu',
-          ],
-          patterns: [
-            /^(go to|navigate to|open|show)\s*(the\s*)?(dashboard|alarms|settings|performance|analytics)$/i,
-            /^(go back|navigate back|back|return)$/i,
-          ],
-        },
-        alarm_management: {
-          exact: [
-            'create alarm',
-            'new alarm',
-            'add alarm',
-            'set alarm',
-            'make alarm',
-            'delete alarm',
-            'remove alarm',
-            'cancel alarm',
-            'edit alarm',
-            'list alarms',
-            'show alarms',
-            'my alarms',
-            'all alarms',
-          ],
-          patterns: [
-            /^(create|new|add|set|make)\s*(an?\s*)?(alarm|reminder)$/i,
-            /^(delete|remove|cancel)\s*(the\s*)?(alarm|reminder)$/i,
-            /^(list|show)\s*(all\s*)?(alarms|reminders)$/i,
-          ],
-        },
+    ['en-US', {
+      dismiss: {
+        exact: [
+          'stop', 'stop alarm', 'turn off', 'turn off alarm', 'dismiss', 'dismiss alarm',
+          'shut up', 'quiet', 'silence', 'cancel', 'cancel alarm', 'end', 'end alarm',
+          'off', 'alarm off', 'no more', 'enough', 'wake up', 'im up', "i'm up",
+          'ok', 'okay', 'alright', 'fine', 'done', 'finished', 'disable alarm'
+        ],
+        patterns: [
+          /^(stop|turn off|shut up|dismiss|cancel|end|disable)\s*(the\s*)?(alarm|ringing)?$/i,
+          /^(ok|okay|alright|fine)\s*(i'm?\s*)?(up|awake|ready)$/i,
+          /^(enough|no more)\s*(alarm|noise|sound)?$/i,
+          /^(silence|quiet)\s*(please|now)?$/i
+        ]
       },
-    ],
+      snooze: {
+        exact: [
+          'snooze', 'snooze alarm', 'five more minutes', 'five minutes', '5 minutes',
+          'five more', '5 more', 'later', 'wait', 'sleep', 'more time', 'not yet'
+        ],
+        patterns: [
+          /^(snooze|postpone|delay)\s*(the\s*)?(alarm|for)?$/i,
+          /^(\d+|five|ten|fifteen)\s*(more\s*)?(minutes?)$/i,
+          /^(later|wait|sleep)\s*(please|a bit|some more)?$/i
+        ]
+      },
+      navigation: {
+        exact: [
+          'go to dashboard', 'go to alarms', 'go to settings', 'go to performance',
+          'go back', 'navigate back', 'home', 'menu', 'main menu'
+        ],
+        patterns: [
+          /^(go to|navigate to|open|show)\s*(the\s*)?(dashboard|alarms|settings|performance|analytics)$/i,
+          /^(go back|navigate back|back|return)$/i
+        ]
+      },
+      alarm_management: {
+        exact: [
+          'create alarm', 'new alarm', 'add alarm', 'set alarm', 'make alarm',
+          'delete alarm', 'remove alarm', 'cancel alarm', 'edit alarm',
+          'list alarms', 'show alarms', 'my alarms', 'all alarms'
+        ],
+        patterns: [
+          /^(create|new|add|set|make)\s*(an?\s*)?(alarm|reminder)$/i,
+          /^(delete|remove|cancel)\s*(the\s*)?(alarm|reminder)$/i,
+          /^(list|show)\s*(all\s*)?(alarms|reminders)$/i
+        ]
+      }
+    }],
 
-    [
-      'es-ES',
-      {
-        dismiss: {
-          exact: [
-            'parar',
-            'parar alarma',
-            'apagar',
-            'apagar alarma',
-            'cancelar',
-            'cancelar alarma',
-            'silencio',
-            'callar',
-            'terminar',
-            'terminar alarma',
-            'ya estoy despierto',
-            'vale',
-            'está bien',
-            'de acuerdo',
-            'suficiente',
-            'basta',
-          ],
-          patterns: [
-            /^(parar|apagar|cancelar|terminar)\s*(la\s*)?(alarma)?$/i,
-            /^(vale|está bien|de acuerdo)\s*(ya\s*)?(estoy|me he)?\s*(despierto|levantado)?$/i,
-          ],
-        },
-        snooze: {
-          exact: [
-            'repetir',
-            'repetir alarma',
-            'cinco minutos más',
-            'cinco minutos',
-            '5 minutos',
-            'más tarde',
-            'esperar',
-            'dormir',
-            'más tiempo',
-            'todavía no',
-          ],
-          patterns: [
-            /^(repetir|posponer)\s*(la\s*)?(alarma)?$/i,
-            /^(\d+|cinco|diez)\s*(minutos?\s*)?(más)?$/i,
-          ],
-        },
+    ['es-ES', {
+      dismiss: {
+        exact: [
+          'parar', 'parar alarma', 'apagar', 'apagar alarma', 'cancelar', 'cancelar alarma',
+          'silencio', 'callar', 'terminar', 'terminar alarma', 'ya estoy despierto',
+          'vale', 'está bien', 'de acuerdo', 'suficiente', 'basta'
+        ],
+        patterns: [
+          /^(parar|apagar|cancelar|terminar)\s*(la\s*)?(alarma)?$/i,
+          /^(vale|está bien|de acuerdo)\s*(ya\s*)?(estoy|me he)?\s*(despierto|levantado)?$/i
+        ]
       },
-    ],
+      snooze: {
+        exact: [
+          'repetir', 'repetir alarma', 'cinco minutos más', 'cinco minutos', '5 minutos',
+          'más tarde', 'esperar', 'dormir', 'más tiempo', 'todavía no'
+        ],
+        patterns: [
+          /^(repetir|posponer)\s*(la\s*)?(alarma)?$/i,
+          /^(\d+|cinco|diez)\s*(minutos?\s*)?(más)?$/i
+        ]
+      }
+    }],
 
-    [
-      'fr-FR',
-      {
-        dismiss: {
-          exact: [
-            'arrêter',
-            'arrêter alarme',
-            'éteindre',
-            'éteindre alarme',
-            'annuler',
-            'annuler alarme',
-            'silence',
-            'taire',
-            'terminer',
-            'terminer alarme',
-            'je suis réveillé',
-            "d'accord",
-            'très bien',
-            'assez',
-            'ça suffit',
-          ],
-          patterns: [
-            /^(arrêter|éteindre|annuler|terminer)\s*(l'\s*)?(alarme)?$/i,
-            /^(d'accord|très bien)\s*(je suis)?\s*(réveillé|debout)?$/i,
-          ],
-        },
-        snooze: {
-          exact: [
-            'répéter',
-            'répéter alarme',
-            'cinq minutes de plus',
-            'cinq minutes',
-            '5 minutes',
-            'plus tard',
-            'attendre',
-            'dormir',
-            'plus de temps',
-            'pas encore',
-          ],
-          patterns: [
-            /^(répéter|reporter)\s*(l'\s*)?(alarme)?$/i,
-            /^(\d+|cinq|dix)\s*(minutes?\s*)?(de plus|en plus)?$/i,
-          ],
-        },
+    ['fr-FR', {
+      dismiss: {
+        exact: [
+          'arrêter', 'arrêter alarme', 'éteindre', 'éteindre alarme', 'annuler', 'annuler alarme',
+          'silence', 'taire', 'terminer', 'terminer alarme', 'je suis réveillé',
+          'd\'accord', 'très bien', 'assez', 'ça suffit'
+        ],
+        patterns: [
+          /^(arrêter|éteindre|annuler|terminer)\s*(l'\s*)?(alarme)?$/i,
+          /^(d'accord|très bien)\s*(je suis)?\s*(réveillé|debout)?$/i
+        ]
       },
-    ],
+      snooze: {
+        exact: [
+          'répéter', 'répéter alarme', 'cinq minutes de plus', 'cinq minutes', '5 minutes',
+          'plus tard', 'attendre', 'dormir', 'plus de temps', 'pas encore'
+        ],
+        patterns: [
+          /^(répéter|reporter)\s*(l'\s*)?(alarme)?$/i,
+          /^(\d+|cinq|dix)\s*(minutes?\s*)?(de plus|en plus)?$/i
+        ]
+      }
+    }]
   ]);
 
   private gesturePatterns = {
@@ -338,14 +217,14 @@ class VoiceRecognitionEnhancedService {
       maxFrequency: 4000,
       minDuration: 200,
       maxDuration: 2000,
-      intent: 'dismiss',
+      intent: 'dismiss'
     },
     hum: {
       minFrequency: 80,
       maxFrequency: 300,
       minDuration: 500,
       maxDuration: 3000,
-      intent: 'snooze',
+      intent: 'snooze'
     },
     clap: {
       minAmplitude: 0.3,
@@ -353,7 +232,7 @@ class VoiceRecognitionEnhancedService {
       minDuration: 50,
       maxDuration: 200,
       pattern: 'sharp_peak',
-      intent: 'dismiss',
+      intent: 'dismiss'
     },
     kiss: {
       minFrequency: 500,
@@ -361,8 +240,8 @@ class VoiceRecognitionEnhancedService {
       minDuration: 100,
       maxDuration: 500,
       pattern: 'burst',
-      intent: 'snooze',
-    },
+      intent: 'snooze'
+    }
   };
 
   private constructor() {
@@ -396,10 +275,7 @@ class VoiceRecognitionEnhancedService {
         // Biometrics already initialized via singleton
       }
 
-      this.performanceMonitor.trackCustomMetric(
-        'enhanced_voice_recognition_initialized',
-        1
-      );
+      this.performanceMonitor.trackCustomMetric('enhanced_voice_recognition_initialized', 1);
 
       return true;
     } catch (error) {
@@ -430,9 +306,8 @@ class VoiceRecognitionEnhancedService {
       const startTime = performance.now();
 
       // Start gesture recognition if enabled
-      const stopGesture = this.config.gestures.enabled
-        ? await this.startGestureRecognition(onGesture, onError)
-        : () => {};
+      const stopGesture = this.config.gestures.enabled ?
+        await this.startGestureRecognition(onGesture, onError) : () => {};
 
       // Start multi-language voice recognition
       const stopVoice = await this.startMultiLanguageRecognition(
@@ -445,16 +320,14 @@ class VoiceRecognitionEnhancedService {
       this.isListening = true;
 
       const duration = performance.now() - startTime;
-      this.performanceMonitor.trackCustomMetric(
-        'enhanced_listening_start_time',
-        duration
-      );
+      this.performanceMonitor.trackCustomMetric('enhanced_listening_start_time', duration);
 
       return () => {
         this.isListening = false;
         stopVoice();
         stopGesture();
       };
+
     } catch (error) {
       ErrorHandler.handleError(
         error as Error,
@@ -477,17 +350,14 @@ class VoiceRecognitionEnhancedService {
       // Simple language detection based on spectral characteristics
       // In production, this would use a trained model
       const audioData = audioBuffer.getChannelData(0);
-      const spectralFeatures = this.extractSpectralFeatures(
-        audioData,
-        audioBuffer.sampleRate
-      );
+      const spectralFeatures = this.extractSpectralFeatures(audioData, audioBuffer.sampleRate);
 
       // Analyze formant patterns for language detection
       const detectedLang = this.classifyLanguage(spectralFeatures);
 
-      return this.config.languages.secondaryLanguages.includes(detectedLang)
-        ? detectedLang
-        : this.config.languages.primaryLanguage;
+      return this.config.languages.secondaryLanguages.includes(detectedLang) ?
+        detectedLang : this.config.languages.primaryLanguage;
+
     } catch (error) {
       console.error('Language detection failed:', error);
       return this.config.languages.fallbackLanguage;
@@ -501,7 +371,7 @@ class VoiceRecognitionEnhancedService {
     try {
       const supportedLanguages = [
         this.config.languages.primaryLanguage,
-        ...this.config.languages.secondaryLanguages,
+        ...this.config.languages.secondaryLanguages
       ];
 
       if (!supportedLanguages.includes(language)) {
@@ -532,8 +402,7 @@ class VoiceRecognitionEnhancedService {
     audioBuffer?: AudioBuffer,
     userId?: string
   ): EnhancedVoiceCommand {
-    const patterns =
-      this.commandPatterns.get(language) || this.commandPatterns.get('en-US')!;
+    const patterns = this.commandPatterns.get(language) || this.commandPatterns.get('en-US')!;
 
     // Analyze emotion from audio if available
     let emotion: EnhancedVoiceCommand['emotion'] = 'neutral';
@@ -559,7 +428,7 @@ class VoiceRecognitionEnhancedService {
       emotion,
       timestamp: new Date(),
       userId,
-      contextualScore,
+      contextualScore
     };
   }
 
@@ -581,8 +450,8 @@ class VoiceRecognitionEnhancedService {
           channelCount: 1,
           echoCancellation: false,
           noiseSuppression: false,
-          autoGainControl: false,
-        },
+          autoGainControl: false
+        }
       });
 
       const source = this.audioContext.createMediaStreamSource(stream);
@@ -600,6 +469,7 @@ class VoiceRecognitionEnhancedService {
         gestureDetection();
         stream.getTracks().forEach(track => track.stop());
       };
+
     } catch (error) {
       console.error('Gesture recognition failed to start:', error);
       onError?.(error instanceof Error ? error.message : 'Gesture recognition failed');
@@ -631,7 +501,7 @@ class VoiceRecognitionEnhancedService {
         this.detectWhistle(dataArray, analyser),
         this.detectHum(dataArray, analyser),
         this.detectClap(timeDataArray, analyser),
-        this.detectKiss(dataArray, analyser),
+        this.detectKiss(dataArray, analyser)
       ].filter(result => result !== null);
 
       // Report detected gestures
@@ -654,10 +524,7 @@ class VoiceRecognitionEnhancedService {
   /**
    * Detect whistle gesture
    */
-  private detectWhistle(
-    frequencyData: Uint8Array,
-    analyser: AnalyserNode
-  ): { type: string; confidence: number; intent: string } | null {
+  private detectWhistle(frequencyData: Uint8Array, analyser: AnalyserNode): { type: string; confidence: number; intent: string } | null {
     if (!this.config.gestures.patterns.whistle.enabled) return null;
 
     const sampleRate = this.audioContext!.sampleRate;
@@ -680,15 +547,13 @@ class VoiceRecognitionEnhancedService {
 
     // Check if amplitude is above threshold
     const threshold = 100; // Adjust based on calibration
-    const confidence =
-      Math.min(1.0, maxAmplitude / 255) *
-      this.config.gestures.patterns.whistle.sensitivity;
+    const confidence = Math.min(1.0, maxAmplitude / 255) * this.config.gestures.patterns.whistle.sensitivity;
 
     if (maxAmplitude > threshold && confidence > 0.6) {
       return {
         type: 'whistle',
         confidence,
-        intent: pattern.intent,
+        intent: pattern.intent
       };
     }
 
@@ -698,10 +563,7 @@ class VoiceRecognitionEnhancedService {
   /**
    * Detect hum gesture
    */
-  private detectHum(
-    frequencyData: Uint8Array,
-    analyser: AnalyserNode
-  ): { type: string; confidence: number; intent: string } | null {
+  private detectHum(frequencyData: Uint8Array, analyser: AnalyserNode): { type: string; confidence: number; intent: string } | null {
     if (!this.config.gestures.patterns.hum.enabled) return null;
 
     const sampleRate = this.audioContext!.sampleRate;
@@ -718,14 +580,13 @@ class VoiceRecognitionEnhancedService {
     }
 
     const avgEnergy = totalEnergy / (maxBin - minBin);
-    const confidence =
-      Math.min(1.0, avgEnergy / 100) * this.config.gestures.patterns.hum.sensitivity;
+    const confidence = Math.min(1.0, avgEnergy / 100) * this.config.gestures.patterns.hum.sensitivity;
 
     if (avgEnergy > 30 && confidence > 0.5) {
       return {
         type: 'hum',
         confidence,
-        intent: pattern.intent,
+        intent: pattern.intent
       };
     }
 
@@ -735,10 +596,7 @@ class VoiceRecognitionEnhancedService {
   /**
    * Detect clap gesture
    */
-  private detectClap(
-    timeData: Uint8Array,
-    analyser: AnalyserNode
-  ): { type: string; confidence: number; intent: string } | null {
+  private detectClap(timeData: Uint8Array, analyser: AnalyserNode): { type: string; confidence: number; intent: string } | null {
     if (!this.config.gestures.patterns.clap.enabled) return null;
 
     // Detect sharp amplitude spike characteristic of clapping
@@ -755,14 +613,13 @@ class VoiceRecognitionEnhancedService {
 
     // Look for sharp peak above baseline
     const peakRatio = maxAmplitude / Math.max(baseline, 0.01);
-    const confidence =
-      Math.min(1.0, peakRatio / 5) * this.config.gestures.patterns.clap.sensitivity;
+    const confidence = Math.min(1.0, peakRatio / 5) * this.config.gestures.patterns.clap.sensitivity;
 
     if (peakRatio > 3 && maxAmplitude > 0.2 && confidence > 0.7) {
       return {
         type: 'clap',
         confidence,
-        intent: this.gesturePatterns.clap.intent,
+        intent: this.gesturePatterns.clap.intent
       };
     }
 
@@ -772,10 +629,7 @@ class VoiceRecognitionEnhancedService {
   /**
    * Detect kiss gesture
    */
-  private detectKiss(
-    frequencyData: Uint8Array,
-    analyser: AnalyserNode
-  ): { type: string; confidence: number; intent: string } | null {
+  private detectKiss(frequencyData: Uint8Array, analyser: AnalyserNode): { type: string; confidence: number; intent: string } | null {
     if (!this.config.gestures.patterns.kiss.enabled) return null;
 
     // Kiss sounds have characteristic burst pattern in mid-frequency range
@@ -793,15 +647,13 @@ class VoiceRecognitionEnhancedService {
     }
 
     const avgBurstEnergy = burstEnergy / (maxBin - minBin);
-    const confidence =
-      Math.min(1.0, avgBurstEnergy / 80) *
-      this.config.gestures.patterns.kiss.sensitivity;
+    const confidence = Math.min(1.0, avgBurstEnergy / 80) * this.config.gestures.patterns.kiss.sensitivity;
 
     if (avgBurstEnergy > 40 && confidence > 0.4) {
       return {
         type: 'kiss',
         confidence,
-        intent: pattern.intent,
+        intent: pattern.intent
       };
     }
 
@@ -813,8 +665,7 @@ class VoiceRecognitionEnhancedService {
    */
   private async initializeAudioContext(): Promise<void> {
     try {
-      this.audioContext = new (window.AudioContext ||
-        (window as any).webkitAudioContext)();
+      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
 
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
@@ -884,10 +735,7 @@ class VoiceRecognitionEnhancedService {
   }
 
   // Utility methods
-  private mergeConfig(
-    base: AdvancedRecognitionConfig,
-    override: Partial<AdvancedRecognitionConfig>
-  ): AdvancedRecognitionConfig {
+  private mergeConfig(base: AdvancedRecognitionConfig, override: Partial<AdvancedRecognitionConfig>): AdvancedRecognitionConfig {
     return {
       ...base,
       ...override,
@@ -895,7 +743,7 @@ class VoiceRecognitionEnhancedService {
       gestures: { ...base.gestures, ...override.gestures },
       biometrics: { ...base.biometrics, ...override.biometrics },
       contextual: { ...base.contextual, ...override.contextual },
-      performance: { ...base.performance, ...override.performance },
+      performance: { ...base.performance, ...override.performance }
     };
   }
 
@@ -912,7 +760,7 @@ class VoiceRecognitionEnhancedService {
     return {
       formants: this.extractFormants(audioData, sampleRate),
       spectralCentroid: this.calculateSpectralCentroid(audioData, sampleRate),
-      fundamentalFreq: this.extractFundamentalFreq(audioData, sampleRate),
+      fundamentalFreq: this.extractFundamentalFreq(audioData, sampleRate)
     };
   }
 
@@ -935,21 +783,13 @@ class VoiceRecognitionEnhancedService {
     return 'neutral';
   }
 
-  private detectEnhancedIntent(
-    transcript: string,
-    patterns: any,
-    emotion: string
-  ): EnhancedVoiceCommand['intent'] {
+  private detectEnhancedIntent(transcript: string, patterns: any, emotion: string): EnhancedVoiceCommand['intent'] {
     const lowerTranscript = transcript.toLowerCase();
 
     // Check exact matches first
     for (const [intent, data] of Object.entries(patterns)) {
       const intentData = data as any;
-      if (
-        intentData.exact?.some((phrase: string) =>
-          lowerTranscript.includes(phrase.toLowerCase())
-        )
-      ) {
+      if (intentData.exact?.some((phrase: string) => lowerTranscript.includes(phrase.toLowerCase()))) {
         return intent as EnhancedVoiceCommand['intent'];
       }
     }
@@ -957,9 +797,7 @@ class VoiceRecognitionEnhancedService {
     // Check pattern matches
     for (const [intent, data] of Object.entries(patterns)) {
       const intentData = data as any;
-      if (
-        intentData.patterns?.some((pattern: RegExp) => pattern.test(lowerTranscript))
-      ) {
+      if (intentData.patterns?.some((pattern: RegExp) => pattern.test(lowerTranscript))) {
         return intent as EnhancedVoiceCommand['intent'];
       }
     }
@@ -972,11 +810,7 @@ class VoiceRecognitionEnhancedService {
     return 'unknown';
   }
 
-  private extractEntities(
-    transcript: string,
-    intent: string,
-    language: string
-  ): { [key: string]: string } {
+  private extractEntities(transcript: string, intent: string, language: string): { [key: string]: string } {
     const entities: { [key: string]: string } = {};
 
     // Time extraction
@@ -996,11 +830,7 @@ class VoiceRecognitionEnhancedService {
     return entities;
   }
 
-  private calculateContextualScore(
-    transcript: string,
-    intent: string,
-    emotion: string
-  ): number {
+  private calculateContextualScore(transcript: string, intent: string, emotion: string): number {
     let score = 0.5; // Base score
 
     // Intent clarity
@@ -1017,7 +847,7 @@ class VoiceRecognitionEnhancedService {
     // Time of day context
     const hour = new Date().getHours();
     if (this.config.contextual.timeAwareness) {
-      if (hour >= 5 && hour <= 10 && (intent === 'dismiss' || intent === 'snooze')) {
+      if ((hour >= 5 && hour <= 10) && (intent === 'dismiss' || intent === 'snooze')) {
         score += 0.1;
       }
     }
@@ -1031,10 +861,7 @@ class VoiceRecognitionEnhancedService {
     return [500, 1500, 2500]; // Placeholder formant values
   }
 
-  private calculateSpectralCentroid(
-    audioData: Float32Array,
-    sampleRate: number
-  ): number {
+  private calculateSpectralCentroid(audioData: Float32Array, sampleRate: number): number {
     // Simplified spectral centroid calculation
     return 1500; // Placeholder value
   }
@@ -1045,9 +872,7 @@ class VoiceRecognitionEnhancedService {
   }
 
   private calculateEnergyLevel(audioData: Float32Array): number {
-    const rms = Math.sqrt(
-      audioData.reduce((sum, sample) => sum + sample * sample, 0) / audioData.length
-    );
+    const rms = Math.sqrt(audioData.reduce((sum, sample) => sum + sample * sample, 0) / audioData.length);
     return Math.min(1.0, rms * 10);
   }
 

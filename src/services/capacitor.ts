@@ -37,7 +37,7 @@ export const initializeCapacitor = async (): Promise<CapacitorInitResult> => {
       platform,
       isNative,
       notificationPermission,
-      pushPermission,
+      pushPermission
     };
   } catch (error) {
     console.error('Error initializing Capacitor:', error);
@@ -45,7 +45,7 @@ export const initializeCapacitor = async (): Promise<CapacitorInitResult> => {
       platform,
       isNative,
       notificationPermission: false,
-      pushPermission: false,
+      pushPermission: false
     };
   }
 };
@@ -74,7 +74,7 @@ export const scheduleLocalNotification = async ({
   id,
   title,
   body,
-  schedule,
+  schedule
 }: {
   id: number;
   title: string;
@@ -89,16 +89,16 @@ export const scheduleLocalNotification = async ({
           title,
           body,
           schedule: {
-            at: schedule,
+            at: schedule
           },
           sound: 'beep.wav',
           attachments: [],
           actionTypeId: 'ALARM_ACTION',
           extra: {
-            alarmId: id.toString(),
-          },
-        },
-      ],
+            alarmId: id.toString()
+          }
+        }
+      ]
     });
 
     console.log(`Scheduled notification for ${schedule}`);
@@ -111,7 +111,7 @@ export const scheduleLocalNotification = async ({
 export const cancelLocalNotification = async (id: number): Promise<void> => {
   try {
     await LocalNotifications.cancel({
-      notifications: [{ id }],
+      notifications: [{ id }]
     });
 
     console.log(`Cancelled notification ${id}`);
@@ -123,7 +123,7 @@ export const cancelLocalNotification = async (id: number): Promise<void> => {
 
 export const setupNotificationListeners = (): void => {
   // Listen for notification tap
-  LocalNotifications.addListener('localNotificationActionPerformed', notification => {
+  LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
     console.log('Notification action performed:', notification);
 
     // Handle alarm notification tap
@@ -131,34 +131,32 @@ export const setupNotificationListeners = (): void => {
       const alarmId = notification.notification.extra?.alarmId;
       if (alarmId) {
         // Trigger alarm UI
-        window.dispatchEvent(
-          new CustomEvent('alarm-triggered', {
-            detail: { alarmId },
-          })
-        );
+        window.dispatchEvent(new CustomEvent('alarm-triggered', {
+          detail: { alarmId }
+        }));
       }
     }
   });
 
   // Listen for notification received (when app is in foreground)
-  LocalNotifications.addListener('localNotificationReceived', notification => {
+  LocalNotifications.addListener('localNotificationReceived', (notification) => {
     console.log('Notification received:', notification);
   });
 
   // Push notification listeners
-  PushNotifications.addListener('registration', token => {
+  PushNotifications.addListener('registration', (token) => {
     console.log('Push registration success, token: ' + token.value);
   });
 
-  PushNotifications.addListener('registrationError', error => {
+  PushNotifications.addListener('registrationError', (error) => {
     console.error('Push registration error:', error);
   });
 
-  PushNotifications.addListener('pushNotificationReceived', notification => {
+  PushNotifications.addListener('pushNotificationReceived', (notification) => {
     console.log('Push notification received:', notification);
   });
 
-  PushNotifications.addListener('pushNotificationActionPerformed', notification => {
+  PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
     console.log('Push notification action performed:', notification);
   });
 };

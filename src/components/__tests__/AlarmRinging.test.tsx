@@ -1,4 +1,3 @@
-/// <reference lib="dom" />
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -11,7 +10,7 @@ jest.mock('../../services/voice-pro', () => ({
     speak: jest.fn(() => Promise.resolve()),
     stop: jest.fn(),
     isSupported: jest.fn(() => true),
-  },
+  }
 }));
 
 jest.mock('../../services/voice-recognition', () => ({
@@ -21,7 +20,7 @@ jest.mock('../../services/voice-recognition', () => ({
     isListening: false,
     onCommand: jest.fn(),
     isSupported: jest.fn(() => true),
-  },
+  }
 }));
 
 jest.mock('../../services/capacitor', () => ({
@@ -84,9 +83,7 @@ describe('AlarmRinging', () => {
     test('renders voice recognition controls', () => {
       render(<AlarmRinging {...mockProps} />);
 
-      expect(
-        screen.getByRole('button', { name: /start voice recognition/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /start voice recognition/i })).toBeInTheDocument();
       expect(screen.getByText(/say "stop" to dismiss/i)).toBeInTheDocument();
     });
 
@@ -102,10 +99,7 @@ describe('AlarmRinging', () => {
     });
 
     test('displays motivational message based on voice mood', () => {
-      const motivationalAlarm = {
-        ...testUtils.mockAlarm,
-        voiceMood: 'motivational' as const,
-      };
+      const motivationalAlarm = { ...testUtils.mockAlarm, voiceMood: 'motivational' as const };
       render(<AlarmRinging {...mockProps} alarm={motivationalAlarm} />);
 
       expect(screen.getByText(/time to conquer/i)).toBeInTheDocument();
@@ -117,9 +111,7 @@ describe('AlarmRinging', () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
-      const voiceButton = screen.getByRole('button', {
-        name: /start voice recognition/i,
-      });
+      const voiceButton = screen.getByRole('button', { name: /start voice recognition/i });
       await user.click(voiceButton);
 
       expect(mockSpeechRecognition.start).toHaveBeenCalled();
@@ -130,15 +122,11 @@ describe('AlarmRinging', () => {
       render(<AlarmRinging {...mockProps} />);
 
       // Start listening
-      const voiceButton = screen.getByRole('button', {
-        name: /start voice recognition/i,
-      });
+      const voiceButton = screen.getByRole('button', { name: /start voice recognition/i });
       await user.click(voiceButton);
 
       // Should now show stop button
-      const stopButton = screen.getByRole('button', {
-        name: /stop voice recognition/i,
-      });
+      const stopButton = screen.getByRole('button', { name: /stop voice recognition/i });
       await user.click(stopButton);
 
       expect(mockSpeechRecognition.stop).toHaveBeenCalled();
@@ -148,9 +136,7 @@ describe('AlarmRinging', () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
-      const voiceButton = screen.getByRole('button', {
-        name: /start voice recognition/i,
-      });
+      const voiceButton = screen.getByRole('button', { name: /start voice recognition/i });
       await user.click(voiceButton);
 
       expect(screen.getByText(/listening/i)).toBeInTheDocument();
@@ -161,26 +147,21 @@ describe('AlarmRinging', () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
-      const voiceButton = screen.getByRole('button', {
-        name: /start voice recognition/i,
-      });
+      const voiceButton = screen.getByRole('button', { name: /start voice recognition/i });
       await user.click(voiceButton);
 
       // Simulate speech recognition result
       const mockEvent = {
-        results: [
-          {
-            0: { transcript: 'stop', confidence: 0.9 },
-            isFinal: true,
-          },
-        ],
+        results: [{
+          0: { transcript: 'stop', confidence: 0.9 },
+          isFinal: true,
+        }],
         resultIndex: 0,
       };
 
       // Find the result event handler and call it
-      const resultHandler = mockSpeechRecognition.addEventListener.mock.calls.find(
-        call => call[0] === 'result'
-      )?.[1];
+      const resultHandler = mockSpeechRecognition.addEventListener.mock.calls
+        .find(call => call[0] === 'result')?.[1];
 
       if (resultHandler) {
         resultHandler(mockEvent);
@@ -195,24 +176,19 @@ describe('AlarmRinging', () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
-      const voiceButton = screen.getByRole('button', {
-        name: /start voice recognition/i,
-      });
+      const voiceButton = screen.getByRole('button', { name: /start voice recognition/i });
       await user.click(voiceButton);
 
       const mockEvent = {
-        results: [
-          {
-            0: { transcript: 'snooze', confidence: 0.85 },
-            isFinal: true,
-          },
-        ],
+        results: [{
+          0: { transcript: 'snooze', confidence: 0.85 },
+          isFinal: true,
+        }],
         resultIndex: 0,
       };
 
-      const resultHandler = mockSpeechRecognition.addEventListener.mock.calls.find(
-        call => call[0] === 'result'
-      )?.[1];
+      const resultHandler = mockSpeechRecognition.addEventListener.mock.calls
+        .find(call => call[0] === 'result')?.[1];
 
       if (resultHandler) {
         resultHandler(mockEvent);
@@ -227,24 +203,19 @@ describe('AlarmRinging', () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
-      const voiceButton = screen.getByRole('button', {
-        name: /start voice recognition/i,
-      });
+      const voiceButton = screen.getByRole('button', { name: /start voice recognition/i });
       await user.click(voiceButton);
 
       const mockEvent = {
-        results: [
-          {
-            0: { transcript: 'stop alarm', confidence: 0.7 },
-            isFinal: false,
-          },
-        ],
+        results: [{
+          0: { transcript: 'stop alarm', confidence: 0.7 },
+          isFinal: false,
+        }],
         resultIndex: 0,
       };
 
-      const resultHandler = mockSpeechRecognition.addEventListener.mock.calls.find(
-        call => call[0] === 'result'
-      )?.[1];
+      const resultHandler = mockSpeechRecognition.addEventListener.mock.calls
+        .find(call => call[0] === 'result')?.[1];
 
       if (resultHandler) {
         resultHandler(mockEvent);
@@ -301,12 +272,9 @@ describe('AlarmRinging', () => {
       expect(screen.getByText(/tap again to dismiss/i)).toBeInTheDocument();
 
       // Wait for timeout
-      await waitFor(
-        () => {
-          expect(screen.queryByText(/tap again to dismiss/i)).not.toBeInTheDocument();
-        },
-        { timeout: 4000 }
-      );
+      await waitFor(() => {
+        expect(screen.queryByText(/tap again to dismiss/i)).not.toBeInTheDocument();
+      }, { timeout: 4000 });
     });
   });
 
@@ -400,9 +368,7 @@ describe('AlarmRinging', () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
-      const voiceButton = screen.getByRole('button', {
-        name: /start voice recognition/i,
-      });
+      const voiceButton = screen.getByRole('button', { name: /start voice recognition/i });
       await user.click(voiceButton);
 
       expect(screen.getByLabelText('Voice recognition active')).toBeInTheDocument();
@@ -414,15 +380,12 @@ describe('AlarmRinging', () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
-      const voiceButton = screen.getByRole('button', {
-        name: /start voice recognition/i,
-      });
+      const voiceButton = screen.getByRole('button', { name: /start voice recognition/i });
       await user.click(voiceButton);
 
       // Simulate speech recognition error
-      const errorHandler = mockSpeechRecognition.addEventListener.mock.calls.find(
-        call => call[0] === 'error'
-      )?.[1];
+      const errorHandler = mockSpeechRecognition.addEventListener.mock.calls
+        .find(call => call[0] === 'error')?.[1];
 
       if (errorHandler) {
         errorHandler({ error: 'network', message: 'Network error' });
@@ -438,9 +401,8 @@ describe('AlarmRinging', () => {
 
       render(<AlarmRinging {...mockProps} />);
 
-      expect(
-        screen.queryByRole('button', { name: /start voice recognition/i })
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /start voice recognition/i }))
+        .not.toBeInTheDocument();
       expect(screen.getByText(/voice commands not supported/i)).toBeInTheDocument();
     });
 
@@ -474,7 +436,7 @@ describe('AlarmRinging', () => {
       const maxSnoozedAlarm = {
         ...testUtils.mockAlarm,
         snoozeCount: 3,
-        maxSnoozes: 3,
+        maxSnoozes: 3
       };
       render(<AlarmRinging {...mockProps} alarm={maxSnoozedAlarm} />);
 

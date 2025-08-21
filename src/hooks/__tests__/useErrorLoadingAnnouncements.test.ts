@@ -13,14 +13,14 @@ const mockAnnouncementService = {
   announceAssertive: jest.fn(),
   clearQueue: jest.fn(),
   setEnabled: jest.fn(),
-  isEnabled: jest.fn(() => true),
+  isEnabled: jest.fn(() => true)
 };
 
 jest.mock('../../services/accessibility-announcement', () => ({
   __esModule: true,
   default: {
-    getInstance: () => mockAnnouncementService,
-  },
+    getInstance: () => mockAnnouncementService
+  }
 }));
 
 // Mock i18n hook for error/loading translations
@@ -39,7 +39,7 @@ const mockT = jest.fn((key, options) => {
     'loading.failed': 'Loading failed: {{error}}',
     'retry.attempting': 'Attempting retry {{attempt}} of {{maxAttempts}}',
     'retry.succeeded': 'Operation succeeded after retry',
-    'retry.failed': 'All retry attempts failed',
+    'retry.failed': 'All retry attempts failed'
   };
 
   let translation = translations[key] || key;
@@ -54,7 +54,7 @@ const mockT = jest.fn((key, options) => {
 });
 
 jest.mock('../useI18n', () => ({
-  useErrorI18n: () => ({ t: mockT }),
+  useErrorI18n: () => ({ t: mockT })
 }));
 
 describe('useErrorLoadingAnnouncements', () => {
@@ -115,7 +115,7 @@ describe('useErrorLoadingAnnouncements', () => {
 
     const customError = {
       type: 'custom',
-      message: 'Unable to save your settings. Please try again.',
+      message: 'Unable to save your settings. Please try again.'
     };
 
     await act(async () => {
@@ -131,13 +131,11 @@ describe('useErrorLoadingAnnouncements', () => {
     const { result } = renderHook(() => useErrorLoadingAnnouncements());
 
     await act(async () => {
-      await result.current.announceError('validation', {
-        details: 'Email format is invalid',
-      });
+      await result.current.announceError('validation', { details: 'Email format is invalid' });
     });
 
     expect(mockT).toHaveBeenCalledWith('error.validation', {
-      details: 'Email format is invalid',
+      details: 'Email format is invalid'
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
       'Validation failed: Email format is invalid'
@@ -165,7 +163,7 @@ describe('useErrorLoadingAnnouncements', () => {
     });
 
     expect(mockT).toHaveBeenCalledWith('loading.progress', {
-      progress: 75,
+      progress: 75
     });
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalledWith(
       'Loading 75% complete'
@@ -193,7 +191,7 @@ describe('useErrorLoadingAnnouncements', () => {
     });
 
     expect(mockT).toHaveBeenCalledWith('loading.failed', {
-      error: 'Connection timeout',
+      error: 'Connection timeout'
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
       'Loading failed: Connection timeout'
@@ -209,7 +207,7 @@ describe('useErrorLoadingAnnouncements', () => {
 
     expect(mockT).toHaveBeenCalledWith('retry.attempting', {
       attempt: 2,
-      maxAttempts: 3,
+      maxAttempts: 3
     });
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalledWith(
       'Attempting retry 2 of 3'
@@ -262,7 +260,7 @@ describe('useErrorLoadingAnnouncements', () => {
     const apiError = {
       status: 404,
       message: 'User not found',
-      code: 'USER_NOT_FOUND',
+      code: 'USER_NOT_FOUND'
     };
 
     await act(async () => {
@@ -327,8 +325,11 @@ describe('useErrorLoadingAnnouncements', () => {
     const complexError = {
       type: 'multi-step',
       step: 'payment',
-      errors: ['Credit card expired', 'Billing address invalid'],
-      canRetry: true,
+      errors: [
+        'Credit card expired',
+        'Billing address invalid'
+      ],
+      canRetry: true
     };
 
     await act(async () => {
@@ -364,9 +365,7 @@ describe('useErrorLoadingAnnouncements', () => {
 
   it('should handle errors in announcement service gracefully', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    mockAnnouncementService.announceAssertive.mockRejectedValue(
-      new Error('Announcement failed')
-    );
+    mockAnnouncementService.announceAssertive.mockRejectedValue(new Error('Announcement failed'));
 
     const { result } = renderHook(() => useErrorLoadingAnnouncements());
 
@@ -388,15 +387,11 @@ describe('useErrorLoadingAnnouncements', () => {
     const context = {
       feature: 'alarm_creation',
       action: 'save',
-      userLevel: 'beginner',
+      userLevel: 'beginner'
     };
 
     await act(async () => {
-      await result.current.announceContextualError(
-        'validation',
-        context,
-        'Time format is invalid'
-      );
+      await result.current.announceContextualError('validation', context, 'Time format is invalid');
     });
 
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
@@ -411,7 +406,7 @@ describe('useErrorLoadingAnnouncements', () => {
       { name: 'Authenticating', progress: 25 },
       { name: 'Loading data', progress: 50 },
       { name: 'Rendering', progress: 75 },
-      { name: 'Complete', progress: 100 },
+      { name: 'Complete', progress: 100 }
     ];
 
     for (const stage of stages) {
@@ -434,8 +429,8 @@ describe('useErrorLoadingAnnouncements', () => {
       suggestions: [
         'Check your internet connection',
         'Try refreshing the page',
-        'Contact support if the problem persists',
-      ],
+        'Contact support if the problem persists'
+      ]
     };
 
     await act(async () => {

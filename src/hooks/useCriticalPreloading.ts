@@ -1,26 +1,19 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { criticalPreloader } from '../services/critical-preloader';
 import type { Alarm } from '../types';
-import type {
-  CriticalAsset,
-  PreloadStats,
-  PreloadStrategy,
-} from '../services/critical-preloader';
+import type { CriticalAsset, PreloadStats, PreloadStrategy } from '../services/critical-preloader';
 
 export interface CriticalPreloadingState {
   isAnalyzing: boolean;
   isPreloading: boolean;
   criticalAssets: CriticalAsset[];
   stats: PreloadStats;
-  readinessStatus: Map<
-    string,
-    {
-      ttsReady: boolean;
-      audioReady: boolean;
-      fallbackReady: boolean;
-      overallReady: boolean;
-    }
-  >;
+  readinessStatus: Map<string, {
+    ttsReady: boolean;
+    audioReady: boolean;
+    fallbackReady: boolean;
+    overallReady: boolean;
+  }>;
 }
 
 /**
@@ -32,7 +25,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
     isPreloading: false,
     criticalAssets: [],
     stats: criticalPreloader.getStats(),
-    readinessStatus: new Map(),
+    readinessStatus: new Map()
   });
 
   const statsUpdateInterval = useRef<NodeJS.Timeout>();
@@ -59,7 +52,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
         ...prev,
         criticalAssets,
         readinessStatus,
-        isAnalyzing: false,
+        isAnalyzing: false
       }));
 
       lastAnalysis.current = new Date();
@@ -76,9 +69,8 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
 
   // Initial analysis and periodic re-analysis
   useEffect(() => {
-    const shouldAnalyze =
-      !lastAnalysis.current ||
-      new Date().getTime() - lastAnalysis.current.getTime() > 5 * 60 * 1000; // 5 minutes
+    const shouldAnalyze = !lastAnalysis.current ||
+      (new Date().getTime() - lastAnalysis.current.getTime()) > 5 * 60 * 1000; // 5 minutes
 
     if (shouldAnalyze && alarms.length > 0) {
       analyzeAndPreload();
@@ -108,7 +100,7 @@ export function useAlarmReadiness(alarmId: string, enabled: boolean = true) {
     audioReady: false,
     fallbackReady: true,
     overallReady: false,
-    lastChecked: null as Date | null,
+    lastChecked: null as Date | null
   });
 
   const checkReadiness = useCallback(async () => {
@@ -118,7 +110,7 @@ export function useAlarmReadiness(alarmId: string, enabled: boolean = true) {
       const status = await criticalPreloader.verifyCriticalAssets(alarmId);
       setReadiness({
         ...status,
-        lastChecked: new Date(),
+        lastChecked: new Date()
       });
     } catch (error) {
       console.error(`Error checking readiness for alarm ${alarmId}:`, error);
@@ -144,26 +136,23 @@ export function useAlarmReadiness(alarmId: string, enabled: boolean = true) {
 export function useEmergencyPreloading() {
   const [isEmergencyPreloading, setIsEmergencyPreloading] = useState(false);
 
-  const triggerEmergencyPreload = useCallback(
-    async (alarmIds: string[]) => {
-      if (isEmergencyPreloading) return;
+  const triggerEmergencyPreload = useCallback(async (alarmIds: string[]) => {
+    if (isEmergencyPreloading) return;
 
-      setIsEmergencyPreloading(true);
+    setIsEmergencyPreloading(true);
 
-      try {
-        await criticalPreloader.emergencyPreload(alarmIds);
-      } catch (error) {
-        console.error('Emergency preload failed:', error);
-      } finally {
-        setIsEmergencyPreloading(false);
-      }
-    },
-    [isEmergencyPreloading]
-  );
+    try {
+      await criticalPreloader.emergencyPreload(alarmIds);
+    } catch (error) {
+      console.error('Emergency preload failed:', error);
+    } finally {
+      setIsEmergencyPreloading(false);
+    }
+  }, [isEmergencyPreloading]);
 
   return {
     isEmergencyPreloading,
-    triggerEmergencyPreload,
+    triggerEmergencyPreload
   };
 }
 
@@ -177,17 +166,14 @@ export function usePreloadStrategy() {
     preloadWindow: 15,
     batchSize: 3,
     retryAttempts: 3,
-    priorityThreshold: 5,
+    priorityThreshold: 5
   });
 
-  const updateStrategy = useCallback(
-    (updates: Partial<PreloadStrategy>) => {
-      const newStrategy = { ...currentStrategy, ...updates };
-      setCurrentStrategy(newStrategy);
-      criticalPreloader.updateStrategy(updates);
-    },
-    [currentStrategy]
-  );
+  const updateStrategy = useCallback((updates: Partial<PreloadStrategy>) => {
+    const newStrategy = { ...currentStrategy, ...updates };
+    setCurrentStrategy(newStrategy);
+    criticalPreloader.updateStrategy(updates);
+  }, [currentStrategy]);
 
   const setQuickStrategy = useCallback(() => {
     updateStrategy({
@@ -196,7 +182,7 @@ export function usePreloadStrategy() {
       preloadWindow: 30,
       batchSize: 5,
       retryAttempts: 5,
-      priorityThreshold: 3,
+      priorityThreshold: 3
     });
   }, [updateStrategy]);
 
@@ -207,7 +193,7 @@ export function usePreloadStrategy() {
       preloadWindow: 5,
       batchSize: 1,
       retryAttempts: 2,
-      priorityThreshold: 8,
+      priorityThreshold: 8
     });
   }, [updateStrategy]);
 
@@ -218,7 +204,7 @@ export function usePreloadStrategy() {
       preloadWindow: 15,
       batchSize: 3,
       retryAttempts: 3,
-      priorityThreshold: 5,
+      priorityThreshold: 5
     });
   }, [updateStrategy]);
 
@@ -227,7 +213,7 @@ export function usePreloadStrategy() {
     updateStrategy,
     setQuickStrategy,
     setBatteryOptimizedStrategy,
-    setBalancedStrategy,
+    setBalancedStrategy
   };
 }
 
@@ -235,17 +221,15 @@ export function usePreloadStrategy() {
  * Hook for monitoring critical asset status
  */
 export function useCriticalAssetStatus() {
-  const [assetStatus, setAssetStatus] = useState<
-    Array<{
-      id: string;
-      type: string;
-      alarmId: string;
-      priority: number;
-      isLoaded: boolean;
-      timeUntilTrigger: number;
-      timeUntilPreload: number;
-    }>
-  >([]);
+  const [assetStatus, setAssetStatus] = useState<Array<{
+    id: string;
+    type: string;
+    alarmId: string;
+    priority: number;
+    isLoaded: boolean;
+    timeUntilTrigger: number;
+    timeUntilPreload: number;
+  }>>([]);
 
   useEffect(() => {
     const updateStatus = () => {
@@ -272,16 +256,14 @@ export function usePreloadPerformance() {
     cacheHitRate: 0,
     memoryUsage: 0,
     recentFailures: 0,
-    trend: 'stable' as 'improving' | 'stable' | 'degrading',
+    trend: 'stable' as 'improving' | 'stable' | 'degrading'
   });
 
-  const [performanceHistory, setPerformanceHistory] = useState<
-    {
-      timestamp: Date;
-      successRate: number;
-      avgLoadTime: number;
-    }[]
-  >([]);
+  const [performanceHistory, setPerformanceHistory] = useState<{
+    timestamp: Date;
+    successRate: number;
+    avgLoadTime: number;
+  }[]>([]);
 
   useEffect(() => {
     const updatePerformance = () => {
@@ -293,7 +275,7 @@ export function usePreloadPerformance() {
         cacheHitRate: stats.cacheHitRate,
         memoryUsage: stats.memoryUsage,
         recentFailures: stats.failedAssets,
-        trend: 'stable' as 'improving' | 'stable' | 'degrading',
+        trend: 'stable' as 'improving' | 'stable' | 'degrading'
       };
 
       // Determine trend
@@ -301,10 +283,8 @@ export function usePreloadPerformance() {
         const recent = performanceHistory.slice(-3);
         const earlier = performanceHistory.slice(-6, -3);
 
-        const recentAvg =
-          recent.reduce((sum, p) => sum + p.successRate, 0) / recent.length;
-        const earlierAvg =
-          earlier.reduce((sum, p) => sum + p.successRate, 0) / earlier.length;
+        const recentAvg = recent.reduce((sum, p) => sum + p.successRate, 0) / recent.length;
+        const earlierAvg = earlier.reduce((sum, p) => sum + p.successRate, 0) / earlier.length;
 
         if (recentAvg > earlierAvg + 0.1) {
           newPerformance.trend = 'improving';
@@ -320,7 +300,7 @@ export function usePreloadPerformance() {
         const newEntry = {
           timestamp: new Date(),
           successRate: stats.successRate,
-          avgLoadTime: stats.averageLoadTime,
+          avgLoadTime: stats.averageLoadTime
         };
 
         const updated = [...prev, newEntry];
@@ -336,7 +316,7 @@ export function usePreloadPerformance() {
 
   return {
     performance,
-    performanceHistory,
+    performanceHistory
   };
 }
 
@@ -349,7 +329,7 @@ export function usePreloadDebugging() {
     activeLoads: 0,
     lastError: null as string | null,
     criticalAssetsCount: 0,
-    nextPreloadTime: null as Date | null,
+    nextPreloadTime: null as Date | null
   });
 
   useEffect(() => {
@@ -366,9 +346,7 @@ export function usePreloadDebugging() {
         activeLoads: 0, // This would need to be exposed from the preloader
         lastError: null, // This would need error tracking
         criticalAssetsCount: assetStatus.length,
-        nextPreloadTime: nextAsset
-          ? new Date(Date.now() + nextAsset.timeUntilPreload * 60000)
-          : null,
+        nextPreloadTime: nextAsset ? new Date(Date.now() + nextAsset.timeUntilPreload * 60000) : null
       });
     };
 

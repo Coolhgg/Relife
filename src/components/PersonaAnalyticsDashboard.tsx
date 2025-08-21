@@ -1,25 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
+import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { UserPersona } from '../types/persona';
-import {
-  usePersonaAnalytics,
-  PersonaAnalyticsData,
-  CampaignPerformanceData,
-} from '../analytics/PersonaAnalytics';
+import { usePersonaAnalytics, PersonaAnalyticsData, CampaignPerformanceData } from '../analytics/PersonaAnalytics';
 
 interface AnalyticsDashboardProps {
   className?: string;
@@ -47,12 +29,12 @@ interface CampaignMetrics {
 }
 
 const PERSONA_COLORS: Record<UserPersona, string> = {
-  struggling_sam: '#10B981', // Green
-  busy_ben: '#3B82F6', // Blue
+  struggling_sam: '#10B981',     // Green
+  busy_ben: '#3B82F6',          // Blue
   professional_paula: '#8B5CF6', // Purple
-  enterprise_emma: '#6366F1', // Indigo
-  student_sarah: '#F59E0B', // Orange
-  lifetime_larry: '#F59E0B', // Yellow
+  enterprise_emma: '#6366F1',    // Indigo
+  student_sarah: '#F59E0B',      // Orange
+  lifetime_larry: '#F59E0B'      // Yellow
 };
 
 const PERSONA_NAMES: Record<UserPersona, string> = {
@@ -61,12 +43,10 @@ const PERSONA_NAMES: Record<UserPersona, string> = {
   professional_paula: 'Professional Paula',
   enterprise_emma: 'Enterprise Emma',
   student_sarah: 'Student Sarah',
-  lifetime_larry: 'Lifetime Larry',
+  lifetime_larry: 'Lifetime Larry'
 };
 
-export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
-  className = '',
-}) => {
+export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ className = '' }) => {
   const [analyticsData, setAnalyticsData] = useState<PersonaAnalyticsData[]>([]);
   const [campaignData, setCampaignData] = useState<CampaignPerformanceData[]>([]);
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d' | '90d'>('7d');
@@ -79,9 +59,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       setLoading(true);
       try {
         // Replace with actual API calls
-        const response = await fetch(
-          `/api/analytics/persona-data?timeRange=${timeRange}`
-        );
+        const response = await fetch(`/api/analytics/persona-data?timeRange=${timeRange}`);
         const data = await response.json();
         setAnalyticsData(data.personaData || []);
         setCampaignData(data.campaignData || []);
@@ -110,7 +88,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         conversionRate: 0,
         revenue: 0,
         avgConfidence: 0,
-        color: PERSONA_COLORS[data.persona],
+        color: PERSONA_COLORS[data.persona]
       };
 
       existing.detections += 1;
@@ -126,10 +104,8 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
     return Array.from(metrics.values()).map(metric => ({
       ...metric,
-      conversionRate:
-        metric.detections > 0 ? (metric.conversions / metric.detections) * 100 : 0,
-      avgConfidence:
-        metric.detections > 0 ? (metric.avgConfidence / metric.detections) * 100 : 0,
+      conversionRate: metric.detections > 0 ? (metric.conversions / metric.detections) * 100 : 0,
+      avgConfidence: metric.detections > 0 ? (metric.avgConfidence / metric.detections) * 100 : 0
     }));
   }, [analyticsData]);
 
@@ -143,7 +119,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       conversions: data.metrics.conversions,
       ctr: data.metrics.ctr,
       conversionRate: data.metrics.conversionRate,
-      revenue: data.metrics.revenue,
+      revenue: data.metrics.revenue
     }));
   }, [campaignData]);
 
@@ -152,17 +128,14 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     const totalDetections = personaMetrics.reduce((sum, p) => sum + p.detections, 0);
     const totalConversions = personaMetrics.reduce((sum, p) => sum + p.conversions, 0);
     const totalRevenue = personaMetrics.reduce((sum, p) => sum + p.revenue, 0);
-    const avgConfidence =
-      personaMetrics.reduce((sum, p) => sum + p.avgConfidence, 0) /
-        personaMetrics.length || 0;
+    const avgConfidence = personaMetrics.reduce((sum, p) => sum + p.avgConfidence, 0) / personaMetrics.length || 0;
 
     return {
       totalDetections,
       totalConversions,
       totalRevenue,
-      overallConversionRate:
-        totalDetections > 0 ? (totalConversions / totalDetections) * 100 : 0,
-      avgConfidence,
+      overallConversionRate: totalDetections > 0 ? (totalConversions / totalDetections) * 100 : 0,
+      avgConfidence
     };
   }, [personaMetrics]);
 
@@ -182,12 +155,8 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Persona Analytics Dashboard
-          </h2>
-          <p className="text-gray-600">
-            Track persona detection accuracy and campaign performance
-          </p>
+          <h2 className="text-2xl font-bold text-gray-900">Persona Analytics Dashboard</h2>
+          <p className="text-gray-600">Track persona detection accuracy and campaign performance</p>
         </div>
         <div className="flex space-x-2">
           {(['24h', '7d', '30d', '90d'] as const).map(range => (
@@ -211,25 +180,13 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         <div className="bg-white rounded-lg border p-6">
           <div className="flex items-center">
             <div className="p-2 bg-blue-100 rounded-lg">
-              <svg
-                className="w-6 h-6 text-blue-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                />
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Total Detections</p>
-              <p className="text-2xl font-semibold text-gray-900">
-                {overallStats.totalDetections.toLocaleString()}
-              </p>
+              <p className="text-2xl font-semibold text-gray-900">{overallStats.totalDetections.toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -237,25 +194,13 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         <div className="bg-white rounded-lg border p-6">
           <div className="flex items-center">
             <div className="p-2 bg-green-100 rounded-lg">
-              <svg
-                className="w-6 h-6 text-green-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                />
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Conversion Rate</p>
-              <p className="text-2xl font-semibold text-gray-900">
-                {overallStats.overallConversionRate.toFixed(1)}%
-              </p>
+              <p className="text-2xl font-semibold text-gray-900">{overallStats.overallConversionRate.toFixed(1)}%</p>
             </div>
           </div>
         </div>
@@ -263,25 +208,13 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         <div className="bg-white rounded-lg border p-6">
           <div className="flex items-center">
             <div className="p-2 bg-yellow-100 rounded-lg">
-              <svg
-                className="w-6 h-6 text-yellow-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                />
+              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
               </svg>
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-              <p className="text-2xl font-semibold text-gray-900">
-                ${overallStats.totalRevenue.toLocaleString()}
-              </p>
+              <p className="text-2xl font-semibold text-gray-900">${overallStats.totalRevenue.toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -289,25 +222,13 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         <div className="bg-white rounded-lg border p-6">
           <div className="flex items-center">
             <div className="p-2 bg-purple-100 rounded-lg">
-              <svg
-                className="w-6 h-6 text-purple-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                />
+              <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Avg Confidence</p>
-              <p className="text-2xl font-semibold text-gray-900">
-                {overallStats.avgConfidence.toFixed(1)}%
-              </p>
+              <p className="text-2xl font-semibold text-gray-900">{overallStats.avgConfidence.toFixed(1)}%</p>
             </div>
           </div>
         </div>
@@ -317,9 +238,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Persona Distribution Pie Chart */}
         <div className="bg-white rounded-lg border p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            Persona Distribution
-          </h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Persona Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -327,9 +246,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ persona, detections }) =>
-                  `${PERSONA_NAMES[persona]} (${detections})`
-                }
+                label={({ persona, detections }) => `${PERSONA_NAMES[persona]} (${detections})`}
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="detections"
@@ -345,22 +262,18 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
         {/* Conversion Rates by Persona */}
         <div className="bg-white rounded-lg border p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            Conversion Rates by Persona
-          </h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Conversion Rates by Persona</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={personaMetrics}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={value =>
-                  PERSONA_NAMES[value as UserPersona].split(' ')[1]
-                } // Show only first name
+                tickFormatter={(value) => PERSONA_NAMES[value as UserPersona].split(' ')[1]} // Show only first name
               />
               <YAxis />
               <Tooltip
-                labelFormatter={value => PERSONA_NAMES[value as UserPersona]}
+                labelFormatter={(value) => PERSONA_NAMES[value as UserPersona]}
                 formatter={(value: any) => [`${value.toFixed(1)}%`, 'Conversion Rate']}
               />
               <Bar dataKey="conversionRate" fill="#3B82F6" />
@@ -380,13 +293,11 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={value =>
-                  PERSONA_NAMES[value as UserPersona].split(' ')[1]
-                }
+                tickFormatter={(value) => PERSONA_NAMES[value as UserPersona].split(' ')[1]}
               />
               <YAxis />
               <Tooltip
-                labelFormatter={value => PERSONA_NAMES[value as UserPersona]}
+                labelFormatter={(value) => PERSONA_NAMES[value as UserPersona]}
                 formatter={(value: any) => [`$${value.toLocaleString()}`, 'Revenue']}
               />
               <Bar dataKey="revenue" fill="#10B981" />
@@ -396,22 +307,18 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
         {/* Detection Confidence */}
         <div className="bg-white rounded-lg border p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            Detection Confidence by Persona
-          </h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Detection Confidence by Persona</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={personaMetrics}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={value =>
-                  PERSONA_NAMES[value as UserPersona].split(' ')[1]
-                }
+                tickFormatter={(value) => PERSONA_NAMES[value as UserPersona].split(' ')[1]}
               />
               <YAxis domain={[0, 100]} />
               <Tooltip
-                labelFormatter={value => PERSONA_NAMES[value as UserPersona]}
+                labelFormatter={(value) => PERSONA_NAMES[value as UserPersona]}
                 formatter={(value: any) => [`${value.toFixed(1)}%`, 'Avg Confidence']}
               />
               <Bar dataKey="avgConfidence" fill="#8B5CF6" />
@@ -429,35 +336,19 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Campaign
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Persona
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Impressions
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Clicks
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  CTR
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Conv. Rate
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Revenue
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Persona</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Impressions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CTR</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Conv. Rate</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {campaignMetrics.map((campaign, index) => (
                 <tr key={index} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {campaign.campaign}
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{campaign.campaign}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <span
                       className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white"
@@ -466,21 +357,11 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                       {PERSONA_NAMES[campaign.persona]}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {campaign.impressions.toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {campaign.clicks.toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {(campaign.ctr * 100).toFixed(2)}%
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {(campaign.conversionRate * 100).toFixed(2)}%
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    ${campaign.revenue.toLocaleString()}
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.impressions.toLocaleString()}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.clicks.toLocaleString()}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{(campaign.ctr * 100).toFixed(2)}%</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{(campaign.conversionRate * 100).toFixed(2)}%</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${campaign.revenue.toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
@@ -493,14 +374,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
 // Mock data generators for development
 function generateMockPersonaData(): PersonaAnalyticsData[] {
-  const personas: UserPersona[] = [
-    'struggling_sam',
-    'busy_ben',
-    'professional_paula',
-    'enterprise_emma',
-    'student_sarah',
-    'lifetime_larry',
-  ];
+  const personas: UserPersona[] = ['struggling_sam', 'busy_ben', 'professional_paula', 'enterprise_emma', 'student_sarah', 'lifetime_larry'];
   const mockData: PersonaAnalyticsData[] = [];
 
   personas.forEach(persona => {
@@ -514,7 +388,7 @@ function generateMockPersonaData(): PersonaAnalyticsData[] {
         confidence: 0.6 + Math.random() * 0.4, // 60-100% confidence
         detectionMethod: Math.random() > 0.5 ? 'behavioral' : 'explicit',
         conversionStep: Math.random() > 0.8 ? 'conversion' : 'consideration',
-        metadata: Math.random() > 0.8 ? { revenue: Math.random() * 100 } : {},
+        metadata: Math.random() > 0.8 ? { revenue: Math.random() * 100 } : {}
       });
     }
   });
@@ -523,21 +397,8 @@ function generateMockPersonaData(): PersonaAnalyticsData[] {
 }
 
 function generateMockCampaignData(): CampaignPerformanceData[] {
-  const personas: UserPersona[] = [
-    'struggling_sam',
-    'busy_ben',
-    'professional_paula',
-    'enterprise_emma',
-    'student_sarah',
-    'lifetime_larry',
-  ];
-  const campaigns = [
-    'Email_Welcome',
-    'Social_TikTok',
-    'Social_LinkedIn',
-    'Paid_Google',
-    'Influencer_Collab',
-  ];
+  const personas: UserPersona[] = ['struggling_sam', 'busy_ben', 'professional_paula', 'enterprise_emma', 'student_sarah', 'lifetime_larry'];
+  const campaigns = ['Email_Welcome', 'Social_TikTok', 'Social_LinkedIn', 'Paid_Google', 'Influencer_Collab'];
 
   return campaigns.flatMap(campaign =>
     personas.map(persona => ({
@@ -551,9 +412,9 @@ function generateMockCampaignData(): CampaignPerformanceData[] {
         revenue: Math.floor(Math.random() * 5000) + 500,
         ctr: 0.02 + Math.random() * 0.08, // 2-10% CTR
         conversionRate: 0.05 + Math.random() * 0.15, // 5-20% conversion rate
-        costPerAcquisition: 10 + Math.random() * 40, // $10-50 CPA
+        costPerAcquisition: 10 + Math.random() * 40 // $10-50 CPA
       },
-      timestamp: Date.now(),
+      timestamp: Date.now()
     }))
   );
 }

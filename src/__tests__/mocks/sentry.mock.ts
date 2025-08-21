@@ -45,7 +45,7 @@ const mockSentry = {
       }),
       clear: jest.fn(() => {
         console.log('🧹 Mock Sentry scope clear');
-      }),
+      })
     };
 
     callback(mockScope);
@@ -92,7 +92,7 @@ const mockSentry = {
       finish: jest.fn(() => {
         console.log('✅ Mock Sentry transaction finished');
       }),
-      startChild: jest.fn(() => mockSentry.startTransaction({})),
+      startChild: jest.fn(() => mockSentry.startTransaction({}))
     };
   }),
 
@@ -100,16 +100,16 @@ const mockSentry = {
   getCurrentHub: jest.fn(() => ({
     getClient: jest.fn(() => ({
       captureException: mockSentry.captureException,
-      captureMessage: mockSentry.captureMessage,
+      captureMessage: mockSentry.captureMessage
     })),
     getScope: jest.fn(() => ({
       setTag: mockSentry.setTag,
       setContext: mockSentry.setContext,
       setUser: mockSentry.setUser,
       setLevel: mockSentry.setLevel,
-      setExtra: mockSentry.setExtra,
+      setExtra: mockSentry.setExtra
     })),
-    withScope: mockSentry.withScope,
+    withScope: mockSentry.withScope
   })),
 
   // Configuration
@@ -161,23 +161,23 @@ const mockSentry = {
     Warning: 'warning',
     Log: 'log',
     Info: 'info',
-    Debug: 'debug',
+    Debug: 'debug'
   },
 
   // Integration mocks
   Integrations: {
     BrowserTracing: jest.fn(() => ({
       name: 'BrowserTracing',
-      setupOnce: jest.fn(),
+      setupOnce: jest.fn()
     })),
     Replay: jest.fn(() => ({
       name: 'Replay',
-      setupOnce: jest.fn(),
+      setupOnce: jest.fn()
     })),
     CaptureConsole: jest.fn(() => ({
       name: 'CaptureConsole',
-      setupOnce: jest.fn(),
-    })),
+      setupOnce: jest.fn()
+    }))
   },
 
   // Transport and client
@@ -212,14 +212,14 @@ const mockSentry = {
 
   _mockClearContext: jest.fn(() => {
     console.log('🧹 Mock Sentry clear all context');
-  }),
+  })
 };
 
 // Create a factory function for creating fresh mocks
 export const createMockSentry = () => ({
   ...mockSentry,
   Integrations: { ...mockSentry.Integrations },
-  Severity: { ...mockSentry.Severity },
+  Severity: { ...mockSentry.Severity }
 });
 
 export default mockSentry;

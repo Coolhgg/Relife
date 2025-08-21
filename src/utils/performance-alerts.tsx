@@ -62,8 +62,7 @@ class PerformanceAlertManager {
   private alerts: Map<string, PerformanceAlert> = new Map();
   private alertRules: Map<string, AlertRule> = new Map();
   private alertCooldowns: Map<string, number> = new Map();
-  private metricHistory: Map<string, Array<{ value: number; timestamp: number }>> =
-    new Map();
+  private metricHistory: Map<string, Array<{ value: number; timestamp: number }>> = new Map();
   private observers: Array<(alert: PerformanceAlert) => void> = [];
   private isMonitoring = false;
   private monitoringInterval?: number;
@@ -91,12 +90,9 @@ class PerformanceAlertManager {
         cooldownPeriod: 5,
         autoResolve: true,
         actions: [
-          {
-            type: 'notification',
-            config: { title: 'LCP Performance Issue', persistent: false },
-          },
-          { type: 'console', config: { level: 'warn' } },
-        ],
+          { type: 'notification', config: { title: 'LCP Performance Issue', persistent: false } },
+          { type: 'console', config: { level: 'warn' } }
+        ]
       },
       {
         id: 'fid_threshold',
@@ -111,8 +107,8 @@ class PerformanceAlertManager {
         autoResolve: true,
         actions: [
           { type: 'notification', config: { title: 'Input Responsiveness Issue' } },
-          { type: 'console', config: { level: 'warn' } },
-        ],
+          { type: 'console', config: { level: 'warn' } }
+        ]
       },
       {
         id: 'cls_threshold',
@@ -126,8 +122,8 @@ class PerformanceAlertManager {
         cooldownPeriod: 5,
         autoResolve: false,
         actions: [
-          { type: 'notification', config: { title: 'Layout Stability Issue' } },
-        ],
+          { type: 'notification', config: { title: 'Layout Stability Issue' } }
+        ]
       },
       {
         id: 'memory_usage',
@@ -142,8 +138,8 @@ class PerformanceAlertManager {
         autoResolve: true,
         actions: [
           { type: 'notification', config: { title: 'High Memory Usage' } },
-          { type: 'optimization', config: { type: 'memory_cleanup' } },
-        ],
+          { type: 'optimization', config: { type: 'memory_cleanup' } }
+        ]
       },
       {
         id: 'network_error_rate',
@@ -157,8 +153,8 @@ class PerformanceAlertManager {
         cooldownPeriod: 5,
         autoResolve: false,
         actions: [
-          { type: 'notification', config: { title: 'Network Issues Detected' } },
-        ],
+          { type: 'notification', config: { title: 'Network Issues Detected' } }
+        ]
       },
       {
         id: 'js_error_frequency',
@@ -173,9 +169,9 @@ class PerformanceAlertManager {
         autoResolve: false,
         actions: [
           { type: 'notification', config: { title: 'Critical Error Frequency' } },
-          { type: 'storage', config: { key: 'critical_errors' } },
-        ],
-      },
+          { type: 'storage', config: { key: 'critical_errors' } }
+        ]
+      }
     ];
 
     defaultRules.forEach(rule => this.alertRules.set(rule.id, rule));
@@ -189,10 +185,7 @@ class PerformanceAlertManager {
       try {
         await Notification.requestPermission();
       } catch (error) {
-        console.warn(
-          '[PerformanceAlerts] Could not request notification permission:',
-          error
-        );
+        console.warn('[PerformanceAlerts] Could not request notification permission:', error);
       }
     }
   }
@@ -246,20 +239,13 @@ class PerformanceAlertManager {
   /**
    * Check metric against alert rules
    */
-  private checkMetricAlerts(
-    metric: string,
-    value: number,
-    metadata?: Record<string, any>
-  ) {
+  private checkMetricAlerts(metric: string, value: number, metadata?: Record<string, any>) {
     this.alertRules.forEach(rule => {
       if (rule.metric !== metric || !rule.enabled) return;
 
       // Check cooldown period
       const lastAlertTime = this.alertCooldowns.get(rule.id);
-      if (
-        lastAlertTime &&
-        Date.now() - lastAlertTime < rule.cooldownPeriod * 60 * 1000
-      ) {
+      if (lastAlertTime && Date.now() - lastAlertTime < rule.cooldownPeriod * 60 * 1000) {
         return;
       }
 
@@ -275,24 +261,14 @@ class PerformanceAlertManager {
   /**
    * Evaluate alert condition
    */
-  private evaluateCondition(
-    value: number,
-    condition: AlertRule['condition'],
-    threshold: number
-  ): boolean {
+  private evaluateCondition(value: number, condition: AlertRule['condition'], threshold: number): boolean {
     switch (condition) {
-      case 'gt':
-        return value > threshold;
-      case 'gte':
-        return value >= threshold;
-      case 'lt':
-        return value < threshold;
-      case 'lte':
-        return value <= threshold;
-      case 'eq':
-        return value === threshold;
-      default:
-        return false;
+      case 'gt': return value > threshold;
+      case 'gte': return value >= threshold;
+      case 'lt': return value < threshold;
+      case 'lte': return value <= threshold;
+      case 'eq': return value === threshold;
+      default: return false;
     }
   }
 
@@ -314,7 +290,7 @@ class PerformanceAlertManager {
       severity: rule.severity,
       resolved: false,
       autoResolve: rule.autoResolve,
-      metadata,
+      metadata
     };
 
     this.alerts.set(alertId, alert);
@@ -334,18 +310,12 @@ class PerformanceAlertManager {
    */
   private getAlertType(severity: number): PerformanceAlert['type'] {
     switch (severity) {
-      case 1:
-        return 'info';
-      case 2:
-        return 'info';
-      case 3:
-        return 'warning';
-      case 4:
-        return 'error';
-      case 5:
-        return 'critical';
-      default:
-        return 'warning';
+      case 1: return 'info';
+      case 2: return 'info';
+      case 3: return 'warning';
+      case 4: return 'error';
+      case 5: return 'critical';
+      default: return 'warning';
     }
   }
 
@@ -363,12 +333,7 @@ class PerformanceAlertManager {
    * Format value based on metric type
    */
   private formatValue(metric: string, value: number): string {
-    if (
-      metric.includes('time') ||
-      metric.includes('delay') ||
-      metric === 'LCP' ||
-      metric === 'FID'
-    ) {
+    if (metric.includes('time') || metric.includes('delay') || metric === 'LCP' || metric === 'FID') {
       return `${Math.round(value)}ms`;
     }
 
@@ -420,7 +385,7 @@ class PerformanceAlertManager {
         badge: '/icon-72x72.png',
         tag: `perf-alert-${alert.category}`,
         requireInteraction: config.persistent || alert.severity >= 4,
-        data: { alertId: alert.id },
+        data: { alertId: alert.id }
       });
 
       // Auto-close after 10 seconds unless persistent
@@ -487,11 +452,9 @@ class PerformanceAlertManager {
    */
   private triggerMemoryCleanup() {
     // Trigger memory pressure event
-    window.dispatchEvent(
-      new CustomEvent('memory-pressure', {
-        detail: { source: 'performance-alert', timestamp: Date.now() },
-      })
-    );
+    window.dispatchEvent(new CustomEvent('memory-pressure', {
+      detail: { source: 'performance-alert', timestamp: Date.now() }
+    }));
   }
 
   /**
@@ -567,16 +530,14 @@ class PerformanceAlertManager {
   /**
    * Calculate performance trend
    */
-  private calculateTrend(
-    history: Array<{ value: number; timestamp: number }>
-  ): PerformanceTrend {
+  private calculateTrend(history: Array<{ value: number; timestamp: number }>): PerformanceTrend {
     if (history.length < 10) {
       return {
         metric: '',
         values: [],
         timestamps: [],
         trend: 'stable',
-        changePercent: 0,
+        changePercent: 0
       };
     }
 
@@ -593,10 +554,8 @@ class PerformanceAlertManager {
     const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
 
     // Calculate percent change
-    const first =
-      values.slice(0, Math.floor(n / 3)).reduce((a, b) => a + b) / Math.floor(n / 3);
-    const last =
-      values.slice(-Math.floor(n / 3)).reduce((a, b) => a + b) / Math.floor(n / 3);
+    const first = values.slice(0, Math.floor(n / 3)).reduce((a, b) => a + b) / Math.floor(n / 3);
+    const last = values.slice(-Math.floor(n / 3)).reduce((a, b) => a + b) / Math.floor(n / 3);
     const changePercent = ((last - first) / first) * 100;
 
     let trend: PerformanceTrend['trend'];
@@ -613,7 +572,7 @@ class PerformanceAlertManager {
       values,
       timestamps,
       trend,
-      changePercent,
+      changePercent
     };
   }
 
@@ -633,7 +592,7 @@ class PerformanceAlertManager {
       severity: 3,
       resolved: false,
       autoResolve: true,
-      metadata: { trend },
+      metadata: { trend }
     };
 
     this.alerts.set(alert.id, alert);
@@ -656,7 +615,7 @@ class PerformanceAlertManager {
    * Clean up resolved alerts
    */
   private cleanupResolvedAlerts() {
-    const cutoff = Date.now() - 24 * 60 * 60 * 1000; // 24 hours
+    const cutoff = Date.now() - (24 * 60 * 60 * 1000); // 24 hours
 
     for (const [id, alert] of this.alerts) {
       if (alert.resolved && alert.timestamp < cutoff) {
@@ -704,8 +663,8 @@ class PerformanceAlertManager {
     });
 
     // Remove duplicates and sort by priority
-    const unique = suggestions.filter(
-      (suggestion, index, arr) => arr.findIndex(s => s.id === suggestion.id) === index
+    const unique = suggestions.filter((suggestion, index, arr) =>
+      arr.findIndex(s => s.id === suggestion.id) === index
     );
 
     return unique.sort((a, b) => {
@@ -726,12 +685,10 @@ class PerformanceAlertManager {
         category: 'Web Vitals',
         priority: 'high',
         title: 'Optimize Largest Contentful Paint',
-        description:
-          'Your largest contentful paint is too slow, affecting user experience',
+        description: 'Your largest contentful paint is too slow, affecting user experience',
         impact: 'Improves perceived loading performance',
-        implementation:
-          'Optimize images, use CDN, implement preloading for critical resources',
-        estimatedGain: '30-50% improvement in LCP',
+        implementation: 'Optimize images, use CDN, implement preloading for critical resources',
+        estimatedGain: '30-50% improvement in LCP'
       });
     }
 
@@ -743,9 +700,8 @@ class PerformanceAlertManager {
         title: 'Reduce First Input Delay',
         description: 'Users are experiencing delays when interacting with your app',
         impact: 'Improves interactivity and user satisfaction',
-        implementation:
-          'Use web workers, defer non-critical JavaScript, optimize event handlers',
-        estimatedGain: '60-80% improvement in responsiveness',
+        implementation: 'Use web workers, defer non-critical JavaScript, optimize event handlers',
+        estimatedGain: '60-80% improvement in responsiveness'
       });
     }
 
@@ -756,55 +712,48 @@ class PerformanceAlertManager {
    * Get memory optimizations
    */
   private getMemoryOptimizations(alert: PerformanceAlert): OptimizationSuggestion[] {
-    return [
-      {
-        id: 'memory-cleanup',
-        category: 'Memory',
-        priority: 'medium',
-        title: 'Implement Memory Cleanup',
-        description: 'High memory usage detected, potential memory leaks',
-        impact: 'Prevents crashes and improves stability',
-        implementation:
-          'Review event listeners, clear caches, implement proper cleanup',
-        estimatedGain: '20-40% reduction in memory usage',
-      },
-    ];
+    return [{
+      id: 'memory-cleanup',
+      category: 'Memory',
+      priority: 'medium',
+      title: 'Implement Memory Cleanup',
+      description: 'High memory usage detected, potential memory leaks',
+      impact: 'Prevents crashes and improves stability',
+      implementation: 'Review event listeners, clear caches, implement proper cleanup',
+      estimatedGain: '20-40% reduction in memory usage'
+    }];
   }
 
   /**
    * Get network optimizations
    */
   private getNetworkOptimizations(alert: PerformanceAlert): OptimizationSuggestion[] {
-    return [
-      {
-        id: 'network-optimization',
-        category: 'Network',
-        priority: 'medium',
-        title: 'Optimize Network Requests',
-        description: 'High network error rate affecting user experience',
-        impact: 'Improves reliability and reduces errors',
-        implementation: 'Implement retry logic, request batching, and caching',
-        estimatedGain: '50-70% reduction in network errors',
-      },
-    ];
+    return [{
+      id: 'network-optimization',
+      category: 'Network',
+      priority: 'medium',
+      title: 'Optimize Network Requests',
+      description: 'High network error rate affecting user experience',
+      impact: 'Improves reliability and reduces errors',
+      implementation: 'Implement retry logic, request batching, and caching',
+      estimatedGain: '50-70% reduction in network errors'
+    }];
   }
 
   /**
    * Get error optimizations
    */
   private getErrorOptimizations(alert: PerformanceAlert): OptimizationSuggestion[] {
-    return [
-      {
-        id: 'error-handling',
-        category: 'Error Handling',
-        priority: 'critical',
-        title: 'Improve Error Handling',
-        description: 'High frequency of JavaScript errors detected',
-        impact: 'Prevents crashes and improves user experience',
-        implementation: 'Add error boundaries, improve validation, fix critical bugs',
-        estimatedGain: '80-90% reduction in error frequency',
-      },
-    ];
+    return [{
+      id: 'error-handling',
+      category: 'Error Handling',
+      priority: 'critical',
+      title: 'Improve Error Handling',
+      description: 'High frequency of JavaScript errors detected',
+      impact: 'Prevents crashes and improves user experience',
+      implementation: 'Add error boundaries, improve validation, fix critical bugs',
+      estimatedGain: '80-90% reduction in error frequency'
+    }];
   }
 
   /**
@@ -868,12 +817,9 @@ export function usePerformanceAlerts() {
     };
   }, []);
 
-  const recordMetric = React.useCallback(
-    (name: string, value: number, metadata?: Record<string, any>) => {
-      performanceAlertManager.recordMetric(name, value, metadata);
-    },
-    []
-  );
+  const recordMetric = React.useCallback((name: string, value: number, metadata?: Record<string, any>) => {
+    performanceAlertManager.recordMetric(name, value, metadata);
+  }, []);
 
   const resolveAlert = React.useCallback((alertId: string) => {
     performanceAlertManager.resolveAlert(alertId);
@@ -929,21 +875,17 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
               <div
                 key={alert.id}
                 className={`alert-item p-3 rounded border-l-4 ${
-                  alert.type === 'critical'
-                    ? 'bg-red-50 border-red-500'
-                    : alert.type === 'error'
-                      ? 'bg-orange-50 border-orange-500'
-                      : alert.type === 'warning'
-                        ? 'bg-yellow-50 border-yellow-500'
-                        : 'bg-blue-50 border-blue-500'
+                  alert.type === 'critical' ? 'bg-red-50 border-red-500' :
+                  alert.type === 'error' ? 'bg-orange-50 border-orange-500' :
+                  alert.type === 'warning' ? 'bg-yellow-50 border-yellow-500' :
+                  'bg-blue-50 border-blue-500'
                 }`}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <p className="font-medium text-sm">{alert.message}</p>
                     <p className="text-xs text-gray-600 mt-1">
-                      {alert.category} •{' '}
-                      {new Date(alert.timestamp).toLocaleTimeString()}
+                      {alert.category} • {new Date(alert.timestamp).toLocaleTimeString()}
                     </p>
                   </div>
                   <button
@@ -968,35 +910,25 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
               <div
                 key={suggestion.id}
                 className={`suggestion-item p-3 rounded border ${
-                  suggestion.priority === 'critical'
-                    ? 'border-red-300 bg-red-50'
-                    : suggestion.priority === 'high'
-                      ? 'border-orange-300 bg-orange-50'
-                      : suggestion.priority === 'medium'
-                        ? 'border-yellow-300 bg-yellow-50'
-                        : 'border-gray-300 bg-gray-50'
+                  suggestion.priority === 'critical' ? 'border-red-300 bg-red-50' :
+                  suggestion.priority === 'high' ? 'border-orange-300 bg-orange-50' :
+                  suggestion.priority === 'medium' ? 'border-yellow-300 bg-yellow-50' :
+                  'border-gray-300 bg-gray-50'
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <h5 className="font-medium text-sm">{suggestion.title}</h5>
-                  <span
-                    className={`px-2 py-1 rounded text-xs ${
-                      suggestion.priority === 'critical'
-                        ? 'bg-red-200 text-red-800'
-                        : suggestion.priority === 'high'
-                          ? 'bg-orange-200 text-orange-800'
-                          : suggestion.priority === 'medium'
-                            ? 'bg-yellow-200 text-yellow-800'
-                            : 'bg-gray-200 text-gray-800'
-                    }`}
-                  >
+                  <span className={`px-2 py-1 rounded text-xs ${
+                    suggestion.priority === 'critical' ? 'bg-red-200 text-red-800' :
+                    suggestion.priority === 'high' ? 'bg-orange-200 text-orange-800' :
+                    suggestion.priority === 'medium' ? 'bg-yellow-200 text-yellow-800' :
+                    'bg-gray-200 text-gray-800'
+                  }`}>
                     {suggestion.priority}
                   </span>
                 </div>
                 <p className="text-xs text-gray-600 mb-2">{suggestion.description}</p>
-                <p className="text-xs text-green-600 font-medium">
-                  {suggestion.estimatedGain}
-                </p>
+                <p className="text-xs text-green-600 font-medium">{suggestion.estimatedGain}</p>
               </div>
             ))}
           </div>

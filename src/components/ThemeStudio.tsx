@@ -9,7 +9,7 @@ import {
   Eye,
   Save,
   Download,
-  Upload,
+  Upload
 } from 'lucide-react';
 import ThemeCreator from './ThemeCreator';
 import ThemeGallery from './ThemeGallery';
@@ -23,7 +23,10 @@ interface ThemeStudioProps {
 
 type StudioView = 'gallery' | 'creator' | 'editor';
 
-const ThemeStudio: React.FC<ThemeStudioProps> = ({ className = '', onClose }) => {
+const ThemeStudio: React.FC<ThemeStudioProps> = ({
+  className = '',
+  onClose
+}) => {
   const { theme, themeConfig } = useTheme();
   const [currentView, setCurrentView] = useState<StudioView>('gallery');
   const [editingTheme, setEditingTheme] = useState<CustomThemeConfig | null>(null);
@@ -136,7 +139,12 @@ const ThemeStudio: React.FC<ThemeStudioProps> = ({ className = '', onClose }) =>
     switch (currentView) {
       case 'creator':
       case 'editor':
-        return <ThemeCreator onClose={handleBackToGallery} className="flex-1" />;
+        return (
+          <ThemeCreator
+            onClose={handleBackToGallery}
+            className="flex-1"
+          />
+        );
 
       default: // gallery
         return (

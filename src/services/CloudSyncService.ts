@@ -42,7 +42,7 @@ class CloudSyncService {
       autoSync: true,
       syncInterval: 30000, // 30 seconds
       conflictResolution: 'merge',
-      enableOfflineCache: true,
+      enableOfflineCache: true
     };
 
     this.status = {
@@ -51,7 +51,7 @@ class CloudSyncService {
       lastSyncTime: null,
       hasConflicts: false,
       pendingChanges: 0,
-      error: null,
+      error: null
     };
 
     this.initializeListeners();
@@ -70,8 +70,7 @@ class CloudSyncService {
     if (stored) return stored;
 
     // Generate new device ID
-    const id =
-      'device_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+    const id = 'device_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
     localStorage.setItem('device-id', id);
     return id;
   }
@@ -200,13 +199,14 @@ class CloudSyncService {
         lastSyncTime: new Date(),
         hasConflicts: false,
         pendingChanges: 0,
-        error: null,
+        error: null
       });
+
     } catch (error) {
       console.error('Cloud sync error:', error);
       this.updateStatus({
         isSyncing: false,
-        error: error instanceof Error ? error.message : 'Sync failed',
+        error: error instanceof Error ? error.message : 'Sync failed'
       });
 
       // Save to cache for retry
@@ -242,9 +242,9 @@ class CloudSyncService {
 
       const response = await fetch(`${this.apiEndpoint}/user/preferences`, {
         headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        }
       });
 
       if (response.status === 404) {
@@ -262,9 +262,7 @@ class CloudSyncService {
     }
   }
 
-  private async saveRemotePreferences(
-    preferences: CloudSyncPreferences
-  ): Promise<void> {
+  private async saveRemotePreferences(preferences: CloudSyncPreferences): Promise<void> {
     const authToken = this.getAuthToken();
     if (!authToken) {
       return; // No user logged in, skip cloud save
@@ -274,10 +272,10 @@ class CloudSyncService {
       const response = await fetch(`${this.apiEndpoint}/user/preferences`, {
         method: 'PUT',
         headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(preferences),
+        body: JSON.stringify(preferences)
       });
 
       if (!response.ok) {
@@ -342,26 +340,22 @@ class CloudSyncService {
       colorPreferences: {
         ...otherPrefs.personalization.colorPreferences,
         ...basePrefs.personalization.colorPreferences,
-        favoriteColors: Array.from(
-          new Set([
-            ...(otherPrefs.personalization.colorPreferences?.favoriteColors || []),
-            ...(basePrefs.personalization.colorPreferences?.favoriteColors || []),
-          ])
-        ),
-        avoidColors: Array.from(
-          new Set([
-            ...(otherPrefs.personalization.colorPreferences?.avoidColors || []),
-            ...(basePrefs.personalization.colorPreferences?.avoidColors || []),
-          ])
-        ),
-      },
+        favoriteColors: Array.from(new Set([
+          ...(otherPrefs.personalization.colorPreferences?.favoriteColors || []),
+          ...(basePrefs.personalization.colorPreferences?.favoriteColors || [])
+        ])),
+        avoidColors: Array.from(new Set([
+          ...(otherPrefs.personalization.colorPreferences?.avoidColors || []),
+          ...(basePrefs.personalization.colorPreferences?.avoidColors || [])
+        ]))
+      }
     };
 
     return {
       ...basePrefs,
       personalization: mergedPersonalization,
       lastModified: new Date().toISOString(),
-      version: Math.max(local.version, remote.version) + 1,
+      version: Math.max(local.version, remote.version) + 1
     };
   }
 
@@ -377,7 +371,7 @@ class CloudSyncService {
           highContrastMode: false,
           saturationLevel: 100,
           brightnessLevel: 100,
-          warmthLevel: 50,
+          warmthLevel: 50
         },
         typographyPreferences: {
           preferredFontSize: 'medium',
@@ -386,7 +380,7 @@ class CloudSyncService {
           lineHeightPreference: 'comfortable',
           letterSpacingPreference: 'normal',
           fontWeight: 'normal',
-          dyslexiaFriendly: false,
+          dyslexiaFriendly: false
         },
         motionPreferences: {
           enableAnimations: true,
@@ -395,7 +389,7 @@ class CloudSyncService {
           preferCrossfade: false,
           enableParallax: true,
           enableHoverEffects: true,
-          enableFocusAnimations: true,
+          enableFocusAnimations: true
         },
         soundPreferences: {
           enableSounds: true,
@@ -404,7 +398,7 @@ class CloudSyncService {
           customSounds: {},
           muteOnFocus: false,
           hapticFeedback: true,
-          spatialAudio: false,
+          spatialAudio: false
         },
         layoutPreferences: {
           density: 'comfortable',
@@ -415,7 +409,7 @@ class CloudSyncService {
           showIcons: true,
           iconSize: 'medium',
           gridColumns: 'auto',
-          listSpacing: 'normal',
+          listSpacing: 'normal'
         },
         accessibilityPreferences: {
           screenReaderOptimized: false,
@@ -427,13 +421,13 @@ class CloudSyncService {
           underlineLinks: false,
           flashingElementsReduced: true,
           colorOnlyIndicators: false,
-          focusIndicatorStyle: 'default',
+          focusIndicatorStyle: 'default'
         },
-        lastUpdated: new Date(),
+        lastUpdated: new Date()
       },
       lastModified: new Date().toISOString(),
       deviceId: this.deviceId,
-      version: 1,
+      version: 1
     };
   }
 
@@ -446,7 +440,7 @@ class CloudSyncService {
       const cache = {
         preferences: this.preferences,
         pendingChanges: this.status.pendingChanges,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       };
       localStorage.setItem('cloud-sync-cache', JSON.stringify(cache));
     } catch (error) {
@@ -539,9 +533,9 @@ class CloudSyncService {
       const response = await fetch(`${this.apiEndpoint}/user/preferences`, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        }
       });
 
       if (!response.ok) {
@@ -554,6 +548,7 @@ class CloudSyncService {
 
       this.preferences = null;
       this.updateStatus({ pendingChanges: 0, hasConflicts: false });
+
     } catch (error) {
       console.error('Error clearing remote data:', error);
       throw error;
