@@ -277,6 +277,14 @@ export const _createTestPerformanceMetrics = (
   };
 };
 
+// Export individual functions with proper names
+export const createTestPersonaProfile = _createTestPersonaProfile;
+export const createTestPersonaDetectionResult = _createTestPersonaDetectionResult;
+export const createTestEmailCampaign = _createTestEmailCampaign;
+export const createTestEmailSequence = _createTestEmailSequence;
+export const createTestCampaignMetrics = _createTestCampaignMetrics;
+export const createTestPerformanceMetrics = _createTestPerformanceMetrics;
+
 // Export all factories for easy testing
 export const _enhancedFactories = {
   createTestPersonaProfile,

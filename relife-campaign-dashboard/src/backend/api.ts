@@ -29,7 +29,7 @@ const mockTodos: TodoItem[] = [
 ];
 
 // Helper function for CORS headers
-function corsHeaders(origin: string): HeadersInit {
+function corsHeaders(origin: string): Record<string, string> {
   return {
     "Access-Control-Allow-Origin": origin || "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",

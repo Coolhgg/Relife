@@ -296,7 +296,7 @@ export function _withDefaults<T>(factory: () => T, overrides: Partial<T>): T {
  * const createUser = createFlexibleFactory(baseUserFactory);
  * const user = createUser({ email: 'test@example.com' }); // Direct override
  */
-export function _createFlexibleFactory<T, O = {}>(
+export function _createFlexibleFactory<T, O = Record<string, unknown>>(
   baseFactory: (options?: O) => T,
 ) {
   return (overrides: Partial<T> = {}): T => {
