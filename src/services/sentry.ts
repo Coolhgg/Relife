@@ -2,7 +2,6 @@
 // Provides comprehensive error tracking, crash reporting, and performance monitoring
 
 import * as Sentry from '@sentry/react';
-import { BrowserTracing } from '@sentry/tracing';
 
 export interface SentryConfig {
   dsn: string;
@@ -69,8 +68,12 @@ class SentryService {
 
         // Integrations for enhanced functionality
         integrations: [
-          new BrowserTracing({
+          Sentry.browserTracingIntegration({
             // Capture interactions like clicks, navigation
+          }),
+          Sentry.replayIntegration({
+            maskAllText: true,
+            blockAllMedia: true,
           }),
         ],
 
@@ -83,11 +86,12 @@ class SentryService {
         replaysOnErrorSampleRate: 1.0,
 
         // Privacy and data filtering
-        beforeSend: (event, hint) => {
+        beforeSend: (event) => {
           // Apply custom filtering if provided
           if (config.beforeSend) {
-            event = config.beforeSend(event);
-            if (!event) return null;
+            const filtered = config.beforeSend(event);
+            if (!filtered) return null;
+            event = filtered;
           }
 
           // Filter out sensitive data
@@ -377,6 +381,13 @@ class SentryService {
    */
   createErrorBoundary(fallback?: React.ComponentType<any>) {
     return Sentry.withErrorBoundary;
+  }
+
+  /**
+   * Capture exception (alias for captureError)
+   */
+  captureException(error: Error, context: ErrorContext = {}): string {
+    return this.captureError(error, context);
   }
 }
 
