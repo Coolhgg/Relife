@@ -1,6 +1,10 @@
 import { expect, test, jest } from "@jest/globals";
 import { renderHook, act } from "@testing-library/react";
 
+// TODO(manual): Missing renderHook variable declarations - many references to 'result.current' without proper hook setup
+// TODO(manual): Missing describe block wrapper around beforeEach/afterEach
+// TODO(manual): Missing service mock imports (mockScheduler used but not imported)
+
 // Mock dependencies
 jest.mock('../../../services/alarm-service', () => ({
   __esModule: true,

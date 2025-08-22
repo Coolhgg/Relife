@@ -32,7 +32,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
   onClick,
   onUpgrade,
   variant = 'default',
-  showPreview = false
+  showPreview = false,
 }) => {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -46,7 +46,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
         </div>
       );
     }
-    
+
     if (feature.tier === 'pro') {
       return (
         <div className="flex items-center gap-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-2 py-1 rounded-full text-xs font-bold">
@@ -55,7 +55,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
         </div>
       );
     }
-    
+
     return (
       <div className="flex items-center gap-1 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-2 py-1 rounded-full text-xs font-bold">
         <Crown className="w-3 h-3" />
@@ -93,10 +93,10 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
 
   if (variant === 'compact') {
     return (
-      <div 
+      <div
         className={`relative p-4 rounded-lg border cursor-pointer transition-all duration-200 ${
-          hasAccess 
-            ? 'border-green-200 bg-green-50 hover:bg-green-100' 
+          hasAccess
+            ? 'border-green-200 bg-green-50 hover:bg-green-100'
             : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
         }`}
         onClick={handleCardClick}
@@ -113,10 +113,12 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
               <p className="text-sm text-gray-600">{feature.description}</p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             {!hasAccess && <Lock className="w-4 h-4 text-gray-400" />}
-            <ArrowRight className={`w-4 h-4 transition-transform ${isHovered ? 'translate-x-1' : ''}`} />
+            <ArrowRight
+              className={`w-4 h-4 transition-transform ${isHovered ? 'translate-x-1' : ''}`}
+            />
           </div>
         </div>
       </div>
@@ -124,7 +126,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
   }
 
   return (
-    <div 
+    <div
       className={`relative bg-white rounded-xl border cursor-pointer transition-all duration-300 hover:shadow-lg ${
         hasAccess ? 'border-green-200' : 'border-gray-200'
       }`}
@@ -133,9 +135,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Tier Badge */}
-      <div className="absolute top-4 right-4">
-        {getTierBadge()}
-      </div>
+      <div className="absolute top-4 right-4">{getTierBadge()}</div>
 
       {/* Lock Icon for Locked Features */}
       {!hasAccess && (
@@ -146,7 +146,9 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
 
       <div className="p-6">
         {/* Feature Icon */}
-        <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${getTierColor()} mb-4`}>
+        <div
+          className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${getTierColor()} mb-4`}
+        >
           <feature.icon className="w-6 h-6 text-white" />
         </div>
 
@@ -164,8 +166,8 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
         {/* Action Button */}
         <div className="flex items-center justify-between">
           {hasAccess ? (
-            <button 
-              onClick={(e) => {
+            <button
+              onClick={e => {
                 e.stopPropagation();
                 onClick?.();
               }}
@@ -175,8 +177,8 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
               <ArrowRight className="w-4 h-4" />
             </button>
           ) : (
-            <button 
-              onClick={(e) => {
+            <button
+              onClick={e => {
                 e.stopPropagation();
                 handleUpgrade();
               }}
@@ -190,9 +192,11 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
       </div>
 
       {/* Hover Effect */}
-      <div className={`absolute inset-0 bg-gradient-to-r ${getTierColor()} opacity-0 rounded-xl transition-opacity duration-300 ${
-        isHovered && !hasAccess ? 'opacity-5' : ''
-      }`} />
+      <div
+        className={`absolute inset-0 bg-gradient-to-r ${getTierColor()} opacity-0 rounded-xl transition-opacity duration-300 ${
+          isHovered && !hasAccess ? 'opacity-5' : ''
+        }`}
+      />
     </div>
   );
 };

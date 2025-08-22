@@ -1,7 +1,13 @@
 import { expect, test, jest } from "@jest/globals";
+// TODO(manual): Missing renderHook variable declarations, incomplete mock assignments, missing describe blocks
 /**
  * Tests advanced alarm scheduling, optimization, and management functionality
  */
+
+// TODO(manual): Missing renderHook variable declarations - many references to 'result.current' without proper hook setup
+// TODO(manual): Missing describe block wrapper around beforeEach/afterEach
+// TODO(manual): Incomplete mock assignments at lines 130-140 - dangling function calls without proper mock setup
+// TODO(manual): Missing service imports and proper mock declarations
 
 import { renderHook, act, waitFor } from "@testing-library/react";
 import {

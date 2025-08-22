@@ -15,17 +15,19 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   onClose,
   onSubscribe,
   currentTier = 'free',
-  preSelectedPlan
+  preSelectedPlan,
 }) => {
   const [selectedPlan, setSelectedPlan] = useState(preSelectedPlan || 'premium');
-  const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
+  const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>(
+    'monthly'
+  );
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
   const handleSubscribe = async () => {
     if (!onSubscribe) return;
-    
+
     setLoading(true);
     try {
       await onSubscribe(selectedPlan);
@@ -41,14 +43,14 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
       id: 'premium',
       name: 'Premium',
       price: { monthly: 9.99, yearly: 99.99 },
-      features: ['Unlimited alarms', 'Premium voices', 'Advanced features']
+      features: ['Unlimited alarms', 'Premium voices', 'Advanced features'],
     },
     {
       id: 'pro',
       name: 'Pro',
       price: { monthly: 19.99, yearly: 199.99 },
-      features: ['Everything in Premium', 'Team features', 'Priority support']
-    }
+      features: ['Everything in Premium', 'Team features', 'Priority support'],
+    },
   ];
 
   return (
@@ -59,10 +61,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <Crown className="w-6 h-6 text-yellow-500" />
             Upgrade Your Plan
           </h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full"
-          >
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -96,7 +95,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
           {/* Plans */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            {plans.map((plan) => (
+            {plans.map(plan => (
               <div
                 key={plan.id}
                 className={`border rounded-lg p-6 cursor-pointer ${
@@ -138,7 +137,9 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               disabled={loading}
               className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 flex items-center gap-2"
             >
-              {loading && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+              {loading && (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              )}
               Subscribe
             </button>
           </div>

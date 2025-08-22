@@ -1,6 +1,10 @@
 import { expect, test, jest } from "@jest/globals";
 import { renderHook, act } from "@testing-library/react";
 import React from "react";
+
+// TODO(manual): Missing renderHook variable declarations - many references to 'result.current' without proper hook setup
+// TODO(manual): Missing describe block wrapper around beforeEach/afterEach  
+// TODO(manual): Missing service mock imports (mockScheduler used at line 163 but not imported)
 import { AnalyticsProvider } from "../../../components/AnalyticsProvider";
 import { FeatureAccessProvider } from "../../../contexts/FeatureAccessContext";
 import { LanguageProvider } from "../../../contexts/LanguageContext";

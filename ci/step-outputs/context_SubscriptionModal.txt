@@ -1,0 +1,34 @@
+Context for SubscriptionModal.tsx (151 lines total):
+
+File appears to be a complete, properly formatted React component with:
+- Proper imports (React, useState, Lucide icons)
+- TypeScript interface definitions
+- Standard React functional component structure
+- JSX with proper syntax
+- Default export
+
+No obvious syntax issues detected in this file.
+
+First 10 lines:
+     1	// Subscription Modal Component - Simplified Version
+     2	import React, { useState } from 'react';
+     3	import { X, Crown } from 'lucide-react';
+     4	
+     5	interface SubscriptionModalProps {
+     6	  isOpen: boolean;
+     7	  onClose: () => void;
+     8	  onSubscribe?: (planId: string) => void;
+     9	  currentTier?: string;
+    10	  preSelectedPlan?: string;
+
+Last 10 lines:
+   142	              Subscribe
+   143	            </button>
+   144	          </div>
+   145	        </div>
+   146	      </div>
+   147	    </div>
+   148	  );
+   149	};
+   150	
+   151	export default SubscriptionModal;

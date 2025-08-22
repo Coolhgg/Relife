@@ -1,0 +1,1 @@
+ESLint --fix results (many errors found, including parsing errors in context files and missing variable definitions across multiple files)
