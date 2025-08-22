@@ -210,6 +210,7 @@ export interface User {
   subscriptionStatus?: SubscriptionStatus; // Detailed subscription info
   createdAt: Date | string;
   // Premium subscription fields
+  subscriptionTier?: import('./premium').SubscriptionTier; // auto: legacy compatibility
   subscription?: import('./premium').Subscription;
   stripeCustomerId?: string;
   trialEndsAt?: Date;
