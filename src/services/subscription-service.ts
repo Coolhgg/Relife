@@ -4,6 +4,7 @@
 import type {
   Subscription,
   SubscriptionPlan,
+  SubscriptionTier,
   FeatureAccess,
   BillingUsage,
   Trial,
@@ -17,6 +18,20 @@ import type {
   SubscriptionDashboardData,
   RevenueMetrics
 } from '../types/premium';
+import type {
+  SubscriptionPlanDbRow,
+  TrialDbRow,
+  DiscountDbRow,
+  RetentionOffer,
+  CreateSubscriptionResult,
+  UpdateSubscriptionResult,
+  CancelSubscriptionResult,
+  DiscountValidationResult,
+  TrialStartResult,
+  FreeTierLimits,
+  ReferralStats,
+  EnhancedBillingUsage
+} from '../types/subscription';
 import type { User } from '../types';
 import StripeService from './stripe-service';
 import { supabase } from './supabase';
@@ -157,7 +172,7 @@ class SubscriptionService {
   public async createSubscription(
     userId: string,
     request: CreateSubscriptionRequest
-  ): Promise<{ success: boolean; subscription?: Subscription; error?: string; clientSecret?: string }> {
+  ): Promise<CreateSubscriptionResult> {
     try {
       const analytics = AnalyticsService.getInstance();
 
@@ -230,7 +245,7 @@ class SubscriptionService {
     userId: string,
     subscriptionId: string,
     request: UpdateSubscriptionRequest
-  ): Promise<{ success: boolean; subscription?: Subscription; error?: string }> {
+  ): Promise<UpdateSubscriptionResult> {
     try {
       const analytics = AnalyticsService.getInstance();
 
@@ -279,7 +294,7 @@ class SubscriptionService {
     userId: string,
     subscriptionId: string,
     request: CancelSubscriptionRequest
-  ): Promise<{ success: boolean; subscription?: Subscription; error?: string; retentionOffer?: any }> {
+  ): Promise<CancelSubscriptionResult> {
     try {
       const analytics = AnalyticsService.getInstance();
 
@@ -501,7 +516,7 @@ class SubscriptionService {
   /**
    * Start free trial
    */
-  public async startFreeTrial(userId: string, planId: string): Promise<{ success: boolean; trial?: Trial; error?: string }> {
+  public async startFreeTrial(userId: string, planId: string): Promise<TrialStartResult> {
     try {
       const plan = await this.getSubscriptionPlan(planId);
       if (!plan || !plan.trialDays) {
@@ -567,7 +582,7 @@ class SubscriptionService {
   /**
    * Validate discount code
    */
-  public async validateDiscountCode(userId: string, code: string): Promise<{ valid: boolean; discount?: Discount; error?: string }> {
+  public async validateDiscountCode(userId: string, code: string): Promise<DiscountValidationResult> {
     try {
       const { data: discount, error } = await supabase
         .from('discounts')
@@ -721,9 +736,11 @@ class SubscriptionService {
     const tierHierarchy: SubscriptionTier[] = [
       "free",
       "basic",
+      "student",
       "premium",
       "pro",
-      "enterprise",
+      "ultimate",
+      "lifetime",
     ];
     const userLevel = tierHierarchy.indexOf(userTier);
     const requiredLevel = tierHierarchy.indexOf(requiredTier);
@@ -790,7 +807,7 @@ class SubscriptionService {
   }
 
   // Mapping functions
-  private mapDatabasePlan(data: any): SubscriptionPlan {
+  private mapDatabasePlan(data: SubscriptionPlanDbRow): SubscriptionPlan {
     return {
       id: data.id,
       tier: data.tier,
@@ -815,7 +832,7 @@ class SubscriptionService {
     };
   }
 
-  private mapDatabaseTrial(data: any): Trial {
+  private mapDatabaseTrial(data: TrialDbRow): Trial {
     return {
       id: data.id,
       userId: data.user_id,
@@ -831,7 +848,7 @@ class SubscriptionService {
     };
   }
 
-  private mapDatabaseDiscount(data: any): Discount {
+  private mapDatabaseDiscount(data: DiscountDbRow): Discount {
     return {
       id: data.id,
       code: data.code,

@@ -928,35 +928,7 @@ export interface RealtimeActivity {
 // PREMIUM SUBSCRIPTION TYPES - Subscription & Feature Gating
 // ============================================================================
 
-// Subscription tiers - consolidated definition
-export type SubscriptionTier =
-  | "free"
-  | "basic"
-  | "student"
-  | "premium"
-  | "pro"
-  | "ultimate"
-  | "lifetime";
-
-// Subscription status values
-export type SubscriptionStatus =
-  | 'active'
-  | 'inactive'
-  | 'trialing'
-  | 'past_due'
-  | 'canceled'
-  | 'unpaid'
-  | 'paused';
-
-// Premium feature definition
-export interface PremiumFeature {
-  id: string;
-  name: string;
-  description: string;
-  category: "alarm" | "voice" | "analytics" | "customization" | "ai";
-  isEnabled?: boolean;
-  beta?: boolean;
-}
+// Note: SubscriptionTier, SubscriptionStatus, and PremiumFeature are now defined in premium.ts
 
 // Note: SubscriptionPlan interface defined later in file with more comprehensive properties
 

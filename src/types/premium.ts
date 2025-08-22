@@ -31,6 +31,8 @@ export type RefundStatus = "pending" | "succeeded" | "failed" | "canceled";
 export interface Subscription {
   id: string;
   userId: string;
+  planId?: string; // ID of the subscription plan
+  tier: SubscriptionTier; // Subscription tier
   stripeSubscriptionId?: string;
   stripeCustomerId?: string;
   status: SubscriptionStatus;
