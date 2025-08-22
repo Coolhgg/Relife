@@ -1,4 +1,4 @@
-import { expect, test, jest } from "@jest/globals";
+// Vitest globals are available globally, no need to import
 /**
  * AccessibilityDashboard Component Tests
  *
@@ -25,25 +25,25 @@ const mockAccessibilityPreferences = {
     fontSize: 16,
     voiceAnnouncementsEnabled: false,
     hapticFeedback: false,
-    touchTargetSize: 'normal'
+    touchTargetSize: 'normal',
   },
   updatePreferences: jest.fn(),
   resetToDefaults: jest.fn(),
-  testColorContrast: jest.fn()
+  testColorContrast: jest.fn(),
 };
 
 jest.mock('../hooks/useAccessibilityPreferences', () => ({
-  useAccessibilityPreferences: () => mockAccessibilityPreferences
+  useAccessibilityPreferences: () => mockAccessibilityPreferences,
 }));
 
 const mockDynamicFocus = {
   announce: jest.fn(),
   announceSuccess: jest.fn(),
-  announceError: jest.fn()
+  announceError: jest.fn(),
 };
 
 jest.mock('../hooks/useDynamicFocus', () => ({
-  useDynamicFocus: () => mockDynamicFocus
+  useDynamicFocus: () => mockDynamicFocus,
 }));
 
 describe('AccessibilityDashboard', () => {
@@ -142,7 +142,7 @@ describe('AccessibilityDashboard', () => {
       await user.click(highContrastToggle);
 
       expect(mockAccessibilityPreferences.updatePreferences).toHaveBeenCalledWith({
-        highContrast: true
+        highContrast: true,
       });
 
       expect(mockDynamicFocus.announce).toHaveBeenCalledWith(
@@ -157,7 +157,7 @@ describe('AccessibilityDashboard', () => {
       fireEvent.change(fontSizeSlider, { target: { value: '20' } });
 
       expect(mockAccessibilityPreferences.updatePreferences).toHaveBeenCalledWith({
-        fontSize: 20
+        fontSize: 20,
       });
     });
 
@@ -168,7 +168,7 @@ describe('AccessibilityDashboard', () => {
       await user.click(largeTextToggle);
 
       expect(mockAccessibilityPreferences.updatePreferences).toHaveBeenCalledWith({
-        largeText: true
+        largeText: true,
       });
     });
 
@@ -179,7 +179,7 @@ describe('AccessibilityDashboard', () => {
       await user.click(colorBlindToggle);
 
       expect(mockAccessibilityPreferences.updatePreferences).toHaveBeenCalledWith({
-        colorBlindFriendly: true
+        colorBlindFriendly: true,
       });
     });
   });
@@ -200,7 +200,7 @@ describe('AccessibilityDashboard', () => {
       await user.click(keyboardNavToggle);
 
       expect(mockAccessibilityPreferences.updatePreferences).toHaveBeenCalledWith({
-        keyboardNavigationOnly: true
+        keyboardNavigationOnly: true,
       });
     });
 
@@ -211,7 +211,7 @@ describe('AccessibilityDashboard', () => {
       await user.click(focusIndicatorToggle);
 
       expect(mockAccessibilityPreferences.updatePreferences).toHaveBeenCalledWith({
-        focusIndicatorEnhanced: true
+        focusIndicatorEnhanced: true,
       });
     });
 
@@ -222,7 +222,7 @@ describe('AccessibilityDashboard', () => {
       await user.click(reducedMotionToggle);
 
       expect(mockAccessibilityPreferences.updatePreferences).toHaveBeenCalledWith({
-        reducedMotion: true
+        reducedMotion: true,
       });
     });
   });
@@ -243,7 +243,7 @@ describe('AccessibilityDashboard', () => {
       await user.click(screenReaderToggle);
 
       expect(mockAccessibilityPreferences.updatePreferences).toHaveBeenCalledWith({
-        screenReaderEnabled: true
+        screenReaderEnabled: true,
       });
     });
 
@@ -254,7 +254,7 @@ describe('AccessibilityDashboard', () => {
       await user.click(voiceToggle);
 
       expect(mockAccessibilityPreferences.updatePreferences).toHaveBeenCalledWith({
-        voiceAnnouncementsEnabled: true
+        voiceAnnouncementsEnabled: true,
       });
     });
   });
@@ -275,7 +275,7 @@ describe('AccessibilityDashboard', () => {
       await user.selectOptions(touchSizeSelect, 'large');
 
       expect(mockAccessibilityPreferences.updatePreferences).toHaveBeenCalledWith({
-        touchTargetSize: 'large'
+        touchTargetSize: 'large',
       });
     });
 
@@ -286,7 +286,7 @@ describe('AccessibilityDashboard', () => {
       await user.click(hapticToggle);
 
       expect(mockAccessibilityPreferences.updatePreferences).toHaveBeenCalledWith({
-        hapticFeedback: true
+        hapticFeedback: true,
       });
     });
   });
@@ -438,10 +438,7 @@ describe('AccessibilityDashboard', () => {
 
   describe('Dark Mode Support', () => {
     it('applies dark mode classes correctly', () => {
-      renderWithProviders(
-        <AccessibilityDashboard />,
-        { theme: 'dark' }
-      );
+      renderWithProviders(<AccessibilityDashboard />, { theme: 'dark' });
 
       const headings = screen.getAllByRole('heading');
       headings.forEach(heading => {

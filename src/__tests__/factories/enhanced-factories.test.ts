@@ -1,4 +1,4 @@
-import { expect, test, jest } from "@jest/globals";
+// Vitest globals are available globally, no need to import
 /**
  * Enhanced Factories Tests
  *
@@ -9,7 +9,7 @@ import {
   createTestPersonaProfile,
   createTestPersonaDetectionResult,
   createTestEmailCampaign,
-  createTestPerformanceMetrics
+  createTestPerformanceMetrics,
 } from './enhanced-factories';
 
 describe('Enhanced Factories', () => {

@@ -260,6 +260,19 @@ export default tseslint.config([
         NotificationOptions: 'readonly',
         HeadersInit: 'readonly',
         vitest: 'readonly', // Vitest
+        // Additional test utilities and globals
+        renderWithProviders: 'readonly',
+        i18nMocks: 'readonly',
+        storageMocks: 'readonly',
+        completedChallenges: 'readonly',
+        audioMocks: 'readonly',
+        asyncUtils: 'readonly',
+        PremiumFeatureAccess: 'readonly',
+        SubscriptionService: 'readonly',
+        server: 'readonly',
+        memoryTesting: 'readonly',
+        alarm: 'readonly',
+        React: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {
