@@ -39,17 +39,14 @@ export default tseslint.config([
         'warn',
         {
           argsIgnorePattern: '^_',
-          varsIgnorePattern: '^(_|unused|create.*|generate.*)',
+          varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
           ignoreRestSiblings: true,
-          destructuredArrayIgnorePattern: '^_',
         },
       ],
       'no-constant-condition': 'warn',
       'prefer-const': 'warn',
       'no-undef': 'error',
-      'no-useless-escape': 'warn', // More lenient for regex patterns
-      'no-case-declarations': 'off', // Allow declarations in case blocks
     },
   },
 
@@ -74,10 +71,9 @@ export default tseslint.config([
         'warn',
         {
           argsIgnorePattern: '^_',
-          varsIgnorePattern: '^(_|unused|create.*|generate.*)',
+          varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
           ignoreRestSiblings: true,
-          destructuredArrayIgnorePattern: '^_',
         },
       ],
       'no-undef': 'error',
@@ -109,8 +105,6 @@ export default tseslint.config([
         EventListener: 'readonly',
         EventListenerOrEventListenerObject: 'readonly',
         NotificationOptions: 'readonly',
-        // Additional Node.js types
-        NodeJS: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {
@@ -124,41 +118,33 @@ export default tseslint.config([
       },
     },
     rules: {
-      // TypeScript rules - more permissive for development
+      // TypeScript rules
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
           argsIgnorePattern: '^_',
-          varsIgnorePattern: '^(_|unused|create.*|generate.*)',
+          varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
           ignoreRestSiblings: true,
-          destructuredArrayIgnorePattern: '^_',
         },
       ],
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unsafe-function-type': 'warn', // Warn instead of error
+      '@typescript-eslint/no-unsafe-function-type': 'error',
       '@typescript-eslint/no-require-imports': 'error',
 
       // React rules
       'react/react-in-jsx-scope': 'off',
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn', // Warn instead of error for development
+      'react-hooks/exhaustive-deps': 'error',
 
-      // React Refresh rules - more permissive
-      'react-refresh/only-export-components': [
-        'warn',
-        {
-          allowConstantExport: true,
-          allowExportNames: ['meta', 'config', 'default'],
-        },
-      ],
+      // React Refresh rules
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
       // General rules
       'no-constant-condition': 'warn',
       'prefer-const': 'warn',
       'no-console': 'off', // Allow console in development
       'no-undef': 'error',
-      'no-useless-catch': 'warn', // More lenient
     },
   },
 
@@ -191,8 +177,6 @@ export default tseslint.config([
         pilot: 'readonly',
         // Jasmine globals
         jasmine: 'readonly',
-        // Node.js types
-        NodeJS: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {
@@ -206,38 +190,37 @@ export default tseslint.config([
       },
     },
     rules: {
-      // TypeScript rules - very permissive for test files
+      // TypeScript rules
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
           argsIgnorePattern: '^_',
-          varsIgnorePattern: '^(_|unused|create.*|generate.*|test.*)',
+          varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
           ignoreRestSiblings: true,
-          destructuredArrayIgnorePattern: '^_',
         },
       ],
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unsafe-function-type': 'off', // Very permissive for tests
+      '@typescript-eslint/no-unsafe-function-type': 'error',
       '@typescript-eslint/no-require-imports': 'error',
 
       // React rules
       'react/react-in-jsx-scope': 'off',
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/exhaustive-deps': 'error',
 
       // React Refresh rules
-      'react-refresh/only-export-components': 'off', // Disabled for test files
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
       // General rules
       'no-constant-condition': 'warn',
       'prefer-const': 'warn',
-      'no-console': 'off',
+      'no-console': 'off', // Allow console in development
       'no-undef': 'error',
     },
   },
 
-  // Test files with Jest globals - more permissive rules
+  // Test files with Jest globals
   {
     files: [
       '**/__tests__/**/*.{ts,tsx}',
@@ -290,20 +273,6 @@ export default tseslint.config([
         memoryTesting: 'readonly',
         alarm: 'readonly',
         React: 'readonly',
-        NodeJS: 'readonly',
-        // Factory function globals for test utilities
-        asDate: 'readonly',
-        createTestUserPreferences: 'readonly',
-        createTestUserStats: 'readonly',
-        createTestBattleParticipant: 'readonly',
-        createTestUser: 'readonly',
-        createTestAlarm: 'readonly',
-        createTestBattle: 'readonly',
-        createTestTheme: 'readonly',
-        createFlexibleUser: 'readonly',
-        createFlexibleAlarm: 'readonly',
-        createFlexibleBattle: 'readonly',
-        createTestEmotionalState: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {
@@ -317,34 +286,33 @@ export default tseslint.config([
       },
     },
     rules: {
-      // TypeScript rules - very permissive for test files
+      // TypeScript rules
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
           argsIgnorePattern: '^_',
-          varsIgnorePattern: '^(_|unused|create.*|generate.*|test.*)',
+          varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
           ignoreRestSiblings: true,
-          destructuredArrayIgnorePattern: '^_',
         },
       ],
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unsafe-function-type': 'off', // Very permissive for tests
+      '@typescript-eslint/no-unsafe-function-type': 'error',
       '@typescript-eslint/no-require-imports': 'error',
 
       // React rules
       'react/react-in-jsx-scope': 'off',
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/exhaustive-deps': 'error',
 
       // React Refresh rules
-      'react-refresh/only-export-components': 'off', // Disabled for test files
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
       // General rules
       'no-constant-condition': 'warn',
       'prefer-const': 'warn',
-      'no-console': 'off',
-      'no-undef': 'off', // More permissive for test utilities
+      'no-console': 'off', // Allow console in development
+      'no-undef': 'error',
     },
   },
 
@@ -405,34 +373,27 @@ export default tseslint.config([
       },
     },
     rules: {
-      // TypeScript rules - more lenient for dashboard components
+      // TypeScript rules
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
           argsIgnorePattern: '^_',
-          varsIgnorePattern: '^(_|unused|create.*|generate.*)',
+          varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
           ignoreRestSiblings: true,
-          destructuredArrayIgnorePattern: '^_',
         },
       ],
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unsafe-function-type': 'warn',
+      '@typescript-eslint/no-unsafe-function-type': 'error',
       '@typescript-eslint/no-require-imports': 'error',
 
       // React rules
       'react/react-in-jsx-scope': 'off',
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/exhaustive-deps': 'error',
 
-      // React Refresh rules - more permissive
-      'react-refresh/only-export-components': [
-        'warn',
-        {
-          allowConstantExport: true,
-          allowExportNames: ['meta', 'config', 'default'],
-        },
-      ],
+      // React Refresh rules
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
       // General rules
       'no-constant-condition': 'warn',
