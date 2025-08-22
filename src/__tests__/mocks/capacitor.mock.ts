@@ -533,7 +533,7 @@ export const LocalNotifications = {
     });
   }),
 
-  addListener: vi.fn((eventName: string, listenerFunc: Function) => {
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
     log(`👂 Mock LocalNotifications.addListener: ${eventName}`);
     return addMockListener('LocalNotifications', eventName, listenerFunc);
   }),
@@ -627,7 +627,7 @@ export const PushNotifications = {
     });
   }),
 
-  addListener: vi.fn((eventName: string, listenerFunc: Function) => {
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
     log(`👂 Mock PushNotifications.addListener: ${eventName}`);
     return addMockListener('PushNotifications', eventName, listenerFunc);
   }),
@@ -924,7 +924,7 @@ export const App = {
     });
   }),
 
-  addListener: vi.fn((eventName: string, listenerFunc: Function) => {
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
     log(`👂 Mock App.addListener: ${eventName}`);
     return addMockListener('App', eventName, listenerFunc);
   }),
@@ -960,7 +960,7 @@ export const Network = {
     return Promise.resolve(mockState.network);
   }),
 
-  addListener: vi.fn((eventName: string, listenerFunc: Function) => {
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
     log(`👂 Mock Network.addListener: ${eventName}`);
     return addMockListener('Network', eventName, listenerFunc);
   }),
@@ -1175,7 +1175,7 @@ export const Filesystem = {
 
 // Keyboard Plugin
 export const Keyboard = {
-  addListener: vi.fn((eventName: string, listenerFunc: Function) => {
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
     log(`👂 Mock Keyboard.addListener: ${eventName}`);
     return addMockListener('Keyboard', eventName, listenerFunc);
   }),
@@ -1246,7 +1246,7 @@ export const ScreenOrientation = {
     return Promise.resolve();
   }),
 
-  addListener: vi.fn((eventName: string, listenerFunc: Function) => {
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
     log(`👂 Mock ScreenOrientation.addListener: ${eventName}`);
     return addMockListener('ScreenOrientation', eventName, listenerFunc);
   }),
@@ -1274,7 +1274,7 @@ export const Browser = {
     return Promise.resolve();
   }),
 
-  addListener: vi.fn((eventName: string, listenerFunc: Function) => {
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
     log(`👂 Mock Browser.addListener: ${eventName}`);
     return addMockListener('Browser', eventName, listenerFunc);
   }),

@@ -60,7 +60,7 @@ function useSidebar() {
   return context;
 }
 
-function _SidebarWrapper({
+function SidebarWrapper({
   className,
   style,
   children,
