@@ -22,8 +22,6 @@ import type {
   PremiumAnalytics,
   VoiceMood,
   SubscriptionTier,
-  SubscriptionStatus,
-  BillingInterval,
   PremiumFeatureCategory,
   PremiumVoiceCategory,
   VoicePersonality,
@@ -52,6 +50,7 @@ import {
 // ===============================
 
 export interface CreateSubscriptionOptions {
+  tier?: SubscriptionTier;
   status?: SubscriptionStatus;
   billingInterval?: BillingInterval;
   trial?: boolean;
@@ -155,6 +154,7 @@ export const _createTestSubscription = (
 export const _createTestPremiumFeature = (
   options: {
     category?: PremiumFeatureCategory;
+    tier?: SubscriptionTier;
   } = {}
 ): PremiumFeature => {
   const {
@@ -236,6 +236,7 @@ export const _createTestPremiumFeature = (
 
 export interface CreateVoiceOptions {
   mood?: VoiceMood;
+  tier?: SubscriptionTier;
   isCustom?: boolean;
   language?: string;
 }
@@ -631,3 +632,20 @@ const createTestAnalyticsExportOptions = () => [
     description: 'Machine-readable format for integrations',
   },
 ];
+
+// ===============================
+// PUBLIC EXPORTS
+// ===============================
+
+// Subscription exports
+export const createTestSubscription = _createTestSubscription;
+export const createTestPremiumFeature = _createTestPremiumFeature;
+
+// Voice exports
+export const createTestVoice = _createTestVoice;
+
+// Custom Sound exports
+export const createTestCustomSound = _createTestCustomSound;
+
+// Analytics exports
+export const createTestAnalytics = _createTestAnalytics;
