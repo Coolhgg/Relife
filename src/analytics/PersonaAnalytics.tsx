@@ -2,6 +2,7 @@
 /// <reference lib="dom" />
 import React, { useEffect, useCallback, useRef } from 'react';
 import { PersonaType, PersonaDetectionFactor } from '../types/index';
+import { TimeoutHandle } from '../types/timers';
 
 // Define missing types based on what the component needs
 type UserPersona = {
@@ -76,7 +77,7 @@ class PersonaAnalyticsTracker {
     event: PersonaAnalyticsEvent;
     data: PersonaAnalyticsData | CampaignPerformanceData;
   }> = [];
-  private flushInterval: number | null = null;
+  private flushInterval: TimeoutHandle | undefined = undefined; // auto: changed from number | null to TimeoutHandle
 
   private constructor() {
     this.sessionId = this.generateSessionId();
