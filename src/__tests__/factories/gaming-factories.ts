@@ -264,7 +264,6 @@ export const _createTestTournamentParticipant = (): TournamentParticipant =>
   });
 
 export const _createTestTournamentRounds = (
-export const _createTestTournamentRounds = (
   type: "single-elimination" | "round-robin" | "swiss",
   participantCount: number,
   status: string
@@ -488,8 +487,9 @@ export const _createTestSeason = (options: CreateSeasonOptions = {}): Season => 
 // LEADERBOARD FACTORIES
 // ===============================
 
-export const _createTestLeaderboard = (entryCount = 100): ChallengeLeaderboard[] => {
-  const entries: ChallengeLeaderboard[] = [];
+export const _createTestLeaderboard = (entryCount = 100): Leaderboard => {
+  const leaderboardId = generateId('leaderboard');
+  const entries: LeaderboardEntry[] = [];
   for (let i = 1; i <= entryCount; i++) {
     entries.push(createTestLeaderboardEntry(i));
   }
@@ -509,7 +509,7 @@ export const _createTestLeaderboard = (entryCount = 100): ChallengeLeaderboard[]
   } as any;
 };
 
-export const _createTestLeaderboardEntry = (rank: number): ChallengeLeaderboard => ({
+export const _createTestLeaderboardEntry = (rank: number): LeaderboardEntry => ({
   rank,
   userId: generateId('user'),
   user: createTestUser(),
@@ -629,3 +629,41 @@ export const _createTestRewardSystem = (
   achievements: overrides.achievements || [],
   lastUpdated: overrides.lastUpdated || generateTimestamp({ past: 1 })
 });
+
+// ===============================
+// PUBLIC EXPORTS
+// ===============================
+
+// Achievement exports
+export const createTestAchievement = _createTestAchievement;
+export const createTestAchievementProgress = _createTestAchievementProgress;
+export const createTestAchievementReward = _createTestAchievementReward;
+export const createTestAchievementRequirement = _createTestAchievementRequirement;
+
+// Tournament exports
+export const createTestTournament = _createTestTournament;
+export const createTestTournamentParticipant = _createTestTournamentParticipant;
+export const createTestTournamentRounds = _createTestTournamentRounds;
+export const createTestTournamentMatch = _createTestTournamentMatch;
+export const createTestTournamentPrize = _createTestTournamentPrize;
+
+// Team exports
+export const createTestTeam = _createTestTeam;
+export const createTestTeamMember = _createTestTeamMember;
+export const createTestTeamStats = _createTestTeamStats;
+
+// Season exports
+export const createTestSeason = _createTestSeason;
+
+// Leaderboard exports
+export const createTestLeaderboard = _createTestLeaderboard;
+export const createTestLeaderboardEntry = _createTestLeaderboardEntry;
+
+// Battle exports
+export const createTestBattle = _createTestBattle;
+export const createTestBattleParticipant = _createTestBattleParticipant;
+export const createTestBattleParticipantStats = _createTestBattleParticipantStats;
+export const createTestBattleSettings = _createTestBattleSettings;
+export const createTestBattlePrize = _createTestBattlePrize;
+export const createTestTrashTalkMessage = _createTestTrashTalkMessage;
+export const createTestRewardSystem = _createTestRewardSystem;
