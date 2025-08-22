@@ -1,0 +1,47 @@
+Context for src/hooks/__tests__/useAdvancedAlarms.test.ts syntax error:
+
+Lines 104-143:
+   104	        isEnabled: true,
+   105	        settings: { analysisWeeks: 4 },
+   106	      },
+   107	    ],
+   108	    dependencies: [
+   109	      {
+   110	        alarmId: 'dependent-alarm-id',
+   111	        type: 'sequence',
+   112	        delay: 600,
+   113	      },
+   114	    ],
+   115	  };
+   116	
+   117	  beforeEach(() => {           <-- ERROR: Missing test globals and describe block
+   118	    clearAllMocks();
+   119	    jest.clearAllTimers();
+   120	    jest.useFakeTimers();
+   121	
+   122	    // Reset all mocks to default successful responses
+   123	      // AlarmService is now imported at the top  <-- ERROR: Hanging comment, incomplete code
+   124	
+   125	    AlarmService.loadAlarms.mockResolvedValue([mockBasicAlarm]);
+   126	    AlarmService.createAlarm.mockResolvedValue(mockBasicAlarm);
+   127	    AlarmService.updateAlarm.mockResolvedValue(mockBasicAlarm);
+   128	    AlarmService.deleteAlarm.mockResolvedValue(true);
+   129	
+   130	      Promise.resolve(alarm),      <-- ERROR: Hanging code without context
+   131	    );
+   132	      (alarm) => alarm,           <-- ERROR: Hanging code without context
+   133	    );
+   134	      new Date(Date.now() + 24 * 60 * 60 * 1000),  <-- ERROR: Hanging code
+   135	    ]);
+   136	      true,                      <-- ERROR: Hanging code
+   137	    );
+   138	      true,                      <-- ERROR: Hanging code
+   139	    );
+   140	    });                          <-- ERROR: Hanging closing brace
+   141	      success: 1,                <-- ERROR: Hanging code
+   142	      failed: 0,
+   143	      errors: [],
+
+Error type: Declaration or statement expected
+Cause: Multiple issues - missing test globals, hanging incomplete code blocks, orphaned statements
+Fix: Add test globals shim, wrap in describe block, clean up hanging code fragments
