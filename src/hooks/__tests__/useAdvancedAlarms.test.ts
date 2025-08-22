@@ -10,6 +10,7 @@ import {
   createMockAlarm,
   clearAllMocks,
 } from "../../__tests__/utils/hook-testing-utils";
+import useAdvancedAlarms from '../useAdvancedAlarms';
 import { AlarmService } from "../../services/alarm";
 
 // Mock services
@@ -60,6 +61,7 @@ Object.defineProperty(global, 'URL', {
 
   const mockBasicAlarm = createMockAlarm();
 
+  const mockAdvancedAlarm = {
     ...mockBasicAlarm,
     scheduleType: 'daily',
     recurrencePattern: undefined,
