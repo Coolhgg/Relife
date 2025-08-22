@@ -5,7 +5,6 @@
  * and related providers to ensure proper ARIA compliance and accessibility workflows
  */
 
-import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe, toHaveNoViolations } from 'jest-axe';

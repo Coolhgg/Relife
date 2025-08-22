@@ -4,7 +4,6 @@
  * Tests end-to-end functionality including UI components, persistence, and user interactions
  */
 
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ThemeProvider } from '../hooks/useTheme';
