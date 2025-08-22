@@ -33,8 +33,11 @@ export class AlarmParser {
 
       // Check if we've reached the end conditions
       if (pattern.endDate && nextOccurrence > pattern.endDate) break;
-      if (pattern.endAfterOccurrences &&
-          this.getTotalOccurrences(alarm, fromDate) >= pattern.endAfterOccurrences) break;
+      if (
+        pattern.endAfterOccurrences &&
+        this.getTotalOccurrences(alarm, fromDate) >= pattern.endAfterOccurrences
+      )
+        break;
 
       // Check if this date is an exception
       if (!this.isException(nextOccurrence, pattern.exceptions || [])) {
@@ -78,17 +81,27 @@ export class AlarmParser {
     return result;
   }
 
-  private static getNextDaily(baseTime: Date, pattern: RecurrencePattern, fromDate: Date): Date {
+  private static getNextDaily(
+    baseTime: Date,
+    pattern: RecurrencePattern,
+    fromDate: Date
+  ): Date {
     const nextTime = new Date(baseTime);
-    const daysDiff = Math.ceil((fromDate.getTime() - baseTime.getTime()) / (24 * 60 * 60 * 1000));
+    const daysDiff = Math.ceil(
+      (fromDate.getTime() - baseTime.getTime()) / (24 * 60 * 60 * 1000)
+    );
     const intervalAdjusted = Math.ceil(daysDiff / pattern.interval) * pattern.interval;
     nextTime.setDate(nextTime.getDate() + intervalAdjusted);
     return nextTime;
   }
 
-  private static getNextWeekly(baseTime: Date, pattern: RecurrencePattern, fromDate: Date): Date {
+  private static getNextWeekly(
+    baseTime: Date,
+    pattern: RecurrencePattern,
+    fromDate: Date
+  ): Date {
     const daysOfWeek = pattern.daysOfWeek || [baseTime.getDay()];
-    
+
     for (let i = 0; i < 14; i++) {
       const checkDate = new Date(fromDate);
       checkDate.setDate(fromDate.getDate() + i);
@@ -102,20 +115,33 @@ export class AlarmParser {
     return new Date(baseTime);
   }
 
-  private static getNextMonthly(baseTime: Date, pattern: RecurrencePattern, fromDate: Date): Date {
+  private static getNextMonthly(
+    baseTime: Date,
+    pattern: RecurrencePattern,
+    fromDate: Date
+  ): Date {
     const nextTime = new Date(baseTime);
 
     if (pattern.daysOfMonth) {
       return this.getNextMonthlyByDate(baseTime, pattern.daysOfMonth, fromDate);
     } else if (pattern.weeksOfMonth) {
-      return this.getNextMonthlyByWeek(baseTime, pattern.weeksOfMonth, pattern.daysOfWeek || [], fromDate);
+      return this.getNextMonthlyByWeek(
+        baseTime,
+        pattern.weeksOfMonth,
+        pattern.daysOfWeek || [],
+        fromDate
+      );
     }
 
     nextTime.setMonth(nextTime.getMonth() + pattern.interval);
     return nextTime;
   }
 
-  private static getNextYearly(baseTime: Date, pattern: RecurrencePattern, fromDate: Date): Date {
+  private static getNextYearly(
+    baseTime: Date,
+    pattern: RecurrencePattern,
+    fromDate: Date
+  ): Date {
     const nextTime = new Date(baseTime);
     const monthsOfYear = pattern.monthsOfYear || [baseTime.getMonth() + 1];
 
@@ -152,7 +178,11 @@ export class AlarmParser {
     return nextTime;
   }
 
-  private static getNextCustom(baseTime: Date, pattern: RecurrencePattern, fromDate: Date): Date | null {
+  private static getNextCustom(
+    baseTime: Date,
+    pattern: RecurrencePattern,
+    fromDate: Date
+  ): Date | null {
     if (!pattern.customPattern) return null;
 
     const { customPattern } = pattern;
@@ -187,10 +217,11 @@ export class AlarmParser {
   }
 
   private static isException(date: Date, exceptions: Date[]): boolean {
-    return exceptions.some(exception =>
-      exception.getFullYear() === date.getFullYear() &&
-      exception.getMonth() === date.getMonth() &&
-      exception.getDate() === date.getDate()
+    return exceptions.some(
+      exception =>
+        exception.getFullYear() === date.getFullYear() &&
+        exception.getMonth() === date.getMonth() &&
+        exception.getDate() === date.getDate()
     );
   }
 
@@ -204,15 +235,26 @@ export class AlarmParser {
     return occurrences.filter(date => date < fromDate).length;
   }
 
-  private static getNextMonthlyByDate(baseTime: Date, daysOfMonth: number[], fromDate: Date): Date {
+  private static getNextMonthlyByDate(
+    baseTime: Date,
+    daysOfMonth: number[],
+    fromDate: Date
+  ): Date {
     const nextTime = new Date(fromDate);
     nextTime.setHours(baseTime.getHours(), baseTime.getMinutes(), 0, 0);
 
     const sortedDays = [...daysOfMonth].sort((a, b) => a - b);
 
     for (const day of sortedDays) {
-      const testDate = new Date(nextTime.getFullYear(), nextTime.getMonth(), day,
-                                baseTime.getHours(), baseTime.getMinutes(), 0, 0);
+      const testDate = new Date(
+        nextTime.getFullYear(),
+        nextTime.getMonth(),
+        day,
+        baseTime.getHours(),
+        baseTime.getMinutes(),
+        0,
+        0
+      );
       if (testDate > fromDate) {
         return testDate;
       }
@@ -224,13 +266,23 @@ export class AlarmParser {
     return nextTime;
   }
 
-  private static getNextMonthlyByWeek(baseTime: Date, weeksOfMonth: number[], daysOfWeek: number[], fromDate: Date): Date {
+  private static getNextMonthlyByWeek(
+    baseTime: Date,
+    weeksOfMonth: number[],
+    daysOfWeek: number[],
+    fromDate: Date
+  ): Date {
     const nextTime = new Date(fromDate);
     nextTime.setHours(baseTime.getHours(), baseTime.getMinutes(), 0, 0);
 
     for (const week of weeksOfMonth) {
       for (const dayOfWeek of daysOfWeek) {
-        const testDate = this.getNthWeekdayOfMonth(nextTime.getFullYear(), nextTime.getMonth(), week, dayOfWeek);
+        const testDate = this.getNthWeekdayOfMonth(
+          nextTime.getFullYear(),
+          nextTime.getMonth(),
+          week,
+          dayOfWeek
+        );
         testDate.setHours(baseTime.getHours(), baseTime.getMinutes(), 0, 0);
 
         if (testDate > fromDate) {
@@ -242,12 +294,22 @@ export class AlarmParser {
     nextTime.setMonth(nextTime.getMonth() + 1);
     const firstWeek = Math.min(...weeksOfMonth);
     const firstDay = Math.min(...daysOfWeek);
-    const resultDate = this.getNthWeekdayOfMonth(nextTime.getFullYear(), nextTime.getMonth(), firstWeek, firstDay);
+    const resultDate = this.getNthWeekdayOfMonth(
+      nextTime.getFullYear(),
+      nextTime.getMonth(),
+      firstWeek,
+      firstDay
+    );
     resultDate.setHours(baseTime.getHours(), baseTime.getMinutes(), 0, 0);
     return resultDate;
   }
 
-  private static getNthWeekdayOfMonth(year: number, month: number, week: number, dayOfWeek: number): Date {
+  private static getNthWeekdayOfMonth(
+    year: number,
+    month: number,
+    week: number,
+    dayOfWeek: number
+  ): Date {
     const firstDay = new Date(year, month, 1);
     const firstWeekday = firstDay.getDay();
 

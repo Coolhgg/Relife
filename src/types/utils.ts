@@ -29,11 +29,11 @@ declare const __brand: unique symbol;
 export type Branded<T, B> = T & { readonly [__brand]: B };
 
 // Specific ID types
-export type UserId = Branded<string, "UserId">;
-export type AlarmId = Branded<string, "AlarmId">;
-export type BattleId = Branded<string, "BattleId">;
-export type ThemeId = Branded<string, "ThemeId">;
-export type SubscriptionId = Branded<string, "SubscriptionId">;
+export type UserId = Branded<string, 'UserId'>;
+export type AlarmId = Branded<string, 'AlarmId'>;
+export type BattleId = Branded<string, 'BattleId'>;
+export type ThemeId = Branded<string, 'ThemeId'>;
+export type SubscriptionId = Branded<string, 'SubscriptionId'>;
 
 /**
  * Result pattern for better error handling
@@ -56,8 +56,7 @@ export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 /**
  * RequiredBy - Makes specific properties required
  */
-export type RequiredBy<T, K extends keyof T> = Omit<T, K> &
-  Required<Pick<T, K>>;
+export type RequiredBy<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
 
 /**
  * StrictOmit - Omit that ensures K exists in T
@@ -136,18 +135,18 @@ export type FactoryOptions<T> = DeepPartial<T> & {
 };
 
 export type FactoryFunction<T, TOptions = FactoryOptions<T>> = (
-  options?: TOptions,
+  options?: TOptions
 ) => T;
 
 // Event handler type utilities
 export type EventHandler<TElement = Element, TEvent = Event> = (
   this: TElement,
-  ev: TEvent,
+  ev: TEvent
 ) => void | boolean;
 
 export type AsyncEventHandler<TElement = Element, TEvent = Event> = (
   this: TElement,
-  ev: TEvent,
+  ev: TEvent
 ) => Promise<void | boolean>;
 
 // API response type utilities
@@ -197,9 +196,8 @@ export const createBrandedId =
   (id: string): Branded<string, B> =>
     `${prefix}_${id}` as Branded<string, B>;
 
-export const extractIdFromBranded = <B>(
-  brandedId: Branded<string, B>,
-): string => brandedId.toString().split("_").slice(1).join("_");
+export const extractIdFromBranded = <B>(brandedId: Branded<string, B>): string =>
+  brandedId.toString().split('_').slice(1).join('_');
 
 // Result utility functions
 export const success = <T>(data: T): Result<T> => ({ success: true, data });
@@ -219,7 +217,7 @@ export interface CapacitorAppUrlOpenEvent {
 
 export interface CapacitorNetworkEvent {
   connected: boolean;
-  connectionType: "wifi" | "cellular" | "none" | "unknown";
+  connectionType: 'wifi' | 'cellular' | 'none' | 'unknown';
 }
 
 export interface CapacitorBatteryEvent {
@@ -229,7 +227,7 @@ export interface CapacitorBatteryEvent {
 
 // Security event types
 export interface SecurityAlertDetail {
-  severity: "low" | "medium" | "high" | "critical";
+  severity: 'low' | 'medium' | 'high' | 'critical';
   type: string;
   timestamp: string;
   userId?: string;
@@ -243,10 +241,10 @@ export interface SecurityAlertEvent extends CustomEvent {
 
 export interface AlarmTamperDetail {
   alarmId: string;
-  tamperType: "physical" | "digital" | "network" | "unknown";
+  tamperType: 'physical' | 'digital' | 'network' | 'unknown';
   timestamp: string;
   userId?: string;
-  severity: "medium" | "high" | "critical";
+  severity: 'medium' | 'high' | 'critical';
 }
 
 export interface AlarmTamperEvent extends CustomEvent {
@@ -256,73 +254,73 @@ export interface AlarmTamperEvent extends CustomEvent {
 // Discriminated union types for Personas
 export type PersonaProfileDiscriminated =
   | {
-      kind: "struggling_sam";
-      tier: "free";
-      supportLevel: "high";
-      conversionUrgency: "low";
+      kind: 'struggling_sam';
+      tier: 'free';
+      supportLevel: 'high';
+      conversionUrgency: 'low';
     }
   | {
-      kind: "busy_ben";
-      tier: "basic" | "premium";
-      supportLevel: "medium";
-      conversionUrgency: "medium";
-      timeConstraints: "high";
+      kind: 'busy_ben';
+      tier: 'basic' | 'premium';
+      supportLevel: 'medium';
+      conversionUrgency: 'medium';
+      timeConstraints: 'high';
     }
   | {
-      kind: "professional_paula";
-      tier: "premium" | "pro";
-      supportLevel: "low";
-      conversionUrgency: "high";
+      kind: 'professional_paula';
+      tier: 'premium' | 'pro';
+      supportLevel: 'low';
+      conversionUrgency: 'high';
       businessFocused: true;
     }
   | {
-      kind: "enterprise_emma";
-      tier: "pro";
-      supportLevel: "dedicated";
-      conversionUrgency: "high";
+      kind: 'enterprise_emma';
+      tier: 'pro';
+      supportLevel: 'dedicated';
+      conversionUrgency: 'high';
       teamSize: number;
       complianceRequired: boolean;
     }
   | {
-      kind: "student_sarah";
-      tier: "student";
-      supportLevel: "medium";
-      conversionUrgency: "low";
+      kind: 'student_sarah';
+      tier: 'student';
+      supportLevel: 'medium';
+      conversionUrgency: 'low';
       graduationYear?: number;
       discountEligible: true;
     }
   | {
-      kind: "lifetime_larry";
-      tier: "lifetime";
-      supportLevel: "low";
-      conversionUrgency: "none";
-      paymentPreference: "one_time";
+      kind: 'lifetime_larry';
+      tier: 'lifetime';
+      supportLevel: 'low';
+      conversionUrgency: 'none';
+      paymentPreference: 'one_time';
     };
 
 // Type checking utilities
 export const isResult = <T, E>(value: unknown): value is Result<T, E> =>
-  typeof value === "object" &&
+  typeof value === 'object' &&
   value !== null &&
-  "success" in value &&
-  typeof value.success === "boolean";
+  'success' in value &&
+  typeof value.success === 'boolean';
 
 export const isSuccess = <T, E>(
-  result: Result<T, E>,
+  result: Result<T, E>
 ): result is { success: true; data: T } => result.success;
 
 export const isFailure = <T, E>(
-  result: Result<T, E>,
+  result: Result<T, E>
 ): result is { success: false; error: E } => !result.success; // Webhook event types
 export interface StripeWebhookEvent {
   id: string;
-  object: "event";
+  object: 'event';
   type:
-    | "customer.subscription.updated"
-    | "customer.subscription.deleted"
-    | "customer.subscription.created"
-    | "invoice.payment_succeeded"
-    | "invoice.payment_failed"
-    | "payment_method.attached";
+    | 'customer.subscription.updated'
+    | 'customer.subscription.deleted'
+    | 'customer.subscription.created'
+    | 'invoice.payment_succeeded'
+    | 'invoice.payment_failed'
+    | 'payment_method.attached';
   data: {
     object: Record<string, unknown>;
   };

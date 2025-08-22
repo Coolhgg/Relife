@@ -27,8 +27,8 @@ describe('Mobile Plugin Testing Examples', () => {
         body: 'Time to wake up!',
         schedule: {
           at: new Date(Date.now() + 1000), // 1 second from now
-          allowWhileIdle: true
-        }
+          allowWhileIdle: true,
+        },
       });
 
       // Test complete alarm flow
@@ -50,8 +50,9 @@ describe('Mobile Plugin Testing Examples', () => {
 
       // Check that snooze alarm was created
       const scheduled = helper.alarms.getScheduled();
-      const snoozedAlarm = scheduled.find(alarm =>
-        alarm.extra?.originalAlarmId === alarmId && alarm.extra?.snoozed === true
+      const snoozedAlarm = scheduled.find(
+        alarm =>
+          alarm.extra?.originalAlarmId === alarmId && alarm.extra?.snoozed === true
       );
 
       expect(snoozedAlarm).toBeDefined();
@@ -75,7 +76,7 @@ describe('Mobile Plugin Testing Examples', () => {
     it('should load and play audio', async () => {
       const audioConfig = mobileTestUtils.createTestAudio({
         assetId: 'alarm-sound',
-        assetPath: '/sounds/alarm.mp3'
+        assetPath: '/sounds/alarm.mp3',
       });
 
       // Test audio playback scenario
@@ -88,12 +89,12 @@ describe('Mobile Plugin Testing Examples', () => {
     it('should handle multiple audio files', async () => {
       const audio1 = mobileTestUtils.createTestAudio({
         assetId: 'sound1',
-        assetPath: '/sounds/sound1.mp3'
+        assetPath: '/sounds/sound1.mp3',
       });
 
       const audio2 = mobileTestUtils.createTestAudio({
         assetId: 'sound2',
-        assetPath: '/sounds/sound2.mp3'
+        assetPath: '/sounds/sound2.mp3',
       });
 
       await helper.audio.load(audio1);
@@ -165,7 +166,7 @@ describe('Mobile Plugin Testing Examples', () => {
     it('should configure device characteristics', () => {
       const deviceConfig = mobileTestUtils.createTestDevice('ios', {
         model: 'iPhone 14',
-        osVersion: '16.0'
+        osVersion: '16.0',
       });
 
       helper.device.configure(deviceConfig);
@@ -199,7 +200,7 @@ describe('Mobile Plugin Testing Examples', () => {
       const pushData = {
         title: 'Test Push',
         body: 'This is a test push notification',
-        data: { type: 'alarm-reminder' }
+        data: { type: 'alarm-reminder' },
       };
 
       helper.notifications.simulatePush(pushData);
@@ -272,14 +273,14 @@ describe('Mobile Plugin Testing Examples', () => {
       // 3. Load alarm sound
       const audioConfig = mobileTestUtils.createTestAudio({
         assetId: 'alarm-tone',
-        assetPath: '/sounds/alarm-tone.mp3'
+        assetPath: '/sounds/alarm-tone.mp3',
       });
       await helper.audio.load(audioConfig);
 
       // 4. Schedule alarm
       const alarmConfig = mobileTestUtils.createTestAlarm({
         title: 'Integration Test Alarm',
-        sound: audioConfig.assetId
+        sound: audioConfig.assetId,
       });
       const alarmId = await helper.alarms.schedule(alarmConfig);
 

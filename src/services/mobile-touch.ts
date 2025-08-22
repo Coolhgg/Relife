@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import { Haptics, ImpactStyle, NotificationType } from "@capacitor/haptics";
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 
 export interface TouchGestureOptions {
   element: HTMLElement;
@@ -48,7 +48,9 @@ export class MobileTouchService {
   }
 
   // Haptic Feedback Methods
-  async triggerHaptic(type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light') {
+  async triggerHaptic(
+    type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
+  ) {
     if (!this.isCapacitorAvailable) {
       // Fallback to vibration API if available
       if (navigator.vibrate) {
@@ -58,7 +60,7 @@ export class MobileTouchService {
           heavy: [50],
           success: [10, 50, 10],
           warning: [25, 25, 25],
-          error: [100, 50, 100]
+          error: [100, 50, 100],
         };
         navigator.vibrate(patterns[type]);
       }
@@ -108,7 +110,10 @@ export class MobileTouchService {
   }
 
   // Enhanced Button Interactions
-  enhanceButton(button: HTMLElement, hapticType: 'light' | 'medium' | 'heavy' = 'light') {
+  enhanceButton(
+    button: HTMLElement,
+    hapticType: 'light' | 'medium' | 'heavy' = 'light'
+  ) {
     const handleTouchStart = () => {
       button.style.transform = 'scale(0.95)';
       this.triggerHaptic(hapticType);
@@ -211,17 +216,23 @@ class TouchGestureHandler {
       swipeThreshold: 50,
       longPressDelay: 500,
       preventScroll: false,
-      ...options
+      ...options,
     };
 
     this.bindEvents();
   }
 
   private bindEvents() {
-    this.element.addEventListener('touchstart', this.handleTouchStart, { passive: !this.options.preventScroll });
-    this.element.addEventListener('touchmove', this.handleTouchMove, { passive: !this.options.preventScroll });
+    this.element.addEventListener('touchstart', this.handleTouchStart, {
+      passive: !this.options.preventScroll,
+    });
+    this.element.addEventListener('touchmove', this.handleTouchMove, {
+      passive: !this.options.preventScroll,
+    });
     this.element.addEventListener('touchend', this.handleTouchEnd, { passive: true });
-    this.element.addEventListener('touchcancel', this.handleTouchCancel, { passive: true });
+    this.element.addEventListener('touchcancel', this.handleTouchCancel, {
+      passive: true,
+    });
   }
 
   private handleTouchStart = (e: TouchEvent) => {
@@ -229,7 +240,7 @@ class TouchGestureHandler {
     this.startPoint = {
       x: touch.clientX,
       y: touch.clientY,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     // Start long press timer
@@ -280,7 +291,7 @@ class TouchGestureHandler {
 
     // Check for swipe gestures
     if (distance > this.options.swipeThreshold! && duration < 500) {
-      const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+      const angle = (Math.atan2(deltaY, deltaX) * 180) / Math.PI;
 
       if (Math.abs(angle) < 45) {
         // Right swipe
@@ -314,10 +325,13 @@ class TouchGestureHandler {
         MobileTouchService.getInstance().triggerHaptic('medium');
       } else if (this.options.onTap) {
         // Single tap (with delay to check for double tap)
-        this.tapTimeout = window.setTimeout(() => {
-          this.options.onTap?.();
-          MobileTouchService.getInstance().triggerHaptic('light');
-        }, this.options.onDoubleTap ? 300 : 0);
+        this.tapTimeout = window.setTimeout(
+          () => {
+            this.options.onTap?.();
+            MobileTouchService.getInstance().triggerHaptic('light');
+          },
+          this.options.onDoubleTap ? 300 : 0
+        );
       }
 
       this.lastTap = now;

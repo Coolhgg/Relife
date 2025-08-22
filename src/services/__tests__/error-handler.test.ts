@@ -1,16 +1,18 @@
-import { expect, test, jest } from "@jest/globals";
-import { ErrorHandler } from "../error-handler";
-import { testUtils } from "../../test-setup";
+import { expect, test, jest } from '@jest/globals';
+import { ErrorHandler } from '../error-handler';
+import { testUtils } from '../../test-setup';
 
 // Mock Sentry
 jest.mock('@sentry/browser', () => ({
   captureException: jest.fn(),
   captureMessage: jest.fn(),
-  withScope: jest.fn((callback) => callback({
-    setTag: jest.fn(),
-    setContext: jest.fn(),
-    setLevel: jest.fn(),
-  })),
+  withScope: jest.fn(callback =>
+    callback({
+      setTag: jest.fn(),
+      setContext: jest.fn(),
+      setLevel: jest.fn(),
+    })
+  ),
 }));
 
 // Mock PostHog
@@ -465,7 +467,7 @@ describe('ErrorHandler', () => {
 
       expect(stats.errorsByType).toEqual(
         expect.objectContaining({
-          'Error': 3,
+          Error: 3,
         })
       );
     });
@@ -478,17 +480,18 @@ describe('ErrorHandler', () => {
       const stats = ErrorHandler.getErrorStatistics();
 
       expect(stats.errorsByComponent).toEqual({
-        'ComponentA': 2,
-        'ComponentB': 1,
+        ComponentA: 2,
+        ComponentB: 1,
       });
     });
 
     test('calculates error rate over time', () => {
       const now = Date.now();
-      const oneHourAgo = now - (60 * 60 * 1000);
+      const oneHourAgo = now - 60 * 60 * 1000;
 
       // Mock timestamps
-      jest.spyOn(Date, 'now')
+      jest
+        .spyOn(Date, 'now')
         .mockReturnValueOnce(oneHourAgo)
         .mockReturnValueOnce(now)
         .mockReturnValueOnce(now);
@@ -505,7 +508,7 @@ describe('ErrorHandler', () => {
 
   describe('error cleanup and maintenance', () => {
     test('clears old errors beyond retention period', () => {
-      const oldDate = Date.now() - (8 * 24 * 60 * 60 * 1000); // 8 days ago
+      const oldDate = Date.now() - 8 * 24 * 60 * 60 * 1000; // 8 days ago
 
       // Mock Date.now for old error
       jest.spyOn(Date, 'now').mockReturnValueOnce(oldDate);
@@ -548,9 +551,7 @@ describe('ErrorHandler', () => {
 
       expect(exportData).toMatch(/^data:application\/json/);
 
-      const jsonData = JSON.parse(
-        decodeURIComponent(exportData.split(',')[1])
-      );
+      const jsonData = JSON.parse(decodeURIComponent(exportData.split(',')[1]));
 
       expect(jsonData.errors).toHaveLength(1);
       expect(jsonData.errors[0]).toEqual(
@@ -568,14 +569,12 @@ describe('ErrorHandler', () => {
       ErrorHandler.handleError(new Error('Stat error 2'), { component: 'A' });
 
       const exportData = ErrorHandler.exportErrorData();
-      const jsonData = JSON.parse(
-        decodeURIComponent(exportData.split(',')[1])
-      );
+      const jsonData = JSON.parse(decodeURIComponent(exportData.split(',')[1]));
 
       expect(jsonData.statistics).toEqual(
         expect.objectContaining({
-          errorsByComponent: { 'A': 2 },
-          errorsByType: { 'Error': 2 },
+          errorsByComponent: { A: 2 },
+          errorsByType: { Error: 2 },
         })
       );
     });

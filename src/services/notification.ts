@@ -4,7 +4,7 @@ import {
   scheduleLocalNotification,
   cancelLocalNotification,
   requestNotificationPermissions,
-  vibrate
+  vibrate,
 } from './capacitor';
 
 export interface NotificationOptions {
@@ -132,20 +132,20 @@ export class NotificationService {
             {
               action: 'dismiss',
               title: 'Dismiss',
-              icon: '/dismiss-icon.png'
+              icon: '/dismiss-icon.png',
             },
             {
               action: 'snooze',
               title: 'Snooze 5min',
-              icon: '/snooze-icon.png'
-            }
+              icon: '/snooze-icon.png',
+            },
           ],
           data: {
             alarmId: alarm.id,
             voiceMood: alarm.voiceMood,
-            type: 'alarm'
-          }
-        }
+            type: 'alarm',
+          },
+        },
       };
 
       await this.scheduleNotification(mainNotification);
@@ -166,9 +166,9 @@ export class NotificationService {
             silent: true,
             data: {
               alarmId: alarm.id,
-              type: 'reminder'
-            }
-          }
+              type: 'reminder',
+            },
+          },
         };
 
         await this.scheduleNotification(reminderNotification);
@@ -180,7 +180,10 @@ export class NotificationService {
     }
   }
 
-  static async scheduleSnoozeNotification(alarm: Alarm, minutes: number = 5): Promise<void> {
+  static async scheduleSnoozeNotification(
+    alarm: Alarm,
+    minutes: number = 5
+  ): Promise<void> {
     if (!this.hasPermission) {
       console.warn('No notification permission, cannot schedule snooze notification');
       return;
@@ -207,25 +210,27 @@ export class NotificationService {
             {
               action: 'dismiss',
               title: 'Dismiss',
-              icon: '/dismiss-icon.png'
+              icon: '/dismiss-icon.png',
             },
             {
               action: 'snooze',
               title: 'Snooze 5min',
-              icon: '/snooze-icon.png'
-            }
+              icon: '/snooze-icon.png',
+            },
           ],
           data: {
             alarmId: alarm.id,
             voiceMood: alarm.voiceMood,
             type: 'snooze',
-            snoozeCount: alarm.snoozeCount + 1
-          }
-        }
+            snoozeCount: alarm.snoozeCount + 1,
+          },
+        },
       };
 
       await this.scheduleNotification(snoozeNotification);
-      console.log(`Scheduled snooze notification for alarm ${alarm.id} in ${minutes} minutes`);
+      console.log(
+        `Scheduled snooze notification for alarm ${alarm.id} in ${minutes} minutes`
+      );
     } catch (error) {
       console.error('Error scheduling snooze notification:', error);
     }
@@ -239,7 +244,7 @@ export class NotificationService {
         `reminder_${alarmId}`,
         ...Array.from(this.scheduledNotifications.keys()).filter(id =>
           id.startsWith(`snooze_${alarmId}`)
-        )
+        ),
       ];
 
       for (const id of notificationIds) {
@@ -252,7 +257,9 @@ export class NotificationService {
     }
   }
 
-  private static async scheduleNotification(scheduledNotification: ScheduledNotification): Promise<void> {
+  private static async scheduleNotification(
+    scheduledNotification: ScheduledNotification
+  ): Promise<void> {
     try {
       // Store the scheduled notification
       this.scheduledNotifications.set(scheduledNotification.id, scheduledNotification);
@@ -263,7 +270,7 @@ export class NotificationService {
           id: parseInt(scheduledNotification.id.replace(/\D/g, '')) || Date.now(),
           title: scheduledNotification.notification.title,
           body: scheduledNotification.notification.body,
-          schedule: scheduledNotification.scheduledTime
+          schedule: scheduledNotification.scheduledTime,
         });
         return;
       } catch (capacitorError) {
@@ -314,7 +321,7 @@ export class NotificationService {
           tag: options.tag,
           requireInteraction: options.requireInteraction || false,
           silent: options.silent || false,
-          data: options.data || {}
+          data: options.data || {},
         };
 
         // Add actions if available (service worker notifications support this)
@@ -322,7 +329,10 @@ export class NotificationService {
           notificationOptions.actions = options.actions;
         }
 
-        await this.serviceWorkerRegistration.showNotification(options.title, notificationOptions);
+        await this.serviceWorkerRegistration.showNotification(
+          options.title,
+          notificationOptions
+        );
 
         // Trigger vibration separately if specified
         if (options.vibrate && 'vibrate' in navigator) {
@@ -338,7 +348,7 @@ export class NotificationService {
         tag: options.tag,
         requireInteraction: options.requireInteraction || false,
         silent: options.silent || false,
-        data: options.data || {}
+        data: options.data || {},
       });
 
       // Trigger vibration separately if specified
@@ -352,9 +362,11 @@ export class NotificationService {
         notification.close();
 
         // Dispatch custom event
-        window.dispatchEvent(new CustomEvent('notification-click', {
-          detail: { notification: options }
-        }));
+        window.dispatchEvent(
+          new CustomEvent('notification-click', {
+            detail: { notification: options },
+          })
+        );
       };
 
       // Auto-close after 30 seconds if not requiring interaction
@@ -381,14 +393,14 @@ export class NotificationService {
       tag: 'test',
       requireInteraction: false,
       vibrate: [200, 100, 200],
-      data: { type: 'test', voiceMood }
+      data: { type: 'test', voiceMood },
     });
   }
 
   private static setupNotificationHandlers(): void {
     // Handle notification clicks from service worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.addEventListener('message', (event) => {
+      navigator.serviceWorker.addEventListener('message', event => {
         const { type, data } = event.data;
 
         switch (type) {
@@ -418,18 +430,22 @@ export class NotificationService {
     window.focus();
 
     // Dispatch custom event
-    window.dispatchEvent(new CustomEvent('notification-click', {
-      detail: data
-    }));
+    window.dispatchEvent(
+      new CustomEvent('notification-click', {
+        detail: data,
+      })
+    );
   }
 
   private static handleNotificationAction(data: Record<string, unknown>): void {
     console.log('Notification action:', data);
 
     // Dispatch custom event
-    window.dispatchEvent(new CustomEvent('notification-action', {
-      detail: data
-    }));
+    window.dispatchEvent(
+      new CustomEvent('notification-action', {
+        detail: data,
+      })
+    );
   }
 
   private static async clearVisibleNotifications(): Promise<void> {

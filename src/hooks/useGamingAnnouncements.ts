@@ -12,11 +12,20 @@ import type {
   WeeklyChallenge,
   PlayerLevel,
   ExperienceGain,
-  BattleType
+  BattleType,
 } from '../types';
 
 interface GamingAnnouncement {
-  type: 'battle' | 'achievement' | 'level' | 'friend' | 'reward' | 'quest' | 'leaderboard' | 'tournament' | 'xp-gain';
+  type:
+    | 'battle'
+    | 'achievement'
+    | 'level'
+    | 'friend'
+    | 'reward'
+    | 'quest'
+    | 'leaderboard'
+    | 'tournament'
+    | 'xp-gain';
   action?: string;
   data?: any;
   priority?: 'polite' | 'assertive';
@@ -27,163 +36,214 @@ export function useGamingAnnouncements(enabled = true) {
   const { announce } = useScreenReaderAnnouncements({ enabled });
   const previousValues = useRef<Record<string, any>>({});
 
-  const announceGaming = useCallback((announcement: GamingAnnouncement) => {
-    if (!enabled) return;
+  const announceGaming = useCallback(
+    (announcement: GamingAnnouncement) => {
+      if (!enabled) return;
 
-    const { type, action, data, priority = 'polite', customMessage } = announcement;
-    let message = customMessage || '';
+      const { type, action, data, priority = 'polite', customMessage } = announcement;
+      let message = customMessage || '';
 
-    switch (type) {
-      case 'battle':
-        message = formatBattleAnnouncement(action!, data);
-        break;
-      case 'achievement':
-        message = formatAchievementAnnouncement(action!, data);
-        break;
-      case 'level':
-        message = formatLevelAnnouncement(action!, data);
-        break;
-      case 'friend':
-        message = formatFriendAnnouncement(action!, data);
-        break;
-      case 'reward':
-        message = formatRewardAnnouncement(action!, data);
-        break;
-      case 'quest':
-        message = formatQuestAnnouncement(action!, data);
-        break;
-      case 'leaderboard':
-        message = formatLeaderboardAnnouncement(action!, data);
-        break;
-      case 'tournament':
-        message = formatTournamentAnnouncement(action!, data);
-        break;
-      case 'xp-gain':
-        message = formatXpGainAnnouncement(data);
-        break;
-    }
+      switch (type) {
+        case 'battle':
+          message = formatBattleAnnouncement(action!, data);
+          break;
+        case 'achievement':
+          message = formatAchievementAnnouncement(action!, data);
+          break;
+        case 'level':
+          message = formatLevelAnnouncement(action!, data);
+          break;
+        case 'friend':
+          message = formatFriendAnnouncement(action!, data);
+          break;
+        case 'reward':
+          message = formatRewardAnnouncement(action!, data);
+          break;
+        case 'quest':
+          message = formatQuestAnnouncement(action!, data);
+          break;
+        case 'leaderboard':
+          message = formatLeaderboardAnnouncement(action!, data);
+          break;
+        case 'tournament':
+          message = formatTournamentAnnouncement(action!, data);
+          break;
+        case 'xp-gain':
+          message = formatXpGainAnnouncement(data);
+          break;
+      }
 
-    if (message) {
-      announce({
-        type: 'custom',
-        message,
-        priority
-      });
-    }
-  }, [enabled, announce]);
-
-  // Battle announcements
-  const announceBattleEvent = useCallback((action: 'created' | 'joined' | 'started' | 'won' | 'lost' | 'ended', battleData: Partial<Battle>) => {
-    announceGaming({
-      type: 'battle',
-      action,
-      data: battleData,
-      priority: action === 'won' || action === 'lost' ? 'assertive' : 'polite'
-    });
-  }, [announceGaming]);
-
-  // Achievement announcements
-  const announceAchievement = useCallback((action: 'unlocked' | 'progress' | 'completed', achievementData: Partial<Achievement>) => {
-    announceGaming({
-      type: 'achievement',
-      action,
-      data: achievementData,
-      priority: action === 'unlocked' ? 'assertive' : 'polite'
-    });
-  }, [announceGaming]);
-
-  // Level/XP announcements
-  const announceLevelChange = useCallback((action: 'level-up' | 'xp-gained', levelData: Partial<PlayerLevel> | ExperienceGain) => {
-    announceGaming({
-      type: 'level',
-      action,
-      data: levelData,
-      priority: action === 'level-up' ? 'assertive' : 'polite'
-    });
-  }, [announceGaming]);
-
-  // Friend system announcements
-  const announceFriendEvent = useCallback((action: 'added' | 'request-sent' | 'request-received' | 'removed', friendData: Partial<UserType>) => {
-    announceGaming({
-      type: 'friend',
-      action,
-      data: friendData,
-      priority: 'polite'
-    });
-  }, [announceGaming]);
-
-  // Reward announcements
-  const announceRewardEvent = useCallback((action: 'claimed' | 'available' | 'expired', rewardData: Partial<Reward>) => {
-    announceGaming({
-      type: 'reward',
-      action,
-      data: rewardData,
-      priority: action === 'claimed' ? 'assertive' : 'polite'
-    });
-  }, [announceGaming]);
-
-  // Quest announcements
-  const announceQuestEvent = useCallback((action: 'started' | 'completed' | 'progress' | 'failed', questData: Partial<Quest>) => {
-    announceGaming({
-      type: 'quest',
-      action,
-      data: questData,
-      priority: action === 'completed' ? 'assertive' : 'polite'
-    });
-  }, [announceGaming]);
-
-  // Leaderboard announcements
-  const announceLeaderboardChange = useCallback((action: 'rank-up' | 'rank-down' | 'new-record', leaderboardData: { oldRank?: number; newRank: number; score?: number }) => {
-    announceGaming({
-      type: 'leaderboard',
-      action,
-      data: leaderboardData,
-      priority: 'polite'
-    });
-  }, [announceGaming]);
-
-  // Tournament announcements
-  const announceTournamentEvent = useCallback((action: 'joined' | 'eliminated' | 'advanced' | 'won', tournamentData: any) => {
-    announceGaming({
-      type: 'tournament',
-      action,
-      data: tournamentData,
-      priority: action === 'won' ? 'assertive' : 'polite'
-    });
-  }, [announceGaming]);
-
-  // Auto-tracking for common state changes
-  const trackBattleCount = useCallback((battles: Battle[]) => {
-    const activeBattleCount = battles.filter(b => b.status === 'active').length;
-    const previousCount = previousValues.current.activeBattles || 0;
-
-    if (previousCount !== activeBattleCount && previousCount > 0) {
-      const difference = activeBattleCount - previousCount;
-      if (difference > 0) {
-        announceGaming({
-          type: 'battle',
-          customMessage: `${difference} new battle${difference > 1 ? 's' : ''} available`,
-          priority: 'polite'
+      if (message) {
+        announce({
+          type: 'custom',
+          message,
+          priority,
         });
       }
-    }
-    previousValues.current.activeBattles = activeBattleCount;
-  }, [announceGaming]);
+    },
+    [enabled, announce]
+  );
 
-  const trackAchievements = useCallback((achievements: Achievement[]) => {
-    const unlockedCount = achievements.filter(a => a.unlockedAt).length;
-    const previousCount = previousValues.current.achievements || 0;
+  // Battle announcements
+  const announceBattleEvent = useCallback(
+    (
+      action: 'created' | 'joined' | 'started' | 'won' | 'lost' | 'ended',
+      battleData: Partial<Battle>
+    ) => {
+      announceGaming({
+        type: 'battle',
+        action,
+        data: battleData,
+        priority: action === 'won' || action === 'lost' ? 'assertive' : 'polite',
+      });
+    },
+    [announceGaming]
+  );
 
-    if (unlockedCount > previousCount && previousCount > 0) {
-      const newAchievements = unlockedCount - previousCount;
+  // Achievement announcements
+  const announceAchievement = useCallback(
+    (
+      action: 'unlocked' | 'progress' | 'completed',
+      achievementData: Partial<Achievement>
+    ) => {
       announceGaming({
         type: 'achievement',
-        customMessage: `${newAchievements} new achievement${newAchievements > 1 ? 's' : ''} unlocked!`,
-        priority: 'assertive'
+        action,
+        data: achievementData,
+        priority: action === 'unlocked' ? 'assertive' : 'polite',
       });
-    }
-    previousValues.current.achievements = unlockedCount;
-  }, [announceGaming]);
+    },
+    [announceGaming]
+  );
+
+  // Level/XP announcements
+  const announceLevelChange = useCallback(
+    (
+      action: 'level-up' | 'xp-gained',
+      levelData: Partial<PlayerLevel> | ExperienceGain
+    ) => {
+      announceGaming({
+        type: 'level',
+        action,
+        data: levelData,
+        priority: action === 'level-up' ? 'assertive' : 'polite',
+      });
+    },
+    [announceGaming]
+  );
+
+  // Friend system announcements
+  const announceFriendEvent = useCallback(
+    (
+      action: 'added' | 'request-sent' | 'request-received' | 'removed',
+      friendData: Partial<UserType>
+    ) => {
+      announceGaming({
+        type: 'friend',
+        action,
+        data: friendData,
+        priority: 'polite',
+      });
+    },
+    [announceGaming]
+  );
+
+  // Reward announcements
+  const announceRewardEvent = useCallback(
+    (action: 'claimed' | 'available' | 'expired', rewardData: Partial<Reward>) => {
+      announceGaming({
+        type: 'reward',
+        action,
+        data: rewardData,
+        priority: action === 'claimed' ? 'assertive' : 'polite',
+      });
+    },
+    [announceGaming]
+  );
+
+  // Quest announcements
+  const announceQuestEvent = useCallback(
+    (
+      action: 'started' | 'completed' | 'progress' | 'failed',
+      questData: Partial<Quest>
+    ) => {
+      announceGaming({
+        type: 'quest',
+        action,
+        data: questData,
+        priority: action === 'completed' ? 'assertive' : 'polite',
+      });
+    },
+    [announceGaming]
+  );
+
+  // Leaderboard announcements
+  const announceLeaderboardChange = useCallback(
+    (
+      action: 'rank-up' | 'rank-down' | 'new-record',
+      leaderboardData: { oldRank?: number; newRank: number; score?: number }
+    ) => {
+      announceGaming({
+        type: 'leaderboard',
+        action,
+        data: leaderboardData,
+        priority: 'polite',
+      });
+    },
+    [announceGaming]
+  );
+
+  // Tournament announcements
+  const announceTournamentEvent = useCallback(
+    (action: 'joined' | 'eliminated' | 'advanced' | 'won', tournamentData: any) => {
+      announceGaming({
+        type: 'tournament',
+        action,
+        data: tournamentData,
+        priority: action === 'won' ? 'assertive' : 'polite',
+      });
+    },
+    [announceGaming]
+  );
+
+  // Auto-tracking for common state changes
+  const trackBattleCount = useCallback(
+    (battles: Battle[]) => {
+      const activeBattleCount = battles.filter(b => b.status === 'active').length;
+      const previousCount = previousValues.current.activeBattles || 0;
+
+      if (previousCount !== activeBattleCount && previousCount > 0) {
+        const difference = activeBattleCount - previousCount;
+        if (difference > 0) {
+          announceGaming({
+            type: 'battle',
+            customMessage: `${difference} new battle${difference > 1 ? 's' : ''} available`,
+            priority: 'polite',
+          });
+        }
+      }
+      previousValues.current.activeBattles = activeBattleCount;
+    },
+    [announceGaming]
+  );
+
+  const trackAchievements = useCallback(
+    (achievements: Achievement[]) => {
+      const unlockedCount = achievements.filter(a => a.unlockedAt).length;
+      const previousCount = previousValues.current.achievements || 0;
+
+      if (unlockedCount > previousCount && previousCount > 0) {
+        const newAchievements = unlockedCount - previousCount;
+        announceGaming({
+          type: 'achievement',
+          customMessage: `${newAchievements} new achievement${newAchievements > 1 ? 's' : ''} unlocked!`,
+          priority: 'assertive',
+        });
+      }
+      previousValues.current.achievements = unlockedCount;
+    },
+    [announceGaming]
+  );
 
   return {
     announceGaming,
@@ -196,7 +256,7 @@ export function useGamingAnnouncements(enabled = true) {
     announceLeaderboardChange,
     announceTournamentEvent,
     trackBattleCount,
-    trackAchievements
+    trackAchievements,
   };
 }
 
@@ -209,7 +269,7 @@ function formatBattleAnnouncement(action: string, data: Partial<Battle>): string
     tasks: 'Task Master',
     bragging: 'Bragging Rights',
     group: 'Group Battle',
-    tournament: 'Tournament Battle'
+    tournament: 'Tournament Battle',
   };
 
   const battleName = data.type ? battleTypeNames[data.type] : 'Battle';
@@ -233,7 +293,10 @@ function formatBattleAnnouncement(action: string, data: Partial<Battle>): string
   }
 }
 
-function formatAchievementAnnouncement(action: string, data: Partial<Achievement>): string {
+function formatAchievementAnnouncement(
+  action: string,
+  data: Partial<Achievement>
+): string {
   const achievementName = data.name || 'Achievement';
   const rarity = data.rarity || 'common';
   const rarityText = rarity === 'common' ? '' : ` ${rarity} `;
@@ -243,7 +306,9 @@ function formatAchievementAnnouncement(action: string, data: Partial<Achievement
       return `Achievement unlocked! ${achievementName}${rarityText ? ` - ${rarityText}rarity` : ''}. ${data.description || ''}`;
     case 'progress':
       if (data.progress) {
-        const percentage = Math.round((data.progress.current / data.progress.target) * 100);
+        const percentage = Math.round(
+          (data.progress.current / data.progress.target) * 100
+        );
         return `Achievement progress: ${achievementName} - ${percentage}% complete (${data.progress.current} of ${data.progress.target})`;
       }
       return `Progress made on ${achievementName}`;
@@ -320,7 +385,10 @@ function formatQuestAnnouncement(action: string, data: Partial<Quest>): string {
   }
 }
 
-function formatLeaderboardAnnouncement(action: string, data: { oldRank?: number; newRank: number; score?: number }): string {
+function formatLeaderboardAnnouncement(
+  action: string,
+  data: { oldRank?: number; newRank: number; score?: number }
+): string {
   switch (action) {
     case 'rank-up':
       return `Leaderboard rank improved! Moved from rank ${data.oldRank} to rank ${data.newRank}.`;

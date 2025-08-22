@@ -1,13 +1,13 @@
-import { expect, test, jest } from "@jest/globals";
-import { renderHook, act } from "@testing-library/react";
-import React from "react";
-import { useAuth } from "../../useAuth";
-import { useFeatureGate } from "../../useFeatureGate";
-import { useSubscription } from "../../useSubscription";
-import { AnalyticsProvider } from "../../../components/AnalyticsProvider";
-import { FeatureAccessProvider } from "../../../contexts/FeatureAccessContext";
-import { LanguageProvider } from "../../../contexts/LanguageContext";
-import { StrugglingSamProvider } from "../../../contexts/StrugglingsamContext";
+import { expect, test, jest } from '@jest/globals';
+import { renderHook, act } from '@testing-library/react';
+import React from 'react';
+import { useAuth } from '../../useAuth';
+import { useFeatureGate } from '../../useFeatureGate';
+import { useSubscription } from '../../useSubscription';
+import { AnalyticsProvider } from '../../../components/AnalyticsProvider';
+import { FeatureAccessProvider } from '../../../contexts/FeatureAccessContext';
+import { LanguageProvider } from '../../../contexts/LanguageContext';
+import { StrugglingSamProvider } from '../../../contexts/StrugglingsamContext';
 import SubscriptionService from '../../../services/subscription-service';
 
 // Mock all services
@@ -19,9 +19,9 @@ jest.mock('../../../services/supabase-service', () => ({
       signOut: jest.fn(),
       getCurrentUser: jest.fn(),
       getSession: jest.fn(),
-      onAuthStateChange: jest.fn()
-    })
-  }
+      onAuthStateChange: jest.fn(),
+    }),
+  },
 }));
 
 jest.mock('../../../services/subscription-service', () => ({
@@ -33,9 +33,9 @@ jest.mock('../../../services/subscription-service', () => ({
       getUserTier: jest.fn(),
       createSubscription: jest.fn(),
       cancelSubscription: jest.fn(),
-      updateSubscription: jest.fn()
-    })
-  }
+      updateSubscription: jest.fn(),
+    }),
+  },
 }));
 
 jest.mock('../../../services/stripe-service', () => ({
@@ -45,9 +45,9 @@ jest.mock('../../../services/stripe-service', () => ({
       createPaymentIntent: jest.fn(),
       confirmPayment: jest.fn(),
       createSetupIntent: jest.fn(),
-      updatePaymentMethod: jest.fn()
-    })
-  }
+      updatePaymentMethod: jest.fn(),
+    }),
+  },
 }));
 
 jest.mock('../../../services/alarm-service', () => ({
@@ -57,9 +57,9 @@ jest.mock('../../../services/alarm-service', () => ({
       getAllAlarms: jest.fn(),
       createAlarm: jest.fn(),
       updateAlarm: jest.fn(),
-      deleteAlarm: jest.fn()
-    })
-  }
+      deleteAlarm: jest.fn(),
+    }),
+  },
 }));
 
 jest.mock('../../../services/feature-gate-service', () => ({
@@ -67,15 +67,15 @@ jest.mock('../../../services/feature-gate-service', () => ({
   default: {
     getInstance: () => ({
       trackFeatureAttempt: jest.fn(),
-      grantTemporaryAccess: jest.fn()
-    })
-  }
+      grantTemporaryAccess: jest.fn(),
+    }),
+  },
 }));
 
 jest.mock('../../../services/error-handler', () => ({
   ErrorHandler: {
-    handleError: jest.fn()
-  }
+    handleError: jest.fn(),
+  },
 }));
 
 // Mock analytics hooks
@@ -83,21 +83,21 @@ jest.mock('../../useAnalytics', () => ({
   useAnalytics: () => ({
     track: jest.fn(),
     trackPageView: jest.fn(),
-    trackFeatureUsage: jest.fn()
+    trackFeatureUsage: jest.fn(),
   }),
   useEngagementAnalytics: () => ({
-    trackFeatureDiscovery: jest.fn()
+    trackFeatureDiscovery: jest.fn(),
   }),
   usePerformanceAnalytics: () => ({
-    trackComponentRenderTime: jest.fn()
+    trackComponentRenderTime: jest.fn(),
   }),
   ANALYTICS_EVENTS: {
     SESSION_ENDED: 'session_ended',
     ERROR_OCCURRED: 'error_occurred',
     USER_SIGNED_IN: 'user_signed_in',
     SUBSCRIPTION_CREATED: 'subscription_created',
-    FEATURE_GATE_BYPASSED: 'feature_gate_bypassed'
-  }
+    FEATURE_GATE_BYPASSED: 'feature_gate_bypassed',
+  },
 }));
 
 // Mock i18n
@@ -106,28 +106,28 @@ jest.mock('react-i18next', () => ({
     t: (key: string) => key,
     i18n: {
       language: 'en',
-      exists: jest.fn().mockReturnValue(true)
-    }
-  })
+      exists: jest.fn().mockReturnValue(true),
+    },
+  }),
 }));
 
 jest.mock('@capacitor/device', () => ({
   Device: {
-    getLanguageCode: jest.fn().mockResolvedValue({ value: 'en' })
-  }
+    getLanguageCode: jest.fn().mockResolvedValue({ value: 'en' }),
+  },
 }));
 
 jest.mock('../../../config/i18n', () => ({
   SUPPORTED_LANGUAGES: {
     en: { nativeName: 'English', rtl: false },
-    es: { nativeName: 'Español', rtl: false }
+    es: { nativeName: 'Español', rtl: false },
   },
   getCurrentLanguage: () => 'en',
   getLanguageInfo: () => ({ nativeName: 'English', rtl: false }),
   isRTL: () => false,
   formatTime: (time: string) => time,
   formatRelativeTime: (date: Date) => date.toLocaleDateString(),
-  changeLanguage: jest.fn()
+  changeLanguage: jest.fn(),
 }));
 
 // Comprehensive test wrapper with all providers
@@ -142,7 +142,7 @@ const FullTestWrapper: React.FC<FullTestWrapperProps> = ({
   children,
   initialUser = null,
   userTier = 'free',
-  subscription = null
+  subscription = null,
 }) => {
   const [user, setUser] = React.useState(initialUser);
 
@@ -155,9 +155,15 @@ const FullTestWrapper: React.FC<FullTestWrapperProps> = ({
     mockSupabaseService.getSession.mockResolvedValue(
       user ? { access_token: 'token', user } : null
     );
-    mockSupabaseService.onAuthStateChange.mockImplementation((callback) => {
-      setTimeout(() => callback(user ? 'SIGNED_IN' : 'SIGNED_OUT',
-        user ? { access_token: 'token', user } : null), 10);
+    mockSupabaseService.onAuthStateChange.mockImplementation(callback => {
+      setTimeout(
+        () =>
+          callback(
+            user ? 'SIGNED_IN' : 'SIGNED_OUT',
+            user ? { access_token: 'token', user } : null
+          ),
+        10
+      );
       return { data: { subscription: { unsubscribe: jest.fn() } } };
     });
 
@@ -171,17 +177,17 @@ const FullTestWrapper: React.FC<FullTestWrapperProps> = ({
           hasAccess: userTier !== 'free',
           usageLimit: userTier === 'basic' ? 10 : null,
           usageCount: 0,
-          upgradeRequired: userTier === 'free' ? 'basic' : null
+          upgradeRequired: userTier === 'free' ? 'basic' : null,
         },
         premium_themes: {
           hasAccess: userTier === 'pro',
-          upgradeRequired: userTier !== 'pro' ? 'pro' : null
+          upgradeRequired: userTier !== 'pro' ? 'pro' : null,
         },
         export_data: {
           hasAccess: userTier === 'pro',
-          upgradeRequired: userTier !== 'pro' ? 'pro' : null
-        }
-      }
+          upgradeRequired: userTier !== 'pro' ? 'pro' : null,
+        },
+      },
     });
 
     // Mock Alarm Service
@@ -214,16 +220,18 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const mockUser = {
         id: 'user-123',
         email: 'test@example.com',
-        user_metadata: { subscription_tier: 'basic' }
+        user_metadata: { subscription_tier: 'basic' },
       };
 
       const { result } = renderHook(
         () => ({
           auth: useAuth(),
-          featureGate: useFeatureGate("advanced_alarms"),
+          featureGate: useFeatureGate('advanced_alarms'),
         }),
         {
-          wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          wrapper: props => (
+            <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          ),
         }
       );
 
@@ -242,10 +250,10 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const { result, rerender } = renderHook(
         () => ({
           auth: useAuth(),
-          featureGate: useFeatureGate("advanced_alarms"),
+          featureGate: useFeatureGate('advanced_alarms'),
         }),
         {
-          wrapper: (props) => <FullTestWrapper {...props} userTier="free" />
+          wrapper: props => <FullTestWrapper {...props} userTier="free" />,
         }
       );
 
@@ -264,10 +272,12 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const { result: newResult } = renderHook(
         () => ({
           auth: useAuth(),
-          featureGate: useFeatureGate("advanced_alarms"),
+          featureGate: useFeatureGate('advanced_alarms'),
         }),
         {
-          wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          wrapper: props => (
+            <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          ),
         }
       );
 
@@ -287,15 +297,15 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
         id: 'sub-123',
         status: 'active',
         tier: 'pro',
-        features: ['advanced_alarms', 'premium_themes', 'export_data']
+        features: ['advanced_alarms', 'premium_themes', 'export_data'],
       };
 
       const { result } = renderHook(
         () => ({
           auth: useAuth(),
-          subscription: useSubscription("user-123"),
-          advancedAlarmsGate: useFeatureGate("advanced_alarms"),
-          premiumThemesGate: useFeatureGate("premium_themes"),
+          subscription: useSubscription('user-123'),
+          advancedAlarmsGate: useFeatureGate('advanced_alarms'),
+          premiumThemesGate: useFeatureGate('premium_themes'),
         }),
         {
           wrapper: props => (
@@ -305,7 +315,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
               userTier="pro"
               subscription={mockSubscription}
             />
-          )
+          ),
         }
       );
 
@@ -325,20 +335,23 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
 
       const { result } = renderHook(
         () => ({
-          subscription: useSubscription("user-123"),
-          featureGate: useFeatureGate("premium_themes"),
+          subscription: useSubscription('user-123'),
+          featureGate: useFeatureGate('premium_themes'),
         }),
         {
-          wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="pro" />
+          wrapper: props => (
+            <FullTestWrapper {...props} initialUser={mockUser} userTier="pro" />
+          ),
         }
       );
 
       // Mock subscription service to simulate cancellation
-      const SubscriptionService = require('../../../services/subscription-service').default;
+      const SubscriptionService =
+        require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
       mockSubscriptionService.cancelSubscription.mockResolvedValue({
         id: 'sub-123',
-        status: 'canceled'
+        status: 'canceled',
       });
 
       await act(async () => {
@@ -352,7 +365,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
-        trackFeatureUsage: jest.fn()
+        trackFeatureUsage: jest.fn(),
       });
 
       expect(mockTrack).toHaveBeenCalled();
@@ -366,10 +379,12 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const { result } = renderHook(
         () => ({
           auth: useAuth(),
-          featureGate: useFeatureGate("advanced_alarms"),
+          featureGate: useFeatureGate('advanced_alarms'),
         }),
         {
-          wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          wrapper: props => (
+            <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          ),
         }
       );
 
@@ -393,17 +408,19 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
-        trackFeatureUsage: jest.fn()
+        trackFeatureUsage: jest.fn(),
       });
 
       const mockUser = { id: 'user-123', email: 'test@example.com' };
 
       const { result } = renderHook(
         () => ({
-          featureGate: useFeatureGate("advanced_alarms"),
+          featureGate: useFeatureGate('advanced_alarms'),
         }),
         {
-          wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          wrapper: props => (
+            <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          ),
         }
       );
 
@@ -416,8 +433,8 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
         expect.any(String),
         expect.objectContaining({
           metadata: expect.objectContaining({
-            user_language: expect.any(String)
-          })
+            user_language: expect.any(String),
+          }),
         })
       );
     });
@@ -432,7 +449,9 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
           auth: useAuth(),
         }),
         {
-          wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          wrapper: props => (
+            <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          ),
         }
       );
 
@@ -442,7 +461,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       mockAlarmService.createAlarm.mockResolvedValue({
         id: 'alarm-123',
         name: 'Test Alarm',
-        time: '07:00'
+        time: '07:00',
       });
 
       await act(async () => {
@@ -450,7 +469,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
           name: 'Test Alarm',
           time: '07:00',
           enabled: true,
-          repeatDays: []
+          repeatDays: [],
         });
       });
 
@@ -466,13 +485,16 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       ErrorHandler.handleError = mockHandleError;
 
       // Mock service failures
-      const SubscriptionService = require('../../../services/subscription-service').default;
+      const SubscriptionService =
+        require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      mockSubscriptionService.getFeatureAccess.mockRejectedValue(new Error('Service unavailable'));
+      mockSubscriptionService.getFeatureAccess.mockRejectedValue(
+        new Error('Service unavailable')
+      );
 
       const { result } = renderHook(
         () => ({
-          featureGate: useFeatureGate("advanced_alarms"),
+          featureGate: useFeatureGate('advanced_alarms'),
         }),
         { wrapper: FullTestWrapper }
       );
@@ -488,14 +510,15 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
 
     it('should maintain hook functionality despite provider chain failures', async () => {
       // Mock multiple provider failures
-      const SubscriptionService = require('../../../services/subscription-service').default;
+      const SubscriptionService =
+        require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
       mockSubscriptionService.getUserTier.mockRejectedValue(new Error('Network error'));
 
       const { result } = renderHook(
         () => ({
           auth: useAuth(),
-          featureGate: useFeatureGate('advanced_alarms')
+          featureGate: useFeatureGate('advanced_alarms'),
         }),
         { wrapper: FullTestWrapper }
       );
@@ -518,11 +541,13 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const { result } = renderHook(
         () => ({
           auth: useAuth(),
-          subscription: useSubscription("user-123"),
-          featureGate: useFeatureGate("advanced_alarms"),
+          subscription: useSubscription('user-123'),
+          featureGate: useFeatureGate('advanced_alarms'),
         }),
         {
-          wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          wrapper: props => (
+            <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          ),
         }
       );
 
@@ -551,11 +576,13 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
       const { result } = renderHook(
         () => ({
           auth: useAuth(),
-          featureGate: useFeatureGate("advanced_alarms"),
-          subscription: useSubscription("user-123"),
+          featureGate: useFeatureGate('advanced_alarms'),
+          subscription: useSubscription('user-123'),
         }),
         {
-          wrapper: (props) => <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          wrapper: props => (
+            <FullTestWrapper {...props} initialUser={mockUser} userTier="basic" />
+          ),
         }
       );
 

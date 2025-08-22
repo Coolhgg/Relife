@@ -48,7 +48,9 @@ test.describe('Dashboard', () => {
 
     await test.step('Verify alarm form opens', async () => {
       // Wait for alarm form to appear
-      const formVisible = await dashboardPage.page.locator('[data-testid="alarm-form"]').isVisible({ timeout: 5000 });
+      const formVisible = await dashboardPage.page
+        .locator('[data-testid="alarm-form"]')
+        .isVisible({ timeout: 5000 });
 
       if (formVisible) {
         // Modal form opened
@@ -66,7 +68,9 @@ test.describe('Dashboard', () => {
     });
 
     await test.step('Verify settings page opens', async () => {
-      const settingsVisible = await dashboardPage.page.locator('[data-testid="settings-container"]').isVisible({ timeout: 5000 });
+      const settingsVisible = await dashboardPage.page
+        .locator('[data-testid="settings-container"]')
+        .isVisible({ timeout: 5000 });
 
       if (settingsVisible) {
         // Modal settings opened
@@ -80,7 +84,9 @@ test.describe('Dashboard', () => {
 
   test('should display user statistics if available', async () => {
     await test.step('Check for statistics container', async () => {
-      const statsVisible = await dashboardPage.statsContainer.isVisible({ timeout: 3000 });
+      const statsVisible = await dashboardPage.statsContainer.isVisible({
+        timeout: 3000,
+      });
 
       if (statsVisible) {
         await dashboardPage.getQuickStatsData();
@@ -96,7 +102,9 @@ test.describe('Dashboard', () => {
 
       if (alarmCount === 0) {
         // Check for empty state message
-        const emptyMessage = dashboardPage.page.locator('[data-testid="empty-alarms"], .empty-state');
+        const emptyMessage = dashboardPage.page.locator(
+          '[data-testid="empty-alarms"], .empty-state'
+        );
         const hasEmptyMessage = await emptyMessage.isVisible({ timeout: 3000 });
 
         // Either show empty message or the add button should be prominent
@@ -132,7 +140,9 @@ test.describe('Dashboard', () => {
     });
 
     await test.step('Check for offline indicator', async () => {
-      const offlineIndicator = dashboardPage.page.locator('[data-testid="offline-indicator"]');
+      const offlineIndicator = dashboardPage.page.locator(
+        '[data-testid="offline-indicator"]'
+      );
       // Should show offline indicator or handle gracefully
       const isOffline = await offlineIndicator.isVisible({ timeout: 5000 });
 
@@ -147,16 +157,22 @@ test.describe('Dashboard', () => {
 
   test('should show PWA install prompt when appropriate', async () => {
     await test.step('Check for PWA install prompt', async () => {
-      const pwaPrompt = dashboardPage.page.locator('[data-testid="pwa-install-prompt"]');
+      const pwaPrompt = dashboardPage.page.locator(
+        '[data-testid="pwa-install-prompt"]'
+      );
       const isPromptVisible = await pwaPrompt.isVisible({ timeout: 3000 });
 
       if (isPromptVisible) {
         // Test install prompt functionality
-        const installButton = pwaPrompt.locator('button:has-text("Install"), button:has-text("Add to Home")');
+        const installButton = pwaPrompt.locator(
+          'button:has-text("Install"), button:has-text("Add to Home")'
+        );
         await expect(installButton).toBeVisible();
 
         // Test dismiss functionality
-        const dismissButton = pwaPrompt.locator('button:has-text("Dismiss"), button:has-text("Close")');
+        const dismissButton = pwaPrompt.locator(
+          'button:has-text("Dismiss"), button:has-text("Close")'
+        );
         if (await dismissButton.isVisible()) {
           await dismissButton.click();
           await expect(pwaPrompt).toBeHidden();
@@ -181,7 +197,9 @@ test.describe('Dashboard', () => {
       });
 
       await test.step('Verify user can access premium features if applicable', async () => {
-        const premiumFeatures = dashboardPage.page.locator('[data-testid*="premium"], [data-premium="true"]');
+        const premiumFeatures = dashboardPage.page.locator(
+          '[data-testid*="premium"], [data-premium="true"]'
+        );
         const premiumCount = await premiumFeatures.count();
 
         if (premiumCount > 0) {

@@ -52,8 +52,12 @@ export class SettingsPage extends BasePage {
     // Tabs
     this.generalSettingsTab = page.getByRole('tab').filter({ hasText: /general/i });
     this.soundSettingsTab = page.getByRole('tab').filter({ hasText: /sound/i });
-    this.notificationSettingsTab = page.getByRole('tab').filter({ hasText: /notification/i });
-    this.accessibilitySettingsTab = page.getByRole('tab').filter({ hasText: /accessibility/i });
+    this.notificationSettingsTab = page
+      .getByRole('tab')
+      .filter({ hasText: /notification/i });
+    this.accessibilitySettingsTab = page
+      .getByRole('tab')
+      .filter({ hasText: /accessibility/i });
     this.premiumSettingsTab = page.getByRole('tab').filter({ hasText: /premium/i });
 
     // General Settings
@@ -61,7 +65,9 @@ export class SettingsPage extends BasePage {
     this.themeSelector = page.locator('[data-testid="theme-selector"]');
     this.timeFormatToggle = page.locator('[data-testid="time-format-toggle"]');
     this.smartWakeupToggle = page.locator('[data-testid="smart-wakeup-toggle"]');
-    this.weatherIntegrationToggle = page.locator('[data-testid="weather-integration-toggle"]');
+    this.weatherIntegrationToggle = page.locator(
+      '[data-testid="weather-integration-toggle"]'
+    );
 
     // Sound Settings
     this.defaultSoundSelector = page.locator('[data-testid="default-sound-selector"]');
@@ -71,10 +77,18 @@ export class SettingsPage extends BasePage {
     this.voiceMoodSelector = page.locator('[data-testid="voice-mood-selector"]');
 
     // Notification Settings
-    this.pushNotificationsToggle = page.locator('[data-testid="push-notifications-toggle"]');
-    this.emailNotificationsToggle = page.locator('[data-testid="email-notifications-toggle"]');
-    this.reminderSettingsToggle = page.locator('[data-testid="reminder-settings-toggle"]');
-    this.motivationalMessagesToggle = page.locator('[data-testid="motivational-messages-toggle"]');
+    this.pushNotificationsToggle = page.locator(
+      '[data-testid="push-notifications-toggle"]'
+    );
+    this.emailNotificationsToggle = page.locator(
+      '[data-testid="email-notifications-toggle"]'
+    );
+    this.reminderSettingsToggle = page.locator(
+      '[data-testid="reminder-settings-toggle"]'
+    );
+    this.motivationalMessagesToggle = page.locator(
+      '[data-testid="motivational-messages-toggle"]'
+    );
 
     // Accessibility Settings
     this.screenReaderToggle = page.locator('[data-testid="screen-reader-toggle"]');
@@ -88,7 +102,9 @@ export class SettingsPage extends BasePage {
     this.resetButton = page.getByRole('button').filter({ hasText: /reset/i });
     this.exportDataButton = page.getByRole('button').filter({ hasText: /export/i });
     this.importDataButton = page.getByRole('button').filter({ hasText: /import/i });
-    this.deleteAccountButton = page.getByRole('button').filter({ hasText: /delete account/i });
+    this.deleteAccountButton = page
+      .getByRole('button')
+      .filter({ hasText: /delete account/i });
   }
 
   async navigateToSettings() {
@@ -97,18 +113,22 @@ export class SettingsPage extends BasePage {
   }
 
   async openSettingsFromDashboard() {
-    const settingsButton = this.page.getByRole('button').filter({ hasText: /settings/i });
+    const settingsButton = this.page
+      .getByRole('button')
+      .filter({ hasText: /settings/i });
     await settingsButton.click();
     await this.waitForElement(this.settingsContainer);
   }
 
-  async switchToTab(tabName: 'general' | 'sound' | 'notification' | 'accessibility' | 'premium') {
+  async switchToTab(
+    tabName: 'general' | 'sound' | 'notification' | 'accessibility' | 'premium'
+  ) {
     const tabs = {
       general: this.generalSettingsTab,
       sound: this.soundSettingsTab,
       notification: this.notificationSettingsTab,
       accessibility: this.accessibilitySettingsTab,
-      premium: this.premiumSettingsTab
+      premium: this.premiumSettingsTab,
     };
 
     await tabs[tabName].click();
@@ -117,7 +137,9 @@ export class SettingsPage extends BasePage {
   async changeLanguage(language: string) {
     await this.switchToTab('general');
     await this.languageSelector.click();
-    const languageOption = this.page.locator(`[data-testid="language-option-${language}"]`);
+    const languageOption = this.page.locator(
+      `[data-testid="language-option-${language}"]`
+    );
     await languageOption.click();
   }
 
@@ -253,7 +275,9 @@ export class SettingsPage extends BasePage {
   async verifyPremiumSettings() {
     await this.switchToTab('premium');
 
-    const premiumContainer = this.page.locator('[data-testid="premium-settings-container"]');
+    const premiumContainer = this.page.locator(
+      '[data-testid="premium-settings-container"]'
+    );
     await expect(premiumContainer).toBeVisible();
 
     // Check for premium feature toggles or upgrade prompts
@@ -266,12 +290,16 @@ export class SettingsPage extends BasePage {
     await this.deleteAccountButton.click();
 
     // Handle confirmation dialog
-    const confirmationInput = this.page.locator('input[placeholder*="DELETE"], input[placeholder*="delete"]');
+    const confirmationInput = this.page.locator(
+      'input[placeholder*="DELETE"], input[placeholder*="delete"]'
+    );
     if (await confirmationInput.isVisible()) {
       await confirmationInput.fill('DELETE');
     }
 
-    const confirmButton = this.page.getByRole('button').filter({ hasText: /confirm|delete/i });
+    const confirmButton = this.page
+      .getByRole('button')
+      .filter({ hasText: /confirm|delete/i });
     await confirmButton.click();
   }
 }

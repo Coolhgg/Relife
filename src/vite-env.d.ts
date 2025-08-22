@@ -10,7 +10,7 @@ declare global {
   interface Window {
     swManager?: import('./services/service-worker-manager').ServiceWorkerManager;
   }
-  
+
   interface ServiceWorkerGlobalScope {
     skipWaiting(): void;
   }

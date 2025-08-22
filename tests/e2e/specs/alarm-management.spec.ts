@@ -35,7 +35,9 @@ test.describe('Alarm Management', () => {
         await alarmFormPage.waitForToast(TestData.SUCCESS_MESSAGES.ALARM_CREATED);
 
         // Verify alarm appears in list
-        const alarmItem = dashboardPage.page.locator(`[data-testid="alarm-item"]:has-text("${testAlarm.label}")`);
+        const alarmItem = dashboardPage.page.locator(
+          `[data-testid="alarm-item"]:has-text("${testAlarm.label}")`
+        );
         await expect(alarmItem).toBeVisible();
       });
     });
@@ -48,13 +50,17 @@ test.describe('Alarm Management', () => {
       });
 
       await test.step('Create recurring alarm', async () => {
-        await alarmFormPage.createRecurringAlarm(testAlarm.time, testAlarm.label, [...testAlarm.days!]);
+        await alarmFormPage.createRecurringAlarm(testAlarm.time, testAlarm.label, [
+          ...testAlarm.days!,
+        ]);
       });
 
       await test.step('Verify recurring alarm was created', async () => {
         await alarmFormPage.waitForToast();
 
-        const alarmItem = dashboardPage.page.locator(`[data-testid="alarm-item"]:has-text("${testAlarm.label}")`);
+        const alarmItem = dashboardPage.page.locator(
+          `[data-testid="alarm-item"]:has-text("${testAlarm.label}")`
+        );
         await expect(alarmItem).toBeVisible();
 
         // Check that days are displayed
@@ -81,14 +87,16 @@ test.describe('Alarm Management', () => {
           vibrate: testAlarm.vibrate,
           days: testAlarm.days ? [...testAlarm.days] : undefined,
           voiceMood: testAlarm.voiceMood,
-          smartWakeup: true
+          smartWakeup: true,
         });
       });
 
       await test.step('Verify advanced alarm was created', async () => {
         await alarmFormPage.waitForToast();
 
-        const alarmItem = dashboardPage.page.locator(`[data-testid="alarm-item"]:has-text("${testAlarm.label}")`);
+        const alarmItem = dashboardPage.page.locator(
+          `[data-testid="alarm-item"]:has-text("${testAlarm.label}")`
+        );
         await expect(alarmItem).toBeVisible();
       });
     });
@@ -133,11 +141,15 @@ test.describe('Alarm Management', () => {
 
     test('should edit an existing alarm', async () => {
       await test.step('Open alarm for editing', async () => {
-        const alarmItem = dashboardPage.page.locator('[data-testid="alarm-item"]:has-text("Test Edit Alarm")');
+        const alarmItem = dashboardPage.page.locator(
+          '[data-testid="alarm-item"]:has-text("Test Edit Alarm")'
+        );
         await alarmItem.click();
 
         // Or click edit button if available
-        const editButton = alarmItem.locator('[data-testid="edit-alarm"], button:has-text("Edit")');
+        const editButton = alarmItem.locator(
+          '[data-testid="edit-alarm"], button:has-text("Edit")'
+        );
         if (await editButton.isVisible()) {
           await editButton.click();
         }
@@ -152,10 +164,14 @@ test.describe('Alarm Management', () => {
       await test.step('Verify changes were saved', async () => {
         await alarmFormPage.waitForToast();
 
-        const modifiedAlarm = dashboardPage.page.locator('[data-testid="alarm-item"]:has-text("Modified Test Alarm")');
+        const modifiedAlarm = dashboardPage.page.locator(
+          '[data-testid="alarm-item"]:has-text("Modified Test Alarm")'
+        );
         await expect(modifiedAlarm).toBeVisible();
 
-        const oldAlarm = dashboardPage.page.locator('[data-testid="alarm-item"]:has-text("Test Edit Alarm")');
+        const oldAlarm = dashboardPage.page.locator(
+          '[data-testid="alarm-item"]:has-text("Test Edit Alarm")'
+        );
         await expect(oldAlarm).toBeHidden();
       });
     });
@@ -170,17 +186,23 @@ test.describe('Alarm Management', () => {
 
     test('should delete an alarm', async () => {
       await test.step('Open alarm for deletion', async () => {
-        const alarmItem = dashboardPage.page.locator('[data-testid="alarm-item"]:has-text("Test Delete Alarm")');
+        const alarmItem = dashboardPage.page.locator(
+          '[data-testid="alarm-item"]:has-text("Test Delete Alarm")'
+        );
 
         // Try to find delete button
-        const deleteButton = alarmItem.locator('[data-testid="delete-alarm"], button:has-text("Delete")');
+        const deleteButton = alarmItem.locator(
+          '[data-testid="delete-alarm"], button:has-text("Delete")'
+        );
 
         if (await deleteButton.isVisible()) {
           await deleteButton.click();
         } else {
           // Alternative: long press or right click for context menu
           await alarmItem.click({ button: 'right' });
-          const contextDelete = dashboardPage.page.locator('[role="menu"] button:has-text("Delete")');
+          const contextDelete = dashboardPage.page.locator(
+            '[role="menu"] button:has-text("Delete")'
+          );
           if (await contextDelete.isVisible()) {
             await contextDelete.click();
           }
@@ -189,9 +211,13 @@ test.describe('Alarm Management', () => {
 
       await test.step('Confirm deletion', async () => {
         // Handle confirmation dialog
-        const confirmDialog = dashboardPage.page.locator('[role="dialog"]:has-text("delete")');
+        const confirmDialog = dashboardPage.page.locator(
+          '[role="dialog"]:has-text("delete")'
+        );
         if (await confirmDialog.isVisible()) {
-          const confirmButton = confirmDialog.locator('button:has-text("Delete"), button:has-text("Confirm")');
+          const confirmButton = confirmDialog.locator(
+            'button:has-text("Delete"), button:has-text("Confirm")'
+          );
           await confirmButton.click();
         }
       });
@@ -199,7 +225,9 @@ test.describe('Alarm Management', () => {
       await test.step('Verify alarm was deleted', async () => {
         await alarmFormPage.waitForToast();
 
-        const deletedAlarm = dashboardPage.page.locator('[data-testid="alarm-item"]:has-text("Test Delete Alarm")');
+        const deletedAlarm = dashboardPage.page.locator(
+          '[data-testid="alarm-item"]:has-text("Test Delete Alarm")'
+        );
         await expect(deletedAlarm).toBeHidden();
       });
     });
@@ -213,10 +241,14 @@ test.describe('Alarm Management', () => {
     });
 
     test('should enable and disable alarms', async () => {
-      const alarmItem = dashboardPage.page.locator('[data-testid="alarm-item"]:has-text("Test Toggle Alarm")');
+      const alarmItem = dashboardPage.page.locator(
+        '[data-testid="alarm-item"]:has-text("Test Toggle Alarm")'
+      );
 
       await test.step('Find alarm toggle switch', async () => {
-        const toggleSwitch = alarmItem.locator('[role="switch"], input[type="checkbox"]');
+        const toggleSwitch = alarmItem.locator(
+          '[role="switch"], input[type="checkbox"]'
+        );
         await expect(toggleSwitch).toBeVisible();
 
         // Should be enabled by default
@@ -224,7 +256,9 @@ test.describe('Alarm Management', () => {
       });
 
       await test.step('Disable alarm', async () => {
-        const toggleSwitch = alarmItem.locator('[role="switch"], input[type="checkbox"]');
+        const toggleSwitch = alarmItem.locator(
+          '[role="switch"], input[type="checkbox"]'
+        );
         await toggleSwitch.click();
 
         // Verify it's disabled
@@ -235,7 +269,9 @@ test.describe('Alarm Management', () => {
       });
 
       await test.step('Re-enable alarm', async () => {
-        const toggleSwitch = alarmItem.locator('[role="switch"], input[type="checkbox"]');
+        const toggleSwitch = alarmItem.locator(
+          '[role="switch"], input[type="checkbox"]'
+        );
         await toggleSwitch.click();
 
         // Verify it's enabled again
@@ -250,7 +286,7 @@ test.describe('Alarm Management', () => {
       const alarms = [
         { time: '06:00', label: 'Early Alarm' },
         { time: '08:00', label: 'Morning Alarm' },
-        { time: '12:00', label: 'Noon Alarm' }
+        { time: '12:00', label: 'Noon Alarm' },
       ];
 
       await test.step('Create multiple alarms', async () => {
@@ -267,8 +303,14 @@ test.describe('Alarm Management', () => {
 
         if (count >= 3) {
           // Check that early alarm appears before noon alarm
-          const earlyAlarmIndex = await alarmItems.locator(':has-text("Early Alarm")').first().elementHandle();
-          const noonAlarmIndex = await alarmItems.locator(':has-text("Noon Alarm")').first().elementHandle();
+          const earlyAlarmIndex = await alarmItems
+            .locator(':has-text("Early Alarm")')
+            .first()
+            .elementHandle();
+          const noonAlarmIndex = await alarmItems
+            .locator(':has-text("Noon Alarm")')
+            .first()
+            .elementHandle();
 
           // Both should be visible
           await expect(alarmItems.locator(':has-text("Early Alarm")')).toBeVisible();
@@ -283,7 +325,9 @@ test.describe('Alarm Management', () => {
 
         if (alarmCount === 0) {
           // Should show empty state
-          const emptyState = dashboardPage.page.locator('[data-testid="empty-alarms"], .empty-state');
+          const emptyState = dashboardPage.page.locator(
+            '[data-testid="empty-alarms"], .empty-state'
+          );
           const hasEmptyState = await emptyState.isVisible({ timeout: 3000 });
 
           if (hasEmptyState) {
@@ -305,13 +349,17 @@ test.describe('Alarm Management', () => {
         await alarmFormPage.selectSound('nature-sounds');
 
         // Look for preview button
-        const previewButton = alarmFormPage.page.locator('[data-testid="sound-preview"], button:has-text("Preview")');
+        const previewButton = alarmFormPage.page.locator(
+          '[data-testid="sound-preview"], button:has-text("Preview")'
+        );
 
         if (await previewButton.isVisible()) {
           await previewButton.click();
 
           // Verify preview is playing (button state change, stop button appears, etc.)
-          const stopButton = alarmFormPage.page.locator('[data-testid="stop-preview"], button:has-text("Stop")');
+          const stopButton = alarmFormPage.page.locator(
+            '[data-testid="stop-preview"], button:has-text("Stop")'
+          );
           if (await stopButton.isVisible()) {
             await expect(stopButton).toBeVisible();
             await stopButton.click();

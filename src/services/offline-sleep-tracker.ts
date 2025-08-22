@@ -49,7 +49,12 @@ interface SleepEnvironment {
 
 interface SleepGoal {
   id: string;
-  type: 'bedtime_consistency' | 'sleep_duration' | 'wake_consistency' | 'sleep_quality' | 'routine_completion';
+  type:
+    | 'bedtime_consistency'
+    | 'sleep_duration'
+    | 'wake_consistency'
+    | 'sleep_quality'
+    | 'routine_completion';
   target: number;
   current: number;
   progress: number; // percentage
@@ -91,7 +96,7 @@ export class OfflineSleepTracker {
     SLEEP_GOALS: 'relife-sleep-goals',
     SLEEP_INSIGHTS: 'relife-sleep-insights',
     SLEEP_ANALYTICS: 'relife-sleep-analytics',
-    CURRENT_SESSION: 'relife-current-sleep-session'
+    CURRENT_SESSION: 'relife-current-sleep-session',
   };
 
   private sleepSessions: SleepSession[] = [];
@@ -119,7 +124,9 @@ export class OfflineSleepTracker {
 
   private async loadFromStorage(): Promise<void> {
     try {
-      const sessions = SecurityService.secureStorageGet(this.STORAGE_KEYS.SLEEP_SESSIONS);
+      const sessions = SecurityService.secureStorageGet(
+        this.STORAGE_KEYS.SLEEP_SESSIONS
+      );
       if (sessions && Array.isArray(sessions)) {
         this.sleepSessions = sessions;
       }
@@ -129,24 +136,34 @@ export class OfflineSleepTracker {
         this.sleepGoals = goals;
       }
 
-      const insights = SecurityService.secureStorageGet(this.STORAGE_KEYS.SLEEP_INSIGHTS);
+      const insights = SecurityService.secureStorageGet(
+        this.STORAGE_KEYS.SLEEP_INSIGHTS
+      );
       if (insights && Array.isArray(insights)) {
         this.sleepInsights = insights;
       }
 
-      const analytics = SecurityService.secureStorageGet(this.STORAGE_KEYS.SLEEP_ANALYTICS);
+      const analytics = SecurityService.secureStorageGet(
+        this.STORAGE_KEYS.SLEEP_ANALYTICS
+      );
       if (analytics) {
         this.sleepAnalytics = analytics;
       }
 
-      const currentSession = SecurityService.secureStorageGet(this.STORAGE_KEYS.CURRENT_SESSION);
+      const currentSession = SecurityService.secureStorageGet(
+        this.STORAGE_KEYS.CURRENT_SESSION
+      );
       if (currentSession) {
         this.currentSession = currentSession;
         // Resume tracking if we have an active session
         this.resumeTracking();
       }
 
-      console.log('[OfflineSleepTracker] Loaded', this.sleepSessions.length, 'sleep sessions');
+      console.log(
+        '[OfflineSleepTracker] Loaded',
+        this.sleepSessions.length,
+        'sleep sessions'
+      );
     } catch (error) {
       console.error('[OfflineSleepTracker] Failed to load from storage:', error);
     }
@@ -158,7 +175,7 @@ export class OfflineSleepTracker {
 
     // Listen for service worker messages
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.addEventListener('message', (event) => {
+      navigator.serviceWorker.addEventListener('message', event => {
         if (event.data.type === 'SLEEP_SYNC_COMPLETE') {
           this.handleSyncComplete(event.data);
         }
@@ -176,7 +193,7 @@ export class OfflineSleepTracker {
           current: 0,
           progress: 0,
           streak: 0,
-          active: true
+          active: true,
         },
         {
           id: 'sleep_duration',
@@ -185,7 +202,7 @@ export class OfflineSleepTracker {
           current: 0,
           progress: 0,
           streak: 0,
-          active: true
+          active: true,
         },
         {
           id: 'sleep_quality',
@@ -194,8 +211,8 @@ export class OfflineSleepTracker {
           current: 0,
           progress: 0,
           streak: 0,
-          active: true
-        }
+          active: true,
+        },
       ];
 
       this.sleepGoals = defaultGoals;
@@ -205,7 +222,10 @@ export class OfflineSleepTracker {
 
   // ==================== SLEEP TRACKING ====================
 
-  async startSleepTracking(userId: string, environment?: Partial<SleepEnvironment>): Promise<string> {
+  async startSleepTracking(
+    userId: string,
+    environment?: Partial<SleepEnvironment>
+  ): Promise<string> {
     try {
       // End any existing session first
       if (this.currentSession) {
@@ -222,12 +242,12 @@ export class OfflineSleepTracker {
         environment: {
           roomConditions: 'fair',
           bedtimeRoutine: [],
-          ...environment
+          ...environment,
         },
         wakeMethod: 'natural',
         mood: 'tired',
         createdAt: new Date().toISOString(),
-        synced: false
+        synced: false,
       };
 
       this.currentSession = session;
@@ -240,7 +260,7 @@ export class OfflineSleepTracker {
       return session.id;
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to start sleep tracking', {
-        context: 'OfflineSleepTracker.startSleepTracking'
+        context: 'OfflineSleepTracker.startSleepTracking',
       });
       throw error;
     }
@@ -260,14 +280,17 @@ export class OfflineSleepTracker {
 
       const endTime = new Date().toISOString();
       const startTime = new Date(this.currentSession.startTime);
-      const duration = Math.round((new Date(endTime).getTime() - startTime.getTime()) / (1000 * 60));
+      const duration = Math.round(
+        (new Date(endTime).getTime() - startTime.getTime()) / (1000 * 60)
+      );
 
       // Complete the session
       this.currentSession.endTime = endTime;
       this.currentSession.duration = duration;
       this.currentSession.wakeMethod = wakeMethod;
       this.currentSession.mood = mood;
-      this.currentSession.quality = quality || this.calculateSleepQuality(this.currentSession);
+      this.currentSession.quality =
+        quality || this.calculateSleepQuality(this.currentSession);
       this.currentSession.notes = notes;
 
       // Stop stage tracking
@@ -292,15 +315,21 @@ export class OfflineSleepTracker {
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
           type: 'QUEUE_SLEEP_DATA',
-          data: { session: completedSession }
+          data: { session: completedSession },
         });
       }
 
-      console.log('[OfflineSleepTracker] Ended sleep tracking:', completedSession.id, 'Duration:', duration, 'minutes');
+      console.log(
+        '[OfflineSleepTracker] Ended sleep tracking:',
+        completedSession.id,
+        'Duration:',
+        duration,
+        'minutes'
+      );
       return completedSession;
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to end sleep tracking', {
-        context: 'OfflineSleepTracker.endSleepTracking'
+        context: 'OfflineSleepTracker.endSleepTracking',
       });
       return null;
     }
@@ -320,7 +349,7 @@ export class OfflineSleepTracker {
       type,
       severity,
       duration: 1, // Will be updated when interruption ends
-      description
+      description,
     };
 
     this.currentSession.interruptions.push(interruption);
@@ -339,7 +368,7 @@ export class OfflineSleepTracker {
       type: 'awake',
       startTime: this.currentSession.startTime,
       duration: 0,
-      confidence: 1.0
+      confidence: 1.0,
     };
 
     this.currentSession.stages.push(awakeStage);
@@ -359,7 +388,10 @@ export class OfflineSleepTracker {
 
   private resumeTracking(): void {
     if (this.currentSession && !this.trackingTimer) {
-      console.log('[OfflineSleepTracker] Resuming sleep tracking for session:', this.currentSession.id);
+      console.log(
+        '[OfflineSleepTracker] Resuming sleep tracking for session:',
+        this.currentSession.id
+      );
       this.startStageTracking();
     }
   }
@@ -367,33 +399,53 @@ export class OfflineSleepTracker {
   private simulateSleepStageDetection(): void {
     if (!this.currentSession || this.currentSession.stages.length === 0) return;
 
-    const currentStage = this.currentSession.stages[this.currentSession.stages.length - 1];
-    const sessionDuration = Date.now() - new Date(this.currentSession.startTime).getTime();
+    const currentStage =
+      this.currentSession.stages[this.currentSession.stages.length - 1];
+    const sessionDuration =
+      Date.now() - new Date(this.currentSession.startTime).getTime();
     const sessionMinutes = sessionDuration / (1000 * 60);
 
     // Update current stage duration
-    currentStage.duration = Math.round(sessionMinutes - this.currentSession.stages.slice(0, -1).reduce((sum, stage) => sum + stage.duration, 0));
+    currentStage.duration = Math.round(
+      sessionMinutes -
+        this.currentSession.stages
+          .slice(0, -1)
+          .reduce((sum, stage) => sum + stage.duration, 0)
+    );
 
     // Simple sleep stage progression simulation
     let nextStageType = currentStage.type;
 
     if (sessionMinutes > 15 && currentStage.type === 'awake') {
       nextStageType = 'light';
-    } else if (sessionMinutes > 45 && currentStage.type === 'light' && currentStage.duration > 20) {
+    } else if (
+      sessionMinutes > 45 &&
+      currentStage.type === 'light' &&
+      currentStage.duration > 20
+    ) {
       nextStageType = 'deep';
-    } else if (sessionMinutes > 90 && currentStage.type === 'deep' && currentStage.duration > 30) {
+    } else if (
+      sessionMinutes > 90 &&
+      currentStage.type === 'deep' &&
+      currentStage.duration > 30
+    ) {
       nextStageType = 'rem';
-    } else if (sessionMinutes > 120 && currentStage.type === 'rem' && currentStage.duration > 20) {
+    } else if (
+      sessionMinutes > 120 &&
+      currentStage.type === 'rem' &&
+      currentStage.duration > 20
+    ) {
       nextStageType = Math.random() > 0.5 ? 'light' : 'deep';
     }
 
     // Add new stage if type changed
-    if (nextStageType !== currentStage.type && currentStage.duration >= 5) { // Minimum 5 minutes per stage
+    if (nextStageType !== currentStage.type && currentStage.duration >= 5) {
+      // Minimum 5 minutes per stage
       const newStage: SleepStage = {
         type: nextStageType,
         startTime: new Date().toISOString(),
         duration: 0,
-        confidence: 0.8 + Math.random() * 0.2 // 80-100% confidence
+        confidence: 0.8 + Math.random() * 0.2, // 80-100% confidence
       };
 
       this.currentSession.stages.push(newStage);
@@ -427,7 +479,8 @@ export class OfflineSleepTracker {
       .filter(stage => stage.type === 'deep')
       .reduce((sum, stage) => sum + stage.duration, 0);
 
-    if (session.duration && deepSleepMinutes > session.duration * 0.15) { // More than 15% deep sleep
+    if (session.duration && deepSleepMinutes > session.duration * 0.15) {
+      // More than 15% deep sleep
       score += 1;
     }
 
@@ -436,7 +489,8 @@ export class OfflineSleepTracker {
       .filter(stage => stage.type === 'rem')
       .reduce((sum, stage) => sum + stage.duration, 0);
 
-    if (session.duration && remSleepMinutes > session.duration * 0.20) { // More than 20% REM sleep
+    if (session.duration && remSleepMinutes > session.duration * 0.2) {
+      // More than 20% REM sleep
       score += 1;
     }
 
@@ -513,15 +567,19 @@ export class OfflineSleepTracker {
       const weeklyQualities = recentSessions.map(s => s.quality);
 
       this.sleepAnalytics = {
-        weeklyAverage: weeklyDurations.reduce((sum, dur) => sum + dur, 0) / weeklyDurations.length,
-        weeklyQuality: weeklyQualities.reduce((sum, qual) => sum + qual, 0) / weeklyQualities.length,
+        weeklyAverage:
+          weeklyDurations.reduce((sum, dur) => sum + dur, 0) / weeklyDurations.length,
+        weeklyQuality:
+          weeklyQualities.reduce((sum, qual) => sum + qual, 0) / weeklyQualities.length,
         bedtimeConsistency: this.calculateBedtimeConsistency(recentSessions),
         wakeTimeConsistency: this.calculateWakeTimeConsistency(recentSessions),
         deepSleepPercentage: this.calculateDeepSleepPercentage(recentSessions),
         remSleepPercentage: this.calculateRemSleepPercentage(recentSessions),
-        interruptionRate: recentSessions.reduce((sum, s) => sum + s.interruptions.length, 0) / recentSessions.length,
+        interruptionRate:
+          recentSessions.reduce((sum, s) => sum + s.interruptions.length, 0) /
+          recentSessions.length,
         improvementTrend: this.calculateImprovementTrend(recentSessions),
-        lastCalculated: new Date().toISOString()
+        lastCalculated: new Date().toISOString(),
       };
 
       await this.saveToStorage();
@@ -536,9 +594,10 @@ export class OfflineSleepTracker {
     const bedtimes = sessions.map(s => new Date(s.startTime).getHours());
     const avgBedtime = bedtimes.reduce((sum, time) => sum + time, 0) / bedtimes.length;
     const deviations = bedtimes.map(time => Math.abs(time - avgBedtime));
-    const avgDeviation = deviations.reduce((sum, dev) => sum + dev, 0) / deviations.length;
+    const avgDeviation =
+      deviations.reduce((sum, dev) => sum + dev, 0) / deviations.length;
 
-    return Math.max(0, 100 - (avgDeviation * 10)); // Lower deviation = higher consistency
+    return Math.max(0, 100 - avgDeviation * 10); // Lower deviation = higher consistency
   }
 
   private calculateWakeTimeConsistency(sessions: SleepSession[]): number {
@@ -550,11 +609,13 @@ export class OfflineSleepTracker {
 
     if (wakeTimes.length < 2) return 0;
 
-    const avgWakeTime = wakeTimes.reduce((sum, time) => sum + time, 0) / wakeTimes.length;
+    const avgWakeTime =
+      wakeTimes.reduce((sum, time) => sum + time, 0) / wakeTimes.length;
     const deviations = wakeTimes.map(time => Math.abs(time - avgWakeTime));
-    const avgDeviation = deviations.reduce((sum, dev) => sum + dev, 0) / deviations.length;
+    const avgDeviation =
+      deviations.reduce((sum, dev) => sum + dev, 0) / deviations.length;
 
-    return Math.max(0, 100 - (avgDeviation * 10));
+    return Math.max(0, 100 - avgDeviation * 10);
   }
 
   private calculateDeepSleepPercentage(sessions: SleepSession[]): number {
@@ -589,7 +650,9 @@ export class OfflineSleepTracker {
     return totalSleep > 0 ? (totalRem / totalSleep) * 100 : 0;
   }
 
-  private calculateImprovementTrend(sessions: SleepSession[]): 'improving' | 'stable' | 'declining' {
+  private calculateImprovementTrend(
+    sessions: SleepSession[]
+  ): 'improving' | 'stable' | 'declining' {
     if (sessions.length < 4) return 'stable';
 
     const recent = sessions.slice(0, 3).map(s => s.quality);
@@ -626,13 +689,20 @@ export class OfflineSleepTracker {
           confidence: 0.9,
           priority: 'high',
           actionable: true,
-          actions: ['Set a consistent bedtime', 'Create a bedtime routine', 'Use sleep reminders'],
-          createdAt: new Date().toISOString()
+          actions: [
+            'Set a consistent bedtime',
+            'Create a bedtime routine',
+            'Use sleep reminders',
+          ],
+          createdAt: new Date().toISOString(),
         });
       }
 
       // Sleep duration insight
-      const avgDuration = recentSessions.reduce((sum, s) => sum + (s.duration || 0), 0) / recentSessions.length / 60;
+      const avgDuration =
+        recentSessions.reduce((sum, s) => sum + (s.duration || 0), 0) /
+        recentSessions.length /
+        60;
       if (avgDuration < 7) {
         insights.push({
           id: `insight_duration_${Date.now()}`,
@@ -643,8 +713,12 @@ export class OfflineSleepTracker {
           confidence: 0.95,
           priority: 'high',
           actionable: true,
-          actions: ['Go to bed earlier', 'Reduce screen time before bed', 'Create a calming bedtime routine'],
-          createdAt: new Date().toISOString()
+          actions: [
+            'Go to bed earlier',
+            'Reduce screen time before bed',
+            'Create a calming bedtime routine',
+          ],
+          createdAt: new Date().toISOString(),
         });
       }
 
@@ -659,27 +733,31 @@ export class OfflineSleepTracker {
           confidence: 0.8,
           priority: 'medium',
           actionable: false,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
         });
       }
 
       // Add new insights (avoid duplicates)
       const existingInsightTypes = this.sleepInsights.map(i => i.type + '_' + i.title);
-      const newInsights = insights.filter(insight =>
-        !existingInsightTypes.includes(insight.type + '_' + insight.title)
+      const newInsights = insights.filter(
+        insight => !existingInsightTypes.includes(insight.type + '_' + insight.title)
       );
 
       this.sleepInsights.unshift(...newInsights);
 
       // Keep only recent insights (last 30 days)
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-      this.sleepInsights = this.sleepInsights.filter(insight =>
-        new Date(insight.createdAt) > thirtyDaysAgo
+      this.sleepInsights = this.sleepInsights.filter(
+        insight => new Date(insight.createdAt) > thirtyDaysAgo
       );
 
       if (newInsights.length > 0) {
         await this.saveToStorage();
-        console.log('[OfflineSleepTracker] Generated', newInsights.length, 'new insights');
+        console.log(
+          '[OfflineSleepTracker] Generated',
+          newInsights.length,
+          'new insights'
+        );
       }
     } catch (error) {
       console.error('[OfflineSleepTracker] Failed to generate insights:', error);
@@ -718,17 +796,25 @@ export class OfflineSleepTracker {
           await this.syncSleepSession(session);
           session.synced = true;
         } catch (error) {
-          console.error('[OfflineSleepTracker] Failed to sync session:', session.id, error);
+          console.error(
+            '[OfflineSleepTracker] Failed to sync session:',
+            session.id,
+            error
+          );
         }
       }
 
       if (unsyncedSessions.length > 0) {
         await this.saveToStorage();
-        console.log('[OfflineSleepTracker] Synced', unsyncedSessions.length, 'sleep sessions');
+        console.log(
+          '[OfflineSleepTracker] Synced',
+          unsyncedSessions.length,
+          'sleep sessions'
+        );
       }
     } catch (error) {
       ErrorHandler.handleError(error, 'Sleep tracking sync failed', {
-        context: 'OfflineSleepTracker.syncWithServer'
+        context: 'OfflineSleepTracker.syncWithServer',
       });
     }
   }
@@ -777,12 +863,21 @@ export class OfflineSleepTracker {
 
   private async saveToStorage(): Promise<void> {
     try {
-      SecurityService.secureStorageSet(this.STORAGE_KEYS.SLEEP_SESSIONS, this.sleepSessions);
+      SecurityService.secureStorageSet(
+        this.STORAGE_KEYS.SLEEP_SESSIONS,
+        this.sleepSessions
+      );
       SecurityService.secureStorageSet(this.STORAGE_KEYS.SLEEP_GOALS, this.sleepGoals);
-      SecurityService.secureStorageSet(this.STORAGE_KEYS.SLEEP_INSIGHTS, this.sleepInsights);
+      SecurityService.secureStorageSet(
+        this.STORAGE_KEYS.SLEEP_INSIGHTS,
+        this.sleepInsights
+      );
 
       if (this.sleepAnalytics) {
-        SecurityService.secureStorageSet(this.STORAGE_KEYS.SLEEP_ANALYTICS, this.sleepAnalytics);
+        SecurityService.secureStorageSet(
+          this.STORAGE_KEYS.SLEEP_ANALYTICS,
+          this.sleepAnalytics
+        );
       }
     } catch (error) {
       console.error('[OfflineSleepTracker] Failed to save to storage:', error);
@@ -792,7 +887,10 @@ export class OfflineSleepTracker {
   private async saveCurrentSession(): Promise<void> {
     try {
       if (this.currentSession) {
-        SecurityService.secureStorageSet(this.STORAGE_KEYS.CURRENT_SESSION, this.currentSession);
+        SecurityService.secureStorageSet(
+          this.STORAGE_KEYS.CURRENT_SESSION,
+          this.currentSession
+        );
       } else {
         SecurityService.secureStorageRemove(this.STORAGE_KEYS.CURRENT_SESSION);
       }
@@ -808,11 +906,18 @@ export class OfflineSleepTracker {
       totalSessions: this.sleepSessions.length,
       unsyncedSessions: this.sleepSessions.filter(s => !s.synced).length,
       currentlyTracking: !!this.currentSession,
-      currentSessionDuration: this.currentSession ?
-        Math.round((Date.now() - new Date(this.currentSession.startTime).getTime()) / (1000 * 60)) : 0,
-      averageQuality: this.sleepSessions.length > 0 ?
-        this.sleepSessions.reduce((sum, s) => sum + s.quality, 0) / this.sleepSessions.length : 0,
-      isOnline: this.isOnline
+      currentSessionDuration: this.currentSession
+        ? Math.round(
+            (Date.now() - new Date(this.currentSession.startTime).getTime()) /
+              (1000 * 60)
+          )
+        : 0,
+      averageQuality:
+        this.sleepSessions.length > 0
+          ? this.sleepSessions.reduce((sum, s) => sum + s.quality, 0) /
+            this.sleepSessions.length
+          : 0,
+      isOnline: this.isOnline,
     };
   }
 
@@ -835,7 +940,7 @@ export class OfflineSleepTracker {
       console.log('[OfflineSleepTracker] Cleared all offline sleep data');
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to clear offline sleep data', {
-        context: 'OfflineSleepTracker.clearOfflineData'
+        context: 'OfflineSleepTracker.clearOfflineData',
       });
     }
   }

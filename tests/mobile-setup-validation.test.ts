@@ -25,8 +25,8 @@ describe('Mobile Testing Setup Validation', () => {
       body: 'This is a test alarm',
       schedule: {
         at: new Date(Date.now() + 60000), // 1 minute from now
-        allowWhileIdle: true
-      }
+        allowWhileIdle: true,
+      },
     };
 
     const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -44,7 +44,7 @@ describe('Mobile Testing Setup Validation', () => {
       assetId: 'test-sound',
       assetPath: '/test-audio.mp3',
       volume: 0.8,
-      loop: false
+      loop: false,
     };
 
     await mobileHelper.loadAudio(audioConfig);
@@ -105,7 +105,7 @@ describe('Mobile Testing Setup Validation', () => {
       title: 'Morning Alarm',
       body: 'Wake up!',
       schedule: { at: new Date(Date.now() + 30000) },
-      sound: 'morning-chime.mp3'
+      sound: 'morning-chime.mp3',
     });
 
     expect(alarmFlowResult.success).toBe(true);
@@ -118,12 +118,12 @@ describe('Mobile Testing Setup Validation', () => {
     await mobileHelper.scheduleAlarm({
       title: 'Test Alarm 1',
       body: 'Test body',
-      schedule: { at: new Date(Date.now() + 60000) }
+      schedule: { at: new Date(Date.now() + 60000) },
     });
 
     await mobileHelper.loadAudio({
       assetId: 'cleanup-test',
-      assetPath: '/cleanup-test.mp3'
+      assetPath: '/cleanup-test.mp3',
     });
 
     // Verify data exists

@@ -1,7 +1,13 @@
 import OpenAI from 'openai';
 
 export interface PersonaPrediction {
-  persona: 'struggling_sam' | 'busy_ben' | 'professional_paula' | 'enterprise_emma' | 'student_sarah' | 'lifetime_larry';
+  persona:
+    | 'struggling_sam'
+    | 'busy_ben'
+    | 'professional_paula'
+    | 'enterprise_emma'
+    | 'student_sarah'
+    | 'lifetime_larry';
   confidence: number;
   reasons: string[];
   recommendedCampaigns: string[];
@@ -53,7 +59,7 @@ export class AIService {
   configure(apiKey: string): void {
     this.openai = new OpenAI({
       apiKey: apiKey,
-      dangerouslyAllowBrowser: true // Note: In production, this should be done server-side
+      dangerouslyAllowBrowser: true, // Note: In production, this should be done server-side
     });
   }
 
@@ -107,13 +113,17 @@ Provide analysis in this JSON format:
 
     try {
       const response = await this.openai!.chat.completions.create({
-        model: "gpt-4",
+        model: 'gpt-4',
         messages: [
-          { role: "system", content: "You are an expert marketing analyst specializing in user persona prediction for SaaS applications." },
-          { role: "user", content: prompt }
+          {
+            role: 'system',
+            content:
+              'You are an expert marketing analyst specializing in user persona prediction for SaaS applications.',
+          },
+          { role: 'user', content: prompt },
         ],
         temperature: 0.3,
-        max_tokens: 500
+        max_tokens: 500,
       });
 
       const content = response.choices[0]?.message?.content;
@@ -162,13 +172,17 @@ Provide optimization in this JSON format:
 
     try {
       const response = await this.openai!.chat.completions.create({
-        model: "gpt-4",
+        model: 'gpt-4',
         messages: [
-          { role: "system", content: "You are an expert email marketing copywriter specializing in personalized content optimization." },
-          { role: "user", content: prompt }
+          {
+            role: 'system',
+            content:
+              'You are an expert email marketing copywriter specializing in personalized content optimization.',
+          },
+          { role: 'user', content: prompt },
         ],
         temperature: 0.7,
-        max_tokens: 800
+        max_tokens: 800,
       });
 
       const responseContent = response.choices[0]?.message?.content;
@@ -182,14 +196,16 @@ Provide optimization in this JSON format:
   }
 
   // Automated Segmentation
-  async generateSegmentationRules(userData: Array<{
-    id: string;
-    email: string;
-    signupDate: string;
-    lastActive: string;
-    features: Record<string, any>;
-    engagement: Record<string, number>;
-  }>): Promise<SegmentationRule[]> {
+  async generateSegmentationRules(
+    userData: Array<{
+      id: string;
+      email: string;
+      signupDate: string;
+      lastActive: string;
+      features: Record<string, any>;
+      engagement: Record<string, number>;
+    }>
+  ): Promise<SegmentationRule[]> {
     this.ensureConfigured();
 
     const prompt = `
@@ -218,13 +234,17 @@ Return as JSON array:
 
     try {
       const response = await this.openai!.chat.completions.create({
-        model: "gpt-4",
+        model: 'gpt-4',
         messages: [
-          { role: "system", content: "You are an expert data scientist specializing in user segmentation and behavioral analysis." },
-          { role: "user", content: prompt }
+          {
+            role: 'system',
+            content:
+              'You are an expert data scientist specializing in user segmentation and behavioral analysis.',
+          },
+          { role: 'user', content: prompt },
         ],
         temperature: 0.4,
-        max_tokens: 1000
+        max_tokens: 1000,
       });
 
       const content = response.choices[0]?.message?.content;
@@ -274,13 +294,17 @@ Return as JSON:
 
     try {
       const response = await this.openai!.chat.completions.create({
-        model: "gpt-4",
+        model: 'gpt-4',
         messages: [
-          { role: "system", content: "You are an expert behavioral analyst specializing in user engagement and churn prediction." },
-          { role: "user", content: prompt }
+          {
+            role: 'system',
+            content:
+              'You are an expert behavioral analyst specializing in user engagement and churn prediction.',
+          },
+          { role: 'user', content: prompt },
         ],
         temperature: 0.3,
-        max_tokens: 800
+        max_tokens: 800,
       });
 
       const content = response.choices[0]?.message?.content;
@@ -294,7 +318,11 @@ Return as JSON:
   }
 
   // Subject Line A/B Testing
-  async generateSubjectLineVariations(originalSubject: string, persona: string, count: number = 3): Promise<string[]> {
+  async generateSubjectLineVariations(
+    originalSubject: string,
+    persona: string,
+    count: number = 3
+  ): Promise<string[]> {
     this.ensureConfigured();
 
     const prompt = `
@@ -313,13 +341,17 @@ Return as JSON array of strings: ["variation1", "variation2", "variation3"]
 
     try {
       const response = await this.openai!.chat.completions.create({
-        model: "gpt-4",
+        model: 'gpt-4',
         messages: [
-          { role: "system", content: "You are an expert email marketer specializing in subject line optimization and A/B testing." },
-          { role: "user", content: prompt }
+          {
+            role: 'system',
+            content:
+              'You are an expert email marketer specializing in subject line optimization and A/B testing.',
+          },
+          { role: 'user', content: prompt },
         ],
         temperature: 0.8,
-        max_tokens: 200
+        max_tokens: 200,
       });
 
       const content = response.choices[0]?.message?.content;
@@ -378,13 +410,17 @@ Return prediction as JSON:
 
     try {
       const response = await this.openai!.chat.completions.create({
-        model: "gpt-4",
+        model: 'gpt-4',
         messages: [
-          { role: "system", content: "You are an expert marketing analyst with deep expertise in email campaign performance prediction." },
-          { role: "user", content: prompt }
+          {
+            role: 'system',
+            content:
+              'You are an expert marketing analyst with deep expertise in email campaign performance prediction.',
+          },
+          { role: 'user', content: prompt },
         ],
         temperature: 0.3,
-        max_tokens: 400
+        max_tokens: 400,
       });
 
       const content = response.choices[0]?.message?.content;

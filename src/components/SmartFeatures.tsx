@@ -27,7 +27,7 @@ import {
   Wifi,
   AlertCircle,
   CheckCircle,
-  TrendingUp
+  TrendingUp,
 } from 'lucide-react';
 import type {
   User as UserType,
@@ -36,7 +36,7 @@ import type {
   FitnessIntegration,
   FitnessChallenge,
   SmartAlarmSettings,
-  ContextualTask
+  ContextualTask,
 } from '../types/index';
 
 interface SmartFeaturesProps {
@@ -64,8 +64,8 @@ const MOCK_WEATHER: WeatherData = {
     { time: '06:00', temperature: 18, condition: 'cloudy', precipitation: 10 },
     { time: '09:00', temperature: 22, condition: 'partly_cloudy', precipitation: 0 },
     { time: '12:00', temperature: 26, condition: 'sunny', precipitation: 0 },
-    { time: '15:00', temperature: 24, condition: 'sunny', precipitation: 0 }
-  ]
+    { time: '15:00', temperature: 24, condition: 'sunny', precipitation: 0 },
+  ],
 };
 
 const MOCK_LOCATION_CHALLENGES: LocationChallenge[] = [
@@ -74,19 +74,23 @@ const MOCK_LOCATION_CHALLENGES: LocationChallenge[] = [
     name: 'Morning Coffee Run',
     description: 'Visit your favorite coffee shop before 8:00 AM',
     type: 'visit_place',
-    targetLocation: { latitude: 37.7749, longitude: -122.4194, name: 'Blue Bottle Coffee' },
+    targetLocation: {
+      latitude: 37.7749,
+      longitude: -122.4194,
+      name: 'Blue Bottle Coffee',
+    },
     radius: 50,
     timeLimit: 30,
     rewards: [
       { type: 'experience', value: 150, description: '150 XP' },
-      { type: 'badge', value: 'Coffee Enthusiast', description: 'Coffee Badge' }
+      { type: 'badge', value: 'Coffee Enthusiast', description: 'Coffee Badge' },
     ],
     status: 'active',
     startedAt: new Date().toISOString(),
     progress: {
       distanceToTarget: 250,
-      timeInRadius: 0
-    }
+      timeInRadius: 0,
+    },
   },
   {
     id: '2',
@@ -98,16 +102,16 @@ const MOCK_LOCATION_CHALLENGES: LocationChallenge[] = [
     timeLimit: 60,
     rewards: [
       { type: 'experience', value: 200, description: '200 XP' },
-      { type: 'bonus_xp', value: 50, description: '50 Bonus XP' }
+      { type: 'bonus_xp', value: 50, description: '50 Bonus XP' },
     ],
     status: 'completed',
     startedAt: new Date(Date.now() - 3600000).toISOString(),
     completedAt: new Date(Date.now() - 900000).toISOString(),
     progress: {
       timeInRadius: 45,
-      currentLocation: { latitude: 37.7849, longitude: -122.4094 }
-    }
-  }
+      currentLocation: { latitude: 37.7849, longitude: -122.4094 },
+    },
+  },
 ];
 
 const MOCK_FITNESS_INTEGRATIONS: FitnessIntegration[] = [
@@ -125,9 +129,9 @@ const MOCK_FITNESS_INTEGRATIONS: FitnessIntegration[] = [
       activeMinutes: 45,
       distance: 6200,
       caloriesBurned: 342,
-      date: new Date().toISOString().split('T')[0]
-    }
-  }
+      date: new Date().toISOString().split('T')[0],
+    },
+  },
 ];
 
 const MOCK_FITNESS_CHALLENGES: FitnessChallenge[] = [
@@ -147,11 +151,11 @@ const MOCK_FITNESS_CHALLENGES: FitnessChallenge[] = [
     integration: 'apple_health',
     rewards: [
       { type: 'experience', value: 100, description: '100 XP' },
-      { type: 'badge', value: 'Step Master', description: 'Daily Steps Badge' }
+      { type: 'badge', value: 'Step Master', description: 'Daily Steps Badge' },
     ],
     completed: false,
-    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-  }
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+  },
 ];
 
 const MOCK_SMART_SETTINGS: SmartAlarmSettings = {
@@ -161,26 +165,36 @@ const MOCK_SMART_SETTINGS: SmartAlarmSettings = {
   smartWakeWindow: 30,
   adaptiveDifficulty: true,
   contextualTasks: true,
-  environmentalAdjustments: true
+  environmentalAdjustments: true,
 };
 
 const getWeatherIcon = (condition: string) => {
   switch (condition) {
-    case 'sunny': return <Sun className="h-5 w-5 text-yellow-500" />;
-    case 'partly_cloudy': return <Cloud className="h-5 w-5 text-gray-400" />;
-    case 'cloudy': return <Cloud className="h-5 w-5 text-gray-500" />;
-    case 'rainy': return <CloudRain className="h-5 w-5 text-blue-500" />;
-    default: return <Cloud className="h-5 w-5 text-gray-400" />;
+    case 'sunny':
+      return <Sun className="h-5 w-5 text-yellow-500" />;
+    case 'partly_cloudy':
+      return <Cloud className="h-5 w-5 text-gray-400" />;
+    case 'cloudy':
+      return <Cloud className="h-5 w-5 text-gray-500" />;
+    case 'rainy':
+      return <CloudRain className="h-5 w-5 text-blue-500" />;
+    default:
+      return <Cloud className="h-5 w-5 text-gray-400" />;
   }
 };
 
 const getLocationStatusColor = (status: LocationChallenge['status']) => {
   switch (status) {
-    case 'active': return 'bg-blue-100 text-blue-800';
-    case 'completed': return 'bg-green-100 text-green-800';
-    case 'failed': return 'bg-red-100 text-red-800';
-    case 'expired': return 'bg-gray-100 text-gray-800';
-    default: return 'bg-gray-100 text-gray-800';
+    case 'active':
+      return 'bg-blue-100 text-blue-800';
+    case 'completed':
+      return 'bg-green-100 text-green-800';
+    case 'failed':
+      return 'bg-red-100 text-red-800';
+    case 'expired':
+      return 'bg-gray-100 text-gray-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
   }
 };
 
@@ -194,7 +208,7 @@ export function SmartFeatures({
   contextualTasks = [],
   onUpdateSettings,
   onCreateLocationChallenge,
-  onConnectFitness
+  onConnectFitness,
 }: SmartFeaturesProps) {
   const {
     announceTabChange,
@@ -212,13 +226,16 @@ export function SmartFeatures({
     announceNavigateToChallenge,
     announceDetailedWeather,
     announceDetailedChallenge,
-    announceDetailedFitnessChallenge
+    announceDetailedFitnessChallenge,
   } = useSmartFeaturesAnnouncements();
 
   const [selectedTab, setSelectedTab] = useState('weather');
   const [settings, setSettings] = useState(smartSettings);
 
-  const handleSettingChange = (key: keyof SmartAlarmSettings, value: boolean | number) => {
+  const handleSettingChange = (
+    key: keyof SmartAlarmSettings,
+    value: boolean | number
+  ) => {
     const newSettings = { ...settings, [key]: value };
     setSettings(newSettings);
     onUpdateSettings?.(newSettings);
@@ -231,11 +248,15 @@ export function SmartFeatures({
       adaptiveDifficulty: 'Automatic challenge difficulty adjustment',
       smartWakeWindow: 'Smart wake window for optimal sleep cycles',
       contextualTasks: 'Context-aware task suggestions',
-      environmentalAdjustments: 'Environmental condition adjustments'
+      environmentalAdjustments: 'Environmental condition adjustments',
     };
 
     const description = settingDescriptions[key] || 'Smart alarm feature';
-    announceSettingChange(key.replace(/([A-Z])/g, ' $1').toLowerCase(), value, description);
+    announceSettingChange(
+      key.replace(/([A-Z])/g, ' $1').toLowerCase(),
+      value,
+      description
+    );
   };
 
   const handleTabChange = (tabName: string) => {
@@ -247,7 +268,7 @@ export function SmartFeatures({
     announceCreateChallenge();
     onCreateLocationChallenge?.({
       name: 'New Challenge',
-      type: 'visit_place'
+      type: 'visit_place',
     });
   };
 
@@ -264,13 +285,16 @@ export function SmartFeatures({
   const completedChallenges = locationChallenges.filter(c => c.status === 'completed');
 
   const connectedIntegrations = fitnessIntegrations.filter(f => f.isConnected);
-  const totalFitnessData = connectedIntegrations.reduce((acc, integration) => ({
-    steps: acc.steps + integration.data.steps,
-    sleepHours: Math.max(acc.sleepHours, integration.data.sleepHours),
-    activeMinutes: acc.activeMinutes + integration.data.activeMinutes,
-    distance: acc.distance + integration.data.distance,
-    caloriesBurned: acc.caloriesBurned + integration.data.caloriesBurned
-  }), { steps: 0, sleepHours: 0, activeMinutes: 0, distance: 0, caloriesBurned: 0 });
+  const totalFitnessData = connectedIntegrations.reduce(
+    (acc, integration) => ({
+      steps: acc.steps + integration.data.steps,
+      sleepHours: Math.max(acc.sleepHours, integration.data.sleepHours),
+      activeMinutes: acc.activeMinutes + integration.data.activeMinutes,
+      distance: acc.distance + integration.data.distance,
+      caloriesBurned: acc.caloriesBurned + integration.data.caloriesBurned,
+    }),
+    { steps: 0, sleepHours: 0, activeMinutes: 0, distance: 0, caloriesBurned: 0 }
+  );
 
   // Announce data updates when they change
   useEffect(() => {
@@ -283,7 +307,13 @@ export function SmartFeatures({
     if (totalFitnessData.steps > 0) {
       announceFitnessDataUpdate(totalFitnessData);
     }
-  }, [totalFitnessData.steps, totalFitnessData.sleepHours, totalFitnessData.activeMinutes, totalFitnessData.distance, announceFitnessDataUpdate]);
+  }, [
+    totalFitnessData.steps,
+    totalFitnessData.sleepHours,
+    totalFitnessData.activeMinutes,
+    totalFitnessData.distance,
+    announceFitnessDataUpdate,
+  ]);
 
   useEffect(() => {
     // Announce location challenge status changes
@@ -317,13 +347,33 @@ export function SmartFeatures({
   return (
     <div className="space-y-6" role="main" aria-label="Smart Features Dashboard">
       {/* Screen reader live region for announcements */}
-      <div aria-live="polite" aria-atomic="true" className="sr-only" id="smart-features-announcements"></div>
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+        id="smart-features-announcements"
+      ></div>
       <Tabs value={selectedTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="grid w-full grid-cols-4" role="tablist" aria-label="Smart Features Navigation">
-          <TabsTrigger value="weather" aria-label="Weather-smart alarms and forecasts">Weather</TabsTrigger>
-          <TabsTrigger value="location" aria-label="Location-based challenges and tracking">Location</TabsTrigger>
-          <TabsTrigger value="fitness" aria-label="Fitness data and health challenges">Fitness</TabsTrigger>
-          <TabsTrigger value="settings" aria-label="Smart alarm configuration settings">Settings</TabsTrigger>
+        <TabsList
+          className="grid w-full grid-cols-4"
+          role="tablist"
+          aria-label="Smart Features Navigation"
+        >
+          <TabsTrigger value="weather" aria-label="Weather-smart alarms and forecasts">
+            Weather
+          </TabsTrigger>
+          <TabsTrigger
+            value="location"
+            aria-label="Location-based challenges and tracking"
+          >
+            Location
+          </TabsTrigger>
+          <TabsTrigger value="fitness" aria-label="Fitness data and health challenges">
+            Fitness
+          </TabsTrigger>
+          <TabsTrigger value="settings" aria-label="Smart alarm configuration settings">
+            Settings
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="weather" className="space-y-4">
@@ -348,12 +398,16 @@ export function SmartFeatures({
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-2xl font-bold">{weatherData.temperature}°C</div>
-                  <div className="text-sm text-muted-foreground">{weatherData.location}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {weatherData.location}
+                  </div>
                 </div>
                 <div className="text-right">
                   <div className="flex items-center gap-2">
                     <Thermometer className="h-4 w-4" />
-                    <span className="text-sm">Feels like {weatherData.temperature + 2}°C</span>
+                    <span className="text-sm">
+                      Feels like {weatherData.temperature + 2}°C
+                    </span>
                   </div>
                   <div className="text-sm text-muted-foreground">
                     Humidity: {weatherData.humidity}%
@@ -370,7 +424,9 @@ export function SmartFeatures({
                       <div className="text-xs mt-1">{forecast.time}</div>
                       <div className="text-sm font-bold">{forecast.temperature}°</div>
                       {forecast.precipitation > 0 && (
-                        <div className="text-xs text-blue-600">{forecast.precipitation}%</div>
+                        <div className="text-xs text-blue-600">
+                          {forecast.precipitation}%
+                        </div>
                       )}
                     </div>
                   ))}
@@ -390,7 +446,9 @@ export function SmartFeatures({
                   <CloudRain className="h-5 w-5 text-blue-600" />
                   <div>
                     <div className="font-medium">Rain Expected</div>
-                    <div className="text-sm text-muted-foreground">Your alarm will ring 15 minutes earlier</div>
+                    <div className="text-sm text-muted-foreground">
+                      Your alarm will ring 15 minutes earlier
+                    </div>
                   </div>
                 </div>
                 <Badge variant="secondary">Auto-adjusted</Badge>
@@ -401,7 +459,9 @@ export function SmartFeatures({
                   <Sun className="h-5 w-5 text-yellow-600" />
                   <div>
                     <div className="font-medium">Sunny Morning</div>
-                    <div className="text-sm text-muted-foreground">Perfect weather for your morning run!</div>
+                    <div className="text-sm text-muted-foreground">
+                      Perfect weather for your morning run!
+                    </div>
                   </div>
                 </div>
                 <Badge variant="outline">Suggested</Badge>
@@ -449,7 +509,9 @@ export function SmartFeatures({
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <h3 className="font-medium">{challenge.name}</h3>
-                      <p className="text-sm text-muted-foreground">{challenge.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {challenge.description}
+                      </p>
                       <Button
                         variant="ghost"
                         size="sm"
@@ -481,7 +543,9 @@ export function SmartFeatures({
                   <div className="flex items-center justify-between mt-3">
                     <div className="flex items-center gap-2">
                       <Zap className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm font-medium">+{challenge.rewards[0]?.value} XP</span>
+                      <span className="text-sm font-medium">
+                        +{challenge.rewards[0]?.value} XP
+                      </span>
                     </div>
                     <Button
                       size="sm"
@@ -503,20 +567,26 @@ export function SmartFeatures({
                 <CardTitle>Completed Today</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {completedChallenges.map((challenge) => (
-                  <div key={challenge.id} className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                {completedChallenges.map(challenge => (
+                  <div
+                    key={challenge.id}
+                    className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg"
+                  >
                     <div className="flex items-center gap-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
                       <div>
                         <div className="font-medium">{challenge.name}</div>
                         <div className="text-sm text-muted-foreground">
-                          Completed at {new Date(challenge.completedAt!).toLocaleTimeString()}
+                          Completed at{' '}
+                          {new Date(challenge.completedAt!).toLocaleTimeString()}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <Zap className="h-4 w-4 text-yellow-500" />
-                      <span className="font-bold text-green-600">+{challenge.rewards[0]?.value} XP</span>
+                      <span className="font-bold text-green-600">
+                        +{challenge.rewards[0]?.value} XP
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -537,19 +607,27 @@ export function SmartFeatures({
             <CardContent>
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div>
-                  <div className="text-2xl font-bold text-primary">{totalFitnessData.steps.toLocaleString()}</div>
+                  <div className="text-2xl font-bold text-primary">
+                    {totalFitnessData.steps.toLocaleString()}
+                  </div>
                   <div className="text-sm text-muted-foreground">Steps</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-primary">{totalFitnessData.sleepHours}h</div>
+                  <div className="text-2xl font-bold text-primary">
+                    {totalFitnessData.sleepHours}h
+                  </div>
                   <div className="text-sm text-muted-foreground">Sleep</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-primary">{totalFitnessData.activeMinutes}</div>
+                  <div className="text-2xl font-bold text-primary">
+                    {totalFitnessData.activeMinutes}
+                  </div>
                   <div className="text-sm text-muted-foreground">Active Min</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-primary">{Math.round(totalFitnessData.distance / 1000 * 10) / 10}km</div>
+                  <div className="text-2xl font-bold text-primary">
+                    {Math.round((totalFitnessData.distance / 1000) * 10) / 10}km
+                  </div>
                   <div className="text-sm text-muted-foreground">Distance</div>
                 </div>
               </div>
@@ -562,14 +640,19 @@ export function SmartFeatures({
               <CardTitle>Connected Apps</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {connectedIntegrations.map((integration) => (
-                <div key={integration.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+              {connectedIntegrations.map(integration => (
+                <div
+                  key={integration.id}
+                  className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                >
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-primary/10 rounded-full">
                       <Smartphone className="h-4 w-4 text-primary" />
                     </div>
                     <div>
-                      <div className="font-medium capitalize">{integration.provider.replace('_', ' ')}</div>
+                      <div className="font-medium capitalize">
+                        {integration.provider.replace('_', ' ')}
+                      </div>
                       <div className="text-sm text-muted-foreground">
                         Last sync: {new Date(integration.lastSync).toLocaleTimeString()}
                       </div>
@@ -605,7 +688,9 @@ export function SmartFeatures({
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <h3 className="font-medium">{challenge.name}</h3>
-                      <p className="text-sm text-muted-foreground">{challenge.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {challenge.description}
+                      </p>
                       <Button
                         variant="ghost"
                         size="sm"
@@ -624,18 +709,30 @@ export function SmartFeatures({
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Progress</span>
-                      <span>{challenge.currentValue.toLocaleString()}/{challenge.targetValue.toLocaleString()} {challenge.unit}</span>
+                      <span>
+                        {challenge.currentValue.toLocaleString()}/
+                        {challenge.targetValue.toLocaleString()} {challenge.unit}
+                      </span>
                     </div>
-                    <Progress value={(challenge.currentValue / challenge.targetValue) * 100} className="h-2" />
+                    <Progress
+                      value={(challenge.currentValue / challenge.targetValue) * 100}
+                      className="h-2"
+                    />
                   </div>
 
                   <div className="flex items-center justify-between mt-3">
                     <div className="flex items-center gap-2">
                       <Zap className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm font-medium">+{challenge.rewards[0]?.value} XP</span>
+                      <span className="text-sm font-medium">
+                        +{challenge.rewards[0]?.value} XP
+                      </span>
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {Math.round((challenge.targetValue - challenge.currentValue) / (challenge.targetValue / 100))}% to go
+                      {Math.round(
+                        (challenge.targetValue - challenge.currentValue) /
+                          (challenge.targetValue / 100)
+                      )}
+                      % to go
                     </div>
                   </div>
                 </div>
@@ -656,59 +753,82 @@ export function SmartFeatures({
               <div className="flex items-center justify-between">
                 <div>
                   <Label htmlFor="weather-enabled">Weather Integration</Label>
-                  <p className="text-sm text-muted-foreground">Adjust alarms based on weather conditions</p>
+                  <p className="text-sm text-muted-foreground">
+                    Adjust alarms based on weather conditions
+                  </p>
                 </div>
                 <Switch
                   id="weather-enabled"
                   checked={settings.weatherEnabled}
-                  onCheckedChange={(checked) => handleSettingChange('weatherEnabled', checked)}
+                  onCheckedChange={checked =>
+                    handleSettingChange('weatherEnabled', checked)
+                  }
                 />
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
                   <Label htmlFor="location-enabled">Location Challenges</Label>
-                  <p className="text-sm text-muted-foreground">Create location-based wake-up challenges</p>
+                  <p className="text-sm text-muted-foreground">
+                    Create location-based wake-up challenges
+                  </p>
                 </div>
                 <Switch
                   id="location-enabled"
                   checked={settings.locationEnabled}
-                  onCheckedChange={(checked) => handleSettingChange('locationEnabled', checked)}
+                  onCheckedChange={checked =>
+                    handleSettingChange('locationEnabled', checked)
+                  }
                 />
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
                   <Label htmlFor="fitness-enabled">Fitness Integration</Label>
-                  <p className="text-sm text-muted-foreground">Connect with health and fitness apps</p>
+                  <p className="text-sm text-muted-foreground">
+                    Connect with health and fitness apps
+                  </p>
                 </div>
                 <Switch
                   id="fitness-enabled"
                   checked={settings.fitnessEnabled}
-                  onCheckedChange={(checked) => handleSettingChange('fitnessEnabled', checked)}
+                  onCheckedChange={checked =>
+                    handleSettingChange('fitnessEnabled', checked)
+                  }
                 />
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
                   <Label htmlFor="adaptive-difficulty">Adaptive Difficulty</Label>
-                  <p className="text-sm text-muted-foreground">Automatically adjust challenge difficulty</p>
+                  <p className="text-sm text-muted-foreground">
+                    Automatically adjust challenge difficulty
+                  </p>
                 </div>
                 <Switch
                   id="adaptive-difficulty"
                   checked={settings.adaptiveDifficulty}
-                  onCheckedChange={(checked) => handleSettingChange('adaptiveDifficulty', checked)}
+                  onCheckedChange={checked =>
+                    handleSettingChange('adaptiveDifficulty', checked)
+                  }
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="smart-wake-window">Smart Wake Window (minutes)</Label>
-                <p className="text-sm text-muted-foreground">How early can the alarm wake you for optimal sleep cycles</p>
+                <p className="text-sm text-muted-foreground">
+                  How early can the alarm wake you for optimal sleep cycles
+                </p>
                 <Input
                   id="smart-wake-window"
                   type="number"
                   value={settings.smartWakeWindow}
-                  onChange={(e) => handleSettingChange('smartWakeWindow', parseInt(e.target.value) || 30)}
+                  onChange={e =>
+                    handleSettingChange(
+                      'smartWakeWindow',
+                      parseInt(e.target.value) || 30
+                    )
+                  }
                   min="0"
                   max="60"
                 />
@@ -725,7 +845,9 @@ export function SmartFeatures({
                 <CheckCircle className="h-5 w-5 text-green-500" />
                 <div>
                   <div className="font-medium">Location Access</div>
-                  <div className="text-sm text-muted-foreground">Required for location challenges</div>
+                  <div className="text-sm text-muted-foreground">
+                    Required for location challenges
+                  </div>
                 </div>
               </div>
 
@@ -733,7 +855,9 @@ export function SmartFeatures({
                 <CheckCircle className="h-5 w-5 text-green-500" />
                 <div>
                   <div className="font-medium">Health Data</div>
-                  <div className="text-sm text-muted-foreground">Connected to Apple Health</div>
+                  <div className="text-sm text-muted-foreground">
+                    Connected to Apple Health
+                  </div>
                 </div>
               </div>
 
@@ -741,7 +865,9 @@ export function SmartFeatures({
                 <AlertCircle className="h-5 w-5 text-yellow-500" />
                 <div>
                   <div className="font-medium">Weather Data</div>
-                  <div className="text-sm text-muted-foreground">Enable for weather-based adjustments</div>
+                  <div className="text-sm text-muted-foreground">
+                    Enable for weather-based adjustments
+                  </div>
                 </div>
               </div>
             </CardContent>

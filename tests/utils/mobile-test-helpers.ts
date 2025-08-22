@@ -72,13 +72,18 @@ export class MobileTestHelper {
     configure: (config: TestDeviceConfig) => {
       _mockCapacitorSetup.setPlatform(config.platform);
 
-      if (config.model || config.osVersion || config.manufacturer || config.isVirtual !== undefined) {
+      if (
+        config.model ||
+        config.osVersion ||
+        config.manufacturer ||
+        config.isVirtual !== undefined
+      ) {
         _mockCapacitorSetup.setDeviceInfo({
           platform: config.platform,
           model: config.model || 'Test Device',
           osVersion: config.osVersion || '15.0',
           manufacturer: config.manufacturer || 'Test Manufacturer',
-          isVirtual: config.isVirtual || false
+          isVirtual: config.isVirtual || false,
         });
       }
 
@@ -90,7 +95,9 @@ export class MobileTestHelper {
      */
     setBatteryLevel: (level: number, isCharging: boolean = false) => {
       // This would need to be implemented in the mock if needed
-      console.log(`🔋 Test battery set to ${Math.round(level * 100)}% ${isCharging ? '(charging)' : ''}`);
+      console.log(
+        `🔋 Test battery set to ${Math.round(level * 100)}% ${isCharging ? '(charging)' : ''}`
+      );
     },
 
     /**
@@ -103,7 +110,7 @@ export class MobileTestHelper {
 
     simulateWake: () => {
       console.log('😃 Simulating device wake');
-    }
+    },
   };
 
   /**
@@ -120,7 +127,7 @@ export class MobileTestHelper {
         body: config.body,
         schedule: config.schedule,
         sound: config.sound || 'default',
-        extra: { isAlarm: true, ...config.extra }
+        extra: { isAlarm: true, ...config.extra },
       });
 
       console.log(`⏰ Test alarm scheduled: ${config.title} (ID: ${alarmId})`);
@@ -172,7 +179,7 @@ export class MobileTestHelper {
         title: 'Snoozed Alarm',
         body: 'This alarm was snoozed',
         schedule: { at: newSchedule },
-        extra: { originalAlarmId: alarmId, snoozed: true }
+        extra: { originalAlarmId: alarmId, snoozed: true },
       });
       console.log(`😴 Alarm ${alarmId} snoozed for ${minutes} minutes`);
     },
@@ -183,7 +190,7 @@ export class MobileTestHelper {
     clearAll: () => {
       _mockCapacitorSetup.reset();
       console.log('🧹 All test alarms cleared');
-    }
+    },
   };
 
   /**
@@ -248,7 +255,7 @@ export class MobileTestHelper {
       const loaded = _mockCapacitorSetup.getLoadedSounds();
       console.log(`🎧 Loaded test sounds: ${loaded.length}`);
       return loaded;
-    }
+    },
   };
 
   /**
@@ -291,7 +298,7 @@ export class MobileTestHelper {
       const state = _mockCapacitorSetup.getBackgroundState();
       console.log('🌙 Background state:', state);
       return state;
-    }
+    },
   };
 
   /**
@@ -320,7 +327,7 @@ export class MobileTestHelper {
     simulatePush: (data: any) => {
       console.log('📨 Simulating push notification:', data);
       // This would trigger push notification events
-    }
+    },
   };
 
   /**
@@ -339,7 +346,7 @@ export class MobileTestHelper {
      */
     testNotification: (type: 'SUCCESS' | 'WARNING' | 'ERROR' = 'SUCCESS') => {
       console.log(`📳 Testing haptic notification: ${type}`);
-    }
+    },
   };
 
   /**
@@ -369,7 +376,9 @@ export class MobileTestHelper {
 
       // 5. Check history
       const history = this.alarms.getHistory();
-      expect(history.find(h => h.id === alarmId && h.action === 'triggered')).toBeTruthy();
+      expect(
+        history.find(h => h.id === alarmId && h.action === 'triggered')
+      ).toBeTruthy();
 
       console.log('✅ Alarm flow test completed successfully');
       return alarmId;
@@ -444,7 +453,7 @@ export class MobileTestHelper {
 
       console.log('🏁 Cross-platform test results:', results);
       return results;
-    }
+    },
   };
 
   /**
@@ -473,10 +482,10 @@ export const mobileTestUtils = {
     body: 'This is a test alarm',
     schedule: {
       at: new Date(Date.now() + 60000), // 1 minute from now
-      allowWhileIdle: true
+      allowWhileIdle: true,
     },
     sound: 'default',
-    ...overrides
+    ...overrides,
   }),
 
   /**
@@ -486,19 +495,24 @@ export const mobileTestUtils = {
     assetId: 'test-sound',
     assetPath: '/sounds/test.mp3',
     volume: 1.0,
-    ...overrides
+    ...overrides,
   }),
 
   /**
    * Create test device configuration
    */
-  createTestDevice: (platform: 'web' | 'ios' | 'android', overrides: Partial<TestDeviceConfig> = {}): TestDeviceConfig => ({
+  createTestDevice: (
+    platform: 'web' | 'ios' | 'android',
+    overrides: Partial<TestDeviceConfig> = {}
+  ): TestDeviceConfig => ({
     platform,
-    model: platform === 'ios' ? 'iPhone 13' : platform === 'android' ? 'Pixel 6' : 'WebKit',
+    model:
+      platform === 'ios' ? 'iPhone 13' : platform === 'android' ? 'Pixel 6' : 'WebKit',
     osVersion: platform === 'ios' ? '15.0' : platform === 'android' ? '12' : 'Browser',
-    manufacturer: platform === 'ios' ? 'Apple' : platform === 'android' ? 'Google' : 'Browser',
+    manufacturer:
+      platform === 'ios' ? 'Apple' : platform === 'android' ? 'Google' : 'Browser',
     isVirtual: false,
-    ...overrides
+    ...overrides,
   }),
 
   /**
@@ -522,7 +536,7 @@ export const mobileTestUtils = {
       throw new Error('Alarm must have valid schedule');
     }
     return true;
-  }
+  },
 };
 
 // Global helper for easy testing

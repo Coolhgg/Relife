@@ -5,20 +5,15 @@
  * Generates built-in alarm sounds and UI effects using Web Audio API
  */
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // WAV file encoder utility
-function encodeWAV(
-  samples,
-  sampleRate = 44100,
-  numChannels = 1,
-  bitDepth = 16,
-) {
+function encodeWAV(samples, sampleRate = 44100, numChannels = 1, bitDepth = 16) {
   const buffer = new ArrayBuffer(44 + samples.length * 2);
   const view = new DataView(buffer);
 
@@ -29,10 +24,10 @@ function encodeWAV(
     }
   };
 
-  writeString(0, "RIFF");
+  writeString(0, 'RIFF');
   view.setUint32(4, 36 + samples.length * 2, true);
-  writeString(8, "WAVE");
-  writeString(12, "fmt ");
+  writeString(8, 'WAVE');
+  writeString(12, 'fmt ');
   view.setUint32(16, 16, true);
   view.setUint16(20, 1, true); // PCM
   view.setUint16(22, numChannels, true);
@@ -40,7 +35,7 @@ function encodeWAV(
   view.setUint32(28, sampleRate * 2, true);
   view.setUint16(32, 2, true);
   view.setUint16(34, 16, true);
-  writeString(36, "data");
+  writeString(36, 'data');
   view.setUint32(40, samples.length * 2, true);
 
   // Convert float samples to 16-bit PCM
@@ -331,9 +326,7 @@ function generateNotificationSound(duration = 0.8, sampleRate = 44100) {
         const adjustedTime = time - delay;
         const envelope = Math.exp(-adjustedTime * 4);
         sample +=
-          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) *
-          envelope *
-          0.3;
+          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) * envelope * 0.3;
       }
     }
 
@@ -345,27 +338,27 @@ function generateNotificationSound(duration = 0.8, sampleRate = 44100) {
 
 // Main generation function
 async function generateAllSounds() {
-  const soundsDir = path.join(__dirname, "..", "public", "sounds");
-  const alarmsDir = path.join(soundsDir, "alarms");
-  const uiDir = path.join(soundsDir, "ui");
-  const notificationsDir = path.join(soundsDir, "notifications");
+  const soundsDir = path.join(__dirname, '..', 'public', 'sounds');
+  const alarmsDir = path.join(soundsDir, 'alarms');
+  const uiDir = path.join(soundsDir, 'ui');
+  const notificationsDir = path.join(soundsDir, 'notifications');
 
-  console.log("🔊 Generating sound effects...");
+  console.log('🔊 Generating sound effects...');
 
   // Alarm sounds
   const alarmSounds = [
-    { name: "gentle_bells.wav", generator: generateGentleBells, duration: 5 },
-    { name: "morning_birds.wav", generator: generateMorningBirds, duration: 8 },
-    { name: "classic_beep.wav", generator: generateClassicBeep, duration: 3 },
-    { name: "ocean_waves.wav", generator: generateOceanWaves, duration: 10 },
+    { name: 'gentle_bells.wav', generator: generateGentleBells, duration: 5 },
+    { name: 'morning_birds.wav', generator: generateMorningBirds, duration: 8 },
+    { name: 'classic_beep.wav', generator: generateClassicBeep, duration: 3 },
+    { name: 'ocean_waves.wav', generator: generateOceanWaves, duration: 10 },
     {
-      name: "energetic_beep.wav",
+      name: 'energetic_beep.wav',
       generator: generateEnergeticBeep,
       duration: 4,
     },
   ];
 
-  console.log("Generating alarm sounds...");
+  console.log('Generating alarm sounds...');
   for (const sound of alarmSounds) {
     console.log(`  - ${sound.name}`);
     const samples = sound.generator(sound.duration);
@@ -375,13 +368,13 @@ async function generateAllSounds() {
 
   // UI sounds
   const uiSounds = [
-    { name: "click.wav", generator: generateClickSound, duration: 0.1 },
-    { name: "hover.wav", generator: generateHoverSound, duration: 0.05 },
-    { name: "success.wav", generator: generateSuccessSound, duration: 0.5 },
-    { name: "error.wav", generator: generateErrorSound, duration: 0.3 },
+    { name: 'click.wav', generator: generateClickSound, duration: 0.1 },
+    { name: 'hover.wav', generator: generateHoverSound, duration: 0.05 },
+    { name: 'success.wav', generator: generateSuccessSound, duration: 0.5 },
+    { name: 'error.wav', generator: generateErrorSound, duration: 0.3 },
   ];
 
-  console.log("Generating UI sounds...");
+  console.log('Generating UI sounds...');
   for (const sound of uiSounds) {
     console.log(`  - ${sound.name}`);
     const samples = sound.generator(sound.duration);
@@ -392,32 +385,29 @@ async function generateAllSounds() {
   // Notification sounds
   const notificationSounds = [
     {
-      name: "notification.wav",
+      name: 'notification.wav',
       generator: generateNotificationSound,
       duration: 0.8,
     },
-    { name: "alarm.wav", generator: () => generateClassicBeep(1), duration: 1 },
+    { name: 'alarm.wav', generator: () => generateClassicBeep(1), duration: 1 },
     {
-      name: "beep.wav",
+      name: 'beep.wav',
       generator: () => generateClickSound(0.2),
       duration: 0.2,
     },
   ];
 
-  console.log("Generating notification sounds...");
+  console.log('Generating notification sounds...');
   for (const sound of notificationSounds) {
     console.log(`  - ${sound.name}`);
     const samples = sound.generator(sound.duration);
     const wavBuffer = encodeWAV(samples);
-    fs.writeFileSync(
-      path.join(notificationsDir, sound.name),
-      Buffer.from(wavBuffer),
-    );
+    fs.writeFileSync(path.join(notificationsDir, sound.name), Buffer.from(wavBuffer));
   }
 
-  console.log("✅ All sound effects generated successfully!");
+  console.log('✅ All sound effects generated successfully!');
   console.log(
-    `Generated ${alarmSounds.length + uiSounds.length + notificationSounds.length} sound files`,
+    `Generated ${alarmSounds.length + uiSounds.length + notificationSounds.length} sound files`
   );
 }
 

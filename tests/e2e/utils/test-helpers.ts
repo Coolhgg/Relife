@@ -36,7 +36,10 @@ export class TestHelpers {
     }`);
   }
 
-  static async mockNotificationPermission(page: Page, permission: 'granted' | 'denied' | 'default') {
+  static async mockNotificationPermission(
+    page: Page,
+    permission: 'granted' | 'denied' | 'default'
+  ) {
     await page.context().grantPermissions(['notifications']);
     await page.addInitScript(`{
       Object.defineProperty(Notification, 'permission', {
@@ -45,7 +48,11 @@ export class TestHelpers {
     }`);
   }
 
-  static async mockGeolocation(page: Page, latitude: number = 40.7128, longitude: number = -74.0060) {
+  static async mockGeolocation(
+    page: Page,
+    latitude: number = 40.7128,
+    longitude: number = -74.006
+  ) {
     await page.context().setGeolocation({ latitude, longitude });
   }
 
@@ -62,7 +69,7 @@ export class TestHelpers {
   static async takeFullPageScreenshot(page: Page, name: string) {
     await page.screenshot({
       path: `test-results/screenshots/${name}-${Date.now()}.png`,
-      fullPage: true
+      fullPage: true,
     });
   }
 
@@ -88,7 +95,7 @@ export class TestHelpers {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify(mockResponse)
+        body: JSON.stringify(mockResponse),
       });
     });
   }
@@ -109,13 +116,15 @@ export class TestHelpers {
   }
 
   static async waitForAnimationEnd(page: Page, selector: string) {
-    await page.waitForFunction((sel) => {
+    await page.waitForFunction(sel => {
       const element = document.querySelector(sel);
       if (!element) return true;
       const computedStyle = getComputedStyle(element);
-      return computedStyle.animationPlayState === 'paused' ||
-             computedStyle.animationPlayState === 'finished' ||
-             computedStyle.animationName === 'none';
+      return (
+        computedStyle.animationPlayState === 'paused' ||
+        computedStyle.animationPlayState === 'finished' ||
+        computedStyle.animationName === 'none'
+      );
     }, selector);
   }
 
@@ -169,7 +178,12 @@ export class TestHelpers {
     );
   }
 
-  static async simulateTyping(page: Page, selector: string, text: string, delay: number = 100) {
+  static async simulateTyping(
+    page: Page,
+    selector: string,
+    text: string,
+    delay: number = 100
+  ) {
     const element = page.locator(selector);
     await element.focus();
     await element.fill(''); // Clear existing text
@@ -217,7 +231,7 @@ export class TestHelpers {
 
       if (id) {
         const label = page.locator(`label[for="${id}"]`);
-        const hasLabel = await label.count() > 0;
+        const hasLabel = (await label.count()) > 0;
         expect(hasLabel || ariaLabel || ariaLabelledBy).toBeTruthy();
       }
     }

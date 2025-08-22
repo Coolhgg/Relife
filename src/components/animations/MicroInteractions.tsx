@@ -34,7 +34,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
   error,
   disabled = false,
   icon,
-  className = ''
+  className = '',
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hasValue, setHasValue] = useState(false);
@@ -60,22 +60,31 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
       <motion.div
         className={`
           relative bg-white rounded-xl border-2 transition-all duration-200
-          ${isFocused
-            ? 'border-blue-500 shadow-lg shadow-blue-500/10'
-            : error
-              ? 'border-red-300 shadow-lg shadow-red-500/10'
-              : 'border-gray-200 hover:border-gray-300'
+          ${
+            isFocused
+              ? 'border-blue-500 shadow-lg shadow-blue-500/10'
+              : error
+                ? 'border-red-300 shadow-lg shadow-red-500/10'
+                : 'border-gray-200 hover:border-gray-300'
           }
           ${disabled ? 'opacity-60 cursor-not-allowed' : ''}
         `}
-        whileHover={!disabled ? {
-          scale: 1.01,
-          transition: { duration: 0.2 }
-        } : {}}
-        whileTap={!disabled ? {
-          scale: 0.99,
-          transition: { duration: 0.1 }
-        } : {}}
+        whileHover={
+          !disabled
+            ? {
+                scale: 1.01,
+                transition: { duration: 0.2 },
+              }
+            : {}
+        }
+        whileTap={
+          !disabled
+            ? {
+                scale: 0.99,
+                transition: { duration: 0.1 },
+              }
+            : {}
+        }
       >
         {/* Icon */}
         {icon && (
@@ -85,7 +94,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
             }`}
             animate={{
               scale: isFocused ? 1.1 : 1,
-              color: isFocused ? '#3B82F6' : '#9CA3AF'
+              color: isFocused ? '#3B82F6' : '#9CA3AF',
             }}
             transition={{ duration: 0.2 }}
           >
@@ -97,29 +106,20 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
         <motion.label
           className={`
             absolute left-${icon ? '12' : '4'} pointer-events-none select-none font-medium
-            ${isFocused
-              ? 'text-blue-500'
-              : error
-                ? 'text-red-500'
-                : 'text-gray-500'
-            }
+            ${isFocused ? 'text-blue-500' : error ? 'text-red-500' : 'text-gray-500'}
           `}
           animate={{
             y: isFocused || hasValue ? -28 : 0,
             scale: isFocused || hasValue ? 0.85 : 1,
-            color: isFocused
-              ? '#3B82F6'
-              : error
-                ? '#EF4444'
-                : '#6B7280'
+            color: isFocused ? '#3B82F6' : error ? '#EF4444' : '#6B7280',
           }}
           transition={{
             type: 'spring' as const,
             stiffness: 300,
-            damping: 20
+            damping: 20,
           }}
           style={{
-            transformOrigin: 'left center'
+            transformOrigin: 'left center',
           }}
         >
           {label}
@@ -148,12 +148,12 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
           animate={{
             width: isFocused ? '100%' : 0,
             left: isFocused ? '0%' : '50%',
-            x: isFocused ? '0%' : '-50%'
+            x: isFocused ? '0%' : '-50%',
           }}
           transition={{
             type: 'spring' as const,
             stiffness: 300,
-            damping: 25
+            damping: 25,
           }}
         />
       </motion.div>
@@ -171,7 +171,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.1, type: "spring" as const, stiffness: 300 }}
+              transition={{ delay: 0.1, type: 'spring' as const, stiffness: 300 }}
             >
               ⚠️
             </motion.span>
@@ -188,7 +188,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: "spring" as const, stiffness: 300, damping: 20 }}
+            transition={{ type: 'spring' as const, stiffness: 300, damping: 20 }}
           >
             ✓
           </motion.div>
@@ -227,7 +227,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
   placeholder = 'Select an option...',
   error,
   disabled = false,
-  className = ''
+  className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<SelectOption | null>(
@@ -246,29 +246,26 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
       <motion.label
         className={`
           absolute left-4 pointer-events-none select-none font-medium z-10
-          ${isOpen || selectedOption
-            ? 'text-blue-500'
-            : error
-              ? 'text-red-500'
-              : 'text-gray-500'
+          ${
+            isOpen || selectedOption
+              ? 'text-blue-500'
+              : error
+                ? 'text-red-500'
+                : 'text-gray-500'
           }
         `}
         animate={{
           y: isOpen || selectedOption ? -28 : 16,
           scale: isOpen || selectedOption ? 0.85 : 1,
-          color: isOpen
-            ? '#3B82F6'
-            : error
-              ? '#EF4444'
-              : '#6B7280'
+          color: isOpen ? '#3B82F6' : error ? '#EF4444' : '#6B7280',
         }}
         transition={{
           type: 'spring' as const,
           stiffness: 300,
-          damping: 20
+          damping: 20,
         }}
         style={{
-          transformOrigin: 'left center'
+          transformOrigin: 'left center',
         }}
       >
         {label}
@@ -280,23 +277,32 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
         className={`
           w-full bg-white rounded-xl border-2 px-4 py-4 text-left flex items-center justify-between
           transition-all duration-200 focus:outline-none
-          ${isOpen
-            ? 'border-blue-500 shadow-lg shadow-blue-500/10'
-            : error
-              ? 'border-red-300 shadow-lg shadow-red-500/10'
-              : 'border-gray-200 hover:border-gray-300'
+          ${
+            isOpen
+              ? 'border-blue-500 shadow-lg shadow-blue-500/10'
+              : error
+                ? 'border-red-300 shadow-lg shadow-red-500/10'
+                : 'border-gray-200 hover:border-gray-300'
           }
           ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}
         `}
         onClick={() => !disabled && setIsOpen(!isOpen)}
-        whileHover={!disabled ? {
-          scale: 1.01,
-          transition: { duration: 0.2 }
-        } : {}}
-        whileTap={!disabled ? {
-          scale: 0.99,
-          transition: { duration: 0.1 }
-        } : {}}
+        whileHover={
+          !disabled
+            ? {
+                scale: 1.01,
+                transition: { duration: 0.2 },
+              }
+            : {}
+        }
+        whileTap={
+          !disabled
+            ? {
+                scale: 0.99,
+                transition: { duration: 0.1 },
+              }
+            : {}
+        }
       >
         {/* Selected value or placeholder */}
         <div className="flex items-center space-x-3">
@@ -321,7 +327,11 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
           transition={{ duration: 0.2 }}
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+            <path
+              fillRule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
           </svg>
         </motion.div>
 
@@ -332,12 +342,12 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
           animate={{
             width: isOpen ? '100%' : 0,
             left: isOpen ? '0%' : '50%',
-            x: isOpen ? '0%' : '-50%'
+            x: isOpen ? '0%' : '-50%',
           }}
           transition={{
             type: 'spring' as const,
             stiffness: 300,
-            damping: 25
+            damping: 25,
           }}
         />
       </motion.button>
@@ -353,7 +363,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
             transition={{
               type: 'spring',
               stiffness: 300,
-              damping: 25
+              damping: 25,
             }}
           >
             {options.map((option, index) => (
@@ -440,22 +450,27 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   disabled = false,
   loading = false,
   className = '',
-  icon
+  icon,
 }) => {
-  const [ripples, setRipples] = useState<Array<{ id: string; x: number; y: number }>>([]);
+  const [ripples, setRipples] = useState<Array<{ id: string; x: number; y: number }>>(
+    []
+  );
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const baseClasses = {
-    primary: 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25',
-    secondary: 'bg-white text-gray-700 border border-gray-200 shadow-sm hover:shadow-md',
+    primary:
+      'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25',
+    secondary:
+      'bg-white text-gray-700 border border-gray-200 shadow-sm hover:shadow-md',
     ghost: 'text-gray-600 hover:bg-gray-50',
-    danger: 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25'
+    danger:
+      'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25',
   };
 
   const sizes = {
     sm: 'px-4 py-2 text-sm',
     md: 'px-6 py-3 text-base',
-    lg: 'px-8 py-4 text-lg'
+    lg: 'px-8 py-4 text-lg',
   };
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -490,17 +505,23 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       `}
       onClick={handleClick}
       disabled={disabled || loading}
-
-      whileHover={!disabled && !loading ? {
-        scale: 1.02,
-        y: -1,
-        transition: { type: "spring" as const, stiffness: 300, damping: 20 }
-      } : {}}
-
-      whileTap={!disabled && !loading ? {
-        scale: 0.98,
-        transition: { duration: 0.1 }
-      } : {}}
+      whileHover={
+        !disabled && !loading
+          ? {
+              scale: 1.02,
+              y: -1,
+              transition: { type: 'spring' as const, stiffness: 300, damping: 20 },
+            }
+          : {}
+      }
+      whileTap={
+        !disabled && !loading
+          ? {
+              scale: 0.98,
+              transition: { duration: 0.1 },
+            }
+          : {}
+      }
     >
       {/* Ripple effects */}
       <AnimatePresence>
@@ -512,7 +533,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
               left: ripple.x - 25,
               top: ripple.y - 25,
               width: 50,
-              height: 50
+              height: 50,
             }}
             initial={{ scale: 0, opacity: 1 }}
             animate={{ scale: 4, opacity: 0 }}
@@ -548,9 +569,13 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       >
         {icon && (
           <motion.div
-            animate={!disabled && !loading ? {
-              scale: [1, 1.1, 1]
-            } : {}}
+            animate={
+              !disabled && !loading
+                ? {
+                    scale: [1, 1.1, 1],
+                  }
+                : {}
+            }
             transition={{ duration: 0.3, repeat: Infinity, repeatDelay: 2 }}
           >
             {icon}
@@ -583,12 +608,12 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
   description,
   disabled = false,
   size = 'md',
-  className = ''
+  className = '',
 }) => {
   const sizes = {
     sm: { checkbox: 'w-4 h-4', text: 'text-sm' },
     md: { checkbox: 'w-5 h-5', text: 'text-base' },
-    lg: { checkbox: 'w-6 h-6', text: 'text-lg' }
+    lg: { checkbox: 'w-6 h-6', text: 'text-lg' },
   };
 
   return (
@@ -606,21 +631,22 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
         <motion.div
           className={`
             w-full h-full rounded border-2 transition-colors duration-200
-            ${checked
-              ? 'bg-blue-500 border-blue-500'
-              : 'bg-white border-gray-300 hover:border-gray-400'
+            ${
+              checked
+                ? 'bg-blue-500 border-blue-500'
+                : 'bg-white border-gray-300 hover:border-gray-400'
             }
             ${disabled ? 'opacity-50' : ''}
           `}
           animate={{
             scale: checked ? [1, 1.1, 1] : 1,
             backgroundColor: checked ? '#3B82F6' : '#FFFFFF',
-            borderColor: checked ? '#3B82F6' : '#D1D5DB'
+            borderColor: checked ? '#3B82F6' : '#D1D5DB',
           }}
           transition={{
             scale: { duration: 0.2, type: 'spring' as const, stiffness: 300 },
             backgroundColor: { duration: 0.2 },
-            borderColor: { duration: 0.2 }
+            borderColor: { duration: 0.2 },
           }}
         />
 
@@ -636,7 +662,7 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
                 type: 'spring' as const,
                 stiffness: 300,
                 damping: 20,
-                delay: 0.1
+                delay: 0.1,
               }}
             >
               <svg
@@ -707,7 +733,7 @@ export const AnimatedProgress: React.FC<AnimatedProgressProps> = ({
   color = 'blue',
   size = 'md',
   animated = true,
-  className = ''
+  className = '',
 }) => {
   const percentage = Math.min((value / max) * 100, 100);
 
@@ -716,13 +742,13 @@ export const AnimatedProgress: React.FC<AnimatedProgressProps> = ({
     green: 'from-green-500 to-green-600',
     purple: 'from-purple-500 to-purple-600',
     red: 'from-red-500 to-red-600',
-    yellow: 'from-yellow-500 to-yellow-600'
+    yellow: 'from-yellow-500 to-yellow-600',
   };
 
   const sizes = {
     sm: 'h-2',
     md: 'h-3',
-    lg: 'h-4'
+    lg: 'h-4',
   };
 
   return (
@@ -746,7 +772,7 @@ export const AnimatedProgress: React.FC<AnimatedProgressProps> = ({
               key={percentage}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: "spring" as const, stiffness: 300, damping: 20 }}
+              transition={{ type: 'spring' as const, stiffness: 300, damping: 20 }}
             >
               {Math.round(percentage)}%
             </motion.span>
@@ -771,7 +797,7 @@ export const AnimatedProgress: React.FC<AnimatedProgressProps> = ({
             duration: 0.8,
             type: 'spring' as const,
             stiffness: 100,
-            damping: 20
+            damping: 20,
           }}
         >
           {/* Animated shimmer effect */}
@@ -779,13 +805,13 @@ export const AnimatedProgress: React.FC<AnimatedProgressProps> = ({
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
               animate={{
-                x: ['-100%', '100%']
+                x: ['-100%', '100%'],
               }}
               transition={{
                 duration: 1.5,
                 repeat: Infinity,
-                ease: "linear",
-                repeatDelay: 1
+                ease: 'linear',
+                repeatDelay: 1,
               }}
             />
           )}
@@ -800,5 +826,5 @@ export default {
   AnimatedSelect,
   AnimatedButton,
   AnimatedCheckbox,
-  AnimatedProgress
+  AnimatedProgress,
 };

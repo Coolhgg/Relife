@@ -84,172 +84,205 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
   /**
    * Announce message to screen readers
    */
-  const announce = useCallback((message: string, politeness?: 'polite' | 'assertive') => {
-    if (!announceChanges || !message.trim()) return;
+  const announce = useCallback(
+    (message: string, politeness?: 'polite' | 'assertive') => {
+      if (!announceChanges || !message.trim()) return;
 
-    initializeLiveRegion();
+      initializeLiveRegion();
 
-    if (!liveRegionRef.current) return;
+      if (!liveRegionRef.current) return;
 
-    // Update live region politeness if specified
-    if (politeness && politeness !== liveRegionPoliteness) {
-      liveRegionRef.current.setAttribute('aria-live', politeness);
-    }
-
-    if (debounceMs > 0) {
-      // Add to pending announcements
-      pendingAnnouncementsRef.current.push(message);
-
-      if (announcementTimeoutRef.current) {
-        clearTimeout(announcementTimeoutRef.current);
-      }
-
-      announcementTimeoutRef.current = setTimeout(() => {
-        if (liveRegionRef.current && pendingAnnouncementsRef.current.length > 0) {
-          const announcement = pendingAnnouncementsRef.current.join('. ');
-          liveRegionRef.current.textContent = announcement;
-
-          if (!persistAnnouncements) {
-            // Clear the announcement after it's been read
-            setTimeout(() => {
-              if (liveRegionRef.current) {
-                liveRegionRef.current.textContent = '';
-              }
-            }, 1000);
-          }
-
-          pendingAnnouncementsRef.current = [];
-        }
-
-        // Reset live region politeness if it was changed
-        if (politeness && politeness !== liveRegionPoliteness && liveRegionRef.current) {
-          liveRegionRef.current.setAttribute('aria-live', liveRegionPoliteness);
-        }
-      }, debounceMs);
-    } else {
-      // Immediate announcement
-      liveRegionRef.current.textContent = message;
-
-      if (!persistAnnouncements) {
-        setTimeout(() => {
-          if (liveRegionRef.current) {
-            liveRegionRef.current.textContent = '';
-          }
-        }, 1000);
-      }
-
+      // Update live region politeness if specified
       if (politeness && politeness !== liveRegionPoliteness) {
-        setTimeout(() => {
-          if (liveRegionRef.current) {
+        liveRegionRef.current.setAttribute('aria-live', politeness);
+      }
+
+      if (debounceMs > 0) {
+        // Add to pending announcements
+        pendingAnnouncementsRef.current.push(message);
+
+        if (announcementTimeoutRef.current) {
+          clearTimeout(announcementTimeoutRef.current);
+        }
+
+        announcementTimeoutRef.current = setTimeout(() => {
+          if (liveRegionRef.current && pendingAnnouncementsRef.current.length > 0) {
+            const announcement = pendingAnnouncementsRef.current.join('. ');
+            liveRegionRef.current.textContent = announcement;
+
+            if (!persistAnnouncements) {
+              // Clear the announcement after it's been read
+              setTimeout(() => {
+                if (liveRegionRef.current) {
+                  liveRegionRef.current.textContent = '';
+                }
+              }, 1000);
+            }
+
+            pendingAnnouncementsRef.current = [];
+          }
+
+          // Reset live region politeness if it was changed
+          if (
+            politeness &&
+            politeness !== liveRegionPoliteness &&
+            liveRegionRef.current
+          ) {
             liveRegionRef.current.setAttribute('aria-live', liveRegionPoliteness);
           }
-        }, 100);
+        }, debounceMs);
+      } else {
+        // Immediate announcement
+        liveRegionRef.current.textContent = message;
+
+        if (!persistAnnouncements) {
+          setTimeout(() => {
+            if (liveRegionRef.current) {
+              liveRegionRef.current.textContent = '';
+            }
+          }, 1000);
+        }
+
+        if (politeness && politeness !== liveRegionPoliteness) {
+          setTimeout(() => {
+            if (liveRegionRef.current) {
+              liveRegionRef.current.setAttribute('aria-live', liveRegionPoliteness);
+            }
+          }, 100);
+        }
       }
-    }
-  }, [announceChanges, initializeLiveRegion, debounceMs, liveRegionPoliteness, persistAnnouncements]);
+    },
+    [
+      announceChanges,
+      initializeLiveRegion,
+      debounceMs,
+      liveRegionPoliteness,
+      persistAnnouncements,
+    ]
+  );
 
   /**
    * Handle content changes with appropriate focus and announcements
    */
-  const handleContentChange = useCallback((change: ContentChange) => {
-    const { type, element, description, shouldFocus } = change;
+  const handleContentChange = useCallback(
+    (change: ContentChange) => {
+      const { type, element, description, shouldFocus } = change;
 
-    if (!element) return;
+      if (!element) return;
 
-    let announcement = '';
+      let announcement = '';
 
-    switch (type) {
-      case 'added':
-        announcement = description || 'New content added';
-        break;
-      case 'updated':
-        announcement = description || 'Content updated';
-        break;
-      case 'removed':
-        announcement = description || 'Content removed';
-        break;
-    }
+      switch (type) {
+        case 'added':
+          announcement = description || 'New content added';
+          break;
+        case 'updated':
+          announcement = description || 'Content updated';
+          break;
+        case 'removed':
+          announcement = description || 'Content removed';
+          break;
+      }
 
-    // Announce the change
-    if (announcement) {
-      announce(announcement);
-    }
+      // Announce the change
+      if (announcement) {
+        announce(announcement);
+      }
 
-    // Handle focus management
-    if ((shouldFocus ?? focusOnChange) && type !== 'removed') {
-      // Save current focus
-      lastFocusedRef.current = document.activeElement as HTMLElement;
+      // Handle focus management
+      if ((shouldFocus ?? focusOnChange) && type !== 'removed') {
+        // Save current focus
+        lastFocusedRef.current = document.activeElement as HTMLElement;
 
-      // Focus the new/updated element
-      setTimeout(() => {
-        if (element && document.body.contains(element)) {
-          try {
-            // Make element focusable if it isn't already
-            if (element.tabIndex < 0 && !element.hasAttribute('tabindex')) {
-              element.setAttribute('tabindex', '-1');
-              element.setAttribute('data-dynamic-focus', 'true');
+        // Focus the new/updated element
+        setTimeout(() => {
+          if (element && document.body.contains(element)) {
+            try {
+              // Make element focusable if it isn't already
+              if (element.tabIndex < 0 && !element.hasAttribute('tabindex')) {
+                element.setAttribute('tabindex', '-1');
+                element.setAttribute('data-dynamic-focus', 'true');
+              }
+
+              element.focus({ preventScroll: false });
+            } catch (error) {
+              console.warn('Failed to focus dynamic content:', error);
             }
-
-            element.focus({ preventScroll: false });
-          } catch (error) {
-            console.warn('Failed to focus dynamic content:', error);
           }
-        }
-      }, 100);
-    }
-  }, [announce, focusOnChange]);
+        }, 100);
+      }
+    },
+    [announce, focusOnChange]
+  );
 
   /**
    * Announce content loading state
    */
-  const announceLoading = useCallback((isLoading: boolean, loadingMessage = 'Loading content', completeMessage = 'Content loaded') => {
-    if (isLoading) {
-      announce(loadingMessage, 'polite');
-    } else {
-      announce(completeMessage, 'polite');
-    }
-  }, [announce]);
+  const announceLoading = useCallback(
+    (
+      isLoading: boolean,
+      loadingMessage = 'Loading content',
+      completeMessage = 'Content loaded'
+    ) => {
+      if (isLoading) {
+        announce(loadingMessage, 'polite');
+      } else {
+        announce(completeMessage, 'polite');
+      }
+    },
+    [announce]
+  );
 
   /**
    * Announce error states
    */
-  const announceError = useCallback((errorMessage: string) => {
-    announce(`Error: ${errorMessage}`, 'assertive');
-  }, [announce]);
+  const announceError = useCallback(
+    (errorMessage: string) => {
+      announce(`Error: ${errorMessage}`, 'assertive');
+    },
+    [announce]
+  );
 
   /**
    * Announce success states
    */
-  const announceSuccess = useCallback((successMessage: string) => {
-    announce(`Success: ${successMessage}`, 'polite');
-  }, [announce]);
+  const announceSuccess = useCallback(
+    (successMessage: string) => {
+      announce(`Success: ${successMessage}`, 'polite');
+    },
+    [announce]
+  );
 
   /**
    * Handle form validation announcements
    */
-  const announceValidation = useCallback((field: HTMLElement, isValid: boolean, message?: string) => {
-    const fieldLabel = field.getAttribute('aria-label') ||
-                      field.getAttribute('name') ||
-                      field.id ||
-                      'Field';
+  const announceValidation = useCallback(
+    (field: HTMLElement, isValid: boolean, message?: string) => {
+      const fieldLabel =
+        field.getAttribute('aria-label') ||
+        field.getAttribute('name') ||
+        field.id ||
+        'Field';
 
-    if (isValid) {
-      if (message) {
-        announce(`${fieldLabel} is valid: ${message}`, 'polite');
+      if (isValid) {
+        if (message) {
+          announce(`${fieldLabel} is valid: ${message}`, 'polite');
+        }
+      } else {
+        const errorMessage = message || 'Invalid input';
+        announce(`${fieldLabel} error: ${errorMessage}`, 'assertive');
+
+        // Also set aria-invalid and aria-describedby if not already set
+        field.setAttribute('aria-invalid', 'true');
+
+        // Focus the field to help user correct the error
+        setTimeout(() => {
+          field.focus({ preventScroll: false });
+        }, 100);
       }
-    } else {
-      const errorMessage = message || 'Invalid input';
-      announce(`${fieldLabel} error: ${errorMessage}`, 'assertive');
-
-      // Also set aria-invalid and aria-describedby if not already set
-      field.setAttribute('aria-invalid', 'true');
-
-      // Focus the field to help user correct the error
-      setTimeout(() => {
-        field.focus({ preventScroll: false });
-      }, 100);
-    }
-  }, [announce]);
+    },
+    [announce]
+  );
 
   /**
    * Create a focus trap for dynamic content

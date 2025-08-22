@@ -117,11 +117,11 @@ export interface CustomSoundAssignment {
 }
 
 export type CustomSoundType =
-  | 'uploaded'    // User uploaded file
-  | 'builtin'     // Existing app sound
-  | 'generated'   // Procedurally generated
-  | 'url'         // External URL
-  | 'tts';        // Text-to-speech generated
+  | 'uploaded' // User uploaded file
+  | 'builtin' // Existing app sound
+  | 'generated' // Procedurally generated
+  | 'url' // External URL
+  | 'tts'; // Text-to-speech generated
 
 // Custom uploaded sound definition
 export interface CustomSound {
@@ -406,11 +406,11 @@ export interface CustomSoundThemePermissions {
 }
 
 export type ThemePermissionLevel =
-  | 'public'      // Anyone can access
-  | 'registered'  // Registered users only
-  | 'friends'     // Friends only
-  | 'private'     // Creator only
-  | 'premium';    // Premium users only
+  | 'public' // Anyone can access
+  | 'registered' // Registered users only
+  | 'friends' // Friends only
+  | 'private' // Creator only
+  | 'premium'; // Premium users only
 
 // Theme creation and editing workflow
 export interface CustomSoundThemeCreationSession {
@@ -442,14 +442,14 @@ export interface CustomSoundThemeCreationSession {
 }
 
 export type CreationStep =
-  | 'info'           // Basic information
-  | 'sounds'         // Sound selection/upload
-  | 'assignment'     // Assign sounds to categories
-  | 'customization'  // Volume, effects, etc.
-  | 'preview'        // Preview and test
-  | 'metadata'       // Tags, description, etc.
-  | 'sharing'        // Privacy and sharing settings
-  | 'publish';       // Final publish step
+  | 'info' // Basic information
+  | 'sounds' // Sound selection/upload
+  | 'assignment' // Assign sounds to categories
+  | 'customization' // Volume, effects, etc.
+  | 'preview' // Preview and test
+  | 'metadata' // Tags, description, etc.
+  | 'sharing' // Privacy and sharing settings
+  | 'publish'; // Final publish step
 
 export interface CreationProgress {
   currentStep: CreationStep;

@@ -24,7 +24,7 @@ class ErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: null
+      errorId: null,
     };
   }
 
@@ -33,7 +33,7 @@ class ErrorBoundary extends Component<Props, State> {
       hasError: true,
       error,
       errorInfo: null,
-      errorId: null
+      errorId: null,
     };
   }
 
@@ -42,13 +42,13 @@ class ErrorBoundary extends Component<Props, State> {
       context: this.props.context || 'ErrorBoundary',
       componentStack: errorInfo.componentStack,
       timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent
+      userAgent: navigator.userAgent,
     });
 
     this.setState({
       error,
       errorInfo,
-      errorId
+      errorId,
     });
 
     // Call custom error handler if provided
@@ -60,7 +60,7 @@ class ErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: null
+      errorId: null,
     });
   };
 
@@ -92,7 +92,8 @@ class ErrorBoundary extends Component<Props, State> {
             </h2>
 
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              We're sorry, but something unexpected happened. The error has been logged and our team will investigate.
+              We're sorry, but something unexpected happened. The error has been logged
+              and our team will investigate.
             </p>
 
             {this.state.errorId && (
@@ -130,7 +131,8 @@ class ErrorBoundary extends Component<Props, State> {
                   <strong>Error:</strong> {this.state.error.toString()}
                   {this.state.errorInfo && (
                     <>
-                      <br /><br />
+                      <br />
+                      <br />
                       <strong>Component Stack:</strong>
                       <pre className="whitespace-pre-wrap mt-1">
                         {this.state.errorInfo.componentStack}

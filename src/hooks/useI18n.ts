@@ -7,20 +7,25 @@ import { SupportedLanguage } from '../config/i18n';
  * Provides easy access to translations and language utilities
  */
 export const useI18n = (namespace?: string) => {
-  const { t: baseT, i18n } = useTranslation(namespace ? [namespace, 'common'] : ['common']);
+  const { t: baseT, i18n } = useTranslation(
+    namespace ? [namespace, 'common'] : ['common']
+  );
   const language = useLanguage();
 
   // Enhanced translation function with better type safety and fallbacks
   const t = (key: string, optionsOrDefault?: Record<string, unknown> | string) => {
     try {
       // Handle string defaults vs options objects
-      const translated = typeof optionsOrDefault === 'string' 
-        ? baseT(key, { defaultValue: optionsOrDefault })
-        : baseT(key, optionsOrDefault);
+      const translated =
+        typeof optionsOrDefault === 'string'
+          ? baseT(key, { defaultValue: optionsOrDefault })
+          : baseT(key, optionsOrDefault);
 
       // If translation is the same as key, it might be missing
       if (translated === key && process.env.NODE_ENV === 'development') {
-        console.warn(`Missing translation for key: ${key} in namespace: ${namespace || 'common'}`);
+        console.warn(
+          `Missing translation for key: ${key} in namespace: ${namespace || 'common'}`
+        );
       }
 
       return translated;
@@ -81,7 +86,7 @@ export const useI18n = (namespace?: string) => {
       t(`${baseKey}.wednesday${suffix}`),
       t(`${baseKey}.thursday${suffix}`),
       t(`${baseKey}.friday${suffix}`),
-      t(`${baseKey}.saturday${suffix}`)
+      t(`${baseKey}.saturday${suffix}`),
     ];
   };
 
@@ -90,7 +95,7 @@ export const useI18n = (namespace?: string) => {
     morning: t('common:time.morning'),
     afternoon: t('common:time.afternoon'),
     evening: t('common:time.evening'),
-    night: t('common:time.night')
+    night: t('common:time.night'),
   });
 
   // Voice mood translations for alarms
@@ -100,7 +105,7 @@ export const useI18n = (namespace?: string) => {
     motivational: t('alarms:create.moods.motivational'),
     'drill-sergeant': t('alarms:create.moods.drill-sergeant'),
     funny: t('alarms:create.moods.funny'),
-    calm: t('alarms:create.moods.calm')
+    calm: t('alarms:create.moods.calm'),
   });
 
   // Difficulty level translations
@@ -108,7 +113,7 @@ export const useI18n = (namespace?: string) => {
     easy: t('alarms:create.difficulties.easy'),
     medium: t('alarms:create.difficulties.medium'),
     hard: t('alarms:create.difficulties.hard'),
-    nuclear: t('alarms:create.difficulties.nuclear')
+    nuclear: t('alarms:create.difficulties.nuclear'),
   });
 
   // Error message helper
@@ -126,19 +131,22 @@ export const useI18n = (namespace?: string) => {
   // Success message helper
   const getSuccessMessage = (successKey: string, context?: string) => {
     const contextPrefix = context ? `${context}.` : '';
-    return tc(`${contextPrefix}messages.${successKey}`) ||
-           tc(`common:status.success`);
+    return tc(`${contextPrefix}messages.${successKey}`) || tc(`common:status.success`);
   };
 
   // Language direction helpers for styling
   const getDirectionStyles = () => ({
-    textAlign: language.isRTL ? 'right' as const : 'left' as const,
+    textAlign: language.isRTL ? ('right' as const) : ('left' as const),
     direction: language.getTextDirection(),
-    flexDirection: language.getFlexDirection()
+    flexDirection: language.getFlexDirection(),
   });
 
   // Responsive text helper based on language
-  const getResponsiveText = (shortKey: string, longKey: string, useShort: boolean = false) => {
+  const getResponsiveText = (
+    shortKey: string,
+    longKey: string,
+    useShort: boolean = false
+  ) => {
     return useShort ? t(shortKey) : t(longKey);
   };
 
@@ -149,7 +157,7 @@ export const useI18n = (namespace?: string) => {
     advanced: t('common:navigation.advanced'),
     gaming: t('common:navigation.gaming'),
     settings: t('common:navigation.settings'),
-    premium: t('common:navigation.premium')
+    premium: t('common:navigation.premium'),
   });
 
   // Action button labels
@@ -162,7 +170,7 @@ export const useI18n = (namespace?: string) => {
     close: t('common:app.close'),
     confirm: t('common:app.confirm'),
     retry: t('common:app.retry'),
-    refresh: t('common:app.refresh')
+    refresh: t('common:app.refresh'),
   });
 
   // Accessibility labels
@@ -171,7 +179,7 @@ export const useI18n = (namespace?: string) => {
     mainContent: t('common:accessibility.mainContent'),
     navigation: t('common:accessibility.navigation'),
     loading: t('common:accessibility.loading'),
-    error: t('common:accessibility.error')
+    error: t('common:accessibility.error'),
   });
 
   return {
@@ -215,7 +223,7 @@ export const useI18n = (namespace?: string) => {
     // Current language info
     currentLanguage: language.currentLanguage,
     languageInfo: language.languageInfo,
-    isRTL: language.isRTL
+    isRTL: language.isRTL,
   };
 };
 
@@ -232,14 +240,18 @@ export const useAlarmI18n = () => {
   };
 
   const getSnoozeText = (minutes: number, snoozesLeft: number) => {
-    return i18n.ti('alarms:ringing.snoozeFor', { minutes }) +
-           (snoozesLeft > 0 ? ` (${i18n.tp('alarms:ringing.snoozesLeft', snoozesLeft)})` : '');
+    return (
+      i18n.ti('alarms:ringing.snoozeFor', { minutes }) +
+      (snoozesLeft > 0
+        ? ` (${i18n.tp('alarms:ringing.snoozesLeft', snoozesLeft)})`
+        : '')
+    );
   };
 
   return {
     ...i18n,
     getAlarmStatusText,
-    getSnoozeText
+    getSnoozeText,
   };
 };
 
@@ -255,7 +267,7 @@ export const useAuthI18n = () => {
 
   return {
     ...i18n,
-    getAuthErrorText
+    getAuthErrorText,
   };
 };
 
@@ -276,7 +288,7 @@ export const useGamingI18n = () => {
   return {
     ...i18n,
     getBattleStatusText,
-    getRewardText
+    getRewardText,
   };
 };
 
@@ -292,7 +304,7 @@ export const useSettingsI18n = () => {
 
   return {
     ...i18n,
-    getCategoryText
+    getCategoryText,
   };
 };
 

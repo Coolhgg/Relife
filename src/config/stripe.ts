@@ -32,14 +32,14 @@ export const subscriptionPlans = {
       'Basic alarm functionality',
       'Up to 3 alarms',
       'Standard wake-up sounds',
-      'Basic statistics'
+      'Basic statistics',
     ],
     limits: {
       maxAlarms: 3,
       maxCustomSounds: 0,
       aiInsightsPerDay: 3,
-      battlesPerDay: 5
-    }
+      battlesPerDay: 5,
+    },
   },
   basic: {
     name: 'Basic',
@@ -50,14 +50,14 @@ export const subscriptionPlans = {
       'Custom sound uploads (up to 50MB)',
       'Voice-controlled snooze',
       'Social features (team joining)',
-      'Email support'
+      'Email support',
     ],
     limits: {
       maxAlarms: null, // unlimited
       maxCustomSounds: 10,
       aiInsightsPerDay: 20,
-      battlesPerDay: 50
-    }
+      battlesPerDay: 50,
+    },
   },
   premium: {
     name: 'Premium',
@@ -72,15 +72,15 @@ export const subscriptionPlans = {
       'Premium analytics dashboard',
       'Team creation and management',
       'Location-based alarms',
-      'Priority support'
+      'Priority support',
     ],
     limits: {
       maxAlarms: null,
       maxCustomSounds: 50,
       aiInsightsPerDay: 100,
       battlesPerDay: null,
-      elevenlabsCallsPerMonth: 100
-    }
+      elevenlabsCallsPerMonth: 100,
+    },
   },
   pro: {
     name: 'Pro',
@@ -94,7 +94,7 @@ export const subscriptionPlans = {
       'Custom challenge creation',
       'Detailed reporting and exports',
       'White-label options',
-      'Dedicated support'
+      'Dedicated support',
     ],
     limits: {
       maxAlarms: null,
@@ -102,8 +102,8 @@ export const subscriptionPlans = {
       aiInsightsPerDay: null,
       battlesPerDay: null,
       elevenlabsCallsPerMonth: 500,
-      voiceCloning: true
-    }
+      voiceCloning: true,
+    },
   },
   enterprise: {
     name: 'Enterprise',
@@ -115,7 +115,7 @@ export const subscriptionPlans = {
       'Advanced admin controls',
       'Custom integrations',
       'SLA guarantee',
-      'Account manager'
+      'Account manager',
     ],
     limits: {
       maxAlarms: null,
@@ -124,16 +124,17 @@ export const subscriptionPlans = {
       battlesPerDay: null,
       elevenlabsCallsPerMonth: null,
       voiceCloning: true,
-      customIntegrations: true
-    }
-  }
+      customIntegrations: true,
+    },
+  },
 } as const;
-
 
 // Helper functions
 export function getStripePublishableKey(): string {
   if (!stripeConfig.publishableKey) {
-    console.warn('Stripe publishable key not configured. Payment functionality will be disabled.');
+    console.warn(
+      'Stripe publishable key not configured. Payment functionality will be disabled.'
+    );
     return '';
   }
   return stripeConfig.publishableKey;
@@ -166,7 +167,8 @@ export function validateStripeConfig(): { isValid: boolean; errors: string[] } {
     }
 
     // Server-side validation (only if we have access to server environment)
-    if (typeof window === 'undefined') { // Server-side
+    if (typeof window === 'undefined') {
+      // Server-side
       if (!stripeConfig.secretKey) {
         errors.push('Stripe secret key is required for server-side operations');
       }
@@ -183,7 +185,7 @@ export function validateStripeConfig(): { isValid: boolean; errors: string[] } {
 
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   };
 }
 
@@ -192,8 +194,12 @@ export function logStripeConfig(): void {
   if (config.features.debugMode) {
     console.group('💳 Stripe Configuration');
     console.log('Enabled:', stripeConfig.enabled);
-    console.log('Publishable Key:', stripeConfig.publishableKey ?
-      `${stripeConfig.publishableKey.substring(0, 12)}...` : 'Not configured');
+    console.log(
+      'Publishable Key:',
+      stripeConfig.publishableKey
+        ? `${stripeConfig.publishableKey.substring(0, 12)}...`
+        : 'Not configured'
+    );
     console.log('Currency:', stripeConfig.currency);
     console.log('Success URL:', stripeConfig.successUrl);
     console.log('Cancel URL:', stripeConfig.cancelUrl);

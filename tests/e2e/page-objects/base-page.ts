@@ -32,7 +32,7 @@ export class BasePage {
   }
 
   async getElementText(locator: Locator): Promise<string> {
-    return await locator.textContent() || '';
+    return (await locator.textContent()) || '';
   }
 
   async isElementVisible(locator: Locator): Promise<boolean> {

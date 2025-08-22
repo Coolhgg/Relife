@@ -3,7 +3,13 @@
  * Handles comprehensive theme data storage, backup, and recovery
  */
 
-import type { Theme, ThemeConfig, PersonalizationSettings, ThemePreset, CustomThemeConfig } from '../types';
+import type {
+  Theme,
+  ThemeConfig,
+  PersonalizationSettings,
+  ThemePreset,
+  CustomThemeConfig,
+} from '../types';
 import { ErrorHandler } from './error-handler';
 
 interface ThemeStorageData {
@@ -66,7 +72,9 @@ class ThemePersistenceService {
 
   private migrateStorage(oldVersion?: string): void {
     try {
-      console.log(`Migrating theme storage from ${oldVersion || 'unknown'} to ${this.CURRENT_VERSION}`);
+      console.log(
+        `Migrating theme storage from ${oldVersion || 'unknown'} to ${this.CURRENT_VERSION}`
+      );
 
       // Handle migration from older versions
       if (!oldVersion) {
@@ -94,15 +102,15 @@ class ThemePersistenceService {
       analytics: {
         lastUsed: new Date().toISOString(),
         usageCount: 0,
-        favoriteThemes: []
-      }
+        favoriteThemes: [],
+      },
     };
 
     const metadata: StorageMetadata = {
       version: this.CURRENT_VERSION,
       lastBackup: new Date().toISOString(),
       backupCount: 0,
-      lastSync: new Date().toISOString()
+      lastSync: new Date().toISOString(),
     };
 
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(defaultData));
@@ -133,7 +141,7 @@ class ThemePersistenceService {
         version: this.CURRENT_VERSION,
         lastBackup: new Date().toISOString(),
         backupCount: 0,
-        lastSync: new Date().toISOString()
+        lastSync: new Date().toISOString(),
       };
 
       Object.assign(metadata, updates);
@@ -160,7 +168,7 @@ class ThemePersistenceService {
         ...existing,
         ...data,
         timestamp: new Date().toISOString(),
-        version: this.CURRENT_VERSION
+        version: this.CURRENT_VERSION,
       };
 
       // Update analytics
@@ -172,7 +180,7 @@ class ThemePersistenceService {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedData));
 
       this.updateMetadata({
-        lastSync: new Date().toISOString()
+        lastSync: new Date().toISOString(),
       });
 
       return true;
@@ -201,7 +209,7 @@ class ThemePersistenceService {
       // Validate data integrity
       if (!this.validateThemeData(data)) {
         console.warn('Theme data validation failed, attempting backup restore');
-        return await this.restoreFromBackup() || this.getDefaultThemeData();
+        return (await this.restoreFromBackup()) || this.getDefaultThemeData();
       }
 
       return data;
@@ -221,11 +229,7 @@ class ThemePersistenceService {
   private validateThemeData(data: any): boolean {
     try {
       return (
-        data &&
-        typeof data === 'object' &&
-        data.version &&
-        data.theme &&
-        data.timestamp
+        data && typeof data === 'object' && data.version && data.theme && data.timestamp
       );
     } catch {
       return false;
@@ -244,8 +248,8 @@ class ThemePersistenceService {
       analytics: {
         lastUsed: new Date().toISOString(),
         usageCount: 0,
-        favoriteThemes: []
-      }
+        favoriteThemes: [],
+      },
     };
   }
 
@@ -268,7 +272,7 @@ class ThemePersistenceService {
 
       this.updateMetadata({
         lastBackup: new Date().toISOString(),
-        backupCount: (metadata?.backupCount || 0) + 1
+        backupCount: (metadata?.backupCount || 0) + 1,
       });
 
       return true;
@@ -347,7 +351,7 @@ class ThemePersistenceService {
         ...data,
         exportedAt: new Date().toISOString(),
         appVersion: '1.0.0', // Could be dynamic
-        exportVersion: this.CURRENT_VERSION
+        exportVersion: this.CURRENT_VERSION,
       };
 
       return JSON.stringify(exportData, null, 2);
@@ -434,14 +438,15 @@ class ThemePersistenceService {
     try {
       const data = localStorage.getItem(this.STORAGE_KEY);
       const metadata = this.getMetadata();
-      const backupKeys = Object.keys(localStorage)
-        .filter(key => key.startsWith(this.BACKUP_KEY));
+      const backupKeys = Object.keys(localStorage).filter(key =>
+        key.startsWith(this.BACKUP_KEY)
+      );
 
       return {
         dataSize: data ? new Blob([data]).size : 0,
         backupCount: backupKeys.length,
         lastBackup: metadata?.lastBackup || null,
-        version: this.CURRENT_VERSION
+        version: this.CURRENT_VERSION,
       };
     } catch (error) {
       console.error('Failed to get storage stats:', error);
@@ -449,7 +454,7 @@ class ThemePersistenceService {
         dataSize: 0,
         backupCount: 0,
         lastBackup: null,
-        version: this.CURRENT_VERSION
+        version: this.CURRENT_VERSION,
       };
     }
   }

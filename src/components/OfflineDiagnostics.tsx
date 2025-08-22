@@ -10,7 +10,7 @@ import {
   TrendingUp,
   Wifi,
   WifiOff,
-  Zap
+  Zap,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
@@ -37,7 +37,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
   const [diagnostics, setDiagnostics] = useState<DiagnosticCheck[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [lastCheck, setLastCheck] = useState<Date | null>(null);
-  const [overallHealth, setOverallHealth] = useState<'healthy' | 'warning' | 'error'>('healthy');
+  const [overallHealth, setOverallHealth] = useState<'healthy' | 'warning' | 'error'>(
+    'healthy'
+  );
 
   const runDiagnostics = async () => {
     setIsRunning(true);
@@ -88,7 +90,6 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
       } else {
         setOverallHealth('healthy');
       }
-
     } catch (error) {
       console.error('Diagnostics failed:', error);
     } finally {
@@ -104,7 +105,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           name: 'Service Worker',
           status: 'error',
           message: 'Service Worker not supported',
-          lastChecked: new Date()
+          lastChecked: new Date(),
         };
       }
 
@@ -115,7 +116,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           name: 'Service Worker',
           status: 'error',
           message: 'Service Worker not registered',
-          lastChecked: new Date()
+          lastChecked: new Date(),
         };
       }
 
@@ -126,7 +127,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           name: 'Service Worker',
           status: 'warning',
           message: 'Service Worker registered but not controlling',
-          lastChecked: new Date()
+          lastChecked: new Date(),
         };
       }
 
@@ -134,7 +135,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
       try {
         const status = await new Promise<any>(resolve => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event) => resolve(event.data);
+          channel.port1.onmessage = event => resolve(event.data);
           controller.postMessage({ type: 'GET_STATUS' }, [channel.port2]);
           setTimeout(() => resolve({ error: 'timeout' }), 5000);
         });
@@ -145,7 +146,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
             name: 'Service Worker',
             status: 'warning',
             message: 'Service Worker not responding to messages',
-            lastChecked: new Date()
+            lastChecked: new Date(),
           };
         }
 
@@ -155,7 +156,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           status: 'healthy',
           message: `Active and responding (v${status.version || 'unknown'})`,
           details: status,
-          lastChecked: new Date()
+          lastChecked: new Date(),
         };
       } catch (error) {
         return {
@@ -163,7 +164,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           name: 'Service Worker',
           status: 'warning',
           message: 'Service Worker communication error',
-          lastChecked: new Date()
+          lastChecked: new Date(),
         };
       }
     } catch (error) {
@@ -172,7 +173,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         name: 'Service Worker',
         status: 'error',
         message: `Service Worker check failed: ${error.message}`,
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     }
   };
@@ -185,7 +186,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           name: 'Cache API',
           status: 'error',
           message: 'Cache API not supported',
-          lastChecked: new Date()
+          lastChecked: new Date(),
         };
       }
 
@@ -196,7 +197,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           name: 'Cache Storage',
           status: 'warning',
           message: 'No caches found',
-          lastChecked: new Date()
+          lastChecked: new Date(),
         };
       }
 
@@ -210,11 +211,15 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         totalEntries += requests.length;
 
         // Estimate size (rough calculation)
-        for (const request of requests.slice(0, 5)) { // Sample first 5 entries
+        for (const request of requests.slice(0, 5)) {
+          // Sample first 5 entries
           try {
             const response = await cache.match(request);
             if (response) {
-              const size = parseInt(response.headers.get('content-length') || '1024', 10);
+              const size = parseInt(
+                response.headers.get('content-length') || '1024',
+                10
+              );
               totalSize += size;
             }
           } catch (error) {
@@ -232,9 +237,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           cacheCount: cacheNames.length,
           totalEntries,
           estimatedSize: totalSize,
-          cacheNames
+          cacheNames,
         },
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     } catch (error) {
       return {
@@ -242,7 +247,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         name: 'Cache Storage',
         status: 'error',
         message: `Cache check failed: ${error.message}`,
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     }
   };
@@ -255,7 +260,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           name: 'IndexedDB',
           status: 'error',
           message: 'IndexedDB not supported',
-          lastChecked: new Date()
+          lastChecked: new Date(),
         };
       }
 
@@ -278,9 +283,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         status: 'healthy',
         message: `Accessible with ${objectStoreNames.length} stores`,
         details: {
-          storeNames: objectStoreNames
+          storeNames: objectStoreNames,
         },
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     } catch (error) {
       return {
@@ -288,7 +293,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         name: 'IndexedDB',
         status: 'error',
         message: `IndexedDB check failed: ${error.message}`,
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     }
   };
@@ -307,7 +312,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         status,
         message,
         details: stats,
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     } catch (error) {
       return {
@@ -315,7 +320,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         name: 'Gaming Service',
         status: 'error',
         message: `Gaming service check failed: ${error.message}`,
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     }
   };
@@ -334,7 +339,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         status,
         message,
         details: stats,
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     } catch (error) {
       return {
@@ -342,7 +347,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         name: 'Analytics Service',
         status: 'error',
         message: `Analytics service check failed: ${error.message}`,
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     }
   };
@@ -361,7 +366,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         status,
         message,
         details: stats,
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     } catch (error) {
       return {
@@ -369,7 +374,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         name: 'Sleep Tracker',
         status: 'error',
         message: `Sleep service check failed: ${error.message}`,
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     }
   };
@@ -383,9 +388,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
       message: isOnline ? 'Online' : 'Offline - sync will resume when connected',
       details: {
         isOnline,
-        connection: (navigator as any).connection
+        connection: (navigator as any).connection,
       },
-      lastChecked: new Date()
+      lastChecked: new Date(),
     };
   };
 
@@ -397,7 +402,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           name: 'Storage Quota',
           status: 'warning',
           message: 'Storage quota API not available',
-          lastChecked: new Date()
+          lastChecked: new Date(),
         };
       }
 
@@ -418,9 +423,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         details: {
           usedBytes: estimate.usage,
           quotaBytes: estimate.quota,
-          usagePercent
+          usagePercent,
         },
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     } catch (error) {
       return {
@@ -428,26 +433,34 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         name: 'Storage Quota',
         status: 'error',
         message: `Storage quota check failed: ${error.message}`,
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
     }
   };
 
   const getStatusIcon = (status: DiagnosticCheck['status']) => {
     switch (status) {
-      case 'healthy': return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'warning': return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
-      case 'error': return <AlertTriangle className="h-4 w-4 text-red-500" />;
-      case 'checking': return <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />;
+      case 'healthy':
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case 'warning':
+        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
+      case 'error':
+        return <AlertTriangle className="h-4 w-4 text-red-500" />;
+      case 'checking':
+        return <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />;
     }
   };
 
   const getStatusColor = (status: DiagnosticCheck['status']) => {
     switch (status) {
-      case 'healthy': return 'text-green-600 dark:text-green-400';
-      case 'warning': return 'text-yellow-600 dark:text-yellow-400';
-      case 'error': return 'text-red-600 dark:text-red-400';
-      case 'checking': return 'text-blue-600 dark:text-blue-400';
+      case 'healthy':
+        return 'text-green-600 dark:text-green-400';
+      case 'warning':
+        return 'text-yellow-600 dark:text-yellow-400';
+      case 'error':
+        return 'text-red-600 dark:text-red-400';
+      case 'checking':
+        return 'text-blue-600 dark:text-blue-400';
     }
   };
 
@@ -463,7 +476,15 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           <div className="flex items-center gap-2">
             <Activity className="h-5 w-5" />
             <CardTitle>Offline Health Diagnostics</CardTitle>
-            <Badge variant={overallHealth === 'healthy' ? 'default' : overallHealth === 'warning' ? 'secondary' : 'destructive'}>
+            <Badge
+              variant={
+                overallHealth === 'healthy'
+                  ? 'default'
+                  : overallHealth === 'warning'
+                    ? 'secondary'
+                    : 'destructive'
+              }
+            >
               {overallHealth.toUpperCase()}
             </Badge>
           </div>
@@ -489,11 +510,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {diagnostics.map((check) => (
+        {diagnostics.map(check => (
           <div key={check.id} className="flex items-start gap-3 p-3 border rounded-lg">
-            <div className="flex-shrink-0 mt-1">
-              {getStatusIcon(check.status)}
-            </div>
+            <div className="flex-shrink-0 mt-1">{getStatusIcon(check.status)}</div>
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">

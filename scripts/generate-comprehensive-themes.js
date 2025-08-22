@@ -1,17 +1,12 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // WAV file encoder (reused from main script)
-function encodeWAV(
-  samples,
-  sampleRate = 44100,
-  numChannels = 1,
-  bitDepth = 16,
-) {
+function encodeWAV(samples, sampleRate = 44100, numChannels = 1, bitDepth = 16) {
   const buffer = new ArrayBuffer(44 + samples.length * 2);
   const view = new DataView(buffer);
   const writeString = (offset, string) => {
@@ -19,10 +14,10 @@ function encodeWAV(
       view.setUint8(offset + i, string.charCodeAt(i));
     }
   };
-  writeString(0, "RIFF");
+  writeString(0, 'RIFF');
   view.setUint32(4, 36 + samples.length * 2, true);
-  writeString(8, "WAVE");
-  writeString(12, "fmt ");
+  writeString(8, 'WAVE');
+  writeString(12, 'fmt ');
   view.setUint32(16, 16, true);
   view.setUint16(20, 1, true);
   view.setUint16(22, numChannels, true);
@@ -30,7 +25,7 @@ function encodeWAV(
   view.setUint32(28, sampleRate * 2, true);
   view.setUint16(32, 2, true);
   view.setUint16(34, 16, true);
-  writeString(36, "data");
+  writeString(36, 'data');
   view.setUint32(40, samples.length * 2, true);
   let offset = 44;
   for (let i = 0; i < samples.length; i++) {
@@ -78,14 +73,10 @@ const generateNatureSuccess = (duration = 0.7) => {
         const adjustedTime = time - delay;
         const envelope = Math.exp(-adjustedTime * 2.5);
         sample +=
-          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) *
-          envelope *
-          0.15;
+          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) * envelope * 0.15;
         // Add harmonics for bell-like sound
         sample +=
-          Math.sin(2 * Math.PI * frequencies[j] * 2 * adjustedTime) *
-          envelope *
-          0.05;
+          Math.sin(2 * Math.PI * frequencies[j] * 2 * adjustedTime) * envelope * 0.05;
       }
     }
     samples.push(sample);
@@ -102,8 +93,7 @@ const generateElectronicClick = (duration = 0.05) => {
     const time = i / sampleRate;
     const envelope = Math.exp(-time * 80);
     // Sharp digital click
-    let sample =
-      Math.sign(Math.sin(2 * Math.PI * 2000 * time)) * envelope * 0.4;
+    let sample = Math.sign(Math.sin(2 * Math.PI * 2000 * time)) * envelope * 0.4;
     // Add bit-crush effect
     sample = Math.round(sample * 8) / 8;
     samples.push(sample);
@@ -145,8 +135,7 @@ const generateRetroClick = (duration = 0.1) => {
     const time = i / sampleRate;
     const envelope = Math.exp(-time * 25);
     // 8-bit style click
-    let sample =
-      Math.sign(Math.sin(2 * Math.PI * 1000 * time)) * envelope * 0.3;
+    let sample = Math.sign(Math.sin(2 * Math.PI * 1000 * time)) * envelope * 0.3;
     // Quantize to simulate 8-bit
     sample = Math.round(sample * 32) / 32;
     samples.push(sample);
@@ -169,9 +158,7 @@ const generateRetroSuccess = (duration = 0.8) => {
     // Add square wave harmonics
     for (let h = 3; h <= 7; h += 2) {
       sample +=
-        Math.sign(Math.sin(2 * Math.PI * freq * h * time)) *
-        envelope *
-        (0.1 / h);
+        Math.sign(Math.sin(2 * Math.PI * freq * h * time)) * envelope * (0.1 / h);
     }
     // 8-bit quantization
     sample = Math.round(sample * 64) / 64;
@@ -219,8 +206,7 @@ const generateCyberpunkClick = (duration = 0.08) => {
     const time = i / sampleRate;
     const envelope = Math.exp(-time * 60);
     // Harsh digital glitch
-    let sample =
-      Math.sign(Math.sin(2 * Math.PI * 1500 * time)) * envelope * 0.5;
+    let sample = Math.sign(Math.sin(2 * Math.PI * 1500 * time)) * envelope * 0.5;
     // Add noise and distortion
     sample += (Math.random() - 0.5) * 0.3 * envelope;
     // Bit crush effect
@@ -246,10 +232,8 @@ const generateCyberpunkSuccess = (duration = 0.8) => {
         const freq = frequencies[j];
         const envelope = Math.exp(-noteTime * 3) * Math.exp(-time * 0.8);
         // Harsh square wave with distortion
-        sample +=
-          Math.sign(Math.sin(2 * Math.PI * freq * time)) * envelope * 0.4;
-        sample +=
-          Math.sign(Math.sin(2 * Math.PI * freq * 2 * time)) * envelope * 0.1;
+        sample += Math.sign(Math.sin(2 * Math.PI * freq * time)) * envelope * 0.4;
+        sample += Math.sign(Math.sin(2 * Math.PI * freq * 2 * time)) * envelope * 0.1;
       }
     }
     samples.push(sample);
@@ -292,17 +276,11 @@ const generateFantasySuccess = (duration = 1.0) => {
         const envelope = Math.exp(-adjustedTime * 1.5);
         // Bell-like harmonic structure
         sample +=
-          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) *
-          envelope *
-          0.2;
+          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) * envelope * 0.2;
         sample +=
-          Math.sin(2 * Math.PI * frequencies[j] * 2.5 * adjustedTime) *
-          envelope *
-          0.1;
+          Math.sin(2 * Math.PI * frequencies[j] * 2.5 * adjustedTime) * envelope * 0.1;
         sample +=
-          Math.sin(2 * Math.PI * frequencies[j] * 4 * adjustedTime) *
-          envelope *
-          0.05;
+          Math.sin(2 * Math.PI * frequencies[j] * 4 * adjustedTime) * envelope * 0.05;
       }
     }
     // Add ethereal reverb simulation
@@ -440,9 +418,7 @@ const generateLofiSuccess = (duration = 0.9) => {
         const envelope = Math.exp(-adjustedTime * 1.8);
         // Warm sine waves
         sample +=
-          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) *
-          envelope *
-          0.2;
+          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) * envelope * 0.2;
       }
     }
 
@@ -499,9 +475,7 @@ const generateAmbientSuccess = (duration = 2.0) => {
         const adjustedTime = time - delay;
         const envelope = Math.exp(-adjustedTime * 0.8);
         sample +=
-          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) *
-          envelope *
-          0.12;
+          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) * envelope * 0.12;
         // Add subtle detuning
         sample +=
           Math.sin(2 * Math.PI * (frequencies[j] * 1.003) * adjustedTime) *
@@ -597,9 +571,7 @@ const generateWorkoutSuccess = (duration = 0.8) => {
       if (time >= delay) {
         const adjustedTime = time - delay;
         sample +=
-          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) *
-          envelope *
-          0.25;
+          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) * envelope * 0.25;
         // Add energy with square wave harmonics
         sample +=
           Math.sign(Math.sin(2 * Math.PI * frequencies[j] * adjustedTime)) *
@@ -650,14 +622,10 @@ const generateSeasonalSuccess = (duration = 1.8) => {
         const adjustedTime = time - delay;
         const envelope = Math.exp(-adjustedTime * 1.2);
         sample +=
-          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) *
-          envelope *
-          0.18;
+          Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) * envelope * 0.18;
         // Add icicle-like harmonics
         sample +=
-          Math.sin(2 * Math.PI * frequencies[j] * 1.5 * adjustedTime) *
-          envelope *
-          0.1;
+          Math.sin(2 * Math.PI * frequencies[j] * 1.5 * adjustedTime) * envelope * 0.1;
       }
     }
 
@@ -683,45 +651,42 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
     let sample = 0;
 
     switch (themeStyle) {
-      case "nature":
+      case 'nature':
         // Gentle bird-like awakening
-        sample =
-          Math.sin(2 * Math.PI * (440 + Math.sin(time * 2) * 50) * time) * 0.6;
+        sample = Math.sin(2 * Math.PI * (440 + Math.sin(time * 2) * 50) * time) * 0.6;
         sample +=
-          Math.sin(2 * Math.PI * (660 + Math.sin(time * 1.5) * 30) * time) *
-          0.4;
+          Math.sin(2 * Math.PI * (660 + Math.sin(time * 1.5) * 30) * time) * 0.4;
         sample *= 1 + Math.sin(time * 0.5) * 0.3; // Gentle tremolo
         break;
 
-      case "electronic":
+      case 'electronic':
         // Pulsing electronic alarm
         const pulseRate = Math.floor(time * 2) % 2;
-        sample =
-          Math.sign(Math.sin(2 * Math.PI * 880 * time)) * 0.7 * pulseRate;
+        sample = Math.sign(Math.sin(2 * Math.PI * 880 * time)) * 0.7 * pulseRate;
         sample += Math.sin(2 * Math.PI * 1760 * time) * 0.3 * pulseRate;
         break;
 
-      case "retro":
+      case 'retro':
         // 8-bit game-style alarm
         const freq = [440, 554.37, 659.25, 880][Math.floor(time * 4) % 4];
         sample = Math.sign(Math.sin(2 * Math.PI * freq * time)) * 0.6;
         sample = Math.round(sample * 16) / 16; // Quantize
         break;
 
-      case "minimal":
+      case 'minimal':
         // Very gentle sine wave
         sample = Math.sin(2 * Math.PI * 440 * time) * 0.3;
         sample *= 1 + Math.sin(time * 0.3) * 0.2;
         break;
 
-      case "cyberpunk":
+      case 'cyberpunk':
         // Harsh dystopian alarm
         sample = Math.sign(Math.sin(2 * Math.PI * 220 * time)) * 0.8;
         sample += (Math.random() - 0.5) * 0.4;
         sample = Math.tanh(sample * 2); // Aggressive distortion
         break;
 
-      case "fantasy":
+      case 'fantasy':
         // Magical bell-like alarm
         const magicFreqs = [523.25, 659.25, 783.99, 1046.5];
         for (let j = 0; j < magicFreqs.length; j++) {
@@ -735,14 +700,14 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
         }
         break;
 
-      case "horror":
+      case 'horror':
         // Unsettling drone alarm
         sample = Math.sin(2 * Math.PI * 110 * time) * 0.5;
         sample += Math.sin(2 * Math.PI * 113 * time) * 0.5; // Dissonant beating
         sample *= 1 + Math.sin(time * 1.5) * 0.5;
         break;
 
-      case "classical":
+      case 'classical':
         // Orchestral morning call
         const classicalChord = [523.25, 659.25, 783.99]; // C major
         for (const freq of classicalChord) {
@@ -751,7 +716,7 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
         sample *= 1 + Math.sin(time * 0.8) * 0.3;
         break;
 
-      case "lofi":
+      case 'lofi':
         // Warm, muffled alarm
         sample = Math.sin(2 * Math.PI * 440 * time) * 0.6;
         sample += Math.sin(2 * Math.PI * 220 * time) * 0.3;
@@ -759,7 +724,7 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
         sample += (Math.random() - 0.5) * 0.05; // Vinyl noise
         break;
 
-      case "ambient":
+      case 'ambient':
         // Ethereal pad-like alarm
         sample = Math.sin(2 * Math.PI * 261.63 * time) * 0.4;
         sample += Math.sin(2 * Math.PI * 329.63 * time) * 0.3;
@@ -767,23 +732,22 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
         sample *= 1 + Math.sin(time * 0.2) * 0.4;
         break;
 
-      case "scifi":
+      case 'scifi':
         // Futuristic sweep alarm
         const sweepFreq = 400 + Math.sin(time * 3) * 200;
         sample = Math.sin(2 * Math.PI * sweepFreq * time) * 0.7;
         sample += Math.sin(2 * Math.PI * sweepFreq * 1.618 * time) * 0.3;
         break;
 
-      case "workout":
+      case 'workout':
         // High-energy motivational alarm
         const beatPattern = Math.floor(time * 8) % 8;
         const intensity = [1, 0.5, 0.8, 0.5, 1, 0.5, 1, 0][beatPattern];
         sample = Math.sin(2 * Math.PI * 880 * time) * 0.6 * intensity;
-        sample +=
-          Math.sign(Math.sin(2 * Math.PI * 440 * time)) * 0.4 * intensity;
+        sample += Math.sign(Math.sin(2 * Math.PI * 440 * time)) * 0.4 * intensity;
         break;
 
-      case "seasonal":
+      case 'seasonal':
         // Crystal winter alarm
         sample = Math.sin(2 * Math.PI * 1760 * time) * 0.5;
         sample += Math.sin(2 * Math.PI * 2217.46 * time) * 0.3;
@@ -812,157 +776,157 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
 
 // All theme packs with UI and alarm sounds
 async function generateAllThemePacks() {
-  const soundsDir = path.join(__dirname, "..", "public", "sounds", "themes");
+  const soundsDir = path.join(__dirname, '..', 'public', 'sounds', 'themes');
 
   const themes = [
     // Existing themes
     {
-      name: "nature",
+      name: 'nature',
       sounds: {
-        "ui/click.wav": generateNatureClick,
-        "ui/success.wav": generateNatureSuccess,
-        "ui/hover.wav": () => generateNatureClick(0.05),
-        "ui/error.wav": () => generateNatureClick(0.3),
-        "alarms/gentle_awakening.wav": () => generateAlarmSound("nature", 8),
-        "alarms/forest_morning.wav": () => generateAlarmSound("nature", 10),
+        'ui/click.wav': generateNatureClick,
+        'ui/success.wav': generateNatureSuccess,
+        'ui/hover.wav': () => generateNatureClick(0.05),
+        'ui/error.wav': () => generateNatureClick(0.3),
+        'alarms/gentle_awakening.wav': () => generateAlarmSound('nature', 8),
+        'alarms/forest_morning.wav': () => generateAlarmSound('nature', 10),
       },
     },
     {
-      name: "electronic",
+      name: 'electronic',
       sounds: {
-        "ui/click.wav": generateElectronicClick,
-        "ui/success.wav": generateElectronicSuccess,
-        "ui/hover.wav": () => generateElectronicClick(0.03),
-        "ui/error.wav": () => generateElectronicClick(0.4),
-        "alarms/digital_pulse.wav": () => generateAlarmSound("electronic", 8),
-        "alarms/synth_cascade.wav": () => generateAlarmSound("electronic", 10),
+        'ui/click.wav': generateElectronicClick,
+        'ui/success.wav': generateElectronicSuccess,
+        'ui/hover.wav': () => generateElectronicClick(0.03),
+        'ui/error.wav': () => generateElectronicClick(0.4),
+        'alarms/digital_pulse.wav': () => generateAlarmSound('electronic', 8),
+        'alarms/synth_cascade.wav': () => generateAlarmSound('electronic', 10),
       },
     },
     {
-      name: "retro",
+      name: 'retro',
       sounds: {
-        "ui/click.wav": generateRetroClick,
-        "ui/success.wav": generateRetroSuccess,
-        "ui/hover.wav": () => generateRetroClick(0.08),
-        "ui/error.wav": () => generateRetroClick(0.35),
-        "alarms/arcade_alarm.wav": () => generateAlarmSound("retro", 8),
-        "alarms/pixel_wake.wav": () => generateAlarmSound("retro", 10),
+        'ui/click.wav': generateRetroClick,
+        'ui/success.wav': generateRetroSuccess,
+        'ui/hover.wav': () => generateRetroClick(0.08),
+        'ui/error.wav': () => generateRetroClick(0.35),
+        'alarms/arcade_alarm.wav': () => generateAlarmSound('retro', 8),
+        'alarms/pixel_wake.wav': () => generateAlarmSound('retro', 10),
       },
     },
     {
-      name: "minimal",
+      name: 'minimal',
       sounds: {
-        "ui/click.wav": generateMinimalClick,
-        "ui/success.wav": generateMinimalSuccess,
-        "ui/hover.wav": () => generateMinimalClick(0.02),
-        "ui/error.wav": () => generateMinimalClick(0.15),
-        "alarms/gentle_tone.wav": () => generateAlarmSound("minimal", 8),
-        "alarms/soft_chime.wav": () => generateAlarmSound("minimal", 10),
+        'ui/click.wav': generateMinimalClick,
+        'ui/success.wav': generateMinimalSuccess,
+        'ui/hover.wav': () => generateMinimalClick(0.02),
+        'ui/error.wav': () => generateMinimalClick(0.15),
+        'alarms/gentle_tone.wav': () => generateAlarmSound('minimal', 8),
+        'alarms/soft_chime.wav': () => generateAlarmSound('minimal', 10),
       },
     },
     {
-      name: "cyberpunk",
+      name: 'cyberpunk',
       sounds: {
-        "ui/click.wav": generateCyberpunkClick,
-        "ui/success.wav": generateCyberpunkSuccess,
-        "ui/hover.wav": () => generateCyberpunkClick(0.05),
-        "ui/error.wav": () => generateCyberpunkClick(0.25),
-        "alarms/dystopian_alert.wav": () => generateAlarmSound("cyberpunk", 8),
-        "alarms/neon_nightmare.wav": () => generateAlarmSound("cyberpunk", 10),
+        'ui/click.wav': generateCyberpunkClick,
+        'ui/success.wav': generateCyberpunkSuccess,
+        'ui/hover.wav': () => generateCyberpunkClick(0.05),
+        'ui/error.wav': () => generateCyberpunkClick(0.25),
+        'alarms/dystopian_alert.wav': () => generateAlarmSound('cyberpunk', 8),
+        'alarms/neon_nightmare.wav': () => generateAlarmSound('cyberpunk', 10),
       },
     },
     {
-      name: "fantasy",
+      name: 'fantasy',
       sounds: {
-        "ui/click.wav": generateFantasyClick,
-        "ui/success.wav": generateFantasySuccess,
-        "ui/hover.wav": () => generateFantasyClick(0.08),
-        "ui/error.wav": () => generateFantasyClick(0.2),
-        "alarms/magic_bells.wav": () => generateAlarmSound("fantasy", 8),
-        "alarms/enchanted_chimes.wav": () => generateAlarmSound("fantasy", 10),
+        'ui/click.wav': generateFantasyClick,
+        'ui/success.wav': generateFantasySuccess,
+        'ui/hover.wav': () => generateFantasyClick(0.08),
+        'ui/error.wav': () => generateFantasyClick(0.2),
+        'alarms/magic_bells.wav': () => generateAlarmSound('fantasy', 8),
+        'alarms/enchanted_chimes.wav': () => generateAlarmSound('fantasy', 10),
       },
     },
     {
-      name: "horror",
+      name: 'horror',
       sounds: {
-        "ui/click.wav": generateHorrorClick,
-        "ui/success.wav": generateHorrorSuccess,
-        "ui/hover.wav": () => generateHorrorClick(0.08),
-        "ui/error.wav": () => generateHorrorClick(0.3),
-        "alarms/ominous_drone.wav": () => generateAlarmSound("horror", 8),
-        "alarms/creepy_whispers.wav": () => generateAlarmSound("horror", 10),
+        'ui/click.wav': generateHorrorClick,
+        'ui/success.wav': generateHorrorSuccess,
+        'ui/hover.wav': () => generateHorrorClick(0.08),
+        'ui/error.wav': () => generateHorrorClick(0.3),
+        'alarms/ominous_drone.wav': () => generateAlarmSound('horror', 8),
+        'alarms/creepy_whispers.wav': () => generateAlarmSound('horror', 10),
       },
     },
     {
-      name: "classical",
+      name: 'classical',
       sounds: {
-        "ui/click.wav": generateClassicalClick,
-        "ui/success.wav": generateClassicalSuccess,
-        "ui/hover.wav": () => generateClassicalClick(0.04),
-        "ui/error.wav": () => generateClassicalClick(0.2),
-        "alarms/morning_symphony.wav": () => generateAlarmSound("classical", 8),
-        "alarms/orchestral_dawn.wav": () => generateAlarmSound("classical", 10),
+        'ui/click.wav': generateClassicalClick,
+        'ui/success.wav': generateClassicalSuccess,
+        'ui/hover.wav': () => generateClassicalClick(0.04),
+        'ui/error.wav': () => generateClassicalClick(0.2),
+        'alarms/morning_symphony.wav': () => generateAlarmSound('classical', 8),
+        'alarms/orchestral_dawn.wav': () => generateAlarmSound('classical', 10),
       },
     },
     {
-      name: "lofi",
+      name: 'lofi',
       sounds: {
-        "ui/click.wav": generateLofiClick,
-        "ui/success.wav": generateLofiSuccess,
-        "ui/hover.wav": () => generateLofiClick(0.06),
-        "ui/error.wav": () => generateLofiClick(0.25),
-        "alarms/vinyl_morning.wav": () => generateAlarmSound("lofi", 8),
-        "alarms/chill_awakening.wav": () => generateAlarmSound("lofi", 10),
+        'ui/click.wav': generateLofiClick,
+        'ui/success.wav': generateLofiSuccess,
+        'ui/hover.wav': () => generateLofiClick(0.06),
+        'ui/error.wav': () => generateLofiClick(0.25),
+        'alarms/vinyl_morning.wav': () => generateAlarmSound('lofi', 8),
+        'alarms/chill_awakening.wav': () => generateAlarmSound('lofi', 10),
       },
     },
     // NEW THEMES
     {
-      name: "ambient",
+      name: 'ambient',
       sounds: {
-        "ui/click.wav": generateAmbientClick,
-        "ui/success.wav": generateAmbientSuccess,
-        "ui/hover.wav": () => generateAmbientClick(0.12),
-        "ui/error.wav": () => generateAmbientClick(0.25),
-        "alarms/ethereal_pads.wav": () => generateAlarmSound("ambient", 8),
-        "alarms/atmospheric_rise.wav": () => generateAlarmSound("ambient", 10),
+        'ui/click.wav': generateAmbientClick,
+        'ui/success.wav': generateAmbientSuccess,
+        'ui/hover.wav': () => generateAmbientClick(0.12),
+        'ui/error.wav': () => generateAmbientClick(0.25),
+        'alarms/ethereal_pads.wav': () => generateAlarmSound('ambient', 8),
+        'alarms/atmospheric_rise.wav': () => generateAlarmSound('ambient', 10),
       },
     },
     {
-      name: "scifi",
+      name: 'scifi',
       sounds: {
-        "ui/click.wav": generateSciFiClick,
-        "ui/success.wav": generateSciFiSuccess,
-        "ui/hover.wav": () => generateSciFiClick(0.08),
-        "ui/error.wav": () => generateSciFiClick(0.2),
-        "alarms/space_station.wav": () => generateAlarmSound("scifi", 8),
-        "alarms/laser_sweep.wav": () => generateAlarmSound("scifi", 10),
+        'ui/click.wav': generateSciFiClick,
+        'ui/success.wav': generateSciFiSuccess,
+        'ui/hover.wav': () => generateSciFiClick(0.08),
+        'ui/error.wav': () => generateSciFiClick(0.2),
+        'alarms/space_station.wav': () => generateAlarmSound('scifi', 8),
+        'alarms/laser_sweep.wav': () => generateAlarmSound('scifi', 10),
       },
     },
     {
-      name: "workout",
+      name: 'workout',
       sounds: {
-        "ui/click.wav": generateWorkoutClick,
-        "ui/success.wav": generateWorkoutSuccess,
-        "ui/hover.wav": () => generateWorkoutClick(0.04),
-        "ui/error.wav": () => generateWorkoutClick(0.15),
-        "alarms/pump_up.wav": () => generateAlarmSound("workout", 8),
-        "alarms/energy_blast.wav": () => generateAlarmSound("workout", 10),
+        'ui/click.wav': generateWorkoutClick,
+        'ui/success.wav': generateWorkoutSuccess,
+        'ui/hover.wav': () => generateWorkoutClick(0.04),
+        'ui/error.wav': () => generateWorkoutClick(0.15),
+        'alarms/pump_up.wav': () => generateAlarmSound('workout', 8),
+        'alarms/energy_blast.wav': () => generateAlarmSound('workout', 10),
       },
     },
     {
-      name: "seasonal",
+      name: 'seasonal',
       sounds: {
-        "ui/click.wav": generateSeasonalClick,
-        "ui/success.wav": generateSeasonalSuccess,
-        "ui/hover.wav": () => generateSeasonalClick(0.08),
-        "ui/error.wav": () => generateSeasonalClick(0.2),
-        "alarms/winter_sparkle.wav": () => generateAlarmSound("seasonal", 8),
-        "alarms/crystal_morning.wav": () => generateAlarmSound("seasonal", 10),
+        'ui/click.wav': generateSeasonalClick,
+        'ui/success.wav': generateSeasonalSuccess,
+        'ui/hover.wav': () => generateSeasonalClick(0.08),
+        'ui/error.wav': () => generateSeasonalClick(0.2),
+        'alarms/winter_sparkle.wav': () => generateAlarmSound('seasonal', 8),
+        'alarms/crystal_morning.wav': () => generateAlarmSound('seasonal', 10),
       },
     },
   ];
 
-  console.log("🎨 Generating comprehensive sound theme packs...");
+  console.log('🎨 Generating comprehensive sound theme packs...');
   console.log(`📦 Creating ${themes.length} themes with UI and alarm sounds
 `);
 
@@ -987,18 +951,16 @@ async function generateAllThemePacks() {
     }
   }
 
-  console.log(
-    "\n✅ All comprehensive sound theme packs generated successfully!",
-  );
-  console.log("\n🎵 Available themes with UI and alarm sounds:");
+  console.log('\n✅ All comprehensive sound theme packs generated successfully!');
+  console.log('\n🎵 Available themes with UI and alarm sounds:');
   themes.forEach((theme, index) => {
-    const isNew = index >= 9 ? " ✨ NEW" : "";
+    const isNew = index >= 9 ? ' ✨ NEW' : '';
     console.log(`  - ${theme.name}${isNew}`);
   });
 
   console.log(`
 📊 Total files generated: ${themes.reduce((sum, theme) => sum + Object.keys(theme.sounds).length, 0)}`);
-  console.log("🔊 Each theme now includes UI sounds AND alarm variations!");
+  console.log('🔊 Each theme now includes UI sounds AND alarm variations!');
 }
 
 // Run if called directly

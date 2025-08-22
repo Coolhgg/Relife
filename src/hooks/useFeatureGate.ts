@@ -1,9 +1,9 @@
 // Feature Gate Hook for Relife Alarm App
 // Provides access control and upgrade prompts for premium features
 
-import { useState, useEffect, useCallback } from "react";
-import { useSubscription } from "./useSubscription";
-import AnalyticsService from "../services/analytics";
+import { useState, useEffect, useCallback } from 'react';
+import { useSubscription } from './useSubscription';
+import AnalyticsService from '../services/analytics';
 
 interface FeatureGateConfig {
   feature: string;
@@ -38,7 +38,9 @@ interface UseFeatureGateOptions {
   onAccessDenied?: (result: FeatureGateResult) => void;
 }
 
-function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & FeatureGateActions {
+function useFeatureGate(
+  options: UseFeatureGateOptions
+): FeatureGateResult & FeatureGateActions {
   const { userId, feature, config = {}, onAccessDenied, onUpgradeRequired } = options;
 
   const subscription = useSubscription({ userId });
@@ -47,7 +49,7 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
     isGated: true,
     requiredTier: null,
     upgradeMessage: '',
-    canBypass: false
+    canBypass: false,
   });
 
   const analytics = AnalyticsService.getInstance();
@@ -60,7 +62,7 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
     customMessage: '',
     redirectToUpgrade: true,
     trackUsage: true,
-    ...config
+    ...config,
   };
 
   // Feature access definitions
@@ -77,81 +79,94 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
       requiredTier: 'basic',
       category: 'alarms',
       description: 'Set unlimited alarms',
-      upgradeMessage: 'Upgrade to Basic to set unlimited alarms and never miss an important wake-up call!'
+      upgradeMessage:
+        'Upgrade to Basic to set unlimited alarms and never miss an important wake-up call!',
     },
     custom_sounds: {
       requiredTier: 'basic',
       category: 'alarms',
       description: 'Upload custom alarm sounds',
-      upgradeMessage: 'Upgrade to Basic to upload your own alarm sounds and wake up to your favorite tunes!'
+      upgradeMessage:
+        'Upgrade to Basic to upload your own alarm sounds and wake up to your favorite tunes!',
     },
     alarm_battles: {
       requiredTier: 'basic',
       category: 'battles',
       description: 'Join alarm battles',
-      upgradeMessage: 'Upgrade to Basic to participate in alarm battles and compete with friends!',
-      hasUsageLimit: true
+      upgradeMessage:
+        'Upgrade to Basic to participate in alarm battles and compete with friends!',
+      hasUsageLimit: true,
     },
     unlimited_battles: {
       requiredTier: 'premium',
       category: 'battles',
       description: 'Unlimited battle participation',
-      upgradeMessage: 'Upgrade to Premium to join unlimited battles and become the ultimate early bird!'
+      upgradeMessage:
+        'Upgrade to Premium to join unlimited battles and become the ultimate early bird!',
     },
     smart_scheduling: {
       requiredTier: 'premium',
       category: 'ai',
       description: 'AI-powered smart alarm scheduling',
-      upgradeMessage: 'Upgrade to Premium to unlock AI-powered smart scheduling and optimize your sleep cycles!'
+      upgradeMessage:
+        'Upgrade to Premium to unlock AI-powered smart scheduling and optimize your sleep cycles!',
     },
     advanced_voice_ai: {
       requiredTier: 'premium',
       category: 'voice',
       description: 'Advanced AI voice recognition',
-      upgradeMessage: 'Upgrade to Premium for advanced voice AI that understands context and natural speech!'
+      upgradeMessage:
+        'Upgrade to Premium for advanced voice AI that understands context and natural speech!',
     },
     calendar_integration: {
       requiredTier: 'premium',
       category: 'integrations',
       description: 'Calendar sync and integration',
-      upgradeMessage: 'Upgrade to Premium to sync with your calendar and auto-schedule wake-up times!'
+      upgradeMessage:
+        'Upgrade to Premium to sync with your calendar and auto-schedule wake-up times!',
     },
     weather_integration: {
       requiredTier: 'premium',
       category: 'integrations',
       description: 'Weather-based alarm adjustments',
-      upgradeMessage: 'Upgrade to Premium to adjust alarms based on weather conditions!'
+      upgradeMessage:
+        'Upgrade to Premium to adjust alarms based on weather conditions!',
     },
     advanced_analytics: {
       requiredTier: 'premium',
       category: 'analytics',
       description: 'Detailed sleep and wake patterns',
-      upgradeMessage: 'Upgrade to Premium to access detailed analytics and insights about your sleep patterns!'
+      upgradeMessage:
+        'Upgrade to Premium to access detailed analytics and insights about your sleep patterns!',
     },
     team_features: {
       requiredTier: 'pro',
       category: 'collaboration',
       description: 'Team battles and collaboration',
-      upgradeMessage: 'Upgrade to Pro to create team battles and collaborate with colleagues!'
+      upgradeMessage:
+        'Upgrade to Pro to create team battles and collaborate with colleagues!',
     },
     api_access: {
       requiredTier: 'pro',
       category: 'integrations',
       description: 'Developer API access',
-      upgradeMessage: 'Upgrade to Pro to access our developer API and build custom integrations!'
+      upgradeMessage:
+        'Upgrade to Pro to access our developer API and build custom integrations!',
     },
     white_label: {
       requiredTier: 'pro',
       category: 'customization',
       description: 'Remove Relife branding',
-      upgradeMessage: 'Upgrade to Pro to remove branding and white-label the app for your organization!'
+      upgradeMessage:
+        'Upgrade to Pro to remove branding and white-label the app for your organization!',
     },
     custom_themes: {
       requiredTier: 'pro',
       category: 'themes',
       description: 'Create custom themes',
-      upgradeMessage: 'Upgrade to Pro to create and share custom themes with unlimited customization options!'
-    }
+      upgradeMessage:
+        'Upgrade to Pro to create and share custom themes with unlimited customization options!',
+    },
   };
 
   // Calculate feature access
@@ -162,7 +177,7 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
           ...prev,
           hasAccess: false,
           isGated: true,
-          upgradeMessage: 'Loading subscription data...'
+          upgradeMessage: 'Loading subscription data...',
         }));
         return;
       }
@@ -174,7 +189,7 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
           ...prev,
           hasAccess: true,
           isGated: false,
-          upgradeMessage: ''
+          upgradeMessage: '',
         }));
         return;
       }
@@ -219,7 +234,7 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
         usageLimit,
         upgradeMessage,
         canBypass,
-        bypassReason: inGracePeriod ? 'grace_period' : undefined
+        bypassReason: inGracePeriod ? 'grace_period' : undefined,
       };
 
       setGateResult(result);
@@ -247,7 +262,7 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
       analytics.trackFeatureUsage('feature_gate_bypassed', undefined, {
         userId,
         feature,
-        reason: gateResult.bypassReason || 'soft_gate'
+        reason: gateResult.bypassReason || 'soft_gate',
       });
 
       return true;
@@ -258,7 +273,7 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
       userId,
       feature,
       currentTier: subscription.userTier,
-      requiredTier: gateResult.requiredTier
+      requiredTier: gateResult.requiredTier,
     });
 
     return false;
@@ -273,7 +288,7 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
       hasAccess: gateResult.hasAccess,
       isGated: gateResult.isGated,
       currentTier: subscription.userTier,
-      requiredTier: gateResult.requiredTier
+      requiredTier: gateResult.requiredTier,
     });
   }, [userId, feature, gateResult, subscription.userTier]);
 
@@ -283,7 +298,7 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
       analytics.trackFeatureUsage('upgrade_modal_requested', undefined, {
         userId,
         feature,
-        requiredTier: gateResult.requiredTier
+        requiredTier: gateResult.requiredTier,
       });
 
       // You would implement this to show your upgrade modal
@@ -291,27 +306,30 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
     }
   }, [userId, feature, gateResult.requiredTier]);
 
-  const bypassGate = useCallback((reason: string) => {
-    setGateResult(prev => ({
-      ...prev,
-      hasAccess: true,
-      isGated: false,
-      bypassReason: reason
-    }));
+  const bypassGate = useCallback(
+    (reason: string) => {
+      setGateResult(prev => ({
+        ...prev,
+        hasAccess: true,
+        isGated: false,
+        bypassReason: reason,
+      }));
 
-    analytics.trackFeatureUsage('feature_gate_bypassed_manual', undefined, {
-      userId,
-      feature,
-      reason
-    });
-  }, [userId, feature]);
+      analytics.trackFeatureUsage('feature_gate_bypassed_manual', undefined, {
+        userId,
+        feature,
+        reason,
+      });
+    },
+    [userId, feature]
+  );
 
   return {
     ...gateResult,
     requestAccess,
     trackFeatureAttempt,
     showUpgradeModal,
-    bypassGate
+    bypassGate,
   };
 }
 

@@ -6,7 +6,7 @@ import type {
   PremiumUsage,
   FeatureLimits,
   SUBSCRIPTION_LIMITS,
-  SUBSCRIPTION_PLANS
+  SUBSCRIPTION_PLANS,
 } from '../types';
 import { ErrorHandler } from './error-handler';
 
@@ -47,26 +47,29 @@ export class SubscriptionService {
         .eq('status', 'active')
         .single();
 
-      if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+      if (error && error.code !== 'PGRST116') {
+        // PGRST116 is "no rows returned"
         throw new Error(`Failed to get subscription: ${error.message}`);
       }
 
-      const subscription = data ? {
-        id: data.id,
-        userId: data.user_id,
-        tier: data.tier,
-        status: data.status,
-        currentPeriodStart: new Date(data.current_period_start),
-        currentPeriodEnd: new Date(data.current_period_end),
-        trialEnd: data.trial_end ? new Date(data.trial_end) : undefined,
-        cancelAtPeriodEnd: data.cancel_at_period_end,
-        canceledAt: data.canceled_at ? new Date(data.canceled_at) : undefined,
-        createdAt: new Date(data.created_at),
-        updatedAt: new Date(data.updated_at),
-        stripeCustomerId: data.stripe_customer_id,
-        stripeSubscriptionId: data.stripe_subscription_id,
-        stripePriceId: data.stripe_price_id
-      } as Subscription : null;
+      const subscription = data
+        ? ({
+            id: data.id,
+            userId: data.user_id,
+            tier: data.tier,
+            status: data.status,
+            currentPeriodStart: new Date(data.current_period_start),
+            currentPeriodEnd: new Date(data.current_period_end),
+            trialEnd: data.trial_end ? new Date(data.trial_end) : undefined,
+            cancelAtPeriodEnd: data.cancel_at_period_end,
+            canceledAt: data.canceled_at ? new Date(data.canceled_at) : undefined,
+            createdAt: new Date(data.created_at),
+            updatedAt: new Date(data.updated_at),
+            stripeCustomerId: data.stripe_customer_id,
+            stripeSubscriptionId: data.stripe_subscription_id,
+            stripePriceId: data.stripe_price_id,
+          } as Subscription)
+        : null;
 
       if (subscription) {
         this.setCachedData(cacheKey, subscription);
@@ -148,7 +151,8 @@ export class SubscriptionService {
         break;
     }
 
-    if (limit === -1) { // Unlimited
+    if (limit === -1) {
+      // Unlimited
       return { hasAccess: true };
     }
 
@@ -158,7 +162,7 @@ export class SubscriptionService {
         reason: `Daily/monthly limit exceeded`,
         upgradeRequired: true,
         currentUsage,
-        limit
+        limit,
       };
     }
 
@@ -192,15 +196,17 @@ export class SubscriptionService {
         throw new Error(`Failed to get usage: ${error.message}`);
       }
 
-      const usage = data ? {
-        userId: data.user_id,
-        month: data.month,
-        elevenlabsApiCalls: data.elevenlabs_api_calls,
-        aiInsightsGenerated: data.ai_insights_generated,
-        customVoiceMessages: data.custom_voice_messages,
-        premiumThemesUsed: data.premium_themes_used,
-        lastUpdated: new Date(data.last_updated)
-      } as PremiumUsage : null;
+      const usage = data
+        ? ({
+            userId: data.user_id,
+            month: data.month,
+            elevenlabsApiCalls: data.elevenlabs_api_calls,
+            aiInsightsGenerated: data.ai_insights_generated,
+            customVoiceMessages: data.custom_voice_messages,
+            premiumThemesUsed: data.premium_themes_used,
+            lastUpdated: new Date(data.last_updated),
+          } as PremiumUsage)
+        : null;
 
       if (usage) {
         this.setCachedData(cacheKey, usage, 1 * 60 * 1000); // Cache for 1 minute for usage data
@@ -236,7 +242,7 @@ export class SubscriptionService {
         p_user_id: userId,
         p_month: currentMonth,
         p_feature: feature,
-        p_increment: increment
+        p_increment: increment,
       });
 
       if (error) {
@@ -264,9 +270,8 @@ export class SubscriptionService {
     }
 
     try {
-      const { error } = await supabase
-        .from('subscriptions')
-        .upsert([{
+      const { error } = await supabase.from('subscriptions').upsert([
+        {
           id: subscription.id,
           user_id: subscription.userId,
           tier: subscription.tier,
@@ -280,8 +285,9 @@ export class SubscriptionService {
           updated_at: subscription.updatedAt.toISOString(),
           stripe_customer_id: subscription.stripeCustomerId,
           stripe_subscription_id: subscription.stripeSubscriptionId,
-          stripe_price_id: subscription.stripePriceId
-        }]);
+          stripe_price_id: subscription.stripePriceId,
+        },
+      ]);
 
       if (error) {
         throw new Error(`Failed to upsert subscription: ${error.message}`);
@@ -301,7 +307,10 @@ export class SubscriptionService {
   /**
    * Cancel a subscription
    */
-  static async cancelSubscription(userId: string, cancelAtPeriodEnd: boolean = true): Promise<void> {
+  static async cancelSubscription(
+    userId: string,
+    cancelAtPeriodEnd: boolean = true
+  ): Promise<void> {
     if (!this.isAvailable) {
       return;
     }
@@ -309,7 +318,7 @@ export class SubscriptionService {
     try {
       const updates: any = {
         cancel_at_period_end: cancelAtPeriodEnd,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       };
 
       if (!cancelAtPeriodEnd) {

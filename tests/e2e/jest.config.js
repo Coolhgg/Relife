@@ -13,13 +13,16 @@ module.exports = {
       'jest-junit',
       {
         outputDirectory: './test-results',
-        outputName: 'detox-junit.xml'
-      }
-    ]
+        outputName: 'detox-junit.xml',
+      },
+    ],
   ],
   verbose: true,
   setupFilesAfterEnv: ['<rootDir>/tests/e2e/setup.ts'],
   transform: {
-    '\\.[jt]sx?$': ['babel-jest', { presets: ['@babel/preset-env', '@babel/preset-typescript'] }]
-  }
+    '\\.[jt]sx?$': [
+      'babel-jest',
+      { presets: ['@babel/preset-env', '@babel/preset-typescript'] },
+    ],
+  },
 };

@@ -1,4 +1,4 @@
-import { expect, test, jest } from "@jest/globals";
+import { expect, test, jest } from '@jest/globals';
 /**
  * Unit tests for useCapacitor hook
  * Tests native mobile integration via Capacitor plugins
@@ -10,7 +10,7 @@ import { useCapacitor } from '../useCapacitor';
 // Mock Capacitor plugins
 const mockDevice = {
   getInfo: jest.fn(),
-  getBatteryInfo: jest.fn()
+  getBatteryInfo: jest.fn(),
 };
 
 const mockHaptics = {
@@ -18,7 +18,7 @@ const mockHaptics = {
   vibrate: jest.fn(),
   selectionStart: jest.fn(),
   selectionChanged: jest.fn(),
-  selectionEnd: jest.fn()
+  selectionEnd: jest.fn(),
 };
 
 const mockLocalNotifications = {
@@ -26,14 +26,14 @@ const mockLocalNotifications = {
   getPending: jest.fn(),
   cancel: jest.fn(),
   areEnabled: jest.fn(),
-  requestPermissions: jest.fn()
+  requestPermissions: jest.fn(),
 };
 
 const mockPreferences = {
   get: jest.fn(),
   set: jest.fn(),
   remove: jest.fn(),
-  clear: jest.fn()
+  clear: jest.fn(),
 };
 
 // Mock Capacitor core and plugins
@@ -41,24 +41,24 @@ jest.mock('@capacitor/core', () => ({
   Capacitor: {
     isNativePlatform: jest.fn(() => true),
     getPlatform: jest.fn(() => 'ios'),
-    isPluginAvailable: jest.fn(() => true)
-  }
+    isPluginAvailable: jest.fn(() => true),
+  },
 }));
 
 jest.mock('@capacitor/device', () => ({
-  Device: mockDevice
+  Device: mockDevice,
 }));
 
 jest.mock('@capacitor/haptics', () => ({
-  Haptics: mockHaptics
+  Haptics: mockHaptics,
 }));
 
 jest.mock('@capacitor/local-notifications', () => ({
-  LocalNotifications: mockLocalNotifications
+  LocalNotifications: mockLocalNotifications,
 }));
 
 jest.mock('@capacitor/preferences', () => ({
-  Preferences: mockPreferences
+  Preferences: mockPreferences,
 }));
 
 describe('useCapacitor', () => {
@@ -71,12 +71,12 @@ describe('useCapacitor', () => {
       platform: 'ios',
       osVersion: '15.0',
       manufacturer: 'Apple',
-      isVirtual: false
+      isVirtual: false,
     });
 
     mockDevice.getBatteryInfo.mockResolvedValue({
       batteryLevel: 0.75,
-      isCharging: false
+      isCharging: false,
     });
 
     mockLocalNotifications.areEnabled.mockResolvedValue({ value: true });
@@ -104,7 +104,7 @@ describe('useCapacitor', () => {
         platform: 'ios',
         osVersion: '15.0',
         manufacturer: 'Apple',
-        isVirtual: false
+        isVirtual: false,
       });
     });
 
@@ -119,7 +119,7 @@ describe('useCapacitor', () => {
 
       expect(batteryInfo).toEqual({
         batteryLevel: 0.75,
-        isCharging: false
+        isCharging: false,
       });
     });
 
@@ -167,7 +167,7 @@ describe('useCapacitor', () => {
       title: 'Alarm',
       body: 'Time to wake up!',
       id: 1,
-      schedule: { at: new Date(Date.now() + 60000) }
+      schedule: { at: new Date(Date.now() + 60000) },
     };
 
     await act(async () => {
@@ -175,15 +175,13 @@ describe('useCapacitor', () => {
     });
 
     expect(mockLocalNotifications.schedule).toHaveBeenCalledWith({
-      notifications: [notification]
+      notifications: [notification],
     });
   });
 
   it('should get pending notifications', async () => {
     mockLocalNotifications.getPending.mockResolvedValue({
-      notifications: [
-        { id: 1, title: 'Test Notification' }
-      ]
+      notifications: [{ id: 1, title: 'Test Notification' }],
     });
 
     const { result } = renderHook(() => useCapacitor());
@@ -191,9 +189,7 @@ describe('useCapacitor', () => {
     await act(async () => {
       const pending = await result.current.getPendingNotifications();
 
-      expect(pending).toEqual([
-        { id: 1, title: 'Test Notification' }
-      ]);
+      expect(pending).toEqual([{ id: 1, title: 'Test Notification' }]);
     });
 
     expect(mockLocalNotifications.getPending).toHaveBeenCalledTimes(1);
@@ -207,7 +203,7 @@ describe('useCapacitor', () => {
     });
 
     expect(mockLocalNotifications.cancel).toHaveBeenCalledWith({
-      notifications: [{ id: 1 }, { id: 2 }, { id: 3 }]
+      notifications: [{ id: 1 }, { id: 2 }, { id: 3 }],
     });
   });
 
@@ -239,7 +235,7 @@ describe('useCapacitor', () => {
 
     expect(mockPreferences.set).toHaveBeenCalledWith({
       key: 'theme',
-      value: 'dark'
+      value: 'dark',
     });
 
     // Get preference
@@ -284,11 +280,11 @@ describe('useCapacitor', () => {
     const mockCapacitor = {
       isNativePlatform: jest.fn(() => false),
       getPlatform: jest.fn(() => 'web'),
-      isPluginAvailable: jest.fn(() => false)
+      isPluginAvailable: jest.fn(() => false),
     };
 
     jest.doMock('@capacitor/core', () => ({
-      Capacitor: mockCapacitor
+      Capacitor: mockCapacitor,
     }));
 
     const { result } = renderHook(() => useCapacitor());
@@ -319,7 +315,7 @@ describe('useCapacitor', () => {
     const notifications = [
       { id: 1, title: 'Alarm 1', body: 'First alarm' },
       { id: 2, title: 'Alarm 2', body: 'Second alarm' },
-      { id: 3, title: 'Alarm 3', body: 'Third alarm' }
+      { id: 3, title: 'Alarm 3', body: 'Third alarm' },
     ];
 
     await act(async () => {
@@ -327,7 +323,7 @@ describe('useCapacitor', () => {
     });
 
     expect(mockLocalNotifications.schedule).toHaveBeenCalledWith({
-      notifications: notifications
+      notifications: notifications,
     });
   });
 });

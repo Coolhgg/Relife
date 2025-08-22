@@ -9,7 +9,9 @@ import { useRTL } from '../../hooks/useRTL';
 interface RTLGridProps {
   children: React.ReactNode;
   className?: string;
-  cols?: number | { sm?: number; md?: number; lg?: number; xl?: number; '2xl'?: number };
+  cols?:
+    | number
+    | { sm?: number; md?: number; lg?: number; xl?: number; '2xl'?: number };
   rows?: number | 'auto';
   gap?: number | string | { x?: number | string; y?: number | string };
   autoFlow?: 'row' | 'col' | 'row-dense' | 'col-dense' | 'rtl-row' | 'rtl-col';
@@ -166,8 +168,16 @@ export const RTLGrid: React.FC<RTLGridProps> = ({
 
     // Responsive classes
     Object.entries(cols).forEach(([breakpoint, value]) => {
-      if (breakpoint !== 'sm' && value && responsiveColsClasses[breakpoint as keyof typeof responsiveColsClasses]) {
-        classes.push(responsiveColsClasses[breakpoint as keyof typeof responsiveColsClasses][value as keyof typeof responsiveColsClasses.sm]);
+      if (
+        breakpoint !== 'sm' &&
+        value &&
+        responsiveColsClasses[breakpoint as keyof typeof responsiveColsClasses]
+      ) {
+        classes.push(
+          responsiveColsClasses[breakpoint as keyof typeof responsiveColsClasses][
+            value as keyof typeof responsiveColsClasses.sm
+          ]
+        );
       }
     });
 
@@ -200,12 +210,14 @@ export const RTLGrid: React.FC<RTLGridProps> = ({
   );
 
   const gridStyle = {
-    ...(gap && typeof gap === 'object' ? {
-      columnGap: typeof gap.x === 'number' ? `${gap.x}px` : gap.x,
-      rowGap: typeof gap.y === 'number' ? `${gap.y}px` : gap.y,
-    } : gap && {
-      gap: typeof gap === 'number' ? `${gap}px` : gap,
-    }),
+    ...(gap && typeof gap === 'object'
+      ? {
+          columnGap: typeof gap.x === 'number' ? `${gap.x}px` : gap.x,
+          rowGap: typeof gap.y === 'number' ? `${gap.y}px` : gap.y,
+        }
+      : gap && {
+          gap: typeof gap === 'number' ? `${gap}px` : gap,
+        }),
     ...style,
   };
 
