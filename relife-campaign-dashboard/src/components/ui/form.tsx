@@ -13,11 +13,6 @@ import {
 
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
-import {
-  FormFieldContext,
-  FormItemContext,
-  useFormField,
-} from '@/lib/hooks/use-form-field';
 
 const Form = FormProvider;
 
@@ -45,6 +40,14 @@ const FormField = <
   );
 };
 
+type FormItemContextValue = {
+  id: string;
+};
+
+const FormItemContext = React.createContext<FormItemContextValue>(
+  {} as FormItemContextValue
+);
+
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);
   const itemContext = React.useContext(FormItemContext);
@@ -67,14 +70,6 @@ const useFormField = () => {
     ...fieldState,
   };
 };
-
-type FormItemContextValue = {
-  id: string;
-};
-
-const FormItemContext = React.createContext<FormItemContextValue>(
-  {} as FormItemContextValue
-);
 
 function FormItem({ className, ...props }: React.ComponentProps<'div'>) {
   const id = React.useId();
