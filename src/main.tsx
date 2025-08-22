@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
@@ -7,7 +7,7 @@ import RootErrorBoundary from './components/RootErrorBoundary.tsx'
 import { setupNotificationListeners } from './services/capacitor'
 import { ServiceWorkerManager } from './services/service-worker-manager'
 import { initializeApp } from './config/initializeApp'
-import { pwaManager } from './services/pwa-manager'
+
 
 // Show loading screen while app initializes
 const showLoadingScreen = () => {
