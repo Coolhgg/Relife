@@ -6,7 +6,15 @@
 import { MonitoringIntegrationService } from './monitoring-integration';
 
 // Import types from the main application
-import type { User, UserPreferences as _UserPreferences, VoiceMood, D1Database, KVNamespace, R2Bucket, PersonalizationSettings } from '../types/index';
+import type {
+  User,
+  UserPreferences as _UserPreferences,
+  VoiceMood,
+  D1Database,
+  KVNamespace,
+  R2Bucket,
+  PersonalizationSettings,
+} from '../types/index';
 
 // Default personalization settings for new users
 const defaultPersonalizationSettings: PersonalizationSettings = {
@@ -18,7 +26,7 @@ const defaultPersonalizationSettings: PersonalizationSettings = {
     highContrastMode: false,
     saturationLevel: 50,
     brightnessLevel: 50,
-    warmthLevel: 50
+    warmthLevel: 50,
   },
   typographyPreferences: {
     preferredFontSize: 'medium',
@@ -27,7 +35,7 @@ const defaultPersonalizationSettings: PersonalizationSettings = {
     lineHeightPreference: 'comfortable',
     letterSpacingPreference: 'normal',
     fontWeight: 'normal',
-    dyslexiaFriendly: false
+    dyslexiaFriendly: false,
   },
   motionPreferences: {
     enableAnimations: true,
@@ -36,7 +44,7 @@ const defaultPersonalizationSettings: PersonalizationSettings = {
     preferCrossfade: false,
     enableParallax: true,
     enableHoverEffects: true,
-    enableFocusAnimations: true
+    enableFocusAnimations: true,
   },
   soundPreferences: {
     enableSounds: true,
@@ -45,7 +53,7 @@ const defaultPersonalizationSettings: PersonalizationSettings = {
     customSounds: {},
     muteOnFocus: false,
     hapticFeedback: true,
-    spatialAudio: false
+    spatialAudio: false,
   },
   layoutPreferences: {
     density: 'comfortable',
@@ -56,7 +64,7 @@ const defaultPersonalizationSettings: PersonalizationSettings = {
     showIcons: true,
     iconSize: 'medium',
     gridColumns: 2,
-    listSpacing: 'normal'
+    listSpacing: 'normal',
   },
   accessibilityPreferences: {
     screenReaderOptimized: false,
@@ -68,10 +76,10 @@ const defaultPersonalizationSettings: PersonalizationSettings = {
     underlineLinks: false,
     flashingElementsReduced: false,
     colorOnlyIndicators: false,
-    focusIndicatorStyle: 'outline'
+    focusIndicatorStyle: 'outline',
   },
   lastUpdated: new Date(),
-  syncAcrossDevices: true
+  syncAcrossDevices: true,
 };
 
 interface Alarm {
@@ -161,10 +169,10 @@ const mockUsers: User[] = [
       rewardsEnabled: true,
       aiInsightsEnabled: true,
       personalizedMessagesEnabled: true,
-      shareAchievements: true
+      shareAchievements: true,
     },
     subscriptionTier: 'premium',
-    createdAt: "2024-01-01"
+    createdAt: '2024-01-01',
   },
   {
     id: '2',
@@ -190,10 +198,10 @@ const mockUsers: User[] = [
       rewardsEnabled: true,
       aiInsightsEnabled: true,
       personalizedMessagesEnabled: true,
-      shareAchievements: false
+      shareAchievements: false,
     },
     subscriptionTier: 'free',
-    createdAt: "2024-01-02"
+    createdAt: '2024-01-02',
   },
 ];
 
@@ -205,11 +213,11 @@ const mockAlarms: Alarm[] = [
     label: 'Morning Workout',
     enabled: true,
     days: [1, 2, 3, 4, 5],
-    voiceMood: "drill-sergeant",
-    sound: "default",
-    difficulty: "medium",
-    battleId: "battle_1",
-    createdAt: "2024-01-01"
+    voiceMood: 'drill-sergeant',
+    sound: 'default',
+    difficulty: 'medium',
+    battleId: 'battle_1',
+    createdAt: '2024-01-01',
   },
 ];
 
@@ -224,8 +232,8 @@ const mockBattles: Battle[] = [
         status: 'joined',
         score: 0,
         wakeTime: null,
-        completedTasks: []
-      }
+        completedTasks: [],
+      },
     ],
     creatorId: '1',
     status: 'registration',
@@ -237,12 +245,12 @@ const mockBattles: Battle[] = [
       maxSnoozes: 0,
       difficulty: 'medium',
       weatherBonus: false,
-      taskChallenge: false
+      taskChallenge: false,
     },
     maxParticipants: 10,
     entryFee: 50,
-    createdAt: "2024-01-01"
-  }
+    createdAt: '2024-01-01',
+  },
 ];
 
 const mockTournaments: Tournament[] = [
@@ -257,8 +265,8 @@ const mockTournaments: Tournament[] = [
     entryFee: 100,
     startTime: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
     endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-    createdAt: "2024-01-01"
-  }
+    createdAt: '2024-01-01',
+  },
 ];
 
 // Helper function for CORS headers
@@ -284,11 +292,13 @@ export default {
     }
 
     // Route performance monitoring requests
-    if (url.pathname.startsWith('/api/performance/') ||
-        url.pathname.startsWith('/api/analytics/') ||
-        url.pathname.startsWith('/api/monitoring/') ||
-        url.pathname.startsWith('/api/external-monitoring/') ||
-        url.pathname.startsWith('/api/deployment/')) {
+    if (
+      url.pathname.startsWith('/api/performance/') ||
+      url.pathname.startsWith('/api/analytics/') ||
+      url.pathname.startsWith('/api/monitoring/') ||
+      url.pathname.startsWith('/api/external-monitoring/') ||
+      url.pathname.startsWith('/api/deployment/')
+    ) {
       const monitoringService = new MonitoringIntegrationService(env);
       return await monitoringService.handleMonitoringRequest(request);
     }
@@ -301,18 +311,20 @@ export default {
           {
             status: 'healthy',
             timestamp: new Date().toISOString(),
-            version: "1.0.0"
+            version: '1.0.0',
           },
           { headers: corsHeaders(origin) }
         );
       }
 
       // GET /api/users - List all users with battle stats
-      if (url.pathname === "/api/users" && method === "GET") {
+      if (url.pathname === '/api/users' && method === 'GET') {
         const enhancedUsers = mockUsers.map(user => ({
           ...user,
           battlesWon: mockBattles.filter(b => b.winner === user.id).length,
-          totalBattles: mockBattles.filter(b => b.participants.some(p => p.userId === user.id)).length
+          totalBattles: mockBattles.filter(b =>
+            b.participants.some(p => p.userId === user.id)
+          ).length,
         }));
 
         return Response.json(
@@ -329,25 +341,22 @@ export default {
 
         if (!user) {
           return Response.json(
-            { error: "User not found" },
+            { error: 'User not found' },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
 
-        return Response.json(
-          { user },
-          { headers: corsHeaders(origin) }
-        );
+        return Response.json({ user }, { headers: corsHeaders(origin) });
       }
 
       // POST /api/users - Create new user
-      if (url.pathname === "/api/users" && method === "POST") {
-        const body = await request.json() as Partial<User>;
+      if (url.pathname === '/api/users' && method === 'POST') {
+        const body = (await request.json()) as Partial<User>;
 
         // Validate input
         if (!body.name || !body.email) {
           return Response.json(
-            { error: "Name and email are required" },
+            { error: 'Name and email are required' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
@@ -375,7 +384,7 @@ export default {
             rewardsEnabled: true,
             aiInsightsEnabled: true,
             personalizedMessagesEnabled: true,
-            shareAchievements: true
+            shareAchievements: true,
           },
           subscriptionTier: 'free',
           createdAt: new Date().toISOString(),
@@ -403,10 +412,12 @@ export default {
         }
 
         if (enabled !== null) {
-          filteredAlarms = filteredAlarms.filter(a => a.enabled === (enabled === "true"));
+          filteredAlarms = filteredAlarms.filter(
+            a => a.enabled === (enabled === 'true')
+          );
         }
 
-        if (withBattles === "true") {
+        if (withBattles === 'true') {
           filteredAlarms = filteredAlarms.filter(a => a.battleId);
         }
 
@@ -417,13 +428,13 @@ export default {
       }
 
       // POST /api/alarms - Create new alarm
-      if (url.pathname === "/api/alarms" && method === "POST") {
-        const body = await request.json() as Partial<Alarm>;
+      if (url.pathname === '/api/alarms' && method === 'POST') {
+        const body = (await request.json()) as Partial<Alarm>;
 
         // Validate input
         if (!body.userId || !body.time || !body.label) {
           return Response.json(
-            { error: "UserId, time, and label are required" },
+            { error: 'UserId, time, and label are required' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
@@ -467,8 +478,8 @@ export default {
         }
 
         if (userId) {
-          filteredBattles = filteredBattles.filter(b =>
-            b.creatorId === userId || b.participants.some(p => p.userId === userId)
+          filteredBattles = filteredBattles.filter(
+            b => b.creatorId === userId || b.participants.some(p => p.userId === userId)
           );
         }
 
@@ -479,13 +490,13 @@ export default {
       }
 
       // POST /api/battles - Create new battle
-      if (url.pathname === "/api/battles" && method === "POST") {
-        const body = await request.json() as Partial<Battle>;
+      if (url.pathname === '/api/battles' && method === 'POST') {
+        const body = (await request.json()) as Partial<Battle>;
 
         // Validate input
         if (!body.type || !body.creatorId || !body.startTime || !body.endTime) {
           return Response.json(
-            { error: "Type, creatorId, startTime, and endTime are required" },
+            { error: 'Type, creatorId, startTime, and endTime are required' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
@@ -504,7 +515,7 @@ export default {
             maxSnoozes: 0,
             difficulty: 'medium',
             weatherBonus: false,
-            taskChallenge: false
+            taskChallenge: false,
           },
           maxParticipants: body.maxParticipants,
           entryFee: body.entryFee,
@@ -527,50 +538,52 @@ export default {
 
         if (!battle) {
           return Response.json(
-            { error: "Battle not found" },
+            { error: 'Battle not found' },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
 
-        return Response.json(
-          { battle },
-          { headers: corsHeaders(origin) }
-        );
+        return Response.json({ battle }, { headers: corsHeaders(origin) });
       }
 
       // POST /api/battles/:id/join - Join battle
       const joinBattleMatch = url.pathname.match(/^\/api\/battles\/([^/]+)\/join$/);
-      if (joinBattleMatch && method === "POST") {
+      if (joinBattleMatch && method === 'POST') {
         const battleId = joinBattleMatch[1];
-        const body = await request.json() as { userId: string };
+        const body = (await request.json()) as { userId: string };
 
         const battle = mockBattles.find(b => b.id === battleId);
 
         if (!battle) {
           return Response.json(
-            { error: "Battle not found" },
+            { error: 'Battle not found' },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
 
         if (battle.status !== 'registration') {
           return Response.json(
-            { error: "Battle registration is closed" },
+            { error: 'Battle registration is closed' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
 
-        if (battle.maxParticipants && battle.participants.length >= battle.maxParticipants) {
+        if (
+          battle.maxParticipants &&
+          battle.participants.length >= battle.maxParticipants
+        ) {
           return Response.json(
-            { error: "Battle is full" },
+            { error: 'Battle is full' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
 
-        const isAlreadyParticipant = battle.participants.some(p => p.userId === body.userId);
+        const isAlreadyParticipant = battle.participants.some(
+          p => p.userId === body.userId
+        );
         if (isAlreadyParticipant) {
           return Response.json(
-            { error: "User already in battle" },
+            { error: 'User already in battle' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
@@ -581,7 +594,7 @@ export default {
           status: 'joined',
           score: 0,
           wakeTime: null,
-          completedTasks: []
+          completedTasks: [],
         };
 
         battle.participants.push(participant);
@@ -612,13 +625,13 @@ export default {
       const wakeMatch = url.pathname.match(/^\/api\/battles\/([^/]+)\/wake$/);
       if (wakeMatch && method === 'POST') {
         const battleId = wakeMatch[1];
-        const body = await request.json() as { userId: string; wakeTime: string };
+        const body = (await request.json()) as { userId: string; wakeTime: string };
 
         const battle = mockBattles.find(b => b.id === battleId);
 
         if (!battle) {
           return Response.json(
-            { error: "Battle not found" },
+            { error: 'Battle not found' },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
@@ -626,7 +639,7 @@ export default {
         const participant = battle.participants.find(p => p.userId === body.userId);
         if (!participant) {
           return Response.json(
-            { error: "User not in battle" },
+            { error: 'User not in battle' },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
@@ -636,7 +649,9 @@ export default {
         // Calculate score based on wake time
         const targetTime = new Date(battle.startTime);
         const actualWakeTime = new Date(body.wakeTime);
-        const diffMinutes = Math.abs((actualWakeTime.getTime() - targetTime.getTime()) / 60000);
+        const diffMinutes = Math.abs(
+          (actualWakeTime.getTime() - targetTime.getTime()) / 60000
+        );
         participant.score = Math.max(0, 100 - diffMinutes);
 
         return Response.json(
@@ -647,11 +662,11 @@ export default {
 
       // GET /api/users/:id/stats - Get user battle statistics
       const userStatsMatch = url.pathname.match(/^\/api\/users\/([^/]+)\/stats$/);
-      if (userStatsMatch && method === "GET") {
+      if (userStatsMatch && method === 'GET') {
         const userId = userStatsMatch[1];
 
-        const userBattles = mockBattles.filter(b =>
-          b.participants.some(p => p.userId === userId) && b.status === "completed"
+        const userBattles = mockBattles.filter(
+          b => b.participants.some(p => p.userId === userId) && b.status === 'completed'
         );
 
         const wins = mockBattles.filter(b => b.winner === userId).length;
@@ -665,13 +680,10 @@ export default {
           winRate: Math.round(winRate),
           averageScore: 0, // Would calculate from participant scores
           currentStreak: 0, // Would track current win streak
-          longestStreak: 0 // Would track longest win streak
+          longestStreak: 0, // Would track longest win streak
         };
 
-        return Response.json(
-          { stats },
-          { headers: corsHeaders(origin) }
-        );
+        return Response.json({ stats }, { headers: corsHeaders(origin) });
       }
 
       // POST /api/echo - Echo endpoint for testing
@@ -681,7 +693,7 @@ export default {
           {
             echo: body,
             headers: Object.fromEntries(request.headers.entries()),
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           },
           { headers: corsHeaders(origin) }
         );
@@ -689,45 +701,44 @@ export default {
 
       // 404 for unmatched routes
       return Response.json(
-        { error: "Not Found", path: url.pathname },
+        { error: 'Not Found', path: url.pathname },
         { status: 404, headers: corsHeaders(origin) }
       );
-
     } catch (error) {
       console.error('API Error:', error);
       return Response.json(
-        { error: "Internal Server Error" },
+        { error: 'Internal Server Error' },
         { status: 500, headers: corsHeaders(origin) }
       );
     }
-  }
+  },
 };
 
 // Environment bindings interface for enhanced monitoring
 interface Env {
   // Database connections
-  DB: D1Database;                    // For SQL database
-  KV: KVNamespace;                   // For key-value storage
-  BUCKET?: R2Bucket;                 // For file storage
+  DB: D1Database; // For SQL database
+  KV: KVNamespace; // For key-value storage
+  BUCKET?: R2Bucket; // For file storage
 
   // API Keys and secrets
-  API_KEY?: string;                  // For general API access
-  JWT_SECRET: string;                // For JWT token signing
+  API_KEY?: string; // For general API access
+  JWT_SECRET: string; // For JWT token signing
 
   // Database connections
-  SUPABASE_URL: string;              // Supabase URL
-  SUPABASE_KEY: string;              // Supabase API key
-  SUPABASE_SERVICE_KEY: string;      // Supabase service role key
+  SUPABASE_URL: string; // Supabase URL
+  SUPABASE_KEY: string; // Supabase API key
+  SUPABASE_SERVICE_KEY: string; // Supabase service role key
 
   // External monitoring services
-  POSTHOG_API_KEY?: string;          // PostHog analytics
-  SENTRY_DSN?: string;               // Sentry error tracking
-  DATADOG_API_KEY?: string;          // DataDog monitoring
-  NEWRELIC_API_KEY?: string;         // New Relic APM
-  AMPLITUDE_API_KEY?: string;        // Amplitude analytics
+  POSTHOG_API_KEY?: string; // PostHog analytics
+  SENTRY_DSN?: string; // Sentry error tracking
+  DATADOG_API_KEY?: string; // DataDog monitoring
+  NEWRELIC_API_KEY?: string; // New Relic APM
+  AMPLITUDE_API_KEY?: string; // Amplitude analytics
 
   // Configuration
-  ENVIRONMENT: string;               // Environment (dev/staging/prod)
+  ENVIRONMENT: string; // Environment (dev/staging/prod)
 }
 
 // Available API Endpoints:

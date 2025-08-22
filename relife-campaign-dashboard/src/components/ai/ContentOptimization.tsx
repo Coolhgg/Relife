@@ -407,15 +407,17 @@ Ready to transform your mornings?`);
                             <div className="text-sm font-medium text-gray-700">
                               Key Improvements:
                             </div>
-                            {optimizedContent.improvements.map((improvement, index) => (
-                              <div
-                                key={index}
-                                className="flex items-start gap-2 text-sm"
-                              >
-                                <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                                <span>{improvement}</span>
-                              </div>
-                            ))}
+                            {optimizedContent.improvements.map(
+                              (improvement, _index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-start gap-2 text-sm"
+                                >
+                                  <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                                  <span>{improvement}</span>
+                                </div>
+                              )
+                            )}
                           </div>
                         </CardContent>
                       </Card>
@@ -476,7 +478,7 @@ Ready to transform your mornings?`);
 
               {subjectLineVariations.length > 0 ? (
                 <div className="space-y-3">
-                  {subjectLineVariations.map((variation, index) => (
+                  {subjectLineVariations.map((variation, _index) => (
                     <Card key={variation.id}>
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">
@@ -549,7 +551,7 @@ Ready to transform your mornings?`);
             <TabsContent value="history" className="space-y-4">
               {optimizationHistory.length > 0 ? (
                 <div className="space-y-3">
-                  {optimizationHistory.map((opt, index) => (
+                  {optimizationHistory.map((opt, _index) => (
                     <Card key={index}>
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">

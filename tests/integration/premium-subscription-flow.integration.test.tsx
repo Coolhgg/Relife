@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /**
  * Premium Subscription Flow Integration Tests
- * 
+ *
  * End-to-end tests for premium features and subscription management:
  * - Free tier limitations and upgrade prompts
  * - Premium feature discovery and paywall interactions
@@ -23,7 +23,11 @@ import { StripeService } from '../../src/services/stripe-service';
 import { SubscriptionService } from '../../src/services/subscription';
 
 import { integrationTestHelpers } from '../utils/integration-test-setup';
-import { createMockUser, createMockAlarm, measurePerformance } from '../utils/test-mocks';
+import {
+  createMockUser,
+  createMockAlarm,
+  measurePerformance,
+} from '../utils/test-mocks';
 
 vi.mock('../../src/services/supabase');
 vi.mock('../../src/services/stripe-service');
@@ -47,17 +51,23 @@ describe('Premium Subscription Flow Integration', () => {
       const freeUser = createMockUser({
         subscriptionTier: 'free',
         alarmsCount: 3, // At free tier limit
-        premiumFeatures: []
+        premiumFeatures: [],
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(freeUser);
       vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
-        alarms: Array(3).fill(null).map((_, i) => createMockAlarm({ id: `alarm-${i}` })),
-        error: null
+        alarms: Array(3)
+          .fill(null)
+          .map((_, i) => createMockAlarm({ id: `alarm-${i}` })),
+        error: null,
       });
 
       await act(async () => {
-        const result = render(<BrowserRouter><App /></BrowserRouter>);
+        const result = render(
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        );
         container = result.container;
       });
 
@@ -67,7 +77,9 @@ describe('Premium Subscription Flow Integration', () => {
 
       // Should show upgrade prompt instead of alarm form
       await waitFor(() => {
-        expect(screen.getByText(/upgrade.*premium|unlock.*premium/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/upgrade.*premium|unlock.*premium/i)
+        ).toBeInTheDocument();
         expect(screen.getByText(/3.*alarm.*limit/i)).toBeInTheDocument();
       });
 
@@ -80,7 +92,11 @@ describe('Premium Subscription Flow Integration', () => {
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(freeUser);
 
       await act(async () => {
-        const result = render(<BrowserRouter><App /></BrowserRouter>);
+        const result = render(
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        );
         container = result.container;
       });
 
@@ -94,10 +110,10 @@ describe('Premium Subscription Flow Integration', () => {
 
       if (smartWakeupTeaser) {
         expect(smartWakeupTeaser).toBeInTheDocument();
-        
+
         // Click should trigger upgrade flow
         await user.click(smartWakeupTeaser);
-        
+
         await waitFor(() => {
           expect(screen.getByText(/upgrade.*premium/i)).toBeInTheDocument();
         });
@@ -111,7 +127,11 @@ describe('Premium Subscription Flow Integration', () => {
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(freeUser);
 
       await act(async () => {
-        const result = render(<BrowserRouter><App /></BrowserRouter>);
+        const result = render(
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        );
         container = result.container;
       });
 
@@ -129,7 +149,7 @@ describe('Premium Subscription Flow Integration', () => {
       vi.mocked(StripeService.createSubscription).mockResolvedValue({
         id: 'sub_test_123',
         status: 'active',
-        current_period_end: Date.now() + (30 * 24 * 60 * 60 * 1000)
+        current_period_end: Date.now() + 30 * 24 * 60 * 60 * 1000,
       });
 
       // Fill payment form (mocked Stripe Elements)
@@ -140,14 +160,26 @@ describe('Premium Subscription Flow Integration', () => {
       await user.click(subscribeButton);
 
       // Should activate premium features
-      const updatedUser = { ...freeUser, subscriptionTier: 'premium', premiumFeatures: ['unlimited_alarms', 'custom_sounds'] };
-      vi.mocked(SupabaseService.updateUserSubscription).mockResolvedValue({ user: updatedUser, error: null });
-
-      await waitFor(() => {
-        expect(screen.getByText(/subscription.*active|welcome.*premium/i)).toBeInTheDocument();
+      const updatedUser = {
+        ...freeUser,
+        subscriptionTier: 'premium',
+        premiumFeatures: ['unlimited_alarms', 'custom_sounds'],
+      };
+      vi.mocked(SupabaseService.updateUserSubscription).mockResolvedValue({
+        user: updatedUser,
+        error: null,
       });
 
-      expect(StripeService.createSubscription).toHaveBeenCalledWith(mockPaymentMethod.id, 'monthly');
+      await waitFor(() => {
+        expect(
+          screen.getByText(/subscription.*active|welcome.*premium/i)
+        ).toBeInTheDocument();
+      });
+
+      expect(StripeService.createSubscription).toHaveBeenCalledWith(
+        mockPaymentMethod.id,
+        'monthly'
+      );
     });
 
     it('should handle payment failures gracefully', async () => {
@@ -155,7 +187,11 @@ describe('Premium Subscription Flow Integration', () => {
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(freeUser);
 
       await act(async () => {
-        const result = render(<BrowserRouter><App /></BrowserRouter>);
+        const result = render(
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        );
         container = result.container;
       });
 
@@ -163,7 +199,9 @@ describe('Premium Subscription Flow Integration', () => {
       await user.click(upgradeButton);
 
       // Mock payment failure
-      vi.mocked(StripeService.createPaymentMethod).mockRejectedValue(new Error('Your card was declined'));
+      vi.mocked(StripeService.createPaymentMethod).mockRejectedValue(
+        new Error('Your card was declined')
+      );
 
       const monthlyPlan = screen.getByRole('button', { name: /monthly/i });
       await user.click(monthlyPlan);
@@ -186,12 +224,18 @@ describe('Premium Subscription Flow Integration', () => {
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(freeUser);
 
       await act(async () => {
-        const result = render(<BrowserRouter><App /></BrowserRouter>);
+        const result = render(
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        );
         container = result.container;
       });
 
       // Start premium trial
-      const startTrialButton = screen.getByRole('button', { name: /start.*trial|try.*free/i });
+      const startTrialButton = screen.getByRole('button', {
+        name: /start.*trial|try.*free/i,
+      });
       await user.click(startTrialButton);
 
       const trialUser = {
@@ -199,10 +243,13 @@ describe('Premium Subscription Flow Integration', () => {
         subscriptionTier: 'trial',
         trialStartedAt: new Date(),
         trialEndsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        premiumFeatures: ['unlimited_alarms', 'custom_sounds']
+        premiumFeatures: ['unlimited_alarms', 'custom_sounds'],
       };
 
-      vi.mocked(SupabaseService.startPremiumTrial).mockResolvedValue({ user: trialUser, error: null });
+      vi.mocked(SupabaseService.startPremiumTrial).mockResolvedValue({
+        user: trialUser,
+        error: null,
+      });
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(trialUser);
 
       await waitFor(() => {
@@ -210,7 +257,9 @@ describe('Premium Subscription Flow Integration', () => {
       });
 
       // Should show trial countdown
-      expect(screen.getByText(/7.*days.*remaining|trial.*expires/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/7.*days.*remaining|trial.*expires/i)
+      ).toBeInTheDocument();
 
       // Premium features should now be accessible
       const settingsButton = screen.getByRole('button', { name: /settings/i });

@@ -10,7 +10,7 @@ import {
   X,
   ChevronUp,
   Send,
-  ThumbsDown
+  ThumbsDown,
 } from 'lucide-react';
 import FeedbackModal from './FeedbackModal';
 import BugReportModal from './BugReportModal';
@@ -27,12 +27,14 @@ export function FeedbackWidget({
   position = 'bottom-right',
   showBadge = true,
   autoHide = false,
-  autoHideDelay = 3000
+  autoHideDelay = 3000,
 }: FeedbackWidgetProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [showBugModal, setShowBugModal] = useState(false);
-  const [feedbackType, setFeedbackType] = useState<'rating' | 'text' | 'bug' | 'suggestion' | 'complaint'>('text');
+  const [feedbackType, setFeedbackType] = useState<
+    'rating' | 'text' | 'bug' | 'suggestion' | 'complaint'
+  >('text');
   const [isVisible, setIsVisible] = useState(true);
   const [hasNewFeatures, setHasNewFeatures] = useState(true);
 
@@ -42,7 +44,7 @@ export function FeedbackWidget({
     'bottom-right': 'bottom-6 right-6',
     'bottom-left': 'bottom-6 left-6',
     'top-right': 'top-6 right-6',
-    'top-left': 'top-6 left-6'
+    'top-left': 'top-6 left-6',
   };
 
   const feedbackOptions = [
@@ -52,7 +54,7 @@ export function FeedbackWidget({
       description: 'Share your overall experience',
       icon: Star,
       color: 'text-yellow-600 hover:text-yellow-700',
-      bgColor: 'hover:bg-yellow-50'
+      bgColor: 'hover:bg-yellow-50',
     },
     {
       id: 'text',
@@ -60,7 +62,7 @@ export function FeedbackWidget({
       description: 'Share thoughts and suggestions',
       icon: MessageSquare,
       color: 'text-blue-600 hover:text-blue-700',
-      bgColor: 'hover:bg-blue-50'
+      bgColor: 'hover:bg-blue-50',
     },
     {
       id: 'suggestion',
@@ -68,7 +70,7 @@ export function FeedbackWidget({
       description: 'Suggest new features',
       icon: Lightbulb,
       color: 'text-green-600 hover:text-green-700',
-      bgColor: 'hover:bg-green-50'
+      bgColor: 'hover:bg-green-50',
     },
     {
       id: 'complaint',
@@ -76,7 +78,7 @@ export function FeedbackWidget({
       description: 'Something bothering you?',
       icon: ThumbsDown,
       color: 'text-orange-600 hover:text-orange-700',
-      bgColor: 'hover:bg-orange-50'
+      bgColor: 'hover:bg-orange-50',
     },
     {
       id: 'bug',
@@ -84,8 +86,8 @@ export function FeedbackWidget({
       description: 'Report technical problems',
       icon: Bug,
       color: 'text-red-600 hover:text-red-700',
-      bgColor: 'hover:bg-red-50'
-    }
+      bgColor: 'hover:bg-red-50',
+    },
   ] as const;
 
   useEffect(() => {
@@ -121,7 +123,9 @@ export function FeedbackWidget({
 
   return (
     <>
-      <div className={`fixed ${positionClasses[position]} z-50 transition-all duration-300 ease-in-out`}>
+      <div
+        className={`fixed ${positionClasses[position]} z-50 transition-all duration-300 ease-in-out`}
+      >
         {isExpanded ? (
           <Card className="w-80 shadow-lg border-2">
             <CardContent className="p-4">
@@ -152,7 +156,9 @@ export function FeedbackWidget({
                       <Icon className={`w-5 h-5 ${option.color}`} />
                       <div className="text-left">
                         <div className="font-medium text-sm">{option.title}</div>
-                        <div className="text-xs text-gray-600">{option.description}</div>
+                        <div className="text-xs text-gray-600">
+                          {option.description}
+                        </div>
                       </div>
                     </button>
                   );

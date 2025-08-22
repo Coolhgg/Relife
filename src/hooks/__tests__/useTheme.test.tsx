@@ -1,4 +1,4 @@
-import { expect, test, jest } from "@jest/globals";
+import { expect, test, jest } from '@jest/globals';
 /// <reference lib="dom" />
 /**
  * Unit tests for useTheme hook
@@ -21,9 +21,9 @@ jest.mock('../../services/CloudSyncService', () => ({
       isOnline: true,
       isSyncing: false,
       hasConflicts: false,
-      pendingChanges: 0
-    }))
-  }))
+      pendingChanges: 0,
+    })),
+  })),
 }));
 
 jest.mock('../../services/theme-persistence', () => ({
@@ -41,14 +41,14 @@ jest.mock('../../services/theme-persistence', () => ({
         analytics: {
           lastUsed: new Date().toISOString(),
           usageCount: 0,
-          favoriteThemes: []
-        }
+          favoriteThemes: [],
+        },
       }),
       saveThemeData: jest.fn().mockResolvedValue(true),
       exportThemes: jest.fn().mockResolvedValue('{}'),
-      importThemes: jest.fn().mockResolvedValue(true)
-    }))
-  }
+      importThemes: jest.fn().mockResolvedValue(true),
+    })),
+  },
 }));
 
 // Mock localStorage
@@ -65,12 +65,12 @@ const mockLocalStorage = (() => {
     },
     clear: () => {
       store = {};
-    }
+    },
   };
 })();
 
 Object.defineProperty(window, 'localStorage', {
-  value: mockLocalStorage
+  value: mockLocalStorage,
 });
 
 // Mock matchMedia
@@ -178,15 +178,17 @@ describe('useTheme Hook', () => {
 
       const updates: Partial<PersonalizationSettings> = {
         colorPreferences: {
-          accentColor: '#ff0000'
-        }
+          accentColor: '#ff0000',
+        },
       };
 
       act(() => {
         result.current.updatePersonalization(updates);
       });
 
-      expect(result.current.personalization.colorPreferences?.accentColor).toBe('#ff0000');
+      expect(result.current.personalization.colorPreferences?.accentColor).toBe(
+        '#ff0000'
+      );
     });
 
     it('should update color preferences', () => {
@@ -196,7 +198,9 @@ describe('useTheme Hook', () => {
         result.current.updateColorPreference('primaryColor', '#00ff00');
       });
 
-      expect(result.current.personalization.colorPreferences?.primaryColor).toBe('#00ff00');
+      expect(result.current.personalization.colorPreferences?.primaryColor).toBe(
+        '#00ff00'
+      );
     });
 
     it('should update typography preferences', () => {
@@ -206,7 +210,9 @@ describe('useTheme Hook', () => {
         result.current.updateTypographyPreference('fontSize', 'large');
       });
 
-      expect(result.current.personalization.typographyPreferences?.fontSize).toBe('large');
+      expect(result.current.personalization.typographyPreferences?.fontSize).toBe(
+        'large'
+      );
     });
 
     it('should update motion preferences', () => {
@@ -246,7 +252,9 @@ describe('useTheme Hook', () => {
         result.current.updateAccessibilityPreference('highContrast', true);
       });
 
-      expect(result.current.personalization.accessibilityPreferences?.highContrast).toBe(true);
+      expect(
+        result.current.personalization.accessibilityPreferences?.highContrast
+      ).toBe(true);
     });
   });
 
@@ -286,7 +294,7 @@ describe('useTheme Hook', () => {
       let customTheme;
       await act(async () => {
         customTheme = await result.current.createCustomTheme('light', {
-          primaryColor: '#ff0000'
+          primaryColor: '#ff0000',
         });
       });
 
@@ -304,7 +312,7 @@ describe('useTheme Hook', () => {
         personalization: {},
         createdAt: new Date(),
         isCustom: true,
-        category: 'custom' as const
+        category: 'custom' as const,
       };
 
       await act(async () => {
@@ -353,9 +361,9 @@ describe('useTheme Hook', () => {
         version: '2.0.0',
         personalization: {
           colorPreferences: {
-            accentColor: '#ff0000'
-          }
-        }
+            accentColor: '#ff0000',
+          },
+        },
       });
 
       let success;
@@ -451,7 +459,11 @@ describe('useTheme Hook', () => {
   describe('System Theme Detection', () => {
     it('should detect system theme when enableSystem is true', () => {
       const wrapperWithSystem = ({ children }: { children: React.ReactNode }) => (
-        <ThemeProvider defaultTheme="light" enableSystem={true} storageKey="test-theme-system">
+        <ThemeProvider
+          defaultTheme="light"
+          enableSystem={true}
+          storageKey="test-theme-system"
+        >
           {children}
         </ThemeProvider>
       );

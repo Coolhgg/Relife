@@ -151,27 +151,15 @@
     "jest-axe": {
       "version": "latest",
       "rules": "wcag21aa",
-      "tags": [
-        "wcag2a",
-        "wcag2aa"
-      ]
+      "tags": ["wcag2a", "wcag2aa"]
     },
     "playwright-axe": {
       "version": "latest",
-      "include": [
-        "main",
-        "nav",
-        "[role=\"main\"]"
-      ],
-      "exclude": [
-        "iframe",
-        "[aria-hidden=\"true\"]"
-      ]
+      "include": ["main", "nav", "[role=\"main\"]"],
+      "exclude": ["iframe", "[aria-hidden=\"true\"]"]
     },
     "lighthouse": {
-      "categories": [
-        "accessibility"
-      ],
+      "categories": ["accessibility"],
       "threshold": 90
     },
     "pa11y": {
@@ -180,16 +168,8 @@
     }
   },
   "reporting": {
-    "formats": [
-      "html",
-      "json",
-      "junit"
-    ],
-    "destinations": [
-      "artifacts/a11y-reports/",
-      "playwright-report/",
-      "coverage/a11y/"
-    ],
+    "formats": ["html", "json", "junit"],
+    "destinations": ["artifacts/a11y-reports/", "playwright-report/", "coverage/a11y/"],
     "notifications": {
       "onFailure": true,
       "onImprovement": true,

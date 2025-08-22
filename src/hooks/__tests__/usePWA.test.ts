@@ -1,4 +1,4 @@
-import { expect, test, jest } from "@jest/globals";
+import { expect, test, jest } from '@jest/globals';
 /// <reference lib="dom" />
 /**
  * Unit tests for PWA hooks
@@ -16,7 +16,10 @@ import {
   useBackgroundSync,
   useAlarmPWA,
 } from '../usePWA';
-import { renderHookWithProviders, clearAllMocks } from '../../__tests__/utils/hook-testing-utils';
+import {
+  renderHookWithProviders,
+  clearAllMocks,
+} from '../../__tests__/utils/hook-testing-utils';
 
 // Mock PWA manager
 const mockPWAManager = {
@@ -80,7 +83,7 @@ describe('PWA Hooks', () => {
     // Mock matchMedia
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: jest.fn().mockImplementation((query) => ({
+      value: jest.fn().mockImplementation(query => ({
         matches: query === '(display-mode: standalone)',
         media: query,
         onchange: null,
@@ -161,11 +164,23 @@ describe('PWA Hooks', () => {
     it('should set up event listeners on mount', () => {
       renderHookWithProviders(() => usePWA());
 
-      expect(window.addEventListener).toHaveBeenCalledWith('online', expect.any(Function));
-      expect(window.addEventListener).toHaveBeenCalledWith('offline', expect.any(Function));
-      expect(mockPWAManager.on).toHaveBeenCalledWith('installable', expect.any(Function));
+      expect(window.addEventListener).toHaveBeenCalledWith(
+        'online',
+        expect.any(Function)
+      );
+      expect(window.addEventListener).toHaveBeenCalledWith(
+        'offline',
+        expect.any(Function)
+      );
+      expect(mockPWAManager.on).toHaveBeenCalledWith(
+        'installable',
+        expect.any(Function)
+      );
       expect(mockPWAManager.on).toHaveBeenCalledWith('installed', expect.any(Function));
-      expect(mockPWAManager.on).toHaveBeenCalledWith('already-installed', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith(
+        'already-installed',
+        expect.any(Function)
+      );
     });
 
     it('should clean up event listeners on unmount', () => {
@@ -173,11 +188,26 @@ describe('PWA Hooks', () => {
 
       unmount();
 
-      expect(window.removeEventListener).toHaveBeenCalledWith('online', expect.any(Function));
-      expect(window.removeEventListener).toHaveBeenCalledWith('offline', expect.any(Function));
-      expect(mockPWAManager.off).toHaveBeenCalledWith('installable', expect.any(Function));
-      expect(mockPWAManager.off).toHaveBeenCalledWith('installed', expect.any(Function));
-      expect(mockPWAManager.off).toHaveBeenCalledWith('already-installed', expect.any(Function));
+      expect(window.removeEventListener).toHaveBeenCalledWith(
+        'online',
+        expect.any(Function)
+      );
+      expect(window.removeEventListener).toHaveBeenCalledWith(
+        'offline',
+        expect.any(Function)
+      );
+      expect(mockPWAManager.off).toHaveBeenCalledWith(
+        'installable',
+        expect.any(Function)
+      );
+      expect(mockPWAManager.off).toHaveBeenCalledWith(
+        'installed',
+        expect.any(Function)
+      );
+      expect(mockPWAManager.off).toHaveBeenCalledWith(
+        'already-installed',
+        expect.any(Function)
+      );
     });
   });
 
@@ -246,10 +276,19 @@ describe('PWA Hooks', () => {
     it('should set up PWA event listeners', () => {
       renderHookWithProviders(() => useInstallPrompt());
 
-      expect(mockPWAManager.on).toHaveBeenCalledWith('installable', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith(
+        'installable',
+        expect.any(Function)
+      );
       expect(mockPWAManager.on).toHaveBeenCalledWith('installed', expect.any(Function));
-      expect(mockPWAManager.on).toHaveBeenCalledWith('install-accepted', expect.any(Function));
-      expect(mockPWAManager.on).toHaveBeenCalledWith('install-dismissed', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith(
+        'install-accepted',
+        expect.any(Function)
+      );
+      expect(mockPWAManager.on).toHaveBeenCalledWith(
+        'install-dismissed',
+        expect.any(Function)
+      );
     });
   });
 
@@ -440,9 +479,18 @@ describe('PWA Hooks', () => {
     it('should set up online/offline event listeners', () => {
       renderHookWithProviders(() => useOffline());
 
-      expect(window.addEventListener).toHaveBeenCalledWith('online', expect.any(Function));
-      expect(window.addEventListener).toHaveBeenCalledWith('offline', expect.any(Function));
-      expect(mockPWAManager.on).toHaveBeenCalledWith('sync-complete', expect.any(Function));
+      expect(window.addEventListener).toHaveBeenCalledWith(
+        'online',
+        expect.any(Function)
+      );
+      expect(window.addEventListener).toHaveBeenCalledWith(
+        'offline',
+        expect.any(Function)
+      );
+      expect(mockPWAManager.on).toHaveBeenCalledWith(
+        'sync-complete',
+        expect.any(Function)
+      );
     });
   });
 
@@ -465,7 +513,7 @@ describe('PWA Hooks', () => {
       });
 
       // Mock matchMedia to return true for standalone
-      window.matchMedia = jest.fn().mockImplementation((query) => ({
+      window.matchMedia = jest.fn().mockImplementation(query => ({
         matches: query === '(display-mode: standalone)',
         media: query,
         addEventListener: jest.fn(),
@@ -664,9 +712,18 @@ describe('PWA Hooks', () => {
     it('should set up alarm event listeners', () => {
       renderHookWithProviders(() => useAlarmPWA());
 
-      expect(mockPWAManager.on).toHaveBeenCalledWith('alarm-triggered', expect.any(Function));
-      expect(mockPWAManager.on).toHaveBeenCalledWith('alarm-dismissed', expect.any(Function));
-      expect(mockPWAManager.on).toHaveBeenCalledWith('alarm-snoozed', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith(
+        'alarm-triggered',
+        expect.any(Function)
+      );
+      expect(mockPWAManager.on).toHaveBeenCalledWith(
+        'alarm-dismissed',
+        expect.any(Function)
+      );
+      expect(mockPWAManager.on).toHaveBeenCalledWith(
+        'alarm-snoozed',
+        expect.any(Function)
+      );
     });
 
     it('should clean up alarm event listeners on unmount', () => {
@@ -674,9 +731,18 @@ describe('PWA Hooks', () => {
 
       unmount();
 
-      expect(mockPWAManager.off).toHaveBeenCalledWith('alarm-triggered', expect.any(Function));
-      expect(mockPWAManager.off).toHaveBeenCalledWith('alarm-dismissed', expect.any(Function));
-      expect(mockPWAManager.off).toHaveBeenCalledWith('alarm-snoozed', expect.any(Function));
+      expect(mockPWAManager.off).toHaveBeenCalledWith(
+        'alarm-triggered',
+        expect.any(Function)
+      );
+      expect(mockPWAManager.off).toHaveBeenCalledWith(
+        'alarm-dismissed',
+        expect.any(Function)
+      );
+      expect(mockPWAManager.off).toHaveBeenCalledWith(
+        'alarm-snoozed',
+        expect.any(Function)
+      );
     });
   });
 });

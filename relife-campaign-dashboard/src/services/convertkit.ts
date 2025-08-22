@@ -81,7 +81,7 @@ export class ConvertKitService {
 
     // Set default params for all requests
     this.api.defaults.params = {
-      api_key: this.apiKey
+      api_key: this.apiKey,
     };
   }
 
@@ -103,12 +103,14 @@ export class ConvertKitService {
     }
   }
 
-  async getSubscribers(page: number = 1): Promise<{ subscribers: ConvertKitSubscriber[]; total_subscribers: number }> {
+  async getSubscribers(
+    page: number = 1
+  ): Promise<{ subscribers: ConvertKitSubscriber[]; total_subscribers: number }> {
     this.ensureConfigured();
 
     try {
       const response = await this.api.get('/subscribers', {
-        params: { page }
+        params: { page },
       });
       return response.data;
     } catch (error) {
@@ -129,18 +131,21 @@ export class ConvertKitService {
     }
   }
 
-  async addSubscriber(email: string, data?: {
-    first_name?: string;
-    fields?: Record<string, any>;
-    tags?: number[];
-  }): Promise<ConvertKitSubscriber> {
+  async addSubscriber(
+    email: string,
+    data?: {
+      first_name?: string;
+      fields?: Record<string, any>;
+      tags?: number[];
+    }
+  ): Promise<ConvertKitSubscriber> {
     this.ensureConfigured();
 
     try {
       const response = await this.api.post('/subscribers', {
         api_secret: this.apiSecret,
         email,
-        ...data
+        ...data,
       });
       return response.data.subscription;
     } catch (error) {
@@ -161,17 +166,21 @@ export class ConvertKitService {
     }
   }
 
-  async addSubscriberToForm(formId: number, email: string, data?: {
-    first_name?: string;
-    fields?: Record<string, any>;
-  }): Promise<ConvertKitSubscriber> {
+  async addSubscriberToForm(
+    formId: number,
+    email: string,
+    data?: {
+      first_name?: string;
+      fields?: Record<string, any>;
+    }
+  ): Promise<ConvertKitSubscriber> {
     this.ensureConfigured();
 
     try {
       const response = await this.api.post(`/forms/${formId}/subscribe`, {
         api_key: this.apiKey,
         email,
-        ...data
+        ...data,
       });
       return response.data.subscription;
     } catch (error) {
@@ -192,13 +201,16 @@ export class ConvertKitService {
     }
   }
 
-  async addSubscriberToSequence(sequenceId: number, email: string): Promise<ConvertKitSubscriber> {
+  async addSubscriberToSequence(
+    sequenceId: number,
+    email: string
+  ): Promise<ConvertKitSubscriber> {
     this.ensureConfigured();
 
     try {
       const response = await this.api.post(`/sequences/${sequenceId}/subscribe`, {
         api_key: this.apiKey,
-        email
+        email,
       });
       return response.data.subscription;
     } catch (error) {
@@ -225,7 +237,7 @@ export class ConvertKitService {
     try {
       const response = await this.api.post(`/tags/${tagId}/subscribe`, {
         api_key: this.apiKey,
-        email
+        email,
       });
       return response.data.subscription;
     } catch (error) {
@@ -261,7 +273,7 @@ export class ConvertKitService {
     try {
       const response = await this.api.post('/broadcasts', {
         api_secret: this.apiSecret,
-        ...data
+        ...data,
       });
       return response.data.broadcast;
     } catch (error) {
@@ -288,7 +300,7 @@ export class ConvertKitService {
     try {
       const response = await this.api.put('/unsubscribe', {
         api_secret: this.apiSecret,
-        email
+        email,
       });
       return response.data.subscriber;
     } catch (error) {
@@ -303,7 +315,7 @@ export class ConvertKitService {
 
     try {
       const response = await this.api.get('/reports/growth', {
-        params: { timeframe }
+        params: { timeframe },
       });
       return response.data;
     } catch (error) {

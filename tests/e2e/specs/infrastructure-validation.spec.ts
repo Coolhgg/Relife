@@ -16,13 +16,15 @@ test.describe('E2E Infrastructure Validation', () => {
     await page.selectOption('select[name="size"]', 'medium');
 
     // Test screenshot capture
-    await page.screenshot({ path: 'test-results/infrastructure-validation-screenshot.png' });
+    await page.screenshot({
+      path: 'test-results/infrastructure-validation-screenshot.png',
+    });
 
     // Test async/await with modern JS features
     const testData = {
       timestamp: new Date().toISOString(),
       browserInfo: await page.evaluate(() => navigator.userAgent),
-      viewportSize: await page.viewportSize()
+      viewportSize: await page.viewportSize(),
     };
 
     expect(testData.timestamp).toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);

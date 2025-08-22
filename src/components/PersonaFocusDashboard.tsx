@@ -1,12 +1,33 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, LineChart, Line, Legend,
-  FunnelChart, Funnel, LabelList
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+  Legend,
+  FunnelChart,
+  Funnel,
+  LabelList,
 } from 'recharts';
 import {
-  Users, TrendingUp, Target, DollarSign, Clock,
-  UserCheck, UserX, Award, ArrowUp, ArrowDown
+  Users,
+  TrendingUp,
+  Target,
+  DollarSign,
+  Clock,
+  UserCheck,
+  UserX,
+  Award,
+  ArrowUp,
+  ArrowDown,
 } from 'lucide-react';
 
 interface PersonaMetrics {
@@ -30,7 +51,7 @@ interface PersonaDashboardProps {
 
 const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
   timeRange,
-  onTimeRangeChange
+  onTimeRangeChange,
 }) => {
   const [metrics, setMetrics] = useState<PersonaMetrics[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,12 +65,12 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
       count: 15420,
       conversionRate: 0.12,
       churnRate: 0.35,
-      ltv: 15.50,
+      ltv: 15.5,
       avgSessionDuration: 180,
       topFeatures: ['basic_alarm', 'free_sounds', 'simple_snooze'],
       revenueContribution: 0.08,
       trend: 'up',
-      color: '#ef4444'
+      color: '#ef4444',
     },
     {
       personaId: 'busy_ben',
@@ -57,12 +78,12 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
       count: 8750,
       conversionRate: 0.68,
       churnRate: 0.15,
-      ltv: 47.80,
+      ltv: 47.8,
       avgSessionDuration: 240,
       topFeatures: ['custom_sounds', 'multiple_alarms', 'family_mode'],
       revenueContribution: 0.35,
       trend: 'stable',
-      color: '#3b82f6'
+      color: '#3b82f6',
     },
     {
       personaId: 'professional_paula',
@@ -70,12 +91,12 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
       count: 4200,
       conversionRate: 0.85,
       churnRate: 0.08,
-      ltv: 125.30,
+      ltv: 125.3,
       avgSessionDuration: 320,
       topFeatures: ['ai_optimization', 'calendar_sync', 'analytics'],
       revenueContribution: 0.42,
       trend: 'up',
-      color: '#10b981'
+      color: '#10b981',
     },
     {
       personaId: 'enterprise_emma',
@@ -83,12 +104,12 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
       count: 950,
       conversionRate: 0.92,
       churnRate: 0.05,
-      ltv: 280.50,
+      ltv: 280.5,
       avgSessionDuration: 420,
       topFeatures: ['team_management', 'admin_dashboard', 'bulk_scheduling'],
       revenueContribution: 0.12,
       trend: 'up',
-      color: '#8b5cf6'
+      color: '#8b5cf6',
     },
     {
       personaId: 'student_sarah',
@@ -96,12 +117,12 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
       count: 6800,
       conversionRate: 0.45,
       churnRate: 0.25,
-      ltv: 28.90,
+      ltv: 28.9,
       avgSessionDuration: 150,
       topFeatures: ['study_timer', 'class_schedule', 'group_alarms'],
       revenueContribution: 0.08,
       trend: 'down',
-      color: '#f59e0b'
+      color: '#f59e0b',
     },
     {
       personaId: 'lifetime_larry',
@@ -109,13 +130,13 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
       count: 1200,
       conversionRate: 1.0,
       churnRate: 0.02,
-      ltv: 450.00,
+      ltv: 450.0,
       avgSessionDuration: 380,
       topFeatures: ['all_premium', 'early_access', 'vip_support'],
       revenueContribution: 0.15,
       trend: 'stable',
-      color: '#d97706'
-    }
+      color: '#d97706',
+    },
   ];
 
   useEffect(() => {
@@ -126,20 +147,29 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
     }, 1000);
   }, [timeRange]);
 
-  const totalUsers = useMemo(() =>
-    metrics.reduce((sum, persona) => sum + persona.count, 0), [metrics]
+  const totalUsers = useMemo(
+    () => metrics.reduce((sum, persona) => sum + persona.count, 0),
+    [metrics]
   );
 
-  const totalRevenue = useMemo(() =>
-    metrics.reduce((sum, persona) => sum + (persona.ltv * persona.count * persona.conversionRate), 0), [metrics]
+  const totalRevenue = useMemo(
+    () =>
+      metrics.reduce(
+        (sum, persona) => sum + persona.ltv * persona.count * persona.conversionRate,
+        0
+      ),
+    [metrics]
   );
 
   const PersonaCard = ({ persona }: { persona: PersonaMetrics }) => {
     const getTrendIcon = (trend: string) => {
       switch (trend) {
-        case 'up': return <ArrowUp className="w-4 h-4 text-green-500" />;
-        case 'down': return <ArrowDown className="w-4 h-4 text-red-500" />;
-        default: return <div className="w-4 h-4" />;
+        case 'up':
+          return <ArrowUp className="w-4 h-4 text-green-500" />;
+        case 'down':
+          return <ArrowDown className="w-4 h-4 text-red-500" />;
+        default:
+          return <div className="w-4 h-4" />;
       }
     };
 
@@ -198,17 +228,23 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
         <div className="mt-4 pt-4 border-t border-gray-100">
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-600">Churn Rate</span>
-            <span className={`text-sm font-medium ${
-              persona.churnRate < 0.1 ? 'text-green-600' :
-              persona.churnRate < 0.2 ? 'text-yellow-600' : 'text-red-600'
-            }`}>
+            <span
+              className={`text-sm font-medium ${
+                persona.churnRate < 0.1
+                  ? 'text-green-600'
+                  : persona.churnRate < 0.2
+                    ? 'text-yellow-600'
+                    : 'text-red-600'
+              }`}
+            >
               {(persona.churnRate * 100).toFixed(1)}%
             </span>
           </div>
           <div className="flex justify-between items-center mt-1">
             <span className="text-sm text-gray-600">Avg Session</span>
             <span className="text-sm font-medium text-gray-900">
-              {Math.floor(persona.avgSessionDuration / 60)}m {persona.avgSessionDuration % 60}s
+              {Math.floor(persona.avgSessionDuration / 60)}m{' '}
+              {persona.avgSessionDuration % 60}s
             </span>
           </div>
         </div>
@@ -222,7 +258,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
       users: persona.count,
       conversions: Math.round(persona.count * persona.conversionRate),
       conversionRate: persona.conversionRate,
-      fill: persona.color
+      fill: persona.color,
     }));
 
     return (
@@ -237,8 +273,10 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
             <YAxis />
             <Tooltip
               formatter={(value, name) => [
-                name === 'users' ? `${value.toLocaleString()} users` : `${value.toLocaleString()} conversions`,
-                name === 'users' ? 'Total Users' : 'Conversions'
+                name === 'users'
+                  ? `${value.toLocaleString()} users`
+                  : `${value.toLocaleString()} conversions`,
+                name === 'users' ? 'Total Users' : 'Conversions',
               ]}
             />
             <Bar dataKey="users" fill="#e5e7eb" />
@@ -254,7 +292,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
       name: persona.personaName,
       value: persona.revenueContribution,
       revenue: persona.ltv * persona.count * persona.conversionRate,
-      fill: persona.color
+      fill: persona.color,
     }));
 
     return (
@@ -269,7 +307,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={({name, value}) => `${name}: ${(value * 100).toFixed(1)}%`}
+              label={({ name, value }) => `${name}: ${(value * 100).toFixed(1)}%`}
               outerRadius={80}
               fill="#8884d8"
               dataKey="value"
@@ -279,7 +317,10 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
               ))}
             </Pie>
             <Tooltip
-              formatter={(value) => [`${(value as number * 100).toFixed(1)}%`, 'Revenue Share']}
+              formatter={value => [
+                `${((value as number) * 100).toFixed(1)}%`,
+                'Revenue Share',
+              ]}
             />
           </PieChart>
         </ResponsiveContainer>
@@ -308,7 +349,9 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Persona Focus Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Persona Focus Dashboard
+            </h1>
             <p className="text-gray-600 mt-2">
               Real-time analytics for persona-driven user engagement
             </p>
@@ -358,7 +401,12 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
               <div>
                 <p className="text-sm font-medium text-gray-600">Avg Conversion</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {((metrics.reduce((sum, p) => sum + p.conversionRate, 0) / metrics.length) * 100).toFixed(1)}%
+                  {(
+                    (metrics.reduce((sum, p) => sum + p.conversionRate, 0) /
+                      metrics.length) *
+                    100
+                  ).toFixed(1)}
+                  %
                 </p>
               </div>
               <Target className="w-8 h-8 text-purple-500" />
@@ -370,7 +418,10 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
               <div>
                 <p className="text-sm font-medium text-gray-600">Avg LTV</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  ${(metrics.reduce((sum, p) => sum + p.ltv, 0) / metrics.length).toFixed(0)}
+                  $
+                  {(
+                    metrics.reduce((sum, p) => sum + p.ltv, 0) / metrics.length
+                  ).toFixed(0)}
                 </p>
               </div>
               <Award className="w-8 h-8 text-yellow-500" />

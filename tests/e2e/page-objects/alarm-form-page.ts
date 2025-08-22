@@ -43,9 +43,13 @@ export class AlarmFormPage extends BasePage {
     this.saveButton = page.getByRole('button').filter({ hasText: /save|create/i });
     this.cancelButton = page.getByRole('button').filter({ hasText: /cancel|close/i });
     this.deleteButton = page.getByRole('button').filter({ hasText: /delete|remove/i });
-    this.advancedOptionsToggle = page.locator('[data-testid="advanced-options-toggle"]');
+    this.advancedOptionsToggle = page.locator(
+      '[data-testid="advanced-options-toggle"]'
+    );
     this.smartWakeupToggle = page.locator('[data-testid="smart-wakeup-toggle"]');
-    this.weatherIntegrationToggle = page.locator('[data-testid="weather-integration-toggle"]');
+    this.weatherIntegrationToggle = page.locator(
+      '[data-testid="weather-integration-toggle"]'
+    );
 
     // Day checkboxes
     this.mondayCheckbox = page.locator('[data-testid="day-monday"]');
@@ -58,7 +62,10 @@ export class AlarmFormPage extends BasePage {
   }
 
   async openAlarmForm() {
-    const addButton = this.page.getByRole('button').filter({ hasText: /add|create|new/i }).first();
+    const addButton = this.page
+      .getByRole('button')
+      .filter({ hasText: /add|create|new/i })
+      .first();
     await addButton.click();
     await this.waitForElement(this.timeInput);
   }
@@ -195,7 +202,9 @@ export class AlarmFormPage extends BasePage {
     await this.saveButton.click();
 
     // Check for validation messages
-    const validationMessages = this.page.locator('[role="alert"], .error-message, [data-testid*="error"]');
+    const validationMessages = this.page.locator(
+      '[role="alert"], .error-message, [data-testid*="error"]'
+    );
     const count = await validationMessages.count();
     expect(count).toBeGreaterThan(0);
   }

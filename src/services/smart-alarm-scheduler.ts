@@ -1,4 +1,8 @@
-import { SleepAnalysisService, SmartAlarmRecommendation, SleepPattern } from './sleep-analysis';
+import {
+  SleepAnalysisService,
+  SmartAlarmRecommendation,
+  SleepPattern,
+} from './sleep-analysis';
 import { supabase } from './supabase';
 import type { Alarm } from '../types';
 
@@ -50,7 +54,12 @@ export interface UserScheduleAnalysis {
 }
 
 export interface ScheduleRecommendation {
-  type: 'bedtime_earlier' | 'bedtime_later' | 'wake_consistent' | 'sleep_goal' | 'weekend_adjustment';
+  type:
+    | 'bedtime_earlier'
+    | 'bedtime_later'
+    | 'wake_consistent'
+    | 'sleep_goal'
+    | 'weekend_adjustment';
   description: string;
   impact: 'low' | 'medium' | 'high';
   timeAdjustment: number; // minutes
@@ -69,7 +78,9 @@ export class SmartAlarmScheduler {
   }
 
   // Smart alarm management
-  static async createSmartAlarm(alarmData: Partial<SmartAlarm>): Promise<SmartAlarm | null> {
+  static async createSmartAlarm(
+    alarmData: Partial<SmartAlarm>
+  ): Promise<SmartAlarm | null> {
     if (!this.userId) throw new Error('User not initialized');
 
     try {
@@ -85,7 +96,7 @@ export class SmartAlarmScheduler {
             reason: recommendation.reason,
             sleepQuality: recommendation.estimatedSleepQuality,
             wakeUpDifficulty: recommendation.wakeUpDifficulty,
-            lastUpdated: new Date()
+            lastUpdated: new Date(),
           };
         }
       }
@@ -113,32 +124,30 @@ export class SmartAlarmScheduler {
           reason: 'No sleep data available',
           sleepQuality: 5,
           wakeUpDifficulty: 'normal',
-          lastUpdated: new Date()
-        }
+          lastUpdated: new Date(),
+        },
       };
 
       // Save to database
-      const { data, error } = await supabase
-        .from('alarms')
-        .insert({
-          id: smartAlarm.id,
-          user_id: this.userId,
-          time: smartAlarm.time,
-          label: smartAlarm.label,
-          enabled: smartAlarm.enabled,
-          days: smartAlarm.days,
-          voice_mood: smartAlarm.voiceMood,
-          snooze_count: smartAlarm.snoozeCount,
-          smart_enabled: smartAlarm.smartEnabled,
-          wake_window: smartAlarm.wakeWindow,
-          adaptive_enabled: smartAlarm.adaptiveEnabled,
-          sleep_goal: smartAlarm.sleepGoal,
-          consistency: smartAlarm.consistency,
-          seasonal_adjustment: smartAlarm.seasonalAdjustment,
-          smart_schedule: smartAlarm.smartSchedule,
-          created_at: smartAlarm.createdAt,
-          updated_at: smartAlarm.updatedAt
-        });
+      const { data, error } = await supabase.from('alarms').insert({
+        id: smartAlarm.id,
+        user_id: this.userId,
+        time: smartAlarm.time,
+        label: smartAlarm.label,
+        enabled: smartAlarm.enabled,
+        days: smartAlarm.days,
+        voice_mood: smartAlarm.voiceMood,
+        snooze_count: smartAlarm.snoozeCount,
+        smart_enabled: smartAlarm.smartEnabled,
+        wake_window: smartAlarm.wakeWindow,
+        adaptive_enabled: smartAlarm.adaptiveEnabled,
+        sleep_goal: smartAlarm.sleepGoal,
+        consistency: smartAlarm.consistency,
+        seasonal_adjustment: smartAlarm.seasonalAdjustment,
+        smart_schedule: smartAlarm.smartSchedule,
+        created_at: smartAlarm.createdAt,
+        updated_at: smartAlarm.updatedAt,
+      });
 
       if (error) throw error;
       return smartAlarm;
@@ -148,7 +157,10 @@ export class SmartAlarmScheduler {
     }
   }
 
-  static async updateSmartAlarm(alarmId: string, updates: Partial<SmartAlarm>): Promise<SmartAlarm | null> {
+  static async updateSmartAlarm(
+    alarmId: string,
+    updates: Partial<SmartAlarm>
+  ): Promise<SmartAlarm | null> {
     if (!this.userId) throw new Error('User not initialized');
 
     try {
@@ -156,7 +168,10 @@ export class SmartAlarmScheduler {
       if (updates.time || updates.days || updates.smartEnabled) {
         const alarm = await this.getSmartAlarm(alarmId);
         if (alarm && updates.smartEnabled !== false) {
-          const recommendation = await this.generateSmartSchedule({ ...alarm, ...updates } as Alarm);
+          const recommendation = await this.generateSmartSchedule({
+            ...alarm,
+            ...updates,
+          } as Alarm);
           if (recommendation) {
             updates.smartSchedule = {
               originalTime: updates.time || alarm.time,
@@ -165,7 +180,7 @@ export class SmartAlarmScheduler {
               reason: recommendation.reason,
               sleepQuality: recommendation.estimatedSleepQuality,
               wakeUpDifficulty: recommendation.wakeUpDifficulty,
-              lastUpdated: new Date()
+              lastUpdated: new Date(),
             };
           }
         }
@@ -181,7 +196,7 @@ export class SmartAlarmScheduler {
           sleep_goal: updates.sleepGoal,
           seasonal_adjustment: updates.seasonalAdjustment,
           smart_schedule: updates.smartSchedule,
-          updated_at: new Date()
+          updated_at: new Date(),
         })
         .eq('id', alarmId)
         .eq('user_id', this.userId)
@@ -234,13 +249,19 @@ export class SmartAlarmScheduler {
   }
 
   // Smart scheduling logic
-  static async generateSmartSchedule(alarm: Alarm): Promise<SmartAlarmRecommendation | null> {
+  static async generateSmartSchedule(
+    alarm: Alarm
+  ): Promise<SmartAlarmRecommendation | null> {
     try {
-      const recommendation = await SleepAnalysisService.getSmartAlarmRecommendation(alarm);
+      const recommendation =
+        await SleepAnalysisService.getSmartAlarmRecommendation(alarm);
 
       if (recommendation && this.sleepGoal) {
         // Additional optimization based on sleep goal
-        const optimizedRecommendation = await this.optimizeForSleepGoal(recommendation, alarm);
+        const optimizedRecommendation = await this.optimizeForSleepGoal(
+          recommendation,
+          alarm
+        );
         return optimizedRecommendation;
       }
 
@@ -261,7 +282,8 @@ export class SmartAlarmScheduler {
     const recommendedWakeTime = this.parseTimeString(recommendation.recommendedTime);
 
     const targetMinutes = targetWakeTime.hours * 60 + targetWakeTime.minutes;
-    const recommendedMinutes = recommendedWakeTime.hours * 60 + recommendedWakeTime.minutes;
+    const recommendedMinutes =
+      recommendedWakeTime.hours * 60 + recommendedWakeTime.minutes;
 
     // If recommended time is too far from sleep goal, adjust
     const difference = Math.abs(targetMinutes - recommendedMinutes);
@@ -274,14 +296,17 @@ export class SmartAlarmScheduler {
         ...recommendation,
         recommendedTime: this.minutesToTimeString(consistentTime),
         reason: `${recommendation.reason} Adjusted for sleep goal consistency.`,
-        confidence: recommendation.confidence * 0.9 // Slightly reduce confidence
+        confidence: recommendation.confidence * 0.9, // Slightly reduce confidence
       };
     }
 
     return recommendation;
   }
 
-  private static findConsistentTime(targetMinutes: number, recommendedMinutes: number): number {
+  private static findConsistentTime(
+    targetMinutes: number,
+    recommendedMinutes: number
+  ): number {
     // Find a compromise between target and recommended time
     const midpoint = (targetMinutes + recommendedMinutes) / 2;
 
@@ -296,13 +321,11 @@ export class SmartAlarmScheduler {
     this.sleepGoal = goal;
 
     try {
-      await supabase
-        .from('user_preferences')
-        .upsert({
-          user_id: this.userId,
-          sleep_goal: goal,
-          updated_at: new Date()
-        });
+      await supabase.from('user_preferences').upsert({
+        user_id: this.userId,
+        sleep_goal: goal,
+        updated_at: new Date(),
+      });
 
       console.log('Sleep goal updated:', goal);
     } catch (error) {
@@ -334,7 +357,7 @@ export class SmartAlarmScheduler {
           targetDuration: 510, // 8.5 hours
           consistency: true,
           weekendVariation: 60, // 1 hour variation on weekends
-          adaptToLifestyle: true
+          adaptToLifestyle: true,
         };
       }
     } catch (error) {
@@ -356,7 +379,11 @@ export class SmartAlarmScheduler {
         averageSleepDuration: pattern.averageSleepDuration,
         sleepConsistency: this.calculateSleepConsistency(sleepSessions),
         chronotypeAlignment: this.calculateChronotypeAlignment(pattern, alarms),
-        recommendations: this.generateScheduleRecommendations(pattern, sleepSessions, alarms)
+        recommendations: this.generateScheduleRecommendations(
+          pattern,
+          sleepSessions,
+          alarms
+        ),
       };
 
       return analysis;
@@ -371,7 +398,10 @@ export class SmartAlarmScheduler {
 
     const last7Days = sessions.slice(0, 7);
     const totalSleepDeficit = last7Days.reduce((debt, session) => {
-      const deficit = Math.max(0, this.sleepGoal!.targetDuration - session.sleepDuration);
+      const deficit = Math.max(
+        0,
+        this.sleepGoal!.targetDuration - session.sleepDuration
+      );
       return debt + deficit;
     }, 0);
 
@@ -408,7 +438,10 @@ export class SmartAlarmScheduler {
     return squaredDiffs.reduce((sum, diff) => sum + diff, 0) / values.length;
   }
 
-  private static calculateChronotypeAlignment(pattern: SleepPattern, alarms: SmartAlarm[]): number {
+  private static calculateChronotypeAlignment(
+    pattern: SleepPattern,
+    alarms: SmartAlarm[]
+  ): number {
     if (alarms.length === 0) return 50; // Neutral score
 
     const idealBedtime = this.getIdealBedtimeForChronotype(pattern.chronotype);
@@ -423,29 +456,38 @@ export class SmartAlarmScheduler {
     return Math.round((bedtimeAlignment + waketimeAlignment) / 2);
   }
 
-  private static getIdealBedtimeForChronotype(chronotype: string): { hours: number; minutes: number } {
+  private static getIdealBedtimeForChronotype(chronotype: string): {
+    hours: number;
+    minutes: number;
+  } {
     const idealTimes = {
-      'extreme_early': { hours: 20, minutes: 30 },
-      'early': { hours: 21, minutes: 30 },
-      'normal': { hours: 22, minutes: 30 },
-      'late': { hours: 23, minutes: 30 },
-      'extreme_late': { hours: 0, minutes: 30 }
+      extreme_early: { hours: 20, minutes: 30 },
+      early: { hours: 21, minutes: 30 },
+      normal: { hours: 22, minutes: 30 },
+      late: { hours: 23, minutes: 30 },
+      extreme_late: { hours: 0, minutes: 30 },
     };
     return idealTimes[chronotype as keyof typeof idealTimes] || idealTimes.normal;
   }
 
-  private static getIdealWakeTimeForChronotype(chronotype: string): { hours: number; minutes: number } {
+  private static getIdealWakeTimeForChronotype(chronotype: string): {
+    hours: number;
+    minutes: number;
+  } {
     const idealTimes = {
-      'extreme_early': { hours: 5, minutes: 30 },
-      'early': { hours: 6, minutes: 30 },
-      'normal': { hours: 7, minutes: 30 },
-      'late': { hours: 8, minutes: 30 },
-      'extreme_late': { hours: 9, minutes: 30 }
+      extreme_early: { hours: 5, minutes: 30 },
+      early: { hours: 6, minutes: 30 },
+      normal: { hours: 7, minutes: 30 },
+      late: { hours: 8, minutes: 30 },
+      extreme_late: { hours: 9, minutes: 30 },
     };
     return idealTimes[chronotype as keyof typeof idealTimes] || idealTimes.normal;
   }
 
-  private static calculateAverageAlarmTime(alarms: SmartAlarm[]): { hours: number; minutes: number } {
+  private static calculateAverageAlarmTime(alarms: SmartAlarm[]): {
+    hours: number;
+    minutes: number;
+  } {
     const enabledAlarms = alarms.filter(a => a.enabled);
     if (enabledAlarms.length === 0) return { hours: 7, minutes: 0 };
 
@@ -457,11 +499,14 @@ export class SmartAlarmScheduler {
     const avgMinutes = totalMinutes / enabledAlarms.length;
     return {
       hours: Math.floor(avgMinutes / 60),
-      minutes: Math.round(avgMinutes % 60)
+      minutes: Math.round(avgMinutes % 60),
     };
   }
 
-  private static calculateTimeAlignment(actual: { hours: number; minutes: number }, ideal: { hours: number; minutes: number }): number {
+  private static calculateTimeAlignment(
+    actual: { hours: number; minutes: number },
+    ideal: { hours: number; minutes: number }
+  ): number {
     const actualMinutes = actual.hours * 60 + actual.minutes;
     const idealMinutes = ideal.hours * 60 + ideal.minutes;
 
@@ -486,7 +531,7 @@ export class SmartAlarmScheduler {
         description: `Move bedtime 15-30 minutes earlier to reduce your ${Math.round(sleepDebt)} minute sleep debt`,
         impact: 'high',
         timeAdjustment: -30,
-        expectedImprovement: 'Better energy and mood throughout the day'
+        expectedImprovement: 'Better energy and mood throughout the day',
       });
     }
 
@@ -498,7 +543,7 @@ export class SmartAlarmScheduler {
         description: 'Try to wake up at the same time every day, including weekends',
         impact: 'medium',
         timeAdjustment: 0,
-        expectedImprovement: 'More stable circadian rhythm and better sleep quality'
+        expectedImprovement: 'More stable circadian rhythm and better sleep quality',
       });
     }
 
@@ -507,15 +552,17 @@ export class SmartAlarmScheduler {
     if (alignment < 60) {
       const idealBedtime = this.getIdealBedtimeForChronotype(pattern.chronotype);
       const currentBedtime = this.parseTimeString(pattern.averageBedtime);
-      const adjustment = (idealBedtime.hours * 60 + idealBedtime.minutes) -
-                        (currentBedtime.hours * 60 + currentBedtime.minutes);
+      const adjustment =
+        idealBedtime.hours * 60 +
+        idealBedtime.minutes -
+        (currentBedtime.hours * 60 + currentBedtime.minutes);
 
       recommendations.push({
         type: adjustment > 0 ? 'bedtime_later' : 'bedtime_earlier',
         description: `Adjust bedtime to better match your ${pattern.chronotype} chronotype`,
         impact: 'medium',
         timeAdjustment: Math.round(adjustment / 2), // Gradual adjustment
-        expectedImprovement: 'Easier time falling asleep and waking up'
+        expectedImprovement: 'Easier time falling asleep and waking up',
       });
     }
 
@@ -527,19 +574,17 @@ export class SmartAlarmScheduler {
     if (!this.userId) return;
 
     try {
-      await supabase
-        .from('alarm_optimizations')
-        .insert({
-          user_id: this.userId,
-          alarm_id: optimization.alarmId,
-          optimization_type: optimization.optimizationType,
-          old_time: optimization.oldTime,
-          new_time: optimization.newTime,
-          reason: optimization.reason,
-          effective_date: optimization.effectiveDate,
-          accepted: optimization.accepted,
-          created_at: new Date()
-        });
+      await supabase.from('alarm_optimizations').insert({
+        user_id: this.userId,
+        alarm_id: optimization.alarmId,
+        optimization_type: optimization.optimizationType,
+        old_time: optimization.oldTime,
+        new_time: optimization.newTime,
+        reason: optimization.reason,
+        effective_date: optimization.effectiveDate,
+        accepted: optimization.accepted,
+        created_at: new Date(),
+      });
     } catch (error) {
       console.error('Error recording optimization:', error);
     }
@@ -569,7 +614,7 @@ export class SmartAlarmScheduler {
         newTime: item.new_time,
         reason: item.reason,
         effectiveDate: new Date(item.effective_date),
-        accepted: item.accepted
+        accepted: item.accepted,
       }));
     } catch (error) {
       console.error('Error fetching optimization history:', error);
@@ -602,8 +647,8 @@ export class SmartAlarmScheduler {
         reason: 'No data available',
         sleepQuality: 5,
         wakeUpDifficulty: 'normal',
-        lastUpdated: new Date()
-      }
+        lastUpdated: new Date(),
+      },
     };
   }
 
@@ -613,7 +658,7 @@ export class SmartAlarmScheduler {
   }
 
   private static minutesToTimeString(totalMinutes: number): string {
-    const adjustedMinutes = ((totalMinutes % (24 * 60)) + (24 * 60)) % (24 * 60);
+    const adjustedMinutes = ((totalMinutes % (24 * 60)) + 24 * 60) % (24 * 60);
     const hours = Math.floor(adjustedMinutes / 60);
     const minutes = adjustedMinutes % 60;
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;

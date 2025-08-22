@@ -2,7 +2,8 @@
 
 ## Overview
 
-The Relife alarm app now has comprehensive RTL (Right-to-Left) language support for Arabic, Hebrew, Urdu, Persian (Farsi), and Kurdish. This guide explains how to use and develop with the RTL system.
+The Relife alarm app now has comprehensive RTL (Right-to-Left) language support for Arabic, Hebrew,
+Urdu, Persian (Farsi), and Kurdish. This guide explains how to use and develop with the RTL system.
 
 ## Supported RTL Languages
 
@@ -96,8 +97,8 @@ padding-inline-end: 2rem;
 border-inline-start: 1px solid;
 
 /* Instead of physical properties */
-margin-left: 1rem;     /* ❌ Doesn't flip in RTL */
-padding-right: 2rem;   /* ❌ Doesn't flip in RTL */
+margin-left: 1rem; /* ❌ Doesn't flip in RTL */
+padding-right: 2rem; /* ❌ Doesn't flip in RTL */
 border-left: 1px solid; /* ❌ Doesn't flip in RTL */
 ```
 
@@ -109,18 +110,18 @@ Main hook for RTL functionality:
 
 ```tsx
 const {
-  isRTL,                    // boolean: true if current language is RTL
-  direction,                // 'ltr' | 'rtl': current text direction
-  language,                 // current language code
-  getDirection,             // function to get direction for any language
-  getFlexDirection,         // function to get RTL-aware flex direction
-  getTextAlign,             // function to get RTL-aware text alignment
-  textAlignClass,           // function to get Tailwind alignment classes
-  flexDirectionClass,       // function to get Tailwind flex classes
-  getMarginStyle,           // function for CSS-in-JS margin styles
-  getPaddingStyle,          // function for CSS-in-JS padding styles
-  getPositionStyle,         // function for CSS-in-JS positioning
-  getTransformStyle,        // function for CSS-in-JS transforms
+  isRTL, // boolean: true if current language is RTL
+  direction, // 'ltr' | 'rtl': current text direction
+  language, // current language code
+  getDirection, // function to get direction for any language
+  getFlexDirection, // function to get RTL-aware flex direction
+  getTextAlign, // function to get RTL-aware text alignment
+  textAlignClass, // function to get Tailwind alignment classes
+  flexDirectionClass, // function to get Tailwind flex classes
+  getMarginStyle, // function for CSS-in-JS margin styles
+  getPaddingStyle, // function for CSS-in-JS padding styles
+  getPositionStyle, // function for CSS-in-JS positioning
+  getTransformStyle, // function for CSS-in-JS transforms
 } = useRTL();
 ```
 
@@ -133,8 +134,8 @@ const { margin, padding } = useRTLSpacing();
 
 // CSS-in-JS styles
 const styles = {
-  ...margin.start('1rem'),    // margin-left in LTR, margin-right in RTL
-  ...padding.end('0.5rem'),   // padding-right in LTR, padding-left in RTL
+  ...margin.start('1rem'), // margin-left in LTR, margin-right in RTL
+  ...padding.end('0.5rem'), // padding-right in LTR, padding-left in RTL
 };
 ```
 
@@ -147,7 +148,7 @@ const { flex } = useRTLFlex();
 
 const containerStyle = {
   display: 'flex',
-  flexDirection: flex.direction(),     // 'row' in LTR, 'row-reverse' in RTL
+  flexDirection: flex.direction(), // 'row' in LTR, 'row-reverse' in RTL
   justifyContent: flex.justifyContent.start, // 'flex-start' in LTR, 'flex-end' in RTL
 };
 ```
@@ -177,11 +178,11 @@ Responsive container with RTL support:
 
 ```tsx
 <RTLContainer
-  maxWidth="xl"        // 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'none'
-  padding="lg"         // boolean | 'none' | 'sm' | 'md' | 'lg' | 'xl'
-  center={true}        // center horizontally
-  dir="auto"           // 'ltr' | 'rtl' | 'auto'
-  as="section"         // HTML element type
+  maxWidth="xl" // 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'none'
+  padding="lg" // boolean | 'none' | 'sm' | 'md' | 'lg' | 'xl'
+  center={true} // center horizontally
+  dir="auto" // 'ltr' | 'rtl' | 'auto'
+  as="section" // HTML element type
 >
   Content
 </RTLContainer>
@@ -193,12 +194,12 @@ Flexbox container with RTL support:
 
 ```tsx
 <RTLFlex
-  direction="row-rtl"     // 'row' | 'column' | 'row-reverse' | 'column-reverse' | 'row-rtl'
-  justify="start"         // 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly'
-  align="center"          // 'start' | 'end' | 'center' | 'stretch' | 'baseline'
-  wrap={true}             // boolean | 'reverse'
-  gap={16}                // number | string
-  inline={false}          // use inline-flex instead of flex
+  direction="row-rtl" // 'row' | 'column' | 'row-reverse' | 'column-reverse' | 'row-rtl'
+  justify="start" // 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly'
+  align="center" // 'start' | 'end' | 'center' | 'stretch' | 'baseline'
+  wrap={true} // boolean | 'reverse'
+  gap={16} // number | string
+  inline={false} // use inline-flex instead of flex
 >
   <div>Item 1</div>
   <div>Item 2</div>
@@ -211,12 +212,12 @@ CSS Grid container with RTL support:
 
 ```tsx
 <RTLGrid
-  cols={3}                              // number | responsive object
+  cols={3} // number | responsive object
   cols={{ sm: 1, md: 2, lg: 3, xl: 4 }} // responsive columns
-  gap={16}                              // number | string | {x: number, y: number}
-  autoFlow="rtl-row"                    // 'row' | 'col' | 'rtl-row' | 'rtl-col'
-  justify="start"                       // 'start' | 'end' | 'center' | 'stretch'
-  align="center"                        // 'start' | 'end' | 'center' | 'stretch'
+  gap={16} // number | string | {x: number, y: number}
+  autoFlow="rtl-row" // 'row' | 'col' | 'rtl-row' | 'rtl-col'
+  justify="start" // 'start' | 'end' | 'center' | 'stretch'
+  align="center" // 'start' | 'end' | 'center' | 'stretch'
 >
   <div>Grid item</div>
 </RTLGrid>
@@ -228,12 +229,12 @@ Text component with RTL-aware typography:
 
 ```tsx
 <RTLText
-  align="start"           // 'start' | 'end' | 'center' | 'justify'
-  size="lg"               // 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | etc.
-  weight="semibold"       // 'thin' | 'light' | 'normal' | 'medium' | etc.
-  truncate={2}            // boolean | number (line clamp)
-  dir="auto"              // 'ltr' | 'rtl' | 'auto'
-  as="h2"                 // HTML element type
+  align="start" // 'start' | 'end' | 'center' | 'justify'
+  size="lg" // 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | etc.
+  weight="semibold" // 'thin' | 'light' | 'normal' | 'medium' | etc.
+  truncate={2} // boolean | number (line clamp)
+  dir="auto" // 'ltr' | 'rtl' | 'auto'
+  as="h2" // HTML element type
 >
   Text content
 </RTLText>
@@ -245,16 +246,12 @@ Form wrapper with RTL-aware layout:
 
 ```tsx
 <RTLForm
-  layout="vertical"       // 'vertical' | 'horizontal' | 'inline'
-  gap="md"                // 'sm' | 'md' | 'lg'
-  labelPosition="auto"    // 'auto' | 'start' | 'end' | 'top'
+  layout="vertical" // 'vertical' | 'horizontal' | 'inline'
+  gap="md" // 'sm' | 'md' | 'lg'
+  labelPosition="auto" // 'auto' | 'start' | 'end' | 'top'
   onSubmit={handleSubmit}
 >
-  <RTLFormField
-    label="Field Label"
-    error="Error message"
-    required
-  >
+  <RTLFormField label="Field Label" error="Error message" required>
     <input type="text" />
   </RTLFormField>
 </RTLForm>
@@ -297,12 +294,12 @@ All base UI components now support RTL:
 <Dialog>
   <DialogContent dir="auto">
     <DialogHeader>
-      <DialogTitle>Title</DialogTitle>  {/* Text aligns correctly */}
+      <DialogTitle>Title</DialogTitle> {/* Text aligns correctly */}
     </DialogHeader>
     <div>Content</div>
     <DialogFooter>
       <button>Cancel</button>
-      <button>Save</button>  {/* Buttons reorder in RTL */}
+      <button>Save</button> {/* Buttons reorder in RTL */}
     </DialogFooter>
     {/* Close button (×) positions left in RTL, right in LTR */}
   </DialogContent>
@@ -314,7 +311,7 @@ All base UI components now support RTL:
 ```tsx
 <Input
   dir="auto"
-  placeholder="Placeholder text"  // Aligns correctly in RTL
+  placeholder="Placeholder text" // Aligns correctly in RTL
 />
 ```
 
@@ -323,11 +320,7 @@ All base UI components now support RTL:
 Use the RTL testing utilities:
 
 ```tsx
-import {
-  renderWithRTL,
-  rtlTestHelpers,
-  rtlTestScenarios
-} from '../utils/rtl-testing';
+import { renderWithRTL, rtlTestHelpers, rtlTestScenarios } from '../utils/rtl-testing';
 
 describe('MyComponent RTL', () => {
   rtlTestScenarios.testBothDirections(
@@ -365,10 +358,10 @@ Test your components with actual RTL text, not placeholder content:
 
 ```tsx
 // ✅ Test with real Arabic text
-const arabicText = "مرحباً بكم في تطبيق المنبه الذكي";
+const arabicText = 'مرحباً بكم في تطبيق المنبه الذكي';
 
 // ❌ Don't test with Latin placeholder
-const placeholder = "Lorem ipsum dolor sit amet";
+const placeholder = 'Lorem ipsum dolor sit amet';
 ```
 
 ### 3. Consider Icon Direction
@@ -438,24 +431,28 @@ function RTLDebugger() {
 ### 2. Common Issues and Solutions
 
 #### Icons not flipping:
+
 ```tsx
 // Add transform utility
 <Icon className="rtl:scale-x-[-1]" />
 ```
 
 #### Text alignment not working:
+
 ```tsx
 // Use semantic classes instead of physical
 <div className="text-start rtl:text-right ltr:text-left" />
 ```
 
 #### Spacing issues:
+
 ```tsx
 // Use directional utilities
 <div className="ms-4 me-2" /> // margin-start, margin-end
 ```
 
 #### Flex direction problems:
+
 ```tsx
 // Use RTL-aware flex
 <div className="flex ltr:flex-row rtl:flex-row-reverse" />
@@ -522,7 +519,8 @@ Replace fixed direction classes with RTL-aware ones:
 
 ### Common Issues
 
-1. **Text not aligning correctly**: Check if you're using semantic classes (`text-start`) vs physical (`text-left`)
+1. **Text not aligning correctly**: Check if you're using semantic classes (`text-start`) vs
+   physical (`text-left`)
 
 2. **Icons in wrong position**: Ensure flex containers use RTL-aware direction classes
 

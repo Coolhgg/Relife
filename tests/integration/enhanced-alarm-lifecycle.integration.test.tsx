@@ -1,12 +1,21 @@
 /**
  * Enhanced Alarm Lifecycle Integration Tests
- * 
+ *
  * Comprehensive integration tests for the complete alarm lifecycle using
  * enhanced test utilities and MSW handlers. Tests all critical paths from
  * the integration test matrix.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -37,7 +46,7 @@ import {
   renderWithProviders,
   waitForLoadingToFinish,
   expectNoConsoleErrors,
-  expectAccessibleForm
+  expectAccessibleForm,
 } from '../utils/enhanced-test-utilities';
 
 import { createMockUser, createMockAlarm, setupAllMocks } from '../utils/test-mocks';
@@ -61,7 +70,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
   beforeAll(async () => {
     // Setup all browser API mocks
     setupAllMocks();
-    
+
     // Setup enhanced mocks
     mockPostHogInstance = mockPostHog();
     mockSpeechRecognition = setupVoiceRecognitionMock();
@@ -71,11 +80,11 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
     user = userEvent.setup();
     mockUser = createMockUser();
     checkConsoleErrors = expectNoConsoleErrors();
-    
+
     // Clear all test data before each test
     testDataHelpers.clearAll();
     testDataHelpers.addUser(mockUser);
-    
+
     // Reset all mocks
     vi.clearAllMocks();
     vi.clearAllTimers();
@@ -125,7 +134,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
           label: 'Morning Workout',
           days: [1, 2, 3, 4, 5], // Weekdays
           voiceMood: 'motivational',
-          snoozeEnabled: true
+          snoozeEnabled: true,
         });
 
         // Save alarm
@@ -142,7 +151,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
       // Verify alarm appears in list with correct details
       const alarmElement = screen.getByText('Morning Workout');
       expect(alarmElement).toBeInTheDocument();
-      
+
       // Verify time is displayed
       expect(screen.getByText('7:00')).toBeInTheDocument();
 
@@ -152,7 +161,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
         label: 'Morning Workout',
         time: '07:00',
         snoozeEnabled: true,
-        voiceMood: 'motivational'
+        voiceMood: 'motivational',
       });
 
       // Verify user data was updated
@@ -206,7 +215,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
           id: `alarm-${i}`,
           userId: freeUser.id,
           label: `Alarm ${i + 1}`,
-          time: `0${6 + i}:00`
+          time: `0${6 + i}:00`,
         });
         testDataHelpers.addAlarm(alarm);
       }
@@ -230,7 +239,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
 
       await fillAlarmForm(user, {
         time: '12:00',
-        label: '6th Alarm'
+        label: '6th Alarm',
       });
 
       const saveButton = screen.getByRole('button', { name: /save|create/i });
@@ -238,7 +247,9 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
 
       // Should show upgrade prompt
       await waitFor(() => {
-        const upgradeMessage = screen.queryByText(/upgrade.*premium|limit.*reached|5 alarms/i);
+        const upgradeMessage = screen.queryByText(
+          /upgrade.*premium|limit.*reached|5 alarms/i
+        );
         expect(upgradeMessage).toBeInTheDocument();
       });
 
@@ -255,7 +266,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
         userId: mockUser.id,
         time: '07:30',
         label: 'Test Trigger Alarm',
-        enabled: true
+        enabled: true,
       });
       testDataHelpers.addAlarm(alarm);
 
@@ -276,7 +287,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
       // Should show dismiss and snooze buttons
       const dismissButton = screen.getByRole('button', { name: /dismiss|stop/i });
       const snoozeButton = screen.getByRole('button', { name: /snooze/i });
-      
+
       expect(dismissButton).toBeInTheDocument();
       expect(snoozeButton).toBeInTheDocument();
 
@@ -292,7 +303,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
       await integrationTestUtils.waitForAnalyticsEvents(1);
       expectAnalyticsEvent(mockPostHogInstance, 'alarm_dismissed', {
         alarmId: alarm.id,
-        method: 'button'
+        method: 'button',
       });
     });
 
@@ -304,7 +315,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
         enabled: true,
         snoozeEnabled: true,
         maxSnoozes: 2,
-        snoozeInterval: 5
+        snoozeInterval: 5,
       });
       testDataHelpers.addAlarm(alarm);
 
@@ -351,7 +362,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
         userId: mockUser.id,
         time: '08:00',
         label: 'Voice Test Alarm',
-        enabled: true
+        enabled: true,
       });
       testDataHelpers.addAlarm(alarm);
 
@@ -379,7 +390,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
       // Should track voice dismissal
       await integrationTestUtils.waitForAnalyticsEvents(2); // trigger + dismiss
       expectAnalyticsEvent(mockPostHogInstance, 'alarm_dismissed', {
-        method: 'voice'
+        method: 'voice',
       });
     });
   });
@@ -452,9 +463,9 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
       const premiumUser = createPremiumUser();
       const nuclearAlarm = createNuclearAlarm({
         userId: premiumUser.id,
-        nuclearChallenges: ['math', 'qr_scan']
+        nuclearChallenges: ['math', 'qr_scan'],
       });
-      
+
       testDataHelpers.addUser(premiumUser);
       testDataHelpers.addAlarm(nuclearAlarm);
 
@@ -479,10 +490,12 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
       const mathProblem = screen.queryByText(/\d+\s*[\+\-\*\/]\s*\d+/);
       if (mathProblem) {
         expect(mathProblem).toBeInTheDocument();
-        
+
         // Would need to solve the math problem in a real test
         // For now, we'll simulate successful completion
-        const submitButton = screen.queryByRole('button', { name: /submit|check|solve/i });
+        const submitButton = screen.queryByRole('button', {
+          name: /submit|check|solve/i,
+        });
         if (submitButton) {
           // Simulate correct answer
           const answerInput = screen.queryByLabelText(/answer|result/i);
@@ -494,10 +507,15 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
       }
 
       // After completing challenges, should allow dismissal
-      await waitFor(() => {
-        const finalDismissButton = screen.queryByRole('button', { name: /dismiss|complete/i });
-        expect(finalDismissButton).toBeInTheDocument();
-      }, { timeout: 10000 });
+      await waitFor(
+        () => {
+          const finalDismissButton = screen.queryByRole('button', {
+            name: /dismiss|complete/i,
+          });
+          expect(finalDismissButton).toBeInTheDocument();
+        },
+        { timeout: 10000 }
+      );
     });
   });
 
@@ -518,7 +536,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
 
       await fillAlarmForm(user, {
         time: '09:00',
-        label: 'Network Test Alarm'
+        label: 'Network Test Alarm',
       });
 
       const saveButton = screen.getByRole('button', { name: /save|create/i });
@@ -533,15 +551,15 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
       // Should offer offline mode or retry
       const retryButton = screen.queryByRole('button', { name: /retry|try.*again/i });
       const offlineButton = screen.queryByText(/offline|save.*locally/i);
-      
+
       expect(retryButton || offlineButton).toBeTruthy();
 
       // Reset network and retry should work
       integrationTestUtils.resetNetworkSimulation();
-      
+
       if (retryButton) {
         await user.click(retryButton);
-        
+
         await waitFor(() => {
           expect(screen.getByText('Network Test Alarm')).toBeInTheDocument();
         });
@@ -562,7 +580,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
 
       await fillAlarmForm(user, {
         time: '10:00',
-        label: 'Service Worker Test'
+        label: 'Service Worker Test',
       });
 
       const saveButton = screen.getByRole('button', { name: /save|create/i });
@@ -574,7 +592,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
 
       // Simulate service worker failure during alarm trigger
       const alarm = testDataHelpers.getAlarmsForUser(mockUser.id)[0];
-      
+
       // Mock service worker error
       await act(async () => {
         const errorMessage = {
@@ -582,8 +600,8 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
           data: {
             alarmId: alarm.id,
             error: 'Service worker unavailable',
-            fallbackMethod: 'web_notification'
-          }
+            fallbackMethod: 'web_notification',
+          },
         };
         const messageEvent = new MessageEvent('message', { data: errorMessage });
         window.dispatchEvent(messageEvent);
@@ -591,7 +609,9 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
 
       // Should show fallback notification or error handling
       await waitFor(() => {
-        const fallbackMessage = screen.queryByText(/service.*worker|fallback|alternative.*method/i);
+        const fallbackMessage = screen.queryByText(
+          /service.*worker|fallback|alternative.*method/i
+        );
         expect(fallbackMessage).toBeInTheDocument();
       });
     });
@@ -611,7 +631,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
 
         await fillAlarmForm(user, {
           time: `0${7 + i}:00`,
-          label: `Crash Test Alarm ${i + 1}`
+          label: `Crash Test Alarm ${i + 1}`,
         });
 
         const saveButton = screen.getByRole('button', { name: /save|create/i });
@@ -662,8 +682,10 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
       await user.type(document.activeElement!, 'Keyboard Test Alarm');
 
       // Tab to save button and activate
-      while (document.activeElement?.textContent !== 'Save' && 
-             document.activeElement?.textContent !== 'Create') {
+      while (
+        document.activeElement?.textContent !== 'Save' &&
+        document.activeElement?.textContent !== 'Create'
+      ) {
         await user.tab();
       }
 
@@ -677,7 +699,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
 
     it('should handle large numbers of alarms efficiently', async () => {
       const premiumUser = createPremiumUser();
-      
+
       // Add 50 alarms for performance testing
       const alarms = [];
       for (let i = 0; i < 50; i++) {
@@ -686,7 +708,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
           userId: premiumUser.id,
           label: `Performance Test ${i + 1}`,
           time: `${String(Math.floor(i / 4) + 6).padStart(2, '0')}:${String((i % 4) * 15).padStart(2, '0')}`,
-          enabled: i % 2 === 0 // Half enabled, half disabled
+          enabled: i % 2 === 0, // Half enabled, half disabled
         });
         alarms.push(alarm);
         testDataHelpers.addAlarm(alarm);
@@ -710,7 +732,7 @@ describe('Enhanced Alarm Lifecycle Integration Tests', () => {
       const alarmList = screen.getByRole('list') || screen.getByTestId('alarm-list');
       if (alarmList) {
         fireEvent.scroll(alarmList, { target: { scrollTop: 1000 } });
-        
+
         // Should handle scrolling without performance issues
         await waitFor(() => {
           expect(screen.getByText('Performance Test 50')).toBeInTheDocument();

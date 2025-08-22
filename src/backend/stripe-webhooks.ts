@@ -11,7 +11,7 @@ import type {
   Payment,
   PaymentMethod,
   SubscriptionStatus,
-  PaymentStatus
+  PaymentStatus,
 } from '../types/premium';
 
 export class StripeWebhookHandler {
@@ -20,7 +20,7 @@ export class StripeWebhookHandler {
 
   constructor(stripeSecretKey: string, endpointSecret: string) {
     this.stripe = new Stripe(stripeSecretKey, {
-      apiVersion: '2023-10-16'
+      apiVersion: '2023-10-16',
     });
     this.endpointSecret = endpointSecret;
   }
@@ -47,13 +47,19 @@ export class StripeWebhookHandler {
       switch (event.type) {
         // Subscription events
         case 'customer.subscription.created':
-          await this.handleSubscriptionCreated(event.data.object as Stripe.Subscription);
+          await this.handleSubscriptionCreated(
+            event.data.object as Stripe.Subscription
+          );
           break;
         case 'customer.subscription.updated':
-          await this.handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
+          await this.handleSubscriptionUpdated(
+            event.data.object as Stripe.Subscription
+          );
           break;
         case 'customer.subscription.deleted':
-          await this.handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
+          await this.handleSubscriptionDeleted(
+            event.data.object as Stripe.Subscription
+          );
           break;
         case 'customer.subscription.trial_will_end':
           await this.handleTrialWillEnd(event.data.object as Stripe.Subscription);
@@ -73,23 +79,33 @@ export class StripeWebhookHandler {
           await this.handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);
           break;
         case 'invoice.payment_action_required':
-          await this.handleInvoicePaymentActionRequired(event.data.object as Stripe.Invoice);
+          await this.handleInvoicePaymentActionRequired(
+            event.data.object as Stripe.Invoice
+          );
           break;
 
         // Payment events
         case 'payment_intent.succeeded':
-          await this.handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent);
+          await this.handlePaymentIntentSucceeded(
+            event.data.object as Stripe.PaymentIntent
+          );
           break;
         case 'payment_intent.payment_failed':
-          await this.handlePaymentIntentFailed(event.data.object as Stripe.PaymentIntent);
+          await this.handlePaymentIntentFailed(
+            event.data.object as Stripe.PaymentIntent
+          );
           break;
 
         // Payment method events
         case 'payment_method.attached':
-          await this.handlePaymentMethodAttached(event.data.object as Stripe.PaymentMethod);
+          await this.handlePaymentMethodAttached(
+            event.data.object as Stripe.PaymentMethod
+          );
           break;
         case 'payment_method.detached':
-          await this.handlePaymentMethodDetached(event.data.object as Stripe.PaymentMethod);
+          await this.handlePaymentMethodDetached(
+            event.data.object as Stripe.PaymentMethod
+          );
           break;
 
         // Customer events
@@ -109,12 +125,11 @@ export class StripeWebhookHandler {
 
       // Log successful webhook processing
       await this.logWebhookEvent(event, 'success');
-
     } catch (error) {
       ErrorHandler.logError(error as Error, {
         context: 'webhook_processing',
         eventType: event.type,
-        eventId: event.id
+        eventId: event.id,
       });
 
       await this.logWebhookEvent(event, 'error', error);
@@ -125,7 +140,9 @@ export class StripeWebhookHandler {
   /**
    * Handle subscription creation
    */
-  private async handleSubscriptionCreated(subscription: Stripe.Subscription): Promise<void> {
+  private async handleSubscriptionCreated(
+    subscription: Stripe.Subscription
+  ): Promise<void> {
     const customerId = subscription.customer as string;
     const user = await this.getUserByStripeCustomerId(customerId);
 
@@ -147,21 +164,28 @@ export class StripeWebhookHandler {
       stripeCustomerId: customerId,
       tier: plan.tier,
       status: this.mapStripeStatus(subscription.status),
-      billingInterval: subscription.items.data[0]?.price.recurring?.interval === 'year' ? 'year' : 'month',
+      billingInterval:
+        subscription.items.data[0]?.price.recurring?.interval === 'year'
+          ? 'year'
+          : 'month',
       amount: subscription.items.data[0]?.price.unit_amount || 0,
       currency: subscription.items.data[0]?.price.currency || 'usd',
       currentPeriodStart: new Date(subscription.current_period_start * 1000),
       currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-      trialStart: subscription.trial_start ? new Date(subscription.trial_start * 1000) : undefined,
-      trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : undefined,
+      trialStart: subscription.trial_start
+        ? new Date(subscription.trial_start * 1000)
+        : undefined,
+      trialEnd: subscription.trial_end
+        ? new Date(subscription.trial_end * 1000)
+        : undefined,
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
-      canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : undefined,
-      metadata: subscription.metadata
+      canceledAt: subscription.canceled_at
+        ? new Date(subscription.canceled_at * 1000)
+        : undefined,
+      metadata: subscription.metadata,
     };
 
-    const { error } = await supabase
-      .from('subscriptions')
-      .insert(subscriptionData);
+    const { error } = await supabase.from('subscriptions').insert(subscriptionData);
 
     if (error) {
       throw error;
@@ -176,14 +200,16 @@ export class StripeWebhookHandler {
       tier: plan.tier,
       billingInterval: subscriptionData.billingInterval,
       amount: subscriptionData.amount,
-      trial: !!subscriptionData.trialEnd
+      trial: !!subscriptionData.trialEnd,
     });
   }
 
   /**
    * Handle subscription updates
    */
-  private async handleSubscriptionUpdated(subscription: Stripe.Subscription): Promise<void> {
+  private async handleSubscriptionUpdated(
+    subscription: Stripe.Subscription
+  ): Promise<void> {
     const priceId = subscription.items.data[0]?.price.id;
     const plan = await this.getSubscriptionPlanByPriceId(priceId);
 
@@ -194,18 +220,29 @@ export class StripeWebhookHandler {
     const updateData: Partial<Subscription> = {
       tier: plan.tier,
       status: this.mapStripeStatus(subscription.status),
-      billingInterval: subscription.items.data[0]?.price.recurring?.interval === 'year' ? 'year' : 'month',
+      billingInterval:
+        subscription.items.data[0]?.price.recurring?.interval === 'year'
+          ? 'year'
+          : 'month',
       amount: subscription.items.data[0]?.price.unit_amount || 0,
       currency: subscription.items.data[0]?.price.currency || 'usd',
       currentPeriodStart: new Date(subscription.current_period_start * 1000),
       currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-      trialStart: subscription.trial_start ? new Date(subscription.trial_start * 1000) : undefined,
-      trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : undefined,
+      trialStart: subscription.trial_start
+        ? new Date(subscription.trial_start * 1000)
+        : undefined,
+      trialEnd: subscription.trial_end
+        ? new Date(subscription.trial_end * 1000)
+        : undefined,
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
-      canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : undefined,
-      endedAt: subscription.ended_at ? new Date(subscription.ended_at * 1000) : undefined,
+      canceledAt: subscription.canceled_at
+        ? new Date(subscription.canceled_at * 1000)
+        : undefined,
+      endedAt: subscription.ended_at
+        ? new Date(subscription.ended_at * 1000)
+        : undefined,
       metadata: subscription.metadata,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     const { error } = await supabase
@@ -228,7 +265,7 @@ export class StripeWebhookHandler {
       AnalyticsService.getInstance().track('subscription_cancelled', {
         userId: user?.id,
         tier: plan.tier,
-        cancelAtPeriodEnd: true
+        cancelAtPeriodEnd: true,
       });
     }
   }
@@ -236,13 +273,15 @@ export class StripeWebhookHandler {
   /**
    * Handle subscription deletion
    */
-  private async handleSubscriptionDeleted(subscription: Stripe.Subscription): Promise<void> {
+  private async handleSubscriptionDeleted(
+    subscription: Stripe.Subscription
+  ): Promise<void> {
     const { error } = await supabase
       .from('subscriptions')
       .update({
         status: 'canceled',
         endedAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .eq('stripeSubscriptionId', subscription.id);
 
@@ -257,7 +296,7 @@ export class StripeWebhookHandler {
 
       AnalyticsService.getInstance().track('subscription_ended', {
         userId: user.id,
-        tier: 'free'
+        tier: 'free',
       });
     }
   }
@@ -277,7 +316,9 @@ export class StripeWebhookHandler {
       AnalyticsService.getInstance().track('trial_will_end', {
         userId: user.id,
         trialEndDate: trialEndDate.toISOString(),
-        daysLeft: Math.ceil((trialEndDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+        daysLeft: Math.ceil(
+          (trialEndDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+        ),
       });
     }
   }
@@ -288,7 +329,9 @@ export class StripeWebhookHandler {
   private async handleInvoiceCreated(invoice: Stripe.Invoice): Promise<void> {
     if (!invoice.subscription) return;
 
-    const subscription = await this.getSubscriptionByStripeId(invoice.subscription as string);
+    const subscription = await this.getSubscriptionByStripeId(
+      invoice.subscription as string
+    );
     if (!subscription) return;
 
     const invoiceData: Partial<Invoice> = {
@@ -304,12 +347,10 @@ export class StripeWebhookHandler {
       receiptUrl: invoice.hosted_invoice_url || undefined,
       invoicePdf: invoice.invoice_pdf || undefined,
       metadata: invoice.metadata,
-      createdAt: new Date(invoice.created * 1000)
+      createdAt: new Date(invoice.created * 1000),
     };
 
-    const { error } = await supabase
-      .from('invoices')
-      .insert(invoiceData);
+    const { error } = await supabase.from('invoices').insert(invoiceData);
 
     if (error) {
       throw error;
@@ -323,7 +364,7 @@ export class StripeWebhookHandler {
     await this.updateInvoice(invoice.id, {
       status: this.mapInvoiceStatus(invoice.status),
       receiptUrl: invoice.hosted_invoice_url || undefined,
-      invoicePdf: invoice.invoice_pdf || undefined
+      invoicePdf: invoice.invoice_pdf || undefined,
     });
   }
 
@@ -333,7 +374,7 @@ export class StripeWebhookHandler {
   private async handleInvoicePaymentSucceeded(invoice: Stripe.Invoice): Promise<void> {
     await this.updateInvoice(invoice.id, {
       status: 'succeeded',
-      paidAt: new Date()
+      paidAt: new Date(),
     });
 
     // Create payment record
@@ -343,13 +384,15 @@ export class StripeWebhookHandler {
     }
 
     // Track analytics
-    const subscription = await this.getSubscriptionByStripeId(invoice.subscription as string);
+    const subscription = await this.getSubscriptionByStripeId(
+      invoice.subscription as string
+    );
     if (subscription) {
       AnalyticsService.getInstance().track('payment_succeeded', {
         userId: subscription.userId,
         amount: invoice.total,
         currency: invoice.currency,
-        subscriptionTier: subscription.tier
+        subscriptionTier: subscription.tier,
       });
     }
   }
@@ -359,7 +402,7 @@ export class StripeWebhookHandler {
    */
   private async handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
     await this.updateInvoice(invoice.id, {
-      status: 'failed'
+      status: 'failed',
     });
 
     // Create payment record
@@ -369,7 +412,9 @@ export class StripeWebhookHandler {
     }
 
     // Send payment failed notification
-    const subscription = await this.getSubscriptionByStripeId(invoice.subscription as string);
+    const subscription = await this.getSubscriptionByStripeId(
+      invoice.subscription as string
+    );
     if (subscription) {
       const user = await this.getUserById(subscription.userId);
       if (user) {
@@ -381,7 +426,7 @@ export class StripeWebhookHandler {
         amount: invoice.total,
         currency: invoice.currency,
         subscriptionTier: subscription.tier,
-        failureReason: invoice.last_finalization_error?.message
+        failureReason: invoice.last_finalization_error?.message,
       });
     }
   }
@@ -389,13 +434,17 @@ export class StripeWebhookHandler {
   /**
    * Handle invoice payment action required
    */
-  private async handleInvoicePaymentActionRequired(invoice: Stripe.Invoice): Promise<void> {
+  private async handleInvoicePaymentActionRequired(
+    invoice: Stripe.Invoice
+  ): Promise<void> {
     await this.updateInvoice(invoice.id, {
-      status: 'requires_action'
+      status: 'requires_action',
     });
 
     // Send action required notification
-    const subscription = await this.getSubscriptionByStripeId(invoice.subscription as string);
+    const subscription = await this.getSubscriptionByStripeId(
+      invoice.subscription as string
+    );
     if (subscription) {
       const user = await this.getUserById(subscription.userId);
       if (user) {
@@ -407,31 +456,37 @@ export class StripeWebhookHandler {
   /**
    * Handle successful payment intent
    */
-  private async handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent): Promise<void> {
+  private async handlePaymentIntentSucceeded(
+    paymentIntent: Stripe.PaymentIntent
+  ): Promise<void> {
     // This might be for one-time payments or setup intents
     AnalyticsService.getInstance().track('payment_intent_succeeded', {
       paymentIntentId: paymentIntent.id,
       amount: paymentIntent.amount,
-      currency: paymentIntent.currency
+      currency: paymentIntent.currency,
     });
   }
 
   /**
    * Handle failed payment intent
    */
-  private async handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent): Promise<void> {
+  private async handlePaymentIntentFailed(
+    paymentIntent: Stripe.PaymentIntent
+  ): Promise<void> {
     AnalyticsService.getInstance().track('payment_intent_failed', {
       paymentIntentId: paymentIntent.id,
       amount: paymentIntent.amount,
       currency: paymentIntent.currency,
-      failureReason: paymentIntent.last_payment_error?.message
+      failureReason: paymentIntent.last_payment_error?.message,
     });
   }
 
   /**
    * Handle payment method attached to customer
    */
-  private async handlePaymentMethodAttached(paymentMethod: Stripe.PaymentMethod): Promise<void> {
+  private async handlePaymentMethodAttached(
+    paymentMethod: Stripe.PaymentMethod
+  ): Promise<void> {
     if (!paymentMethod.customer) return;
 
     const user = await this.getUserByStripeCustomerId(paymentMethod.customer as string);
@@ -442,25 +497,27 @@ export class StripeWebhookHandler {
       userId: user.id,
       stripeCustomerId: paymentMethod.customer as string,
       type: paymentMethod.type as any,
-      cardData: paymentMethod.card ? {
-        brand: paymentMethod.card.brand,
-        last4: paymentMethod.card.last4,
-        expMonth: paymentMethod.card.exp_month,
-        expYear: paymentMethod.card.exp_year,
-        fingerprint: paymentMethod.card.fingerprint
-      } : undefined,
-      billingDetails: paymentMethod.billing_details ? {
-        name: paymentMethod.billing_details.name || undefined,
-        email: paymentMethod.billing_details.email || undefined,
-        phone: paymentMethod.billing_details.phone || undefined,
-        address: paymentMethod.billing_details.address || undefined
-      } : undefined,
-      createdAt: new Date(paymentMethod.created * 1000)
+      cardData: paymentMethod.card
+        ? {
+            brand: paymentMethod.card.brand,
+            last4: paymentMethod.card.last4,
+            expMonth: paymentMethod.card.exp_month,
+            expYear: paymentMethod.card.exp_year,
+            fingerprint: paymentMethod.card.fingerprint,
+          }
+        : undefined,
+      billingDetails: paymentMethod.billing_details
+        ? {
+            name: paymentMethod.billing_details.name || undefined,
+            email: paymentMethod.billing_details.email || undefined,
+            phone: paymentMethod.billing_details.phone || undefined,
+            address: paymentMethod.billing_details.address || undefined,
+          }
+        : undefined,
+      createdAt: new Date(paymentMethod.created * 1000),
     };
 
-    const { error } = await supabase
-      .from('payment_methods')
-      .insert(paymentMethodData);
+    const { error } = await supabase.from('payment_methods').insert(paymentMethodData);
 
     if (error) {
       throw error;
@@ -470,7 +527,9 @@ export class StripeWebhookHandler {
   /**
    * Handle payment method detached from customer
    */
-  private async handlePaymentMethodDetached(paymentMethod: Stripe.PaymentMethod): Promise<void> {
+  private async handlePaymentMethodDetached(
+    paymentMethod: Stripe.PaymentMethod
+  ): Promise<void> {
     const { error } = await supabase
       .from('payment_methods')
       .delete()
@@ -488,7 +547,7 @@ export class StripeWebhookHandler {
     // Customer is usually created via our API, but we can log it
     AnalyticsService.getInstance().track('stripe_customer_created', {
       customerId: customer.id,
-      email: customer.email
+      email: customer.email,
     });
   }
 
@@ -499,7 +558,7 @@ export class StripeWebhookHandler {
     // Update any cached customer data if needed
     AnalyticsService.getInstance().track('stripe_customer_updated', {
       customerId: customer.id,
-      email: customer.email
+      email: customer.email,
     });
   }
 
@@ -508,38 +567,50 @@ export class StripeWebhookHandler {
    */
   private async handleCustomerDeleted(customer: Stripe.Customer): Promise<void> {
     // Clean up related data
-    await supabase
-      .from('payment_methods')
-      .delete()
-      .eq('stripeCustomerId', customer.id);
+    await supabase.from('payment_methods').delete().eq('stripeCustomerId', customer.id);
 
     AnalyticsService.getInstance().track('stripe_customer_deleted', {
-      customerId: customer.id
+      customerId: customer.id,
     });
   }
 
   // Utility methods
 
-  private mapStripeStatus(stripeStatus: Stripe.Subscription.Status): SubscriptionStatus {
+  private mapStripeStatus(
+    stripeStatus: Stripe.Subscription.Status
+  ): SubscriptionStatus {
     switch (stripeStatus) {
-      case 'active': return 'active';
-      case 'canceled': return 'canceled';
-      case 'past_due': return 'past_due';
-      case 'unpaid': return 'unpaid';
-      case 'trialing': return 'trialing';
-      case 'incomplete': return 'incomplete';
-      case 'incomplete_expired': return 'incomplete_expired';
-      default: return 'active';
+      case 'active':
+        return 'active';
+      case 'canceled':
+        return 'canceled';
+      case 'past_due':
+        return 'past_due';
+      case 'unpaid':
+        return 'unpaid';
+      case 'trialing':
+        return 'trialing';
+      case 'incomplete':
+        return 'incomplete';
+      case 'incomplete_expired':
+        return 'incomplete_expired';
+      default:
+        return 'active';
     }
   }
 
   private mapInvoiceStatus(stripeStatus: Stripe.Invoice.Status | null): PaymentStatus {
     switch (stripeStatus) {
-      case 'paid': return 'succeeded';
-      case 'open': return 'pending';
-      case 'uncollectible': return 'failed';
-      case 'void': return 'canceled';
-      default: return 'pending';
+      case 'paid':
+        return 'succeeded';
+      case 'open':
+        return 'pending';
+      case 'uncollectible':
+        return 'failed';
+      case 'void':
+        return 'canceled';
+      default:
+        return 'pending';
     }
   }
 
@@ -580,7 +651,9 @@ export class StripeWebhookHandler {
     const { data, error } = await supabase
       .from('subscription_plans')
       .select('*')
-      .or(`pricing->monthly->stripePriceId.eq.${priceId},pricing->yearly->stripePriceId.eq.${priceId}`)
+      .or(
+        `pricing->monthly->stripePriceId.eq.${priceId},pricing->yearly->stripePriceId.eq.${priceId}`
+      )
       .single();
 
     if (error) throw error;
@@ -605,8 +678,14 @@ export class StripeWebhookHandler {
     if (error) throw error;
   }
 
-  private async createPaymentRecord(invoice: Stripe.Invoice, charge: Stripe.Charge, status: PaymentStatus) {
-    const subscription = await this.getSubscriptionByStripeId(invoice.subscription as string);
+  private async createPaymentRecord(
+    invoice: Stripe.Invoice,
+    charge: Stripe.Charge,
+    status: PaymentStatus
+  ) {
+    const subscription = await this.getSubscriptionByStripeId(
+      invoice.subscription as string
+    );
     if (!subscription) return;
 
     const paymentData: Partial<Payment> = {
@@ -620,17 +699,17 @@ export class StripeWebhookHandler {
       paymentMethodId: charge.payment_method as string,
       failureReason: charge.failure_message || undefined,
       receiptUrl: charge.receipt_url || undefined,
-      createdAt: new Date(charge.created * 1000)
+      createdAt: new Date(charge.created * 1000),
     };
 
-    const { error } = await supabase
-      .from('payments')
-      .insert(paymentData);
+    const { error } = await supabase.from('payments').insert(paymentData);
 
     if (error) throw error;
   }
 
-  private async getInvoiceIdByStripeId(stripeInvoiceId: string): Promise<string | undefined> {
+  private async getInvoiceIdByStripeId(
+    stripeInvoiceId: string
+  ): Promise<string | undefined> {
     const { data, error } = await supabase
       .from('invoices')
       .select('id')
@@ -641,7 +720,11 @@ export class StripeWebhookHandler {
     return data?.id;
   }
 
-  private async logWebhookEvent(event: Stripe.Event, status: 'success' | 'error', error?: any) {
+  private async logWebhookEvent(
+    event: Stripe.Event,
+    status: 'success' | 'error',
+    error?: any
+  ) {
     const logData = {
       stripeEventId: event.id,
       eventType: event.type,
@@ -651,29 +734,36 @@ export class StripeWebhookHandler {
       metadata: {
         apiVersion: event.api_version,
         created: new Date(event.created * 1000),
-        data: event.data
-      }
+        data: event.data,
+      },
     };
 
-    await supabase
-      .from('webhook_logs')
-      .insert(logData);
+    await supabase.from('webhook_logs').insert(logData);
   }
 
   // Notification methods (implement based on your notification system)
   private async sendTrialEndingNotification(user: any, trialEndDate: Date) {
     // Implement trial ending notification
-    console.log(`Sending trial ending notification to user ${user.id}, trial ends: ${trialEndDate}`);
+    console.log(
+      `Sending trial ending notification to user ${user.id}, trial ends: ${trialEndDate}`
+    );
   }
 
   private async sendPaymentFailedNotification(user: any, invoice: Stripe.Invoice) {
     // Implement payment failed notification
-    console.log(`Sending payment failed notification to user ${user.id}, invoice: ${invoice.id}`);
+    console.log(
+      `Sending payment failed notification to user ${user.id}, invoice: ${invoice.id}`
+    );
   }
 
-  private async sendPaymentActionRequiredNotification(user: any, invoice: Stripe.Invoice) {
+  private async sendPaymentActionRequiredNotification(
+    user: any,
+    invoice: Stripe.Invoice
+  ) {
     // Implement payment action required notification
-    console.log(`Sending payment action required notification to user ${user.id}, invoice: ${invoice.id}`);
+    console.log(
+      `Sending payment action required notification to user ${user.id}, invoice: ${invoice.id}`
+    );
   }
 }
 

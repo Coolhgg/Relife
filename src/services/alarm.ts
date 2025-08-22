@@ -1,21 +1,12 @@
 /// <reference types="node" />
-import type {
-  Alarm,
-  VoiceMood,
-  AlarmEvent,
-  AlarmInstance,
-  User,
-} from "../types";
-import { generateAlarmId, getNextAlarmTime } from "../utils";
-import {
-  scheduleLocalNotification,
-  cancelLocalNotification,
-} from "./capacitor";
-import { alarmBattleIntegration } from "./alarm-battle-integration";
-import AppAnalyticsService from "./app-analytics";
-import SecureAlarmStorageService from "./secure-alarm-storage";
-import SecurityService from "./security";
-import { ErrorHandler } from "./error-handler";
+import type { Alarm, VoiceMood, AlarmEvent, AlarmInstance, User } from '../types';
+import { generateAlarmId, getNextAlarmTime } from '../utils';
+import { scheduleLocalNotification, cancelLocalNotification } from './capacitor';
+import { alarmBattleIntegration } from './alarm-battle-integration';
+import AppAnalyticsService from './app-analytics';
+import SecureAlarmStorageService from './secure-alarm-storage';
+import SecurityService from './security';
+import { ErrorHandler } from './error-handler';
 
 export class AlarmService {
   private static alarms: Alarm[] = [];
@@ -33,19 +24,25 @@ export class AlarmService {
       const alarmData = await secureStorage.retrieveAlarms(userId);
 
       // Convert date strings back to Date objects and validate
-      this.alarms = alarmData.map((alarm) => ({
-        ...alarm,
-        createdAt: new Date(alarm.createdAt),
-        updatedAt: new Date(alarm.updatedAt),
-        lastTriggered: alarm.lastTriggered ? new Date(alarm.lastTriggered) : undefined
-      })).filter(alarm => {
-        // Additional validation for loaded alarms
-        return alarm.id &&
-               alarm.time &&
-               alarm.label &&
-               Array.isArray(alarm.days) &&
-               alarm.voiceMood;
-      });
+      this.alarms = alarmData
+        .map(alarm => ({
+          ...alarm,
+          createdAt: new Date(alarm.createdAt),
+          updatedAt: new Date(alarm.updatedAt),
+          lastTriggered: alarm.lastTriggered
+            ? new Date(alarm.lastTriggered)
+            : undefined,
+        }))
+        .filter(alarm => {
+          // Additional validation for loaded alarms
+          return (
+            alarm.id &&
+            alarm.time &&
+            alarm.label &&
+            Array.isArray(alarm.days) &&
+            alarm.voiceMood
+          );
+        });
 
       // Start alarm checking
       this.startAlarmChecker();
@@ -54,17 +51,16 @@ export class AlarmService {
       this.logSecurityEvent('alarms_loaded', {
         userId,
         alarmCount: this.alarms.length,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       return this.alarms;
     } catch (error) {
       const wrappedError = error instanceof Error ? error : new Error(String(error));
-      ErrorHandler.handleError(
-        wrappedError,
-        'Failed to load alarms',
-        { context: 'alarm_loading', metadata: { userId } }
-      );
+      ErrorHandler.handleError(wrappedError, 'Failed to load alarms', {
+        context: 'alarm_loading',
+        metadata: { userId },
+      });
       console.error('Error loading alarms:', error);
       throw wrappedError;
     }
@@ -85,13 +81,16 @@ export class AlarmService {
       this.logSecurityEvent('alarms_saved', {
         userId,
         alarmCount: this.alarms.length,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         'Failed to save alarms',
-        { context: 'alarm_saving', metadata: { userId, alarmCount: this.alarms.length } }
+        {
+          context: 'alarm_saving',
+          metadata: { userId, alarmCount: this.alarms.length },
+        }
       );
       console.error('Error saving alarms:', error);
       throw error;
@@ -121,10 +120,21 @@ export class AlarmService {
       enabled: true,
       isActive: true,
       days: data.days,
-      dayNames: data.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as any),
+      dayNames: data.days.map(
+        d =>
+          [
+            'sunday',
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thursday',
+            'friday',
+            'saturday',
+          ][d] as any
+      ),
       voiceMood: data.voiceMood,
       sound: data.sound || 'default',
-      difficulty: data.difficulty || 'medium' as any,
+      difficulty: data.difficulty || ('medium' as any),
       snoozeEnabled: data.snoozeEnabled ?? true,
       snoozeInterval: data.snoozeInterval || 5,
       snoozeCount: 0,
@@ -132,7 +142,7 @@ export class AlarmService {
       battleId: data.battleId,
       weatherEnabled: data.weatherEnabled || false,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     };
 
     // Validate alarm data before saving
@@ -148,25 +158,28 @@ export class AlarmService {
     this.logSecurityEvent('alarm_created', {
       alarmId: newAlarm.id,
       userId: data.userId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     return newAlarm;
   }
 
-  static async updateAlarm(alarmId: string, data: {
-    time: string;
-    label: string;
-    days: number[];
-    voiceMood: VoiceMood;
-    sound?: string;
-    difficulty?: string;
-    snoozeEnabled?: boolean;
-    snoozeInterval?: number;
-    maxSnoozes?: number;
-    battleId?: string;
-    weatherEnabled?: boolean;
-  }): Promise<Alarm> {
+  static async updateAlarm(
+    alarmId: string,
+    data: {
+      time: string;
+      label: string;
+      days: number[];
+      voiceMood: VoiceMood;
+      sound?: string;
+      difficulty?: string;
+      snoozeEnabled?: boolean;
+      snoozeInterval?: number;
+      maxSnoozes?: number;
+      battleId?: string;
+      weatherEnabled?: boolean;
+    }
+  ): Promise<Alarm> {
     const alarmIndex = this.alarms.findIndex(a => a.id === alarmId);
     if (alarmIndex === -1) {
       throw new Error('Alarm not found');
@@ -177,7 +190,18 @@ export class AlarmService {
       time: data.time,
       label: data.label,
       days: data.days,
-      dayNames: data.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as any),
+      dayNames: data.days.map(
+        d =>
+          [
+            'sunday',
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thursday',
+            'friday',
+            'saturday',
+          ][d] as any
+      ),
       voiceMood: data.voiceMood,
       sound: data.sound || this.alarms[alarmIndex].sound,
       difficulty: (data.difficulty || this.alarms[alarmIndex].difficulty) as any,
@@ -186,7 +210,7 @@ export class AlarmService {
       maxSnoozes: data.maxSnoozes ?? this.alarms[alarmIndex].maxSnoozes,
       battleId: data.battleId ?? this.alarms[alarmIndex].battleId,
       weatherEnabled: data.weatherEnabled ?? this.alarms[alarmIndex].weatherEnabled,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     // Validate updated alarm data
@@ -201,7 +225,7 @@ export class AlarmService {
     this.logSecurityEvent('alarm_updated', {
       alarmId,
       userId: updatedAlarm.userId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     // Reschedule notification
@@ -232,7 +256,7 @@ export class AlarmService {
     this.logSecurityEvent('alarm_deleted', {
       alarmId,
       userId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 
@@ -245,7 +269,7 @@ export class AlarmService {
     const updatedAlarm = {
       ...this.alarms[alarmIndex],
       enabled,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     // Validate updated alarm
@@ -261,7 +285,7 @@ export class AlarmService {
       alarmId,
       enabled,
       userId: updatedAlarm.userId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     // Handle notification scheduling
@@ -273,7 +297,11 @@ export class AlarmService {
     return this.alarms[alarmIndex];
   }
 
-  static async dismissAlarm(alarmId: string, method: 'voice' | 'button' | 'shake' | 'challenge', user?: User): Promise<void> {
+  static async dismissAlarm(
+    alarmId: string,
+    method: 'voice' | 'button' | 'shake' | 'challenge',
+    user?: User
+  ): Promise<void> {
     const alarm = this.alarms.find(a => a.id === alarmId);
     if (!alarm) {
       throw new Error(`Alarm with ID ${alarmId} not found`);
@@ -288,7 +316,7 @@ export class AlarmService {
         ...alarm,
         snoozeCount: 0,
         lastTriggered: dismissalTime,
-        updatedAt: dismissalTime
+        updatedAt: dismissalTime,
       };
 
       this.alarms[alarmIndex] = updatedAlarm;
@@ -299,7 +327,7 @@ export class AlarmService {
         alarmId,
         method,
         userId: user?.id,
-        timestamp: dismissalTime.toISOString()
+        timestamp: dismissalTime.toISOString(),
       });
     }
 
@@ -312,7 +340,7 @@ export class AlarmService {
         actualWakeTime: dismissalTime.toISOString(),
         status: 'completed',
         snoozeCount: alarm.snoozeCount,
-        battleId: alarm.battleId
+        battleId: alarm.battleId,
       };
 
       await alarmBattleIntegration.handleAlarmDismissal(
@@ -331,21 +359,26 @@ export class AlarmService {
       dismissed: true,
       snoozed: false,
       userAction: 'dismissed',
-      dismissMethod: method
+      dismissMethod: method,
     });
 
     // Reschedule for next occurrence
     await this.scheduleNotification(alarm);
   }
 
-  static async snoozeAlarm(alarmId: string, minutes?: number, user?: User): Promise<void> {
+  static async snoozeAlarm(
+    alarmId: string,
+    minutes?: number,
+    user?: User
+  ): Promise<void> {
     const alarm = this.alarms.find(a => a.id === alarmId);
     if (!alarm) {
       throw new Error(`Alarm with ID ${alarmId} not found`);
     }
 
     // Use provided minutes, or alarm's configured interval, or user's default preference, or 5 as fallback
-    const snoozeMinutes = minutes || alarm.snoozeInterval || (user?.preferences?.snoozeMinutes) || 5;
+    const snoozeMinutes =
+      minutes || alarm.snoozeInterval || user?.preferences?.snoozeMinutes || 5;
 
     const snoozeTime = new Date();
     const newSnoozeCount = alarm.snoozeCount + 1;
@@ -356,7 +389,7 @@ export class AlarmService {
     }
 
     // Check max snoozes limit - use alarm's setting or user's preference
-    const maxSnoozes = alarm.maxSnoozes || (user?.preferences?.maxSnoozes) || Infinity;
+    const maxSnoozes = alarm.maxSnoozes || user?.preferences?.maxSnoozes || Infinity;
     if (maxSnoozes && newSnoozeCount > maxSnoozes) {
       throw new Error(`Maximum snoozes exceeded (${newSnoozeCount}/${maxSnoozes})`);
     }
@@ -367,7 +400,7 @@ export class AlarmService {
       const updatedAlarm = {
         ...alarm,
         snoozeCount: newSnoozeCount,
-        updatedAt: snoozeTime
+        updatedAt: snoozeTime,
       };
 
       this.alarms[alarmIndex] = updatedAlarm;
@@ -378,7 +411,7 @@ export class AlarmService {
         alarmId,
         snoozeCount: newSnoozeCount,
         userId: user?.id,
-        timestamp: snoozeTime.toISOString()
+        timestamp: snoozeTime.toISOString(),
       });
     }
 
@@ -390,7 +423,7 @@ export class AlarmService {
         scheduledTime: this.getLastScheduledTime(alarm).toISOString(),
         status: 'snoozed',
         snoozeCount: newSnoozeCount,
-        battleId: alarm.battleId
+        battleId: alarm.battleId,
       };
 
       await alarmBattleIntegration.handleAlarmSnooze(
@@ -408,18 +441,20 @@ export class AlarmService {
       firedAt: new Date(),
       dismissed: false,
       snoozed: true,
-      userAction: 'snoozed'
+      userAction: 'snoozed',
     });
 
     // Schedule snooze notification
     const nextSnoozeTime = new Date(Date.now() + snoozeMinutes * 60 * 1000);
 
-    console.log(`Snoozing alarm "${alarm.label}" for ${snoozeMinutes} minutes (attempt ${newSnoozeCount}/${maxSnoozes === Infinity ? '∞' : maxSnoozes})`);
+    console.log(
+      `Snoozing alarm "${alarm.label}" for ${snoozeMinutes} minutes (attempt ${newSnoozeCount}/${maxSnoozes === Infinity ? '∞' : maxSnoozes})`
+    );
     await scheduleLocalNotification({
       id: parseInt(alarmId.replace(/\D/g, '')) + 10000, // Offset for snooze
       title: `⏰ ${alarm.label} (Snoozed)`,
       body: `Time to wake up! (Snooze ${newSnoozeCount}/${maxSnoozes === Infinity ? '∞' : maxSnoozes})`,
-      schedule: nextSnoozeTime
+      schedule: nextSnoozeTime,
     });
   }
 
@@ -444,7 +479,7 @@ export class AlarmService {
         id: parseInt(alarm.id.replace(/\D/g, '')),
         title: `🔔 ${alarm.label}`,
         body: notificationBody,
-        schedule: nextTime
+        schedule: nextTime,
       });
 
       console.log(`Scheduled alarm "${alarm.label}" for ${nextTime.toLocaleString()}`);
@@ -513,7 +548,7 @@ export class AlarmService {
           scheduledTime: now.toISOString(),
           status: 'pending',
           snoozeCount: 0,
-          battleId: alarm.battleId
+          battleId: alarm.battleId,
         };
 
         // Handle battle integration
@@ -529,16 +564,18 @@ export class AlarmService {
             joinDate: new Date().toISOString(),
             lastActive: new Date().toISOString(),
             preferences: {} as any,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
           };
 
           await alarmBattleIntegration.handleAlarmTrigger(alarmInstance, user);
         }
 
         // Trigger alarm with enhanced data
-        window.dispatchEvent(new CustomEvent('alarm-triggered', {
-          detail: { alarm, alarmInstance }
-        }));
+        window.dispatchEvent(
+          new CustomEvent('alarm-triggered', {
+            detail: { alarm, alarmInstance },
+          })
+        );
       }
     });
   }
@@ -569,13 +606,24 @@ export class AlarmService {
         enabled: true,
         isActive: true,
         days: data.days,
-        dayNames: data.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as any),
+        dayNames: data.days.map(
+          d =>
+            [
+              'sunday',
+              'monday',
+              'tuesday',
+              'wednesday',
+              'thursday',
+              'friday',
+              'saturday',
+            ][d] as any
+        ),
         voiceMood: data.voiceMood,
         sound: 'default',
         difficulty: (data.difficulty || 'medium') as any,
         snoozeEnabled: false,
         snoozeInterval: 5,
-        snoozeCount: 0
+        snoozeCount: 0,
       },
       data.battleId,
       {
@@ -588,7 +636,7 @@ export class AlarmService {
         joinDate: new Date().toISOString(),
         lastActive: new Date().toISOString(),
         preferences: {} as any,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       }
     );
 
@@ -606,7 +654,7 @@ export class AlarmService {
       alarmId: battleAlarm.id,
       battleId: data.battleId,
       userId: data.userId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     return battleAlarm;
@@ -630,7 +678,7 @@ export class AlarmService {
       ...this.alarms[alarmIndex],
       battleId: undefined,
       snoozeEnabled: true, // Reset to allow snoozing
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     this.alarms[alarmIndex] = updatedAlarm;
@@ -640,7 +688,7 @@ export class AlarmService {
     this.logSecurityEvent('alarm_unlinked_from_battle', {
       alarmId,
       previousBattleId: originalBattleId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     if (originalBattleId) {
@@ -695,7 +743,10 @@ export class AlarmService {
       }
 
       // Validate snooze settings
-      if (typeof alarm.snoozeInterval === 'number' && (alarm.snoozeInterval < 1 || alarm.snoozeInterval > 60)) {
+      if (
+        typeof alarm.snoozeInterval === 'number' &&
+        (alarm.snoozeInterval < 1 || alarm.snoozeInterval > 60)
+      ) {
         return false;
       }
 
@@ -713,13 +764,15 @@ export class AlarmService {
       event,
       details,
       timestamp: new Date().toISOString(),
-      source: 'AlarmService'
+      source: 'AlarmService',
     };
 
     // Emit custom event for security monitoring
-    window.dispatchEvent(new CustomEvent('alarm-security-event', {
-      detail: logEntry
-    }));
+    window.dispatchEvent(
+      new CustomEvent('alarm-security-event', {
+        detail: logEntry,
+      })
+    );
 
     console.log('[ALARM SECURITY LOG]', logEntry);
   }
@@ -728,9 +781,7 @@ export class AlarmService {
    * Get alarms for specific user with ownership validation
    */
   static getUserAlarms(userId: string): Alarm[] {
-    return this.alarms.filter(alarm =>
-      !alarm.userId || alarm.userId === userId
-    );
+    return this.alarms.filter(alarm => !alarm.userId || alarm.userId === userId);
   }
 
   /**
@@ -758,7 +809,9 @@ export const enhancedAlarmTracking = {
 
     // Validate ownership before tracking
     if (!AlarmService.validateAlarmOwnership(alarmId, userId)) {
-      throw new Error('Access denied: cannot track performance for alarm not owned by user');
+      throw new Error(
+        'Access denied: cannot track performance for alarm not owned by user'
+      );
     }
 
     AppAnalyticsService.getInstance().track('alarm_performance', {
@@ -768,7 +821,7 @@ export const enhancedAlarmTracking = {
       hasBattle: !!alarm.battleId,
       battleId: alarm.battleId,
       snoozeCount: alarm.snoozeCount,
-      voiceMood: alarm.voiceMood
+      voiceMood: alarm.voiceMood,
     });
   },
 
@@ -789,7 +842,9 @@ export const enhancedAlarmTracking = {
       userId,
       battleAlarmsCount: validBattleAlarms.length,
       regularAlarmsCount: validRegularAlarms.length,
-      battleParticipationRate: validBattleAlarms.length / (validBattleAlarms.length + validRegularAlarms.length)
+      battleParticipationRate:
+        validBattleAlarms.length /
+        (validBattleAlarms.length + validRegularAlarms.length),
     });
-  }
+  },
 };

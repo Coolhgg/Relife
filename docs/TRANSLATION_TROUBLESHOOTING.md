@@ -110,8 +110,7 @@ node scripts/manage-translations.mjs generate
 
 ### Right-to-Left Languages (Arabic, Hebrew)
 
-**Text direction**: Handled automatically by CSS
-**Numbers and dates**: Remain left-to-right
+**Text direction**: Handled automatically by CSS **Numbers and dates**: Remain left-to-right
 **Punctuation**: May need adjustment for readability
 
 ```json
@@ -124,9 +123,8 @@ node scripts/manage-translations.mjs generate
 
 ### Asian Languages (Chinese, Japanese, Korean)
 
-**Character encoding**: Ensure UTF-8 support
-**Text length**: Often shorter than English, check UI layout
-**Formality levels**: Choose appropriate level of politeness
+**Character encoding**: Ensure UTF-8 support **Text length**: Often shorter than English, check UI
+layout **Formality levels**: Choose appropriate level of politeness
 
 ```json
 // Japanese formal example
@@ -332,8 +330,10 @@ Include this information:
 ### Validation Tools
 
 - [JSONLint](https://jsonlint.com/) - JSON syntax validator
-- [Unicode Character Inspector](https://apps.timwhitlock.info/unicode/inspect) - Check character codes
-- [Language Plural Rules](https://www.unicode.org/cldr/cldr-aux/charts/30/supplemental/language_plural_rules.html) - CLDR plural rules
+- [Unicode Character Inspector](https://apps.timwhitlock.info/unicode/inspect) - Check character
+  codes
+- [Language Plural Rules](https://www.unicode.org/cldr/cldr-aux/charts/30/supplemental/language_plural_rules.html) -
+  CLDR plural rules
 
 ### Reference Materials
 
@@ -357,4 +357,5 @@ When something isn't working:
 - [ ] Browser cache cleared
 - [ ] Development server restarted
 
-Remember: Most translation issues are simple syntax errors or missing variables. The validation script will catch most problems! 🚀
+Remember: Most translation issues are simple syntax errors or missing variables. The validation
+script will catch most problems! 🚀

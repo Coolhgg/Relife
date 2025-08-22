@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /**
  * Enhanced Test Utilities for Critical User Flows
- * 
+ *
  * Specialized utilities for testing alarm lifecycle, premium features,
  * voice commands, and analytics integration flows.
  */
@@ -11,14 +11,14 @@ import { render, screen, waitFor, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import type { 
-  User, 
-  Alarm, 
-  SubscriptionTier, 
-  VoiceMood, 
-  PremiumFeature, 
+import type {
+  User,
+  Alarm,
+  SubscriptionTier,
+  VoiceMood,
+  PremiumFeature,
   AnalyticsEvent,
-  AlarmStatus
+  AlarmStatus,
 } from '../../src/types';
 import { createMockUser, createMockAlarm } from './test-mocks';
 
@@ -82,7 +82,7 @@ export const mockSpeechRecognition = (): MockSpeechRecognition => {
 
 export const setupVoiceRecognitionMock = () => {
   const recognition = mockSpeechRecognition();
-  
+
   // Mock the SpeechRecognition constructor
   (global as any).SpeechRecognition = vi.fn(() => recognition);
   (global as any).webkitSpeechRecognition = vi.fn(() => recognition);
@@ -90,17 +90,23 @@ export const setupVoiceRecognitionMock = () => {
   return recognition;
 };
 
-export const simulateVoiceCommand = (recognition: MockSpeechRecognition, command: string, confidence = 0.9) => {
+export const simulateVoiceCommand = (
+  recognition: MockSpeechRecognition,
+  command: string,
+  confidence = 0.9
+) => {
   const event = {
-    results: [{
-      0: {
-        transcript: command,
-        confidence
+    results: [
+      {
+        0: {
+          transcript: command,
+          confidence,
+        },
+        length: 1,
+        isFinal: true,
       },
-      length: 1,
-      isFinal: true
-    }],
-    resultIndex: 0
+    ],
+    resultIndex: 0,
   };
 
   if (recognition.onresult) {
@@ -108,10 +114,13 @@ export const simulateVoiceCommand = (recognition: MockSpeechRecognition, command
   }
 };
 
-export const simulateVoiceError = (recognition: MockSpeechRecognition, error: string = 'network') => {
+export const simulateVoiceError = (
+  recognition: MockSpeechRecognition,
+  error: string = 'network'
+) => {
   const event = {
     error,
-    message: `Speech recognition error: ${error}`
+    message: `Speech recognition error: ${error}`,
   };
 
   if (recognition.onerror) {
@@ -132,7 +141,7 @@ export const createPremiumUser = (
     premiumFeatures: features,
     subscriptionId: 'sub_premium_123',
     subscriptionStatus: 'active',
-    trialEndsAt: null
+    trialEndsAt: null,
   });
 };
 
@@ -142,7 +151,7 @@ export const createTrialUser = (): User => {
     premiumFeatures: ['nuclear_mode', 'custom_sounds'],
     subscriptionId: 'sub_trial_123',
     subscriptionStatus: 'trialing',
-    trialEndsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    trialEndsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 };
 
@@ -152,7 +161,7 @@ export const createExpiredPremiumUser = (): User => {
     premiumFeatures: [],
     subscriptionId: 'sub_expired_123',
     subscriptionStatus: 'canceled',
-    trialEndsAt: new Date(Date.now() - 24 * 60 * 60 * 1000)
+    trialEndsAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
   });
 };
 
@@ -161,7 +170,10 @@ export const expectPremiumFeatureVisible = (screen: any, feature: string) => {
   expect(featureElement).toBeInTheDocument();
 };
 
-export const expectPremiumFeatureGated = (screen: any, upgradeText: string = 'upgrade') => {
+export const expectPremiumFeatureGated = (
+  screen: any,
+  upgradeText: string = 'upgrade'
+) => {
   const upgradeElement = screen.queryByText(new RegExp(upgradeText, 'i'));
   expect(upgradeElement).toBeInTheDocument();
 };
@@ -184,7 +196,7 @@ export const createComplexAlarm = (overrides: Partial<Alarm> = {}): Alarm => {
     nuclearMode: true,
     smartWakeupEnabled: true,
     locationBased: false,
-    ...overrides
+    ...overrides,
   });
 };
 
@@ -194,17 +206,20 @@ export const createNuclearAlarm = (overrides: Partial<Alarm> = {}): Alarm => {
     nuclearMode: true,
     nuclearChallenges: ['math', 'qr_scan', 'location'],
     maxSnoozes: 0, // No snooze in nuclear mode
-    ...overrides
+    ...overrides,
   });
 };
 
-export const fillAlarmForm = async (user: ReturnType<typeof userEvent.setup>, alarmData: {
-  time: string;
-  label: string;
-  days?: number[];
-  voiceMood?: string;
-  snoozeEnabled?: boolean;
-}) => {
+export const fillAlarmForm = async (
+  user: ReturnType<typeof userEvent.setup>,
+  alarmData: {
+    time: string;
+    label: string;
+    days?: number[];
+    voiceMood?: string;
+    snoozeEnabled?: boolean;
+  }
+) => {
   // Fill time
   const timeInput = screen.getByLabelText(/time/i);
   await user.clear(timeInput);
@@ -217,7 +232,15 @@ export const fillAlarmForm = async (user: ReturnType<typeof userEvent.setup>, al
 
   // Select days if provided
   if (alarmData.days) {
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayNames = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
     for (const day of alarmData.days) {
       const dayCheckbox = screen.getByLabelText(dayNames[day]);
       if (!dayCheckbox.checked) {
@@ -241,17 +264,20 @@ export const fillAlarmForm = async (user: ReturnType<typeof userEvent.setup>, al
   }
 };
 
-export const simulateAlarmTrigger = async (alarm: Alarm, options: {
-  isSnoozeEnd?: boolean;
-  triggeredAt?: Date;
-} = {}) => {
+export const simulateAlarmTrigger = async (
+  alarm: Alarm,
+  options: {
+    isSnoozeEnd?: boolean;
+    triggeredAt?: Date;
+  } = {}
+) => {
   const message = {
     type: 'ALARM_TRIGGERED',
     data: {
       alarm,
       triggeredAt: (options.triggeredAt || new Date()).toISOString(),
-      isSnoozeEnd: options.isSnoozeEnd || false
-    }
+      isSnoozeEnd: options.isSnoozeEnd || false,
+    },
   };
 
   await act(async () => {
@@ -285,9 +311,9 @@ export const createMockAnalyticsEvent = (
       timestamp: new Date().toISOString(),
       userId: userId || 'test-user-123',
       sessionId: 'session-123',
-      ...properties
+      ...properties,
     },
-    timestamp: new Date()
+    timestamp: new Date(),
   };
 };
 
@@ -310,8 +336,8 @@ export const mockPostHog = () => {
       set: vi.fn(),
       set_once: vi.fn(),
       increment: vi.fn(),
-      unset: vi.fn()
-    }
+      unset: vi.fn(),
+    },
   };
 
   (global as any).posthog = posthog;
@@ -325,7 +351,9 @@ export const expectAnalyticsEvent = (
 ) => {
   expect(mockPostHog.capture).toHaveBeenCalledWith(
     eventName,
-    expectedProperties ? expect.objectContaining(expectedProperties) : expect.any(Object)
+    expectedProperties
+      ? expect.objectContaining(expectedProperties)
+      : expect.any(Object)
   );
 };
 
@@ -336,7 +364,9 @@ export const expectAnalyticsIdentify = (
 ) => {
   expect(mockPostHog.identify).toHaveBeenCalledWith(
     userId,
-    expectedProperties ? expect.objectContaining(expectedProperties) : expect.any(Object)
+    expectedProperties
+      ? expect.objectContaining(expectedProperties)
+      : expect.any(Object)
   );
 };
 
@@ -350,7 +380,7 @@ export const mockServiceWorker = () => {
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
     scriptURL: 'mock-sw.js',
-    state: 'activated'
+    state: 'activated',
   };
 
   Object.defineProperty(navigator, 'serviceWorker', {
@@ -360,21 +390,21 @@ export const mockServiceWorker = () => {
         waiting: null,
         active: mockSW,
         addEventListener: vi.fn(),
-        unregister: vi.fn().mockResolvedValue(true)
+        unregister: vi.fn().mockResolvedValue(true),
       }),
       ready: Promise.resolve({
         active: mockSW,
         installing: null,
         waiting: null,
         addEventListener: vi.fn(),
-        unregister: vi.fn()
+        unregister: vi.fn(),
       }),
       controller: mockSW,
       addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
-      getRegistrations: vi.fn().mockResolvedValue([])
+      getRegistrations: vi.fn().mockResolvedValue([]),
     },
-    writable: true
+    writable: true,
   });
 
   return mockSW;
@@ -383,7 +413,7 @@ export const mockServiceWorker = () => {
 export const simulateServiceWorkerMessage = (type: string, data: any) => {
   const message = { type, data };
   const event = new MessageEvent('message', { data: message });
-  
+
   if (navigator.serviceWorker?.controller) {
     // Simulate message from service worker
     window.dispatchEvent(event);
@@ -404,32 +434,32 @@ export const mockStripeElements = () => {
     update: vi.fn(),
     focus: vi.fn(),
     blur: vi.fn(),
-    clear: vi.fn()
+    clear: vi.fn(),
   };
 
   const elements = {
     create: vi.fn(() => cardElement),
-    getElement: vi.fn(() => cardElement)
+    getElement: vi.fn(() => cardElement),
   };
 
   const stripe = {
     elements: vi.fn(() => elements),
     createPaymentMethod: vi.fn().mockResolvedValue({
       paymentMethod: { id: 'pm_test_card' },
-      error: null
+      error: null,
     }),
     confirmCardPayment: vi.fn().mockResolvedValue({
       paymentIntent: { status: 'succeeded', id: 'pi_test_123' },
-      error: null
+      error: null,
     }),
     confirmCardSetup: vi.fn().mockResolvedValue({
       setupIntent: { status: 'succeeded', id: 'seti_test_123' },
-      error: null
-    })
+      error: null,
+    }),
   };
 
   (global as any).Stripe = vi.fn(() => stripe);
-  
+
   return { stripe, elements, cardElement };
 };
 
@@ -437,20 +467,23 @@ export const simulateSuccessfulPayment = async (stripe: any) => {
   stripe.confirmCardPayment.mockResolvedValueOnce({
     paymentIntent: {
       status: 'succeeded',
-      id: 'pi_success_123'
+      id: 'pi_success_123',
     },
-    error: null
+    error: null,
   });
 };
 
-export const simulateFailedPayment = async (stripe: any, errorMessage = 'Your card was declined.') => {
+export const simulateFailedPayment = async (
+  stripe: any,
+  errorMessage = 'Your card was declined.'
+) => {
   stripe.confirmCardPayment.mockResolvedValueOnce({
     paymentIntent: null,
     error: {
       type: 'card_error',
       code: 'card_declined',
-      message: errorMessage
-    }
+      message: errorMessage,
+    },
   });
 };
 
@@ -482,15 +515,18 @@ export const renderWithProviders = (
 
   return render(ui, {
     wrapper: AllProviders,
-    ...options
+    ...options,
   });
 };
 
 export const waitForLoadingToFinish = async (timeout = 5000) => {
-  await waitFor(() => {
-    const loadingElements = screen.queryAllByText(/loading|wait|spinner/i);
-    expect(loadingElements).toHaveLength(0);
-  }, { timeout });
+  await waitFor(
+    () => {
+      const loadingElements = screen.queryAllByText(/loading|wait|spinner/i);
+      expect(loadingElements).toHaveLength(0);
+    },
+    { timeout }
+  );
 };
 
 export const expectNoConsoleErrors = () => {
@@ -533,11 +569,13 @@ export const expectAccessibleForm = async (screen: any) => {
   });
 };
 
-export const expectKeyboardNavigation = async (user: ReturnType<typeof userEvent.setup>) => {
+export const expectKeyboardNavigation = async (
+  user: ReturnType<typeof userEvent.setup>
+) => {
   // Tab through interactive elements
   await user.tab();
   expect(document.activeElement).toBeVisible();
-  
+
   await user.tab();
   expect(document.activeElement).toBeVisible();
 };
@@ -549,7 +587,7 @@ export const expectKeyboardNavigation = async (user: ReturnType<typeof userEvent
 export const simulateError = (component: any, error: Error) => {
   const originalError = console.error;
   console.error = vi.fn(); // Suppress error logging during test
-  
+
   try {
     throw error;
   } catch (e) {

@@ -10,7 +10,7 @@ import {
   Zap,
   Download,
   Heart,
-  Wand2
+  Wand2,
 } from 'lucide-react';
 import { PremiumGate } from './PremiumGate';
 import { SubscriptionService } from '../services/subscription';
@@ -47,9 +47,9 @@ const PREMIUM_THEMES: ThemeConfig[] = [
       background: '#0a0a0a',
       surface: '#1a1a2e',
       text: '#ffffff',
-      textSecondary: '#cccccc'
+      textSecondary: '#cccccc',
     },
-    description: 'Futuristic cyberpunk theme with electric neon accents'
+    description: 'Futuristic cyberpunk theme with electric neon accents',
   },
   {
     id: 'sunset-gradient',
@@ -65,9 +65,9 @@ const PREMIUM_THEMES: ThemeConfig[] = [
       background: '#2c1810',
       surface: '#3d2518',
       text: '#ffffff',
-      textSecondary: '#e6e6e6'
+      textSecondary: '#e6e6e6',
     },
-    description: 'Warm sunset colors with beautiful gradient backgrounds'
+    description: 'Warm sunset colors with beautiful gradient backgrounds',
   },
   {
     id: 'forest-zen',
@@ -83,9 +83,9 @@ const PREMIUM_THEMES: ThemeConfig[] = [
       background: '#f1f8e9',
       surface: '#ffffff',
       text: '#1b5e20',
-      textSecondary: '#4a7c59'
+      textSecondary: '#4a7c59',
     },
-    description: 'Peaceful forest-inspired theme for better sleep'
+    description: 'Peaceful forest-inspired theme for better sleep',
   },
   {
     id: 'deep-space',
@@ -101,9 +101,9 @@ const PREMIUM_THEMES: ThemeConfig[] = [
       background: '#0d1117',
       surface: '#161b22',
       text: '#ffffff',
-      textSecondary: '#b0bec5'
+      textSecondary: '#b0bec5',
     },
-    description: 'Cosmic theme inspired by deep space and nebulae'
+    description: 'Cosmic theme inspired by deep space and nebulae',
   },
   {
     id: 'golden-hour',
@@ -119,9 +119,9 @@ const PREMIUM_THEMES: ThemeConfig[] = [
       background: '#fef7e0',
       surface: '#ffffff',
       text: '#e65100',
-      textSecondary: '#ff8f00'
+      textSecondary: '#ff8f00',
     },
-    description: 'Warm golden tones perfect for morning routines'
+    description: 'Warm golden tones perfect for morning routines',
   },
   {
     id: 'ocean-depths',
@@ -137,10 +137,10 @@ const PREMIUM_THEMES: ThemeConfig[] = [
       background: '#e3f2fd',
       surface: '#ffffff',
       text: '#01579b',
-      textSecondary: '#0288d1'
+      textSecondary: '#0288d1',
     },
-    description: 'Deep ocean blues for a calming experience'
-  }
+    description: 'Deep ocean blues for a calming experience',
+  },
 ];
 
 const FREE_THEMES: ThemeConfig[] = [
@@ -157,9 +157,9 @@ const FREE_THEMES: ThemeConfig[] = [
       background: '#ffffff',
       surface: '#f9fafb',
       text: '#111827',
-      textSecondary: '#6b7280'
+      textSecondary: '#6b7280',
     },
-    description: 'Clean and bright default light theme'
+    description: 'Clean and bright default light theme',
   },
   {
     id: 'default-dark',
@@ -174,9 +174,9 @@ const FREE_THEMES: ThemeConfig[] = [
       background: '#111827',
       surface: '#1f2937',
       text: '#ffffff',
-      textSecondary: '#d1d5db'
+      textSecondary: '#d1d5db',
     },
-    description: 'Sleek dark theme for night time use'
+    description: 'Sleek dark theme for night time use',
   },
   {
     id: 'minimal',
@@ -191,24 +191,24 @@ const FREE_THEMES: ThemeConfig[] = [
       background: '#ffffff',
       surface: '#fafafa',
       text: '#000000',
-      textSecondary: '#666666'
+      textSecondary: '#666666',
     },
-    description: 'Minimalist black and white theme'
-  }
+    description: 'Minimalist black and white theme',
+  },
 ];
 
 export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
   userId,
   currentTheme,
   onThemeChange,
-  className = ''
+  className = '',
 }) => {
   const [state, setState] = useState<ThemeState>({
     availableThemes: FREE_THEMES,
     premiumThemes: PREMIUM_THEMES,
     selectedTheme: currentTheme,
     hasAccess: false,
-    loading: true
+    loading: true,
   });
 
   useEffect(() => {
@@ -219,12 +219,15 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
     setState(prev => ({ ...prev, loading: true }));
 
     try {
-      const hasAccess = await SubscriptionService.hasFeatureAccess(userId, 'premiumThemes');
+      const hasAccess = await SubscriptionService.hasFeatureAccess(
+        userId,
+        'premiumThemes'
+      );
       setState(prev => ({
         ...prev,
         hasAccess,
         availableThemes: hasAccess ? [...FREE_THEMES, ...PREMIUM_THEMES] : FREE_THEMES,
-        loading: false
+        loading: false,
       }));
     } catch (error) {
       console.error('Error checking premium theme access:', error);
@@ -257,14 +260,16 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
         }`}
         onClick={() => handleThemeSelect(theme)}
       >
-        <div className={`rounded-xl overflow-hidden border-2 ${
-          isSelected ? 'border-blue-500' : 'border-gray-200'
-        } ${!hasAccessToTheme ? 'opacity-75' : ''}`}>
+        <div
+          className={`rounded-xl overflow-hidden border-2 ${
+            isSelected ? 'border-blue-500' : 'border-gray-200'
+          } ${!hasAccessToTheme ? 'opacity-75' : ''}`}
+        >
           {/* Theme Preview */}
           <div
             className="h-24 relative"
             style={{
-              background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary}, ${theme.colors.accent})`
+              background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary}, ${theme.colors.accent})`,
             }}
           >
             {/* Color swatches */}
@@ -340,7 +345,9 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
 
         {state.hasAccess ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {state.premiumThemes.map((theme, index) => renderThemeCard(theme, index + state.availableThemes.length))}
+            {state.premiumThemes.map((theme, index) =>
+              renderThemeCard(theme, index + state.availableThemes.length)
+            )}
           </div>
         ) : (
           <PremiumGate
@@ -352,7 +359,9 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
             className="col-span-full"
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 opacity-50 pointer-events-none">
-              {state.premiumThemes.slice(0, 6).map((theme, index) => renderThemeCard(theme, index))}
+              {state.premiumThemes
+                .slice(0, 6)
+                .map((theme, index) => renderThemeCard(theme, index))}
             </div>
           </PremiumGate>
         )}
@@ -406,7 +415,9 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
         <div className="space-y-4 border-t border-gray-200 pt-8">
           <div className="flex items-center space-x-2">
             <Wand2 className="w-5 h-5 text-purple-500" />
-            <h3 className="text-lg font-semibold text-gray-900">Custom Theme Builder</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Custom Theme Builder
+            </h3>
             <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
               Pro Feature
             </div>
@@ -426,7 +437,9 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
                   <Wand2 className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-gray-900 mb-1">Create Your Perfect Theme</h4>
+                  <h4 className="font-semibold text-gray-900 mb-1">
+                    Create Your Perfect Theme
+                  </h4>
                   <p className="text-sm text-gray-600">
                     Mix colors, adjust typography, and create custom gradients
                   </p>
@@ -445,4 +458,5 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
       )}
     </div>
   );
-};export default PremiumThemeSettings;
+};
+export default PremiumThemeSettings;

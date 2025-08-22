@@ -8,7 +8,7 @@ module.exports = {
         'http://localhost:4173', // Preview build URL
         'http://localhost:4173/settings',
         'http://localhost:4173/alarm/create',
-        'http://localhost:4173/onboarding'
+        'http://localhost:4173/onboarding',
       ],
       // Build settings
       staticDistDir: './dist',
@@ -26,9 +26,9 @@ module.exports = {
         screenEmulation: {
           mobile: false,
           width: 1200,
-          height: 800
-        }
-      }
+          height: 800,
+        },
+      },
     },
     assert: {
       assertions: {
@@ -37,7 +37,7 @@ module.exports = {
         // Specific accessibility rules we care about
         'aria-allowed-attr': 'off', // Allow some flexibility with ARIA
         'aria-hidden-body': 'error',
-        'aria-hidden-focus': 'error', 
+        'aria-hidden-focus': 'error',
         'aria-input-field-name': 'error',
         'aria-required-children': 'error',
         'aria-required-parent': 'error',
@@ -45,7 +45,7 @@ module.exports = {
         'aria-valid-attr-value': 'error',
         'aria-valid-attr': 'error',
         'button-name': 'error',
-        'bypass': 'error', // Skip links
+        bypass: 'error', // Skip links
         'color-contrast': 'error',
         'document-title': 'error',
         'duplicate-id-aria': 'error',
@@ -56,20 +56,20 @@ module.exports = {
         'html-lang-valid': 'error',
         'image-alt': 'error',
         'input-image-alt': 'error',
-        'label': 'error',
+        label: 'error',
         'link-name': 'error',
-        'list': 'error',
-        'listitem': 'error',
+        list: 'error',
+        listitem: 'error',
         'meta-refresh': 'error',
         'meta-viewport': 'error',
         'object-alt': 'error',
         'select-name': 'error',
         'skip-link': 'warn', // Warn instead of error to allow gradual implementation
-        'tabindex': 'error',
+        tabindex: 'error',
         'td-headers-attr': 'off', // Not applicable for current app
         'th-has-data-cells': 'off', // Not applicable for current app
-        'valid-lang': 'error'
-      }
+        'valid-lang': 'error',
+      },
     },
     upload: {
       target: 'temporary-public-storage', // Store reports temporarily for PR artifacts
@@ -78,6 +78,6 @@ module.exports = {
       // Optional: Configure for future LHCI server
       // target: 'lhci',
       // serverBaseUrl: process.env.LHCI_SERVER_URL
-    }
-  }
+    },
+  },
 };

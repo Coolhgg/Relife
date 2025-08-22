@@ -3,15 +3,15 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    cluster: 'relife-production'
-    environment: 'production'
+    cluster: "relife-production"
+    environment: "production"
 
 # Alerting configuration
 alerting:
   alertmanagers:
     - static_configs:
         - targets:
-          - alertmanager:9093
+            - alertmanager:9093
 
 # Load alerting rules
 rule_files:
@@ -20,82 +20,82 @@ rule_files:
 # Scrape configurations
 scrape_configs:
   # Prometheus itself
-  - job_name: 'prometheus'
+  - job_name: "prometheus"
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ["localhost:9090"]
 
   # Node Exporter for system metrics
-  - job_name: 'node-exporter'
+  - job_name: "node-exporter"
     static_configs:
-      - targets: ['localhost:9100']
+      - targets: ["localhost:9100"]
     scrape_interval: 30s
 
   # Nginx metrics
-  - job_name: 'nginx'
+  - job_name: "nginx"
     static_configs:
-      - targets: ['nginx:9113']
+      - targets: ["nginx:9113"]
     scrape_interval: 30s
 
   # Redis metrics
-  - job_name: 'redis'
+  - job_name: "redis"
     static_configs:
-      - targets: ['redis:9121']
+      - targets: ["redis:9121"]
     scrape_interval: 30s
 
   # Application metrics from Cloudflare Workers
-  - job_name: 'relife-api'
-    metrics_path: '/api/performance/metrics-export'
+  - job_name: "relife-api"
+    metrics_path: "/api/performance/metrics-export"
     static_configs:
-      - targets: ['api.relife.app']
+      - targets: ["api.relife.app"]
     scrape_interval: 60s
     honor_timestamps: true
     scrape_timeout: 30s
 
   # Web vitals from client-side
-  - job_name: 'relife-web-vitals'
-    metrics_path: '/api/performance/web-vitals-export'
+  - job_name: "relife-web-vitals"
+    metrics_path: "/api/performance/web-vitals-export"
     static_configs:
-      - targets: ['api.relife.app']
+      - targets: ["api.relife.app"]
     scrape_interval: 30s
 
   # Database metrics (if using PostgreSQL exporter)
-  - job_name: 'postgresql'
+  - job_name: "postgresql"
     static_configs:
-      - targets: ['postgres-exporter:9187']
+      - targets: ["postgres-exporter:9187"]
     scrape_interval: 30s
 
   # Custom application metrics
-  - job_name: 'relife-custom-metrics'
-    metrics_path: '/metrics'
+  - job_name: "relife-custom-metrics"
+    metrics_path: "/metrics"
     static_configs:
-      - targets: ['app:3000']
+      - targets: ["app:3000"]
     scrape_interval: 15s
     metrics_relabel_configs:
       # Add environment label to all metrics
       - source_labels: [__name__]
         target_label: environment
-        replacement: 'production'
-      
+        replacement: "production"
+
       # Rename some metrics for consistency
       - source_labels: [__name__]
         target_label: __name__
-        regex: 'relife_(.+)'
-        replacement: 'relife_${1}'
+        regex: "relife_(.+)"
+        replacement: "relife_${1}"
 
   # Health check endpoints
-  - job_name: 'health-checks'
-    metrics_path: '/api/health'
+  - job_name: "health-checks"
+    metrics_path: "/api/health"
     static_configs:
-      - targets: 
-        - 'api.relife.app'
-        - 'app.relife.app'
+      - targets:
+          - "api.relife.app"
+          - "app.relife.app"
     scrape_interval: 30s
     scrape_timeout: 10s
 
   # External service monitoring
-  - job_name: 'external-services'
+  - job_name: "external-services"
     http_sd_configs:
-      - url: 'http://service-discovery:8500/v1/catalog/services'
+      - url: "http://service-discovery:8500/v1/catalog/services"
         refresh_interval: 30s
     relabel_configs:
       - source_labels: [__meta_consul_service]
@@ -105,20 +105,20 @@ scrape_configs:
 
 # Remote write configuration for long-term storage
 remote_write:
-  - url: 'https://prometheus-remote-write-endpoint.com/api/v1/write'
+  - url: "https://prometheus-remote-write-endpoint.com/api/v1/write"
     basic_auth:
-      username: 'relife-monitoring'
-      password_file: '/etc/prometheus/remote-write-password'
-    
+      username: "relife-monitoring"
+      password_file: "/etc/prometheus/remote-write-password"
+
     # Write relabeling
     write_relabel_configs:
       - source_labels: [__name__]
-        regex: 'relife_.*'
+        regex: "relife_.*"
         action: keep
 
-# Remote read configuration  
+# Remote read configuration
 remote_read:
-  - url: 'https://prometheus-remote-read-endpoint.com/api/v1/read'
+  - url: "https://prometheus-remote-read-endpoint.com/api/v1/read"
     basic_auth:
-      username: 'relife-monitoring' 
-      password_file: '/etc/prometheus/remote-read-password'
+      username: "relife-monitoring"
+      password_file: "/etc/prometheus/remote-read-password"

@@ -52,7 +52,7 @@ class ServiceWorkerManager {
       // Register the unified service worker (combines all features)
       this.registration = await navigator.serviceWorker.register('/sw-unified.js', {
         scope: '/',
-        updateViaCache: 'none' // Always check for updates
+        updateViaCache: 'none', // Always check for updates
       });
 
       console.log('🔧 Service Worker registered:', this.registration.scope);
@@ -74,7 +74,6 @@ class ServiceWorkerManager {
         console.log('🔄 Service Worker update found');
         this.handleUpdateFound();
       });
-
     } catch (error) {
       console.error('❌ Service Worker registration failed:', error);
       throw error;
@@ -135,8 +134,10 @@ class ServiceWorkerManager {
       this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
 
       // Wait for the new service worker to take control
-      await new Promise<void>((resolve) => {
-        navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), { once: true });
+      await new Promise<void>(resolve => {
+        navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), {
+          once: true,
+        });
       });
 
       console.log('✅ Service Worker update applied');
@@ -160,7 +161,7 @@ class ServiceWorkerManager {
     }
 
     // Listen for messages from service worker
-    navigator.serviceWorker.addEventListener('message', (event) => {
+    navigator.serviceWorker.addEventListener('message', event => {
       this.handleServiceWorkerMessage(event);
     });
 
@@ -168,7 +169,7 @@ class ServiceWorkerManager {
     this.sendMessage({
       type: 'CLIENT_READY',
       timestamp: Date.now(),
-      url: window.location.href
+      url: window.location.href,
     });
   }
 
@@ -214,15 +215,15 @@ class ServiceWorkerManager {
         ...eventData,
         timestamp: Date.now(),
         url: window.location.href,
-        userAgent: navigator.userAgent
-      }
+        userAgent: navigator.userAgent,
+      },
     };
 
     if (this.isOnline) {
       // Send immediately if online
       this.sendMessage({
         type: 'TRACK_EMOTIONAL_EVENT',
-        data: event
+        data: event,
       });
     } else {
       // Queue for later if offline
@@ -236,12 +237,17 @@ class ServiceWorkerManager {
     // Request persistent storage for better reliability
     if ('storage' in navigator && 'persist' in navigator.storage) {
       navigator.storage.persist().then(granted => {
-        console.log(granted ? '💾 Persistent storage granted' : '⚠️ Persistent storage denied');
+        console.log(
+          granted ? '💾 Persistent storage granted' : '⚠️ Persistent storage denied'
+        );
       });
     }
 
     // Setup periodic sync for emotional data (if supported)
-    if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
+    if (
+      'serviceWorker' in navigator &&
+      'sync' in window.ServiceWorkerRegistration.prototype
+    ) {
       // Background sync will be triggered by the service worker
       console.log('🔄 Background sync supported');
     }
@@ -268,7 +274,7 @@ class ServiceWorkerManager {
       for (const event of events) {
         this.sendMessage({
           type: 'TRACK_EMOTIONAL_EVENT',
-          data: event
+          data: event,
         });
       }
 
@@ -304,22 +310,28 @@ class ServiceWorkerManager {
   }
 
   // Handle emotional notification actions
-  handleEmotionalNotificationAction(data: { action: string; emotion_type: string; notification_id: string }): void {
+  handleEmotionalNotificationAction(data: {
+    action: string;
+    emotion_type: string;
+    notification_id: string;
+  }): void {
     const { action, emotion_type, notification_id } = data;
 
     console.log('🧠 Handling emotional notification action:', action);
 
     // Emit custom event for the app to handle
-    window.dispatchEvent(new CustomEvent('emotional-notification-action', {
-      detail: { action, emotion_type, notification_id, data }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('emotional-notification-action', {
+        detail: { action, emotion_type, notification_id, data },
+      })
+    );
 
     // Track the action
     this.trackEmotionalEvent('notification_action_handled', {
       action,
       emotion_type,
       notification_id,
-      source: 'service_worker'
+      source: 'service_worker',
     });
   }
 
@@ -327,7 +339,7 @@ class ServiceWorkerManager {
   cacheAssets(assets: string[]): void {
     this.sendMessage({
       type: 'CACHE_ASSETS',
-      data: { assets }
+      data: { assets },
     });
   }
 
@@ -336,12 +348,14 @@ class ServiceWorkerManager {
     console.log('🔄 Service Worker update available');
 
     // Emit event for UI to handle
-    window.dispatchEvent(new CustomEvent('sw-update-available', {
-      detail: {
-        registration: this.registration,
-        applyUpdate: () => this.applyUpdate()
-      }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('sw-update-available', {
+        detail: {
+          registration: this.registration,
+          applyUpdate: () => this.applyUpdate(),
+        },
+      })
+    );
   }
 
   notifyInstallComplete() {
@@ -359,9 +373,11 @@ class ServiceWorkerManager {
   handleSyncCompleted(data: any): void {
     console.log('✅ Background sync completed:', data);
 
-    window.dispatchEvent(new CustomEvent('sw-sync-complete', {
-      detail: data
-    }));
+    window.dispatchEvent(
+      new CustomEvent('sw-sync-complete', {
+        detail: data,
+      })
+    );
   }
 
   // Get registration status
@@ -377,7 +393,7 @@ class ServiceWorkerManager {
       registration: this.registration,
       isUpdateAvailable: this.isUpdateAvailable,
       isOnline: this.isOnline,
-      queuedEvents: this.emotionalEventsQueue.length
+      queuedEvents: this.emotionalEventsQueue.length,
     };
   }
 }

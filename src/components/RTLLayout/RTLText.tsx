@@ -12,7 +12,15 @@ interface RTLTextProps {
   align?: 'start' | 'end' | 'center' | 'justify';
   as?: keyof JSX.IntrinsicElements;
   size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
-  weight?: 'thin' | 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black';
+  weight?:
+    | 'thin'
+    | 'light'
+    | 'normal'
+    | 'medium'
+    | 'semibold'
+    | 'bold'
+    | 'extrabold'
+    | 'black';
   color?: string;
   leading?: 'none' | 'tight' | 'snug' | 'normal' | 'relaxed' | 'loose';
   tracking?: 'tighter' | 'tight' | 'normal' | 'wide' | 'wider' | 'widest';

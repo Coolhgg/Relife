@@ -1,11 +1,23 @@
 import React, { useState, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -30,12 +42,20 @@ import {
   Bold,
   Italic,
   Link,
-  Zap
+  Zap,
 } from 'lucide-react';
 
 interface EmailBlock {
   id: string;
-  type: 'text' | 'image' | 'button' | 'divider' | 'spacer' | 'social' | 'header' | 'footer';
+  type:
+    | 'text'
+    | 'image'
+    | 'button'
+    | 'divider'
+    | 'spacer'
+    | 'social'
+    | 'header'
+    | 'footer';
   content: any;
   styles?: any;
 }
@@ -58,23 +78,23 @@ const defaultBlocks = {
       text: 'Your text content goes here...',
       fontSize: 16,
       color: '#333333',
-      alignment: 'left'
+      alignment: 'left',
     },
     styles: {
       padding: '16px',
-      backgroundColor: 'transparent'
-    }
+      backgroundColor: 'transparent',
+    },
   },
   image: {
     content: {
       src: 'https://via.placeholder.com/600x300/6366f1/ffffff?text=Image+Placeholder',
       alt: 'Image',
       href: '',
-      width: '100%'
+      width: '100%',
     },
     styles: {
-      padding: '16px'
-    }
+      padding: '16px',
+    },
   },
   button: {
     content: {
@@ -83,55 +103,55 @@ const defaultBlocks = {
       fontSize: 16,
       color: '#ffffff',
       backgroundColor: '#6366f1',
-      borderRadius: 6
+      borderRadius: 6,
     },
     styles: {
       padding: '16px',
-      textAlign: 'center'
-    }
+      textAlign: 'center',
+    },
   },
   divider: {
     content: {
       height: 1,
-      color: '#e5e7eb'
+      color: '#e5e7eb',
     },
     styles: {
-      padding: '16px'
-    }
+      padding: '16px',
+    },
   },
   spacer: {
     content: {
-      height: 32
+      height: 32,
     },
-    styles: {}
+    styles: {},
   },
   header: {
     content: {
       logo: 'https://via.placeholder.com/150x50/6366f1/ffffff?text=Logo',
       title: 'Relife Smart Alarm',
-      subtitle: 'Wake up refreshed every morning'
+      subtitle: 'Wake up refreshed every morning',
     },
     styles: {
       padding: '24px',
       backgroundColor: '#f8fafc',
-      textAlign: 'center'
-    }
+      textAlign: 'center',
+    },
   },
   footer: {
     content: {
       companyName: 'Relife Technologies',
       address: '123 Sleep Street, Dream City, DC 12345',
       unsubscribeText: 'Unsubscribe from these emails',
-      unsubscribeLink: '#'
+      unsubscribeLink: '#',
     },
     styles: {
       padding: '24px',
       backgroundColor: '#f1f5f9',
       fontSize: 12,
       color: '#64748b',
-      textAlign: 'center'
-    }
-  }
+      textAlign: 'center',
+    },
+  },
 };
 
 interface EmailBuilderProps {
@@ -141,7 +161,12 @@ interface EmailBuilderProps {
   className?: string;
 }
 
-export function EmailBuilder({ initialTemplate, onSave, onSend, className }: EmailBuilderProps) {
+export function EmailBuilder({
+  initialTemplate,
+  onSave,
+  onSend,
+  className,
+}: EmailBuilderProps) {
   const [template, setTemplate] = useState<EmailTemplate>(
     initialTemplate || {
       id: 'new-template',
@@ -151,8 +176,8 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
       styles: {
         backgroundColor: '#ffffff',
         fontFamily: 'Arial, sans-serif',
-        maxWidth: '600px'
-      }
+        maxWidth: '600px',
+      },
     }
   );
 
@@ -164,12 +189,12 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
       id: `block-${Date.now()}`,
       type,
       content: { ...defaultBlocks[type].content },
-      styles: { ...defaultBlocks[type].styles }
+      styles: { ...defaultBlocks[type].styles },
     };
 
     setTemplate(prev => ({
       ...prev,
-      blocks: [...prev.blocks, newBlock]
+      blocks: [...prev.blocks, newBlock],
     }));
   }, []);
 
@@ -178,31 +203,34 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
       ...prev,
       blocks: prev.blocks.map(block =>
         block.id === blockId ? { ...block, ...updates } : block
-      )
+      ),
     }));
   }, []);
 
   const deleteBlock = useCallback((blockId: string) => {
     setTemplate(prev => ({
       ...prev,
-      blocks: prev.blocks.filter(block => block.id !== blockId)
+      blocks: prev.blocks.filter(block => block.id !== blockId),
     }));
     setSelectedBlockId(null);
   }, []);
 
-  const duplicateBlock = useCallback((blockId: string) => {
-    const blockToDuplicate = template.blocks.find(b => b.id === blockId);
-    if (blockToDuplicate) {
-      const newBlock: EmailBlock = {
-        ...blockToDuplicate,
-        id: `block-${Date.now()}`
-      };
-      setTemplate(prev => ({
-        ...prev,
-        blocks: [...prev.blocks, newBlock]
-      }));
-    }
-  }, [template.blocks]);
+  const duplicateBlock = useCallback(
+    (blockId: string) => {
+      const blockToDuplicate = template.blocks.find(b => b.id === blockId);
+      if (blockToDuplicate) {
+        const newBlock: EmailBlock = {
+          ...blockToDuplicate,
+          id: `block-${Date.now()}`,
+        };
+        setTemplate(prev => ({
+          ...prev,
+          blocks: [...prev.blocks, newBlock],
+        }));
+      }
+    },
+    [template.blocks]
+  );
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -213,11 +241,13 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
 
     setTemplate(prev => ({
       ...prev,
-      blocks: items
+      blocks: items,
     }));
   };
 
-  const selectedBlock = selectedBlockId ? template.blocks.find(b => b.id === selectedBlockId) : null;
+  const selectedBlock = selectedBlockId
+    ? template.blocks.find(b => b.id === selectedBlockId)
+    : null;
 
   const renderBlockPreview = (block: EmailBlock) => {
     switch (block.type) {
@@ -229,7 +259,7 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
               backgroundColor: block.styles?.backgroundColor,
               textAlign: block.content.alignment,
               fontSize: block.content.fontSize,
-              color: block.content.color
+              color: block.content.color,
             }}
             dangerouslySetInnerHTML={{ __html: block.content.text }}
           />
@@ -258,7 +288,12 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
 
       case 'button':
         return (
-          <div style={{ padding: block.styles?.padding, textAlign: block.styles?.textAlign }}>
+          <div
+            style={{
+              padding: block.styles?.padding,
+              textAlign: block.styles?.textAlign,
+            }}
+          >
             <a
               href={block.content.href}
               style={{
@@ -268,7 +303,7 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
                 color: block.content.color,
                 textDecoration: 'none',
                 borderRadius: block.content.borderRadius,
-                fontSize: block.content.fontSize
+                fontSize: block.content.fontSize,
               }}
             >
               {block.content.text}
@@ -279,12 +314,14 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
       case 'divider':
         return (
           <div style={{ padding: block.styles?.padding }}>
-            <hr style={{
-              height: block.content.height,
-              backgroundColor: block.content.color,
-              border: 'none',
-              margin: 0
-            }} />
+            <hr
+              style={{
+                height: block.content.height,
+                backgroundColor: block.content.color,
+                border: 'none',
+                margin: 0,
+              }}
+            />
           </div>
         );
 
@@ -294,7 +331,11 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
       case 'header':
         return (
           <div style={{ ...block.styles }}>
-            <img src={block.content.logo} alt="Logo" style={{ maxHeight: '50px', marginBottom: '16px' }} />
+            <img
+              src={block.content.logo}
+              alt="Logo"
+              style={{ maxHeight: '50px', marginBottom: '16px' }}
+            />
             <h1 style={{ fontSize: '24px', margin: '0 0 8px 0', fontWeight: 'bold' }}>
               {block.content.title}
             </h1>
@@ -310,9 +351,7 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
             <div style={{ marginBottom: '16px' }}>
               <strong>{block.content.companyName}</strong>
             </div>
-            <div style={{ marginBottom: '16px' }}>
-              {block.content.address}
-            </div>
+            <div style={{ marginBottom: '16px' }}>{block.content.address}</div>
             <div>
               <a href={block.content.unsubscribeLink} style={{ color: '#64748b' }}>
                 {block.content.unsubscribeText}
@@ -338,9 +377,11 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
               <Textarea
                 id="text-content"
                 value={selectedBlock.content.text}
-                onChange={(e) => updateBlock(selectedBlock.id, {
-                  content: { ...selectedBlock.content, text: e.target.value }
-                })}
+                onChange={e =>
+                  updateBlock(selectedBlock.id, {
+                    content: { ...selectedBlock.content, text: e.target.value },
+                  })
+                }
                 rows={4}
               />
             </div>
@@ -351,9 +392,14 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
                   id="font-size"
                   type="number"
                   value={selectedBlock.content.fontSize}
-                  onChange={(e) => updateBlock(selectedBlock.id, {
-                    content: { ...selectedBlock.content, fontSize: parseInt(e.target.value) }
-                  })}
+                  onChange={e =>
+                    updateBlock(selectedBlock.id, {
+                      content: {
+                        ...selectedBlock.content,
+                        fontSize: parseInt(e.target.value),
+                      },
+                    })
+                  }
                 />
               </div>
               <div>
@@ -362,9 +408,11 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
                   id="text-color"
                   type="color"
                   value={selectedBlock.content.color}
-                  onChange={(e) => updateBlock(selectedBlock.id, {
-                    content: { ...selectedBlock.content, color: e.target.value }
-                  })}
+                  onChange={e =>
+                    updateBlock(selectedBlock.id, {
+                      content: { ...selectedBlock.content, color: e.target.value },
+                    })
+                  }
                 />
               </div>
             </div>
@@ -372,9 +420,11 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
               <Label htmlFor="text-align">Alignment</Label>
               <Select
                 value={selectedBlock.content.alignment}
-                onValueChange={(value) => updateBlock(selectedBlock.id, {
-                  content: { ...selectedBlock.content, alignment: value }
-                })}
+                onValueChange={value =>
+                  updateBlock(selectedBlock.id, {
+                    content: { ...selectedBlock.content, alignment: value },
+                  })
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -397,9 +447,11 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
               <Input
                 id="button-text"
                 value={selectedBlock.content.text}
-                onChange={(e) => updateBlock(selectedBlock.id, {
-                  content: { ...selectedBlock.content, text: e.target.value }
-                })}
+                onChange={e =>
+                  updateBlock(selectedBlock.id, {
+                    content: { ...selectedBlock.content, text: e.target.value },
+                  })
+                }
               />
             </div>
             <div>
@@ -408,9 +460,11 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
                 id="button-link"
                 type="url"
                 value={selectedBlock.content.href}
-                onChange={(e) => updateBlock(selectedBlock.id, {
-                  content: { ...selectedBlock.content, href: e.target.value }
-                })}
+                onChange={e =>
+                  updateBlock(selectedBlock.id, {
+                    content: { ...selectedBlock.content, href: e.target.value },
+                  })
+                }
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -420,9 +474,14 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
                   id="button-bg"
                   type="color"
                   value={selectedBlock.content.backgroundColor}
-                  onChange={(e) => updateBlock(selectedBlock.id, {
-                    content: { ...selectedBlock.content, backgroundColor: e.target.value }
-                  })}
+                  onChange={e =>
+                    updateBlock(selectedBlock.id, {
+                      content: {
+                        ...selectedBlock.content,
+                        backgroundColor: e.target.value,
+                      },
+                    })
+                  }
                 />
               </div>
               <div>
@@ -431,9 +490,11 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
                   id="button-color"
                   type="color"
                   value={selectedBlock.content.color}
-                  onChange={(e) => updateBlock(selectedBlock.id, {
-                    content: { ...selectedBlock.content, color: e.target.value }
-                  })}
+                  onChange={e =>
+                    updateBlock(selectedBlock.id, {
+                      content: { ...selectedBlock.content, color: e.target.value },
+                    })
+                  }
                 />
               </div>
             </div>
@@ -449,9 +510,11 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
                 id="image-src"
                 type="url"
                 value={selectedBlock.content.src}
-                onChange={(e) => updateBlock(selectedBlock.id, {
-                  content: { ...selectedBlock.content, src: e.target.value }
-                })}
+                onChange={e =>
+                  updateBlock(selectedBlock.id, {
+                    content: { ...selectedBlock.content, src: e.target.value },
+                  })
+                }
               />
             </div>
             <div>
@@ -459,9 +522,11 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
               <Input
                 id="image-alt"
                 value={selectedBlock.content.alt}
-                onChange={(e) => updateBlock(selectedBlock.id, {
-                  content: { ...selectedBlock.content, alt: e.target.value }
-                })}
+                onChange={e =>
+                  updateBlock(selectedBlock.id, {
+                    content: { ...selectedBlock.content, alt: e.target.value },
+                  })
+                }
               />
             </div>
             <div>
@@ -470,9 +535,11 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
                 id="image-link"
                 type="url"
                 value={selectedBlock.content.href}
-                onChange={(e) => updateBlock(selectedBlock.id, {
-                  content: { ...selectedBlock.content, href: e.target.value }
-                })}
+                onChange={e =>
+                  updateBlock(selectedBlock.id, {
+                    content: { ...selectedBlock.content, href: e.target.value },
+                  })
+                }
               />
             </div>
           </div>
@@ -542,9 +609,7 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
                 Send Test
               </Button>
             </div>
-            <Badge variant="secondary">
-              {template.blocks.length} blocks
-            </Badge>
+            <Badge variant="secondary">{template.blocks.length} blocks</Badge>
           </div>
 
           {/* Email Subject */}
@@ -555,7 +620,9 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
                 <Input
                   id="subject"
                   value={template.subject}
-                  onChange={(e) => setTemplate(prev => ({ ...prev, subject: e.target.value }))}
+                  onChange={e =>
+                    setTemplate(prev => ({ ...prev, subject: e.target.value }))
+                  }
                 />
               </div>
               <div>
@@ -563,7 +630,9 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
                 <Input
                   id="preheader"
                   value={template.preheader}
-                  onChange={(e) => setTemplate(prev => ({ ...prev, preheader: e.target.value }))}
+                  onChange={e =>
+                    setTemplate(prev => ({ ...prev, preheader: e.target.value }))
+                  }
                 />
               </div>
             </div>
@@ -576,35 +645,41 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
             }`}
             style={{
               backgroundColor: template.styles.backgroundColor,
-              fontFamily: template.styles.fontFamily
+              fontFamily: template.styles.fontFamily,
             }}
           >
             <DragDropContext onDragEnd={onDragEnd}>
               <Droppable droppableId="email-canvas">
-                {(provided) => (
+                {provided => (
                   <div {...provided.droppableProps} ref={provided.innerRef}>
-                    {template.blocks.map((block, index) => (
+                    {template.blocks.map((block, _index) => (
                       <Draggable key={block.id} draggableId={block.id} index={index}>
-                        {(provided) => (
+                        {provided => (
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             className={`relative group hover:outline hover:outline-2 hover:outline-blue-400 ${
-                              selectedBlockId === block.id ? 'outline outline-2 outline-blue-500' : ''
+                              selectedBlockId === block.id
+                                ? 'outline outline-2 outline-blue-500'
+                                : ''
                             }`}
                             onClick={() => setSelectedBlockId(block.id)}
                           >
                             {renderBlockPreview(block)}
                             {/* Block Controls */}
-                            <div className={`absolute top-2 right-2 flex gap-1 transition-opacity ${
-                              selectedBlockId === block.id || 'group-hover:' ? 'opacity-100' : 'opacity-0'
-                            }`}>
+                            <div
+                              className={`absolute top-2 right-2 flex gap-1 transition-opacity ${
+                                selectedBlockId === block.id || 'group-hover:'
+                                  ? 'opacity-100'
+                                  : 'opacity-0'
+                              }`}
+                            >
                               <Button
                                 size="sm"
                                 variant="secondary"
                                 className="h-6 w-6 p-0"
-                                onClick={(e) => {
+                                onClick={e => {
                                   e.stopPropagation();
                                   duplicateBlock(block.id);
                                 }}
@@ -615,7 +690,7 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
                                 size="sm"
                                 variant="destructive"
                                 className="h-6 w-6 p-0"
-                                onClick={(e) => {
+                                onClick={e => {
                                   e.stopPropagation();
                                   deleteBlock(block.id);
                                 }}

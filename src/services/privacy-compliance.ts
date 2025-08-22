@@ -54,7 +54,7 @@ class PrivacyComplianceService {
     errorTracking: false,
     sessionRecording: false,
     marketing: false,
-    functional: true // Essential for app functionality
+    functional: true, // Essential for app functionality
   };
 
   // Default privacy settings
@@ -64,7 +64,7 @@ class PrivacyComplianceService {
     cookieConsent: false,
     marketingCommunication: false,
     personalizedExperience: false,
-    dataRetention: '1year'
+    dataRetention: '1year',
   };
 
   private constructor() {
@@ -97,7 +97,6 @@ class PrivacyComplianceService {
 
       this.isInitialized = true;
       console.info('Privacy compliance service initialized');
-
     } catch (error) {
       console.error('Failed to initialize privacy compliance service:', error);
     }
@@ -125,7 +124,7 @@ class PrivacyComplianceService {
       consentType,
       source,
       userAgent: navigator.userAgent,
-      version: this.consentPolicyVersion
+      version: this.consentPolicyVersion,
     };
 
     this.consentHistory.push(consentEvent);
@@ -141,7 +140,7 @@ class PrivacyComplianceService {
       previousConsent,
       newConsent: granted,
       source,
-      userId
+      userId,
     });
   }
 
@@ -208,7 +207,7 @@ class PrivacyComplianceService {
   setPrivacySettings(settings: Partial<PrivacySettings>): void {
     this.privacySettings = {
       ...this.privacySettings,
-      ...settings
+      ...settings,
     };
 
     this.savePrivacySettings();
@@ -236,7 +235,7 @@ class PrivacyComplianceService {
     }
 
     // Show banner if consent is older than 1 year
-    const oneYearAgo = Date.now() - (365 * 24 * 60 * 60 * 1000);
+    const oneYearAgo = Date.now() - 365 * 24 * 60 * 60 * 1000;
     return parseInt(consentTimestamp) < oneYearAgo;
   }
 
@@ -251,7 +250,7 @@ class PrivacyComplianceService {
       userId,
       timestamp: Date.now(),
       status: 'pending',
-      requestId
+      requestId,
     };
 
     this.userDataRequests.push(request);
@@ -268,15 +267,18 @@ class PrivacyComplianceService {
         errors: await this.getErrorData(userId),
         performance: await this.getPerformanceData(userId),
         exportedAt: new Date().toISOString(),
-        requestId
+        requestId,
       };
 
       // In real implementation, this would generate a downloadable file
-      console.info('User data export created:', { requestId, userId, dataSize: JSON.stringify(exportData).length });
+      console.info('User data export created:', {
+        requestId,
+        userId,
+        dataSize: JSON.stringify(exportData).length,
+      });
 
       request.status = 'completed';
       return request;
-
     } catch (error) {
       request.status = 'failed';
       console.error('Failed to create data export:', error);
@@ -295,7 +297,7 @@ class PrivacyComplianceService {
       userId,
       timestamp: Date.now(),
       status: 'pending',
-      requestId
+      requestId,
     };
 
     this.userDataRequests.push(request);
@@ -309,13 +311,14 @@ class PrivacyComplianceService {
       await this.deletePerformanceData(userId);
 
       // Remove consent history for this user
-      this.consentHistory = this.consentHistory.filter(event => event.userId !== userId);
+      this.consentHistory = this.consentHistory.filter(
+        event => event.userId !== userId
+      );
 
       request.status = 'completed';
 
       console.info('User data deletion completed:', { requestId, userId });
       return request;
-
     } catch (error) {
       request.status = 'failed';
       console.error('Failed to delete user data:', error);
@@ -346,7 +349,7 @@ class PrivacyComplianceService {
       analytics: this.privacySettings.dataRetention,
       errors: this.privacySettings.dataRetention,
       performance: '6months', // Performance data kept shorter
-      consent: '7years' // Legal requirement to keep consent records
+      consent: '7years', // Legal requirement to keep consent records
     };
   }
 
@@ -374,7 +377,7 @@ class PrivacyComplianceService {
       gdpr: gdprCompliant,
       ccpa: ccpaCompliant,
       coppa: coppaCompliant,
-      issues
+      issues,
     };
   }
 
@@ -401,7 +404,6 @@ class PrivacyComplianceService {
       if (historyStored) {
         this.consentHistory = JSON.parse(historyStored);
       }
-
     } catch (error) {
       console.warn('Failed to load privacy settings:', error);
     }
@@ -414,7 +416,10 @@ class PrivacyComplianceService {
     try {
       localStorage.setItem('privacy_consent', JSON.stringify(this.consentSettings));
       localStorage.setItem('privacy_consent_timestamp', Date.now().toString());
-      localStorage.setItem('privacy_consent_history', JSON.stringify(this.consentHistory.slice(-100))); // Keep last 100 events
+      localStorage.setItem(
+        'privacy_consent_history',
+        JSON.stringify(this.consentHistory.slice(-100))
+      ); // Keep last 100 events
     } catch (error) {
       console.warn('Failed to save privacy settings:', error);
     }
@@ -482,11 +487,15 @@ class PrivacyComplianceService {
     let compliant = true;
 
     // Check if consent was properly obtained
-    const hasValidConsent = this.consentHistory.some(event =>
-      event.consentGiven && event.timestamp > (Date.now() - 365 * 24 * 60 * 60 * 1000)
+    const hasValidConsent = this.consentHistory.some(
+      event =>
+        event.consentGiven && event.timestamp > Date.now() - 365 * 24 * 60 * 60 * 1000
     );
 
-    if (!hasValidConsent && (this.consentSettings.analytics || this.consentSettings.marketing)) {
+    if (
+      !hasValidConsent &&
+      (this.consentSettings.analytics || this.consentSettings.marketing)
+    ) {
       issues.push('Missing valid consent for data processing');
       compliant = false;
     }
@@ -507,7 +516,10 @@ class PrivacyComplianceService {
     let compliant = true;
 
     // Check if user can opt-out of data sale
-    if (this.privacySettings.dataSharing && !this.privacySettings.marketingCommunication) {
+    if (
+      this.privacySettings.dataSharing &&
+      !this.privacySettings.marketingCommunication
+    ) {
       issues.push('Users must be able to opt-out of data sharing');
       compliant = false;
     }
@@ -533,7 +545,7 @@ class PrivacyComplianceService {
       events: [],
       sessions: [],
       userId,
-      note: 'Analytics data would be fetched from PostHog API'
+      note: 'Analytics data would be fetched from PostHog API',
     };
   }
 
@@ -545,7 +557,7 @@ class PrivacyComplianceService {
     return {
       errors: [],
       userId,
-      note: 'Error data would be fetched from Sentry API'
+      note: 'Error data would be fetched from Sentry API',
     };
   }
 
@@ -556,7 +568,7 @@ class PrivacyComplianceService {
     return {
       metrics: [],
       userId,
-      note: 'Performance data from local storage and analytics'
+      note: 'Performance data from local storage and analytics',
     };
   }
 

@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /**
  * Comprehensive Notification and Service Worker Integration Tests
- * 
+ *
  * Tests background alarm processing, notification handling, and service worker lifecycle:
  * - Service worker registration and messaging
  * - Background alarm triggering when tab inactive
@@ -11,7 +11,16 @@
  * - Offline notification queuing and delivery
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -29,7 +38,7 @@ import {
   verifyNotificationShown,
   verifyServiceWorkerActive,
   serviceWorkerHelpers,
-  notificationHelpers
+  notificationHelpers,
 } from '../utils/integration-test-setup';
 
 import { createMockUser, createMockAlarm } from '../utils/test-mocks';
@@ -58,7 +67,11 @@ describe('Comprehensive Notification and Service Worker Integration', () => {
   describe('Service Worker Registration and Background Processing', () => {
     it('should register service worker and handle background alarms', async () => {
       await act(async () => {
-        const result = render(<BrowserRouter><App /></BrowserRouter>);
+        const result = render(
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        );
         container = result.container;
       });
 
@@ -70,12 +83,12 @@ describe('Comprehensive Notification and Service Worker Integration', () => {
       const mockAlarm = createMockAlarm({
         id: 'bg-alarm-123',
         time: '08:00',
-        label: 'Background Test Alarm'
+        label: 'Background Test Alarm',
       });
 
       const notification = await simulateAlarmNotification('Background Test Alarm', {
         body: 'Background alarm test',
-        requireInteraction: true
+        requireInteraction: true,
       });
 
       expect(verifyNotificationShown('Background Test Alarm')).toBe(true);
@@ -84,13 +97,17 @@ describe('Comprehensive Notification and Service Worker Integration', () => {
 
     it('should handle push notification subscription', async () => {
       await act(async () => {
-        const result = render(<BrowserRouter><App /></BrowserRouter>);
+        const result = render(
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        );
         container = result.container;
       });
 
       const subscription = await simulatePushSubscription();
       expect(subscription.endpoint).toContain('fcm.googleapis.com');
-      
+
       // Verify push subscription stored
       expect(vi.mocked(PushNotificationService.subscribe)).toHaveBeenCalled();
     });
@@ -99,20 +116,27 @@ describe('Comprehensive Notification and Service Worker Integration', () => {
   describe('Cross-Tab Synchronization', () => {
     it('should synchronize alarm dismissal across tabs', async () => {
       await act(async () => {
-        const result = render(<BrowserRouter><App /></BrowserRouter>);
+        const result = render(
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        );
         container = result.container;
       });
 
       // Create notification
       const notification = await simulateAlarmNotification('Sync Test Alarm');
-      
+
       // Simulate dismissal from service worker message (other tab)
-      vi.mocked(AlarmService.dismissAlarm).mockResolvedValueOnce({ success: true, dismissedAt: new Date() });
-      
+      vi.mocked(AlarmService.dismissAlarm).mockResolvedValueOnce({
+        success: true,
+        dismissedAt: new Date(),
+      });
+
       await act(async () => {
         serviceWorkerHelpers.simulateMessage({
           type: 'ALARM_DISMISSED',
-          data: { alarmId: 'sync-alarm-123' }
+          data: { alarmId: 'sync-alarm-123' },
         });
       });
 

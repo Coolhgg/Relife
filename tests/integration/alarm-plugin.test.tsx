@@ -23,7 +23,7 @@ describe('Alarm Plugin Integration', () => {
       title: 'Test Alarm',
       body: 'Test alarm body',
       schedule: { at: new Date(Date.now() + 60000) },
-      sound: 'default.mp3'
+      sound: 'default.mp3',
     };
 
     const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -42,7 +42,7 @@ describe('Alarm Plugin Integration', () => {
     const alarmConfig = {
       title: 'Cancel Test',
       body: 'Will be cancelled',
-      schedule: { at: new Date(Date.now() + 60000) }
+      schedule: { at: new Date(Date.now() + 60000) },
     };
 
     const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -56,7 +56,7 @@ describe('Alarm Plugin Integration', () => {
     const alarmConfig = {
       title: 'Snooze Test',
       body: 'Snooze test body',
-      schedule: { at: new Date(Date.now() + 1000) }
+      schedule: { at: new Date(Date.now() + 1000) },
     };
 
     const alarm = await mobileHelper.scheduleAlarm(alarmConfig);

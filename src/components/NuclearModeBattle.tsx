@@ -1,6 +1,6 @@
 /// <reference types="node" />
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Zap,
   AlertTriangle,
@@ -10,7 +10,7 @@ import {
   Atom,
   Shield,
   Explosion,
-  Crown
+  Crown,
 } from 'lucide-react';
 import { PremiumGate } from './PremiumGate';
 import type { Alarm, User, AlarmDifficulty } from '../types';
@@ -43,7 +43,7 @@ const NUCLEAR_CHALLENGES: NuclearChallenge[] = [
     description: 'Memorize and repeat the atomic sequence',
     difficulty: 10,
     timeLimit: 30,
-    points: 500
+    points: 500,
   },
   {
     id: 'fusion-math',
@@ -52,7 +52,7 @@ const NUCLEAR_CHALLENGES: NuclearChallenge[] = [
     description: 'Solve complex equations to prevent meltdown',
     difficulty: 9,
     timeLimit: 45,
-    points: 400
+    points: 400,
   },
   {
     id: 'reactor-pattern',
@@ -61,7 +61,7 @@ const NUCLEAR_CHALLENGES: NuclearChallenge[] = [
     description: 'Match the cooling rod pattern exactly',
     difficulty: 8,
     timeLimit: 60,
-    points: 600
+    points: 600,
   },
   {
     id: 'endurance-protocol',
@@ -70,7 +70,7 @@ const NUCLEAR_CHALLENGES: NuclearChallenge[] = [
     description: 'Maintain focus while chaos erupts around you',
     difficulty: 10,
     timeLimit: 90,
-    points: 800
+    points: 800,
   },
   {
     id: 'precision-targeting',
@@ -79,8 +79,8 @@ const NUCLEAR_CHALLENGES: NuclearChallenge[] = [
     description: 'Hit exact targets with nuclear precision',
     difficulty: 9,
     timeLimit: 40,
-    points: 700
-  }
+    points: 700,
+  },
 ];
 
 export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
@@ -88,16 +88,20 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   user,
   onDismiss,
   onSnooze,
-  isActive
+  isActive,
 }) => {
-  const [currentChallenge, setCurrentChallenge] = useState<NuclearChallenge | null>(null);
+  const [currentChallenge, setCurrentChallenge] = useState<NuclearChallenge | null>(
+    null
+  );
   const [challengeProgress, setChallengeProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [totalScore, setTotalScore] = useState(0);
   const [challengesCompleted, setChallengesCompleted] = useState(0);
   const [isExploding, setIsExploding] = useState(false);
   const [nuclearEffects, setNuclearEffects] = useState(true);
-  const [warningLevel, setWarningLevel] = useState<'green' | 'yellow' | 'red' | 'critical'>('green');
+  const [warningLevel, setWarningLevel] = useState<
+    'green' | 'yellow' | 'red' | 'critical'
+  >('green');
 
   const timerRef = useRef<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -171,32 +175,35 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     triggerNuclearMeltdown();
   }, []);
 
-  const handleChallengeComplete = useCallback((success: boolean, score: number = 0) => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-
-    if (success) {
-      setTotalScore(prev => prev + score);
-      setChallengesCompleted(prev => prev + 1);
-
-      // Check if all challenges completed
-      if (challengesCompleted + 1 >= requiredChallenges) {
-        handleNuclearSuccess();
-      } else {
-        // Move to next challenge
-        setTimeout(() => {
-          const nextChallenge = getRandomChallenge();
-          setCurrentChallenge(nextChallenge);
-          setTimeRemaining(nextChallenge.timeLimit);
-          setChallengeProgress(0);
-          startChallengeTimer(nextChallenge.timeLimit);
-        }, 1000);
+  const handleChallengeComplete = useCallback(
+    (success: boolean, score: number = 0) => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
       }
-    } else {
-      triggerNuclearMeltdown();
-    }
-  }, [challengesCompleted]);
+
+      if (success) {
+        setTotalScore(prev => prev + score);
+        setChallengesCompleted(prev => prev + 1);
+
+        // Check if all challenges completed
+        if (challengesCompleted + 1 >= requiredChallenges) {
+          handleNuclearSuccess();
+        } else {
+          // Move to next challenge
+          setTimeout(() => {
+            const nextChallenge = getRandomChallenge();
+            setCurrentChallenge(nextChallenge);
+            setTimeRemaining(nextChallenge.timeLimit);
+            setChallengeProgress(0);
+            startChallengeTimer(nextChallenge.timeLimit);
+          }, 1000);
+        }
+      } else {
+        triggerNuclearMeltdown();
+      }
+    },
+    [challengesCompleted]
+  );
 
   const handleNuclearSuccess = useCallback(() => {
     setWarningLevel('green');
@@ -242,35 +249,45 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
 
     switch (currentChallenge.type) {
       case 'sequence':
-        return <SequenceChallenge
-          challenge={currentChallenge}
-          onComplete={handleChallengeComplete}
-          timeRemaining={timeRemaining}
-        />;
+        return (
+          <SequenceChallenge
+            challenge={currentChallenge}
+            onComplete={handleChallengeComplete}
+            timeRemaining={timeRemaining}
+          />
+        );
       case 'math':
-        return <MathChallenge
-          challenge={currentChallenge}
-          onComplete={handleChallengeComplete}
-          timeRemaining={timeRemaining}
-        />;
+        return (
+          <MathChallenge
+            challenge={currentChallenge}
+            onComplete={handleChallengeComplete}
+            timeRemaining={timeRemaining}
+          />
+        );
       case 'pattern':
-        return <PatternChallenge
-          challenge={currentChallenge}
-          onComplete={handleChallengeComplete}
-          timeRemaining={timeRemaining}
-        />;
+        return (
+          <PatternChallenge
+            challenge={currentChallenge}
+            onComplete={handleChallengeComplete}
+            timeRemaining={timeRemaining}
+          />
+        );
       case 'endurance':
-        return <EnduranceChallenge
-          challenge={currentChallenge}
-          onComplete={handleChallengeComplete}
-          timeRemaining={timeRemaining}
-        />;
+        return (
+          <EnduranceChallenge
+            challenge={currentChallenge}
+            onComplete={handleChallengeComplete}
+            timeRemaining={timeRemaining}
+          />
+        );
       case 'precision':
-        return <PrecisionChallenge
-          challenge={currentChallenge}
-          onComplete={handleChallengeComplete}
-          timeRemaining={timeRemaining}
-        />;
+        return (
+          <PrecisionChallenge
+            challenge={currentChallenge}
+            onComplete={handleChallengeComplete}
+            timeRemaining={timeRemaining}
+          />
+        );
       default:
         return null;
     }
@@ -289,10 +306,13 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
           {nuclearEffects && (
             <motion.div
               className={`absolute inset-0 ${
-                warningLevel === 'critical' ? 'bg-red-900/90' :
-                warningLevel === 'red' ? 'bg-red-800/70' :
-                warningLevel === 'yellow' ? 'bg-orange-600/50' :
-                'bg-green-900/30'
+                warningLevel === 'critical'
+                  ? 'bg-red-900/90'
+                  : warningLevel === 'red'
+                    ? 'bg-red-800/70'
+                    : warningLevel === 'yellow'
+                      ? 'bg-orange-600/50'
+                      : 'bg-green-900/30'
               }`}
               animate={{
                 opacity: [0.3, 1, 0.3],
@@ -300,7 +320,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
               transition={{
                 duration: warningLevel === 'critical' ? 0.5 : 2,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: 'easeInOut',
               }}
             />
           )}
@@ -351,14 +371,18 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
           <div className="px-6 py-3 bg-black/50">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium">Protocol Progress</span>
-              <span className="text-sm">{challengesCompleted}/{requiredChallenges}</span>
+              <span className="text-sm">
+                {challengesCompleted}/{requiredChallenges}
+              </span>
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2">
               <motion.div
                 className="bg-gradient-to-r from-red-600 to-orange-500 h-2 rounded-full"
-                initial={{ width: "0%" }}
-                animate={{ width: `${(challengesCompleted / requiredChallenges) * 100}%` }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
+                initial={{ width: '0%' }}
+                animate={{
+                  width: `${(challengesCompleted / requiredChallenges) * 100}%`,
+                }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
               />
             </div>
           </div>
@@ -367,26 +391,33 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
           {currentChallenge && (
             <div className="px-6 py-2 bg-red-900/30">
               <div className="flex items-center justify-center space-x-2">
-                <Timer className={`h-5 w-5 ${
-                  warningLevel === 'critical' ? 'text-red-400' :
-                  warningLevel === 'red' ? 'text-orange-400' :
-                  'text-yellow-400'
-                }`} />
-                <span className={`text-lg font-mono font-bold ${
-                  warningLevel === 'critical' ? 'text-red-400' :
-                  warningLevel === 'red' ? 'text-orange-400' :
-                  'text-yellow-400'
-                }`}>
-                  {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+                <Timer
+                  className={`h-5 w-5 ${
+                    warningLevel === 'critical'
+                      ? 'text-red-400'
+                      : warningLevel === 'red'
+                        ? 'text-orange-400'
+                        : 'text-yellow-400'
+                  }`}
+                />
+                <span
+                  className={`text-lg font-mono font-bold ${
+                    warningLevel === 'critical'
+                      ? 'text-red-400'
+                      : warningLevel === 'red'
+                        ? 'text-orange-400'
+                        : 'text-yellow-400'
+                  }`}
+                >
+                  {Math.floor(timeRemaining / 60)}:
+                  {(timeRemaining % 60).toString().padStart(2, '0')}
                 </span>
               </div>
             </div>
           )}
 
           {/* Challenge Area */}
-          <div className="flex-1 p-6">
-            {renderChallenge()}
-          </div>
+          <div className="flex-1 p-6">{renderChallenge()}</div>
 
           {/* Warning Footer */}
           <div className="p-4 bg-red-900/50 border-t border-red-500/50">

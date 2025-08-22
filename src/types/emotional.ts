@@ -1,11 +1,23 @@
 // Emotional Intelligence Types for Relife Smart Alarm
 // Integrates with existing voice mood system and user preferences
 
-export type EmotionType = 'happy' | 'sad' | 'worried' | 'excited' | 'lonely' | 'proud' | 'sleepy';
+export type EmotionType =
+  | 'happy'
+  | 'sad'
+  | 'worried'
+  | 'excited'
+  | 'lonely'
+  | 'proud'
+  | 'sleepy';
 
 export type EmotionalTone = 'encouraging' | 'playful' | 'firm' | 'roast';
 
-export type EscalationLevel = 'gentle' | 'slightly_emotional' | 'strong_emotional' | 'social_pressure' | 'major_reset';
+export type EscalationLevel =
+  | 'gentle'
+  | 'slightly_emotional'
+  | 'strong_emotional'
+  | 'social_pressure'
+  | 'major_reset';
 
 export interface EmotionalContext {
   daysSinceLastUse: number;
@@ -89,8 +101,8 @@ export const VOICE_MOOD_TO_EMOTIONAL_TONE: Record<string, EmotionalTone> = {
   'sweet-angel': 'encouraging',
   'anime-hero': 'playful',
   'savage-roast': 'roast',
-  'motivational': 'encouraging',
-  'gentle': 'encouraging'
+  motivational: 'encouraging',
+  gentle: 'encouraging',
 };
 
 // Notification categories for integration with existing push service
@@ -99,7 +111,8 @@ export const EMOTIONAL_NOTIFICATION_CATEGORIES = {
   CELEBRATION: 'emotional_celebration',
   GENTLE_NUDGE: 'emotional_nudge',
   ACHIEVEMENT: 'emotional_achievement',
-  STREAK_WARNING: 'emotional_streak_warning'
+  STREAK_WARNING: 'emotional_streak_warning',
 } as const;
 
-export type EmotionalNotificationCategory = typeof EMOTIONAL_NOTIFICATION_CATEGORIES[keyof typeof EMOTIONAL_NOTIFICATION_CATEGORIES];
+export type EmotionalNotificationCategory =
+  (typeof EMOTIONAL_NOTIFICATION_CATEGORIES)[keyof typeof EMOTIONAL_NOTIFICATION_CATEGORIES];

@@ -1,5 +1,5 @@
-import { expect, test, jest } from "@jest/globals";
-import PerformanceMonitor from "../performance-monitor";
+import { expect, test, jest } from '@jest/globals';
+import PerformanceMonitor from '../performance-monitor';
 
 // Mock Web Vitals
 jest.mock('web-vitals', () => ({
@@ -130,11 +130,13 @@ describe('PerformanceMonitor', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       // Mock performance.getEntriesByName to return a measure
-      performance.getEntriesByName = jest.fn(() => [{
-        name: 'test-operation',
-        duration: 150,
-        startTime: 100,
-      }]);
+      performance.getEntriesByName = jest.fn(() => [
+        {
+          name: 'test-operation',
+          duration: 150,
+          startTime: 100,
+        },
+      ]);
 
       monitor.startTracking('test-operation');
       const result = monitor.endTracking('test-operation');
@@ -536,9 +538,7 @@ describe('PerformanceMonitor', () => {
 
       expect(exportData).toMatch(/^data:application\/json;charset=utf-8,/);
 
-      const jsonData = JSON.parse(
-        decodeURIComponent(exportData.split(',')[1])
-      );
+      const jsonData = JSON.parse(decodeURIComponent(exportData.split(',')[1]));
       expect(jsonData).toHaveProperty('webVitals');
       expect(jsonData).toHaveProperty('userActions');
     });

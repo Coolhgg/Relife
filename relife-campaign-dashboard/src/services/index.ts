@@ -365,8 +365,4 @@ export const emailPlatformManager = new EmailPlatformManager();
 export { mailchimpService, convertKitService, activeCampaignService, aiService };
 
 // Export types
-export type {
-  EmailPlatformStatus,
-  CampaignMetrics,
-  UnifiedCampaign
-};
+export type { EmailPlatformStatus, CampaignMetrics, UnifiedCampaign };

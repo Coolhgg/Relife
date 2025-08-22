@@ -27,7 +27,7 @@ apm_config:
   env: production
   receiver_port: 8126
   apm_non_local_traffic: true
-  
+
   # Analyzed spans configuration
   analyzed_spans:
     relife-api|express.request: 1.0
@@ -40,7 +40,7 @@ process_config:
   scrub_args: true
   custom_sensitive_words:
     - "password"
-    - "token" 
+    - "token"
     - "key"
     - "secret"
 
@@ -97,7 +97,7 @@ integrations:
         tags:
           - component:api
           - environment:production
-        
+
       - name: relife-app-health
         url: https://app.relife.app/api/health
         timeout: 10
@@ -128,12 +128,12 @@ custom_metrics:
     type: gauge
     tags:
       - metric_type:performance
-  
+
   - name: relife.alarms.success_rate
     type: rate
     tags:
       - metric_type:business
-      
+
   - name: relife.users.active
     type: gauge
     tags:
@@ -149,7 +149,7 @@ synthetics:
 listeners:
   - name: docker
   - name: kubelet
-  
+
 config_providers:
   - name: docker
     polling: true
@@ -179,7 +179,7 @@ dogstatsd_config:
 # Cloud provider detection
 cloud_provider_metadata:
   - "AWS"
-  - "GCP" 
+  - "GCP"
   - "Azure"
 
 # External monitoring webhooks
@@ -188,7 +188,7 @@ webhooks:
     url: ${SLACK_WEBHOOK_URL}
     custom_headers:
       Content-Type: application/json
-    
+
   - name: pagerduty-critical
     url: ${PAGERDUTY_WEBHOOK_URL}
     custom_headers:

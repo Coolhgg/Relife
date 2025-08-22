@@ -48,10 +48,10 @@ export const WEBHOOK_EVENTS = [
 
   // Account and capability events (for Connect if needed)
   'account.updated',
-  'capability.updated'
+  'capability.updated',
 ] as const;
 
-export type WebhookEventType = typeof WEBHOOK_EVENTS[number];
+export type WebhookEventType = (typeof WEBHOOK_EVENTS)[number];
 
 // Webhook endpoint configuration
 export const WEBHOOK_CONFIG = {
@@ -65,14 +65,11 @@ export const WEBHOOK_CONFIG = {
   highPriorityEvents: [
     'invoice.payment_succeeded',
     'invoice.payment_failed',
-    'customer.subscription.deleted'
+    'customer.subscription.deleted',
   ],
 
   // Events that can be processed with delay (low priority)
-  lowPriorityEvents: [
-    'customer.updated',
-    'invoice.created'
-  ],
+  lowPriorityEvents: ['customer.updated', 'invoice.created'],
 
   // Timeout for webhook processing (milliseconds)
   processingTimeout: 30000, // 30 seconds
@@ -81,27 +78,22 @@ export const WEBHOOK_CONFIG = {
   batchProcessing: {
     enabled: false, // Enable for high-volume scenarios
     batchSize: 10,
-    batchTimeout: 5000 // 5 seconds
-  }
+    batchTimeout: 5000, // 5 seconds
+  },
 };
 
 // Webhook security configuration
 export const SECURITY_CONFIG = {
   // Required headers
-  requiredHeaders: [
-    'stripe-signature'
-  ],
+  requiredHeaders: ['stripe-signature'],
 
   // Allowed content types
-  allowedContentTypes: [
-    'application/json',
-    'application/json; charset=utf-8'
-  ],
+  allowedContentTypes: ['application/json', 'application/json; charset=utf-8'],
 
   // Rate limiting (requests per minute)
   rateLimit: {
     windowMs: 60 * 1000, // 1 minute
-    max: 1000 // Max 1000 webhooks per minute
+    max: 1000, // Max 1000 webhooks per minute
   },
 
   // IP whitelist (Stripe's webhook IPs)
@@ -111,8 +103,8 @@ export const SECURITY_CONFIG = {
     '54.187.216.72',
     '54.241.31.99',
     '54.241.31.102',
-    '54.241.34.107'
-  ]
+    '54.241.34.107',
+  ],
 };
 
 // Environment configuration
@@ -134,7 +126,7 @@ export function getWebhookEnvironmentConfig(): WebhookEnvironmentConfig {
     environment: (process.env.NODE_ENV as any) || 'development',
     logLevel: (process.env.WEBHOOK_LOG_LEVEL as any) || 'info',
     enableMetrics: process.env.ENABLE_WEBHOOK_METRICS === 'true',
-    enableRetries: process.env.ENABLE_WEBHOOK_RETRIES !== 'false'
+    enableRetries: process.env.ENABLE_WEBHOOK_RETRIES !== 'false',
   };
 }
 
@@ -144,7 +136,7 @@ export const MONITORING_CONFIG = {
   alertThresholds: {
     errorRate: 0.05, // Alert if error rate exceeds 5%
     processingTime: 10000, // Alert if processing takes more than 10 seconds
-    queueSize: 1000 // Alert if queue size exceeds 1000
+    queueSize: 1000, // Alert if queue size exceeds 1000
   },
 
   // Metrics to track
@@ -152,15 +144,15 @@ export const MONITORING_CONFIG = {
     'webhook_events_processed',
     'webhook_processing_time',
     'webhook_errors',
-    'webhook_retries'
+    'webhook_retries',
   ],
 
   // Health check configuration
   healthCheck: {
     enabled: true,
     interval: 60000, // 1 minute
-    timeout: 5000 // 5 seconds
-  }
+    timeout: 5000, // 5 seconds
+  },
 };
 
 // Webhook retry configuration
@@ -170,27 +162,19 @@ export const RETRY_CONFIG = {
     initialDelay: 1000, // 1 second
     maxDelay: 300000, // 5 minutes
     multiplier: 2,
-    jitter: true
+    jitter: true,
   },
 
   // Events that should not be retried
   nonRetryableEvents: [
-    'customer.deleted' // Don't retry if customer is already deleted
+    'customer.deleted', // Don't retry if customer is already deleted
   ],
 
   // Error codes that should trigger immediate retry
-  retryableErrors: [
-    'ECONNRESET',
-    'ECONNREFUSED',
-    'ETIMEDOUT',
-    'EAI_AGAIN'
-  ],
+  retryableErrors: ['ECONNRESET', 'ECONNREFUSED', 'ETIMEDOUT', 'EAI_AGAIN'],
 
   // Error codes that should not be retried
-  nonRetryableErrors: [
-    'INVALID_SIGNATURE',
-    'EVENT_TOO_OLD'
-  ]
+  nonRetryableErrors: ['INVALID_SIGNATURE', 'EVENT_TOO_OLD'],
 };
 
 // Development and testing helpers
@@ -206,29 +190,33 @@ export const DEVELOPMENT_CONFIG = {
           customer: 'cus_test',
           status: 'active',
           items: {
-            data: [{
-              price: {
-                id: 'price_test',
-                unit_amount: 999,
-                currency: 'usd',
-                recurring: { interval: 'month' }
-              }
-            }]
-          }
-        }
-      }
-    }
+            data: [
+              {
+                price: {
+                  id: 'price_test',
+                  unit_amount: 999,
+                  currency: 'usd',
+                  recurring: { interval: 'month' },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
   },
 
   // Testing utilities
   enableTestMode: process.env.STRIPE_TEST_MODE === 'true',
 
   // Debug logging
-  verboseLogging: process.env.WEBHOOK_VERBOSE_LOGGING === 'true'
+  verboseLogging: process.env.WEBHOOK_VERBOSE_LOGGING === 'true',
 };
 
 // Webhook endpoint validation
-export function validateWebhookConfig(config: Partial<WebhookEnvironmentConfig>): string[] {
+export function validateWebhookConfig(
+  config: Partial<WebhookEnvironmentConfig>
+): string[] {
   const errors: string[] = [];
 
   if (!config.stripeSecretKey) {
@@ -259,23 +247,23 @@ export const SETUP_INSTRUCTIONS = {
   stripe: {
     webhookUrl: 'https://your-app.com/api/webhooks/stripe',
     events: WEBHOOK_EVENTS,
-    description: 'Relife Alarm App - Subscription Management'
+    description: 'Relife Alarm App - Subscription Management',
   },
 
   environments: {
     development: {
       webhookUrl: 'https://localhost:3000/api/webhooks/stripe',
-      ngrokSetup: 'Use ngrok for local testing: ngrok http 3000'
+      ngrokSetup: 'Use ngrok for local testing: ngrok http 3000',
     },
 
     staging: {
-      webhookUrl: 'https://staging.your-app.com/api/webhooks/stripe'
+      webhookUrl: 'https://staging.your-app.com/api/webhooks/stripe',
     },
 
     production: {
-      webhookUrl: 'https://your-app.com/api/webhooks/stripe'
-    }
-  }
+      webhookUrl: 'https://your-app.com/api/webhooks/stripe',
+    },
+  },
 };
 
 export default {
@@ -287,5 +275,5 @@ export default {
   DEVELOPMENT_CONFIG,
   getWebhookEnvironmentConfig,
   validateWebhookConfig,
-  SETUP_INSTRUCTIONS
+  SETUP_INSTRUCTIONS,
 };

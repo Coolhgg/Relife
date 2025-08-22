@@ -176,7 +176,9 @@ test.describe('Authentication', () => {
 
       await test.step('Verify duplicate email error', async () => {
         await expect(authPage.errorMessage).toBeVisible();
-        await expect(authPage.errorMessage).toContainText(/already exists|taken|duplicate/i);
+        await expect(authPage.errorMessage).toContainText(
+          /already exists|taken|duplicate/i
+        );
       });
     });
 
@@ -209,12 +211,16 @@ test.describe('Authentication', () => {
         const emailInput = authPage.page.locator('input[type="email"]').first();
         await emailInput.fill(TestData.USERS.VALID_USER.email);
 
-        const resetButton = authPage.page.getByRole('button').filter({ hasText: /reset|send/i });
+        const resetButton = authPage.page
+          .getByRole('button')
+          .filter({ hasText: /reset|send/i });
         await resetButton.click();
       });
 
       await test.step('Verify reset email sent message', async () => {
-        const successMessage = authPage.page.locator('[data-testid*="success"], .success-message');
+        const successMessage = authPage.page.locator(
+          '[data-testid*="success"], .success-message'
+        );
         const hasSuccessMessage = await successMessage.isVisible({ timeout: 5000 });
 
         if (hasSuccessMessage) {
@@ -302,11 +308,14 @@ test.describe('Authentication', () => {
 
         // Should redirect to login or show auth required
         const currentUrl = authPage.page.url();
-        const isOnProtectedPage = !currentUrl.includes('/login') && !currentUrl.includes('/auth');
+        const isOnProtectedPage =
+          !currentUrl.includes('/login') && !currentUrl.includes('/auth');
 
         if (isOnProtectedPage) {
           // Check if there's an auth required message
-          const authRequired = authPage.page.locator(':has-text("login"), :has-text("authenticate")');
+          const authRequired = authPage.page.locator(
+            ':has-text("login"), :has-text("authenticate")'
+          );
           const hasAuthMessage = await authRequired.isVisible({ timeout: 3000 });
 
           if (!hasAuthMessage) {
@@ -348,7 +357,9 @@ test.describe('Authentication', () => {
 
         if (!isOnLogin) {
           // Check for re-authentication prompt
-          const authPrompt = authPage.page.locator(':has-text("session"), :has-text("expired"), :has-text("login")');
+          const authPrompt = authPage.page.locator(
+            ':has-text("session"), :has-text("expired"), :has-text("login")'
+          );
           const hasAuthPrompt = await authPrompt.isVisible({ timeout: 3000 });
 
           if (hasAuthPrompt) {

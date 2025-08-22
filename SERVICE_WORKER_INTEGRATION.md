@@ -1,6 +1,7 @@
 # ServiceWorkerStatus Component Integration Guide
 
-This guide shows how to integrate the ServiceWorkerStatus component into your Relife app UI for monitoring alarm reliability.
+This guide shows how to integrate the ServiceWorkerStatus component into your Relife app UI for
+monitoring alarm reliability.
 
 ## Integration Options
 
@@ -28,7 +29,7 @@ function App() {
   const {
     state: serviceWorkerState,
     updateAlarms: updateServiceWorkerAlarms,
-    performHealthCheck
+    performHealthCheck,
   } = useEnhancedServiceWorker();
 
   // ... existing code
@@ -405,11 +406,14 @@ Once integrated, users will see:
 ## Styling Customization
 
 The component uses your existing design system with:
+
 - Card components for layout
 - Badge components for status indicators
 - Button components for actions
 - Consistent spacing and colors with your theme
 
-You can customize the appearance by modifying the ServiceWorkerStatus component or adding custom CSS classes.
+You can customize the appearance by modifying the ServiceWorkerStatus component or adding custom CSS
+classes.
 
-This integration provides users with complete visibility into the alarm reliability system and gives them control over notification permissions and system health.
+This integration provides users with complete visibility into the alarm reliability system and gives
+them control over notification permissions and system health.

@@ -1,6 +1,7 @@
 # Smart Alarm Database Setup
 
-This directory contains the database schema and setup scripts for the Smart Alarm application using Supabase.
+This directory contains the database schema and setup scripts for the Smart Alarm application using
+Supabase.
 
 ## Prerequisites
 
@@ -18,6 +19,7 @@ cp .env.example .env
 ```
 
 Update the values in `.env`:
+
 ```
 VITE_SUPABASE_URL=https://your-project-id.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
@@ -32,6 +34,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 4. Run the SQL script
 
 This will create:
+
 - All necessary tables (users, alarms, alarm_events, voices, user_voices)
 - Indexes for performance
 - Row Level Security (RLS) policies
@@ -51,26 +54,31 @@ For real-time alarm synchronization across devices:
 ### Tables
 
 #### `users`
+
 - User profiles and preferences
 - Linked to Supabase Auth
 - Stores theme, notification, and voice preferences
 
 #### `alarms`
+
 - User-created alarms
 - Stores time, days, voice mood, and status
 - Links to user via `user_id`
 
 #### `alarm_events`
+
 - Log of alarm triggers and interactions
 - Tracks dismissals, snoozes, and methods used
 - Used for analytics and debugging
 
 #### `voices`
+
 - Available TTS voices and configurations
 - Public table with default voice settings
 - Extensible for future TTS provider integration
 
 #### `user_voices`
+
 - User-specific voice customizations
 - Custom messages per voice mood
 - Links users to preferred voices
@@ -90,7 +98,8 @@ For real-time alarm synchronization across devices:
 
 ## API Usage
 
-The app uses the `SupabaseService` class in `src/services/supabase.ts` to interact with the database:
+The app uses the `SupabaseService` class in `src/services/supabase.ts` to interact with the
+database:
 
 ```typescript
 // Sign up new user
@@ -111,6 +120,7 @@ const unsubscribe = SupabaseService.subscribeToUserAlarms(userId, (alarms) => {
 ## Local Development
 
 For local development without Supabase:
+
 - The app will fall back to local storage
 - User authentication will be bypassed
 - All alarm data is stored locally
@@ -127,6 +137,7 @@ For local development without Supabase:
 ## Backup and Recovery
 
 Supabase provides automatic backups, but for critical deployments:
+
 1. Set up daily database dumps
 2. Store critical alarm data redundantly
 3. Implement data export functionality for users

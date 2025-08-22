@@ -2,7 +2,9 @@
 
 ## Overview
 
-The Relife Theme System is a comprehensive, enterprise-grade theming solution that provides dynamic theme switching, personalization, accessibility features, performance optimizations, and cloud synchronization for the Relife alarm application.
+The Relife Theme System is a comprehensive, enterprise-grade theming solution that provides dynamic
+theme switching, personalization, accessibility features, performance optimizations, and cloud
+synchronization for the Relife alarm application.
 
 ## Table of Contents
 
@@ -60,9 +62,11 @@ The theme system consists of several interconnected services and components:
 
 ### 1. ThemeProvider (`src/hooks/useTheme.tsx`)
 
-The main React context provider that manages theme state and provides all theme-related functionality.
+The main React context provider that manages theme state and provides all theme-related
+functionality.
 
 **Key Features:**
+
 - Theme state management
 - Personalization settings
 - CSS variable generation
@@ -74,6 +78,7 @@ The main React context provider that manages theme state and provides all theme-
 Handles robust data persistence with automatic backups and corruption recovery.
 
 **Key Features:**
+
 - Automatic versioning and migration
 - Backup and restore functionality
 - Data validation and integrity checks
@@ -84,6 +89,7 @@ Handles robust data persistence with automatic backups and corruption recovery.
 Optimizes theme switching and CSS variable application for better performance.
 
 **Key Features:**
+
 - CSS variable caching
 - Batched DOM updates
 - Smooth transitions
@@ -94,6 +100,7 @@ Optimizes theme switching and CSS variable application for better performance.
 Provides comprehensive accessibility features and WCAG compliance testing.
 
 **Key Features:**
+
 - ARIA announcements
 - Contrast ratio calculation
 - Color blindness simulation
@@ -105,6 +112,7 @@ Provides comprehensive accessibility features and WCAG compliance testing.
 The main UI component for theme management and customization.
 
 **Key Features:**
+
 - Theme selection interface
 - Personalization controls
 - Accessibility testing
@@ -139,9 +147,7 @@ function MyComponent() {
   return (
     <div style={getCSSVariables()}>
       Current theme: {theme}
-      <button onClick={() => setTheme('dark')}>
-        Switch to Dark
-      </button>
+      <button onClick={() => setTheme('dark')}>Switch to Dark</button>
     </div>
   );
 }
@@ -156,11 +162,7 @@ import { ThemeProvider } from './hooks/useTheme';
 
 function App() {
   return (
-    <ThemeProvider
-      defaultTheme="light"
-      enableSystem={true}
-      storageKey="my-app-theme"
-    >
+    <ThemeProvider defaultTheme="light" enableSystem={true} storageKey="my-app-theme">
       <YourAppContent />
     </ThemeProvider>
   );
@@ -218,14 +220,14 @@ const { createCustomTheme } = useTheme();
 const customTheme = await createCustomTheme('light', {
   colors: {
     primary: {
-      500: '#ff6b6b'
-    }
+      500: '#ff6b6b',
+    },
   },
   typography: {
     fontSize: {
-      base: '18px'
-    }
-  }
+      base: '18px',
+    },
+  },
 });
 ```
 
@@ -234,6 +236,7 @@ const customTheme = await createCustomTheme('light', {
 ### Available Personalization Options
 
 #### Color Preferences
+
 - Favorite and avoided colors
 - Colorblind-friendly mode
 - High contrast mode
@@ -241,6 +244,7 @@ const customTheme = await createCustomTheme('light', {
 - Color temperature (warmth)
 
 #### Typography Preferences
+
 - Font size scaling
 - Font family selection
 - Line height preference
@@ -248,6 +252,7 @@ const customTheme = await createCustomTheme('light', {
 - Dyslexia-friendly fonts
 
 #### Motion Preferences
+
 - Animation enable/disable
 - Animation speed
 - Reduced motion mode
@@ -255,6 +260,7 @@ const customTheme = await createCustomTheme('light', {
 - Focus animations
 
 #### Layout Preferences
+
 - UI density (compact/comfortable/spacious)
 - Navigation style
 - Card styling
@@ -262,6 +268,7 @@ const customTheme = await createCustomTheme('light', {
 - Icon and label visibility
 
 #### Accessibility Preferences
+
 - Screen reader optimizations
 - Keyboard-only navigation
 - Large touch targets
@@ -278,8 +285,8 @@ const { updatePersonalization, personalization } = useTheme();
 updatePersonalization({
   colorPreferences: {
     ...personalization.colorPreferences,
-    highContrastMode: true
-  }
+    highContrastMode: true,
+  },
 });
 
 // Update typography
@@ -287,8 +294,8 @@ updatePersonalization({
   typographyPreferences: {
     ...personalization.typographyPreferences,
     fontSizeScale: 1.2,
-    dyslexiaFriendly: true
-  }
+    dyslexiaFriendly: true,
+  },
 });
 ```
 
@@ -299,6 +306,7 @@ updatePersonalization({
 The theme system includes comprehensive WCAG compliance features:
 
 #### Contrast Testing
+
 ```tsx
 const { calculateContrastRatio, testThemeAccessibility } = useTheme();
 
@@ -312,6 +320,7 @@ console.log(`Overall score: ${accessibility.overallScore}%`);
 ```
 
 #### Color Blindness Support
+
 ```tsx
 const { simulateColorBlindness } = useTheme();
 
@@ -321,12 +330,14 @@ console.log('Deuteranopia:', simulations.deuteranopia);
 ```
 
 #### Screen Reader Support
+
 - Automatic ARIA announcements for theme changes
 - Skip links for keyboard navigation
 - Descriptive labels for all controls
 - Landmark enhancements
 
 #### Keyboard Navigation
+
 - Built-in keyboard shortcuts (Alt+T for theme toggle)
 - Focus management
 - Tab order optimization
@@ -359,7 +370,7 @@ const { applyThemeWithPerformance, preloadTheme } = useTheme();
 await applyThemeWithPerformance({
   animate: true,
   duration: 300,
-  immediate: false
+  immediate: false,
 });
 
 // Preload themes for faster switching
@@ -415,12 +426,14 @@ await syncThemes();
 ### useTheme Hook
 
 #### Theme Management
+
 - `theme: Theme` - Current active theme
 - `setTheme(theme: Theme): void` - Set active theme
 - `toggleTheme(): void` - Toggle between light/dark
 - `resetTheme(): void` - Reset to default theme
 
 #### Personalization
+
 - `personalization: PersonalizationSettings` - Current personalization settings
 - `updatePersonalization(updates: Partial<PersonalizationSettings>): void` - Update settings
 - `updateColorPreference(property: string, value: any): void` - Update color preferences
@@ -430,15 +443,18 @@ await syncThemes();
 - `updateAccessibilityPreference(property: string, value: any): void` - Update accessibility
 
 #### Theme Utilities
+
 - `getCSSVariables(): Record<string, string>` - Get current CSS variables
 - `getThemeClasses(): string[]` - Get current theme CSS classes
 - `isAccessibleContrast(fg: string, bg: string): boolean` - Test color contrast
 
 #### Performance
+
 - `applyThemeWithPerformance(options?): Promise<void>` - Apply theme with optimizations
 - `preloadTheme(theme: Theme): void` - Preload theme for faster switching
 
 #### Accessibility
+
 - `testThemeAccessibility()` - Test theme for accessibility compliance
 - `getAccessibilityStatus()` - Get current accessibility settings status
 - `announceThemeChange(name: string, previous?: string)` - Announce theme changes
@@ -446,52 +462,57 @@ await syncThemes();
 - `simulateColorBlindness(color: string)` - Simulate color blindness
 
 #### Cloud Sync
+
 - `cloudSyncStatus: CloudSyncStatus` - Current sync status
 - `enableCloudSync(enabled: boolean): void` - Enable/disable sync
 - `syncThemes(): Promise<void>` - Force synchronization
 - `forceCloudSync(): Promise<void>` - Force sync with server
 
 #### Import/Export
+
 - `exportThemes(): Promise<string>` - Export theme data as JSON
 - `importThemes(data: string): Promise<boolean>` - Import theme data
 
 ### Services
 
 #### ThemePersistenceService
+
 ```typescript
 class ThemePersistenceService {
-  saveThemeData(data: ThemeData): Promise<void>
-  loadThemeData(): Promise<ThemeData>
-  createBackup(): Promise<void>
-  restoreFromBackup(backupId?: string): Promise<boolean>
-  exportThemes(): Promise<string>
-  importThemes(data: string): Promise<boolean>
-  clearAllData(): Promise<void>
-  getStorageStats(): StorageStats
+  saveThemeData(data: ThemeData): Promise<void>;
+  loadThemeData(): Promise<ThemeData>;
+  createBackup(): Promise<void>;
+  restoreFromBackup(backupId?: string): Promise<boolean>;
+  exportThemes(): Promise<string>;
+  importThemes(data: string): Promise<boolean>;
+  clearAllData(): Promise<void>;
+  getStorageStats(): StorageStats;
 }
 ```
 
 #### ThemePerformanceService
+
 ```typescript
 class ThemePerformanceService {
-  applyTheme(variables: Record<string, string>, classes: string[], options?): Promise<void>
-  debouncedApplyTheme(variables, classes, delay?, options?): void
-  cacheThemeData(themeId: string, variables, classes): CSSVariableCache
-  preloadTheme(themeId: string, variables, classes): void
-  clearCache(): void
-  getPerformanceStats(): PerformanceStats
+  applyTheme(variables: Record<string, string>, classes: string[], options?): Promise<void>;
+  debouncedApplyTheme(variables, classes, delay?, options?): void;
+  cacheThemeData(themeId: string, variables, classes): CSSVariableCache;
+  preloadTheme(themeId: string, variables, classes): void;
+  clearCache(): void;
+  getPerformanceStats(): PerformanceStats;
 }
 ```
 
 #### ThemeAccessibilityService
+
 ```typescript
 class ThemeAccessibilityService {
-  calculateContrastRatio(fg: string, bg: string): ContrastRatio
-  simulateColorBlindness(color: string): ColorBlindnessSimulation
-  applyAccessibilityEnhancements(settings: PersonalizationSettings): void
-  testThemeAccessibility(colors: Record<string, string>): AccessibilityTestResult
-  announceThemeChange(name: string, options?): void
-  getAccessibilityStatus(): AccessibilityStatus
+  calculateContrastRatio(fg: string, bg: string): ContrastRatio;
+  simulateColorBlindness(color: string): ColorBlindnessSimulation;
+  applyAccessibilityEnhancements(settings: PersonalizationSettings): void;
+  testThemeAccessibility(colors: Record<string, string>): AccessibilityTestResult;
+  announceThemeChange(name: string, options?): void;
+  getAccessibilityStatus(): AccessibilityStatus;
 }
 ```
 
@@ -554,7 +575,8 @@ test('should switch themes correctly', () => {
 1. **Use CSS Custom Properties**: Leverage the built-in CSS variable system
 2. **Minimize Direct DOM Manipulation**: Use the provided performance-optimized functions
 3. **Preload Common Themes**: Use `preloadTheme()` for themes users are likely to switch to
-4. **Cache Expensive Calculations**: The system automatically caches, but be mindful of custom calculations
+4. **Cache Expensive Calculations**: The system automatically caches, but be mindful of custom
+   calculations
 
 ### Accessibility
 
@@ -575,6 +597,7 @@ test('should switch themes correctly', () => {
 ### Common Issues
 
 #### Theme Not Applying
+
 ```typescript
 // Check if theme is set correctly
 const { theme, getCSSVariables } = useTheme();
@@ -586,6 +609,7 @@ console.log('CSS variables:', getCSSVariables());
 ```
 
 #### Performance Issues
+
 ```typescript
 // Check performance stats
 import ThemePerformanceService from './services/theme-performance';
@@ -597,6 +621,7 @@ service.clearCache();
 ```
 
 #### Accessibility Problems
+
 ```typescript
 // Test theme accessibility
 const { testThemeAccessibility } = useTheme();
@@ -606,6 +631,7 @@ console.log('Recommendations:', results.recommendations);
 ```
 
 #### Sync Issues
+
 ```typescript
 // Check sync status
 const { cloudSyncStatus, forceCloudSync } = useTheme();
@@ -649,6 +675,9 @@ localStorage.setItem('theme-debug', 'true');
 
 ## Conclusion
 
-The Relife Theme System provides a comprehensive solution for theming, personalization, and accessibility. It's designed to be performant, accessible, and user-friendly while providing powerful customization capabilities.
+The Relife Theme System provides a comprehensive solution for theming, personalization, and
+accessibility. It's designed to be performant, accessible, and user-friendly while providing
+powerful customization capabilities.
 
-For additional support or feature requests, please refer to the project's issue tracker or documentation updates.
+For additional support or feature requests, please refer to the project's issue tracker or
+documentation updates.

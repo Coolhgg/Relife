@@ -44,7 +44,7 @@ export const validateTime = (time: string): ValidationResult => {
   return {
     isValid: errors.length === 0,
     errors,
-    sanitized: time.trim()
+    sanitized: time.trim(),
   };
 };
 
@@ -75,7 +75,7 @@ export const validateLabel = (label: string): ValidationResult => {
   const sanitized = SecurityService.sanitizeInput(trimmedLabel, {
     allowBasicFormatting: false,
     maxLength: 100,
-    stripEmoji: false
+    stripEmoji: false,
   });
 
   // Additional check for empty sanitized content
@@ -91,7 +91,7 @@ export const validateLabel = (label: string): ValidationResult => {
   return {
     isValid: errors.length === 0,
     errors,
-    sanitized
+    sanitized,
   };
 };
 
@@ -109,11 +109,8 @@ export const validateDays = (days: number[]): ValidationResult => {
   }
 
   // Check if all values are valid day numbers (0-6, where 0 is Sunday)
-  const validDays = days.filter(day =>
-    typeof day === 'number' &&
-    Number.isInteger(day) &&
-    day >= 0 &&
-    day <= 6
+  const validDays = days.filter(
+    day => typeof day === 'number' && Number.isInteger(day) && day >= 0 && day <= 6
   );
 
   if (validDays.length !== days.length) {
@@ -126,7 +123,7 @@ export const validateDays = (days: number[]): ValidationResult => {
   return {
     isValid: errors.length === 0,
     errors,
-    sanitized: uniqueDays
+    sanitized: uniqueDays,
   };
 };
 
@@ -145,7 +142,7 @@ export const validateVoiceMood = (voiceMood: string): ValidationResult => {
     'anime-hero',
     'savage-roast',
     'motivational',
-    'gentle'
+    'gentle',
   ];
 
   const trimmedMood = voiceMood.trim();
@@ -157,7 +154,7 @@ export const validateVoiceMood = (voiceMood: string): ValidationResult => {
   return {
     isValid: errors.length === 0,
     errors,
-    sanitized: trimmedMood
+    sanitized: trimmedMood,
   };
 };
 
@@ -167,8 +164,11 @@ export const validateAlarmData = (alarmData: {
   label: string;
   days: number[];
   voiceMood: string;
-}): { isValid: boolean; errors: AlarmValidationErrors; sanitizedData?: typeof alarmData } => {
-
+}): {
+  isValid: boolean;
+  errors: AlarmValidationErrors;
+  sanitizedData?: typeof alarmData;
+} => {
   const timeResult = validateTime(alarmData.time);
   const labelResult = validateLabel(alarmData.label);
   const daysResult = validateDays(alarmData.days);
@@ -194,12 +194,14 @@ export const validateAlarmData = (alarmData: {
 
   const isValid = Object.keys(errors).length === 0;
 
-  const sanitizedData = isValid ? {
-    time: timeResult.sanitized as string,
-    label: labelResult.sanitized as string,
-    days: daysResult.sanitized as number[],
-    voiceMood: voiceMoodResult.sanitized as string
-  } : undefined;
+  const sanitizedData = isValid
+    ? {
+        time: timeResult.sanitized as string,
+        label: labelResult.sanitized as string,
+        days: daysResult.sanitized as number[],
+        voiceMood: voiceMoodResult.sanitized as string,
+      }
+    : undefined;
 
   return { isValid, errors, sanitizedData };
 };
@@ -209,7 +211,7 @@ export const sanitizeTextInput = (input: string): string => {
   return SecurityService.sanitizeInput(input, {
     allowBasicFormatting: false,
     maxLength: 1000,
-    stripEmoji: false
+    stripEmoji: false,
   });
 };
 
@@ -257,7 +259,7 @@ export const validateNumber = (
   return {
     isValid: errors.length === 0,
     errors,
-    sanitized: numValue
+    sanitized: numValue,
   };
 };
 
@@ -273,18 +275,14 @@ export const validateEmail = (email: string): ValidationResult => {
   const trimmedEmail = email.trim().toLowerCase();
 
   // Enhanced email validation
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   if (!emailRegex.test(trimmedEmail)) {
     errors.push('Please enter a valid email address');
   }
 
   // Check for suspicious patterns
-  const suspiciousPatterns = [
-    /[<>"'&]/,
-    /javascript:/i,
-    /data:/i,
-    /vbscript:/i
-  ];
+  const suspiciousPatterns = [/[<>"'&]/, /javascript:/i, /data:/i, /vbscript:/i];
 
   if (suspiciousPatterns.some(pattern => pattern.test(trimmedEmail))) {
     errors.push('Email contains invalid characters');
@@ -297,7 +295,7 @@ export const validateEmail = (email: string): ValidationResult => {
   return {
     isValid: errors.length === 0,
     errors,
-    sanitized: trimmedEmail
+    sanitized: trimmedEmail,
   };
 };
 
@@ -321,12 +319,7 @@ export const validateUrl = (url: string): ValidationResult => {
     }
 
     // Additional security checks
-    const suspiciousPatterns = [
-      /javascript:/i,
-      /data:/i,
-      /vbscript:/i,
-      /file:/i
-    ];
+    const suspiciousPatterns = [/javascript:/i, /data:/i, /vbscript:/i, /file:/i];
 
     if (suspiciousPatterns.some(pattern => pattern.test(trimmedUrl))) {
       errors.push('URL contains potentially unsafe protocol');
@@ -336,7 +329,6 @@ export const validateUrl = (url: string): ValidationResult => {
     if (!urlObj.hostname || urlObj.hostname.length < 3) {
       errors.push('URL must have a valid domain');
     }
-
   } catch {
     errors.push('Please enter a valid URL');
   }
@@ -344,6 +336,6 @@ export const validateUrl = (url: string): ValidationResult => {
   return {
     isValid: errors.length === 0,
     errors,
-    sanitized: trimmedUrl
+    sanitized: trimmedUrl,
   };
 };

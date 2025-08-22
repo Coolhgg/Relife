@@ -1,6 +1,6 @@
 /**
  * Premium Feature Upgrade Integration Tests
- * 
+ *
  * Tests the complete premium subscription flow:
  * 1. Free user explores premium features
  * 2. Upgrade flow with payment processing
@@ -11,7 +11,16 @@
  * 7. Trial period management
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
@@ -22,7 +31,12 @@ import { SupabaseService } from '../../src/services/supabase';
 import { AppAnalyticsService } from '../../src/services/app-analytics';
 
 // Import test utilities
-import { createMockUser, createMockAlarm, mockNavigatorAPI, mockStripeAPI } from '../utils/test-mocks';
+import {
+  createMockUser,
+  createMockAlarm,
+  mockNavigatorAPI,
+  mockStripeAPI,
+} from '../utils/test-mocks';
 import { TestData } from '../e2e/fixtures/test-data';
 
 // Types
@@ -37,7 +51,7 @@ describe('Premium Feature Upgrade Integration', () => {
   let mockUser: User;
   let container: HTMLElement;
   let user: ReturnType<typeof userEvent.setup>;
-  
+
   // Service instances
   let analyticsService: AppAnalyticsService;
 
@@ -48,26 +62,26 @@ describe('Premium Feature Upgrade Integration', () => {
 
   beforeEach(async () => {
     user = userEvent.setup();
-    
+
     // Create free tier user
     mockUser = createMockUser({
       subscriptionTier: 'free',
       premiumFeatures: [],
-      trialEndsAt: null
+      trialEndsAt: null,
     });
-    
+
     // Reset all mocks
     vi.clearAllMocks();
-    
+
     analyticsService = AppAnalyticsService.getInstance();
-    
+
     // Mock successful authentication
     vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
-    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({ 
-      alarms: [], 
-      error: null 
+    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
+      alarms: [],
+      error: null,
     });
-    
+
     // Mock analytics
     vi.mocked(analyticsService.trackFeatureUsage).mockImplementation(() => {});
     vi.mocked(analyticsService.trackConversion).mockImplementation(() => {});
@@ -88,7 +102,7 @@ describe('Premium Feature Upgrade Integration', () => {
   describe('Premium Feature Discovery and Paywall', () => {
     it('should show premium features with paywall for free users', async () => {
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -111,7 +125,7 @@ describe('Premium Feature Upgrade Integration', () => {
       await waitFor(() => {
         const premiumModal = screen.queryByText(/upgrade.*premium|unlock.*features/i);
         const premiumBadge = screen.queryByText(/premium|pro/i);
-        
+
         // Either paywall modal or premium badge should appear
         if (premiumModal) {
           expect(premiumModal).toBeInTheDocument();
@@ -126,30 +140,30 @@ describe('Premium Feature Upgrade Integration', () => {
         expect.any(String),
         expect.objectContaining({
           feature: expect.any(String),
-          userTier: 'free'
+          userTier: 'free',
         })
       );
     });
 
     it('should show limited alarm creation for free users', async () => {
       // Create some existing alarms near the free limit
-      const existingAlarms = Array.from({ length: 3 }, (_, i) => 
+      const existingAlarms = Array.from({ length: 3 }, (_, i) =>
         createMockAlarm({
           id: `free-alarm-${i}`,
           userId: mockUser.id,
           time: `0${6 + i}:00`,
           label: `Free Alarm ${i + 1}`,
-          enabled: true
+          enabled: true,
         })
       );
 
       vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
         alarms: existingAlarms,
-        error: null
+        error: null,
       });
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -193,12 +207,12 @@ describe('Premium Feature Upgrade Integration', () => {
         userId: mockUser.id,
         time: '09:00',
         label: 'Limit Test Alarm',
-        enabled: true
+        enabled: true,
       });
 
       vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
         alarm: mockAlarm,
-        error: null
+        error: null,
       });
 
       await user.click(screen.getByRole('button', { name: /save|create/i }));
@@ -221,7 +235,7 @@ describe('Premium Feature Upgrade Integration', () => {
   describe('Subscription Upgrade Flow', () => {
     it('should complete the premium upgrade process', async () => {
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -237,7 +251,9 @@ describe('Premium Feature Upgrade Integration', () => {
       });
 
       // Navigate to pricing page
-      const pricingButton = screen.getByRole('button', { name: /premium|crown|pricing/i });
+      const pricingButton = screen.getByRole('button', {
+        name: /premium|crown|pricing/i,
+      });
       await user.click(pricingButton);
 
       await waitFor(() => {
@@ -259,16 +275,16 @@ describe('Premium Feature Upgrade Integration', () => {
         confirmCardPayment: vi.fn().mockResolvedValue({
           paymentIntent: {
             status: 'succeeded',
-            id: 'pi_test_12345'
-          }
+            id: 'pi_test_12345',
+          },
         }),
         elements: vi.fn().mockReturnValue({
           create: vi.fn().mockReturnValue({
             mount: vi.fn(),
             on: vi.fn(),
-            destroy: vi.fn()
-          })
-        })
+            destroy: vi.fn(),
+          }),
+        }),
       };
 
       // @ts-ignore
@@ -296,12 +312,12 @@ describe('Premium Feature Upgrade Integration', () => {
         subscriptionTier: 'premium' as const,
         premiumFeatures: ['advanced_scheduling', 'unlimited_alarms', 'custom_sounds'],
         subscriptionId: 'sub_test_12345',
-        subscriptionStatus: 'active' as const
+        subscriptionStatus: 'active' as const,
       };
 
       vi.mocked(SupabaseService.updateUserSubscription).mockResolvedValueOnce({
         user: upgradedUser,
-        error: null
+        error: null,
       });
 
       // Complete payment
@@ -309,10 +325,13 @@ describe('Premium Feature Upgrade Integration', () => {
       await user.click(payButton);
 
       // Wait for successful upgrade
-      await waitFor(() => {
-        const successMessage = screen.getByText(/success|upgraded|welcome.*premium/i);
-        expect(successMessage).toBeInTheDocument();
-      }, { timeout: 10000 });
+      await waitFor(
+        () => {
+          const successMessage = screen.getByText(/success|upgraded|welcome.*premium/i);
+          expect(successMessage).toBeInTheDocument();
+        },
+        { timeout: 10000 }
+      );
 
       // Verify analytics tracking
       expect(analyticsService.trackConversion).toHaveBeenCalledWith(
@@ -320,7 +339,7 @@ describe('Premium Feature Upgrade Integration', () => {
         expect.objectContaining({
           planId: 'premium',
           amount: expect.any(Number),
-          userId: mockUser.id
+          userId: mockUser.id,
         })
       );
 
@@ -337,7 +356,7 @@ describe('Premium Feature Upgrade Integration', () => {
 
     it('should handle payment failures gracefully', async () => {
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -353,7 +372,9 @@ describe('Premium Feature Upgrade Integration', () => {
       });
 
       // Navigate to pricing
-      const pricingButton = screen.getByRole('button', { name: /premium|crown|pricing/i });
+      const pricingButton = screen.getByRole('button', {
+        name: /premium|crown|pricing/i,
+      });
       await user.click(pricingButton);
 
       await waitFor(() => {
@@ -370,9 +391,9 @@ describe('Premium Feature Upgrade Integration', () => {
           error: {
             type: 'card_error',
             code: 'card_declined',
-            message: 'Your card was declined.'
-          }
-        })
+            message: 'Your card was declined.',
+          },
+        }),
       };
 
       // @ts-ignore
@@ -394,7 +415,7 @@ describe('Premium Feature Upgrade Integration', () => {
         'card_declined',
         expect.objectContaining({
           userId: mockUser.id,
-          planId: 'premium'
+          planId: 'premium',
         })
       );
     });
@@ -407,13 +428,13 @@ describe('Premium Feature Upgrade Integration', () => {
         subscriptionTier: 'premium',
         premiumFeatures: ['advanced_scheduling', 'unlimited_alarms', 'custom_sounds'],
         subscriptionId: 'sub_test_67890',
-        subscriptionStatus: 'active'
+        subscriptionStatus: 'active',
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(premiumUser);
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -450,12 +471,12 @@ describe('Premium Feature Upgrade Integration', () => {
           userId: premiumUser.id,
           time: `0${6 + i}:00`,
           label: `Premium Alarm ${i + 1}`,
-          enabled: true
+          enabled: true,
         });
 
         vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
           alarm: mockAlarm,
-          error: null
+          error: null,
         });
 
         await user.click(screen.getByRole('button', { name: /save|create/i }));
@@ -475,9 +496,11 @@ describe('Premium Feature Upgrade Integration', () => {
 
       await waitFor(() => {
         // Should have access to advanced features
-        const aiOptimization = screen.queryByText(/ai.*optimization|smart.*scheduling/i);
+        const aiOptimization = screen.queryByText(
+          /ai.*optimization|smart.*scheduling/i
+        );
         const customPatterns = screen.queryByText(/custom.*pattern|advanced.*repeat/i);
-        
+
         // At least one premium feature should be visible
         if (aiOptimization) {
           expect(aiOptimization).toBeInTheDocument();
@@ -494,13 +517,13 @@ describe('Premium Feature Upgrade Integration', () => {
         premiumFeatures: [],
         subscriptionId: 'sub_test_expired',
         subscriptionStatus: 'canceled',
-        subscriptionEndsAt: new Date(Date.now() - 24 * 60 * 60 * 1000) // Yesterday
+        subscriptionEndsAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(expiredPremiumUser);
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -516,7 +539,9 @@ describe('Premium Feature Upgrade Integration', () => {
       });
 
       // Should show subscription expired notice
-      const expiredNotice = screen.queryByText(/subscription.*expired|reactivate.*plan/i);
+      const expiredNotice = screen.queryByText(
+        /subscription.*expired|reactivate.*plan/i
+      );
       if (expiredNotice) {
         expect(expiredNotice).toBeInTheDocument();
       }
@@ -527,7 +552,9 @@ describe('Premium Feature Upgrade Integration', () => {
 
       // Should show upgrade prompt again
       await waitFor(() => {
-        const upgradePrompt = screen.getByText(/upgrade.*premium|subscription.*expired/i);
+        const upgradePrompt = screen.getByText(
+          /upgrade.*premium|subscription.*expired/i
+        );
         expect(upgradePrompt).toBeInTheDocument();
       });
 
@@ -537,7 +564,7 @@ describe('Premium Feature Upgrade Integration', () => {
         'advanced_scheduling',
         expect.objectContaining({
           reason: 'subscription_expired',
-          userId: expiredPremiumUser.id
+          userId: expiredPremiumUser.id,
         })
       );
     });
@@ -550,13 +577,13 @@ describe('Premium Feature Upgrade Integration', () => {
         subscriptionTier: 'trial',
         premiumFeatures: ['advanced_scheduling', 'unlimited_alarms'],
         trialEndsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-        trialStartedAt: new Date()
+        trialStartedAt: new Date(),
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(trialUser);
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -593,7 +620,7 @@ describe('Premium Feature Upgrade Integration', () => {
         'advanced_scheduling',
         expect.objectContaining({
           trialDaysRemaining: expect.any(Number),
-          userId: trialUser.id
+          userId: trialUser.id,
         })
       );
     });
@@ -604,13 +631,13 @@ describe('Premium Feature Upgrade Integration', () => {
         subscriptionTier: 'free',
         premiumFeatures: [],
         trialEndsAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
-        trialStartedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000) // 14 days ago
+        trialStartedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 14 days ago
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(expiredTrialUser);
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -626,7 +653,9 @@ describe('Premium Feature Upgrade Integration', () => {
       });
 
       // Should show trial expired message
-      const trialExpiredMessage = screen.queryByText(/trial.*expired|subscribe.*continue/i);
+      const trialExpiredMessage = screen.queryByText(
+        /trial.*expired|subscribe.*continue/i
+      );
       if (trialExpiredMessage) {
         expect(trialExpiredMessage).toBeInTheDocument();
       }
@@ -641,7 +670,9 @@ describe('Premium Feature Upgrade Integration', () => {
       });
 
       // Should offer conversion to paid plan
-      const subscribeButton = screen.queryByRole('button', { name: /subscribe|upgrade.*now/i });
+      const subscribeButton = screen.queryByRole('button', {
+        name: /subscribe|upgrade.*now/i,
+      });
       if (subscribeButton) {
         expect(subscribeButton).toBeInTheDocument();
       }
@@ -654,13 +685,13 @@ describe('Premium Feature Upgrade Integration', () => {
       const strugglingSamUser = createMockUser({
         subscriptionTier: 'free',
         email: 'sam@example.com',
-        detectedPersona: 'struggling_sam' as PersonaType
+        detectedPersona: 'struggling_sam' as PersonaType,
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(strugglingSamUser);
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -676,7 +707,9 @@ describe('Premium Feature Upgrade Integration', () => {
       });
 
       // Navigate to pricing
-      const pricingButton = screen.getByRole('button', { name: /premium|crown|pricing/i });
+      const pricingButton = screen.getByRole('button', {
+        name: /premium|crown|pricing/i,
+      });
       await user.click(pricingButton);
 
       await waitFor(() => {
@@ -684,13 +717,17 @@ describe('Premium Feature Upgrade Integration', () => {
       });
 
       // Should show persona-specific messaging
-      const strugglingMessage = screen.queryByText(/struggle|getting.*started|free.*trial/i);
+      const strugglingMessage = screen.queryByText(
+        /struggle|getting.*started|free.*trial/i
+      );
       if (strugglingMessage) {
         expect(strugglingMessage).toBeInTheDocument();
       }
 
       // Should offer appropriate discount or trial
-      const discountOffer = screen.queryByText(/50%.*off|special.*offer|limited.*time/i);
+      const discountOffer = screen.queryByText(
+        /50%.*off|special.*offer|limited.*time/i
+      );
       if (discountOffer) {
         expect(discountOffer).toBeInTheDocument();
       }
@@ -701,7 +738,7 @@ describe('Premium Feature Upgrade Integration', () => {
         'struggling_sam',
         expect.objectContaining({
           userId: strugglingSamUser.id,
-          persona: 'struggling_sam'
+          persona: 'struggling_sam',
         })
       );
     });
@@ -713,13 +750,13 @@ describe('Premium Feature Upgrade Integration', () => {
         subscriptionTier: 'premium',
         premiumFeatures: ['advanced_scheduling', 'unlimited_alarms'],
         subscriptionId: 'sub_test_active',
-        subscriptionStatus: 'active'
+        subscriptionStatus: 'active',
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(premiumUser);
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -743,7 +780,9 @@ describe('Premium Feature Upgrade Integration', () => {
       });
 
       // Look for subscription management section
-      const subscriptionSection = screen.queryByText(/subscription|billing|manage.*plan/i);
+      const subscriptionSection = screen.queryByText(
+        /subscription|billing|manage.*plan/i
+      );
       if (subscriptionSection) {
         expect(subscriptionSection).toBeInTheDocument();
       }
@@ -755,7 +794,9 @@ describe('Premium Feature Upgrade Integration', () => {
       }
 
       // Should offer management options
-      const manageButton = screen.queryByRole('button', { name: /manage|cancel|update.*payment/i });
+      const manageButton = screen.queryByRole('button', {
+        name: /manage|cancel|update.*payment/i,
+      });
       if (manageButton) {
         expect(manageButton).toBeInTheDocument();
         await user.click(manageButton);
@@ -766,7 +807,7 @@ describe('Premium Feature Upgrade Integration', () => {
           'accessed',
           expect.objectContaining({
             userId: premiumUser.id,
-            subscriptionTier: 'premium'
+            subscriptionTier: 'premium',
           })
         );
       }

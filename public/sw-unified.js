@@ -210,7 +210,7 @@ async function performCacheCleanup(cacheName) {
     }
 
     cacheStats.lastCleanup = Date.now();
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Cache cleanup failed:', error);
   }
 }
@@ -234,7 +234,7 @@ async function smartCachePut(cache, request, response) {
 
   try {
     await cache.put(request, enhancedResponse);
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Failed to cache:', error);
   }
 
@@ -293,7 +293,7 @@ async function warmCriticalCaches() {
           await smartCachePut(cache, request, response);
         }
       }
-    } catch (error) {
+    } catch (_error) {
       console.log(`❌ Failed to warm cache for ${resource}:`, error);
     }
   }
@@ -395,7 +395,7 @@ self.addEventListener('activate', (event) => {
 
 // ==================== FETCH EVENT ====================
 self.addEventListener('fetch', (event) => {
-  const { request } = event;
+  const {_request} = event;
   const url = new URL(request.url);
 
   // Skip non-GET requests and chrome-extension requests
@@ -439,7 +439,7 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('sync', (event) => {
   console.log('🔄 Background sync triggered:', event.tag);
 
-  switch (event.tag) {
+  switch (_event.tag) {
     case SYNC_TAGS.ALARMS:
       event.waitUntil(syncAlarms());
       break;
@@ -474,7 +474,7 @@ self.addEventListener('push', (event) => {
   console.log('📱 Push notification received');
 
   let data = {};
-  if (event.data) {
+  if (_event.data) {
     try {
       data = event.data.json();
     } catch (e) {
@@ -500,7 +500,7 @@ self.addEventListener('notificationclick', (event) => {
 
 // ==================== MESSAGE EVENT ====================
 self.addEventListener('message', (event) => {
-  const { type, data } = event.data;
+  const {_type, _data} = event.data;
 
   switch (type) {
     case 'SCHEDULE_ALARM':
@@ -572,7 +572,7 @@ async function networkFirst(request) {
     }
 
     return networkResponse;
-  } catch (error) {
+  } catch (_error) {
     console.log('🌐 Network failed, trying cache:', request.url);
     const cachedResponse = await smartCacheMatch(cache, request);
 
@@ -630,7 +630,7 @@ async function cacheFirst(request) {
     }
 
     return networkResponse;
-  } catch (error) {
+  } catch (_error) {
     return createOfflineResponse(request);
   }
 }
@@ -689,7 +689,7 @@ async function staleWhileRevalidate(request) {
   try {
     const response = await fetchPromise;
     return response || createOfflineResponse(request);
-  } catch (error) {
+  } catch (_error) {
     return createOfflineResponse(request);
   }
 }
@@ -705,7 +705,7 @@ async function networkWithFallback(request) {
     }
 
     return networkResponse;
-  } catch (error) {
+  } catch (_error) {
     // Try all caches for fallback (in order of priority)
     const cacheNames = Object.values(CACHES);
 
@@ -736,7 +736,7 @@ async function handleAnalyticsRequest(request) {
     // Try network first
     const response = await fetch(request);
     return response;
-  } catch (error) {
+  } catch (_error) {
     // Queue for later if offline
     if (request.method === 'POST') {
       const body = await request.text();
@@ -872,7 +872,7 @@ async function triggerAlarm(alarm) {
       await scheduleAlarm(alarm);
     }
 
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Error triggering alarm:', error);
   }
 }
@@ -1152,7 +1152,7 @@ async function performDataSync(dataType, options = {}) {
         if (batchResult.conflicts > 0) {
           await handleSyncConflicts(dataType, batchResult.conflictDetails);
         }
-      } catch (error) {
+      } catch (_error) {
         console.error(`❌ Batch sync failed for ${dataType}:`, error);
         syncResults.failed += batch.length;
       }
@@ -1182,7 +1182,7 @@ async function performDataSync(dataType, options = {}) {
     console.log(`✅ ${dataType} sync completed:`, syncResults);
     return syncResults;
 
-  } catch (error) {
+  } catch (_error) {
     console.error(`❌ ${dataType} sync failed:`, error);
     return { success: 0, failed: localData?.length || 0, conflicts: 0, error: error.message };
   } finally {
@@ -1215,7 +1215,7 @@ async function getLocalDataForSync(dataType) {
       default:
         return [];
     }
-  } catch (error) {
+  } catch (_error) {
     console.error(`Failed to get ${dataType} data for sync:`, error);
     return [];
   }
@@ -1243,7 +1243,7 @@ async function syncBatch(dataType, batch, options = {}) {
         }
 
         synced = true;
-      } catch (error) {
+      } catch (_error) {
         retryCount++;
         if (retryCount <= SYNC_CONFIG.maxRetries) {
           const delay = SYNC_CONFIG.retryDelays[retryCount - 1] || 15000;
@@ -1351,7 +1351,7 @@ async function handleSyncConflicts(dataType, conflicts) {
       await updateLocalData(dataType, conflict.itemId, resolvedData);
       console.log(`✅ Conflict resolved for ${dataType} item ${conflict.itemId}`);
 
-    } catch (error) {
+    } catch (_error) {
       console.error(`❌ Failed to resolve conflict for ${dataType} item ${conflict.itemId}:`, error);
     }
   }
@@ -1430,7 +1430,7 @@ async function syncAnalytics() {
     const results = await processAnalyticsQueue();
     await notifyMainThread('analytics-sync', results);
     return results;
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Analytics sync failed:', error);
     return { success: 0, failed: analyticsQueue.length, error: error.message };
   }
@@ -1475,7 +1475,7 @@ async function syncEmotionalData() {
     const results = await processEmotionalQueue();
     await notifyMainThread('emotional-sync', results);
     return results;
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Emotional data sync failed:', error);
     return { success: 0, failed: emotionalQueue.length, error: error.message };
   }
@@ -1491,7 +1491,7 @@ async function openIndexedDB() {
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
 
-    request.onupgradeneeded = (event) => {
+    request.onupgradeneeded = (_event) => {
       const db = event.target.result;
 
       // Create object stores if they don't exist
@@ -1536,7 +1536,7 @@ async function markItemAsSynced(dataType, itemId) {
         store.put(item);
       }
     };
-  } catch (error) {
+  } catch (_error) {
     console.error(`Failed to mark ${dataType} item ${itemId} as synced:`, error);
   }
 }
@@ -1553,7 +1553,7 @@ async function updateLocalData(dataType, itemId, newData) {
     newData.lastModified = new Date().toISOString();
 
     store.put(newData);
-  } catch (error) {
+  } catch (_error) {
     console.error(`Failed to update ${dataType} item ${itemId}:`, error);
   }
 }
@@ -1597,7 +1597,7 @@ async function processAnalyticsQueue() {
       });
 
       success += batch.length;
-    } catch (error) {
+    } catch (_error) {
       console.error('Analytics batch upload failed:', error);
       failed += batch.length;
     }
@@ -1621,13 +1621,13 @@ async function processEmotionalQueue() {
   let success = 0;
   let failed = 0;
 
-  for (const event of emotionalQueue) {
+  for (_const event of emotionalQueue) {
     try {
       await simulateEmotionalDataUpload(event);
       event.synced = true;
       event.syncedAt = new Date().toISOString();
       success++;
-    } catch (error) {
+    } catch (_error) {
       console.error('Emotional event sync failed:', error);
       failed++;
     }
@@ -1646,7 +1646,7 @@ async function simulateAnalyticsUpload(batch) {
   if (Math.random() < 0.02) throw new Error('Simulated analytics upload failure');
 }
 
-async function simulateEmotionalDataUpload(event) {
+async function simulateEmotionalDataUpload(_event) {
   await new Promise(resolve => setTimeout(resolve, 50 + Math.random() * 100));
   if (Math.random() < 0.02) throw new Error('Simulated emotional data upload failure');
 }
@@ -1834,14 +1834,14 @@ async function processAnalyticsQueue() {
   const events = [...analyticsQueue];
   analyticsQueue = [];
 
-  for (const event of events) {
+  for (_const event of events) {
     try {
       await fetch(event.url, {
         method: event.method,
         headers: event.headers,
         body: event.body
       });
-    } catch (error) {
+    } catch (_error) {
       console.log('❌ Failed to send analytics event:', error);
       // Re-queue on failure
       analyticsQueue.push(event);
@@ -1857,11 +1857,11 @@ async function processEmotionalQueue() {
   const events = [...emotionalQueue];
   emotionalQueue = [];
 
-  for (const event of events) {
+  for (_const event of events) {
     try {
       // Process emotional event (send to backend, update local state, etc.)
       await storeOfflineEvent('emotional', event);
-    } catch (error) {
+    } catch (_error) {
       console.log('❌ Failed to process emotional event:', error);
     }
   }
@@ -1876,8 +1876,8 @@ async function notifyClients(type, data) {
 
 // Stub implementations for additional features
 async function storeScheduledAlarm(alarm, nextTime) { /* Implementation */ }
-async function storeOfflineEvent(category, event) { /* Implementation */ }
-async function logAlarmEvent(alarm, eventType, metadata = {}) { /* Implementation */ }
+async function storeOfflineEvent(category, _event) { /* Implementation */ }
+async function logAlarmEvent(alarm, _eventType, metadata = {}) { /* Implementation */ }
 async function handleSnooze(data) { /* Implementation */ }
 async function performDataSync(dataType) { /* Implementation */ }
 async function schedulePeriodicSync() { /* Implementation */ }
@@ -1885,8 +1885,8 @@ async function initializeAlarmProcessing() { /* Implementation */ }
 async function checkForAppUpdates() { /* Implementation */ }
 async function handleAppUpdate() { /* Implementation */ }
 async function registerPushSubscription(subscription) { pushSubscription = subscription; }
-async function queueAnalytics(event) { analyticsQueue.push(event); }
-async function queueEmotionalEvent(event) { emotionalQueue.push(event); }
+async function queueAnalytics(_event) { analyticsQueue.push(event); }
+async function queueEmotionalEvent(_event) { emotionalQueue.push(event); }
 async function performCompleteSync() {
   await Promise.all([
     syncAlarms(),
@@ -1949,7 +1949,7 @@ async function getCacheStatistics() {
     }
 
     return stats;
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Failed to get cache statistics:', error);
     return { error: error.message };
   }
@@ -1977,7 +1977,7 @@ async function clearAllCaches() {
     };
 
     console.log('✅ All caches cleared successfully');
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Failed to clear caches:', error);
     throw error;
   }
@@ -1999,7 +1999,7 @@ async function optimizeAllCaches() {
     cacheStats.lastCleanup = Date.now();
 
     console.log('✅ Cache optimization completed');
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Cache optimization failed:', error);
     throw error;
   }

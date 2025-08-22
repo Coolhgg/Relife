@@ -2,10 +2,25 @@
 // Advanced analytics features exclusive to premium subscribers
 
 import React, { useState, useEffect } from 'react';
-import { BarChart3, TrendingUp, Brain, Target, Calendar, Moon, Zap, Award } from 'lucide-react';
+import {
+  BarChart3,
+  TrendingUp,
+  Brain,
+  Target,
+  Calendar,
+  Moon,
+  Zap,
+  Award,
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { Progress } from '../ui/progress';
 import { Badge } from '../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
@@ -21,7 +36,11 @@ interface AnalyticsData {
   };
   sleepQuality: {
     score: number;
-    factors: Array<{ name: string; impact: number; trend: 'positive' | 'negative' | 'neutral' }>;
+    factors: Array<{
+      name: string;
+      impact: number;
+      trend: 'positive' | 'negative' | 'neutral';
+    }>;
   };
   productivity: {
     correlation: number;
@@ -72,10 +91,20 @@ function SleepQualityAnalysis({ data }: { data: AnalyticsData['sleepQuality'] })
               <div className="flex items-center gap-2">
                 <Progress value={Math.abs(factor.impact)} className="w-20 h-2" />
                 <Badge
-                  variant={factor.trend === 'positive' ? 'default' : factor.trend === 'negative' ? 'destructive' : 'secondary'}
+                  variant={
+                    factor.trend === 'positive'
+                      ? 'default'
+                      : factor.trend === 'negative'
+                        ? 'destructive'
+                        : 'secondary'
+                  }
                   className="text-xs"
                 >
-                  {factor.trend === 'positive' ? '↗' : factor.trend === 'negative' ? '↘' : '→'}
+                  {factor.trend === 'positive'
+                    ? '↗'
+                    : factor.trend === 'negative'
+                      ? '↘'
+                      : '→'}
                 </Badge>
               </div>
             </div>
@@ -180,7 +209,10 @@ function HabitTracking({ data }: { data: AnalyticsData['habits'] }) {
         <div className="space-y-3">
           <h4 className="font-semibold">Streak Tracking</h4>
           {data.streaks.map((streak, index) => (
-            <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+            <div
+              key={index}
+              className="flex items-center justify-between p-3 border rounded-lg"
+            >
               <div>
                 <p className="font-medium">{streak.name}</p>
                 <p className="text-sm text-gray-600">Best: {streak.best} days</p>
@@ -207,19 +239,27 @@ function HabitTracking({ data }: { data: AnalyticsData['habits'] }) {
 function AIInsights({ data }: { data: AnalyticsData['insights'] }) {
   const getInsightIcon = (type: string) => {
     switch (type) {
-      case 'tip': return <Brain className="w-4 h-4 text-blue-600" />;
-      case 'warning': return <Zap className="w-4 h-4 text-yellow-600" />;
-      case 'achievement': return <Award className="w-4 h-4 text-green-600" />;
-      default: return <Brain className="w-4 h-4 text-gray-600" />;
+      case 'tip':
+        return <Brain className="w-4 h-4 text-blue-600" />;
+      case 'warning':
+        return <Zap className="w-4 h-4 text-yellow-600" />;
+      case 'achievement':
+        return <Award className="w-4 h-4 text-green-600" />;
+      default:
+        return <Brain className="w-4 h-4 text-gray-600" />;
     }
   };
 
   const getInsightColor = (type: string) => {
     switch (type) {
-      case 'tip': return 'border-blue-200 bg-blue-50';
-      case 'warning': return 'border-yellow-200 bg-yellow-50';
-      case 'achievement': return 'border-green-200 bg-green-50';
-      default: return 'border-gray-200 bg-gray-50';
+      case 'tip':
+        return 'border-blue-200 bg-blue-50';
+      case 'warning':
+        return 'border-yellow-200 bg-yellow-50';
+      case 'achievement':
+        return 'border-green-200 bg-green-50';
+      default:
+        return 'border-gray-200 bg-gray-50';
     }
   };
 
@@ -234,7 +274,10 @@ function AIInsights({ data }: { data: AnalyticsData['insights'] }) {
       </CardHeader>
       <CardContent className="space-y-3">
         {data.map((insight, index) => (
-          <div key={index} className={`p-4 rounded-lg border ${getInsightColor(insight.type)}`}>
+          <div
+            key={index}
+            className={`p-4 rounded-lg border ${getInsightColor(insight.type)}`}
+          >
             <div className="flex items-start gap-3">
               {getInsightIcon(insight.type)}
               <div className="flex-1">
@@ -304,19 +347,27 @@ function AdvancedReports() {
           <div className="space-y-2">
             <div className="flex items-center justify-between p-2 border rounded">
               <span className="text-sm">Sleep Pattern Analysis</span>
-              <Button size="sm" variant="ghost">Generate</Button>
+              <Button size="sm" variant="ghost">
+                Generate
+              </Button>
             </div>
             <div className="flex items-center justify-between p-2 border rounded">
               <span className="text-sm">Productivity Correlation</span>
-              <Button size="sm" variant="ghost">Generate</Button>
+              <Button size="sm" variant="ghost">
+                Generate
+              </Button>
             </div>
             <div className="flex items-center justify-between p-2 border rounded">
               <span className="text-sm">Habit Formation Progress</span>
-              <Button size="sm" variant="ghost">Generate</Button>
+              <Button size="sm" variant="ghost">
+                Generate
+              </Button>
             </div>
             <div className="flex items-center justify-between p-2 border rounded">
               <span className="text-sm">Custom Analytics</span>
-              <Button size="sm" variant="ghost">Create</Button>
+              <Button size="sm" variant="ghost">
+                Create
+              </Button>
             </div>
           </div>
         </div>
@@ -337,7 +388,7 @@ export function PremiumAnalytics({ className = '' }: PremiumAnalyticsProps) {
     wakeUpSuccess: {
       rate: 0.85,
       trend: 'up',
-      weeklyData: [75, 80, 90, 85, 95, 90, 85]
+      weeklyData: [75, 80, 90, 85, 95, 90, 85],
     },
     sleepQuality: {
       score: 78,
@@ -346,13 +397,13 @@ export function PremiumAnalytics({ className = '' }: PremiumAnalyticsProps) {
         { name: 'Bedtime Consistency', impact: 72, trend: 'neutral' },
         { name: 'Screen Time Before Bed', impact: -45, trend: 'negative' },
         { name: 'Caffeine Intake', impact: -30, trend: 'positive' },
-        { name: 'Exercise', impact: 60, trend: 'positive' }
-      ]
+        { name: 'Exercise', impact: 60, trend: 'positive' },
+      ],
     },
     productivity: {
       correlation: 0.73,
       morningEnergy: 7.8,
-      focusTime: 4.2
+      focusTime: 4.2,
     },
     habits: {
       consistency: 0.82,
@@ -360,29 +411,32 @@ export function PremiumAnalytics({ className = '' }: PremiumAnalyticsProps) {
         { name: 'Morning Wake-up', current: 12, best: 28 },
         { name: 'No Snooze', current: 5, best: 15 },
         { name: 'Exercise', current: 8, best: 21 },
-        { name: 'Meditation', current: 3, best: 12 }
-      ]
+        { name: 'Meditation', current: 3, best: 12 },
+      ],
     },
     insights: [
       {
         type: 'achievement',
         title: 'Streak Milestone!',
-        description: 'You\'ve maintained a consistent wake-up time for 12 days straight.',
-        actionable: 'Keep it up!'
+        description:
+          "You've maintained a consistent wake-up time for 12 days straight.",
+        actionable: 'Keep it up!',
       },
       {
         type: 'tip',
         title: 'Optimize Your Evening',
-        description: 'Your sleep quality improves when you avoid screens 1 hour before bed.',
-        actionable: 'Set a reminder'
+        description:
+          'Your sleep quality improves when you avoid screens 1 hour before bed.',
+        actionable: 'Set a reminder',
       },
       {
         type: 'warning',
         title: 'Weekend Pattern',
-        description: 'Your wake-up times vary significantly on weekends, affecting Monday performance.',
-        actionable: 'Adjust schedule'
-      }
-    ]
+        description:
+          'Your wake-up times vary significantly on weekends, affecting Monday performance.',
+        actionable: 'Adjust schedule',
+      },
+    ],
   });
 
   if (!user) {
@@ -399,7 +453,9 @@ export function PremiumAnalytics({ className = '' }: PremiumAnalyticsProps) {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">Premium Analytics</h2>
-            <p className="text-gray-600">Deep insights into your sleep and wake patterns</p>
+            <p className="text-gray-600">
+              Deep insights into your sleep and wake patterns
+            </p>
           </div>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger className="w-32">

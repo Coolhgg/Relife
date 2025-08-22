@@ -7,13 +7,9 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    
+
     /* Test-specific types - Include Vitest and Testing Library types */
-    "types": [
-      "@testing-library/jest-dom",
-      "vitest/globals",
-      "node"
-    ],
+    "types": ["@testing-library/jest-dom", "vitest/globals", "node"],
     "forceConsistentCasingInFileNames": true,
 
     /* Path mappings - same as production */
@@ -46,7 +42,7 @@
     "noUncheckedSideEffectImports": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    
+
     /* Allow more flexible typing for test utilities */
     "suppressImplicitAnyIndexErrors": false,
     "noImplicitOverride": false
@@ -54,7 +50,7 @@
   "include": [
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
-    "src/**/*.spec.ts", 
+    "src/**/*.spec.ts",
     "src/**/*.spec.tsx",
     "src/__tests__/**/*",
     "tests/**/*.ts",
@@ -64,12 +60,5 @@
     "src/test-setup.ts",
     "tests/utils/**/*"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build",
-    "android",
-    "ios",
-    ".next"
-  ]
+  "exclude": ["node_modules", "dist", "build", "android", "ios", ".next"]
 }

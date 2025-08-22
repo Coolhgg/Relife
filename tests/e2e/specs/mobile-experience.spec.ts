@@ -31,8 +31,12 @@ test.describe('Mobile Experience', () => {
 
       await test.step('Verify mobile navigation', async () => {
         // Mobile should have hamburger menu or bottom navigation
-        const mobileNav = dashboardPage.page.locator('[data-testid="mobile-nav"], .mobile-navigation, .bottom-nav');
-        const hamburgerMenu = dashboardPage.page.locator('[data-testid="hamburger-menu"], .hamburger, .menu-toggle');
+        const mobileNav = dashboardPage.page.locator(
+          '[data-testid="mobile-nav"], .mobile-navigation, .bottom-nav'
+        );
+        const hamburgerMenu = dashboardPage.page.locator(
+          '[data-testid="hamburger-menu"], .hamburger, .menu-toggle'
+        );
 
         const hasMobileNav = await mobileNav.isVisible({ timeout: 3000 });
         const hasHamburger = await hamburgerMenu.isVisible({ timeout: 3000 });
@@ -76,8 +80,10 @@ test.describe('Mobile Experience', () => {
 
       await test.step('Test swipe gestures if supported', async () => {
         // Check for swipeable elements
-        const swipeableElements = dashboardPage.page.locator('[data-swipeable], .swipe-container, .carousel');
-        const hasSwipeable = await swipeableElements.count() > 0;
+        const swipeableElements = dashboardPage.page.locator(
+          '[data-swipeable], .swipe-container, .carousel'
+        );
+        const hasSwipeable = (await swipeableElements.count()) > 0;
 
         if (hasSwipeable) {
           const element = swipeableElements.first();
@@ -113,7 +119,9 @@ test.describe('Mobile Experience', () => {
           await dashboardPage.page.mouse.up();
 
           // Check if context menu or action sheet appeared
-          const contextMenu = dashboardPage.page.locator('[role="menu"], .context-menu, .action-sheet');
+          const contextMenu = dashboardPage.page.locator(
+            '[role="menu"], .context-menu, .action-sheet'
+          );
           const hasContextMenu = await contextMenu.isVisible({ timeout: 2000 });
 
           if (hasContextMenu) {
@@ -134,13 +142,19 @@ test.describe('Mobile Experience', () => {
         await alarmFormPage.timeInput.tap();
 
         // Look for mobile time picker
-        const timePicker = dashboardPage.page.locator('[data-testid="time-picker"], .time-picker-modal');
+        const timePicker = dashboardPage.page.locator(
+          '[data-testid="time-picker"], .time-picker-modal'
+        );
         const hasTimePicker = await timePicker.isVisible({ timeout: 3000 });
 
         if (hasTimePicker) {
           // Use mobile time picker
-          const hourInput = timePicker.locator('input[aria-label*="hour"], [data-testid="hour-input"]');
-          const minuteInput = timePicker.locator('input[aria-label*="minute"], [data-testid="minute-input"]');
+          const hourInput = timePicker.locator(
+            'input[aria-label*="hour"], [data-testid="hour-input"]'
+          );
+          const minuteInput = timePicker.locator(
+            'input[aria-label*="minute"], [data-testid="minute-input"]'
+          );
 
           if (await hourInput.isVisible()) {
             await hourInput.fill('09');
@@ -149,7 +163,9 @@ test.describe('Mobile Experience', () => {
             await minuteInput.fill('30');
           }
 
-          const confirmButton = timePicker.locator('button:has-text("OK"), button:has-text("Confirm")');
+          const confirmButton = timePicker.locator(
+            'button:has-text("OK"), button:has-text("Confirm")'
+          );
           if (await confirmButton.isVisible()) {
             await confirmButton.tap();
           }
@@ -191,7 +207,9 @@ test.describe('Mobile Experience', () => {
 
       await test.step('Test mobile settings interactions', async () => {
         // Test toggle switches
-        const toggles = dashboardPage.page.locator('[role="switch"], input[type="checkbox"]');
+        const toggles = dashboardPage.page.locator(
+          '[role="switch"], input[type="checkbox"]'
+        );
         const toggleCount = await toggles.count();
 
         if (toggleCount > 0) {
@@ -229,8 +247,10 @@ test.describe('Mobile Experience', () => {
 
       await test.step('Test iOS safe area handling', async () => {
         // Check if app handles iOS safe areas properly
-        const safeAreaElements = dashboardPage.page.locator('[style*="safe-area"], .safe-area');
-        const hasSafeArea = await safeAreaElements.count() > 0;
+        const safeAreaElements = dashboardPage.page.locator(
+          '[style*="safe-area"], .safe-area'
+        );
+        const hasSafeArea = (await safeAreaElements.count()) > 0;
 
         if (hasSafeArea) {
           // Verify safe area implementation
@@ -260,8 +280,12 @@ test.describe('Mobile Experience', () => {
         await settingsPage.configurePushNotifications();
 
         // Should handle permission gracefully
-        const permissionDialog = dashboardPage.page.locator('[data-testid="permission-dialog"]');
-        const hasPermissionRequest = await permissionDialog.isVisible({ timeout: 3000 });
+        const permissionDialog = dashboardPage.page.locator(
+          '[data-testid="permission-dialog"]'
+        );
+        const hasPermissionRequest = await permissionDialog.isVisible({
+          timeout: 3000,
+        });
 
         if (hasPermissionRequest) {
           expect(hasPermissionRequest).toBe(true);
@@ -377,7 +401,9 @@ test.describe('Mobile Experience', () => {
 
       await test.step('Verify graceful degradation', async () => {
         // Should show loading states
-        const loadingSpinner = dashboardPage.page.locator('[data-testid="loading-spinner"]');
+        const loadingSpinner = dashboardPage.page.locator(
+          '[data-testid="loading-spinner"]'
+        );
         const hasLoading = await loadingSpinner.isVisible({ timeout: 1000 });
 
         if (hasLoading) {
@@ -402,15 +428,22 @@ test.describe('Mobile Experience', () => {
 
     test('should display PWA install prompt on mobile', async () => {
       await test.step('Check for mobile install prompt', async () => {
-        const pwaPrompt = dashboardPage.page.locator('[data-testid="pwa-install-prompt"], .install-prompt');
-        const addToHomePrompt = dashboardPage.page.locator(':has-text("Add to Home"), :has-text("Install App")');
+        const pwaPrompt = dashboardPage.page.locator(
+          '[data-testid="pwa-install-prompt"], .install-prompt'
+        );
+        const addToHomePrompt = dashboardPage.page.locator(
+          ':has-text("Add to Home"), :has-text("Install App")'
+        );
 
-        const hasPrompt = await pwaPrompt.isVisible({ timeout: 3000 }) ||
-                         await addToHomePrompt.isVisible({ timeout: 3000 });
+        const hasPrompt =
+          (await pwaPrompt.isVisible({ timeout: 3000 })) ||
+          (await addToHomePrompt.isVisible({ timeout: 3000 }));
 
         if (hasPrompt) {
           // Test install prompt interaction
-          const installButton = dashboardPage.page.locator('button:has-text("Install"), button:has-text("Add")').first();
+          const installButton = dashboardPage.page
+            .locator('button:has-text("Install"), button:has-text("Add")')
+            .first();
           if (await installButton.isVisible()) {
             await installButton.tap();
           }
@@ -426,7 +459,9 @@ test.describe('Mobile Experience', () => {
 
       await test.step('Verify offline functionality', async () => {
         // Should show offline indicator
-        const offlineIndicator = dashboardPage.page.locator('[data-testid="offline-indicator"]');
+        const offlineIndicator = dashboardPage.page.locator(
+          '[data-testid="offline-indicator"]'
+        );
         const hasOfflineIndicator = await offlineIndicator.isVisible({ timeout: 5000 });
 
         if (hasOfflineIndicator) {

@@ -110,7 +110,7 @@ export class DeviceCapabilityDetector {
       console.log('Device capabilities detected:', {
         tier: this.tier,
         capabilities: this.capabilities,
-        metrics: this.metrics
+        metrics: this.metrics,
       });
 
       // Notify listeners
@@ -140,8 +140,8 @@ export class DeviceCapabilityDetector {
         width: window.screen.width,
         height: window.screen.height,
         availableWidth: window.screen.availWidth,
-        availableHeight: window.screen.availHeight
-      }
+        availableHeight: window.screen.availHeight,
+      },
     };
 
     return capabilities;
@@ -235,7 +235,7 @@ export class DeviceCapabilityDetector {
       networkLatency: await this.measureNetworkLatency(),
       storageSpeed: await this.measureStorageSpeed(),
       cpuSpeed: await this.measureCPUSpeed(),
-      gpuTier: this.detectGPUTier()
+      gpuTier: this.detectGPUTier(),
     };
 
     // Try to get battery information if available
@@ -432,7 +432,7 @@ export class DeviceCapabilityDetector {
           targetFPS: 30,
           memoryLimit: 512, // MB
           networkTimeout: 10000,
-          cacheSize: 20 // MB
+          cacheSize: 20, // MB
         },
         features: {
           animationsEnabled: false,
@@ -443,7 +443,7 @@ export class DeviceCapabilityDetector {
           preloadingEnabled: false,
           virtualScrollingEnabled: true,
           memoryMonitoringEnabled: true,
-          compressionLevel: 'heavy'
+          compressionLevel: 'heavy',
         },
         limits: {
           maxCacheSize: 20, // MB
@@ -451,8 +451,8 @@ export class DeviceCapabilityDetector {
           maxConcurrentOperations: 2,
           performanceMonitoringInterval: 60000, // 1 minute
           metricHistorySize: 50,
-          maxPreloadDistance: 2 // minutes
-        }
+          maxPreloadDistance: 2, // minutes
+        },
       },
       'mid-range': {
         tier: 'mid-range',
@@ -460,7 +460,7 @@ export class DeviceCapabilityDetector {
           targetFPS: 45,
           memoryLimit: 1024, // MB
           networkTimeout: 8000,
-          cacheSize: 50 // MB
+          cacheSize: 50, // MB
         },
         features: {
           animationsEnabled: true,
@@ -471,7 +471,7 @@ export class DeviceCapabilityDetector {
           preloadingEnabled: true,
           virtualScrollingEnabled: true,
           memoryMonitoringEnabled: true,
-          compressionLevel: 'medium'
+          compressionLevel: 'medium',
         },
         limits: {
           maxCacheSize: 50, // MB
@@ -479,8 +479,8 @@ export class DeviceCapabilityDetector {
           maxConcurrentOperations: 4,
           performanceMonitoringInterval: 45000, // 45 seconds
           metricHistorySize: 200,
-          maxPreloadDistance: 5 // minutes
-        }
+          maxPreloadDistance: 5, // minutes
+        },
       },
       'high-end': {
         tier: 'high-end',
@@ -488,7 +488,7 @@ export class DeviceCapabilityDetector {
           targetFPS: 60,
           memoryLimit: 2048, // MB
           networkTimeout: 5000,
-          cacheSize: 100 // MB
+          cacheSize: 100, // MB
         },
         features: {
           animationsEnabled: true,
@@ -499,7 +499,7 @@ export class DeviceCapabilityDetector {
           preloadingEnabled: true,
           virtualScrollingEnabled: false, // Not needed on high-end
           memoryMonitoringEnabled: true,
-          compressionLevel: 'light'
+          compressionLevel: 'light',
         },
         limits: {
           maxCacheSize: 100, // MB
@@ -507,9 +507,9 @@ export class DeviceCapabilityDetector {
           maxConcurrentOperations: 8,
           performanceMonitoringInterval: 30000, // 30 seconds
           metricHistorySize: 500,
-          maxPreloadDistance: 10 // minutes
-        }
-      }
+          maxPreloadDistance: 10, // minutes
+        },
+      },
     };
 
     return baseConfigs[this.tier];
@@ -547,7 +547,9 @@ export class DeviceCapabilityDetector {
 
   shouldReduceAnimations(): boolean {
     // Check both device tier and user preferences
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReduced = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
     return prefersReduced || this.tier === 'low-end';
   }
 

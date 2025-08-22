@@ -15,11 +15,13 @@
 ### Core Types
 
 #### Theme
+
 ```typescript
 type Theme = 'light' | 'dark' | 'system' | 'auto' | 'high-contrast' | 'custom';
 ```
 
 #### ThemeConfig
+
 ```typescript
 interface ThemeConfig {
   id: string;
@@ -47,6 +49,7 @@ interface ThemeConfig {
 ```
 
 #### ColorScale
+
 ```typescript
 interface ColorScale {
   50: string;
@@ -64,6 +67,7 @@ interface ColorScale {
 ```
 
 #### PersonalizationSettings
+
 ```typescript
 interface PersonalizationSettings {
   theme: Theme;
@@ -132,6 +136,7 @@ interface PersonalizationSettings {
 ```
 
 #### CloudSyncStatus
+
 ```typescript
 interface CloudSyncStatus {
   isOnline: boolean;
@@ -146,6 +151,7 @@ interface CloudSyncStatus {
 ### Performance Types
 
 #### CSSVariableCache
+
 ```typescript
 interface CSSVariableCache {
   variables: Record<string, string>;
@@ -156,6 +162,7 @@ interface CSSVariableCache {
 ```
 
 #### PerformanceStats
+
 ```typescript
 interface PerformanceStats {
   cacheSize: number;
@@ -168,6 +175,7 @@ interface PerformanceStats {
 ### Accessibility Types
 
 #### ContrastRatio
+
 ```typescript
 interface ContrastRatio {
   ratio: number;
@@ -177,6 +185,7 @@ interface ContrastRatio {
 ```
 
 #### AccessibilityTestResult
+
 ```typescript
 interface AccessibilityTestResult {
   overallScore: number;
@@ -186,6 +195,7 @@ interface AccessibilityTestResult {
 ```
 
 #### ColorBlindnessSimulation
+
 ```typescript
 interface ColorBlindnessSimulation {
   protanopia: string;
@@ -202,7 +212,7 @@ interface ColorBlindnessSimulation {
 Main hook for theme system integration.
 
 ```typescript
-function useTheme(): ThemeContextValue
+function useTheme(): ThemeContextValue;
 ```
 
 #### Returns
@@ -259,7 +269,7 @@ interface ThemeContextValue {
   applyThemeWithPerformance: (options?: {
     animate?: boolean;
     duration?: number;
-    immediate?: boolean
+    immediate?: boolean;
   }) => Promise<void>;
   preloadTheme: (targetTheme: Theme) => void;
 
@@ -320,7 +330,7 @@ interface ThemeProviderProps {
   enableSystem?: boolean;
 }
 
-function ThemeProvider(props: ThemeProviderProps): JSX.Element
+function ThemeProvider(props: ThemeProviderProps): JSX.Element;
 ```
 
 #### Props
@@ -360,7 +370,7 @@ interface ThemeManagerProps {
   onThemeChange?: (theme: Theme) => void;
 }
 
-function ThemeManager(props: ThemeManagerProps): JSX.Element
+function ThemeManager(props: ThemeManagerProps): JSX.Element;
 ```
 
 #### Props
@@ -394,57 +404,72 @@ class ThemePersistenceService {
 #### Methods
 
 ##### saveThemeData
+
 ```typescript
 saveThemeData(data: ThemeData): Promise<void>
 ```
+
 Saves theme data with automatic backup creation.
 
 **Parameters:**
+
 - `data`: Theme data to save
 
 **Throws:** `Error` if save fails
 
 ##### loadThemeData
+
 ```typescript
 loadThemeData(): Promise<ThemeData>
 ```
+
 Loads theme data with corruption detection and recovery.
 
-**Returns:** Promise resolving to theme data
-**Throws:** `Error` if load fails and no backup available
+**Returns:** Promise resolving to theme data **Throws:** `Error` if load fails and no backup
+available
 
 ##### createBackup
+
 ```typescript
 createBackup(): Promise<void>
 ```
+
 Manually create a backup of current theme data.
 
 ##### restoreFromBackup
+
 ```typescript
 restoreFromBackup(backupId?: string): Promise<boolean>
 ```
+
 Restore from a specific backup or the most recent.
 
 **Parameters:**
+
 - `backupId`: Optional backup ID (uses most recent if not provided)
 
 **Returns:** Promise resolving to success status
 
 ##### exportThemes
+
 ```typescript
 exportThemes(): Promise<string>
 ```
+
 Export all theme data as JSON string.
 
 **Returns:** Promise resolving to JSON string
 
 ##### importThemes
+
 ```typescript
 importThemes(data: string): Promise<boolean>
 ```
+
 Import theme data from JSON string.
 
 **Parameters:**
+
 - `data`: JSON string containing theme data
 
 **Returns:** Promise resolving to success status
@@ -480,11 +505,7 @@ class ThemePerformanceService {
     classes: string[]
   ): CSSVariableCache;
 
-  preloadTheme(
-    themeId: string,
-    variables: Record<string, string>,
-    classes: string[]
-  ): void;
+  preloadTheme(themeId: string, variables: Record<string, string>, classes: string[]): void;
 
   clearCache(): void;
   getPerformanceStats(): PerformanceStats;
@@ -499,20 +520,13 @@ Provides accessibility features and testing.
 class ThemeAccessibilityService {
   static getInstance(): ThemeAccessibilityService;
 
-  calculateContrastRatio(
-    foreground: string,
-    background: string
-  ): ContrastRatio;
+  calculateContrastRatio(foreground: string, background: string): ContrastRatio;
 
   simulateColorBlindness(color: string): ColorBlindnessSimulation;
 
-  applyAccessibilityEnhancements(
-    settings: PersonalizationSettings
-  ): void;
+  applyAccessibilityEnhancements(settings: PersonalizationSettings): void;
 
-  testThemeAccessibility(
-    themeColors: Record<string, string>
-  ): AccessibilityTestResult;
+  testThemeAccessibility(themeColors: Record<string, string>): AccessibilityTestResult;
 
   announceThemeChange(
     themeName: string,
@@ -533,17 +547,10 @@ class ThemeAccessibilityService {
 
 ```typescript
 // Batch CSS updates for better performance
-function batchCSSUpdates(
-  element: HTMLElement,
-  properties: Record<string, string>
-): void;
+function batchCSSUpdates(element: HTMLElement, properties: Record<string, string>): void;
 
 // Create CSS custom property with fallback
-function createCSSProperty(
-  property: string,
-  value: string,
-  fallback?: string
-): string;
+function createCSSProperty(property: string, value: string, fallback?: string): string;
 
 // Get responsive values based on breakpoint
 function getResponsiveValue(
@@ -557,19 +564,15 @@ function getResponsiveValue(
 function getContrastColor(hexColor: string): string;
 
 // Generate color scale from base color
-function generateColorScale(
-  baseColor: string,
-  steps?: number
-): Record<string, string>;
+function generateColorScale(baseColor: string, steps?: number): Record<string, string>;
 
 // CSS-in-JS to CSS string converter
 function stylesToCSSString(styles: Record<string, any>): string;
 
 // Create debounced style application function
-function createDebouncedStyler(delay?: number): (
-  element: HTMLElement,
-  styles: Record<string, string>
-) => void;
+function createDebouncedStyler(
+  delay?: number
+): (element: HTMLElement, styles: Record<string, string>) => void;
 ```
 
 ### CSSCustomPropertiesManager
@@ -578,11 +581,7 @@ Advanced CSS custom properties management.
 
 ```typescript
 class CSSCustomPropertiesManager {
-  setProperty(
-    property: string,
-    value: string,
-    immediate?: boolean
-  ): void;
+  setProperty(property: string, value: string, immediate?: boolean): void;
 
   getProperty(property: string): string | undefined;
   clearCache(): void;
@@ -610,7 +609,7 @@ const DEFAULT_PERSONALIZATION: PersonalizationSettings;
 const THEME_CATEGORIES = {
   SYSTEM: 'system',
   CUSTOM: 'custom',
-  PREMIUM: 'premium'
+  PREMIUM: 'premium',
 } as const;
 ```
 
@@ -626,7 +625,7 @@ const COLOR_SCALE_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
 const WCAG_LEVELS = {
   AAA: 7,
   AA: 4.5,
-  A: 3
+  A: 3,
 } as const;
 ```
 
@@ -635,6 +634,7 @@ const WCAG_LEVELS = {
 ### Error Types
 
 #### ThemeError
+
 ```typescript
 class ThemeError extends Error {
   constructor(
@@ -646,6 +646,7 @@ class ThemeError extends Error {
 ```
 
 #### ThemePersistenceError
+
 ```typescript
 class ThemePersistenceError extends ThemeError {
   constructor(message: string, public operation: string);
@@ -653,6 +654,7 @@ class ThemePersistenceError extends ThemeError {
 ```
 
 #### ThemeAccessibilityError
+
 ```typescript
 class ThemeAccessibilityError extends ThemeError {
   constructor(message: string, public context: string);
@@ -668,7 +670,7 @@ const ERROR_CODES = {
   SYNC_FAILED: 'SYNC_FAILED',
   ACCESSIBILITY_TEST_FAILED: 'ACCESSIBILITY_TEST_FAILED',
   INVALID_THEME_DATA: 'INVALID_THEME_DATA',
-  PERFORMANCE_DEGRADED: 'PERFORMANCE_DEGRADED'
+  PERFORMANCE_DEGRADED: 'PERFORMANCE_DEGRADED',
 } as const;
 ```
 
@@ -711,4 +713,6 @@ The theme system includes automatic error recovery mechanisms:
 
 ---
 
-This API reference provides comprehensive documentation for all public interfaces and functionality in the Relife Theme System. For implementation examples and usage patterns, refer to the main [Theme System Documentation](THEME_SYSTEM.md).
+This API reference provides comprehensive documentation for all public interfaces and functionality
+in the Relife Theme System. For implementation examples and usage patterns, refer to the main
+[Theme System Documentation](THEME_SYSTEM.md).

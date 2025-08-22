@@ -28,12 +28,15 @@ interface MobileAccessibilityContextValue {
   disableLowPowerMode: () => void;
 }
 
-const MobileAccessibilityContext = createContext<MobileAccessibilityContextValue | null>(null);
+const MobileAccessibilityContext =
+  createContext<MobileAccessibilityContextValue | null>(null);
 
 export const useMobileAccessibilityContext = () => {
   const context = useContext(MobileAccessibilityContext);
   if (!context) {
-    throw new Error('useMobileAccessibilityContext must be used within MobileAccessibilityProvider');
+    throw new Error(
+      'useMobileAccessibilityContext must be used within MobileAccessibilityProvider'
+    );
   }
   return context;
 };
@@ -42,14 +45,12 @@ interface MobileAccessibilityProviderProps {
   children: React.ReactNode;
 }
 
-export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderProps> = ({
-  children,
-}) => {
+export const MobileAccessibilityProvider: React.FC<
+  MobileAccessibilityProviderProps
+> = ({ children }) => {
   const { preferences, updatePreferences, isInitialized } = useAccessibility();
-  const {
-    isMobileScreenReaderActive,
-    optimizeForMobileScreenReader,
-  } = useMobileAccessibility();
+  const { isMobileScreenReaderActive, optimizeForMobileScreenReader } =
+    useMobileAccessibility();
   const { announce, announceError, announceSuccess } = useScreenReader();
   const {
     metrics: performanceMetrics,
@@ -87,7 +88,6 @@ export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderPr
           announce('Mobile accessibility features initialized', 'polite');
         }, 1000);
       }
-
     } catch (error) {
       console.error('[MobileAccessibility] Initialization failed:', error);
       announceError('Failed to initialize accessibility features');
@@ -130,7 +130,6 @@ export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderPr
     } else {
       document.body.classList.remove('mobile-low-power');
     }
-
   }, [
     isAccessibilityEnabled,
     isMobileScreenReaderActive,
@@ -167,7 +166,6 @@ export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderPr
       // Could adjust announcement frequency or disable non-essential features
       console.log('[MobileAccessibility] Adjusting for slow network');
     }
-
   }, [
     isAccessibilityEnabled,
     performanceMetrics.devicePerformance,

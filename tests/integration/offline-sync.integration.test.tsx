@@ -1,6 +1,6 @@
 /**
  * Offline/Online Sync Integration Tests
- * 
+ *
  * Tests the complete offline/online synchronization flow:
  * 1. User works offline (creates, edits, deletes alarms)
  * 2. Changes are stored locally
@@ -11,7 +11,16 @@
  * 7. Cross-device synchronization
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
@@ -40,7 +49,7 @@ describe('Offline/Online Sync Integration', () => {
   let container: HTMLElement;
   let user: ReturnType<typeof userEvent.setup>;
   let originalOnLine: boolean;
-  
+
   // Mock network state
   const setOnlineStatus = (isOnline: boolean) => {
     Object.defineProperty(navigator, 'onLine', {
@@ -69,18 +78,18 @@ describe('Offline/Online Sync Integration', () => {
   beforeEach(async () => {
     user = userEvent.setup();
     mockUser = createMockUser();
-    
+
     // Reset all mocks
     vi.clearAllMocks();
-    
+
     // Set up default online state
     setOnlineStatus(true);
-    
+
     // Mock successful authentication
     vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
-    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({ 
-      alarms: [], 
-      error: null 
+    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
+      alarms: [],
+      error: null,
     });
 
     // Clear storage
@@ -102,7 +111,7 @@ describe('Offline/Online Sync Integration', () => {
   describe('Offline Alarm Operations', () => {
     it('should create alarms offline and sync when back online', async () => {
       let appContainer: HTMLElement;
-      
+
       // Start online
       await act(async () => {
         const result = render(
@@ -156,11 +165,13 @@ describe('Offline/Online Sync Integration', () => {
         label: 'Offline Test Alarm',
         enabled: true,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       });
 
       vi.mocked(OfflineStorage.saveAlarm).mockResolvedValueOnce();
-      vi.mocked(SupabaseService.saveAlarm).mockRejectedValueOnce(new Error('Network unavailable'));
+      vi.mocked(SupabaseService.saveAlarm).mockRejectedValueOnce(
+        new Error('Network unavailable')
+      );
 
       const saveButton = screen.getByRole('button', { name: /save|create/i });
       await user.click(saveButton);
@@ -174,7 +185,7 @@ describe('Offline/Online Sync Integration', () => {
         expect.objectContaining({
           time: '07:30',
           label: 'Offline Test Alarm',
-          userId: mockUser.id
+          userId: mockUser.id,
         })
       );
 
@@ -210,39 +221,42 @@ describe('Offline/Online Sync Integration', () => {
           id: 'change-1',
           type: 'create',
           data: offlineAlarm,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         },
         {
-          id: 'change-2', 
+          id: 'change-2',
           type: 'create',
           data: createMockAlarm({
             id: 'offline-alarm-456',
             userId: mockUser.id,
             time: '08:45',
-            label: 'Second Offline Alarm'
+            label: 'Second Offline Alarm',
           }),
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       ]);
 
       vi.mocked(SupabaseService.saveAlarm)
         .mockResolvedValueOnce({ alarm: offlineAlarm, error: null })
-        .mockResolvedValueOnce({ 
+        .mockResolvedValueOnce({
           alarm: createMockAlarm({
             id: 'offline-alarm-456',
             userId: mockUser.id,
             time: '08:45',
-            label: 'Second Offline Alarm'
-          }), 
-          error: null 
+            label: 'Second Offline Alarm',
+          }),
+          error: null,
         });
 
       vi.mocked(OfflineStorage.clearPendingChanges).mockResolvedValueOnce();
 
       // Wait for automatic sync
-      await waitFor(() => {
-        expect(SupabaseService.saveAlarm).toHaveBeenCalledTimes(2);
-      }, { timeout: 10000 });
+      await waitFor(
+        () => {
+          expect(SupabaseService.saveAlarm).toHaveBeenCalledTimes(2);
+        },
+        { timeout: 10000 }
+      );
 
       // Verify sync completed
       expect(OfflineStorage.clearPendingChanges).toHaveBeenCalled();
@@ -261,16 +275,16 @@ describe('Offline/Online Sync Integration', () => {
         userId: mockUser.id,
         time: '06:00',
         label: 'Existing Alarm',
-        enabled: true
+        enabled: true,
       });
 
       vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
         alarms: [existingAlarm],
-        error: null
+        error: null,
       });
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -291,9 +305,11 @@ describe('Offline/Online Sync Integration', () => {
       });
 
       // Edit the alarm
-      const alarmItem = screen.getByText('Existing Alarm').closest('[data-testid="alarm-item"]');
+      const alarmItem = screen
+        .getByText('Existing Alarm')
+        .closest('[data-testid="alarm-item"]');
       const editButton = alarmItem?.querySelector('[data-testid="edit-alarm"]');
-      
+
       if (editButton) {
         await user.click(editButton);
       } else {
@@ -315,7 +331,9 @@ describe('Offline/Online Sync Integration', () => {
       await user.type(timeInput, '06:15');
 
       // Mock offline update
-      vi.mocked(SupabaseService.saveAlarm).mockRejectedValueOnce(new Error('Network unavailable'));
+      vi.mocked(SupabaseService.saveAlarm).mockRejectedValueOnce(
+        new Error('Network unavailable')
+      );
 
       const saveButton = screen.getByRole('button', { name: /save|update/i });
       await user.click(saveButton);
@@ -330,7 +348,7 @@ describe('Offline/Online Sync Integration', () => {
         expect.objectContaining({
           id: 'existing-alarm-789',
           label: 'Modified Offline Alarm',
-          time: '06:15'
+          time: '06:15',
         })
       );
 
@@ -348,10 +366,10 @@ describe('Offline/Online Sync Integration', () => {
             ...existingAlarm,
             label: 'Modified Offline Alarm',
             time: '06:15',
-            updatedAt: new Date()
+            updatedAt: new Date(),
           },
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       ]);
 
       vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
@@ -359,20 +377,23 @@ describe('Offline/Online Sync Integration', () => {
           ...existingAlarm,
           label: 'Modified Offline Alarm',
           time: '06:15',
-          updatedAt: new Date()
+          updatedAt: new Date(),
         },
-        error: null
+        error: null,
       });
 
       // Wait for sync
-      await waitFor(() => {
-        expect(SupabaseService.saveAlarm).toHaveBeenCalledWith(
-          expect.objectContaining({
-            label: 'Modified Offline Alarm',
-            time: '06:15'
-          })
-        );
-      }, { timeout: 10000 });
+      await waitFor(
+        () => {
+          expect(SupabaseService.saveAlarm).toHaveBeenCalledWith(
+            expect.objectContaining({
+              label: 'Modified Offline Alarm',
+              time: '06:15',
+            })
+          );
+        },
+        { timeout: 10000 }
+      );
     });
 
     it('should handle offline alarm deletions and sync', async () => {
@@ -382,16 +403,16 @@ describe('Offline/Online Sync Integration', () => {
         userId: mockUser.id,
         time: '09:30',
         label: 'Delete Me Alarm',
-        enabled: true
+        enabled: true,
       });
 
       vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
         alarms: [existingAlarm],
-        error: null
+        error: null,
       });
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -412,14 +433,19 @@ describe('Offline/Online Sync Integration', () => {
       });
 
       // Delete the alarm
-      const alarmItem = screen.getByText('Delete Me Alarm').closest('[data-testid="alarm-item"]');
+      const alarmItem = screen
+        .getByText('Delete Me Alarm')
+        .closest('[data-testid="alarm-item"]');
       const deleteButton = alarmItem?.querySelector('[data-testid="delete-alarm"]');
-      
+
       if (deleteButton) {
         await user.click(deleteButton);
       } else {
         // Try right-click context menu
-        await user.pointer({ keys: '[MouseRight]', target: screen.getByText('Delete Me Alarm') });
+        await user.pointer({
+          keys: '[MouseRight]',
+          target: screen.getByText('Delete Me Alarm'),
+        });
         const contextDelete = screen.queryByText(/delete/i);
         if (contextDelete) {
           await user.click(contextDelete);
@@ -427,13 +453,17 @@ describe('Offline/Online Sync Integration', () => {
       }
 
       // Confirm deletion if there's a confirmation dialog
-      const confirmButton = screen.queryByRole('button', { name: /confirm|delete|yes/i });
+      const confirmButton = screen.queryByRole('button', {
+        name: /confirm|delete|yes/i,
+      });
       if (confirmButton) {
         await user.click(confirmButton);
       }
 
       // Mock offline deletion
-      vi.mocked(SupabaseService.deleteAlarm).mockRejectedValueOnce(new Error('Network unavailable'));
+      vi.mocked(SupabaseService.deleteAlarm).mockRejectedValueOnce(
+        new Error('Network unavailable')
+      );
 
       // Verify alarm is removed from UI
       await waitFor(() => {
@@ -455,19 +485,24 @@ describe('Offline/Online Sync Integration', () => {
           type: 'delete',
           data: null,
           alarmId: 'delete-me-alarm-999',
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       ]);
 
       vi.mocked(SupabaseService.deleteAlarm).mockResolvedValueOnce({
         success: true,
-        error: null
+        error: null,
       });
 
       // Wait for sync
-      await waitFor(() => {
-        expect(SupabaseService.deleteAlarm).toHaveBeenCalledWith('delete-me-alarm-999');
-      }, { timeout: 10000 });
+      await waitFor(
+        () => {
+          expect(SupabaseService.deleteAlarm).toHaveBeenCalledWith(
+            'delete-me-alarm-999'
+          );
+        },
+        { timeout: 10000 }
+      );
     });
   });
 
@@ -479,16 +514,16 @@ describe('Offline/Online Sync Integration', () => {
         time: '05:00',
         label: 'Conflict Test Alarm',
         enabled: true,
-        updatedAt: new Date('2024-01-01T10:00:00Z')
+        updatedAt: new Date('2024-01-01T10:00:00Z'),
       });
 
       vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
         alarms: [conflictingAlarm],
-        error: null
+        error: null,
       });
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -509,9 +544,11 @@ describe('Offline/Online Sync Integration', () => {
       });
 
       // Make offline changes
-      const alarmItem = screen.getByText('Conflict Test Alarm').closest('[data-testid="alarm-item"]');
+      const alarmItem = screen
+        .getByText('Conflict Test Alarm')
+        .closest('[data-testid="alarm-item"]');
       const editButton = alarmItem?.querySelector('[data-testid="edit-alarm"]');
-      
+
       if (editButton) {
         await user.click(editButton);
       }
@@ -540,12 +577,12 @@ describe('Offline/Online Sync Integration', () => {
         ...conflictingAlarm,
         label: 'Server Modified Alarm',
         time: '05:15',
-        updatedAt: new Date('2024-01-01T11:00:00Z') // Newer than local
+        updatedAt: new Date('2024-01-01T11:00:00Z'), // Newer than local
       };
 
       vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
         alarms: [serverVersionAlarm],
-        error: null
+        error: null,
       });
 
       // Mock pending changes
@@ -556,31 +593,34 @@ describe('Offline/Online Sync Integration', () => {
           data: {
             ...conflictingAlarm,
             label: 'Offline Modified Alarm',
-            updatedAt: new Date('2024-01-01T10:30:00Z') // Older than server
+            updatedAt: new Date('2024-01-01T10:30:00Z'), // Older than server
           },
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       ]);
 
       // Mock conflict resolution (server wins by default)
       vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
         alarm: serverVersionAlarm,
-        error: null
+        error: null,
       });
 
       // Wait for conflict resolution
-      await waitFor(() => {
-        // Server version should win
-        expect(screen.getByText('Server Modified Alarm')).toBeInTheDocument();
-        expect(screen.queryByText('Offline Modified Alarm')).not.toBeInTheDocument();
-      }, { timeout: 10000 });
+      await waitFor(
+        () => {
+          // Server version should win
+          expect(screen.getByText('Server Modified Alarm')).toBeInTheDocument();
+          expect(screen.queryByText('Offline Modified Alarm')).not.toBeInTheDocument();
+        },
+        { timeout: 10000 }
+      );
     });
   });
 
   describe('Background Sync with Service Worker', () => {
     it('should sync changes through service worker when tab is inactive', async () => {
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -604,10 +644,10 @@ describe('Offline/Online Sync Integration', () => {
             id: 'bg-alarm-111',
             userId: mockUser.id,
             time: '11:00',
-            label: 'Background Sync Alarm'
+            label: 'Background Sync Alarm',
           }),
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       ]);
 
       // Simulate tab becoming inactive
@@ -615,7 +655,7 @@ describe('Offline/Online Sync Integration', () => {
         const visibilityChangeEvent = new Event('visibilitychange');
         Object.defineProperty(document, 'visibilityState', {
           value: 'hidden',
-          writable: true
+          writable: true,
         });
         document.dispatchEvent(visibilityChangeEvent);
       });
@@ -624,7 +664,7 @@ describe('Offline/Online Sync Integration', () => {
       await act(async () => {
         const syncMessage = {
           type: 'SYNC_START',
-          data: { source: 'background_sync' }
+          data: { source: 'background_sync' },
         };
         const messageEvent = new MessageEvent('message', { data: syncMessage });
         window.dispatchEvent(messageEvent);
@@ -636,19 +676,19 @@ describe('Offline/Online Sync Integration', () => {
           id: 'bg-alarm-111',
           userId: mockUser.id,
           time: '11:00',
-          label: 'Background Sync Alarm'
+          label: 'Background Sync Alarm',
         }),
-        error: null
+        error: null,
       });
 
       // Simulate sync completion message
       await act(async () => {
         const syncCompleteMessage = {
           type: 'SYNC_COMPLETE',
-          data: { 
+          data: {
             syncedChanges: 1,
-            source: 'background_sync'
-          }
+            source: 'background_sync',
+          },
         };
         const messageEvent = new MessageEvent('message', { data: syncCompleteMessage });
         window.dispatchEvent(messageEvent);
@@ -658,7 +698,7 @@ describe('Offline/Online Sync Integration', () => {
       await act(() => {
         Object.defineProperty(document, 'visibilityState', {
           value: 'visible',
-          writable: true
+          writable: true,
         });
         const visibilityChangeEvent = new Event('visibilitychange');
         document.dispatchEvent(visibilityChangeEvent);
@@ -668,7 +708,7 @@ describe('Offline/Online Sync Integration', () => {
       await waitFor(() => {
         expect(SupabaseService.saveAlarm).toHaveBeenCalledWith(
           expect.objectContaining({
-            label: 'Background Sync Alarm'
+            label: 'Background Sync Alarm',
           })
         );
       });
@@ -685,8 +725,8 @@ describe('Offline/Online Sync Integration', () => {
           time: '06:00',
           label: 'Phone Alarm',
           createdAt: new Date('2024-01-01T08:00:00Z'),
-          metadata: { deviceId: 'phone-123' }
-        })
+          metadata: { deviceId: 'phone-123' },
+        }),
       ];
 
       const device2Alarms = [
@@ -696,17 +736,17 @@ describe('Offline/Online Sync Integration', () => {
           time: '07:00',
           label: 'Laptop Alarm',
           createdAt: new Date('2024-01-01T09:00:00Z'),
-          metadata: { deviceId: 'laptop-456' }
-        })
+          metadata: { deviceId: 'laptop-456' },
+        }),
       ];
 
       vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
         alarms: [...device1Alarms, ...device2Alarms],
-        error: null
+        error: null,
       });
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -745,12 +785,12 @@ describe('Offline/Online Sync Integration', () => {
         time: '08:00',
         label: 'Current Device Alarm',
         createdAt: new Date(),
-        metadata: { deviceId: 'current-device-789' }
+        metadata: { deviceId: 'current-device-789' },
       });
 
       vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
         alarm: newDeviceAlarm,
-        error: null
+        error: null,
       });
 
       await user.click(screen.getByRole('button', { name: /save|create/i }));
@@ -767,8 +807,8 @@ describe('Offline/Online Sync Integration', () => {
         expect.objectContaining({
           label: 'Current Device Alarm',
           metadata: expect.objectContaining({
-            deviceId: expect.any(String)
-          })
+            deviceId: expect.any(String),
+          }),
         })
       );
     });

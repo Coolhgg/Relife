@@ -1,8 +1,8 @@
 /// <reference lib="dom" />
-import { v4 as uuidv4 } from "uuid";
-import { Device } from "@capacitor/device";
-import { Network } from "@capacitor/network";
-import { ErrorHandler } from "./error-handler";
+import { v4 as uuidv4 } from 'uuid';
+import { Device } from '@capacitor/device';
+import { Network } from '@capacitor/network';
+import { ErrorHandler } from './error-handler';
 
 // Types
 export interface UserTestSession {
@@ -167,7 +167,11 @@ export class UserTestingService {
     }
   }
 
-  async startSession(userId: string, testType: UserTestSession['testType'], metadata: Record<string, any> = {}): Promise<string> {
+  async startSession(
+    userId: string,
+    testType: UserTestSession['testType'],
+    metadata: Record<string, any> = {}
+  ): Promise<string> {
     try {
       const deviceInfo = await this.getDeviceInfo();
 
@@ -179,7 +183,7 @@ export class UserTestingService {
         deviceInfo,
         appVersion: import.meta.env.VITE_APP_VERSION || '1.0.0',
         testType,
-        metadata
+        metadata,
       };
 
       // Store session
@@ -204,7 +208,8 @@ export class UserTestingService {
       this.currentSession.endTime = new Date();
 
       // Calculate session metrics
-      const duration = this.currentSession.endTime.getTime() - this.currentSession.startTime.getTime();
+      const duration =
+        this.currentSession.endTime.getTime() - this.currentSession.startTime.getTime();
       this.currentSession.metadata.duration = duration;
       this.currentSession.metadata.eventsCount = this.events.length;
 
@@ -243,7 +248,7 @@ export class UserTestingService {
         scrollPosition: event.scrollPosition,
         duration: event.duration,
         timestamp: new Date(),
-        metadata: event.metadata || {}
+        metadata: event.metadata || {},
       };
 
       this.events.push(fullEvent);
@@ -257,13 +262,18 @@ export class UserTestingService {
     }
   }
 
-  trackClick(element: string, x: number, y: number, metadata: Record<string, any> = {}): void {
+  trackClick(
+    element: string,
+    x: number,
+    y: number,
+    metadata: Record<string, any> = {}
+  ): void {
     this.trackEvent({
       type: 'click',
       element,
       x,
       y,
-      metadata
+      metadata,
     });
   }
 
@@ -272,23 +282,31 @@ export class UserTestingService {
       type: 'navigation',
       page: toPage,
       duration,
-      metadata: { fromPage, toPage }
+      metadata: { fromPage, toPage },
     });
   }
 
-  trackError(error: string, element?: string, metadata: Record<string, any> = {}): void {
+  trackError(
+    error: string,
+    element?: string,
+    metadata: Record<string, any> = {}
+  ): void {
     this.trackEvent({
       type: 'error',
       element,
-      metadata: { error, ...metadata }
+      metadata: { error, ...metadata },
     });
   }
 
-  trackPerformance(metric: string, value: number, metadata: Record<string, any> = {}): void {
+  trackPerformance(
+    metric: string,
+    value: number,
+    metadata: Record<string, any> = {}
+  ): void {
     this.trackEvent({
       type: 'performance',
       duration: value,
-      metadata: { metric, value, ...metadata }
+      metadata: { metric, value, ...metadata },
     });
   }
 
@@ -314,7 +332,7 @@ export class UserTestingService {
         action: feedback.action || 'manual_feedback',
         sentiment: this.analyzeSentiment(feedback.description || ''),
         priority: this.calculatePriority(feedback),
-        status: 'open'
+        status: 'open',
       };
 
       this.feedbacks.push(fullFeedback);
@@ -360,7 +378,7 @@ export class UserTestingService {
         frequency: bug.frequency || 'once',
         timestamp: new Date(),
         status: 'new',
-        tags: bug.tags || []
+        tags: bug.tags || [],
       };
 
       this.bugReports.push(fullBugReport);
@@ -417,8 +435,8 @@ export class UserTestingService {
         variant,
         metric,
         value,
-        type: 'ab_test_conversion'
-      }
+        type: 'ab_test_conversion',
+      },
     });
   }
 
@@ -442,7 +460,7 @@ export class UserTestingService {
         userAgent: navigator.userAgent,
         language: language.value,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        networkType: network.connectionType
+        networkType: network.connectionType,
       };
     } catch (error) {
       console.error('Failed to get device info:', error);
@@ -459,34 +477,29 @@ export class UserTestingService {
         userAgent: navigator.userAgent,
         language: navigator.language,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        networkType: 'unknown'
+        networkType: 'unknown',
       };
     }
   }
 
   private setupEventListeners(): void {
     // Global click tracking
-    document.addEventListener('click', (event) => {
+    document.addEventListener('click', event => {
       const target = event.target as HTMLElement;
-      this.trackClick(
-        this.getElementSelector(target),
-        event.clientX,
-        event.clientY,
-        {
-          tagName: target.tagName,
-          className: target.className,
-          innerText: target.innerText?.slice(0, 100)
-        }
-      );
+      this.trackClick(this.getElementSelector(target), event.clientX, event.clientY, {
+        tagName: target.tagName,
+        className: target.className,
+        innerText: target.innerText?.slice(0, 100),
+      });
     });
 
     // Error tracking
-    window.addEventListener('error', (event) => {
+    window.addEventListener('error', event => {
       this.trackError(event.message, undefined, {
         filename: event.filename,
         lineno: event.lineno,
         colno: event.colno,
-        stack: event.error?.stack
+        stack: event.error?.stack,
       });
     });
 
@@ -497,7 +510,7 @@ export class UserTestingService {
           for (const entry of list.getEntries()) {
             this.trackPerformance(entry.name, entry.duration, {
               entryType: entry.entryType,
-              startTime: entry.startTime
+              startTime: entry.startTime,
             });
           }
         });
@@ -513,8 +526,8 @@ export class UserTestingService {
         type: 'focus',
         metadata: {
           visible: !document.hidden,
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       });
     });
   }
@@ -526,8 +539,26 @@ export class UserTestingService {
   }
 
   private analyzeSentiment(text: string): 'positive' | 'negative' | 'neutral' {
-    const positiveWords = ['good', 'great', 'awesome', 'excellent', 'love', 'perfect', 'amazing', 'fantastic'];
-    const negativeWords = ['bad', 'terrible', 'awful', 'hate', 'horrible', 'worst', 'sucks', 'broken'];
+    const positiveWords = [
+      'good',
+      'great',
+      'awesome',
+      'excellent',
+      'love',
+      'perfect',
+      'amazing',
+      'fantastic',
+    ];
+    const negativeWords = [
+      'bad',
+      'terrible',
+      'awful',
+      'hate',
+      'horrible',
+      'worst',
+      'sucks',
+      'broken',
+    ];
 
     const words = text.toLowerCase().split(/\s+/);
     const positiveCount = words.filter(word => positiveWords.includes(word)).length;
@@ -538,8 +569,11 @@ export class UserTestingService {
     return 'neutral';
   }
 
-  private calculatePriority(feedback: Partial<UserFeedback>): 'low' | 'medium' | 'high' | 'critical' {
-    if (feedback.type === 'bug' && feedback.rating && feedback.rating <= 2) return 'critical';
+  private calculatePriority(
+    feedback: Partial<UserFeedback>
+  ): 'low' | 'medium' | 'high' | 'critical' {
+    if (feedback.type === 'bug' && feedback.rating && feedback.rating <= 2)
+      return 'critical';
     if (feedback.type === 'complaint') return 'high';
     if (feedback.rating && feedback.rating >= 4) return 'low';
     return 'medium';
@@ -549,7 +583,7 @@ export class UserTestingService {
     let hash = 0;
     for (let i = 0; i < userId.length; i++) {
       const char = userId.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
     return Math.abs(hash) % 100;
@@ -640,8 +674,20 @@ export class UserTestingService {
       name: 'Alarm Button Color Test',
       description: 'Test different colors for the main alarm button',
       variants: [
-        { id: 'control', name: 'Blue Button', description: 'Original blue button', percentage: 50, config: { color: 'blue' } },
-        { id: 'variant', name: 'Green Button', description: 'New green button', percentage: 50, config: { color: 'green' } }
+        {
+          id: 'control',
+          name: 'Blue Button',
+          description: 'Original blue button',
+          percentage: 50,
+          config: { color: 'blue' },
+        },
+        {
+          id: 'variant',
+          name: 'Green Button',
+          description: 'New green button',
+          percentage: 50,
+          config: { color: 'green' },
+        },
       ],
       startDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // Started yesterday
       endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Ends in 7 days
@@ -649,8 +695,8 @@ export class UserTestingService {
       status: 'active',
       metrics: [
         { name: 'alarm_created', type: 'conversion', target: 0.8 },
-        { name: 'button_clicks', type: 'engagement', target: 5 }
-      ]
+        { name: 'button_clicks', type: 'engagement', target: 5 },
+      ],
     };
 
     this.abTests.set(mockTest.id, mockTest);

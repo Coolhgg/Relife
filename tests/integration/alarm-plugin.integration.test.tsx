@@ -33,9 +33,9 @@ describe('Alarm Plugin Integration Tests', () => {
         body: 'Time to wake up!',
         schedule: {
           at: new Date(Date.now() + 60000), // 1 minute from now
-          allowWhileIdle: true
+          allowWhileIdle: true,
         },
-        sound: 'morning-chime.mp3'
+        sound: 'morning-chime.mp3',
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -56,18 +56,18 @@ describe('Alarm Plugin Integration Tests', () => {
         {
           title: 'First Alarm',
           body: 'First wake up call',
-          schedule: { at: new Date(baseTime + 60000) }
+          schedule: { at: new Date(baseTime + 60000) },
         },
         {
           title: 'Second Alarm',
           body: 'Second wake up call',
-          schedule: { at: new Date(baseTime + 120000) }
+          schedule: { at: new Date(baseTime + 120000) },
         },
         {
           title: 'Third Alarm',
           body: 'Third wake up call',
-          schedule: { at: new Date(baseTime + 180000) }
-        }
+          schedule: { at: new Date(baseTime + 180000) },
+        },
       ];
 
       const scheduledAlarms = [];
@@ -94,8 +94,8 @@ describe('Alarm Plugin Integration Tests', () => {
         schedule: {
           at: new Date(Date.now() + 60000),
           repeats: true,
-          every: 'day' as const
-        }
+          every: 'day' as const,
+        },
       };
 
       const alarm = await mobileHelper.scheduleAlarm(recurringAlarm);
@@ -111,7 +111,7 @@ describe('Alarm Plugin Integration Tests', () => {
         title: 'Test Trigger Alarm',
         body: 'Testing alarm trigger',
         schedule: { at: new Date(Date.now() + 1000) }, // 1 second from now
-        sound: 'default-alarm.mp3'
+        sound: 'default-alarm.mp3',
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -136,7 +136,7 @@ describe('Alarm Plugin Integration Tests', () => {
       const alarmConfig = {
         title: 'Snooze Test Alarm',
         body: 'Testing snooze functionality',
-        schedule: { at: new Date(Date.now() + 1000) }
+        schedule: { at: new Date(Date.now() + 1000) },
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -158,7 +158,7 @@ describe('Alarm Plugin Integration Tests', () => {
       const alarmConfig = {
         title: 'Cancellation Test',
         body: 'This alarm will be cancelled',
-        schedule: { at: new Date(Date.now() + 60000) }
+        schedule: { at: new Date(Date.now() + 60000) },
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -178,7 +178,7 @@ describe('Alarm Plugin Integration Tests', () => {
         assetId: 'custom-alarm-sound',
         assetPath: '/sounds/nature-birds.mp3',
         volume: 0.8,
-        loop: true
+        loop: true,
       };
 
       // Load the audio first
@@ -189,7 +189,7 @@ describe('Alarm Plugin Integration Tests', () => {
         body: 'Testing custom audio',
         schedule: { at: new Date(Date.now() + 1000) },
         sound: audioConfig.assetId,
-        extra: { audioConfig }
+        extra: { audioConfig },
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -207,14 +207,14 @@ describe('Alarm Plugin Integration Tests', () => {
       await mobileHelper.loadAudio({
         assetId: 'test-alarm-audio',
         assetPath: '/sounds/alarm-beep.mp3',
-        volume: 0.7
+        volume: 0.7,
       });
 
       const alarmConfig = {
         title: 'Audio Control Test',
         body: 'Testing audio controls',
         schedule: { at: new Date(Date.now() + 1000) },
-        sound: 'test-alarm-audio'
+        sound: 'test-alarm-audio',
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -240,7 +240,7 @@ describe('Alarm Plugin Integration Tests', () => {
         title: 'Persistent Alarm',
         body: 'Should survive restart',
         schedule: { at: new Date(Date.now() + 300000) }, // 5 minutes from now
-        persistent: true
+        persistent: true,
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -259,8 +259,16 @@ describe('Alarm Plugin Integration Tests', () => {
     it('should recover from storage after device reboot simulation', async () => {
       // Schedule multiple alarms
       const alarms = [
-        { title: 'Alarm 1', body: 'First', schedule: { at: new Date(Date.now() + 60000) } },
-        { title: 'Alarm 2', body: 'Second', schedule: { at: new Date(Date.now() + 120000) } }
+        {
+          title: 'Alarm 1',
+          body: 'First',
+          schedule: { at: new Date(Date.now() + 60000) },
+        },
+        {
+          title: 'Alarm 2',
+          body: 'Second',
+          schedule: { at: new Date(Date.now() + 120000) },
+        },
       ];
 
       const scheduledIds = [];
@@ -292,8 +300,8 @@ describe('Alarm Plugin Integration Tests', () => {
         body: 'Should work in background',
         schedule: {
           at: new Date(Date.now() + 30000),
-          allowWhileIdle: true
-        }
+          allowWhileIdle: true,
+        },
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -308,8 +316,8 @@ describe('Alarm Plugin Integration Tests', () => {
       await mobileHelper.triggerAlarm(alarm.id);
 
       const alarmHistory = await mobileHelper.getAlarmHistory();
-      const backgroundEvent = alarmHistory.find(h =>
-        h.alarmId === alarm.id && h.context?.background === true
+      const backgroundEvent = alarmHistory.find(
+        h => h.alarmId === alarm.id && h.context?.background === true
       );
       expect(backgroundEvent).toBeDefined();
     });
@@ -318,7 +326,7 @@ describe('Alarm Plugin Integration Tests', () => {
       const alarmConfig = {
         title: 'Keep Awake Alarm',
         body: 'Should prevent sleep',
-        schedule: { at: new Date(Date.now() + 1000) }
+        schedule: { at: new Date(Date.now() + 1000) },
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -346,7 +354,7 @@ describe('Alarm Plugin Integration Tests', () => {
         const alarmConfig = {
           title: `${platform} Alarm`,
           body: `Testing on ${platform}`,
-          schedule: { at: new Date(Date.now() + 60000) }
+          schedule: { at: new Date(Date.now() + 60000) },
         };
 
         const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
@@ -366,12 +374,12 @@ describe('Alarm Plugin Integration Tests', () => {
         body: 'Android-specific features',
         schedule: {
           at: new Date(Date.now() + 60000),
-          allowWhileIdle: true
+          allowWhileIdle: true,
         },
         androidSpecific: {
           priority: 'high',
-          vibration: true
-        }
+          vibration: true,
+        },
       };
 
       let alarm = await mobileHelper.scheduleAlarm(androidAlarm);
@@ -386,8 +394,8 @@ describe('Alarm Plugin Integration Tests', () => {
         schedule: { at: new Date(Date.now() + 60000) },
         iosSpecific: {
           critical: true,
-          interruptionLevel: 'critical'
-        }
+          interruptionLevel: 'critical',
+        },
       };
 
       alarm = await mobileHelper.scheduleAlarm(iosAlarm);
@@ -401,11 +409,12 @@ describe('Alarm Plugin Integration Tests', () => {
       const pastAlarm = {
         title: 'Past Alarm',
         body: 'This should fail',
-        schedule: { at: new Date(Date.now() - 60000) } // 1 minute ago
+        schedule: { at: new Date(Date.now() - 60000) }, // 1 minute ago
       };
 
-      await expect(mobileHelper.scheduleAlarm(pastAlarm))
-        .rejects.toThrow(/cannot schedule alarm in the past/i);
+      await expect(mobileHelper.scheduleAlarm(pastAlarm)).rejects.toThrow(
+        /cannot schedule alarm in the past/i
+      );
     });
 
     it('should handle missing permissions gracefully', async () => {
@@ -415,11 +424,12 @@ describe('Alarm Plugin Integration Tests', () => {
       const alarmConfig = {
         title: 'Permission Test',
         body: 'Should handle permission denial',
-        schedule: { at: new Date(Date.now() + 60000) }
+        schedule: { at: new Date(Date.now() + 60000) },
       };
 
-      await expect(mobileHelper.scheduleAlarm(alarmConfig))
-        .rejects.toThrow(/notification permission denied/i);
+      await expect(mobileHelper.scheduleAlarm(alarmConfig)).rejects.toThrow(
+        /notification permission denied/i
+      );
 
       // Restore permissions
       await mobileHelper.simulatePermissionGranted('notifications');
@@ -430,12 +440,13 @@ describe('Alarm Plugin Integration Tests', () => {
       const manyAlarms = Array.from({ length: 100 }, (_, i) => ({
         title: `Alarm ${i}`,
         body: `Bulk alarm ${i}`,
-        schedule: { at: new Date(Date.now() + (i + 1) * 60000) }
+        schedule: { at: new Date(Date.now() + (i + 1) * 60000) },
       }));
 
       // Should handle reasonable number of alarms
       const scheduledAlarms = [];
-      for (let i = 0; i < Math.min(manyAlarms.length, 64); i++) { // Most platforms limit to 64 notifications
+      for (let i = 0; i < Math.min(manyAlarms.length, 64); i++) {
+        // Most platforms limit to 64 notifications
         const alarm = await mobileHelper.scheduleAlarm(manyAlarms[i]);
         scheduledAlarms.push(alarm);
       }

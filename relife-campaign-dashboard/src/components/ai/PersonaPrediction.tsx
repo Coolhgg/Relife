@@ -226,7 +226,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
     let reasons: string[] = [];
     let recommendedCampaigns: string[] = [];
 
-    const { subscriptionStatus, featureUsage, engagementMetrics } = userData;
+    const { _subscriptionStatus, _featureUsage, _engagementMetrics } = userData;
     const totalFeatureUsage = Object.values(featureUsage).reduce(
       (sum, usage) => sum + usage,
       0
@@ -456,7 +456,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                             Why this prediction?
                           </h4>
                           <ul className="space-y-2">
-                            {prediction.reasons.map((reason, index) => (
+                            {prediction.reasons.map((reason, _index) => (
                               <li
                                 key={index}
                                 className="flex items-start gap-2 text-sm"
@@ -477,7 +477,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                             Recommended Campaigns
                           </h4>
                           <div className="space-y-2">
-                            {prediction.recommendedCampaigns.map((campaign, index) => (
+                            {prediction.recommendedCampaigns.map((campaign, _index) => (
                               <div
                                 key={index}
                                 className="flex items-center justify-between p-2 bg-gray-50 rounded"
@@ -536,7 +536,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                   </div>
 
                   <div className="space-y-2">
-                    {batchPredictions.map(({ user, prediction }, index) => (
+                    {batchPredictions.map(({ user, prediction }, _index) => (
                       <Card key={user.id}>
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">

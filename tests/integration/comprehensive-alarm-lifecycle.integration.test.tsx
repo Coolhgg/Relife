@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /**
  * Comprehensive Alarm Lifecycle Integration Tests
- * 
+ *
  * Enhanced end-to-end tests using comprehensive browser API mocks:
  * - Real notification API interactions
  * - Service worker messaging and lifecycle
@@ -9,11 +9,20 @@
  * - Push notifications and wake locks
  * - Offline/online state management
  * - Performance validation
- * 
+ *
  * This test file demonstrates the complete user journey with realistic browser interactions.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -41,10 +50,14 @@ import {
   notificationHelpers,
   serviceWorkerHelpers,
   speechHelpers,
-  wakeLockHelpers
+  wakeLockHelpers,
 } from '../utils/integration-test-setup';
 
-import { createMockUser, createMockAlarm, measurePerformance } from '../utils/test-mocks';
+import {
+  createMockUser,
+  createMockAlarm,
+  measurePerformance,
+} from '../utils/test-mocks';
 import type { Alarm, User, VoiceMood } from '../../src/types';
 
 // Mock external services
@@ -60,7 +73,7 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
   let mockUser: User;
   let container: HTMLElement;
   let user: ReturnType<typeof userEvent.setup>;
-  
+
   // Service instances
   let analyticsService: AppAnalyticsService;
   let rewardsService: AIRewardsService;
@@ -75,35 +88,35 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
     mockUser = createMockUser({
       id: 'comprehensive-test-user',
       email: 'comprehensive@test.com',
-      name: 'Comprehensive Test User'
+      name: 'Comprehensive Test User',
     });
-    
+
     // Reset all mocks
     vi.clearAllMocks();
-    
+
     // Mock service instances
     analyticsService = AppAnalyticsService.getInstance();
     rewardsService = AIRewardsService.getInstance();
 
     // Mock successful authentication
     vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
-    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({ 
-      alarms: [], 
-      error: null 
+    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
+      alarms: [],
+      error: null,
     });
-    
+
     // Mock analytics and rewards
     vi.mocked(analyticsService.trackAlarmCreated).mockImplementation(() => {});
     vi.mocked(analyticsService.trackAlarmTriggered).mockImplementation(() => {});
     vi.mocked(analyticsService.trackAlarmSnoozed).mockImplementation(() => {});
     vi.mocked(analyticsService.trackAlarmDismissed).mockImplementation(() => {});
-    
+
     vi.mocked(rewardsService.analyzeAndGenerateRewards).mockResolvedValue({
       level: 1,
       currentStreak: 0,
       unlockedRewards: [],
       availableRewards: [],
-      nextMilestone: { type: 'streak', target: 7, progress: 0 }
+      nextMilestone: { type: 'streak', target: 7, progress: 0 },
     });
   });
 
@@ -123,8 +136,8 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
   describe('Complete End-to-End Alarm Flow with Browser APIs', () => {
     it('should complete entire alarm lifecycle with realistic browser interactions', async () => {
       // Performance tracking
-      const performanceMeasures: {[key: string]: number} = {};
-      
+      const performanceMeasures: { [key: string]: number } = {};
+
       // Step 1: App initialization with performance tracking
       const appInitTime = await measurePerformance(async () => {
         await act(async () => {
@@ -136,7 +149,7 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
           container = result.container;
         });
       });
-      
+
       performanceMeasures.appInit = appInitTime;
       expect(appInitTime).toBeLessThan(3000); // App should init within 3 seconds
 
@@ -151,9 +164,12 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
       expect(pushSubscription.endpoint).toContain('fcm.googleapis.com');
 
       // Step 4: Wait for dashboard and verify authentication
-      await waitFor(() => {
-        expect(screen.getByText(/dashboard/i)).toBeInTheDocument();
-      }, { timeout: 10000 });
+      await waitFor(
+        () => {
+          expect(screen.getByText(/dashboard/i)).toBeInTheDocument();
+        },
+        { timeout: 10000 }
+      );
 
       // Step 5: Request notification permissions
       await act(async () => {
@@ -172,7 +188,7 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
           snoozeEnabled: true,
           maxSnoozes: 2,
           volume: 0.8,
-          vibrate: true
+          vibrate: true,
         };
 
         // Click add alarm button
@@ -195,7 +211,15 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
 
         // Select weekdays
         for (const day of alarmData.days) {
-          const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          const dayNames = [
+            'Sunday',
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+          ];
           const dayCheckbox = screen.getByLabelText(dayNames[day]);
           if (dayCheckbox && !dayCheckbox.checked) {
             await user.click(dayCheckbox);
@@ -219,12 +243,12 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
           userId: mockUser.id,
           enabled: true,
           createdAt: new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date(),
         });
-        
+
         vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
           alarm: mockAlarm,
-          error: null
+          error: null,
         });
 
         // Save alarm
@@ -232,9 +256,12 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
         await user.click(saveButton);
 
         // Verify alarm appears in list
-        await waitFor(() => {
-          expect(screen.getByText(alarmData.label)).toBeInTheDocument();
-        }, { timeout: 5000 });
+        await waitFor(
+          () => {
+            expect(screen.getByText(alarmData.label)).toBeInTheDocument();
+          },
+          { timeout: 5000 }
+        );
       });
 
       performanceMeasures.alarmCreation = alarmCreationTime;
@@ -257,8 +284,8 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
         requireInteraction: true,
         data: {
           alarmId: 'comprehensive-alarm-123',
-          actions: ['snooze', 'dismiss']
-        }
+          actions: ['snooze', 'dismiss'],
+        },
       });
 
       // Verify notification was created
@@ -272,14 +299,17 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
       expect(wakeLockSentinel.type).toBe('screen');
 
       // Step 10: Wait for alarm ringing interface
-      await waitFor(() => {
-        expect(screen.getByText(/dismiss|stop|snooze/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          expect(screen.getByText(/dismiss|stop|snooze/i)).toBeInTheDocument();
+        },
+        { timeout: 5000 }
+      );
 
       // Step 11: Test voice-activated snooze
       vi.mocked(AlarmService.snoozeAlarm).mockResolvedValueOnce({
         success: true,
-        snoozeUntil: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
+        snoozeUntil: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
       });
 
       // Simulate voice command
@@ -288,15 +318,20 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
       });
 
       // Wait for voice recognition to process
-      await waitFor(() => {
-        expect(AlarmService.snoozeAlarm).toHaveBeenCalledWith('comprehensive-alarm-123');
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(AlarmService.snoozeAlarm).toHaveBeenCalledWith(
+            'comprehensive-alarm-123'
+          );
+        },
+        { timeout: 3000 }
+      );
 
       // Verify analytics tracking
       expect(analyticsService.trackAlarmSnoozed).toHaveBeenCalledWith(
         expect.objectContaining({
           alarmId: 'comprehensive-alarm-123',
-          snoozeMethod: 'voice'
+          snoozeMethod: 'voice',
         })
       );
 
@@ -314,22 +349,25 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
       const snoozeEndTime = new Date(Date.now() + 5 * 60 * 1000);
       vi.setSystemTime(snoozeEndTime);
 
-      const secondNotification = await simulateAlarmNotification('Comprehensive Test Alarm', {
-        body: 'Snooze ended - Time to wake up! ⏰',
-        icon: '/icons/alarm-icon.png',
-        tag: 'alarm-comprehensive-alarm-123-snooze',
-        requireInteraction: true,
-        data: {
-          alarmId: 'comprehensive-alarm-123',
-          snoozeCount: 1,
-          actions: ['dismiss']
+      const secondNotification = await simulateAlarmNotification(
+        'Comprehensive Test Alarm',
+        {
+          body: 'Snooze ended - Time to wake up! ⏰',
+          icon: '/icons/alarm-icon.png',
+          tag: 'alarm-comprehensive-alarm-123-snooze',
+          requireInteraction: true,
+          data: {
+            alarmId: 'comprehensive-alarm-123',
+            snoozeCount: 1,
+            actions: ['dismiss'],
+          },
         }
-      });
+      );
 
       // Step 15: Test voice-activated dismissal
       vi.mocked(AlarmService.dismissAlarm).mockResolvedValueOnce({
         success: true,
-        dismissedAt: new Date()
+        dismissedAt: new Date(),
       });
 
       await act(async () => {
@@ -337,19 +375,22 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
       });
 
       // Wait for voice dismissal
-      await waitFor(() => {
-        expect(AlarmService.dismissAlarm).toHaveBeenCalledWith(
-          'comprehensive-alarm-123',
-          'voice'
-        );
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(AlarmService.dismissAlarm).toHaveBeenCalledWith(
+            'comprehensive-alarm-123',
+            'voice'
+          );
+        },
+        { timeout: 3000 }
+      );
 
       // Step 16: Verify final cleanup and rewards
       expect(analyticsService.trackAlarmDismissed).toHaveBeenCalledWith(
         expect.objectContaining({
           alarmId: 'comprehensive-alarm-123',
           dismissMethod: 'voice',
-          totalSnoozes: 1
+          totalSnoozes: 1,
         })
       );
 
@@ -415,12 +456,12 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
         userId: mockUser.id,
         time: '08:00',
         label: 'Cross-Tab Test Alarm',
-        enabled: true
+        enabled: true,
       });
-      
+
       vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
         alarm: mockAlarm,
-        error: null
+        error: null,
       });
 
       const saveButton = screen.getByRole('button', { name: /save|create/i });
@@ -433,7 +474,7 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
       // Simulate alarm triggering
       const notification = await simulateAlarmNotification('Cross-Tab Test Alarm', {
         body: 'Cross-tab synchronization test',
-        tag: 'alarm-cross-tab-alarm-456'
+        tag: 'alarm-cross-tab-alarm-456',
       });
 
       // Simulate service worker message to all tabs
@@ -442,8 +483,8 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
           type: 'ALARM_TRIGGERED',
           data: {
             alarmId: 'cross-tab-alarm-456',
-            timestamp: Date.now()
-          }
+            timestamp: Date.now(),
+          },
         });
       });
 
@@ -455,7 +496,7 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
       // Simulate dismissal from another tab (via service worker message)
       vi.mocked(AlarmService.dismissAlarm).mockResolvedValueOnce({
         success: true,
-        dismissedAt: new Date()
+        dismissedAt: new Date(),
       });
 
       await act(async () => {
@@ -464,8 +505,8 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
           data: {
             alarmId: 'cross-tab-alarm-456',
             dismissedBy: 'other-tab',
-            timestamp: Date.now()
-          }
+            timestamp: Date.now(),
+          },
         });
       });
 
@@ -484,7 +525,7 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
       // Simulate going offline
       Object.defineProperty(navigator, 'onLine', {
         value: false,
-        writable: true
+        writable: true,
       });
 
       await act(async () => {
@@ -550,7 +591,7 @@ describe('Comprehensive Alarm Lifecycle Integration', () => {
       // Simulate going back online
       Object.defineProperty(navigator, 'onLine', {
         value: true,
-        writable: true
+        writable: true,
       });
 
       // Simulate sync on reconnection

@@ -1,5 +1,5 @@
 # Docker Compose for Relife Smart Alarm App - Production
-version: '3.8'
+version: "3.8"
 
 services:
   # Main application container - Production build
@@ -21,13 +21,13 @@ services:
         VITE_PERFORMANCE_MONITORING: ${VITE_PERFORMANCE_MONITORING:-true}
         VITE_PERFORMANCE_ENDPOINT: ${VITE_PERFORMANCE_ENDPOINT}
         VITE_ANALYTICS_ENDPOINT: ${VITE_ANALYTICS_ENDPOINT}
-    
+
     container_name: relife-app-prod
-    
+
     ports:
       - "80:80"
       - "443:443"
-    
+
     environment:
       - NODE_ENV=production
       - VITE_APP_ENV=production
@@ -35,7 +35,7 @@ services:
       - PERFORMANCE_MONITORING=true
       - LOG_LEVEL=INFO
       - NGINX_WORKER_PROCESSES=auto
-    
+
     volumes:
       # SSL certificates (if using)
       - ${SSL_CERT_PATH:-./certs}:/etc/ssl/certs:ro
@@ -43,20 +43,20 @@ services:
       # Logs
       - app-logs:/var/log/nginx
       - app-logs:/var/log/app
-    
+
     networks:
       - relife-network
       - monitoring-network
-    
+
     restart: unless-stopped
-    
+
     healthcheck:
       test: ["/usr/local/bin/health-check.sh", "quick"]
       interval: 30s
       timeout: 15s
       retries: 3
       start_period: 45s
-    
+
     labels:
       # Traefik labels for load balancing
       - "traefik.enable=true"
@@ -71,14 +71,14 @@ services:
       - "traefik.http.middlewares.security-headers.headers.stspreload=true"
       - "traefik.http.middlewares.security-headers.headers.stsseconds=31536000"
       - "traefik.http.routers.relife-app.middlewares=security-headers"
-    
+
     deploy:
       resources:
         limits:
-          cpus: '1.0'
+          cpus: "1.0"
           memory: 512M
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 256M
       restart_policy:
         condition: on-failure
@@ -91,107 +91,115 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    
+
     container_name: relife-api-prod
-    
+
     ports:
       - "3001:3001"
-    
+
     environment:
       - NODE_ENV=production
       - PORT=3001
       - DATABASE_URL=${DATABASE_URL}
       - REDIS_URL=${REDIS_URL}
-    
+
     volumes:
       - api-logs:/app/logs
-    
+
     networks:
       - relife-network
       - database-network
-    
+
     restart: unless-stopped
-    
+
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-    
+
     deploy:
       resources:
         limits:
-          cpus: '2.0'
+          cpus: "2.0"
           memory: 1G
         reservations:
-          cpus: '1.0'
+          cpus: "1.0"
           memory: 512M
 
   # Redis for caching and session storage
   redis:
     image: redis:7-alpine
     container_name: relife-redis-prod
-    
+
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
-    
+
     ports:
       - "6379:6379"
-    
+
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-    
+
     volumes:
       - redis-data:/data
       - ./config/redis.conf:/etc/redis/redis.conf:ro
-    
+
     networks:
       - relife-network
-    
+
     restart: unless-stopped
-    
+
     healthcheck:
       test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 30s
       timeout: 10s
       retries: 3
-    
+
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 256M
         reservations:
-          cpus: '0.25'
+          cpus: "0.25"
           memory: 128M
 
   # Prometheus for metrics collection
   prometheus:
     image: prom/prometheus:latest
     container_name: relife-prometheus-prod
-    
+
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=30d'
-      - '--web.enable-lifecycle'
-    
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--storage.tsdb.retention.time=30d"
+      - "--web.enable-lifecycle"
+
     ports:
       - "9090:9090"
-    
+
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
-    
+
     networks:
       - monitoring-network
-    
+
     restart: unless-stopped
-    
+
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9090/-/healthy",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -200,10 +208,10 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: relife-grafana-prod
-    
+
     ports:
       - "3002:3000"
-    
+
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
@@ -211,49 +219,49 @@ services:
       - GF_SERVER_ROOT_URL=https://${DOMAIN:-relife.app}/grafana/
       - GF_ANALYTICS_REPORTING_ENABLED=false
       - GF_ANALYTICS_CHECK_FOR_UPDATES=false
-    
+
     volumes:
       - grafana-data:/var/lib/grafana
       - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
       - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
-    
+
     networks:
       - monitoring-network
-    
+
     restart: unless-stopped
-    
+
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
-    
+
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
         reservations:
-          cpus: '0.25'
+          cpus: "0.25"
           memory: 256M
 
   # Nginx Prometheus Exporter
   nginx-exporter:
     image: nginx/nginx-prometheus-exporter:latest
     container_name: relife-nginx-exporter
-    
+
     command:
-      - '-nginx.scrape-uri=http://app/nginx_status'
-    
+      - "-nginx.scrape-uri=http://app/nginx_status"
+
     ports:
       - "9113:9113"
-    
+
     networks:
       - relife-network
       - monitoring-network
-    
+
     restart: unless-stopped
-    
+
     depends_on:
       - app
 
@@ -262,20 +270,20 @@ services:
     build:
       context: ./logging
       dockerfile: Dockerfile
-    
+
     container_name: relife-fluentd-prod
-    
+
     ports:
       - "24224:24224"
       - "24224:24224/udp"
-    
+
     volumes:
       - app-logs:/var/log/containers
       - ./logging/fluent.conf:/fluentd/etc/fluent.conf:ro
-    
+
     networks:
       - monitoring-network
-    
+
     restart: unless-stopped
 
 # Networks
@@ -286,14 +294,14 @@ networks:
       driver: default
       config:
         - subnet: 172.21.0.0/16
-  
+
   monitoring-network:
     driver: bridge
     ipam:
       driver: default
       config:
         - subnet: 172.22.0.0/16
-  
+
   database-network:
     driver: bridge
     ipam:
@@ -305,15 +313,15 @@ networks:
 volumes:
   redis-data:
     driver: local
-  
+
   grafana-data:
     driver: local
-  
+
   prometheus-data:
     driver: local
-  
+
   app-logs:
     driver: local
-  
+
   api-logs:
     driver: local

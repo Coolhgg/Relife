@@ -120,8 +120,7 @@ node scripts/manage-translations.mjs report
 ```markdown
 ## Translation Contribution
 
-**Language**: [Language Name] (`language-code`)
-**Files Completed**:
+**Language**: [Language Name] (`language-code`) **Files Completed**:
 
 - [ ] common.json (90 keys)
 - [ ] alarms.json (84 keys)
@@ -143,14 +142,18 @@ node scripts/manage-translations.mjs report
 
 - **Validation errors?** Run `node scripts/manage-translations.mjs validate` for details
 - **Not sure about context?** Check the existing English files for reference
-- **Questions?** Open a GitHub issue or check the full [Translation Guidelines](../TRANSLATION_GUIDELINES.md)
+- **Questions?** Open a GitHub issue or check the full
+  [Translation Guidelines](../TRANSLATION_GUIDELINES.md)
 
 ## 🎉 You're Ready!
 
-Jump in and start translating! Even completing one file makes a huge difference for users who speak your language.
+Jump in and start translating! Even completing one file makes a huge difference for users who speak
+your language.
 
-Remember: **Quality over speed** - focus on creating translations that feel natural and helpful to users.
+Remember: **Quality over speed** - focus on creating translations that feel natural and helpful to
+users.
 
 ---
 
-**Need more details?** Check out the comprehensive [Translation Guidelines](../TRANSLATION_GUIDELINES.md) for advanced topics and best practices.
+**Need more details?** Check out the comprehensive
+[Translation Guidelines](../TRANSLATION_GUIDELINES.md) for advanced topics and best practices.

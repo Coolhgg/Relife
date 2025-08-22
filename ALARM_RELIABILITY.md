@@ -1,6 +1,7 @@
 # Alarm Reliability Features
 
-This document explains the enhanced alarm reliability features that ensure your alarms fire reliably even when you switch tabs, close the browser, or navigate away from the app.
+This document explains the enhanced alarm reliability features that ensure your alarms fire reliably
+even when you switch tabs, close the browser, or navigate away from the app.
 
 ## 🚨 Problem Solved
 
@@ -224,4 +225,5 @@ If you experience issues with alarm reliability:
 3. Test in different browsers to identify browser-specific issues
 4. Report persistent issues with specific browser and scenario details
 
-The enhanced alarm reliability system represents a significant improvement in ensuring users never miss important alarms, regardless of their browsing behavior or device state.
+The enhanced alarm reliability system represents a significant improvement in ensuring users never
+miss important alarms, regardless of their browsing behavior or device state.

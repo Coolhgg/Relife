@@ -78,7 +78,7 @@ export class MailchimpService {
   async ping(): Promise<boolean> {
     try {
       const response = await mailchimp.ping.get();
-      return response.health_status === 'Everything\'s Chimpy!';
+      return response.health_status === "Everything's Chimpy!";
     } catch (error) {
       console.error('Mailchimp ping failed:', error);
       return false;
@@ -96,7 +96,7 @@ export class MailchimpService {
         id: list.id,
         name: list.name,
         member_count: list.stats.member_count,
-        date_created: list.date_created
+        date_created: list.date_created,
       }));
     } catch (error) {
       console.error('Failed to fetch Mailchimp audiences:', error);
@@ -131,7 +131,7 @@ export class MailchimpService {
         open_rate: response.opens.open_rate,
         click_rate: response.clicks.click_rate,
         unsubscribes: response.unsubscribed.unsubscribes,
-        bounce_rate: response.bounces.bounce_rate
+        bounce_rate: response.bounces.bounce_rate,
       };
     } catch (error) {
       console.error('Failed to fetch campaign stats:', error);
@@ -162,7 +162,10 @@ export class MailchimpService {
     }
   }
 
-  async setCampaignContent(campaignId: string, content: { html: string }): Promise<void> {
+  async setCampaignContent(
+    campaignId: string,
+    content: { html: string }
+  ): Promise<void> {
     if (!this.isConfigured) {
       throw new Error('Mailchimp not configured');
     }
@@ -188,12 +191,15 @@ export class MailchimpService {
     }
   }
 
-  async addSubscriber(listId: string, subscriber: {
-    email_address: string;
-    status: 'subscribed' | 'unsubscribed' | 'cleaned' | 'pending';
-    merge_fields?: Record<string, any>;
-    tags?: string[];
-  }): Promise<void> {
+  async addSubscriber(
+    listId: string,
+    subscriber: {
+      email_address: string;
+      status: 'subscribed' | 'unsubscribed' | 'cleaned' | 'pending';
+      merge_fields?: Record<string, any>;
+      tags?: string[];
+    }
+  ): Promise<void> {
     if (!this.isConfigured) {
       throw new Error('Mailchimp not configured');
     }
@@ -216,8 +222,8 @@ export class MailchimpService {
         name: `Segment_${Date.now()}`,
         options: {
           match: 'all',
-          conditions
-        }
+          conditions,
+        },
       });
       return response.id;
     } catch (error) {

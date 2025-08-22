@@ -42,8 +42,11 @@ export interface AlarmUpdateData {
 declare module '../services/alarm' {
   export class AlarmService {
     // Add method overload for partial updates
-    static updateAlarm(alarmId: string, updates: Partial<import('./index').Alarm>): Promise<void>;
-    
+    static updateAlarm(
+      alarmId: string,
+      updates: Partial<import('./index').Alarm>
+    ): Promise<void>;
+
     // Add method overload for creating alarm from full Alarm object
     static createAlarm(alarm: import('./index').Alarm): Promise<void>;
   }

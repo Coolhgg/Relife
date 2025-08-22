@@ -1,18 +1,24 @@
 /// <reference lib="dom" />
-import { useState, useEffect, useCallback } from "react";
-import type { TabProtectionSettings } from "../types/tabProtection";
+import { useState, useEffect, useCallback } from 'react';
+import type { TabProtectionSettings } from '../types/tabProtection';
 import {
   getTabProtectionSettings,
   saveTabProtectionSettings,
-  DEFAULT_TAB_PROTECTION_SETTINGS
+  DEFAULT_TAB_PROTECTION_SETTINGS,
 } from '../types/tabProtection';
 
 interface UseTabProtectionSettingsReturn {
   settings: TabProtectionSettings;
   updateSettings: (updates: Partial<TabProtectionSettings>) => void;
-  updateProtectionTiming: (updates: Partial<TabProtectionSettings['protectionTiming']>) => void;
-  updateCustomMessages: (updates: Partial<TabProtectionSettings['customMessages']>) => void;
-  updateVisualSettings: (updates: Partial<TabProtectionSettings['visualSettings']>) => void;
+  updateProtectionTiming: (
+    updates: Partial<TabProtectionSettings['protectionTiming']>
+  ) => void;
+  updateCustomMessages: (
+    updates: Partial<TabProtectionSettings['customMessages']>
+  ) => void;
+  updateVisualSettings: (
+    updates: Partial<TabProtectionSettings['visualSettings']>
+  ) => void;
   resetToDefaults: () => void;
   exportSettings: () => string;
   importSettings: (settingsJson: string) => boolean;
@@ -35,64 +41,82 @@ export const useTabProtectionSettings = (): UseTabProtectionSettingsReturn => {
       }
     };
 
-    window.addEventListener('tabProtectionSettingsChanged' as any, handleSettingsChange);
+    window.addEventListener(
+      'tabProtectionSettingsChanged' as any,
+      handleSettingsChange
+    );
     window.addEventListener('storage', handleStorageChange);
 
     return () => {
-      window.removeEventListener('tabProtectionSettingsChanged' as any, handleSettingsChange);
+      window.removeEventListener(
+        'tabProtectionSettingsChanged' as any,
+        handleSettingsChange
+      );
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
-  const updateSettings = useCallback((updates: Partial<TabProtectionSettings>) => {
-    const newSettings = { ...settings, ...updates };
-    setSettings(newSettings);
-    saveTabProtectionSettings(newSettings);
-  }, [settings]);
+  const updateSettings = useCallback(
+    (updates: Partial<TabProtectionSettings>) => {
+      const newSettings = { ...settings, ...updates };
+      setSettings(newSettings);
+      saveTabProtectionSettings(newSettings);
+    },
+    [settings]
+  );
 
-  const updateProtectionTiming = useCallback((updates: Partial<TabProtectionSettings['protectionTiming']>) => {
-    const newSettings = {
-      ...settings,
-      protectionTiming: {
-        ...settings.protectionTiming,
-        ...updates,
-      },
-    };
-    setSettings(newSettings);
-    saveTabProtectionSettings(newSettings);
-  }, [settings]);
-
-  const updateCustomMessages = useCallback((updates: Partial<TabProtectionSettings['customMessages']>) => {
-    const newSettings = {
-      ...settings,
-      customMessages: {
-        ...settings.customMessages,
-        ...updates,
-        visualWarningTitle: {
-          ...settings.customMessages.visualWarningTitle,
-          ...updates.visualWarningTitle,
+  const updateProtectionTiming = useCallback(
+    (updates: Partial<TabProtectionSettings['protectionTiming']>) => {
+      const newSettings = {
+        ...settings,
+        protectionTiming: {
+          ...settings.protectionTiming,
+          ...updates,
         },
-        accessibilityMessages: {
-          ...settings.customMessages.accessibilityMessages,
-          ...updates.accessibilityMessages,
-        },
-      },
-    };
-    setSettings(newSettings);
-    saveTabProtectionSettings(newSettings);
-  }, [settings]);
+      };
+      setSettings(newSettings);
+      saveTabProtectionSettings(newSettings);
+    },
+    [settings]
+  );
 
-  const updateVisualSettings = useCallback((updates: Partial<TabProtectionSettings['visualSettings']>) => {
-    const newSettings = {
-      ...settings,
-      visualSettings: {
-        ...settings.visualSettings,
-        ...updates,
-      },
-    };
-    setSettings(newSettings);
-    saveTabProtectionSettings(newSettings);
-  }, [settings]);
+  const updateCustomMessages = useCallback(
+    (updates: Partial<TabProtectionSettings['customMessages']>) => {
+      const newSettings = {
+        ...settings,
+        customMessages: {
+          ...settings.customMessages,
+          ...updates,
+          visualWarningTitle: {
+            ...settings.customMessages.visualWarningTitle,
+            ...updates.visualWarningTitle,
+          },
+          accessibilityMessages: {
+            ...settings.customMessages.accessibilityMessages,
+            ...updates.accessibilityMessages,
+          },
+        },
+      };
+      setSettings(newSettings);
+      saveTabProtectionSettings(newSettings);
+    },
+    [settings]
+  );
+
+  const updateVisualSettings = useCallback(
+    (updates: Partial<TabProtectionSettings['visualSettings']>) => {
+      const newSettings = {
+        ...settings,
+        visualSettings: {
+          ...settings.visualSettings,
+          ...updates,
+        },
+      };
+      setSettings(newSettings);
+      saveTabProtectionSettings(newSettings);
+    },
+    [settings]
+  );
 
   const resetToDefaults = useCallback(() => {
     setSettings(DEFAULT_TAB_PROTECTION_SETTINGS);

@@ -29,9 +29,7 @@ function MyComponent() {
   return (
     <div style={getCSSVariables()}>
       <h1>Current theme: {theme}</h1>
-      <button onClick={() => setTheme('dark')}>
-        Switch to Dark
-      </button>
+      <button onClick={() => setTheme('dark')}>Switch to Dark</button>
     </div>
   );
 }
@@ -61,11 +59,7 @@ function Settings() {
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
 
-  return (
-    <button onClick={toggleTheme}>
-      {theme === 'light' ? '🌙' : '☀️'}
-    </button>
-  );
+  return <button onClick={toggleTheme}>{theme === 'light' ? '🌙' : '☀️'}</button>;
 }
 ```
 
@@ -73,19 +67,15 @@ function ThemeToggle() {
 
 ```tsx
 function AccessibleTheme() {
-  const {
-    updatePersonalization,
-    testThemeAccessibility,
-    calculateContrastRatio
-  } = useTheme();
+  const { updatePersonalization, testThemeAccessibility, calculateContrastRatio } = useTheme();
 
   const enableHighContrast = () => {
     updatePersonalization({
       accessibilityPreferences: {
         highContrastMode: true,
         largeTargets: true,
-        boldText: true
-      }
+        boldText: true,
+      },
     });
   };
 
@@ -94,9 +84,7 @@ function AccessibleTheme() {
   return (
     <div>
       <p>Accessibility Score: {accessibilityScore}%</p>
-      <button onClick={enableHighContrast}>
-        Enable High Contrast
-      </button>
+      <button onClick={enableHighContrast}>Enable High Contrast</button>
     </div>
   );
 }
@@ -112,18 +100,14 @@ function CustomThemeCreator() {
     const customTheme = await createCustomTheme('light', {
       colors: {
         primary: { 500: '#ff6b6b' },
-        background: { primary: '#f8f9fa' }
-      }
+        background: { primary: '#f8f9fa' },
+      },
     });
 
     setTheme('custom');
   };
 
-  return (
-    <button onClick={createMyTheme}>
-      Create Custom Theme
-    </button>
-  );
+  return <button onClick={createMyTheme}>Create Custom Theme</button>;
 }
 ```
 
@@ -131,11 +115,7 @@ function CustomThemeCreator() {
 
 ```tsx
 function PerformantThemeSwitcher() {
-  const {
-    applyThemeWithPerformance,
-    preloadTheme,
-    setTheme
-  } = useTheme();
+  const { applyThemeWithPerformance, preloadTheme, setTheme } = useTheme();
 
   useEffect(() => {
     // Preload themes for faster switching
@@ -147,7 +127,7 @@ function PerformantThemeSwitcher() {
     setTheme(theme);
     await applyThemeWithPerformance({
       animate: true,
-      duration: 300
+      duration: 300,
     });
   };
 
@@ -185,9 +165,9 @@ The theme system automatically provides CSS variables:
 
 ```tsx
 <ThemeProvider
-  defaultTheme="system"          // Initial theme
-  storageKey="my-app-theme"      // Storage key
-  enableSystem={true}            // System theme detection
+  defaultTheme="system" // Initial theme
+  storageKey="my-app-theme" // Storage key
+  enableSystem={true} // System theme detection
 >
   <App />
 </ThemeProvider>
@@ -220,16 +200,12 @@ function AccessibilitySettings() {
         reducedTransparency: true,
         boldText: true,
         underlineLinks: true,
-        flashingElementsReduced: true
-      }
+        flashingElementsReduced: true,
+      },
     });
   };
 
-  return (
-    <button onClick={enableAccessibility}>
-      Enable Full Accessibility Mode
-    </button>
-  );
+  return <button onClick={enableAccessibility}>Enable Full Accessibility Mode</button>;
 }
 ```
 
@@ -259,17 +235,11 @@ function ContrastTester() {
 
 ```tsx
 function CloudSyncSettings() {
-  const {
-    enableCloudSync,
-    cloudSyncStatus,
-    syncThemes
-  } = useTheme();
+  const { enableCloudSync, cloudSyncStatus, syncThemes } = useTheme();
 
   return (
     <div>
-      <button onClick={() => enableCloudSync(true)}>
-        Enable Cloud Sync
-      </button>
+      <button onClick={() => enableCloudSync(true)}>Enable Cloud Sync</button>
       <p>Status: {cloudSyncStatus.isSyncing ? 'Syncing...' : 'Ready'}</p>
       <button onClick={syncThemes}>Force Sync</button>
     </div>
@@ -363,11 +333,7 @@ function ThemeBackup() {
   return (
     <div>
       <button onClick={backup}>Export Themes</button>
-      <input
-        type="file"
-        accept=".json"
-        onChange={(e) => restore(e.target.files?.[0]!)}
-      />
+      <input type="file" accept=".json" onChange={(e) => restore(e.target.files?.[0]!)} />
     </div>
   );
 }
@@ -394,6 +360,7 @@ const styles = { color: '#000000' }; // Hardcoded values
 ### Common Issues
 
 **Theme not applying?**
+
 ```tsx
 // Check theme state
 const { theme, getCSSVariables } = useTheme();
@@ -402,6 +369,7 @@ console.log('CSS variables:', getCSSVariables());
 ```
 
 **Performance issues?**
+
 ```tsx
 // Check performance stats
 import ThemePerformanceService from './services/theme-performance';
@@ -410,6 +378,7 @@ console.log(service.getPerformanceStats());
 ```
 
 **Accessibility problems?**
+
 ```tsx
 const { testThemeAccessibility } = useTheme();
 const report = testThemeAccessibility();

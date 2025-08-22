@@ -7,28 +7,28 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'src/**'
-      - 'tests/integration/**'
-      - 'package.json'
-      - 'vitest.integration.config.ts'
+      - "src/**"
+      - "tests/integration/**"
+      - "package.json"
+      - "vitest.integration.config.ts"
   pull_request:
     branches: [main, develop]
     paths:
-      - 'src/**'
-      - 'tests/integration/**'
-      - 'package.json'
-      - 'vitest.integration.config.ts'
+      - "src/**"
+      - "tests/integration/**"
+      - "package.json"
+      - "vitest.integration.config.ts"
   schedule:
     # Run integration tests daily at 2 AM UTC to catch regressions
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
   workflow_dispatch:
     inputs:
       test_pattern:
-        description: 'Test pattern to run (optional)'
+        description: "Test pattern to run (optional)"
         required: false
-        default: ''
+        default: ""
       verbose:
-        description: 'Enable verbose logging'
+        description: "Enable verbose logging"
         type: boolean
         default: false
 
@@ -50,7 +50,7 @@ jobs:
     name: 🔗 Critical User Flow Tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    
+
     strategy:
       matrix:
         test-suite:
@@ -60,7 +60,7 @@ jobs:
           - notification-service-worker
           - gaming-rewards
       fail-fast: false
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -90,9 +90,9 @@ jobs:
       - name: Run integration test suite - ${{ matrix.test-suite }}
         run: |
           echo "🔗 Running integration tests: ${{ matrix.test-suite }}"
-          
+
           TEST_FILE="tests/integration/${{ matrix.test-suite }}.integration.test.ts"
-          
+
           if [ -f "$TEST_FILE" ]; then
             if [ "${{ github.event.inputs.verbose }}" = "true" ]; then
               bun run vitest run --config vitest.integration.config.ts --reporter=verbose "$TEST_FILE"
@@ -129,7 +129,7 @@ jobs:
         if: always()
         run: |
           echo "## Integration Test Results - ${{ matrix.test-suite }}" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ -f "test-results/integration-results.json" ]; then
             echo "✅ Test results found" >> $GITHUB_STEP_SUMMARY
             # Add summary stats if available
@@ -144,7 +144,7 @@ jobs:
     needs: integration-tests
     if: github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     timeout-minutes: 45
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -169,7 +169,7 @@ jobs:
       - name: Run full integration test suite
         run: |
           echo "🔗 Running complete integration test suite..."
-          
+
           if [ -n "${{ github.event.inputs.test_pattern }}" ]; then
             echo "🎯 Running tests matching pattern: ${{ github.event.inputs.test_pattern }}"
             bun run test:integration:coverage -- --testNamePattern="${{ github.event.inputs.test_pattern }}"
@@ -200,7 +200,7 @@ jobs:
         if: always()
         run: |
           echo "## 🔗 Integration Test Coverage Report" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ -f "coverage/integration/coverage-summary.json" ]; then
             echo "📊 Coverage report generated successfully" >> $GITHUB_STEP_SUMMARY
             
@@ -243,7 +243,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: full-integration
     if: github.event_name == 'pull_request'
-    
+
     steps:
       - name: Download test artifacts
         uses: actions/download-artifact@v4
@@ -253,7 +253,7 @@ jobs:
       - name: Check performance metrics
         run: |
           echo "⚡ Checking for performance regressions..." >> $GITHUB_STEP_SUMMARY
-          
+
           # This would ideally compare against baseline metrics
           # For now, just report that performance checks ran
           echo "- ✅ Alarm creation performance validated" >> $GITHUB_STEP_SUMMARY
@@ -266,7 +266,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [integration-tests, full-integration]
     if: github.event_name == 'pull_request'
-    
+
     steps:
       - name: Download test results
         uses: actions/download-artifact@v4
@@ -281,30 +281,30 @@ jobs:
             const testStatus = '${{ needs.full-integration.result }}';
             const statusEmoji = testStatus === 'success' ? '✅' : 
                                testStatus === 'failure' ? '❌' : '⚠️';
-            
+
             const body = `## 🔗 Integration Test Results
-            
+
             **Status**: ${statusEmoji} ${testStatus}
-            
+
             ### Critical User Flows Tested:
             - 🔄 **Alarm Lifecycle**: Creation → Scheduling → Triggering → Completion
             - 📱 **Offline Sync**: Local operations → Online sync → Conflict resolution
             - 💳 **Premium Upgrade**: Discovery → Payment → Feature unlock
             - 🔔 **Notifications**: Service worker → Background processing → User interaction
             - 🎮 **Gaming System**: Rewards → Battles → Social features → Leaderboards
-            
+
             ### Test Coverage:
             - **Performance**: All critical paths under 3s load time
             - **Error Handling**: Network failures, payment issues, permission denials
             - **Cross-Platform**: Mobile, desktop, online/offline states
             - **Security**: Premium feature access control, data validation
-            
+
             ${testStatus === 'success' ? 
               '🚀 All integration tests passed! Critical user flows are working correctly.' :
               '⚠️ Some integration tests failed. Please check the logs and fix any issues before merging.'
             }
             `;
-            
+
             try {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
@@ -323,7 +323,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule'
     needs: full-integration
-    
+
     steps:
       - name: Create health check issue if tests fail
         uses: actions/github-script@v7
@@ -333,28 +333,28 @@ jobs:
           script: |
             const today = new Date().toISOString().split('T')[0];
             const title = `🚨 Integration Test Health Check Failed - ${today}`;
-            
+
             const body = `## Integration Test Failure Alert
-            
+
             The daily integration test health check has failed.
-            
+
             **Date**: ${today}
             **Workflow**: ${{ github.workflow }}
             **Run ID**: ${{ github.run_id }}
-            
+
             ### Affected Areas:
             - Critical user flows may be broken
             - Integration between services may have issues
             - Performance regressions may have been introduced
-            
+
             ### Action Required:
             1. Review the failed test logs
             2. Identify and fix the root cause
             3. Ensure all integration tests pass before closing this issue
-            
+
             **View Logs**: [Workflow Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
             `;
-            
+
             try {
               await github.rest.issues.create({
                 owner: context.repo.owner,

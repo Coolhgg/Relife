@@ -2,7 +2,8 @@
 
 ## 🚀 Quick Start Integration
 
-This guide will help you integrate the persona-driven UI and analytics tracking system into your Relife alarm app.
+This guide will help you integrate the persona-driven UI and analytics tracking system into your
+Relife alarm app.
 
 ## 📋 Prerequisites
 
@@ -16,12 +17,14 @@ This guide will help you integrate the persona-driven UI and analytics tracking 
 ### Step 1: Database Setup
 
 1. **Run the analytics migration**:
+
 ```bash
 # Connect to your Supabase database and run:
 psql -d your_database < database/analytics-migration.sql
 ```
 
 2. **Verify tables were created**:
+
 ```sql
 -- Check that analytics tables exist
 SELECT table_name FROM information_schema.tables
@@ -43,6 +46,7 @@ bun add @supabase/supabase-js
 ### Step 3: Environment Variables
 
 Add to your `.env` file:
+
 ```bash
 # Analytics Configuration
 ANALYTICS_ENDPOINT=https://your-api.com/api/analytics
@@ -60,6 +64,7 @@ SOCIAL_UTM_SOURCE=relife_social
 ### Step 4: Backend API Integration
 
 1. **Add analytics routes to your Express app**:
+
 ```typescript
 // In your main server file (e.g., server/index.ts)
 import { analyticsRoutes, analyticsMiddleware } from './analytics-api';
@@ -77,6 +82,7 @@ app.get('/api/analytics/reports', analyticsRoutes.generateAnalyticsReport);
 ### Step 5: Frontend Integration
 
 1. **Add PersonaAnalyticsProvider to your App.tsx**:
+
 ```typescript
 // In your src/App.tsx
 import { PersonaAnalyticsProvider } from './analytics/PersonaAnalytics';
@@ -91,6 +97,7 @@ function App() {
 ```
 
 2. **Integrate PersonaDrivenUI component**:
+
 ```typescript
 // In your pricing or main page component
 import { PersonaDrivenUI } from '../components/PersonaDrivenUI';
@@ -116,6 +123,7 @@ const YourComponent = () => {
 ```
 
 3. **Add analytics dashboard to admin panel**:
+
 ```typescript
 // In your admin/dashboard area
 import { PersonaAnalyticsDashboard } from '../components/PersonaAnalyticsDashboard';
@@ -133,18 +141,27 @@ const AdminDashboard = () => {
 ### Step 6: Campaign Tracking Integration
 
 1. **Email campaign tracking**:
+
 ```html
 <!-- Add to email templates -->
-<img src="{{CAMPAIGN_TRACKING_PIXEL}}?campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}&event=opened"
-     width="1" height="1" alt="" style="display:none;" />
+<img
+  src="{{CAMPAIGN_TRACKING_PIXEL}}?campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}&event=opened"
+  width="1"
+  height="1"
+  alt=""
+  style="display:none;"
+/>
 
 <!-- For email links -->
-<a href="{{TRACKING_DOMAIN}}/link?url={{destination_url}}&campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}">
+<a
+  href="{{TRACKING_DOMAIN}}/link?url={{destination_url}}&campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}"
+>
   {{persona_specific_cta}}
 </a>
 ```
 
 2. **Social media UTM tracking**:
+
 ```javascript
 // Generate UTM links for social campaigns
 const generateUTMLink = (persona, campaign, platform) => {
@@ -154,7 +171,7 @@ const generateUTMLink = (persona, campaign, platform) => {
     utm_medium: 'social',
     utm_campaign: campaign,
     utm_content: persona,
-    utm_term: 'persona_driven'
+    utm_term: 'persona_driven',
   });
   return `${baseUrl}?${params.toString()}`;
 };
@@ -163,6 +180,7 @@ const generateUTMLink = (persona, campaign, platform) => {
 ### Step 7: Testing the Integration
 
 1. **Test persona detection**:
+
 ```typescript
 // In browser console or test file
 import { usePersonaAnalytics } from '../analytics/PersonaAnalytics';
@@ -171,15 +189,19 @@ const testAnalytics = () => {
   const analytics = usePersonaAnalytics();
 
   // Test persona detection
-  analytics.trackPersonaDetection('busy_ben', {
-    subscriptionTier: 'free',
-    ageRange: '25-35',
-    usagePatterns: ['morning', 'work_focus'],
-    priceInteraction: 'viewed_premium',
-    featurePreferences: ['custom_sounds', 'calendar_sync'],
-    deviceType: 'desktop',
-    timeOfDay: 'morning'
-  }, 0.85);
+  analytics.trackPersonaDetection(
+    'busy_ben',
+    {
+      subscriptionTier: 'free',
+      ageRange: '25-35',
+      usagePatterns: ['morning', 'work_focus'],
+      priceInteraction: 'viewed_premium',
+      featurePreferences: ['custom_sounds', 'calendar_sync'],
+      deviceType: 'desktop',
+      timeOfDay: 'morning',
+    },
+    0.85
+  );
 
   // Check session summary
   console.log(analytics.getSessionSummary());
@@ -187,6 +209,7 @@ const testAnalytics = () => {
 ```
 
 2. **Verify database entries**:
+
 ```sql
 -- Check if events are being recorded
 SELECT * FROM persona_analytics_events
@@ -203,26 +226,28 @@ ORDER BY count DESC;
 ## 📊 Dashboard Configuration
 
 ### Customizing Chart Colors
+
 ```typescript
 // In PersonaAnalyticsDashboard.tsx, modify PERSONA_COLORS
 const PERSONA_COLORS: Record<UserPersona, string> = {
-  struggling_sam: '#10B981',     // Green - Budget-friendly
-  busy_ben: '#3B82F6',          // Blue - Professional
+  struggling_sam: '#10B981', // Green - Budget-friendly
+  busy_ben: '#3B82F6', // Blue - Professional
   professional_paula: '#8B5CF6', // Purple - Premium
-  enterprise_emma: '#6366F1',    // Indigo - Enterprise
-  student_sarah: '#F59E0B',      // Orange - Student
-  lifetime_larry: '#EAB308'      // Yellow - Lifetime
+  enterprise_emma: '#6366F1', // Indigo - Enterprise
+  student_sarah: '#F59E0B', // Orange - Student
+  lifetime_larry: '#EAB308', // Yellow - Lifetime
 };
 ```
 
 ### Adding Custom Metrics
+
 ```typescript
 // Add custom metrics to dashboard
 const customMetrics = useMemo(() => {
   return {
     averageTimeToConversion: calculateAverageTimeToConversion(analyticsData),
     personaRetentionRate: calculateRetentionRate(analyticsData),
-    topConvertingFeatures: findTopConvertingFeatures(analyticsData)
+    topConvertingFeatures: findTopConvertingFeatures(analyticsData),
   };
 }, [analyticsData]);
 ```
@@ -230,27 +255,29 @@ const customMetrics = useMemo(() => {
 ## 🎯 Campaign Setup Examples
 
 ### Setting up Email Campaigns
+
 ```javascript
 // Email campaign configuration
 const emailCampaigns = {
   struggling_sam_welcome: {
-    subject: "Welcome to Relife - Start Free Today! 🎉",
-    template: "struggling_sam_series_01",
+    subject: 'Welcome to Relife - Start Free Today! 🎉',
+    template: 'struggling_sam_series_01',
     delay_hours: 0,
-    persona_target: "struggling_sam",
-    conversion_goal: "trial_signup"
+    persona_target: 'struggling_sam',
+    conversion_goal: 'trial_signup',
   },
   busy_ben_productivity: {
-    subject: "Save 30 Minutes Every Morning ⏰",
-    template: "busy_ben_series_01",
+    subject: 'Save 30 Minutes Every Morning ⏰',
+    template: 'busy_ben_series_01',
     delay_hours: 24,
-    persona_target: "busy_ben",
-    conversion_goal: "premium_upgrade"
-  }
+    persona_target: 'busy_ben',
+    conversion_goal: 'premium_upgrade',
+  },
 };
 ```
 
 ### Social Media Campaign Tracking
+
 ```javascript
 // Social media campaign setup
 const socialCampaigns = [
@@ -262,8 +289,8 @@ const socialCampaigns = [
     budget: 500,
     target_metrics: {
       ctr: 0.03,
-      conversion_rate: 0.12
-    }
+      conversion_rate: 0.12,
+    },
   },
   {
     platform: 'linkedin',
@@ -273,40 +300,42 @@ const socialCampaigns = [
     budget: 800,
     target_metrics: {
       ctr: 0.04,
-      conversion_rate: 0.18
-    }
-  }
+      conversion_rate: 0.18,
+    },
+  },
 ];
 ```
 
 ## 🔍 Monitoring & Alerts
 
 ### Setting Up Performance Alerts
+
 ```typescript
 // Alert configuration
 const alertRules = {
   lowConversionRate: {
     condition: (metrics) => metrics.conversionRate < 10,
-    message: "Conversion rate below 10% threshold",
-    action: "review_persona_messaging",
-    notify: ["team@relife.com", "#analytics-alerts"]
+    message: 'Conversion rate below 10% threshold',
+    action: 'review_persona_messaging',
+    notify: ['team@relife.com', '#analytics-alerts'],
   },
   highPersonaConfidence: {
     condition: (metrics) => metrics.avgConfidence > 95,
-    message: "Persona detection confidence very high",
-    action: "consider_persona_expansion",
-    notify: ["team@relife.com"]
+    message: 'Persona detection confidence very high',
+    action: 'consider_persona_expansion',
+    notify: ['team@relife.com'],
   },
   campaignUnderperforming: {
     condition: (campaign) => campaign.ctr < 0.02,
     message: `Campaign ${campaign.id} underperforming`,
-    action: "review_creative_assets",
-    notify: ["marketing@relife.com"]
-  }
+    action: 'review_creative_assets',
+    notify: ['marketing@relife.com'],
+  },
 };
 ```
 
 ### Creating Automated Reports
+
 ```javascript
 // Schedule weekly reports
 const scheduleWeeklyReport = () => {
@@ -315,7 +344,7 @@ const scheduleWeeklyReport = () => {
       timeRange: '7d',
       format: 'json',
       includePersonas: 'all',
-      includeCampaigns: true
+      includeCampaigns: true,
     });
 
     await sendReportEmail(report, ['team@relife.com']);
@@ -326,6 +355,7 @@ const scheduleWeeklyReport = () => {
 ## 📈 Advanced Analytics Features
 
 ### A/B Testing Integration
+
 ```typescript
 // A/B test persona variations
 const runPersonaABTest = async (userId: string) => {
@@ -334,12 +364,13 @@ const runPersonaABTest = async (userId: string) => {
 
   analytics.trackPersonaDetection(persona, detectionData, confidence, {
     abTestVariant: variant,
-    testName: 'persona_ui_v2_test'
+    testName: 'persona_ui_v2_test',
   });
 };
 ```
 
 ### Cohort Analysis Setup
+
 ```sql
 -- Create cohort analysis view
 CREATE VIEW persona_cohort_analysis AS
@@ -369,6 +400,7 @@ ORDER BY cohort_week DESC, persona;
 ### Common Issues & Solutions
 
 **1. Analytics events not appearing in dashboard**
+
 ```bash
 # Check API endpoint connectivity
 curl -X POST http://localhost:3000/api/analytics/persona-events \
@@ -377,21 +409,25 @@ curl -X POST http://localhost:3000/api/analytics/persona-events \
 ```
 
 **2. Database connection errors**
+
 - Verify Supabase credentials in environment variables
 - Check if analytics tables exist with proper permissions
 - Confirm Supabase RLS policies allow inserts/selects
 
 **3. Dashboard not loading data**
+
 - Verify React components have proper imports
 - Check browser console for JavaScript errors
 - Confirm API endpoints are returning data
 
 **4. Persona detection not working**
+
 - Check if PersonaAnalyticsProvider is properly wrapped around components
 - Verify usePersonaAnalytics hook is being called correctly
 - Check browser network tab for failed API calls
 
 ### Debug Mode
+
 ```typescript
 // Enable debug logging
 localStorage.setItem('ANALYTICS_DEBUG', 'true');
@@ -404,21 +440,26 @@ console.log('Analytics Status:', analytics.getSessionSummary());
 ## 🎯 Success Metrics & KPIs
 
 ### Week 1 Goals
+
 - [ ] Persona detection accuracy > 80%
 - [ ] Analytics events flowing to database
 - [ ] Dashboard displaying real-time data
 - [ ] At least 3 campaigns actively tracked
 
 ### Month 1 Goals
+
 - [ ] Conversion rate improvement of 15%+
 - [ ] Persona-specific CTRs above baseline
 - [ ] Campaign ROI tracking operational
 - [ ] Automated weekly reports generated
 
 ### Quarter 1 Goals
+
 - [ ] 25%+ improvement in user conversion
 - [ ] Persona stability score > 90%
 - [ ] All marketing channels tracked
 - [ ] Predictive analytics implemented
 
-This integration guide should get your persona-driven analytics system up and running effectively. The combination of persona detection, targeted UI/UX, and comprehensive analytics tracking will provide powerful insights for optimizing user conversion and retention! 🚀
+This integration guide should get your persona-driven analytics system up and running effectively.
+The combination of persona detection, targeted UI/UX, and comprehensive analytics tracking will
+provide powerful insights for optimizing user conversion and retention! 🚀

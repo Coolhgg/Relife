@@ -140,7 +140,8 @@ describe('Alarm Functionality E2E Tests', () => {
       await element(by.id('save-alarm-button')).tap();
 
       // Wait for notification (with extended timeout)
-      const notificationReceived = await mobileE2EHelpers.waitForAlarmNotification(45000);
+      const notificationReceived =
+        await mobileE2EHelpers.waitForAlarmNotification(45000);
       expect(notificationReceived).toBe(true);
 
       console.log('✅ Alarm notification test passed');
@@ -252,7 +253,8 @@ describe('Alarm Functionality E2E Tests', () => {
       await mobileE2EHelpers.scheduleTestAlarm('Accuracy Test', 1);
 
       // Wait for notification with precise timing
-      const notificationReceived = await mobileE2EHelpers.waitForAlarmNotification(65000);
+      const notificationReceived =
+        await mobileE2EHelpers.waitForAlarmNotification(65000);
       const endTime = Date.now();
 
       const timeDiff = endTime - startTime;
@@ -274,14 +276,15 @@ describe('Alarm Functionality E2E Tests', () => {
         await element(by.id('save-alarm-button')).tap(); // Save without required fields
 
         // Should show error message
-        await expect(element(by.text('Please fill in all required fields'))).toBeVisible();
+        await expect(
+          element(by.text('Please fill in all required fields'))
+        ).toBeVisible();
 
         // Should allow correction
         await element(by.id('alarm-title-input')).typeText('Recovery Test');
         await element(by.id('save-alarm-button')).tap();
 
         await mobileE2EHelpers.verifyAlarmInList('Recovery Test');
-
       } catch (error) {
         console.log('Expected error during recovery test:', error);
       }

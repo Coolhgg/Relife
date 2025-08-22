@@ -48,7 +48,7 @@ class SecurityService {
 
     if (!deviceKey) {
       // Generate a new device-specific key
-      deviceKey = CryptoJS.lib.WordArray.random(256/8).toString();
+      deviceKey = CryptoJS.lib.WordArray.random(256 / 8).toString();
       localStorage.setItem(`${this.STORAGE_PREFIX}device_key`, deviceKey);
     }
 
@@ -74,9 +74,9 @@ class SecurityService {
    */
   private deriveKey(password: string, salt: string): string {
     return CryptoJS.PBKDF2(password, salt, {
-      keySize: 256/32,
+      keySize: 256 / 32,
       iterations: this.KEY_ITERATIONS,
-      hasher: CryptoJS.algo.SHA256
+      hasher: CryptoJS.algo.SHA256,
     }).toString();
   }
 
@@ -98,7 +98,7 @@ class SecurityService {
       const encrypted = CryptoJS.AES.encrypt(dataString, key, {
         iv: CryptoJS.enc.Hex.parse(iv),
         mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
+        padding: CryptoJS.pad.Pkcs7,
       });
 
       // Combine salt + iv + encrypted data
@@ -106,7 +106,7 @@ class SecurityService {
         salt,
         iv,
         data: encrypted.toString(),
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       return btoa(JSON.stringify(result)); // Base64 encode the result
@@ -133,7 +133,7 @@ class SecurityService {
       const decrypted = CryptoJS.AES.decrypt(data, key, {
         iv: CryptoJS.enc.Hex.parse(iv),
         mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
+        padding: CryptoJS.pad.Pkcs7,
       });
 
       const decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
@@ -211,18 +211,21 @@ class SecurityService {
       ALLOWED_ATTR: [],
       KEEP_CONTENT: true, // Keep text content, remove tags
       SANITIZE_NAMED_PROPS: true,
-      SANITIZE_DOM: true
+      SANITIZE_DOM: true,
     });
   }
 
   /**
    * Advanced input sanitization with custom rules
    */
-  sanitizeInput(input: string, options?: {
-    allowBasicFormatting?: boolean;
-    maxLength?: number;
-    stripEmoji?: boolean;
-  }): string {
+  sanitizeInput(
+    input: string,
+    options?: {
+      allowBasicFormatting?: boolean;
+      maxLength?: number;
+      stripEmoji?: boolean;
+    }
+  ): string {
     if (typeof input !== 'string') {
       return '';
     }
@@ -231,7 +234,7 @@ class SecurityService {
       allowBasicFormatting: false,
       maxLength: 1000,
       stripEmoji: false,
-      ...options
+      ...options,
     };
 
     let sanitized = input.trim();
@@ -247,19 +250,22 @@ class SecurityService {
       sanitized = DOMPurify.sanitize(sanitized, {
         ALLOWED_TAGS: ['b', 'i', 'em', 'strong'],
         ALLOWED_ATTR: [],
-        KEEP_CONTENT: true
+        KEEP_CONTENT: true,
       });
     } else {
       sanitized = DOMPurify.sanitize(sanitized, {
         ALLOWED_TAGS: [],
         ALLOWED_ATTR: [],
-        KEEP_CONTENT: true
+        KEEP_CONTENT: true,
       });
     }
 
     // Remove emoji if requested
     if (opts.stripEmoji) {
-      sanitized = sanitized.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
+      sanitized = sanitized.replace(
+        /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu,
+        ''
+      );
     }
 
     // Normalize whitespace
@@ -282,14 +288,14 @@ class SecurityService {
         score: 0,
         feedback: {
           warning: 'Password is required',
-          suggestions: ['Enter a password']
+          suggestions: ['Enter a password'],
         },
         crack_times_display: {
           offline_slow_hashing_1e4_per_second: 'instantly',
           offline_fast_hashing_1e10_per_second: 'instantly',
           online_no_throttling_10_per_second: 'instantly',
-          online_throttling_100_per_hour: 'instantly'
-        }
+          online_throttling_100_per_hour: 'instantly',
+        },
       };
     }
 
@@ -297,7 +303,7 @@ class SecurityService {
     return {
       score: result.score,
       feedback: result.feedback,
-      crack_times_display: result.crack_times_display
+      crack_times_display: result.crack_times_display,
     };
   }
 
@@ -307,7 +313,7 @@ class SecurityService {
   validatePasswordSecurity(password: string): {
     isValid: boolean;
     errors: string[];
-    strength: PasswordStrength
+    strength: PasswordStrength;
   } {
     const errors: string[] = [];
     const strength = this.checkPasswordStrength(password);
@@ -347,7 +353,7 @@ class SecurityService {
     return {
       isValid: errors.length === 0,
       errors,
-      strength
+      strength,
     };
   }
 
@@ -355,7 +361,8 @@ class SecurityService {
    * Generate secure random password
    */
   generateSecurePassword(length = 16): string {
-    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+    const charset =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
     const array = new Uint8Array(length);
     crypto.getRandomValues(array);
 
@@ -378,7 +385,7 @@ class SecurityService {
    * Generate CSRF token
    */
   generateCSRFToken(): string {
-    return CryptoJS.lib.WordArray.random(256/8).toString();
+    return CryptoJS.lib.WordArray.random(256 / 8).toString();
   }
 
   /**
@@ -389,8 +396,10 @@ class SecurityService {
       return false;
     }
     // Use constant-time comparison to prevent timing attacks
-    return CryptoJS.enc.Hex.stringify(CryptoJS.SHA256(token)) ===
-           CryptoJS.enc.Hex.stringify(CryptoJS.SHA256(expectedToken));
+    return (
+      CryptoJS.enc.Hex.stringify(CryptoJS.SHA256(token)) ===
+      CryptoJS.enc.Hex.stringify(CryptoJS.SHA256(expectedToken))
+    );
   }
 
   /**

@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /**
  * User Authentication Flow Integration Tests
- * 
+ *
  * Comprehensive end-to-end tests for user authentication and profile management:
  * - User registration and email verification
  * - Login with various scenarios (success, failure, rate limiting)
@@ -13,7 +13,16 @@
  * - Logout and cleanup
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -30,7 +39,7 @@ import AnalyticsService from '../../src/services/analytics';
 import {
   integrationTestHelpers,
   serviceWorkerHelpers,
-  permissionHelpers
+  permissionHelpers,
 } from '../utils/integration-test-setup';
 
 import { createMockUser, measurePerformance } from '../utils/test-mocks';
@@ -46,7 +55,7 @@ vi.mock('../../src/services/error-handler');
 describe('User Authentication Flow Integration', () => {
   let container: HTMLElement;
   let user: ReturnType<typeof userEvent.setup>;
-  
+
   // Service instances
   let analyticsService: AppAnalyticsService;
   let securityService: typeof SecurityService;
@@ -58,11 +67,11 @@ describe('User Authentication Flow Integration', () => {
 
   beforeEach(async () => {
     user = userEvent.setup();
-    
+
     // Reset all mocks
     vi.clearAllMocks();
     vi.useRealTimers();
-    
+
     // Mock service instances
     analyticsService = AppAnalyticsService.getInstance();
     securityService = SecurityService;
@@ -70,20 +79,20 @@ describe('User Authentication Flow Integration', () => {
     // Mock initial state - no authenticated user
     vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(null);
     vi.mocked(SupabaseService.getSession).mockResolvedValue(null);
-    
+
     // Mock analytics
     vi.mocked(analyticsService.trackUserSignIn).mockImplementation(() => {});
     vi.mocked(analyticsService.trackUserSignUp).mockImplementation(() => {});
     vi.mocked(analyticsService.trackUserSignOut).mockImplementation(() => {});
     vi.mocked(analyticsService.trackProfileUpdate).mockImplementation(() => {});
-    
+
     // Mock security service
     vi.mocked(securityService.generateCSRFToken).mockReturnValue('csrf-token-123');
     vi.mocked(securityService.validateCSRFToken).mockReturnValue(true);
     vi.mocked(securityService.checkRateLimit).mockReturnValue({
       allowed: true,
       remaining: 5,
-      resetTime: new Date(Date.now() + 60000)
+      resetTime: new Date(Date.now() + 60000),
     });
   });
 
@@ -102,8 +111,8 @@ describe('User Authentication Flow Integration', () => {
 
   describe('User Registration Flow', () => {
     it('should complete full user registration with email verification', async () => {
-      const performanceMeasures: {[key: string]: number} = {};
-      
+      const performanceMeasures: { [key: string]: number } = {};
+
       // Step 1: Load app in unauthenticated state
       const appLoadTime = await measurePerformance(async () => {
         await act(async () => {
@@ -115,7 +124,7 @@ describe('User Authentication Flow Integration', () => {
           container = result.container;
         });
       });
-      
+
       performanceMeasures.appLoad = appLoadTime;
       expect(appLoadTime).toBeLessThan(3000);
 
@@ -129,14 +138,16 @@ describe('User Authentication Flow Integration', () => {
 
       // Step 3: Fill registration form
       await waitFor(() => {
-        expect(screen.getByRole('form', { name: /sign up|register/i })).toBeInTheDocument();
+        expect(
+          screen.getByRole('form', { name: /sign up|register/i })
+        ).toBeInTheDocument();
       });
 
       const registrationData = {
         name: 'Test User Registration',
         email: 'test.registration@example.com',
         password: 'SecurePassword123!',
-        confirmPassword: 'SecurePassword123!'
+        confirmPassword: 'SecurePassword123!',
       };
 
       const nameInput = screen.getByLabelText(/name/i);
@@ -157,27 +168,31 @@ describe('User Authentication Flow Integration', () => {
         email: registrationData.email,
         name: registrationData.name,
         emailVerified: false,
-        createdAt: new Date()
+        createdAt: new Date(),
       });
 
       vi.mocked(SupabaseService.signUp).mockResolvedValueOnce({
         user: mockNewUser,
         session: null, // No session until email verification
-        error: null
+        error: null,
       });
 
-      const submitButton = screen.getByRole('button', { name: /create account|sign up/i });
-      
+      const submitButton = screen.getByRole('button', {
+        name: /create account|sign up/i,
+      });
+
       const registrationTime = await measurePerformance(async () => {
         await user.click(submitButton);
       });
-      
+
       performanceMeasures.registration = registrationTime;
       expect(registrationTime).toBeLessThan(2000);
 
       // Step 5: Verify registration success and email verification prompt
       await waitFor(() => {
-        expect(screen.getByText(/check.*email|verification.*sent/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/check.*email|verification.*sent/i)
+        ).toBeInTheDocument();
       });
 
       expect(SupabaseService.signUp).toHaveBeenCalledWith(
@@ -190,7 +205,7 @@ describe('User Authentication Flow Integration', () => {
         userId: 'new-user-123',
         email: registrationData.email,
         method: 'email',
-        timestamp: expect.any(Date)
+        timestamp: expect.any(Date),
       });
 
       // Step 6: Simulate email verification
@@ -198,22 +213,26 @@ describe('User Authentication Flow Integration', () => {
       const verifiedUser = {
         ...mockNewUser,
         emailVerified: true,
-        id: 'new-user-123'
+        id: 'new-user-123',
       };
 
       vi.mocked(SupabaseService.verifyEmail).mockResolvedValueOnce({
         user: verifiedUser,
-        error: null
+        error: null,
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(verifiedUser);
 
       // Simulate clicking email verification link
-      const verifyEmailButton = screen.getByRole('button', { name: /resend.*email|verify/i });
+      const verifyEmailButton = screen.getByRole('button', {
+        name: /resend.*email|verify/i,
+      });
       await user.click(verifyEmailButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/email.*verified|verification.*complete/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/email.*verified|verification.*complete/i)
+        ).toBeInTheDocument();
       });
 
       // Step 7: Verify user is now authenticated and redirected
@@ -250,7 +269,9 @@ describe('User Authentication Flow Integration', () => {
 
       // Should show validation errors
       await waitFor(() => {
-        expect(screen.getByText(/password.*weak|password.*strength/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/password.*weak|password.*strength/i)
+        ).toBeInTheDocument();
         expect(screen.getByText(/password.*match/i)).toBeInTheDocument();
       });
 
@@ -258,7 +279,7 @@ describe('User Authentication Flow Integration', () => {
       vi.mocked(SupabaseService.signUp).mockResolvedValueOnce({
         user: null,
         session: null,
-        error: 'User already registered'
+        error: 'User already registered',
       });
 
       const emailInput = screen.getByLabelText(/email/i);
@@ -271,11 +292,15 @@ describe('User Authentication Flow Integration', () => {
       await user.clear(confirmPasswordInput);
       await user.type(confirmPasswordInput, 'ValidPassword123!');
 
-      const submitButton = screen.getByRole('button', { name: /create account|sign up/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create account|sign up/i,
+      });
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/already.*registered|user.*exists/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/already.*registered|user.*exists/i)
+        ).toBeInTheDocument();
       });
     });
   });
@@ -286,7 +311,7 @@ describe('User Authentication Flow Integration', () => {
         id: 'login-user-789',
         email: 'login.test@example.com',
         name: 'Login Test User',
-        emailVerified: true
+        emailVerified: true,
       });
 
       await act(async () => {
@@ -308,12 +333,14 @@ describe('User Authentication Flow Integration', () => {
 
       // Step 2: Fill login form
       await waitFor(() => {
-        expect(screen.getByRole('form', { name: /sign in|login/i })).toBeInTheDocument();
+        expect(
+          screen.getByRole('form', { name: /sign in|login/i })
+        ).toBeInTheDocument();
       });
 
       const loginData = {
         email: 'login.test@example.com',
-        password: 'LoginPassword123!'
+        password: 'LoginPassword123!',
       };
 
       const emailInput = screen.getByLabelText(/email/i);
@@ -326,30 +353,33 @@ describe('User Authentication Flow Integration', () => {
       const mockSession = {
         access_token: 'access-token-abc123',
         refresh_token: 'refresh-token-def456',
-        expires_at: Date.now() + (60 * 60 * 1000), // 1 hour
-        user: mockUser
+        expires_at: Date.now() + 60 * 60 * 1000, // 1 hour
+        user: mockUser,
       };
 
       vi.mocked(SupabaseService.signIn).mockResolvedValueOnce({
         user: mockUser,
         session: mockSession,
-        error: null
+        error: null,
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
 
       const submitButton = screen.getByRole('button', { name: /sign in|login/i });
-      
+
       const loginTime = await measurePerformance(async () => {
         await user.click(submitButton);
       });
-      
+
       expect(loginTime).toBeLessThan(2000);
 
       // Step 4: Verify successful authentication
-      await waitFor(() => {
-        expect(screen.getByText(/dashboard|welcome/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          expect(screen.getByText(/dashboard|welcome/i)).toBeInTheDocument();
+        },
+        { timeout: 5000 }
+      );
 
       expect(SupabaseService.signIn).toHaveBeenCalledWith(
         loginData.email,
@@ -359,7 +389,7 @@ describe('User Authentication Flow Integration', () => {
       expect(analyticsService.trackUserSignIn).toHaveBeenCalledWith({
         userId: 'login-user-789',
         method: 'email',
-        timestamp: expect.any(Date)
+        timestamp: expect.any(Date),
       });
 
       // Step 5: Verify session persistence in localStorage
@@ -384,7 +414,7 @@ describe('User Authentication Flow Integration', () => {
       vi.mocked(SupabaseService.signIn).mockResolvedValueOnce({
         user: null,
         session: null,
-        error: 'Invalid email or password'
+        error: 'Invalid email or password',
       });
 
       const emailInput = screen.getByLabelText(/email/i);
@@ -398,20 +428,24 @@ describe('User Authentication Flow Integration', () => {
 
       // Should show error message
       await waitFor(() => {
-        expect(screen.getByText(/invalid.*credentials|email.*password.*incorrect/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/invalid.*credentials|email.*password.*incorrect/i)
+        ).toBeInTheDocument();
       });
 
       // Test rate limiting after multiple failed attempts
       vi.mocked(securityService.checkRateLimit).mockReturnValueOnce({
         allowed: false,
         remaining: 0,
-        resetTime: new Date(Date.now() + 300000) // 5 minutes
+        resetTime: new Date(Date.now() + 300000), // 5 minutes
       });
 
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/too.*many.*attempts|rate.*limit/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/too.*many.*attempts|rate.*limit/i)
+        ).toBeInTheDocument();
         expect(submitButton).toBeDisabled();
       });
 
@@ -427,19 +461,19 @@ describe('User Authentication Flow Integration', () => {
     it('should persist session across browser refreshes', async () => {
       const mockUser = createMockUser({
         id: 'session-user-456',
-        email: 'session.test@example.com'
+        email: 'session.test@example.com',
       });
 
       const mockSession = {
         access_token: 'access-token-session123',
         refresh_token: 'refresh-token-session456',
-        expires_at: Date.now() + (60 * 60 * 1000),
-        user: mockUser
+        expires_at: Date.now() + 60 * 60 * 1000,
+        user: mockUser,
       };
 
       // Mock existing session in localStorage
       localStorage.setItem('supabase.auth.token', JSON.stringify(mockSession));
-      
+
       vi.mocked(SupabaseService.getSession).mockResolvedValue(mockSession);
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
 
@@ -464,7 +498,7 @@ describe('User Authentication Flow Integration', () => {
     it('should handle session refresh when token expires', async () => {
       const mockUser = createMockUser({
         id: 'refresh-user-789',
-        email: 'refresh.test@example.com'
+        email: 'refresh.test@example.com',
       });
 
       // Mock expired session
@@ -472,11 +506,11 @@ describe('User Authentication Flow Integration', () => {
         access_token: 'expired-token-123',
         refresh_token: 'refresh-token-valid456',
         expires_at: Date.now() - 1000, // Expired 1 second ago
-        user: mockUser
+        user: mockUser,
       };
 
       localStorage.setItem('supabase.auth.token', JSON.stringify(expiredSession));
-      
+
       vi.mocked(SupabaseService.getSession).mockResolvedValue(expiredSession);
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
 
@@ -484,13 +518,13 @@ describe('User Authentication Flow Integration', () => {
       const refreshedSession = {
         access_token: 'new-access-token-789',
         refresh_token: 'new-refresh-token-012',
-        expires_at: Date.now() + (60 * 60 * 1000),
-        user: mockUser
+        expires_at: Date.now() + 60 * 60 * 1000,
+        user: mockUser,
       };
 
       vi.mocked(SupabaseService.refreshSession).mockResolvedValueOnce({
         session: refreshedSession,
-        error: null
+        error: null,
       });
 
       await act(async () => {
@@ -522,10 +556,10 @@ describe('User Authentication Flow Integration', () => {
 
     it('should handle session timeout due to inactivity', async () => {
       vi.useFakeTimers();
-      
+
       const mockUser = createMockUser({
         id: 'timeout-user-123',
-        email: 'timeout.test@example.com'
+        email: 'timeout.test@example.com',
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
@@ -550,7 +584,9 @@ describe('User Authentication Flow Integration', () => {
 
       // Should show session timeout warning
       await waitFor(() => {
-        expect(screen.getByText(/session.*expired|timeout|please.*sign.*in/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/session.*expired|timeout|please.*sign.*in/i)
+        ).toBeInTheDocument();
       });
 
       // Should redirect to login
@@ -568,7 +604,7 @@ describe('User Authentication Flow Integration', () => {
         id: 'profile-user-456',
         email: 'profile.test@example.com',
         name: 'Original Name',
-        avatar: null
+        avatar: null,
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
@@ -587,11 +623,15 @@ describe('User Authentication Flow Integration', () => {
       });
 
       // Navigate to profile settings
-      const profileButton = screen.getByRole('button', { name: /profile|account|settings/i });
+      const profileButton = screen.getByRole('button', {
+        name: /profile|account|settings/i,
+      });
       await user.click(profileButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/profile.*settings|edit.*profile/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/profile.*settings|edit.*profile/i)
+        ).toBeInTheDocument();
       });
 
       // Update profile information
@@ -609,12 +649,12 @@ describe('User Authentication Flow Integration', () => {
         ...mockUser,
         name: 'Updated Profile Name',
         bio: 'Updated bio information',
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       vi.mocked(SupabaseService.updateUserProfile).mockResolvedValueOnce({
         user: updatedUser,
-        error: null
+        error: null,
       });
 
       const saveButton = screen.getByRole('button', { name: /save|update/i });
@@ -622,28 +662,30 @@ describe('User Authentication Flow Integration', () => {
 
       // Verify update success
       await waitFor(() => {
-        expect(screen.getByText(/profile.*updated|changes.*saved/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/profile.*updated|changes.*saved/i)
+        ).toBeInTheDocument();
       });
 
       expect(SupabaseService.updateUserProfile).toHaveBeenCalledWith(
         'profile-user-456',
         expect.objectContaining({
           name: 'Updated Profile Name',
-          bio: 'Updated bio information'
+          bio: 'Updated bio information',
         })
       );
 
       expect(analyticsService.trackProfileUpdate).toHaveBeenCalledWith({
         userId: 'profile-user-456',
         fields: ['name', 'bio'],
-        timestamp: expect.any(Date)
+        timestamp: expect.any(Date),
       });
     });
 
     it('should handle password change with security validation', async () => {
       const mockUser = createMockUser({
         id: 'password-user-789',
-        email: 'password.test@example.com'
+        email: 'password.test@example.com',
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
@@ -679,14 +721,18 @@ describe('User Authentication Flow Integration', () => {
       // Mock successful password change
       vi.mocked(SupabaseService.updatePassword).mockResolvedValueOnce({
         success: true,
-        error: null
+        error: null,
       });
 
-      const changePasswordButton = screen.getByRole('button', { name: /change.*password|update.*password/i });
+      const changePasswordButton = screen.getByRole('button', {
+        name: /change.*password|update.*password/i,
+      });
       await user.click(changePasswordButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/password.*updated|password.*changed/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/password.*updated|password.*changed/i)
+        ).toBeInTheDocument();
       });
 
       expect(SupabaseService.updatePassword).toHaveBeenCalledWith(
@@ -700,7 +746,7 @@ describe('User Authentication Flow Integration', () => {
     it('should synchronize login state across tabs', async () => {
       const mockUser = createMockUser({
         id: 'multitab-user-123',
-        email: 'multitab.test@example.com'
+        email: 'multitab.test@example.com',
       });
 
       // Render first tab
@@ -721,8 +767,8 @@ describe('User Authentication Flow Integration', () => {
       const mockSession = {
         access_token: 'multitab-access-token',
         refresh_token: 'multitab-refresh-token',
-        expires_at: Date.now() + (60 * 60 * 1000),
-        user: mockUser
+        expires_at: Date.now() + 60 * 60 * 1000,
+        user: mockUser,
       };
 
       localStorage.setItem('supabase.auth.token', JSON.stringify(mockSession));
@@ -730,10 +776,12 @@ describe('User Authentication Flow Integration', () => {
 
       // Simulate storage event from another tab
       await act(async () => {
-        window.dispatchEvent(new StorageEvent('storage', {
-          key: 'supabase.auth.token',
-          newValue: JSON.stringify(mockSession)
-        }));
+        window.dispatchEvent(
+          new StorageEvent('storage', {
+            key: 'supabase.auth.token',
+            newValue: JSON.stringify(mockSession),
+          })
+        );
       });
 
       // Current tab should automatically authenticate
@@ -745,7 +793,7 @@ describe('User Authentication Flow Integration', () => {
     it('should synchronize logout across tabs', async () => {
       const mockUser = createMockUser({
         id: 'logout-sync-user-456',
-        email: 'logout.sync@example.com'
+        email: 'logout.sync@example.com',
       });
 
       // Start with authenticated user
@@ -769,10 +817,12 @@ describe('User Authentication Flow Integration', () => {
       localStorage.removeItem('supabase.auth.token');
 
       await act(async () => {
-        window.dispatchEvent(new StorageEvent('storage', {
-          key: 'supabase.auth.token',
-          newValue: null
-        }));
+        window.dispatchEvent(
+          new StorageEvent('storage', {
+            key: 'supabase.auth.token',
+            newValue: null,
+          })
+        );
       });
 
       // Should redirect to login
@@ -798,7 +848,9 @@ describe('User Authentication Flow Integration', () => {
       await user.click(forgotPasswordLink);
 
       await waitFor(() => {
-        expect(screen.getByRole('form', { name: /reset.*password|forgot.*password/i })).toBeInTheDocument();
+        expect(
+          screen.getByRole('form', { name: /reset.*password|forgot.*password/i })
+        ).toBeInTheDocument();
       });
 
       const emailInput = screen.getByLabelText(/email/i);
@@ -806,17 +858,21 @@ describe('User Authentication Flow Integration', () => {
 
       vi.mocked(SupabaseService.resetPassword).mockResolvedValueOnce({
         success: true,
-        error: null
+        error: null,
       });
 
-      const resetButton = screen.getByRole('button', { name: /send.*reset|reset.*password/i });
+      const resetButton = screen.getByRole('button', {
+        name: /send.*reset|reset.*password/i,
+      });
       await user.click(resetButton);
 
       await waitFor(() => {
         expect(screen.getByText(/check.*email|reset.*link.*sent/i)).toBeInTheDocument();
       });
 
-      expect(SupabaseService.resetPassword).toHaveBeenCalledWith('reset.test@example.com');
+      expect(SupabaseService.resetPassword).toHaveBeenCalledWith(
+        'reset.test@example.com'
+      );
     });
   });
 
@@ -824,7 +880,7 @@ describe('User Authentication Flow Integration', () => {
     it('should properly clean up user session and data on logout', async () => {
       const mockUser = createMockUser({
         id: 'logout-user-789',
-        email: 'logout.test@example.com'
+        email: 'logout.test@example.com',
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
@@ -844,10 +900,10 @@ describe('User Authentication Flow Integration', () => {
 
       // Perform logout
       const logoutButton = screen.getByRole('button', { name: /logout|sign out/i });
-      
+
       vi.mocked(SupabaseService.signOut).mockResolvedValueOnce({
         success: true,
-        error: null
+        error: null,
       });
 
       await user.click(logoutButton);
@@ -856,7 +912,7 @@ describe('User Authentication Flow Integration', () => {
       expect(SupabaseService.signOut).toHaveBeenCalled();
       expect(analyticsService.trackUserSignOut).toHaveBeenCalledWith({
         userId: 'logout-user-789',
-        timestamp: expect.any(Date)
+        timestamp: expect.any(Date),
       });
 
       // Should redirect to login
@@ -866,13 +922,13 @@ describe('User Authentication Flow Integration', () => {
 
       // Verify session cleanup
       expect(localStorage.getItem('supabase.auth.token')).toBeNull();
-      
+
       // Verify service worker cleanup
       const registrations = serviceWorkerHelpers.getRegistrations();
       registrations.forEach(registration => {
         expect(registration.active?.postMessage).toHaveBeenCalledWith({
           type: 'USER_LOGGED_OUT',
-          data: { userId: 'logout-user-789' }
+          data: { userId: 'logout-user-789' },
         });
       });
     });

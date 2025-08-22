@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   visualAlarmThemes,
   VisualAlarmThemeId,
-  VisualAlarmTheme
+  VisualAlarmTheme,
 } from '../services/visual-alarm-themes';
 import { soundEffectsService, SoundTheme } from '../services/sound-effects';
 import { VoiceMood } from '../types';
@@ -43,9 +43,11 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
   onVisualThemeChange,
   onSoundThemeChange,
   onVoiceMoodChange,
-  className = ''
+  className = '',
 }) => {
-  const [activeTab, setActiveTab] = useState<'visual' | 'sound' | 'voice' | 'combinations'>('combinations');
+  const [activeTab, setActiveTab] = useState<
+    'visual' | 'sound' | 'voice' | 'combinations'
+  >('combinations');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
@@ -58,8 +60,16 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
   const visualThemes = visualAlarmThemes.getAllThemes();
   const soundThemes = soundEffectsService.getAvailableThemes();
   const voiceMoods: VoiceMood[] = [
-    'drill-sergeant', 'sweet-angel', 'anime-hero', 'savage-roast',
-    'motivational', 'gentle', 'demon-lord', 'ai-robot', 'comedian', 'philosopher'
+    'drill-sergeant',
+    'sweet-angel',
+    'anime-hero',
+    'savage-roast',
+    'motivational',
+    'gentle',
+    'demon-lord',
+    'ai-robot',
+    'comedian',
+    'philosopher',
   ];
 
   // Predefined theme combinations
@@ -72,7 +82,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
       sound: 'nature',
       voice: 'sweet-angel',
       category: 'gentle',
-      popularity: 95
+      popularity: 95,
     },
     {
       id: 'energy_boost',
@@ -82,7 +92,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
       sound: 'electronic',
       voice: 'motivational',
       category: 'energetic',
-      popularity: 88
+      popularity: 88,
     },
     {
       id: 'forest_zen',
@@ -92,7 +102,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
       sound: 'nature',
       voice: 'gentle',
       category: 'nature',
-      popularity: 92
+      popularity: 92,
     },
     {
       id: 'cyberpunk_alarm',
@@ -103,7 +113,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
       voice: 'ai-robot',
       category: 'futuristic',
       premium: true,
-      popularity: 78
+      popularity: 78,
     },
     {
       id: 'space_journey',
@@ -113,7 +123,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
       sound: 'ambient',
       voice: 'gentle',
       category: 'cosmic',
-      popularity: 85
+      popularity: 85,
     },
     {
       id: 'drill_sergeant',
@@ -123,7 +133,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
       sound: 'energetic',
       voice: 'drill-sergeant',
       category: 'intense',
-      popularity: 72
+      popularity: 72,
     },
     {
       id: 'anime_hero',
@@ -133,7 +143,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
       sound: 'electronic',
       voice: 'anime-hero',
       category: 'anime',
-      popularity: 80
+      popularity: 80,
     },
     {
       id: 'horror_nightmare',
@@ -144,7 +154,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
       voice: 'demon-lord',
       category: 'horror',
       premium: true,
-      popularity: 45
+      popularity: 45,
     },
     {
       id: 'workout_pump',
@@ -154,7 +164,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
       sound: 'workout',
       voice: 'motivational',
       category: 'workout',
-      popularity: 87
+      popularity: 87,
     },
     {
       id: 'meditation_flow',
@@ -164,23 +174,28 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
       sound: 'meditation',
       voice: 'gentle',
       category: 'meditation',
-      popularity: 91
-    }
+      popularity: 91,
+    },
   ];
 
   // Filter combinations based on search and category
   const filteredCombinations = themeCombinations.filter(combo => {
-    const matchesSearch = searchQuery === '' ||
+    const matchesSearch =
+      searchQuery === '' ||
       combo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       combo.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesCategory = selectedCategory === 'all' || combo.category === selectedCategory;
+    const matchesCategory =
+      selectedCategory === 'all' || combo.category === selectedCategory;
 
     return matchesSearch && matchesCategory;
   });
 
   // Get unique categories
-  const categories = ['all', ...Array.from(new Set(themeCombinations.map(c => c.category)))];
+  const categories = [
+    'all',
+    ...Array.from(new Set(themeCombinations.map(c => c.category))),
+  ];
 
   // Preview theme
   const handlePreviewTheme = (themeId: VisualAlarmThemeId) => {
@@ -252,7 +267,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
             { id: 'combinations', label: 'Combinations', icon: Star },
             { id: 'visual', label: 'Visual', icon: Eye },
             { id: 'sound', label: 'Sound', icon: Volume2 },
-            { id: 'voice', label: 'Voice', icon: Play }
+            { id: 'voice', label: 'Voice', icon: Play },
           ].map(tab => {
             const Icon = tab.icon;
             return (
@@ -260,9 +275,10 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors
-                  ${activeTab === tab.id
-                    ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                  ${
+                    activeTab === tab.id
+                      ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                   }`}
               >
                 <Icon className="w-4 h-4" />
@@ -312,7 +328,9 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                       ${favorites.has(combination.id) ? 'text-red-500' : 'text-gray-400 hover:text-red-500'}
                     `}
                   >
-                    <Heart className={`w-4 h-4 ${favorites.has(combination.id) ? 'fill-current' : ''}`} />
+                    <Heart
+                      className={`w-4 h-4 ${favorites.has(combination.id) ? 'fill-current' : ''}`}
+                    />
                   </button>
 
                   {/* Theme Preview */}
@@ -321,7 +339,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                       <div
                         className="w-6 h-6 rounded-full border-2 border-white shadow-sm"
                         style={{
-                          background: `linear-gradient(135deg, ${visualAlarmThemes.getTheme(combination.visual)?.colors.gradientStart}, ${visualAlarmThemes.getTheme(combination.visual)?.colors.gradientEnd})`
+                          background: `linear-gradient(135deg, ${visualAlarmThemes.getTheme(combination.visual)?.colors.gradientStart}, ${visualAlarmThemes.getTheme(combination.visual)?.colors.gradientEnd})`,
                         }}
                       />
                       <h3 className="font-semibold text-lg">{combination.name}</h3>
@@ -386,17 +404,19 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                   `}
                   onClick={() => onVisualThemeChange(theme.id as VisualAlarmThemeId)}
                   style={{
-                    background: `linear-gradient(135deg, ${theme.colors.gradientStart}20, ${theme.colors.gradientEnd}20)`
+                    background: `linear-gradient(135deg, ${theme.colors.gradientStart}20, ${theme.colors.gradientEnd}20)`,
                   }}
                 >
                   <div
                     className="w-full h-16 rounded-lg mb-3 border border-gray-200"
                     style={{
-                      background: `linear-gradient(135deg, ${theme.colors.gradientStart}, ${theme.colors.gradientEnd})`
+                      background: `linear-gradient(135deg, ${theme.colors.gradientStart}, ${theme.colors.gradientEnd})`,
                     }}
                   />
                   <h3 className="font-semibold mb-1">{theme.name}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{theme.description}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    {theme.description}
+                  </p>
                   <span className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded capitalize">
                     {theme.category}
                   </span>
@@ -433,12 +453,20 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                   `}
                   onClick={() => onSoundThemeChange(theme.id)}
                 >
-                  <div className={`w-12 h-12 rounded-full mb-3 flex items-center justify-center text-white text-xl font-bold`}
-                       style={{ backgroundColor: theme.color ? `var(--${theme.color}-500)` : '#6B7280' }}>
+                  <div
+                    className={`w-12 h-12 rounded-full mb-3 flex items-center justify-center text-white text-xl font-bold`}
+                    style={{
+                      backgroundColor: theme.color
+                        ? `var(--${theme.color}-500)`
+                        : '#6B7280',
+                    }}
+                  >
                     <Volume2 className="w-6 h-6" />
                   </div>
                   <h3 className="font-semibold mb-1">{theme.name}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{theme.description}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    {theme.description}
+                  </p>
                   {theme.category && (
                     <span className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded capitalize">
                       {theme.category}
@@ -468,27 +496,49 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                   onClick={() => onVoiceMoodChange(mood)}
                 >
                   <div className="text-2xl mb-2">
-                    {mood === 'drill-sergeant' ? '🪖' :
-                     mood === 'sweet-angel' ? '😇' :
-                     mood === 'anime-hero' ? '⚡' :
-                     mood === 'savage-roast' ? '🔥' :
-                     mood === 'motivational' ? '💪' :
-                     mood === 'gentle' ? '🌸' :
-                     mood === 'demon-lord' ? '👹' :
-                     mood === 'ai-robot' ? '🤖' :
-                     mood === 'comedian' ? '😄' : '🧠'}
+                    {mood === 'drill-sergeant'
+                      ? '🪖'
+                      : mood === 'sweet-angel'
+                        ? '😇'
+                        : mood === 'anime-hero'
+                          ? '⚡'
+                          : mood === 'savage-roast'
+                            ? '🔥'
+                            : mood === 'motivational'
+                              ? '💪'
+                              : mood === 'gentle'
+                                ? '🌸'
+                                : mood === 'demon-lord'
+                                  ? '👹'
+                                  : mood === 'ai-robot'
+                                    ? '🤖'
+                                    : mood === 'comedian'
+                                      ? '😄'
+                                      : '🧠'}
                   </div>
-                  <h3 className="font-semibold mb-1 capitalize">{mood.replace('-', ' ')}</h3>
+                  <h3 className="font-semibold mb-1 capitalize">
+                    {mood.replace('-', ' ')}
+                  </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {mood === 'drill-sergeant' ? 'Military-style wake up calls' :
-                     mood === 'sweet-angel' ? 'Gentle and encouraging' :
-                     mood === 'anime-hero' ? 'Dramatic and energizing' :
-                     mood === 'savage-roast' ? 'Brutally honest humor' :
-                     mood === 'motivational' ? 'Inspiring and uplifting' :
-                     mood === 'gentle' ? 'Soft and peaceful' :
-                     mood === 'demon-lord' ? 'Dark and commanding' :
-                     mood === 'ai-robot' ? 'Robotic and futuristic' :
-                     mood === 'comedian' ? 'Funny and entertaining' : 'Wise and thoughtful'}
+                    {mood === 'drill-sergeant'
+                      ? 'Military-style wake up calls'
+                      : mood === 'sweet-angel'
+                        ? 'Gentle and encouraging'
+                        : mood === 'anime-hero'
+                          ? 'Dramatic and energizing'
+                          : mood === 'savage-roast'
+                            ? 'Brutally honest humor'
+                            : mood === 'motivational'
+                              ? 'Inspiring and uplifting'
+                              : mood === 'gentle'
+                                ? 'Soft and peaceful'
+                                : mood === 'demon-lord'
+                                  ? 'Dark and commanding'
+                                  : mood === 'ai-robot'
+                                    ? 'Robotic and futuristic'
+                                    : mood === 'comedian'
+                                      ? 'Funny and entertaining'
+                                      : 'Wise and thoughtful'}
                   </p>
                 </motion.div>
               ))}

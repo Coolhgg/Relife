@@ -109,10 +109,10 @@ bun run test:e2e:codegen
 ### Basic Test Structure
 
 ```typescript
-import { test, expect } from "@playwright/test";
-import { DashboardPage } from "../page-objects";
+import { test, expect } from '@playwright/test';
+import { DashboardPage } from '../page-objects';
 
-test.describe("Feature Name", () => {
+test.describe('Feature Name', () => {
   let dashboardPage: DashboardPage;
 
   test.beforeEach(async ({ page }) => {
@@ -120,7 +120,7 @@ test.describe("Feature Name", () => {
     await dashboardPage.navigateToDashboard();
   });
 
-  test("should perform expected behavior", async () => {
+  test('should perform expected behavior', async () => {
     // Test implementation
   });
 });
@@ -131,7 +131,7 @@ test.describe("Feature Name", () => {
 ```typescript
 // Good - use page objects for clean, maintainable tests
 await dashboardPage.clickAddAlarmButton();
-await alarmFormPage.createBasicAlarm("07:00", "Morning Alarm");
+await alarmFormPage.createBasicAlarm('07:00', 'Morning Alarm');
 
 // Avoid - direct page interactions
 await page.click('[data-testid="add-alarm"]');
@@ -140,7 +140,7 @@ await page.click('[data-testid="add-alarm"]');
 ### Test Data
 
 ```typescript
-import { TestData } from "../fixtures/test-data";
+import { TestData } from '../fixtures/test-data';
 
 // Use predefined test data
 const user = TestData.USERS.VALID_USER;

@@ -1,5 +1,18 @@
 import React, { useState, useCallback } from 'react';
-import { TestTube, Send, Clock, Zap, TrendingUp, Shield, Bell, CheckCircle, XCircle, AlertTriangle, Smartphone, RefreshCw } from 'lucide-react';
+import {
+  TestTube,
+  Send,
+  Clock,
+  Zap,
+  TrendingUp,
+  Shield,
+  Bell,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  Smartphone,
+  RefreshCw,
+} from 'lucide-react';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { useAnalytics } from '../hooks/useAnalytics';
 
@@ -14,7 +27,8 @@ interface TestResult {
 }
 
 export const PushNotificationTester: React.FC = () => {
-  const { status, testNotification, sendDailyMotivation, sendWeeklyProgress } = usePushNotifications();
+  const { status, testNotification, sendDailyMotivation, sendWeeklyProgress } =
+    usePushNotifications();
   const { track } = useAnalytics();
 
   const [testResults, setTestResults] = useState<TestResult[]>([]);
@@ -27,119 +41,139 @@ export const PushNotificationTester: React.FC = () => {
       title: 'Basic Test',
       description: 'Simple test notification',
       icon: TestTube,
-      color: 'blue'
+      color: 'blue',
     },
     {
       id: 'alarm',
       title: 'Alarm Notification',
       description: 'Simulated alarm notification',
       icon: Clock,
-      color: 'orange'
+      color: 'orange',
     },
     {
       id: 'motivation',
       title: 'Daily Motivation',
       description: 'Motivational message',
       icon: Zap,
-      color: 'yellow'
+      color: 'yellow',
     },
     {
       id: 'progress',
       title: 'Weekly Progress',
       description: 'Progress statistics',
       icon: TrendingUp,
-      color: 'green'
+      color: 'green',
     },
     {
       id: 'emergency',
       title: 'Emergency Alert',
       description: 'High priority notification',
       icon: Shield,
-      color: 'red'
-    }
+      color: 'red',
+    },
   ];
 
-  const addTestResult = useCallback((type: string, title: string, status: 'success' | 'error', error?: string, duration?: number) => {
-    const result: TestResult = {
-      id: Date.now().toString(),
-      type,
-      title,
-      status,
-      timestamp: new Date(),
-      error,
-      duration
-    };
+  const addTestResult = useCallback(
+    (
+      type: string,
+      title: string,
+      status: 'success' | 'error',
+      error?: string,
+      duration?: number
+    ) => {
+      const result: TestResult = {
+        id: Date.now().toString(),
+        type,
+        title,
+        status,
+        timestamp: new Date(),
+        error,
+        duration,
+      };
 
-    setTestResults(prev => [result, ...prev.slice(0, 9)]); // Keep last 10 results
-  }, []);
+      setTestResults(prev => [result, ...prev.slice(0, 9)]); // Keep last 10 results
+    },
+    []
+  );
 
-  const runSingleTest = useCallback(async (testType: string) => {
-    const startTime = Date.now();
+  const runSingleTest = useCallback(
+    async (testType: string) => {
+      const startTime = Date.now();
 
-    try {
-      switch (testType) {
-        case 'basic':
-          await testNotification();
-          break;
-        case 'motivation':
-          await sendDailyMotivation("🌟 You're doing amazing! Keep pushing forward and make today count!");
-          break;
-        case 'progress':
-          await sendWeeklyProgress({
-            alarmsTriggered: 12,
-            streak: 5,
-            averageWakeTime: '7:15 AM',
-            improvementTrend: 'up'
-          });
-          break;
-        case 'alarm':
-          // For testing, we'll use the basic test notification but with alarm styling
-          await testNotification();
-          break;
-        case 'emergency':
-          // For testing, we'll use the basic test notification
-          await testNotification();
-          break;
-        default:
-          throw new Error('Unknown test type');
+      try {
+        switch (testType) {
+          case 'basic':
+            await testNotification();
+            break;
+          case 'motivation':
+            await sendDailyMotivation(
+              "🌟 You're doing amazing! Keep pushing forward and make today count!"
+            );
+            break;
+          case 'progress':
+            await sendWeeklyProgress({
+              alarmsTriggered: 12,
+              streak: 5,
+              averageWakeTime: '7:15 AM',
+              improvementTrend: 'up',
+            });
+            break;
+          case 'alarm':
+            // For testing, we'll use the basic test notification but with alarm styling
+            await testNotification();
+            break;
+          case 'emergency':
+            // For testing, we'll use the basic test notification
+            await testNotification();
+            break;
+          default:
+            throw new Error('Unknown test type');
+        }
+
+        const duration = Date.now() - startTime;
+        const testTypeData = testTypes.find(t => t.id === testType);
+
+        addTestResult(
+          testType,
+          testTypeData?.title || 'Unknown Test',
+          'success',
+          undefined,
+          duration
+        );
+
+        track('push_notification_test_success', {
+          testType,
+          duration,
+        });
+      } catch (error) {
+        const duration = Date.now() - startTime;
+        const testTypeData = testTypes.find(t => t.id === testType);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+        addTestResult(
+          testType,
+          testTypeData?.title || 'Unknown Test',
+          'error',
+          errorMessage,
+          duration
+        );
+
+        track('push_notification_test_error', {
+          testType,
+          error: errorMessage,
+          duration,
+        });
       }
-
-      const duration = Date.now() - startTime;
-      const testTypeData = testTypes.find(t => t.id === testType);
-
-      addTestResult(
-        testType,
-        testTypeData?.title || 'Unknown Test',
-        'success',
-        undefined,
-        duration
-      );
-
-      track('push_notification_test_success', {
-        testType,
-        duration
-      });
-
-    } catch (error) {
-      const duration = Date.now() - startTime;
-      const testTypeData = testTypes.find(t => t.id === testType);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-      addTestResult(
-        testType,
-        testTypeData?.title || 'Unknown Test',
-        'error',
-        errorMessage,
-        duration
-      );
-
-      track('push_notification_test_error', {
-        testType,
-        error: errorMessage,
-        duration
-      });
-    }
-  }, [testNotification, sendDailyMotivation, sendWeeklyProgress, addTestResult, testTypes, track]);
+    },
+    [
+      testNotification,
+      sendDailyMotivation,
+      sendWeeklyProgress,
+      addTestResult,
+      testTypes,
+      track,
+    ]
+  );
 
   const runAllTests = useCallback(async () => {
     if (!status.hasPermission) {
@@ -159,7 +193,7 @@ export const PushNotificationTester: React.FC = () => {
       track('push_notification_test_suite_complete');
     } catch (error) {
       track('push_notification_test_suite_error', {
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
     } finally {
       setIsRunningTests(false);
@@ -178,7 +212,9 @@ export const PushNotificationTester: React.FC = () => {
       case 'error':
         return <XCircle className="w-4 h-4 text-red-500" />;
       case 'pending':
-        return <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />;
+        return (
+          <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        );
       default:
         return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
     }
@@ -241,10 +277,14 @@ export const PushNotificationTester: React.FC = () => {
         <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
           <div className="flex items-center gap-2">
             <Smartphone className="w-5 h-5 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Status:</span>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Status:
+            </span>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${status.hasPermission ? 'bg-green-500' : 'bg-red-500'}`} />
+            <div
+              className={`w-2 h-2 rounded-full ${status.hasPermission ? 'bg-green-500' : 'bg-red-500'}`}
+            />
             <span className="text-sm text-gray-600 dark:text-gray-400">
               {status.hasPermission ? 'Ready for testing' : 'Permission required'}
             </span>
@@ -254,7 +294,8 @@ export const PushNotificationTester: React.FC = () => {
         {!status.hasPermission && (
           <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
             <p className="text-red-800 dark:text-red-300 text-sm">
-              Push notification permission is required to run tests. Please enable notifications in the settings first.
+              Push notification permission is required to run tests. Please enable
+              notifications in the settings first.
             </p>
           </div>
         )}
@@ -358,9 +399,17 @@ export const PushNotificationTester: React.FC = () => {
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">
-                {testResults.length > 0 ? Math.round(testResults.reduce((acc, r) => acc + (r.duration || 0), 0) / testResults.length) : 0}ms
+                {testResults.length > 0
+                  ? Math.round(
+                      testResults.reduce((acc, r) => acc + (r.duration || 0), 0) /
+                        testResults.length
+                    )
+                  : 0}
+                ms
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Avg Duration</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Avg Duration
+              </div>
             </div>
           </div>
 
@@ -392,13 +441,15 @@ export const PushNotificationTester: React.FC = () => {
                 </div>
 
                 <div className="text-right">
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                    result.status === 'success'
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
-                      : result.status === 'error'
-                      ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300'
-                      : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
-                  }`}>
+                  <span
+                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      result.status === 'success'
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
+                        : result.status === 'error'
+                          ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300'
+                          : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
+                    }`}
+                  >
                     {result.status}
                   </span>
                 </div>
