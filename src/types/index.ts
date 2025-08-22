@@ -135,6 +135,14 @@ export interface Alarm {
   weatherEnabled?: boolean;
   nuclearChallenges?: string[];
   smartFeatures?: SmartAlarmSettings;
+  // Advanced scheduling properties
+  recurrencePattern?: RecurrencePattern;
+  conditionalRules?: ConditionalRule[];
+  locationTriggers?: LocationTrigger[];
+  calendarIntegration?: CalendarIntegration;
+  seasonalAdjustments?: SeasonalAdjustment[];
+  smartOptimizations?: SmartOptimization[];
+  dependencies?: AlarmDependency[];
 }
 
 export type VoiceMood =
@@ -2365,7 +2373,9 @@ export type ActionType =
   | 'delay_by'
   | 'change_volume'
   | 'change_voice_mood'
-  | 'trigger_other_alarm';
+  | 'trigger_other_alarm'
+  | 'enable_alarm'
+  | 'disable_alarm';
 
 // Location-Based Alarms
 export interface LocationTrigger {
@@ -2515,11 +2525,35 @@ export interface BulkScheduleOperation {
   alarmIds?: string[];
   dateRange?: { start: Date; end: Date };
   filters?: ScheduleFilter[];
+  alarms?: Alarm[]; // For bulk create operations
+  updateData?: Partial<Alarm>; // For bulk update operations
 }
 
 export interface ScheduleFilter {
+  field: string;
   operator: ConditionOperator;
   value: any;
+}
+
+// Schedule Import/Export Types
+export interface ScheduleExport {
+  version: string;
+  exportDate: string;
+  alarms: Alarm[];
+  settings: SchedulingConfig;
+  metadata: {
+    totalAlarms: number;
+    timezone: string;
+  };
+}
+
+export interface ScheduleImport {
+  data: ScheduleExport;
+  options: {
+    overwriteExisting: boolean;
+    preserveIds: boolean;
+    adjustTimeZones: boolean;
+  };
 }
 
 // Import/Export Scheduling
@@ -2567,6 +2601,23 @@ export interface Location {
   address?: string;
   name?: string;
 }
+
+// Missing types for ConditionalRule
+export interface ConditionalRule {
+  id: string;
+  name: string;
+  type: 'weather' | 'calendar' | 'sleep_quality' | 'day_of_week' | 'time_since_last';
+  conditions: any;
+  action: {
+    type: 'disable_alarm' | 'enable_alarm' | 'adjust_time' | 'change_sound' | 'change_difficulty';
+    parameters?: any;
+  };
+  isActive: boolean;
+  priority?: number;
+}
+
+// Missing WakeUpMood type
+export type WakeUpMood = 'energetic' | 'peaceful' | 'motivated' | 'groggy' | 'refreshed' | 'tired';
 
 export interface LocationProgress {
   currentLocation?: Location;
