@@ -7,7 +7,6 @@ import {
   Brain,
   MapPin,
   TrendingUp,
-  Zap,
   Lightbulb,
   Sparkles,
 } from 'lucide-react';
@@ -44,14 +43,15 @@ const AlarmList: React.FC<AlarmListProps> = ({
     location: false,
     analytics: false,
   });
-  const { announce, announceListChange } = useScreenReaderAnnouncements();
+  const { announce, announceListChange: _announceListChange } =
+    useScreenReaderAnnouncements();
   const { announceEnter } = useFocusAnnouncements('Alarm List');
 
   // Load advanced features status and optimizations
   useEffect(() => {
     loadAdvancedFeatureStatus();
     loadAlarmOptimizations();
-  }, [alarms]);
+  }, [alarms, loadAlarmOptimizations]);
 
   // Announce when entering the alarm list
   useEffect(() => {
@@ -66,7 +66,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
     });
   };
 
-  const loadAlarmOptimizations = async () => {
+  const loadAlarmOptimizations = useCallback(async () => {
     if (!MLAlarmOptimizer.isMLEnabled()) return;
 
     const optimizations = new Map();
@@ -89,7 +89,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
       }
     }
     setAlarmOptimizations(optimizations);
-  };
+  }, [alarms, setAlarmOptimizations]);
 
   // Announce when alarm count changes
   useEffect(() => {
@@ -374,7 +374,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                           const optimization = alarmOptimizations.get(alarm.id);
                           if (optimization) {
                             // Apply the optimization
-                            const [hours, minutes] =
+                            const [_hours, _minutes] =
                               optimization.optimalTime.split(':');
                             const updatedAlarm = {
                               ...alarm,

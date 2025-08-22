@@ -9,13 +9,11 @@ import {
   Shield,
   Info,
   ExternalLink,
-  LogOut,
   Bug,
   Palette,
   Zap,
   Settings,
   Eye,
-  AlertTriangle,
 } from 'lucide-react';
 import type { AppState, VoiceMood, Theme } from '../types';
 import { VOICE_MOODS } from '../utils';
@@ -77,14 +75,19 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     }
   }, [appState.permissions, announcePermissionStatus]);
   // Get theme from context instead of local state
-  const { theme: currentTheme, setTheme, availableThemes, isDarkMode } = useTheme();
+  const {
+    theme: currentTheme,
+    setTheme,
+    availableThemes: _availableThemes,
+    isDarkMode,
+  } = useTheme();
   const [defaultVoiceMood, setDefaultVoiceMood] = useState<VoiceMood>('motivational');
   const [voiceSensitivity, setVoiceSensitivity] = useState(5);
   const [pushNotifications, setPushNotifications] = useState(true);
   const [hapticFeedback, setHapticFeedback] = useState(true);
   const [snoozeDuration, setSnoozeDuration] = useState('10');
   const [maxSnoozes, setMaxSnoozes] = useState('5');
-  const [tabProtectionEnabled, setTabProtectionEnabled] = useState(() => {
+  const [_tabProtectionEnabled, _setTabProtectionEnabled] = useState(() => {
     // Get from localStorage or default to true
     const stored = localStorage.getItem('tabProtectionEnabled');
     return stored !== null ? JSON.parse(stored) : true;
@@ -156,7 +159,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     announceSliderChange('Voice dismissal sensitivity', value, 1, 10);
   };
 
-  const handlePushNotificationsToggle = () => {
+  const _handlePushNotificationsToggle = () => {
     const newValue = !pushNotifications;
     setPushNotifications(newValue);
     announceToggleSwitch(
