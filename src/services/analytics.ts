@@ -617,6 +617,116 @@ class AnalyticsService {
     this.sessionId = this.generateSessionId();
     this.sessionStartTime = Date.now();
   }
+
+  /**
+   * Capture exception for error handling (alias for trackError)
+   */
+  captureException(error: Error, context?: EventProperties): void {
+    this.trackError(error, context);
+  }
+
+  /**
+   * Track deployment events
+   */
+  trackDeployment(version: string, environment: string): void {
+    this.track('deployment_completed', {
+      version,
+      environment,
+      timestamp: new Date().toISOString(),
+      previous_version: localStorage.getItem('app_version'),
+      deployment_type: version.indexOf('hotfix') !== -1 ? 'hotfix' : 'release'
+    });
+
+    // Store current version for next deployment
+    localStorage.setItem('app_version', version);
+  }
+
+  /**
+   * Track performance budget metrics
+   */
+  trackPerformanceBudget(metric: string, value: number, budget: number): void {
+    const exceededBudget = value > budget;
+    const percentage = (value / budget) * 100;
+
+    this.track('performance_budget_check', {
+      metric,
+      value,
+      budget,
+      exceeds_budget: exceededBudget,
+      percentage,
+      environment: config.env
+    });
+
+    if (exceededBudget) {
+      this.track('performance_budget_violation', {
+        metric,
+        value,
+        budget,
+        overage: value - budget,
+        percentage
+      });
+    }
+  }
+
+  /**
+   * Track feature flag evaluations
+   */
+  trackFeatureFlag(flag: string, enabled: boolean, variant?: string): void {
+    this.track('feature_flag_evaluation', {
+      flag,
+      enabled,
+      variant,
+      environment: config.env,
+      user_segment: this.getUserSegment()
+    });
+  }
+
+  /**
+   * Track business metrics
+   */
+  trackBusinessMetric(metric: string, value: number, metadata?: Record<string, any>): void {
+    this.track('business_metric', {
+      metric,
+      value,
+      environment: config.env,
+      timestamp: new Date().toISOString(),
+      ...metadata
+    });
+  }
+
+  /**
+   * Track SLA violations
+   */
+  trackSLAViolation(service: string, metric: string, threshold: number, actual: number): void {
+    this.track('sla_violation', {
+      service,
+      metric,
+      threshold,
+      actual,
+      violation_percentage: ((actual - threshold) / threshold) * 100,
+      environment: config.env,
+      severity: this.calculateSeverity(actual, threshold)
+    });
+  }
+
+  /**
+   * Get user segment for analytics
+   */
+  private getUserSegment(): string {
+    // Implement user segmentation logic based on your needs
+    return 'default';
+  }
+
+  /**
+   * Calculate SLA violation severity
+   */
+  private calculateSeverity(actual: number, threshold: number): 'low' | 'medium' | 'high' | 'critical' {
+    const ratio = actual / threshold;
+    if (ratio < 1.2) return 'low';
+    if (ratio < 1.5) return 'medium';
+    if (ratio < 2.0) return 'high';
+    return 'critical';
+  }
 }
 
 // Environment-aware analytics initialization
@@ -646,100 +756,6 @@ export const defaultAnalyticsConfigs = {
   development: createAnalyticsConfig('development'),
   staging: createAnalyticsConfig('staging'),
   production: createAnalyticsConfig('production')
-};
-
-// Enhanced analytics methods for production monitoring
-export interface ProductionAnalytics {
-  trackDeployment(version: string, environment: string): void;
-  trackPerformanceBudget(metric: string, value: number, budget: number): void;
-  trackFeatureFlag(flag: string, enabled: boolean, variant?: string): void;
-  trackBusinessMetric(metric: string, value: number, metadata?: Record<string, any>): void;
-  trackSLAViolation(service: string, metric: string, threshold: number, actual: number): void;
-}
-
-// Extend AnalyticsService with production-specific methods
-AnalyticsService.prototype.trackDeployment = function(version: string, environment: string) {
-  this.track('deployment_completed', {
-    version,
-    environment,
-    timestamp: new Date().toISOString(),
-    previous_version: localStorage.getItem('app_version'),
-    deployment_type: version.includes('hotfix') ? 'hotfix' : 'release'
-  });
-
-  // Store current version for next deployment
-  localStorage.setItem('app_version', version);
-};
-
-AnalyticsService.prototype.trackPerformanceBudget = function(metric: string, value: number, budget: number) {
-  const exceedsbudget = value > budget;
-  const percentage = (value / budget) * 100;
-
-  this.track('performance_budget_check', {
-    metric,
-    value,
-    budget,
-    exceeds_budget: exceedsbudget,
-    percentage,
-    environment: config.env
-  });
-
-  if (exceedsbudget) {
-    this.track('performance_budget_violation', {
-      metric,
-      value,
-      budget,
-      overage: value - budget,
-      percentage
-    });
-  }
-};
-
-AnalyticsService.prototype.trackFeatureFlag = function(flag: string, enabled: boolean, variant?: string) {
-  this.track('feature_flag_evaluation', {
-    flag,
-    enabled,
-    variant,
-    environment: config.env,
-    user_segment: this.getUserSegment()
-  });
-};
-
-AnalyticsService.prototype.trackBusinessMetric = function(metric: string, value: number, metadata?: Record<string, any>) {
-  this.track('business_metric', {
-    metric,
-    value,
-    environment: config.env,
-    timestamp: new Date().toISOString(),
-    ...metadata
-  });
-};
-
-AnalyticsService.prototype.trackSLAViolation = function(service: string, metric: string, threshold: number, actual: number) {
-  this.track('sla_violation', {
-    service,
-    metric,
-    threshold,
-    actual,
-    violation_percentage: ((actual - threshold) / threshold) * 100,
-    environment: config.env,
-    severity: this.calculateSeverity(actual, threshold)
-  });
-};
-
-// Helper method for user segmentation
-AnalyticsService.prototype.getUserSegment = function(): string {
-  // Implement user segmentation logic based on your needs
-  return 'default';
-};
-
-// Helper method for SLA violation severity
-AnalyticsService.prototype.calculateSeverity = function(actual: number, threshold: number): 'low' | 'medium' | 'high' | 'critical' {
-  const ratio = actual / threshold;
-  if (ratio < 1.2) return 'low';
-  if (ratio < 1.5) return 'medium';
-  if (ratio < 2.0) return 'high';
-  return 'critical';
 };
 
 export default AnalyticsService;
