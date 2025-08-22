@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { NuclearChallengeType } from '../types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -76,6 +77,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
   className,
 }) => {
   const [hasAccess, setHasAccess] = useState(false);
+  const [userTier, setUserTier] = useState<string>('free'); // auto: added missing userTier state
   const [upgradeUrl, setUpgradeUrl] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const [challengeTypes, setChallengeTypes] = useState<
