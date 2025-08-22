@@ -18,6 +18,7 @@ import type {
   AlarmEvent,
   Battle,
   BattleParticipant,
+  BattleParticipantStats,
   BattleSettings,
   ThemeConfig,
   ThemeColors,
@@ -78,7 +79,9 @@ const createTestSubscription = (
   };
 };
 
-const createTestPremiumFeatureAccess = (): PremiumFeatureAccess => ({
+const createTestPremiumFeatureAccess = (
+  tier: Subscription['tier'] = 'premium'
+): PremiumFeatureAccess => ({
   // Voice Features
   elevenlabsVoices: tier !== 'free',
   customVoiceMessages: tier !== 'free',
