@@ -6,6 +6,7 @@
  */
 
 import { useRef, useCallback, useEffect } from 'react';
+import { TimeoutHandle } from '../types/timers';
 
 interface DynamicFocusOptions {
   announceChanges?: boolean;
@@ -35,7 +36,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
   } = options;
 
   const liveRegionRef = useRef<HTMLDivElement | null>(null);
-  const announcementTimeoutRef = useRef<number | null>(null);
+  const announcementTimeoutRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
   const pendingAnnouncementsRef = useRef<string[]>([]);
   const lastFocusedRef = useRef<HTMLElement | null>(null);
 
@@ -77,7 +78,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
 
     if (announcementTimeoutRef.current) {
       clearTimeout(announcementTimeoutRef.current);
-      announcementTimeoutRef.current = null;
+      announcementTimeoutRef.current = undefined; // auto: changed from null to undefined
     }
   }, []);
 

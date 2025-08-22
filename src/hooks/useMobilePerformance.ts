@@ -2,6 +2,7 @@
 /// <reference lib="dom" />
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { mobilePerformance } from '../services/mobile-performance';
+import { TimeoutHandle } from '../types/timers';
 
 export interface PerformanceMetrics {
   memoryUsage?: number;
@@ -212,7 +213,7 @@ export const useMemoryMonitoring = () => {
   const [memoryPressure, setMemoryPressure] = useState<'low' | 'medium' | 'high'>(
     'low'
   );
-  const intervalRef = useRef<number>();
+  const intervalRef = useRef<TimeoutHandle | undefined>(); // auto: changed from number to TimeoutHandle
 
   useEffect(() => {
     if (!('memory' in performance)) return;
