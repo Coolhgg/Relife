@@ -5,7 +5,7 @@
  * consistent, properly typed mock data for testing purposes.
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals';
+// Vitest globals are available globally, no need to import
 import {
   // Core factories
   createTestUser,
@@ -35,7 +35,7 @@ import {
 
   // Utilities
   seedFaker,
-  resetFaker
+  resetFaker,
 } from './index';
 
 describe('Core Factories', () => {
@@ -54,7 +54,7 @@ describe('Core Factories', () => {
         displayName: expect.any(String),
         level: expect.any(Number),
         experience: expect.any(Number),
-        subscriptionTier: expect.any(String)
+        subscriptionTier: expect.any(String),
       });
     });
 
@@ -84,7 +84,7 @@ describe('Core Factories', () => {
         time: expect.stringMatching(/^\d{2}:\d{2}$/),
         enabled: expect.any(Boolean),
         days: expect.any(Array),
-        difficulty: expect.any(String)
+        difficulty: expect.any(String),
       });
     });
 
@@ -93,7 +93,7 @@ describe('Core Factories', () => {
       const alarm = createTestAlarm({
         userId,
         enabled: true,
-        difficulty: 'nightmare'
+        difficulty: 'nightmare',
       });
 
       expect(alarm.userId).toBe(userId);
@@ -111,7 +111,7 @@ describe('Core Factories', () => {
         type: expect.any(String),
         participants: expect.any(Array),
         status: expect.any(String),
-        settings: expect.any(Object)
+        settings: expect.any(Object),
       });
     });
 
@@ -134,7 +134,7 @@ describe('Premium Factories', () => {
         userId: expect.stringMatching(/^user_/),
         tier: expect.any(String),
         status: expect.any(String),
-        amount: expect.any(Number)
+        amount: expect.any(Number),
       });
     });
 
@@ -156,7 +156,7 @@ describe('Premium Factories', () => {
         name: expect.any(String),
         mood: expect.any(String),
         tier: expect.any(String),
-        samples: expect.any(Array)
+        samples: expect.any(Array),
       });
     });
 
@@ -179,7 +179,7 @@ describe('Gaming Factories', () => {
         category: expect.any(String),
         rarity: expect.any(String),
         rewards: expect.any(Array),
-        requirements: expect.any(Array)
+        requirements: expect.any(Array),
       });
     });
 
@@ -200,7 +200,7 @@ describe('Gaming Factories', () => {
         name: expect.any(String),
         type: expect.any(String),
         participants: expect.any(Array),
-        rounds: expect.any(Array)
+        rounds: expect.any(Array),
       });
     });
   });
@@ -215,7 +215,7 @@ describe('Support Factories', () => {
         emotion: expect.any(String),
         intensity: expect.any(Number),
         confidence: expect.any(Number),
-        triggers: expect.any(Array)
+        triggers: expect.any(Array),
       });
 
       expect(state.intensity).toBeDefined();
@@ -232,7 +232,7 @@ describe('Support Factories', () => {
         type: expect.any(String),
         fileName: expect.any(String),
         url: expect.stringContaining('http'),
-        size: expect.any(Number)
+        size: expect.any(Number),
       });
     });
 
