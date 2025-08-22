@@ -20,6 +20,7 @@ interface UpgradePromptProps {
   /** Whether to show as modal or inline */
   variant?: 'modal' | 'inline' | 'banner';
   /** Callback when user clicks upgrade */
+  onUpgrade?: ((...args: any[]) => void) | undefined; // auto: widened function prop
   /** Callback when user dismisses prompt */
   onDismiss?: () => void;
   /** Custom title override */
@@ -29,6 +30,7 @@ interface UpgradePromptProps {
   /** Whether to show pricing */
   showPricing?: boolean;
   /** Current user tier for comparison */
+  currentTier?: string; // auto: added for prop compatibility
 }
 
 const UpgradePrompt: React.FC<UpgradePromptProps> = ({
