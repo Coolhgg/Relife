@@ -20,6 +20,8 @@ on:
         - dashboard
         - alarms
         - settings
+  schedule:
+    - cron: '0 2 * * 0'  # Run at 2 AM every Sunday
 
 env:
   # Test environment variables
@@ -52,7 +54,7 @@ jobs:
         cache: 'npm'
 
     - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
+      uses: oven-sh/setup-bun@v2
       with:
         bun-version: latest
 
@@ -124,7 +126,7 @@ jobs:
         cache: 'npm'
 
     - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
+      uses: oven-sh/setup-bun@v2
       with:
         bun-version: latest
 
@@ -164,7 +166,7 @@ jobs:
         cache: 'npm'
 
     - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
+      uses: oven-sh/setup-bun@v2
       with:
         bun-version: latest
 
@@ -207,7 +209,7 @@ jobs:
         cache: 'npm'
 
     - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
+      uses: oven-sh/setup-bun@v2
       with:
         bun-version: latest
 
@@ -358,8 +360,3 @@ jobs:
               console.log(`Deleted artifact: ${artifact.name}`);
             }
           }
-
-# Schedule cleanup weekly
-on:
-  schedule:
-    - cron: '0 2 * * 0'  # Run at 2 AM every Sunday
