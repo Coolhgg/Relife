@@ -53,59 +53,62 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
     const finalQuality = quality === 'auto' ? imageQuality : quality;
 
     // Generate image variants based on device capabilities
-    const generateImageVariants = useCallback((originalSrc: string): ImageVariant[] => {
-      const variants: ImageVariant[] = [];
+    const generateImageVariants = useCallback(
+      (originalSrc: string): ImageVariant[] => {
+        const variants: ImageVariant[] = [];
 
-      // Base variant
-      variants.push({
-        src: originalSrc,
-        quality: 'high',
-        format: 'jpeg',
-      });
-
-      // Generate optimized variants for different qualities
-      const baseUrl = originalSrc.split('.').slice(0, -1).join('.');
-      const extension = originalSrc.split('.').pop()?.toLowerCase();
-
-      if (extension && ['jpg', 'jpeg', 'png'].includes(extension)) {
-        // Low quality variant
+        // Base variant
         variants.push({
-          src: `${baseUrl}_q30.${extension}`,
-          quality: 'low',
+          src: originalSrc,
+          quality: 'high',
           format: 'jpeg',
         });
 
-        // Medium quality variant
-        variants.push({
-          src: `${baseUrl}_q60.${extension}`,
-          quality: 'medium',
-          format: 'jpeg',
-        });
+        // Generate optimized variants for different qualities
+        const baseUrl = originalSrc.split('.').slice(0, -1).join('.');
+        const extension = originalSrc.split('.').pop()?.toLowerCase();
 
-        // WebP variants for supported browsers
-        if (supportsWebP()) {
+        if (extension && ['jpg', 'jpeg', 'png'].includes(extension)) {
+          // Low quality variant
           variants.push({
-            src: `${baseUrl}_q30.webp`,
+            src: `${baseUrl}_q30.${extension}`,
             quality: 'low',
-            format: 'webp',
+            format: 'jpeg',
           });
 
+          // Medium quality variant
           variants.push({
-            src: `${baseUrl}_q60.webp`,
+            src: `${baseUrl}_q60.${extension}`,
             quality: 'medium',
-            format: 'webp',
+            format: 'jpeg',
           });
 
-          variants.push({
-            src: `${baseUrl}.webp`,
-            quality: 'high',
-            format: 'webp',
-          });
+          // WebP variants for supported browsers
+          if (supportsWebP()) {
+            variants.push({
+              src: `${baseUrl}_q30.webp`,
+              quality: 'low',
+              format: 'webp',
+            });
+
+            variants.push({
+              src: `${baseUrl}_q60.webp`,
+              quality: 'medium',
+              format: 'webp',
+            });
+
+            variants.push({
+              src: `${baseUrl}.webp`,
+              quality: 'high',
+              format: 'webp',
+            });
+          }
         }
-      }
 
-      return variants;
-    }, []);
+        return variants;
+      },
+      [supportsWebP]
+    );
 
     // Get optimal image source based on device capabilities
     const getOptimalImageSrc = useCallback(
@@ -123,7 +126,7 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
         // Fallback to original source
         return src;
       },
-      [finalQuality, src]
+      [finalQuality, src, supportsWebP]
     );
 
     // WebP support detection (cached)
@@ -246,7 +249,7 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
           return `${variant.src} ${descriptor}`;
         })
         .join(', ');
-    }, [variants, shouldPreloadImages, isLowEnd]);
+    }, [variants, shouldPreloadImages, isLowEnd, supportsWebP]);
 
     const srcSet = generateSrcSet();
 

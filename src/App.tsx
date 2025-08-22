@@ -10,16 +10,7 @@ import {
   LogOut,
   Crown,
 } from 'lucide-react';
-import type {
-  Alarm,
-  AppState,
-  VoiceMood,
-  User,
-  Battle,
-  DayOfWeek,
-  AlarmDifficulty,
-} from './types';
-import type { EmotionalTone } from './types/emotional';
+import type { Alarm, AppState, VoiceMood, User, Battle, DayOfWeek } from './types';
 import { INITIAL_APP_STATE } from './constants/initialState';
 
 // i18n imports
@@ -143,24 +134,37 @@ function AppContent() {
   const {
     t,
     getNavigationLabels,
-    getActionLabels,
+    getActionLabels: _getActionLabels,
     getA11yLabels,
-    isRTL,
-    getDirectionStyles,
-    formatAlarmTime,
+    isRTL: _isRTL,
+    getDirectionStyles: _getDirectionStyles,
+    formatAlarmTime: _formatAlarmTime,
   } = useI18n();
   const auth = useAuth();
-  const { getCSSVariables, getThemeClasses, applyThemeWithPerformance, preloadTheme } =
-    useTheme();
+  const {
+    getCSSVariables: _getCSSVariables,
+    getThemeClasses: _getThemeClasses,
+    applyThemeWithPerformance,
+    preloadTheme,
+  } = useTheme();
   const { announce } = useScreenReaderAnnouncements({
     announceNavigation: true,
     announceStateChanges: true,
   });
 
   // Analytics integration
-  const { identify, track, trackPageView, setUserProperties, reset } = useAnalytics();
-  const { trackSessionActivity, trackDailyActive, trackFeatureDiscovery } =
-    useEngagementAnalytics();
+  const {
+    identify,
+    track,
+    trackPageView: _trackPageView,
+    setUserProperties: _setUserProperties,
+    reset,
+  } = useAnalytics();
+  const {
+    trackSessionActivity,
+    trackDailyActive,
+    trackFeatureDiscovery: _trackFeatureDiscovery,
+  } = useEngagementAnalytics();
   usePageTracking('main-app');
 
   // Advanced Alarms Hook
@@ -174,7 +178,7 @@ function AppContent() {
   const {
     state: serviceWorkerState,
     updateAlarms: updateServiceWorkerAlarms,
-    performHealthCheck,
+    performHealthCheck: _performHealthCheck,
   } = useEnhancedServiceWorker();
 
   // Apply theme with performance optimizations
@@ -199,9 +203,9 @@ function AppContent() {
 
   // Sound Effects Hook for UI feedback
   const {
-    playClick,
+    playClick: _playClick,
     playSuccess,
-    playError,
+    playError: _playError,
     createClickHandler,
     createSuccessHandler,
     createErrorHandler,
@@ -219,7 +223,7 @@ function AppContent() {
     'synced' | 'syncing' | 'error' | 'pending' | 'offline'
   >('synced');
   const [_showPWAInstall, setShowPWAInstall] = useState(false);
-  const [tabProtectionEnabled, setTabProtectionEnabled] = useState(() => {
+  const [_tabProtectionEnabled, setTabProtectionEnabled] = useState(() => {
     // Get from localStorage or default to true
     const stored = localStorage.getItem('tabProtectionEnabled');
     return stored !== null ? JSON.parse(stored) : true;
@@ -236,7 +240,7 @@ function AppContent() {
   }, [appState.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
 
   // Emotional Intelligence Notifications Hook
-  const [emotionalState, emotionalActions] = useEmotionalNotifications({
+  const [_emotionalState, emotionalActions] = useEmotionalNotifications({
     userId: auth.user?.id || '',
     enabled: !!auth.user && appState.permissions.notifications.granted,
   });
@@ -259,31 +263,34 @@ function AppContent() {
     setShowPWAInstall(false);
   };
 
-  const refreshRewardsSystem = async (alarms: Alarm[] = appState.alarms) => {
-    try {
-      const aiRewards = AIRewardsService.getInstance();
-      const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
+  const refreshRewardsSystem = useCallback(
+    async (alarms: Alarm[] = appState.alarms) => {
+      try {
+        const aiRewards = AIRewardsService.getInstance();
+        const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
 
-      setAppState(prev => ({
-        ...prev,
-        rewardSystem,
-      }));
+        setAppState(prev => ({
+          ...prev,
+          rewardSystem,
+        }));
 
-      // Track rewards analysis
-      const appAnalytics = AppAnalyticsService.getInstance();
-      appAnalytics.trackFeatureUsage('rewards_analysis', 'system_updated', {
-        totalRewards: rewardSystem.unlockedRewards.length,
-        level: rewardSystem.level,
-        currentStreak: rewardSystem.currentStreak,
-      });
-    } catch (error) {
-      ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
-        'Failed to refresh rewards system',
-        { context: 'rewards_refresh' }
-      );
-    }
-  };
+        // Track rewards analysis
+        const appAnalytics = AppAnalyticsService.getInstance();
+        appAnalytics.trackFeatureUsage('rewards_analysis', 'system_updated', {
+          totalRewards: rewardSystem.unlockedRewards.length,
+          level: rewardSystem.level,
+          currentStreak: rewardSystem.currentStreak,
+        });
+      } catch (error) {
+        ErrorHandler.handleError(
+          error instanceof Error ? error : new Error(String(error)),
+          'Failed to refresh rewards system',
+          { context: 'rewards_refresh' }
+        );
+      }
+    },
+    [appState.alarms, setAppState]
+  );
 
   const loadUserAlarms = useCallback(async () => {
     if (!auth.user) return;
@@ -484,7 +491,7 @@ function AppContent() {
         });
 
         // Set up beforeunload event for tab close protection
-        window.addEventListener('beforeunload', event => {
+        window.addEventListener('beforeunload', _event => {
           // This will be handled by the tab protection system
           // but we also notify the service worker
           if (readyRegistration.active) {
@@ -504,7 +511,7 @@ function AppContent() {
     } else {
       console.warn('App: Service workers not supported in this browser');
     }
-  }, [appState.alarms]);
+  }, [appState.alarms, handleServiceWorkerAlarmTrigger]);
 
   // Handle alarm triggers from service worker
   const handleServiceWorkerAlarmTrigger = useCallback(
@@ -625,10 +632,10 @@ function AppContent() {
   const initializeAccessibilityServices = async () => {
     try {
       const screenReaderService = ScreenReaderService.getInstance();
-      const keyboardService = KeyboardNavigationService.getInstance();
+      const _keyboardService = KeyboardNavigationService.getInstance();
       const voiceService = VoiceAccessibilityService.getInstance();
-      const mobileService = MobileAccessibilityService.getInstance();
-      const focusService = EnhancedFocusService.getInstance();
+      const _mobileService = MobileAccessibilityService.getInstance();
+      const _focusService = EnhancedFocusService.getInstance();
 
       // Services are automatically initialized when getInstance() is called
       // Just verify they're properly instantiated
@@ -770,7 +777,7 @@ function AppContent() {
         );
       };
     }
-  }, []);
+  }, [handleServiceWorkerMessage]);
 
   // Handle emotional notification events from service worker
   useEffect(() => {
@@ -791,7 +798,7 @@ function AppContent() {
       console.log('🧠 Emotional notification action received:', action, emotion_type);
     };
 
-    const handleServiceWorkerUpdate = (event: CustomEvent) => {
+    const handleServiceWorkerUpdate = (_event: CustomEvent) => {
       console.log('🔄 Service Worker update available');
       // Could show a toast notification or update indicator
     };
@@ -824,67 +831,77 @@ function AppContent() {
     };
   }, [emotionalActions]);
 
-  const handleServiceWorkerMessage = (event: MessageEvent) => {
-    const { type, data } = event.data;
+  const handleServiceWorkerMessage = useCallback(
+    (event: MessageEvent) => {
+      const { type, data } = event.data;
 
-    switch (type) {
-      case 'ALARM_TRIGGERED':
-        if (data.alarm) {
-          setAppState(prev => ({ ...prev, activeAlarm: data.alarm }));
-        }
-        break;
-      case 'SYNC_START':
-        setSyncStatus('pending');
-        break;
-      case 'SYNC_COMPLETE':
-        setSyncStatus('synced');
-        break;
-      case 'SYNC_ERROR':
-        setSyncStatus('error');
-        ErrorHandler.handleError(
-          new Error(data.error || 'Sync failed'),
-          'Background sync failed'
-        );
-        break;
-      case 'NETWORK_STATUS':
-        setIsOnline(data.isOnline);
-        break;
-      case 'EMOTIONAL_NOTIFICATION_ACTION':
-        // Handle emotional notification actions from service worker
-        if (data.action && data.emotion_type) {
-          emotionalActions.trackResponse(data.notification_id || 'unknown', {
-            messageId: data.notification_id || 'unknown',
-            emotion: data.emotion_type,
-            tone: data.tone || 'encouraging',
-            actionTaken:
-              data.action === 'dismiss'
-                ? 'dismissed'
-                : data.action === 'snooze'
-                  ? 'snoozed'
-                  : 'none',
-            notificationOpened: true,
-            timeToResponse: Date.now() - (data.timestamp || Date.now()),
-          });
-
-          // Handle specific actions
-          if (data.action === 'dismiss' && appState.activeAlarm) {
-            setAppState(prev => ({ ...prev, activeAlarm: null }));
-          } else if (data.action === 'snooze' && appState.activeAlarm) {
-            // Trigger snooze functionality
-            handleAlarmSnooze(appState.activeAlarm.id);
+      switch (type) {
+        case 'ALARM_TRIGGERED':
+          if (data.alarm) {
+            setAppState(prev => ({ ...prev, activeAlarm: data.alarm }));
           }
+          break;
+        case 'SYNC_START':
+          setSyncStatus('pending');
+          break;
+        case 'SYNC_COMPLETE':
+          setSyncStatus('synced');
+          break;
+        case 'SYNC_ERROR':
+          setSyncStatus('error');
+          ErrorHandler.handleError(
+            new Error(data.error || 'Sync failed'),
+            'Background sync failed'
+          );
+          break;
+        case 'NETWORK_STATUS':
+          setIsOnline(data.isOnline);
+          break;
+        case 'EMOTIONAL_NOTIFICATION_ACTION':
+          // Handle emotional notification actions from service worker
+          if (data.action && data.emotion_type) {
+            emotionalActions.trackResponse(data.notification_id || 'unknown', {
+              messageId: data.notification_id || 'unknown',
+              emotion: data.emotion_type,
+              tone: data.tone || 'encouraging',
+              actionTaken:
+                data.action === 'dismiss'
+                  ? 'dismissed'
+                  : data.action === 'snooze'
+                    ? 'snoozed'
+                    : 'none',
+              notificationOpened: true,
+              timeToResponse: Date.now() - (data.timestamp || Date.now()),
+            });
 
-          console.log('🧠 Emotional notification action handled:', data.action);
-        }
-        break;
-      default:
-        ErrorHandler.handleError(
-          new Error(`Unknown service worker message type: ${type}`),
-          'Received unknown service worker message',
-          { context: 'service_worker_message', metadata: { type, data } }
-        );
-    }
-  };
+            // Handle specific actions
+            if (data.action === 'dismiss' && appState.activeAlarm) {
+              setAppState(prev => ({ ...prev, activeAlarm: null }));
+            } else if (data.action === 'snooze' && appState.activeAlarm) {
+              // Trigger snooze functionality
+              handleAlarmSnooze(appState.activeAlarm.id);
+            }
+
+            console.log('🧠 Emotional notification action handled:', data.action);
+          }
+          break;
+        default:
+          ErrorHandler.handleError(
+            new Error(`Unknown service worker message type: ${type}`),
+            'Received unknown service worker message',
+            { context: 'service_worker_message', metadata: { type, data } }
+          );
+      }
+    },
+    [
+      setAppState,
+      setSyncStatus,
+      setIsOnline,
+      emotionalActions,
+      appState,
+      handleAlarmSnooze,
+    ]
+  );
 
   useEffect(() => {
     const initialize = async () => {
@@ -960,7 +977,14 @@ function AppContent() {
     if (auth.isInitialized) {
       initialize();
     }
-  }, [auth.isInitialized, auth.user, loadUserAlarms, registerEnhancedServiceWorker]);
+  }, [
+    auth.isInitialized,
+    auth.user,
+    loadUserAlarms,
+    registerEnhancedServiceWorker,
+    track,
+    trackSessionActivity,
+  ]);
 
   // Network status monitoring
   useEffect(() => {
@@ -997,7 +1021,7 @@ function AppContent() {
         );
       };
     }
-  }, []);
+  }, [handleServiceWorkerMessage]);
 
   // Prevent accidental tab closure when alarms are active
   useEffect(() => {
@@ -1605,45 +1629,51 @@ function AppContent() {
     performDismiss();
   };
 
-  const handleAlarmSnooze = async (alarmId: string) => {
-    const analytics = AppAnalyticsService.getInstance();
-    const startTime = performance.now();
+  const handleAlarmSnooze = useCallback(
+    async (alarmId: string) => {
+      const analytics = AppAnalyticsService.getInstance();
+      const startTime = performance.now();
 
-    try {
-      analytics.trackAlarmAction('snooze', alarmId);
+      try {
+        analytics.trackAlarmAction('snooze', alarmId);
 
-      if (isOnline) {
-        await AlarmService.snoozeAlarm(alarmId);
-      }
-
-      const duration = performance.now() - startTime;
-      analytics.trackAlarmAction('snooze', alarmId, { success: true, duration });
-      analytics.trackFeatureUsage('alarm_snooze', 'completed', { duration });
-
-      setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
-    } catch (error) {
-      const duration = performance.now() - startTime;
-      analytics.trackAlarmAction('snooze', alarmId, {
-        success: false,
-        error: error instanceof Error ? error.message : String(error),
-        duration,
-      });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), {
-        action: 'snooze_alarm',
-      });
-
-      ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
-        'Failed to snooze alarm',
-        {
-          context: 'snooze_alarm',
-          metadata: { alarmId, isOnline },
+        if (isOnline) {
+          await AlarmService.snoozeAlarm(alarmId);
         }
-      );
-      // Fallback: still hide the alarm even if snooze fails
-      setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
-    }
-  };
+
+        const duration = performance.now() - startTime;
+        analytics.trackAlarmAction('snooze', alarmId, { success: true, duration });
+        analytics.trackFeatureUsage('alarm_snooze', 'completed', { duration });
+
+        setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
+      } catch (error) {
+        const duration = performance.now() - startTime;
+        analytics.trackAlarmAction('snooze', alarmId, {
+          success: false,
+          error: error instanceof Error ? error.message : String(error),
+          duration,
+        });
+        analytics.trackError(
+          error instanceof Error ? error : new Error(String(error)),
+          {
+            action: 'snooze_alarm',
+          }
+        );
+
+        ErrorHandler.handleError(
+          error instanceof Error ? error : new Error(String(error)),
+          'Failed to snooze alarm',
+          {
+            context: 'snooze_alarm',
+            metadata: { alarmId, isOnline },
+          }
+        );
+        // Fallback: still hide the alarm even if snooze fails
+        setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
+      }
+    },
+    [isOnline, setAppState]
+  );
 
   // Show loading screen while auth is initializing
   if (!auth.isInitialized || !isInitialized) {
