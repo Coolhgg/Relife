@@ -1,4 +1,23 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx --no -- commitlint --edit "$1"
+# Enhanced commit message validation with project-specific rules
+echo "\033[36m🔍 Validating commit message...\033[0m"
+
+# Run enhanced commit validator first
+if ! node scripts/enhanced-commit-validator.js "$1" --require-scope; then
+    echo "\033[31m❌ Enhanced validation failed\033[0m"
+    exit 1
+fi
+
+# Run standard commitlint as backup
+if command -v commitlint &> /dev/null; then
+    if ! npx --no -- commitlint --edit "$1"; then
+        echo "\033[31m❌ Commitlint validation failed\033[0m"
+        exit 1
+    fi
+else
+    echo "\033[33m⚠️ Commitlint not available, using enhanced validator only\033[0m"
+fi
+
+echo "\033[32m✅ Commit message validation passed\033[0m"
