@@ -1,3 +1,4 @@
+/* global describe,it,expect,beforeEach,afterEach */
 import { expect, test, jest } from "@jest/globals";
 import { renderHook, act } from "@testing-library/react";
 import React from "react";
@@ -159,6 +160,9 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
       }
     });
 
+
+    const AdvancedAlarmScheduler = require('../../../services/advanced-alarm-scheduler').default;
+    const mockScheduler = AdvancedAlarmScheduler.getInstance();
       // Service is now imported at the top
     mockScheduler.scheduleAlarm.mockResolvedValue({ success: true });
     mockScheduler.getNextOccurrence.mockReturnValue(new Date(Date.now() + 24 * 60 * 60 * 1000));
@@ -175,6 +179,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
   );
 };
 
+describe('useAdvancedAlarms Integration Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     localStorage.clear();
@@ -575,4 +580,5 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
       expect(result.current.isLoading).toBe(false);
     });
   });
+});
 });

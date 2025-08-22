@@ -1,3 +1,4 @@
+/* global describe,it,expect,beforeEach,afterEach */
 import { expect, test, jest } from "@jest/globals";
 /**
  * Tests advanced alarm scheduling, optimization, and management functionality
@@ -114,6 +115,7 @@ Object.defineProperty(global, 'URL', {
     ],
   };
 
+describe('useAdvancedAlarms Tests', () => {
   beforeEach(() => {
     clearAllMocks();
     jest.clearAllTimers();
@@ -126,27 +128,7 @@ Object.defineProperty(global, 'URL', {
     AlarmService.createAlarm.mockResolvedValue(mockBasicAlarm);
     AlarmService.updateAlarm.mockResolvedValue(mockBasicAlarm);
     AlarmService.deleteAlarm.mockResolvedValue(true);
-
-      Promise.resolve(alarm),
-    );
-      (alarm) => alarm,
-    );
-      new Date(Date.now() + 24 * 60 * 60 * 1000),
-    ]);
-      true,
-    );
-      true,
-    );
     });
-      success: 1,
-      failed: 0,
-      errors: [],
-    });
-      totalAlarms: 1,
-      activeAlarms: 1,
-      scheduledNotifications: 5,
-    });
-
     mockGeolocation.getCurrentPosition.mockImplementation(success =>
       success({
         coords: {
@@ -781,4 +763,5 @@ Object.defineProperty(global, 'URL', {
       expect(result.current.loading).toBe(false);
     });
   });
+});
 });

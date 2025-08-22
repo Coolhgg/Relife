@@ -1,3 +1,4 @@
+/* global describe,it,expect,beforeEach,afterEach */
 import { expect, test, jest } from "@jest/globals";
 import { renderHook, act } from "@testing-library/react";
 
@@ -65,6 +66,7 @@ Object.defineProperty(global.navigator, 'geolocation', {
   writable: true
 });
 
+describe('useAdvancedAlarms Edge Cases', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     localStorage.clear();
@@ -667,4 +669,5 @@ Object.defineProperty(global.navigator, 'geolocation', {
       expect(result.current.error).toBeNull();
     });
   });
+});
 });
