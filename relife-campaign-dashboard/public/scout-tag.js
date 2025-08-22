@@ -1,12 +1,12 @@
 (function () {
   // Create the built by scout tag
-  const tag = document.createElement("div");
-  tag.id = "built-by-scout";
+  const tag = document.createElement('div');
+  tag.id = 'built-by-scout';
   tag.innerHTML =
     '<a href="https://scout.new" target="_blank" rel="noopener noreferrer">Built by Scout</a>';
 
   // Style the tag
-  const style = document.createElement("style");
+  const style = document.createElement('style');
   style.textContent = `
     #built-by-scout {
       position: fixed;
@@ -67,8 +67,8 @@
   document.head.appendChild(style);
 
   // Wait for DOM to be ready
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
       document.body.appendChild(tag);
     });
   } else {

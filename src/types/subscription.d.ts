@@ -176,7 +176,9 @@ export interface ReferralStats {
 }
 
 // Extended interfaces for better type safety
-export interface EnhancedBillingUsage extends import('./premium').BillingUsage {
+import { BillingUsage } from './premium';
+
+export interface EnhancedBillingUsage extends BillingUsage {
   usage: {
     [feature: string]: {
       used: number;
@@ -188,12 +190,32 @@ export interface EnhancedBillingUsage extends import('./premium').BillingUsage {
 }
 
 // Type guards for runtime type checking
-export function isValidSubscriptionTier(tier: string): tier is import('./premium').SubscriptionTier {
-  const validTiers = ['free', 'basic', 'student', 'premium', 'pro', 'ultimate', 'lifetime'];
+export function isValidSubscriptionTier(
+  tier: string
+): tier is import('./premium').SubscriptionTier {
+  const validTiers = [
+    'free',
+    'basic',
+    'student',
+    'premium',
+    'pro',
+    'ultimate',
+    'lifetime',
+  ];
   return validTiers.includes(tier);
 }
 
-export function isValidSubscriptionStatus(status: string): status is import('./premium').SubscriptionStatus {
-  const validStatuses = ['active', 'canceled', 'past_due', 'unpaid', 'trialing', 'incomplete', 'incomplete_expired'];
+export function isValidSubscriptionStatus(
+  status: string
+): status is import('./premium').SubscriptionStatus {
+  const validStatuses = [
+    'active',
+    'canceled',
+    'past_due',
+    'unpaid',
+    'trialing',
+    'incomplete',
+    'incomplete_expired',
+  ];
   return validStatuses.includes(status);
 }

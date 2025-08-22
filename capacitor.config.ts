@@ -11,32 +11,32 @@ const config: CapacitorConfig = {
       '*.supabase.co',
       '*.googleapis.com',
       'localhost',
-      '*.scrapybara.com'
-    ]
+      '*.scrapybara.com',
+    ],
   },
   bundledWebRuntime: false,
   plugins: {
     SplashScreen: {
       launchAutoHide: false,
       launchFadeOutDuration: 1000,
-      backgroundColor: "#667eea",
-      androidSplashResourceName: "splash",
-      androidScaleType: "CENTER_CROP",
+      backgroundColor: '#667eea',
+      androidSplashResourceName: 'splash',
+      androidScaleType: 'CENTER_CROP',
       showSpinner: false,
-      spinnerColor: "#ffffff"
+      spinnerColor: '#ffffff',
     },
     StatusBar: {
       style: 'dark',
-      backgroundColor: "#667eea"
+      backgroundColor: '#667eea',
     },
     Notifications: {
-      presentationOptions: ["badge", "sound", "alert"],
-      iconColor: "#667eea"
+      presentationOptions: ['badge', 'sound', 'alert'],
+      iconColor: '#667eea',
     },
     LocalNotifications: {
-      iconColor: "#667eea",
-      sound: "beep.wav",
-      smallIcon: "ic_stat_icon_config_sample"
+      iconColor: '#667eea',
+      sound: 'beep.wav',
+      smallIcon: 'ic_stat_icon_config_sample',
     },
     Haptics: {
       // Enable haptic feedback
@@ -50,24 +50,24 @@ const config: CapacitorConfig = {
     BackgroundMode: {
       // Enable background processing for alarms
       enabled: true,
-      title: "Relife Alarm is running",
-      text: "Keeping your alarms ready",
+      title: 'Relife Alarm is running',
+      text: 'Keeping your alarms ready',
       silent: false,
       resume: true,
       // Additional background mode options
       hidden: false,
-      color: "667eea",
-      icon: "ic_launcher"
+      color: '667eea',
+      icon: 'ic_launcher',
     },
     CapacitorUpdater: {
       // Auto-update configuration
       autoUpdate: false,
-      resetWhenUpdate: true
+      resetWhenUpdate: true,
     },
     Keyboard: {
       resize: 'body',
       style: 'dark',
-      resizeOnFullScreen: true
+      resizeOnFullScreen: true,
     },
     Screen: {
       // Screen orientation and wake lock
@@ -92,15 +92,15 @@ const config: CapacitorConfig = {
     },
     Badge: {
       // Enable app badge for pending alarms
-    }
+    },
   },
   android: {
     allowMixedContent: true,
     captureInput: true,
     webContentsDebuggingEnabled: true,
     // Enhanced Android configuration
-    backgroundColor: "#667eea",
-    loggingBehavior: "debug",
+    backgroundColor: '#667eea',
+    loggingBehavior: 'debug',
     // Splash screen configuration
     hideLogs: false,
     // Keyboard configuration
@@ -108,33 +108,32 @@ const config: CapacitorConfig = {
     // Security
     allowBackup: false,
     // Performance optimizations
-    useLegacyBridge: false
+    useLegacyBridge: false,
   },
   ios: {
-    scheme: "Relife",
-    contentInset: "automatic",
+    scheme: 'Relife',
+    contentInset: 'automatic',
     // Enhanced iOS configuration
-    backgroundColor: "#667eea",
+    backgroundColor: '#667eea',
     // Scroll configuration
     scrollEnabled: true,
-    overrideUserInterfaceStyle: "automatic",
+    overrideUserInterfaceStyle: 'automatic',
     // Keyboard configuration
     hideKeyboardAccessoryBar: false,
     keyboardDisplayRequiresUserAction: true,
     // Security and privacy
     allowsLinkPreview: false,
     // Performance
-    limitsNavigationsToAppBoundDomains: true
-  }
-},
+    limitsNavigationsToAppBoundDomains: true,
+  },
 
   // Development server configuration
   ...(process.env.NODE_ENV === 'development' && {
     server: {
       url: 'http://localhost:5173',
-      cleartext: true
-    }
-  })
+      cleartext: true,
+    },
+  }),
 };
 
 export default config;

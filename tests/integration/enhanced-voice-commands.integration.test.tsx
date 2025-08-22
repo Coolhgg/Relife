@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /**
  * Enhanced Voice Commands Integration Tests
- * 
+ *
  * Comprehensive end-to-end tests for voice recognition and voice command functionality
  * using enhanced browser API mocks for realistic testing:
  * - Voice permissions and microphone access
@@ -13,7 +13,16 @@
  * - Performance and reliability testing
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -33,10 +42,14 @@ import {
   speechHelpers,
   permissionHelpers,
   simulateAlarmNotification,
-  verifyNotificationShown
+  verifyNotificationShown,
 } from '../utils/integration-test-setup';
 
-import { createMockUser, createMockAlarm, measurePerformance } from '../utils/test-mocks';
+import {
+  createMockUser,
+  createMockAlarm,
+  measurePerformance,
+} from '../utils/test-mocks';
 import type { Alarm, User, VoiceMood } from '../../src/types';
 
 // Mock external services
@@ -51,7 +64,7 @@ describe('Enhanced Voice Commands Integration', () => {
   let container: HTMLElement;
   let user: ReturnType<typeof userEvent.setup>;
   let mockUser: User;
-  
+
   // Service instances
   let voiceRecognitionService: VoiceRecognitionService;
   let voiceEnhancedService: VoiceEnhancedService;
@@ -71,13 +84,13 @@ describe('Enhanced Voice Commands Integration', () => {
       preferences: {
         voiceCommands: true,
         voiceLanguage: 'en-US',
-        voiceSensitivity: 0.8
-      }
+        voiceSensitivity: 0.8,
+      },
     });
-    
+
     // Reset all mocks
     vi.clearAllMocks();
-    
+
     // Mock service instances
     voiceRecognitionService = VoiceRecognitionService.getInstance() as any;
     voiceEnhancedService = VoiceEnhancedService.getInstance() as any;
@@ -85,16 +98,16 @@ describe('Enhanced Voice Commands Integration', () => {
 
     // Mock successful authentication
     vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
-    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({ 
-      alarms: [], 
-      error: null 
+    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
+      alarms: [],
+      error: null,
     });
-    
+
     // Mock voice services
     vi.mocked(voiceRecognitionService.isSupported).mockReturnValue(true);
     vi.mocked(voiceRecognitionService.getPermissionStatus).mockResolvedValue('granted');
     vi.mocked(voiceEnhancedService.initialize).mockResolvedValue(true);
-    
+
     // Mock analytics
     vi.mocked(analyticsService.trackVoiceCommand).mockImplementation(() => {});
     vi.mocked(analyticsService.trackVoiceError).mockImplementation(() => {});
@@ -115,7 +128,7 @@ describe('Enhanced Voice Commands Integration', () => {
 
   describe('Voice Permission and Setup', () => {
     it('should request and handle microphone permissions', async () => {
-      const performanceMeasures: {[key: string]: number} = {};
+      const performanceMeasures: { [key: string]: number } = {};
 
       // Step 1: Load app
       const appInitTime = await measurePerformance(async () => {
@@ -128,7 +141,7 @@ describe('Enhanced Voice Commands Integration', () => {
           container = result.container;
         });
       });
-      
+
       performanceMeasures.appInit = appInitTime;
 
       await waitFor(() => {
@@ -136,7 +149,9 @@ describe('Enhanced Voice Commands Integration', () => {
       });
 
       // Step 2: Navigate to voice settings
-      const settingsButton = screen.getByRole('button', { name: /settings|preferences/i });
+      const settingsButton = screen.getByRole('button', {
+        name: /settings|preferences/i,
+      });
       await user.click(settingsButton);
 
       const voiceTab = screen.queryByText(/voice|speech/i);
@@ -145,17 +160,21 @@ describe('Enhanced Voice Commands Integration', () => {
       }
 
       // Step 3: Enable voice commands
-      const enableVoiceToggle = screen.getByLabelText(/enable.*voice.*command|voice.*control/i);
+      const enableVoiceToggle = screen.getByLabelText(
+        /enable.*voice.*command|voice.*control/i
+      );
       if (!enableVoiceToggle.checked) {
         await user.click(enableVoiceToggle);
       }
 
       // Step 4: Mock microphone permission request
       permissionHelpers.setPermission('microphone', 'prompt');
-      
+
       // Should request microphone permission
       await waitFor(() => {
-        expect(screen.getByText(/microphone.*permission|allow.*microphone/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/microphone.*permission|allow.*microphone/i)
+        ).toBeInTheDocument();
       });
 
       // Grant permission
@@ -167,14 +186,16 @@ describe('Enhanced Voice Commands Integration', () => {
 
       // Step 5: Verify voice setup completion
       await waitFor(() => {
-        expect(screen.getByText(/voice.*enabled|ready.*voice|microphone.*ready/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/voice.*enabled|ready.*voice|microphone.*ready/i)
+        ).toBeInTheDocument();
       });
 
       expect(voiceRecognitionService.initialize).toHaveBeenCalled();
       expect(analyticsService.trackVoiceCommand).toHaveBeenCalledWith({
         command: 'setup_complete',
         userId: 'voice-user-123',
-        success: true
+        success: true,
       });
 
       console.log('Voice setup performance:', performanceMeasures);
@@ -202,18 +223,22 @@ describe('Enhanced Voice Commands Integration', () => {
       permissionHelpers.setPermission('microphone', 'denied');
 
       await waitFor(() => {
-        expect(screen.getByText(/microphone.*denied|permission.*required/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/microphone.*denied|permission.*required/i)
+        ).toBeInTheDocument();
       });
 
       // Should show alternative interaction methods
-      const keyboardShortcutsInfo = screen.queryByText(/keyboard.*shortcut|alternative.*input/i);
+      const keyboardShortcutsInfo = screen.queryByText(
+        /keyboard.*shortcut|alternative.*input/i
+      );
       if (keyboardShortcutsInfo) {
         expect(keyboardShortcutsInfo).toBeInTheDocument();
       }
 
       expect(analyticsService.trackVoiceError).toHaveBeenCalledWith({
         error: 'permission_denied',
-        userId: 'voice-user-123'
+        userId: 'voice-user-123',
       });
     });
   });
@@ -237,17 +262,24 @@ describe('Enhanced Voice Commands Integration', () => {
       });
 
       // Step 1: Activate voice commands
-      const voiceButton = screen.getByRole('button', { name: /voice.*command|microphone|speak/i });
+      const voiceButton = screen.getByRole('button', {
+        name: /voice.*command|microphone|speak/i,
+      });
       await user.click(voiceButton);
 
       // Step 2: Simulate voice command for alarm creation
       await act(async () => {
-        speechHelpers.simulateResult('create alarm at 7 AM tomorrow called Morning Workout', true);
+        speechHelpers.simulateResult(
+          'create alarm at 7 AM tomorrow called Morning Workout',
+          true
+        );
       });
 
       // Step 3: Voice command should trigger alarm creation dialog
       await waitFor(() => {
-        expect(screen.getByRole('dialog', { name: /create.*alarm|new.*alarm/i })).toBeInTheDocument();
+        expect(
+          screen.getByRole('dialog', { name: /create.*alarm|new.*alarm/i })
+        ).toBeInTheDocument();
       });
 
       // Should pre-fill form based on voice command
@@ -263,12 +295,12 @@ describe('Enhanced Voice Commands Integration', () => {
         userId: mockUser.id,
         time: '07:00',
         label: 'Morning Workout',
-        voiceCreated: true
+        voiceCreated: true,
       });
 
       vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
         alarm: mockAlarm,
-        error: null
+        error: null,
       });
 
       const saveButton = screen.getByRole('button', { name: /save|create/i });
@@ -285,8 +317,8 @@ describe('Enhanced Voice Commands Integration', () => {
         success: true,
         parameters: {
           time: '07:00',
-          label: 'Morning Workout'
-        }
+          label: 'Morning Workout',
+        },
       });
     });
 
@@ -308,14 +340,14 @@ describe('Enhanced Voice Commands Integration', () => {
         userId: mockUser.id,
         time: '08:00',
         label: 'Voice Snooze Test',
-        enabled: true
+        enabled: true,
       });
 
       // Simulate alarm triggering
       const notification = await simulateAlarmNotification('Voice Snooze Test', {
         body: 'Time to wake up!',
         tag: 'alarm-snooze-test-alarm-456',
-        requireInteraction: true
+        requireInteraction: true,
       });
 
       await waitFor(() => {
@@ -325,7 +357,7 @@ describe('Enhanced Voice Commands Integration', () => {
       // Step 1: Simulate voice snooze command
       vi.mocked(AlarmService.snoozeAlarm).mockResolvedValueOnce({
         success: true,
-        snoozeUntil: new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
+        snoozeUntil: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
       });
 
       await act(async () => {
@@ -344,7 +376,7 @@ describe('Enhanced Voice Commands Integration', () => {
         alarmId: 'snooze-test-alarm-456',
         snoozeMethod: 'voice',
         snoozeDuration: 10 * 60 * 1000,
-        userId: 'voice-user-123'
+        userId: 'voice-user-123',
       });
 
       // Step 3: Should return to dashboard
@@ -372,12 +404,12 @@ describe('Enhanced Voice Commands Integration', () => {
         id: 'dismiss-test-alarm-789',
         userId: mockUser.id,
         time: '09:00',
-        label: 'Voice Dismiss Test'
+        label: 'Voice Dismiss Test',
       });
 
       const notification = await simulateAlarmNotification('Voice Dismiss Test', {
         body: 'Time to wake up!',
-        tag: 'alarm-dismiss-test-alarm-789'
+        tag: 'alarm-dismiss-test-alarm-789',
       });
 
       await waitFor(() => {
@@ -387,7 +419,7 @@ describe('Enhanced Voice Commands Integration', () => {
       // Step 1: Simulate voice dismissal
       vi.mocked(AlarmService.dismissAlarm).mockResolvedValueOnce({
         success: true,
-        dismissedAt: new Date()
+        dismissedAt: new Date(),
       });
 
       await act(async () => {
@@ -405,7 +437,7 @@ describe('Enhanced Voice Commands Integration', () => {
       expect(analyticsService.trackAlarmDismissed).toHaveBeenCalledWith({
         alarmId: 'dismiss-test-alarm-789',
         dismissMethod: 'voice',
-        userId: 'voice-user-123'
+        userId: 'voice-user-123',
       });
 
       await waitFor(() => {
@@ -434,7 +466,9 @@ describe('Enhanced Voice Commands Integration', () => {
       });
 
       // Step 1: Navigate to settings using voice
-      const voiceButton = screen.getByRole('button', { name: /voice.*command|microphone/i });
+      const voiceButton = screen.getByRole('button', {
+        name: /voice.*command|microphone/i,
+      });
       await user.click(voiceButton);
 
       await act(async () => {
@@ -467,7 +501,7 @@ describe('Enhanced Voice Commands Integration', () => {
         command: 'navigate',
         userId: 'voice-user-123',
         success: true,
-        parameters: { destination: 'dashboard' }
+        parameters: { destination: 'dashboard' },
       });
     });
   });
@@ -490,14 +524,18 @@ describe('Enhanced Voice Commands Integration', () => {
       await user.click(settingsButton);
 
       // Step 1: Change language to Spanish
-      const languageSelect = screen.getByLabelText(/voice.*language|language.*preference/i);
+      const languageSelect = screen.getByLabelText(
+        /voice.*language|language.*preference/i
+      );
       await user.selectOptions(languageSelect, 'es-ES');
 
       // Mock language change
       vi.mocked(voiceRecognitionService.setLanguage).mockResolvedValue(true);
 
       // Step 2: Test Spanish voice command
-      const voiceButton = screen.getByRole('button', { name: /voice.*command|micrófono/i });
+      const voiceButton = screen.getByRole('button', {
+        name: /voice.*command|micrófono/i,
+      });
       await user.click(voiceButton);
 
       await act(async () => {
@@ -508,14 +546,16 @@ describe('Enhanced Voice Commands Integration', () => {
 
       // Should interpret Spanish command correctly
       await waitFor(() => {
-        expect(screen.getByRole('dialog', { name: /crear.*alarma|nueva.*alarma/i })).toBeInTheDocument();
+        expect(
+          screen.getByRole('dialog', { name: /crear.*alarma|nueva.*alarma/i })
+        ).toBeInTheDocument();
       });
 
       expect(analyticsService.trackVoiceCommand).toHaveBeenCalledWith({
         command: 'create_alarm',
         language: 'es-ES',
         userId: 'voice-user-123',
-        success: true
+        success: true,
       });
 
       // Step 3: Test French voice command
@@ -545,7 +585,9 @@ describe('Enhanced Voice Commands Integration', () => {
         container = result.container;
       });
 
-      const voiceButton = screen.getByRole('button', { name: /voice.*command|microphone/i });
+      const voiceButton = screen.getByRole('button', {
+        name: /voice.*command|microphone/i,
+      });
       await user.click(voiceButton);
 
       // Step 1: Simulate network error
@@ -554,7 +596,9 @@ describe('Enhanced Voice Commands Integration', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByText(/network.*error|connection.*problem|try.*again/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/network.*error|connection.*problem|try.*again/i)
+        ).toBeInTheDocument();
       });
 
       // Step 2: Simulate no speech detected
@@ -565,7 +609,9 @@ describe('Enhanced Voice Commands Integration', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByText(/no.*speech|didn.*hear|try.*speaking/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/no.*speech|didn.*hear|try.*speaking/i)
+        ).toBeInTheDocument();
       });
 
       // Step 3: Simulate audio capture error
@@ -576,7 +622,9 @@ describe('Enhanced Voice Commands Integration', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByText(/microphone.*error|audio.*problem/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/microphone.*error|audio.*problem/i)
+        ).toBeInTheDocument();
       });
 
       // Should show keyboard shortcut alternatives
@@ -600,8 +648,10 @@ describe('Enhanced Voice Commands Integration', () => {
         container = result.container;
       });
 
-      const voiceButton = screen.getByRole('button', { name: /voice.*command|microphone/i });
-      
+      const voiceButton = screen.getByRole('button', {
+        name: /voice.*command|microphone/i,
+      });
+
       // Simulate multiple consecutive failures
       for (let i = 0; i < 3; i++) {
         await user.click(voiceButton);
@@ -615,20 +665,24 @@ describe('Enhanced Voice Commands Integration', () => {
 
       // After multiple failures, should suggest text input
       await waitFor(() => {
-        expect(screen.getByText(/text.*input|type.*command|keyboard.*alternative/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/text.*input|type.*command|keyboard.*alternative/i)
+        ).toBeInTheDocument();
       });
 
       // Should show text command input
       const textCommandInput = screen.queryByLabelText(/text.*command|type.*here/i);
       if (textCommandInput) {
         expect(textCommandInput).toBeInTheDocument();
-        
+
         // Test text fallback
         await user.type(textCommandInput, 'create alarm at 10 AM');
         await user.keyboard('{Enter}');
 
         await waitFor(() => {
-          expect(screen.getByRole('dialog', { name: /create.*alarm/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole('dialog', { name: /create.*alarm/i })
+          ).toBeInTheDocument();
         });
       }
     });
@@ -656,13 +710,17 @@ describe('Enhanced Voice Commands Integration', () => {
         await user.click(voiceTab);
       }
 
-      const voiceLearningToggle = screen.queryByLabelText(/voice.*learning|adapt.*voice|personalization/i);
+      const voiceLearningToggle = screen.queryByLabelText(
+        /voice.*learning|adapt.*voice|personalization/i
+      );
       if (voiceLearningToggle && !voiceLearningToggle.checked) {
         await user.click(voiceLearningToggle);
       }
 
       // Step 2: Simulate voice training session
-      const trainVoiceButton = screen.queryByRole('button', { name: /train.*voice|voice.*setup/i });
+      const trainVoiceButton = screen.queryByRole('button', {
+        name: /train.*voice|voice.*setup/i,
+      });
       if (trainVoiceButton) {
         await user.click(trainVoiceButton);
 
@@ -671,26 +729,32 @@ describe('Enhanced Voice Commands Integration', () => {
           'create alarm',
           'snooze for five minutes',
           'dismiss alarm',
-          'go to settings'
+          'go to settings',
         ];
 
         for (const phrase of trainingPhrases) {
           await act(async () => {
             speechHelpers.simulateResult(phrase, true);
           });
-          
+
           await waitFor(() => {
-            expect(screen.getByText(/training.*progress|voice.*pattern/i)).toBeInTheDocument();
+            expect(
+              screen.getByText(/training.*progress|voice.*pattern/i)
+            ).toBeInTheDocument();
           });
         }
 
         await waitFor(() => {
-          expect(screen.getByText(/training.*complete|voice.*ready/i)).toBeInTheDocument();
+          expect(
+            screen.getByText(/training.*complete|voice.*ready/i)
+          ).toBeInTheDocument();
         });
       }
 
       // Step 3: Test improved recognition accuracy
-      const voiceButton = screen.getByRole('button', { name: /voice.*command|microphone/i });
+      const voiceButton = screen.getByRole('button', {
+        name: /voice.*command|microphone/i,
+      });
       await user.click(voiceButton);
 
       // Simulate faster, more accurate recognition
@@ -703,7 +767,9 @@ describe('Enhanced Voice Commands Integration', () => {
       expect(recognitionTime).toBeLessThan(1000); // Should be faster after training
 
       await waitFor(() => {
-        expect(screen.getByRole('dialog', { name: /create.*alarm/i })).toBeInTheDocument();
+        expect(
+          screen.getByRole('dialog', { name: /create.*alarm/i })
+        ).toBeInTheDocument();
       });
 
       expect(analyticsService.trackVoiceCommand).toHaveBeenCalledWith({
@@ -711,7 +777,7 @@ describe('Enhanced Voice Commands Integration', () => {
         userId: 'voice-user-123',
         success: true,
         recognitionAccuracy: expect.any(Number),
-        responseTime: expect.any(Number)
+        responseTime: expect.any(Number),
       });
     });
   });
@@ -721,7 +787,7 @@ describe('Enhanced Voice Commands Integration', () => {
       // Mock screen reader detection
       Object.defineProperty(navigator, 'userAgent', {
         value: 'MockBrowser NVDA/2021.1',
-        writable: true
+        writable: true,
       });
 
       permissionHelpers.setPermission('microphone', 'granted');
@@ -744,13 +810,17 @@ describe('Enhanced Voice Commands Integration', () => {
         await user.click(accessibilityTab);
       }
 
-      const voiceFeedbackToggle = screen.queryByLabelText(/voice.*feedback|audio.*description/i);
+      const voiceFeedbackToggle = screen.queryByLabelText(
+        /voice.*feedback|audio.*description/i
+      );
       if (voiceFeedbackToggle && !voiceFeedbackToggle.checked) {
         await user.click(voiceFeedbackToggle);
       }
 
       // Test voice feedback for navigation
-      const voiceButton = screen.getByRole('button', { name: /voice.*command|microphone/i });
+      const voiceButton = screen.getByRole('button', {
+        name: /voice.*command|microphone/i,
+      });
       await user.click(voiceButton);
 
       await act(async () => {
@@ -759,13 +829,15 @@ describe('Enhanced Voice Commands Integration', () => {
 
       // Should provide audio confirmation
       await waitFor(() => {
-        expect(screen.getByText(/navigating.*alarms|going.*alarms/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/navigating.*alarms|going.*alarms/i)
+        ).toBeInTheDocument();
       });
 
       // Mock speech synthesis for audio feedback
       expect(global.speechSynthesis.speak).toHaveBeenCalledWith(
         expect.objectContaining({
-          text: expect.stringContaining('alarms')
+          text: expect.stringContaining('alarms'),
         })
       );
     });
@@ -783,7 +855,9 @@ describe('Enhanced Voice Commands Integration', () => {
       });
 
       // Test hands-free alarm creation
-      const voiceButton = screen.getByRole('button', { name: /voice.*command|microphone/i });
+      const voiceButton = screen.getByRole('button', {
+        name: /voice.*command|microphone/i,
+      });
       await user.click(voiceButton);
 
       // Complex voice command without manual interaction
@@ -796,7 +870,9 @@ describe('Enhanced Voice Commands Integration', () => {
 
       // Should create alarm without requiring manual form interaction
       await waitFor(() => {
-        expect(screen.getByRole('dialog', { name: /create.*alarm/i })).toBeInTheDocument();
+        expect(
+          screen.getByRole('dialog', { name: /create.*alarm/i })
+        ).toBeInTheDocument();
       });
 
       // Form should be pre-filled from voice command
@@ -811,7 +887,7 @@ describe('Enhanced Voice Commands Integration', () => {
         screen.getByLabelText(/tuesday/i),
         screen.getByLabelText(/wednesday/i),
         screen.getByLabelText(/thursday/i),
-        screen.getByLabelText(/friday/i)
+        screen.getByLabelText(/friday/i),
       ];
 
       weekdayCheckboxes.forEach(checkbox => {
@@ -833,12 +909,12 @@ describe('Enhanced Voice Commands Integration', () => {
         label: 'Work Alarm',
         days: [1, 2, 3, 4, 5],
         snoozeEnabled: true,
-        voiceCreated: true
+        voiceCreated: true,
       });
 
       vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
         alarm: mockAlarm,
-        error: null
+        error: null,
       });
 
       await waitFor(() => {
@@ -854,8 +930,8 @@ describe('Enhanced Voice Commands Integration', () => {
           time: '07:15',
           label: 'Work Alarm',
           days: [1, 2, 3, 4, 5],
-          snoozeEnabled: true
-        }
+          snoozeEnabled: true,
+        },
       });
     });
   });
@@ -873,13 +949,15 @@ describe('Enhanced Voice Commands Integration', () => {
         container = result.container;
       });
 
-      const voiceButton = screen.getByRole('button', { name: /voice.*command|microphone/i });
+      const voiceButton = screen.getByRole('button', {
+        name: /voice.*command|microphone/i,
+      });
       const commands = [
         'create alarm at six AM',
         'go to settings',
         'show my alarms',
         'go home',
-        'create alarm at seven PM'
+        'create alarm at seven PM',
       ];
 
       // Test rapid consecutive voice commands
@@ -889,9 +967,12 @@ describe('Enhanced Voice Commands Integration', () => {
           await act(async () => {
             speechHelpers.simulateResult(command, true);
           });
-          await waitFor(() => {
-            // Wait for command processing
-          }, { timeout: 2000 });
+          await waitFor(
+            () => {
+              // Wait for command processing
+            },
+            { timeout: 2000 }
+          );
         });
 
         expect(commandTime).toBeLessThan(2000); // Each command should process quickly

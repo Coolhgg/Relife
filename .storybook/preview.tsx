@@ -1,9 +1,9 @@
-import type { Preview } from '@storybook/react-vite'
-import { themes } from '@storybook/theming'
-import '../src/index.css'
+import type { Preview } from '@storybook/react-vite';
+import { themes } from '@storybook/theming';
+import '../src/index.css';
 
 // Import Storybook providers
-import { StorybookProviders } from './decorators'
+import { StorybookProviders } from './decorators';
 
 const preview: Preview = {
   parameters: {
@@ -226,11 +226,11 @@ const preview: Preview = {
   decorators: [
     (Story, context) => {
       const { theme, locale, userTier, a11yColorMode, a11yFontSize } = context.globals;
-      
+
       // Generate accessibility classes
       const getA11yClasses = () => {
         let classes = '';
-        
+
         // Color mode accessibility classes
         switch (a11yColorMode) {
           case 'protanopia':
@@ -249,7 +249,7 @@ const preview: Preview = {
             classes += ' high-contrast';
             break;
         }
-        
+
         // Font size accessibility classes
         switch (a11yFontSize) {
           case 'large':
@@ -262,10 +262,10 @@ const preview: Preview = {
             classes += ' text-2xl';
             break;
         }
-        
+
         return classes;
       };
-      
+
       return (
         <StorybookProviders
           theme={theme}
@@ -276,15 +276,22 @@ const preview: Preview = {
         >
           <div
             className={`min-h-screen transition-colors duration-200 ${
-              theme === 'dark' ? 'dark bg-slate-900 text-white' : 'bg-white text-slate-900'
+              theme === 'dark'
+                ? 'dark bg-slate-900 text-white'
+                : 'bg-white text-slate-900'
             }${getA11yClasses()}`}
             style={{
               // CSS filters for color vision deficiency simulation
-              filter: a11yColorMode === 'protanopia' ? 'url(#protanopia)' :
-                     a11yColorMode === 'deuteranopia' ? 'url(#deuteranopia)' :
-                     a11yColorMode === 'tritanopia' ? 'url(#tritanopia)' :
-                     a11yColorMode === 'achromatopsia' ? 'grayscale(100%)' :
-                     'none',
+              filter:
+                a11yColorMode === 'protanopia'
+                  ? 'url(#protanopia)'
+                  : a11yColorMode === 'deuteranopia'
+                    ? 'url(#deuteranopia)'
+                    : a11yColorMode === 'tritanopia'
+                      ? 'url(#tritanopia)'
+                      : a11yColorMode === 'achromatopsia'
+                        ? 'grayscale(100%)'
+                        : 'none',
               // High contrast mode
               ...(a11yColorMode === 'high-contrast' && {
                 filter: 'contrast(150%) brightness(150%)',
@@ -294,17 +301,28 @@ const preview: Preview = {
             }}
           >
             {/* SVG filters for color vision deficiency simulation */}
-            {(a11yColorMode === 'protanopia' || a11yColorMode === 'deuteranopia' || a11yColorMode === 'tritanopia') && (
+            {(a11yColorMode === 'protanopia' ||
+              a11yColorMode === 'deuteranopia' ||
+              a11yColorMode === 'tritanopia') && (
               <svg style={{ position: 'absolute', width: 0, height: 0 }}>
                 <defs>
                   <filter id="protanopia">
-                    <feColorMatrix type="matrix" values="0.567,0.433,0,0,0 0.558,0.442,0,0,0 0,0.242,0.758,0,0 0,0,0,1,0"/>
+                    <feColorMatrix
+                      type="matrix"
+                      values="0.567,0.433,0,0,0 0.558,0.442,0,0,0 0,0.242,0.758,0,0 0,0,0,1,0"
+                    />
                   </filter>
                   <filter id="deuteranopia">
-                    <feColorMatrix type="matrix" values="0.625,0.375,0,0,0 0.7,0.3,0,0,0 0,0.3,0.7,0,0 0,0,0,1,0"/>
+                    <feColorMatrix
+                      type="matrix"
+                      values="0.625,0.375,0,0,0 0.7,0.3,0,0,0 0,0.3,0.7,0,0 0,0,0,1,0"
+                    />
                   </filter>
                   <filter id="tritanopia">
-                    <feColorMatrix type="matrix" values="0.95,0.05,0,0,0 0,0.433,0.567,0,0 0,0.475,0.525,0,0 0,0,0,1,0"/>
+                    <feColorMatrix
+                      type="matrix"
+                      values="0.95,0.05,0,0,0 0,0.433,0.567,0,0 0,0.475,0.525,0,0 0,0,0,1,0"
+                    />
                   </filter>
                 </defs>
               </svg>

@@ -1,11 +1,20 @@
 /**
  * Analytics Logging Flow Integration Tests
- * 
+ *
  * Comprehensive tests for analytics event tracking, user identification,
  * feature usage monitoring, and performance analytics across all user flows.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -32,7 +41,7 @@ import {
   renderWithProviders,
   waitForLoadingToFinish,
   expectNoConsoleErrors,
-  measureRenderTime
+  measureRenderTime,
 } from '../utils/enhanced-test-utilities';
 
 import { setupAllMocks } from '../utils/test-mocks';
@@ -60,12 +69,12 @@ describe('Analytics Logging Flow Integration Tests', () => {
     user = userEvent.setup();
     mockUser = createMockUser();
     checkConsoleErrors = expectNoConsoleErrors();
-    
+
     testDataHelpers.clearAll();
     testDataHelpers.addUser(mockUser);
-    
+
     vi.clearAllMocks();
-    
+
     // Mock console methods to prevent test noise
     vi.spyOn(console, 'log').mockImplementation(() => {});
     vi.spyOn(console, 'info').mockImplementation(() => {});
@@ -88,20 +97,20 @@ describe('Analytics Logging Flow Integration Tests', () => {
         name: mockUser.name,
         subscriptionTier: mockUser.subscriptionTier,
         level: mockUser.level,
-        detectedPersona: mockUser.detectedPersona
+        detectedPersona: mockUser.detectedPersona,
       });
 
       // Should track session start
       expectAnalyticsEvent(mockPostHogInstance, 'session_started', {
         userId: mockUser.id,
         platform: 'web',
-        userAgent: expect.any(String)
+        userAgent: expect.any(String),
       });
 
       // Should track page view
       expectAnalyticsEvent(mockPostHogInstance, 'page_viewed', {
         page: 'dashboard',
-        userId: mockUser.id
+        userId: mockUser.id,
       });
     });
 
@@ -115,7 +124,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
 
       expectAnalyticsEvent(mockPostHogInstance, 'alarm_form_opened', {
         userId: mockUser.id,
-        source: 'add_button'
+        source: 'add_button',
       });
 
       await waitFor(() => {
@@ -128,23 +137,23 @@ describe('Analytics Logging Flow Integration Tests', () => {
         label: 'Analytics Test Alarm',
         days: [1, 2, 3, 4, 5],
         voiceMood: 'motivational',
-        snoozeEnabled: true
+        snoozeEnabled: true,
       });
 
       // Should track field interactions
       expectAnalyticsEvent(mockPostHogInstance, 'alarm_field_changed', {
         field: 'time',
-        value: '07:30'
+        value: '07:30',
       });
 
       expectAnalyticsEvent(mockPostHogInstance, 'alarm_field_changed', {
         field: 'label',
-        value: 'Analytics Test Alarm'
+        value: 'Analytics Test Alarm',
       });
 
       expectAnalyticsEvent(mockPostHogInstance, 'alarm_field_changed', {
         field: 'voiceMood',
-        value: 'motivational'
+        value: 'motivational',
       });
 
       // Save alarm
@@ -160,14 +169,14 @@ describe('Analytics Logging Flow Integration Tests', () => {
           days: [1, 2, 3, 4, 5],
           voiceMood: 'motivational',
           snoozeEnabled: true,
-          difficulty: 'medium'
+          difficulty: 'medium',
         });
       });
 
       // Should track form completion
       expectAnalyticsEvent(mockPostHogInstance, 'alarm_form_completed', {
         duration: expect.any(Number),
-        success: true
+        success: true,
       });
 
       // Verify alarm appears
@@ -182,7 +191,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
 
         expectAnalyticsEvent(mockPostHogInstance, 'alarm_edit_started', {
           alarmId: expect.any(String),
-          source: 'edit_button'
+          source: 'edit_button',
         });
       }
     });
@@ -198,11 +207,11 @@ describe('Analytics Logging Flow Integration Tests', () => {
 
         expectAnalyticsEvent(mockPostHogInstance, 'navigation_clicked', {
           destination: 'settings',
-          source: 'main_menu'
+          source: 'main_menu',
         });
 
         expectAnalyticsEvent(mockPostHogInstance, 'page_viewed', {
-          page: 'settings'
+          page: 'settings',
         });
       }
 
@@ -213,7 +222,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
 
         expectAnalyticsEvent(mockPostHogInstance, 'feature_discovered', {
           feature: 'voice_commands',
-          discoveryMethod: 'settings_navigation'
+          discoveryMethod: 'settings_navigation',
         });
       }
 
@@ -224,7 +233,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
 
         expectAnalyticsEvent(mockPostHogInstance, 'help_accessed', {
           section: 'general',
-          source: 'help_button'
+          source: 'help_button',
         });
       }
     });
@@ -245,7 +254,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
 
       await fillAlarmForm(user, {
         time: '08:00',
-        label: 'Error Test Alarm'
+        label: 'Error Test Alarm',
       });
 
       const saveButton = screen.getByRole('button', { name: /save|create/i });
@@ -256,13 +265,13 @@ describe('Analytics Logging Flow Integration Tests', () => {
         expectAnalyticsEvent(mockPostHogInstance, 'error_occurred', {
           errorType: 'network_error',
           context: 'alarm_creation',
-          userId: mockUser.id
+          userId: mockUser.id,
         });
       });
 
       // Should track retry attempt
       integrationTestUtils.resetNetworkSimulation();
-      
+
       const retryButton = screen.queryByRole('button', { name: /retry|try.*again/i });
       if (retryButton) {
         await user.click(retryButton);
@@ -270,7 +279,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
         expectAnalyticsEvent(mockPostHogInstance, 'error_recovery_attempted', {
           errorType: 'network_error',
           recoveryMethod: 'retry',
-          attemptNumber: 1
+          attemptNumber: 1,
         });
       }
     });
@@ -301,7 +310,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
         expectAnalyticsEvent(mockPostHogInstance, 'premium_feature_discovered', {
           feature: 'premium_features',
           userTier: 'free',
-          discoveryContext: 'alarm_creation'
+          discoveryContext: 'alarm_creation',
         });
 
         // Should show upgrade prompt
@@ -313,18 +322,20 @@ describe('Analytics Logging Flow Integration Tests', () => {
         expectAnalyticsEvent(mockPostHogInstance, 'upgrade_prompt_shown', {
           feature: 'premium_features',
           promptType: 'feature_gate',
-          userTier: 'free'
+          userTier: 'free',
         });
 
         // Click upgrade
-        const upgradeButton = screen.queryByRole('button', { name: /upgrade|go.*premium/i });
+        const upgradeButton = screen.queryByRole('button', {
+          name: /upgrade|go.*premium/i,
+        });
         if (upgradeButton) {
           await user.click(upgradeButton);
 
           expectAnalyticsEvent(mockPostHogInstance, 'upgrade_intent', {
             source: 'feature_gate',
             feature: 'premium_features',
-            userTier: 'free'
+            userTier: 'free',
           });
         }
       }
@@ -342,7 +353,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
       expectAnalyticsEvent(mockPostHogInstance, 'trial_status_checked', {
         daysRemaining: 3,
         trialLength: 7,
-        userId: trialUser.id
+        userId: trialUser.id,
       });
 
       // Track premium feature usage during trial
@@ -361,7 +372,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
           feature: 'nuclear_mode',
           userTier: 'trial',
           daysIntoTrial: 4,
-          featureCategory: 'alarm_difficulty'
+          featureCategory: 'alarm_difficulty',
         });
       }
 
@@ -373,7 +384,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
         expectAnalyticsEvent(mockPostHogInstance, 'trial_conversion_prompted', {
           daysRemaining: 3,
           premiumFeaturesUsed: ['nuclear_mode'],
-          promptContext: 'feature_usage'
+          promptContext: 'feature_usage',
         });
       }
     });
@@ -389,7 +400,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
       expectAnalyticsEvent(mockPostHogInstance, 'premium_features_loaded', {
         userId: premiumUser.id,
         availableFeatures: premiumUser.premiumFeatures,
-        subscriptionTier: 'premium'
+        subscriptionTier: 'premium',
       });
 
       // Create alarm with premium features
@@ -409,7 +420,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
         expectAnalyticsEvent(mockPostHogInstance, 'premium_feature_toggled', {
           feature: 'nuclear_mode',
           enabled: true,
-          userTier: 'premium'
+          userTier: 'premium',
         });
       }
 
@@ -418,7 +429,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
         expectAnalyticsEvent(mockPostHogInstance, 'premium_feature_toggled', {
           feature: 'smart_wakeup',
           enabled: true,
-          userTier: 'premium'
+          userTier: 'premium',
         });
       }
 
@@ -437,7 +448,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
         expectAnalyticsEvent(mockPostHogInstance, 'premium_alarm_created', {
           userId: premiumUser.id,
           premiumFeaturesUsed: expect.arrayContaining(['nuclear_mode']),
-          subscriptionTier: 'premium'
+          subscriptionTier: 'premium',
         });
       });
     });
@@ -457,26 +468,26 @@ describe('Analytics Logging Flow Integration Tests', () => {
         metric: 'load_time',
         value: loadTime,
         threshold: 3000,
-        passed: loadTime < 3000
+        passed: loadTime < 3000,
       });
 
       // Track render performance for heavy operations
       const addAlarmButton = screen.getByRole('button', { name: /add.*alarm/i });
-      
+
       const renderStartTime = performance.now();
       await user.click(addAlarmButton);
-      
+
       await waitFor(() => {
         expect(screen.getByRole('dialog')).toBeInTheDocument();
       });
-      
+
       const renderTime = performance.now() - renderStartTime;
 
       expectAnalyticsEvent(mockPostHogInstance, 'component_performance', {
         component: 'alarm_form',
         metric: 'render_time',
         value: renderTime,
-        threshold: 500
+        threshold: 500,
       });
     });
 
@@ -487,12 +498,12 @@ describe('Analytics Logging Flow Integration Tests', () => {
       // Track session engagement
       expectAnalyticsEvent(mockPostHogInstance, 'session_started', {
         userId: mockUser.id,
-        timestamp: expect.any(String)
+        timestamp: expect.any(String),
       });
 
       // Simulate user activity
       await user.click(screen.getByRole('button', { name: /add.*alarm/i }));
-      
+
       await waitFor(() => {
         expect(screen.getByRole('dialog')).toBeInTheDocument();
       });
@@ -505,7 +516,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
       expectAnalyticsEvent(mockPostHogInstance, 'form_engagement', {
         form: 'alarm_creation',
         fieldsInteracted: 2,
-        timeSpent: expect.any(Number)
+        timeSpent: expect.any(Number),
       });
 
       // Track completion
@@ -516,7 +527,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
         expectAnalyticsEvent(mockPostHogInstance, 'user_action_completed', {
           action: 'alarm_created',
           completionTime: expect.any(Number),
-          success: true
+          success: true,
         });
       });
     });
@@ -528,7 +539,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
           id: `existing-${i}`,
           userId: mockUser.id,
           label: `Existing Alarm ${i + 1}`,
-          time: `0${7 + i}:00`
+          time: `0${7 + i}:00`,
         });
         testDataHelpers.addAlarm(alarm);
       }
@@ -541,25 +552,27 @@ describe('Analytics Logging Flow Integration Tests', () => {
         userId: mockUser.id,
         existingAlarms: 3,
         subscriptionTier: mockUser.subscriptionTier,
-        userLevel: mockUser.level
+        userLevel: mockUser.level,
       });
 
       // Test different interactions
       const interactions = [
         { element: /add.*alarm/i, action: 'create_alarm' },
         { element: /settings/i, action: 'view_settings' },
-        { element: /profile|account/i, action: 'view_profile' }
+        { element: /profile|account/i, action: 'view_profile' },
       ];
 
       for (const { element, action } of interactions) {
-        const button = screen.queryByText(element) || screen.queryByRole('button', { name: element });
+        const button =
+          screen.queryByText(element) ||
+          screen.queryByRole('button', { name: element });
         if (button) {
           await user.click(button);
 
           expectAnalyticsEvent(mockPostHogInstance, 'feature_interaction', {
             feature: action,
             userId: mockUser.id,
-            sessionTime: expect.any(Number)
+            sessionTime: expect.any(Number),
           });
 
           // Navigate back for next test
@@ -576,14 +589,14 @@ describe('Analytics Logging Flow Integration Tests', () => {
       const deviceContexts = [
         { userAgent: 'Mobile Safari', deviceType: 'mobile' },
         { userAgent: 'Chrome Desktop', deviceType: 'desktop' },
-        { userAgent: 'iPad Safari', deviceType: 'tablet' }
+        { userAgent: 'iPad Safari', deviceType: 'tablet' },
       ];
 
       for (const { userAgent, deviceType } of deviceContexts) {
         // Mock user agent
         Object.defineProperty(navigator, 'userAgent', {
           value: userAgent,
-          writable: true
+          writable: true,
         });
 
         renderWithProviders(<App />, { user: mockUser });
@@ -593,7 +606,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
           deviceType,
           userAgent,
           screenSize: expect.any(String),
-          touchCapable: deviceType === 'mobile' || deviceType === 'tablet'
+          touchCapable: deviceType === 'mobile' || deviceType === 'tablet',
         });
 
         // Test device-specific interactions
@@ -605,7 +618,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
 
           expectAnalyticsEvent(mockPostHogInstance, 'touch_interaction', {
             element: 'add_alarm_button',
-            deviceType: 'mobile'
+            deviceType: 'mobile',
           });
         }
 
@@ -620,7 +633,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
       // Test with analytics disabled
       const privacyUser = createMockUser({
         ...mockUser,
-        analyticsConsent: false
+        analyticsConsent: false,
       });
       testDataHelpers.addUser(privacyUser);
 
@@ -635,7 +648,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
 
       // Should only track essential events
       expectAnalyticsEvent(mockPostHogInstance, 'session_started', {
-        anonymized: true
+        anonymized: true,
       });
     });
 
@@ -665,7 +678,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
           userId: mockUser.id,
           time: '07:00',
           label: expect.not.stringContaining('medical'), // Should be anonymized
-          labelHash: expect.any(String) // Should have hash instead
+          labelHash: expect.any(String), // Should have hash instead
         });
       });
     });
@@ -689,7 +702,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
 
       await fillAlarmForm(user, {
         time: '08:00',
-        label: 'Analytics Failure Test'
+        label: 'Analytics Failure Test',
       });
 
       const saveButton = screen.getByRole('button', { name: /save|create/i });
@@ -703,7 +716,7 @@ describe('Analytics Logging Flow Integration Tests', () => {
       // Should track analytics failure
       expectAnalyticsEvent(mockPostHogInstance, 'analytics_error', {
         error: 'Analytics service unavailable',
-        fallback: 'local_storage'
+        fallback: 'local_storage',
       });
     });
   });

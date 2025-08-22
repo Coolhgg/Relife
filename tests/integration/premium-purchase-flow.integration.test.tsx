@@ -1,12 +1,21 @@
 /**
  * Premium Purchase Flow Integration Tests
- * 
+ *
  * Comprehensive tests for the premium subscription purchase flow,
  * covering upgrade prompts, payment processing, subscription management,
  * and feature unlocking.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -33,7 +42,7 @@ import {
   expectAnalyticsIdentify,
   renderWithProviders,
   waitForLoadingToFinish,
-  expectNoConsoleErrors
+  expectNoConsoleErrors,
 } from '../utils/enhanced-test-utilities';
 
 import { createMockUser, setupAllMocks } from '../utils/test-mocks';
@@ -63,10 +72,10 @@ describe('Premium Purchase Flow Integration Tests', () => {
     user = userEvent.setup();
     mockUser = createMockUser({ subscriptionTier: 'free' });
     checkConsoleErrors = expectNoConsoleErrors();
-    
+
     testDataHelpers.clearAll();
     testDataHelpers.addUser(mockUser);
-    
+
     vi.clearAllMocks();
   });
 
@@ -104,7 +113,7 @@ describe('Premium Purchase Flow Integration Tests', () => {
           createdAt: new Date(),
           updatedAt: new Date(),
           completed: false,
-          metadata: {}
+          metadata: {},
         });
       }
       testDataHelpers.addUser(freeUser);
@@ -132,19 +141,23 @@ describe('Premium Purchase Flow Integration Tests', () => {
 
       // Should show upgrade prompt
       await waitFor(() => {
-        const upgradePrompt = screen.queryByText(/upgrade.*premium|limit.*reached|5 alarms.*limit/i);
+        const upgradePrompt = screen.queryByText(
+          /upgrade.*premium|limit.*reached|5 alarms.*limit/i
+        );
         expect(upgradePrompt).toBeInTheDocument();
       });
 
       // Should show upgrade button
-      const upgradeButton = screen.queryByRole('button', { name: /upgrade|go.*premium/i });
+      const upgradeButton = screen.queryByRole('button', {
+        name: /upgrade|go.*premium/i,
+      });
       expect(upgradeButton).toBeInTheDocument();
 
       // Analytics should track limit hit
       expectAnalyticsEvent(mockPostHogInstance, 'subscription_limit_hit', {
         feature: 'alarms',
         currentTier: 'free',
-        limit: 5
+        limit: 5,
       });
     });
 
@@ -153,15 +166,16 @@ describe('Premium Purchase Flow Integration Tests', () => {
       await waitForLoadingToFinish();
 
       // Navigate to pricing/upgrade page
-      const upgradeButton = screen.queryByRole('button', { name: /upgrade|premium|pro/i }) ||
-                           screen.queryByText(/upgrade.*premium/i);
+      const upgradeButton =
+        screen.queryByRole('button', { name: /upgrade|premium|pro/i }) ||
+        screen.queryByText(/upgrade.*premium/i);
 
       if (!upgradeButton) {
         // Try to trigger upgrade prompt by accessing premium feature
         const settingsButton = screen.queryByText(/settings/i);
         if (settingsButton) {
           await user.click(settingsButton);
-          
+
           // Look for premium section
           const premiumSection = screen.queryByText(/premium|subscription/i);
           if (premiumSection) {
@@ -172,7 +186,9 @@ describe('Premium Purchase Flow Integration Tests', () => {
 
       // Should see pricing options
       await waitFor(() => {
-        const pricingElement = screen.queryByText(/premium.*plan|monthly.*plan|\$\d+.*month/i);
+        const pricingElement = screen.queryByText(
+          /premium.*plan|monthly.*plan|\$\d+.*month/i
+        );
         expect(pricingElement).toBeInTheDocument();
       });
 
@@ -206,14 +222,21 @@ describe('Premium Purchase Flow Integration Tests', () => {
       simulateSuccessfulPayment(stripeElements.stripe);
 
       // Submit payment
-      const submitButton = screen.getByRole('button', { name: /subscribe|pay|purchase/i });
+      const submitButton = screen.getByRole('button', {
+        name: /subscribe|pay|purchase/i,
+      });
       await user.click(submitButton);
 
       // Should show success message
-      await waitFor(() => {
-        const successMessage = screen.queryByText(/success|welcome.*premium|subscription.*active/i);
-        expect(successMessage).toBeInTheDocument();
-      }, { timeout: 10000 });
+      await waitFor(
+        () => {
+          const successMessage = screen.queryByText(
+            /success|welcome.*premium|subscription.*active/i
+          );
+          expect(successMessage).toBeInTheDocument();
+        },
+        { timeout: 10000 }
+      );
 
       // Should update user to premium
       const updatedUser = testDataHelpers.getUserByEmail(mockUser.email);
@@ -223,12 +246,12 @@ describe('Premium Purchase Flow Integration Tests', () => {
       expectAnalyticsEvent(mockPostHogInstance, 'subscription_created', {
         plan: 'premium',
         interval: 'month',
-        amount: 999
+        amount: 999,
       });
 
       expectAnalyticsIdentify(mockPostHogInstance, mockUser.id, {
         subscriptionTier: 'premium',
-        subscriptionStatus: 'active'
+        subscriptionStatus: 'active',
       });
     });
 
@@ -243,13 +266,17 @@ describe('Premium Purchase Flow Integration Tests', () => {
       simulateFailedPayment(stripeElements.stripe, 'Your card was declined.');
 
       // Find and click submit button
-      const submitButton = screen.queryByRole('button', { name: /subscribe|pay|purchase/i });
+      const submitButton = screen.queryByRole('button', {
+        name: /subscribe|pay|purchase/i,
+      });
       if (submitButton) {
         await user.click(submitButton);
 
         // Should show error message
         await waitFor(() => {
-          const errorMessage = screen.queryByText(/card.*declined|payment.*failed|error/i);
+          const errorMessage = screen.queryByText(
+            /card.*declined|payment.*failed|error/i
+          );
           expect(errorMessage).toBeInTheDocument();
         });
 
@@ -260,7 +287,7 @@ describe('Premium Purchase Flow Integration Tests', () => {
         // Should track payment failure
         expectAnalyticsEvent(mockPostHogInstance, 'subscription_payment_failed', {
           error: 'card_declined',
-          plan: 'premium'
+          plan: 'premium',
         });
       }
     });
@@ -292,7 +319,7 @@ describe('Premium Purchase Flow Integration Tests', () => {
 
       // Premium features should be available
       expectPremiumFeatureVisible(screen, 'nuclear mode');
-      
+
       // Close form
       const closeButton = screen.queryByRole('button', { name: /close|cancel/i });
       if (closeButton) {
@@ -306,7 +333,7 @@ describe('Premium Purchase Flow Integration Tests', () => {
         ...trialUser,
         subscriptionTier: 'free' as SubscriptionTier,
         trialEndsAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // Expired yesterday
-        premiumFeatures: []
+        premiumFeatures: [],
       };
       testDataHelpers.addUser(expiredTrialUser);
 
@@ -316,7 +343,9 @@ describe('Premium Purchase Flow Integration Tests', () => {
 
       // Should show trial expired message
       await waitFor(() => {
-        const expiredMessage = screen.queryByText(/trial.*expired|subscribe.*continue/i);
+        const expiredMessage = screen.queryByText(
+          /trial.*expired|subscribe.*continue/i
+        );
         expect(expiredMessage).toBeInTheDocument();
       });
 
@@ -352,7 +381,9 @@ describe('Premium Purchase Flow Integration Tests', () => {
         // Complete subscription
         simulateSuccessfulPayment(stripeElements.stripe);
 
-        const submitButton = screen.queryByRole('button', { name: /subscribe|continue/i });
+        const submitButton = screen.queryByRole('button', {
+          name: /subscribe|continue/i,
+        });
         if (submitButton) {
           await user.click(submitButton);
 
@@ -364,7 +395,7 @@ describe('Premium Purchase Flow Integration Tests', () => {
           // Should track trial conversion
           expectAnalyticsEvent(mockPostHogInstance, 'trial_converted', {
             plan: 'premium',
-            trialDuration: 7
+            trialDuration: 7,
           });
         }
       }
@@ -421,16 +452,22 @@ describe('Premium Purchase Flow Integration Tests', () => {
 
           // Should show cancellation confirmation
           await waitFor(() => {
-            const confirmationDialog = screen.queryByText(/sure.*cancel|confirm.*cancellation/i);
+            const confirmationDialog = screen.queryByText(
+              /sure.*cancel|confirm.*cancellation/i
+            );
             expect(confirmationDialog).toBeInTheDocument();
           });
 
           // Should explain what happens
-          const retainAccessText = screen.queryByText(/access.*until.*end|period.*end/i);
+          const retainAccessText = screen.queryByText(
+            /access.*until.*end|period.*end/i
+          );
           expect(retainAccessText).toBeInTheDocument();
 
           // Confirm cancellation
-          const confirmButton = screen.getByRole('button', { name: /confirm|yes.*cancel/i });
+          const confirmButton = screen.getByRole('button', {
+            name: /confirm|yes.*cancel/i,
+          });
           await user.click(confirmButton);
 
           // Should show cancellation success
@@ -442,7 +479,7 @@ describe('Premium Purchase Flow Integration Tests', () => {
           // Should track cancellation
           expectAnalyticsEvent(mockPostHogInstance, 'subscription_canceled', {
             plan: 'premium',
-            reason: 'user_initiated'
+            reason: 'user_initiated',
           });
         }
       }
@@ -535,14 +572,14 @@ describe('Premium Purchase Flow Integration Tests', () => {
         /premium|pro/i,
         /nuclear.*mode/i,
         /smart.*wakeup/i,
-        /custom.*sounds/i
+        /custom.*sounds/i,
       ];
 
       for (const sectionRegex of premiumSections) {
         const section = screen.queryByText(sectionRegex);
         if (section) {
           await user.click(section);
-          
+
           // Should show upgrade prompt
           await waitFor(() => {
             const upgradePrompt = screen.queryByText(/upgrade|premium|subscription/i);
@@ -578,9 +615,14 @@ describe('Premium Purchase Flow Integration Tests', () => {
       const upgradedUser = {
         ...mockUser,
         subscriptionTier: 'premium' as SubscriptionTier,
-        premiumFeatures: ['nuclear_mode', 'custom_sounds', 'unlimited_alarms', 'smart_wakeup'],
+        premiumFeatures: [
+          'nuclear_mode',
+          'custom_sounds',
+          'unlimited_alarms',
+          'smart_wakeup',
+        ],
         subscriptionId: 'sub_new_123',
-        subscriptionStatus: 'active'
+        subscriptionStatus: 'active',
       };
       testDataHelpers.addUser(upgradedUser);
 
@@ -609,7 +651,9 @@ describe('Premium Purchase Flow Integration Tests', () => {
 
       // Should show subscription expired notice
       await waitFor(() => {
-        const expiredNotice = screen.queryByText(/subscription.*expired|premium.*ended/i);
+        const expiredNotice = screen.queryByText(
+          /subscription.*expired|premium.*ended/i
+        );
         expect(expiredNotice).toBeInTheDocument();
       });
 

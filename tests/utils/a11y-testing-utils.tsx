@@ -37,17 +37,15 @@ export async function axeRender(
   }
 ): Promise<RenderResult & { axeResults?: AxeResults }> {
   // Import providers dynamically to avoid circular dependencies
-  const { TestProviders } = await import('../../src/__tests__/providers/test-providers');
-  
+  const { TestProviders } = await import(
+    '../../src/__tests__/providers/test-providers'
+  );
+
   // Separate custom options from render options
   const { axeOptions, skipAxeTest, ...renderOptions } = options || {};
-  
+
   // Wrap component with test providers
-  const WrappedComponent = () => (
-    <TestProviders>
-      {ui}
-    </TestProviders>
-  );
+  const WrappedComponent = () => <TestProviders>{ui}</TestProviders>;
 
   const renderResult = render(<WrappedComponent />, renderOptions);
 

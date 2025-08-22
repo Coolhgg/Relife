@@ -20,10 +20,10 @@ import {
   Users,
   Shield,
   TrendingUp,
-} from "lucide-react";
-import { cn } from "../lib/utils";
-import { PremiumService } from "../services/premium";
-import { SubscriptionStatus } from "./SubscriptionStatus";
+} from 'lucide-react';
+import { cn } from '../lib/utils';
+import { PremiumService } from '../services/premium';
+import { SubscriptionStatus } from './SubscriptionStatus';
 
 interface PricingPageProps {
   user: User;
@@ -70,25 +70,70 @@ const pricingTiers: PricingTier[] = [
     icon: <Shield className="w-6 h-6" />,
     description: 'Perfect for getting started with smart alarms',
     features: [
-      { name: 'Basic voice alarms', included: true, description: 'Standard voice personalities' },
-      { name: 'Up to 10 alarms', included: true, description: 'Create multiple alarms' },
-      { name: 'Standard difficulty levels', included: true, description: 'Easy to hard challenges' },
-      { name: 'Basic voice recognition', included: true, description: 'Voice commands to dismiss' },
-      { name: 'Snooze controls', included: true, description: 'Customizable snooze settings' },
-      { name: 'Nuclear Mode', included: false, premium: true, description: 'Extreme difficulty challenges' },
-      { name: 'Custom voices', included: false, premium: true, description: '18+ premium voice personalities' },
-      { name: 'Voice cloning', included: false, ultimate: true, description: 'Create your own custom voice' },
-      { name: 'Advanced analytics', included: false, premium: true, description: 'Detailed sleep insights' },
-      { name: 'Unlimited alarms', included: false, premium: true, description: 'No limits on alarm creation' }
+      {
+        name: 'Basic voice alarms',
+        included: true,
+        description: 'Standard voice personalities',
+      },
+      {
+        name: 'Up to 10 alarms',
+        included: true,
+        description: 'Create multiple alarms',
+      },
+      {
+        name: 'Standard difficulty levels',
+        included: true,
+        description: 'Easy to hard challenges',
+      },
+      {
+        name: 'Basic voice recognition',
+        included: true,
+        description: 'Voice commands to dismiss',
+      },
+      {
+        name: 'Snooze controls',
+        included: true,
+        description: 'Customizable snooze settings',
+      },
+      {
+        name: 'Nuclear Mode',
+        included: false,
+        premium: true,
+        description: 'Extreme difficulty challenges',
+      },
+      {
+        name: 'Custom voices',
+        included: false,
+        premium: true,
+        description: '18+ premium voice personalities',
+      },
+      {
+        name: 'Voice cloning',
+        included: false,
+        ultimate: true,
+        description: 'Create your own custom voice',
+      },
+      {
+        name: 'Advanced analytics',
+        included: false,
+        premium: true,
+        description: 'Detailed sleep insights',
+      },
+      {
+        name: 'Unlimited alarms',
+        included: false,
+        premium: true,
+        description: 'No limits on alarm creation',
+      },
     ],
     limits: {
       alarms: 10,
       voicePersonalities: 6,
       nuclearChallenges: false,
       voiceCloning: false,
-      analytics: false
+      analytics: false,
     },
-    cta: 'Get Started Free'
+    cta: 'Get Started Free',
   },
   {
     id: 'premium',
@@ -103,24 +148,63 @@ const pricingTiers: PricingTier[] = [
     description: 'Unlock advanced features and nuclear mode',
     features: [
       { name: 'Everything in Free', included: true },
-      { name: 'Nuclear Mode', included: true, description: 'Extreme difficulty challenges' },
-      { name: 'Premium voices', included: true, description: '18+ celebrity and character voices' },
-      { name: 'Unlimited alarms', included: true, description: 'No limits on alarm creation' },
-      { name: 'Advanced analytics', included: true, description: 'Sleep patterns and performance tracking' },
-      { name: 'Priority support', included: true, description: 'Faster response times' },
-      { name: 'Custom challenge difficulty', included: true, description: 'Fine-tune your wake-up challenges' },
-      { name: 'Voice cloning', included: false, ultimate: true, description: 'Create custom voices' },
-      { name: 'Advanced integrations', included: false, ultimate: true, description: 'API access and webhooks' },
-      { name: 'Team management', included: false, ultimate: true, description: 'Manage multiple users' }
+      {
+        name: 'Nuclear Mode',
+        included: true,
+        description: 'Extreme difficulty challenges',
+      },
+      {
+        name: 'Premium voices',
+        included: true,
+        description: '18+ celebrity and character voices',
+      },
+      {
+        name: 'Unlimited alarms',
+        included: true,
+        description: 'No limits on alarm creation',
+      },
+      {
+        name: 'Advanced analytics',
+        included: true,
+        description: 'Sleep patterns and performance tracking',
+      },
+      {
+        name: 'Priority support',
+        included: true,
+        description: 'Faster response times',
+      },
+      {
+        name: 'Custom challenge difficulty',
+        included: true,
+        description: 'Fine-tune your wake-up challenges',
+      },
+      {
+        name: 'Voice cloning',
+        included: false,
+        ultimate: true,
+        description: 'Create custom voices',
+      },
+      {
+        name: 'Advanced integrations',
+        included: false,
+        ultimate: true,
+        description: 'API access and webhooks',
+      },
+      {
+        name: 'Team management',
+        included: false,
+        ultimate: true,
+        description: 'Manage multiple users',
+      },
     ],
     limits: {
       alarms: 'unlimited',
       voicePersonalities: 18,
       nuclearChallenges: true,
       voiceCloning: false,
-      analytics: true
+      analytics: true,
     },
-    cta: 'Upgrade to Premium'
+    cta: 'Upgrade to Premium',
   },
   {
     id: 'ultimate',
@@ -134,25 +218,49 @@ const pricingTiers: PricingTier[] = [
     description: 'The complete alarm solution for power users',
     features: [
       { name: 'Everything in Premium', included: true },
-      { name: 'Voice cloning', included: true, description: 'Create unlimited custom voices' },
-      { name: 'Advanced integrations', included: true, description: 'API access, webhooks, IFTTT' },
+      {
+        name: 'Voice cloning',
+        included: true,
+        description: 'Create unlimited custom voices',
+      },
+      {
+        name: 'Advanced integrations',
+        included: true,
+        description: 'API access, webhooks, IFTTT',
+      },
       { name: 'Team management', included: true, description: 'Manage up to 5 users' },
       { name: 'White-label options', included: true, description: 'Custom branding' },
-      { name: 'Advanced nuclear modes', included: true, description: 'Custom challenge creation' },
-      { name: 'Export data', included: true, description: 'Full data export capabilities' },
+      {
+        name: 'Advanced nuclear modes',
+        included: true,
+        description: 'Custom challenge creation',
+      },
+      {
+        name: 'Export data',
+        included: true,
+        description: 'Full data export capabilities',
+      },
       { name: 'Premium support', included: true, description: '24/7 priority support' },
-      { name: 'Beta features', included: true, description: 'Early access to new features' },
-      { name: 'Custom integrations', included: true, description: 'Dedicated integration support' }
+      {
+        name: 'Beta features',
+        included: true,
+        description: 'Early access to new features',
+      },
+      {
+        name: 'Custom integrations',
+        included: true,
+        description: 'Dedicated integration support',
+      },
     ],
     limits: {
       alarms: 'unlimited',
       voicePersonalities: 'unlimited' as any,
       nuclearChallenges: true,
       voiceCloning: true,
-      analytics: true
+      analytics: true,
     },
-    cta: 'Go Ultimate'
-  }
+    cta: 'Go Ultimate',
+  },
 ];
 
 export const PricingPage: React.FC<PricingPageProps> = ({
@@ -160,9 +268,11 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   currentPlan,
   onUpgrade,
   onManageSubscription,
-  className
+  className,
 }) => {
-  const [selectedBilling, setSelectedBilling] = useState<'monthly' | 'yearly'>('monthly');
+  const [selectedBilling, setSelectedBilling] = useState<'monthly' | 'yearly'>(
+    'monthly'
+  );
   const [isLoading, setIsLoading] = useState<string | null>(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState<any>(null);
 
@@ -181,7 +291,8 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     }
   };
 
-    if (tier === "free") return;
+  const handleUpgrade = async (tier: SubscriptionTier) => {
+    if (tier === 'free') return;
 
     setIsLoading(tier);
     try {
@@ -198,9 +309,12 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             onUpgrade({
               id: tier,
               name: plan.name,
-              price: selectedBilling === 'yearly' ? plan.yearlyPrice || plan.price : plan.price,
+              price:
+                selectedBilling === 'yearly'
+                  ? plan.yearlyPrice || plan.price
+                  : plan.price,
               billingPeriod: selectedBilling === 'yearly' ? 'year' : 'month',
-              features: plan.features.filter(f => f.included).map(f => f.name)
+              features: plan.features.filter(f => f.included).map(f => f.name),
             });
           }
         }
@@ -212,9 +326,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     }
   };
 
-  const simulatePayment = async (
-    billing: "monthly" | "yearly",
-  ): Promise<boolean> => {
+  const simulatePayment = async (billing: 'monthly' | 'yearly'): Promise<boolean> => {
     // Simulate payment processing
     return new Promise(resolve => {
       setTimeout(() => {
@@ -227,11 +339,13 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   const getPrice = (tier: PricingTier) => {
     if (tier.price === 0) return 'Free';
 
-    const price = selectedBilling === 'yearly' && tier.yearlyPrice ? tier.yearlyPrice : tier.price;
+    const price =
+      selectedBilling === 'yearly' && tier.yearlyPrice ? tier.yearlyPrice : tier.price;
     const period = selectedBilling === 'yearly' ? 'year' : 'month';
-    const monthlyPrice = selectedBilling === 'yearly' && tier.yearlyPrice
-      ? tier.yearlyPrice / 12
-      : tier.price;
+    const monthlyPrice =
+      selectedBilling === 'yearly' && tier.yearlyPrice
+        ? tier.yearlyPrice / 12
+        : tier.price;
 
     if (selectedBilling === 'yearly' && tier.yearlyPrice) {
       return (
@@ -252,9 +366,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   };
 
   const canUpgrade = (tier: string) => {
-    if (tier === "free") return false;
-    if (userTier === "free") return true;
-    if (userTier === "premium" && tier === "ultimate") return true;
+    if (tier === 'free') return false;
+    if (userTier === 'free') return true;
+    if (userTier === 'premium' && tier === 'ultimate') return true;
     return false;
   };
 
@@ -289,11 +403,18 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
         {/* Billing Toggle */}
         <div className="flex items-center justify-center gap-4 mb-8">
-          <span className={cn('text-sm', selectedBilling === 'monthly' ? 'font-semibold' : 'text-gray-600')}>
+          <span
+            className={cn(
+              'text-sm',
+              selectedBilling === 'monthly' ? 'font-semibold' : 'text-gray-600'
+            )}
+          >
             Monthly
           </span>
           <button
-            onClick={() => setSelectedBilling(selectedBilling === 'monthly' ? 'yearly' : 'monthly')}
+            onClick={() =>
+              setSelectedBilling(selectedBilling === 'monthly' ? 'yearly' : 'monthly')
+            }
             className={cn(
               'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
               selectedBilling === 'yearly' ? 'bg-blue-600' : 'bg-gray-200'
@@ -306,7 +427,12 @@ export const PricingPage: React.FC<PricingPageProps> = ({
               )}
             />
           </button>
-          <span className={cn('text-sm', selectedBilling === 'yearly' ? 'font-semibold' : 'text-gray-600')}>
+          <span
+            className={cn(
+              'text-sm',
+              selectedBilling === 'yearly' ? 'font-semibold' : 'text-gray-600'
+            )}
+          >
             Yearly
             {selectedBilling === 'yearly' && (
               <Badge className="ml-2 bg-green-100 text-green-800">Save 17%</Badge>
@@ -336,20 +462,22 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
             <CardHeader className="text-center pb-4">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <div className={cn(
-                  'p-2 rounded-lg',
-                  tier.id === 'free' ? 'bg-gray-100 text-gray-600' :
-                  tier.id === 'premium' ? 'bg-blue-100 text-blue-600' :
-                  'bg-purple-100 text-purple-600'
-                )}>
+                <div
+                  className={cn(
+                    'p-2 rounded-lg',
+                    tier.id === 'free'
+                      ? 'bg-gray-100 text-gray-600'
+                      : tier.id === 'premium'
+                        ? 'bg-blue-100 text-blue-600'
+                        : 'bg-purple-100 text-purple-600'
+                  )}
+                >
                   {tier.icon}
                 </div>
                 <CardTitle className="text-2xl font-bold">{tier.name}</CardTitle>
               </div>
 
-              <div className="mb-4">
-                {getPrice(tier)}
-              </div>
+              <div className="mb-4">{getPrice(tier)}</div>
 
               <p className="text-gray-600 text-sm">{tier.description}</p>
             </CardHeader>
@@ -370,10 +498,12 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                       </div>
                     )}
                     <div>
-                      <span className={cn(
-                        'text-sm',
-                        feature.included ? 'text-gray-900' : 'text-gray-500'
-                      )}>
+                      <span
+                        className={cn(
+                          'text-sm',
+                          feature.included ? 'text-gray-900' : 'text-gray-500'
+                        )}
+                      >
                         {feature.name}
                       </span>
                       {feature.description && (
@@ -393,13 +523,17 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                 <div className="flex justify-between">
                   <span>Alarms:</span>
                   <span className="font-medium">
-                    {tier.limits.alarms === 'unlimited' ? 'Unlimited' : tier.limits.alarms}
+                    {tier.limits.alarms === 'unlimited'
+                      ? 'Unlimited'
+                      : tier.limits.alarms}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Voice Personalities:</span>
                   <span className="font-medium">
-                    {tier.limits.voicePersonalities === 'unlimited' ? 'Unlimited' : tier.limits.voicePersonalities}
+                    {tier.limits.voicePersonalities === 'unlimited'
+                      ? 'Unlimited'
+                      : tier.limits.voicePersonalities}
                   </span>
                 </div>
               </div>
@@ -458,11 +592,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                     Downgrade to {tier.name}
                   </Button>
                 ) : (
-                  <Button
-                    variant="outline"
-                    disabled
-                    className="w-full"
-                  >
+                  <Button variant="outline" disabled className="w-full">
                     Not Available
                   </Button>
                 )}
@@ -479,8 +609,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         <Alert className="mb-6">
           <AlertCircle className="w-4 h-4" />
           <AlertDescription>
-            All plans include our core alarm functionality. Premium features unlock advanced capabilities
-            to help you wake up more effectively and track your progress.
+            All plans include our core alarm functionality. Premium features unlock
+            advanced capabilities to help you wake up more effectively and track your
+            progress.
           </AlertDescription>
         </Alert>
 
@@ -488,23 +619,46 @@ export const PricingPage: React.FC<PricingPageProps> = ({
           <table className="w-full border-collapse border border-gray-200 rounded-lg">
             <thead>
               <tr className="bg-gray-50">
-                <th className="border border-gray-200 px-4 py-3 text-left font-semibold">Feature</th>
-                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">Free</th>
-                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">Premium</th>
-                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">Ultimate</th>
+                <th className="border border-gray-200 px-4 py-3 text-left font-semibold">
+                  Feature
+                </th>
+                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">
+                  Free
+                </th>
+                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">
+                  Premium
+                </th>
+                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">
+                  Ultimate
+                </th>
               </tr>
             </thead>
             <tbody>
               {[
                 { name: 'Basic Alarms', free: true, premium: true, ultimate: true },
                 { name: 'Voice Commands', free: true, premium: true, ultimate: true },
-                { name: 'Alarm Limit', free: '10', premium: 'Unlimited', ultimate: 'Unlimited' },
+                {
+                  name: 'Alarm Limit',
+                  free: '10',
+                  premium: 'Unlimited',
+                  ultimate: 'Unlimited',
+                },
                 { name: 'Nuclear Mode', free: false, premium: true, ultimate: true },
                 { name: 'Premium Voices', free: false, premium: true, ultimate: true },
                 { name: 'Voice Cloning', free: false, premium: false, ultimate: true },
-                { name: 'Advanced Analytics', free: false, premium: true, ultimate: true },
+                {
+                  name: 'Advanced Analytics',
+                  free: false,
+                  premium: true,
+                  ultimate: true,
+                },
                 { name: 'API Access', free: false, premium: false, ultimate: true },
-                { name: 'Team Management', free: false, premium: false, ultimate: true },
+                {
+                  name: 'Team Management',
+                  free: false,
+                  premium: false,
+                  ultimate: true,
+                },
               ].map((feature, index) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-3 font-medium">
@@ -552,25 +706,31 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
       {/* FAQs */}
       <div>
-        <h2 className="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+        <h2 className="text-2xl font-bold text-center mb-8">
+          Frequently Asked Questions
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
             {
-              question: "What is Nuclear Mode?",
-              answer: "Nuclear Mode is our most extreme alarm difficulty setting, featuring multi-step challenges, memory tests, and physical verification tasks that ensure you're truly awake before the alarm can be dismissed."
+              question: 'What is Nuclear Mode?',
+              answer:
+                "Nuclear Mode is our most extreme alarm difficulty setting, featuring multi-step challenges, memory tests, and physical verification tasks that ensure you're truly awake before the alarm can be dismissed.",
             },
             {
-              question: "How does voice cloning work?",
-              answer: "With Ultimate tier, you can record voice samples to create custom AI voices that sound like you or your loved ones. Perfect for personalized wake-up messages."
+              question: 'How does voice cloning work?',
+              answer:
+                'With Ultimate tier, you can record voice samples to create custom AI voices that sound like you or your loved ones. Perfect for personalized wake-up messages.',
             },
             {
-              question: "Can I cancel anytime?",
-              answer: "Yes! You can cancel your subscription at any time. Your premium features will remain active until the end of your billing period."
+              question: 'Can I cancel anytime?',
+              answer:
+                'Yes! You can cancel your subscription at any time. Your premium features will remain active until the end of your billing period.',
             },
             {
-              question: "What about data privacy?",
-              answer: "We take privacy seriously. Voice recordings for cloning are processed securely and can be deleted at any time. We never share personal data with third parties."
-            }
+              question: 'What about data privacy?',
+              answer:
+                'We take privacy seriously. Voice recordings for cloning are processed securely and can be deleted at any time. We never share personal data with third parties.',
+            },
           ].map((faq, index) => (
             <Card key={index}>
               <CardContent className="p-6">

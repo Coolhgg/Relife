@@ -500,6 +500,7 @@ Object.defineProperty(global.navigator, 'geolocation', {
       });
 
       const { result, unmount } = renderHook(() =>
+        useAdvancedAlarms()
       );
 
       await act(async () => {
@@ -637,6 +638,7 @@ Object.defineProperty(global.navigator, 'geolocation', {
 
       mockAlarmService.getAllAlarms.mockResolvedValue(orderedAlarms);
 
+      const { result } = renderHook(() => useAdvancedAlarms());
 
       await act(async () => {
         await result.current.refreshAlarms();
@@ -659,6 +661,7 @@ Object.defineProperty(global.navigator, 'geolocation', {
         enabled: true
       });
 
+      const { result } = renderHook(() => useAdvancedAlarms());
 
       await act(async () => {
         await result.current.duplicateAlarm('alarm-1');

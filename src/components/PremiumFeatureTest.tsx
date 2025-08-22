@@ -19,17 +19,17 @@ import {
   Shield,
   Lock,
   Unlock,
-} from "lucide-react";
-import { cn } from "../lib/utils";
-import { PremiumService } from "../services/premium";
-import { premiumVoiceService } from "../services/premium-voice";
-import { nuclearModeService } from "../services/nuclear-mode";
-import { UpgradePrompt } from "./UpgradePrompt";
-import { PremiumFeatureCard } from "./PremiumFeatureCard";
-import { SubscriptionStatus } from "./SubscriptionStatus";
-import { FeatureLockOverlay } from "./FeatureLockOverlay";
-import { VoiceSelector } from "./VoiceSelector";
-import { VoiceCloning } from "./VoiceCloning";
+} from 'lucide-react';
+import { cn } from '../lib/utils';
+import { PremiumService } from '../services/premium';
+import { premiumVoiceService } from '../services/premium-voice';
+import { nuclearModeService } from '../services/nuclear-mode';
+import { UpgradePrompt } from './UpgradePrompt';
+import { PremiumFeatureCard } from './PremiumFeatureCard';
+import { SubscriptionStatus } from './SubscriptionStatus';
+import { FeatureLockOverlay } from './FeatureLockOverlay';
+import { VoiceSelector } from './VoiceSelector';
+import { VoiceCloning } from './VoiceCloning';
 
 interface PremiumFeatureTestProps {
   user: User;
@@ -49,7 +49,10 @@ interface TestSuite {
   tests: TestResult[];
 }
 
-export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, className }) => {
+export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
+  user,
+  className,
+}) => {
   const [testResults, setTestResults] = useState<TestSuite[]>([]);
   const [isRunning, setIsRunning] = useState(false);
 
@@ -75,7 +78,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
       // Test 1: Premium Service Core Functionality
       const premiumServiceSuite: TestSuite = {
         name: 'Premium Service Core',
-        tests: []
+        tests: [],
       };
 
       // Test getUserTier
@@ -85,34 +88,42 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
           name: 'Get User Tier',
           description: 'Verify premium service can retrieve user subscription tier',
           status: ['free', 'premium', 'ultimate'].includes(tier) ? 'pass' : 'fail',
-          details: `Current tier: ${tier}`
+          details: `Current tier: ${tier}`,
         });
       } catch (error) {
         premiumServiceSuite.tests.push({
           name: 'Get User Tier',
           description: 'Verify premium service can retrieve user subscription tier',
           status: 'fail',
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
 
       // Test feature access for each tier
-      const features = ['nuclear_mode', 'custom_voices', 'extra_personalities', 'voice_cloning'];
+      const features = [
+        'nuclear_mode',
+        'custom_voices',
+        'extra_personalities',
+        'voice_cloning',
+      ];
       for (const feature of features) {
         try {
-          const result = await PremiumService.checkFeatureAccess(user.id, feature as any);
+          const result = await PremiumService.checkFeatureAccess(
+            user.id,
+            feature as any
+          );
           premiumServiceSuite.tests.push({
             name: `Feature Access: ${feature}`,
             description: `Check if user has access to ${feature}`,
             status: result.hasAccess !== undefined ? 'pass' : 'fail',
-            details: `Access: ${result.hasAccess}, Tier: ${result.userTier}, Required: ${result.requiredTier || 'N/A'}`
+            details: `Access: ${result.hasAccess}, Tier: ${result.userTier}, Required: ${result.requiredTier || 'N/A'}`,
           });
         } catch (error) {
           premiumServiceSuite.tests.push({
             name: `Feature Access: ${feature}`,
             description: `Check if user has access to ${feature}`,
             status: 'fail',
-            error: error instanceof Error ? error.message : String(error)
+            error: error instanceof Error ? error.message : String(error),
           });
         }
       }
@@ -124,14 +135,14 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
           name: 'Subscription Status',
           description: 'Retrieve detailed subscription information',
           status: status && typeof status === 'object' ? 'pass' : 'fail',
-          details: status ? `Status: ${status.status || 'N/A'}` : 'No status data'
+          details: status ? `Status: ${status.status || 'N/A'}` : 'No status data',
         });
       } catch (error) {
         premiumServiceSuite.tests.push({
           name: 'Subscription Status',
           description: 'Retrieve detailed subscription information',
           status: 'fail',
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
 
@@ -140,7 +151,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
       // Test 2: Nuclear Mode Integration
       const nuclearModeSuite: TestSuite = {
         name: 'Nuclear Mode Features',
-        tests: []
+        tests: [],
       };
 
       // Test nuclear mode access check
@@ -150,14 +161,14 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
           name: 'Nuclear Mode Access Check',
           description: 'Verify nuclear mode access validation',
           status: access && typeof access.hasAccess === 'boolean' ? 'pass' : 'fail',
-          details: `Access: ${access.hasAccess}, Tier: ${access.userTier}`
+          details: `Access: ${access.hasAccess}, Tier: ${access.userTier}`,
         });
       } catch (error) {
         nuclearModeSuite.tests.push({
           name: 'Nuclear Mode Access Check',
           description: 'Verify nuclear mode access validation',
           status: 'fail',
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
 
@@ -167,15 +178,18 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
         nuclearModeSuite.tests.push({
           name: 'Challenge Types',
           description: 'Verify nuclear mode challenge types are available',
-          status: Array.isArray(challengeTypes) && challengeTypes.length > 0 ? 'pass' : 'fail',
-          details: `Found ${challengeTypes.length} challenge types`
+          status:
+            Array.isArray(challengeTypes) && challengeTypes.length > 0
+              ? 'pass'
+              : 'fail',
+          details: `Found ${challengeTypes.length} challenge types`,
         });
       } catch (error) {
         nuclearModeSuite.tests.push({
           name: 'Challenge Types',
           description: 'Verify nuclear mode challenge types are available',
           status: 'fail',
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
 
@@ -184,7 +198,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
       // Test 3: Premium Voice System
       const voiceSystemSuite: TestSuite = {
         name: 'Premium Voice System',
-        tests: []
+        tests: [],
       };
 
       // Test voice personalities
@@ -193,15 +207,16 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
         voiceSystemSuite.tests.push({
           name: 'Voice Personalities',
           description: 'Verify premium voice personalities are loaded',
-          status: Array.isArray(personalities) && personalities.length > 0 ? 'pass' : 'fail',
-          details: `Found ${personalities.length} personalities`
+          status:
+            Array.isArray(personalities) && personalities.length > 0 ? 'pass' : 'fail',
+          details: `Found ${personalities.length} personalities`,
         });
       } catch (error) {
         voiceSystemSuite.tests.push({
           name: 'Voice Personalities',
           description: 'Verify premium voice personalities are loaded',
           status: 'fail',
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
 
@@ -214,14 +229,14 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
             name: `Voice Access: ${voiceId}`,
             description: `Check access to premium voice ${voiceId}`,
             status: typeof hasAccess === 'boolean' ? 'pass' : 'fail',
-            details: `Access: ${hasAccess}`
+            details: `Access: ${hasAccess}`,
           });
         } catch (error) {
           voiceSystemSuite.tests.push({
             name: `Voice Access: ${voiceId}`,
             description: `Check access to premium voice ${voiceId}`,
             status: 'fail',
-            error: error instanceof Error ? error.message : String(error)
+            error: error instanceof Error ? error.message : String(error),
           });
         }
       }
@@ -233,14 +248,14 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
           name: 'Voice Cloning Access',
           description: 'Check if user can access voice cloning (Ultimate tier)',
           status: typeof canClone === 'boolean' ? 'pass' : 'fail',
-          details: `Can clone: ${canClone}`
+          details: `Can clone: ${canClone}`,
         });
       } catch (error) {
         voiceSystemSuite.tests.push({
           name: 'Voice Cloning Access',
           description: 'Check if user can access voice cloning (Ultimate tier)',
           status: 'fail',
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
 
@@ -249,15 +264,27 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
       // Test 4: UI Components
       const uiComponentsSuite: TestSuite = {
         name: 'Premium UI Components',
-        tests: []
+        tests: [],
       };
 
       // Test component rendering (these will always pass if no errors thrown)
       const componentTests = [
-        { name: 'UpgradePrompt', description: 'Verify upgrade prompt component renders' },
-        { name: 'PremiumFeatureCard', description: 'Verify premium feature card component renders' },
-        { name: 'SubscriptionStatus', description: 'Verify subscription status component renders' },
-        { name: 'FeatureLockOverlay', description: 'Verify feature lock overlay component renders' }
+        {
+          name: 'UpgradePrompt',
+          description: 'Verify upgrade prompt component renders',
+        },
+        {
+          name: 'PremiumFeatureCard',
+          description: 'Verify premium feature card component renders',
+        },
+        {
+          name: 'SubscriptionStatus',
+          description: 'Verify subscription status component renders',
+        },
+        {
+          name: 'FeatureLockOverlay',
+          description: 'Verify feature lock overlay component renders',
+        },
       ];
 
       componentTests.forEach(test => {
@@ -265,30 +292,34 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
           name: test.name,
           description: test.description,
           status: 'pass', // If we get here, components loaded successfully
-          details: 'Component imported and available'
+          details: 'Component imported and available',
         });
       });
 
       suites.push(uiComponentsSuite);
 
       setTestResults(suites);
-
     } catch (error) {
       console.error('Error running tests:', error);
-      setTestResults([{
-        name: 'Test Suite Error',
-        tests: [{
-          name: 'Test Execution',
-          description: 'Failed to execute test suite',
-          status: 'fail',
-          error: error instanceof Error ? error.message : String(error)
-        }]
-      }]);
+      setTestResults([
+        {
+          name: 'Test Suite Error',
+          tests: [
+            {
+              name: 'Test Execution',
+              description: 'Failed to execute test suite',
+              status: 'fail',
+              error: error instanceof Error ? error.message : String(error),
+            },
+          ],
+        },
+      ]);
     } finally {
       setIsRunning(false);
     }
   };
 
+  const changeTier = async (tier: SubscriptionTier) => {
     try {
       await PremiumService.updateUserTier(user.id, tier);
       setTestTier(tier);
@@ -309,11 +340,13 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
 
   const getTestSummary = () => {
     const totalTests = testResults.reduce((sum, suite) => sum + suite.tests.length, 0);
-    const passedTests = testResults.reduce((sum, suite) =>
-      sum + suite.tests.filter(test => test.status === 'pass').length, 0
+    const passedTests = testResults.reduce(
+      (sum, suite) => sum + suite.tests.filter(test => test.status === 'pass').length,
+      0
     );
-    const failedTests = testResults.reduce((sum, suite) =>
-      sum + suite.tests.filter(test => test.status === 'fail').length, 0
+    const failedTests = testResults.reduce(
+      (sum, suite) => sum + suite.tests.filter(test => test.status === 'fail').length,
+      0
     );
 
     return { totalTests, passedTests, failedTests };
@@ -330,7 +363,8 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
           Premium Features Test Suite
         </h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Comprehensive testing of premium subscription features, access controls, and user experience components.
+          Comprehensive testing of premium subscription features, access controls, and
+          user experience components.
         </p>
 
         {/* Current Status */}
@@ -345,7 +379,9 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
             <Badge
               className={cn(
                 'px-4 py-2',
-                failedTests === 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                failedTests === 0
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800'
               )}
             >
               {passedTests}/{totalTests} Tests Passed
@@ -395,21 +431,20 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
           <div className="space-y-2">
             <h4 className="font-medium text-sm">Test Different Subscription Tiers:</h4>
             <div className="flex gap-2">
-              {["free", "premium", "ultimate"].map((tier) => (
-                  <Button
-                    key={tier}
-                    onClick={() => changeTierForTesting(tier)}
-                    variant={testTier === tier ? "default" : "outline"}
-                    size="sm"
-                    className="flex items-center gap-2"
-                  >
-                    {tier === "free" && <Shield className="w-3 h-3" />}
-                    {tier === "premium" && <Crown className="w-3 h-3" />}
-                    {tier === "ultimate" && <Star className="w-3 h-3" />}
-                    {tier.charAt(0).toUpperCase() + tier.slice(1)}
-                  </Button>
-                ),
-              )}
+              {['free', 'premium', 'ultimate'].map(tier => (
+                <Button
+                  key={tier}
+                  onClick={() => changeTierForTesting(tier)}
+                  variant={testTier === tier ? 'default' : 'outline'}
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  {tier === 'free' && <Shield className="w-3 h-3" />}
+                  {tier === 'premium' && <Crown className="w-3 h-3" />}
+                  {tier === 'ultimate' && <Star className="w-3 h-3" />}
+                  {tier.charAt(0).toUpperCase() + tier.slice(1)}
+                </Button>
+              ))}
             </div>
           </div>
         </CardContent>
@@ -435,31 +470,45 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
                         suite.tests.every(t => t.status === 'pass')
                           ? 'bg-green-100 text-green-800'
                           : suite.tests.some(t => t.status === 'fail')
-                          ? 'bg-red-100 text-red-800'
-                          : 'bg-yellow-100 text-yellow-800'
+                            ? 'bg-red-100 text-red-800'
+                            : 'bg-yellow-100 text-yellow-800'
                       )}
                     >
-                      {suite.tests.filter(t => t.status === 'pass').length}/{suite.tests.length}
+                      {suite.tests.filter(t => t.status === 'pass').length}/
+                      {suite.tests.length}
                     </Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     {suite.tests.map((test, testIndex) => (
-                      <div key={testIndex} className="flex items-start gap-3 p-3 rounded-lg border">
+                      <div
+                        key={testIndex}
+                        className="flex items-start gap-3 p-3 rounded-lg border"
+                      >
                         <div className="mt-0.5">
-                          {test.status === 'pass' && <Check className="w-5 h-5 text-green-500" />}
-                          {test.status === 'fail' && <X className="w-5 h-5 text-red-500" />}
-                          {test.status === 'pending' && <AlertCircle className="w-5 h-5 text-yellow-500" />}
+                          {test.status === 'pass' && (
+                            <Check className="w-5 h-5 text-green-500" />
+                          )}
+                          {test.status === 'fail' && (
+                            <X className="w-5 h-5 text-red-500" />
+                          )}
+                          {test.status === 'pending' && (
+                            <AlertCircle className="w-5 h-5 text-yellow-500" />
+                          )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <h4 className="font-medium text-sm">{test.name}</h4>
-                          <p className="text-xs text-gray-600 mt-1">{test.description}</p>
+                          <p className="text-xs text-gray-600 mt-1">
+                            {test.description}
+                          </p>
                           {test.details && (
                             <p className="text-xs text-blue-600 mt-1">{test.details}</p>
                           )}
                           {test.error && (
-                            <p className="text-xs text-red-600 mt-1 font-mono">{test.error}</p>
+                            <p className="text-xs text-red-600 mt-1 font-mono">
+                              {test.error}
+                            </p>
                           )}
                         </div>
                       </div>
@@ -479,7 +528,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
                   feature="nuclear_mode"
                   variant="modal"
                   requiredTier="premium"
-                  onUpgrade={(tier) => console.log('Upgrade to:', tier)}
+                  onUpgrade={tier => console.log('Upgrade to:', tier)}
                 />
               </div>
 
@@ -503,11 +552,13 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
                   subscription={{
                     tier: testTier,
                     status: 'active',
-                    renewsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                    renewsAt: new Date(
+                      Date.now() + 30 * 24 * 60 * 60 * 1000
+                    ).toISOString(),
                     usage: {
                       alarms: { used: 5, limit: testTier === 'free' ? 10 : -1 },
-                      voices: { used: 3, limit: testTier === 'free' ? 6 : -1 }
-                    }
+                      voices: { used: 3, limit: testTier === 'free' ? 6 : -1 },
+                    },
                   }}
                   variant="card"
                 />
@@ -525,7 +576,9 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
                 >
                   <div className="p-6 bg-gray-100 rounded-lg">
                     <h4 className="font-medium">Voice Cloning Feature</h4>
-                    <p className="text-sm text-gray-600">This feature is locked for demo purposes</p>
+                    <p className="text-sm text-gray-600">
+                      This feature is locked for demo purposes
+                    </p>
                   </div>
                 </FeatureLockOverlay>
               </div>
@@ -536,8 +589,9 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
             <Alert>
               <AlertCircle className="w-4 h-4" />
               <AlertDescription>
-                This tab demonstrates real integration of premium features with actual components.
-                Change the test tier above to see how features are locked/unlocked.
+                This tab demonstrates real integration of premium features with actual
+                components. Change the test tier above to see how features are
+                locked/unlocked.
               </AlertDescription>
             </Alert>
 
@@ -549,7 +603,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
               <CardContent>
                 <VoiceSelector
                   currentVoice="gentle"
-                  onVoiceChange={(voice) => console.log('Voice changed to:', voice)}
+                  onVoiceChange={voice => console.log('Voice changed to:', voice)}
                   userId={user.id}
                   className="max-w-md"
                 />
@@ -568,7 +622,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
                 <CardContent>
                   <VoiceCloning
                     userId={user.id}
-                    onVoiceCreated={(voice) => console.log('Voice created:', voice)}
+                    onVoiceCreated={voice => console.log('Voice created:', voice)}
                   />
                 </CardContent>
               </Card>
@@ -583,8 +637,12 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
                 <CardContent>
                   <div className="text-center py-8">
                     <Crown className="w-12 h-12 text-purple-500 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">Ultimate Feature Required</h3>
-                    <p className="text-gray-600 mb-4">Voice cloning is available for Ultimate subscribers</p>
+                    <h3 className="text-lg font-semibold mb-2">
+                      Ultimate Feature Required
+                    </h3>
+                    <p className="text-gray-600 mb-4">
+                      Voice cloning is available for Ultimate subscribers
+                    </p>
                     <Button onClick={() => changeTierForTesting('ultimate')}>
                       Test Ultimate Tier
                     </Button>
