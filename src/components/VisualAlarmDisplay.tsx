@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   visualAlarmThemes,
   VisualAlarmThemeId,
-  VisualAlarmTheme
+  VisualAlarmTheme,
 } from '../services/visual-alarm-themes';
 import { Alarm } from '../types';
 
@@ -39,7 +39,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   isActive,
   onDismiss,
   onSnooze,
-  className = ''
+  className = '',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -81,9 +81,14 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   const initializeParticles = useCallback(() => {
     if (!theme) return;
 
-    const particleCount = theme.animations.intensity === 'extreme' ? 100 :
-                         theme.animations.intensity === 'intense' ? 60 :
-                         theme.animations.intensity === 'moderate' ? 30 : 15;
+    const particleCount =
+      theme.animations.intensity === 'extreme'
+        ? 100
+        : theme.animations.intensity === 'intense'
+          ? 60
+          : theme.animations.intensity === 'moderate'
+            ? 30
+            : 15;
 
     const newParticles: ParticleEffect[] = [];
 
@@ -97,8 +102,15 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   const createParticle = (id: number): ParticleEffect => {
     if (!theme) {
       return {
-        id, x: 0, y: 0, vx: 0, vy: 0, life: 0, maxLife: 100,
-        color: '#ffffff', size: 2
+        id,
+        x: 0,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        life: 0,
+        maxLife: 100,
+        color: '#ffffff',
+        size: 2,
       };
     }
 
@@ -115,7 +127,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
       life: Math.random() * 100,
       maxLife: 100 + Math.random() * 100,
       color: Math.random() > 0.5 ? theme.colors.primary : theme.colors.accent,
-      size: Math.random() * 4 + 1
+      size: Math.random() * 4 + 1,
     };
   };
 
@@ -163,8 +175,10 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
 
     // Draw particles
     particles.forEach(particle => {
-      const alpha = 1 - (particle.life / particle.maxLife);
-      ctx.fillStyle = `${particle.color}${Math.floor(alpha * 255).toString(16).padStart(2, '0')}`;
+      const alpha = 1 - particle.life / particle.maxLife;
+      ctx.fillStyle = `${particle.color}${Math.floor(alpha * 255)
+        .toString(16)
+        .padStart(2, '0')}`;
       ctx.beginPath();
       ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
       ctx.fill();
@@ -213,7 +227,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
     hidden: {
       opacity: 0,
       scale: theme.animations.entrance === 'zoom' ? 0.5 : 1,
-      rotate: theme.animations.entrance === 'rotate' ? -180 : 0
+      rotate: theme.animations.entrance === 'rotate' ? -180 : 0,
     },
     visible: {
       opacity: 1,
@@ -221,35 +235,40 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
       rotate: 0,
       transition: {
         duration: theme.animations.duration / 1000,
-        ease: 'easeInOut'
-      }
+        ease: 'easeInOut',
+      },
     },
     exit: {
       opacity: 0,
       scale: 0.8,
-      transition: { duration: 0.3 }
-    }
+      transition: { duration: 0.3 },
+    },
   };
 
-  const loopVariants = theme.animations.loop === 'pulse' ? {
-    animate: {
-      scale: [1, 1.05, 1],
-      transition: {
-        duration: theme.animations.duration / 1000,
-        repeat: Infinity,
-        ease: 'easeInOut'
-      }
-    }
-  } : theme.animations.loop === 'rotate' ? {
-    animate: {
-      rotate: [0, 360],
-      transition: {
-        duration: theme.animations.duration / 1000,
-        repeat: Infinity,
-        ease: 'linear'
-      }
-    }
-  } : {};
+  const loopVariants =
+    theme.animations.loop === 'pulse'
+      ? {
+          animate: {
+            scale: [1, 1.05, 1],
+            transition: {
+              duration: theme.animations.duration / 1000,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            },
+          },
+        }
+      : theme.animations.loop === 'rotate'
+        ? {
+            animate: {
+              rotate: [0, 360],
+              transition: {
+                duration: theme.animations.duration / 1000,
+                repeat: Infinity,
+                ease: 'linear',
+              },
+            },
+          }
+        : {};
 
   return (
     <AnimatePresence>
@@ -274,7 +293,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
           justifyContent: 'center',
           cursor: 'pointer',
           userSelect: 'none',
-          overflow: 'hidden'
+          overflow: 'hidden',
         }}
       >
         {/* Background Canvas for Particles */}
@@ -288,7 +307,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
               top: 0,
               left: 0,
               pointerEvents: 'none',
-              zIndex: -1
+              zIndex: -1,
             }}
           />
         )}
@@ -306,7 +325,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
               opacity: theme.background.opacity,
               backgroundImage: getPatternCSS(theme.background.pattern),
               backgroundSize: '50px 50px',
-              zIndex: -1
+              zIndex: -1,
             }}
           />
         )}
@@ -320,7 +339,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
             borderRadius: '1rem',
             backdropFilter: theme.effects.blur ? 'blur(10px)' : 'none',
             background: theme.effects.blur ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-            border: theme.effects.blur ? '1px solid rgba(255, 255, 255, 0.2)' : 'none'
+            border: theme.effects.blur ? '1px solid rgba(255, 255, 255, 0.2)' : 'none',
           }}
         >
           {/* Alarm Name */}
@@ -329,12 +348,20 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
               fontSize: theme.typography.fontSize === 'extra-large' ? '4rem' : '3rem',
               fontWeight: theme.typography.fontWeight,
               marginBottom: '1rem',
-              letterSpacing: `${theme.typography.letterSpacing}px`
+              letterSpacing: `${theme.typography.letterSpacing}px`,
             }}
-            animate={theme.effects.glitch ? {
-              x: [0, -2, 2, 0],
-              transition: { duration: 0.1, repeat: Infinity, repeatType: 'mirror' }
-            } : {}}
+            animate={
+              theme.effects.glitch
+                ? {
+                    x: [0, -2, 2, 0],
+                    transition: {
+                      duration: 0.1,
+                      repeat: Infinity,
+                      repeatType: 'mirror',
+                    },
+                  }
+                : {}
+            }
           >
             {alarm.name}
           </motion.h1>
@@ -345,20 +372,26 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
               fontSize: '5rem',
               fontWeight: 'bold',
               marginBottom: '2rem',
-              textShadow: theme.typography.textShadow ? '4px 4px 8px rgba(0,0,0,0.3)' : 'none'
+              textShadow: theme.typography.textShadow
+                ? '4px 4px 8px rgba(0,0,0,0.3)'
+                : 'none',
             }}
-            animate={theme.animations.loop === 'glow' ? {
-              textShadow: [
-                `0 0 20px ${theme.colors.accent}`,
-                `0 0 40px ${theme.colors.accent}`,
-                `0 0 20px ${theme.colors.accent}`
-              ],
-              transition: {
-                duration: 2,
-                repeat: Infinity,
-                ease: 'easeInOut'
-              }
-            } : {}}
+            animate={
+              theme.animations.loop === 'glow'
+                ? {
+                    textShadow: [
+                      `0 0 20px ${theme.colors.accent}`,
+                      `0 0 40px ${theme.colors.accent}`,
+                      `0 0 20px ${theme.colors.accent}`,
+                    ],
+                    transition: {
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    },
+                  }
+                : {}
+            }
           >
             {formatTime(alarm.time)}
           </motion.div>
@@ -369,7 +402,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
               style={{
                 fontSize: '1.2rem',
                 opacity: 0.8,
-                marginBottom: '2rem'
+                marginBottom: '2rem',
               }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 0.8, y: 0 }}
@@ -393,7 +426,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
                 bottom: '4rem',
                 display: 'flex',
                 gap: '2rem',
-                zIndex: 10
+                zIndex: 10,
               }}
             >
               <motion.button
@@ -409,7 +442,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
                   color: theme.colors.text,
                   borderRadius: '0.5rem',
                   backdropFilter: 'blur(10px)',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
                 }}
               >
                 Snooze
@@ -427,7 +460,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
                   background: theme.colors.primary,
                   color: theme.colors.background,
                   borderRadius: '0.5rem',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
                 }}
               >
                 Dismiss
@@ -444,7 +477,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
             right: '1rem',
             fontSize: '0.8rem',
             opacity: 0.5,
-            color: theme.colors.text
+            color: theme.colors.text,
           }}
         >
           {theme.name}

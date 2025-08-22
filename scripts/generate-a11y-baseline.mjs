@@ -2,7 +2,7 @@
 
 /**
  * Generate Accessibility Baseline Report
- * 
+ *
  * This script creates a baseline accessibility report by scanning
  * the current state of the application for accessibility compliance.
  */
@@ -20,7 +20,7 @@ async function generateBaseline() {
     generated: timestamp,
     version: '1.0.0',
     description: 'Initial accessibility baseline for Relife alarm app',
-    
+
     // Component inventory for accessibility testing
     components: {
       critical: [
@@ -40,7 +40,7 @@ async function generateBaseline() {
         'VolumeSlider',
         'SoundSelector',
         'SnoozeButton',
-        'AlarmToggle'
+        'AlarmToggle',
       ],
       navigation: [
         'Header',
@@ -50,7 +50,7 @@ async function generateBaseline() {
         'Breadcrumb',
         'Pagination',
         'Menu',
-        'Dropdown'
+        'Dropdown',
       ],
       forms: [
         'LoginForm',
@@ -58,7 +58,7 @@ async function generateBaseline() {
         'AlarmForm',
         'SettingsForm',
         'ContactForm',
-        'SubscriptionForm'
+        'SubscriptionForm',
       ],
       feedback: [
         'ErrorBoundary',
@@ -67,8 +67,8 @@ async function generateBaseline() {
         'Notification',
         'ConfirmationDialog',
         'SuccessMessage',
-        'ErrorMessage'
-      ]
+        'ErrorMessage',
+      ],
     },
 
     // User flows requiring accessibility testing
@@ -78,7 +78,7 @@ async function generateBaseline() {
         'Registration process',
         'Password reset',
         'Account verification',
-        'Logout'
+        'Logout',
       ],
       alarmManagement: [
         'Create new alarm',
@@ -88,7 +88,7 @@ async function generateBaseline() {
         'Set alarm time',
         'Select alarm days',
         'Choose alarm sound',
-        'Configure snooze settings'
+        'Configure snooze settings',
       ],
       alarmExperience: [
         'Alarm ringing screen',
@@ -96,7 +96,7 @@ async function generateBaseline() {
         'Dismiss alarm',
         'Math challenge solving',
         'Photo challenge completion',
-        'Memory game completion'
+        'Memory game completion',
       ],
       settings: [
         'Change theme',
@@ -104,15 +104,15 @@ async function generateBaseline() {
         'Select language',
         'Configure notifications',
         'Manage subscription',
-        'Update profile'
+        'Update profile',
       ],
       onboarding: [
         'Welcome screen',
         'Permission requests',
         'Initial setup wizard',
         'Tutorial completion',
-        'First alarm creation'
-      ]
+        'First alarm creation',
+      ],
     },
 
     // Accessibility standards to test against
@@ -130,8 +130,8 @@ async function generateBaseline() {
           'form-labels',
           'link-purpose',
           'heading-order',
-          'image-alt'
-        ]
+          'image-alt',
+        ],
       },
       additionalChecks: [
         'Touch target size (44px minimum)',
@@ -141,8 +141,8 @@ async function generateBaseline() {
         'Dark mode compatibility',
         'Reduced motion support',
         'High contrast mode',
-        'RTL language support'
-      ]
+        'RTL language support',
+      ],
     },
 
     // Test coverage goals
@@ -150,18 +150,18 @@ async function generateBaseline() {
       unit: {
         target: 90,
         current: 0,
-        components: []
+        components: [],
       },
       integration: {
         target: 85,
         current: 0,
-        flows: []
+        flows: [],
       },
       e2e: {
         target: 80,
         current: 0,
-        scenarios: []
-      }
+        scenarios: [],
+      },
     },
 
     // Known issues to track
@@ -172,8 +172,8 @@ async function generateBaseline() {
         description: 'Baseline generated - no issues identified yet',
         component: null,
         wcagRule: null,
-        status: 'baseline'
-      }
+        status: 'baseline',
+      },
     ],
 
     // Testing tools configuration
@@ -181,44 +181,40 @@ async function generateBaseline() {
       'jest-axe': {
         version: 'latest',
         rules: 'wcag21aa',
-        tags: ['wcag2a', 'wcag2aa']
+        tags: ['wcag2a', 'wcag2aa'],
       },
       'playwright-axe': {
         version: 'latest',
         include: ['main', 'nav', '[role="main"]'],
-        exclude: ['iframe', '[aria-hidden="true"]']
+        exclude: ['iframe', '[aria-hidden="true"]'],
       },
-      'lighthouse': {
+      lighthouse: {
         categories: ['accessibility'],
-        threshold: 90
+        threshold: 90,
       },
-      'pa11y': {
+      pa11y: {
         standard: 'WCAG2AA',
-        timeout: 30000
-      }
+        timeout: 30000,
+      },
     },
 
     // Reporting configuration
     reporting: {
       formats: ['html', 'json', 'junit'],
-      destinations: [
-        'artifacts/a11y-reports/',
-        'playwright-report/',
-        'coverage/a11y/'
-      ],
+      destinations: ['artifacts/a11y-reports/', 'playwright-report/', 'coverage/a11y/'],
       notifications: {
         onFailure: true,
         onImprovement: true,
-        threshold: 5
-      }
-    }
+        threshold: 5,
+      },
+    },
   };
 
   // Ensure artifacts directories exist
   const artifactsDir = path.join(process.cwd(), 'artifacts');
   const baselineDir = path.join(artifactsDir, 'a11y-baseline');
   const reportsDir = path.join(artifactsDir, 'a11y-reports');
-  
+
   await fs.mkdir(baselineDir, { recursive: true });
   await fs.mkdir(reportsDir, { recursive: true });
   await fs.mkdir(path.join(process.cwd(), 'coverage', 'a11y'), { recursive: true });
@@ -236,10 +232,16 @@ async function generateBaseline() {
   console.log(`📄 JSON: ${baselineFile}`);
   console.log(`🌐 HTML: ${htmlFile}`);
   console.log(`\n📊 Baseline Summary:`);
-  console.log(`   - ${baseline.components.critical.length} critical components to test`);
-  console.log(`   - ${baseline.userFlows.alarmManagement.length} alarm management flows`);
+  console.log(
+    `   - ${baseline.components.critical.length} critical components to test`
+  );
+  console.log(
+    `   - ${baseline.userFlows.alarmManagement.length} alarm management flows`
+  );
   console.log(`   - ${baseline.standards.wcag.rules.length} WCAG rules to validate`);
-  console.log(`   - Target coverage: ${baseline.coverage.unit.target}% unit, ${baseline.coverage.integration.target}% integration`);
+  console.log(
+    `   - Target coverage: ${baseline.coverage.unit.target}% unit, ${baseline.coverage.integration.target}% integration`
+  );
 }
 
 function generateHtmlReport(baseline) {
@@ -357,7 +359,7 @@ function generateHtmlReport(baseline) {
                 <span class="badge badge-green">Version ${baseline.standards.wcag.version}</span>
             </div>
             <ul class="list">
-                ${baseline.standards.wcag.rules.map(rule => `<li>✓ ${rule}</li>`).join('')}
+                ${baseline.standards.wcag.rules.map((rule) => `<li>✓ ${rule}</li>`).join('')}
             </ul>
         </div>
     </div>
@@ -368,13 +370,13 @@ function generateHtmlReport(baseline) {
             <div>
                 <h3>UI Components</h3>
                 <ul class="list">
-                    ${baseline.components.critical.map(component => `<li>${component}</li>`).join('')}
+                    ${baseline.components.critical.map((component) => `<li>${component}</li>`).join('')}
                 </ul>
             </div>
             <div>
                 <h3>Navigation</h3>
                 <ul class="list">
-                    ${baseline.components.navigation.map(component => `<li>${component}</li>`).join('')}
+                    ${baseline.components.navigation.map((component) => `<li>${component}</li>`).join('')}
                 </ul>
             </div>
         </div>
@@ -386,13 +388,13 @@ function generateHtmlReport(baseline) {
             <div>
                 <h3>Alarm Management</h3>
                 <ul class="list">
-                    ${baseline.userFlows.alarmManagement.map(flow => `<li>${flow}</li>`).join('')}
+                    ${baseline.userFlows.alarmManagement.map((flow) => `<li>${flow}</li>`).join('')}
                 </ul>
             </div>
             <div>
                 <h3>Authentication</h3>
                 <ul class="list">
-                    ${baseline.userFlows.authentication.map(flow => `<li>${flow}</li>`).join('')}
+                    ${baseline.userFlows.authentication.map((flow) => `<li>${flow}</li>`).join('')}
                 </ul>
             </div>
         </div>
@@ -401,12 +403,16 @@ function generateHtmlReport(baseline) {
     <div class="card">
         <h2>🔧 Testing Tools</h2>
         <div class="grid">
-            ${Object.entries(baseline.tools).map(([tool, config]) => `
+            ${Object.entries(baseline.tools)
+              .map(
+                ([tool, config]) => `
                 <div>
                     <h4>${tool}</h4>
                     <pre style="background: #f3f4f6; padding: 1rem; border-radius: 4px; overflow-x: auto;">${JSON.stringify(config, null, 2)}</pre>
                 </div>
-            `).join('')}
+            `
+              )
+              .join('')}
         </div>
     </div>
 

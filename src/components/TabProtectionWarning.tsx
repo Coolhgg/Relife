@@ -15,7 +15,7 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
   activeAlarm,
   enabledAlarms,
   settings,
-  className = ''
+  className = '',
 }) => {
   const [showWarning, setShowWarning] = useState(false);
   const [upcomingAlarms, setUpcomingAlarms] = useState<Alarm[]>([]);
@@ -29,7 +29,9 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
     // Check for upcoming alarms within the configured threshold
     const checkUpcomingAlarms = () => {
       const now = new Date();
-      const thresholdFromNow = new Date(now.getTime() + settings.protectionTiming.upcomingAlarmThreshold * 60 * 1000);
+      const thresholdFromNow = new Date(
+        now.getTime() + settings.protectionTiming.upcomingAlarmThreshold * 60 * 1000
+      );
 
       const upcoming = enabledAlarms.filter(alarm => {
         const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
@@ -55,11 +57,10 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
       setUpcomingAlarms(upcoming);
 
       // Determine if warning should be shown based on settings
-      const shouldShow = (
+      const shouldShow =
         (settings.protectionTiming.activeAlarmWarning && activeAlarm) ||
         (settings.protectionTiming.upcomingAlarmWarning && upcoming.length > 0) ||
-        (settings.protectionTiming.enabledAlarmWarning && enabledAlarms.length > 0)
-      );
+        (settings.protectionTiming.enabledAlarmWarning && enabledAlarms.length > 0);
 
       setShowWarning(shouldShow);
     };
@@ -92,29 +93,33 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
   const getWarningMessage = () => {
     if (activeAlarm && settings.protectionTiming.activeAlarmWarning) {
       return {
-        icon: <Bell className="w-5 h-5 text-red-500 animate-pulse" aria-hidden="true" />,
+        icon: (
+          <Bell className="w-5 h-5 text-red-500 animate-pulse" aria-hidden="true" />
+        ),
         title: settings.customMessages.visualWarningTitle.activeAlarm,
         message: `"${activeAlarm.label}" is ringing. Closing this tab will stop the alarm.`,
-        priority: "high" as const
+        priority: 'high' as const,
       };
     }
 
     if (settings.protectionTiming.upcomingAlarmWarning && upcomingAlarms.length > 0) {
-      const timeframe = formatTimeframe(settings.protectionTiming.upcomingAlarmThreshold);
+      const timeframe = formatTimeframe(
+        settings.protectionTiming.upcomingAlarmThreshold
+      );
       return {
         icon: <Clock className="w-5 h-5 text-amber-500" aria-hidden="true" />,
         title: settings.customMessages.visualWarningTitle.upcomingAlarm,
         message: `${upcomingAlarms.length} alarm${upcomingAlarms.length > 1 ? 's' : ''} will ring within ${timeframe}. Keep this tab open to ensure they work.`,
-        priority: "medium" as const
+        priority: 'medium' as const,
       };
     }
 
     if (settings.protectionTiming.enabledAlarmWarning && enabledAlarms.length > 0) {
       return {
         icon: <Shield className="w-5 h-5 text-blue-500" aria-hidden="true" />,
-        title: "Alarm Protection Active",
+        title: 'Alarm Protection Active',
         message: `${enabledAlarms.length} alarm${enabledAlarms.length > 1 ? 's are' : ' is'} enabled. Keep this tab open for reliable alarm functionality.`,
-        priority: "low" as const
+        priority: 'low' as const,
       };
     }
 
@@ -135,9 +140,9 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
   };
 
   const priorityStyles = {
-    high: "bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800",
-    medium: "bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800",
-    low: "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"
+    high: 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800',
+    medium: 'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800',
+    low: 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800',
   };
 
   return (
@@ -147,14 +152,19 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
       aria-live={warningData.priority === 'high' ? 'assertive' : 'polite'}
       aria-atomic="true"
     >
-      <div className={`
+      <div
+        className={`
         ${priorityStyles[warningData.priority]}
         border rounded-lg p-4 shadow-lg backdrop-blur-sm
         transform transition-all duration-300 ease-in-out
-      `}>
+      `}
+      >
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0 mt-0.5">
-            <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+            <Shield
+              className="w-4 h-4 text-blue-600 dark:text-blue-400"
+              aria-hidden="true"
+            />
           </div>
 
           <div className="flex-1 min-w-0">
@@ -175,15 +185,23 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
                   Next alarm{upcomingAlarms.length > 1 ? 's' : ''}:
                 </p>
                 <ul className="space-y-1">
-                  {upcomingAlarms.slice(0, settings.visualSettings.maxAlarmsShown).map((alarm) => (
-                    <li key={alarm.id} className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                      <Clock className="w-3 h-3" aria-hidden="true" />
-                      <span>{alarm.time} - {alarm.label}</span>
-                    </li>
-                  ))}
+                  {upcomingAlarms
+                    .slice(0, settings.visualSettings.maxAlarmsShown)
+                    .map(alarm => (
+                      <li
+                        key={alarm.id}
+                        className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-2"
+                      >
+                        <Clock className="w-3 h-3" aria-hidden="true" />
+                        <span>
+                          {alarm.time} - {alarm.label}
+                        </span>
+                      </li>
+                    ))}
                   {upcomingAlarms.length > settings.visualSettings.maxAlarmsShown && (
                     <li className="text-xs text-gray-500 dark:text-gray-500">
-                      +{upcomingAlarms.length - settings.visualSettings.maxAlarmsShown} more...
+                      +{upcomingAlarms.length - settings.visualSettings.maxAlarmsShown}{' '}
+                      more...
                     </li>
                   )}
                 </ul>

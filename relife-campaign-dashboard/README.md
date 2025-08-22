@@ -1,6 +1,7 @@
 # Scout Vite Template
 
-This is a [Vite](https://vite.dev) project bootstrapped with React + TypeScript and configured with TailwindCSS v4 and ShadCN UI.
+This is a [Vite](https://vite.dev) project bootstrapped with React + TypeScript and configured with
+TailwindCSS v4 and ShadCN UI.
 
 ## Getting Started
 
@@ -12,7 +13,8 @@ bun dev
 
 Open [http://localhost:5173](http://localhost:5173) with your browser to see the result.
 
-You can start editing the page by modifying `src/App.tsx`. The page auto-updates as you edit the file.
+You can start editing the page by modifying `src/App.tsx`. The page auto-updates as you edit the
+file.
 
 ## Project Configuration
 
@@ -33,7 +35,9 @@ The project uses Tailwind CSS V4 with a theme defined in:
 
 ### ShadCN UI Components
 
-This project uses [ShadCN UI](https://ui.shadcn.com) for styled components. The components are incorporated directly into the codebase (not as dependencies), making them fully customizable. All components have been installed:
+This project uses [ShadCN UI](https://ui.shadcn.com) for styled components. The components are
+incorporated directly into the codebase (not as dependencies), making them fully customizable. All
+components have been installed:
 
 - accordion
 - alert-dialog
@@ -82,10 +86,11 @@ This project uses [ShadCN UI](https://ui.shadcn.com) for styled components. The 
 
 ### Icon Library
 
-[Lucide React](https://lucide.dev/) is the preferred icon library for this project, as specified in components.json. Always use Lucide icons to maintain consistency:
+[Lucide React](https://lucide.dev/) is the preferred icon library for this project, as specified in
+components.json. Always use Lucide icons to maintain consistency:
 
 ```tsx
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from 'lucide-react';
 
 // Use in components
 <Button>
@@ -104,12 +109,12 @@ This project uses Google Fonts with:
 The font is imported via Google Fonts CDN in `src/index.css` and configured in the Tailwind theme:
 
 ```css
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 @theme inline {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
 }
 ```
 

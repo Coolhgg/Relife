@@ -1,6 +1,7 @@
 # End-to-End Testing with Playwright
 
-This document provides comprehensive guidance on running, writing, and maintaining end-to-end tests for the Relife Alarm application using Playwright.
+This document provides comprehensive guidance on running, writing, and maintaining end-to-end tests
+for the Relife Alarm application using Playwright.
 
 ## Table of Contents
 
@@ -27,16 +28,19 @@ This document provides comprehensive guidance on running, writing, and maintaini
 ### Installation
 
 1. Install dependencies:
+
    ```bash
    bun install
    ```
 
 2. Install Playwright browsers:
+
    ```bash
    bun run test:e2e:install
    ```
 
 3. Build the application:
+
    ```bash
    bun run build
    ```
@@ -51,6 +55,7 @@ This document provides comprehensive guidance on running, writing, and maintaini
 ### Available Scripts
 
 #### Basic Test Execution
+
 ```bash
 # Run all E2E tests
 bun run test:e2e
@@ -66,6 +71,7 @@ bun run test:e2e:mobile
 ```
 
 #### Debugging and Development
+
 ```bash
 # Open Playwright Test UI (interactive mode)
 bun run test:e2e:ui
@@ -81,6 +87,7 @@ bun run test:e2e:report
 ```
 
 #### CI/CD Mode
+
 ```bash
 # Run tests in CI mode with GitHub reporter
 bun run test:e2e:ci
@@ -237,11 +244,7 @@ test('should login with valid user', async () => {
 
 test('should create alarm with test data', async () => {
   const alarm = TestData.ALARMS.WORK_ALARM;
-  await alarmFormPage.createRecurringAlarm(
-    alarm.time,
-    alarm.label,
-    alarm.days!
-  );
+  await alarmFormPage.createRecurringAlarm(alarm.time, alarm.label, alarm.days!);
 });
 ```
 
@@ -265,11 +268,7 @@ import { MockResponses } from '../fixtures/test-data';
 import { TestHelpers } from '../utils/test-helpers';
 
 test('should handle API failure gracefully', async ({ page }) => {
-  await TestHelpers.interceptApiCalls(
-    page,
-    '/api/alarms',
-    MockResponses.ERROR_RESPONSE
-  );
+  await TestHelpers.interceptApiCalls(page, '/api/alarms', MockResponses.ERROR_RESPONSE);
 
   // Test error handling behavior
 });
@@ -280,26 +279,32 @@ test('should handle API failure gracefully', async ({ page }) => {
 ### Local Debugging
 
 #### 1. Playwright UI Mode (Recommended)
+
 ```bash
 bun run test:e2e:ui
 ```
+
 - Interactive test execution
 - Step-by-step debugging
 - Live browser preview
 - Test recording capabilities
 
 #### 2. Debug Mode
+
 ```bash
 bun run test:e2e:debug
 ```
+
 - Runs tests with debugger attached
 - Browser stays open for inspection
 - Console logging enabled
 
 #### 3. Headed Mode
+
 ```bash
 bun run test:e2e:headed
 ```
+
 - Tests run with visible browser
 - See real-time test execution
 - Good for understanding test flow
@@ -347,7 +352,7 @@ test('manual screenshots', async ({ page }) => {
   // Take full page screenshot
   await page.screenshot({
     path: 'debug-full-page.png',
-    fullPage: true
+    fullPage: true,
   });
 });
 ```
@@ -357,6 +362,7 @@ test('manual screenshots', async ({ page }) => {
 ### GitHub Actions Workflow
 
 The E2E tests run automatically on:
+
 - **Push** to main/develop branches
 - **Pull requests** to main/develop branches
 - **Manual dispatch** with test suite selection
@@ -392,6 +398,7 @@ You can manually trigger E2E tests with specific parameters:
 ### Mobile Device Configuration
 
 Tests run on simulated mobile devices:
+
 - **Mobile Chrome** (Pixel 5)
 - **Mobile Safari** (iPhone 12)
 
@@ -512,6 +519,7 @@ await authPage.login('test@example.com', 'password123');
 ### Common Issues
 
 #### 1. Tests fail with "element not found"
+
 ```bash
 # Check if elements have correct data-testid attributes
 # Verify app is fully loaded before interacting
@@ -519,6 +527,7 @@ await page.waitForLoadState('networkidle');
 ```
 
 #### 2. Flaky tests
+
 ```bash
 # Add proper waits instead of timeouts
 await expect(element).toBeVisible();
@@ -528,6 +537,7 @@ await TestHelpers.clearAllStorage(page);
 ```
 
 #### 3. Browser installation issues
+
 ```bash
 # Reinstall browsers
 bun run test:e2e:install
@@ -537,6 +547,7 @@ sudo apt-get install -y libwoff2dec-1.0-2 libwebpdemux2 libwebpmux3
 ```
 
 #### 4. Port conflicts
+
 ```bash
 # Check if port 4173 is available
 netstat -tulpn | grep 4173
@@ -641,4 +652,5 @@ export const test = base.extend<CustomFixtures>({
 
 ---
 
-This documentation should be updated as the test suite evolves. For questions or improvements, please open an issue or submit a pull request.
+This documentation should be updated as the test suite evolves. For questions or improvements,
+please open an issue or submit a pull request.

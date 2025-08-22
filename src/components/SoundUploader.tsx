@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef } from 'react';
 import {
   Upload,
   X,
@@ -11,37 +11,37 @@ import {
   CheckCircle,
   Loader2,
   Trash2,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Textarea } from "./ui/textarea";
-import { Badge } from "./ui/badge";
-import { Progress } from "./ui/progress";
-import { Alert, AlertDescription } from "./ui/alert";
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Textarea } from './ui/textarea';
+import { Badge } from './ui/badge';
+import { Progress } from './ui/progress';
+import { Alert, AlertDescription } from './ui/alert';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { ScrollArea } from "./ui/scroll-area";
+} from './ui/select';
+import { ScrollArea } from './ui/scroll-area';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
-import { CustomSoundManager } from "../services/custom-sound-manager";
+} from './ui/dialog';
+import { CustomSoundManager } from '../services/custom-sound-manager';
 import type {
   CustomSound,
   SoundCategory,
   SoundUploadProgress,
   SoundUploadResult,
-  UploadedFile
+  UploadedFile,
 } from '../types/custom-sound-themes';
 
 interface SoundUploaderProps {
@@ -60,18 +60,46 @@ interface UploadItem extends UploadedFile {
   audio?: HTMLAudioElement;
 }
 
-const SOUND_CATEGORIES: Array<{ value: SoundCategory; label: string; description: string }> = [
-  { value: 'ui', label: 'UI Sounds', description: 'Click, hover, success, error sounds' },
-  { value: 'notification', label: 'Notifications', description: 'Alert and notification sounds' },
+const SOUND_CATEGORIES: Array<{
+  value: SoundCategory;
+  label: string;
+  description: string;
+}> = [
+  {
+    value: 'ui',
+    label: 'UI Sounds',
+    description: 'Click, hover, success, error sounds',
+  },
+  {
+    value: 'notification',
+    label: 'Notifications',
+    description: 'Alert and notification sounds',
+  },
   { value: 'alarm', label: 'Alarms', description: 'Wake-up and alarm sounds' },
-  { value: 'ambient', label: 'Ambient', description: 'Background and atmospheric sounds' },
+  {
+    value: 'ambient',
+    label: 'Ambient',
+    description: 'Background and atmospheric sounds',
+  },
   { value: 'voice', label: 'Voice', description: 'Voice recordings and speech' },
   { value: 'music', label: 'Music', description: 'Musical compositions and melodies' },
   { value: 'effect', label: 'Sound Effects', description: 'General sound effects' },
-  { value: 'nature', label: 'Nature', description: 'Natural sounds like birds, water, wind' },
-  { value: 'mechanical', label: 'Mechanical', description: 'Machine and mechanical sounds' },
-  { value: 'electronic', label: 'Electronic', description: 'Digital and synthetic sounds' },
-  { value: 'organic', label: 'Organic', description: 'Human and organic sounds' }
+  {
+    value: 'nature',
+    label: 'Nature',
+    description: 'Natural sounds like birds, water, wind',
+  },
+  {
+    value: 'mechanical',
+    label: 'Mechanical',
+    description: 'Machine and mechanical sounds',
+  },
+  {
+    value: 'electronic',
+    label: 'Electronic',
+    description: 'Digital and synthetic sounds',
+  },
+  { value: 'organic', label: 'Organic', description: 'Human and organic sounds' },
 ];
 
 export const SoundUploader: React.FC<SoundUploaderProps> = ({
@@ -80,7 +108,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
   onSoundDeleted,
   maxFiles = 10,
   allowedCategories,
-  className = ''
+  className = '',
 }) => {
   const [uploadItems, setUploadItems] = useState<UploadItem[]>([]);
   const [uploadedSounds, setUploadedSounds] = useState<CustomSound[]>([]);
@@ -165,7 +193,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
       status: 'uploading',
       file,
       previewUrl: URL.createObjectURL(file),
-      isPlaying: false
+      isPlaying: false,
     }));
 
     setUploadItems(prev => [...prev, ...newItems]);
@@ -186,10 +214,10 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
       updateUploadItem(item.id, { status: 'uploading' });
 
       const metadata = {
-        name: item.file.name.replace(/\.[^/.]+$/, ""), // Remove extension
+        name: item.file.name.replace(/\.[^/.]+$/, ''), // Remove extension
         description: '',
         category: 'effect' as SoundCategory, // Default category
-        tags: []
+        tags: [],
       };
 
       const result: SoundUploadResult = await customSoundManager.uploadCustomSound(
@@ -199,7 +227,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
         (progress: SoundUploadProgress) => {
           updateUploadItem(item.id, {
             uploadProgress: progress.percentage,
-            status: progress.stage === 'complete' ? 'ready' : 'processing'
+            status: progress.stage === 'complete' ? 'ready' : 'processing',
           });
         }
       );
@@ -207,7 +235,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
       if (result.success && result.customSound) {
         updateUploadItem(item.id, {
           status: 'ready',
-          uploadProgress: 100
+          uploadProgress: 100,
         });
 
         // Add to uploaded sounds list
@@ -216,21 +244,21 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
       } else {
         updateUploadItem(item.id, {
           status: 'error',
-          error: result.error || 'Upload failed'
+          error: result.error || 'Upload failed',
         });
       }
     } catch (error) {
       updateUploadItem(item.id, {
         status: 'error',
-        error: error instanceof Error ? error.message : 'Upload failed'
+        error: error instanceof Error ? error.message : 'Upload failed',
       });
     }
   };
 
   const updateUploadItem = (id: string, updates: Partial<UploadItem>) => {
-    setUploadItems(prev => prev.map(item =>
-      item.id === id ? { ...item, ...updates } : item
-    ));
+    setUploadItems(prev =>
+      prev.map(item => (item.id === id ? { ...item, ...updates } : item))
+    );
   };
 
   const removeUploadItem = (id: string) => {
@@ -383,7 +411,10 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
               <h4 className="font-medium">Uploading Files</h4>
               <ScrollArea className="h-64">
                 {uploadItems.map(item => (
-                  <div key={item.id} className="flex items-center gap-3 p-3 border rounded-lg">
+                  <div
+                    key={item.id}
+                    className="flex items-center gap-3 p-3 border rounded-lg"
+                  >
                     {getStatusIcon(item.status)}
 
                     <div className="flex-1 min-w-0">
@@ -401,7 +432,9 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                       {item.error && (
                         <Alert className="mt-2">
                           <AlertCircle className="w-4 h-4" />
-                          <AlertDescription className="text-sm">{item.error}</AlertDescription>
+                          <AlertDescription className="text-sm">
+                            {item.error}
+                          </AlertDescription>
                         </Alert>
                       )}
                     </div>
@@ -414,7 +447,11 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                           onClick={() => togglePreview(item)}
                           disabled={item.status === 'error'}
                         >
-                          {item.isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                          {item.isPlaying ? (
+                            <Pause className="w-4 h-4" />
+                          ) : (
+                            <Play className="w-4 h-4" />
+                          )}
                         </Button>
                       )}
 
@@ -458,23 +495,33 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
             <ScrollArea className="h-96">
               <div className="space-y-3">
                 {uploadedSounds.map(sound => (
-                  <div key={sound.id} className="flex items-center gap-3 p-4 border rounded-lg hover:bg-gray-50">
+                  <div
+                    key={sound.id}
+                    className="flex items-center gap-3 p-4 border rounded-lg hover:bg-gray-50"
+                  >
                     <FileAudio className="w-8 h-8 text-blue-500" />
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h4 className="font-medium truncate">{sound.name}</h4>
                         <Badge variant="secondary" className="text-xs">
-                          {SOUND_CATEGORIES.find(cat => cat.value === sound.category)?.label || sound.category}
+                          {SOUND_CATEGORIES.find(cat => cat.value === sound.category)
+                            ?.label || sound.category}
                         </Badge>
                       </div>
                       {sound.description && (
-                        <p className="text-sm text-gray-600 truncate">{sound.description}</p>
+                        <p className="text-sm text-gray-600 truncate">
+                          {sound.description}
+                        </p>
                       )}
                       <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
                         <span>{formatFileSize(sound.fileSize || 0)}</span>
                         <span>•</span>
-                        <span>{sound.duration ? `${Math.round(sound.duration)}s` : 'Unknown'}</span>
+                        <span>
+                          {sound.duration
+                            ? `${Math.round(sound.duration)}s`
+                            : 'Unknown'}
+                        </span>
                         {sound.tags && sound.tags.length > 0 && (
                           <>
                             <span>•</span>
@@ -505,10 +552,12 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                           </DialogHeader>
                           <SoundEditForm
                             sound={sound}
-                            onSave={(updatedSound) => {
-                              setUploadedSounds(prev => prev.map(s =>
-                                s.id === updatedSound.id ? updatedSound : s
-                              ));
+                            onSave={updatedSound => {
+                              setUploadedSounds(prev =>
+                                prev.map(s =>
+                                  s.id === updatedSound.id ? updatedSound : s
+                                )
+                              );
                             }}
                           />
                         </DialogContent>
@@ -556,7 +605,10 @@ const SoundEditForm: React.FC<{
           name: name.trim(),
           description: description.trim() || undefined,
           category,
-          tags: tags.split(',').map(tag => tag.trim()).filter(Boolean)
+          tags: tags
+            .split(',')
+            .map(tag => tag.trim())
+            .filter(Boolean),
         }
       );
 
@@ -566,7 +618,10 @@ const SoundEditForm: React.FC<{
           name: name.trim(),
           description: description.trim() || undefined,
           category,
-          tags: tags.split(',').map(tag => tag.trim()).filter(Boolean)
+          tags: tags
+            .split(',')
+            .map(tag => tag.trim())
+            .filter(Boolean),
         };
         onSave(updatedSound);
       }
@@ -602,7 +657,10 @@ const SoundEditForm: React.FC<{
 
       <div>
         <Label htmlFor="sound-category">Category</Label>
-        <Select value={category} onValueChange={(value: SoundCategory) => setCategory(value)}>
+        <Select
+          value={category}
+          onValueChange={(value: SoundCategory) => setCategory(value)}
+        >
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
@@ -627,7 +685,11 @@ const SoundEditForm: React.FC<{
         <p className="text-sm text-gray-500 mt-1">Separate tags with commas</p>
       </div>
 
-      <Button onClick={handleSave} disabled={isSaving || !name.trim()} className="w-full">
+      <Button
+        onClick={handleSave}
+        disabled={isSaving || !name.trim()}
+        className="w-full"
+      >
         {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
         Save Changes
       </Button>

@@ -1,4 +1,4 @@
-import { expect, test, jest } from "@jest/globals";
+import { expect, test, jest } from '@jest/globals';
 /**
  * Unit tests for useFormAnnouncements hook
  * Tests form validation and error announcements for accessibility
@@ -14,14 +14,14 @@ const mockAnnouncementService = {
   announceAssertive: jest.fn(),
   clearQueue: jest.fn(),
   setEnabled: jest.fn(),
-  isEnabled: jest.fn(() => true)
+  isEnabled: jest.fn(() => true),
 };
 
 jest.mock('../../services/accessibility-announcement', () => ({
   __esModule: true,
   default: {
-    getInstance: () => mockAnnouncementService
-  }
+    getInstance: () => mockAnnouncementService,
+  },
 }));
 
 // Mock i18n hook for form translations
@@ -36,7 +36,7 @@ const mockT = jest.fn((key, options) => {
     'form.error.submit': 'Form submission failed: {{error}}',
     'form.field.changed': '{{field}} field updated',
     'form.progress.step': 'Step {{current}} of {{total}}: {{stepName}}',
-    'form.autosave.saved': 'Changes saved automatically'
+    'form.autosave.saved': 'Changes saved automatically',
   };
 
   let translation = translations[key] || key;
@@ -51,7 +51,7 @@ const mockT = jest.fn((key, options) => {
 });
 
 jest.mock('../useI18n', () => ({
-  useFormI18n: () => ({ t: mockT })
+  useFormI18n: () => ({ t: mockT }),
 }));
 
 describe('useFormAnnouncements', () => {
@@ -76,7 +76,7 @@ describe('useFormAnnouncements', () => {
     });
 
     expect(mockT).toHaveBeenCalledWith('form.validation.required', {
-      field: 'email'
+      field: 'email',
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
       'Field email is required'
@@ -100,11 +100,13 @@ describe('useFormAnnouncements', () => {
     const { result } = renderHook(() => useFormAnnouncements());
 
     await act(async () => {
-      await result.current.announceValidationError('password', 'password', { minLength: 8 });
+      await result.current.announceValidationError('password', 'password', {
+        minLength: 8,
+      });
     });
 
     expect(mockT).toHaveBeenCalledWith('form.validation.password', {
-      minLength: 8
+      minLength: 8,
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
       'Password must be at least 8 characters'
@@ -117,7 +119,7 @@ describe('useFormAnnouncements', () => {
     const errors = [
       { field: 'email', type: 'required' },
       { field: 'password', type: 'password', params: { minLength: 8 } },
-      { field: 'confirmPassword', type: 'match' }
+      { field: 'confirmPassword', type: 'match' },
     ];
 
     await act(async () => {
@@ -125,7 +127,7 @@ describe('useFormAnnouncements', () => {
     });
 
     expect(mockT).toHaveBeenCalledWith('form.error.summary', {
-      count: 3
+      count: 3,
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
       '3 validation errors found'
@@ -158,7 +160,7 @@ describe('useFormAnnouncements', () => {
     });
 
     expect(mockT).toHaveBeenCalledWith('form.error.submit', {
-      error: 'Network connection failed'
+      error: 'Network connection failed',
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
       'Form submission failed: Network connection failed'
@@ -173,7 +175,7 @@ describe('useFormAnnouncements', () => {
     });
 
     expect(mockT).toHaveBeenCalledWith('form.field.changed', {
-      field: 'username'
+      field: 'username',
     });
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalledWith(
       'username field updated'
@@ -190,7 +192,7 @@ describe('useFormAnnouncements', () => {
     expect(mockT).toHaveBeenCalledWith('form.progress.step', {
       current: 2,
       total: 4,
-      stepName: 'Account Details'
+      stepName: 'Account Details',
     });
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalledWith(
       'Step 2 of 4: Account Details'
@@ -262,7 +264,7 @@ describe('useFormAnnouncements', () => {
       field: 'creditCard',
       type: 'custom',
       message: 'Credit card number is invalid',
-      suggestions: ['Check for typos', 'Ensure all digits are entered']
+      suggestions: ['Check for typos', 'Ensure all digits are entered'],
     };
 
     await act(async () => {
@@ -281,7 +283,7 @@ describe('useFormAnnouncements', () => {
       await result.current.announceFieldFocus('password', {
         label: 'Password',
         requirements: 'Must be at least 8 characters',
-        required: true
+        required: true,
       });
     });
 
@@ -302,7 +304,9 @@ describe('useFormAnnouncements', () => {
 
   it('should handle errors gracefully', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    mockAnnouncementService.announceAssertive.mockRejectedValue(new Error('Announcement failed'));
+    mockAnnouncementService.announceAssertive.mockRejectedValue(
+      new Error('Announcement failed')
+    );
 
     const { result } = renderHook(() => useFormAnnouncements());
 
@@ -324,12 +328,12 @@ describe('useFormAnnouncements', () => {
     const formState = {
       errors: [
         { field: 'email', type: 'required' },
-        { field: 'phone', type: 'format' }
+        { field: 'phone', type: 'format' },
       ],
       success: false,
       submitting: false,
       step: 1,
-      totalSteps: 3
+      totalSteps: 3,
     };
 
     await act(async () => {
@@ -348,7 +352,7 @@ describe('useFormAnnouncements', () => {
       field: 'username',
       type: 'availability',
       message: 'Username "johndoe" is already taken',
-      suggestions: ['Try "johndoe2" or "john_doe"']
+      suggestions: ['Try "johndoe2" or "john_doe"'],
     };
 
     await act(async () => {
@@ -361,10 +365,12 @@ describe('useFormAnnouncements', () => {
   });
 
   it('should support conditional announcement based on user preferences', async () => {
-    const { result } = renderHook(() => useFormAnnouncements({
-      verbosity: 'minimal', // Only critical announcements
-      realTimeValidation: false
-    }));
+    const { result } = renderHook(() =>
+      useFormAnnouncements({
+        verbosity: 'minimal', // Only critical announcements
+        realTimeValidation: false,
+      })
+    );
 
     // Should not announce field changes in minimal mode
     await act(async () => {

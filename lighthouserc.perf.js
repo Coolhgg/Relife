@@ -8,7 +8,7 @@ module.exports = {
         'http://localhost:4173', // Preview build URL - homepage
         'http://localhost:4173/settings', // Settings page
         'http://localhost:4173/alarm/create', // Alarm creation
-        'http://localhost:4173/onboarding' // Onboarding flow
+        'http://localhost:4173/onboarding', // Onboarding flow
       ],
       // Build settings
       staticDistDir: './dist',
@@ -24,7 +24,7 @@ module.exports = {
         screenEmulation: {
           mobile: false,
           width: 1200,
-          height: 800
+          height: 800,
         },
         // Throttling settings for consistent results
         throttlingMethod: 'simulate',
@@ -34,17 +34,17 @@ module.exports = {
           cpuSlowdownMultiplier: 1,
           requestLatencyMs: 0,
           downloadThroughputKbps: 0,
-          uploadThroughputKbps: 0
-        }
-      }
+          uploadThroughputKbps: 0,
+        },
+      },
     },
     assert: {
       assertions: {
         // Performance budgets - strict for alarm app
         'categories:performance': ['error', { minScore: 0.85 }], // Must score 85+ for performance
-        'categories:best-practices': ['error', { minScore: 0.90 }], // Must score 90+ for best practices
-        'categories:accessibility': ['error', { minScore: 0.90 }], // Must score 90+ for accessibility
-        'categories:seo': ['warn', { minScore: 0.80 }], // Warn if SEO < 80
+        'categories:best-practices': ['error', { minScore: 0.9 }], // Must score 90+ for best practices
+        'categories:accessibility': ['error', { minScore: 0.9 }], // Must score 90+ for accessibility
+        'categories:seo': ['warn', { minScore: 0.8 }], // Warn if SEO < 80
 
         // Critical performance metrics
         'first-contentful-paint': ['warn', { maxNumericValue: 2000 }], // FCP < 2s
@@ -69,7 +69,7 @@ module.exports = {
         // Accessibility (carried over from main config)
         'color-contrast': 'error',
         'image-alt': 'error',
-        'label': 'error',
+        label: 'error',
         'button-name': 'error',
         'document-title': 'error',
         'html-has-lang': 'error',
@@ -78,8 +78,8 @@ module.exports = {
         'uses-https': 'error',
         'is-on-https': 'error',
         'no-vulnerable-libraries': 'error',
-        'csp-xss': 'warn' // Content Security Policy
-      }
+        'csp-xss': 'warn', // Content Security Policy
+      },
     },
     upload: {
       target: 'temporary-public-storage', // Store performance reports temporarily for PR artifacts
@@ -88,6 +88,6 @@ module.exports = {
       // Optional: Configure for future LHCI server
       // target: 'lhci',
       // serverBaseUrl: process.env.LHCI_SERVER_URL
-    }
-  }
+    },
+  },
 };

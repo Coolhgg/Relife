@@ -1,6 +1,8 @@
 # 🌍 Translation Guidelines for Relife Alarms
 
-This document provides comprehensive guidelines for contributing high-quality translations to the Relife Alarms project. Our goal is to create an inclusive, culturally-appropriate experience for users worldwide.
+This document provides comprehensive guidelines for contributing high-quality translations to the
+Relife Alarms project. Our goal is to create an inclusive, culturally-appropriate experience for
+users worldwide.
 
 ## 📋 Table of Contents
 
@@ -18,7 +20,9 @@ This document provides comprehensive guidelines for contributing high-quality tr
 
 ## 📖 Overview
 
-Relife is a life-changing alarm app designed to help users build better morning routines and achieve their goals. Our translation system supports **22 languages** with region-specific variants to provide the best possible user experience across different cultures and markets.
+Relife is a life-changing alarm app designed to help users build better morning routines and achieve
+their goals. Our translation system supports **22 languages** with region-specific variants to
+provide the best possible user experience across different cultures and markets.
 
 ### Translation Philosophy
 
@@ -127,7 +131,8 @@ Each language has 6 translation files:
 
 - **Adapt cultural references**: Replace culture-specific examples with local equivalents
 - **Consider social norms**: Ensure content aligns with local customs and values
-- **Respect religious/cultural sensitivities**: Be mindful of dietary, religious, and cultural practices
+- **Respect religious/cultural sensitivities**: Be mindful of dietary, religious, and cultural
+  practices
 
 #### Regional Differences
 
@@ -141,8 +146,7 @@ Each language has 6 translation files:
 
 - **Maintain interpolation variables**: Keep `{{variable}}` and `{variable}` placeholders intact
 - **Preserve HTML tags**: Maintain `<strong>`, `<em>`, and other formatting
-- **Respect line breaks**: Use `
-` where appropriate for multi-line text
+- **Respect line breaks**: Use ` ` where appropriate for multi-line text
 
 #### Character Encoding
 
@@ -384,9 +388,8 @@ When submitting translations, include:
 ```markdown
 ## Translation Contribution
 
-**Language**: [Language Name] (`language-code`)
-**Completion Level**: [X]% complete
-**Files Modified**:
+**Language**: [Language Name] (`language-code`) **Completion Level**: [X]% complete **Files
+Modified**:
 
 - [ ] common.json (90 keys)
 - [ ] alarms.json (84 keys)
@@ -496,12 +499,12 @@ When submitting translations, include:
 
 ## 🙏 Thank You
 
-Your contribution to making Relife accessible to users worldwide is invaluable. Every translation helps someone build better morning routines and achieve their goals, regardless of their native language.
+Your contribution to making Relife accessible to users worldwide is invaluable. Every translation
+helps someone build better morning routines and achieve their goals, regardless of their native
+language.
 
 Together, we're making productivity and personal growth truly global! 🌍✨
 
 ---
 
-**Last Updated**: 2025-01-17
-**Version**: 1.0.0
-**Maintained by**: Relife Translation Team
+**Last Updated**: 2025-01-17 **Version**: 1.0.0 **Maintained by**: Relife Translation Team

@@ -1,10 +1,10 @@
 /// <reference lib="dom" />
 /**
  * Enhanced Browser API Mocks for Integration Tests
- * 
+ *
  * Comprehensive mocks for critical browser APIs needed for alarm app functionality:
  * - Notification API
- * - Push Manager API  
+ * - Push Manager API
  * - Service Worker API
  * - Wake Lock API
  * - Background Sync API
@@ -15,15 +15,15 @@ import { vi } from 'vitest';
 
 // Types for mock state management
 interface MockNotificationState {
-  permissions: {[key: string]: NotificationPermission};
+  permissions: { [key: string]: NotificationPermission };
   notifications: MockNotification[];
-  clickHandlers: {[key: string]: () => void};
+  clickHandlers: { [key: string]: () => void };
 }
 
 interface MockServiceWorkerState {
   registrations: MockServiceWorkerRegistration[];
   activeWorker: MockServiceWorker | null;
-  messageHandlers: {[key: string]: (event: MessageEvent) => void};
+  messageHandlers: { [key: string]: (event: MessageEvent) => void };
 }
 
 interface MockPushState {
@@ -36,17 +36,17 @@ const mockStates = {
   notification: {
     permissions: { default: 'default' as NotificationPermission },
     notifications: [],
-    clickHandlers: {}
+    clickHandlers: {},
   } as MockNotificationState,
   serviceWorker: {
     registrations: [],
     activeWorker: null,
-    messageHandlers: {}
+    messageHandlers: {},
   } as MockServiceWorkerState,
   push: {
     subscriptions: [],
-    pushMessages: []
-  } as MockPushState
+    pushMessages: [],
+  } as MockPushState,
 };
 
 // Mock Notification interface
@@ -130,7 +130,7 @@ interface MockWakeLockSentinel extends EventTarget {
  */
 export const mockNotificationAPI = () => {
   // Mock Notification constructor
-  const MockNotificationConstructor = vi.fn().mockImplementation(function(
+  const MockNotificationConstructor = vi.fn().mockImplementation(function (
     this: MockNotification,
     title: string,
     options: NotificationOptions = {}
@@ -159,7 +159,7 @@ export const mockNotificationAPI = () => {
         if (notification.onclose) {
           notification.onclose(new Event('close'));
         }
-      })
+      }),
     };
 
     // Store notification
@@ -177,21 +177,21 @@ export const mockNotificationAPI = () => {
 
   // Mock static methods
   MockNotificationConstructor.permission = mockStates.notification.permissions.default;
-  
-  MockNotificationConstructor.requestPermission = vi.fn().mockImplementation(
-    (callback?: (permission: NotificationPermission) => void) => {
+
+  MockNotificationConstructor.requestPermission = vi
+    .fn()
+    .mockImplementation((callback?: (permission: NotificationPermission) => void) => {
       const permission: NotificationPermission = 'granted';
       mockStates.notification.permissions.default = permission;
       MockNotificationConstructor.permission = permission;
-      
+
       if (callback) {
         callback(permission);
         return Promise.resolve(permission);
       }
-      
+
       return Promise.resolve(permission);
-    }
-  );
+    });
 
   // Set global Notification
   global.Notification = MockNotificationConstructor as any;
@@ -212,7 +212,7 @@ export const mockNotificationAPI = () => {
       mockStates.notification.notifications = [];
       mockStates.notification.permissions.default = 'default';
       MockNotificationConstructor.permission = 'default';
-    }
+    },
   };
 };
 
@@ -236,7 +236,7 @@ export const mockServiceWorkerAPI = () => {
           handler(messageEvent);
         });
       }, 0);
-    })
+    }),
   });
 
   const createMockPushManager = (): MockPushManager => ({
@@ -251,10 +251,10 @@ export const mockServiceWorkerAPI = () => {
           endpoint: 'https://fcm.googleapis.com/fcm/send/test-endpoint-123',
           keys: {
             p256dh: 'test-p256dh-key',
-            auth: 'test-auth-key'
-          }
+            auth: 'test-auth-key',
+          },
         }),
-        unsubscribe: vi.fn().mockResolvedValue(true)
+        unsubscribe: vi.fn().mockResolvedValue(true),
       };
       mockStates.push.subscriptions.push(subscription);
       return subscription;
@@ -262,15 +262,17 @@ export const mockServiceWorkerAPI = () => {
     getSubscription: vi.fn().mockImplementation(async () => {
       return mockStates.push.subscriptions[0] || null;
     }),
-    permissionState: vi.fn().mockResolvedValue('granted' as PermissionState)
+    permissionState: vi.fn().mockResolvedValue('granted' as PermissionState),
   });
 
   const createMockSyncManager = (): MockSyncManager => ({
     register: vi.fn().mockResolvedValue(undefined),
-    getTags: vi.fn().mockResolvedValue(['alarm-sync', 'background-sync'])
+    getTags: vi.fn().mockResolvedValue(['alarm-sync', 'background-sync']),
   });
 
-  const createMockServiceWorkerRegistration = (scope: string): MockServiceWorkerRegistration => {
+  const createMockServiceWorkerRegistration = (
+    scope: string
+  ): MockServiceWorkerRegistration => {
     const activeWorker = createMockServiceWorker(`${scope}/sw.js`);
     mockStates.serviceWorker.activeWorker = activeWorker;
 
@@ -286,12 +288,14 @@ export const mockServiceWorkerAPI = () => {
       dispatchEvent: vi.fn(),
       update: vi.fn().mockResolvedValue(undefined),
       unregister: vi.fn().mockResolvedValue(true),
-      showNotification: vi.fn().mockImplementation(async (title: string, options?: NotificationOptions) => {
-        // Create notification through service worker
-        const notification = new (global.Notification as any)(title, options);
-        return notification;
-      }),
-      getNotifications: vi.fn().mockResolvedValue([])
+      showNotification: vi
+        .fn()
+        .mockImplementation(async (title: string, options?: NotificationOptions) => {
+          // Create notification through service worker
+          const notification = new (global.Notification as any)(title, options);
+          return notification;
+        }),
+      getNotifications: vi.fn().mockResolvedValue([]),
     };
   };
 
@@ -299,29 +303,33 @@ export const mockServiceWorkerAPI = () => {
   const mockServiceWorkerContainer = {
     controller: null,
     ready: Promise.resolve(createMockServiceWorkerRegistration('/')),
-    register: vi.fn().mockImplementation(async (scriptURL: string, options?: RegistrationOptions) => {
-      const scope = options?.scope || '/';
-      const registration = createMockServiceWorkerRegistration(scope);
-      mockStates.serviceWorker.registrations.push(registration);
-      return registration;
-    }),
+    register: vi
+      .fn()
+      .mockImplementation(async (scriptURL: string, options?: RegistrationOptions) => {
+        const scope = options?.scope || '/';
+        const registration = createMockServiceWorkerRegistration(scope);
+        mockStates.serviceWorker.registrations.push(registration);
+        return registration;
+      }),
     getRegistration: vi.fn().mockImplementation(async (scope?: string) => {
-      return mockStates.serviceWorker.registrations.find(reg => 
-        !scope || reg.scope === scope
-      ) || null;
+      return (
+        mockStates.serviceWorker.registrations.find(
+          reg => !scope || reg.scope === scope
+        ) || null
+      );
     }),
     getRegistrations: vi.fn().mockImplementation(async () => {
       return mockStates.serviceWorker.registrations;
     }),
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
-    startMessages: vi.fn()
+    startMessages: vi.fn(),
   };
 
   Object.defineProperty(navigator, 'serviceWorker', {
     value: mockServiceWorkerContainer,
     writable: true,
-    configurable: true
+    configurable: true,
   });
 
   return {
@@ -339,7 +347,7 @@ export const mockServiceWorkerAPI = () => {
       mockStates.serviceWorker.registrations = [];
       mockStates.serviceWorker.activeWorker = null;
       mockStates.serviceWorker.messageHandlers = {};
-    }
+    },
   };
 };
 
@@ -367,9 +375,9 @@ export const mockWakeLockAPI = () => {
         if (sentinel.onrelease) {
           sentinel.onrelease(new Event('release'));
         }
-      })
+      }),
     };
-    
+
     activeSentinels.push(sentinel);
     return sentinel;
   };
@@ -377,13 +385,13 @@ export const mockWakeLockAPI = () => {
   const mockWakeLock: MockWakeLock = {
     request: vi.fn().mockImplementation(async (type: WakeLockType = 'screen') => {
       return createWakeLockSentinel(type);
-    })
+    }),
   };
 
   Object.defineProperty(navigator, 'wakeLock', {
     value: mockWakeLock,
     writable: true,
-    configurable: true
+    configurable: true,
   });
 
   return {
@@ -393,7 +401,7 @@ export const mockWakeLockAPI = () => {
     },
     resetWakeLocks: () => {
       activeSentinels.splice(0, activeSentinels.length);
-    }
+    },
   };
 };
 
@@ -420,8 +428,8 @@ export const mockEnhancedSpeechRecognitionAPI = () => {
     onspeechend: null,
     onaudiostart: null,
     onaudioend: null,
-    
-    start: vi.fn().mockImplementation(function() {
+
+    start: vi.fn().mockImplementation(function () {
       setTimeout(() => {
         if (this.onstart) this.onstart(new Event('start'));
         if (this.onaudiostart) this.onaudiostart(new Event('audiostart'));
@@ -429,8 +437,8 @@ export const mockEnhancedSpeechRecognitionAPI = () => {
         if (this.onspeechstart) this.onspeechstart(new Event('speechstart'));
       }, 50);
     }),
-    
-    stop: vi.fn().mockImplementation(function() {
+
+    stop: vi.fn().mockImplementation(function () {
       setTimeout(() => {
         if (this.onspeechend) this.onspeechend(new Event('speechend'));
         if (this.onsoundend) this.onsoundend(new Event('soundend'));
@@ -438,21 +446,21 @@ export const mockEnhancedSpeechRecognitionAPI = () => {
         if (this.onend) this.onend(new Event('end'));
       }, 50);
     }),
-    
-    abort: vi.fn().mockImplementation(function() {
+
+    abort: vi.fn().mockImplementation(function () {
       setTimeout(() => {
         if (this.onend) this.onend(new Event('end'));
       }, 10);
     }),
-    
+
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn()
+    dispatchEvent: vi.fn(),
   };
 
   // Mock speech recognition constructor
   const MockSpeechRecognition = vi.fn().mockImplementation(() => mockRecognition);
-  
+
   // Set up global APIs
   global.SpeechRecognition = MockSpeechRecognition;
   global.webkitSpeechRecognition = MockSpeechRecognition;
@@ -460,18 +468,20 @@ export const mockEnhancedSpeechRecognitionAPI = () => {
   return {
     instance: mockRecognition,
     simulateResult: (transcript: string, isFinal: boolean = true) => {
-      const results = [{
-        0: { transcript, confidence: 0.95 },
-        isFinal,
-        length: 1
-      }];
-      
+      const results = [
+        {
+          0: { transcript, confidence: 0.95 },
+          isFinal,
+          length: 1,
+        },
+      ];
+
       const event = {
         results,
         resultIndex: 0,
-        type: 'result'
+        type: 'result',
       };
-      
+
       if (mockRecognition.onresult) {
         mockRecognition.onresult(event as any);
       }
@@ -486,7 +496,7 @@ export const mockEnhancedSpeechRecognitionAPI = () => {
       if (mockRecognition.onnomatch) {
         mockRecognition.onnomatch(new Event('nomatch'));
       }
-    }
+    },
   };
 };
 
@@ -494,18 +504,21 @@ export const mockEnhancedSpeechRecognitionAPI = () => {
  * Mock Permissions API with advanced support
  */
 export const mockEnhancedPermissionsAPI = () => {
-  const permissions: {[key: string]: PermissionStatus} = {};
-  
-  const createPermissionStatus = (name: string, state: PermissionState = 'granted'): PermissionStatus => {
+  const permissions: { [key: string]: PermissionStatus } = {};
+
+  const createPermissionStatus = (
+    name: string,
+    state: PermissionState = 'granted'
+  ): PermissionStatus => {
     const status = {
       name,
       state,
       onchange: null,
       addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn()
+      dispatchEvent: vi.fn(),
     } as PermissionStatus;
-    
+
     permissions[name] = status;
     return status;
   };
@@ -517,22 +530,25 @@ export const mockEnhancedPermissionsAPI = () => {
         if (existingPermission) {
           return existingPermission;
         }
-        
+
         // Default permissions for different types
-        const defaultStates: {[key: string]: PermissionState} = {
-          'notifications': 'granted',
-          'push': 'granted',
-          'microphone': 'granted',
-          'camera': 'denied',
-          'geolocation': 'granted',
-          'persistent-storage': 'granted'
+        const defaultStates: { [key: string]: PermissionState } = {
+          notifications: 'granted',
+          push: 'granted',
+          microphone: 'granted',
+          camera: 'denied',
+          geolocation: 'granted',
+          'persistent-storage': 'granted',
         };
-        
-        return createPermissionStatus(descriptor.name, defaultStates[descriptor.name] || 'denied');
-      })
+
+        return createPermissionStatus(
+          descriptor.name,
+          defaultStates[descriptor.name] || 'denied'
+        );
+      }),
     },
     writable: true,
-    configurable: true
+    configurable: true,
   });
 
   return {
@@ -549,7 +565,7 @@ export const mockEnhancedPermissionsAPI = () => {
     getPermissions: () => permissions,
     resetPermissions: () => {
       Object.keys(permissions).forEach(key => delete permissions[key]);
-    }
+    },
   };
 };
 
@@ -558,7 +574,7 @@ export const mockEnhancedPermissionsAPI = () => {
  */
 export const setupEnhancedBrowserAPIMocks = () => {
   const notificationMocks = mockNotificationAPI();
-  const serviceWorkerMocks = mockServiceWorkerAPI(); 
+  const serviceWorkerMocks = mockServiceWorkerAPI();
   const wakeLockMocks = mockWakeLockAPI();
   const speechMocks = mockEnhancedSpeechRecognitionAPI();
   const permissionMocks = mockEnhancedPermissionsAPI();
@@ -569,14 +585,14 @@ export const setupEnhancedBrowserAPIMocks = () => {
     wakeLock: wakeLockMocks,
     speech: speechMocks,
     permissions: permissionMocks,
-    
+
     // Cleanup function for tests
     resetAll: () => {
       notificationMocks.resetNotifications();
       serviceWorkerMocks.resetServiceWorkers();
       wakeLockMocks.resetWakeLocks();
       permissionMocks.resetPermissions();
-    }
+    },
   };
 };
 
@@ -585,10 +601,10 @@ export const setupEnhancedBrowserAPIMocks = () => {
  */
 export const createIntegrationTestHelpers = () => {
   const mocks = setupEnhancedBrowserAPIMocks();
-  
+
   return {
     ...mocks,
-    
+
     // Common alarm app scenarios
     simulateAlarmNotification: async (title: string, options?: NotificationOptions) => {
       const registration = await navigator.serviceWorker.getRegistration();
@@ -597,41 +613,41 @@ export const createIntegrationTestHelpers = () => {
       }
       return mocks.notifications.getActiveNotifications().slice(-1)[0];
     },
-    
+
     simulateVoiceAlarmDismiss: () => {
       mocks.speech.simulateResult('dismiss alarm', true);
     },
-    
+
     simulateVoiceSnooze: () => {
       mocks.speech.simulateResult('snooze 5 minutes', true);
     },
-    
+
     simulatePushSubscription: async () => {
       const registration = await navigator.serviceWorker.register('/sw.js');
       return registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: new Uint8Array([1, 2, 3, 4])
+        applicationServerKey: new Uint8Array([1, 2, 3, 4]),
       });
     },
-    
+
     simulateScreenWakeLock: async () => {
       return navigator.wakeLock!.request('screen');
     },
-    
+
     // Test state verification
     verifyNotificationShown: (expectedTitle: string) => {
       const notifications = mocks.notifications.getActiveNotifications();
       return notifications.some(n => n.title === expectedTitle);
     },
-    
+
     verifyServiceWorkerActive: () => {
       return mocks.serviceWorker.getActiveWorker() !== null;
     },
-    
+
     verifyPushSubscriptionActive: () => {
-      return mocks.serviceWorker.getRegistrations().some(reg => 
-        reg.pushManager && reg.pushManager.getSubscription()
-      );
-    }
+      return mocks.serviceWorker
+        .getRegistrations()
+        .some(reg => reg.pushManager && reg.pushManager.getSubscription());
+    },
   };
 };

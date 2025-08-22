@@ -67,7 +67,7 @@ export default async function globalSetup() {
       console.warn('This may cause tests to fail unexpectedly.\n');
     });
 
-    process.on('uncaughtException', (error) => {
+    process.on('uncaughtException', error => {
       console.error('\n❌ Uncaught Exception in test environment:');
       console.error(error);
       console.error('This will cause the test suite to terminate.\n');
@@ -86,8 +86,11 @@ export default async function globalSetup() {
         const startTime = testStartTimes.get(testName);
         if (startTime) {
           const duration = originalPerformanceNow() - startTime;
-          if (duration > 5000) { // Log slow tests (>5s)
-            console.log(`⏱️ Slow test detected: ${testName} took ${duration.toFixed(2)}ms`);
+          if (duration > 5000) {
+            // Log slow tests (>5s)
+            console.log(
+              `⏱️ Slow test detected: ${testName} took ${duration.toFixed(2)}ms`
+            );
           }
           testStartTimes.delete(testName);
           return duration;
@@ -95,10 +98,10 @@ export default async function globalSetup() {
         return 0;
       },
       getSlowTests: () => {
-        const slowTests: Array<{name: string, duration: number}> = [];
+        const slowTests: Array<{ name: string; duration: number }> = [];
         // Implementation would track and return slow tests
         return slowTests;
-      }
+      },
     };
 
     // Mock external services that don't need real connections
@@ -134,15 +137,15 @@ export default async function globalSetup() {
         .filter(key => key.startsWith('VITE_') || key.startsWith('TEST_'))
         .forEach(key => {
           const value = process.env[key];
-          const maskedValue = key.includes('SECRET') || key.includes('KEY')
-            ? value?.slice(0, 10) + '...'
-            : value;
+          const maskedValue =
+            key.includes('SECRET') || key.includes('KEY')
+              ? value?.slice(0, 10) + '...'
+              : value;
           console.log(`  ${key}: ${maskedValue}`);
         });
     }
 
     console.log('\n' + '='.repeat(80) + '\n');
-
   } catch (error) {
     console.error('\n❌ Global test setup failed:');
     console.error(error);

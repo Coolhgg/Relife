@@ -1,10 +1,10 @@
-import { expect, test, jest } from "@jest/globals";
-import { renderHook, act } from "@testing-library/react";
-import React from "react";
-import { useAuth } from "../../useAuth";
-import { AnalyticsProvider } from "../../../components/AnalyticsProvider";
-import { FeatureAccessProvider } from "../../../contexts/FeatureAccessContext";
-import { LanguageProvider } from "../../../contexts/LanguageContext";
+import { expect, test, jest } from '@jest/globals';
+import { renderHook, act } from '@testing-library/react';
+import React from 'react';
+import { useAuth } from '../../useAuth';
+import { AnalyticsProvider } from '../../../components/AnalyticsProvider';
+import { FeatureAccessProvider } from '../../../contexts/FeatureAccessContext';
+import { LanguageProvider } from '../../../contexts/LanguageContext';
 
 // Mock dependencies
 jest.mock('../../../services/supabase-service', () => ({
@@ -18,9 +18,9 @@ jest.mock('../../../services/supabase-service', () => ({
       updateProfile: jest.fn(),
       getCurrentUser: jest.fn(),
       getSession: jest.fn(),
-      onAuthStateChange: jest.fn()
-    })
-  }
+      onAuthStateChange: jest.fn(),
+    }),
+  },
 }));
 
 jest.mock('../../../services/security-service', () => ({
@@ -30,15 +30,15 @@ jest.mock('../../../services/security-service', () => ({
       generateCSRFToken: jest.fn(),
       validateCSRFToken: jest.fn(),
       isRateLimited: jest.fn(),
-      resetRateLimit: jest.fn()
-    })
-  }
+      resetRateLimit: jest.fn(),
+    }),
+  },
 }));
 
 jest.mock('../../../services/error-handler', () => ({
   ErrorHandler: {
-    handleError: jest.fn()
-  }
+    handleError: jest.fn(),
+  },
 }));
 
 // Mock analytics hooks
@@ -46,20 +46,20 @@ jest.mock('../../useAnalytics', () => ({
   useAnalytics: () => ({
     track: jest.fn(),
     trackPageView: jest.fn(),
-    trackFeatureUsage: jest.fn()
+    trackFeatureUsage: jest.fn(),
   }),
   useEngagementAnalytics: () => ({
-    trackFeatureDiscovery: jest.fn()
+    trackFeatureDiscovery: jest.fn(),
   }),
   usePerformanceAnalytics: () => ({
-    trackComponentRenderTime: jest.fn()
+    trackComponentRenderTime: jest.fn(),
   }),
   ANALYTICS_EVENTS: {
     SESSION_ENDED: 'session_ended',
     ERROR_OCCURRED: 'error_occurred',
     USER_SIGNED_IN: 'user_signed_in',
-    USER_SIGNED_OUT: 'user_signed_out'
-  }
+    USER_SIGNED_OUT: 'user_signed_out',
+  },
 }));
 
 // Mock i18n
@@ -68,30 +68,30 @@ jest.mock('react-i18next', () => ({
     t: (key: string) => key,
     i18n: {
       language: 'en',
-      exists: jest.fn().mockReturnValue(true)
-    }
-  })
+      exists: jest.fn().mockReturnValue(true),
+    },
+  }),
 }));
 
 // Mock Capacitor Device
 jest.mock('@capacitor/device', () => ({
   Device: {
-    getLanguageCode: jest.fn().mockResolvedValue({ value: 'en' })
-  }
+    getLanguageCode: jest.fn().mockResolvedValue({ value: 'en' }),
+  },
 }));
 
 // Mock i18n config
 jest.mock('../../../config/i18n', () => ({
   SUPPORTED_LANGUAGES: {
     en: { nativeName: 'English', rtl: false },
-    es: { nativeName: 'Español', rtl: false }
+    es: { nativeName: 'Español', rtl: false },
   },
   getCurrentLanguage: () => 'en',
   getLanguageInfo: () => ({ nativeName: 'English', rtl: false }),
   isRTL: () => false,
   formatTime: (time: string) => time,
   formatRelativeTime: (date: Date) => date.toLocaleDateString(),
-  changeLanguage: jest.fn()
+  changeLanguage: jest.fn(),
 }));
 
 // Test wrapper with multiple providers
@@ -106,7 +106,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
   children,
   userId = 'test-user-123',
   mockUser = null,
-  mockSession = null
+  mockSession = null,
 }) => {
   // Mock Supabase service responses
   React.useEffect(() => {
@@ -144,27 +144,24 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
-        trackFeatureUsage: jest.fn()
+        trackFeatureUsage: jest.fn(),
       });
 
       const mockUser = {
         id: 'user-123',
         email: 'test@example.com',
-        user_metadata: { name: 'Test User' }
+        user_metadata: { name: 'Test User' },
       };
 
-      const { result } = renderHook(
-        () => useAuth(),
-        {
-          wrapper: (props) => <TestWrapper {...props} mockUser={mockUser} />
-        }
-      );
+      const { result } = renderHook(() => useAuth(), {
+        wrapper: props => <TestWrapper {...props} mockUser={mockUser} />,
+      });
 
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
       mockService.signIn.mockResolvedValue({
         user: mockUser,
-        session: { access_token: 'token' }
+        session: { access_token: 'token' },
       });
 
       await act(async () => {
@@ -176,8 +173,8 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
         expect.objectContaining({
           metadata: expect.objectContaining({
             user_id: 'user-123',
-            method: 'email'
-          })
+            method: 'email',
+          }),
         })
       );
     });
@@ -188,20 +185,17 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
-        trackFeatureUsage: jest.fn()
+        trackFeatureUsage: jest.fn(),
       });
 
       const mockUser = {
         id: 'user-123',
-        email: 'test@example.com'
+        email: 'test@example.com',
       };
 
-      const { result } = renderHook(
-        () => useAuth(),
-        {
-          wrapper: (props) => <TestWrapper {...props} mockUser={mockUser} />
-        }
-      );
+      const { result } = renderHook(() => useAuth(), {
+        wrapper: props => <TestWrapper {...props} mockUser={mockUser} />,
+      });
 
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
@@ -215,8 +209,8 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
         'user_signed_out',
         expect.objectContaining({
           metadata: expect.objectContaining({
-            user_id: 'user-123'
-          })
+            user_id: 'user-123',
+          }),
         })
       );
     });
@@ -227,13 +221,10 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
-        trackFeatureUsage: jest.fn()
+        trackFeatureUsage: jest.fn(),
       });
 
-      const { result } = renderHook(
-        () => useAuth(),
-        { wrapper: TestWrapper }
-      );
+      const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
@@ -248,8 +239,8 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
         expect.objectContaining({
           metadata: expect.objectContaining({
             error_type: 'sign_in_failed',
-            error_message: 'Invalid credentials'
-          })
+            error_message: 'Invalid credentials',
+          }),
         })
       );
     });
@@ -259,13 +250,15 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
     it('should trigger feature access reload on authentication state change', async () => {
       const mockUser = {
         id: 'user-123',
-        email: 'test@example.com'
+        email: 'test@example.com',
       };
 
       const mockRefreshFeatureAccess = jest.fn();
 
       // Mock the FeatureAccessProvider to spy on refresh calls
-      const TestWrapperWithSpy: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+      const TestWrapperWithSpy: React.FC<{ children: React.ReactNode }> = ({
+        children,
+      }) => {
         const [refreshCount, setRefreshCount] = React.useState(0);
 
         React.useEffect(() => {
@@ -287,12 +280,9 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
         );
       };
 
-      const { result } = renderHook(
-        () => useAuth(),
-        {
-          wrapper: TestWrapperWithSpy
-        }
-      );
+      const { result } = renderHook(() => useAuth(), {
+        wrapper: TestWrapperWithSpy,
+      });
 
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -304,22 +294,19 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
     it('should clear feature access on sign out', async () => {
       const mockUser = {
         id: 'user-123',
-        email: 'test@example.com'
+        email: 'test@example.com',
       };
 
-      const { result } = renderHook(
-        () => useAuth(),
-        {
-          wrapper: (props) => <TestWrapper {...props} mockUser={mockUser} />
-        }
-      );
+      const { result } = renderHook(() => useAuth(), {
+        wrapper: props => <TestWrapper {...props} mockUser={mockUser} />,
+      });
 
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
       // Simulate sign out clearing the user
       mockService.signOut.mockResolvedValue({ error: null });
-      mockService.onAuthStateChange.mockImplementation((callback) => {
+      mockService.onAuthStateChange.mockImplementation(callback => {
         setTimeout(() => callback('SIGNED_OUT', null), 10);
         return { data: { subscription: { unsubscribe: jest.fn() } } };
       });
@@ -335,10 +322,10 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
 
   describe('Language Provider Integration', () => {
     it('should work with language context for localized error messages', async () => {
-      const mockT = jest.fn((key) => {
+      const mockT = jest.fn(key => {
         const translations: Record<string, string> = {
           'auth.error.invalid_credentials': 'Credenciales inválidas',
-          'auth.error.rate_limited': 'Demasiados intentos'
+          'auth.error.rate_limited': 'Demasiados intentos',
         };
         return translations[key] || key;
       });
@@ -346,13 +333,10 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       const useTranslation = require('react-i18next').useTranslation;
       useTranslation.mockReturnValue({
         t: mockT,
-        i18n: { language: 'es', exists: jest.fn().mockReturnValue(true) }
+        i18n: { language: 'es', exists: jest.fn().mockReturnValue(true) },
       });
 
-      const { result } = renderHook(
-        () => useAuth(),
-        { wrapper: TestWrapper }
-      );
+      const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
@@ -374,10 +358,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       const isRTL = require('../../../config/i18n').isRTL;
       isRTL.mockReturnValue(true);
 
-      const { result } = renderHook(
-        () => useAuth(),
-        { wrapper: TestWrapper }
-      );
+      const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 50));
@@ -394,10 +375,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       const mockSecurityService = SecurityService.getInstance();
       mockSecurityService.isRateLimited.mockReturnValue(true);
 
-      const { result } = renderHook(
-        () => useAuth(),
-        { wrapper: TestWrapper }
-      );
+      const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       await act(async () => {
         await result.current.signIn('test@example.com', 'password');
@@ -414,10 +392,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       // Start rate limited
       mockSecurityService.isRateLimited.mockReturnValue(true);
 
-      const { result } = renderHook(
-        () => useAuth(),
-        { wrapper: TestWrapper }
-      );
+      const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       // Reset rate limit
       mockSecurityService.isRateLimited.mockReturnValue(false);
@@ -435,21 +410,20 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
     it('should coordinate session state across all providers', async () => {
       const mockUser = {
         id: 'user-123',
-        email: 'test@example.com'
+        email: 'test@example.com',
       };
 
       const mockSession = {
         access_token: 'token-123',
         expires_at: Date.now() + 3600000, // 1 hour
-        user: mockUser
+        user: mockUser,
       };
 
-      const { result } = renderHook(
-        () => useAuth(),
-        {
-          wrapper: (props) => <TestWrapper {...props} mockUser={mockUser} mockSession={mockSession} />
-        }
-      );
+      const { result } = renderHook(() => useAuth(), {
+        wrapper: props => (
+          <TestWrapper {...props} mockUser={mockUser} mockSession={mockSession} />
+        ),
+      });
 
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -463,15 +437,12 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       const mockExpiredSession = {
         access_token: 'expired-token',
         expires_at: Date.now() - 1000, // Expired
-        user: { id: 'user-123' }
+        user: { id: 'user-123' },
       };
 
-      const { result } = renderHook(
-        () => useAuth(),
-        {
-          wrapper: (props) => <TestWrapper {...props} mockSession={mockExpiredSession} />
-        }
-      );
+      const { result } = renderHook(() => useAuth(), {
+        wrapper: props => <TestWrapper {...props} mockSession={mockExpiredSession} />,
+      });
 
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -488,10 +459,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       const ErrorHandler = require('../../../services/error-handler').ErrorHandler;
       ErrorHandler.handleError = mockHandleError;
 
-      const { result } = renderHook(
-        () => useAuth(),
-        { wrapper: TestWrapper }
-      );
+      const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
@@ -505,21 +473,19 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
         expect.any(Error),
         expect.stringContaining('Authentication failed'),
         expect.objectContaining({
-          context: expect.stringContaining('useAuth')
+          context: expect.stringContaining('useAuth'),
         })
       );
     });
 
     it('should handle provider initialization errors gracefully', async () => {
       // Mock FeatureAccessProvider error
-      const SubscriptionService = require('../../../services/subscription-service').default;
+      const SubscriptionService =
+        require('../../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
       mockService.getFeatureAccess.mockRejectedValue(new Error('Service down'));
 
-      const { result } = renderHook(
-        () => useAuth(),
-        { wrapper: TestWrapper }
-      );
+      const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -538,25 +504,27 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
         track: jest.fn(),
         trackPageView: jest.fn(),
         trackFeatureUsage: jest.fn(),
-        trackPerformance: mockTrackPerformance
+        trackPerformance: mockTrackPerformance,
       });
 
-      const { result } = renderHook(
-        () => useAuth(),
-        { wrapper: TestWrapper }
-      );
+      const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
       // Add delay to measure performance
-      mockService.signIn.mockImplementation(() =>
-        new Promise(resolve =>
-          setTimeout(() => resolve({
-            user: { id: 'user-123' },
-            session: { access_token: 'token' }
-          }), 100)
-        )
+      mockService.signIn.mockImplementation(
+        () =>
+          new Promise(resolve =>
+            setTimeout(
+              () =>
+                resolve({
+                  user: { id: 'user-123' },
+                  session: { access_token: 'token' },
+                }),
+              100
+            )
+          )
       );
 
       await act(async () => {

@@ -28,7 +28,7 @@ import {
   Star,
   Edit3,
   Bell,
-  User
+  User,
 } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import type {
@@ -40,7 +40,7 @@ import type {
   ThemeSpacing,
   ThemeAnimations,
   ThemeEffects,
-  ThemeAccessibility
+  ThemeAccessibility,
 } from '../types';
 
 interface ThemeCreatorProps {
@@ -64,21 +64,19 @@ interface PreviewComponent {
   component: React.ReactNode;
 }
 
-const ThemeCreator: React.FC<ThemeCreatorProps> = ({
-  className = '',
-  onClose
-}) => {
+const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) => {
   const {
     theme,
     themeConfig,
     setTheme,
     createCustomTheme,
     saveThemePreset,
-    availableThemes
+    availableThemes,
   } = useTheme();
 
   // State management
-  const [currentEditingTheme, setCurrentEditingTheme] = useState<CustomThemeConfig | null>(null);
+  const [currentEditingTheme, setCurrentEditingTheme] =
+    useState<CustomThemeConfig | null>(null);
   const [baseTheme, setBaseTheme] = useState<Theme>('light');
   const [activeSection, setActiveSection] = useState<string>('colors');
   const [previewMode, setPreviewMode] = useState(false);
@@ -91,7 +89,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
     background: '#ffffff',
     surface: '#f8fafc',
     text: '#0f172a',
-    border: '#e2e8f0'
+    border: '#e2e8f0',
   });
   const [showColorPicker, setShowColorPicker] = useState<string | null>(null);
   const [savedThemes, setSavedThemes] = useState<CustomThemeConfig[]>([]);
@@ -107,7 +105,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
         background: themeConfig.colors.background.primary || '#ffffff',
         surface: themeConfig.colors.surface.elevated || '#f8fafc',
         text: themeConfig.colors.text.primary || '#0f172a',
-        border: themeConfig.colors.border.primary || '#e2e8f0'
+        border: themeConfig.colors.border.primary || '#e2e8f0',
       });
     }
   }, [themeConfig, baseTheme]);
@@ -117,11 +115,13 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
     // Convert hex to RGB
     const hexToRgb = (hex: string) => {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      } : null;
+      return result
+        ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16),
+          }
+        : null;
     };
 
     // Convert RGB to HSL
@@ -131,15 +131,23 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
       b /= 255;
       const max = Math.max(r, g, b);
       const min = Math.min(r, g, b);
-      let h = 0, s = 0, l = (max + min) / 2;
+      let h = 0,
+        s = 0,
+        l = (max + min) / 2;
 
       if (max !== min) {
         const d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
         switch (max) {
-          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-          case g: h = (b - r) / d + 2; break;
-          case b: h = (r - g) / d + 4; break;
+          case r:
+            h = (g - b) / d + (g < b ? 6 : 0);
+            break;
+          case g:
+            h = (b - r) / d + 2;
+            break;
+          case b:
+            h = (r - g) / d + 4;
+            break;
         }
         h /= 6;
       }
@@ -181,7 +189,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
       700: hslToRgb(h, Math.min(s + 10, 95), Math.max(l - 15, 25)),
       800: hslToRgb(h, Math.min(s + 15, 100), Math.max(l - 25, 15)),
       900: hslToRgb(h, Math.min(s + 20, 100), Math.max(l - 35, 10)),
-      950: hslToRgb(h, Math.min(s + 25, 100), Math.max(l - 45, 5))
+      950: hslToRgb(h, Math.min(s + 25, 100), Math.max(l - 45, 5)),
     };
 
     const result: Record<string, string> = {};
@@ -213,7 +221,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
             tertiary: adjustColor(colorPalette.background, -10),
             overlay: 'rgba(0, 0, 0, 0.5)',
             modal: colorPalette.background,
-            card: colorPalette.surface
+            card: colorPalette.surface,
           },
           text: {
             primary: colorPalette.text,
@@ -221,69 +229,86 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
             tertiary: adjustColor(colorPalette.text, 40),
             inverse: getContrastColor(colorPalette.text),
             disabled: adjustColor(colorPalette.text, 60),
-            link: colorPalette.primary
+            link: colorPalette.primary,
           },
           border: {
             primary: colorPalette.border,
             secondary: adjustColor(colorPalette.border, -10),
             focus: colorPalette.primary,
             hover: adjustColor(colorPalette.border, -20),
-            active: adjustColor(colorPalette.primary, -10)
+            active: adjustColor(colorPalette.primary, -10),
           },
           surface: {
             elevated: colorPalette.surface,
             depressed: adjustColor(colorPalette.surface, -5),
             interactive: adjustColor(colorPalette.surface, 10),
-            disabled: adjustColor(colorPalette.surface, -15)
-          }
-        }
+            disabled: adjustColor(colorPalette.surface, -15),
+          },
+        },
       };
 
       const customTheme = await createCustomTheme(baseTheme, customizations);
 
       customTheme.displayName = themeName;
-      customTheme.description = themeDescription || `Custom theme based on ${baseTheme}`;
+      customTheme.description =
+        themeDescription || `Custom theme based on ${baseTheme}`;
 
       setCurrentEditingTheme(customTheme);
       setSavedThemes(prev => [...prev, customTheme]);
 
       // Save to localStorage
-      const savedCustomThemes = JSON.parse(localStorage.getItem('custom-themes') || '[]');
+      const savedCustomThemes = JSON.parse(
+        localStorage.getItem('custom-themes') || '[]'
+      );
       savedCustomThemes.push(customTheme);
       localStorage.setItem('custom-themes', JSON.stringify(savedCustomThemes));
-
     } catch (error) {
       console.error('Error generating custom theme:', error);
       alert('Failed to generate theme. Please try again.');
     } finally {
       setIsGeneratingTheme(false);
     }
-  }, [themeName, themeDescription, colorPalette, baseTheme, createCustomTheme, generateColorShades]);
+  }, [
+    themeName,
+    themeDescription,
+    colorPalette,
+    baseTheme,
+    createCustomTheme,
+    generateColorShades,
+  ]);
 
   // Utility functions
   const adjustColor = (color: string, amount: number) => {
     const num = parseInt(color.replace('#', ''), 16);
     const amt = Math.round(2.55 * amount);
     const R = (num >> 16) + amt;
-    const G = (num >> 8 & 0x00FF) + amt;
-    const B = (num & 0x0000FF) + amt;
-    return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-      (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-      (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+    const G = ((num >> 8) & 0x00ff) + amt;
+    const B = (num & 0x0000ff) + amt;
+    return (
+      '#' +
+      (
+        0x1000000 +
+        (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+        (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+        (B < 255 ? (B < 1 ? 0 : B) : 255)
+      )
+        .toString(16)
+        .slice(1)
+    );
   };
 
   const getContrastColor = (hexcolor: string) => {
     const r = parseInt(hexcolor.substr(1, 2), 16);
     const g = parseInt(hexcolor.substr(3, 2), 16);
     const b = parseInt(hexcolor.substr(5, 2), 16);
-    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-    return (yiq >= 128) ? '#000000' : '#ffffff';
+    const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+    return yiq >= 128 ? '#000000' : '#ffffff';
   };
 
   const handleColorChange = (colorKey: keyof ColorPaletteState, color: string) => {
     setColorPalette(prev => ({
       ...prev,
-      [colorKey]: color
+      [colorKey]: color,
     }));
   };
 
@@ -296,7 +321,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
       background: '#ffffff',
       surface: '#f8fafc',
       text: '#0f172a',
-      border: '#e2e8f0'
+      border: '#e2e8f0',
     });
   };
 
@@ -320,7 +345,17 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
         className="w-full h-32 rounded-md border border-gray-200 cursor-pointer"
       />
       <div className="mt-3 flex gap-2">
-        {['#ef4444', '#f97316', '#eab308', '#22c55e', '#14b8a6', '#0ea5e9', '#6366f1', '#8b5cf6', '#ec4899'].map((presetColor) => (
+        {[
+          '#ef4444',
+          '#f97316',
+          '#eab308',
+          '#22c55e',
+          '#14b8a6',
+          '#0ea5e9',
+          '#6366f1',
+          '#8b5cf6',
+          '#ec4899',
+        ].map(presetColor => (
           <button
             key={presetColor}
             onClick={() => onChange(presetColor)}
@@ -347,15 +382,22 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
       id: 'card',
       name: 'Card',
       component: (
-        <div className="p-4 rounded-lg shadow-md" style={{
-          backgroundColor: colorPalette.surface,
-          border: `1px solid ${colorPalette.border}`,
-          color: colorPalette.text
-        }}>
-          <h3 className="font-semibold mb-2" style={{ color: colorPalette.primary }}>Sample Card</h3>
-          <p className="text-sm opacity-80">This is how cards will look with your custom theme.</p>
+        <div
+          className="p-4 rounded-lg shadow-md"
+          style={{
+            backgroundColor: colorPalette.surface,
+            border: `1px solid ${colorPalette.border}`,
+            color: colorPalette.text,
+          }}
+        >
+          <h3 className="font-semibold mb-2" style={{ color: colorPalette.primary }}>
+            Sample Card
+          </h3>
+          <p className="text-sm opacity-80">
+            This is how cards will look with your custom theme.
+          </p>
         </div>
-      )
+      ),
     },
     {
       id: 'button',
@@ -373,7 +415,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
             style={{
               backgroundColor: 'transparent',
               color: colorPalette.primary,
-              border: `2px solid ${colorPalette.primary}`
+              border: `2px solid ${colorPalette.primary}`,
             }}
           >
             Secondary
@@ -385,7 +427,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
             Accent
           </button>
         </div>
-      )
+      ),
     },
     {
       id: 'form',
@@ -399,7 +441,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
             style={{
               backgroundColor: colorPalette.background,
               border: `1px solid ${colorPalette.border}`,
-              color: colorPalette.text
+              color: colorPalette.text,
             }}
           />
           <select
@@ -407,7 +449,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
             style={{
               backgroundColor: colorPalette.background,
               border: `1px solid ${colorPalette.border}`,
-              color: colorPalette.text
+              color: colorPalette.text,
             }}
           >
             <option>Select option</option>
@@ -415,8 +457,8 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
             <option>Option 2</option>
           </select>
         </div>
-      )
-    }
+      ),
+    },
   ];
 
   const sections = [
@@ -428,7 +470,9 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
   ];
 
   return (
-    <div className={`fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 ${className}`}>
+    <div
+      className={`fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 ${className}`}
+    >
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl h-[90vh] flex overflow-hidden">
         {/* Header */}
         <div className="absolute top-0 left-0 right-0 bg-white border-b border-gray-200 p-6 z-10">
@@ -492,7 +536,9 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
             <div className="p-6">
               {/* Theme Info */}
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Theme Details</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Theme Details
+                </h3>
                 <div className="space-y-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -556,21 +602,30 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                       </label>
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => setShowColorPicker(showColorPicker === key ? null : key)}
+                          onClick={() =>
+                            setShowColorPicker(showColorPicker === key ? null : key)
+                          }
                           className="w-10 h-10 rounded-lg border-2 border-gray-200 shadow-sm hover:border-gray-300 transition-colors"
                           style={{ backgroundColor: color }}
                         />
                         <input
                           type="text"
                           value={color}
-                          onChange={(e) => handleColorChange(key as keyof ColorPaletteState, e.target.value)}
+                          onChange={e =>
+                            handleColorChange(
+                              key as keyof ColorPaletteState,
+                              e.target.value
+                            )
+                          }
                           className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       {showColorPicker === key && (
                         <ColorPicker
                           color={color}
-                          onChange={(newColor) => handleColorChange(key as keyof ColorPaletteState, newColor)}
+                          onChange={newColor =>
+                            handleColorChange(key as keyof ColorPaletteState, newColor)
+                          }
                           onClose={() => setShowColorPicker(null)}
                         />
                       )}
@@ -585,7 +640,11 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => {
-                      const exported = JSON.stringify({ colorPalette, themeName, themeDescription }, null, 2);
+                      const exported = JSON.stringify(
+                        { colorPalette, themeName, themeDescription },
+                        null,
+                        2
+                      );
                       navigator.clipboard.writeText(exported);
                       alert('Theme data copied to clipboard!');
                     }}
@@ -597,7 +656,16 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                   <button
                     onClick={() => {
                       const element = document.createElement('a');
-                      const file = new Blob([JSON.stringify({ colorPalette, themeName, themeDescription }, null, 2)], { type: 'application/json' });
+                      const file = new Blob(
+                        [
+                          JSON.stringify(
+                            { colorPalette, themeName, themeDescription },
+                            null,
+                            2
+                          ),
+                        ],
+                        { type: 'application/json' }
+                      );
                       element.href = URL.createObjectURL(file);
                       element.download = `${themeName || 'custom-theme'}.json`;
                       document.body.appendChild(element);
@@ -644,7 +712,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                 className="rounded-xl border-2 border-gray-200 overflow-hidden"
                 style={{
                   backgroundColor: colorPalette.background,
-                  minHeight: '500px'
+                  minHeight: '500px',
                 }}
               >
                 <div className="p-8 space-y-8">
@@ -653,7 +721,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                     className="flex items-center justify-between p-4 rounded-lg"
                     style={{
                       backgroundColor: colorPalette.primary,
-                      color: getContrastColor(colorPalette.primary)
+                      color: getContrastColor(colorPalette.primary),
                     }}
                   >
                     <div className="flex items-center gap-3">
@@ -679,7 +747,10 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {previewComponents.map(({ id, name, component }) => (
                       <div key={id} className="space-y-3">
-                        <h4 className="font-medium" style={{ color: colorPalette.text }}>
+                        <h4
+                          className="font-medium"
+                          style={{ color: colorPalette.text }}
+                        >
                           {name}
                         </h4>
                         {component}
@@ -693,7 +764,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                       className="p-4 rounded-lg"
                       style={{
                         backgroundColor: colorPalette.surface,
-                        border: `1px solid ${colorPalette.border}`
+                        border: `1px solid ${colorPalette.border}`,
                       }}
                     >
                       <div className="flex items-center gap-2 mb-3">
@@ -701,11 +772,17 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                           className="w-3 h-3 rounded-full"
                           style={{ backgroundColor: colorPalette.primary }}
                         />
-                        <span className="text-sm font-medium" style={{ color: colorPalette.text }}>
+                        <span
+                          className="text-sm font-medium"
+                          style={{ color: colorPalette.text }}
+                        >
                           Active Alarms
                         </span>
                       </div>
-                      <p className="text-2xl font-bold" style={{ color: colorPalette.primary }}>
+                      <p
+                        className="text-2xl font-bold"
+                        style={{ color: colorPalette.primary }}
+                      >
                         5
                       </p>
                     </div>
@@ -714,7 +791,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                       className="p-4 rounded-lg"
                       style={{
                         backgroundColor: colorPalette.surface,
-                        border: `1px solid ${colorPalette.border}`
+                        border: `1px solid ${colorPalette.border}`,
                       }}
                     >
                       <div className="flex items-center gap-2 mb-3">
@@ -722,11 +799,17 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                           className="w-3 h-3 rounded-full"
                           style={{ backgroundColor: colorPalette.accent }}
                         />
-                        <span className="text-sm font-medium" style={{ color: colorPalette.text }}>
+                        <span
+                          className="text-sm font-medium"
+                          style={{ color: colorPalette.text }}
+                        >
                           Sleep Score
                         </span>
                       </div>
-                      <p className="text-2xl font-bold" style={{ color: colorPalette.accent }}>
+                      <p
+                        className="text-2xl font-bold"
+                        style={{ color: colorPalette.accent }}
+                      >
                         85%
                       </p>
                     </div>
@@ -735,7 +818,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                       className="p-4 rounded-lg"
                       style={{
                         backgroundColor: colorPalette.surface,
-                        border: `1px solid ${colorPalette.border}`
+                        border: `1px solid ${colorPalette.border}`,
                       }}
                     >
                       <div className="flex items-center gap-2 mb-3">
@@ -743,11 +826,17 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                           className="w-3 h-3 rounded-full"
                           style={{ backgroundColor: colorPalette.secondary }}
                         />
-                        <span className="text-sm font-medium" style={{ color: colorPalette.text }}>
+                        <span
+                          className="text-sm font-medium"
+                          style={{ color: colorPalette.text }}
+                        >
                           Streak
                         </span>
                       </div>
-                      <p className="text-2xl font-bold" style={{ color: colorPalette.secondary }}>
+                      <p
+                        className="text-2xl font-bold"
+                        style={{ color: colorPalette.secondary }}
+                      >
                         12 days
                       </p>
                     </div>
@@ -758,15 +847,21 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                     className="p-6 rounded-lg"
                     style={{
                       backgroundColor: colorPalette.surface,
-                      border: `1px solid ${colorPalette.border}`
+                      border: `1px solid ${colorPalette.border}`,
                     }}
                   >
-                    <h3 className="text-lg font-semibold mb-4" style={{ color: colorPalette.text }}>
+                    <h3
+                      className="text-lg font-semibold mb-4"
+                      style={{ color: colorPalette.text }}
+                    >
                       Create New Alarm
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium mb-2" style={{ color: colorPalette.text }}>
+                        <label
+                          className="block text-sm font-medium mb-2"
+                          style={{ color: colorPalette.text }}
+                        >
                           Time
                         </label>
                         <input
@@ -776,12 +871,15 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                           style={{
                             backgroundColor: colorPalette.background,
                             border: `1px solid ${colorPalette.border}`,
-                            color: colorPalette.text
+                            color: colorPalette.text,
                           }}
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2" style={{ color: colorPalette.text }}>
+                        <label
+                          className="block text-sm font-medium mb-2"
+                          style={{ color: colorPalette.text }}
+                        >
                           Label
                         </label>
                         <input
@@ -791,7 +889,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                           style={{
                             backgroundColor: colorPalette.background,
                             border: `1px solid ${colorPalette.border}`,
-                            color: colorPalette.text
+                            color: colorPalette.text,
                           }}
                         />
                       </div>
@@ -808,7 +906,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                         style={{
                           backgroundColor: 'transparent',
                           color: colorPalette.text,
-                          border: `1px solid ${colorPalette.border}`
+                          border: `1px solid ${colorPalette.border}`,
                         }}
                       >
                         Cancel

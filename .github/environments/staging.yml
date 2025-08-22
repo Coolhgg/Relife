@@ -6,10 +6,10 @@ url: https://relife-staging.yourdomain.com
 
 # Environment protection rules
 protection_rules:
-  required_reviewers: 0  # No reviewers needed for staging
+  required_reviewers: 0 # No reviewers needed for staging
   prevent_self_review: false
   dismiss_stale_reviews: false
-  deployment_branch_policy: 
+  deployment_branch_policy:
     protected_branches: false
     custom_branches: ["develop"]
 
@@ -19,24 +19,24 @@ environment_variables:
   VITE_APP_ENV: staging
   VITE_APP_API_URL: https://api-staging.relife.com
   VITE_APP_VERSION: ${{ github.sha }}
-  
+
   # Feature flags for staging
   VITE_FEATURE_ADVANCED_BATTLE: "true"
-  VITE_FEATURE_PREMIUM_THEMES: "true" 
+  VITE_FEATURE_PREMIUM_THEMES: "true"
   VITE_FEATURE_ANALYTICS: "true"
-  
+
   # Debug settings
   VITE_DEBUG_MODE: "true"
   VITE_LOG_LEVEL: "debug"
 
 # Secrets required for staging (to be configured in GitHub)
 required_secrets:
-  - STAGING_DEPLOY_KEY        # SSH key or deployment token
-  - CODECOV_TOKEN            # Code coverage reporting
-  - SENTRY_DSN_STAGING       # Error tracking for staging
-  - FIREBASE_CONFIG_STAGING  # Firebase configuration
-  - AWS_ACCESS_KEY_ID        # If using AWS for hosting
-  - AWS_SECRET_ACCESS_KEY    # If using AWS for hosting
+  - STAGING_DEPLOY_KEY # SSH key or deployment token
+  - CODECOV_TOKEN # Code coverage reporting
+  - SENTRY_DSN_STAGING # Error tracking for staging
+  - FIREBASE_CONFIG_STAGING # Firebase configuration
+  - AWS_ACCESS_KEY_ID # If using AWS for hosting
+  - AWS_SECRET_ACCESS_KEY # If using AWS for hosting
 
 # Health check configuration
 health_check:
@@ -50,14 +50,14 @@ deployment:
   strategy: rolling
   max_unavailable: 0
   max_surge: 1
-  
+
 # Monitoring and alerts
 monitoring:
   enabled: true
   performance_budget:
-    fcp: 2s    # First Contentful Paint
-    lcp: 3s    # Largest Contentful Paint
-    cls: 0.1   # Cumulative Layout Shift
+    fcp: 2s # First Contentful Paint
+    lcp: 3s # Largest Contentful Paint
+    cls: 0.1 # Cumulative Layout Shift
     fid: 100ms # First Input Delay
 
 # Auto-deployment settings

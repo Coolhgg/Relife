@@ -2,7 +2,7 @@
 
 /**
  * Performance Report Generator
- * 
+ *
  * Combines k6 and Lighthouse results into comprehensive performance reports
  * for the Relife alarm app performance testing infrastructure.
  */
@@ -47,14 +47,16 @@ function loadLighthouseResults() {
   // LHCI stores results in .lighthouseci directory
   const lhciDir = './.lighthouseci';
   if (!existsSync(lhciDir)) {
-    console.log('⚠️  No Lighthouse results found. Run `npm run test:perf:lighthouse:full` first.');
+    console.log(
+      '⚠️  No Lighthouse results found. Run `npm run test:perf:lighthouse:full` first.'
+    );
     return null;
   }
 
   // For now, return a placeholder - in production this would parse LHCI results
   return {
     summary: 'Lighthouse results available in .lighthouseci directory',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 }
 
@@ -72,7 +74,7 @@ function generatePerformanceSummary(k6Results, lighthouseResults) {
       k6_version: 'latest',
       lighthouse_version: 'latest',
       node_version: process.version,
-      platform: process.platform
+      platform: process.platform,
     },
     test_coverage: {
       baseline_tests: true,
@@ -80,22 +82,22 @@ function generatePerformanceSummary(k6Results, lighthouseResults) {
       stress_tests: true,
       soak_tests: true,
       frontend_profiling: true,
-      ci_integration: true
+      ci_integration: true,
     },
     k6_load_testing: null,
     lighthouse_performance: null,
     react_profiling: {
       enabled: process.env.REACT_APP_PERFORMANCE_PROFILING === 'true',
       dashboard_available: true,
-      keyboard_shortcut: 'Ctrl+Shift+P'
+      keyboard_shortcut: 'Ctrl+Shift+P',
     },
     ci_integration: {
       github_actions: true,
       performance_regression_detection: true,
       automated_reporting: true,
-      artifact_generation: true
+      artifact_generation: true,
     },
-    overall_status: 'unknown'
+    overall_status: 'unknown',
   };
 
   // Process k6 results
@@ -107,13 +109,14 @@ function generatePerformanceSummary(k6Results, lighthouseResults) {
       http_req_failed: metrics.http_req_failed?.values || {},
       http_reqs: metrics.http_reqs?.values || {},
       vus: metrics.vus?.values || {},
-      status: 'completed'
+      status: 'completed',
     };
 
     // Check if thresholds passed
-    const thresholdsPassed = !k6Results.root_group?.checks || 
-      k6Results.root_group.checks.filter(check => check.passes === 0).length === 0;
-    
+    const thresholdsPassed =
+      !k6Results.root_group?.checks ||
+      k6Results.root_group.checks.filter((check) => check.passes === 0).length === 0;
+
     summary.k6_load_testing.thresholds_passed = thresholdsPassed;
   }
 
@@ -122,14 +125,14 @@ function generatePerformanceSummary(k6Results, lighthouseResults) {
     summary.lighthouse_performance = {
       status: 'completed',
       timestamp: lighthouseResults.timestamp,
-      details: lighthouseResults.summary
+      details: lighthouseResults.summary,
     };
   }
 
   // Determine overall status
   const k6Passed = summary.k6_load_testing?.thresholds_passed !== false;
   const lighthousePassed = summary.lighthouse_performance !== null;
-  
+
   if (k6Passed && lighthousePassed) {
     summary.overall_status = 'pass';
   } else if (!k6Passed || !lighthousePassed) {
@@ -146,10 +149,10 @@ function generatePerformanceSummary(k6Results, lighthouseResults) {
  */
 function generateMarkdownReport(summary) {
   const statusEmoji = {
-    'pass': '✅',
-    'partial': '⚠️',
-    'fail': '❌',
-    'unknown': '❓'
+    pass: '✅',
+    partial: '⚠️',
+    fail: '❌',
+    unknown: '❓',
   };
 
   const codeBlockStart = '```';
@@ -190,7 +193,9 @@ This report covers the complete performance testing infrastructure implemented f
 
 ## Load Testing Results (k6)
 
-${summary.k6_load_testing ? `
+${
+  summary.k6_load_testing
+    ? `
 ### Summary
 - **Status**: ${summary.k6_load_testing.status}
 - **Thresholds**: ${summary.k6_load_testing.thresholds_passed ? '✅ PASSED' : '❌ FAILED'}
@@ -205,11 +210,15 @@ ${summary.k6_load_testing.http_reqs?.rate ? `- **Request Rate**: ${summary.k6_lo
 - ✅ 95th percentile < 500ms
 - ✅ Error rate < 1%
 - ✅ Request rate > 1 req/s
-` : '❌ **No k6 results available**'}
+`
+    : '❌ **No k6 results available**'
+}
 
 ## Frontend Performance (Lighthouse)
 
-${summary.lighthouse_performance ? `
+${
+  summary.lighthouse_performance
+    ? `
 ### Summary
 - **Status**: ${summary.lighthouse_performance.status}
 - **Timestamp**: ${summary.lighthouse_performance.timestamp}
@@ -227,7 +236,9 @@ ${summary.lighthouse_performance ? `
 - **Total Blocking Time**: < 300ms
 
 *Detailed Lighthouse results available in .lighthouseci directory*
-` : '❌ **No Lighthouse results available**'}
+`
+    : '❌ **No Lighthouse results available**'
+}
 
 ## 🛠️ Performance Testing Infrastructure
 
@@ -461,7 +472,7 @@ async function main() {
   }
 }
 
-main().catch(error => {
+main().catch((error) => {
   console.error('❌ Error generating performance report:', error);
   process.exit(1);
 });

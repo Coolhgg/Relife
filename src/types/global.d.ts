@@ -40,7 +40,7 @@ interface ComponentState {
   [key: string]: string | number | boolean | ComponentState;
 }
 
-// For analysis worker data structures  
+// For analysis worker data structures
 interface SleepSession {
   startTime: string;
   endTime: string;

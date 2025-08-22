@@ -1,6 +1,7 @@
 # 🌍 Translation Files
 
-This directory contains all translation files for the Relife Alarms application. Each language has its own subdirectory with JSON files containing localized text.
+This directory contains all translation files for the Relife Alarms application. Each language has
+its own subdirectory with JSON files containing localized text.
 
 ## 📁 Directory Structure
 
@@ -48,22 +49,24 @@ Each language directory contains 6 JSON files:
 
 ### For Contributors
 
-1. **Check translation status**: Run `node scripts/manage-translations.mjs validate` from project root
+1. **Check translation status**: Run `node scripts/manage-translations.mjs validate` from project
+   root
 2. **Find your language**: Look for your language code in the directories above
-3. **Review guidelines**: Read [TRANSLATION_GUIDELINES.md](../../TRANSLATION_GUIDELINES.md) for detailed instructions
+3. **Review guidelines**: Read [TRANSLATION_GUIDELINES.md](../../TRANSLATION_GUIDELINES.md) for
+   detailed instructions
 4. **Start translating**: Begin with `common.json` as it contains the most frequently used terms
 
 ### For Developers
 
 ```javascript
 // Import translation hook
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 // Use in component
 function MyComponent() {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
-  return <h1>{t("welcome.title")}</h1>;
+  return <h1>{t('welcome.title')}</h1>;
 }
 ```
 

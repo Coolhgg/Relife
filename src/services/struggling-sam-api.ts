@@ -53,10 +53,7 @@ const API_ENDPOINTS = {
 
 // HTTP client with error handling
 class ApiClient {
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     const config: RequestInit = {
       headers: {
@@ -70,7 +67,9 @@ class ApiClient {
       const response = await fetch(url, config);
 
       if (!response.ok) {
-        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `API request failed: ${response.status} ${response.statusText}`
+        );
       }
 
       return await response.json();
@@ -122,12 +121,15 @@ export class StrugglingSamApiService {
     }
   }
 
-  static async updateStreak(userId: string, streakData: {
-    currentStreak: number;
-    longestStreak?: number;
-    lastWakeUpDate: string;
-    streakType?: string;
-  }): Promise<UserStreak> {
+  static async updateStreak(
+    userId: string,
+    streakData: {
+      currentStreak: number;
+      longestStreak?: number;
+      lastWakeUpDate: string;
+      streakType?: string;
+    }
+  ): Promise<UserStreak> {
     return await apiClient.put<UserStreak>(API_ENDPOINTS.UPDATE_STREAK, {
       userId,
       ...streakData,
@@ -135,7 +137,9 @@ export class StrugglingSamApiService {
   }
 
   static async useStreakFreeze(userId: string): Promise<UserStreak> {
-    return await apiClient.post<UserStreak>(`${API_ENDPOINTS.USER_STREAK}/freeze`, { userId });
+    return await apiClient.post<UserStreak>(`${API_ENDPOINTS.USER_STREAK}/freeze`, {
+      userId,
+    });
   }
 
   // ============================================================================
@@ -143,13 +147,19 @@ export class StrugglingSamApiService {
   // ============================================================================
 
   static async getUserAchievements(userId: string): Promise<SamAchievement[]> {
-    return await apiClient.get<SamAchievement[]>(`${API_ENDPOINTS.ACHIEVEMENTS}/${userId}`);
+    return await apiClient.get<SamAchievement[]>(
+      `${API_ENDPOINTS.ACHIEVEMENTS}/${userId}`
+    );
   }
 
-  static async unlockAchievement(userId: string, achievementType: string, progress?: {
-    current: number;
-    target: number;
-  }): Promise<SamAchievement> {
+  static async unlockAchievement(
+    userId: string,
+    achievementType: string,
+    progress?: {
+      current: number;
+      target: number;
+    }
+  ): Promise<SamAchievement> {
     return await apiClient.post<SamAchievement>(API_ENDPOINTS.UNLOCK_ACHIEVEMENT, {
       userId,
       achievementType,
@@ -157,7 +167,10 @@ export class StrugglingSamApiService {
     });
   }
 
-  static async shareAchievement(achievementId: string, platform: string): Promise<void> {
+  static async shareAchievement(
+    achievementId: string,
+    platform: string
+  ): Promise<void> {
     await apiClient.post(API_ENDPOINTS.SHARE_ACHIEVEMENT, {
       achievementId,
       platform,
@@ -165,7 +178,9 @@ export class StrugglingSamApiService {
   }
 
   static async checkAchievementProgress(userId: string): Promise<SamAchievement[]> {
-    return await apiClient.get<SamAchievement[]>(`${API_ENDPOINTS.ACHIEVEMENTS}/${userId}/progress`);
+    return await apiClient.get<SamAchievement[]>(
+      `${API_ENDPOINTS.ACHIEVEMENTS}/${userId}/progress`
+    );
   }
 
   // ============================================================================
@@ -180,10 +195,15 @@ export class StrugglingSamApiService {
   }
 
   static async getUserChallenges(userId: string): Promise<SocialChallenge[]> {
-    return await apiClient.get<SocialChallenge[]>(`${API_ENDPOINTS.CHALLENGES}/user/${userId}`);
+    return await apiClient.get<SocialChallenge[]>(
+      `${API_ENDPOINTS.CHALLENGES}/user/${userId}`
+    );
   }
 
-  static async joinChallenge(userId: string, challengeId: string): Promise<ChallengeParticipant> {
+  static async joinChallenge(
+    userId: string,
+    challengeId: string
+  ): Promise<ChallengeParticipant> {
     return await apiClient.post<ChallengeParticipant>(API_ENDPOINTS.JOIN_CHALLENGE, {
       userId,
       challengeId,
@@ -197,7 +217,11 @@ export class StrugglingSamApiService {
     });
   }
 
-  static async updateChallengeProgress(userId: string, challengeId: string, progress: number): Promise<void> {
+  static async updateChallengeProgress(
+    userId: string,
+    challengeId: string,
+    progress: number
+  ): Promise<void> {
     await apiClient.put(`${API_ENDPOINTS.CHALLENGES}/progress`, {
       userId,
       challengeId,
@@ -210,17 +234,25 @@ export class StrugglingSamApiService {
   // ============================================================================
 
   static async getUpgradePrompts(userId: string): Promise<SmartUpgradePrompt[]> {
-    return await apiClient.get<SmartUpgradePrompt[]>(`${API_ENDPOINTS.UPGRADE_PROMPTS}/${userId}`);
+    return await apiClient.get<SmartUpgradePrompt[]>(
+      `${API_ENDPOINTS.UPGRADE_PROMPTS}/${userId}`
+    );
   }
 
-  static async createUpgradePrompt(userId: string, promptData: Partial<SmartUpgradePrompt>): Promise<SmartUpgradePrompt> {
+  static async createUpgradePrompt(
+    userId: string,
+    promptData: Partial<SmartUpgradePrompt>
+  ): Promise<SmartUpgradePrompt> {
     return await apiClient.post<SmartUpgradePrompt>(API_ENDPOINTS.UPGRADE_PROMPTS, {
       userId,
       ...promptData,
     });
   }
 
-  static async trackPromptAction(promptId: string, action: 'shown' | 'clicked' | 'converted' | 'dismissed'): Promise<void> {
+  static async trackPromptAction(
+    promptId: string,
+    action: 'shown' | 'clicked' | 'converted' | 'dismissed'
+  ): Promise<void> {
     await apiClient.post(API_ENDPOINTS.TRACK_PROMPT_ACTION, {
       promptId,
       action,
@@ -232,8 +264,13 @@ export class StrugglingSamApiService {
   // CELEBRATION OPERATIONS
   // ============================================================================
 
-  static async createCelebration(celebration: Omit<HabitCelebration, 'id'>): Promise<HabitCelebration> {
-    return await apiClient.post<HabitCelebration>(API_ENDPOINTS.CELEBRATIONS, celebration);
+  static async createCelebration(
+    celebration: Omit<HabitCelebration, 'id'>
+  ): Promise<HabitCelebration> {
+    return await apiClient.post<HabitCelebration>(
+      API_ENDPOINTS.CELEBRATIONS,
+      celebration
+    );
   }
 
   static async markCelebrationShown(celebrationId: string): Promise<void> {
@@ -242,7 +279,10 @@ export class StrugglingSamApiService {
     });
   }
 
-  static async shareCelebration(celebrationId: string, platform: string): Promise<void> {
+  static async shareCelebration(
+    celebrationId: string,
+    platform: string
+  ): Promise<void> {
     await apiClient.post(`${API_ENDPOINTS.CELEBRATIONS}/${celebrationId}/share`, {
       platform,
       sharedAt: new Date().toISOString(),
@@ -264,7 +304,10 @@ export class StrugglingSamApiService {
     return await apiClient.get<SocialProofData[]>(endpoint);
   }
 
-  static async getSuccessStories(persona?: string, limit?: number): Promise<SuccessStory[]> {
+  static async getSuccessStories(
+    persona?: string,
+    limit?: number
+  ): Promise<SuccessStory[]> {
     const params = new URLSearchParams();
     if (persona) params.append('persona', persona);
     if (limit) params.append('limit', limit.toString());
@@ -273,7 +316,10 @@ export class StrugglingSamApiService {
     return await apiClient.get<SuccessStory[]>(endpoint);
   }
 
-  static async trackSocialProofEngagement(proofId: string, action: 'view' | 'click' | 'share'): Promise<void> {
+  static async trackSocialProofEngagement(
+    proofId: string,
+    action: 'view' | 'click' | 'share'
+  ): Promise<void> {
     await apiClient.post(`${API_ENDPOINTS.SOCIAL_PROOF}/${proofId}/track`, {
       action,
       timestamp: new Date().toISOString(),
@@ -286,7 +332,9 @@ export class StrugglingSamApiService {
 
   static async getUserABTestAssignment(userId: string): Promise<UserABTest | null> {
     try {
-      return await apiClient.get<UserABTest>(`${API_ENDPOINTS.AB_TEST_ASSIGNMENT}/${userId}`);
+      return await apiClient.get<UserABTest>(
+        `${API_ENDPOINTS.AB_TEST_ASSIGNMENT}/${userId}`
+      );
     } catch (error) {
       console.error('Error fetching A/B test assignment:', error);
       return null;
@@ -294,7 +342,9 @@ export class StrugglingSamApiService {
   }
 
   static async assignUserToABTest(userId: string): Promise<UserABTest> {
-    return await apiClient.post<UserABTest>(API_ENDPOINTS.AB_TEST_ASSIGNMENT, { userId });
+    return await apiClient.post<UserABTest>(API_ENDPOINTS.AB_TEST_ASSIGNMENT, {
+      userId,
+    });
   }
 
   static async getABTestGroups(): Promise<ABTestGroup[]> {
@@ -310,7 +360,12 @@ export class StrugglingSamApiService {
     });
   }
 
-  static async trackABTestEngagement(testId: string, userId: string, action: string, metadata?: Record<string, any>): Promise<void> {
+  static async trackABTestEngagement(
+    testId: string,
+    userId: string,
+    action: string,
+    metadata?: Record<string, any>
+  ): Promise<void> {
     await apiClient.post(API_ENDPOINTS.AB_TEST_TRACKING, {
       testId,
       userId,
@@ -324,7 +379,11 @@ export class StrugglingSamApiService {
   // UTILITY METHODS
   // ============================================================================
 
-  static async recordWakeUpEvent(userId: string, alarmTime: string, actualWakeTime: string): Promise<{
+  static async recordWakeUpEvent(
+    userId: string,
+    alarmTime: string,
+    actualWakeTime: string
+  ): Promise<{
     streakUpdated: boolean;
     newStreak: number;
     achievementsUnlocked: SamAchievement[];

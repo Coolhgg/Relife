@@ -1,7 +1,7 @@
-import path from "path";
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import path from 'path';
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
 // Custom plugin to inject "built by scout" tag
 function injectBuiltByScoutPlugin() {
@@ -13,7 +13,7 @@ function injectBuiltByScoutPlugin() {
 
       // Inject the script before the closing body tag
       return html.replace('</body>', scriptTag + '\n  </body>');
-    }
+    },
   };
 }
 
@@ -22,7 +22,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), injectBuiltByScoutPlugin()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, './src'),
     },
   },
 });

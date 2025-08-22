@@ -1,23 +1,29 @@
 # Integration Tests for Critical User Flows
 
-This directory contains comprehensive integration tests that validate end-to-end user journeys in the Relife alarm application. These tests complement the existing E2E tests by focusing on complex, multi-step workflows that span multiple components and services.
+This directory contains comprehensive integration tests that validate end-to-end user journeys in
+the Relife alarm application. These tests complement the existing E2E tests by focusing on complex,
+multi-step workflows that span multiple components and services.
 
 ## Test Structure
 
 ### 1. Complete Alarm Lifecycle Integration (`alarm-lifecycle.integration.test.ts`)
+
 Tests the entire alarm journey from creation to completion:
+
 - ✅ User authentication and dashboard access
 - ✅ Alarm creation with all features (basic, recurring, advanced)
 - ✅ Service worker integration and background scheduling
 - ✅ Alarm triggering and notification handling
-- ✅ User interactions (snooze, dismiss) 
+- ✅ User interactions (snooze, dismiss)
 - ✅ Analytics tracking and rewards system integration
 - ✅ Premium feature access control
 - ✅ Error handling and graceful degradation
 - ✅ Performance validation (< 2s alarm creation, < 3s app init)
 
 ### 2. Offline/Online Sync Integration (`offline-sync.integration.test.ts`)
+
 Tests comprehensive offline functionality and synchronization:
+
 - ✅ Offline alarm operations (create, edit, delete)
 - ✅ Local storage and pending changes management
 - ✅ Automatic sync when back online
@@ -27,7 +33,9 @@ Tests comprehensive offline functionality and synchronization:
 - ✅ Network failure handling and recovery
 
 ### 3. Premium Upgrade Flow (`premium-upgrade.integration.test.ts`)
+
 Tests the complete subscription and premium features flow:
+
 - ✅ Premium feature discovery and paywall
 - ✅ Free tier limitations and upgrade prompts
 - ✅ Payment processing with Stripe integration
@@ -39,7 +47,9 @@ Tests the complete subscription and premium features flow:
 - ✅ Downgrade and cancellation scenarios
 
 ### 4. Notification & Service Worker Integration (`notification-service-worker.integration.test.ts`)
+
 Tests background processing and notification systems:
+
 - ✅ Service worker registration and initialization
 - ✅ Push notification setup and permissions
 - ✅ Background alarm triggering when tab inactive
@@ -51,7 +61,9 @@ Tests background processing and notification systems:
 - ✅ Performance under various browser states
 
 ### 5. Gaming & Rewards System (`gaming-rewards.integration.test.ts`)
+
 Tests the complete gamification and social features:
+
 - ✅ Reward system initialization and progression
 - ✅ Achievement unlocking and notifications
 - ✅ Level progression and experience tracking
@@ -62,7 +74,9 @@ Tests the complete gamification and social features:
 - ✅ Error handling and graceful degradation
 
 ### 6. AI Voice Cloning Integration (`ai-voice-cloning.integration.test.tsx`)
+
 Tests the complete AI-powered voice features:
+
 - ✅ Voice sample recording with MediaRecorder API
 - ✅ AI voice cloning with ElevenLabs TTS integration
 - ✅ Voice biometric authentication and training workflows
@@ -74,7 +88,9 @@ Tests the complete AI-powered voice features:
 - ✅ Analytics tracking for voice cloning usage
 
 ### 7. Advanced Sleep Tracking (`advanced-sleep-tracking.integration.test.tsx`)
+
 Tests comprehensive sleep analysis and smart alarm features:
+
 - ✅ Manual sleep session logging with validation
 - ✅ Sleep pattern analysis and chronotype detection
 - ✅ Smart alarm recommendations based on 90-minute cycles
@@ -87,7 +103,9 @@ Tests comprehensive sleep analysis and smart alarm features:
 - ✅ Error handling for data sync failures and offline mode
 
 ### 8. Social Battles & Real-time Features (`social-battles.integration.test.tsx`)
+
 Tests multiplayer social features and real-time interactions:
+
 - ✅ Battle creation with different challenge types (streak, early_bird, team)
 - ✅ Real-time WebSocket connections for live updates
 - ✅ Tournament bracket generation and progression
@@ -103,10 +121,14 @@ Tests multiplayer social features and real-time interactions:
 ## Key Testing Patterns
 
 ### 1. **End-to-End User Journeys**
-Each test simulates real user workflows from start to finish, including authentication, navigation, form interactions, and result verification.
+
+Each test simulates real user workflows from start to finish, including authentication, navigation,
+form interactions, and result verification.
 
 ### 2. **Service Integration**
+
 Tests validate integration between:
+
 - Frontend components
 - Backend services (Supabase)
 - External APIs (Stripe, Push notifications)
@@ -114,7 +136,9 @@ Tests validate integration between:
 - Analytics services (PostHog, Sentry)
 
 ### 3. **Error Handling & Resilience**
+
 Comprehensive error scenarios:
+
 - Network failures
 - Payment failures
 - Permission denials
@@ -122,7 +146,9 @@ Comprehensive error scenarios:
 - Invalid data states
 
 ### 4. **Performance Validation**
+
 Built-in performance assertions:
+
 - App initialization < 3 seconds
 - Alarm creation < 2 seconds
 - Large dataset handling (1000+ items)
@@ -134,7 +160,9 @@ Built-in performance assertions:
 - Large sleep dataset processing (365+ days) < 2 seconds
 
 ### 5. **Cross-Platform Testing**
+
 Tests account for different environments:
+
 - Online/offline states
 - Different device types
 - Various browser capabilities
@@ -182,6 +210,7 @@ npm run ci:test
 ### Vitest Integration Config (`vitest.integration.config.ts`)
 
 Integration tests use a dedicated Vitest configuration:
+
 - **Test Runner**: Vitest with happy-dom environment
 - **Component Testing**: @testing-library/react with user-event
 - **Coverage**: V8 provider with dedicated integration coverage directory
@@ -190,6 +219,7 @@ Integration tests use a dedicated Vitest configuration:
 - **Reporting**: Multiple formats (JSON, JUnit, HTML) for CI/CD integration
 
 ### Technology Stack
+
 - **Vitest** for test runner and assertions
 - **@testing-library/react** for component testing
 - **@testing-library/user-event** for realistic user interactions
@@ -204,6 +234,7 @@ Integration tests use a dedicated Vitest configuration:
 ## Mock Strategy
 
 The tests use comprehensive mocking via `tests/utils/test-mocks.ts`:
+
 - **Navigator APIs**: geolocation, clipboard, permissions, vibration
 - **Storage APIs**: localStorage, sessionStorage, IndexedDB
 - **Web APIs**: fetch, ResizeObserver, IntersectionObserver
@@ -234,6 +265,7 @@ The tests use comprehensive mocking via `tests/utils/test-mocks.ts`:
 ## Analytics Validation
 
 Each test validates that appropriate analytics events are tracked:
+
 - User actions (alarm_created, premium_upgrade, etc.)
 - Feature usage (gaming_hub_accessed, notification_dismissed)
 - Performance metrics (load_time, interaction_duration)
@@ -243,6 +275,7 @@ Each test validates that appropriate analytics events are tracked:
 ## Test Data Management
 
 Tests use factories and builders for consistent test data:
+
 - `createMockUser()` - Generate users with various states
 - `createMockAlarm()` - Generate alarms with different configurations
 - `generateTestAlarms()` - Bulk alarm generation
@@ -253,17 +286,20 @@ Tests use factories and builders for consistent test data:
 ### GitHub Actions Workflows
 
 #### 1. Enhanced CI/CD Pipeline (`enhanced-ci-cd.yml`)
+
 - Runs integration tests alongside unit tests
 - Generates combined coverage reports
 - Posts detailed coverage comments on PRs
 - Uploads coverage to Codecov with separate flags
 
 #### 2. PR Validation (`pr-validation.yml`)
+
 - Quick integration test execution on PRs
 - Validates critical user flows before merge
 - Updates PR status with integration test results
 
 #### 3. Dedicated Integration Tests (`integration-tests.yml`)
+
 - **Matrix Testing**: Runs each test suite individually
 - **Full Suite**: Comprehensive integration test execution
 - **Performance Monitoring**: Regression detection
@@ -271,6 +307,7 @@ Tests use factories and builders for consistent test data:
 - **Failure Alerts**: Creates GitHub issues for failed daily checks
 
 ### CI/CD Features
+
 - **Parallel Execution**: Matrix strategy for individual test suites
 - **Performance Tracking**: Built-in performance regression detection
 - **Environment Mocking**: Consistent test environment setup
@@ -301,7 +338,8 @@ export PERFORMANCE_APP_INIT_THRESHOLD=3000
 
 ### CI/CD Environment
 
-Integration tests in CI/CD use the same mock environment variables, ensuring consistent behavior across local development and automated testing.
+Integration tests in CI/CD use the same mock environment variables, ensuring consistent behavior
+across local development and automated testing.
 
 ### Advanced Feature Environment
 
@@ -344,36 +382,44 @@ npm run test:integration:ui
 ### Common Issues and Solutions
 
 #### Test Timeouts
+
 - **Cause**: Complex integration flows taking longer than expected
 - **Solution**: Adjust timeout values in `vitest.integration.config.ts`
 
 #### Service Worker Mocking
+
 - **Cause**: Service worker registration failing in test environment
 - **Solution**: Check mock setup in `tests/utils/test-mocks.ts`
 
 #### Payment Flow Testing
+
 - **Cause**: Stripe integration not properly mocked
 - **Solution**: Verify Stripe mock configuration and test environment keys
 
 #### WebSocket Connection Issues
+
 - **Cause**: Real-time features failing to connect in test environment
 - **Solution**: Check WebSocket mock setup and message simulation in test-mocks.ts
 
 #### Voice Recording Failures
+
 - **Cause**: MediaRecorder API not properly mocked
 - **Solution**: Verify media API mocks and audio blob generation
 
 #### Sleep Data Performance
+
 - **Cause**: Large dataset tests taking too long
 - **Solution**: Optimize mock data generation and adjust performance thresholds
 
 #### Tournament Bracket Generation
+
 - **Cause**: Complex bracket logic failing with odd participant numbers
 - **Solution**: Check tournament bracket generation and bye round handling
 
 ## Test Coverage by Feature
 
 ### Core Features (Existing)
+
 - **Alarm Lifecycle**: 95% coverage
 - **Offline Sync**: 90% coverage
 - **Premium Upgrade**: 88% coverage
@@ -381,6 +427,7 @@ npm run test:integration:ui
 - **Gaming & Rewards**: 85% coverage
 
 ### Advanced Features (New)
+
 - **AI Voice Cloning**: 85% coverage
 - **Sleep Tracking**: 88% coverage
 - **Social Battles**: 82% coverage
@@ -390,6 +437,7 @@ npm run test:integration:ui
 ## Future Enhancements
 
 Planned additions:
+
 - **Multi-language testing**: Integration tests with different locales
 - **Accessibility validation**: A11y checks within integration flows
 - **Performance regression detection**: Automated performance monitoring (✅ Partially implemented)

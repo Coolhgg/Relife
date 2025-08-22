@@ -35,7 +35,7 @@ describe('Capacitor Integration Smoke Tests', () => {
       platform: info.platform,
       model: info.model,
       osVersion: info.osVersion,
-      manufacturer: info.manufacturer
+      manufacturer: info.manufacturer,
     });
 
     if (isRealDevice) {
@@ -89,7 +89,7 @@ describe('Capacitor Integration Smoke Tests', () => {
 
     console.log('Plugin availability:', {
       Device: deviceAvailable,
-      LocalNotifications: notificationsAvailable
+      LocalNotifications: notificationsAvailable,
     });
   });
 
@@ -131,12 +131,14 @@ describe('Capacitor Integration Smoke Tests', () => {
       scheduleTime.setSeconds(scheduleTime.getSeconds() + 5); // 5 seconds from now
 
       await LocalNotifications.schedule({
-        notifications: [{
-          id: 999,
-          title: 'Test Notification',
-          body: 'This is a test notification from the mobile testing suite',
-          schedule: { at: scheduleTime }
-        }]
+        notifications: [
+          {
+            id: 999,
+            title: 'Test Notification',
+            body: 'This is a test notification from the mobile testing suite',
+            schedule: { at: scheduleTime },
+          },
+        ],
       });
 
       // Get pending notifications
@@ -150,9 +152,8 @@ describe('Capacitor Integration Smoke Tests', () => {
 
       // Clean up - cancel the test notification
       await LocalNotifications.cancel({
-        notifications: [{ id: 999 }]
+        notifications: [{ id: 999 }],
       });
-
     } catch (error) {
       console.log('Notification scheduling test failed:', error);
 

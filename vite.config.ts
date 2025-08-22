@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { resolve } from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 // import { visualizer } from 'rollup-plugin-visualizer'
 // import type { PluginOption } from 'vite'
 // import { splitVendorChunkPlugin } from 'vite' // Not available in current Vite version
@@ -81,45 +81,32 @@ export default defineConfig({
           'react-vendor': ['react', 'react-dom'],
 
           // UI libraries
-          'ui-vendor': [
-            '@headlessui/react',
-            'framer-motion',
-          ],
+          'ui-vendor': ['@headlessui/react', 'framer-motion'],
 
           // Utility libraries
-          'utils-vendor': [
-            'date-fns',
-            'lodash-es',
-            'uuid',
-          ],
+          'utils-vendor': ['date-fns', 'lodash-es', 'uuid'],
 
           // Database and API
-          'api-vendor': [
-            '@supabase/supabase-js',
-            'axios',
-          ],
+          'api-vendor': ['@supabase/supabase-js', 'axios'],
 
           // PWA and service worker
-          'pwa-vendor': [
-            'workbox-window',
-            'workbox-core',
-          ],
+          'pwa-vendor': ['workbox-window', 'workbox-core'],
         },
 
         // File naming patterns
         chunkFileNames: 'js/[name]-[hash].js',
         entryFileNames: 'js/[name]-[hash].js',
-        assetFileNames: (assetInfo) => {
-          const info = assetInfo.name?.split('.') || []
-          let extType = info[info.length - 1] || ''
+        assetFileNames: assetInfo => {
+          const info = assetInfo.name?.split('.') || [];
+          let extType = info[info.length - 1] || '';
 
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
-            extType = 'img'
+            extType = 'img';
           } else if (/woff|woff2/i.test(extType)) {
-            extType = 'fonts'
+            extType = 'fonts';
           }
 
-          return `${extType}/[name]-[hash][extname]`
+          return `${extType}/[name]-[hash][extname]`;
         },
       },
 
@@ -227,4 +214,4 @@ export default defineConfig({
     format: 'es',
     plugins: () => [],
   },
-})
+});

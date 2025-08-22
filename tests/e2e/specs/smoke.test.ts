@@ -16,7 +16,7 @@ test.describe('E2E Infrastructure Test', () => {
     const testData = {
       message: 'Hello E2E Tests',
       timestamp: new Date().toISOString(),
-      features: ['async/await', 'ES2017', 'modules'] as const
+      features: ['async/await', 'ES2017', 'modules'] as const,
     };
 
     expect(testData.message).toBe('Hello E2E Tests');

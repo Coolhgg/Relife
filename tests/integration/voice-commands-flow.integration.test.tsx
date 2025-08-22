@@ -1,11 +1,20 @@
 /**
  * Voice Commands Flow Integration Tests
- * 
+ *
  * Comprehensive tests for voice recognition and voice command functionality,
  * including alarm dismissal, app navigation, and voice settings management.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -31,7 +40,7 @@ import {
   renderWithProviders,
   waitForLoadingToFinish,
   expectNoConsoleErrors,
-  expectKeyboardNavigation
+  expectKeyboardNavigation,
 } from '../utils/enhanced-test-utilities';
 
 import { setupAllMocks } from '../utils/test-mocks';
@@ -61,18 +70,18 @@ describe('Voice Commands Flow Integration Tests', () => {
     user = userEvent.setup();
     mockUser = createMockUser();
     checkConsoleErrors = expectNoConsoleErrors();
-    
+
     testDataHelpers.clearAll();
     testDataHelpers.addUser(mockUser);
-    
+
     vi.clearAllMocks();
-    
+
     // Mock microphone permission as granted
     Object.defineProperty(navigator, 'permissions', {
       value: {
-        query: vi.fn().mockResolvedValue({ state: 'granted' })
+        query: vi.fn().mockResolvedValue({ state: 'granted' }),
       },
-      writable: true
+      writable: true,
     });
   });
 
@@ -89,9 +98,9 @@ describe('Voice Commands Flow Integration Tests', () => {
       // Start with permission denied
       Object.defineProperty(navigator, 'permissions', {
         value: {
-          query: vi.fn().mockResolvedValue({ state: 'prompt' })
+          query: vi.fn().mockResolvedValue({ state: 'prompt' }),
         },
-        writable: true
+        writable: true,
       });
 
       renderWithProviders(<App />, { user: mockUser });
@@ -108,26 +117,32 @@ describe('Voice Commands Flow Integration Tests', () => {
 
           // Should show permission request
           await waitFor(() => {
-            const permissionText = screen.queryByText(/microphone.*permission|allow.*microphone/i);
+            const permissionText = screen.queryByText(
+              /microphone.*permission|allow.*microphone/i
+            );
             expect(permissionText).toBeInTheDocument();
           });
 
           // Click enable microphone
-          const enableButton = screen.queryByRole('button', { name: /enable|allow.*microphone/i });
+          const enableButton = screen.queryByRole('button', {
+            name: /enable|allow.*microphone/i,
+          });
           if (enableButton) {
             await user.click(enableButton);
 
             // Mock permission granted
             Object.defineProperty(navigator, 'permissions', {
               value: {
-                query: vi.fn().mockResolvedValue({ state: 'granted' })
+                query: vi.fn().mockResolvedValue({ state: 'granted' }),
               },
-              writable: true
+              writable: true,
             });
 
             // Should show success message
             await waitFor(() => {
-              const successMessage = screen.queryByText(/microphone.*enabled|voice.*ready/i);
+              const successMessage = screen.queryByText(
+                /microphone.*enabled|voice.*ready/i
+              );
               expect(successMessage).toBeInTheDocument();
             });
 
@@ -153,12 +168,15 @@ describe('Voice Commands Flow Integration Tests', () => {
 
           // Should show sensitivity settings
           await waitFor(() => {
-            const sensitivitySlider = screen.queryByLabelText(/sensitivity|confidence/i);
+            const sensitivitySlider =
+              screen.queryByLabelText(/sensitivity|confidence/i);
             expect(sensitivitySlider).toBeInTheDocument();
           });
 
           // Test microphone
-          const testButton = screen.queryByRole('button', { name: /test.*microphone|test.*voice/i });
+          const testButton = screen.queryByRole('button', {
+            name: /test.*microphone|test.*voice/i,
+          });
           if (testButton) {
             await user.click(testButton);
 
@@ -173,14 +191,16 @@ describe('Voice Commands Flow Integration Tests', () => {
 
             // Should show recognition result
             await waitFor(() => {
-              const recognizedText = screen.queryByText(/test voice recognition|recognized/i);
+              const recognizedText = screen.queryByText(
+                /test voice recognition|recognized/i
+              );
               expect(recognizedText).toBeInTheDocument();
             });
 
             // Should track voice test
             expectAnalyticsEvent(mockPostHogInstance, 'voice_test_completed', {
               confidence: 0.9,
-              transcript: 'test voice recognition'
+              transcript: 'test voice recognition',
             });
           }
         }
@@ -209,7 +229,9 @@ describe('Voice Commands Flow Integration Tests', () => {
 
             // Should show error message
             await waitFor(() => {
-              const errorMessage = screen.queryByText(/microphone.*blocked|permission.*denied/i);
+              const errorMessage = screen.queryByText(
+                /microphone.*blocked|permission.*denied/i
+              );
               expect(errorMessage).toBeInTheDocument();
             });
 
@@ -229,7 +251,7 @@ describe('Voice Commands Flow Integration Tests', () => {
         userId: mockUser.id,
         time: '07:30',
         label: 'Voice Test Alarm',
-        enabled: true
+        enabled: true,
       });
       testDataHelpers.addAlarm(alarm);
 
@@ -241,8 +263,9 @@ describe('Voice Commands Flow Integration Tests', () => {
       await expectAlarmRingingState(screen);
 
       // Should show voice command option
-      const voiceButton = screen.queryByRole('button', { name: /voice|speak/i }) ||
-                         screen.queryByText(/say.*stop|voice.*command/i);
+      const voiceButton =
+        screen.queryByRole('button', { name: /voice|speak/i }) ||
+        screen.queryByText(/say.*stop|voice.*command/i);
 
       if (voiceButton) {
         await user.click(voiceButton);
@@ -254,12 +277,7 @@ describe('Voice Commands Flow Integration Tests', () => {
         });
 
         // Test different dismiss commands
-        const dismissCommands = [
-          'stop alarm',
-          'dismiss',
-          'turn off',
-          'stop'
-        ];
+        const dismissCommands = ['stop alarm', 'dismiss', 'turn off', 'stop'];
 
         for (const command of dismissCommands) {
           // Reset alarm state
@@ -274,15 +292,18 @@ describe('Voice Commands Flow Integration Tests', () => {
             simulateVoiceCommand(mockSpeechRecognition, command, 0.9);
 
             // Should dismiss alarm
-            await waitFor(() => {
-              expect(screen.getByText(/dashboard/i)).toBeInTheDocument();
-            }, { timeout: 5000 });
+            await waitFor(
+              () => {
+                expect(screen.getByText(/dashboard/i)).toBeInTheDocument();
+              },
+              { timeout: 5000 }
+            );
 
             // Should track voice dismissal
             expectAnalyticsEvent(mockPostHogInstance, 'alarm_dismissed', {
               method: 'voice',
               command: command,
-              confidence: 0.9
+              confidence: 0.9,
             });
           }
         }
@@ -296,7 +317,7 @@ describe('Voice Commands Flow Integration Tests', () => {
         label: 'Snooze Voice Test',
         enabled: true,
         snoozeEnabled: true,
-        maxSnoozes: 3
+        maxSnoozes: 3,
       });
       testDataHelpers.addAlarm(alarm);
 
@@ -313,12 +334,7 @@ describe('Voice Commands Flow Integration Tests', () => {
         await user.click(voiceButton);
 
         // Test snooze commands
-        const snoozeCommands = [
-          'snooze',
-          'snooze alarm',
-          'five more minutes',
-          'sleep'
-        ];
+        const snoozeCommands = ['snooze', 'snooze alarm', 'five more minutes', 'sleep'];
 
         for (const command of snoozeCommands) {
           // Reset alarm
@@ -340,7 +356,7 @@ describe('Voice Commands Flow Integration Tests', () => {
             expectAnalyticsEvent(mockPostHogInstance, 'alarm_snoozed', {
               method: 'voice',
               command: command,
-              confidence: 0.85
+              confidence: 0.85,
             });
           }
         }
@@ -352,7 +368,7 @@ describe('Voice Commands Flow Integration Tests', () => {
         userId: mockUser.id,
         time: '09:00',
         label: 'Low Confidence Test',
-        enabled: true
+        enabled: true,
       });
       testDataHelpers.addAlarm(alarm);
 
@@ -394,7 +410,7 @@ describe('Voice Commands Flow Integration Tests', () => {
         userId: mockUser.id,
         time: '10:00',
         label: 'Voice Fallback Test',
-        enabled: true
+        enabled: true,
       });
       testDataHelpers.addAlarm(alarm);
 
@@ -428,7 +444,7 @@ describe('Voice Commands Flow Integration Tests', () => {
         // Should track fallback usage
         expectAnalyticsEvent(mockPostHogInstance, 'voice_fallback_used', {
           error: 'network',
-          fallbackMethod: 'button'
+          fallbackMethod: 'button',
         });
       }
     });
@@ -440,7 +456,9 @@ describe('Voice Commands Flow Integration Tests', () => {
       await waitForLoadingToFinish();
 
       // Look for voice navigation button
-      const voiceNavButton = screen.queryByRole('button', { name: /voice.*navigation|speak.*command/i });
+      const voiceNavButton = screen.queryByRole('button', {
+        name: /voice.*navigation|speak.*command/i,
+      });
       if (voiceNavButton) {
         await user.click(voiceNavButton);
 
@@ -448,25 +466,31 @@ describe('Voice Commands Flow Integration Tests', () => {
         const navigationCommands = [
           { command: 'create alarm', expectedSection: /add.*alarm|create.*alarm/ },
           { command: 'open settings', expectedSection: /settings/ },
-          { command: 'show profile', expectedSection: /profile|account/ }
+          { command: 'show profile', expectedSection: /profile|account/ },
         ];
 
         for (const { command, expectedSection } of navigationCommands) {
           simulateVoiceCommand(mockSpeechRecognition, command, 0.9);
 
           // Should navigate to the section
-          await waitFor(() => {
-            const section = screen.queryByText(expectedSection);
-            if (section) {
-              expect(section).toBeInTheDocument();
-            }
-          }, { timeout: 3000 });
+          await waitFor(
+            () => {
+              const section = screen.queryByText(expectedSection);
+              if (section) {
+                expect(section).toBeInTheDocument();
+              }
+            },
+            { timeout: 3000 }
+          );
 
           // Track navigation
           expectAnalyticsEvent(mockPostHogInstance, 'voice_navigation_used', {
             command: command,
-            destination: command.includes('alarm') ? 'create_alarm' : 
-                        command.includes('settings') ? 'settings' : 'profile'
+            destination: command.includes('alarm')
+              ? 'create_alarm'
+              : command.includes('settings')
+                ? 'settings'
+                : 'profile',
           });
 
           // Go back to dashboard for next test
@@ -495,12 +519,18 @@ describe('Voice Commands Flow Integration Tests', () => {
         });
 
         // Test voice form filling
-        const voiceFormButton = screen.queryByRole('button', { name: /voice.*input|speak.*details/i });
+        const voiceFormButton = screen.queryByRole('button', {
+          name: /voice.*input|speak.*details/i,
+        });
         if (voiceFormButton) {
           await user.click(voiceFormButton);
 
           // Simulate voice form input
-          simulateVoiceCommand(mockSpeechRecognition, 'set time to seven thirty AM', 0.9);
+          simulateVoiceCommand(
+            mockSpeechRecognition,
+            'set time to seven thirty AM',
+            0.9
+          );
 
           // Should fill time field
           await waitFor(() => {
@@ -572,7 +602,8 @@ describe('Voice Commands Flow Integration Tests', () => {
       await expectKeyboardNavigation(user);
 
       // Voice should not interfere with screen readers
-      const landmarks = screen.queryAllByRole('main') || screen.queryAllByRole('navigation');
+      const landmarks =
+        screen.queryAllByRole('main') || screen.queryAllByRole('navigation');
       expect(landmarks.length).toBeGreaterThan(0);
 
       // Focus management should work properly
@@ -586,7 +617,7 @@ describe('Voice Commands Flow Integration Tests', () => {
         userId: mockUser.id,
         time: '11:00',
         label: 'Noise Test Alarm',
-        enabled: true
+        enabled: true,
       });
       testDataHelpers.addAlarm(alarm);
 
@@ -610,7 +641,9 @@ describe('Voice Commands Flow Integration Tests', () => {
         });
 
         // Should show noise warning
-        const noiseWarning = screen.queryByText(/background.*noise|clearer|try.*again/i);
+        const noiseWarning = screen.queryByText(
+          /background.*noise|clearer|try.*again/i
+        );
         expect(noiseWarning).toBeInTheDocument();
 
         // Clear command should work
@@ -629,7 +662,7 @@ describe('Voice Commands Flow Integration Tests', () => {
       const voiceButton = screen.queryByRole('button', { name: /voice/i });
       if (voiceButton) {
         const startTime = performance.now();
-        
+
         await user.click(voiceButton);
 
         // Should start listening quickly
@@ -665,7 +698,7 @@ describe('Voice Commands Flow Integration Tests', () => {
       const browserTests = [
         { browser: 'chrome', hasWebkitSpeech: true },
         { browser: 'firefox', hasWebkitSpeech: false },
-        { browser: 'safari', hasWebkitSpeech: true }
+        { browser: 'safari', hasWebkitSpeech: true },
       ];
 
       for (const { browser, hasWebkitSpeech } of browserTests) {
@@ -680,13 +713,15 @@ describe('Voice Commands Flow Integration Tests', () => {
         await waitForLoadingToFinish();
 
         const voiceButton = screen.queryByRole('button', { name: /voice/i });
-        
+
         if (hasWebkitSpeech) {
           // Should work normally
           expect(voiceButton).toBeInTheDocument();
         } else {
           // Should show unsupported message or hide voice features
-          const unsupportedMessage = screen.queryByText(/voice.*not.*supported|browser.*support/i);
+          const unsupportedMessage = screen.queryByText(
+            /voice.*not.*supported|browser.*support/i
+          );
           if (!voiceButton) {
             expect(unsupportedMessage).toBeInTheDocument();
           }

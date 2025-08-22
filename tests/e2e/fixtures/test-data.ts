@@ -19,44 +19,44 @@ export class TestData {
     VALID_USER: {
       email: 'test.user@example.com',
       password: 'TestPassword123!',
-      name: 'Test User'
+      name: 'Test User',
     },
     ADMIN_USER: {
       email: 'admin@example.com',
       password: 'AdminPassword123!',
-      name: 'Admin User'
+      name: 'Admin User',
     },
     PREMIUM_USER: {
       email: 'premium@example.com',
       password: 'PremiumPassword123!',
-      name: 'Premium User'
-    }
+      name: 'Premium User',
+    },
   } as const;
 
   static readonly INVALID_USERS = {
     INVALID_EMAIL: {
       email: 'invalid-email',
-      password: 'ValidPassword123!'
+      password: 'ValidPassword123!',
     },
     WEAK_PASSWORD: {
       email: 'test@example.com',
-      password: '123'
+      password: '123',
     },
     EMPTY_FIELDS: {
       email: '',
-      password: ''
-    }
+      password: '',
+    },
   } as const;
 
   static readonly ALARMS = {
     BASIC_ALARM: {
       time: '07:00',
-      label: 'Morning Alarm'
+      label: 'Morning Alarm',
     },
     WEEKEND_ALARM: {
       time: '09:00',
       label: 'Weekend Sleep-in',
-      days: ['Saturday', 'Sunday']
+      days: ['Saturday', 'Sunday'],
     },
     WORK_ALARM: {
       time: '06:30',
@@ -64,7 +64,7 @@ export class TestData {
       days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       sound: 'gentle-wake',
       volume: '70',
-      vibrate: true
+      vibrate: true,
     },
     ADVANCED_ALARM: {
       time: '07:30',
@@ -73,14 +73,14 @@ export class TestData {
       sound: 'nature-sounds',
       volume: '80',
       vibrate: true,
-      voiceMood: 'energetic'
+      voiceMood: 'energetic',
     },
     QUICK_NAP: {
       time: '14:30',
       label: 'Power Nap',
       sound: 'soft-chime',
-      volume: '50'
-    }
+      volume: '50',
+    },
   } as const;
 
   static readonly SETTINGS = {
@@ -89,7 +89,7 @@ export class TestData {
     SOUNDS: ['default', 'gentle-wake', 'nature-sounds', 'classical', 'electronic'],
     VOICE_MOODS: ['gentle', 'energetic', 'professional', 'friendly', 'motivational'],
     TIME_FORMATS: ['12h', '24h'],
-    VOLUME_LEVELS: ['0', '25', '50', '75', '100']
+    VOLUME_LEVELS: ['0', '25', '50', '75', '100'],
   } as const;
 
   static readonly API_ENDPOINTS = {
@@ -98,7 +98,7 @@ export class TestData {
     LOGOUT: '/api/auth/logout',
     ALARMS: '/api/alarms',
     SETTINGS: '/api/settings',
-    USER_PROFILE: '/api/user/profile'
+    USER_PROFILE: '/api/user/profile',
   } as const;
 
   static readonly ERROR_MESSAGES = {
@@ -109,7 +109,7 @@ export class TestData {
     EMAIL_FORMAT: 'Please enter a valid email address',
     PASSWORD_MISMATCH: 'Passwords do not match',
     ACCOUNT_NOT_FOUND: 'Account not found',
-    NETWORK_ERROR: 'Network error occurred'
+    NETWORK_ERROR: 'Network error occurred',
   } as const;
 
   static readonly SUCCESS_MESSAGES = {
@@ -118,7 +118,7 @@ export class TestData {
     ALARM_CREATED: 'Alarm created successfully',
     ALARM_UPDATED: 'Alarm updated successfully',
     ALARM_DELETED: 'Alarm deleted successfully',
-    SETTINGS_SAVED: 'Settings saved successfully'
+    SETTINGS_SAVED: 'Settings saved successfully',
   } as const;
 
   static readonly SELECTORS = {
@@ -140,7 +140,7 @@ export class TestData {
     SAVE_BUTTON: 'button:has-text("Save"), [data-testid*="save"]',
     CANCEL_BUTTON: 'button:has-text("Cancel"), [data-testid*="cancel"]',
     DELETE_BUTTON: 'button:has-text("Delete"), [data-testid*="delete"]',
-    ADD_BUTTON: 'button:has-text("Add"), [data-testid*="add"]'
+    ADD_BUTTON: 'button:has-text("Add"), [data-testid*="add"]',
   } as const;
 
   // Helper methods for generating test data
@@ -149,20 +149,28 @@ export class TestData {
     return {
       email: `test.user.${timestamp}@example.com`,
       password: 'TestPassword123!',
-      name: `Test User ${timestamp}`
+      name: `Test User ${timestamp}`,
     };
   }
 
   static generateRandomAlarm(): TestAlarm {
-    const hours = Math.floor(Math.random() * 24).toString().padStart(2, '0');
-    const minutes = Math.floor(Math.random() * 60).toString().padStart(2, '0');
+    const hours = Math.floor(Math.random() * 24)
+      .toString()
+      .padStart(2, '0');
+    const minutes = Math.floor(Math.random() * 60)
+      .toString()
+      .padStart(2, '0');
     const timestamp = Date.now();
 
     return {
       time: `${hours}:${minutes}`,
       label: `Test Alarm ${timestamp}`,
-      sound: this.SETTINGS.SOUNDS[Math.floor(Math.random() * this.SETTINGS.SOUNDS.length)],
-      volume: this.SETTINGS.VOLUME_LEVELS[Math.floor(Math.random() * this.SETTINGS.VOLUME_LEVELS.length)]
+      sound:
+        this.SETTINGS.SOUNDS[Math.floor(Math.random() * this.SETTINGS.SOUNDS.length)],
+      volume:
+        this.SETTINGS.VOLUME_LEVELS[
+          Math.floor(Math.random() * this.SETTINGS.VOLUME_LEVELS.length)
+        ],
     };
   }
 
@@ -179,7 +187,15 @@ export class TestData {
   }
 
   static getRandomDays(count: number = 3): string[] {
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const days = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
     const shuffled = days.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
   }
@@ -193,7 +209,15 @@ export class TestData {
   }
 
   static getAllDays(): string[] {
-    return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    return [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
   }
 }
 
@@ -205,9 +229,9 @@ export const MockResponses = {
       id: '123',
       email: 'test@example.com',
       name: 'Test User',
-      premium: false
+      premium: false,
     },
-    token: 'mock-jwt-token'
+    token: 'mock-jwt-token',
   },
 
   ALARMS_LIST: {
@@ -218,16 +242,16 @@ export const MockResponses = {
         time: '07:00',
         label: 'Morning Alarm',
         enabled: true,
-        days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+        days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       },
       {
         id: '2',
         time: '09:00',
         label: 'Weekend Alarm',
         enabled: false,
-        days: ['Saturday', 'Sunday']
-      }
-    ]
+        days: ['Saturday', 'Sunday'],
+      },
+    ],
   },
 
   USER_SETTINGS: {
@@ -239,13 +263,13 @@ export const MockResponses = {
       defaultSound: 'gentle-wake',
       volume: '75',
       vibrate: true,
-      pushNotifications: true
-    }
+      pushNotifications: true,
+    },
   },
 
   ERROR_RESPONSE: {
     success: false,
     error: 'Something went wrong',
-    message: 'Please try again later'
-  }
+    message: 'Please try again later',
+  },
 };

@@ -14,37 +14,37 @@ export interface GeneratedConvertKitConfig {
 // Placeholder configuration - will be replaced by setup script
 export const CONVERTKIT_IDS: GeneratedConvertKitConfig = {
   forms: {
-    struggling_sam: { id: 0, name: "Placeholder - Run setup script" },
-    busy_ben: { id: 0, name: "Placeholder - Run setup script" },
-    professional_paula: { id: 0, name: "Placeholder - Run setup script" },
-    enterprise_emma: { id: 0, name: "Placeholder - Run setup script" },
-    student_sarah: { id: 0, name: "Placeholder - Run setup script" },
-    lifetime_larry: { id: 0, name: "Placeholder - Run setup script" }
+    struggling_sam: { id: 0, name: 'Placeholder - Run setup script' },
+    busy_ben: { id: 0, name: 'Placeholder - Run setup script' },
+    professional_paula: { id: 0, name: 'Placeholder - Run setup script' },
+    enterprise_emma: { id: 0, name: 'Placeholder - Run setup script' },
+    student_sarah: { id: 0, name: 'Placeholder - Run setup script' },
+    lifetime_larry: { id: 0, name: 'Placeholder - Run setup script' },
   },
   sequences: {
-    struggling_sam: { id: 0, name: "Placeholder - Run setup script" },
-    busy_ben: { id: 0, name: "Placeholder - Run setup script" },
-    professional_paula: { id: 0, name: "Placeholder - Run setup script" },
-    enterprise_emma: { id: 0, name: "Placeholder - Run setup script" },
-    student_sarah: { id: 0, name: "Placeholder - Run setup script" },
-    lifetime_larry: { id: 0, name: "Placeholder - Run setup script" }
+    struggling_sam: { id: 0, name: 'Placeholder - Run setup script' },
+    busy_ben: { id: 0, name: 'Placeholder - Run setup script' },
+    professional_paula: { id: 0, name: 'Placeholder - Run setup script' },
+    enterprise_emma: { id: 0, name: 'Placeholder - Run setup script' },
+    student_sarah: { id: 0, name: 'Placeholder - Run setup script' },
+    lifetime_larry: { id: 0, name: 'Placeholder - Run setup script' },
   },
   tags: {
-    struggling_sam: "persona:struggling_sam",
-    busy_ben: "persona:busy_ben",
-    professional_paula: "persona:professional_paula",
-    enterprise_emma: "persona:enterprise_emma",
-    student_sarah: "persona:student_sarah",
-    lifetime_larry: "persona:lifetime_larry"
+    struggling_sam: 'persona:struggling_sam',
+    busy_ben: 'persona:busy_ben',
+    professional_paula: 'persona:professional_paula',
+    enterprise_emma: 'persona:enterprise_emma',
+    student_sarah: 'persona:student_sarah',
+    lifetime_larry: 'persona:lifetime_larry',
   },
-  createdAt: "2024-08-17T00:00:00.000Z"
+  createdAt: '2024-08-17T00:00:00.000Z',
 };
 
 // Environment-specific URLs
 export const WEBHOOK_URLS = {
-  production: "https://relife.app/api/webhooks/convertkit",
-  development: "https://relife-dev.app/api/webhooks/convertkit",
-  test: "http://localhost:3000/api/webhooks/convertkit"
+  production: 'https://relife.app/api/webhooks/convertkit',
+  development: 'https://relife-dev.app/api/webhooks/convertkit',
+  test: 'http://localhost:3000/api/webhooks/convertkit',
 };
 
 export default CONVERTKIT_IDS;

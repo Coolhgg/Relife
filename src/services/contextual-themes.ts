@@ -4,10 +4,7 @@
  * including time of day, weather, user patterns, and calendar events
  */
 
-import {
-  VisualAlarmThemeId,
-  visualAlarmThemes
-} from './visual-alarm-themes';
+import { VisualAlarmThemeId, visualAlarmThemes } from './visual-alarm-themes';
 import { SoundTheme } from './sound-effects';
 import { VoiceMood } from '../types';
 
@@ -21,16 +18,37 @@ export interface ContextualThemeRecommendation {
 }
 
 export interface ThemeContext {
-  type: 'time' | 'weather' | 'calendar' | 'pattern' | 'location' | 'health' | 'sleep' | 'mood';
+  type:
+    | 'time'
+    | 'weather'
+    | 'calendar'
+    | 'pattern'
+    | 'location'
+    | 'health'
+    | 'sleep'
+    | 'mood';
   value: string | number;
   weight: number; // Importance multiplier
 }
 
 export interface UserThemePattern {
-  timeOfDay: { hour: number; preferences: { visual: VisualAlarmThemeId; sound: SoundTheme; voice: VoiceMood }[] }[];
-  dayOfWeek: { day: number; preferences: { visual: VisualAlarmThemeId; sound: SoundTheme; voice: VoiceMood }[] }[];
-  weatherConditions: { condition: string; preferences: { visual: VisualAlarmThemeId; sound: SoundTheme; voice: VoiceMood }[] }[];
-  moodHistory: { mood: string; timestamp: Date; themes: { visual: VisualAlarmThemeId; sound: SoundTheme; voice: VoiceMood } }[];
+  timeOfDay: {
+    hour: number;
+    preferences: { visual: VisualAlarmThemeId; sound: SoundTheme; voice: VoiceMood }[];
+  }[];
+  dayOfWeek: {
+    day: number;
+    preferences: { visual: VisualAlarmThemeId; sound: SoundTheme; voice: VoiceMood }[];
+  }[];
+  weatherConditions: {
+    condition: string;
+    preferences: { visual: VisualAlarmThemeId; sound: SoundTheme; voice: VoiceMood }[];
+  }[];
+  moodHistory: {
+    mood: string;
+    timestamp: Date;
+    themes: { visual: VisualAlarmThemeId; sound: SoundTheme; voice: VoiceMood };
+  }[];
 }
 
 export interface SmartThemeRule {
@@ -43,7 +61,14 @@ export interface SmartThemeRule {
 }
 
 export interface ThemeCondition {
-  type: 'time-range' | 'weather' | 'calendar-event' | 'sleep-quality' | 'stress-level' | 'location' | 'day-of-week';
+  type:
+    | 'time-range'
+    | 'weather'
+    | 'calendar-event'
+    | 'sleep-quality'
+    | 'stress-level'
+    | 'location'
+    | 'day-of-week';
   operator: 'equals' | 'contains' | 'between' | 'greater-than' | 'less-than';
   value: any;
   weight: number;
@@ -90,27 +115,84 @@ class ContextualThemesService {
   private getDefaultPatterns(): UserThemePattern {
     return {
       timeOfDay: [
-        { hour: 6, preferences: [{ visual: 'sunrise_glow', sound: 'nature', voice: 'gentle' }] },
-        { hour: 7, preferences: [{ visual: 'morning_mist', sound: 'nature', voice: 'sweet-angel' }] },
-        { hour: 8, preferences: [{ visual: 'sunrise_glow', sound: 'default', voice: 'motivational' }] },
-        { hour: 12, preferences: [{ visual: 'clean_white', sound: 'minimal', voice: 'gentle' }] },
-        { hour: 18, preferences: [{ visual: 'forest_canopy', sound: 'nature', voice: 'gentle' }] },
-        { hour: 22, preferences: [{ visual: 'galaxy_spiral', sound: 'ambient', voice: 'gentle' }] }
+        {
+          hour: 6,
+          preferences: [{ visual: 'sunrise_glow', sound: 'nature', voice: 'gentle' }],
+        },
+        {
+          hour: 7,
+          preferences: [
+            { visual: 'morning_mist', sound: 'nature', voice: 'sweet-angel' },
+          ],
+        },
+        {
+          hour: 8,
+          preferences: [
+            { visual: 'sunrise_glow', sound: 'default', voice: 'motivational' },
+          ],
+        },
+        {
+          hour: 12,
+          preferences: [{ visual: 'clean_white', sound: 'minimal', voice: 'gentle' }],
+        },
+        {
+          hour: 18,
+          preferences: [{ visual: 'forest_canopy', sound: 'nature', voice: 'gentle' }],
+        },
+        {
+          hour: 22,
+          preferences: [{ visual: 'galaxy_spiral', sound: 'ambient', voice: 'gentle' }],
+        },
       ],
       dayOfWeek: [
-        { day: 1, preferences: [{ visual: 'lightning_bolt', sound: 'energetic', voice: 'motivational' }] }, // Monday
-        { day: 5, preferences: [{ visual: 'neon_pulse', sound: 'electronic', voice: 'anime-hero' }] }, // Friday
-        { day: 6, preferences: [{ visual: 'morning_mist', sound: 'nature', voice: 'gentle' }] }, // Saturday
-        { day: 0, preferences: [{ visual: 'forest_canopy', sound: 'ambient', voice: 'gentle' }] }  // Sunday
+        {
+          day: 1,
+          preferences: [
+            { visual: 'lightning_bolt', sound: 'energetic', voice: 'motivational' },
+          ],
+        }, // Monday
+        {
+          day: 5,
+          preferences: [
+            { visual: 'neon_pulse', sound: 'electronic', voice: 'anime-hero' },
+          ],
+        }, // Friday
+        {
+          day: 6,
+          preferences: [{ visual: 'morning_mist', sound: 'nature', voice: 'gentle' }],
+        }, // Saturday
+        {
+          day: 0,
+          preferences: [{ visual: 'forest_canopy', sound: 'ambient', voice: 'gentle' }],
+        }, // Sunday
       ],
       weatherConditions: [
-        { condition: 'sunny', preferences: [{ visual: 'sunrise_glow', sound: 'nature', voice: 'sweet-angel' }] },
-        { condition: 'rainy', preferences: [{ visual: 'morning_mist', sound: 'ambient', voice: 'gentle' }] },
-        { condition: 'stormy', preferences: [{ visual: 'lightning_bolt', sound: 'electronic', voice: 'drill-sergeant' }] },
-        { condition: 'snowy', preferences: [{ visual: 'clean_white', sound: 'minimal', voice: 'gentle' }] },
-        { condition: 'foggy', preferences: [{ visual: 'morning_mist', sound: 'ambient', voice: 'gentle' }] }
+        {
+          condition: 'sunny',
+          preferences: [
+            { visual: 'sunrise_glow', sound: 'nature', voice: 'sweet-angel' },
+          ],
+        },
+        {
+          condition: 'rainy',
+          preferences: [{ visual: 'morning_mist', sound: 'ambient', voice: 'gentle' }],
+        },
+        {
+          condition: 'stormy',
+          preferences: [
+            { visual: 'lightning_bolt', sound: 'electronic', voice: 'drill-sergeant' },
+          ],
+        },
+        {
+          condition: 'snowy',
+          preferences: [{ visual: 'clean_white', sound: 'minimal', voice: 'gentle' }],
+        },
+        {
+          condition: 'foggy',
+          preferences: [{ visual: 'morning_mist', sound: 'ambient', voice: 'gentle' }],
+        },
       ],
-      moodHistory: []
+      moodHistory: [],
     };
   }
 
@@ -122,14 +204,14 @@ class ContextualThemesService {
         description: 'Soft, gentle wake-up for very early hours',
         priority: 8,
         conditions: [
-          { type: 'time-range', operator: 'between', value: [4, 6], weight: 1 }
+          { type: 'time-range', operator: 'between', value: [4, 6], weight: 1 },
         ],
         recommendation: {
           visual: 'sunrise_glow',
           sound: 'nature',
           voice: 'gentle',
-          reason: 'Early morning gentle wake-up'
-        }
+          reason: 'Early morning gentle wake-up',
+        },
       },
       {
         id: 'monday_motivation',
@@ -138,14 +220,14 @@ class ContextualThemesService {
         priority: 7,
         conditions: [
           { type: 'day-of-week', operator: 'equals', value: 1, weight: 1 },
-          { type: 'time-range', operator: 'between', value: [6, 9], weight: 0.8 }
+          { type: 'time-range', operator: 'between', value: [6, 9], weight: 0.8 },
         ],
         recommendation: {
           visual: 'lightning_bolt',
           sound: 'energetic',
           voice: 'motivational',
-          reason: 'Monday motivation boost'
-        }
+          reason: 'Monday motivation boost',
+        },
       },
       {
         id: 'rainy_day_cozy',
@@ -153,14 +235,14 @@ class ContextualThemesService {
         description: 'Gentle, cozy themes for rainy weather',
         priority: 6,
         conditions: [
-          { type: 'weather', operator: 'contains', value: 'rain', weight: 1 }
+          { type: 'weather', operator: 'contains', value: 'rain', weight: 1 },
         ],
         recommendation: {
           visual: 'morning_mist',
           sound: 'ambient',
           voice: 'gentle',
-          reason: 'Cozy wake-up for rainy weather'
-        }
+          reason: 'Cozy wake-up for rainy weather',
+        },
       },
       {
         id: 'weekend_relaxed',
@@ -169,14 +251,14 @@ class ContextualThemesService {
         priority: 5,
         conditions: [
           { type: 'day-of-week', operator: 'equals', value: 0, weight: 1 }, // Sunday
-          { type: 'day-of-week', operator: 'equals', value: 6, weight: 1 }  // Saturday
+          { type: 'day-of-week', operator: 'equals', value: 6, weight: 1 }, // Saturday
         ],
         recommendation: {
           visual: 'forest_canopy',
           sound: 'nature',
           voice: 'gentle',
-          reason: 'Relaxed weekend morning'
-        }
+          reason: 'Relaxed weekend morning',
+        },
       },
       {
         id: 'late_night_minimal',
@@ -184,14 +266,14 @@ class ContextualThemesService {
         description: 'Minimal themes for late night/early morning alarms',
         priority: 7,
         conditions: [
-          { type: 'time-range', operator: 'between', value: [23, 4], weight: 1 }
+          { type: 'time-range', operator: 'between', value: [23, 4], weight: 1 },
         ],
         recommendation: {
           visual: 'clean_white',
           sound: 'minimal',
           voice: 'gentle',
-          reason: 'Minimal disruption for late hours'
-        }
+          reason: 'Minimal disruption for late hours',
+        },
       },
       {
         id: 'sunny_energetic',
@@ -200,14 +282,14 @@ class ContextualThemesService {
         priority: 6,
         conditions: [
           { type: 'weather', operator: 'contains', value: 'clear', weight: 1 },
-          { type: 'time-range', operator: 'between', value: [6, 10], weight: 0.8 }
+          { type: 'time-range', operator: 'between', value: [6, 10], weight: 0.8 },
         ],
         recommendation: {
           visual: 'sunrise_glow',
           sound: 'energetic',
           voice: 'sweet-angel',
-          reason: 'Bright and energetic for sunny morning'
-        }
+          reason: 'Bright and energetic for sunny morning',
+        },
       },
       {
         id: 'stormy_dramatic',
@@ -215,14 +297,14 @@ class ContextualThemesService {
         description: 'Dramatic themes matching stormy weather',
         priority: 8,
         conditions: [
-          { type: 'weather', operator: 'contains', value: 'storm', weight: 1 }
+          { type: 'weather', operator: 'contains', value: 'storm', weight: 1 },
         ],
         recommendation: {
           visual: 'lightning_bolt',
           sound: 'electronic',
           voice: 'drill-sergeant',
-          reason: 'Dramatic wake-up matching the storm outside'
-        }
+          reason: 'Dramatic wake-up matching the storm outside',
+        },
       },
       {
         id: 'workout_day',
@@ -231,20 +313,23 @@ class ContextualThemesService {
         priority: 9,
         conditions: [
           { type: 'calendar-event', operator: 'contains', value: 'workout', weight: 1 },
-          { type: 'calendar-event', operator: 'contains', value: 'gym', weight: 1 }
+          { type: 'calendar-event', operator: 'contains', value: 'gym', weight: 1 },
         ],
         recommendation: {
           visual: 'lightning_bolt',
           sound: 'workout',
           voice: 'motivational',
-          reason: 'High-energy wake-up for workout day'
-        }
-      }
+          reason: 'High-energy wake-up for workout day',
+        },
+      },
     ];
   }
 
   // Main recommendation method
-  async getContextualRecommendation(alarmTime: string, date: Date = new Date()): Promise<ContextualThemeRecommendation> {
+  async getContextualRecommendation(
+    alarmTime: string,
+    date: Date = new Date()
+  ): Promise<ContextualThemeRecommendation> {
     const contexts = await this.gatherContexts(alarmTime, date);
 
     // Apply smart rules
@@ -271,14 +356,14 @@ class ContextualThemesService {
     contexts.push({
       type: 'time',
       value: hour,
-      weight: 1
+      weight: 1,
     });
 
     // Day of week context
     contexts.push({
       type: 'time',
       value: date.getDay(),
-      weight: 0.7
+      weight: 0.7,
     });
 
     // Weather context
@@ -286,7 +371,7 @@ class ContextualThemesService {
       contexts.push({
         type: 'weather',
         value: this.weatherData.weather[0].main.toLowerCase(),
-        weight: 0.8
+        weight: 0.8,
       });
     }
 
@@ -296,7 +381,7 @@ class ContextualThemesService {
       contexts.push({
         type: 'calendar',
         value: event.title.toLowerCase(),
-        weight: 0.9
+        weight: 0.9,
       });
     });
 
@@ -306,7 +391,7 @@ class ContextualThemesService {
       contexts.push({
         type: 'sleep',
         value: sleepQuality,
-        weight: 0.6
+        weight: 0.6,
       });
     }
 
@@ -321,7 +406,9 @@ class ContextualThemesService {
       let totalWeight = 0;
 
       for (const condition of rule.conditions) {
-        const matchingContexts = contexts.filter(ctx => this.contextMatchesCondition(ctx, condition));
+        const matchingContexts = contexts.filter(ctx =>
+          this.contextMatchesCondition(ctx, condition)
+        );
 
         if (matchingContexts.length > 0) {
           matchScore += condition.weight;
@@ -331,13 +418,14 @@ class ContextualThemesService {
 
       const confidence = totalWeight > 0 ? (matchScore / totalWeight) * 100 : 0;
 
-      if (confidence > 50) { // Only include rules with reasonable confidence
+      if (confidence > 50) {
+        // Only include rules with reasonable confidence
         recommendations.push({
           ...rule.recommendation,
           confidence: confidence * (rule.priority / 10), // Factor in rule priority
           context: contexts.filter(ctx =>
             rule.conditions.some(cond => this.contextMatchesCondition(ctx, cond))
-          )
+          ),
         });
       }
     }
@@ -345,7 +433,10 @@ class ContextualThemesService {
     return recommendations.sort((a, b) => b.confidence - a.confidence);
   }
 
-  private contextMatchesCondition(context: ThemeContext, condition: ThemeCondition): boolean {
+  private contextMatchesCondition(
+    context: ThemeContext,
+    condition: ThemeCondition
+  ): boolean {
     switch (condition.type) {
       case 'time-range':
         if (context.type === 'time' && condition.operator === 'between') {
@@ -377,7 +468,10 @@ class ContextualThemesService {
     return false;
   }
 
-  private getPatternBasedRecommendation(alarmTime: string, date: Date): ContextualThemeRecommendation {
+  private getPatternBasedRecommendation(
+    alarmTime: string,
+    date: Date
+  ): ContextualThemeRecommendation {
     const hour = parseInt(alarmTime.split(':')[0]);
     const dayOfWeek = date.getDay();
 
@@ -387,20 +481,23 @@ class ContextualThemesService {
 
     // Use most relevant pattern or default
     const pattern = timePattern?.preferences[0] ||
-                   dayPattern?.preferences[0] ||
-                   { visual: 'sunrise_glow' as VisualAlarmThemeId, sound: 'default' as SoundTheme, voice: 'gentle' as VoiceMood };
+      dayPattern?.preferences[0] || {
+        visual: 'sunrise_glow' as VisualAlarmThemeId,
+        sound: 'default' as SoundTheme,
+        voice: 'gentle' as VoiceMood,
+      };
 
     return {
       visual: pattern.visual,
       sound: pattern.sound,
       voice: pattern.voice,
       confidence: timePattern ? 70 : dayPattern ? 50 : 30,
-      reason: timePattern ? `Based on your ${hour}:00 preferences` :
-              dayPattern ? `Based on your ${this.getDayName(dayOfWeek)} preferences` :
-              'Default gentle wake-up',
-      context: [
-        { type: 'pattern', value: 'user-history', weight: 1 }
-      ]
+      reason: timePattern
+        ? `Based on your ${hour}:00 preferences`
+        : dayPattern
+          ? `Based on your ${this.getDayName(dayOfWeek)} preferences`
+          : 'Default gentle wake-up',
+      context: [{ type: 'pattern', value: 'user-history', weight: 1 }],
     };
   }
 
@@ -409,7 +506,6 @@ class ContextualThemesService {
     patternRec: ContextualThemeRecommendation,
     contexts: ThemeContext[]
   ): ContextualThemeRecommendation {
-
     // If we have high-confidence rule recommendations, use the best one
     if (ruleRecs.length > 0 && ruleRecs[0].confidence > 70) {
       return ruleRecs[0];
@@ -420,9 +516,11 @@ class ContextualThemesService {
       const bestRule = ruleRecs[0];
 
       // Use rule recommendation but boost confidence if it aligns with patterns
-      if (bestRule.visual === patternRec.visual ||
-          bestRule.sound === patternRec.sound ||
-          bestRule.voice === patternRec.voice) {
+      if (
+        bestRule.visual === patternRec.visual ||
+        bestRule.sound === patternRec.sound ||
+        bestRule.voice === patternRec.voice
+      ) {
         bestRule.confidence = Math.min(95, bestRule.confidence + 15);
         bestRule.reason += ' (matches your preferences)';
       }
@@ -456,14 +554,14 @@ class ContextualThemesService {
     }
 
     // Add or update preference (with simple frequency-based learning)
-    const existingPref = timePattern.preferences.find(p =>
-      p.visual === visual && p.sound === sound && p.voice === voice
+    const existingPref = timePattern.preferences.find(
+      p => p.visual === visual && p.sound === sound && p.voice === voice
     );
 
     if (existingPref) {
       // Increase weight of existing preference
-      timePattern.preferences = timePattern.preferences.map(p =>
-        p === existingPref ? p : p // Could add usage counting here
+      timePattern.preferences = timePattern.preferences.map(
+        p => (p === existingPref ? p : p) // Could add usage counting here
       );
     } else {
       timePattern.preferences.unshift({ visual, sound, voice });
@@ -491,7 +589,7 @@ class ContextualThemesService {
       // For now, simulate weather data
       this.weatherData = {
         weather: [{ main: 'Clear', description: 'clear sky' }],
-        main: { temp: 20, humidity: 50 }
+        main: { temp: 20, humidity: 50 },
       };
     } catch (error) {
       console.warn('Failed to fetch weather data:', error);
@@ -504,7 +602,7 @@ class ContextualThemesService {
         navigator.geolocation.getCurrentPosition(position => {
           this.currentLocation = {
             lat: position.coords.latitude,
-            lon: position.coords.longitude
+            lon: position.coords.longitude,
           };
         });
       }
@@ -514,7 +612,9 @@ class ContextualThemesService {
   }
 
   // Calendar integration (placeholder)
-  private async getUpcomingCalendarEvents(date: Date): Promise<{ title: string; time: string }[]> {
+  private async getUpcomingCalendarEvents(
+    date: Date
+  ): Promise<{ title: string; time: string }[]> {
     // This would integrate with calendar APIs (Google Calendar, Outlook, etc.)
     // For now, return mock data
     const hour = date.getHours();
@@ -539,7 +639,15 @@ class ContextualThemesService {
 
   // Utility methods
   private getDayName(dayOfWeek: number): string {
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const days = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
     return days[dayOfWeek] || 'Unknown';
   }
 
@@ -556,7 +664,10 @@ class ContextualThemesService {
 
   private async saveUserPatterns(): Promise<void> {
     try {
-      localStorage.setItem('contextual-theme-patterns', JSON.stringify(this.userPatterns));
+      localStorage.setItem(
+        'contextual-theme-patterns',
+        JSON.stringify(this.userPatterns)
+      );
     } catch (error) {
       console.error('Failed to save user patterns:', error);
     }
@@ -585,7 +696,10 @@ class ContextualThemesService {
   }
 
   // Preview and testing
-  async previewRecommendation(alarmTime: string, date: Date = new Date()): Promise<ContextualThemeRecommendation> {
+  async previewRecommendation(
+    alarmTime: string,
+    date: Date = new Date()
+  ): Promise<ContextualThemeRecommendation> {
     return this.getContextualRecommendation(alarmTime, date);
   }
 }

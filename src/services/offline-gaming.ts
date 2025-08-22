@@ -11,7 +11,7 @@ import type {
   ExperienceGain,
   DailyChallenge,
   WeeklyChallenge,
-  AIInsight
+  AIInsight,
 } from '../types/index';
 import { EnhancedOfflineStorage } from './enhanced-offline-storage';
 import { ErrorHandler } from './error-handler';
@@ -55,7 +55,7 @@ export class OfflineGamingService {
     GAMING_DATA: 'relife-gaming-data',
     BATTLE_ACTIONS: 'relife-battle-actions',
     OFFLINE_REWARDS: 'relife-offline-rewards',
-    GAMING_CONFLICTS: 'relife-gaming-conflicts'
+    GAMING_CONFLICTS: 'relife-gaming-conflicts',
   };
 
   private gamingData: OfflineGamingData = {
@@ -68,7 +68,7 @@ export class OfflineGamingService {
     dailyChallenges: [],
     weeklyChallenges: [],
     aiInsights: [],
-    lastSync: new Date().toISOString()
+    lastSync: new Date().toISOString(),
   };
 
   private pendingActions: BattleAction[] = [];
@@ -92,10 +92,14 @@ export class OfflineGamingService {
   private async initializeOfflineGaming(): Promise<void> {
     try {
       await this.loadFromStorage();
-      console.log('[OfflineGaming] Initialized with', this.gamingData.battles.length, 'battles');
+      console.log(
+        '[OfflineGaming] Initialized with',
+        this.gamingData.battles.length,
+        'battles'
+      );
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to initialize offline gaming', {
-        context: 'OfflineGamingService.initializeOfflineGaming'
+        context: 'OfflineGamingService.initializeOfflineGaming',
       });
     }
   }
@@ -107,7 +111,7 @@ export class OfflineGamingService {
 
     // Listen for service worker messages
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.addEventListener('message', (event) => {
+      navigator.serviceWorker.addEventListener('message', event => {
         if (event.data.type === 'GAMING_SYNC_COMPLETE') {
           this.handleSyncComplete(event.data);
         }
@@ -128,8 +132,8 @@ export class OfflineGamingService {
         type: 'QUEUE_GAMING_SYNC',
         data: {
           pendingActions: this.pendingActions.length,
-          offlineRewards: this.offlineRewards.length
-        }
+          offlineRewards: this.offlineRewards.length,
+        },
       });
     }
   }
@@ -157,12 +161,12 @@ export class OfflineGamingService {
           maxSnoozes: 0,
           difficulty: 'medium',
           weatherBonus: false,
-          taskChallenge: false
+          taskChallenge: false,
         },
         createdAt: new Date().toISOString(),
         maxParticipants: battleData.maxParticipants || 10,
         minParticipants: battleData.minParticipants || 2,
-        ...battleData
+        ...battleData,
       };
 
       // Add to local storage
@@ -177,7 +181,7 @@ export class OfflineGamingService {
         userId: battle.creatorId,
         data: battle,
         timestamp: new Date().toISOString(),
-        synced: false
+        synced: false,
       };
 
       this.pendingActions.push(action);
@@ -187,7 +191,7 @@ export class OfflineGamingService {
       return battle;
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to create battle offline', {
-        context: 'OfflineGamingService.createBattle'
+        context: 'OfflineGamingService.createBattle',
       });
       throw error;
     }
@@ -215,7 +219,7 @@ export class OfflineGamingService {
         score: 0,
         wakeTime: '',
         status: 'registered',
-        eliminated: false
+        eliminated: false,
       };
 
       battle.participants.push(participant);
@@ -229,7 +233,7 @@ export class OfflineGamingService {
         userId,
         data: participant,
         timestamp: new Date().toISOString(),
-        synced: false
+        synced: false,
       };
 
       this.pendingActions.push(action);
@@ -241,13 +245,16 @@ export class OfflineGamingService {
       ErrorHandler.handleError(error, 'Failed to join battle offline', {
         context: 'OfflineGamingService.joinBattle',
         battleId,
-        userId
+        userId,
       });
       return false;
     }
   }
 
-  async completeBattle(battleId: string, results: { userId: string; score: number; wakeTime: string }[]): Promise<void> {
+  async completeBattle(
+    battleId: string,
+    results: { userId: string; score: number; wakeTime: string }[]
+  ): Promise<void> {
     try {
       const battle = this.gamingData.battles.find(b => b.id === battleId);
       if (!battle) {
@@ -286,8 +293,10 @@ export class OfflineGamingService {
         await this.awardOfflineReward({
           type: isWinner ? 'battle_win' : 'experience',
           amount: rewardAmount,
-          reason: isWinner ? `Won ${battle.type} battle` : `Participated in ${battle.type} battle`,
-          userId: participant.userId
+          reason: isWinner
+            ? `Won ${battle.type} battle`
+            : `Participated in ${battle.type} battle`,
+          userId: participant.userId,
         });
       }
 
@@ -301,24 +310,34 @@ export class OfflineGamingService {
         userId: winnerId,
         data: { results, winner: winnerId },
         timestamp: new Date().toISOString(),
-        synced: false
+        synced: false,
       };
 
       this.pendingActions.push(action);
       await this.savePendingActions();
 
-      console.log('[OfflineGaming] Completed battle offline:', battleId, 'Winner:', winnerId);
+      console.log(
+        '[OfflineGaming] Completed battle offline:',
+        battleId,
+        'Winner:',
+        winnerId
+      );
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to complete battle offline', {
         context: 'OfflineGamingService.completeBattle',
-        battleId
+        battleId,
       });
     }
   }
 
   // ==================== REWARDS MANAGEMENT ====================
 
-  async awardOfflineReward(reward: { type: OfflineReward['type']; amount: number; reason: string; userId: string }): Promise<void> {
+  async awardOfflineReward(reward: {
+    type: OfflineReward['type'];
+    amount: number;
+    reason: string;
+    userId: string;
+  }): Promise<void> {
     try {
       const offlineReward: OfflineReward = {
         id: `reward_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -326,7 +345,7 @@ export class OfflineGamingService {
         amount: reward.amount,
         reason: reward.reason,
         timestamp: new Date().toISOString(),
-        synced: false
+        synced: false,
       };
 
       this.offlineRewards.push(offlineReward);
@@ -336,7 +355,8 @@ export class OfflineGamingService {
         this.gamingData.rewardSystem.totalPoints += reward.amount;
 
         // Check for level up
-        const newLevel = Math.floor(this.gamingData.rewardSystem.totalPoints / 1000) + 1;
+        const newLevel =
+          Math.floor(this.gamingData.rewardSystem.totalPoints / 1000) + 1;
         if (newLevel > this.gamingData.rewardSystem.level) {
           this.gamingData.rewardSystem.level = newLevel;
 
@@ -347,7 +367,7 @@ export class OfflineGamingService {
             amount: newLevel,
             reason: `Reached level ${newLevel}`,
             timestamp: new Date().toISOString(),
-            synced: false
+            synced: false,
           };
           this.offlineRewards.push(levelUpReward);
         }
@@ -356,10 +376,14 @@ export class OfflineGamingService {
       await this.saveToStorage();
       await this.saveOfflineRewards();
 
-      console.log('[OfflineGaming] Awarded offline reward:', reward.type, reward.amount);
+      console.log(
+        '[OfflineGaming] Awarded offline reward:',
+        reward.type,
+        reward.amount
+      );
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to award offline reward', {
-        context: 'OfflineGamingService.awardOfflineReward'
+        context: 'OfflineGamingService.awardOfflineReward',
       });
     }
   }
@@ -371,8 +395,8 @@ export class OfflineGamingService {
   }
 
   getActiveBattles(): Battle[] {
-    return this.gamingData.battles.filter(b =>
-      b.status === 'active' || b.status === 'registration'
+    return this.gamingData.battles.filter(
+      b => b.status === 'active' || b.status === 'registration'
     );
   }
 
@@ -404,17 +428,23 @@ export class OfflineGamingService {
 
   private async loadFromStorage(): Promise<void> {
     try {
-      const gamingData = SecurityService.secureStorageGet(this.STORAGE_KEYS.GAMING_DATA);
+      const gamingData = SecurityService.secureStorageGet(
+        this.STORAGE_KEYS.GAMING_DATA
+      );
       if (gamingData) {
         this.gamingData = { ...this.gamingData, ...gamingData };
       }
 
-      const pendingActions = SecurityService.secureStorageGet(this.STORAGE_KEYS.BATTLE_ACTIONS);
+      const pendingActions = SecurityService.secureStorageGet(
+        this.STORAGE_KEYS.BATTLE_ACTIONS
+      );
       if (pendingActions && Array.isArray(pendingActions)) {
         this.pendingActions = pendingActions;
       }
 
-      const offlineRewards = SecurityService.secureStorageGet(this.STORAGE_KEYS.OFFLINE_REWARDS);
+      const offlineRewards = SecurityService.secureStorageGet(
+        this.STORAGE_KEYS.OFFLINE_REWARDS
+      );
       if (offlineRewards && Array.isArray(offlineRewards)) {
         this.offlineRewards = offlineRewards;
       }
@@ -433,7 +463,10 @@ export class OfflineGamingService {
 
   private async savePendingActions(): Promise<void> {
     try {
-      SecurityService.secureStorageSet(this.STORAGE_KEYS.BATTLE_ACTIONS, this.pendingActions);
+      SecurityService.secureStorageSet(
+        this.STORAGE_KEYS.BATTLE_ACTIONS,
+        this.pendingActions
+      );
     } catch (error) {
       console.error('[OfflineGaming] Failed to save pending actions:', error);
     }
@@ -441,7 +474,10 @@ export class OfflineGamingService {
 
   private async saveOfflineRewards(): Promise<void> {
     try {
-      SecurityService.secureStorageSet(this.STORAGE_KEYS.OFFLINE_REWARDS, this.offlineRewards);
+      SecurityService.secureStorageSet(
+        this.STORAGE_KEYS.OFFLINE_REWARDS,
+        this.offlineRewards
+      );
     } catch (error) {
       console.error('[OfflineGaming] Failed to save offline rewards:', error);
     }
@@ -488,7 +524,7 @@ export class OfflineGamingService {
       console.log('[OfflineGaming] Sync completed successfully');
     } catch (error) {
       ErrorHandler.handleError(error, 'Gaming sync failed', {
-        context: 'OfflineGamingService.syncWithServer'
+        context: 'OfflineGamingService.syncWithServer',
       });
     }
   }
@@ -520,13 +556,15 @@ export class OfflineGamingService {
     console.log('[OfflineGaming] Sync completed via service worker:', data);
 
     // Dispatch custom event for components to update
-    window.dispatchEvent(new CustomEvent('gaming-sync-complete', {
-      detail: {
-        synced: data.synced || 0,
-        failed: data.failed || 0,
-        timestamp: Date.now()
-      }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('gaming-sync-complete', {
+        detail: {
+          synced: data.synced || 0,
+          failed: data.failed || 0,
+          timestamp: Date.now(),
+        },
+      })
+    );
   }
 
   // ==================== UTILITY METHODS ====================
@@ -543,7 +581,7 @@ export class OfflineGamingService {
         dailyChallenges: [],
         weeklyChallenges: [],
         aiInsights: [],
-        lastSync: new Date().toISOString()
+        lastSync: new Date().toISOString(),
       };
 
       this.pendingActions = [];
@@ -556,7 +594,7 @@ export class OfflineGamingService {
       console.log('[OfflineGaming] Cleared all offline gaming data');
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to clear offline gaming data', {
-        context: 'OfflineGamingService.clearOfflineData'
+        context: 'OfflineGamingService.clearOfflineData',
       });
     }
   }
@@ -567,7 +605,7 @@ export class OfflineGamingService {
       pendingActions: this.pendingActions.filter(a => !a.synced).length,
       offlineRewards: this.offlineRewards.filter(r => !r.synced).length,
       lastSync: this.gamingData.lastSync,
-      isOnline: this.isOnline
+      isOnline: this.isOnline,
     };
   }
 }

@@ -254,7 +254,7 @@ export const mobileE2EHelpers = {
     } catch (_error) {
       console.log('ℹ️ No test alarms to clear or cleanup not needed');
     }
-  }
+  },
 };
 
 // Export helpers for use in tests

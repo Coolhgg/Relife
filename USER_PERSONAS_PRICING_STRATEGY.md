@@ -2,7 +2,8 @@
 
 ## Overview
 
-These detailed user personas align with our new pricing strategy and help guide product development, marketing campaigns, and customer acquisition efforts across all subscription tiers.
+These detailed user personas align with our new pricing strategy and help guide product development,
+marketing campaigns, and customer acquisition efforts across all subscription tiers.
 
 ---
 
@@ -450,4 +451,5 @@ _The Long-Term Value Seeker_
 
 ---
 
-This persona framework guides every aspect of product development, marketing, and customer success to maximize the effectiveness of our optimized pricing strategy.
+This persona framework guides every aspect of product development, marketing, and customer success
+to maximize the effectiveness of our optimized pricing strategy.

@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Settings, BarChart3, Accessibility, TestTube, Volume2, Palette } from 'lucide-react';
+import {
+  Settings,
+  BarChart3,
+  Accessibility,
+  TestTube,
+  Volume2,
+  Palette,
+} from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import SettingsPage from './SettingsPage';
 import PerformanceDashboard from './PerformanceDashboard';
@@ -24,7 +31,7 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
   onUpdateProfile,
   onSignOut,
   isLoading,
-  error
+  error,
 }) => {
   const [activeTab, setActiveTab] = useState('settings');
 
@@ -42,7 +49,11 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
       </div>
 
       <div className="flex-1 overflow-hidden">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="h-full flex flex-col"
+        >
           <TabsList className="grid w-full grid-cols-6 mx-4 mt-4">
             <TabsTrigger value="settings" className="flex items-center gap-2">
               <Settings className="w-4 h-4" />
@@ -91,9 +102,7 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
             </TabsContent>
 
             <TabsContent value="premium-test" className="h-full mt-0 p-4">
-              {appState.user && (
-                <PremiumFeatureTest user={appState.user} />
-              )}
+              {appState.user && <PremiumFeatureTest user={appState.user} />}
             </TabsContent>
 
             <TabsContent value="themes" className="h-full mt-0 p-4">

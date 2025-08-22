@@ -7,8 +7,11 @@ export interface TimeSeriesDataPoint {
 }
 
 // Generate mock time series data
-export function generateMockTimeSeriesData(timeframe: '7d' | '30d' | '90d' | '1y'): TimeSeriesDataPoint[] {
-  const days = timeframe === '7d' ? 7 : timeframe === '30d' ? 30 : timeframe === '90d' ? 90 : 365;
+export function generateMockTimeSeriesData(
+  timeframe: '7d' | '30d' | '90d' | '1y'
+): TimeSeriesDataPoint[] {
+  const days =
+    timeframe === '7d' ? 7 : timeframe === '30d' ? 30 : timeframe === '90d' ? 90 : 365;
   const data: TimeSeriesDataPoint[] = [];
 
   for (let i = days - 1; i >= 0; i--) {
@@ -26,7 +29,7 @@ export function generateMockTimeSeriesData(timeframe: '7d' | '30d' | '90d' | '1y
       opens: Math.round(baseOpens),
       clicks: Math.round(baseClicks),
       conversions: Math.round(baseConversions),
-      revenue: Math.round(baseRevenue)
+      revenue: Math.round(baseRevenue),
     });
   }
 

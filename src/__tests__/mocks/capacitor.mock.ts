@@ -1,33 +1,33 @@
 /**
  * Comprehensive Capacitor Plugin Mock System
- * 
+ *
  * Complete mock implementation for all Capacitor plugins used in Relife Alarm app.
  * Provides high-fidelity simulation of mobile functionality for testing:
- * 
+ *
  * Core Plugins:
  * - Device, App, Network, Keyboard, Screen, Browser
- * 
+ *
  * Notification Plugins:
  * - LocalNotifications, PushNotifications, Badge
- * 
+ *
  * Media Plugins:
  * - Camera, Filesystem, AudioManager, Haptics
- * 
+ *
  * Location Plugins:
  * - Geolocation
- * 
+ *
  * UI Plugins:
  * - StatusBar, SplashScreen
- * 
+ *
  * Background Plugins:
  * - BackgroundMode, KeepAwake
- * 
+ *
  * Storage Plugins:
  * - Preferences
- * 
+ *
  * Social Plugins:
  * - Share
- * 
+ *
  * Features:
  * - Cross-platform behavior simulation (iOS/Android/Web)
  * - Realistic async operations with proper timing
@@ -117,7 +117,9 @@ const mockState = {
   alarms: {
     scheduled: new Map<number, MockAlarmNotification>(),
     active: new Set<number>(),
-    history: [] as Array<MockAlarmNotification & { triggeredAt: number; action: string }>
+    history: [] as Array<
+      MockAlarmNotification & { triggeredAt: number; action: string }
+    >,
   },
 
   // Audio management
@@ -126,14 +128,14 @@ const mockState = {
     volume: 1.0,
     isPlaying: false,
     isPaused: false,
-    loadedSounds: new Map<string, MockAudioAsset>()
+    loadedSounds: new Map<string, MockAudioAsset>(),
   },
 
   // Background processing
   background: {
     isEnabled: false,
     isActive: false,
-    keepAwakeActive: false
+    keepAwakeActive: false,
   },
 
   // Device characteristics
@@ -153,30 +155,30 @@ const mockState = {
       diskTotal: 16000000000,
       memUsed: 500000000,
       realDiskFree: 1000000000,
-      realDiskTotal: 16000000000
+      realDiskTotal: 16000000000,
     } as MockDeviceInfo,
     battery: {
       batteryLevel: 0.85,
-      isCharging: false
+      isCharging: false,
     } as MockBatteryInfo,
     permissions: {
       notifications: 'granted' as PermissionState,
       camera: 'granted' as PermissionState,
       microphone: 'granted' as PermissionState,
-      location: 'granted' as PermissionState
-    }
+      location: 'granted' as PermissionState,
+    },
   },
 
   // Network connectivity
   network: {
     connected: true,
-    connectionType: 'wifi' as 'wifi' | 'cellular' | 'none' | 'unknown'
+    connectionType: 'wifi' as 'wifi' | 'cellular' | 'none' | 'unknown',
   } as MockNetworkStatus,
 
   // App lifecycle
   app: {
     isActive: true,
-    state: 'active' as 'active' | 'background' | 'unknown'
+    state: 'active' as 'active' | 'background' | 'unknown',
   },
 
   // UI state
@@ -185,31 +187,31 @@ const mockState = {
       style: 'DEFAULT' as 'LIGHT' | 'DARK' | 'DEFAULT',
       backgroundColor: '#000000',
       visible: true,
-      overlaysWebView: false
+      overlaysWebView: false,
     },
     splashScreen: {
-      visible: false
+      visible: false,
     },
     keyboard: {
       visible: false,
-      height: 0
-    }
+      height: 0,
+    },
   },
 
   // File system
   filesystem: {
-    files: new Map<string, { data: string; mimeType: string }>()
+    files: new Map<string, { data: string; mimeType: string }>(),
   },
 
   // Camera state
   camera: {
     available: true,
-    permissions: 'granted' as PermissionState
+    permissions: 'granted' as PermissionState,
   },
 
   // Badge count
   badge: {
-    count: 0
+    count: 0,
   },
 
   // Location tracking
@@ -217,14 +219,17 @@ const mockState = {
     currentPosition: {
       latitude: 37.7749,
       longitude: -122.4194,
-      accuracy: 10
+      accuracy: 10,
     },
-    watchIds: new Map<string, NodeJS.Timeout>()
-  }
+    watchIds: new Map<string, NodeJS.Timeout>(),
+  },
 };
 
 // Event listener management
-const mockEventListeners = new Map<string, Array<{ eventName: string; callback: Function; pluginName: string }>>();
+const mockEventListeners = new Map<
+  string,
+  Array<{ eventName: string; callback: Function; pluginName: string }>
+>();
 
 const addMockListener = (pluginName: string, eventName: string, callback: Function) => {
   const key = `${pluginName}:${eventName}`;
@@ -243,7 +248,7 @@ const addMockListener = (pluginName: string, eventName: string, callback: Functi
           log(`🔇 Mock ${pluginName} listener removed: ${eventName}`);
         }
       }
-    })
+    }),
   };
 };
 
@@ -309,19 +314,19 @@ export const Capacitor = {
       alarms: {
         scheduled: new Map(),
         active: new Set(),
-        history: []
+        history: [],
       },
       audio: {
         currentlyPlaying: null,
         volume: 1.0,
         isPlaying: false,
         isPaused: false,
-        loadedSounds: new Map()
+        loadedSounds: new Map(),
       },
       background: {
         isEnabled: false,
         isActive: false,
-        keepAwakeActive: false
+        keepAwakeActive: false,
       },
       device: {
         platform: 'web',
@@ -339,71 +344,71 @@ export const Capacitor = {
           diskTotal: 16000000000,
           memUsed: 500000000,
           realDiskFree: 1000000000,
-          realDiskTotal: 16000000000
+          realDiskTotal: 16000000000,
         },
         battery: {
           batteryLevel: 0.85,
-          isCharging: false
+          isCharging: false,
         },
         permissions: {
           notifications: 'granted',
           camera: 'granted',
           microphone: 'granted',
-          location: 'granted'
-        }
+          location: 'granted',
+        },
       },
       network: {
         connected: true,
-        connectionType: 'wifi'
+        connectionType: 'wifi',
       },
       app: {
         isActive: true,
-        state: 'active'
+        state: 'active',
       },
       ui: {
         statusBar: {
           style: 'DEFAULT',
           backgroundColor: '#000000',
           visible: true,
-          overlaysWebView: false
+          overlaysWebView: false,
         },
         splashScreen: {
-          visible: false
+          visible: false,
         },
         keyboard: {
           visible: false,
-          height: 0
-        }
+          height: 0,
+        },
       },
       filesystem: {
-        files: new Map()
+        files: new Map(),
       },
       camera: {
         available: true,
-        permissions: 'granted'
+        permissions: 'granted',
       },
       badge: {
-        count: 0
+        count: 0,
       },
       geolocation: {
         currentPosition: {
           latitude: 37.7749,
           longitude: -122.4194,
-          accuracy: 10
+          accuracy: 10,
         },
-        watchIds: new Map()
-      }
+        watchIds: new Map(),
+      },
     });
-    
+
     // Clear all event listeners
     mockEventListeners.clear();
-    
+
     // Clear geolocation watch intervals
     mockState.geolocation.watchIds.forEach(interval => clearInterval(interval));
     mockState.geolocation.watchIds.clear();
-    
+
     log('🧹 Mock Capacitor completely reset');
-  }
+  },
 };
 
 // =============================================================================
@@ -419,14 +424,14 @@ export const Device = {
   getId: vi.fn(() => {
     log('🆔 Mock Device.getId');
     return Promise.resolve({
-      identifier: 'mock-device-id-12345'
+      identifier: 'mock-device-id-12345',
     });
   }),
 
   getLanguageCode: vi.fn(() => {
     log('🌐 Mock Device.getLanguageCode');
     return Promise.resolve({
-      value: 'en'
+      value: 'en',
     });
   }),
 
@@ -438,13 +443,15 @@ export const Device = {
   // Testing utilities
   _mockSetBattery: (level: number, isCharging: boolean = false) => {
     mockState.device.battery = { batteryLevel: level, isCharging };
-    log(`🔋 Mock battery set: ${Math.round(level * 100)}% ${isCharging ? '(charging)' : ''}`);
+    log(
+      `🔋 Mock battery set: ${Math.round(level * 100)}% ${isCharging ? '(charging)' : ''}`
+    );
   },
 
   _mockSetDeviceInfo: (info: Partial<MockDeviceInfo>) => {
     Object.assign(mockState.device.info, info);
     log('📱 Mock device info updated:', info);
-  }
+  },
 };
 
 // =============================================================================
@@ -453,30 +460,33 @@ export const Device = {
 
 export const LocalNotifications = {
   schedule: vi.fn((options: { notifications: MockAlarmNotification[] }) => {
-    log(`🔔 Mock LocalNotifications.schedule: ${options.notifications.length} notifications`);
-    
-    const scheduledNotifications = options.notifications.map((notification) => {
+    log(
+      `🔔 Mock LocalNotifications.schedule: ${options.notifications.length} notifications`
+    );
+
+    const scheduledNotifications = options.notifications.map(notification => {
       const id = notification.id || Date.now() + Math.floor(Math.random() * 1000);
       const enhancedNotification: MockAlarmNotification = {
         ...notification,
         id,
         scheduledAt: Date.now(),
-        isAlarm: notification.title?.includes('Alarm') || notification.extra?.isAlarm || false
+        isAlarm:
+          notification.title?.includes('Alarm') || notification.extra?.isAlarm || false,
       };
-      
+
       // Store scheduled notifications
       mockState.alarms.scheduled.set(id, enhancedNotification);
-      
+
       // Update badge count
       mockState.badge.count = mockState.alarms.scheduled.size;
-      
+
       if (enhancedNotification.isAlarm) {
         log(`⏰ Alarm scheduled: ID ${id}`);
       }
-      
+
       return enhancedNotification;
     });
-    
+
     return Promise.resolve({ notifications: scheduledNotifications });
   }),
 
@@ -487,56 +497,62 @@ export const LocalNotifications = {
   }),
 
   cancel: vi.fn((options: { notifications: Array<{ id: number }> }) => {
-    log(`❌ Mock LocalNotifications.cancel: ${options.notifications.length} notifications`);
-    
+    log(
+      `❌ Mock LocalNotifications.cancel: ${options.notifications.length} notifications`
+    );
+
     options.notifications.forEach(({ id }) => {
       if (mockState.alarms.scheduled.has(id)) {
         const notification = mockState.alarms.scheduled.get(id);
         mockState.alarms.scheduled.delete(id);
         mockState.alarms.active.delete(id);
-        
+
         if (notification?.isAlarm) {
           log(`⏰ Alarm cancelled: ID ${id}`);
         }
       }
     });
-    
+
     // Update badge count
     mockState.badge.count = mockState.alarms.scheduled.size;
-    
+
     return Promise.resolve();
   }),
 
   registerActionTypes: vi.fn((options: { types: any[] }) => {
-    log(`⚡ Mock LocalNotifications.registerActionTypes: ${options.types.length} types`);
+    log(
+      `⚡ Mock LocalNotifications.registerActionTypes: ${options.types.length} types`
+    );
     return Promise.resolve();
   }),
 
   areEnabled: vi.fn(() => {
     log('❓ Mock LocalNotifications.areEnabled');
     return Promise.resolve({
-      value: mockState.device.permissions.notifications === 'granted'
+      value: mockState.device.permissions.notifications === 'granted',
     });
   }),
 
   requestPermissions: vi.fn(() => {
     log('🔐 Mock LocalNotifications.requestPermissions');
     return Promise.resolve({
-      display: mockState.device.permissions.notifications
+      display: mockState.device.permissions.notifications,
     });
   }),
 
   checkPermissions: vi.fn(() => {
     log('🔍 Mock LocalNotifications.checkPermissions');
     return Promise.resolve({
-      display: mockState.device.permissions.notifications
+      display: mockState.device.permissions.notifications,
     });
   }),
 
-  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-    log(`👂 Mock LocalNotifications.addListener: ${eventName}`);
-    return addMockListener('LocalNotifications', eventName, listenerFunc);
-  }),
+  addListener: vi.fn(
+    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+      log(`👂 Mock LocalNotifications.addListener: ${eventName}`);
+      return addMockListener('LocalNotifications', eventName, listenerFunc);
+    }
+  ),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock LocalNotifications.removeAllListeners');
@@ -550,36 +566,39 @@ export const LocalNotifications = {
   }),
 
   // Testing utilities
-  _mockTriggerNotification: (notificationId: number, actionId: NotificationAction = 'tap') => {
+  _mockTriggerNotification: (
+    notificationId: number,
+    actionId: NotificationAction = 'tap'
+  ) => {
     const notification = mockState.alarms.scheduled.get(notificationId);
     if (notification) {
       mockState.alarms.active.add(notificationId);
       mockState.alarms.history.push({
         ...notification,
         triggeredAt: Date.now(),
-        action: 'triggered'
+        action: 'triggered',
       });
-      
+
       // Trigger events
       triggerMockEvent('LocalNotifications', 'localNotificationReceived', {
         notificationId,
         actionId: 'default',
         inputValue: '',
-        extra: notification.extra || {}
+        extra: notification.extra || {},
       });
-      
+
       if (actionId !== 'tap') {
         triggerMockEvent('LocalNotifications', 'localNotificationActionPerformed', {
           notificationId,
           actionId,
           inputValue: '',
-          extra: notification.extra || {}
+          extra: notification.extra || {},
         });
       }
-      
+
       log(`🔔 Notification triggered: ${notificationId} (${actionId})`);
     }
-  }
+  },
 };
 
 // =============================================================================
@@ -592,7 +611,7 @@ export const PushNotifications = {
     // Simulate registration event
     setTimeout(() => {
       triggerMockEvent('PushNotifications', 'registration', {
-        value: 'mock-registration-token-12345'
+        value: 'mock-registration-token-12345',
       });
     }, 100);
     return Promise.resolve();
@@ -604,7 +623,9 @@ export const PushNotifications = {
   }),
 
   removeDeliveredNotifications: vi.fn((options: { notifications: any[] }) => {
-    log(`📨 Mock PushNotifications.removeDeliveredNotifications: ${options.notifications.length}`);
+    log(
+      `📨 Mock PushNotifications.removeDeliveredNotifications: ${options.notifications.length}`
+    );
     return Promise.resolve();
   }),
 
@@ -616,21 +637,23 @@ export const PushNotifications = {
   requestPermissions: vi.fn(() => {
     log('🔐 Mock PushNotifications.requestPermissions');
     return Promise.resolve({
-      receive: mockState.device.permissions.notifications
+      receive: mockState.device.permissions.notifications,
     });
   }),
 
   checkPermissions: vi.fn(() => {
     log('🔍 Mock PushNotifications.checkPermissions');
     return Promise.resolve({
-      receive: mockState.device.permissions.notifications
+      receive: mockState.device.permissions.notifications,
     });
   }),
 
-  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-    log(`👂 Mock PushNotifications.addListener: ${eventName}`);
-    return addMockListener('PushNotifications', eventName, listenerFunc);
-  }),
+  addListener: vi.fn(
+    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+      log(`👂 Mock PushNotifications.addListener: ${eventName}`);
+      return addMockListener('PushNotifications', eventName, listenerFunc);
+    }
+  ),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock PushNotifications.removeAllListeners');
@@ -651,7 +674,7 @@ export const PushNotifications = {
   _mockPushAction: (data: any) => {
     triggerMockEvent('PushNotifications', 'pushNotificationActionPerformed', data);
     log('📨 Mock push notification action:', data);
-  }
+  },
 };
 
 // =============================================================================
@@ -690,7 +713,7 @@ export const Haptics = {
   selectionEnd: vi.fn(() => {
     log('📳 Mock Haptics.selectionEnd');
     return Promise.resolve();
-  })
+  }),
 };
 
 // =============================================================================
@@ -709,49 +732,55 @@ export const Geolocation = {
         altitude: null,
         altitudeAccuracy: null,
         heading: null,
-        speed: null
-      }
+        speed: null,
+      },
     });
   }),
 
   watchPosition: vi.fn((options?: any, callback?: Function) => {
     log('👀 Mock Geolocation.watchPosition', options);
-    
+
     const watchId = `mock-watch-${Math.random().toString(36).substr(2, 9)}`;
-    
+
     if (callback) {
       // Simulate position updates
       const interval = setInterval(() => {
         const position = {
           timestamp: Date.now(),
           coords: {
-            latitude: mockState.geolocation.currentPosition.latitude + (Math.random() - 0.5) * 0.01,
-            longitude: mockState.geolocation.currentPosition.longitude + (Math.random() - 0.5) * 0.01,
-            accuracy: mockState.geolocation.currentPosition.accuracy + (Math.random() - 0.5) * 5,
+            latitude:
+              mockState.geolocation.currentPosition.latitude +
+              (Math.random() - 0.5) * 0.01,
+            longitude:
+              mockState.geolocation.currentPosition.longitude +
+              (Math.random() - 0.5) * 0.01,
+            accuracy:
+              mockState.geolocation.currentPosition.accuracy +
+              (Math.random() - 0.5) * 5,
             altitude: null,
             altitudeAccuracy: null,
             heading: null,
-            speed: null
-          }
+            speed: null,
+          },
         };
         callback(null, position);
       }, 1000);
-      
+
       mockState.geolocation.watchIds.set(watchId, interval);
     }
-    
+
     return Promise.resolve(watchId);
   }),
 
   clearWatch: vi.fn((options: { id: string }) => {
     log('🛑 Mock Geolocation.clearWatch', options.id);
-    
+
     const interval = mockState.geolocation.watchIds.get(options.id);
     if (interval) {
       clearInterval(interval);
       mockState.geolocation.watchIds.delete(options.id);
     }
-    
+
     return Promise.resolve();
   }),
 
@@ -759,7 +788,7 @@ export const Geolocation = {
     log('🔍 Mock Geolocation.checkPermissions');
     return Promise.resolve({
       location: mockState.device.permissions.location,
-      coarseLocation: mockState.device.permissions.location
+      coarseLocation: mockState.device.permissions.location,
     });
   }),
 
@@ -767,7 +796,7 @@ export const Geolocation = {
     log('🔐 Mock Geolocation.requestPermissions');
     return Promise.resolve({
       location: mockState.device.permissions.location,
-      coarseLocation: mockState.device.permissions.location
+      coarseLocation: mockState.device.permissions.location,
     });
   }),
 
@@ -775,7 +804,7 @@ export const Geolocation = {
   _mockSetPosition: (latitude: number, longitude: number, accuracy: number = 10) => {
     mockState.geolocation.currentPosition = { latitude, longitude, accuracy };
     log(`🌍 Mock position set: ${latitude}, ${longitude} (±${accuracy}m)`);
-  }
+  },
 };
 
 // =============================================================================
@@ -816,7 +845,7 @@ export const Preferences = {
     log('🔑 Mock Preferences.keys');
     const keys = Object.keys(localStorage);
     return Promise.resolve({ keys });
-  })
+  }),
 };
 
 // =============================================================================
@@ -860,9 +889,9 @@ export const StatusBar = {
       visible: mockState.ui.statusBar.visible,
       style: mockState.ui.statusBar.style,
       color: mockState.ui.statusBar.backgroundColor,
-      overlays: mockState.ui.statusBar.overlaysWebView
+      overlays: mockState.ui.statusBar.overlaysWebView,
     });
-  })
+  }),
 };
 
 // =============================================================================
@@ -870,30 +899,32 @@ export const StatusBar = {
 // =============================================================================
 
 export const SplashScreen = {
-  show: vi.fn((options?: {
-    showDuration?: number;
-    fadeInDuration?: number;
-    fadeOutDuration?: number;
-    autoHide?: boolean;
-  }) => {
-    log('💫 Mock SplashScreen.show', options);
-    mockState.ui.splashScreen.visible = true;
-    
-    // Auto-hide if specified
-    if (options?.autoHide && options.showDuration) {
-      setTimeout(() => {
-        mockState.ui.splashScreen.visible = false;
-      }, options.showDuration);
+  show: vi.fn(
+    (options?: {
+      showDuration?: number;
+      fadeInDuration?: number;
+      fadeOutDuration?: number;
+      autoHide?: boolean;
+    }) => {
+      log('💫 Mock SplashScreen.show', options);
+      mockState.ui.splashScreen.visible = true;
+
+      // Auto-hide if specified
+      if (options?.autoHide && options.showDuration) {
+        setTimeout(() => {
+          mockState.ui.splashScreen.visible = false;
+        }, options.showDuration);
+      }
+
+      return Promise.resolve();
     }
-    
-    return Promise.resolve();
-  }),
+  ),
 
   hide: vi.fn((options?: { fadeOutDuration?: number }) => {
     log('🙈 Mock SplashScreen.hide', options);
     mockState.ui.splashScreen.visible = false;
     return Promise.resolve();
-  })
+  }),
 };
 
 // =============================================================================
@@ -913,21 +944,23 @@ export const App = {
       name: 'Relife Alarm',
       id: 'com.scrapybara.relife',
       build: '1',
-      version: '1.0.0'
+      version: '1.0.0',
     });
   }),
 
   getState: vi.fn(() => {
     log('📱 Mock App.getState');
     return Promise.resolve({
-      isActive: mockState.app.isActive
+      isActive: mockState.app.isActive,
     });
   }),
 
-  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-    log(`👂 Mock App.addListener: ${eventName}`);
-    return addMockListener('App', eventName, listenerFunc);
-  }),
+  addListener: vi.fn(
+    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+      log(`👂 Mock App.addListener: ${eventName}`);
+      return addMockListener('App', eventName, listenerFunc);
+    }
+  ),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock App.removeAllListeners');
@@ -950,7 +983,7 @@ export const App = {
   _mockBackButton: () => {
     triggerMockEvent('App', 'backButton', { canGoBack: false });
     log('⬅️ Mock back button pressed');
-  }
+  },
 };
 
 // Network Plugin
@@ -960,10 +993,12 @@ export const Network = {
     return Promise.resolve(mockState.network);
   }),
 
-  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-    log(`👂 Mock Network.addListener: ${eventName}`);
-    return addMockListener('Network', eventName, listenerFunc);
-  }),
+  addListener: vi.fn(
+    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+      log(`👂 Mock Network.addListener: ${eventName}`);
+      return addMockListener('Network', eventName, listenerFunc);
+    }
+  ),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock Network.removeAllListeners');
@@ -976,11 +1011,14 @@ export const Network = {
   }),
 
   // Testing utilities
-  _mockNetworkChange: (connected: boolean, connectionType: 'wifi' | 'cellular' | 'none' | 'unknown' = 'wifi') => {
+  _mockNetworkChange: (
+    connected: boolean,
+    connectionType: 'wifi' | 'cellular' | 'none' | 'unknown' = 'wifi'
+  ) => {
     mockState.network = { connected, connectionType };
     triggerMockEvent('Network', 'networkStatusChange', mockState.network);
     log(`🌐 Mock network changed: ${connected ? connectionType : 'disconnected'}`);
-  }
+  },
 };
 
 // Badge Plugin
@@ -1014,7 +1052,7 @@ export const Badge = {
     mockState.badge.count = Math.max(0, mockState.badge.count - decrement);
     log(`🔴 Mock Badge.decrease: -${decrement} (total: ${mockState.badge.count})`);
     return Promise.resolve();
-  })
+  }),
 };
 
 // Background Mode Plugin
@@ -1051,7 +1089,7 @@ export const BackgroundMode = {
   unlock: vi.fn(() => {
     log('🔓 Mock BackgroundMode.unlock');
     return Promise.resolve();
-  })
+  }),
 };
 
 // Keep Awake Plugin
@@ -1076,7 +1114,7 @@ export const KeepAwake = {
   isKeptAwake: vi.fn(() => {
     log('❓ Mock KeepAwake.isKeptAwake');
     return Promise.resolve({ kept: mockState.background.keepAwakeActive });
-  })
+  }),
 };
 
 // Camera Plugin
@@ -1087,7 +1125,7 @@ export const Camera = {
       base64String: 'mock-base64-image-data',
       dataUrl: 'data:image/jpeg;base64,mock-base64-image-data',
       format: 'jpeg',
-      saved: false
+      saved: false,
     });
   }),
 
@@ -1095,7 +1133,7 @@ export const Camera = {
     log('🔐 Mock Camera.requestPermissions');
     return Promise.resolve({
       camera: mockState.device.permissions.camera,
-      photos: mockState.device.permissions.camera
+      photos: mockState.device.permissions.camera,
     });
   }),
 
@@ -1103,9 +1141,9 @@ export const Camera = {
     log('🔍 Mock Camera.checkPermissions');
     return Promise.resolve({
       camera: mockState.device.permissions.camera,
-      photos: mockState.device.permissions.camera
+      photos: mockState.device.permissions.camera,
     });
-  })
+  }),
 };
 
 // Filesystem Plugin
@@ -1123,7 +1161,7 @@ export const Filesystem = {
     log(`📝 Mock Filesystem.writeFile: ${options.path}`);
     mockState.filesystem.files.set(options.path, {
       data: options.data,
-      mimeType: 'text/plain'
+      mimeType: 'text/plain',
     });
     return Promise.resolve({ uri: `file://${options.path}` });
   }),
@@ -1148,7 +1186,14 @@ export const Filesystem = {
     log(`📋 Mock Filesystem.readdir: ${options.path}`);
     const files = Array.from(mockState.filesystem.files.keys())
       .filter(path => path.startsWith(options.path))
-      .map(path => ({ name: path.split('/').pop() || '', type: 'file', size: 0, ctime: 0, mtime: 0, uri: path }));
+      .map(path => ({
+        name: path.split('/').pop() || '',
+        type: 'file',
+        size: 0,
+        ctime: 0,
+        mtime: 0,
+        uri: path,
+      }));
     return Promise.resolve({ files });
   }),
 
@@ -1166,19 +1211,21 @@ export const Filesystem = {
         size: file.data.length,
         ctime: 0,
         mtime: 0,
-        uri: `file://${options.path}`
+        uri: `file://${options.path}`,
       });
     }
     return Promise.reject(new Error('File not found'));
-  })
+  }),
 };
 
 // Keyboard Plugin
 export const Keyboard = {
-  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-    log(`👂 Mock Keyboard.addListener: ${eventName}`);
-    return addMockListener('Keyboard', eventName, listenerFunc);
-  }),
+  addListener: vi.fn(
+    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+      log(`👂 Mock Keyboard.addListener: ${eventName}`);
+      return addMockListener('Keyboard', eventName, listenerFunc);
+    }
+  ),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock Keyboard.removeAllListeners');
@@ -1226,7 +1273,7 @@ export const Keyboard = {
   setResizeMode: vi.fn((options: { mode: 'body' | 'ionic' | 'native' }) => {
     log(`⌨️ Mock Keyboard.setResizeMode: ${options.mode}`);
     return Promise.resolve();
-  })
+  }),
 };
 
 // Screen Orientation Plugin
@@ -1246,10 +1293,12 @@ export const ScreenOrientation = {
     return Promise.resolve();
   }),
 
-  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-    log(`👂 Mock ScreenOrientation.addListener: ${eventName}`);
-    return addMockListener('ScreenOrientation', eventName, listenerFunc);
-  }),
+  addListener: vi.fn(
+    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+      log(`👂 Mock ScreenOrientation.addListener: ${eventName}`);
+      return addMockListener('ScreenOrientation', eventName, listenerFunc);
+    }
+  ),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock ScreenOrientation.removeAllListeners');
@@ -1259,7 +1308,7 @@ export const ScreenOrientation = {
       }
     }
     return Promise.resolve();
-  })
+  }),
 };
 
 // Browser Plugin
@@ -1274,10 +1323,12 @@ export const Browser = {
     return Promise.resolve();
   }),
 
-  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-    log(`👂 Mock Browser.addListener: ${eventName}`);
-    return addMockListener('Browser', eventName, listenerFunc);
-  }),
+  addListener: vi.fn(
+    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+      log(`👂 Mock Browser.addListener: ${eventName}`);
+      return addMockListener('Browser', eventName, listenerFunc);
+    }
+  ),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock Browser.removeAllListeners');
@@ -1287,20 +1338,22 @@ export const Browser = {
       }
     }
     return Promise.resolve();
-  })
+  }),
 };
 
 // Share Plugin
 export const Share = {
-  share: vi.fn((options: { title?: string; text?: string; url?: string; files?: string[] }) => {
-    log('📤 Mock Share.share', options);
-    return Promise.resolve({ activityType: 'mock.share.activity' });
-  }),
+  share: vi.fn(
+    (options: { title?: string; text?: string; url?: string; files?: string[] }) => {
+      log('📤 Mock Share.share', options);
+      return Promise.resolve({ activityType: 'mock.share.activity' });
+    }
+  ),
 
   canShare: vi.fn(() => {
     log('❓ Mock Share.canShare');
     return Promise.resolve({ value: true });
-  })
+  }),
 };
 
 // =============================================================================
@@ -1316,7 +1369,10 @@ export const _mockCapacitorSetup = {
   },
 
   // Permission management
-  setPermission: (permission: keyof typeof mockState.device.permissions, value: PermissionState) => {
+  setPermission: (
+    permission: keyof typeof mockState.device.permissions,
+    value: PermissionState
+  ) => {
     if (!USE_REAL_DEVICE) {
       mockState.device.permissions[permission] = value;
       log(`🔐 Mock permission set: ${permission} = ${value}`);
@@ -1356,7 +1412,7 @@ export const _mockCapacitorSetup = {
         body: 'Test alarm body',
         ...alarmData,
         id,
-        isAlarm: true
+        isAlarm: true,
       };
       mockState.alarms.scheduled.set(id, alarm);
       mockState.badge.count = mockState.alarms.scheduled.size;
@@ -1400,7 +1456,7 @@ export const _mockCapacitorSetup = {
         assetId,
         assetPath,
         duration: 30,
-        isLoaded: true
+        isLoaded: true,
       };
       mockState.audio.loadedSounds.set(assetId, asset);
       log(`🎧 Test sound loaded: ${assetId}`);
@@ -1415,7 +1471,7 @@ export const _mockCapacitorSetup = {
         mockState.audio.currentlyPlaying = assetId;
         mockState.audio.isPlaying = true;
         mockState.audio.isPaused = false;
-        
+
         // Simulate audio completion
         setTimeout(() => {
           if (mockState.audio.currentlyPlaying === assetId) {
@@ -1423,7 +1479,7 @@ export const _mockCapacitorSetup = {
             mockState.audio.currentlyPlaying = null;
           }
         }, asset.duration * 1000);
-        
+
         log(`▶️ Test sound playing: ${assetId}`);
       }
     }
@@ -1442,7 +1498,7 @@ export const _mockCapacitorSetup = {
         currentlyPlaying: mockState.audio.currentlyPlaying,
         isPlaying: mockState.audio.isPlaying,
         isPaused: mockState.audio.isPaused,
-        volume: mockState.audio.volume
+        volume: mockState.audio.volume,
       };
     }
     return null;
@@ -1483,7 +1539,7 @@ export const _mockCapacitorSetup = {
       Capacitor._mockReset();
       log('🧹 Mock Capacitor completely reset');
     }
-  }
+  },
 };
 
 // =============================================================================
@@ -1512,7 +1568,7 @@ export {
   ScreenOrientation,
   Browser,
   Share,
-  _mockCapacitorSetup
+  _mockCapacitorSetup,
 };
 
 // Default export for jest.mock() usage
@@ -1520,7 +1576,7 @@ const CapacitorMock = {
   Capacitor,
   Device,
   LocalNotifications,
-  PushNotifications, 
+  PushNotifications,
   Haptics,
   Geolocation,
   Preferences,
@@ -1537,7 +1593,7 @@ const CapacitorMock = {
   ScreenOrientation,
   Browser,
   Share,
-  _mockCapacitorSetup
+  _mockCapacitorSetup,
 };
 
 export default CapacitorMock;
@@ -1550,13 +1606,13 @@ export default CapacitorMock;
 if (typeof global !== 'undefined') {
   // Make mock setup available globally for easy testing
   (global as any).mockCapacitor = _mockCapacitorSetup;
-  
+
   // Initialize event listener tracking
   (global as any).mockEventListeners = mockEventListeners;
-  
+
   // Make state accessible for advanced testing scenarios
   (global as any).mockCapacitorState = mockState;
-  
+
   log('🧪 Global Capacitor mock utilities initialized');
 }
 
@@ -1568,7 +1624,7 @@ if (typeof global !== 'undefined') {
 if (!USE_REAL_DEVICE) {
   // Core Capacitor
   vi.mock('@capacitor/core', () => ({ Capacitor }));
-  
+
   // Individual plugins
   vi.mock('@capacitor/device', () => ({ Device }));
   vi.mock('@capacitor/local-notifications', () => ({ LocalNotifications }));
@@ -1587,11 +1643,11 @@ if (!USE_REAL_DEVICE) {
   vi.mock('@capacitor/screen-orientation', () => ({ ScreenOrientation }));
   vi.mock('@capacitor/browser', () => ({ Browser }));
   vi.mock('@capacitor/share', () => ({ Share }));
-  
+
   // Community plugins
   vi.mock('@capacitor-community/background-mode', () => ({ BackgroundMode }));
   vi.mock('@capacitor-community/keep-awake', () => ({ KeepAwake }));
-  
+
   log('🔌 Capacitor plugin mocks auto-registered for Vitest');
 }
 
@@ -1623,17 +1679,24 @@ export const _Share = Share;
 
 // Audio Manager mock (for backward compatibility)
 export const AudioManager = {
-  preload: vi.fn((options: { assetId: string; assetPath: string; audioChannelNum?: number; isUrl?: boolean }) => {
-    log(`🎧 Mock AudioManager.preload: ${options.assetId}`);
-    const asset: MockAudioAsset = {
-      assetId: options.assetId,
-      assetPath: options.assetPath,
-      duration: 30,
-      isLoaded: true
-    };
-    mockState.audio.loadedSounds.set(options.assetId, asset);
-    return Promise.resolve({ assetId: options.assetId });
-  }),
+  preload: vi.fn(
+    (options: {
+      assetId: string;
+      assetPath: string;
+      audioChannelNum?: number;
+      isUrl?: boolean;
+    }) => {
+      log(`🎧 Mock AudioManager.preload: ${options.assetId}`);
+      const asset: MockAudioAsset = {
+        assetId: options.assetId,
+        assetPath: options.assetPath,
+        duration: 30,
+        isLoaded: true,
+      };
+      mockState.audio.loadedSounds.set(options.assetId, asset);
+      return Promise.resolve({ assetId: options.assetId });
+    }
+  ),
 
   play: vi.fn((options: { assetId: string; time?: number }) => {
     log(`▶️ Mock AudioManager.play: ${options.assetId}`);
@@ -1666,7 +1729,10 @@ export const AudioManager = {
 
   resume: vi.fn((options: { assetId: string }) => {
     log(`▶️ Mock AudioManager.resume: ${options.assetId}`);
-    if (mockState.audio.currentlyPlaying === options.assetId && mockState.audio.isPaused) {
+    if (
+      mockState.audio.currentlyPlaying === options.assetId &&
+      mockState.audio.isPaused
+    ) {
       mockState.audio.isPlaying = true;
       mockState.audio.isPaused = false;
     }
@@ -1707,9 +1773,10 @@ export const AudioManager = {
 
   isPlaying: vi.fn((options: { assetId: string }) => {
     log(`❓ Mock AudioManager.isPlaying: ${options.assetId}`);
-    const isCurrentlyPlaying = mockState.audio.currentlyPlaying === options.assetId && mockState.audio.isPlaying;
+    const isCurrentlyPlaying =
+      mockState.audio.currentlyPlaying === options.assetId && mockState.audio.isPlaying;
     return Promise.resolve({ assetId: options.assetId, isPlaying: isCurrentlyPlaying });
-  })
+  }),
 };
 
 export const _AudioManager = AudioManager;
@@ -1721,15 +1788,15 @@ export const WebAudioAPI = {
       connect: vi.fn(),
       start: vi.fn(),
       stop: vi.fn(),
-      frequency: { value: 440 }
+      frequency: { value: 440 },
     })),
     createGain: vi.fn(() => ({
       connect: vi.fn(),
-      gain: { value: 1.0 }
+      gain: { value: 1.0 },
     })),
     destination: {},
     state: 'running',
-    resume: vi.fn(() => Promise.resolve())
+    resume: vi.fn(() => Promise.resolve()),
   })),
 
   mockPlaySound: vi.fn((soundId: string, options?: any) => {
@@ -1737,7 +1804,7 @@ export const WebAudioAPI = {
     mockState.audio.currentlyPlaying = soundId;
     mockState.audio.isPlaying = true;
     return Promise.resolve();
-  })
+  }),
 };
 
 export const _WebAudioAPI = WebAudioAPI;

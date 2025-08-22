@@ -25,5 +25,5 @@ export type {
   FeatureAccess,
   BillingUsage,
   Trial,
-  SubscriptionDashboardData
+  SubscriptionDashboardData,
 } from '../../types/premium';

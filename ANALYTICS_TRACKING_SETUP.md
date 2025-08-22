@@ -2,11 +2,13 @@
 
 ## Overview
 
-This document outlines the complete analytics tracking system for monitoring persona detection accuracy, campaign performance, and user conversion metrics across the Relife alarm app.
+This document outlines the complete analytics tracking system for monitoring persona detection
+accuracy, campaign performance, and user conversion metrics across the Relife alarm app.
 
 ## 🎯 Key Metrics Being Tracked
 
 ### Persona Detection Metrics
+
 - **Detection Accuracy**: How accurately the algorithm identifies user personas
 - **Confidence Scores**: Algorithm confidence levels (0-100%)
 - **Persona Stability**: How often users switch between personas
@@ -14,6 +16,7 @@ This document outlines the complete analytics tracking system for monitoring per
 - **Time to Detection**: How quickly personas are identified
 
 ### Conversion Metrics by Persona
+
 - **Free → Basic Conversion Rate**: Target 8-12% (varies by persona)
 - **Basic → Premium Conversion Rate**: Target 15-20%
 - **Premium → Pro Conversion Rate**: Target 5-10%
@@ -21,6 +24,7 @@ This document outlines the complete analytics tracking system for monitoring per
 - **Student Verification Rate**: Target 60-70%
 
 ### Campaign Performance Metrics
+
 - **Email Open Rates**: 25-50% (persona-specific targets)
 - **Email Click-through Rates**: 3-8%
 - **Social Media Engagement**: Platform and persona-specific
@@ -29,6 +33,7 @@ This document outlines the complete analytics tracking system for monitoring per
 - **Lifetime Value (LTV)**: Persona-specific calculations
 
 ### User Experience Metrics
+
 - **Onboarding Completion Rate**: By persona type
 - **Feature Adoption Rate**: Persona-specific features
 - **Time to First Value**: When users see benefits
@@ -60,6 +65,7 @@ This document outlines the complete analytics tracking system for monitoring per
 ### Tracking Events Implemented
 
 #### Persona-Specific Events
+
 ```typescript
 - persona_detected: When algorithm identifies user persona
 - persona_changed: When user switches persona classification
@@ -73,6 +79,7 @@ This document outlines the complete analytics tracking system for monitoring per
 ```
 
 #### Campaign Events
+
 ```typescript
 - campaign_performance_tracked: Campaign metrics collection
 - social_media_engagement: Platform-specific interactions
@@ -84,6 +91,7 @@ This document outlines the complete analytics tracking system for monitoring per
 ## 🎨 Dashboard Features
 
 ### Real-Time Metrics Display
+
 - **Overview Cards**: Total detections, conversion rates, revenue, confidence
 - **Persona Distribution Pie Chart**: Visual breakdown of user personas
 - **Conversion Rate Comparison**: Bar chart showing persona performance
@@ -91,12 +99,14 @@ This document outlines the complete analytics tracking system for monitoring per
 - **Campaign Performance Table**: Detailed campaign metrics
 
 ### Interactive Filters
+
 - **Time Range Selection**: 24h, 7d, 30d, 90d views
 - **Persona Filtering**: Focus on specific personas
 - **Campaign Type Filtering**: Email, social, paid, organic
 - **Conversion Funnel Analysis**: Step-by-step conversion tracking
 
 ### Export Capabilities
+
 - **PDF Reports**: Automated performance reports
 - **CSV Data Export**: Raw data for external analysis
 - **Dashboard Screenshots**: Visual report generation
@@ -105,6 +115,7 @@ This document outlines the complete analytics tracking system for monitoring per
 ## 📈 Persona-Specific Tracking
 
 ### Struggling Sam (Price-Conscious)
+
 ```typescript
 Tracking Focus:
 - Free trial usage patterns
@@ -121,6 +132,7 @@ Target Metrics:
 ```
 
 ### Busy Ben (Efficiency-Focused)
+
 ```typescript
 Tracking Focus:
 - Time-saving feature usage
@@ -137,6 +149,7 @@ Target Metrics:
 ```
 
 ### Professional Paula (Feature-Rich)
+
 ```typescript
 Tracking Focus:
 - Advanced feature exploration
@@ -153,6 +166,7 @@ Target Metrics:
 ```
 
 ### Enterprise Emma (Team-Oriented)
+
 ```typescript
 Tracking Focus:
 - Team management features
@@ -169,6 +183,7 @@ Target Metrics:
 ```
 
 ### Student Sarah (Budget-Constrained)
+
 ```typescript
 Tracking Focus:
 - Student verification completion
@@ -185,6 +200,7 @@ Target Metrics:
 ```
 
 ### Lifetime Larry (One-Time Payment)
+
 ```typescript
 Tracking Focus:
 - Subscription fatigue indicators
@@ -203,24 +219,28 @@ Target Metrics:
 ## 🚀 Implementation Steps
 
 ### Phase 1: Core Analytics (✅ Completed)
+
 - [x] PersonaAnalytics tracking system
 - [x] PersonaAnalyticsDashboard component
 - [x] Event tracking infrastructure
 - [x] Mock data for testing
 
 ### Phase 2: API Integration (Next Steps)
+
 - [ ] Create analytics API endpoints
 - [ ] Integrate with existing database
 - [ ] Set up data persistence layer
 - [ ] Configure automated data collection
 
 ### Phase 3: Advanced Features
+
 - [ ] A/B testing framework integration
 - [ ] Predictive analytics for persona switching
 - [ ] Real-time campaign optimization
 - [ ] Automated alert system for metric thresholds
 
 ### Phase 4: Reporting & Automation
+
 - [ ] Automated weekly performance reports
 - [ ] Campaign ROI calculation automation
 - [ ] Persona performance alerts
@@ -229,6 +249,7 @@ Target Metrics:
 ## 🔧 Technical Integration
 
 ### Database Schema Extensions
+
 ```sql
 -- Analytics Events Table
 CREATE TABLE persona_analytics_events (
@@ -268,6 +289,7 @@ CREATE INDEX idx_campaign_persona ON campaign_performance(persona);
 ```
 
 ### Environment Variables
+
 ```bash
 # Analytics Configuration
 ANALYTICS_ENDPOINT=https://api.relife.com/analytics
@@ -283,6 +305,7 @@ SOCIAL_UTM_SOURCE=relife_social
 ```
 
 ### Integration with Existing Systems
+
 ```typescript
 // Integration with PersonaDrivenUI component
 import { usePersonaAnalytics } from '../analytics/PersonaAnalytics';
@@ -306,16 +329,25 @@ const handleCTAClick = (tier: string) => {
 ## 📧 Email Campaign Tracking Integration
 
 ### Tracking Pixel Implementation
+
 ```html
 <!-- Email tracking pixel for open rates -->
-<img src="https://track.relife.com/pixel?campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}&event=opened"
-     width="1" height="1" alt="" style="display:none;" />
+<img
+  src="https://track.relife.com/pixel?campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}&event=opened"
+  width="1"
+  height="1"
+  alt=""
+  style="display:none;"
+/>
 ```
 
 ### Link Tracking
+
 ```html
 <!-- Click tracking for email links -->
-<a href="https://track.relife.com/link?url={{destination_url}}&campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}">
+<a
+  href="https://track.relife.com/link?url={{destination_url}}&campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}"
+>
   Get Started with {{persona_specific_cta}}
 </a>
 ```
@@ -323,33 +355,37 @@ const handleCTAClick = (tier: string) => {
 ## 🎯 Success Metrics & KPIs
 
 ### Detection Accuracy Goals
+
 - **Overall Confidence**: >85% average confidence score
 - **Persona Stability**: <10% persona switching rate
 - **Time to Detection**: <5 minutes average
 - **False Positive Rate**: <5% incorrect classifications
 
 ### Conversion Goals by Persona
-| Persona | Free→Basic | Basic→Premium | Trial→Paid | Revenue/User |
-|---------|------------|---------------|------------|--------------|
-| Struggling Sam | 8-12% | 10-15% | 15-18% | $47.88 |
-| Busy Ben | 15-20% | 20-25% | 22-28% | $95.88 |
-| Professional Paula | 18-25% | 25-30% | 25-30% | $95.88 |
-| Enterprise Emma | 20-30% | 30-40% | 30-35% | $191.88 |
-| Student Sarah | 12-18% | 15-20% | 18-22% | $23.88 |
-| Lifetime Larry | 5-8% | N/A | 25-30% | $99.00 |
+
+| Persona            | Free→Basic | Basic→Premium | Trial→Paid | Revenue/User |
+| ------------------ | ---------- | ------------- | ---------- | ------------ |
+| Struggling Sam     | 8-12%      | 10-15%        | 15-18%     | $47.88       |
+| Busy Ben           | 15-20%     | 20-25%        | 22-28%     | $95.88       |
+| Professional Paula | 18-25%     | 25-30%        | 25-30%     | $95.88       |
+| Enterprise Emma    | 20-30%     | 30-40%        | 30-35%     | $191.88      |
+| Student Sarah      | 12-18%     | 15-20%        | 18-22%     | $23.88       |
+| Lifetime Larry     | 5-8%       | N/A           | 25-30%     | $99.00       |
 
 ### Campaign Performance Goals
-| Channel | CTR Target | Conversion Target | CPA Target | ROAS Target |
-|---------|------------|------------------|------------|-------------|
-| Email | 5-8% | 15-25% | $15-25 | 4:1 |
-| Social Media | 2-5% | 10-18% | $20-35 | 3:1 |
-| Paid Search | 3-6% | 12-20% | $25-40 | 3.5:1 |
-| Influencer | 4-7% | 15-22% | $18-30 | 4:1 |
-| Organic | 8-12% | 20-30% | $5-15 | 6:1 |
+
+| Channel      | CTR Target | Conversion Target | CPA Target | ROAS Target |
+| ------------ | ---------- | ----------------- | ---------- | ----------- |
+| Email        | 5-8%       | 15-25%            | $15-25     | 4:1         |
+| Social Media | 2-5%       | 10-18%            | $20-35     | 3:1         |
+| Paid Search  | 3-6%       | 12-20%            | $25-40     | 3.5:1       |
+| Influencer   | 4-7%       | 15-22%            | $18-30     | 4:1         |
+| Organic      | 8-12%      | 20-30%            | $5-15      | 6:1         |
 
 ## 🔍 Monitoring & Alerts
 
 ### Automated Alerts Setup
+
 ```typescript
 // Alert conditions
 const alertConditions = {
@@ -357,20 +393,21 @@ const alertConditions = {
   highChurnRate: churnRate > 15, // Above 15%
   lowPersonaConfidence: avgConfidence < 70, // Below 70%
   campaignUnderperforming: ctr < 2, // Below 2% CTR
-  highAcquisitionCost: cpa > 50 // Above $50 CPA
+  highAcquisitionCost: cpa > 50, // Above $50 CPA
 };
 
 // Notification channels
 const notifications = {
   email: 'team@relife.com',
   slack: '#analytics-alerts',
-  dashboard: true
+  dashboard: true,
 };
 ```
 
 ## 📱 Mobile Analytics Integration
 
 ### React Native / Capacitor Integration
+
 ```typescript
 // Mobile-specific tracking
 import { Capacitor } from '@capacitor/core';
@@ -381,7 +418,7 @@ const trackMobilePersonaEvent = (event: string, data: any) => {
     data.deviceInfo = {
       platform: Capacitor.getPlatform(),
       deviceId: await Device.getId(),
-      appVersion: await App.getInfo()
+      appVersion: await App.getInfo(),
     };
   }
 
@@ -392,21 +429,25 @@ const trackMobilePersonaEvent = (event: string, data: any) => {
 ## 🎨 Future Enhancements
 
 ### Machine Learning Integration
+
 - **Persona Prediction Models**: Predict persona changes before they happen
 - **Churn Prevention**: Identify at-risk users by persona
 - **Optimal Timing**: Best times to show CTAs for each persona
 - **Dynamic Pricing**: Real-time pricing optimization by persona
 
 ### Advanced Segmentation
+
 - **Micro-Personas**: Sub-segments within main personas
 - **Behavioral Clustering**: Group users by actual behavior patterns
 - **Cohort Analysis**: Track persona performance over time
 - **Cross-Platform Tracking**: Unified view across web, mobile, email
 
 ### Real-Time Optimization
+
 - **Dynamic Content**: Real-time content personalization
 - **A/B Test Automation**: Automatically optimize campaigns
 - **Smart Notifications**: Persona-specific push notification timing
 - **Predictive Actions**: Proactive intervention for at-risk users
 
-This analytics system provides comprehensive tracking of persona-driven marketing effectiveness and will enable data-driven optimization of the Relife app's conversion and retention strategies.
+This analytics system provides comprehensive tracking of persona-driven marketing effectiveness and
+will enable data-driven optimization of the Relife app's conversion and retention strategies.

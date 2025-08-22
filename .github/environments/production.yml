@@ -1,4 +1,4 @@
-# Production Environment Configuration  
+# Production Environment Configuration
 # This file documents the production environment setup for GitHub Environments
 
 name: production
@@ -6,13 +6,13 @@ url: https://relife.yourdomain.com
 
 # Environment protection rules
 protection_rules:
-  required_reviewers: 2  # Require 2 reviewers for production
+  required_reviewers: 2 # Require 2 reviewers for production
   prevent_self_review: true
   dismiss_stale_reviews: true
   deployment_branch_policy:
     protected_branches: true
     custom_branches: ["main"]
-  
+
   # Wait timer before deployment (5 minutes)
   wait_timer: 5
 
@@ -22,32 +22,32 @@ environment_variables:
   VITE_APP_ENV: production
   VITE_APP_API_URL: https://api.relife.com
   VITE_APP_VERSION: ${{ github.sha }}
-  
+
   # Feature flags for production (more conservative)
   VITE_FEATURE_ADVANCED_BATTLE: "true"
   VITE_FEATURE_PREMIUM_THEMES: "true"
   VITE_FEATURE_ANALYTICS: "true"
-  
+
   # Production settings
   VITE_DEBUG_MODE: "false"
   VITE_LOG_LEVEL: "error"
-  
+
   # Performance optimization
   VITE_ENABLE_PWA: "true"
   VITE_ENABLE_SERVICE_WORKER: "true"
 
 # Secrets required for production (to be configured in GitHub)
 required_secrets:
-  - PRODUCTION_DEPLOY_KEY      # SSH key or deployment token
-  - CODECOV_TOKEN             # Code coverage reporting
-  - SENTRY_DSN_PRODUCTION     # Error tracking for production
+  - PRODUCTION_DEPLOY_KEY # SSH key or deployment token
+  - CODECOV_TOKEN # Code coverage reporting
+  - SENTRY_DSN_PRODUCTION # Error tracking for production
   - FIREBASE_CONFIG_PRODUCTION # Firebase configuration
-  - AWS_ACCESS_KEY_ID         # If using AWS for hosting
-  - AWS_SECRET_ACCESS_KEY     # If using AWS for hosting
-  - SSL_CERTIFICATE           # SSL certificate if needed
-  - CDN_INVALIDATION_KEY      # For cache invalidation
-  - ANALYTICS_API_KEY         # Analytics service key
-  - PAYMENT_API_KEY           # Payment processing (if applicable)
+  - AWS_ACCESS_KEY_ID # If using AWS for hosting
+  - AWS_SECRET_ACCESS_KEY # If using AWS for hosting
+  - SSL_CERTIFICATE # SSL certificate if needed
+  - CDN_INVALIDATION_KEY # For cache invalidation
+  - ANALYTICS_API_KEY # Analytics service key
+  - PAYMENT_API_KEY # Payment processing (if applicable)
 
 # Health check configuration
 health_check:
@@ -56,10 +56,10 @@ health_check:
   timeout: 10s
   retries: 5
   interval: 30s
-  
+
 # Deployment strategy
 deployment:
-  strategy: blue-green  # Zero-downtime deployment
+  strategy: blue-green # Zero-downtime deployment
   max_unavailable: 0
   max_surge: 1
   rollback_enabled: true
@@ -72,11 +72,11 @@ deployment:
 monitoring:
   enabled: true
   performance_budget:
-    fcp: 1.5s  # First Contentful Paint (stricter for prod)
-    lcp: 2.5s  # Largest Contentful Paint
-    cls: 0.05  # Cumulative Layout Shift
-    fid: 50ms  # First Input Delay
-    
+    fcp: 1.5s # First Contentful Paint (stricter for prod)
+    lcp: 2.5s # Largest Contentful Paint
+    cls: 0.05 # Cumulative Layout Shift
+    fid: 50ms # First Input Delay
+
   # Alerting thresholds
   alerts:
     error_rate_threshold: 1%
@@ -88,7 +88,7 @@ backup:
   enabled: true
   retention_days: 90
   backup_frequency: daily
-  
+
 # Auto-deployment settings
 auto_deployment:
   enabled: true

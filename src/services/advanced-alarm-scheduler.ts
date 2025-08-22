@@ -5,7 +5,7 @@ import type {
   BulkScheduleOperation,
   ScheduleExport,
   ScheduleImport,
-  SunSchedule
+  SunSchedule,
 } from '../types/index';
 import { SchedulerCore } from './scheduler-core';
 import { AlarmParser } from './alarm-parser';
@@ -13,12 +13,11 @@ import { AlarmExecutor } from './alarm-executor';
 
 /**
  * AdvancedAlarmScheduler - Facade class that delegates to the new modular architecture
- * 
- * This maintains backward compatibility while using the new AlarmParser, AlarmExecutor, 
+ *
+ * This maintains backward compatibility while using the new AlarmParser, AlarmExecutor,
  * and SchedulerCore modules for better maintainability and separation of concerns.
  */
 export class AdvancedAlarmScheduler {
-
   // ===== INITIALIZATION =====
 
   static async initialize(): Promise<void> {
@@ -87,7 +86,10 @@ export class AdvancedAlarmScheduler {
 
   // ===== SUN-BASED SCHEDULING =====
 
-  static async calculateSunBasedTime(sunSchedule: SunSchedule, date: Date = new Date()): Promise<string> {
+  static async calculateSunBasedTime(
+    sunSchedule: SunSchedule,
+    date: Date = new Date()
+  ): Promise<string> {
     return AlarmExecutor.calculateSunBasedTime(sunSchedule, date);
   }
 
@@ -102,7 +104,9 @@ export class AdvancedAlarmScheduler {
 
   // ===== BULK OPERATIONS =====
 
-  static async executeBulkOperation(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
+  static async executeBulkOperation(
+    operation: BulkScheduleOperation
+  ): Promise<{ success: number; failed: number; errors: string[] }> {
     return SchedulerCore.executeBulkOperation(operation);
   }
 
@@ -112,7 +116,9 @@ export class AdvancedAlarmScheduler {
     return SchedulerCore.exportSchedule();
   }
 
-  static async importSchedule(importData: ScheduleImport): Promise<{ success: number; failed: number; errors: string[] }> {
+  static async importSchedule(
+    importData: ScheduleImport
+  ): Promise<{ success: number; failed: number; errors: string[] }> {
     return SchedulerCore.importSchedule(importData);
   }
 

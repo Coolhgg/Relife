@@ -18,8 +18,8 @@ class PWABrowserTester {
         total: 0,
         passed: 0,
         failed: 0,
-        warnings: 0
-      }
+        warnings: 0,
+      },
     };
   }
 
@@ -28,10 +28,10 @@ class PWABrowserTester {
     const prefix = {
       info: '📋',
       success: '✅',
-      error: '❌', 
-      warning: '⚠️'
+      error: '❌',
+      warning: '⚠️',
     }[type];
-    
+
     console.log(`${prefix} [${timestamp}] ${message}`);
   }
 
@@ -41,30 +41,40 @@ class PWABrowserTester {
       status, // 'pass', 'fail', 'warning'
       message,
       details,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     this.results.tests.push(result);
     this.results.summary.total++;
-    
+
     if (status === 'pass') this.results.summary.passed++;
     else if (status === 'fail') this.results.summary.failed++;
     else if (status === 'warning') this.results.summary.warnings++;
 
-    this.log(`${test}: ${message}`, status === 'pass' ? 'success' : status === 'fail' ? 'error' : 'warning');
+    this.log(
+      `${test}: ${message}`,
+      status === 'pass' ? 'success' : status === 'fail' ? 'error' : 'warning'
+    );
   }
 
   // Test PWA Manifest
   testManifest() {
     this.log('Testing PWA Manifest...', 'info');
-    
+
     try {
       const manifestPath = path.join(__dirname, '../public/manifest.json');
       const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
       // Required fields
-      const requiredFields = ['name', 'short_name', 'start_url', 'display', 'theme_color', 'icons'];
-      const missingFields = requiredFields.filter(field => !manifest[field]);
+      const requiredFields = [
+        'name',
+        'short_name',
+        'start_url',
+        'display',
+        'theme_color',
+        'icons',
+      ];
+      const missingFields = requiredFields.filter((field) => !manifest[field]);
 
       if (missingFields.length > 0) {
         this.addTestResult(
@@ -82,9 +92,20 @@ class PWABrowserTester {
       }
 
       // Icon sizes validation
-      const requiredIconSizes = ['72x72', '96x96', '128x128', '144x144', '152x152', '192x192', '384x384', '512x512'];
-      const existingIconSizes = manifest.icons.map(icon => icon.sizes);
-      const missingIcons = requiredIconSizes.filter(size => !existingIconSizes.includes(size));
+      const requiredIconSizes = [
+        '72x72',
+        '96x96',
+        '128x128',
+        '144x144',
+        '152x152',
+        '192x192',
+        '384x384',
+        '512x512',
+      ];
+      const existingIconSizes = manifest.icons.map((icon) => icon.sizes);
+      const missingIcons = requiredIconSizes.filter(
+        (size) => !existingIconSizes.includes(size)
+      );
 
       if (missingIcons.length > 0) {
         this.addTestResult(
@@ -103,15 +124,17 @@ class PWABrowserTester {
 
       // Advanced PWA features
       const advancedFeatures = ['shortcuts', 'screenshots', 'categories'];
-      const existingAdvanced = advancedFeatures.filter(feature => manifest[feature]);
-      
+      const existingAdvanced = advancedFeatures.filter((feature) => manifest[feature]);
+
       this.addTestResult(
         'Advanced PWA Features',
         existingAdvanced.length === advancedFeatures.length ? 'pass' : 'warning',
         `Advanced features: ${existingAdvanced.join(', ')}`,
-        { existingAdvanced, missingAdvanced: advancedFeatures.filter(f => !manifest[f]) }
+        {
+          existingAdvanced,
+          missingAdvanced: advancedFeatures.filter((f) => !manifest[f]),
+        }
       );
-
     } catch (error) {
       this.addTestResult(
         'Manifest Validation',
@@ -132,12 +155,12 @@ class PWABrowserTester {
 
       // Check for PWA features
       const pwaPattterns = {
-        'Cache Management': /CACHE_NAME.*=.*['"].*['"]/, 
-        'Install Event': /addEventListener.*['"]install['"]/, 
-        'Fetch Event': /addEventListener.*['"]fetch['"]/, 
-        'Background Sync': /sync.*['"]background.*sync['"]/, 
-        'Push Notifications': /addEventListener.*['"]push['"]/, 
-        'Offline Support': /navigator\.onLine/
+        'Cache Management': /CACHE_NAME.*=.*['"].*['"]/,
+        'Install Event': /addEventListener.*['"]install['"]/,
+        'Fetch Event': /addEventListener.*['"]fetch['"]/,
+        'Background Sync': /sync.*['"]background.*sync['"]/,
+        'Push Notifications': /addEventListener.*['"]push['"]/,
+        'Offline Support': /navigator\.onLine/,
       };
 
       Object.entries(pwaPattterns).forEach(([feature, pattern]) => {
@@ -156,7 +179,6 @@ class PWABrowserTester {
           );
         }
       });
-
     } catch (error) {
       this.addTestResult(
         'Service Worker Validation',
@@ -174,10 +196,10 @@ class PWABrowserTester {
     const iconSizes = ['72x72', '192x192', '512x512'];
     const iconPath = path.join(__dirname, '../public');
 
-    iconSizes.forEach(size => {
+    iconSizes.forEach((size) => {
       const iconFile = `icon-${size}.png`;
       const fullPath = path.join(iconPath, iconFile);
-      
+
       if (fs.existsSync(fullPath)) {
         const stats = fs.statSync(fullPath);
         this.addTestResult(
@@ -466,7 +488,7 @@ class PWABrowserTester {
     }
 
     fs.writeFileSync(path.join(testDir, 'browser-test.html'), testHTML);
-    
+
     this.addTestResult(
       'Browser Test Generation',
       'pass',
@@ -483,7 +505,7 @@ class PWABrowserTester {
       extends: 'lighthouse:default',
       settings: {
         onlyCategories: ['pwa', 'performance', 'accessibility'],
-        skipAudits: ['redirects-http']
+        skipAudits: ['redirects-http'],
       },
       audits: [
         'installable-manifest',
@@ -495,13 +517,13 @@ class PWABrowserTester {
         'maskable-icon',
         'service-worker',
         'works-offline',
-        'offline-start-url'
-      ]
+        'offline-start-url',
+      ],
     };
 
     const testDir = path.join(__dirname, '../test-pwa');
     fs.writeFileSync(
-      path.join(testDir, 'lighthouse-config.json'), 
+      path.join(testDir, 'lighthouse-config.json'),
       JSON.stringify(lighthouseConfig, null, 2)
     );
 
@@ -554,7 +576,10 @@ fi
       'Lighthouse Config Generation',
       'pass',
       'Lighthouse configuration and test script generated',
-      { configPath: 'test-pwa/lighthouse-config.json', scriptPath: 'test-pwa/run-lighthouse.sh' }
+      {
+        configPath: 'test-pwa/lighthouse-config.json',
+        scriptPath: 'test-pwa/run-lighthouse.sh',
+      }
     );
   }
 
@@ -586,7 +611,7 @@ fi
 // Run tests if script is executed directly
 if (require.main === module) {
   const tester = new PWABrowserTester();
-  tester.run().then(results => {
+  tester.run().then((results) => {
     process.exit(results.summary.failed > 0 ? 1 : 0);
   });
 }

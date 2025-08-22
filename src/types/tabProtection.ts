@@ -24,7 +24,13 @@ export interface TabProtectionSettings {
   visualSettings: {
     showVisualWarning: boolean;
     autoHideDelay: number; // seconds, 0 = never auto-hide
-    position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'top-center' | 'bottom-center';
+    position:
+      | 'top-right'
+      | 'top-left'
+      | 'bottom-right'
+      | 'bottom-left'
+      | 'top-center'
+      | 'bottom-center';
     showAlarmDetails: boolean; // Show upcoming alarm list
     maxAlarmsShown: number; // Max number of upcoming alarms to show
   };
@@ -39,18 +45,23 @@ export const DEFAULT_TAB_PROTECTION_SETTINGS: TabProtectionSettings = {
     enabledAlarmWarning: false, // Don't warn just because alarms exist
   },
   customMessages: {
-    activeAlarmMessage: "An alarm is currently ringing! Are you sure you want to close this tab?",
-    upcomingAlarmMessage: "You have {count} alarm{plural} set to ring within {timeframe}. Are you sure you want to close this tab?",
-    enabledAlarmMessage: "You have {count} enabled alarm{plural}. Closing this tab may prevent them from working properly. Continue?",
+    activeAlarmMessage:
+      'An alarm is currently ringing! Are you sure you want to close this tab?',
+    upcomingAlarmMessage:
+      'You have {count} alarm{plural} set to ring within {timeframe}. Are you sure you want to close this tab?',
+    enabledAlarmMessage:
+      'You have {count} enabled alarm{plural}. Closing this tab may prevent them from working properly. Continue?',
     visualWarningTitle: {
       activeAlarm: 'Alarm Currently Ringing!',
       upcomingAlarm: 'Upcoming Alarms',
     },
     accessibilityMessages: {
-      protectionActive: "Tab closure protection is active due to {reason}.",
-      protectionInactive: "Tab closure protection is inactive.",
-      alarmRingingWarning: "Warning: Closing this tab will stop the currently ringing alarm.",
-      upcomingAlarmWarning: "Warning: You have {count} upcoming alarm{plural}. Closing this tab may prevent them from ringing.",
+      protectionActive: 'Tab closure protection is active due to {reason}.',
+      protectionInactive: 'Tab closure protection is inactive.',
+      alarmRingingWarning:
+        'Warning: Closing this tab will stop the currently ringing alarm.',
+      upcomingAlarmWarning:
+        'Warning: You have {count} upcoming alarm{plural}. Closing this tab may prevent them from ringing.',
     },
   },
   visualSettings: {
@@ -138,9 +149,11 @@ export const saveTabProtectionSettings = (settings: TabProtectionSettings): void
     localStorage.setItem('tabProtectionSettings', JSON.stringify(settings));
 
     // Dispatch custom event for cross-tab synchronization
-    window.dispatchEvent(new CustomEvent('tabProtectionSettingsChanged', {
-      detail: settings
-    }));
+    window.dispatchEvent(
+      new CustomEvent('tabProtectionSettingsChanged', {
+        detail: settings,
+      })
+    );
   } catch (error) {
     console.error('Failed to save tab protection settings:', error);
   }
@@ -150,7 +163,8 @@ export const saveTabProtectionSettings = (settings: TabProtectionSettings): void
 export const formatTimeframe = (minutes: number): string => {
   if (minutes < 60) {
     return `${minutes} minute${minutes === 1 ? '' : 's'}`;
-  } else if (minutes < 1440) { // Less than 24 hours
+  } else if (minutes < 1440) {
+    // Less than 24 hours
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
 

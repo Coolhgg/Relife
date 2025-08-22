@@ -3,7 +3,7 @@ import {
   LocalNotifications,
   ActionPerformed,
   LocalNotificationSchema,
-  LocalNotificationDescriptor
+  LocalNotificationDescriptor,
 } from '@capacitor/local-notifications';
 import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 import { StatusBar, Style } from '@capacitor/status-bar';
@@ -94,7 +94,6 @@ export class CapacitorEnhancedService {
       this.isInitialized = true;
       console.log('[Capacitor] Enhanced services initialized successfully');
       this.emit('initialized', { features: this.deviceFeatures });
-
     } catch (error) {
       console.error('[Capacitor] Failed to initialize services:', error);
       throw error;
@@ -109,8 +108,10 @@ export class CapacitorEnhancedService {
 
       this.appInfo = appInfo;
       this.deviceFeatures = {
-        hasHaptics: Capacitor.isNativePlatform() && (deviceInfo.platform === 'ios' ||
-                   (deviceInfo.platform === 'android' && parseInt(deviceInfo.osVersion) >= 8)),
+        hasHaptics:
+          Capacitor.isNativePlatform() &&
+          (deviceInfo.platform === 'ios' ||
+            (deviceInfo.platform === 'android' && parseInt(deviceInfo.osVersion) >= 8)),
         hasNotifications: Capacitor.isNativePlatform(),
         hasBiometrics: Capacitor.isNativePlatform(),
         hasWakeLock: Capacitor.isNativePlatform(),
@@ -163,16 +164,15 @@ export class CapacitorEnhancedService {
       console.log('[Capacitor] Notification permissions:', permissions);
 
       // Listen for notification events
-      LocalNotifications.addListener('localNotificationReceived', (notification) => {
+      LocalNotifications.addListener('localNotificationReceived', notification => {
         console.log('[Capacitor] Notification received:', notification);
         this.emit('notification-received', notification);
       });
 
-      LocalNotifications.addListener('localNotificationActionPerformed', (action) => {
+      LocalNotifications.addListener('localNotificationActionPerformed', action => {
         console.log('[Capacitor] Notification action:', action);
         this.handleNotificationAction(action);
       });
-
     } catch (error) {
       console.error('[Capacitor] Notification initialization failed:', error);
     }
@@ -193,12 +193,12 @@ export class CapacitorEnhancedService {
       }
     });
 
-    App.addListener('appUrlOpen', (event) => {
+    App.addListener('appUrlOpen', event => {
       console.log('[Capacitor] App opened via URL:', event);
       this.emit('app-url-open', event);
     });
 
-    App.addListener('backButton', (event) => {
+    App.addListener('backButton', event => {
       console.log('[Capacitor] Back button pressed:', event);
       this.emit('back-button', event);
     });
@@ -275,7 +275,6 @@ export class CapacitorEnhancedService {
 
       console.log('[Capacitor] Alarm notification scheduled:', alarm.id);
       this.emit('alarm-scheduled', { alarm, notification });
-
     } catch (error) {
       console.error('[Capacitor] Failed to schedule alarm:', error);
       throw error;
@@ -295,7 +294,6 @@ export class CapacitorEnhancedService {
 
       console.log('[Capacitor] Alarm notification cancelled:', alarmId);
       this.emit('alarm-cancelled', { alarmId });
-
     } catch (error) {
       console.error('[Capacitor] Failed to cancel alarm:', error);
       throw error;
@@ -316,7 +314,9 @@ export class CapacitorEnhancedService {
   }
 
   // Haptic feedback methods
-  async triggerHapticFeedback(type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'): Promise<void> {
+  async triggerHapticFeedback(
+    type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
+  ): Promise<void> {
     if (!this.deviceFeatures?.hasHaptics) return;
 
     try {
@@ -392,7 +392,7 @@ export class CapacitorEnhancedService {
     console.log('[Capacitor] Snooze action triggered');
     this.emit('alarm-snoozed', {
       alarmId: notification.extra?.alarmId,
-      notification
+      notification,
     });
   }
 
@@ -400,7 +400,7 @@ export class CapacitorEnhancedService {
     console.log('[Capacitor] Dismiss action triggered');
     this.emit('alarm-dismissed', {
       alarmId: notification.extra?.alarmId,
-      notification
+      notification,
     });
   }
 
@@ -408,7 +408,7 @@ export class CapacitorEnhancedService {
     console.log('[Capacitor] Notification tapped');
     this.emit('alarm-tapped', {
       alarmId: notification.extra?.alarmId,
-      notification
+      notification,
     });
   }
 

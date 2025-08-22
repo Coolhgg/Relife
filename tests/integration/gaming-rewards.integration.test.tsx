@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /**
  * Gaming and Rewards System Integration Tests
- * 
+ *
  * Tests for gamification features and social functionality:
  * - Achievement unlocking and progression
  * - Battle creation and participation
@@ -43,13 +43,17 @@ describe('Gaming and Rewards System Integration', () => {
       const mockUser = createMockUser({
         level: 1,
         experience: 0,
-        achievements: []
+        achievements: [],
       });
 
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
 
       await act(async () => {
-        const result = render(<BrowserRouter><App /></BrowserRouter>);
+        const result = render(
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        );
         container = result.container;
       });
 
@@ -58,17 +62,21 @@ describe('Gaming and Rewards System Integration', () => {
         level: 2,
         experience: 100,
         unlockedAchievements: ['first_alarm_completed'],
-        unlockedRewards: ['morning_warrior_badge']
+        unlockedRewards: ['morning_warrior_badge'],
       };
 
-      vi.mocked(AIRewardsService.getInstance().analyzeAndGenerateRewards).mockResolvedValue(mockReward);
+      vi.mocked(
+        AIRewardsService.getInstance().analyzeAndGenerateRewards
+      ).mockResolvedValue(mockReward);
 
       // Navigate to gaming hub
       const gamingButton = screen.getByRole('button', { name: /gaming.*hub|rewards/i });
       await user.click(gamingButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/achievement.*unlocked|reward.*earned/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/achievement.*unlocked|reward.*earned/i)
+        ).toBeInTheDocument();
         expect(screen.getByText(/morning.*warrior/i)).toBeInTheDocument();
       });
     });
@@ -80,12 +88,18 @@ describe('Gaming and Rewards System Integration', () => {
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
 
       await act(async () => {
-        const result = render(<BrowserRouter><App /></BrowserRouter>);
+        const result = render(
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        );
         container = result.container;
       });
 
       // Create a battle
-      const createBattleButton = screen.getByRole('button', { name: /create.*battle/i });
+      const createBattleButton = screen.getByRole('button', {
+        name: /create.*battle/i,
+      });
       await user.click(createBattleButton);
 
       const battleName = screen.getByLabelText(/battle.*name/i);
@@ -95,10 +109,13 @@ describe('Gaming and Rewards System Integration', () => {
         id: 'battle-123',
         name: 'Morning Warriors Challenge',
         participants: [mockUser.id],
-        status: 'active'
+        status: 'active',
       };
 
-      vi.mocked(BattleService.createBattle).mockResolvedValue({ battle: mockBattle, error: null });
+      vi.mocked(BattleService.createBattle).mockResolvedValue({
+        battle: mockBattle,
+        error: null,
+      });
 
       const startBattleButton = screen.getByRole('button', { name: /start.*battle/i });
       await user.click(startBattleButton);

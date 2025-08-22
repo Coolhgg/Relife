@@ -13,7 +13,7 @@ import {
   Target,
   Clock,
   Fire,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface PsychologyDrivenCTAProps {
   /** Primary call-to-action text */
@@ -23,7 +23,13 @@ interface PsychologyDrivenCTAProps {
   /** Target subscription tier */
   /** Callback when CTA is clicked */
   /** Psychology trigger to use */
-  trigger?: 'scarcity' | 'social_proof' | 'urgency' | 'loss_aversion' | 'authority' | 'reciprocity';
+  trigger?:
+    | 'scarcity'
+    | 'social_proof'
+    | 'urgency'
+    | 'loss_aversion'
+    | 'authority'
+    | 'reciprocity';
   /** Visual style variant */
   variant?: 'gradient' | 'neon' | 'minimal' | 'bold' | 'premium';
   /** Size of the CTA */
@@ -43,7 +49,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
   variant = 'gradient',
   size = 'medium',
   animate = true,
-  className = ''
+  className = '',
 }) => {
   const [timeLeft, setTimeLeft] = useState({ hours: 23, minutes: 47, seconds: 32 });
   const [userCount, setUserCount] = useState(10847);
@@ -97,22 +103,22 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
         period: 'month',
         color: 'from-blue-600 to-purple-600',
         icon: <Star className="w-5 h-5" />,
-        badge: 'PREMIUM'
+        badge: 'PREMIUM',
       },
       pro: {
         price: '$9.99',
         period: 'month',
         color: 'from-orange-600 to-red-600',
         icon: <Crown className="w-5 h-5" />,
-        badge: 'PRO'
+        badge: 'PRO',
       },
       lifetime: {
         price: '$99.99',
         period: 'once',
         color: 'from-purple-600 to-pink-600',
         icon: <Trophy className="w-5 h-5" />,
-        badge: 'LIFETIME'
-      }
+        badge: 'LIFETIME',
+      },
     };
 
     return tierMap[targetTier] || tierMap.premium;
@@ -128,7 +134,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           secondary: secondaryText || 'Only 47 spots left this month',
           badge: 'LIMITED SPOTS',
           badgeIcon: <Target className="w-4 h-4" />,
-          urgencyBar: true
+          urgencyBar: true,
         };
 
       case 'social_proof':
@@ -137,7 +143,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           secondary: secondaryText || '94% report better morning routines',
           badge: `${userCount.toLocaleString()}+ USERS`,
           badgeIcon: <Users className="w-4 h-4" />,
-          socialIndicators: true
+          socialIndicators: true,
         };
 
       case 'urgency':
@@ -146,7 +152,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           secondary: secondaryText || 'Limited time offer expires soon',
           badge: 'ENDING SOON',
           badgeIcon: <Timer className="w-4 h-4" />,
-          countdown: true
+          countdown: true,
         };
 
       case 'loss_aversion':
@@ -155,7 +161,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           secondary: secondaryText || 'Others are already 5x more productive',
           badge: 'MISSING OUT',
           badgeIcon: <TrendingUp className="w-4 h-4" />,
-          lossIndicator: true
+          lossIndicator: true,
         };
 
       case 'authority':
@@ -164,7 +170,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           secondary: secondaryText || 'Trusted by 100+ medical professionals',
           badge: 'EXPERT APPROVED',
           badgeIcon: <Shield className="w-4 h-4" />,
-          authorityBadges: true
+          authorityBadges: true,
         };
 
       case 'reciprocity':
@@ -173,7 +179,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           secondary: secondaryText || '30-day trial + exclusive bonuses',
           badge: 'FREE TRIAL',
           badgeIcon: <Sparkles className="w-4 h-4" />,
-          bonusIndicator: true
+          bonusIndicator: true,
         };
 
       default:
@@ -181,7 +187,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           primary: primaryText || 'Upgrade Now',
           secondary: secondaryText || 'Unlock premium features',
           badge: 'UPGRADE',
-          badgeIcon: <Zap className="w-4 h-4" />
+          badgeIcon: <Zap className="w-4 h-4" />,
         };
     }
   };
@@ -194,35 +200,36 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
         return {
           container: `bg-black border-2 border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:shadow-[0_0_50px_rgba(34,211,238,0.5)]`,
           button: `bg-gradient-to-r ${tierInfo.color} hover:scale-105 shadow-lg hover:shadow-xl`,
-          text: 'text-cyan-400'
+          text: 'text-cyan-400',
         };
 
       case 'minimal':
         return {
           container: 'bg-white border border-gray-200 shadow-sm hover:shadow-md',
           button: `bg-gray-900 hover:bg-gray-800 text-white`,
-          text: 'text-gray-600'
+          text: 'text-gray-600',
         };
 
       case 'bold':
         return {
           container: `bg-gradient-to-br ${tierInfo.color} text-white shadow-2xl`,
           button: 'bg-white text-gray-900 hover:bg-gray-100 font-bold',
-          text: 'text-white opacity-90'
+          text: 'text-white opacity-90',
         };
 
       case 'premium':
         return {
-          container: 'bg-gradient-to-br from-gray-900 to-black border border-yellow-400 shadow-2xl',
+          container:
+            'bg-gradient-to-br from-gray-900 to-black border border-yellow-400 shadow-2xl',
           button: `bg-gradient-to-r from-yellow-400 to-yellow-600 text-black hover:from-yellow-300 hover:to-yellow-500 font-bold`,
-          text: 'text-yellow-400'
+          text: 'text-yellow-400',
         };
 
       default: // gradient
         return {
           container: `bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-lg hover:shadow-xl`,
           button: `bg-gradient-to-r ${tierInfo.color} text-white hover:scale-105 shadow-lg`,
-          text: 'text-gray-600'
+          text: 'text-gray-600',
         };
     }
   };
@@ -235,7 +242,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           title: 'text-lg font-bold',
           subtitle: 'text-sm',
           button: 'px-4 py-2 text-sm rounded-lg',
-          badge: 'px-2 py-1 text-xs'
+          badge: 'px-2 py-1 text-xs',
         };
 
       case 'large':
@@ -244,7 +251,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           title: 'text-3xl font-bold',
           subtitle: 'text-lg',
           button: 'px-8 py-4 text-lg rounded-xl',
-          badge: 'px-4 py-2 text-sm'
+          badge: 'px-4 py-2 text-sm',
         };
 
       case 'hero':
@@ -253,7 +260,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           title: 'text-4xl md:text-5xl font-bold',
           subtitle: 'text-xl',
           button: 'px-12 py-5 text-xl rounded-2xl',
-          badge: 'px-6 py-3 text-base'
+          badge: 'px-6 py-3 text-base',
         };
 
       default: // medium
@@ -262,7 +269,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           title: 'text-2xl font-bold',
           subtitle: 'text-base',
           button: 'px-6 py-3 text-base rounded-xl',
-          badge: 'px-3 py-1 text-sm'
+          badge: 'px-3 py-1 text-sm',
         };
     }
   };
@@ -273,15 +280,16 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
   const tierInfo = getTierInfo();
 
   return (
-    <div className={`
+    <div
+      className={`
       relative overflow-hidden transition-all duration-500 transform
       ${styles.container} ${sizeStyles.container}
       ${hasAnimated ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}
       ${isHovered ? 'scale-102' : 'scale-100'}
       ${className}
     `}
-    onMouseEnter={() => setIsHovered(true)}
-    onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Background effects */}
       {variant === 'neon' && (
@@ -290,11 +298,13 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
 
       {/* Badge */}
       <div className="flex items-center justify-center mb-4">
-        <div className={`
+        <div
+          className={`
           inline-flex items-center space-x-2 font-bold tracking-wider
           ${sizeStyles.badge} ${styles.text}
           bg-yellow-400 bg-opacity-20 border border-yellow-400 rounded-full
-        `}>
+        `}
+        >
           {content.badgeIcon}
           <span>{content.badge}</span>
         </div>
@@ -302,7 +312,9 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
 
       {/* Main content */}
       <div className="text-center mb-6">
-        <h3 className={`${sizeStyles.title} mb-2 ${variant === 'bold' || variant === 'premium' ? 'text-white' : 'text-gray-900'}`}>
+        <h3
+          className={`${sizeStyles.title} mb-2 ${variant === 'bold' || variant === 'premium' ? 'text-white' : 'text-gray-900'}`}
+        >
           {content.primary}
         </h3>
         <p className={`${sizeStyles.subtitle} ${styles.text} mb-4`}>
@@ -327,11 +339,16 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           <div className="flex items-center justify-center space-x-6 mb-4">
             <div className="flex items-center space-x-1">
               <div className="flex -space-x-2">
-                {[1,2,3,4,5].map(i => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 border-2 border-white" />
+                {[1, 2, 3, 4, 5].map(i => (
+                  <div
+                    key={i}
+                    className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 border-2 border-white"
+                  />
                 ))}
               </div>
-              <span className="text-sm text-gray-600 ml-2">+{userCount.toLocaleString()} users</span>
+              <span className="text-sm text-gray-600 ml-2">
+                +{userCount.toLocaleString()} users
+              </span>
             </div>
           </div>
         )}

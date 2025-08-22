@@ -1,6 +1,6 @@
 /**
  * React Performance Profiler Utility
- * 
+ *
  * Provides development-mode performance monitoring for React components,
  * including render time tracking, re-render analysis, and bottleneck detection.
  */
@@ -33,9 +33,10 @@ class PerformanceProfiler {
   private reportingEnabled: boolean = false;
 
   constructor() {
-    this.enabled = process.env.NODE_ENV === 'development' && 
-                   process.env.REACT_APP_PERFORMANCE_PROFILING === 'true';
-    
+    this.enabled =
+      process.env.NODE_ENV === 'development' &&
+      process.env.REACT_APP_PERFORMANCE_PROFILING === 'true';
+
     this.logLevel = (process.env.REACT_APP_PROFILING_LOG_LEVEL as any) || 'summary';
     this.slowThreshold = parseInt(process.env.REACT_APP_SLOW_RENDER_THRESHOLD || '16');
     this.reportingEnabled = process.env.REACT_APP_PERF_REPORTING === 'true';
@@ -62,7 +63,7 @@ class PerformanceProfiler {
 
     const existing = this.data.get(id);
     const renderCount = existing ? existing.renderCount + 1 : 1;
-    
+
     const entry: PerformanceEntry = {
       id,
       phase,
@@ -73,15 +74,11 @@ class PerformanceProfiler {
       interactions: new Set(), // Placeholder as interactions parameter was removed in newer React
       renderCount,
       totalTime: existing ? existing.totalTime + actualDuration : actualDuration,
-      averageTime: existing 
+      averageTime: existing
         ? (existing.totalTime + actualDuration) / renderCount
         : actualDuration,
-      maxTime: existing 
-        ? Math.max(existing.maxTime, actualDuration)
-        : actualDuration,
-      minTime: existing 
-        ? Math.min(existing.minTime, actualDuration)
-        : actualDuration,
+      maxTime: existing ? Math.max(existing.maxTime, actualDuration) : actualDuration,
+      minTime: existing ? Math.min(existing.minTime, actualDuration) : actualDuration,
       lastRender: Date.now(),
     };
 
@@ -107,16 +104,13 @@ class PerformanceProfiler {
    * Log slow renders with detailed information
    */
   private logSlowRender(entry: PerformanceEntry) {
-    console.warn(
-      `🐌 Slow render detected: ${entry.id}`,
-      {
-        duration: `${entry.actualDuration.toFixed(2)}ms`,
-        phase: entry.phase,
-        renderCount: entry.renderCount,
-        average: `${entry.averageTime.toFixed(2)}ms`,
-        threshold: `${this.slowThreshold}ms`,
-      }
-    );
+    console.warn(`🐌 Slow render detected: ${entry.id}`, {
+      duration: `${entry.actualDuration.toFixed(2)}ms`,
+      phase: entry.phase,
+      renderCount: entry.renderCount,
+      average: `${entry.averageTime.toFixed(2)}ms`,
+      threshold: `${this.slowThreshold}ms`,
+    });
 
     // Send to analytics if reporting is enabled
     if (this.reportingEnabled) {
@@ -136,7 +130,8 @@ class PerformanceProfiler {
   } {
     const entries = Array.from(this.data.values());
     const slowComponents = entries.filter(e => e.averageTime > this.slowThreshold);
-    const frequentComponents = entries.filter(e => e.renderCount > 10)
+    const frequentComponents = entries
+      .filter(e => e.renderCount > 10)
       .sort((a, b) => b.renderCount - a.renderCount);
 
     const totalRenderTime = entries.reduce((sum, e) => sum + e.totalTime, 0);
@@ -158,7 +153,7 @@ class PerformanceProfiler {
     if (!this.enabled || this.logLevel === 'none') return;
 
     const summary = this.getSummary();
-    
+
     console.group('🔬 React Performance Summary');
     console.log(`📊 Total components tracked: ${summary.totalComponents}`);
     console.log(`⚡ Average render time: ${summary.averageRenderTime.toFixed(2)}ms`);
@@ -167,7 +162,9 @@ class PerformanceProfiler {
     if (summary.slowComponents.length > 0) {
       console.group(`🐌 Slow components (>${this.slowThreshold}ms):`);
       summary.slowComponents.forEach(comp => {
-        console.log(`  ${comp.id}: avg ${comp.averageTime.toFixed(2)}ms, max ${comp.maxTime.toFixed(2)}ms, renders: ${comp.renderCount}`);
+        console.log(
+          `  ${comp.id}: avg ${comp.averageTime.toFixed(2)}ms, max ${comp.maxTime.toFixed(2)}ms, renders: ${comp.renderCount}`
+        );
       });
       console.groupEnd();
     }
@@ -175,7 +172,9 @@ class PerformanceProfiler {
     if (summary.frequentComponents.length > 0) {
       console.group('🔄 Frequently rendering components:');
       summary.frequentComponents.slice(0, 5).forEach(comp => {
-        console.log(`  ${comp.id}: ${comp.renderCount} renders, avg ${comp.averageTime.toFixed(2)}ms`);
+        console.log(
+          `  ${comp.id}: ${comp.renderCount} renders, avg ${comp.averageTime.toFixed(2)}ms`
+        );
       });
       console.groupEnd();
     }
@@ -190,13 +189,16 @@ class PerformanceProfiler {
     if (typeof PerformanceObserver === 'undefined') return;
 
     try {
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver(list => {
         const entries = list.getEntries();
         entries.forEach(entry => {
           if (entry.entryType === 'measure' && entry.name.startsWith('⚛️')) {
             // React DevTools performance markers
             if (this.logLevel === 'verbose') {
-              console.log(`⚛️ React measure: ${entry.name}`, `${entry.duration.toFixed(2)}ms`);
+              console.log(
+                `⚛️ React measure: ${entry.name}`,
+                `${entry.duration.toFixed(2)}ms`
+              );
             }
           }
         });
@@ -219,7 +221,7 @@ class PerformanceProfiler {
       if (this.logLevel !== 'none') {
         this.logSummary();
       }
-      
+
       if (this.reportingEnabled) {
         this.sendPerformanceReport();
       }
@@ -311,10 +313,11 @@ export function withPerformanceProfiler<T extends {}>(
   WrappedComponent: React.ComponentType<T>,
   profilerId?: string
 ) {
-  const displayName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
+  const displayName =
+    WrappedComponent.displayName || WrappedComponent.name || 'Component';
   const id = profilerId || displayName;
 
-  const ProfiledComponent: React.FC<T> = (props) => {
+  const ProfiledComponent: React.FC<T> = props => {
     return React.createElement(
       Profiler,
       { id, onRender: performanceProfiler.onRender },
@@ -336,10 +339,10 @@ export function usePerformanceMonitor(componentName: string) {
   React.useEffect(() => {
     renderCount.current += 1;
     const endTime = performance.now();
-    
+
     if (startTime.current) {
       const duration = endTime - startTime.current;
-      
+
       if (duration > performanceProfiler['slowThreshold']) {
         console.warn(
           `🐌 Slow render in ${componentName}: ${duration.toFixed(2)}ms`,
@@ -347,7 +350,7 @@ export function usePerformanceMonitor(componentName: string) {
         );
       }
     }
-    
+
     startTime.current = endTime;
   });
 

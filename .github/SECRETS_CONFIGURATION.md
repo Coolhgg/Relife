@@ -1,6 +1,7 @@
 # 🔐 Secrets & Environment Variables Configuration
 
-This document provides comprehensive details on all secrets and environment variables required for the Relife CI/CD pipeline.
+This document provides comprehensive details on all secrets and environment variables required for
+the Relife CI/CD pipeline.
 
 ## 📋 Quick Setup Checklist
 
@@ -16,6 +17,7 @@ This document provides comprehensive details on all secrets and environment vari
 ### Core Deployment Secrets
 
 #### `CODECOV_TOKEN`
+
 - **Purpose**: Code coverage reporting integration
 - **Where to get**: [Codecov.io](https://codecov.io) → Repository Settings → Copy token
 - **Environments**: Both staging and production
@@ -23,6 +25,7 @@ This document provides comprehensive details on all secrets and environment vari
 - **Example**: `12345678-1234-1234-1234-123456789012`
 
 #### `STAGING_DEPLOY_KEY` / `PRODUCTION_DEPLOY_KEY`
+
 - **Purpose**: Authentication for deployment to hosting service
 - **Where to get**: Your hosting provider (Vercel, Netlify, AWS, etc.)
 - **Environments**: Staging / Production respectively
@@ -35,6 +38,7 @@ This document provides comprehensive details on all secrets and environment vari
 ### Error Tracking & Monitoring
 
 #### `SENTRY_DSN_STAGING` / `SENTRY_DSN_PRODUCTION`
+
 - **Purpose**: Error tracking and performance monitoring
 - **Where to get**: [Sentry.io](https://sentry.io) → Project Settings → Client Keys
 - **Environments**: Staging / Production respectively
@@ -44,11 +48,13 @@ This document provides comprehensive details on all secrets and environment vari
 ### Firebase Integration
 
 #### `FIREBASE_CONFIG_STAGING` / `FIREBASE_CONFIG_PRODUCTION`
+
 - **Purpose**: Firebase SDK configuration for backend services
 - **Where to get**: Firebase Console → Project Settings → General → Your apps
 - **Environments**: Staging / Production respectively
 - **Format**: JSON configuration object
 - **Example**:
+
 ```json
 {
   "apiKey": "AIza...",
@@ -63,6 +69,7 @@ This document provides comprehensive details on all secrets and environment vari
 ### Cloud Provider (AWS)
 
 #### `AWS_ACCESS_KEY_ID`
+
 - **Purpose**: AWS authentication for deployment and services
 - **Where to get**: AWS IAM Console → Users → Security credentials
 - **Environments**: Both (can be same for non-sensitive resources)
@@ -70,6 +77,7 @@ This document provides comprehensive details on all secrets and environment vari
 - **Example**: `AKIAIOSFODNN7EXAMPLE`
 
 #### `AWS_SECRET_ACCESS_KEY`
+
 - **Purpose**: AWS secret key paired with access key ID
 - **Where to get**: AWS IAM Console → Users → Security credentials
 - **Environments**: Both (can be same for non-sensitive resources)
@@ -77,6 +85,7 @@ This document provides comprehensive details on all secrets and environment vari
 - **Example**: `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`
 
 #### `AWS_REGION` (Optional)
+
 - **Purpose**: Specify AWS region for deployments
 - **Where to get**: Choose based on your deployment location
 - **Environments**: Both
@@ -86,6 +95,7 @@ This document provides comprehensive details on all secrets and environment vari
 ### Optional Integrations
 
 #### `SSL_CERTIFICATE`
+
 - **Purpose**: Custom SSL certificate for HTTPS
 - **Where to get**: Certificate authority or cloud provider
 - **Environments**: Production (typically)
@@ -93,18 +103,21 @@ This document provides comprehensive details on all secrets and environment vari
 - **Example**: `-----BEGIN CERTIFICATE-----...`
 
 #### `CDN_INVALIDATION_KEY`
+
 - **Purpose**: CloudFront/CDN cache invalidation
 - **Where to get**: AWS CloudFront or CDN provider
 - **Environments**: Production
 - **Format**: Provider-specific API key
 
 #### `ANALYTICS_API_KEY`
+
 - **Purpose**: Google Analytics or similar service integration
 - **Where to get**: Analytics provider dashboard
 - **Environments**: Production
 - **Format**: Provider-specific key format
 
 #### `PAYMENT_API_KEY`
+
 - **Purpose**: Payment processing integration (Stripe, PayPal, etc.)
 - **Where to get**: Payment provider dashboard
 - **Environments**: Production (use test keys for staging)
@@ -115,6 +128,7 @@ This document provides comprehensive details on all secrets and environment vari
 ### Core Application Variables
 
 #### Staging Environment Variables
+
 ```bash
 # Application Environment
 NODE_ENV=staging
@@ -142,6 +156,7 @@ VITE_ENABLE_SERVICE_WORKER=false
 ```
 
 #### Production Environment Variables
+
 ```bash
 # Application Environment
 NODE_ENV=production
@@ -172,6 +187,7 @@ VITE_ENABLE_COMPRESSION=true
 ### Service-Specific Variables
 
 #### AlarmService Configuration
+
 ```bash
 # Alarm Settings
 VITE_ALARM_MAX_DAILY_ALARMS=10
@@ -181,6 +197,7 @@ VITE_ALARM_DEFAULT_VOLUME=0.7
 ```
 
 #### VoiceService Configuration
+
 ```bash
 # Voice Settings
 VITE_VOICE_DEFAULT_ENGINE=web-speech
@@ -190,6 +207,7 @@ VITE_VOICE_FALLBACK_ENABLED=true
 ```
 
 #### SubscriptionService Configuration
+
 ```bash
 # Subscription Settings
 VITE_SUBSCRIPTION_TRIAL_DAYS=7
@@ -252,19 +270,23 @@ echo "🌍 Environment validation complete"
 ## 🔄 Secret Rotation Schedule
 
 ### Monthly Rotation
+
 - [ ] Deployment keys (if using tokens)
 - [ ] API keys for external services
 
 ### Quarterly Rotation
+
 - [ ] AWS credentials
 - [ ] Database credentials
 - [ ] SSL certificates check
 
 ### Annual Rotation
+
 - [ ] Service account keys
 - [ ] Long-term authentication tokens
 
 ### Emergency Rotation
+
 - [ ] Any compromised secrets
 - [ ] After team member departures
 - [ ] Security incident response
@@ -272,6 +294,7 @@ echo "🌍 Environment validation complete"
 ## 🛡️ Security Best Practices
 
 ### Secret Management
+
 1. **Never commit secrets to code**: Use environment variables only
 2. **Use least privilege**: Grant minimal required permissions
 3. **Regular rotation**: Follow the rotation schedule above
@@ -279,6 +302,7 @@ echo "🌍 Environment validation complete"
 5. **Backup strategy**: Securely backup critical secrets
 
 ### Environment Variables
+
 1. **Environment separation**: Never share production secrets with staging
 2. **Descriptive naming**: Use clear, consistent naming conventions
 3. **Documentation**: Keep this document updated
@@ -289,16 +313,19 @@ echo "🌍 Environment validation complete"
 ### Common Issues
 
 #### "Secret not found" errors
+
 1. Check secret name spelling (case-sensitive)
 2. Verify secret is set in correct environment
 3. Ensure no extra whitespace in secret values
 
 #### "Invalid credentials" errors
+
 1. Verify secret values are current and valid
 2. Check if secrets need rotation
 3. Confirm service integrations are properly configured
 
 #### Environment variable issues
+
 1. Verify variable names match exactly in code
 2. Check that variables are set in the correct environment
 3. Ensure values don't contain special characters that need escaping
@@ -331,7 +358,7 @@ For secrets and configuration issues:
 
 ---
 
-**Security Notice**: Never share actual secret values. If you suspect a secret has been compromised, rotate it immediately and update all dependent systems.
+**Security Notice**: Never share actual secret values. If you suspect a secret has been compromised,
+rotate it immediately and update all dependent systems.
 
-*Last Updated: $(date)*
-*Document Version: 1.0*
+_Last Updated: $(date)_ _Document Version: 1.0_

@@ -93,7 +93,7 @@ class MixedScriptValidator {
             file: filePath,
             key: currentPath.join('.'),
             value: value,
-            allowed: this.isAllowedMixedScript(value)
+            allowed: this.isAllowedMixedScript(value),
           };
 
           this.findings.push(finding);
@@ -110,9 +110,9 @@ class MixedScriptValidator {
   validateAllFiles() {
     console.log('🔍 Validating mixed script usage in translation files...');
 
-    const languages = fs.readdirSync(LOCALES_DIR).filter(dir =>
-      fs.statSync(path.join(LOCALES_DIR, dir)).isDirectory()
-    );
+    const languages = fs
+      .readdirSync(LOCALES_DIR)
+      .filter(dir => fs.statSync(path.join(LOCALES_DIR, dir)).isDirectory());
 
     languages.forEach(lang => {
       const langDir = path.join(LOCALES_DIR, lang);
@@ -179,17 +179,22 @@ class MixedScriptValidator {
   generateIgnorePatterns() {
     const ignoreFile = path.join(__dirname, '..', '.mixedscriptignore');
     let content = '# Mixed Script Ignore File';
-    content += '# This file specifies intentional mixed script usage that should not generate warnings';
+    content +=
+      '# This file specifies intentional mixed script usage that should not generate warnings';
 
-    this.findings.filter(f => f.allowed).forEach(finding => {
-      const relativePath = path.relative(process.cwd(), finding.file);
-      content += `# ${finding.key}: ${finding.value}`;
-      content += `${relativePath}:${finding.key}
+    this.findings
+      .filter(f => f.allowed)
+      .forEach(finding => {
+        const relativePath = path.relative(process.cwd(), finding.file);
+        content += `# ${finding.key}: ${finding.value}`;
+        content += `${relativePath}:${finding.key}
 `;
-    });
+      });
 
     fs.writeFileSync(ignoreFile, content);
-    console.log(`📝 Updated .mixedscriptignore with ${this.findings.filter(f => f.allowed).length} patterns`);
+    console.log(
+      `📝 Updated .mixedscriptignore with ${this.findings.filter(f => f.allowed).length} patterns`
+    );
   }
 }
 

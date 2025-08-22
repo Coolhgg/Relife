@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Play, Volume2, VolumeX, Palette, Music, Zap } from "lucide-react";
-import { soundEffectsService, SoundTheme } from "../services/sound-effects";
-import { motion } from "framer-motion";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Play, Volume2, VolumeX, Palette, Music, Zap } from 'lucide-react';
+import { soundEffectsService, SoundTheme } from '../services/sound-effects';
+import { motion } from 'framer-motion';
 
 interface ThemeCategory {
   name: string;
@@ -25,131 +25,131 @@ interface ThemeCategory {
 }
 
 const SoundThemeDemo: React.FC = () => {
-  const [currentTheme, setCurrentTheme] = useState<SoundTheme>("default");
+  const [currentTheme, setCurrentTheme] = useState<SoundTheme>('default');
   const [isPlaying, setIsPlaying] = useState<{ [key: string]: boolean }>({});
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [testResults, setTestResults] = useState<{
-    [key: string]: "success" | "error" | "testing";
+    [key: string]: 'success' | 'error' | 'testing';
   }>({});
 
   // Organized theme categories for better presentation
   const themeCategories: ThemeCategory[] = [
     {
-      name: "Core Themes",
+      name: 'Core Themes',
       icon: <Palette className="w-5 h-5" />,
-      color: "blue",
+      color: 'blue',
       themes: [
         {
-          id: "default",
-          name: "Default",
-          description: "Clean and modern sounds",
-          color: "blue",
+          id: 'default',
+          name: 'Default',
+          description: 'Clean and modern sounds',
+          color: 'blue',
         },
         {
-          id: "minimal",
-          name: "Minimal",
-          description: "Subtle and understated sounds",
-          color: "gray",
+          id: 'minimal',
+          name: 'Minimal',
+          description: 'Subtle and understated sounds',
+          color: 'gray',
         },
       ],
     },
     {
-      name: "Nature & Ambient",
+      name: 'Nature & Ambient',
       icon: <div className="text-green-500">🌿</div>,
-      color: "green",
+      color: 'green',
       themes: [
         {
-          id: "nature",
-          name: "Nature",
-          description: "Organic wood taps and wind chimes",
-          color: "green",
+          id: 'nature',
+          name: 'Nature',
+          description: 'Organic wood taps and wind chimes',
+          color: 'green',
         },
         {
-          id: "ambient",
-          name: "Ambient",
-          description: "Ethereal pads and atmospheric sounds",
-          color: "cyan",
+          id: 'ambient',
+          name: 'Ambient',
+          description: 'Ethereal pads and atmospheric sounds',
+          color: 'cyan',
         },
         {
-          id: "seasonal",
-          name: "Seasonal",
-          description: "Crystal winter sparkles and ice sounds",
-          color: "sky",
+          id: 'seasonal',
+          name: 'Seasonal',
+          description: 'Crystal winter sparkles and ice sounds',
+          color: 'sky',
         },
       ],
     },
     {
-      name: "Electronic & Futuristic",
+      name: 'Electronic & Futuristic',
       icon: <Zap className="w-5 h-5 text-purple-500" />,
-      color: "purple",
+      color: 'purple',
       themes: [
         {
-          id: "electronic",
-          name: "Electronic",
-          description: "Sharp digital clicks and arpeggios",
-          color: "indigo",
+          id: 'electronic',
+          name: 'Electronic',
+          description: 'Sharp digital clicks and arpeggios',
+          color: 'indigo',
         },
         {
-          id: "cyberpunk",
-          name: "Cyberpunk",
-          description: "Dark dystopian tech with distortion",
-          color: "pink",
+          id: 'cyberpunk',
+          name: 'Cyberpunk',
+          description: 'Dark dystopian tech with distortion',
+          color: 'pink',
         },
         {
-          id: "scifi",
-          name: "Sci-Fi",
-          description: "Futuristic laser sweeps and space sounds",
-          color: "blue",
+          id: 'scifi',
+          name: 'Sci-Fi',
+          description: 'Futuristic laser sweeps and space sounds',
+          color: 'blue',
         },
       ],
     },
     {
-      name: "Artistic & Creative",
+      name: 'Artistic & Creative',
       icon: <div className="text-purple-500">✨</div>,
-      color: "purple",
+      color: 'purple',
       themes: [
         {
-          id: "fantasy",
-          name: "Fantasy",
-          description: "Magical sparkles and bell harmonics",
-          color: "emerald",
+          id: 'fantasy',
+          name: 'Fantasy',
+          description: 'Magical sparkles and bell harmonics',
+          color: 'emerald',
         },
         {
-          id: "horror",
-          name: "Horror",
-          description: "Dissonant tones and creepy ambience",
-          color: "zinc",
+          id: 'horror',
+          name: 'Horror',
+          description: 'Dissonant tones and creepy ambience',
+          color: 'zinc',
         },
         {
-          id: "classical",
-          name: "Classical",
-          description: "Harpsichord plucks and orchestral progressions",
-          color: "yellow",
+          id: 'classical',
+          name: 'Classical',
+          description: 'Harpsichord plucks and orchestral progressions',
+          color: 'yellow',
         },
         {
-          id: "lofi",
-          name: "Lo-Fi",
-          description: "Warm vintage sounds with vinyl crackle",
-          color: "rose",
+          id: 'lofi',
+          name: 'Lo-Fi',
+          description: 'Warm vintage sounds with vinyl crackle',
+          color: 'rose',
         },
       ],
     },
     {
-      name: "Energy & Activity",
+      name: 'Energy & Activity',
       icon: <div className="text-red-500">💪</div>,
-      color: "red",
+      color: 'red',
       themes: [
         {
-          id: "workout",
-          name: "Workout",
-          description: "High-energy motivational beats",
-          color: "red",
+          id: 'workout',
+          name: 'Workout',
+          description: 'High-energy motivational beats',
+          color: 'red',
         },
         {
-          id: "retro",
-          name: "Retro",
-          description: "8-bit gaming sounds and square waves",
-          color: "fuchsia",
+          id: 'retro',
+          name: 'Retro',
+          description: '8-bit gaming sounds and square waves',
+          color: 'fuchsia',
         },
       ],
     },
@@ -157,15 +157,15 @@ const SoundThemeDemo: React.FC = () => {
 
   // Sound types for testing
   const soundTypes = [
-    { id: "ui.click", name: "Click", description: "Primary interaction sound" },
-    { id: "ui.hover", name: "Hover", description: "Rollover feedback" },
-    { id: "ui.success", name: "Success", description: "Positive confirmation" },
-    { id: "ui.error", name: "Error", description: "Negative feedback" },
+    { id: 'ui.click', name: 'Click', description: 'Primary interaction sound' },
+    { id: 'ui.hover', name: 'Hover', description: 'Rollover feedback' },
+    { id: 'ui.success', name: 'Success', description: 'Positive confirmation' },
+    { id: 'ui.error', name: 'Error', description: 'Negative feedback' },
   ];
 
   const alarmTypes = [
-    { name: "Gentle Awakening", description: "Soft morning alarm" },
-    { name: "Energetic Wake", description: "High-energy alarm" },
+    { name: 'Gentle Awakening', description: 'Soft morning alarm' },
+    { name: 'Energetic Wake', description: 'High-energy alarm' },
   ];
 
   // Play sound effect
@@ -173,8 +173,8 @@ const SoundThemeDemo: React.FC = () => {
     if (!soundEnabled) return;
 
     const key = `${themeId}-${soundId}`;
-    setIsPlaying((prev) => ({ ...prev, [key]: true }));
-    setTestResults((prev) => ({ ...prev, [key]: "testing" }));
+    setIsPlaying(prev => ({ ...prev, [key]: true }));
+    setTestResults(prev => ({ ...prev, [key]: 'testing' }));
 
     try {
       // Temporarily switch to theme for testing
@@ -191,13 +191,13 @@ const SoundThemeDemo: React.FC = () => {
         await soundEffectsService.setSoundTheme(originalTheme);
       }
 
-      setTestResults((prev) => ({ ...prev, [key]: "success" }));
+      setTestResults(prev => ({ ...prev, [key]: 'success' }));
     } catch (error) {
-      console.error("Sound test failed:", error);
-      setTestResults((prev) => ({ ...prev, [key]: "error" }));
+      console.error('Sound test failed:', error);
+      setTestResults(prev => ({ ...prev, [key]: 'error' }));
     } finally {
       setTimeout(() => {
-        setIsPlaying((prev) => ({ ...prev, [key]: false }));
+        setIsPlaying(prev => ({ ...prev, [key]: false }));
       }, 500);
     }
   };
@@ -207,13 +207,13 @@ const SoundThemeDemo: React.FC = () => {
     if (!soundEnabled) return;
 
     const key = `${themeId}-alarm-${alarmType}`;
-    setIsPlaying((prev) => ({ ...prev, [key]: true }));
+    setIsPlaying(prev => ({ ...prev, [key]: true }));
 
     // Simulate alarm sound by playing success sound with loop simulation
-    await playSound("ui.success", themeId);
+    await playSound('ui.success', themeId);
 
     setTimeout(() => {
-      setIsPlaying((prev) => ({ ...prev, [key]: false }));
+      setIsPlaying(prev => ({ ...prev, [key]: false }));
     }, 2000);
   };
 
@@ -226,20 +226,20 @@ const SoundThemeDemo: React.FC = () => {
       // Play a sample sound to demonstrate
       if (soundEnabled) {
         setTimeout(() => {
-          soundEffectsService.playSound("ui.success", { force: true });
+          soundEffectsService.playSound('ui.success', { force: true });
         }, 200);
       }
     } catch (error) {
-      console.error("Failed to apply theme:", error);
+      console.error('Failed to apply theme:', error);
     }
   };
 
   const getStatusColor = (key: string) => {
     const status = testResults[key];
-    if (status === "testing") return "animate-pulse text-blue-500";
-    if (status === "success") return "text-green-500";
-    if (status === "error") return "text-red-500";
-    return "text-gray-400";
+    if (status === 'testing') return 'animate-pulse text-blue-500';
+    if (status === 'success') return 'text-green-500';
+    if (status === 'error') return 'text-red-500';
+    return 'text-gray-400';
   };
 
   return (
@@ -261,7 +261,7 @@ const SoundThemeDemo: React.FC = () => {
 
         <div className="flex items-center justify-center gap-4">
           <Button
-            variant={soundEnabled ? "default" : "outline"}
+            variant={soundEnabled ? 'default' : 'outline'}
             size="sm"
             onClick={() => setSoundEnabled(!soundEnabled)}
             className="flex items-center gap-2"
@@ -271,14 +271,13 @@ const SoundThemeDemo: React.FC = () => {
             ) : (
               <VolumeX className="w-4 h-4" />
             )}
-            {soundEnabled ? "Sounds On" : "Sounds Off"}
+            {soundEnabled ? 'Sounds On' : 'Sounds Off'}
           </Button>
 
           <Badge variant="outline" className="text-sm">
-            Current:{" "}
-            {themeCategories
-              .flatMap((cat) => cat.themes)
-              .find((t) => t.id === currentTheme)?.name || "Default"}
+            Current:{' '}
+            {themeCategories.flatMap(cat => cat.themes).find(t => t.id === currentTheme)
+              ?.name || 'Default'}
           </Badge>
         </div>
       </div>
@@ -314,8 +313,8 @@ const SoundThemeDemo: React.FC = () => {
                 <Card
                   className={`h-full border-2 transition-all duration-300 ${
                     currentTheme === theme.id
-                      ? "border-blue-500 bg-blue-50 dark:bg-blue-950/20 shadow-lg"
-                      : "border-gray-200 dark:border-gray-700 hover:border-gray-300"
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20 shadow-lg'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
                   }`}
                 >
                   <CardHeader className="pb-3">
@@ -328,12 +327,10 @@ const SoundThemeDemo: React.FC = () => {
                       </CardTitle>
                       <Button
                         size="sm"
-                        variant={
-                          currentTheme === theme.id ? "default" : "outline"
-                        }
+                        variant={currentTheme === theme.id ? 'default' : 'outline'}
                         onClick={() => applyTheme(theme.id)}
                       >
-                        {currentTheme === theme.id ? "Active" : "Apply"}
+                        {currentTheme === theme.id ? 'Active' : 'Apply'}
                       </Button>
                     </div>
                     <CardDescription className="text-sm">
@@ -348,7 +345,7 @@ const SoundThemeDemo: React.FC = () => {
                         UI Sounds
                       </h4>
                       <div className="grid grid-cols-2 gap-1">
-                        {soundTypes.map((sound) => {
+                        {soundTypes.map(sound => {
                           const key = `${theme.id}-${sound.id}`;
                           const isPlayingThis = isPlaying[key];
                           return (
@@ -361,7 +358,7 @@ const SoundThemeDemo: React.FC = () => {
                               disabled={isPlayingThis}
                             >
                               <Play
-                                className={`w-3 h-3 mr-1 ${isPlayingThis ? "animate-spin" : ""}`}
+                                className={`w-3 h-3 mr-1 ${isPlayingThis ? 'animate-spin' : ''}`}
                               />
                               {sound.name}
                             </Button>
@@ -386,13 +383,11 @@ const SoundThemeDemo: React.FC = () => {
                               variant="ghost"
                               size="sm"
                               className="h-8 text-xs justify-start w-full"
-                              onClick={() =>
-                                playAlarmSound(alarm.name, theme.id)
-                              }
+                              onClick={() => playAlarmSound(alarm.name, theme.id)}
                               disabled={isPlayingThis}
                             >
                               <Play
-                                className={`w-3 h-3 mr-1 ${isPlayingThis ? "animate-pulse" : ""}`}
+                                className={`w-3 h-3 mr-1 ${isPlayingThis ? 'animate-pulse' : ''}`}
                               />
                               {alarm.name}
                             </Button>
@@ -419,18 +414,18 @@ const SoundThemeDemo: React.FC = () => {
         <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-300">
           <div>
             <p>
-              <strong>13 Total Themes:</strong> From minimal to cyberpunk,
-              fantasy to classical
+              <strong>13 Total Themes:</strong> From minimal to cyberpunk, fantasy to
+              classical
             </p>
             <p>
-              <strong>78 Sound Files:</strong> Each theme includes 4 UI sounds +
-              2 alarm variations
+              <strong>78 Sound Files:</strong> Each theme includes 4 UI sounds + 2 alarm
+              variations
             </p>
           </div>
           <div>
             <p>
-              <strong>Procedural Audio:</strong> All sounds generated using Web
-              Audio API
+              <strong>Procedural Audio:</strong> All sounds generated using Web Audio
+              API
             </p>
             <p>
               <strong>Instant Switching:</strong> Change themes immediately with

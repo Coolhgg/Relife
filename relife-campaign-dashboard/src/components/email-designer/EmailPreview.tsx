@@ -19,7 +19,14 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import {
   Eye,
   Send,
@@ -34,7 +41,7 @@ import {
   Users,
   Target,
   Zap,
-  RefreshCw
+  RefreshCw,
 } from 'lucide-react';
 
 interface EmailTemplate {
@@ -95,11 +102,11 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
     setTestEmails([...testEmails, '']);
   };
 
-  const removeTestEmail = (index: number) => {
+  const removeTestEmail = (_index: number) => {
     setTestEmails(testEmails.filter((_, i) => i !== index));
   };
 
-  const updateTestEmail = (index: number, value: string) => {
+  const updateTestEmail = (_index: number, value: string) => {
     const updated = [...testEmails];
     updated[index] = value;
     setTestEmails(updated);
@@ -435,7 +442,7 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <h3 className="font-medium">Test Recipients</h3>
-                  {testEmails.map((email, index) => (
+                  {testEmails.map((email, _index) => (
                     <div key={index} className="flex gap-2">
                       <Input
                         type="email"

@@ -36,15 +36,23 @@ import {
   Loader2,
   AlertCircle,
   Settings,
-  VolumeX
+  VolumeX,
 } from 'lucide-react';
 
 // Import our audio services
 import { audioManager } from '../services/audio-manager';
 import { lazyAudioLoader } from '../services/lazy-audio-loader';
-import { useAudioLazyLoading, usePlaylistLazyLoading } from '../hooks/useAudioLazyLoading';
+import {
+  useAudioLazyLoading,
+  usePlaylistLazyLoading,
+} from '../hooks/useAudioLazyLoading';
 import { useEnhancedCaching } from '../hooks/useEnhancedCaching';
-import type { CustomSound, Playlist, MotivationalQuote, MediaLibrary } from '../services/types/media';
+import type {
+  CustomSound,
+  Playlist,
+  MotivationalQuote,
+  MediaLibrary,
+} from '../services/types/media';
 
 interface EnhancedMediaContentProps {
   currentUser: { id: string; username: string; displayName: string };
@@ -52,7 +60,11 @@ interface EnhancedMediaContentProps {
   onUploadSound?: (file: File) => Promise<void>;
   onCreatePlaylist?: (playlist: Partial<Playlist>) => Promise<void>;
   onSubmitQuote?: (quote: Partial<MotivationalQuote>) => Promise<void>;
-  onCompletePhotoChallenge?: (challengeId: string, photo: File, caption?: string) => Promise<void>;
+  onCompletePhotoChallenge?: (
+    challengeId: string,
+    photo: File,
+    caption?: string
+  ) => Promise<void>;
 }
 
 // Enhanced mock data with real audio capabilities
@@ -71,7 +83,7 @@ const ENHANCED_MOCK_SOUNDS: CustomSound[] = [
     rating: 4.8,
     format: 'audio/mpeg',
     size: 1920000, // ~1.9MB
-    compressionLevel: 'light'
+    compressionLevel: 'light',
   },
   {
     id: '2',
@@ -87,7 +99,7 @@ const ENHANCED_MOCK_SOUNDS: CustomSound[] = [
     rating: 4.6,
     format: 'audio/mpeg',
     size: 1440000, // ~1.4MB
-    compressionLevel: 'medium'
+    compressionLevel: 'medium',
   },
   {
     id: '3',
@@ -103,8 +115,8 @@ const ENHANCED_MOCK_SOUNDS: CustomSound[] = [
     rating: 4.7,
     format: 'audio/mpeg',
     size: 2880000, // ~2.8MB
-    compressionLevel: 'light'
-  }
+    compressionLevel: 'light',
+  },
 ];
 
 const ENHANCED_MOCK_PLAYLISTS: Playlist[] = [
@@ -113,8 +125,20 @@ const ENHANCED_MOCK_PLAYLISTS: Playlist[] = [
     name: 'Morning Energy',
     description: 'Perfect playlist to start your day with energy',
     sounds: [
-      { soundId: '2', sound: ENHANCED_MOCK_SOUNDS[1], order: 1, volume: 0.8, fadeIn: 2 },
-      { soundId: '1', sound: ENHANCED_MOCK_SOUNDS[0], order: 2, volume: 0.6, fadeIn: 5 }
+      {
+        soundId: '2',
+        sound: ENHANCED_MOCK_SOUNDS[1],
+        order: 1,
+        volume: 0.8,
+        fadeIn: 2,
+      },
+      {
+        soundId: '1',
+        sound: ENHANCED_MOCK_SOUNDS[0],
+        order: 2,
+        volume: 0.6,
+        fadeIn: 5,
+      },
     ],
     isPublic: true,
     createdBy: 'user1',
@@ -125,8 +149,8 @@ const ENHANCED_MOCK_PLAYLISTS: Playlist[] = [
     likeCount: 23,
     shareCount: 7,
     totalDuration: 210,
-    isPreloaded: false
-  }
+    isPreloaded: false,
+  },
 ];
 
 interface AudioPlayerState {
@@ -146,7 +170,7 @@ export function EnhancedMediaContent({
   onUploadSound,
   onCreatePlaylist,
   onSubmitQuote,
-  onCompletePhotoChallenge
+  onCompletePhotoChallenge,
 }: EnhancedMediaContentProps) {
   const [selectedTab, setSelectedTab] = useState('sounds');
   const [searchQuery, setSearchQuery] = useState('');
@@ -163,12 +187,14 @@ export function EnhancedMediaContent({
     currentTime: 0,
     duration: 0,
     loading: false,
-    error: null
+    error: null,
   });
 
   // Audio context and source
   const currentAudioSource = useRef<AudioBufferSourceNode | null>(null);
-  const [audioSources, setAudioSources] = useState<Map<string, AudioBufferSourceNode>>(new Map());
+  const [audioSources, setAudioSources] = useState<Map<string, AudioBufferSourceNode>>(
+    new Map()
+  );
 
   // Use our enhanced caching
   const { cacheState, warmCache, getCacheEntry } = useEnhancedCaching();
@@ -188,8 +214,8 @@ export function EnhancedMediaContent({
         tags: ['action', 'success', 'start'],
         isCustom: false,
         likes: 342,
-        uses: 1205
-      }
+        uses: 1205,
+      },
     ],
     photos: [],
     storage: {
@@ -197,7 +223,7 @@ export function EnhancedMediaContent({
       total: 104857600, // 100MB
       percentage: (cacheState.stats.totalSize / 104857600) * 100,
       audioCache: cacheState.stats.totalSize,
-      availableForPreload: 104857600 - cacheState.stats.totalSize
+      availableForPreload: 104857600 - cacheState.stats.totalSize,
     },
     cacheSettings: {
       maxCacheSize: 150 * 1024 * 1024,
@@ -205,14 +231,14 @@ export function EnhancedMediaContent({
       compressionEnabled: true,
       priorityLoading: true,
       autoCleanup: true,
-      cleanupThreshold: 80
+      cleanupThreshold: 80,
     },
     compressionSettings: {
       enabledForLargeFiles: true,
       largeFileThreshold: 1024 * 1024,
       defaultCompressionLevel: 'medium',
-      preserveQualityForFavorites: true
-    }
+      preserveQualityForFavorites: true,
+    },
   };
 
   // Initialize audio manager
@@ -232,80 +258,85 @@ export function EnhancedMediaContent({
 
   // Playlist loading hook
   const playlistLoadingState = usePlaylistLazyLoading(
-    playerState.currentPlaylist ?
-      effectiveMediaLibrary.playlists.find(p => p.id === playerState.currentPlaylist) || null :
-      null
+    playerState.currentPlaylist
+      ? effectiveMediaLibrary.playlists.find(
+          p => p.id === playerState.currentPlaylist
+        ) || null
+      : null
   );
 
-  const playSound = useCallback(async (sound: CustomSound) => {
-    setPlayerState(prev => ({ ...prev, loading: true, error: null }));
+  const playSound = useCallback(
+    async (sound: CustomSound) => {
+      setPlayerState(prev => ({ ...prev, loading: true, error: null }));
 
-    try {
-      // Stop current audio if playing
-      if (currentAudioSource.current) {
-        currentAudioSource.current.stop();
-        currentAudioSource.current = null;
-      }
-
-      // Load and play audio using our audio manager
-      const audioSource = await audioManager.playAudioFile(sound.fileUrl, {
-        volume: playerState.volume,
-        onEnded: () => {
-          setPlayerState(prev => ({
-            ...prev,
-            isPlaying: false,
-            currentTrack: null,
-            currentTime: 0
-          }));
+      try {
+        // Stop current audio if playing
+        if (currentAudioSource.current) {
+          currentAudioSource.current.stop();
+          currentAudioSource.current = null;
         }
-      });
 
-      if (audioSource) {
-        currentAudioSource.current = audioSource;
-        setPlayerState(prev => ({
-          ...prev,
-          isPlaying: true,
-          currentTrack: sound.id,
-          loading: false,
-          duration: sound.duration,
-          currentTime: 0
-        }));
-
-        // Set up time updates
-        const startTime = performance.now();
-        const updateTime = () => {
-          if (currentAudioSource.current === audioSource) {
-            const elapsed = (performance.now() - startTime) / 1000;
+        // Load and play audio using our audio manager
+        const audioSource = await audioManager.playAudioFile(sound.fileUrl, {
+          volume: playerState.volume,
+          onEnded: () => {
             setPlayerState(prev => ({
               ...prev,
-              currentTime: Math.min(elapsed, sound.duration)
+              isPlaying: false,
+              currentTrack: null,
+              currentTime: 0,
             }));
+          },
+        });
 
-            if (elapsed < sound.duration) {
-              requestAnimationFrame(updateTime);
+        if (audioSource) {
+          currentAudioSource.current = audioSource;
+          setPlayerState(prev => ({
+            ...prev,
+            isPlaying: true,
+            currentTrack: sound.id,
+            loading: false,
+            duration: sound.duration,
+            currentTime: 0,
+          }));
+
+          // Set up time updates
+          const startTime = performance.now();
+          const updateTime = () => {
+            if (currentAudioSource.current === audioSource) {
+              const elapsed = (performance.now() - startTime) / 1000;
+              setPlayerState(prev => ({
+                ...prev,
+                currentTime: Math.min(elapsed, sound.duration),
+              }));
+
+              if (elapsed < sound.duration) {
+                requestAnimationFrame(updateTime);
+              }
             }
-          }
-        };
-        requestAnimationFrame(updateTime);
-      } else {
-        throw new Error('Failed to create audio source');
-      }
-    } catch (error) {
-      console.error('Error playing sound:', error);
-      setPlayerState(prev => ({
-        ...prev,
-        loading: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      }));
+          };
+          requestAnimationFrame(updateTime);
+        } else {
+          throw new Error('Failed to create audio source');
+        }
+      } catch (error) {
+        console.error('Error playing sound:', error);
+        setPlayerState(prev => ({
+          ...prev,
+          loading: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        }));
 
-      // Fallback to beep if audio fails
-      try {
-        await audioManager.playFallbackBeep('single');
-      } catch (fallbackError) {
-        console.error('Fallback beep also failed:', fallbackError);
+        // Fallback to beep if audio fails
+        try {
+          await audioManager.playFallbackBeep('single');
+        } catch (fallbackError) {
+          console.error('Fallback beep also failed:', fallbackError);
+        }
       }
-    }
-  }, [playerState.volume]);
+    },
+    [playerState.volume]
+  );
 
   const pauseSound = useCallback(() => {
     if (currentAudioSource.current) {
@@ -315,7 +346,7 @@ export function EnhancedMediaContent({
     setPlayerState(prev => ({
       ...prev,
       isPlaying: false,
-      currentTrack: null
+      currentTrack: null,
     }));
   }, []);
 
@@ -328,17 +359,19 @@ export function EnhancedMediaContent({
     // In a real implementation, you'd use a GainNode for this
   }, []);
 
-  const playPlaylist = useCallback(async (playlist: Playlist) => {
-    if (playlist.sounds.length === 0) return;
+  const playPlaylist = useCallback(
+    async (playlist: Playlist) => {
+      if (playlist.sounds.length === 0) return;
 
-    setPlayerState(prev => ({ ...prev, currentPlaylist: playlist.id }));
+      setPlayerState(prev => ({ ...prev, currentPlaylist: playlist.id }));
 
-    // Start with the first sound
-    const firstSound = playlist.sounds
-      .sort((a, b) => a.order - b.order)[0];
+      // Start with the first sound
+      const firstSound = playlist.sounds.sort((a, b) => a.order - b.order)[0];
 
-    await playSound(firstSound.sound);
-  }, [playSound]);
+      await playSound(firstSound.sound);
+    },
+    [playSound]
+  );
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -392,13 +425,18 @@ export function EnhancedMediaContent({
 
   // Filter sounds based on search and category
   const filteredSounds = effectiveMediaLibrary.sounds.filter(sound => {
-    const matchesSearch = sound.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         sound.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesCategory = selectedCategory === 'all' || sound.category === selectedCategory;
+    const matchesSearch =
+      sound.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      sound.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesCategory =
+      selectedCategory === 'all' || sound.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const categories = ['all', ...new Set(effectiveMediaLibrary.sounds.map(s => s.category))];
+  const categories = [
+    'all',
+    ...new Set(effectiveMediaLibrary.sounds.map(s => s.category)),
+  ];
 
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -416,11 +454,16 @@ export function EnhancedMediaContent({
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'nature': return <Music className="h-4 w-4 text-green-500" />;
-      case 'music': return <Headphones className="h-4 w-4 text-blue-500" />;
-      case 'voice': return <Mic className="h-4 w-4 text-purple-500" />;
-      case 'ambient': return <Volume2 className="h-4 w-4 text-gray-500" />;
-      default: return <FileAudio className="h-4 w-4 text-gray-500" />;
+      case 'nature':
+        return <Music className="h-4 w-4 text-green-500" />;
+      case 'music':
+        return <Headphones className="h-4 w-4 text-blue-500" />;
+      case 'voice':
+        return <Mic className="h-4 w-4 text-purple-500" />;
+      case 'ambient':
+        return <Volume2 className="h-4 w-4 text-gray-500" />;
+      default:
+        return <FileAudio className="h-4 w-4 text-gray-500" />;
     }
   };
 
@@ -434,13 +477,15 @@ export function EnhancedMediaContent({
             </div>
             <div>
               <div className="font-medium">
-                {playerState.currentTrack ?
-                  effectiveMediaLibrary.sounds.find(s => s.id === playerState.currentTrack)?.name || 'Unknown'
-                  : 'No track selected'
-                }
+                {playerState.currentTrack
+                  ? effectiveMediaLibrary.sounds.find(
+                      s => s.id === playerState.currentTrack
+                    )?.name || 'Unknown'
+                  : 'No track selected'}
               </div>
               <div className="text-sm text-muted-foreground">
-                {formatDuration(playerState.currentTime)} / {formatDuration(playerState.duration)}
+                {formatDuration(playerState.currentTime)} /{' '}
+                {formatDuration(playerState.duration)}
               </div>
             </div>
           </div>
@@ -452,12 +497,18 @@ export function EnhancedMediaContent({
 
             <Button
               size="sm"
-              onClick={playerState.isPlaying ? pauseSound : () => {
-                if (playerState.currentTrack) {
-                  const sound = effectiveMediaLibrary.sounds.find(s => s.id === playerState.currentTrack);
-                  if (sound) playSound(sound);
-                }
-              }}
+              onClick={
+                playerState.isPlaying
+                  ? pauseSound
+                  : () => {
+                      if (playerState.currentTrack) {
+                        const sound = effectiveMediaLibrary.sounds.find(
+                          s => s.id === playerState.currentTrack
+                        );
+                        if (sound) playSound(sound);
+                      }
+                    }
+              }
               disabled={playerState.loading}
             >
               {playerState.loading ? (
@@ -477,7 +528,11 @@ export function EnhancedMediaContent({
 
         {/* Progress bar */}
         <Progress
-          value={playerState.duration > 0 ? (playerState.currentTime / playerState.duration) * 100 : 0}
+          value={
+            playerState.duration > 0
+              ? (playerState.currentTime / playerState.duration) * 100
+              : 0
+          }
           className="mb-3"
         />
 
@@ -519,7 +574,8 @@ export function EnhancedMediaContent({
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium">Audio Cache</span>
             <span className="text-sm text-muted-foreground">
-              {formatFileSize(cacheState.stats.totalSize)} • {cacheState.stats.totalEntries} files
+              {formatFileSize(cacheState.stats.totalSize)} •{' '}
+              {cacheState.stats.totalEntries} files
             </span>
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -556,7 +612,9 @@ export function EnhancedMediaContent({
                   onChange={e => setSearchQuery(e.target.value)}
                 />
               </div>
-              <label htmlFor="category-filter" className="sr-only">Filter by category</label>
+              <label htmlFor="category-filter" className="sr-only">
+                Filter by category
+              </label>
               <select
                 id="category-filter"
                 value={selectedCategory}
@@ -566,7 +624,9 @@ export function EnhancedMediaContent({
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>
-                    {cat === 'all' ? 'All Categories' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    {cat === 'all'
+                      ? 'All Categories'
+                      : cat.charAt(0).toUpperCase() + cat.slice(1)}
                   </option>
                 ))}
               </select>
@@ -588,7 +648,10 @@ export function EnhancedMediaContent({
                 onChange={handleFileUpload}
                 className="hidden"
               />
-              <Button variant="outline" onClick={() => warmCache(filteredSounds.slice(0, 5))}>
+              <Button
+                variant="outline"
+                onClick={() => warmCache(filteredSounds.slice(0, 5))}
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Preload Popular
               </Button>
@@ -601,7 +664,9 @@ export function EnhancedMediaContent({
                   <div className="flex items-center gap-3">
                     <Loader2 className="h-4 w-4 animate-spin" />
                     <div className="flex-1">
-                      <div className="text-sm font-medium mb-1">Uploading audio file...</div>
+                      <div className="text-sm font-medium mb-1">
+                        Uploading audio file...
+                      </div>
                       <Progress value={uploadProgress} />
                     </div>
                     <span className="text-sm font-medium">{uploadProgress}%</span>
@@ -627,7 +692,9 @@ export function EnhancedMediaContent({
                           <div className="font-medium flex items-center gap-2">
                             {sound.name}
                             {sound.isCustom && (
-                              <Badge variant="secondary" className="text-xs">Custom</Badge>
+                              <Badge variant="secondary" className="text-xs">
+                                Custom
+                              </Badge>
                             )}
                             {loadingState?.state === 'loading' && (
                               <Loader2 className="h-3 w-3 animate-spin text-blue-500" />
@@ -691,7 +758,11 @@ export function EnhancedMediaContent({
                         <div className="text-xs text-muted-foreground mt-1">
                           Loading... {Math.round(loadingState.progress)}%
                           {loadingState.estimatedTimeRemaining && (
-                            <span> • ~{Math.round(loadingState.estimatedTimeRemaining)}s remaining</span>
+                            <span>
+                              {' '}
+                              • ~{Math.round(loadingState.estimatedTimeRemaining)}s
+                              remaining
+                            </span>
                           )}
                         </div>
                       </div>
@@ -718,7 +789,9 @@ export function EnhancedMediaContent({
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <h3 className="font-medium">{playlist.name}</h3>
-                    <p className="text-sm text-muted-foreground">{playlist.description}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {playlist.description}
+                    </p>
                   </div>
                   <Badge variant={playlist.isPublic ? 'default' : 'secondary'}>
                     {playlist.isPublic ? 'Public' : 'Private'}
@@ -726,9 +799,14 @@ export function EnhancedMediaContent({
                 </div>
 
                 <div className="space-y-2 mb-3">
-                  {playlist.sounds.map((playlistSound) => (
-                    <div key={playlistSound.soundId} className="flex items-center gap-2 text-sm">
-                      <span className="text-muted-foreground w-6">{playlistSound.order}.</span>
+                  {playlist.sounds.map(playlistSound => (
+                    <div
+                      key={playlistSound.soundId}
+                      className="flex items-center gap-2 text-sm"
+                    >
+                      <span className="text-muted-foreground w-6">
+                        {playlistSound.order}.
+                      </span>
                       <div className="flex-1">{playlistSound.sound.name}</div>
                       <span className="text-muted-foreground">
                         {formatDuration(playlistSound.sound.duration)}
@@ -762,7 +840,9 @@ export function EnhancedMediaContent({
         <TabsContent value="quotes" className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Motivational Quotes</h3>
-            <Button onClick={() => onSubmitQuote?.({ text: '', category: 'motivation' })}>
+            <Button
+              onClick={() => onSubmitQuote?.({ text: '', category: 'motivation' })}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Quote
             </Button>
@@ -778,7 +858,9 @@ export function EnhancedMediaContent({
                       "{quote.text}"
                     </blockquote>
                     {quote.author && (
-                      <cite className="text-sm text-muted-foreground">— {quote.author}</cite>
+                      <cite className="text-sm text-muted-foreground">
+                        — {quote.author}
+                      </cite>
                     )}
                   </div>
                 </div>
@@ -810,7 +892,9 @@ export function EnhancedMediaContent({
               <div className="text-center py-8 text-muted-foreground">
                 <Camera className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Photo challenges feature coming soon!</p>
-                <p className="text-sm mt-2">Capture moments and earn rewards for completing daily challenges.</p>
+                <p className="text-sm mt-2">
+                  Capture moments and earn rewards for completing daily challenges.
+                </p>
               </div>
             </CardContent>
           </Card>

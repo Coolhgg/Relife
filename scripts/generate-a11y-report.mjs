@@ -2,7 +2,7 @@
 
 /**
  * Accessibility Report Generator
- * 
+ *
  * Generates comprehensive accessibility test reports by aggregating results
  * from jest-axe, Playwright, Lighthouse, and pa11y test runs.
  */
@@ -46,19 +46,19 @@ function generateSummary() {
       unit: { status: 'not_run', violations: 0, components: 0 },
       e2e: { status: 'not_run', violations: 0, flows: 0 },
       lighthouse: { status: 'not_run', score: null, audits: 0 },
-      pa11y: { status: 'not_run', violations: 0, pages: 0 }
+      pa11y: { status: 'not_run', violations: 0, pages: 0 },
     },
     coverage: {
       components: 0,
       criticalFlows: 0,
-      pages: 0
+      pages: 0,
     },
     violations: {
       critical: 0,
       serious: 0,
       moderate: 0,
-      minor: 0
-    }
+      minor: 0,
+    },
   };
 
   // Check for jest-axe unit test results
@@ -74,19 +74,22 @@ function generateSummary() {
   const e2eResultsPath = path.join(reportsDir, 'playwright-a11y-results.json');
   const e2eResults = readJsonFile(e2eResultsPath);
   if (e2eResults) {
-    summary.testSuites.e2e.status = e2eResults.suites?.every(suite => 
-      suite.tests?.every(test => test.status === 'passed')
-    ) ? 'passed' : 'failed';
-    
+    summary.testSuites.e2e.status = e2eResults.suites?.every((suite) =>
+      suite.tests?.every((test) => test.status === 'passed')
+    )
+      ? 'passed'
+      : 'failed';
+
     // Count violations from Playwright axe results
-    e2eResults.suites?.forEach(suite => {
-      suite.tests?.forEach(test => {
+    e2eResults.suites?.forEach((suite) => {
+      suite.tests?.forEach((test) => {
         if (test.results) {
-          test.results.forEach(result => {
+          test.results.forEach((result) => {
             if (result.violations) {
-              result.violations.forEach(violation => {
+              result.violations.forEach((violation) => {
                 const impact = violation.impact || 'minor';
-                summary.violations[impact] = (summary.violations[impact] || 0) + violation.nodes?.length || 1;
+                summary.violations[impact] =
+                  (summary.violations[impact] || 0) + violation.nodes?.length || 1;
               });
             }
           });
@@ -100,22 +103,27 @@ function generateSummary() {
   const lighthouseResults = readJsonFile(lighthouseResultsPath);
   if (lighthouseResults) {
     const accessibilityScore = lighthouseResults.categories?.accessibility?.score;
-    summary.testSuites.lighthouse.status = accessibilityScore >= 0.9 ? 'passed' : 'failed';
+    summary.testSuites.lighthouse.status =
+      accessibilityScore >= 0.9 ? 'passed' : 'failed';
     summary.testSuites.lighthouse.score = Math.round(accessibilityScore * 100);
-    summary.testSuites.lighthouse.audits = Object.keys(lighthouseResults.audits || {}).length;
+    summary.testSuites.lighthouse.audits = Object.keys(
+      lighthouseResults.audits || {}
+    ).length;
   }
 
   // Check for pa11y results
   const pa11yResultsPath = path.join(reportsDir, 'pa11y-results.json');
   const pa11yResults = readJsonFile(pa11yResultsPath);
   if (pa11yResults && Array.isArray(pa11yResults)) {
-    const hasViolations = pa11yResults.some(result => result.issues && result.issues.length > 0);
+    const hasViolations = pa11yResults.some(
+      (result) => result.issues && result.issues.length > 0
+    );
     summary.testSuites.pa11y.status = hasViolations ? 'failed' : 'passed';
     summary.testSuites.pa11y.pages = pa11yResults.length;
-    
-    pa11yResults.forEach(result => {
+
+    pa11yResults.forEach((result) => {
       if (result.issues) {
-        result.issues.forEach(issue => {
+        result.issues.forEach((issue) => {
           const type = issue.type?.toLowerCase() || 'minor';
           if (type === 'error') {
             summary.violations.serious = (summary.violations.serious || 0) + 1;
@@ -286,8 +294,11 @@ function generateHtmlReport(summary) {
  * Generate markdown report for GitHub/docs
  */
 function generateMarkdownReport(summary) {
-  const totalViolations = Object.values(summary.violations).reduce((sum, count) => sum + count, 0);
-  
+  const totalViolations = Object.values(summary.violations).reduce(
+    (sum, count) => sum + count,
+    0
+  );
+
   const markdown = `# Accessibility Test Report 🔍
 
 **Generated:** ${new Date(summary.timestamp).toLocaleString()}  
@@ -337,44 +348,62 @@ ${generateRecommendations(summary)}
 }
 
 function getStatusEmoji(status) {
-  switch(status) {
-    case 'passed': return '✅';
-    case 'failed': return '❌';
-    case 'not_run': return '⏸️';
-    default: return '❓';
+  switch (status) {
+    case 'passed':
+      return '✅';
+    case 'failed':
+      return '❌';
+    case 'not_run':
+      return '⏸️';
+    default:
+      return '❓';
   }
 }
 
 function generateRecommendations(summary) {
   const recommendations = [];
-  
+
   if (summary.violations.critical > 0) {
-    recommendations.push('🔴 **Immediate Action Required:** Fix critical violations that severely impact accessibility');
+    recommendations.push(
+      '🔴 **Immediate Action Required:** Fix critical violations that severely impact accessibility'
+    );
   }
-  
+
   if (summary.violations.serious > 0) {
-    recommendations.push('🟠 **High Priority:** Address serious violations before deployment');
+    recommendations.push(
+      '🟠 **High Priority:** Address serious violations before deployment'
+    );
   }
-  
+
   if (summary.testSuites.lighthouse.score && summary.testSuites.lighthouse.score < 90) {
-    recommendations.push('📊 **Lighthouse:** Improve accessibility score to reach 90+ target');
+    recommendations.push(
+      '📊 **Lighthouse:** Improve accessibility score to reach 90+ target'
+    );
   }
-  
+
   if (summary.testSuites.unit.status === 'failed') {
-    recommendations.push('🧪 **Unit Tests:** Review and fix failing component accessibility tests');
+    recommendations.push(
+      '🧪 **Unit Tests:** Review and fix failing component accessibility tests'
+    );
   }
-  
+
   if (summary.testSuites.e2e.status === 'failed') {
-    recommendations.push('🔄 **E2E Tests:** Address accessibility issues in critical user flows');
+    recommendations.push(
+      '🔄 **E2E Tests:** Address accessibility issues in critical user flows'
+    );
   }
-  
-  recommendations.push('⌨️ **Manual Testing:** Complement automated tests with keyboard and screen reader testing');
-  
+
+  recommendations.push(
+    '⌨️ **Manual Testing:** Complement automated tests with keyboard and screen reader testing'
+  );
+
   if (recommendations.length === 1) {
-    recommendations.unshift('🎉 **Great Work!** Most accessibility tests are passing. Continue with manual validation.');
+    recommendations.unshift(
+      '🎉 **Great Work!** Most accessibility tests are passing. Continue with manual validation.'
+    );
   }
-  
-  return recommendations.map(rec => `- ${rec}`).join('\n');
+
+  return recommendations.map((rec) => `- ${rec}`).join('\n');
 }
 
 /**
@@ -382,45 +411,57 @@ function generateRecommendations(summary) {
  */
 async function main() {
   console.log('🔍 Generating accessibility test report...');
-  
+
   try {
     // Generate summary from available test results
     const summary = generateSummary();
-    
+
     // Save JSON summary
     const summaryPath = path.join(reportsDir, 'accessibility-summary.json');
     fs.writeFileSync(summaryPath, JSON.stringify(summary, null, 2));
     console.log(`✅ Summary saved: ${summaryPath}`);
-    
+
     // Generate HTML report
     const htmlReport = generateHtmlReport(summary);
     const htmlPath = path.join(reportsDir, 'accessibility-report.html');
     fs.writeFileSync(htmlPath, htmlReport);
     console.log(`✅ HTML report saved: ${htmlPath}`);
-    
+
     // Generate Markdown report
     const markdownReport = generateMarkdownReport(summary);
     const markdownPath = path.join(reportsDir, 'accessibility-report.md');
     fs.writeFileSync(markdownPath, markdownReport);
     console.log(`✅ Markdown report saved: ${markdownPath}`);
-    
+
     // Print summary to console
     console.log('\n📊 ACCESSIBILITY TEST SUMMARY');
     console.log('================================');
-    console.log(`Unit Tests: ${summary.testSuites.unit.status} (${summary.testSuites.unit.components} components)`);
-    console.log(`E2E Tests: ${summary.testSuites.e2e.status} (${summary.testSuites.e2e.flows} flows)`);
-    console.log(`Lighthouse: ${summary.testSuites.lighthouse.status} (${summary.testSuites.lighthouse.score || 'N/A'}/100)`);
-    console.log(`pa11y: ${summary.testSuites.pa11y.status} (${summary.testSuites.pa11y.pages} pages)`);
-    console.log(`\nViolations: ${summary.violations.critical} critical, ${summary.violations.serious} serious, ${summary.violations.moderate} moderate, ${summary.violations.minor} minor`);
-    
+    console.log(
+      `Unit Tests: ${summary.testSuites.unit.status} (${summary.testSuites.unit.components} components)`
+    );
+    console.log(
+      `E2E Tests: ${summary.testSuites.e2e.status} (${summary.testSuites.e2e.flows} flows)`
+    );
+    console.log(
+      `Lighthouse: ${summary.testSuites.lighthouse.status} (${summary.testSuites.lighthouse.score || 'N/A'}/100)`
+    );
+    console.log(
+      `pa11y: ${summary.testSuites.pa11y.status} (${summary.testSuites.pa11y.pages} pages)`
+    );
+    console.log(
+      `\nViolations: ${summary.violations.critical} critical, ${summary.violations.serious} serious, ${summary.violations.moderate} moderate, ${summary.violations.minor} minor`
+    );
+
     // Exit with error code if critical issues found
-    if (summary.violations.critical > 0 || summary.testSuites.unit.status === 'failed') {
+    if (
+      summary.violations.critical > 0 ||
+      summary.testSuites.unit.status === 'failed'
+    ) {
       console.log('\n❌ Critical accessibility issues detected!');
       process.exit(1);
     }
-    
+
     console.log('\n✅ Accessibility report generation complete!');
-    
   } catch (error) {
     console.error('❌ Error generating accessibility report:', error);
     process.exit(1);

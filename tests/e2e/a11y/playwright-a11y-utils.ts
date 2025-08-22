@@ -1,6 +1,6 @@
 /**
  * Playwright Accessibility Testing Utilities
- * 
+ *
  * Comprehensive utilities for accessibility testing in Playwright E2E tests
  * using axe-core for WCAG compliance validation.
  */
@@ -33,9 +33,9 @@ export const axeConfigs = {
     tags: ['wcag2a', 'wcag2aa'],
     rules: {
       'color-contrast': { enabled: true },
-      'keyboard': { enabled: true },
+      keyboard: { enabled: true },
       'focus-order-semantics': { enabled: true },
-      'label': { enabled: true },
+      label: { enabled: true },
       'aria-required-attr': { enabled: true },
       'button-name': { enabled: true },
       'link-name': { enabled: true },
@@ -54,7 +54,7 @@ export const axeConfigs = {
   forms: {
     tags: ['wcag2a', 'wcag2aa'],
     rules: {
-      'label': { enabled: true },
+      label: { enabled: true },
       'form-field-multiple-labels': { enabled: true },
       'duplicate-id-aria': { enabled: true },
       'aria-describedby': { enabled: true },
@@ -68,7 +68,7 @@ export const axeConfigs = {
     rules: {
       'focus-order-semantics': { enabled: true },
       'aria-dialog-name': { enabled: true },
-      'keyboard': { enabled: true },
+      keyboard: { enabled: true },
       'aria-required-attr': { enabled: true },
     },
   },
@@ -123,14 +123,17 @@ export class PlaywrightA11yUtils {
    */
   async expectNoViolations(config?: AxeConfig) {
     const results = await this.runAxeTest(config);
-    
+
     if (results.violations.length > 0) {
-      const violationMessages = results.violations.map(violation => 
-        `${violation.id}: ${violation.description}\n` +
-        `  Impact: ${violation.impact}\n` +
-        `  Elements: ${violation.nodes.map(node => node.html).join(', ')}`
-      ).join('\n\n');
-      
+      const violationMessages = results.violations
+        .map(
+          violation =>
+            `${violation.id}: ${violation.description}\n` +
+            `  Impact: ${violation.impact}\n` +
+            `  Elements: ${violation.nodes.map(node => node.html).join(', ')}`
+        )
+        .join('\n\n');
+
       throw new Error(`Accessibility violations found:\n\n${violationMessages}`);
     }
 
@@ -145,9 +148,10 @@ export class PlaywrightA11yUtils {
     tabOrder: string[];
     violations: string[];
   }> {
-    const containerLocator = typeof container === 'string' 
-      ? this.page.locator(container)
-      : container || this.page.locator('body');
+    const containerLocator =
+      typeof container === 'string'
+        ? this.page.locator(container)
+        : container || this.page.locator('body');
 
     // Get all focusable elements
     const focusableSelectors = [
@@ -167,8 +171,8 @@ export class PlaywrightA11yUtils {
       const elements = await containerLocator.locator(selector).all();
       for (const element of elements) {
         const tagName = await element.evaluate(el => el.tagName.toLowerCase());
-        const id = await element.getAttribute('id') || '';
-        const className = await element.getAttribute('class') || '';
+        const id = (await element.getAttribute('id')) || '';
+        const className = (await element.getAttribute('class')) || '';
         const identifier = id || `${tagName}.${className.split(' ')[0]}`;
         focusableElements.push(identifier);
       }
@@ -177,22 +181,22 @@ export class PlaywrightA11yUtils {
     // Test tab navigation order
     if (focusableElements.length > 0) {
       await this.page.keyboard.press('Tab');
-      
+
       for (let i = 0; i < Math.min(focusableElements.length, 10); i++) {
         const focused = await this.page.evaluate(() => {
           const activeEl = document.activeElement;
           if (!activeEl) return null;
-          
+
           const id = activeEl.id || '';
           const tagName = activeEl.tagName.toLowerCase();
           const className = activeEl.className || '';
           return id || `${tagName}.${className.split(' ')[0]}`;
         });
-        
+
         if (focused) {
           tabOrder.push(focused);
         }
-        
+
         await this.page.keyboard.press('Tab');
       }
     }
@@ -209,33 +213,35 @@ export class PlaywrightA11yUtils {
     restoresFocus: boolean;
   }> {
     // Store initially focused element
-    const initiallyFocused = await this.page.evaluate(() => 
-      document.activeElement?.tagName.toLowerCase() || null
+    const initiallyFocused = await this.page.evaluate(
+      () => document.activeElement?.tagName.toLowerCase() || null
     );
 
     // Open modal and check initial focus
     const modal = this.page.locator(modalSelector);
     await modal.waitFor({ state: 'visible' });
-    
-    const initialFocus = await this.page.evaluate(() => 
-      document.activeElement?.tagName.toLowerCase() || null
+
+    const initialFocus = await this.page.evaluate(
+      () => document.activeElement?.tagName.toLowerCase() || null
     );
 
     // Test focus trap
     let focusTrapped = true;
-    const modalFocusableElements = await modal.locator('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])').count();
-    
+    const modalFocusableElements = await modal
+      .locator('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])')
+      .count();
+
     if (modalFocusableElements > 1) {
       // Tab through modal elements and ensure focus stays within modal
       for (let i = 0; i < modalFocusableElements + 2; i++) {
         await this.page.keyboard.press('Tab');
-        
-        const currentFocus = await this.page.evaluate((selector) => {
+
+        const currentFocus = await this.page.evaluate(selector => {
           const modalEl = document.querySelector(selector);
           const activeEl = document.activeElement;
           return modalEl?.contains(activeEl) || false;
         }, modalSelector);
-        
+
         if (!currentFocus) {
           focusTrapped = false;
           break;
@@ -246,11 +252,11 @@ export class PlaywrightA11yUtils {
     // Close modal and check focus restoration
     await this.page.keyboard.press('Escape');
     await modal.waitFor({ state: 'hidden' });
-    
-    const finalFocus = await this.page.evaluate(() => 
-      document.activeElement?.tagName.toLowerCase() || null
+
+    const finalFocus = await this.page.evaluate(
+      () => document.activeElement?.tagName.toLowerCase() || null
     );
-    
+
     const restoresFocus = finalFocus === initiallyFocused;
 
     return {
@@ -269,10 +275,10 @@ export class PlaywrightA11yUtils {
     timeout = 3000
   ): Promise<string[]> {
     const announcements: string[] = [];
-    
+
     // Set up listener for aria-live regions
     await this.page.evaluate(() => {
-      const observer = new MutationObserver((mutations) => {
+      const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
           const target = mutation.target as Element;
           const liveRegion = target.closest('[aria-live]');
@@ -282,13 +288,13 @@ export class PlaywrightA11yUtils {
           }
         });
       });
-      
-      observer.observe(document.body, { 
-        childList: true, 
-        subtree: true, 
-        characterData: true 
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true,
       });
-      
+
       (window as any).__announcements = [];
     });
 
@@ -297,22 +303,22 @@ export class PlaywrightA11yUtils {
 
     // Wait and collect announcements
     await this.page.waitForTimeout(timeout);
-    
-    const collectedAnnouncements = await this.page.evaluate(() => 
-      (window as any).__announcements || []
+
+    const collectedAnnouncements = await this.page.evaluate(
+      () => (window as any).__announcements || []
     );
 
     announcements.push(...collectedAnnouncements);
 
     if (expectedText) {
-      const found = announcements.some(announcement => 
+      const found = announcements.some(announcement =>
         announcement.includes(expectedText)
       );
-      
+
       if (!found) {
         throw new Error(
           `Expected announcement "${expectedText}" not found. ` +
-          `Actual announcements: ${announcements.join(', ')}`
+            `Actual announcements: ${announcements.join(', ')}`
         );
       }
     }
@@ -334,8 +340,10 @@ export class PlaywrightA11yUtils {
       include: selector ? [selector] : undefined,
     });
 
-    const contrastViolations = results.violations.filter(v => v.id === 'color-contrast');
-    
+    const contrastViolations = results.violations.filter(
+      v => v.id === 'color-contrast'
+    );
+
     if (contrastViolations.length === 0) {
       return { passed: true, ratio: 7, wcagAA: true, wcagAAA: true };
     }
@@ -371,13 +379,13 @@ export class PlaywrightA11yUtils {
 
     for (const selector of touchableSelectors) {
       const elements = await this.page.locator(selector).all();
-      
+
       for (const element of elements) {
         const box = await element.boundingBox();
         if (box) {
           const adequate = box.width >= minSize && box.height >= minSize;
           if (!adequate) violations++;
-          
+
           results.push({
             selector,
             width: box.width,
@@ -465,10 +473,10 @@ export const a11yPatterns = {
    */
   async testFormAccessibility(page: Page, formSelector?: string) {
     const a11y = createA11yUtils(page);
-    const config = formSelector 
+    const config = formSelector
       ? { ...axeConfigs.forms, include: [formSelector] }
       : axeConfigs.forms;
-    
+
     return await a11y.expectNoViolations(config);
   },
 
@@ -477,16 +485,16 @@ export const a11yPatterns = {
    */
   async testModalAccessibility(page: Page, modalSelector: string) {
     const a11y = createA11yUtils(page);
-    
+
     // Test accessibility
     const axeResults = await a11y.expectNoViolations({
       ...axeConfigs.modals,
       include: [modalSelector],
     });
-    
+
     // Test focus management
     const focusResults = await a11y.testModalFocus(modalSelector);
-    
+
     return { axeResults, focusResults };
   },
 };

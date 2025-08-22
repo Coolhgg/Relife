@@ -1,8 +1,8 @@
 /// <reference lib="dom" />
-import type { CustomSound, SoundCategory } from "../types";
-import { AudioManager } from "./audio-manager";
-import { supabase } from "./supabase";
-import { ErrorHandler } from "./error-handler";
+import type { CustomSound, SoundCategory } from '../types';
+import { AudioManager } from './audio-manager';
+import { supabase } from './supabase';
+import { ErrorHandler } from './error-handler';
 
 export interface SoundUploadResult {
   success: boolean;
@@ -35,7 +35,12 @@ export class CustomSoundManager {
 
   // Supported audio formats
   private static readonly SUPPORTED_FORMATS = [
-    'audio/mp3', 'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/m4a'
+    'audio/mp3',
+    'audio/mpeg',
+    'audio/wav',
+    'audio/ogg',
+    'audio/aac',
+    'audio/m4a',
   ];
 
   // File size limits (in bytes)
@@ -89,7 +94,7 @@ export class CustomSoundManager {
         .from('audio-files')
         .upload(fileName, file, {
           cacheControl: '31536000', // 1 year
-          upsert: false
+          upsert: false,
         });
 
       if (uploadError) {
@@ -116,7 +121,7 @@ export class CustomSoundManager {
         uploadedBy: userId,
         uploadedAt: new Date().toISOString(),
         downloads: 0,
-        rating: 0
+        rating: 0,
       };
 
       // Stage 4: Save metadata to database
@@ -144,10 +149,13 @@ export class CustomSoundManager {
 
       return { success: true, customSound };
     } catch (error) {
-      ErrorHandler.getInstance().handleError(error, 'CustomSoundManager.uploadCustomSound');
+      ErrorHandler.getInstance().handleError(
+        error,
+        'CustomSoundManager.uploadCustomSound'
+      );
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Upload failed'
+        error: error instanceof Error ? error.message : 'Upload failed',
       };
     }
   }
@@ -161,7 +169,7 @@ export class CustomSoundManager {
       if (!CustomSoundManager.SUPPORTED_FORMATS.includes(file.type)) {
         return {
           valid: false,
-          error: `Unsupported format. Please use: ${CustomSoundManager.SUPPORTED_FORMATS.join(', ')}`
+          error: `Unsupported format. Please use: ${CustomSoundManager.SUPPORTED_FORMATS.join(', ')}`,
         };
       }
 
@@ -169,14 +177,14 @@ export class CustomSoundManager {
       if (file.size > CustomSoundManager.MAX_FILE_SIZE) {
         return {
           valid: false,
-          error: `File too large. Maximum size is ${this.formatFileSize(CustomSoundManager.MAX_FILE_SIZE)}`
+          error: `File too large. Maximum size is ${this.formatFileSize(CustomSoundManager.MAX_FILE_SIZE)}`,
         };
       }
 
       if (file.size < CustomSoundManager.MIN_FILE_SIZE) {
         return {
           valid: false,
-          error: 'File too small. Minimum size is 1KB'
+          error: 'File too small. Minimum size is 1KB',
         };
       }
 
@@ -194,7 +202,7 @@ export class CustomSoundManager {
           if (duration > CustomSoundManager.MAX_DURATION) {
             resolve({
               valid: false,
-              error: `Audio too long. Maximum duration is ${this.formatDuration(CustomSoundManager.MAX_DURATION)}`
+              error: `Audio too long. Maximum duration is ${this.formatDuration(CustomSoundManager.MAX_DURATION)}`,
             });
             return;
           }
@@ -202,7 +210,7 @@ export class CustomSoundManager {
           if (duration < CustomSoundManager.MIN_DURATION) {
             resolve({
               valid: false,
-              error: 'Audio too short. Minimum duration is 1 second'
+              error: 'Audio too short. Minimum duration is 1 second',
             });
             return;
           }
@@ -215,7 +223,7 @@ export class CustomSoundManager {
               size: file.size,
               // Note: Web Audio API doesn't provide direct access to sample rate and channels from file
               // These would need to be extracted during actual audio processing
-            }
+            },
           });
         });
 
@@ -223,7 +231,7 @@ export class CustomSoundManager {
           URL.revokeObjectURL(audioUrl);
           resolve({
             valid: false,
-            error: 'Invalid audio file or corrupted'
+            error: 'Invalid audio file or corrupted',
           });
         });
 
@@ -232,14 +240,14 @@ export class CustomSoundManager {
           URL.revokeObjectURL(audioUrl);
           resolve({
             valid: false,
-            error: 'File validation timeout'
+            error: 'File validation timeout',
           });
         }, 10000);
       });
     } catch (error) {
       return {
         valid: false,
-        error: 'File validation failed'
+        error: 'File validation failed',
       };
     }
   }
@@ -261,7 +269,10 @@ export class CustomSoundManager {
 
       return data || [];
     } catch (error) {
-      ErrorHandler.getInstance().handleError(error, 'CustomSoundManager.getUserCustomSounds');
+      ErrorHandler.getInstance().handleError(
+        error,
+        'CustomSoundManager.getUserCustomSounds'
+      );
       return [];
     }
   }
@@ -304,7 +315,10 @@ export class CustomSoundManager {
 
       return true;
     } catch (error) {
-      ErrorHandler.getInstance().handleError(error, 'CustomSoundManager.deleteCustomSound');
+      ErrorHandler.getInstance().handleError(
+        error,
+        'CustomSoundManager.deleteCustomSound'
+      );
       return false;
     }
   }
@@ -312,7 +326,9 @@ export class CustomSoundManager {
   /**
    * Preview a sound before upload (from File object)
    */
-  async previewSound(file: File): Promise<{ audio: HTMLAudioElement; cleanup: () => void }> {
+  async previewSound(
+    file: File
+  ): Promise<{ audio: HTMLAudioElement; cleanup: () => void }> {
     const audioUrl = URL.createObjectURL(file);
     const audio = new Audio(audioUrl);
 
@@ -352,7 +368,10 @@ export class CustomSoundManager {
 
       return true;
     } catch (error) {
-      ErrorHandler.getInstance().handleError(error, 'CustomSoundManager.updateCustomSound');
+      ErrorHandler.getInstance().handleError(
+        error,
+        'CustomSoundManager.updateCustomSound'
+      );
       return false;
     }
   }

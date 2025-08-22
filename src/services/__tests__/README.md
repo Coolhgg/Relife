@@ -1,12 +1,14 @@
 # Analytics & Crash Reporting Tests
 
-This directory contains comprehensive test suites for all analytics and crash reporting services implemented in the Relife alarm app.
+This directory contains comprehensive test suites for all analytics and crash reporting services
+implemented in the Relife alarm app.
 
 ## 🧪 Test Overview
 
 The testing strategy covers all analytics services with both unit tests and integration tests:
 
 ### Unit Tests
+
 - **AnalyticsConfigService** - Service initialization and configuration
 - **PrivacyComplianceService** - GDPR/CCPA compliance and consent management
 - **SentryService** - Error tracking and crash reporting
@@ -15,6 +17,7 @@ The testing strategy covers all analytics services with both unit tests and inte
 - **PerformanceAnalyticsService** - Core Web Vitals and performance monitoring
 
 ### Integration Tests
+
 - **analytics-integration.test.ts** - Cross-service communication and workflows
 
 ## 🏃‍♂️ Running Tests
@@ -36,24 +39,29 @@ npm test -- --watch src/services/__tests__
 ## 📋 Test Categories
 
 ### 1. Singleton Pattern Tests
+
 Each service implements the singleton pattern. Tests verify:
+
 - Single instance creation
 - Proper instance reuse
 - Instance reset between tests
 
 ### 2. Initialization Tests
+
 - Service startup with default and custom configurations
 - Dependency injection and service coordination
 - Error handling during initialization
 - Environment-specific configuration loading
 
 ### 3. Core Functionality Tests
+
 - Primary service methods and workflows
 - Data validation and sanitization
 - Event tracking and error reporting
 - User context management
 
 ### 4. Privacy Compliance Tests
+
 - GDPR/CCPA consent management
 - Data retention policies
 - Right to be forgotten implementation
@@ -61,12 +69,14 @@ Each service implements the singleton pattern. Tests verify:
 - Sensitive data filtering
 
 ### 5. Integration Tests
+
 - Cross-service communication
 - End-to-end user journeys
 - Error propagation and recovery
 - Service health monitoring
 
 ### 6. Performance Tests
+
 - Memory usage optimization
 - High-frequency event handling
 - Batching and throttling
@@ -75,6 +85,7 @@ Each service implements the singleton pattern. Tests verify:
 ## 🔧 Test Configuration
 
 ### Jest Setup
+
 Tests use Jest with the following configuration:
 
 ```typescript
@@ -87,30 +98,35 @@ Object.defineProperty(global, 'localStorage', {
     getItem: jest.fn(),
     setItem: jest.fn(),
     removeItem: jest.fn(),
-    clear: jest.fn()
-  }
+    clear: jest.fn(),
+  },
 });
 
 Object.defineProperty(global, 'performance', {
   value: {
     now: jest.fn(() => 1000),
-    memory: { /* mock memory API */ }
-  }
+    memory: {
+      /* mock memory API */
+    },
+  },
 });
 ```
 
 ### Mock Strategy
 
 #### External Services
+
 - **Sentry SDK** - Mocked with `jest.mock('@sentry/react')`
 - **PostHog SDK** - Mocked with `jest.mock('posthog-js')`
 
 #### Browser APIs
+
 - **localStorage** - Full mock implementation
 - **Performance API** - Mock with realistic values
 - **PerformanceObserver** - Mock for Web Vitals testing
 
 #### Singleton Reset
+
 Each test resets singleton instances to ensure test isolation:
 
 ```typescript
@@ -124,6 +140,7 @@ beforeEach(() => {
 ## 🛠 Testing Best Practices
 
 ### 1. Test Structure
+
 Follow the AAA pattern (Arrange, Act, Assert):
 
 ```typescript
@@ -145,6 +162,7 @@ it('should track user events with context', () => {
 ```
 
 ### 2. Comprehensive Error Testing
+
 Test both success and failure scenarios:
 
 ```typescript
@@ -154,14 +172,12 @@ it('should handle service initialization failure', async () => {
 
   await analyticsConfig.initialize();
 
-  expect(console.error).toHaveBeenCalledWith(
-    'Failed to initialize Sentry:',
-    expect.any(Error)
-  );
+  expect(console.error).toHaveBeenCalledWith('Failed to initialize Sentry:', expect.any(Error));
 });
 ```
 
 ### 3. Privacy Testing
+
 Always test privacy compliance:
 
 ```typescript
@@ -169,7 +185,7 @@ it('should filter sensitive data from events', () => {
   const sensitiveData = {
     password: 'secret123',
     token: 'auth-token',
-    userId: 'user-123' // Safe to keep
+    userId: 'user-123', // Safe to keep
   };
 
   appAnalytics.trackEvent('user_action', sensitiveData);
@@ -182,6 +198,7 @@ it('should filter sensitive data from events', () => {
 ```
 
 ### 4. Async Testing
+
 Handle asynchronous operations properly:
 
 ```typescript
@@ -197,6 +214,7 @@ it('should initialize services asynchronously', async () => {
 ```
 
 ### 5. Performance Testing
+
 Test performance characteristics:
 
 ```typescript
@@ -221,6 +239,7 @@ Maintain high test coverage across all services:
 - **Statements**: > 90%
 
 ### Coverage Reports
+
 Generate coverage reports to identify gaps:
 
 ```bash
@@ -232,8 +251,9 @@ npm test -- --coverage --collectCoverageFrom="src/services/**/*.{ts,tsx}"
 ### Common Issues
 
 #### 1. Singleton State Pollution
-**Problem**: Tests fail due to shared singleton state
-**Solution**: Reset singleton instances in `beforeEach`
+
+**Problem**: Tests fail due to shared singleton state **Solution**: Reset singleton instances in
+`beforeEach`
 
 ```typescript
 beforeEach(() => {
@@ -242,8 +262,8 @@ beforeEach(() => {
 ```
 
 #### 2. Async Operations Not Awaited
-**Problem**: Tests complete before async operations finish
-**Solution**: Properly await async calls
+
+**Problem**: Tests complete before async operations finish **Solution**: Properly await async calls
 
 ```typescript
 it('should handle async initialization', async () => {
@@ -253,8 +273,8 @@ it('should handle async initialization', async () => {
 ```
 
 #### 3. Mock Not Reset
-**Problem**: Previous test mocks affect current test
-**Solution**: Clear mocks in `beforeEach`
+
+**Problem**: Previous test mocks affect current test **Solution**: Clear mocks in `beforeEach`
 
 ```typescript
 beforeEach(() => {
@@ -263,8 +283,8 @@ beforeEach(() => {
 ```
 
 #### 4. Timer Issues
-**Problem**: Tests involving timers are unreliable
-**Solution**: Use fake timers
+
+**Problem**: Tests involving timers are unreliable **Solution**: Use fake timers
 
 ```typescript
 beforeEach(() => {
@@ -283,12 +303,14 @@ it('should track metrics periodically', () => {
 ## 📊 Test Metrics
 
 ### Current Test Stats
+
 - **Total Tests**: 250+
 - **Test Files**: 7
 - **Average Test Runtime**: < 5 seconds
 - **Coverage**: > 90% across all services
 
 ### Performance Benchmarks
+
 - **Service Initialization**: < 100ms
 - **Event Tracking**: < 10ms per event
 - **Privacy Filtering**: < 1ms per filter operation
@@ -297,11 +319,13 @@ it('should track metrics periodically', () => {
 ## 🔄 Continuous Integration
 
 Tests run automatically on:
+
 - Pull request creation
 - Code push to main branch
 - Scheduled daily runs
 
 ### CI Configuration
+
 ```yaml
 test:
   script:
@@ -313,16 +337,19 @@ test:
 ## 📖 Additional Resources
 
 ### Related Documentation
+
 - [Analytics Services Architecture](../README.md)
 - [Privacy Compliance Guide](../privacy/README.md)
 - [Performance Monitoring Setup](../performance/README.md)
 
 ### External Testing Resources
+
 - [Jest Documentation](https://jestjs.io/docs/getting-started)
 - [Testing Library Best Practices](https://testing-library.com/docs/guiding-principles)
 - [React Testing Patterns](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library)
 
 ### Service-Specific Testing Guides
+
 - [Sentry Testing Best Practices](https://docs.sentry.io/platforms/javascript/guides/react/manual-setup/#test-your-implementation)
 - [PostHog Testing Guide](https://posthog.com/docs/integrate/client/js#testing)
 
@@ -337,6 +364,7 @@ When adding new analytics features:
 5. **Update documentation** with new test patterns
 
 ### Test Review Checklist
+
 - [ ] All new code has corresponding tests
 - [ ] Tests cover edge cases and error scenarios
 - [ ] Privacy compliance is tested
@@ -346,4 +374,5 @@ When adding new analytics features:
 
 ---
 
-*This test suite ensures the reliability, privacy compliance, and performance of our analytics infrastructure while maintaining high code quality standards.*
+_This test suite ensures the reliability, privacy compliance, and performance of our analytics
+infrastructure while maintaining high code quality standards._

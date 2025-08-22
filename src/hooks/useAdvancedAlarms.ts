@@ -14,7 +14,7 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       const loadedAlarms = await AlarmService.loadAlarms();
-      
+
       // Convert basic alarms to advanced alarms with default values
       const advancedAlarms = loadedAlarms.map(alarm => ({
         ...alarm,
@@ -26,7 +26,7 @@ export function useAdvancedAlarms() {
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         seasonalAdjustments: [],
         smartOptimizations: [],
-        dependencies: []
+        dependencies: [],
       }));
 
       setAlarms(advancedAlarms);
@@ -59,9 +59,9 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       await AlarmService.updateAlarm(id, alarmData);
-      setAlarms(prev => prev.map(alarm => 
-        alarm.id === id ? { ...alarm, ...alarmData } : alarm
-      ));
+      setAlarms(prev =>
+        prev.map(alarm => (alarm.id === id ? { ...alarm, ...alarmData } : alarm))
+      );
       setError(null);
     } catch (error) {
       console.error('Error updating alarm:', error);
@@ -94,6 +94,6 @@ export function useAdvancedAlarms() {
     createAlarm,
     updateAlarm,
     deleteAlarm,
-    refresh: loadAlarms
+    refresh: loadAlarms,
   };
 }

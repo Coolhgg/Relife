@@ -15,7 +15,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'MM/dd/yyyy',
     timeFormat: '12h',
     currency: 'USD',
-    region: 'US'
+    region: 'US',
   },
   'en-GB': {
     code: 'en-GB',
@@ -26,7 +26,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'GBP',
-    region: 'GB'
+    region: 'GB',
   },
   'en-AU': {
     code: 'en-AU',
@@ -37,7 +37,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'AUD',
-    region: 'AU'
+    region: 'AU',
   },
   es: {
     code: 'es',
@@ -48,7 +48,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'EUR',
-    region: 'ES'
+    region: 'ES',
   },
   'es-MX': {
     code: 'es-MX',
@@ -59,7 +59,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '12h',
     currency: 'MXN',
-    region: 'MX'
+    region: 'MX',
   },
   'es-419': {
     code: 'es-419',
@@ -70,7 +70,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '12h',
     currency: 'USD',
-    region: '419'
+    region: '419',
   },
   fr: {
     code: 'fr',
@@ -81,7 +81,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'EUR',
-    region: 'FR'
+    region: 'FR',
   },
   'fr-CA': {
     code: 'fr-CA',
@@ -92,7 +92,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'yyyy-MM-dd',
     timeFormat: '24h',
     currency: 'CAD',
-    region: 'CA'
+    region: 'CA',
   },
   de: {
     code: 'de',
@@ -103,7 +103,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd.MM.yyyy',
     timeFormat: '24h',
     currency: 'EUR',
-    region: 'DE'
+    region: 'DE',
   },
   ja: {
     code: 'ja',
@@ -114,7 +114,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'yyyy/MM/dd',
     timeFormat: '24h',
     currency: 'JPY',
-    region: 'JP'
+    region: 'JP',
   },
   zh: {
     code: 'zh',
@@ -125,7 +125,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'yyyy/MM/dd',
     timeFormat: '24h',
     currency: 'CNY',
-    region: 'CN'
+    region: 'CN',
   },
   'zh-TW': {
     code: 'zh-TW',
@@ -136,7 +136,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'yyyy/MM/dd',
     timeFormat: '24h',
     currency: 'TWD',
-    region: 'TW'
+    region: 'TW',
   },
   ar: {
     code: 'ar',
@@ -147,7 +147,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '12h',
     currency: 'SAR',
-    region: 'SA'
+    region: 'SA',
   },
   he: {
     code: 'he',
@@ -158,7 +158,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'ILS',
-    region: 'IL'
+    region: 'IL',
   },
   ur: {
     code: 'ur',
@@ -169,7 +169,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '12h',
     currency: 'PKR',
-    region: 'PK'
+    region: 'PK',
   },
   fa: {
     code: 'fa',
@@ -180,7 +180,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'yyyy/MM/dd',
     timeFormat: '24h',
     currency: 'IRR',
-    region: 'IR'
+    region: 'IR',
   },
   ku: {
     code: 'ku',
@@ -191,7 +191,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'USD',
-    region: 'KU'
+    region: 'KU',
   },
   hi: {
     code: 'hi',
@@ -202,7 +202,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '12h',
     currency: 'INR',
-    region: 'IN'
+    region: 'IN',
   },
   ko: {
     code: 'ko',
@@ -213,7 +213,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'yyyy. MM. dd.',
     timeFormat: '12h',
     currency: 'KRW',
-    region: 'KR'
+    region: 'KR',
   },
   pt: {
     code: 'pt',
@@ -224,7 +224,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'EUR',
-    region: 'PT'
+    region: 'PT',
   },
   'pt-BR': {
     code: 'pt-BR',
@@ -235,7 +235,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'BRL',
-    region: 'BR'
+    region: 'BR',
   },
   it: {
     code: 'it',
@@ -246,7 +246,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'EUR',
-    region: 'IT'
+    region: 'IT',
   },
   ru: {
     code: 'ru',
@@ -257,7 +257,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd.MM.yyyy',
     timeFormat: '24h',
     currency: 'RUB',
-    region: 'RU'
+    region: 'RU',
   },
   id: {
     code: 'id',
@@ -268,7 +268,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'IDR',
-    region: 'ID'
+    region: 'ID',
   },
   bn: {
     code: 'bn',
@@ -279,7 +279,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '12h',
     currency: 'BDT',
-    region: 'BD'
+    region: 'BD',
   },
   vi: {
     code: 'vi',
@@ -290,7 +290,7 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'VND',
-    region: 'VN'
+    region: 'VN',
   },
   th: {
     code: 'th',
@@ -301,8 +301,8 @@ export const SUPPORTED_LANGUAGES = {
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'THB',
-    region: 'TH'
-  }
+    region: 'TH',
+  },
 } as const;
 
 export type SupportedLanguage = keyof typeof SUPPORTED_LANGUAGES;
@@ -339,7 +339,10 @@ const createCustomLanguageDetector = () => {
               return;
             }
           } catch (capacitorError) {
-            console.warn('Failed to get device language from Capacitor:', capacitorError);
+            console.warn(
+              'Failed to get device language from Capacitor:',
+              capacitorError
+            );
           }
         }
 
@@ -365,7 +368,6 @@ const createCustomLanguageDetector = () => {
         // Final fallback to default language
         console.log('🌍 Using default language:', DEFAULT_LANGUAGE);
         callback(DEFAULT_LANGUAGE);
-
       } catch (error) {
         console.error('Language detection failed:', error);
         callback(DEFAULT_LANGUAGE);
@@ -377,7 +379,7 @@ const createCustomLanguageDetector = () => {
       } catch (error) {
         console.warn('Failed to cache user language:', error);
       }
-    }
+    },
   };
 };
 
@@ -394,8 +396,8 @@ const i18nConfig = {
     requestOptions: {
       mode: 'cors',
       credentials: 'same-origin',
-      cache: 'default'
-    }
+      cache: 'default',
+    },
   },
 
   // Language detection configuration
@@ -404,7 +406,7 @@ const i18nConfig = {
     lookupLocalStorage: 'user-language',
     caches: ['localStorage'],
     excludeCacheFor: ['cimode'],
-    checkWhitelist: true
+    checkWhitelist: true,
   },
 
   fallbackLng: DEFAULT_LANGUAGE,
@@ -416,7 +418,7 @@ const i18nConfig = {
 
   // Interpolation options
   interpolation: {
-    escapeValue: false // React already escapes values
+    escapeValue: false, // React already escapes values
   },
 
   // React specific options
@@ -426,7 +428,7 @@ const i18nConfig = {
     transEmptyNodeValue: '',
     transSupportBasicHtmlNodes: true,
     transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'em', 'span'],
-    useSuspense: false // Disable suspense to avoid loading issues
+    useSuspense: false, // Disable suspense to avoid loading issues
   },
 
   // Performance optimizations
@@ -439,9 +441,16 @@ const i18nConfig = {
 
   // Missing key handling
   saveMissing: import.meta.env.MODE === 'development',
-  missingKeyHandler: (lng: string[], ns: string, key: string, fallbackValue: string) => {
+  missingKeyHandler: (
+    lng: string[],
+    ns: string,
+    key: string,
+    fallbackValue: string
+  ) => {
     if (import.meta.env.MODE === 'development') {
-      console.warn(`Missing translation key: ${ns}:${key} for language: ${lng.join(', ')}`);
+      console.warn(
+        `Missing translation key: ${ns}:${key} for language: ${lng.join(', ')}`
+      );
     }
   },
 
@@ -455,7 +464,7 @@ const i18nConfig = {
   compatibilityJSON: 'v4',
 
   // Resources (will be overridden by backend)
-  resources: {}
+  resources: {},
 };
 
 // Initialize i18next
@@ -533,7 +542,10 @@ export const changeLanguage = async (lang: SupportedLanguage): Promise<void> => 
   }
 };
 
-export const formatMessage = (key: string, options?: Record<string, unknown>): string => {
+export const formatMessage = (
+  key: string,
+  options?: Record<string, unknown>
+): string => {
   return i18n.t(key, options);
 };
 
@@ -579,7 +591,7 @@ export const formatTime = (time: string, lang?: SupportedLanguage): string => {
     return new Intl.DateTimeFormat(currentLang, {
       hour: 'numeric',
       minute: '2-digit',
-      hour12: langInfo?.timeFormat === '12h'
+      hour12: langInfo?.timeFormat === '12h',
     }).format(date);
   } catch (error) {
     console.error('Failed to format time:', error);
@@ -593,7 +605,7 @@ export const formatDate = (date: Date, lang?: SupportedLanguage): string => {
     return new Intl.DateTimeFormat(currentLang, {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     }).format(date);
   } catch (error) {
     console.error('Failed to format date:', error);
@@ -607,7 +619,7 @@ export const formatShortDate = (date: Date, lang?: SupportedLanguage): string =>
     return new Intl.DateTimeFormat(currentLang, {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     }).format(date);
   } catch (error) {
     console.error('Failed to format short date:', error);
@@ -622,7 +634,7 @@ export const formatCurrency = (amount: number, lang?: SupportedLanguage): string
   try {
     return new Intl.NumberFormat(currentLang, {
       style: 'currency',
-      currency: langInfo?.currency || 'USD'
+      currency: langInfo?.currency || 'USD',
     }).format(amount);
   } catch (error) {
     console.error('Failed to format currency:', error);
@@ -646,7 +658,7 @@ export const formatPercentage = (value: number, lang?: SupportedLanguage): strin
     return new Intl.NumberFormat(currentLang, {
       style: 'percent',
       minimumFractionDigits: 0,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(value / 100);
   } catch (error) {
     console.error('Failed to format percentage:', error);
@@ -660,7 +672,7 @@ export const formatList = (items: string[], lang?: SupportedLanguage): string =>
     if (typeof Intl.ListFormat !== 'undefined') {
       return new Intl.ListFormat(currentLang, {
         style: 'long',
-        type: 'conjunction'
+        type: 'conjunction',
       }).format(items);
     } else {
       // Fallback for older browsers
@@ -683,9 +695,16 @@ export const formatDuration = (seconds: number, lang?: SupportedLanguage): strin
     const remainingSeconds = seconds % 60;
 
     if (hours > 0) {
-      return formatMessage('common:time.hoursMinutesSeconds', { hours, minutes, seconds: remainingSeconds });
+      return formatMessage('common:time.hoursMinutesSeconds', {
+        hours,
+        minutes,
+        seconds: remainingSeconds,
+      });
     } else if (minutes > 0) {
-      return formatMessage('common:time.minutesSeconds', { minutes, seconds: remainingSeconds });
+      return formatMessage('common:time.minutesSeconds', {
+        minutes,
+        seconds: remainingSeconds,
+      });
     } else {
       return formatMessage('common:time.seconds', { seconds: remainingSeconds });
     }
@@ -729,7 +748,11 @@ export const getPluralizationRules = (lang?: SupportedLanguage): Intl.PluralRule
 };
 
 // Smart pluralization for different languages
-export const smartPlural = (count: number, options: Record<string, string>, lang?: SupportedLanguage): string => {
+export const smartPlural = (
+  count: number,
+  options: Record<string, string>,
+  lang?: SupportedLanguage
+): string => {
   const currentLang = lang || getCurrentLanguage();
   try {
     const pluralRule = getPluralizationRules(currentLang).select(count);

@@ -1,21 +1,25 @@
 # Performance Testing Infrastructure
 
-Comprehensive performance and load testing setup for the Relife alarm app using k6 and Lighthouse CI.
+Comprehensive performance and load testing setup for the Relife alarm app using k6 and Lighthouse
+CI.
 
 ## Overview
 
-This directory contains performance testing infrastructure designed to validate system performance, identify bottlenecks, and ensure the Relife alarm app can handle real-world user loads efficiently.
+This directory contains performance testing infrastructure designed to validate system performance,
+identify bottlenecks, and ensure the Relife alarm app can handle real-world user loads efficiently.
 
 ## Test Types
 
 ### 1. Baseline Tests
+
 - **Purpose**: Validate basic functionality under minimal load
 - **File**: `k6/baseline-smoke-test.js`
 - **Duration**: 2 minutes
 - **Virtual Users**: 10
 - **Use Case**: CI/CD pipeline validation, regression detection
 
-### 2. Validation Tests  
+### 2. Validation Tests
+
 - **Purpose**: Verify k6 infrastructure is working correctly
 - **File**: `k6/validation-test.js`
 - **Duration**: 40 seconds
@@ -23,6 +27,7 @@ This directory contains performance testing infrastructure designed to validate 
 - **Use Case**: Testing setup validation, troubleshooting
 
 ### 3. Load Tests
+
 - **Purpose**: Test realistic user load patterns and alarm lifecycle
 - **File**: `k6/alarm-lifecycle-load-test.js`
 - **Duration**: 14 minutes (3 scenarios)
@@ -30,6 +35,7 @@ This directory contains performance testing infrastructure designed to validate 
 - **Use Case**: Normal operations validation, capacity planning
 
 ### 4. Stress Tests
+
 - **Purpose**: Find breaking points and system limits
 - **File**: `k6/critical-endpoints-stress-test.js`
 - **Duration**: 20 minutes (3 scenarios)
@@ -37,6 +43,7 @@ This directory contains performance testing infrastructure designed to validate 
 - **Use Case**: Disaster recovery planning, infrastructure sizing
 
 ### 5. Soak/Endurance Tests
+
 - **Purpose**: Long-term stability and memory leak detection
 - **File**: `k6/soak-endurance-test.js`
 - **Duration**: 30 minutes
@@ -44,6 +51,7 @@ This directory contains performance testing infrastructure designed to validate 
 - **Use Case**: Production readiness, long-term reliability
 
 ### 6. Frontend Performance Tests
+
 - **Purpose**: Web performance auditing and optimization
 - **Tool**: Lighthouse CI
 - **Config**: `lighthouserc.perf.js`
@@ -53,6 +61,7 @@ This directory contains performance testing infrastructure designed to validate 
 ## Quick Start
 
 ### Prerequisites
+
 - Docker installed and running
 - Node.js and npm
 - Development server running (for full tests)
@@ -102,11 +111,13 @@ Simulates complete user workflows:
 6. **Analytics Logging** - Usage data collection and reporting
 
 **Scenarios:**
+
 - **Load Test**: 50 → 200 → 200 → 0 users over 14 minutes
-- **Stress Test**: 200 → 500 → 500 → 0 users over 10 minutes  
+- **Stress Test**: 200 → 500 → 500 → 0 users over 10 minutes
 - **Soak Test**: 100 constant users for 10 minutes
 
 **Performance Targets:**
+
 - 95th percentile response time < 300ms
 - Error rate < 1% (load), < 2% (stress)
 - Request rate > 10 req/s
@@ -120,6 +131,7 @@ Focused testing of system-critical endpoints:
 3. **Critical Path Test**: High-frequency testing of essential functions
 
 **Key Endpoints:**
+
 - `/auth/login` - Authentication endpoint
 - `/alarms` (GET/POST) - Alarm management
 - `/alarms/*/trigger` - Alarm activation
@@ -127,6 +139,7 @@ Focused testing of system-critical endpoints:
 - `/analytics/events` - Usage tracking
 
 **Performance Targets:**
+
 - Median response time < 200ms
 - 95th percentile < 1000ms under stress
 - Error rate < 5% even at breaking point
@@ -140,6 +153,7 @@ Long-term stability validation:
 3. **Periodic Load**: Rush hour pattern simulation
 
 **Stability Indicators:**
+
 - Response time consistency over time
 - Memory usage patterns (no degradation)
 - Error rate stability
@@ -148,17 +162,20 @@ Long-term stability validation:
 ## Performance Thresholds
 
 ### Response Time Targets
+
 - **API Endpoints**: < 500ms (95th percentile)
 - **Alarm Triggers**: < 150ms (95th percentile)
 - **Database Queries**: < 100ms (average)
 - **Authentication**: < 500ms (95th percentile)
 
 ### Error Rate Limits
+
 - **Production**: < 0.1% error rate
 - **Load Testing**: < 1% error rate
 - **Stress Testing**: < 5% error rate
 
 ### Frontend Performance Budgets
+
 - **Performance Score**: 85+
 - **First Contentful Paint**: < 2.0s
 - **Largest Contentful Paint**: < 2.5s
@@ -177,7 +194,7 @@ AUTH_TOKEN=your-test-token           # Authentication token
 STRESS_LEVEL=high                    # low, medium, high, extreme
 SOAK_DURATION=30                     # Soak test duration in minutes
 
-# Lighthouse Configuration  
+# Lighthouse Configuration
 LHCI_GITHUB_APP_TOKEN=your-token     # GitHub integration token
 LHCI_SERVER_URL=your-lhci-server     # LHCI server URL
 ```
@@ -185,6 +202,7 @@ LHCI_SERVER_URL=your-lhci-server     # LHCI server URL
 ### Test Data Configuration
 
 Tests use realistic data patterns:
+
 - **Alarm Times**: Common wake-up and reminder times
 - **User Patterns**: Morning users, office workers, night owls, shift workers
 - **Labels**: Realistic alarm descriptions
@@ -193,6 +211,7 @@ Tests use realistic data patterns:
 ## Reports and Artifacts
 
 ### Generated Reports
+
 - `performance/reports/baseline-results.json` - k6 baseline results
 - `performance/reports/alarm-lifecycle-report.html` - Load test results
 - `performance/reports/critical-endpoints-report.html` - Stress test results
@@ -202,6 +221,7 @@ Tests use realistic data patterns:
 - `.lighthouseci/` - Lighthouse CI detailed reports
 
 ### Report Contents
+
 - **Performance Metrics**: Response times, throughput, error rates
 - **System Metrics**: CPU, memory, network utilization
 - **User Experience**: Page load times, interaction delays
@@ -218,7 +238,7 @@ Add to your workflow:
 - name: Performance Testing
   run: |
     npm run test:perf:ci
-    
+
 - name: Upload Performance Reports
   uses: actions/upload-artifact@v3
   with:
@@ -231,6 +251,7 @@ Add to your workflow:
 ### Quality Gates
 
 Performance tests can block deployments:
+
 - Baseline tests must pass for all commits
 - Load tests required for staging deployments
 - Stress tests required for production releases
@@ -239,14 +260,16 @@ Performance tests can block deployments:
 ## Monitoring Integration
 
 ### Existing Infrastructure
+
 - **Grafana**: Performance dashboard visualization
 - **Prometheus**: Metrics collection and alerting
 - **DataDog**: External monitoring and APM
 - **New Relic**: Application performance monitoring
 
 ### Performance Alerts
+
 - API response time > 1s for 5 minutes
-- Error rate > 5% for 2 minutes  
+- Error rate > 5% for 2 minutes
 - Frontend performance score < 80
 - Memory usage > 90% for 10 minutes
 
@@ -255,6 +278,7 @@ Performance tests can block deployments:
 ### Common Issues
 
 **k6 Tests Failing:**
+
 ```bash
 # Check Docker is running
 docker --version
@@ -267,6 +291,7 @@ docker run --rm -v $(pwd):/workspace grafana/k6 run --check /workspace/performan
 ```
 
 **Lighthouse Tests Failing:**
+
 ```bash
 # Check development server is running
 curl http://localhost:4173
@@ -279,6 +304,7 @@ npx lhci autorun --help
 ```
 
 **Performance Reports Empty:**
+
 ```bash
 # Verify reports directory exists
 ls -la performance/reports/
@@ -311,6 +337,7 @@ npm run test:perf:report
 ## Development Workflow
 
 ### Before Committing Code
+
 ```bash
 # Run baseline performance test
 npm run test:perf:baseline
@@ -320,6 +347,7 @@ npm run test:perf:report
 ```
 
 ### Before Production Deployment
+
 ```bash
 # Run comprehensive performance suite
 npm run test:perf:full-suite
@@ -329,6 +357,7 @@ cat artifacts/performance-test-report.md
 ```
 
 ### Performance Regression Testing
+
 ```bash
 # Compare against baseline
 npm run test:perf:ci
@@ -349,4 +378,5 @@ npm run test:perf:report
 
 ---
 
-For more information, see the [Performance Testing Matrix](../artifacts/integration-test-matrix.md) and generated reports in the `artifacts/` directory.
+For more information, see the [Performance Testing Matrix](../artifacts/integration-test-matrix.md)
+and generated reports in the `artifacts/` directory.

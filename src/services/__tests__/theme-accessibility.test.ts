@@ -1,4 +1,4 @@
-import { expect, test, jest } from "@jest/globals";
+import { expect, test, jest } from '@jest/globals';
 /// <reference lib="dom" />
 /**
  * Tests for Theme Accessibility Service
@@ -14,13 +14,13 @@ const mockDocument = {
     appendChild: jest.fn(),
     textContent: '',
     style: {
-      cssText: ''
+      cssText: '',
     },
     classList: {
       add: jest.fn(),
       remove: jest.fn(),
-      contains: jest.fn(() => false)
-    }
+      contains: jest.fn(() => false),
+    },
   })),
   body: {
     appendChild: jest.fn(),
@@ -28,32 +28,32 @@ const mockDocument = {
     classList: {
       add: jest.fn(),
       remove: jest.fn(),
-      contains: jest.fn(() => false)
-    }
+      contains: jest.fn(() => false),
+    },
   },
   documentElement: {
     style: {
-      setProperty: jest.fn()
+      setProperty: jest.fn(),
     },
     classList: {
-      contains: jest.fn(() => false)
-    }
+      contains: jest.fn(() => false),
+    },
   },
   querySelector: jest.fn(() => null),
   querySelectorAll: jest.fn(() => []),
   addEventListener: jest.fn(),
   removeEventListener: jest.fn(),
   head: {
-    appendChild: jest.fn()
-  }
+    appendChild: jest.fn(),
+  },
 };
 
 // Mock window APIs
 const mockWindow = {
   matchMedia: jest.fn(() => ({
     matches: false,
-    addEventListener: jest.fn()
-  }))
+    addEventListener: jest.fn(),
+  })),
 };
 
 global.document = mockDocument as any;
@@ -132,7 +132,7 @@ describe('ThemeAccessibilityService', () => {
           highContrastMode: false,
           saturationLevel: 100,
           brightnessLevel: 100,
-          warmthLevel: 50
+          warmthLevel: 50,
         },
         typographyPreferences: {
           preferredFontSize: 'medium',
@@ -141,7 +141,7 @@ describe('ThemeAccessibilityService', () => {
           lineHeightPreference: 'comfortable',
           letterSpacingPreference: 'normal',
           fontWeight: 'normal',
-          dyslexiaFriendly: false
+          dyslexiaFriendly: false,
         },
         motionPreferences: {
           enableAnimations: true,
@@ -150,7 +150,7 @@ describe('ThemeAccessibilityService', () => {
           preferCrossfade: false,
           enableParallax: true,
           enableHoverEffects: true,
-          enableFocusAnimations: true
+          enableFocusAnimations: true,
         },
         soundPreferences: {
           enableSounds: true,
@@ -159,7 +159,7 @@ describe('ThemeAccessibilityService', () => {
           customSounds: {},
           muteOnFocus: false,
           hapticFeedback: true,
-          spatialAudio: false
+          spatialAudio: false,
         },
         layoutPreferences: {
           density: 'comfortable',
@@ -170,7 +170,7 @@ describe('ThemeAccessibilityService', () => {
           showIcons: true,
           iconSize: 'medium',
           gridColumns: 2,
-          listSpacing: 'normal'
+          listSpacing: 'normal',
         },
         accessibilityPreferences: {
           screenReaderOptimized: false,
@@ -182,10 +182,10 @@ describe('ThemeAccessibilityService', () => {
           underlineLinks: false,
           flashingElementsReduced: false,
           colorOnlyIndicators: false,
-          focusIndicatorStyle: 'outline'
+          focusIndicatorStyle: 'outline',
         },
         lastUpdated: new Date(),
-        syncAcrossDevices: true
+        syncAcrossDevices: true,
       };
 
       service.applyAccessibilityEnhancements(settings);
@@ -203,7 +203,7 @@ describe('ThemeAccessibilityService', () => {
           highContrastMode: false,
           saturationLevel: 100,
           brightnessLevel: 100,
-          warmthLevel: 50
+          warmthLevel: 50,
         },
         typographyPreferences: {
           preferredFontSize: 'medium',
@@ -212,7 +212,7 @@ describe('ThemeAccessibilityService', () => {
           lineHeightPreference: 'comfortable',
           letterSpacingPreference: 'normal',
           fontWeight: 'normal',
-          dyslexiaFriendly: false
+          dyslexiaFriendly: false,
         },
         motionPreferences: {
           enableAnimations: true,
@@ -221,7 +221,7 @@ describe('ThemeAccessibilityService', () => {
           preferCrossfade: false,
           enableParallax: true,
           enableHoverEffects: true,
-          enableFocusAnimations: true
+          enableFocusAnimations: true,
         },
         soundPreferences: {
           enableSounds: true,
@@ -230,7 +230,7 @@ describe('ThemeAccessibilityService', () => {
           customSounds: {},
           muteOnFocus: false,
           hapticFeedback: true,
-          spatialAudio: false
+          spatialAudio: false,
         },
         layoutPreferences: {
           density: 'comfortable',
@@ -241,7 +241,7 @@ describe('ThemeAccessibilityService', () => {
           showIcons: true,
           iconSize: 'medium',
           gridColumns: 2,
-          listSpacing: 'normal'
+          listSpacing: 'normal',
         },
         accessibilityPreferences: {
           screenReaderOptimized: false,
@@ -253,10 +253,10 @@ describe('ThemeAccessibilityService', () => {
           underlineLinks: false,
           flashingElementsReduced: false,
           colorOnlyIndicators: false,
-          focusIndicatorStyle: 'outline'
+          focusIndicatorStyle: 'outline',
         },
         lastUpdated: new Date(),
-        syncAcrossDevices: true
+        syncAcrossDevices: true,
       };
 
       service.applyAccessibilityEnhancements(settings);
@@ -274,7 +274,7 @@ describe('ThemeAccessibilityService', () => {
           highContrastMode: false,
           saturationLevel: 100,
           brightnessLevel: 100,
-          warmthLevel: 50
+          warmthLevel: 50,
         },
         typographyPreferences: {
           preferredFontSize: 'medium',
@@ -283,7 +283,7 @@ describe('ThemeAccessibilityService', () => {
           lineHeightPreference: 'comfortable',
           letterSpacingPreference: 'normal',
           fontWeight: 'normal',
-          dyslexiaFriendly: true
+          dyslexiaFriendly: true,
         },
         motionPreferences: {
           enableAnimations: true,
@@ -292,7 +292,7 @@ describe('ThemeAccessibilityService', () => {
           preferCrossfade: false,
           enableParallax: true,
           enableHoverEffects: true,
-          enableFocusAnimations: true
+          enableFocusAnimations: true,
         },
         soundPreferences: {
           enableSounds: true,
@@ -301,7 +301,7 @@ describe('ThemeAccessibilityService', () => {
           customSounds: {},
           muteOnFocus: false,
           hapticFeedback: true,
-          spatialAudio: false
+          spatialAudio: false,
         },
         layoutPreferences: {
           density: 'comfortable',
@@ -312,7 +312,7 @@ describe('ThemeAccessibilityService', () => {
           showIcons: true,
           iconSize: 'medium',
           gridColumns: 2,
-          listSpacing: 'normal'
+          listSpacing: 'normal',
         },
         accessibilityPreferences: {
           screenReaderOptimized: false,
@@ -324,10 +324,10 @@ describe('ThemeAccessibilityService', () => {
           underlineLinks: false,
           flashingElementsReduced: false,
           colorOnlyIndicators: false,
-          focusIndicatorStyle: 'outline'
+          focusIndicatorStyle: 'outline',
         },
         lastUpdated: new Date(),
-        syncAcrossDevices: true
+        syncAcrossDevices: true,
       };
 
       service.applyAccessibilityEnhancements(settings);
@@ -342,7 +342,7 @@ describe('ThemeAccessibilityService', () => {
         '--theme-text-primary': '#000000',
         '--theme-background': '#ffffff',
         '--theme-primary': '#0000ff',
-        '--theme-focus': '#0000ff'
+        '--theme-focus': '#0000ff',
       };
 
       const result = service.testThemeAccessibility(themeColors);
@@ -359,7 +359,7 @@ describe('ThemeAccessibilityService', () => {
       const themeColors = {
         '--theme-text-primary': '#777777',
         '--theme-background': '#888888',
-        '--theme-primary': '#999999'
+        '--theme-primary': '#999999',
       };
 
       const result = service.testThemeAccessibility(themeColors);
@@ -397,7 +397,7 @@ describe('ThemeAccessibilityService', () => {
       expect(() => {
         service.announceThemeChange('Light Mode', {
           includePreviousTheme: true,
-          previousTheme: 'Dark Mode'
+          previousTheme: 'Dark Mode',
         });
       }).not.toThrow();
     });

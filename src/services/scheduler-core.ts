@@ -7,7 +7,7 @@ import type {
   SchedulingStats,
   BulkScheduleOperation,
   ScheduleExport,
-  ScheduleImport
+  ScheduleImport,
 } from '../types/index';
 import { AlarmService } from './alarm';
 import { AlarmParser } from './alarm-parser';
@@ -26,7 +26,7 @@ export class SchedulerCore {
     learningMode: true,
     privacyMode: false,
     backupAlarms: true,
-    advancedLogging: false
+    advancedLogging: false,
   };
 
   private static stats: SchedulingStats = {
@@ -35,7 +35,7 @@ export class SchedulerCore {
     averageAdjustment: 0,
     mostEffectiveOptimization: 'sleep_cycle',
     patternRecognition: [],
-    recommendations: []
+    recommendations: [],
   };
 
   private static schedulingEngine: any;
@@ -69,7 +69,7 @@ export class SchedulerCore {
     try {
       await Preferences.set({
         key: ADVANCED_CONFIG_KEY,
-        value: JSON.stringify(this.config)
+        value: JSON.stringify(this.config),
       });
     } catch (error) {
       console.error('Error saving scheduling config:', error);
@@ -91,7 +91,7 @@ export class SchedulerCore {
     try {
       await Preferences.set({
         key: SCHEDULING_STATS_KEY,
-        value: JSON.stringify(this.stats)
+        value: JSON.stringify(this.stats),
       });
     } catch (error) {
       console.error('Error saving scheduling stats:', error);
@@ -120,19 +120,28 @@ export class SchedulerCore {
 
       for (const alarm of activeAlarms) {
         // Apply smart optimizations
-        const optimizedAlarm = await AlarmExecutor.applySmartOptimizations(alarm, this.config);
-        
+        const optimizedAlarm = await AlarmExecutor.applySmartOptimizations(
+          alarm,
+          this.config
+        );
+
         // Apply seasonal adjustments
-        const seasonallyAdjustedAlarm = AlarmExecutor.applySeasonalAdjustments(optimizedAlarm);
-        
+        const seasonallyAdjustedAlarm =
+          AlarmExecutor.applySeasonalAdjustments(optimizedAlarm);
+
         // Evaluate conditional rules
-        const shouldRun = await AlarmExecutor.evaluateConditionalRules(seasonallyAdjustedAlarm);
-        
+        const shouldRun = await AlarmExecutor.evaluateConditionalRules(
+          seasonallyAdjustedAlarm
+        );
+
         // Evaluate location triggers if location is available
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
-            async (position) => {
-              await AlarmExecutor.evaluateLocationTriggers(seasonallyAdjustedAlarm, position);
+            async position => {
+              await AlarmExecutor.evaluateLocationTriggers(
+                seasonallyAdjustedAlarm,
+                position
+              );
             },
             () => {
               // Location not available, continue without location-based features
@@ -151,7 +160,10 @@ export class SchedulerCore {
     }
   }
 
-  private static async updateAlarmFromOptimization(original: Alarm, optimized: Alarm): Promise<void> {
+  private static async updateAlarmFromOptimization(
+    original: Alarm,
+    optimized: Alarm
+  ): Promise<void> {
     try {
       await AlarmService.updateAlarm(original.id, {
         time: optimized.time,
@@ -164,13 +176,13 @@ export class SchedulerCore {
         snoozeInterval: optimized.snoozeInterval,
         maxSnoozes: optimized.maxSnoozes,
         battleId: optimized.battleId,
-        weatherEnabled: optimized.weatherEnabled
+        weatherEnabled: optimized.weatherEnabled,
       });
-      
+
       // Update statistics
       this.stats.totalScheduledAlarms++;
       await this.saveStats();
-      
+
       console.log(`Applied optimization to alarm "${optimized.label}"`);
     } catch (error) {
       console.error('Error updating optimized alarm:', error);
@@ -182,7 +194,11 @@ export class SchedulerCore {
   static async scheduleAdvancedAlarm(alarm: Alarm): Promise<void> {
     try {
       // Calculate next occurrences using AlarmParser
-      const nextOccurrences = AlarmParser.calculateNextOccurrences(alarm, new Date(), 5);
+      const nextOccurrences = AlarmParser.calculateNextOccurrences(
+        alarm,
+        new Date(),
+        5
+      );
 
       if (nextOccurrences.length === 0) {
         console.log(`No future occurrences found for alarm: ${alarm.label}`);
@@ -190,7 +206,10 @@ export class SchedulerCore {
       }
 
       // Apply optimizations using AlarmExecutor
-      const optimizedAlarm = await AlarmExecutor.applySmartOptimizations(alarm, this.config);
+      const optimizedAlarm = await AlarmExecutor.applySmartOptimizations(
+        alarm,
+        this.config
+      );
       const finalAlarm = AlarmExecutor.applySeasonalAdjustments(optimizedAlarm);
 
       // Schedule notifications for each occurrence
@@ -200,7 +219,9 @@ export class SchedulerCore {
       this.stats.totalScheduledAlarms++;
       await this.saveStats();
 
-      console.log(`Scheduled advanced alarm "${finalAlarm.label}" with ${nextOccurrences.length} occurrences`);
+      console.log(
+        `Scheduled advanced alarm "${finalAlarm.label}" with ${nextOccurrences.length} occurrences`
+      );
     } catch (error) {
       console.error('Error scheduling advanced alarm:', error);
       throw error;
@@ -222,7 +243,11 @@ export class SchedulerCore {
   static async scheduleAdvancedNotifications(alarm: Alarm): Promise<void> {
     try {
       // Calculate next few occurrences
-      const nextOccurrences = AlarmParser.calculateNextOccurrences(alarm, new Date(), 5);
+      const nextOccurrences = AlarmParser.calculateNextOccurrences(
+        alarm,
+        new Date(),
+        5
+      );
 
       if (nextOccurrences.length === 0) {
         console.log(`No future occurrences found for alarm: ${alarm.label}`);
@@ -235,7 +260,10 @@ export class SchedulerCore {
         const notificationId = parseInt(alarm.id.replace(/\D/g, '')) + i;
 
         // Apply conditional rules for this specific occurrence
-        const shouldTrigger = await AlarmExecutor.evaluateConditionalRules(alarm, occurrence);
+        const shouldTrigger = await AlarmExecutor.evaluateConditionalRules(
+          alarm,
+          occurrence
+        );
         if (!shouldTrigger) {
           console.log(`Skipping occurrence due to conditional rules: ${occurrence}`);
           continue;
@@ -243,7 +271,10 @@ export class SchedulerCore {
 
         // Enhanced notification body
         let notificationBody = 'Time to wake up!';
-        if (alarm.smartOptimizations && alarm.smartOptimizations.some(opt => opt.isEnabled)) {
+        if (
+          alarm.smartOptimizations &&
+          alarm.smartOptimizations.some(opt => opt.isEnabled)
+        ) {
           notificationBody += ' (AI-optimized)';
         }
 
@@ -262,12 +293,13 @@ export class SchedulerCore {
           id: notificationId,
           title: `🔔 ${alarm.label}${alarm.recurrencePattern ? ' (Advanced)' : ''}`,
           body: notificationBody,
-          schedule: occurrence
+          schedule: occurrence,
         });
 
-        console.log(`Scheduled advanced alarm "${alarm.label}" for ${occurrence.toLocaleString()}`);
+        console.log(
+          `Scheduled advanced alarm "${alarm.label}" for ${occurrence.toLocaleString()}`
+        );
       }
-
     } catch (error) {
       console.error('Error scheduling advanced alarm notifications:', error);
     }
@@ -291,7 +323,9 @@ export class SchedulerCore {
 
   // ===== BULK OPERATIONS =====
 
-  static async executeBulkOperation(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
+  static async executeBulkOperation(
+    operation: BulkScheduleOperation
+  ): Promise<{ success: number; failed: number; errors: string[] }> {
     const results = { success: 0, failed: 0, errors: [] as string[] };
 
     try {
@@ -312,12 +346,16 @@ export class SchedulerCore {
           throw new Error(`Unknown operation: ${operation.operation}`);
       }
     } catch (error) {
-      results.errors.push(`Bulk operation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      results.errors.push(
+        `Bulk operation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
       return results;
     }
   }
 
-  private static async bulkCreateAlarms(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
+  private static async bulkCreateAlarms(
+    operation: BulkScheduleOperation
+  ): Promise<{ success: number; failed: number; errors: string[] }> {
     const results = { success: 0, failed: 0, errors: [] as string[] };
 
     if (!operation.alarms || operation.alarms.length === 0) {
@@ -339,19 +377,23 @@ export class SchedulerCore {
           maxSnoozes: alarm.maxSnoozes,
           battleId: alarm.battleId,
           weatherEnabled: alarm.weatherEnabled,
-          userId: alarm.userId
+          userId: alarm.userId,
         });
         results.success++;
       } catch (error) {
         results.failed++;
-        results.errors.push(`Failed to create alarm "${alarm.label}": ${error instanceof Error ? error.message : 'Unknown error'}`);
+        results.errors.push(
+          `Failed to create alarm "${alarm.label}": ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     }
 
     return results;
   }
 
-  private static async bulkUpdateAlarms(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
+  private static async bulkUpdateAlarms(
+    operation: BulkScheduleOperation
+  ): Promise<{ success: number; failed: number; errors: string[] }> {
     const results = { success: 0, failed: 0, errors: [] as string[] };
 
     if (!operation.updates || operation.updates.length === 0) {
@@ -365,14 +407,18 @@ export class SchedulerCore {
         results.success++;
       } catch (error) {
         results.failed++;
-        results.errors.push(`Failed to update alarm ${update.id}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        results.errors.push(
+          `Failed to update alarm ${update.id}: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     }
 
     return results;
   }
 
-  private static async bulkDeleteAlarms(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
+  private static async bulkDeleteAlarms(
+    operation: BulkScheduleOperation
+  ): Promise<{ success: number; failed: number; errors: string[] }> {
     const results = { success: 0, failed: 0, errors: [] as string[] };
 
     if (!operation.alarmIds || operation.alarmIds.length === 0) {
@@ -386,14 +432,18 @@ export class SchedulerCore {
         results.success++;
       } catch (error) {
         results.failed++;
-        results.errors.push(`Failed to delete alarm ${alarmId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        results.errors.push(
+          `Failed to delete alarm ${alarmId}: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     }
 
     return results;
   }
 
-  private static async bulkDuplicateAlarms(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
+  private static async bulkDuplicateAlarms(
+    operation: BulkScheduleOperation
+  ): Promise<{ success: number; failed: number; errors: string[] }> {
     const results = { success: 0, failed: 0, errors: [] as string[] };
 
     if (!operation.alarmIds || operation.alarmIds.length === 0) {
@@ -416,14 +466,16 @@ export class SchedulerCore {
           ...originalAlarm,
           id: this.generateUniqueId(),
           label: `${originalAlarm.label} (Copy)`,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
         };
 
         await AlarmService.createAlarm(duplicateAlarm);
         results.success++;
       } catch (error) {
         results.failed++;
-        results.errors.push(`Failed to duplicate alarm ${alarmId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        results.errors.push(
+          `Failed to duplicate alarm ${alarmId}: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     }
 
@@ -447,7 +499,9 @@ export class SchedulerCore {
     };
   }
 
-  static async importSchedule(importData: ScheduleImport): Promise<{ success: number; failed: number; errors: string[] }> {
+  static async importSchedule(
+    importData: ScheduleImport
+  ): Promise<{ success: number; failed: number; errors: string[] }> {
     const results = { success: 0, failed: 0, errors: [] as string[] };
 
     try {
@@ -461,15 +515,22 @@ export class SchedulerCore {
       for (const alarm of data.alarms) {
         try {
           // Adjust timezone if needed
-          if (options.adjustTimeZones && data.settings.timeZone !== this.config.timeZone) {
-            alarm.time = this.convertTimeZone(alarm.time, data.settings.timeZone, this.config.timeZone);
+          if (
+            options.adjustTimeZones &&
+            data.settings.timeZone !== this.config.timeZone
+          ) {
+            alarm.time = this.convertTimeZone(
+              alarm.time,
+              data.settings.timeZone,
+              this.config.timeZone
+            );
           }
 
           // Check for existing alarm if not overwriting
           if (!options.overwriteExisting) {
             const existingAlarms = await AlarmService.loadAlarms();
-            const exists = existingAlarms.some(existing =>
-              existing.label === alarm.label && existing.time === alarm.time
+            const exists = existingAlarms.some(
+              existing => existing.label === alarm.label && existing.time === alarm.time
             );
 
             if (exists) {
@@ -496,18 +557,22 @@ export class SchedulerCore {
             maxSnoozes: alarm.maxSnoozes,
             battleId: alarm.battleId,
             weatherEnabled: alarm.weatherEnabled,
-            userId: alarm.userId
+            userId: alarm.userId,
           });
           results.success++;
         } catch (error) {
           results.failed++;
-          results.errors.push(`Failed to import alarm "${alarm.label}": ${error instanceof Error ? error.message : 'Unknown error'}`);
+          results.errors.push(
+            `Failed to import alarm "${alarm.label}": ${error instanceof Error ? error.message : 'Unknown error'}`
+          );
         }
       }
 
       return results;
     } catch (error) {
-      results.errors.push(`Import failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      results.errors.push(
+        `Import failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
       return results;
     }
   }
@@ -550,10 +615,10 @@ export class SchedulerCore {
       clearInterval(this.schedulingEngine);
       this.schedulingEngine = null;
     }
-    
+
     await this.saveConfig();
     await this.saveStats();
-    
+
     console.log('Advanced Alarm Scheduler cleaned up');
   }
 }

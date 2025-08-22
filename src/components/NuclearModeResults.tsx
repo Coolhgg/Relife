@@ -24,12 +24,12 @@ import {
   Crown,
   Flame,
   Medal,
-  Activity
+  Activity,
 } from 'lucide-react';
 import type {
   NuclearModeSession,
   NuclearPerformance,
-  NuclearChallengeAttempt
+  NuclearChallengeAttempt,
 } from '../types';
 import { nuclearModeService } from '../services/nuclear-mode';
 import { cn } from '../lib/utils';
@@ -53,7 +53,7 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
   session,
   onRestart,
   onDismiss,
-  className
+  className,
 }) => {
   const [stats, setStats] = useState<any>(null);
   const [showDetails, setShowDetails] = useState(false);
@@ -82,37 +82,63 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
       label: 'Overall Score',
       value: performance.overallScore,
       icon: Trophy,
-      color: performance.overallScore >= 80 ? 'text-green-600' : performance.overallScore >= 60 ? 'text-yellow-600' : 'text-red-600',
-      description: 'Combined performance across all challenges'
+      color:
+        performance.overallScore >= 80
+          ? 'text-green-600'
+          : performance.overallScore >= 60
+            ? 'text-yellow-600'
+            : 'text-red-600',
+      description: 'Combined performance across all challenges',
     },
     {
       label: 'Speed',
       value: performance.speed,
       icon: Timer,
-      color: performance.speed >= 80 ? 'text-blue-600' : performance.speed >= 60 ? 'text-yellow-600' : 'text-red-600',
-      description: 'How quickly you completed challenges'
+      color:
+        performance.speed >= 80
+          ? 'text-blue-600'
+          : performance.speed >= 60
+            ? 'text-yellow-600'
+            : 'text-red-600',
+      description: 'How quickly you completed challenges',
     },
     {
       label: 'Accuracy',
       value: performance.accuracy,
       icon: Target,
-      color: performance.accuracy >= 90 ? 'text-green-600' : performance.accuracy >= 70 ? 'text-yellow-600' : 'text-red-600',
-      description: 'Percentage of challenges completed correctly on first try'
+      color:
+        performance.accuracy >= 90
+          ? 'text-green-600'
+          : performance.accuracy >= 70
+            ? 'text-yellow-600'
+            : 'text-red-600',
+      description: 'Percentage of challenges completed correctly on first try',
     },
     {
       label: 'Persistence',
       value: performance.persistence,
       icon: Flame,
-      color: performance.persistence >= 80 ? 'text-orange-600' : performance.persistence >= 60 ? 'text-yellow-600' : 'text-red-600',
-      description: 'Determination shown when facing difficult challenges'
-    }
+      color:
+        performance.persistence >= 80
+          ? 'text-orange-600'
+          : performance.persistence >= 60
+            ? 'text-yellow-600'
+            : 'text-red-600',
+      description: 'Determination shown when facing difficult challenges',
+    },
   ];
 
-  const getOverallRating = (score: number): { label: string; color: string; icon: React.ComponentType<any> } => {
-    if (score >= 90) return { label: 'Nuclear Master', color: 'text-purple-600', icon: Crown };
-    if (score >= 80) return { label: 'Explosive Expert', color: 'text-orange-600', icon: Medal };
-    if (score >= 70) return { label: 'Bomb Specialist', color: 'text-blue-600', icon: Award };
-    if (score >= 60) return { label: 'Blast Rookie', color: 'text-green-600', icon: Star };
+  const getOverallRating = (
+    score: number
+  ): { label: string; color: string; icon: React.ComponentType<any> } => {
+    if (score >= 90)
+      return { label: 'Nuclear Master', color: 'text-purple-600', icon: Crown };
+    if (score >= 80)
+      return { label: 'Explosive Expert', color: 'text-orange-600', icon: Medal };
+    if (score >= 70)
+      return { label: 'Bomb Specialist', color: 'text-blue-600', icon: Award };
+    if (score >= 60)
+      return { label: 'Blast Rookie', color: 'text-green-600', icon: Star };
     return { label: 'Training Needed', color: 'text-gray-600', icon: RefreshCw };
   };
 
@@ -125,22 +151,30 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
   const rating = getOverallRating(performance.overallScore);
 
   return (
-    <div className={cn('min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4', className)}>
+    <div
+      className={cn(
+        'min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4',
+        className
+      )}
+    >
       <div className="max-w-4xl mx-auto space-y-6">
-
         {/* Header Card */}
-        <Card className={cn(
-          'text-center',
-          isSuccess
-            ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200'
-            : 'bg-gradient-to-r from-red-50 to-orange-50 border-red-200'
-        )}>
+        <Card
+          className={cn(
+            'text-center',
+            isSuccess
+              ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200'
+              : 'bg-gradient-to-r from-red-50 to-orange-50 border-red-200'
+          )}
+        >
           <CardHeader>
             <div className="flex items-center justify-center mb-4">
-              <div className={cn(
-                'p-4 rounded-full',
-                isSuccess ? 'bg-green-100' : 'bg-red-100'
-              )}>
+              <div
+                className={cn(
+                  'p-4 rounded-full',
+                  isSuccess ? 'bg-green-100' : 'bg-red-100'
+                )}
+              >
                 {isSuccess ? (
                   <Trophy className="w-12 h-12 text-green-600" />
                 ) : (
@@ -149,21 +183,21 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
               </div>
             </div>
 
-            <CardTitle className={cn(
-              'text-3xl font-bold',
-              isSuccess ? 'text-green-900' : 'text-red-900'
-            )}>
+            <CardTitle
+              className={cn(
+                'text-3xl font-bold',
+                isSuccess ? 'text-green-900' : 'text-red-900'
+              )}
+            >
               {isSuccess ? '💣 Nuclear Mode Completed!' : '💥 Nuclear Mode Failed'}
             </CardTitle>
 
-            <CardDescription className={cn(
-              'text-lg',
-              isSuccess ? 'text-green-700' : 'text-red-700'
-            )}>
+            <CardDescription
+              className={cn('text-lg', isSuccess ? 'text-green-700' : 'text-red-700')}
+            >
               {isSuccess
                 ? 'Congratulations! You conquered all challenges!'
-                : 'Don\'t give up! Every failure teaches valuable lessons.'
-              }
+                : "Don't give up! Every failure teaches valuable lessons."}
             </CardDescription>
 
             {/* Overall Rating */}
@@ -229,9 +263,7 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Total Attempts:</span>
-                    <span className="font-medium">
-                      {session.totalAttempts}
-                    </span>
+                    <span className="font-medium">{session.totalAttempts}</span>
                   </div>
                 </div>
               </div>
@@ -247,16 +279,16 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Difficulty:</span>
-                    <span className="font-medium">
-                      {session.difficulty}/10
-                    </span>
+                    <span className="font-medium">{session.difficulty}/10</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Improvement:</span>
-                    <span className={cn(
-                      'font-medium flex items-center gap-1',
-                      performance.improvement >= 0 ? 'text-green-600' : 'text-red-600'
-                    )}>
+                    <span
+                      className={cn(
+                        'font-medium flex items-center gap-1',
+                        performance.improvement >= 0 ? 'text-green-600' : 'text-red-600'
+                      )}
+                    >
                       {performance.improvement >= 0 ? (
                         <TrendingUp className="w-3 h-3" />
                       ) : (
@@ -273,9 +305,7 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Your Rank:</span>
-                    <span className="font-medium">
-                      #{performance.rank}
-                    </span>
+                    <span className="font-medium">#{performance.rank}</span>
                   </div>
                   {stats && (
                     <>
@@ -287,9 +317,7 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Best Score:</span>
-                        <span className="font-medium">
-                          {stats.bestScore}
-                        </span>
+                        <span className="font-medium">{stats.bestScore}</span>
                       </div>
                     </>
                   )}
@@ -316,7 +344,9 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
                     className="bg-yellow-100 text-yellow-800 px-3 py-2"
                   >
                     <Trophy className="w-3 h-3 mr-1" />
-                    {achievement.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    {achievement
+                      .replace(/_/g, ' ')
+                      .replace(/\b\w/g, l => l.toUpperCase())}
                   </Badge>
                 ))}
               </div>
@@ -430,12 +460,14 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
           <Alert className="border-blue-200 bg-blue-50">
             <Brain className="w-4 h-4 text-blue-600" />
             <AlertDescription className="text-blue-800">
-              <strong>Tips for next time:</strong> Practice math problems, memory games, and speed challenges.
-              Consider adjusting difficulty or selecting fewer challenges to build confidence.
+              <strong>Tips for next time:</strong> Practice math problems, memory games,
+              and speed challenges. Consider adjusting difficulty or selecting fewer
+              challenges to build confidence.
             </AlertDescription>
           </Alert>
         )}
       </div>
     </div>
   );
-};export default NuclearModeResults;
+};
+export default NuclearModeResults;

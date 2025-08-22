@@ -4,7 +4,9 @@
 
 ## Overview
 
-The Relife alarm app now features a comprehensive sound theme system that allows users to customize their audio experience with different aesthetic styles. Users can choose from 13 distinct themes, each offering a unique sound palette for UI interactions, notifications, and alarms.
+The Relife alarm app now features a comprehensive sound theme system that allows users to customize
+their audio experience with different aesthetic styles. Users can choose from 13 distinct themes,
+each offering a unique sound palette for UI interactions, notifications, and alarms.
 
 ## Available Themes
 
@@ -221,7 +223,8 @@ The Relife alarm app now features a comprehensive sound theme system that allows
 1. Open the app settings
 2. Navigate to "Sound Effects" section
 3. Find the "Sound Theme" area OR visit the Sound Theme Demo page
-4. Choose from 13 available themes: Default, Minimal, Nature, Electronic, Cyberpunk, Fantasy, Horror, Classical, Lo-Fi, Ambient, Sci-Fi, Workout, or Seasonal
+4. Choose from 13 available themes: Default, Minimal, Nature, Electronic, Cyberpunk, Fantasy,
+   Horror, Classical, Lo-Fi, Ambient, Sci-Fi, Workout, or Seasonal
 5. Click on any theme to apply it instantly
 6. Use play buttons to preview themes and their alarm sounds before switching
 
@@ -240,8 +243,10 @@ The Relife alarm app now features a comprehensive sound theme system that allows
 - **Alarm-Specific Sounds**: Each theme includes 2 unique alarm variations (26 total alarm sounds)
 - **Interactive Demo Page**: Complete theme preview page with all sound testing capabilities
 - **Procedural Audio Generation**: All 78 sound files generated using Web Audio API
-- **Theme Categories**: Organized by style (Core, Nature & Ambient, Electronic & Futuristic, Artistic & Creative, Energy & Activity, Retro & Vintage)
-- **Distinctive Sound Palettes**: Each theme has unique audio characteristics across UI and alarm sounds
+- **Theme Categories**: Organized by style (Core, Nature & Ambient, Electronic & Futuristic,
+  Artistic & Creative, Energy & Activity, Retro & Vintage)
+- **Distinctive Sound Palettes**: Each theme has unique audio characteristics across UI and alarm
+  sounds
 
 ### Planned Features 🔮
 
@@ -306,7 +311,8 @@ Explore the **Sound Theme Demo** page to:
 
 - **13 Total Themes**: Complete coverage of different aesthetic preferences
 - **78 Sound Files**: 4 UI sounds + 2 alarm sounds per theme (6 × 13 = 78)
-- **5 Categories**: Core, Nature & Ambient, Electronic & Futuristic, Artistic & Creative, Energy & Activity
+- **5 Categories**: Core, Nature & Ambient, Electronic & Futuristic, Artistic & Creative, Energy &
+  Activity
 - **100% Procedural**: All sounds generated using Web Audio API for copyright-free content
 - **Instant Preview**: Real-time theme testing without changing your settings
 

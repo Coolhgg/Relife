@@ -1,6 +1,7 @@
 # Visual Regression Testing Setup
 
-This document outlines the visual regression testing setup for the Relife application using Storybook and Chromatic.
+This document outlines the visual regression testing setup for the Relife application using
+Storybook and Chromatic.
 
 ## Overview
 
@@ -21,12 +22,15 @@ We use the following tools for visual regression testing:
 ### Local Development
 
 1. **Start Storybook locally:**
+
    ```bash
    bun run storybook
    ```
+
    This starts Storybook on http://localhost:6006
 
 2. **Build Storybook:**
+
    ```bash
    bun run build-storybook
    ```
@@ -66,8 +70,8 @@ Each component should have comprehensive stories covering:
 ### Example Story Structure
 
 ```typescript
-import type { Meta, StoryObj } from '@storybook/react'
-import { ComponentName } from './ComponentName'
+import type { Meta, StoryObj } from '@storybook/react';
+import { ComponentName } from './ComponentName';
 
 const meta: Meta<typeof ComponentName> = {
   title: 'Components/ComponentName',
@@ -81,22 +85,22 @@ const meta: Meta<typeof ComponentName> = {
     },
   },
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
     // Default props
   },
-}
+};
 
 export const Variant: Story = {
   args: {
     // Variant props
   },
-}
+};
 ```
 
 ## Visual Testing Process
@@ -118,15 +122,19 @@ export const Variant: Story = {
 ## Configuration Files
 
 ### `.storybook/main.ts`
+
 Main Storybook configuration with addons and settings.
 
 ### `.storybook/preview.ts`
+
 Global decorators, parameters, and theming for all stories.
 
 ### `.storybook/chromatic.config.js`
+
 Chromatic-specific configuration for visual testing.
 
 ### `.github/workflows/chromatic.yml`
+
 GitHub Actions workflow for automated visual testing.
 
 ## Available Scripts
@@ -201,4 +209,5 @@ When contributing new components or modifications:
 
 ---
 
-For questions or issues with visual testing setup, please create an issue in the repository or contact the development team.
+For questions or issues with visual testing setup, please create an issue in the repository or
+contact the development team.

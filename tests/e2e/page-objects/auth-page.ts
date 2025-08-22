@@ -23,17 +23,25 @@ export class AuthPage extends BasePage {
     this.page = page;
     this.emailInput = page.locator('input[type="email"], input[name="email"]');
     this.passwordInput = page.locator('input[type="password"], input[name="password"]');
-    this.confirmPasswordInput = page.locator('input[name="confirmPassword"], input[name="confirm-password"]');
+    this.confirmPasswordInput = page.locator(
+      'input[name="confirmPassword"], input[name="confirm-password"]'
+    );
     this.loginButton = page.getByRole('button').filter({ hasText: /log in|sign in/i });
-    this.signupButton = page.getByRole('button').filter({ hasText: /sign up|register|create account/i });
+    this.signupButton = page
+      .getByRole('button')
+      .filter({ hasText: /sign up|register|create account/i });
     this.forgotPasswordLink = page.getByText(/forgot password|reset password/i);
     this.googleSignInButton = page.getByRole('button').filter({ hasText: /google/i });
     this.switchToSignupLink = page.getByText(/sign up|create account/i);
     this.switchToLoginLink = page.getByText(/log in|sign in/i);
-    this.logoutButton = page.getByRole('button').filter({ hasText: /logout|sign out/i });
+    this.logoutButton = page
+      .getByRole('button')
+      .filter({ hasText: /logout|sign out/i });
     this.userProfileButton = page.locator('[data-testid="user-profile-button"]');
     this.authContainer = page.locator('[data-testid="auth-container"]');
-    this.errorMessage = page.locator('[role="alert"], .error-message, [data-testid*="error"]');
+    this.errorMessage = page.locator(
+      '[role="alert"], .error-message, [data-testid*="error"]'
+    );
     this.successMessage = page.locator('.success-message, [data-testid*="success"]');
   }
 
@@ -69,7 +77,10 @@ export class AuthPage extends BasePage {
     await this.waitForSuccessfulLogin();
   }
 
-  async signupWithNewUser(email: string = 'newuser@example.com', password: string = 'newpassword123') {
+  async signupWithNewUser(
+    email: string = 'newuser@example.com',
+    password: string = 'newpassword123'
+  ) {
     await this.signup(email, password, password);
     await this.waitForSuccessfulSignup();
   }
@@ -100,7 +111,9 @@ export class AuthPage extends BasePage {
 
   async waitForSuccessfulLogin() {
     // Wait for redirect to dashboard or success indicator
-    await this.page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 10000 });
+    await this.page.waitForURL(url => !url.pathname.includes('/login'), {
+      timeout: 10000,
+    });
 
     // Or check for user profile button indicating successful login
     await this.waitForElement(this.userProfileButton, 10000);
@@ -116,7 +129,10 @@ export class AuthPage extends BasePage {
 
   async waitForLogout() {
     // Wait for redirect to login page or auth container to appear
-    await this.page.waitForURL(url => url.pathname.includes('/login') || url.pathname === '/', { timeout: 10000 });
+    await this.page.waitForURL(
+      url => url.pathname.includes('/login') || url.pathname === '/',
+      { timeout: 10000 }
+    );
   }
 
   async verifyLoginFormValidation() {
@@ -187,7 +203,9 @@ export class AuthPage extends BasePage {
   }
 
   async checkRememberMeOption() {
-    const rememberMeCheckbox = this.page.locator('input[type="checkbox"]').filter({ hasText: /remember me/i });
+    const rememberMeCheckbox = this.page
+      .locator('input[type="checkbox"]')
+      .filter({ hasText: /remember me/i });
     if (await rememberMeCheckbox.isVisible()) {
       await rememberMeCheckbox.check();
       expect(await rememberMeCheckbox.isChecked()).toBe(true);

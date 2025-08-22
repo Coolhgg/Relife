@@ -40,7 +40,7 @@ export class EmailCampaignService {
           apiSecret: config.apiSecret || '',
           fromEmail: config.fromEmail,
           fromName: config.fromName,
-          webhookSecret: config.webhookSecret
+          webhookSecret: config.webhookSecret,
         };
 
         const initialized = await this.convertKitService.initialize(convertKitConfig);
@@ -67,7 +67,10 @@ export class EmailCampaignService {
   }
 
   // Enhanced persona detection with behavioral analytics
-  async detectUserPersona(user: User, behavioralData?: any): Promise<PersonaDetectionResult> {
+  async detectUserPersona(
+    user: User,
+    behavioralData?: any
+  ): Promise<PersonaDetectionResult> {
     try {
       let persona: PersonaType = 'struggling_sam';
       let confidence = 0.5;
@@ -97,29 +100,37 @@ export class EmailCampaignService {
         factor: 'subscription_tier',
         weight: 0.4,
         value: tier,
-        influence: baseConfidence
+        influence: baseConfidence,
       });
 
       // Email domain analysis
       const emailDomain = user.email?.split('@')[1]?.toLowerCase() || '';
-      if (emailDomain.includes('.edu') ||
-          emailDomain.includes('university') ||
-          emailDomain.includes('college') ||
-          emailDomain.includes('student')) {
+      if (
+        emailDomain.includes('.edu') ||
+        emailDomain.includes('university') ||
+        emailDomain.includes('college') ||
+        emailDomain.includes('student')
+      ) {
         persona = 'student_sarah';
         confidence = Math.max(confidence, 0.9);
         factors.push({
           factor: 'email_domain',
           weight: 0.3,
           value: emailDomain,
-          influence: 0.9
+          influence: 0.9,
         });
       }
 
       // Company domain analysis for enterprise
-      const enterpriseDomains = ['company.com', 'corp.com', 'enterprise.com', 'business.com'];
-      const isEnterpriseDomain = enterpriseDomains.some(domain => emailDomain.includes(domain)) ||
-                                !['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'].includes(emailDomain);
+      const enterpriseDomains = [
+        'company.com',
+        'corp.com',
+        'enterprise.com',
+        'business.com',
+      ];
+      const isEnterpriseDomain =
+        enterpriseDomains.some(domain => emailDomain.includes(domain)) ||
+        !['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'].includes(emailDomain);
 
       if (isEnterpriseDomain && tier !== 'student') {
         if (tier === 'pro' || tier === 'premium') {
@@ -130,7 +141,7 @@ export class EmailCampaignService {
           factor: 'enterprise_domain',
           weight: 0.2,
           value: emailDomain,
-          influence: 0.7
+          influence: 0.7,
         });
       }
 
@@ -148,9 +159,10 @@ export class EmailCampaignService {
 
       // Calculate final confidence score
       const totalWeight = factors.reduce((sum, factor) => sum + factor.weight, 0);
-      const weightedConfidence = factors.reduce((sum, factor) => {
-        return sum + (factor.influence * factor.weight);
-      }, 0) / totalWeight;
+      const weightedConfidence =
+        factors.reduce((sum, factor) => {
+          return sum + factor.influence * factor.weight;
+        }, 0) / totalWeight;
 
       confidence = Math.min(0.99, Math.max(0.1, weightedConfidence || baseConfidence));
 
@@ -158,7 +170,7 @@ export class EmailCampaignService {
         persona,
         confidence,
         factors,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
     } catch (error) {
       ErrorHandler.handleError(
@@ -169,7 +181,7 @@ export class EmailCampaignService {
         persona: 'struggling_sam',
         confidence: 0.5,
         factors: [],
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
     }
   }
@@ -194,7 +206,7 @@ export class EmailCampaignService {
           factor: 'analytics_usage',
           weight: 0.3,
           value: usage.analytics,
-          influence: 0.8
+          influence: 0.8,
         });
         suggestedPersona = 'professional_paula';
         confidence = 0.8;
@@ -206,7 +218,7 @@ export class EmailCampaignService {
           factor: 'team_features',
           weight: 0.35,
           value: usage.teamFeatures,
-          influence: 0.85
+          influence: 0.85,
         });
         suggestedPersona = 'enterprise_emma';
         confidence = 0.85;
@@ -218,7 +230,7 @@ export class EmailCampaignService {
           factor: 'shortcut_usage',
           weight: 0.25,
           value: usage.shortcuts,
-          influence: 0.75
+          influence: 0.75,
         });
         if (!suggestedPersona || confidence < 0.75) {
           suggestedPersona = 'busy_ben';
@@ -237,7 +249,7 @@ export class EmailCampaignService {
           factor: 'session_pattern',
           weight: 0.2,
           value: 'frequent_short',
-          influence: 0.7
+          influence: 0.7,
         });
       }
 
@@ -247,7 +259,7 @@ export class EmailCampaignService {
           factor: 'session_pattern',
           weight: 0.2,
           value: 'long_focused',
-          influence: 0.7
+          influence: 0.7,
         });
       }
     }
@@ -283,13 +295,20 @@ export class EmailCampaignService {
     }
   }
 
-  private async addToEnhancedConvertKit(user: User, persona: PersonaType): Promise<boolean> {
+  private async addToEnhancedConvertKit(
+    user: User,
+    persona: PersonaType
+  ): Promise<boolean> {
     try {
       // Get the form ID for this persona
       const formId = CONVERTKIT_IDS?.forms?.[persona]?.id;
 
       // Add subscriber to ConvertKit
-      const subscriber = await this.convertKitService.addSubscriber(user, persona, formId);
+      const subscriber = await this.convertKitService.addSubscriber(
+        user,
+        persona,
+        formId
+      );
 
       if (subscriber) {
         // Add to sequence if available
@@ -298,7 +317,9 @@ export class EmailCampaignService {
           await this.convertKitService.addToSequence(user.email, sequenceId);
         }
 
-        console.log(`✅ Successfully added ${user.email} to ConvertKit with persona ${persona}`);
+        console.log(
+          `✅ Successfully added ${user.email} to ConvertKit with persona ${persona}`
+        );
         return true;
       } else {
         console.error(`❌ Failed to add ${user.email} to ConvertKit`);
@@ -320,8 +341,8 @@ export class EmailCampaignService {
         email: user.email,
         first_name: user.name || user.username,
         fields: { persona, user_id: user.id },
-        tags: [`persona:${persona}`]
-      })
+        tags: [`persona:${persona}`],
+      }),
     });
 
     return response.ok;
@@ -334,7 +355,11 @@ export class EmailCampaignService {
   }
 
   // Enhanced sequence triggering
-  async triggerSequence(email: string, persona: PersonaType, delay: number = 0): Promise<boolean> {
+  async triggerSequence(
+    email: string,
+    persona: PersonaType,
+    delay: number = 0
+  ): Promise<boolean> {
     if (!this.isInitialized || !this.config) {
       console.warn('Email service not initialized');
       return false;
@@ -360,7 +385,9 @@ export class EmailCampaignService {
           return false;
         }
       } else {
-        console.log(`Triggering ${persona} sequence for ${email} (${this.config.platform})`);
+        console.log(
+          `Triggering ${persona} sequence for ${email} (${this.config.platform})`
+        );
         return true;
       }
     } catch (error) {
@@ -373,7 +400,11 @@ export class EmailCampaignService {
   }
 
   // Update user persona and move to appropriate campaign
-  async updateUserPersona(email: string, newPersona: PersonaType, confidence: number): Promise<boolean> {
+  async updateUserPersona(
+    email: string,
+    newPersona: PersonaType,
+    confidence: number
+  ): Promise<boolean> {
     if (!this.isInitialized || !this.config) {
       console.warn('Email service not initialized');
       return false;
@@ -381,11 +412,17 @@ export class EmailCampaignService {
 
     try {
       if (this.config.platform === 'convertkit') {
-        const updated = await this.convertKitService.updateSubscriberPersona(email, newPersona, confidence);
+        const updated = await this.convertKitService.updateSubscriberPersona(
+          email,
+          newPersona,
+          confidence
+        );
         if (updated) {
           // Trigger new persona sequence
           await this.triggerSequence(email, newPersona);
-          console.log(`✅ Updated persona for ${email}: ${newPersona} (confidence: ${confidence})`);
+          console.log(
+            `✅ Updated persona for ${email}: ${newPersona} (confidence: ${confidence})`
+          );
           return true;
         }
       }
@@ -405,7 +442,7 @@ export class EmailCampaignService {
       return {
         isInitialized: false,
         platform: null,
-        stats: null
+        stats: null,
       };
     }
 
@@ -415,13 +452,13 @@ export class EmailCampaignService {
         return {
           isInitialized: this.isInitialized,
           platform: this.config.platform,
-          stats
+          stats,
         };
       } else {
         return {
           isInitialized: this.isInitialized,
           platform: this.config.platform,
-          stats: { message: 'Stats not available for this platform' }
+          stats: { message: 'Stats not available for this platform' },
         };
       }
     } catch (error) {
@@ -429,7 +466,7 @@ export class EmailCampaignService {
       return {
         isInitialized: this.isInitialized,
         platform: this.config.platform,
-        stats: { error: 'Failed to retrieve stats' }
+        stats: { error: 'Failed to retrieve stats' },
       };
     }
   }

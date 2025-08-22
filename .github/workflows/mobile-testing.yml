@@ -7,38 +7,38 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'src/**'
-      - 'tests/**mobile**'
-      - 'tests/integration/**mobile**'
-      - 'src/services/capacitor-enhanced.ts'
-      - 'src/__tests__/mocks/capacitor.mock.ts'
-      - 'capacitor.config.ts'
-      - 'package.json'
-      - 'vitest.config.ts'
-      - 'android/**'
-      - 'ios/**'
+      - "src/**"
+      - "tests/**mobile**"
+      - "tests/integration/**mobile**"
+      - "src/services/capacitor-enhanced.ts"
+      - "src/__tests__/mocks/capacitor.mock.ts"
+      - "capacitor.config.ts"
+      - "package.json"
+      - "vitest.config.ts"
+      - "android/**"
+      - "ios/**"
   pull_request:
     branches: [main, develop]
     paths:
-      - 'src/**'
-      - 'tests/**mobile**'
-      - 'tests/integration/**mobile**'
-      - 'src/services/capacitor-enhanced.ts'
-      - 'src/__tests__/mocks/capacitor.mock.ts'
-      - 'capacitor.config.ts'
-      - 'package.json'
-      - 'vitest.config.ts'
-      - 'android/**'
-      - 'ios/**'
+      - "src/**"
+      - "tests/**mobile**"
+      - "tests/integration/**mobile**"
+      - "src/services/capacitor-enhanced.ts"
+      - "src/__tests__/mocks/capacitor.mock.ts"
+      - "capacitor.config.ts"
+      - "package.json"
+      - "vitest.config.ts"
+      - "android/**"
+      - "ios/**"
   schedule:
     # Run mobile tests daily at 3 AM UTC
-    - cron: '0 3 * * *'
+    - cron: "0 3 * * *"
   workflow_dispatch:
     inputs:
       platform:
-        description: 'Target platform for testing'
+        description: "Target platform for testing"
         required: false
-        default: 'all'
+        default: "all"
         type: choice
         options:
           - all
@@ -46,9 +46,9 @@ on:
           - android
           - web
       test_type:
-        description: 'Type of mobile tests to run'
+        description: "Type of mobile tests to run"
         required: false
-        default: 'all'
+        default: "all"
         type: choice
         options:
           - all
@@ -56,7 +56,7 @@ on:
           - emulator
           - device
       verbose:
-        description: 'Enable verbose logging'
+        description: "Enable verbose logging"
         type: boolean
         default: false
 
@@ -85,12 +85,12 @@ jobs:
   # ==========================================================================
   # MOBILE MOCK TESTING (FAST FEEDBACK)
   # ==========================================================================
-  
+
   mobile-mock-tests:
     name: 📱 Mobile Mock Tests
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    
+
     strategy:
       matrix:
         platform: [ios, android, web]
@@ -109,7 +109,7 @@ jobs:
             device: Chrome
             os_version: "latest"
       fail-fast: false
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -142,12 +142,12 @@ jobs:
       - name: 🧪 Run mobile mock tests - ${{ matrix.platform }} - ${{ matrix.test-suite }}
         run: |
           echo "📱 Running mobile tests for ${{ matrix.platform }}: ${{ matrix.test-suite }}"
-          
+
           # Set platform-specific environment variables
           export MOCK_PLATFORM="${{ matrix.platform }}"
           export MOCK_DEVICE="${{ matrix.device }}"
           export MOCK_OS_VERSION="${{ matrix.os_version }}"
-          
+
           # Determine test file pattern
           if [ "${{ matrix.test-suite }}" = "capacitor-plugins" ]; then
             TEST_PATTERN="tests/integration/*capacitor*"
@@ -156,7 +156,7 @@ jobs:
           else
             TEST_PATTERN="tests/integration/mobile-capacitor-comprehensive*"
           fi
-          
+
           # Run tests with platform simulation
           if [ "${{ github.event.inputs.verbose }}" = "true" ]; then
             VERBOSE_TESTS=true bun run vitest run \
@@ -201,7 +201,7 @@ jobs:
           echo "**OS Version**: ${{ matrix.os_version }}" >> mobile-test-report-${{ matrix.platform }}-${{ matrix.test-suite }}.md
           echo "**Test Suite**: ${{ matrix.test-suite }}" >> mobile-test-report-${{ matrix.platform }}-${{ matrix.test-suite }}.md
           echo "" >> mobile-test-report-${{ matrix.platform }}-${{ matrix.test-suite }}.md
-          
+
           if [ -f "test-results/mobile-test-results.json" ]; then
             echo "✅ Test results available" >> mobile-test-report-${{ matrix.platform }}-${{ matrix.test-suite }}.md
           else
@@ -221,18 +221,18 @@ jobs:
   # ==========================================================================
   # MOBILE EMULATOR TESTING (ANDROID)
   # ==========================================================================
-  
+
   android-emulator-tests:
     name: 🤖 Android Emulator Tests
     runs-on: ubuntu-latest
     if: github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'emulator' || github.event_name == 'schedule'
     timeout-minutes: 45
-    
+
     strategy:
       matrix:
         android-api: [30, 33] # Android 11 and 13
       fail-fast: false
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -240,8 +240,8 @@ jobs:
       - name: ☕ Set up JDK 11
         uses: actions/setup-java@v4
         with:
-          java-version: '11'
-          distribution: 'temurin'
+          java-version: "11"
+          distribution: "temurin"
 
       - name: 🔧 Set up Bun
         uses: oven-sh/setup-bun@v2
@@ -301,10 +301,10 @@ jobs:
           disable-animations: true
           script: |
             echo "🧪 Running tests on Android API ${{ matrix.android-api }}..."
-            
+
             # Install the APK
             adb install -r android/app/build/outputs/apk/debug/app-debug.apk
-            
+
             # Run Detox tests if configured
             if [ -f ".detoxrc.json" ]; then
               echo "🔍 Running Detox end-to-end tests..."
@@ -312,7 +312,7 @@ jobs:
             else
               echo "⚠️ Detox configuration not found, skipping E2E tests"
             fi
-            
+
             # Run mobile-specific integration tests with emulator
             echo "🧪 Running mobile integration tests on emulator..."
             CAPACITOR_MOCK_MODE=false \
@@ -332,19 +332,19 @@ jobs:
   # ==========================================================================
   # iOS SIMULATOR TESTING (macOS)
   # ==========================================================================
-  
+
   ios-simulator-tests:
     name: 🍎 iOS Simulator Tests
     runs-on: macos-latest
     if: github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'emulator' || github.event_name == 'schedule'
     timeout-minutes: 45
-    
+
     strategy:
       matrix:
         ios-version: ["15.0", "16.0"]
         device: ["iPhone 13 Pro", "iPhone 14 Pro"]
       fail-fast: false
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -376,10 +376,10 @@ jobs:
           bun run build
           bunx cap add ios
           bunx cap sync ios
-          
+
           # Install iOS dependencies
           cd ios/App && pod install && cd ../..
-          
+
           # Build for simulator
           bunx cap build ios --configuration debug
         env:
@@ -389,10 +389,10 @@ jobs:
       - name: 🧪 Run iOS simulator tests
         run: |
           echo "🧪 Running tests on iOS ${{ matrix.ios-version }} - ${{ matrix.device }}..."
-          
+
           # Start iOS simulator
           DEVICE_ID=$(xcrun simctl create "TestDevice" "com.apple.CoreSimulator.SimDeviceType.${{ matrix.device }}" "com.apple.CoreSimulator.SimRuntime.iOS-${{ matrix.ios-version }}" || echo "")
-          
+
           if [ -n "$DEVICE_ID" ]; then
             echo "📱 Starting simulator: $DEVICE_ID"
             xcrun simctl boot "$DEVICE_ID"
@@ -429,13 +429,13 @@ jobs:
   # ==========================================================================
   # MOBILE PERFORMANCE TESTING
   # ==========================================================================
-  
+
   mobile-performance-tests:
     name: ⚡ Mobile Performance Tests
     runs-on: ubuntu-latest
     needs: mobile-mock-tests
     timeout-minutes: 20
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -451,7 +451,7 @@ jobs:
       - name: ⚡ Run mobile performance tests
         run: |
           echo "⚡ Running mobile performance tests..."
-          
+
           # Test alarm performance across platforms
           for platform in ios android web; do
             echo "📱 Testing $platform performance..."
@@ -476,7 +476,7 @@ jobs:
           echo "- **Notification Delivery**: < 500ms" >> performance-report.md
           echo "" >> performance-report.md
           echo "### Results by Platform:" >> performance-report.md
-          
+
           # Add detailed performance metrics if available
           if [ -f "test-results/performance-results.json" ]; then
             echo "✅ Performance results available" >> performance-report.md
@@ -497,13 +497,13 @@ jobs:
   # ==========================================================================
   # COMPREHENSIVE MOBILE TESTING SUMMARY
   # ==========================================================================
-  
+
   mobile-test-summary:
     name: 📋 Mobile Test Summary
     runs-on: ubuntu-latest
     needs: [mobile-mock-tests, mobile-performance-tests]
     if: always()
-    
+
     steps:
       - name: 📥 Download all test results
         uses: actions/download-artifact@v4
@@ -516,24 +516,24 @@ jobs:
           echo "" >> mobile-test-summary.md
           echo "## Test Execution Summary" >> mobile-test-summary.md
           echo "" >> mobile-test-summary.md
-          
+
           # Test status summary
           MOCK_STATUS="${{ needs.mobile-mock-tests.result }}"
           PERFORMANCE_STATUS="${{ needs.mobile-performance-tests.result }}"
-          
+
           echo "| Test Suite | Status | Coverage |" >> mobile-test-summary.md
           echo "|------------|--------|----------|" >> mobile-test-summary.md
           echo "| 📱 Mock Tests | ${MOCK_STATUS} | All platforms |" >> mobile-test-summary.md
           echo "| ⚡ Performance | ${PERFORMANCE_STATUS} | Cross-platform |" >> mobile-test-summary.md
-          
+
           if [ -n "${{ needs.android-emulator-tests.result }}" ]; then
             echo "| 🤖 Android Emulator | ${{ needs.android-emulator-tests.result }} | API 30, 33 |" >> mobile-test-summary.md
           fi
-          
+
           if [ -n "${{ needs.ios-simulator-tests.result }}" ]; then
             echo "| 🍎 iOS Simulator | ${{ needs.ios-simulator-tests.result }} | iOS 15, 16 |" >> mobile-test-summary.md
           fi
-          
+
           echo "" >> mobile-test-summary.md
           echo "## Mobile Features Tested" >> mobile-test-summary.md
           echo "" >> mobile-test-summary.md
@@ -555,7 +555,7 @@ jobs:
           echo "- **Network Handling**: Online/Offline state management" >> mobile-test-summary.md
           echo "- **Performance**: Mobile-optimized response times" >> mobile-test-summary.md
           echo "" >> mobile-test-summary.md
-          
+
           # Add overall status
           if [[ "$MOCK_STATUS" == "success" && "$PERFORMANCE_STATUS" == "success" ]]; then
             echo "## 🎉 Overall Status: SUCCESS" >> mobile-test-summary.md
@@ -577,13 +577,13 @@ jobs:
   # ==========================================================================
   # PR COMMENT WITH MOBILE TEST RESULTS
   # ==========================================================================
-  
+
   mobile-pr-comment:
     name: 📝 Mobile Test PR Comment
     runs-on: ubuntu-latest
     needs: mobile-test-summary
     if: github.event_name == 'pull_request'
-    
+
     steps:
       - name: 📥 Download test summary
         uses: actions/download-artifact@v4
@@ -596,38 +596,38 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            
+
             let summaryContent = '';
             try {
               summaryContent = fs.readFileSync('mobile-test-summary.md', 'utf8');
             } catch (error) {
               summaryContent = '⚠️ Mobile test summary not available';
             }
-            
+
             const mockStatus = '${{ needs.mobile-mock-tests.result }}';
             const performanceStatus = '${{ needs.mobile-performance-tests.result }}';
-            
+
             const overallSuccess = mockStatus === 'success' && performanceStatus === 'success';
             const statusEmoji = overallSuccess ? '✅' : '⚠️';
-            
+
             const body = `## 📱 Mobile Testing Results
-            
+
             **Overall Status**: ${statusEmoji} ${overallSuccess ? 'PASSED' : 'NEEDS ATTENTION'}
-            
+
             ${summaryContent}
-            
+
             ---
-            
+
             📋 **Test Coverage**: All 15+ Capacitor plugins tested across iOS, Android, and Web platforms
             🚀 **Performance**: Mobile-optimized thresholds validated
             🔒 **Security**: Permission flows and error handling verified
-            
+
             ${overallSuccess ? 
               '🎉 **Ready for mobile deployment!** All critical mobile workflows are functioning correctly.' :
               '🛠️ **Action Required**: Please review failed tests and ensure mobile functionality before merging.'
             }
             `;
-            
+
             try {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
@@ -643,13 +643,13 @@ jobs:
   # ==========================================================================
   # MOBILE TEST HEALTH MONITORING
   # ==========================================================================
-  
+
   mobile-health-check:
     name: 🏥 Mobile Test Health Check
     runs-on: ubuntu-latest
     needs: mobile-test-summary
     if: github.event_name == 'schedule' && needs.mobile-test-summary.result == 'failure'
-    
+
     steps:
       - name: 🚨 Create mobile test failure issue
         uses: actions/github-script@v7
@@ -658,15 +658,15 @@ jobs:
           script: |
             const today = new Date().toISOString().split('T')[0];
             const title = `🚨 Mobile Test Health Check Failed - ${today}`;
-            
+
             const body = `## 📱 Mobile Testing Failure Alert
-            
+
             The daily mobile test health check has failed.
-            
+
             **Date**: ${today}
             **Workflow**: ${{ github.workflow }}
             **Run ID**: ${{ github.run_id }}
-            
+
             ### Potentially Affected Mobile Features:
             - 📱 **Capacitor Plugin Integration**: One or more of the 15+ plugins may be broken
             - ⏰ **Mobile Alarm Functionality**: Scheduling, triggering, or background execution
@@ -675,24 +675,24 @@ jobs:
             - 🌍 **Geolocation Services**: Location-based alarm features
             - 💾 **Local Storage**: Preferences and data persistence
             - 🎯 **Cross-Platform Compatibility**: iOS, Android, or Web platform issues
-            
+
             ### Immediate Action Required:
             1. 🔍 **Review failed test logs** in the workflow run
             2. 🧪 **Run mobile tests locally** to reproduce issues
             3. 🔧 **Fix identified problems** with mobile functionality
             4. ✅ **Verify all mobile tests pass** before closing this issue
             5. 📱 **Test on actual devices** if emulator tests are failing
-            
+
             ### Critical Mobile Workflows to Verify:
             - Complete alarm lifecycle (schedule → trigger → handle)
             - Background app behavior and alarm reliability
             - Permission handling and graceful degradation
             - Cross-platform feature parity
             - Performance under mobile constraints
-            
+
             **View Detailed Logs**: [Mobile Test Workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
             `;
-            
+
             try {
               await github.rest.issues.create({
                 owner: context.repo.owner,

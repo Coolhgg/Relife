@@ -110,7 +110,8 @@ export class SecurityMonitoringForensicsService {
 
   static getInstance(): SecurityMonitoringForensicsService {
     if (!SecurityMonitoringForensicsService.instance) {
-      SecurityMonitoringForensicsService.instance = new SecurityMonitoringForensicsService();
+      SecurityMonitoringForensicsService.instance =
+        new SecurityMonitoringForensicsService();
     }
     return SecurityMonitoringForensicsService.instance;
   }
@@ -136,7 +137,7 @@ export class SecurityMonitoringForensicsService {
         details: this.sanitizeDetails(details),
         resolved: false,
         actions: [],
-        fingerprint: this.generateEventFingerprint(type, source, details)
+        fingerprint: this.generateEventFingerprint(type, source, details),
       };
 
       // Add to buffer for immediate analysis
@@ -152,12 +153,16 @@ export class SecurityMonitoringForensicsService {
       await this.checkForAlerts(event);
 
       // Log to console for debugging
-      console.log(`[SecurityMonitoring] Event logged: ${type} (${severity}) from ${source}`);
+      console.log(
+        `[SecurityMonitoring] Event logged: ${type} (${severity}) from ${source}`
+      );
 
       // Emit custom event for UI components
-      window.dispatchEvent(new CustomEvent('security-event-logged', {
-        detail: event
-      }));
+      window.dispatchEvent(
+        new CustomEvent('security-event-logged', {
+          detail: event,
+        })
+      );
 
       return event.id;
     } catch (error) {
@@ -203,7 +208,6 @@ export class SecurityMonitoringForensicsService {
           event.userId
         );
       }
-
     } catch (error) {
       console.error('[SecurityMonitoring] Event analysis failed:', error);
     }
@@ -212,7 +216,10 @@ export class SecurityMonitoringForensicsService {
   /**
    * Handle detected security threats
    */
-  private async handleThreatDetection(event: SecurityEvent, signature: ThreatSignature): Promise<void> {
+  private async handleThreatDetection(
+    event: SecurityEvent,
+    signature: ThreatSignature
+  ): Promise<void> {
     const threatEvent: SecurityEvent = {
       id: this.generateEventId(),
       timestamp: new Date(),
@@ -226,11 +233,15 @@ export class SecurityMonitoringForensicsService {
         description: signature.description,
         mitigation: signature.mitigation,
         triggeringEvent: event.id,
-        automated: true
+        automated: true,
       },
       resolved: false,
       actions: [],
-      fingerprint: this.generateEventFingerprint('threat_detected', signature.id, event.details)
+      fingerprint: this.generateEventFingerprint(
+        'threat_detected',
+        signature.id,
+        event.details
+      ),
     };
 
     await this.storeSecurityEvent(threatEvent);
@@ -249,13 +260,18 @@ export class SecurityMonitoringForensicsService {
     // Execute automated mitigation if configured
     await this.executeAutomatedMitigation(signature, event);
 
-    console.warn(`[SecurityMonitoring] THREAT DETECTED: ${signature.name} (${signature.severity})`);
+    console.warn(
+      `[SecurityMonitoring] THREAT DETECTED: ${signature.name} (${signature.severity})`
+    );
   }
 
   /**
    * Execute automated mitigation for detected threats
    */
-  private async executeAutomatedMitigation(signature: ThreatSignature, event: SecurityEvent): Promise<void> {
+  private async executeAutomatedMitigation(
+    signature: ThreatSignature,
+    event: SecurityEvent
+  ): Promise<void> {
     try {
       const actions: string[] = [];
 
@@ -298,7 +314,6 @@ export class SecurityMonitoringForensicsService {
           { actions, threat: signature.id, originalEvent: event.id }
         );
       }
-
     } catch (error) {
       console.error('[SecurityMonitoring] Automated mitigation failed:', error);
     }
@@ -323,16 +338,18 @@ export class SecurityMonitoringForensicsService {
       description,
       events: eventIds,
       acknowledged: false,
-      resolved: false
+      resolved: false,
     };
 
     this.activeAlerts.set(alert.id, alert);
     await this.storeSecurityAlerts();
 
     // Emit alert event
-    window.dispatchEvent(new CustomEvent('security-alert-created', {
-      detail: alert
-    }));
+    window.dispatchEvent(
+      new CustomEvent('security-alert-created', {
+        detail: alert,
+      })
+    );
 
     console.log(`[SecurityMonitoring] Alert created: ${title} (${severity})`);
     return alert.id;
@@ -353,11 +370,12 @@ export class SecurityMonitoringForensicsService {
       const events = await this.getEventsInTimeframe(startDate, endDate, userId);
 
       // Analyze suspicious activities
-      const suspiciousActivities = events.filter(event =>
-        event.severity === 'high' ||
-        event.severity === 'critical' ||
-        event.type === 'suspicious_activity' ||
-        event.type === 'threat_detected'
+      const suspiciousActivities = events.filter(
+        event =>
+          event.severity === 'high' ||
+          event.severity === 'critical' ||
+          event.type === 'suspicious_activity' ||
+          event.type === 'threat_detected'
       );
 
       // Perform threat analysis
@@ -377,7 +395,7 @@ export class SecurityMonitoringForensicsService {
         suspiciousActivities,
         threatAnalysis,
         recommendations,
-        riskAssessment
+        riskAssessment,
       };
 
       // Store report
@@ -393,7 +411,6 @@ export class SecurityMonitoringForensicsService {
 
       console.log(`[SecurityMonitoring] Forensic report generated: ${report.id}`);
       return report;
-
     } catch (error) {
       console.error('[SecurityMonitoring] Failed to generate forensic report:', error);
       throw error;
@@ -405,16 +422,21 @@ export class SecurityMonitoringForensicsService {
    */
   async getSecurityMetrics(): Promise<SecurityMetrics> {
     try {
-      if (this.metrics &&
-          this.metrics.lastAnalysis &&
-          (Date.now() - this.metrics.lastAnalysis.getTime()) < 300000) { // 5 minutes cache
+      if (
+        this.metrics &&
+        this.metrics.lastAnalysis &&
+        Date.now() - this.metrics.lastAnalysis.getTime() < 300000
+      ) {
+        // 5 minutes cache
         return this.metrics;
       }
 
       // Calculate metrics from recent events
       const recentEvents = await this.getRecentEvents(24 * 60 * 60 * 1000); // Last 24 hours
       const criticalEvents = recentEvents.filter(e => e.severity === 'critical').length;
-      const threatsDetected = recentEvents.filter(e => e.type === 'threat_detected').length;
+      const threatsDetected = recentEvents.filter(
+        e => e.type === 'threat_detected'
+      ).length;
       const resolvedIncidents = recentEvents.filter(e => e.resolved).length;
 
       // Calculate risk level
@@ -433,11 +455,12 @@ export class SecurityMonitoringForensicsService {
         new Date(Date.now() - 24 * 60 * 60 * 1000)
       );
 
-      const trendDirection = recentEvents.length > yesterdayEvents.length
-        ? 'degrading'
-        : recentEvents.length < yesterdayEvents.length
-          ? 'improving'
-          : 'stable';
+      const trendDirection =
+        recentEvents.length > yesterdayEvents.length
+          ? 'degrading'
+          : recentEvents.length < yesterdayEvents.length
+            ? 'improving'
+            : 'stable';
 
       this.metrics = {
         totalEvents: recentEvents.length,
@@ -449,13 +472,12 @@ export class SecurityMonitoringForensicsService {
         riskLevel,
         trendAnalysis: {
           direction: trendDirection,
-          confidence: 0.75 // Basic confidence calculation
-        }
+          confidence: 0.75, // Basic confidence calculation
+        },
       };
 
       await this.storeMetrics();
       return this.metrics;
-
     } catch (error) {
       console.error('[SecurityMonitoring] Failed to get security metrics:', error);
       return {
@@ -468,8 +490,8 @@ export class SecurityMonitoringForensicsService {
         riskLevel: 'low',
         trendAnalysis: {
           direction: 'stable',
-          confidence: 0
-        }
+          confidence: 0,
+        },
       };
     }
   }
@@ -486,7 +508,7 @@ export class SecurityMonitoringForensicsService {
         severity: 'high',
         description: 'Multiple failed attempts to access alarms detected',
         mitigation: ['rate_limit', 'block_user'],
-        enabled: true
+        enabled: true,
       },
       {
         id: 'tampering_pattern',
@@ -495,7 +517,7 @@ export class SecurityMonitoringForensicsService {
         severity: 'critical',
         description: 'Systematic data tampering detected',
         mitigation: ['backup_recovery', 'alert_admin'],
-        enabled: true
+        enabled: true,
       },
       {
         id: 'encryption_failures',
@@ -504,7 +526,7 @@ export class SecurityMonitoringForensicsService {
         severity: 'critical',
         description: 'Multiple encryption failures may indicate system compromise',
         mitigation: ['alert_admin', 'backup_recovery'],
-        enabled: true
+        enabled: true,
       },
       {
         id: 'rapid_alarm_changes',
@@ -513,7 +535,7 @@ export class SecurityMonitoringForensicsService {
         severity: 'medium',
         description: 'Unusually rapid alarm modifications detected',
         mitigation: ['rate_limit'],
-        enabled: true
+        enabled: true,
       },
       {
         id: 'backup_system_failure',
@@ -522,21 +544,26 @@ export class SecurityMonitoringForensicsService {
         severity: 'high',
         description: 'Critical backup system failures',
         mitigation: ['alert_admin'],
-        enabled: true
-      }
+        enabled: true,
+      },
     ];
 
     signatures.forEach(signature => {
       this.threatSignatures.set(signature.id, signature);
     });
 
-    console.log(`[SecurityMonitoring] Initialized ${signatures.length} threat signatures`);
+    console.log(
+      `[SecurityMonitoring] Initialized ${signatures.length} threat signatures`
+    );
   }
 
   /**
    * Check if event matches threat signature
    */
-  private matchesThreatSignature(event: SecurityEvent, signature: ThreatSignature): boolean {
+  private matchesThreatSignature(
+    event: SecurityEvent,
+    signature: ThreatSignature
+  ): boolean {
     if (signature.pattern instanceof RegExp) {
       return signature.pattern.test(JSON.stringify(event));
     } else {
@@ -551,10 +578,11 @@ export class SecurityMonitoringForensicsService {
     const patterns: string[] = [];
 
     // Check for rapid repeated actions
-    const recentSimilarEvents = this.eventBuffer.filter(e =>
-      e.type === event.type &&
-      e.userId === event.userId &&
-      (Date.now() - e.timestamp.getTime()) < 300000 // Last 5 minutes
+    const recentSimilarEvents = this.eventBuffer.filter(
+      e =>
+        e.type === event.type &&
+        e.userId === event.userId &&
+        Date.now() - e.timestamp.getTime() < 300000 // Last 5 minutes
     );
 
     if (recentSimilarEvents.length > 10) {
@@ -568,7 +596,10 @@ export class SecurityMonitoringForensicsService {
     }
 
     // Check for unusual source patterns
-    if (event.source && event.source.includes('unknown') || event.source.includes('suspicious')) {
+    if (
+      (event.source && event.source.includes('unknown')) ||
+      event.source.includes('suspicious')
+    ) {
       patterns.push('suspicious_source');
     }
 
@@ -580,19 +611,20 @@ export class SecurityMonitoringForensicsService {
    */
   private analyzeRateAnomalies(event: SecurityEvent): any | null {
     // Count similar events in the last hour
-    const hourlyEvents = this.eventBuffer.filter(e =>
-      e.type === event.type &&
-      e.userId === event.userId &&
-      (Date.now() - e.timestamp.getTime()) < 3600000 // Last hour
+    const hourlyEvents = this.eventBuffer.filter(
+      e =>
+        e.type === event.type &&
+        e.userId === event.userId &&
+        Date.now() - e.timestamp.getTime() < 3600000 // Last hour
     );
 
     // Define rate limits by event type
     const rateLimits: Record<string, number> = {
-      'alarm_access_denied': 20,
-      'tampering_detected': 5,
-      'encryption_error': 10,
-      'unauthorized_modification': 30,
-      'backup_failure': 3
+      alarm_access_denied: 20,
+      tampering_detected: 5,
+      encryption_error: 10,
+      unauthorized_modification: 30,
+      backup_failure: 3,
     };
 
     const limit = rateLimits[event.type];
@@ -601,7 +633,7 @@ export class SecurityMonitoringForensicsService {
         eventType: event.type,
         count: hourlyEvents.length,
         limit,
-        timeframe: 'hourly'
+        timeframe: 'hourly',
       };
     }
 
@@ -718,8 +750,9 @@ export class SecurityMonitoringForensicsService {
    * Check overall system health
    */
   private async checkSystemHealth(): Promise<void> {
-    const recentCriticalEvents = (await this.getRecentEvents(60 * 60 * 1000))
-      .filter(e => e.severity === 'critical');
+    const recentCriticalEvents = (await this.getRecentEvents(60 * 60 * 1000)).filter(
+      e => e.severity === 'critical'
+    );
 
     if (recentCriticalEvents.length > 3) {
       await this.createSecurityAlert(
@@ -736,8 +769,9 @@ export class SecurityMonitoringForensicsService {
    * Generate digest alerts
    */
   private async generateDigestAlerts(): Promise<void> {
-    const recentHighSeverityEvents = (await this.getRecentEvents(24 * 60 * 60 * 1000))
-      .filter(e => e.severity === 'high' || e.severity === 'critical');
+    const recentHighSeverityEvents = (
+      await this.getRecentEvents(24 * 60 * 60 * 1000)
+    ).filter(e => e.severity === 'high' || e.severity === 'critical');
 
     if (recentHighSeverityEvents.length > 0) {
       await this.createSecurityAlert(
@@ -763,7 +797,11 @@ export class SecurityMonitoringForensicsService {
     return `forensic_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  private generateEventFingerprint(type: SecurityEventType, source: string, details: any): string {
+  private generateEventFingerprint(
+    type: SecurityEventType,
+    source: string,
+    details: any
+  ): string {
     const fingerprintData = { type, source, details: JSON.stringify(details) };
     return SecurityService.hashData(JSON.stringify(fingerprintData));
   }
@@ -785,11 +823,14 @@ export class SecurityMonitoringForensicsService {
       existingEvents.unshift(event);
 
       // Keep only recent events
-      const recentEvents = existingEvents.slice(0, SecurityMonitoringForensicsService.MAX_EVENTS);
+      const recentEvents = existingEvents.slice(
+        0,
+        SecurityMonitoringForensicsService.MAX_EVENTS
+      );
 
       await Preferences.set({
         key: SecurityMonitoringForensicsService.EVENTS_KEY,
-        value: SecurityService.encryptData(recentEvents)
+        value: SecurityService.encryptData(recentEvents),
       });
     } catch (error) {
       console.error('[SecurityMonitoring] Failed to store security event:', error);
@@ -799,7 +840,7 @@ export class SecurityMonitoringForensicsService {
   private async loadSecurityEvents(): Promise<SecurityEvent[]> {
     try {
       const { value } = await Preferences.get({
-        key: SecurityMonitoringForensicsService.EVENTS_KEY
+        key: SecurityMonitoringForensicsService.EVENTS_KEY,
       });
 
       if (!value) return [];
@@ -807,7 +848,7 @@ export class SecurityMonitoringForensicsService {
       const events = SecurityService.decryptData(value);
       return events.map((e: any) => ({
         ...e,
-        timestamp: new Date(e.timestamp)
+        timestamp: new Date(e.timestamp),
       }));
     } catch (error) {
       console.error('[SecurityMonitoring] Failed to load security events:', error);
@@ -820,7 +861,7 @@ export class SecurityMonitoringForensicsService {
       const alertsArray = Array.from(this.activeAlerts.values());
       await Preferences.set({
         key: SecurityMonitoringForensicsService.ALERTS_KEY,
-        value: SecurityService.encryptData(alertsArray)
+        value: SecurityService.encryptData(alertsArray),
       });
     } catch (error) {
       console.error('[SecurityMonitoring] Failed to store alerts:', error);
@@ -832,7 +873,7 @@ export class SecurityMonitoringForensicsService {
       if (this.metrics) {
         await Preferences.set({
           key: SecurityMonitoringForensicsService.METRICS_KEY,
-          value: SecurityService.encryptData(this.metrics)
+          value: SecurityService.encryptData(this.metrics),
         });
       }
     } catch (error) {
@@ -845,7 +886,7 @@ export class SecurityMonitoringForensicsService {
       const reportKey = `forensic_report_${report.id}`;
       await Preferences.set({
         key: reportKey,
-        value: SecurityService.encryptData(report)
+        value: SecurityService.encryptData(report),
       });
     } catch (error) {
       console.error('[SecurityMonitoring] Failed to store forensic report:', error);
@@ -853,12 +894,17 @@ export class SecurityMonitoringForensicsService {
   }
 
   // Data retrieval methods
-  private async getEventsInTimeframe(startDate: Date, endDate: Date, userId?: string): Promise<SecurityEvent[]> {
+  private async getEventsInTimeframe(
+    startDate: Date,
+    endDate: Date,
+    userId?: string
+  ): Promise<SecurityEvent[]> {
     const allEvents = await this.loadSecurityEvents();
-    return allEvents.filter(event =>
-      event.timestamp >= startDate &&
-      event.timestamp <= endDate &&
-      (!userId || !event.userId || event.userId === userId)
+    return allEvents.filter(
+      event =>
+        event.timestamp >= startDate &&
+        event.timestamp <= endDate &&
+        (!userId || !event.userId || event.userId === userId)
     );
   }
 
@@ -876,17 +922,20 @@ export class SecurityMonitoringForensicsService {
   private performThreatAnalysis(events: SecurityEvent[]): any {
     const threatTypes = events
       .filter(e => e.type === 'threat_detected')
-      .reduce((acc, event) => {
-        const threatName = event.details.threatName || 'unknown';
-        acc[threatName] = (acc[threatName] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      .reduce(
+        (acc, event) => {
+          const threatName = event.details.threatName || 'unknown';
+          acc[threatName] = (acc[threatName] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
     return {
       totalThreats: events.filter(e => e.type === 'threat_detected').length,
       threatTypes,
-      mostCommonThreat: Object.entries(threatTypes).sort(([,a], [,b]) => b - a)[0],
-      severity: this.calculateOverallThreatSeverity(events)
+      mostCommonThreat: Object.entries(threatTypes).sort(([, a], [, b]) => b - a)[0],
+      severity: this.calculateOverallThreatSeverity(events),
     };
   }
 
@@ -895,10 +944,14 @@ export class SecurityMonitoringForensicsService {
 
     const criticalEvents = events.filter(e => e.severity === 'critical').length;
     const tamperingEvents = events.filter(e => e.type === 'tampering_detected').length;
-    const accessDeniedEvents = events.filter(e => e.type === 'alarm_access_denied').length;
+    const accessDeniedEvents = events.filter(
+      e => e.type === 'alarm_access_denied'
+    ).length;
 
     if (criticalEvents > 5) {
-      recommendations.push('Review and strengthen security policies due to high critical event count');
+      recommendations.push(
+        'Review and strengthen security policies due to high critical event count'
+      );
     }
 
     if (tamperingEvents > 0) {
@@ -916,7 +969,10 @@ export class SecurityMonitoringForensicsService {
     return recommendations;
   }
 
-  private performRiskAssessment(events: SecurityEvent[], suspiciousActivities: SecurityEvent[]): any {
+  private performRiskAssessment(
+    events: SecurityEvent[],
+    suspiciousActivities: SecurityEvent[]
+  ): any {
     let riskLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
     const factors: string[] = [];
     const mitigations: string[] = [];
@@ -942,11 +998,16 @@ export class SecurityMonitoringForensicsService {
     return { level: riskLevel, factors, mitigations };
   }
 
-  private calculateOverallThreatSeverity(events: SecurityEvent[]): 'low' | 'medium' | 'high' | 'critical' {
-    const severityCounts = events.reduce((acc, event) => {
-      acc[event.severity] = (acc[event.severity] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+  private calculateOverallThreatSeverity(
+    events: SecurityEvent[]
+  ): 'low' | 'medium' | 'high' | 'critical' {
+    const severityCounts = events.reduce(
+      (acc, event) => {
+        acc[event.severity] = (acc[event.severity] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     if (severityCounts.critical > 0) return 'critical';
     if (severityCounts.high > 3) return 'high';
@@ -960,7 +1021,7 @@ export class SecurityMonitoringForensicsService {
 
     const totalTime = resolvedEvents.reduce((acc, event) => {
       // Calculate response time based on event actions
-      return acc + (event.actions.length * 300000); // Estimate 5 minutes per action
+      return acc + event.actions.length * 300000; // Estimate 5 minutes per action
     }, 0);
 
     return totalTime / resolvedEvents.length;
@@ -978,16 +1039,19 @@ export class SecurityMonitoringForensicsService {
       if (recentEvents.length !== allEvents.length) {
         await Preferences.set({
           key: SecurityMonitoringForensicsService.EVENTS_KEY,
-          value: SecurityService.encryptData(recentEvents)
+          value: SecurityService.encryptData(recentEvents),
         });
 
-        console.log(`[SecurityMonitoring] Cleaned up ${allEvents.length - recentEvents.length} old events`);
+        console.log(
+          `[SecurityMonitoring] Cleaned up ${allEvents.length - recentEvents.length} old events`
+        );
       }
 
       // Clean up resolved alerts older than 7 days
-      const oldAlerts = Array.from(this.activeAlerts.values()).filter(alert =>
-        alert.resolved &&
-        (Date.now() - alert.timestamp.getTime()) > 7 * 24 * 60 * 60 * 1000
+      const oldAlerts = Array.from(this.activeAlerts.values()).filter(
+        alert =>
+          alert.resolved &&
+          Date.now() - alert.timestamp.getTime() > 7 * 24 * 60 * 60 * 1000
       );
 
       oldAlerts.forEach(alert => this.activeAlerts.delete(alert.id));
@@ -995,7 +1059,6 @@ export class SecurityMonitoringForensicsService {
         await this.storeSecurityAlerts();
         console.log(`[SecurityMonitoring] Cleaned up ${oldAlerts.length} old alerts`);
       }
-
     } catch (error) {
       console.error('[SecurityMonitoring] Data cleanup failed:', error);
     }
@@ -1045,8 +1108,8 @@ export class SecurityMonitoringForensicsService {
       systemHealth: {
         status: metrics.riskLevel === 'low' ? 'healthy' : 'needs_attention',
         riskLevel: metrics.riskLevel,
-        lastUpdate: new Date()
-      }
+        lastUpdate: new Date(),
+      },
     };
   }
 

@@ -2,18 +2,18 @@ name: Performance Monitoring
 
 on:
   push:
-    branches: [ main, staging, test/performance-load-setup ]
+    branches: [main, staging, test/performance-load-setup]
   pull_request:
-    branches: [ main, staging ]
+    branches: [main, staging]
   schedule:
     # Run performance tests daily at 2 AM UTC
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
   workflow_dispatch:
     inputs:
       test_type:
-        description: 'Type of performance test to run'
+        description: "Type of performance test to run"
         required: true
-        default: 'ci'
+        default: "ci"
         type: choice
         options:
           - ci
@@ -22,9 +22,9 @@ on:
           - stress
           - full-suite
       environment:
-        description: 'Environment to test against'
+        description: "Environment to test against"
         required: true
-        default: 'staging'
+        default: "staging"
         type: choice
         options:
           - staging
@@ -39,7 +39,7 @@ jobs:
     name: Baseline Performance Tests
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' || github.event.inputs.test_type == 'baseline' || github.event.inputs.test_type == 'ci'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -49,8 +49,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -106,7 +106,7 @@ jobs:
           script: |
             const fs = require('fs');
             const path = './artifacts/performance-test-report.md';
-            
+
             if (fs.existsSync(path)) {
               const report = fs.readFileSync(path, 'utf8');
               const truncatedReport = report.length > 65000 ? 
@@ -125,7 +125,7 @@ jobs:
     name: Load Performance Tests
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.event.inputs.test_type == 'load' || github.event.inputs.test_type == 'full-suite'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -133,8 +133,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -175,7 +175,7 @@ jobs:
     name: Stress Performance Tests
     runs-on: ubuntu-latest
     if: github.event.inputs.test_type == 'stress' || github.event.inputs.test_type == 'full-suite'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -183,8 +183,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -227,7 +227,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: performance-baseline
     if: github.event_name == 'pull_request'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -235,8 +235,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Download current performance data
         uses: actions/download-artifact@v4
@@ -337,10 +337,10 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            
+
             let message = '## ⚠️ Performance Regression Detected\n\n';
             message += 'The performance tests indicate a regression in this PR.\n\n';
-            
+
             if (fs.existsSync('./performance-comparison.json')) {
               const comparison = JSON.parse(fs.readFileSync('./performance-comparison.json', 'utf8'));
               if (comparison.details.length > 0) {
@@ -350,9 +350,9 @@ jobs:
                 });
               }
             }
-            
+
             message += '\nPlease review the performance impact before merging.';
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -364,7 +364,7 @@ jobs:
     name: Continuous Performance Monitoring
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.ref == 'refs/heads/main'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -372,8 +372,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci

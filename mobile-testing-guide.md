@@ -1,6 +1,7 @@
 # 📱 Mobile Optimization Testing Guide
 
-This comprehensive guide covers testing all mobile features and optimizations implemented in the Relife smart alarm app.
+This comprehensive guide covers testing all mobile features and optimizations implemented in the
+Relife smart alarm app.
 
 ## 🚀 Quick Test Overview
 
@@ -275,10 +276,10 @@ This comprehensive guide covers testing all mobile features and optimizations im
 
 ```javascript
 // Monitor mobile performance
-console.log("Memory usage:", performance.memory?.usedJSHeapSize);
-console.log("Battery level:", navigator.getBattery?.());
-console.log("Network info:", navigator.connection?.effectiveType);
-console.log("Device memory:", navigator.deviceMemory);
+console.log('Memory usage:', performance.memory?.usedJSHeapSize);
+console.log('Battery level:', navigator.getBattery?.());
+console.log('Network info:', navigator.connection?.effectiveType);
+console.log('Device memory:', navigator.deviceMemory);
 ```
 
 ### Accessibility Testing Tools
@@ -472,4 +473,5 @@ The mobile optimization is considered successful when:
 
 ---
 
-_This testing guide covers comprehensive mobile optimization verification for the Relife smart alarm app. Regular testing against these criteria ensures optimal mobile user experience._
+_This testing guide covers comprehensive mobile optimization verification for the Relife smart alarm
+app. Regular testing against these criteria ensures optimal mobile user experience._

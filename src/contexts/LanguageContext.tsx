@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Device } from '@capacitor/device';
 import {
@@ -9,14 +16,14 @@ import {
   getLanguageInfo,
   isRTL,
   formatTime,
-  formatRelativeTime
+  formatRelativeTime,
 } from '../config/i18n';
 
 // Language context interface
 interface LanguageContextType {
   // Current language state
   currentLanguage: SupportedLanguage;
-  languageInfo: typeof SUPPORTED_LANGUAGES[SupportedLanguage];
+  languageInfo: (typeof SUPPORTED_LANGUAGES)[SupportedLanguage];
   isRTL: boolean;
   isLoading: boolean;
   error: string | null;
@@ -70,7 +77,7 @@ interface LanguageProviderProps {
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
   defaultLanguage = 'en',
-  enableAutoDetect = true
+  enableAutoDetect = true,
 }) => {
   const { t, i18n } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
@@ -81,20 +88,14 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   });
 
   // Current language state
-  const currentLanguage = useMemo(
-    () => getCurrentLanguage(),
-    [i18n.language]
-  );
+  const currentLanguage = useMemo(() => getCurrentLanguage(), [i18n.language]);
 
   const languageInfo = useMemo(
     () => getLanguageInfo(currentLanguage),
     [currentLanguage]
   );
 
-  const currentIsRTL = useMemo(
-    () => isRTL(currentLanguage),
-    [currentLanguage]
-  );
+  const currentIsRTL = useMemo(() => isRTL(currentLanguage), [currentLanguage]);
 
   // Detect device language
   const detectDeviceLanguage = useCallback(async (): Promise<SupportedLanguage> => {
@@ -136,47 +137,52 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   }, [defaultLanguage]);
 
   // Change language function
-  const handleChangeLanguage = useCallback(async (lang: SupportedLanguage) => {
-    if (lang === currentLanguage) {
-      return; // No change needed
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      await changeLanguage(lang);
-
-      // Store preference
-      localStorage.setItem('user-language', lang);
-
-      // Announce language change for accessibility
-      const langInfo = SUPPORTED_LANGUAGES[lang];
-      if (langInfo) {
-        // Use a small delay to ensure screen readers pick up the announcement
-        setTimeout(() => {
-          const announcement = document.createElement('div');
-          announcement.setAttribute('aria-live', 'polite');
-          announcement.setAttribute('aria-atomic', 'true');
-          announcement.className = 'sr-only';
-          announcement.textContent = `Language changed to ${langInfo.nativeName}`;
-          document.body.appendChild(announcement);
-
-          // Remove after announcement
-          setTimeout(() => {
-            document.body.removeChild(announcement);
-          }, 1000);
-        }, 100);
+  const handleChangeLanguage = useCallback(
+    async (lang: SupportedLanguage) => {
+      if (lang === currentLanguage) {
+        return; // No change needed
       }
 
-      console.log(`Language changed successfully to: ${lang} (${langInfo?.nativeName})`);
-    } catch (error) {
-      console.error('Failed to change language:', error);
-      setError(`Failed to change language to ${lang}`);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [currentLanguage]);
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        await changeLanguage(lang);
+
+        // Store preference
+        localStorage.setItem('user-language', lang);
+
+        // Announce language change for accessibility
+        const langInfo = SUPPORTED_LANGUAGES[lang];
+        if (langInfo) {
+          // Use a small delay to ensure screen readers pick up the announcement
+          setTimeout(() => {
+            const announcement = document.createElement('div');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.setAttribute('aria-atomic', 'true');
+            announcement.className = 'sr-only';
+            announcement.textContent = `Language changed to ${langInfo.nativeName}`;
+            document.body.appendChild(announcement);
+
+            // Remove after announcement
+            setTimeout(() => {
+              document.body.removeChild(announcement);
+            }, 1000);
+          }, 100);
+        }
+
+        console.log(
+          `Language changed successfully to: ${lang} (${langInfo?.nativeName})`
+        );
+      } catch (error) {
+        console.error('Failed to change language:', error);
+        setError(`Failed to change language to ${lang}`);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [currentLanguage]
+  );
 
   // Auto-detect device language on mount
   useEffect(() => {
@@ -209,40 +215,55 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   }, [autoDetectEnabled]);
 
   // Translation helpers
-  const tExists = useCallback((key: string): boolean => {
-    return i18n.exists(key);
-  }, [i18n]);
+  const tExists = useCallback(
+    (key: string): boolean => {
+      return i18n.exists(key);
+    },
+    [i18n]
+  );
 
   // Formatting helpers
-  const formatTimeHelper = useCallback((time: string): string => {
-    return formatTime(time, currentLanguage);
-  }, [currentLanguage]);
+  const formatTimeHelper = useCallback(
+    (time: string): string => {
+      return formatTime(time, currentLanguage);
+    },
+    [currentLanguage]
+  );
 
-  const formatRelativeTimeHelper = useCallback((date: Date): string => {
-    return formatRelativeTime(date, currentLanguage);
-  }, [currentLanguage]);
+  const formatRelativeTimeHelper = useCallback(
+    (date: Date): string => {
+      return formatRelativeTime(date, currentLanguage);
+    },
+    [currentLanguage]
+  );
 
-  const formatNumber = useCallback((num: number): string => {
-    try {
-      return new Intl.NumberFormat(currentLanguage).format(num);
-    } catch (error) {
-      console.error('Failed to format number:', error);
-      return num.toString();
-    }
-  }, [currentLanguage]);
+  const formatNumber = useCallback(
+    (num: number): string => {
+      try {
+        return new Intl.NumberFormat(currentLanguage).format(num);
+      } catch (error) {
+        console.error('Failed to format number:', error);
+        return num.toString();
+      }
+    },
+    [currentLanguage]
+  );
 
-  const formatDate = useCallback((date: Date): string => {
-    try {
-      return new Intl.DateTimeFormat(currentLanguage, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      }).format(date);
-    } catch (error) {
-      console.error('Failed to format date:', error);
-      return date.toLocaleDateString();
-    }
-  }, [currentLanguage]);
+  const formatDate = useCallback(
+    (date: Date): string => {
+      try {
+        return new Intl.DateTimeFormat(currentLanguage, {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }).format(date);
+      } catch (error) {
+        console.error('Failed to format date:', error);
+        return date.toLocaleDateString();
+      }
+    },
+    [currentLanguage]
+  );
 
   // Direction helpers
   const getTextDirection = useCallback((): 'ltr' | 'rtl' => {
@@ -254,57 +275,60 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   }, [currentIsRTL]);
 
   // Context value
-  const contextValue = useMemo<LanguageContextType>(() => ({
-    // Current language state
-    currentLanguage,
-    languageInfo,
-    isRTL: currentIsRTL,
-    isLoading,
-    error,
+  const contextValue = useMemo<LanguageContextType>(
+    () => ({
+      // Current language state
+      currentLanguage,
+      languageInfo,
+      isRTL: currentIsRTL,
+      isLoading,
+      error,
 
-    // Available languages
-    supportedLanguages: SUPPORTED_LANGUAGES,
+      // Available languages
+      supportedLanguages: SUPPORTED_LANGUAGES,
 
-    // Language switching
-    changeLanguage: handleChangeLanguage,
-    detectDeviceLanguage,
+      // Language switching
+      changeLanguage: handleChangeLanguage,
+      detectDeviceLanguage,
 
-    // Translation helpers
-    t,
-    tExists,
+      // Translation helpers
+      t,
+      tExists,
 
-    // Formatting helpers
-    formatTime: formatTimeHelper,
-    formatRelativeTime: formatRelativeTimeHelper,
-    formatNumber,
-    formatDate,
+      // Formatting helpers
+      formatTime: formatTimeHelper,
+      formatRelativeTime: formatRelativeTimeHelper,
+      formatNumber,
+      formatDate,
 
-    // Direction helpers
-    getTextDirection,
-    getFlexDirection,
+      // Direction helpers
+      getTextDirection,
+      getFlexDirection,
 
-    // Language preferences
-    autoDetectEnabled,
-    setAutoDetectEnabled
-  }), [
-    currentLanguage,
-    languageInfo,
-    currentIsRTL,
-    isLoading,
-    error,
-    handleChangeLanguage,
-    detectDeviceLanguage,
-    t,
-    tExists,
-    formatTimeHelper,
-    formatRelativeTimeHelper,
-    formatNumber,
-    formatDate,
-    getTextDirection,
-    getFlexDirection,
-    autoDetectEnabled,
-    setAutoDetectEnabled
-  ]);
+      // Language preferences
+      autoDetectEnabled,
+      setAutoDetectEnabled,
+    }),
+    [
+      currentLanguage,
+      languageInfo,
+      currentIsRTL,
+      isLoading,
+      error,
+      handleChangeLanguage,
+      detectDeviceLanguage,
+      t,
+      tExists,
+      formatTimeHelper,
+      formatRelativeTimeHelper,
+      formatNumber,
+      formatDate,
+      getTextDirection,
+      getFlexDirection,
+      autoDetectEnabled,
+      setAutoDetectEnabled,
+    ]
+  );
 
   return (
     <LanguageContext.Provider value={contextValue}>{children}</LanguageContext.Provider>
@@ -318,7 +342,7 @@ export const useTranslationNamespace = (namespace: string) => {
 
   return {
     t,
-    ...language
+    ...language,
   };
 };
 
@@ -338,7 +362,7 @@ export const useLanguageAwareNavigation = () => {
     currentLanguage,
     isRTL,
     getNavigationDirection,
-    getSlideDirection
+    getSlideDirection,
   };
 };
 

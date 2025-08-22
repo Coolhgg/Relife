@@ -1,6 +1,6 @@
-import { expect, test, jest } from "@jest/globals";
-import { renderHook, act } from "@testing-library/react";
-import { useAuth } from "../../useAuth";
+import { expect, test, jest } from '@jest/globals';
+import { renderHook, act } from '@testing-library/react';
+import { useAuth } from '../../useAuth';
 
 // Mock dependencies
 jest.mock('../../../services/supabase-service', () => ({
@@ -14,9 +14,9 @@ jest.mock('../../../services/supabase-service', () => ({
       updateProfile: jest.fn(),
       getCurrentUser: jest.fn(),
       getSession: jest.fn(),
-      onAuthStateChange: jest.fn()
-    })
-  }
+      onAuthStateChange: jest.fn(),
+    }),
+  },
 }));
 
 jest.mock('../../../services/security-service', () => ({
@@ -26,28 +26,28 @@ jest.mock('../../../services/security-service', () => ({
       generateCSRFToken: jest.fn(),
       validateCSRFToken: jest.fn(),
       isRateLimited: jest.fn(),
-      resetRateLimit: jest.fn()
-    })
-  }
+      resetRateLimit: jest.fn(),
+    }),
+  },
 }));
 
 jest.mock('../../../services/error-handler', () => ({
   ErrorHandler: {
-    handleError: jest.fn()
-  }
+    handleError: jest.fn(),
+  },
 }));
 
 jest.mock('../../useAnalytics', () => ({
   useAnalytics: () => ({
     track: jest.fn(),
     trackPageView: jest.fn(),
-    trackFeatureUsage: jest.fn()
+    trackFeatureUsage: jest.fn(),
   }),
   ANALYTICS_EVENTS: {
     USER_SIGNED_IN: 'user_signed_in',
     USER_SIGNED_OUT: 'user_signed_out',
-    ERROR_OCCURRED: 'error_occurred'
-  }
+    ERROR_OCCURRED: 'error_occurred',
+  },
 }));
 
 describe('useAuth Edge Cases and Stress Tests', () => {
@@ -88,11 +88,19 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       const originalLocalStorage = window.localStorage;
       Object.defineProperty(window, 'localStorage', {
         value: {
-          getItem: () => { throw new Error('Storage unavailable'); },
-          setItem: () => { throw new Error('Storage unavailable'); },
-          removeItem: () => { throw new Error('Storage unavailable'); },
-          clear: () => { throw new Error('Storage unavailable'); }
-        }
+          getItem: () => {
+            throw new Error('Storage unavailable');
+          },
+          setItem: () => {
+            throw new Error('Storage unavailable');
+          },
+          removeItem: () => {
+            throw new Error('Storage unavailable');
+          },
+          clear: () => {
+            throw new Error('Storage unavailable');
+          },
+        },
       });
 
       const { result } = renderHook(() => useAuth());
@@ -115,8 +123,8 @@ describe('useAuth Edge Cases and Stress Tests', () => {
         email: 'test@example.com',
         metadata: {
           largeData: 'x'.repeat(100000), // 100KB of data
-          moreData: Array(1000).fill('large string data').join(' ')
-        }
+          moreData: Array(1000).fill('large string data').join(' '),
+        },
       };
 
       localStorage.setItem('auth_user', JSON.stringify(largeUser));
@@ -141,10 +149,14 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       mockService.signIn.mockImplementation(() => {
         callCount++;
         return new Promise(resolve => {
-          setTimeout(() => resolve({
-            user: { id: `user-${callCount}`, email: 'test@example.com' },
-            session: { access_token: `token-${callCount}` }
-          }), 100 + Math.random() * 100);
+          setTimeout(
+            () =>
+              resolve({
+                user: { id: `user-${callCount}`, email: 'test@example.com' },
+                session: { access_token: `token-${callCount}` },
+              }),
+            100 + Math.random() * 100
+          );
         });
       });
 
@@ -155,7 +167,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
         const promises = [
           result.current.signIn('test@example.com', 'password1'),
           result.current.signIn('test@example.com', 'password2'),
-          result.current.signIn('test@example.com', 'password3')
+          result.current.signIn('test@example.com', 'password3'),
         ];
 
         await Promise.allSettled(promises);
@@ -170,11 +182,18 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
-      mockService.signIn.mockImplementation(() =>
-        new Promise(resolve => setTimeout(() => resolve({
-          user: { id: 'user-123', email: 'test@example.com' },
-          session: { access_token: 'token' }
-        }), 200))
+      mockService.signIn.mockImplementation(
+        () =>
+          new Promise(resolve =>
+            setTimeout(
+              () =>
+                resolve({
+                  user: { id: 'user-123', email: 'test@example.com' },
+                  session: { access_token: 'token' },
+                }),
+              200
+            )
+          )
       );
 
       mockService.signOut.mockResolvedValue({ error: null });
@@ -213,12 +232,18 @@ describe('useAuth Edge Cases and Stress Tests', () => {
         // Simulate rapid auth state changes
         authCallbacks.forEach((callback, index) => {
           setTimeout(() => {
-            callback('SIGNED_IN', { user: { id: `user-${index}` }, access_token: `token-${index}` });
+            callback('SIGNED_IN', {
+              user: { id: `user-${index}` },
+              access_token: `token-${index}`,
+            });
           }, index * 10);
 
-          setTimeout(() => {
-            callback('SIGNED_OUT', null);
-          }, index * 10 + 5);
+          setTimeout(
+            () => {
+              callback('SIGNED_OUT', null);
+            },
+            index * 10 + 5
+          );
         });
 
         await new Promise(resolve => setTimeout(resolve, 200));
@@ -236,7 +261,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       const mockUnsubscribe = jest.fn();
 
       mockService.onAuthStateChange.mockReturnValue({
-        data: { subscription: { unsubscribe: mockUnsubscribe } }
+        data: { subscription: { unsubscribe: mockUnsubscribe } },
       });
 
       const { unmount } = renderHook(() => useAuth());
@@ -280,7 +305,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
         // Missing required fields
         email: null,
         id: undefined,
-        metadata: 'invalid-type'
+        metadata: 'invalid-type',
       });
 
       const { result } = renderHook(() => useAuth());
@@ -301,7 +326,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       const expiredSession = {
         access_token: 'token',
         expires_at: Date.now() - 10000, // 10 seconds ago
-        user: { id: 'user-123' }
+        user: { id: 'user-123' },
       };
 
       mockService.getSession.mockResolvedValue(expiredSession);
@@ -325,7 +350,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       // Mock navigator.onLine
       Object.defineProperty(navigator, 'onLine', {
         writable: true,
-        value: false
+        value: false,
       });
 
       const { result } = renderHook(() => useAuth());
@@ -347,16 +372,18 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       let callCount = 0;
       mockService.updateProfile.mockImplementation(() => {
         callCount++;
-        return Promise.resolve({ user: { id: 'user-123', name: `Update ${callCount}` } });
+        return Promise.resolve({
+          user: { id: 'user-123', name: `Update ${callCount}` },
+        });
       });
 
       const { result } = renderHook(() => useAuth());
 
       await act(async () => {
         // Fire 50 rapid updates
-        const promises = Array(50).fill(null).map((_, index) =>
-          result.current.updateProfile({ name: `Name ${index}` })
-        );
+        const promises = Array(50)
+          .fill(null)
+          .map((_, index) => result.current.updateProfile({ name: `Name ${index}` }));
 
         await Promise.allSettled(promises);
       });
@@ -370,11 +397,18 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
-      mockService.signIn.mockImplementation(() =>
-        new Promise(resolve => setTimeout(() => resolve({
-          user: { id: 'user-123' },
-          session: { access_token: 'token' }
-        }), 10000)) // 10 second delay
+      mockService.signIn.mockImplementation(
+        () =>
+          new Promise(resolve =>
+            setTimeout(
+              () =>
+                resolve({
+                  user: { id: 'user-123' },
+                  session: { access_token: 'token' },
+                }),
+              10000
+            )
+          ) // 10 second delay
       );
 
       const { result } = renderHook(() => useAuth());
@@ -395,11 +429,18 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
-      mockService.signIn.mockImplementation(() =>
-        new Promise(resolve => setTimeout(() => resolve({
-          user: { id: 'user-123' },
-          session: { access_token: 'token' }
-        }), 100))
+      mockService.signIn.mockImplementation(
+        () =>
+          new Promise(resolve =>
+            setTimeout(
+              () =>
+                resolve({
+                  user: { id: 'user-123' },
+                  session: { access_token: 'token' },
+                }),
+              100
+            )
+          )
       );
 
       const { result, rerender } = renderHook(() => useAuth());
@@ -479,7 +520,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       mockService.getCurrentUser.mockResolvedValue(persistedUser);
       mockService.getSession.mockResolvedValue({
         access_token: 'token',
-        user: persistedUser
+        user: persistedUser,
       });
 
       const { result } = renderHook(() => useAuth());
@@ -496,8 +537,11 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
-      mockService.updateProfile.mockImplementation(() =>
-        new Promise(resolve => setTimeout(() => resolve({ user: { id: 'user-123' } }), 200))
+      mockService.updateProfile.mockImplementation(
+        () =>
+          new Promise(resolve =>
+            setTimeout(() => resolve({ user: { id: 'user-123' } }), 200)
+          )
       );
       mockService.signOut.mockResolvedValue({ error: null });
 

@@ -19,7 +19,7 @@ import {
   RotateCcw,
   Check,
   AlertCircle,
-  Info
+  Info,
 } from 'lucide-react';
 import { useAccessibilityPreferences } from '../hooks/useAccessibilityPreferences';
 import { useDynamicFocus } from '../hooks/useDynamicFocus';
@@ -33,14 +33,19 @@ interface AccessibilityDashboardProps {
 
 const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   onClose,
-  embedded = false
+  embedded = false,
 }) => {
-  const { preferences, updatePreferences, resetToDefaults, testColorContrast } = useAccessibilityPreferences();
+  const { preferences, updatePreferences, resetToDefaults, testColorContrast } =
+    useAccessibilityPreferences();
   const [activeSection, setActiveSection] = useState<string>('visual');
   const [_showPreview, _setShowPreview] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
-  const { announce, announceSuccess, announceError: _announceError } = useDynamicFocus({
+  const {
+    announce,
+    announceSuccess,
+    announceError: _announceError,
+  } = useDynamicFocus({
     announceChanges: true,
     liveRegionPoliteness: 'polite',
   });
@@ -83,13 +88,18 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Visual & Display Section
   const renderVisualSection = () => (
     <div
-      ref={el => { sectionRefs.current['visual'] = el; }}
+      ref={el => {
+        sectionRefs.current['visual'] = el;
+      }}
       className="space-y-6"
       tabIndex={-1}
       role="tabpanel"
       aria-labelledby="visual-tab"
     >
-      <h3 id="visual-heading" className="text-lg font-semibold text-gray-900 dark:text-white">
+      <h3
+        id="visual-heading"
+        className="text-lg font-semibold text-gray-900 dark:text-white"
+      >
         Visual & Display Settings
       </h3>
 
@@ -106,11 +116,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="high-contrast"
           type="checkbox"
           checked={preferences.highContrastMode}
-          onChange={(e) => handlePreferenceUpdate(
-            'highContrastMode',
-            e.target.checked,
-            'High contrast mode'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'highContrastMode',
+              e.target.checked,
+              'High contrast mode'
+            )
+          }
           className="setting-toggle"
           aria-describedby="high-contrast-desc"
         />
@@ -161,11 +173,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="color-blind-friendly"
           type="checkbox"
           checked={preferences.colorBlindFriendly}
-          onChange={(e) => handlePreferenceUpdate(
-            'colorBlindFriendly',
-            e.target.checked,
-            'Color blind friendly mode'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'colorBlindFriendly',
+              e.target.checked,
+              'Color blind friendly mode'
+            )
+          }
           className="setting-toggle"
         />
       </div>
@@ -183,11 +197,9 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="reduced-motion"
           type="checkbox"
           checked={preferences.reducedMotion}
-          onChange={(e) => handlePreferenceUpdate(
-            'reducedMotion',
-            e.target.checked,
-            'Reduced motion'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate('reducedMotion', e.target.checked, 'Reduced motion')
+          }
           className="setting-toggle"
         />
       </div>
@@ -197,13 +209,18 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Navigation & Focus Section
   const renderNavigationSection = () => (
     <div
-      ref={el => { sectionRefs.current['navigation'] = el; }}
+      ref={el => {
+        sectionRefs.current['navigation'] = el;
+      }}
       className="space-y-6"
       tabIndex={-1}
       role="tabpanel"
       aria-labelledby="navigation-tab"
     >
-      <h3 id="navigation-heading" className="text-lg font-semibold text-gray-900 dark:text-white">
+      <h3
+        id="navigation-heading"
+        className="text-lg font-semibold text-gray-900 dark:text-white"
+      >
         Navigation & Focus Settings
       </h3>
 
@@ -220,11 +237,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="enhanced-focus"
           type="checkbox"
           checked={preferences.enhancedFocusRings}
-          onChange={(e) => handlePreferenceUpdate(
-            'enhancedFocusRings',
-            e.target.checked,
-            'Enhanced focus rings'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'enhancedFocusRings',
+              e.target.checked,
+              'Enhanced focus rings'
+            )
+          }
           className="setting-toggle"
         />
       </div>
@@ -267,11 +286,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="skip-links"
           type="checkbox"
           checked={preferences.skipLinksVisible}
-          onChange={(e) => handlePreferenceUpdate(
-            'skipLinksVisible',
-            e.target.checked,
-            'Skip links visibility'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'skipLinksVisible',
+              e.target.checked,
+              'Skip links visibility'
+            )
+          }
           className="setting-toggle"
         />
       </div>
@@ -289,11 +310,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="keyboard-nav"
           type="checkbox"
           checked={preferences.keyboardNavigation}
-          onChange={(e) => handlePreferenceUpdate(
-            'keyboardNavigation',
-            e.target.checked,
-            'Keyboard navigation'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'keyboardNavigation',
+              e.target.checked,
+              'Keyboard navigation'
+            )
+          }
           className="setting-toggle"
         />
       </div>
@@ -308,13 +331,18 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Audio & Speech Section
   const renderAudioSection = () => (
     <div
-      ref={el => { sectionRefs.current['audio'] = el; }}
+      ref={el => {
+        sectionRefs.current['audio'] = el;
+      }}
       className="space-y-6"
       tabIndex={-1}
       role="tabpanel"
       aria-labelledby="audio-tab"
     >
-      <h3 id="audio-heading" className="text-lg font-semibold text-gray-900 dark:text-white">
+      <h3
+        id="audio-heading"
+        className="text-lg font-semibold text-gray-900 dark:text-white"
+      >
         Audio & Speech Settings
       </h3>
 
@@ -331,11 +359,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="screen-reader"
           type="checkbox"
           checked={preferences.screenReaderOptimized}
-          onChange={(e) => handlePreferenceUpdate(
-            'screenReaderOptimized',
-            e.target.checked,
-            'Screen reader optimization'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'screenReaderOptimized',
+              e.target.checked,
+              'Screen reader optimization'
+            )
+          }
           className="setting-toggle"
         />
       </div>
@@ -353,11 +383,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="announce-transitions"
           type="checkbox"
           checked={preferences.announceTransitions}
-          onChange={(e) => handlePreferenceUpdate(
-            'announceTransitions',
-            e.target.checked,
-            'Transition announcements'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'announceTransitions',
+              e.target.checked,
+              'Transition announcements'
+            )
+          }
           className="setting-toggle"
         />
       </div>
@@ -375,11 +407,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="announce-errors"
           type="checkbox"
           checked={preferences.announceErrors}
-          onChange={(e) => handlePreferenceUpdate(
-            'announceErrors',
-            e.target.checked,
-            'Error announcements'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'announceErrors',
+              e.target.checked,
+              'Error announcements'
+            )
+          }
           className="setting-toggle"
         />
       </div>
@@ -397,11 +431,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="announce-success"
           type="checkbox"
           checked={preferences.announceSuccess}
-          onChange={(e) => handlePreferenceUpdate(
-            'announceSuccess',
-            e.target.checked,
-            'Success announcements'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'announceSuccess',
+              e.target.checked,
+              'Success announcements'
+            )
+          }
           className="setting-toggle"
         />
       </div>
@@ -430,7 +466,10 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           className="setting-range w-full"
           aria-describedby="speech-rate-desc"
         />
-        <span id="speech-rate-desc" className="text-sm text-gray-600 dark:text-gray-400">
+        <span
+          id="speech-rate-desc"
+          className="text-sm text-gray-600 dark:text-gray-400"
+        >
           {preferences.speechRate}x speed
         </span>
       </div>
@@ -440,13 +479,18 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Touch & Interaction Section
   const renderTouchSection = () => (
     <div
-      ref={el => { sectionRefs.current['touch'] = el; }}
+      ref={el => {
+        sectionRefs.current['touch'] = el;
+      }}
       className="space-y-6"
       tabIndex={-1}
       role="tabpanel"
       aria-labelledby="touch-tab"
     >
-      <h3 id="touch-heading" className="text-lg font-semibold text-gray-900 dark:text-white">
+      <h3
+        id="touch-heading"
+        className="text-lg font-semibold text-gray-900 dark:text-white"
+      >
         Touch & Interaction Settings
       </h3>
 
@@ -463,11 +507,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="large-touch"
           type="checkbox"
           checked={preferences.largerTouchTargets}
-          onChange={(e) => handlePreferenceUpdate(
-            'largerTouchTargets',
-            e.target.checked,
-            'Larger touch targets'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'largerTouchTargets',
+              e.target.checked,
+              'Larger touch targets'
+            )
+          }
           className="setting-toggle"
         />
       </div>
@@ -485,11 +531,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="haptic-feedback"
           type="checkbox"
           checked={preferences.hapticFeedback}
-          onChange={(e) => handlePreferenceUpdate(
-            'hapticFeedback',
-            e.target.checked,
-            'Haptic feedback'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'hapticFeedback',
+              e.target.checked,
+              'Haptic feedback'
+            )
+          }
           className="setting-toggle"
         />
       </div>
@@ -525,13 +573,18 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Advanced Features Section
   const renderAdvancedSection = () => (
     <div
-      ref={el => { sectionRefs.current['advanced'] = el; }}
+      ref={el => {
+        sectionRefs.current['advanced'] = el;
+      }}
       className="space-y-6"
       tabIndex={-1}
       role="tabpanel"
       aria-labelledby="advanced-tab"
     >
-      <h3 id="advanced-heading" className="text-lg font-semibold text-gray-900 dark:text-white">
+      <h3
+        id="advanced-heading"
+        className="text-lg font-semibold text-gray-900 dark:text-white"
+      >
         Advanced Features
       </h3>
 
@@ -548,11 +601,9 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="voice-commands"
           type="checkbox"
           checked={preferences.voiceCommands}
-          onChange={(e) => handlePreferenceUpdate(
-            'voiceCommands',
-            e.target.checked,
-            'Voice commands'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate('voiceCommands', e.target.checked, 'Voice commands')
+          }
           className="setting-toggle"
         />
       </div>
@@ -570,11 +621,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="gesture-nav"
           type="checkbox"
           checked={preferences.gestureNavigation}
-          onChange={(e) => handlePreferenceUpdate(
-            'gestureNavigation',
-            e.target.checked,
-            'Gesture navigation'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'gestureNavigation',
+              e.target.checked,
+              'Gesture navigation'
+            )
+          }
           className="setting-toggle"
         />
       </div>
@@ -592,11 +645,9 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="autoplay"
           type="checkbox"
           checked={preferences.autoplay}
-          onChange={(e) => handlePreferenceUpdate(
-            'autoplay',
-            e.target.checked,
-            'Autoplay media'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate('autoplay', e.target.checked, 'Autoplay media')
+          }
           className="setting-toggle"
         />
       </div>
@@ -614,11 +665,13 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="blinking-elements"
           type="checkbox"
           checked={preferences.blinkingElements}
-          onChange={(e) => handlePreferenceUpdate(
-            'blinkingElements',
-            e.target.checked,
-            'Blinking elements'
-          )}
+          onChange={e =>
+            handlePreferenceUpdate(
+              'blinkingElements',
+              e.target.checked,
+              'Blinking elements'
+            )
+          }
           className="setting-toggle"
         />
       </div>
@@ -638,7 +691,9 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           <button
             onClick={() => {
               const result = testColorContrast('#000000', '#ffffff');
-              announce(`Contrast ratio test: ${result.ratio}:1, WCAG AA ${result.wcagAA ? 'pass' : 'fail'}`);
+              announce(
+                `Contrast ratio test: ${result.ratio}:1, WCAG AA ${result.wcagAA ? 'pass' : 'fail'}`
+              );
             }}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
             aria-label="Test color contrast between black and white"
@@ -653,13 +708,18 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Screen Reader Testing Section
   const renderTestingSection = () => (
     <div
-      ref={el => { sectionRefs.current['testing'] = el; }}
+      ref={el => {
+        sectionRefs.current['testing'] = el;
+      }}
       className="space-y-6"
       tabIndex={-1}
       role="tabpanel"
       aria-labelledby="testing-tab"
     >
-      <h3 id="testing-heading" className="text-lg font-semibold text-gray-900 dark:text-white">
+      <h3
+        id="testing-heading"
+        className="text-lg font-semibold text-gray-900 dark:text-white"
+      >
         Screen Reader Testing
       </h3>
 
@@ -682,14 +742,19 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           Comprehensive App Testing
         </h4>
         <p className="setting-description mb-4">
-          Test all Relife app features with custom scenarios including voice features, battles, smart scheduling, and more
+          Test all Relife app features with custom scenarios including voice features,
+          battles, smart scheduling, and more
         </p>
         <ExtendedScreenReaderTester
           embedded={true}
           userName="Test User"
           isPremium={false}
           onTestComplete={(testId, success) => {
-            announce(success ? `Test ${testId} completed successfully` : `Test ${testId} failed`);
+            announce(
+              success
+                ? `Test ${testId} completed successfully`
+                : `Test ${testId} failed`
+            );
           }}
         />
       </div>
@@ -717,8 +782,12 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
 
       <div className="dashboard-content">
         {/* Section Navigation */}
-        <nav className="dashboard-nav" role="tablist" aria-label="Accessibility settings sections">
-          {sections.map((section) => {
+        <nav
+          className="dashboard-nav"
+          role="tablist"
+          aria-label="Accessibility settings sections"
+        >
+          {sections.map(section => {
             const Icon = section.icon;
             return (
               <button

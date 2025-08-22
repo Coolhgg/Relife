@@ -1,27 +1,24 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     screens: {
-      'xs': '475px',
-      'sm': '640px',
-      'md': '768px',
-      'lg': '1024px',
-      'xl': '1280px',
+      xs: '475px',
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
       '2xl': '1536px',
       // Mobile-first breakpoints
-      'mobile': {'max': '640px'},
-      'tablet': {'min': '641px', 'max': '1024px'},
-      'desktop': {'min': '1025px'},
+      mobile: { max: '640px' },
+      tablet: { min: '641px', max: '1024px' },
+      desktop: { min: '1025px' },
       // Orientation and device specific
-      'portrait': {'raw': '(orientation: portrait)'},
-      'landscape': {'raw': '(orientation: landscape)'},
-      'touch': {'raw': '(pointer: coarse)'},
-      'mouse': {'raw': '(pointer: fine)'},
-      'retina': {'raw': '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)'},
+      portrait: { raw: '(orientation: portrait)' },
+      landscape: { raw: '(orientation: landscape)' },
+      touch: { raw: '(pointer: coarse)' },
+      mouse: { raw: '(pointer: fine)' },
+      retina: { raw: '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)' },
     },
     extend: {
       colors: {
@@ -243,24 +240,31 @@ export default {
           800: '#1f2937',
           900: '#111827',
           950: '#030712',
-        }
+        },
       },
       fontFamily: {
-        'alarm': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
-        'display': ['Inter', 'system-ui', 'sans-serif'],
-        'mono': ['JetBrains Mono', 'Consolas', 'Monaco', 'monospace'],
+        alarm: [
+          'Inter',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'system-ui',
+          'sans-serif',
+        ],
+        display: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Consolas', 'Monaco', 'monospace'],
         // Theme-aware fonts
-        'theme': 'var(--theme-font-family)',
+        theme: 'var(--theme-font-family)',
         'theme-display': 'var(--theme-font-family-display)',
         'theme-mono': 'var(--theme-font-family-mono)',
       },
       fontSize: {
         '2xs': ['0.625rem', { lineHeight: '0.75rem' }],
-        'xs': ['0.75rem', { lineHeight: '1rem' }],
-        'sm': ['0.875rem', { lineHeight: '1.25rem' }],
-        'base': ['1rem', { lineHeight: '1.5rem' }],
-        'lg': ['1.125rem', { lineHeight: '1.75rem' }],
-        'xl': ['1.25rem', { lineHeight: '1.75rem' }],
+        xs: ['0.75rem', { lineHeight: '1rem' }],
+        sm: ['0.875rem', { lineHeight: '1.25rem' }],
+        base: ['1rem', { lineHeight: '1.5rem' }],
+        lg: ['1.125rem', { lineHeight: '1.75rem' }],
+        xl: ['1.25rem', { lineHeight: '1.75rem' }],
         '2xl': ['1.5rem', { lineHeight: '2rem' }],
         '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
         '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
@@ -280,9 +284,9 @@ export default {
         'theme-6xl': 'calc(var(--theme-font-size-base) * 3.75)',
       },
       spacing: {
-        '18': '4.5rem',
-        '88': '22rem',
-        '128': '32rem',
+        18: '4.5rem',
+        88: '22rem',
+        128: '32rem',
         // Mobile-optimized spacing
         'mobile-xs': '0.25rem',
         'mobile-sm': '0.5rem',
@@ -291,8 +295,8 @@ export default {
         'mobile-xl': '2rem',
         // Touch-friendly sizes
         'touch-sm': '2.75rem', // 44px min touch target
-        'touch-md': '3.5rem',  // 56px recommended
-        'touch-lg': '4rem',    // 64px comfortable
+        'touch-md': '3.5rem', // 56px recommended
+        'touch-lg': '4rem', // 64px comfortable
         // Theme-aware spacing
         'theme-xs': 'var(--theme-spacing-xs)',
         'theme-sm': 'var(--theme-spacing-sm)',
@@ -307,7 +311,7 @@ export default {
         // Theme-aware border radius
         'theme-none': 'var(--theme-radius-none)',
         'theme-sm': 'var(--theme-radius-sm)',
-        'theme': 'var(--theme-radius-md)',
+        theme: 'var(--theme-radius-md)',
         'theme-md': 'var(--theme-radius-md)',
         'theme-lg': 'var(--theme-radius-lg)',
         'theme-xl': 'var(--theme-radius-xl)',
@@ -315,14 +319,14 @@ export default {
         'theme-full': 'var(--theme-radius-full)',
       },
       boxShadow: {
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
-        'glow': '0 0 20px rgba(59, 130, 246, 0.3)',
-        'alarm': '0 0 30px rgba(239, 68, 68, 0.4)',
+        soft: '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+        glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+        glow: '0 0 20px rgba(59, 130, 246, 0.3)',
+        alarm: '0 0 30px rgba(239, 68, 68, 0.4)',
         'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
         // Theme-aware shadows
         'theme-sm': 'var(--theme-shadow-sm)',
-        'theme': 'var(--theme-shadow-md)',
+        theme: 'var(--theme-shadow-md)',
         'theme-md': 'var(--theme-shadow-md)',
         'theme-lg': 'var(--theme-shadow-lg)',
         'theme-xl': 'var(--theme-shadow-xl)',
@@ -330,20 +334,20 @@ export default {
         'theme-inner': 'var(--theme-shadow-inner)',
       },
       backdropBlur: {
-        'xs': '2px',
+        xs: '2px',
         '4xl': '72px',
       },
       animation: {
         'pulse-ring': 'pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite',
         'alarm-shake': 'alarm-shake 0.5s ease-in-out infinite',
-        'float': 'float 6s ease-in-out infinite',
+        float: 'float 6s ease-in-out infinite',
         'slide-up': 'slide-up 0.3s ease-out',
         'slide-down': 'slide-down 0.3s ease-out',
         'fade-in': 'fade-in 0.2s ease-out',
         'scale-in': 'scale-in 0.2s ease-out',
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite alternate',
         'bounce-subtle': 'bounce-subtle 1s ease-in-out infinite',
-        'wiggle': 'wiggle 1s ease-in-out infinite',
+        wiggle: 'wiggle 1s ease-in-out infinite',
       },
       keyframes: {
         'pulse-ring': {
@@ -355,7 +359,7 @@ export default {
           '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-4px)' },
           '20%, 40%, 60%, 80%': { transform: 'translateX(4px)' },
         },
-        'float': {
+        float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-10px)' },
         },
@@ -383,7 +387,7 @@ export default {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-5px)' },
         },
-        'wiggle': {
+        wiggle: {
           '0%, 100%': { transform: 'rotate(0deg)' },
           '25%': { transform: 'rotate(-2deg)' },
           '75%': { transform: 'rotate(2deg)' },
@@ -391,69 +395,71 @@ export default {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-        'aurora': 'linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899, #f59e0b)',
+        'gradient-conic':
+          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'glass-gradient':
+          'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+        aurora: 'linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899, #f59e0b)',
       },
     },
   },
   plugins: [
-    function({ addUtilities }) {
+    function ({ addUtilities }) {
       const newUtilities = {
         '.glass': {
-          'background': 'rgba(255, 255, 255, 0.1)',
+          background: 'rgba(255, 255, 255, 0.1)',
           'backdrop-filter': 'blur(10px)',
-          'border': '1px solid rgba(255, 255, 255, 0.2)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
         },
         '.glass-dark': {
-          'background': 'rgba(0, 0, 0, 0.2)',
+          background: 'rgba(0, 0, 0, 0.2)',
           'backdrop-filter': 'blur(10px)',
-          'border': '1px solid rgba(255, 255, 255, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
         },
         '.gradient-text': {
-          'background': 'linear-gradient(45deg, #6366f1, #8b5cf6)',
+          background: 'linear-gradient(45deg, #6366f1, #8b5cf6)',
           '-webkit-background-clip': 'text',
           'background-clip': 'text',
           '-webkit-text-fill-color': 'transparent',
         },
         // Theme-aware utilities
         '.theme-glass': {
-          'background': 'var(--theme-glass-background)',
+          background: 'var(--theme-glass-background)',
           'backdrop-filter': 'var(--theme-glass-blur)',
-          'border': '1px solid var(--theme-glass-border)',
+          border: '1px solid var(--theme-glass-border)',
         },
         '.theme-gradient-text': {
-          'background': 'var(--theme-gradient-primary)',
+          background: 'var(--theme-gradient-primary)',
           '-webkit-background-clip': 'text',
           'background-clip': 'text',
           '-webkit-text-fill-color': 'transparent',
         },
         '.theme-card': {
           'background-color': 'var(--theme-surface)',
-          'border': '1px solid var(--theme-border)',
+          border: '1px solid var(--theme-border)',
           'border-radius': 'var(--theme-radius-md)',
           'box-shadow': 'var(--theme-shadow-sm)',
         },
         '.theme-button': {
           'background-color': 'var(--theme-primary)',
-          'color': 'var(--theme-text-on-primary)',
+          color: 'var(--theme-text-on-primary)',
           'border-radius': 'var(--theme-radius-md)',
-          'padding': 'var(--theme-spacing-sm) var(--theme-spacing-md)',
+          padding: 'var(--theme-spacing-sm) var(--theme-spacing-md)',
           'font-weight': '500',
-          'transition': 'all var(--theme-transition-fast)',
+          transition: 'all var(--theme-transition-fast)',
         },
         '.theme-button-secondary': {
           'background-color': 'var(--theme-surface)',
-          'color': 'var(--theme-text)',
-          'border': '1px solid var(--theme-border)',
+          color: 'var(--theme-text)',
+          border: '1px solid var(--theme-border)',
           'border-radius': 'var(--theme-radius-md)',
-          'padding': 'var(--theme-spacing-sm) var(--theme-spacing-md)',
+          padding: 'var(--theme-spacing-sm) var(--theme-spacing-md)',
           'font-weight': '500',
-          'transition': 'all var(--theme-transition-fast)',
+          transition: 'all var(--theme-transition-fast)',
         },
         '.reduce-motion': {
-          'transition': 'none !important',
-          'animation': 'none !important',
+          transition: 'none !important',
+          animation: 'none !important',
         },
         // Mobile-specific utilities
         '.mobile-touch': {
@@ -545,28 +551,28 @@ export default {
         // RTL Transform Utilities
         '.rtl\\:scale-x-[-1]': {
           '[dir="rtl"] &': {
-            'transform': 'scaleX(-1)',
+            transform: 'scaleX(-1)',
           },
         },
         // Direction-aware utilities
         '.dir-aware-start': {
           '[dir="ltr"] &': {
-            'left': '0',
-            'right': 'auto',
+            left: '0',
+            right: 'auto',
           },
           '[dir="rtl"] &': {
-            'right': '0',
-            'left': 'auto',
+            right: '0',
+            left: 'auto',
           },
         },
         '.dir-aware-end': {
           '[dir="ltr"] &': {
-            'right': '0',
-            'left': 'auto',
+            right: '0',
+            left: 'auto',
           },
           '[dir="rtl"] &': {
-            'left': '0',
-            'right': 'auto',
+            left: '0',
+            right: 'auto',
           },
         },
         '.dir-aware-margin-start': {
@@ -639,9 +645,9 @@ export default {
             'border-bottom-left-radius': 'var(--theme-radius-md)',
           },
         },
-      }
-      addUtilities(newUtilities)
-    }
+      };
+      addUtilities(newUtilities);
+    },
   ],
   darkMode: ['class', '[data-theme="dark"]'],
-}
+};

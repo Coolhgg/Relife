@@ -2,30 +2,30 @@
 // Comprehensive monetization system with subscription tiers, payments, and feature gating
 
 export type SubscriptionTier =
-  | "free"
-  | "basic"
-  | "student"
-  | "premium"
-  | "pro"
-  | "ultimate"
-  | "lifetime";
+  | 'free'
+  | 'basic'
+  | 'student'
+  | 'premium'
+  | 'pro'
+  | 'ultimate'
+  | 'lifetime';
 export type SubscriptionStatus =
-  | "active"
-  | "canceled"
-  | "past_due"
-  | "unpaid"
-  | "trialing"
-  | "incomplete"
-  | "incomplete_expired";
-export type BillingInterval = "month" | "year" | "lifetime";
+  | 'active'
+  | 'canceled'
+  | 'past_due'
+  | 'unpaid'
+  | 'trialing'
+  | 'incomplete'
+  | 'incomplete_expired';
+export type BillingInterval = 'month' | 'year' | 'lifetime';
 export type PaymentStatus =
-  | "succeeded"
-  | "pending"
-  | "failed"
-  | "canceled"
-  | "requires_action"
-  | "processing";
-export type RefundStatus = "pending" | "succeeded" | "failed" | "canceled";
+  | 'succeeded'
+  | 'pending'
+  | 'failed'
+  | 'canceled'
+  | 'requires_action'
+  | 'processing';
+export type RefundStatus = 'pending' | 'succeeded' | 'failed' | 'canceled';
 
 // Core Subscription Interface
 export interface Subscription {
@@ -226,7 +226,11 @@ export interface Refund {
   stripeRefundId: string;
   amount: number; // in cents
   currency: string;
-  reason: 'duplicate' | 'fraudulent' | 'requested_by_customer' | 'expired_uncaptured_charge';
+  reason:
+    | 'duplicate'
+    | 'fraudulent'
+    | 'requested_by_customer'
+    | 'expired_uncaptured_charge';
   status: RefundStatus;
   description?: string;
   createdAt: Date;
@@ -377,13 +381,7 @@ export interface SubscriptionChange {
   id: string;
   subscriptionId: string;
   userId: string;
-  changeType:
-    | "upgrade"
-    | "downgrade"
-    | "cancel"
-    | "reactivate"
-    | "pause"
-    | "resume";
+  changeType: 'upgrade' | 'downgrade' | 'cancel' | 'reactivate' | 'pause' | 'resume';
   fromPlanId: string;
   toPlanId: string;
   prorationAmount?: number; // in cents
@@ -397,7 +395,13 @@ export interface CancellationSurvey {
   id: string;
   userId: string;
   subscriptionId: string;
-  primaryReason: 'too_expensive' | 'not_using' | 'missing_features' | 'technical_issues' | 'competitor' | 'other';
+  primaryReason:
+    | 'too_expensive'
+    | 'not_using'
+    | 'missing_features'
+    | 'technical_issues'
+    | 'competitor'
+    | 'other';
   secondaryReasons: string[];
   feedback: string;
   improvementSuggestions: string;
@@ -463,12 +467,15 @@ export interface RevenueMetrics {
     churnRate: number;
     growthRate: number;
   };
-  byTier: Record<SubscriptionTier, {
+  byTier: Record<
+    SubscriptionTier,
+    {
       customers: number;
       revenue: number;
       churnRate: number;
       avgRevenue: number;
-    }>;
+    }
+  >;
   cohortAnalysis: CohortData[];
 }
 
@@ -565,7 +572,12 @@ export interface PremiumUIState {
   showCancelModal: boolean;
   showUpgradeModal: boolean;
   errors: Record<string, string>;
-  currentStep: 'plan_selection' | 'payment_method' | 'confirmation' | 'processing' | 'complete';
+  currentStep:
+    | 'plan_selection'
+    | 'payment_method'
+    | 'confirmation'
+    | 'processing'
+    | 'complete';
   paymentIntent?: {
     clientSecret: string;
     status: string;

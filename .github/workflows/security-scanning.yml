@@ -7,13 +7,13 @@ on:
   pull_request:
     branches: [main, develop]
   schedule:
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
 
 jobs:
   security-scan:
     name: 🔍 Security Analysis
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -47,13 +47,13 @@ jobs:
         with:
           script: |
             const report = `## 🔒 Security Scan Results
-            
+
             ✅ **Dependencies**: Scanned for vulnerabilities
             ✅ **Code Analysis**: No dangerous patterns detected  
             ✅ **Service Security**: AlarmService, VoiceService, SubscriptionService validated
-            
+
             All security checks passed successfully.`;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /**
  * Complete Alarm Lifecycle Integration Tests
- * 
+ *
  * Tests the entire alarm journey from creation to triggering to completion:
  * 1. User authentication
  * 2. Alarm creation with all features
@@ -13,7 +13,16 @@
  * 8. Data persistence and cleanup
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -47,7 +56,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
   let mockServiceWorker: ServiceWorker;
   let container: HTMLElement;
   let user: ReturnType<typeof userEvent.setup>;
-  
+
   // Service instances
   let supabaseService: SupabaseService;
   let alarmService: AlarmService;
@@ -57,7 +66,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
   beforeAll(() => {
     // Mock browser APIs
     mockNavigatorAPI();
-    
+
     // Mock service worker
     Object.defineProperty(navigator, 'serviceWorker', {
       value: {
@@ -79,10 +88,10 @@ describe('Complete Alarm Lifecycle Integration', () => {
   beforeEach(async () => {
     user = userEvent.setup();
     mockUser = createMockUser();
-    
+
     // Reset all service mocks
     vi.clearAllMocks();
-    
+
     // Mock service instances
     supabaseService = SupabaseService;
     alarmService = AlarmService;
@@ -91,11 +100,11 @@ describe('Complete Alarm Lifecycle Integration', () => {
 
     // Mock successful authentication
     vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
-    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({ 
-      alarms: [], 
-      error: null 
+    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
+      alarms: [],
+      error: null,
     });
-    
+
     // Mock analytics and rewards
     vi.mocked(analyticsService.trackAlarmCreated).mockImplementation(() => {});
     vi.mocked(rewardsService.analyzeAndGenerateRewards).mockResolvedValue({
@@ -103,7 +112,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
       currentStreak: 0,
       unlockedRewards: [],
       availableRewards: [],
-      nextMilestone: { type: 'streak', target: 7, progress: 0 }
+      nextMilestone: { type: 'streak', target: 7, progress: 0 },
     });
   });
 
@@ -123,7 +132,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
   describe('Full Alarm Creation to Triggering Flow', () => {
     it('should complete the entire alarm lifecycle successfully', async () => {
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -135,9 +144,12 @@ describe('Complete Alarm Lifecycle Integration', () => {
       });
 
       // Step 1: Verify user is authenticated and on dashboard
-      await waitFor(() => {
-        expect(screen.getByText(/dashboard/i)).toBeInTheDocument();
-      }, { timeout: 10000 });
+      await waitFor(
+        () => {
+          expect(screen.getByText(/dashboard/i)).toBeInTheDocument();
+        },
+        { timeout: 10000 }
+      );
 
       // Step 2: Create a new alarm
       const alarmData = {
@@ -147,7 +159,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
         voiceMood: 'motivational' as VoiceMood,
         sound: 'morning-chime.mp3',
         snoozeEnabled: true,
-        maxSnoozes: 3
+        maxSnoozes: 3,
       };
 
       // Click add alarm button
@@ -169,7 +181,15 @@ describe('Complete Alarm Lifecycle Integration', () => {
 
       // Select days
       for (const day of alarmData.days) {
-        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const dayNames = [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+        ];
         const dayCheckbox = screen.getByLabelText(dayNames[day]);
         if (dayCheckbox && !dayCheckbox.checked) {
           await user.click(dayCheckbox);
@@ -188,7 +208,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
 
       // Save alarm
       const saveButton = screen.getByRole('button', { name: /save|create/i });
-      
+
       // Mock the save operation
       const mockAlarm = createMockAlarm({
         ...alarmData,
@@ -196,20 +216,23 @@ describe('Complete Alarm Lifecycle Integration', () => {
         userId: mockUser.id,
         enabled: true,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       });
-      
+
       vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
         alarm: mockAlarm,
-        error: null
+        error: null,
       });
 
       await user.click(saveButton);
 
       // Step 3: Verify alarm was created and appears in list
-      await waitFor(() => {
-        expect(screen.getByText(alarmData.label)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          expect(screen.getByText(alarmData.label)).toBeInTheDocument();
+        },
+        { timeout: 5000 }
+      );
 
       // Verify service calls
       expect(SupabaseService.saveAlarm).toHaveBeenCalledWith(
@@ -217,7 +240,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
           time: alarmData.time,
           label: alarmData.label,
           userId: mockUser.id,
-          enabled: true
+          enabled: true,
         })
       );
 
@@ -225,7 +248,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
       expect(analyticsService.trackAlarmCreated).toHaveBeenCalledWith(
         expect.objectContaining({
           id: 'test-alarm-123',
-          label: alarmData.label
+          label: alarmData.label,
         }),
         expect.any(Object)
       );
@@ -239,31 +262,34 @@ describe('Complete Alarm Lifecycle Integration', () => {
       // Mock service worker alarm trigger
       const serviceWorkerMessage = {
         type: 'ALARM_TRIGGERED',
-        data: { 
+        data: {
           alarm: mockAlarm,
-          triggeredAt: triggerTime.toISOString()
-        }
+          triggeredAt: triggerTime.toISOString(),
+        },
       };
 
       // Simulate service worker message
       await act(async () => {
-        const messageEvent = new MessageEvent('message', { 
-          data: serviceWorkerMessage 
+        const messageEvent = new MessageEvent('message', {
+          data: serviceWorkerMessage,
         });
         navigator.serviceWorker.dispatchEvent?.(messageEvent);
       });
 
       // Step 6: Verify alarm ringing state
-      await waitFor(() => {
-        expect(screen.getByText(/dismiss|stop|snooze/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          expect(screen.getByText(/dismiss|stop|snooze/i)).toBeInTheDocument();
+        },
+        { timeout: 5000 }
+      );
 
       // Step 7: Test snooze functionality
       const snoozeButton = screen.getByRole('button', { name: /snooze/i });
-      
+
       vi.mocked(AlarmService.snoozeAlarm).mockResolvedValueOnce({
         success: true,
-        snoozeUntil: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
+        snoozeUntil: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
       });
 
       await user.click(snoozeButton);
@@ -283,14 +309,14 @@ describe('Complete Alarm Lifecycle Integration', () => {
       await act(async () => {
         const snoozeEndMessage = {
           type: 'ALARM_TRIGGERED',
-          data: { 
+          data: {
             alarm: mockAlarm,
             triggeredAt: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
-            isSnoozeEnd: true
-          }
+            isSnoozeEnd: true,
+          },
         };
-        const messageEvent = new MessageEvent('message', { 
-          data: snoozeEndMessage 
+        const messageEvent = new MessageEvent('message', {
+          data: snoozeEndMessage,
         });
         navigator.serviceWorker.dispatchEvent?.(messageEvent);
       });
@@ -300,10 +326,10 @@ describe('Complete Alarm Lifecycle Integration', () => {
       });
 
       const dismissButton = screen.getByRole('button', { name: /dismiss|stop/i });
-      
+
       vi.mocked(AlarmService.dismissAlarm).mockResolvedValueOnce({
         success: true,
-        dismissedAt: new Date()
+        dismissedAt: new Date(),
       });
 
       await user.click(dismissButton);
@@ -333,13 +359,13 @@ describe('Complete Alarm Lifecycle Integration', () => {
       const premiumUser = {
         ...mockUser,
         subscriptionTier: 'premium' as const,
-        premiumFeatures: ['advanced_scheduling', 'custom_sounds', 'unlimited_alarms']
+        premiumFeatures: ['advanced_scheduling', 'custom_sounds', 'unlimited_alarms'],
       };
-      
+
       vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(premiumUser);
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -384,7 +410,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
 
       // Save premium alarm
       const saveButton = screen.getByRole('button', { name: /save|create/i });
-      
+
       const mockPremiumAlarm = createMockAlarm({
         id: 'premium-alarm-456',
         userId: premiumUser.id,
@@ -392,12 +418,12 @@ describe('Complete Alarm Lifecycle Integration', () => {
         label: 'Premium Test Alarm',
         isPremiumFeature: true,
         smartWakeupEnabled: true,
-        enabled: true
+        enabled: true,
       });
-      
+
       vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
         alarm: mockPremiumAlarm,
-        error: null
+        error: null,
       });
 
       await user.click(saveButton);
@@ -411,7 +437,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
       expect(analyticsService.trackAlarmCreated).toHaveBeenCalledWith(
         expect.objectContaining({
           isPremiumFeature: true,
-          smartWakeupEnabled: true
+          smartWakeupEnabled: true,
         }),
         expect.any(Object)
       );
@@ -421,7 +447,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
   describe('Alarm Lifecycle Error Handling', () => {
     it('should handle errors gracefully throughout the lifecycle', async () => {
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -456,7 +482,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
       // Mock save failure
       vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
         alarm: null,
-        error: 'Database connection failed'
+        error: 'Database connection failed',
       });
 
       const saveButton = screen.getByRole('button', { name: /save|create/i });
@@ -499,16 +525,16 @@ describe('Complete Alarm Lifecycle Integration', () => {
         userId: mockUser.id,
         time: '09:00',
         label: 'Fail Test Alarm',
-        enabled: true
+        enabled: true,
       });
 
       vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
         alarms: [mockAlarm],
-        error: null
+        error: null,
       });
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -527,25 +553,30 @@ describe('Complete Alarm Lifecycle Integration', () => {
       await act(async () => {
         const failureMessage = {
           type: 'ALARM_ERROR',
-          data: { 
+          data: {
             alarmId: 'fail-alarm-789',
             error: 'Notification permission denied',
-            fallbackMethod: 'web_notification'
-          }
+            fallbackMethod: 'web_notification',
+          },
         };
-        const messageEvent = new MessageEvent('message', { 
-          data: failureMessage 
+        const messageEvent = new MessageEvent('message', {
+          data: failureMessage,
         });
         navigator.serviceWorker.dispatchEvent?.(messageEvent);
       });
 
       // Should show error handling UI
-      await waitFor(() => {
-        const errorMessage = screen.queryByText(/permission.*denied|notification.*failed/i);
-        if (errorMessage) {
-          expect(errorMessage).toBeInTheDocument();
-        }
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const errorMessage = screen.queryByText(
+            /permission.*denied|notification.*failed/i
+          );
+          if (errorMessage) {
+            expect(errorMessage).toBeInTheDocument();
+          }
+        },
+        { timeout: 5000 }
+      );
 
       // Should attempt fallback notification method
       await waitFor(() => {
@@ -558,9 +589,9 @@ describe('Complete Alarm Lifecycle Integration', () => {
   describe('Alarm Lifecycle Performance', () => {
     it('should complete lifecycle within performance budgets', async () => {
       const startTime = performance.now();
-      
+
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -581,7 +612,7 @@ describe('Complete Alarm Lifecycle Integration', () => {
 
       // Measure alarm creation time
       const creationStartTime = performance.now();
-      
+
       const addAlarmButton = screen.getByRole('button', { name: /add.*alarm/i });
       await user.click(addAlarmButton);
 
@@ -603,12 +634,12 @@ describe('Complete Alarm Lifecycle Integration', () => {
         userId: mockUser.id,
         time: '10:00',
         label: 'Performance Test',
-        enabled: true
+        enabled: true,
       });
-      
+
       vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
         alarm: mockAlarm,
-        error: null
+        error: null,
       });
 
       const saveButton = screen.getByRole('button', { name: /save|create/i });

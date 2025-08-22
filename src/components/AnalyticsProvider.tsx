@@ -1,20 +1,28 @@
 /// <reference lib="dom" />
-import React, { createContext, useContext, useEffect, useRef } from "react";
-import type { ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useRef } from 'react';
+import type { ReactNode } from 'react';
 import {
   useAnalytics,
   useEngagementAnalytics,
   usePerformanceAnalytics,
   ANALYTICS_EVENTS,
-} from "../hooks/useAnalytics";
+} from '../hooks/useAnalytics';
 
 interface AnalyticsContextType {
   track: (eventName: string, properties?: Record<string, any>) => void;
   trackPageView: (pageName?: string, properties?: Record<string, any>) => void;
-  trackFeatureUsage: (featureName: string, action: string, properties?: Record<string, any>) => void;
+  trackFeatureUsage: (
+    featureName: string,
+    action: string,
+    properties?: Record<string, any>
+  ) => void;
   trackError: (error: Error, context?: string) => void;
   trackPerformance: (metric: string, value: number, context?: string) => void;
-  trackUserInteraction: (element: string, action: string, properties?: Record<string, any>) => void;
+  trackUserInteraction: (
+    element: string,
+    action: string,
+    properties?: Record<string, any>
+  ) => void;
 }
 
 const AnalyticsContext = createContext<AnalyticsContextType | null>(null);
@@ -43,8 +51,8 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
           duration: sessionDuration,
           interactions: interactionCount.current,
           pages_viewed: pageViews.current.size,
-          features_used: featuresUsed.current.size
-        }
+          features_used: featuresUsed.current.size,
+        },
       });
     };
 
@@ -54,13 +62,13 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
         track('app_backgrounded', {
           timestamp: new Date().toISOString(),
           metadata: {
-            duration_active: Date.now() - sessionStartTime.current
-          }
+            duration_active: Date.now() - sessionStartTime.current,
+          },
         });
       } else {
         // Track when user returns to the app
         track('app_foregrounded', {
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
       }
     };
@@ -82,12 +90,15 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
       timestamp: new Date().toISOString(),
       metadata: {
         session_interaction_count: interactionCount.current,
-        ...(properties?.metadata || {})
-      }
+        ...(properties?.metadata || {}),
+      },
     });
   };
 
-  const trackPageViewEnhanced = (pageName?: string, properties?: Record<string, any>) => {
+  const trackPageViewEnhanced = (
+    pageName?: string,
+    properties?: Record<string, any>
+  ) => {
     if (pageName) {
       pageViews.current.add(pageName);
 
@@ -104,12 +115,16 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
       timestamp: new Date().toISOString(),
       metadata: {
         total_page_views: pageViews.current.size,
-        ...(properties?.metadata || {})
-      }
+        ...(properties?.metadata || {}),
+      },
     });
   };
 
-  const trackFeatureUsageEnhanced = (featureName: string, action: string, properties?: Record<string, any>) => {
+  const trackFeatureUsageEnhanced = (
+    featureName: string,
+    action: string,
+    properties?: Record<string, any>
+  ) => {
     featuresUsed.current.add(featureName);
 
     // Track feature discovery if first time using
@@ -124,8 +139,8 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
       timestamp: new Date().toISOString(),
       metadata: {
         total_features_used: featuresUsed.current.size,
-        ...(properties?.metadata || {})
-      }
+        ...(properties?.metadata || {}),
+      },
     });
   };
 
@@ -138,24 +153,32 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
         error_name: error.name,
         context: context || 'unknown',
         user_agent: navigator.userAgent,
-        url: window.location.href
-      }
+        url: window.location.href,
+      },
     });
   };
 
-  const trackPerformanceEnhanced = (metric: string, value: number, context?: string) => {
+  const trackPerformanceEnhanced = (
+    metric: string,
+    value: number,
+    context?: string
+  ) => {
     track('performance_metric', {
       timestamp: new Date().toISOString(),
       metadata: {
         metric_name: metric,
         metric_value: value,
         context: context || 'unknown',
-        user_agent: navigator.userAgent
-      }
+        user_agent: navigator.userAgent,
+      },
     });
   };
 
-  const trackUserInteractionEnhanced = (element: string, action: string, properties?: Record<string, any>) => {
+  const trackUserInteractionEnhanced = (
+    element: string,
+    action: string,
+    properties?: Record<string, any>
+  ) => {
     interactionCount.current += 1;
 
     track('user_interaction', {
@@ -164,8 +187,8 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
         element_type: element,
         action_type: action,
         interaction_count: interactionCount.current,
-        ...(properties?.metadata || {})
-      }
+        ...(properties?.metadata || {}),
+      },
     });
   };
 
@@ -175,7 +198,7 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     trackFeatureUsage: trackFeatureUsageEnhanced,
     trackError: trackErrorEnhanced,
     trackPerformance: trackPerformanceEnhanced,
-    trackUserInteraction: trackUserInteractionEnhanced
+    trackUserInteraction: trackUserInteractionEnhanced,
   };
 
   return (
@@ -209,7 +232,11 @@ export const withAnalytics = <P extends object>(
     useEffect(() => {
       if (renderStartTime.current) {
         const renderTime = performance.now() - renderStartTime.current;
-        trackPerformance(`${componentName}_render_time`, renderTime, 'component_render');
+        trackPerformance(
+          `${componentName}_render_time`,
+          renderTime,
+          'component_render'
+        );
       }
     });
 
@@ -230,7 +257,7 @@ export const useComponentAnalytics = (componentName: string) => {
     // Track component mount
     analytics.track('component_mounted', {
       component_name: componentName,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     return () => {
@@ -240,7 +267,7 @@ export const useComponentAnalytics = (componentName: string) => {
         component_name: componentName,
         usage_duration: usageDuration,
         interactions: interactionCount.current,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     };
   }, [componentName, analytics]);
@@ -249,11 +276,15 @@ export const useComponentAnalytics = (componentName: string) => {
     interactionCount.current += 1;
     analytics.trackUserInteraction(componentName, action, {
       ...properties,
-      component_interactions: interactionCount.current
+      component_interactions: interactionCount.current,
     });
   };
 
-  const trackFeature = (featureName: string, action: string, properties?: Record<string, any>) => {
+  const trackFeature = (
+    featureName: string,
+    action: string,
+    properties?: Record<string, any>
+  ) => {
     analytics.trackFeatureUsage(`${componentName}_${featureName}`, action, properties);
   };
 
@@ -261,6 +292,7 @@ export const useComponentAnalytics = (componentName: string) => {
     ...analytics,
     trackInteraction,
     trackFeature,
-    componentName
+    componentName,
   };
-};export default AnalyticsProvider;
+};
+export default AnalyticsProvider;

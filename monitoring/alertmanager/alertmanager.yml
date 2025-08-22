@@ -1,45 +1,45 @@
 # Alertmanager configuration for Relife Smart Alarm
 global:
   # The smarthost and SMTP sender used for mail notifications
-  smtp_smarthost: 'smtp.gmail.com:587'
-  smtp_from: 'alerts@relife.app'
-  smtp_auth_username: 'alerts@relife.app'
-  smtp_auth_password: '${SMTP_PASSWORD}'
+  smtp_smarthost: "smtp.gmail.com:587"
+  smtp_from: "alerts@relife.app"
+  smtp_auth_username: "alerts@relife.app"
+  smtp_auth_password: "${SMTP_PASSWORD}"
   smtp_require_tls: true
-  
+
   # Global webhook settings
-  slack_api_url: '${SLACK_WEBHOOK_URL}'
-  
+  slack_api_url: "${SLACK_WEBHOOK_URL}"
+
   # Resolve timeout for alerts
   resolve_timeout: 5m
 
 # Templates for custom alert formats
 templates:
-  - '/etc/alertmanager/templates/*.tmpl'
+  - "/etc/alertmanager/templates/*.tmpl"
 
 # Routing configuration
 route:
   # Default receiver for all alerts
-  receiver: 'web.hook.fallback'
-  
+  receiver: "web.hook.fallback"
+
   # Group alerts by these labels
-  group_by: ['alertname', 'cluster', 'service']
-  
+  group_by: ["alertname", "cluster", "service"]
+
   # Time to wait for other alerts in the same group
   group_wait: 30s
-  
+
   # Time to wait before sending another notification for the same group
   group_interval: 5m
-  
-  # Time to wait before re-sending an alert 
+
+  # Time to wait before re-sending an alert
   repeat_interval: 4h
-  
+
   # Route-specific configurations
   routes:
     # Critical alerts - immediate notification
     - match:
         severity: critical
-      receiver: 'critical-alerts'
+      receiver: "critical-alerts"
       group_wait: 10s
       group_interval: 2m
       repeat_interval: 1h
@@ -47,83 +47,83 @@ route:
         # Service down alerts
         - match:
             alertname: ServiceDown
-          receiver: 'service-down-pager'
+          receiver: "service-down-pager"
           group_wait: 0s
-          
+
         # High error rate alerts
         - match:
             alertname: HighErrorRate
-          receiver: 'error-rate-pager'
-          
+          receiver: "error-rate-pager"
+
         # Critical performance issues
         - match_re:
             alertname: ^(HighLargestContentfulPaint|HighCumulativeLayoutShift)$
-          receiver: 'performance-critical'
-    
+          receiver: "performance-critical"
+
     # Warning alerts - normal notification flow
     - match:
         severity: warning
-      receiver: 'warning-alerts'
+      receiver: "warning-alerts"
       group_interval: 10m
       repeat_interval: 8h
-      
+
     # Performance alerts - specialized handling
     - match:
         category: performance
-      receiver: 'performance-team'
-      group_by: ['alertname', 'device_type']
-      
+      receiver: "performance-team"
+      group_by: ["alertname", "device_type"]
+
     # Error alerts - development team
     - match:
         category: errors
-      receiver: 'dev-team'
-      
+      receiver: "dev-team"
+
     # Infrastructure alerts - ops team
     - match:
         category: infrastructure
-      receiver: 'ops-team'
-      
+      receiver: "ops-team"
+
     # Alarm-specific alerts - product team
     - match:
         category: alarms
-      receiver: 'product-team'
-      
+      receiver: "product-team"
+
     # Deployment alerts - release team
     - match:
         category: deployment
-      receiver: 'release-team'
+      receiver: "release-team"
 
 # Inhibition rules - suppress certain alerts when others are active
 inhibit_rules:
   # Suppress warning alerts when critical alerts are active for the same service
   - source_match:
-      severity: 'critical'
+      severity: "critical"
     target_match:
-      severity: 'warning'
-    equal: ['service', 'cluster']
-  
+      severity: "warning"
+    equal: ["service", "cluster"]
+
   # Suppress individual service alerts when the entire service is down
   - source_match:
-      alertname: 'ServiceDown'
+      alertname: "ServiceDown"
     target_match_re:
-      alertname: '^(High.*|Low.*)'
-    equal: ['service']
+      alertname: "^(High.*|Low.*)"
+    equal: ["service"]
 
 # Receiver configurations
 receivers:
   # Fallback receiver
-  - name: 'web.hook.fallback'
+  - name: "web.hook.fallback"
     webhook_configs:
-      - url: 'https://api.relife.app/api/monitoring/webhook/alerts'
-        title: 'Relife Alert - {{ .GroupLabels.alertname }}'
+      - url: "https://api.relife.app/api/monitoring/webhook/alerts"
+        title: "Relife Alert - {{ .GroupLabels.alertname }}"
         http_config:
-          bearer_token: '${WEBHOOK_AUTH_TOKEN}'
+          bearer_token: "${WEBHOOK_AUTH_TOKEN}"
 
   # Critical alerts - multiple notification channels
-  - name: 'critical-alerts'
+  - name: "critical-alerts"
     email_configs:
-      - to: 'engineering@relife.app'
-        subject: '[CRITICAL] {{ .GroupLabels.alertname }} - Relife'
+      - to: "engineering@relife.app"
+        subject: "[CRITICAL] {{ .GroupLabels.alertname }} - Relife"
         body: |
           {{ range .Alerts }}
           Alert: {{ .Annotations.summary }}
@@ -133,11 +133,11 @@ receivers:
           Time: {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
           {{ end }}
         headers:
-          X-Priority: '1'
-          
+          X-Priority: "1"
+
     slack_configs:
-      - channel: '#alerts-critical'
-        title: 'Critical Alert - {{ .GroupLabels.alertname }}'
+      - channel: "#alerts-critical"
+        title: "Critical Alert - {{ .GroupLabels.alertname }}"
         text: |
           {{ range .Alerts }}
           *Alert:* {{ .Annotations.summary }}
@@ -146,57 +146,57 @@ receivers:
           *Severity:* {{ .Labels.severity }}
           *Runbook:* {{ .Annotations.runbook_url }}
           {{ end }}
-        color: 'danger'
+        color: "danger"
         send_resolved: true
-        
+
     pagerduty_configs:
-      - routing_key: '${PAGERDUTY_ROUTING_KEY_CRITICAL}'
-        description: '{{ .GroupLabels.alertname }} - {{ .GroupLabels.service }}'
+      - routing_key: "${PAGERDUTY_ROUTING_KEY_CRITICAL}"
+        description: "{{ .GroupLabels.alertname }} - {{ .GroupLabels.service }}"
         details:
-          firing: '{{ .Alerts.Firing | len }}'
-          resolved: '{{ .Alerts.Resolved | len }}'
-          
+          firing: "{{ .Alerts.Firing | len }}"
+          resolved: "{{ .Alerts.Resolved | len }}"
+
   # Service down - immediate paging
-  - name: 'service-down-pager'
+  - name: "service-down-pager"
     pagerduty_configs:
-      - routing_key: '${PAGERDUTY_ROUTING_KEY_URGENT}'
-        description: 'SERVICE DOWN - {{ .GroupLabels.service }}'
-        severity: 'critical'
+      - routing_key: "${PAGERDUTY_ROUTING_KEY_URGENT}"
+        description: "SERVICE DOWN - {{ .GroupLabels.service }}"
+        severity: "critical"
         details:
-          summary: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
-          timestamp: '{{ .Alerts | first | .StartsAt }}'
-          
+          summary: "{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}"
+          timestamp: "{{ .Alerts | first | .StartsAt }}"
+
     slack_configs:
-      - channel: '#incidents'
-        title: '🚨 SERVICE DOWN'
+      - channel: "#incidents"
+        title: "🚨 SERVICE DOWN"
         text: |
           *Service:* {{ .GroupLabels.service }}
           *Instance:* {{ .GroupLabels.instance }}
           *Started:* {{ .Alerts | first | .StartsAt.Format "15:04:05 UTC" }}
-        color: 'danger'
-        
+        color: "danger"
+
   # Error rate alerts
-  - name: 'error-rate-pager'
+  - name: "error-rate-pager"
     slack_configs:
-      - channel: '#alerts-errors'
-        title: 'High Error Rate Detected'
+      - channel: "#alerts-errors"
+        title: "High Error Rate Detected"
         text: |
           {{ range .Alerts }}
           *Service:* {{ .Labels.service }}
           *Error Rate:* {{ .Annotations.description }}
           *Runbook:* {{ .Annotations.runbook_url }}
           {{ end }}
-        color: 'warning'
-        
+        color: "warning"
+
   # Performance critical alerts
-  - name: 'performance-critical'
+  - name: "performance-critical"
     email_configs:
-      - to: 'performance@relife.app'
-        subject: '[PERFORMANCE] Critical Issue - {{ .GroupLabels.alertname }}'
-        
+      - to: "performance@relife.app"
+        subject: "[PERFORMANCE] Critical Issue - {{ .GroupLabels.alertname }}"
+
     slack_configs:
-      - channel: '#performance'
-        title: 'Critical Performance Issue'
+      - channel: "#performance"
+        title: "Critical Performance Issue"
         text: |
           {{ range .Alerts }}
           *Metric:* {{ .Labels.alertname }}
@@ -204,77 +204,77 @@ receivers:
           *Device:* {{ .Labels.device_type | default "all" }}
           *Action Required:* Check Web Vitals dashboard
           {{ end }}
-        color: 'danger'
-        
+        color: "danger"
+
   # Warning alerts
-  - name: 'warning-alerts'
+  - name: "warning-alerts"
     slack_configs:
-      - channel: '#alerts-warning'
-        title: 'Warning - {{ .GroupLabels.alertname }}'
+      - channel: "#alerts-warning"
+        title: "Warning - {{ .GroupLabels.alertname }}"
         text: |
           {{ range .Alerts }}
           *Alert:* {{ .Annotations.summary }}
           *Description:* {{ .Annotations.description }}
           *Service:* {{ .Labels.service }}
           {{ end }}
-        color: 'warning'
+        color: "warning"
         send_resolved: true
-        
+
   # Performance team notifications
-  - name: 'performance-team'
+  - name: "performance-team"
     slack_configs:
-      - channel: '#performance'
-        title: 'Performance Alert - {{ .GroupLabels.alertname }}'
-        
-  # Development team notifications  
-  - name: 'dev-team'
+      - channel: "#performance"
+        title: "Performance Alert - {{ .GroupLabels.alertname }}"
+
+  # Development team notifications
+  - name: "dev-team"
     slack_configs:
-      - channel: '#dev-alerts'
-      
+      - channel: "#dev-alerts"
+
   # Operations team notifications
-  - name: 'ops-team'
+  - name: "ops-team"
     slack_configs:
-      - channel: '#ops-alerts'
-      
+      - channel: "#ops-alerts"
+
   # Product team notifications
-  - name: 'product-team'
+  - name: "product-team"
     slack_configs:
-      - channel: '#product-alerts'
-      
+      - channel: "#product-alerts"
+
   # Release team notifications
-  - name: 'release-team'
+  - name: "release-team"
     slack_configs:
-      - channel: '#release-alerts'
+      - channel: "#release-alerts"
 
 # Time-based silencing
 time_intervals:
   - name: weekends
     time_intervals:
-      - weekdays: ['saturday', 'sunday']
-        
+      - weekdays: ["saturday", "sunday"]
+
   - name: business_hours
     time_intervals:
-      - weekdays: ['monday:friday']
+      - weekdays: ["monday:friday"]
         times:
-          - start_time: '09:00'
-            end_time: '17:00'
-        location: 'America/New_York'
-        
+          - start_time: "09:00"
+            end_time: "17:00"
+        location: "America/New_York"
+
   - name: after_hours
     time_intervals:
-      - weekdays: ['monday:friday'] 
+      - weekdays: ["monday:friday"]
         times:
-          - start_time: '17:01'
-            end_time: '08:59'
-        location: 'America/New_York'
-      - weekdays: ['saturday', 'sunday']
+          - start_time: "17:01"
+            end_time: "08:59"
+        location: "America/New_York"
+      - weekdays: ["saturday", "sunday"]
 
 # Mute configurations for different time periods
 mute_time_intervals:
   - name: maintenance_window
     time_intervals:
-      - weekdays: ['sunday']
+      - weekdays: ["sunday"]
         times:
-          - start_time: '02:00'
-            end_time: '04:00'
-        location: 'UTC'
+          - start_time: "02:00"
+            end_time: "04:00"
+        location: "UTC"

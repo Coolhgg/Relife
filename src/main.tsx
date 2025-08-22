@@ -1,19 +1,18 @@
-
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import RootErrorBoundary from './components/RootErrorBoundary.tsx'
-import { setupNotificationListeners } from './services/capacitor'
-import { ServiceWorkerManager } from './services/service-worker-manager'
-import { initializeApp } from './config/initializeApp'
-
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.tsx';
+import RootErrorBoundary from './components/RootErrorBoundary.tsx';
+import { setupNotificationListeners } from './services/capacitor';
+import { ServiceWorkerManager } from './services/service-worker-manager';
+import { initializeApp } from './config/initializeApp';
 
 // Show loading screen while app initializes
 const showLoadingScreen = () => {
   const loadingElement = document.createElement('div');
   loadingElement.id = 'app-loading';
-  loadingElement.className = 'min-h-screen flex items-center justify-center bg-primary-900';
+  loadingElement.className =
+    'min-h-screen flex items-center justify-center bg-primary-900';
   loadingElement.innerHTML = `
     <div class="text-center text-white">
       <div class="w-16 h-16 mx-auto mb-4 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -44,7 +43,9 @@ const startApp = async () => {
 
     // Initialize Enhanced Service Worker with Emotional Intelligence
     const swManager = new ServiceWorkerManager();
-    console.log('🚀 Enhanced Service Worker initialized with emotional intelligence support');
+    console.log(
+      '🚀 Enhanced Service Worker initialized with emotional intelligence support'
+    );
 
     // Initialize PWA Manager for mobile optimization
     console.log('📱 Initializing PWA Manager for mobile optimization...');
@@ -59,7 +60,7 @@ const startApp = async () => {
         <RootErrorBoundary>
           <App />
         </RootErrorBoundary>
-      </StrictMode>,
+      </StrictMode>
     );
   } catch (error) {
     console.error('Failed to start app:', error);
@@ -67,7 +68,8 @@ const startApp = async () => {
 
     // Show error screen
     const errorElement = document.createElement('div');
-    errorElement.className = 'min-h-screen flex items-center justify-center bg-red-50 dark:bg-red-900/10 p-4';
+    errorElement.className =
+      'min-h-screen flex items-center justify-center bg-red-50 dark:bg-red-900/10 p-4';
     errorElement.innerHTML = `
       <div class="text-center max-w-md mx-auto">
         <h2 class="text-xl font-bold text-red-800 dark:text-red-200 mb-2">App Initialization Failed</h2>

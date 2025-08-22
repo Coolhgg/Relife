@@ -267,4 +267,7 @@ CREATE TABLE social_challenges (
 
 ---
 
-This comprehensive plan addresses Struggling Sam's core motivations (financial constraints, need for proof, social influence) while building sustainable habits that lead to natural conversion opportunities. The gamification elements provide immediate value, while social proof builds trust for the eventual upgrade decision.
+This comprehensive plan addresses Struggling Sam's core motivations (financial constraints, need for
+proof, social influence) while building sustainable habits that lead to natural conversion
+opportunities. The gamification elements provide immediate value, while social proof builds trust
+for the eventual upgrade decision.

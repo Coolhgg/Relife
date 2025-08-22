@@ -197,7 +197,9 @@ export class ActiveCampaignService {
 
   private ensureConfigured(): void {
     if (!this.apiKey || !this.baseUrl) {
-      throw new Error('ActiveCampaign not configured. Please provide API key and base URL.');
+      throw new Error(
+        'ActiveCampaign not configured. Please provide API key and base URL.'
+      );
     }
   }
 
@@ -260,13 +262,16 @@ export class ActiveCampaignService {
     }
   }
 
-  async updateContact(id: string, contact: {
-    email?: string;
-    firstName?: string;
-    lastName?: string;
-    phone?: string;
-    fieldValues?: Array<{ field: string; value: string }>;
-  }): Promise<ActiveCampaignContact> {
+  async updateContact(
+    id: string,
+    contact: {
+      email?: string;
+      firstName?: string;
+      lastName?: string;
+      phone?: string;
+      fieldValues?: Array<{ field: string; value: string }>;
+    }
+  ): Promise<ActiveCampaignContact> {
     this.ensureConfigured();
 
     try {
@@ -309,8 +314,8 @@ export class ActiveCampaignService {
         contactList: {
           list: listId,
           contact: contactId,
-          status: 1
-        }
+          status: 1,
+        },
       });
       return response.data;
     } catch (error) {
@@ -350,8 +355,8 @@ export class ActiveCampaignService {
       const response = await this.api.post('/contactAutomations', {
         contactAutomation: {
           contact: contactId,
-          automation: automationId
-        }
+          automation: automationId,
+        },
       });
       return response.data;
     } catch (error) {
@@ -379,8 +384,8 @@ export class ActiveCampaignService {
       const response = await this.api.post('/contactTags', {
         contactTag: {
           contact: contactId,
-          tag: tagId
-        }
+          tag: tagId,
+        },
       });
       return response.data;
     } catch (error) {
@@ -417,8 +422,14 @@ export class ActiveCampaignService {
         unique_clicks: parseInt(campaign.uniquelinkclicks),
         unsubscribes: parseInt(campaign.unsubscribes),
         bounces: parseInt(campaign.hardbounces) + parseInt(campaign.softbounces),
-        open_rate: campaign.send_amt > 0 ? (parseInt(campaign.uniqueopens) / parseInt(campaign.send_amt)) * 100 : 0,
-        click_rate: campaign.send_amt > 0 ? (parseInt(campaign.uniquelinkclicks) / parseInt(campaign.send_amt)) * 100 : 0,
+        open_rate:
+          campaign.send_amt > 0
+            ? (parseInt(campaign.uniqueopens) / parseInt(campaign.send_amt)) * 100
+            : 0,
+        click_rate:
+          campaign.send_amt > 0
+            ? (parseInt(campaign.uniquelinkclicks) / parseInt(campaign.send_amt)) * 100
+            : 0,
       };
     } catch (error) {
       console.error('Failed to fetch campaign stats:', error);

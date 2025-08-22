@@ -1,4 +1,4 @@
-import { expect, test, jest } from "@jest/globals";
+import { expect, test, jest } from '@jest/globals';
 /**
  * Unit tests for useAlarmRingingAnnouncements hook
  * Tests alarm-specific screen reader announcements
@@ -14,15 +14,15 @@ const mockAnnouncementService = {
   announceAssertive: jest.fn(),
   clearQueue: jest.fn(),
   setEnabled: jest.fn(),
-  isEnabled: jest.fn(() => true)
+  isEnabled: jest.fn(() => true),
 };
 
 // Mock accessibility service
 jest.mock('../../services/accessibility-announcement', () => ({
   __esModule: true,
   default: {
-    getInstance: () => mockAnnouncementService
-  }
+    getInstance: () => mockAnnouncementService,
+  },
 }));
 
 // Mock i18n hook
@@ -35,7 +35,7 @@ const mockT = jest.fn((key, options) => {
     'alarm.sound.changed': 'Alarm sound changed to {{soundName}}',
     'alarm.next.announcement': 'Next alarm: {{time}}',
     'alarm.multiple.ringing': '{{count}} alarms are ringing',
-    'alarm.smart.adjustment': 'Smart alarm adjusted wake time by {{minutes}} minutes'
+    'alarm.smart.adjustment': 'Smart alarm adjusted wake time by {{minutes}} minutes',
   };
 
   let translation = translations[key] || key;
@@ -50,7 +50,7 @@ const mockT = jest.fn((key, options) => {
 });
 
 jest.mock('../useI18n', () => ({
-  useAlarmI18n: () => ({ t: mockT })
+  useAlarmI18n: () => ({ t: mockT }),
 }));
 
 describe('useAlarmRingingAnnouncements', () => {
@@ -74,12 +74,12 @@ describe('useAlarmRingingAnnouncements', () => {
       await result.current.announceAlarmRinging({
         id: 'alarm-1',
         name: 'Morning Alarm',
-        time: '07:00'
+        time: '07:00',
       });
     });
 
     expect(mockT).toHaveBeenCalledWith('alarm.ringing.announcement', {
-      alarmName: 'Morning Alarm'
+      alarmName: 'Morning Alarm',
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
       'Alarm is ringing: Morning Alarm'
@@ -92,12 +92,12 @@ describe('useAlarmRingingAnnouncements', () => {
     await act(async () => {
       await result.current.announceAlarmSnoozed({
         alarmId: 'alarm-1',
-        snoozeMinutes: 10
+        snoozeMinutes: 10,
       });
     });
 
     expect(mockT).toHaveBeenCalledWith('alarm.snooze.announcement', {
-      minutes: 10
+      minutes: 10,
     });
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalledWith(
       'Alarm snoozed for 10 minutes'
@@ -109,7 +109,7 @@ describe('useAlarmRingingAnnouncements', () => {
 
     await act(async () => {
       await result.current.announceAlarmDismissed({
-        alarmId: 'alarm-1'
+        alarmId: 'alarm-1',
       });
     });
 
@@ -127,7 +127,7 @@ describe('useAlarmRingingAnnouncements', () => {
     });
 
     expect(mockT).toHaveBeenCalledWith('alarm.volume.changed', {
-      volume: 75
+      volume: 75,
     });
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalledWith(
       'Volume changed to 75%'
@@ -142,7 +142,7 @@ describe('useAlarmRingingAnnouncements', () => {
     });
 
     expect(mockT).toHaveBeenCalledWith('alarm.sound.changed', {
-      soundName: 'Gentle Wake'
+      soundName: 'Gentle Wake',
     });
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalledWith(
       'Alarm sound changed to Gentle Wake'
@@ -157,7 +157,7 @@ describe('useAlarmRingingAnnouncements', () => {
     });
 
     expect(mockT).toHaveBeenCalledWith('alarm.next.announcement', {
-      time: '08:30 AM'
+      time: '08:30 AM',
     });
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalledWith(
       'Next alarm: 08:30 AM'
@@ -169,7 +169,7 @@ describe('useAlarmRingingAnnouncements', () => {
 
     const alarms = [
       { id: 'alarm-1', name: 'Morning Alarm', time: '07:00' },
-      { id: 'alarm-2', name: 'Backup Alarm', time: '07:05' }
+      { id: 'alarm-2', name: 'Backup Alarm', time: '07:05' },
     ];
 
     await act(async () => {
@@ -177,7 +177,7 @@ describe('useAlarmRingingAnnouncements', () => {
     });
 
     expect(mockT).toHaveBeenCalledWith('alarm.multiple.ringing', {
-      count: 2
+      count: 2,
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
       '2 alarms are ringing'
@@ -191,12 +191,12 @@ describe('useAlarmRingingAnnouncements', () => {
       await result.current.announceSmartAdjustment({
         originalTime: '07:00',
         adjustedTime: '06:45',
-        adjustmentMinutes: -15
+        adjustmentMinutes: -15,
       });
     });
 
     expect(mockT).toHaveBeenCalledWith('alarm.smart.adjustment', {
-      minutes: 15
+      minutes: 15,
     });
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalledWith(
       'Smart alarm adjusted wake time by 15 minutes'
@@ -214,7 +214,7 @@ describe('useAlarmRingingAnnouncements', () => {
       await result.current.announceAlarmRinging({
         id: 'alarm-1',
         name: 'Morning Alarm',
-        time: '07:00'
+        time: '07:00',
       });
     });
 
@@ -250,7 +250,9 @@ describe('useAlarmRingingAnnouncements', () => {
 
   it('should handle errors gracefully', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    mockAnnouncementService.announceAssertive.mockRejectedValue(new Error('Announcement failed'));
+    mockAnnouncementService.announceAssertive.mockRejectedValue(
+      new Error('Announcement failed')
+    );
 
     const { result } = renderHook(() => useAlarmRingingAnnouncements());
 
@@ -258,7 +260,7 @@ describe('useAlarmRingingAnnouncements', () => {
       await result.current.announceAlarmRinging({
         id: 'alarm-1',
         name: 'Morning Alarm',
-        time: '07:00'
+        time: '07:00',
       });
     });
 
@@ -276,13 +278,13 @@ describe('useAlarmRingingAnnouncements', () => {
     await act(async () => {
       await result.current.announceAlarmRinging({
         id: 'alarm-1',
-        time: '07:00'
+        time: '07:00',
         // Missing name
       });
     });
 
     expect(mockT).toHaveBeenCalledWith('alarm.ringing.announcement', {
-      alarmName: 'Unnamed Alarm'
+      alarmName: 'Unnamed Alarm',
     });
   });
 
@@ -312,7 +314,7 @@ describe('useAlarmRingingAnnouncements', () => {
     const announcements = [
       { type: 'ringing', alarm: { id: 'alarm-1', name: 'Alarm 1', time: '07:00' } },
       { type: 'volume', volume: 80 },
-      { type: 'sound', soundName: 'Birds' }
+      { type: 'sound', soundName: 'Birds' },
     ];
 
     await act(async () => {
@@ -333,7 +335,7 @@ describe('useAlarmRingingAnnouncements', () => {
       result.current.announceAlarmRinging({
         id: 'alarm-1',
         name: 'Test',
-        time: '07:00'
+        time: '07:00',
       });
     });
 
