@@ -6,7 +6,6 @@
  * screen reader simulation, and accessibility compliance validation.
  */
 
-import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '../../__tests__/utils/render-helpers';

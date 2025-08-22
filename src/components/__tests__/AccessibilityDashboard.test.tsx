@@ -6,7 +6,6 @@
  * navigation preferences, audio controls, and screen reader functionality.
  */
 
-import React from 'react';
 import { screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '../../__tests__/utils/render-helpers';

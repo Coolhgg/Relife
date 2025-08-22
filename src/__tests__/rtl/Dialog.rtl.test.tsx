@@ -2,7 +2,6 @@
  * RTL tests for Dialog components
  */
 
-import React from 'react';
 import { screen } from '@testing-library/react';
 import { vi, describe, it, expect, test } from 'vitest';
 import {

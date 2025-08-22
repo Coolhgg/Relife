@@ -2,7 +2,6 @@
  * RTL tests for Card components
  */
 
-import React from 'react';
 import { screen } from '@testing-library/react';
 import { describe, it, expect, test } from 'vitest';
 import {

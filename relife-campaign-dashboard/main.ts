@@ -7,5 +7,4 @@ const app = new Hono();
 app.use("*", serveStatic({ root: "./dist" }));
 
 // @ts-expect-error - Deno.serve used for deployment
-// eslint-disable-next-line no-undef
-Deno.serve(app.fetch);
+Deno.serve(app.fetch); // eslint-disable-line no-undef

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useState } from 'react';
 import { User, Mail, Settings, Shield, Bell, Mic, Palette, Clock, Save, X, AlertCircle, CheckCircle, LogOut } from 'lucide-react';
 import type { User as AppUser, VoiceMood } from '../types';
