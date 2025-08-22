@@ -218,7 +218,7 @@ export function criticalEndpointsTest() {
     const events = [];
     const eventCount = randomIntBetween(1, 5); // Batch events
 
-    for (_let i = 0; i < eventCount; i++) {
+    for (let i = 0; i < eventCount; i++) {
       events.push({
         event: 'stress_test_event',
         userId: userId,
