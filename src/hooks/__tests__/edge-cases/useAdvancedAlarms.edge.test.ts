@@ -1,6 +1,7 @@
 /* global describe,it,expect,beforeEach,afterEach */
 import { expect, test, jest } from "@jest/globals";
 import { renderHook, act } from "@testing-library/react";
+import useAdvancedAlarms from '../../useAdvancedAlarms';
 
 // Mock dependencies
 jest.mock('../../../services/alarm-service', () => ({
@@ -501,8 +502,7 @@ describe('useAdvancedAlarms Edge Cases', () => {
         return Promise.resolve({ scheduled: true });
       });
 
-      const { result, unmount } = renderHook(() =>
-      );
+      const { result, unmount } = renderHook(() => useAdvancedAlarms());
 
       await act(async () => {
         // Create and schedule many alarms
@@ -669,5 +669,4 @@ describe('useAdvancedAlarms Edge Cases', () => {
       expect(result.current.error).toBeNull();
     });
   });
-});
 });

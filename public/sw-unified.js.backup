@@ -1955,6 +1955,31 @@ async function optimizeAllCaches() {
   }
 }
 
+// Enhanced service worker status with cache info
+function getServiceWorkerStatus() {
+  return {
+    version: APP_VERSION,
+    isOnline: isOnline,
+    lastSync: lastSyncTime ? new Date(lastSyncTime).toISOString() : null,
+    alarmCount: alarmTimeouts.size,
+    analyticsQueued: analyticsQueue.length,
+    emotionalQueued: emotionalQueue.length,
+    cacheStats: {
+      hits: cacheStats.hits,
+      misses: cacheStats.misses,
+      hitRatio: cacheStats.hitRatio.toFixed(2),
+      lastCleanup: new Date(cacheStats.lastCleanup).toISOString()
+    },
+    features: {
+      smartCaching: true,
+      backgroundSync: true,
+      pushNotifications: !!pushSubscription,
+      emotionalIntelligence: true,
+      offlineGaming: true,
+      analytics: true
+    }
+  };
+}
 
 console.log(`🎉 Unified Service Worker v${APP_VERSION} loaded and ready with comprehensive offline support!`);
 console.log('📊 Cache statistics:', cacheStats);
