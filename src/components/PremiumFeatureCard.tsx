@@ -10,6 +10,7 @@ import {
   Eye,
 } from "lucide-react";
 import UpgradePrompt from "./UpgradePrompt";
+import { User } from "../types";
 
 interface PremiumFeatureCardProps {
   /** Feature information */
@@ -28,6 +29,7 @@ interface PremiumFeatureCardProps {
   /** Callback when feature is clicked */
   onClick?: () => void;
   /** Callback when upgrade is requested */
+  onUpgrade?: () => void;
   /** Card variant */
   variant?: 'default' | 'compact' | 'detailed';
   /** Whether to show preview for locked features */
