@@ -395,7 +395,7 @@ self.addEventListener('activate', (event) => {
 
 // ==================== FETCH EVENT ====================
 self.addEventListener('fetch', (event) => {
-  const {_request} = event;
+  const {request} = event;
   const url = new URL(request.url);
 
   // Skip non-GET requests and chrome-extension requests
@@ -499,8 +499,8 @@ self.addEventListener('notificationclick', (event) => {
 });
 
 // ==================== MESSAGE EVENT ====================
-self.addEventListener('message', (event) => {
-  const {_type, _data} = event.data;
+self.addEventListener('message', async (event) => {
+  const {type, data} = event.data;
 
   switch (type) {
     case 'SCHEDULE_ALARM':
@@ -1621,7 +1621,7 @@ async function processEmotionalQueue() {
   let success = 0;
   let failed = 0;
 
-  for (_const event of emotionalQueue) {
+  for (const event of emotionalQueue) {
     try {
       await simulateEmotionalDataUpload(event);
       event.synced = true;
