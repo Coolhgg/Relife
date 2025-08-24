@@ -865,7 +865,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   min="1"
                   max="10"
                   value={voiceSensitivity}
-                  onChange={e => handleVoiceSensitivityChange(Number(e.target.value))}
+                  
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleVoiceSensitivityChange(parseInt(e.target.value)))
                   className="w-full h-2 bg-gray-200 dark:bg-dark-300 rounded-lg appearance-none cursor-pointer"
                   aria-describedby="sensitivity-help"
                   aria-valuemin={1}
@@ -1016,7 +1017,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <select
                     id="snooze-duration"
                     value={snoozeDuration}
-                    onChange={e => handleSnoozeDurationChange(e.target.value)}
+                    
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSnoozeDurationChange(e.target.value))
                     className="alarm-input"
                     aria-describedby="snooze-duration-desc"
                   >
@@ -1039,7 +1041,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <select
                     id="max-snoozes"
                     value={maxSnoozes}
-                    onChange={e => handleMaxSnoozesChange(e.target.value)}
+                    
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleMaxSnoozesChange(e.target.value))
                     className="alarm-input"
                     aria-describedby="max-snoozes-desc"
                   >

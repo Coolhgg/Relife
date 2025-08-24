@@ -337,7 +337,9 @@ export function ActiveAlarm({
                       <Input
                         type="number"
                         value={challengeAnswer}
-                        onChange={(e: any) => setChallengeAnswer(e.target.value)}
+                        
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>
+) => setChallengeAnswer(e.target.value)}
                         placeholder="Your answer"
                         className="text-center text-lg"
                         autoFocus

@@ -515,7 +515,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         </label>
         <select
           value={personalization?.soundPreferences?.soundTheme || 'default'}
-          onChange={(e: any) => updateSoundPreference('soundTheme', e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSoundPreference('soundTheme', e.target.value)}
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
         >
           <option value="default">Default</option>
@@ -647,7 +647,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.layoutPreferences?.showIcons !== false}
-            onChange={(e: any) => updateLayoutPreference('showIcons', e.target.checked)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateLayoutPreference('showIcons', e.target.checked)}
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>

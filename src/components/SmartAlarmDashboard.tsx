@@ -384,10 +384,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                         <span
                           className={
                             alarm.realTimeAdaptation ? 'text-green-400' : 'text-red-400'
-                          }
-                        >
-                          {alarm.realTimeAdaptation ? 'ON' : 'OFF'}
-                        </span>
+                          }>alarm.realTimeAdaptation ? 'ON' : 'OFF'</span>
                       </div>
 
                       <div className="flex items-center gap-2">
@@ -396,10 +393,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                         <span
                           className={
                             alarm.dynamicWakeWindow ? 'text-green-400' : 'text-red-400'
-                          }
-                        >
-                          {alarm.dynamicWakeWindow ? 'ON' : 'OFF'}
-                        </span>
+                          }>alarm.dynamicWakeWindow ? 'ON' : 'OFF'</span>
                       </div>
 
                       <div className="flex items-center gap-2">

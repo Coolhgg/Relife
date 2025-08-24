@@ -13,6 +13,7 @@ import type {
   Invoice,
   Discount,
 } from '../types/premium';
+import type { RetentionOffer } from '../types/utility-types';
 
 interface StripeEnv {
   STRIPE_SECRET_KEY: string;
@@ -766,7 +767,7 @@ export class SubscriptionAPIHandler {
       .eq('stripe_subscription_id', stripeSubscription.id);
   }
 
-  private async generateRetentionOffer(subscriptionId: string): Promise<any> {
+  private async generateRetentionOffer(subscriptionId: string): Promise<RetentionOffer> {
     // Logic to generate retention offers based on user behavior
     // This could include discounts, free months, etc.
     return {

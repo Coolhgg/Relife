@@ -181,7 +181,7 @@ export const PushNotificationSettingsComponent: React.FC<
               <input
                 type="checkbox"
                 checked={status.settings.enabled}
-                onChange={(e: any) => handleToggleEnabled(e.target.checked)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleToggleEnabled(e.target.checked)}
                 className="sr-only peer"
                 disabled={status.isLoading}
               />
