@@ -19,7 +19,7 @@ const AlarmService = {
   },
   updateAlarm: async (id: string, updates: any): Promise<void> => {
     console.warn('AlarmService.updateAlarm stub called:', { id, updates });
-  }
+  },
 };
 
 export class AlarmExecutor {

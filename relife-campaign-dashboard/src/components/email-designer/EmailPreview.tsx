@@ -102,11 +102,11 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
     setTestEmails([...testEmails, '']);
   };
 
-  const removeTestEmail = (_index: number) => {
+  const removeTestEmail = (index: number) => {
     setTestEmails(testEmails.filter((_, i) => i !== index));
   };
 
-  const updateTestEmail = (_index: number, value: string) => {
+  const updateTestEmail = (index: number, value: string) => {
     const updated = [...testEmails];
     updated[index] = value;
     setTestEmails(updated);
@@ -442,7 +442,7 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <h3 className="font-medium">Test Recipients</h3>
-                  {testEmails.map((email, _index) => (
+                  {testEmails.map((email, index) => (
                     <div key={index} className="flex gap-2">
                       <Input
                         type="email"

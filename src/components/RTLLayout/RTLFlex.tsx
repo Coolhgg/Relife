@@ -1,3 +1,4 @@
+/* global JSX */
 /**
  * RTL-aware Flex component that automatically handles direction-based flexbox layouts
  */

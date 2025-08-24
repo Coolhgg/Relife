@@ -427,7 +427,7 @@ export default function CampaignDashboard() {
                       emails: 3,
                       conversion: '8%',
                     },
-                  ].map((template, _index) => (
+                  ].map((template, index) => (
                     <Card
                       key={index}
                       className="cursor-pointer hover:shadow-md transition-shadow"
@@ -484,7 +484,7 @@ export default function CampaignDashboard() {
                       status: 'disconnected',
                       campaigns: 0,
                     },
-                  ].map((platform, _index) => (
+                  ].map((platform, index) => (
                     <Card key={index}>
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
@@ -551,7 +551,7 @@ export default function CampaignDashboard() {
                       status: 'paused',
                       triggered: 89,
                     },
-                  ].map((rule, _index) => (
+                  ].map((rule, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between p-4 border rounded-lg"

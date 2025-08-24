@@ -52,7 +52,7 @@ const FormItemContext = React.createContext<FormItemContextValue>(
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);
   const itemContext = React.useContext(FormItemContext);
-  const { _getFieldState } = useFormContext();
+  const { getFieldState } = useFormContext();
   const formState = useFormState({ name: fieldContext.name });
   const fieldState = getFieldState(fieldContext.name, formState);
 
@@ -86,7 +86,7 @@ function FormLabel({
   className,
   ...props
 }: React.ComponentProps<typeof LabelPrimitive.Root>) {
-  const { _error, _formItemId } = useFormField();
+  const { error, formItemId } = useFormField();
 
   return (
     <Label
@@ -100,7 +100,7 @@ function FormLabel({
 }
 
 function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
-  const { _error, _formItemId, _formDescriptionId, _formMessageId } = useFormField();
+  const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
 
   return (
     <Slot
@@ -116,7 +116,7 @@ function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
 }
 
 function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {
-  const { _formDescriptionId } = useFormField();
+  const { formDescriptionId } = useFormField();
 
   return (
     <p
@@ -129,7 +129,7 @@ function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {
 }
 
 function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
-  const { _error, _formMessageId } = useFormField();
+  const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message ?? '') : props.children;
 
   if (!body) {

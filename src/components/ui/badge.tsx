@@ -1,3 +1,4 @@
+/* global VariantProps */
 import React from 'react'; // auto: added missing React import
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';

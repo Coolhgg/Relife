@@ -652,7 +652,7 @@ export function EmailBuilder({
               <Droppable droppableId="email-canvas">
                 {provided => (
                   <div {...provided.droppableProps} ref={provided.innerRef}>
-                    {template.blocks.map((block, _index) => (
+                    {template.blocks.map((block, index) => (
                       <Draggable key={block.id} draggableId={block.id} index={index}>
                         {provided => (
                           <div

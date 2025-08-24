@@ -195,7 +195,7 @@ export default {
         { status: 404, headers: corsHeaders(origin) }
       );
     } catch (_error) {
-      console.error('API Error:', error);
+      console.error('API Error:', _error);
       return Response.json(
         { error: 'Internal Server Error' },
         { status: 500, headers: corsHeaders(origin) }

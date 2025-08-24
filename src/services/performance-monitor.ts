@@ -1,3 +1,4 @@
+/* global PerformanceEntryList */
 /// <reference lib="dom" />
 // Enhanced Performance Monitoring Service for Smart Alarm App
 // Tracks Web Vitals, user interactions, and application performance metrics

@@ -1,3 +1,4 @@
+/* global TimeoutHandle */
 // Analytics Service for Smart Alarm App
 // Provides comprehensive user behavior tracking and analytics using PostHog
 // Enhanced with environment-specific configuration

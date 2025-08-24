@@ -1,3 +1,4 @@
+/* global TimeoutHandle */
 // Environment Configuration Management
 // Centralized configuration for different deployment environments
 
