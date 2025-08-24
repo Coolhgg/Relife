@@ -598,7 +598,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                               }`}
                             >
                               {rec.impact === 'high' ? (
-                                <Alert className="w-4 h-4 text-red-400" />
+                                <AlertTriangle className="w-4 h-4 text-red-400" />
                               ) : rec.impact === 'medium' ? (
                                 <Info className="w-4 h-4 text-yellow-400" />
                               ) : (

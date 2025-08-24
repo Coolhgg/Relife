@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
-import { Alert, AlertDescription } from './ui/alert';
+import { AlertTriangle, AlertDescription } from './ui/alert';
 import { Separator } from './ui/separator';
 import { Label } from './ui/label';
 import {
@@ -13,7 +13,7 @@ import {
   Target,
   CheckCircle,
   XCircle,
-  Alert,
+  AlertTriangle,
   Brain,
   Camera,
   Mic,
@@ -203,7 +203,7 @@ const MathChallenge: React.FC<{
 
       {errors > 0 && (
         <Alert className="border-red-200 bg-red-50">
-          <Alert className="w-4 h-4 text-red-600" />
+          <AlertTriangle className="w-4 h-4 text-red-600" />
           <AlertDescription className="text-red-800">
             {errors} error{errors !== 1 ? 's' : ''} made.
             {errors >= 1 && ' One more _error will reset the sequence!'}
@@ -769,7 +769,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
 
         {/* Warning */}
         <Alert className="mt-6 max-w-2xl mx-auto border-red-200 bg-red-50">
-          <Alert className="w-4 h-4 text-red-600" />
+          <AlertTriangle className="w-4 h-4 text-red-600" />
           <AlertDescription className="text-red-800">
             Nuclear Mode is active. You must complete all challenges to dismiss the
             alarm. Snoozing is disabled.

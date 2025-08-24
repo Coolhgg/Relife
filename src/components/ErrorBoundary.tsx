@@ -1,5 +1,5 @@
 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
-import { Alert, RefreshCw, Home } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { ErrorHandler } from '../services/error-handler';
 
 interface Props {
@@ -83,7 +83,7 @@ class ErrorBoundary extends Component<Props, State> {
           <div className="max-w-md w-full bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6 text-center">
             <div className="flex justify-center mb-4">
               <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
-                <Alert className="w-8 h-8 text-red-600 dark:text-red-400" />
+                <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
               </div>
             </div>
 
