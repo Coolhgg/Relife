@@ -270,7 +270,8 @@ function AppContent() {
         const aiRewards = AIRewardsService.getInstance();
         const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
 
-        setAppState((prev: any) => ({ // auto
+        setAppState((prev: any) => ({
+          // auto
           ...prev,
           rewardSystem,
         }));

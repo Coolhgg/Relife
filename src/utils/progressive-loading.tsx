@@ -433,7 +433,8 @@ export function useProgressiveLoad<T>(
       setState((prev: any) => ({ ...prev, isLoading: false, isLoaded: true })); // auto
       return result;
     } catch (error) {
-      setState((prev: any) => ({ // auto
+      setState((prev: any) => ({
+        // auto
         ...prev,
         isLoading: false,
         isError: true,

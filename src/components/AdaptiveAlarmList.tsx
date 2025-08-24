@@ -308,17 +308,21 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
   // Standard list rendering for better devices or short lists
   return (
     <div className={`space-y-3 ${className}`}>
-      {sortedAlarms.map((alarm: any) => ( // auto
-        <AlarmItem
-          key={alarm.id}
-          alarm={alarm}
-          onToggleAlarm={onToggleAlarm}
-          onEditAlarm={onEditAlarm}
-          onDeleteAlarm={onDeleteAlarm}
-          isLowEnd={isLowEnd}
-          shouldReduceAnimations={shouldReduceAnimations}
-        />
-      ))}
+      {sortedAlarms.map(
+        (
+          alarm: any // auto
+        ) => (
+          <AlarmItem
+            key={alarm.id}
+            alarm={alarm}
+            onToggleAlarm={onToggleAlarm}
+            onEditAlarm={onEditAlarm}
+            onDeleteAlarm={onDeleteAlarm}
+            isLowEnd={isLowEnd}
+            shouldReduceAnimations={shouldReduceAnimations}
+          />
+        )
+      )}
     </div>
   );
 };
@@ -371,7 +375,8 @@ class AlarmListErrorBoundary extends React.Component<
 
 export const AdaptiveAlarmListWithErrorBoundary: React.FC<
   AdaptiveAlarmListWrapperProps
-> = (props: any) => { // auto
+> = (props: any) => {
+  // auto
   return (
     <AlarmListErrorBoundary fallback={props.fallback}>
       <AdaptiveAlarmList {...props} />

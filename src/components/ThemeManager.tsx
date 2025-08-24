@@ -263,7 +263,8 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
 
                 {/* Favorite button */}
                 <button
-                  onClick={(e: any) => { // auto
+                  onClick={(e: any) => {
+                    // auto
                     e.stopPropagation();
                     toggleFavorite(quickTheme.id);
                   }}
@@ -292,38 +293,42 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                 </span>
               </div>
               <div className="flex gap-1 overflow-x-auto pb-2">
-                {customThemes.slice(0, 4).map((customTheme: any) => ( // auto
-                  <button
-                    key={customTheme.id}
-                    onClick={() => applyTheme(customTheme.name)}
-                    className="flex-shrink-0 w-12 h-8 rounded-md border border-gray-200 overflow-hidden hover:ring-2 hover:ring-blue-300 transition-all"
-                    title={customTheme.displayName || customTheme.name}
-                  >
-                    <div className="w-full h-full flex">
-                      <div
-                        className="flex-1"
-                        style={{
-                          backgroundColor:
-                            customTheme.colors?.primary?.[500] || '#0ea5e9',
-                        }}
-                      />
-                      <div
-                        className="flex-1"
-                        style={{
-                          backgroundColor:
-                            customTheme.colors?.secondary?.[500] || '#64748b',
-                        }}
-                      />
-                      <div
-                        className="flex-1"
-                        style={{
-                          backgroundColor:
-                            customTheme.colors?.accent?.[500] || '#ef4444',
-                        }}
-                      />
-                    </div>
-                  </button>
-                ))}
+                {customThemes.slice(0, 4).map(
+                  (
+                    customTheme: any // auto
+                  ) => (
+                    <button
+                      key={customTheme.id}
+                      onClick={() => applyTheme(customTheme.name)}
+                      className="flex-shrink-0 w-12 h-8 rounded-md border border-gray-200 overflow-hidden hover:ring-2 hover:ring-blue-300 transition-all"
+                      title={customTheme.displayName || customTheme.name}
+                    >
+                      <div className="w-full h-full flex">
+                        <div
+                          className="flex-1"
+                          style={{
+                            backgroundColor:
+                              customTheme.colors?.primary?.[500] || '#0ea5e9',
+                          }}
+                        />
+                        <div
+                          className="flex-1"
+                          style={{
+                            backgroundColor:
+                              customTheme.colors?.secondary?.[500] || '#64748b',
+                          }}
+                        />
+                        <div
+                          className="flex-1"
+                          style={{
+                            backgroundColor:
+                              customTheme.colors?.accent?.[500] || '#ef4444',
+                          }}
+                        />
+                      </div>
+                    </button>
+                  )
+                )}
                 {customThemes.length > 4 && (
                   <button
                     onClick={() => setShowStudio(true)}
@@ -515,40 +520,45 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
               Custom Themes ({customThemes.length})
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {customThemes.slice(0, 6).map((customTheme: any) => ( // auto
-                <button
-                  key={customTheme.id}
-                  onClick={() => applyTheme(customTheme.name)}
-                  className="p-3 border border-gray-200 rounded-lg hover:shadow-md transition-all text-left group"
-                >
-                  <div className="flex gap-1 mb-2">
-                    <div
-                      className="w-4 h-4 rounded-full"
-                      style={{
-                        backgroundColor:
-                          customTheme.colors?.primary?.[500] || '#0ea5e9',
-                      }}
-                    />
-                    <div
-                      className="w-4 h-4 rounded-full"
-                      style={{
-                        backgroundColor:
-                          customTheme.colors?.secondary?.[500] || '#64748b',
-                      }}
-                    />
-                    <div
-                      className="w-4 h-4 rounded-full"
-                      style={{
-                        backgroundColor: customTheme.colors?.accent?.[500] || '#ef4444',
-                      }}
-                    />
-                  </div>
-                  <h4 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
-                    {customTheme.displayName || customTheme.name}
-                  </h4>
-                  <p className="text-sm text-gray-500">{customTheme.description}</p>
-                </button>
-              ))}
+              {customThemes.slice(0, 6).map(
+                (
+                  customTheme: any // auto
+                ) => (
+                  <button
+                    key={customTheme.id}
+                    onClick={() => applyTheme(customTheme.name)}
+                    className="p-3 border border-gray-200 rounded-lg hover:shadow-md transition-all text-left group"
+                  >
+                    <div className="flex gap-1 mb-2">
+                      <div
+                        className="w-4 h-4 rounded-full"
+                        style={{
+                          backgroundColor:
+                            customTheme.colors?.primary?.[500] || '#0ea5e9',
+                        }}
+                      />
+                      <div
+                        className="w-4 h-4 rounded-full"
+                        style={{
+                          backgroundColor:
+                            customTheme.colors?.secondary?.[500] || '#64748b',
+                        }}
+                      />
+                      <div
+                        className="w-4 h-4 rounded-full"
+                        style={{
+                          backgroundColor:
+                            customTheme.colors?.accent?.[500] || '#ef4444',
+                        }}
+                      />
+                    </div>
+                    <h4 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                      {customTheme.displayName || customTheme.name}
+                    </h4>
+                    <p className="text-sm text-gray-500">{customTheme.description}</p>
+                  </button>
+                )
+              )}
             </div>
             {customThemes.length > 6 && (
               <button

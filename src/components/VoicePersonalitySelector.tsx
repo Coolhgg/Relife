@@ -296,7 +296,8 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
         {showPreview && hasPreviewAccess && !isLocked && (
           <div className="absolute bottom-2 right-2">
             <button
-              onClick={(e: any) => { // auto
+              onClick={(e: any) => {
+                // auto
                 e.stopPropagation();
                 playPreview(personality.id as VoiceMood);
               }}

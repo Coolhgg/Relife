@@ -235,11 +235,14 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
     const generateSrcSet = useCallback((): string => {
       if (!shouldPreloadImages || isLowEnd) return '';
 
-      const webpVariants = variants.filter((v: any) => v.format === 'webp' && supportsWebP()); // auto
+      const webpVariants = variants.filter(
+        (v: any) => v.format === 'webp' && supportsWebP()
+      ); // auto
       if (webpVariants.length === 0) return '';
 
       return webpVariants
-        .map((variant: any) => { // auto
+        .map((variant: any) => {
+          // auto
           const descriptor =
             variant.quality === 'low'
               ? '0.5x'

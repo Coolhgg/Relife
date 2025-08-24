@@ -228,7 +228,8 @@ export const rtlTestScenarios = {
           // Mock window.matchMedia for breakpoint testing
           Object.defineProperty(window, 'matchMedia', {
             writable: true,
-            value: vi.fn().mockImplementation((query: any) => ({ // auto
+            value: vi.fn().mockImplementation((query: any) => ({
+              // auto
               matches: query.includes(breakpoint),
               media: query,
               onchange: null,

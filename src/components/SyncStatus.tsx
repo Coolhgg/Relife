@@ -177,7 +177,8 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
           <div className="flex items-center gap-2">
             {status.isOnline && (
               <button
-                onClick={(e: any) => { // auto
+                onClick={(e: any) => {
+                  // auto
                   e.stopPropagation();
                   handleManualSync();
                 }}
