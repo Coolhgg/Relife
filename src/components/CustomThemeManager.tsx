@@ -177,7 +177,9 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const handleThemeUpdated = (theme: CustomSoundTheme) => {
-    setThemes((prev: any) => prev.map((t: any) => ({
+    setThemes((prev: any) => prev.map((t: any) => 
+      t.id === theme.id ? theme : t
+    ));
     setEditingTheme(null);
   };
 
@@ -185,7 +187,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     try {
       const success = await soundEffectsService.deleteCustomTheme(themeId, userId);
       if (success) {
-        setThemes((prev: any) => prev.filter((t: any) => t
+        setThemes((prev: any) => prev.filter((t: any) => t.id !== themeId));
       }
     } catch (error) {
       console.error('Error deleting theme:', error);
@@ -440,7 +442,9 @@ duplicatedTheme, ...prev]);
 
       const success = await soundEffectsService.shareThemeWithCommunity(updatedTheme);
       if (success) {
-        setThemes((prev: any) => prev.map((t: any) => ({
+        setThemes((prev: any) => prev.map((t: any) => 
+          t.id === theme.id ? updatedTheme : t
+        ));
         if (onThemeUpdated) {
           onThemeUpdated(updatedTheme);
         }
