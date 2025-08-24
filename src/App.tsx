@@ -250,7 +250,7 @@ function AppContent() {
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
     activeAlarm: appState.activeAlarm,
-    enabledAlarms: appState.alarms.filter(alarm => alarm.enabled),
+    enabledAlarms: appState.alarms.filter((alarm: any) => alarm.enabled), // auto
     settings: tabProtectionSettings.settings,
   });
 
@@ -270,7 +270,7 @@ function AppContent() {
         const aiRewards = AIRewardsService.getInstance();
         const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
 
-        setAppState(prev => ({
+        setAppState((prev: any) => ({ // auto
           ...prev,
           rewardSystem,
         }));

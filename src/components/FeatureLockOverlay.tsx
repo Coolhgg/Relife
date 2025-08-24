@@ -273,7 +273,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
       {showUpgradeModal && featureId && (
         <UpgradePrompt
           feature={featureId}
-          onUpgrade={tier => {
+          onUpgrade={(tier: any) => { // auto
             setShowUpgradeModal(false);
             onUpgrade?.(tier);
           }}

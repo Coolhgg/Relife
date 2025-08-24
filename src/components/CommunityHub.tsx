@@ -577,7 +577,7 @@ export function CommunityHub({
                         <Button
                           size="sm"
                           className="w-full"
-                          onClick={e => {
+                          onClick={(e: any) => { // auto
                             e.stopPropagation();
                             announceRewardEvent('claimed', {
                               title: `${quest.reward.experience} XP${quest.reward.title ? ` + ${quest.reward.title}` : ''}${quest.reward.badge ? ` + ${quest.reward.badge}` : ''}`,
