@@ -318,7 +318,7 @@ export function withPerformanceProfiler<T extends {}>(
     WrappedComponent.displayName || WrappedComponent.name || 'Component';
   const id = profilerId || displayName;
 
-  const ProfiledComponent: React.FC<T> = props => {
+  const ProfiledComponent: React.FC<T> = (props: any) => { // auto
     return React.createElement(
       Profiler,
       { id, onRender: performanceProfiler.onRender },
