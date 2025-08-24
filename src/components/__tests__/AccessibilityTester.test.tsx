@@ -1,3 +1,4 @@
+import React from 'react'; // auto: added missing React import
 // Vitest globals are available globally, no need to import
 /**
  * AccessibilityTester Component Tests

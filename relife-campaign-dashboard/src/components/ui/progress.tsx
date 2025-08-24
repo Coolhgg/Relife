@@ -1,3 +1,4 @@
+import React from 'react'; // auto: added missing React import
 import * as React from 'react';
 import * as ProgressPrimitive from '@radix-ui/react-progress';
 

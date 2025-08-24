@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react'; // auto: added missing React import
 import { Button } from '@/components/ui/button';
 import {
   Card,

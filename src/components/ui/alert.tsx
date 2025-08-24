@@ -1,3 +1,4 @@
+import React from 'react'; // auto: added missing React import
 import * as React from 'react';
 import { cva } from 'class-variance-authority';
 
