@@ -649,3 +649,25 @@ export const createTestCustomSound = _createTestCustomSound;
 
 // Analytics exports
 export const createTestAnalytics = _createTestAnalytics;
+
+// ===============================
+// MISSING EXPORT PLACEHOLDERS
+// ===============================
+
+// Placeholder exports to satisfy imports - please refine
+export const _createTestSubscriptionPlan = (options: any = {}) => {
+  return {} as any; // auto: placeholder - please refine
+};
+
+export const _createTestPaymentMethod = (options: any = {}) => {
+  return {} as any; // auto: placeholder - please refine
+};
+
+export const _createTestPricing = (options: any = {}) => {
+  return {} as any; // auto: placeholder - please refine
+};
+
+// Placeholder exports
+export const createTestSubscriptionPlan = _createTestSubscriptionPlan;
+export const createTestPaymentMethod = _createTestPaymentMethod;
+export const createTestPricing = _createTestPricing;
