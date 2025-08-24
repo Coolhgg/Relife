@@ -25,6 +25,7 @@ interface SubscriptionStatusProps {
   /** Show manage subscription button */
   showManage?: boolean;
   /** Callback when upgrade is clicked */
+  onUpgrade?: (tier: string) => void;
   /** Callback when manage is clicked */
   onManage?: () => void;
 }

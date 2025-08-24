@@ -37,11 +37,7 @@ vi.mock('../../useAnalytics', () => ({
 
 // Test wrapper component
 const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (
-    <div data-testid="test-wrapper">
-      {children}
-    </div>
-  );
+  return <div data-testid="test-wrapper">{children}</div>;
 };
 
 describe('useAdvancedAlarms Integration Tests', () => {

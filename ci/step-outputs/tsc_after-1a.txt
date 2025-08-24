@@ -41,7 +41,6 @@ src/components/AlarmThemeBrowser.tsx(38,3): error TS2724: '"lucide-react"' has n
 src/components/AlarmThemeBrowser.tsx(40,3): error TS2305: Module '"lucide-react"' has no exported member '_X'.
 src/components/AlarmThemeBrowser.tsx(43,3): error TS2724: '"lucide-react"' has no exported member named '_Moon'. Did you mean 'Moon'?
 src/components/AnalyticsProvider.tsx(226,29): error TS2554: Expected 1 arguments, but got 0.
-src/components/AuthenticationFlow.tsx(20,3): error TS2339: Property '_onAuthSuccess' does not exist on type 'AuthenticationFlowProps'.
 src/components/BattleSystem.tsx(103,5): error TS2741: Property 'personalization' is missing in type '{ theme: "system"; soundEnabled: true; notificationsEnabled: true; voiceDismissalSensitivity: number; defaultVoiceMood: "motivational"; hapticFeedback: true; snoozeMinutes: number; maxSnoozes: number; rewardsEnabled: true; aiInsightsEnabled: true; personalizedMessagesEnabled: true; shareAchievements: true; }' but required in type 'UserPreferences'.
 src/components/BattleSystem.tsx(128,5): error TS2741: Property 'personalization' is missing in type '{ theme: "system"; soundEnabled: true; notificationsEnabled: true; voiceDismissalSensitivity: number; defaultVoiceMood: "motivational"; hapticFeedback: true; snoozeMinutes: number; maxSnoozes: number; rewardsEnabled: true; aiInsightsEnabled: true; personalizedMessagesEnabled: true; shareAchievements: true; }' but required in type 'UserPreferences'.
 src/components/BattleSystem.tsx(153,5): error TS2741: Property 'personalization' is missing in type '{ theme: "system"; soundEnabled: true; notificationsEnabled: true; voiceDismissalSensitivity: number; defaultVoiceMood: "motivational"; hapticFeedback: true; snoozeMinutes: number; maxSnoozes: number; rewardsEnabled: true; aiInsightsEnabled: true; personalizedMessagesEnabled: true; shareAchievements: true; }' but required in type 'UserPreferences'.
@@ -219,7 +218,6 @@ src/components/PremiumFeatureTest.tsx(54,13): error TS7053: Element implicitly h
   No index signature with a parameter of type 'string' was found on type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
 src/components/PremiumFeatureTest.tsx(54,47): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
   No index signature with a parameter of type 'string' was found on type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
-src/components/PremiumGate.tsx(22,3): error TS2339: Property '_mode' does not exist on type 'PremiumGateProps'.
 src/components/PremiumGate.tsx(38,6): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
   No index signature with a parameter of type 'string' was found on type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
 src/components/PremiumGate.tsx(38,40): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
@@ -366,51 +364,50 @@ src/components/SoundUploader.tsx(607,11): error TS2322: Type 'SoundCategory' is 
   Type '"electronic"' is not assignable to type 'SoundCategory | undefined'.
 src/components/SpecializedErrorBoundaries.tsx(61,9): error TS2322: Type 'string | null | undefined' is not assignable to type 'string | undefined'.
   Type 'null' is not assignable to type 'string | undefined'.
-src/components/SubscriptionStatus.tsx(37,3): error TS2339: Property 'onUpgrade' does not exist on type 'SubscriptionStatusProps'.
-src/components/SubscriptionStatus.tsx(52,29): error TS2345: Argument of type '{ tier: SubscriptionTier; plan: PremiumFeature; limits: { alarmCount: { current: number; max: number | null; }; voicesAccess: { basic: boolean; premium: boolean; ultimate: boolean; }; featuresUnlocked: string[]; featuresLocked: string[]; }; }' is not assignable to parameter of type 'SetStateAction<SubscriptionStatus | null>'.
-src/components/SubscriptionStatus.tsx(101,28): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(53,29): error TS2345: Argument of type '{ tier: SubscriptionTier; plan: PremiumFeature; limits: { alarmCount: { current: number; max: number | null; }; voicesAccess: { basic: boolean; premium: boolean; ultimate: boolean; }; featuresUnlocked: string[]; featuresLocked: string[]; }; }' is not assignable to parameter of type 'SetStateAction<SubscriptionStatus | null>'.
+src/components/SubscriptionStatus.tsx(102,28): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
   Property 'status' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(102,50): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(103,50): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
   Property 'currentPeriodEnd' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(116,28): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(117,28): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
   Property 'status' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(125,28): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(126,28): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
   Property 'status' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(126,52): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(127,52): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
   Property 'currentPeriodEnd' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(140,28): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(141,28): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
   Property 'status' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(141,53): error TS2551: Property 'trialEnd' does not exist on type 'SubscriptionStatus'. Did you mean 'trimEnd'?
+src/components/SubscriptionStatus.tsx(142,53): error TS2551: Property 'trialEnd' does not exist on type 'SubscriptionStatus'. Did you mean 'trimEnd'?
   Property 'trialEnd' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(253,39): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(254,39): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
   Property 'status' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(258,39): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(259,39): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
   Property 'status' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(263,39): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(264,39): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
   Property 'currentPeriodEnd' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(264,49): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(265,49): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
   Property 'currentPeriodEnd' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(350,37): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(351,37): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
   Property 'status' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(356,37): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(357,37): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
   Property 'status' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(358,40): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(359,40): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
   Property 'status' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(363,37): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(364,37): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
   Property 'currentPeriodEnd' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(364,47): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(365,47): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
   Property 'currentPeriodEnd' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(368,33): error TS2339: Property 'plan' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(369,33): error TS2339: Property 'plan' does not exist on type 'SubscriptionStatus'.
   Property 'plan' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(372,40): error TS2339: Property 'plan' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(373,40): error TS2339: Property 'plan' does not exist on type 'SubscriptionStatus'.
   Property 'plan' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(377,33): error TS2339: Property 'usage' does not exist on type 'SubscriptionStatus'.
-  Property 'usage' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(381,39): error TS2339: Property 'usage' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(378,33): error TS2339: Property 'usage' does not exist on type 'SubscriptionStatus'.
   Property 'usage' does not exist on type '"active"'.
 src/components/SubscriptionStatus.tsx(382,39): error TS2339: Property 'usage' does not exist on type 'SubscriptionStatus'.
   Property 'usage' does not exist on type '"active"'.
-src/components/SubscriptionStatus.tsx(384,42): error TS2339: Property 'usage' does not exist on type 'SubscriptionStatus'.
+src/components/SubscriptionStatus.tsx(383,39): error TS2339: Property 'usage' does not exist on type 'SubscriptionStatus'.
+  Property 'usage' does not exist on type '"active"'.
+src/components/SubscriptionStatus.tsx(385,42): error TS2339: Property 'usage' does not exist on type 'SubscriptionStatus'.
   Property 'usage' does not exist on type '"active"'.
 src/components/TabProtectionWarning.tsx(65,22): error TS2345: Argument of type 'boolean | Alarm' is not assignable to parameter of type 'SetStateAction<boolean>'.
   Type 'Alarm' is not assignable to type 'SetStateAction<boolean>'.
@@ -448,27 +445,10 @@ src/components/ThemeCustomizationStudio.tsx(613,14): error TS2322: Type '{ child
 src/components/ThemeGallery.tsx(314,11): error TS2739: Type '{ primary: string; secondary: string; accent: string; background: string; surface: string; }' is missing the following properties from type 'ThemePreview': primaryColor, backgroundColor, textColor, cardColor, accentColor
 src/components/ThemeStudio.tsx(4,3): error TS2305: Module '"lucide-react"' has no exported member 'Gallery'.
 src/components/UpgradePrompt.tsx(19,12): error TS2304: Cannot find name 'PremiumFeature'.
-src/components/UpgradePrompt.tsx(200,36): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
-src/components/UpgradePrompt.tsx(200,57): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
-  Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; }'.
-src/components/UpgradePrompt.tsx(222,30): error TS2722: Cannot invoke an object which is possibly 'undefined'.
-src/components/UpgradePrompt.tsx(222,52): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
-  Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; }'.
-src/components/UpgradePrompt.tsx(269,28): error TS2722: Cannot invoke an object which is possibly 'undefined'.
-src/components/UpgradePrompt.tsx(269,50): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
-  Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; }'.
-src/components/UpgradePrompt.tsx(337,43): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
-src/components/UpgradePrompt.tsx(337,64): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
-  Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; }'.
-src/components/UpgradePrompt.tsx(339,26): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
-src/components/UpgradePrompt.tsx(339,61): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
-  Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; }'.
-src/components/UpgradePrompt.tsx(346,33): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
-src/components/UpgradePrompt.tsx(385,42): error TS2722: Cannot invoke an object which is possibly 'undefined'.
-src/components/UpgradePrompt.tsx(385,57): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
-src/components/UpgradePrompt.tsx(408,32): error TS2722: Cannot invoke an object which is possibly 'undefined'.
-src/components/UpgradePrompt.tsx(408,54): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
-  Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; }'.
+src/components/UpgradePrompt.tsx(234,30): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/components/UpgradePrompt.tsx(281,28): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/components/UpgradePrompt.tsx(397,42): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/components/UpgradePrompt.tsx(420,32): error TS2722: Cannot invoke an object which is possibly 'undefined'.
 src/components/UserProfile.tsx(27,25): error TS2528: A module cannot have multiple default exports.
 src/components/UserProfile.tsx(145,16): error TS2528: A module cannot have multiple default exports.
 src/components/VisualAlarmDisplay.tsx(46,29): error TS2554: Expected 1 arguments, but got 0.
@@ -2315,6 +2295,8 @@ src/types/index.ts(3894,5): error TS2353: Object literal may only specify known 
 src/types/index.ts(3936,5): error TS2353: Object literal may only specify known properties, and 'tier' does not exist in type 'SubscriptionPlan'.
 src/types/index.ts(3999,5): error TS2741: Property 'premiumPersonalities' is missing in type '{ elevenlabsVoices: true; customVoiceMessages: true; voiceCloning: true; advancedAIInsights: true; personalizedChallenges: true; smartRecommendations: true; behaviorAnalysis: true; premiumThemes: true; ... 15 more ...; prioritySupport: true; }' but required in type 'PremiumFeatureAccess'.
 src/types/index.ts(4042,5): error TS2741: Property 'premiumPersonalities' is missing in type '{ elevenlabsVoices: true; customVoiceMessages: true; voiceCloning: true; advancedAIInsights: true; personalizedChallenges: true; smartRecommendations: true; behaviorAnalysis: true; premiumThemes: true; ... 15 more ...; prioritySupport: true; }' but required in type 'PremiumFeatureAccess'.
+src/types/user.ts(47,72): error TS2322: Type '"enterprise"' is not assignable to type 'SubscriptionTier'.
+src/types/user.ts(67,34): error TS2339: Property 'id' does not exist on type 'never'.
 src/utils/alarm-conversion.ts(31,25): error TS2339: Property 'id' does not exist on type 'AdvancedAlarm'.
 src/utils/alarm-conversion.ts(32,29): error TS2339: Property 'userId' does not exist on type 'AdvancedAlarm'.
 src/utils/alarm-conversion.ts(33,27): error TS2339: Property 'time' does not exist on type 'AdvancedAlarm'.

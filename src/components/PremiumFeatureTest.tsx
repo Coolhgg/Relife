@@ -11,7 +11,7 @@ interface PremiumFeatureTestProps {
 const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
   userTier = 'free',
   onUpgrade,
-  className = ''
+  className = '',
 }) => {
   const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
 
@@ -22,7 +22,7 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
       description: 'Ultra-challenging wake-up tasks',
       icon: Zap,
       tier: 'premium',
-      color: 'from-red-500 to-orange-600'
+      color: 'from-red-500 to-orange-600',
     },
     {
       id: 'voice-cloning',
@@ -30,7 +30,7 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
       description: 'Create custom AI voices',
       icon: Star,
       tier: 'pro',
-      color: 'from-purple-500 to-pink-600'
+      color: 'from-purple-500 to-pink-600',
     },
     {
       id: 'analytics-pro',
@@ -38,8 +38,8 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
       description: 'Detailed sleep and wake patterns',
       icon: Shield,
       tier: 'premium',
-      color: 'from-blue-500 to-cyan-600'
-    }
+      color: 'from-blue-500 to-cyan-600',
+    },
   ];
 
   const tierHierarchy = {
@@ -47,7 +47,7 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
     basic: 1,
     premium: 2,
     pro: 3,
-    ultimate: 4
+    ultimate: 4,
   };
 
   const hasAccess = (requiredTier: string) => {
@@ -75,7 +75,7 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {features.map((feature) => {
+          {features.map(feature => {
             const Icon = feature.icon;
             const isAccessible = hasAccess(feature.tier);
             const isSelected = selectedFeature === feature.id;
@@ -96,7 +96,9 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
                   </div>
                 )}
 
-                <div className={`inline-flex p-2 rounded-lg bg-gradient-to-r ${feature.color} mb-3`}>
+                <div
+                  className={`inline-flex p-2 rounded-lg bg-gradient-to-r ${feature.color} mb-3`}
+                >
                   <Icon className="w-5 h-5 text-white" />
                 </div>
 
@@ -104,17 +106,19 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
                 <p className="text-sm text-gray-600 mb-3">{feature.description}</p>
 
                 <div className="flex items-center justify-between">
-                  <span className={`text-xs px-2 py-1 rounded-full ${
-                    feature.tier === 'premium' 
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-purple-100 text-purple-800'
-                  }`}>
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      feature.tier === 'premium'
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-purple-100 text-purple-800'
+                    }`}
+                  >
                     {feature.tier}
                   </span>
 
                   {!isAccessible && (
                     <button
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onUpgrade?.();
                       }}
@@ -138,7 +142,7 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
             {!hasAccess(features.find(f => f.id === selectedFeature)?.tier || '') && (
               <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
                 <p className="text-yellow-800 text-sm">
-                  This feature requires a premium subscription. 
+                  This feature requires a premium subscription.
                   <button
                     onClick={onUpgrade}
                     className="ml-2 text-yellow-900 font-medium hover:underline"

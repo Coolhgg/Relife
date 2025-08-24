@@ -281,7 +281,23 @@ export const _createTestUser = <T extends CreateUserOptions = CreateUserOptions>
         ? undefined
         : faker.helpers.arrayElement(COMMON_DATA.subscriptionStatuses),
     createdAt: joinDate,
-    subscription: tier !== 'free' ? ({ id: generateId('sub') } as any) : undefined,
+    subscription:
+      tier !== 'free'
+        ? ({
+            id: generateId('sub'),
+            userId,
+            tier,
+            status: faker.helpers.arrayElement(['active', 'trialing']) as any,
+            billingInterval: faker.helpers.arrayElement(['month', 'year']) as any,
+            amount: tier === 'premium' ? 999 : tier === 'ultimate' ? 1999 : 499,
+            currency: 'usd',
+            currentPeriodStart: new Date(),
+            currentPeriodEnd: faker.date.future(),
+            cancelAtPeriodEnd: false,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          } as Subscription)
+        : undefined,
     stripeCustomerId:
       tier !== 'free' ? `cus_${faker.string.alphanumeric(14)}` : undefined,
     trialEndsAt: tier === 'free' ? undefined : faker.date.soon({ days: 14 }),
