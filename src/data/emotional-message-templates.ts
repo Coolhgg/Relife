@@ -1,4 +1,5 @@
 import type { EmotionType, EmotionalTone } from '../types/emotional';
+import type { EmotionalMessageVariables } from '../types/configuration-interfaces';
 
 // Emotional Message Templates - Builds on existing voice mood system
 // Variables available: {name}, {missed_days}, {streak_days}, {missed_alarms}, {achievement}, {time}, {label}
@@ -262,7 +263,7 @@ export interface MessageTemplate {
   emotion: EmotionType;
   tone: EmotionalTone;
   template: string;
-  variables: Record<string, any>;
+  variables: EmotionalMessageVariables;
   tags: string[]; // For categorization and filtering
   effectivenessScore: number; // 0-100
   timesUsed: number;
@@ -273,7 +274,7 @@ export interface MessageTemplate {
 export function getEmotionalMessageTemplate(
   emotion: EmotionType,
   tone: EmotionalTone,
-  context: Record<string, any> = {}
+  context: EmotionalMessageVariables = {}
 ): string {
   const templates = EMOTIONAL_MESSAGE_TEMPLATES[emotion]?.[tone] || [];
 
@@ -295,7 +296,7 @@ export function getEmotionalMessageTemplate(
 // Message variable replacement
 export function personalizeMessage(
   template: string,
-  variables: Record<string, any>
+  variables: EmotionalMessageVariables
 ): string {
   let message = template;
 

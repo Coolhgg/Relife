@@ -2,6 +2,7 @@
 // Manages ConvertKit forms, sequences, and automation setup for each persona
 
 import { PersonaType } from '../types/email-campaigns';
+import { ConvertKitAutomationParameters } from '../types/configuration-interfaces';
 
 export interface PersonaConvertKitConfig {
   persona: PersonaType;
@@ -21,7 +22,7 @@ export interface PersonaAutomationRule {
     | 'email_opened';
   condition?: string;
   action: 'add_to_sequence' | 'add_tag' | 'send_email' | 'remove_tag' | 'update_field';
-  parameters: Record<string, any>;
+  parameters: ConvertKitAutomationParameters;
   delay?: number; // minutes
 }
 

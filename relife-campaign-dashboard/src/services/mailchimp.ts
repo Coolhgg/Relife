@@ -1,4 +1,5 @@
 import mailchimp from '@mailchimp/mailchimp_marketing';
+import { MailchimpMergeFields } from '../../../src/types/api-responses';
 
 // Mailchimp API Configuration
 const configureMailchimp = (apiKey: string) => {
@@ -196,7 +197,7 @@ export class MailchimpService {
     subscriber: {
       email_address: string;
       status: 'subscribed' | 'unsubscribed' | 'cleaned' | 'pending';
-      merge_fields?: Record<string, any>;
+      merge_fields?: MailchimpMergeFields;
       tags?: string[];
     }
   ): Promise<void> {

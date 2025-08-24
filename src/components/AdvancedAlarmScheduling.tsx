@@ -349,10 +349,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   id="alarm-time"
                   type="time"
                   value={formData.time}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement> 
-) =>
-                    setFormData((prev: any
-) => ({ ...prev, time: e.target.value }))
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormData((prev: any) => ({ ...prev, time: e.target.value }))
                   }
                 />
               </div>
@@ -361,10 +359,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                 <Input
                   id="alarm-label"
                   value={formData.label}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement> 
-) =>
-                    setFormData((prev: any
-) => ({ ...prev, label: e.target.value }))
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormData((prev: any) => ({ ...prev, label: e.target.value }))
                   }
                   placeholder="Enter alarm name"
                 />
@@ -451,10 +447,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     min="1"
                     max="365"
                     value={formData.recurrencePattern?.interval || 1}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement> 
-) =>
-                      setFormData((prev: any
-) => ({
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFormData((prev: any) => ({
                         ...prev,
                         recurrencePattern: {
                           ...prev.recurrencePattern,
@@ -531,10 +525,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                       value={
                         formData.recurrencePattern.endDate.toISOString().split('T')[0]
                       }
-                      onChange={(e: React.ChangeEvent<HTMLInputElement> 
-) =>
-                        setFormData((prev: any
-) => ({
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFormData((prev: any) => ({
                           ...prev,
                           recurrencePattern: {
                             ...prev.recurrencePattern!,

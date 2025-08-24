@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { ConvertKit } from '../../../src/types/api-responses';
 
 const CONVERTKIT_API_BASE = 'https://api.convertkit.com/v3';
 
@@ -8,7 +9,7 @@ export interface ConvertKitSubscriber {
   first_name: string | null;
   created_at: string;
   state: 'active' | 'bounced' | 'unsubscribed' | 'cancelled';
-  fields: Record<string, any>;
+  fields: ConvertKit.CustomFields;
   tags: Array<{ id: number; name: string }>;
 }
 
@@ -91,7 +92,7 @@ export class ConvertKitService {
     }
   }
 
-  async getAccount(): Promise<any> {
+  async getAccount(): Promise<ConvertKit.AccountResponse> {
     this.ensureConfigured();
 
     try {
@@ -135,7 +136,7 @@ export class ConvertKitService {
     email: string,
     data?: {
       first_name?: string;
-      fields?: Record<string, any>;
+      fields?: ConvertKit.CustomFields;
       tags?: number[];
     }
   ): Promise<ConvertKitSubscriber> {
@@ -171,7 +172,7 @@ export class ConvertKitService {
     email: string,
     data?: {
       first_name?: string;
-      fields?: Record<string, any>;
+      fields?: ConvertKit.CustomFields;
     }
   ): Promise<ConvertKitSubscriber> {
     this.ensureConfigured();
@@ -282,7 +283,7 @@ export class ConvertKitService {
     }
   }
 
-  async getBroadcastStats(broadcastId: number): Promise<any> {
+  async getBroadcastStats(broadcastId: number): Promise<ConvertKit.BroadcastStatsResponse> {
     this.ensureConfigured();
 
     try {
@@ -310,7 +311,7 @@ export class ConvertKitService {
   }
 
   // Analytics and reporting methods
-  async getGrowthStats(timeframe: '1d' | '7d' | '30d' = '30d'): Promise<any> {
+  async getGrowthStats(timeframe: '1d' | '7d' | '30d' = '30d'): Promise<ConvertKit.GrowthStatsResponse> {
     this.ensureConfigured();
 
     try {

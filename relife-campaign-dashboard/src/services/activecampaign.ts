@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { ActiveCampaign } from '../../../src/types/api-responses';
 
 export interface ActiveCampaignContact {
   id: string;
@@ -306,7 +307,7 @@ export class ActiveCampaignService {
     }
   }
 
-  async subscribeContactToList(contactId: string, listId: string): Promise<any> {
+  async subscribeContactToList(contactId: string, listId: string): Promise<ActiveCampaign.SubscribeResponse> {
     this.ensureConfigured();
 
     try {
@@ -348,7 +349,7 @@ export class ActiveCampaignService {
     }
   }
 
-  async addContactToAutomation(contactId: string, automationId: string): Promise<any> {
+  async addContactToAutomation(contactId: string, automationId: string): Promise<ActiveCampaign.AutomationResponse> {
     this.ensureConfigured();
 
     try {
@@ -377,7 +378,7 @@ export class ActiveCampaignService {
     }
   }
 
-  async addTagToContact(contactId: string, tagId: string): Promise<any> {
+  async addTagToContact(contactId: string, tagId: string): Promise<ActiveCampaign.TagResponse> {
     this.ensureConfigured();
 
     try {
@@ -407,7 +408,7 @@ export class ActiveCampaignService {
   }
 
   // Analytics methods
-  async getCampaignStats(campaignId: string): Promise<any> {
+  async getCampaignStats(campaignId: string): Promise<ActiveCampaign.CampaignStatsResponse> {
     this.ensureConfigured();
 
     try {
@@ -437,7 +438,7 @@ export class ActiveCampaignService {
     }
   }
 
-  async getAutomationStats(automationId: string): Promise<any> {
+  async getAutomationStats(automationId: string): Promise<ActiveCampaign.AutomationStatsResponse> {
     this.ensureConfigured();
 
     try {

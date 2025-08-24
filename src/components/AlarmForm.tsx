@@ -327,9 +327,8 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
       );
 
       if (result.success && result.customSound) {
-        setCustomSounds((prev: boolean) => [result.customSound!, ...prev]);
-        setFormData((prev: any
-) => ({ 
+        setCustomSounds((prev: any) => [result.customSound!, ...prev]);
+        setFormData((prev: any) => ({
           ...prev,
           soundType: 'custom',
           customSoundId: result.customSound!.id,
@@ -440,7 +439,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
     if (confirm(`Are you sure you want to delete "${sound.name}"?`)) {
       const success = await customSoundManager.deleteCustomSound(sound.id, userId);
       if (success) {
-        setCustomSounds((prev: any) => prev.filter((s: any) => s
+        setCustomSounds((prev: any) => prev.filter((s: any) => s.id !== sound.id));
         // If the deleted sound was selected, reset to voice-only
         if (formData.customSoundId === sound.id) {
           setFormData((prev: any) => ({
@@ -536,8 +535,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               id="alarm-time"
               type="time"
               value={formData.time}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => { // auto: implicit any
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const newTime = e.target.value;
                 setFormData((prev: any) => ({ ...prev, time: newTime }));
                 announceFieldChange(
@@ -555,7 +553,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   announceFieldValidation('Time', true);
                 }
               }}
-              onKeyDown={(e: any) => {
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === 'F1') {
                   e.preventDefault();
                   announceFieldDescription(
@@ -599,8 +597,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               id="alarm-label"
               type="text"
               value={formData.label}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => { // auto: implicit any
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const newLabel = e.target.value;
                 setFormData((prev: any) => ({ ...prev, label: newLabel }));
                 announceFieldChange(
@@ -620,7 +617,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   announceFieldValidation('Label', false, 'Label is required');
                 }
               }}
-              onKeyDown={(e: any) => {
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === 'F1') {
                   e.preventDefault();
                   announceFieldDescription(
@@ -676,7 +673,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   key={day.id}
                   type="button"
                   onClick={() => toggleDay(day.id)}
-                  onKeyDown={(e: any) => {
+                  onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
                       toggleDay(day.id);
@@ -763,7 +760,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   key={mood.id}
                   type="button"
                   onClick={() => handleVoiceMoodSelect(mood.id)}
-                  onKeyDown={(e: any) => {
+                  onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
                       handleVoiceMoodSelect(mood.id);
@@ -989,8 +986,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                           checked={
                             formData.nuclearChallenges?.includes(challenge.id) || false
                           }
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => { // auto: implicit any
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             const challenges = formData.nuclearChallenges || [];
                             if (e.target.checked) {
                               setFormData((prev: any) => ({
@@ -1299,10 +1295,8 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   <select
                     id="snooze-interval"
                     value={formData.snoozeInterval}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => 
-                      setFormData((prev: any
-) => ({ 
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      setFormData((prev: any) => ({
                         ...prev,
                         snoozeInterval: parseInt(e.target.value),
                       }));
@@ -1331,10 +1325,8 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   <select
                     id="max-snoozes"
                     value={formData.maxSnoozes}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => 
-                      setFormData((prev: any
-) => ({ 
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      setFormData((prev: any) => ({
                         ...prev,
                         maxSnoozes: parseInt(e.target.value),
                       }));

@@ -2171,14 +2171,14 @@ function AppContent() {
                         borderColor: 'transparent',
                       }
                 }
-                onMouseEnter={(e: any) => {
+                onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
                   if (appState.currentView !== 'dashboard') {
                     e.currentTarget.style.backgroundColor =
                       'var(--theme-surface-hover)';
                     e.currentTarget.style.color = 'var(--theme-text-primary)';
                   }
                 }}
-                onMouseLeave={(e: any) => {
+                onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
                   if (appState.currentView !== 'dashboard') {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = 'var(--theme-text-secondary)';
@@ -2222,14 +2222,14 @@ function AppContent() {
                         borderColor: 'transparent',
                       }
                 }
-                onMouseEnter={(e: any) => {
+                onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
                   if (appState.currentView !== 'alarms') {
                     e.currentTarget.style.backgroundColor =
                       'var(--theme-surface-hover)';
                     e.currentTarget.style.color = 'var(--theme-text-primary)';
                   }
                 }}
-                onMouseLeave={(e: any) => {
+                onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
                   if (appState.currentView !== 'alarms') {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = 'var(--theme-text-secondary)';
