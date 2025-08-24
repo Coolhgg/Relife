@@ -405,7 +405,6 @@ export function EnhancedMediaContent({
       // Simulate upload progress
       const progressInterval = setInterval(() => {
         setUploadProgress((prev: any) => {
-          // auto: implicit any
           const next = prev + 10;
           if (next >= 100) {
             clearInterval(progressInterval);

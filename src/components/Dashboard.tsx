@@ -248,7 +248,6 @@ const Dashboard: React.FC<DashboardProps> = ({
           </h3>
           <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
             {alarms.slice(0, 3).map((alarm: any) => {
-              // auto: implicit any
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
               return (

@@ -147,7 +147,6 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
 
     // Apply filters
     filtered = filtered.filter((combo: any) => {
-      // auto: implicit any
       if (selectedCategory !== 'all' && combo.category !== selectedCategory)
         return false;
       if (selectedIntensity !== 'all' && combo.difficulty !== selectedIntensity)
@@ -646,7 +645,6 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
       {/* Favorite Button */}
       <button
         onClick={(e: any) => {
-          // auto: implicit any
           e.stopPropagation();
           onToggleFavorite();
         }}

@@ -174,7 +174,6 @@ export function useCachePerformance() {
 
       // Update history
       setPerformanceHistory((prev: any) => {
-        // auto: implicit any
         const newEntry = {
           timestamp: new Date(),
           hitRate: newPerformance.hitRate,

@@ -252,8 +252,7 @@
 //                       <input
 //                         type="checkbox"
 //                         value={time}
-//                         onChange={(e: any
-// ) => { // auto: implicit any
+//                         onChange={(e: any) => {
 //                           if (e.target.checked) {
 //                             setCustomTheme({
 //                               ...customTheme,

@@ -103,7 +103,6 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     const metrics = new Map<UserPersona, PersonaMetrics>();
 
     analyticsData.forEach((data: any) => {
-      // auto: implicit any
       const existing = metrics.get(data.persona) || {
         persona: data.persona,
         detections: 0,

@@ -190,7 +190,6 @@ const ExtendedNavigationPanel: React.FC<ExtendedNavigationPanelProps> = ({
 
         <div className="grid grid-cols-3 gap-4">
           {items.map((item: any) => {
-            // auto: implicit any
             const { icon: Icon } = item;
             return (
               <button
