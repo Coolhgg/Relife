@@ -1,3 +1,4 @@
+import React from 'react'; // auto: added missing React import
 import type { Meta, StoryObj } from '@storybook/react';
 import {
   Card,

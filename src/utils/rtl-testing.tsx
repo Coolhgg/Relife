@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import React from 'react'; // auto: added missing React import
 import * as React from 'react';
 /**
  * RTL testing utilities for validating direction-aware components

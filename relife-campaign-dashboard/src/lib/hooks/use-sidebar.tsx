@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import React from 'react'; // auto: added missing React import
 /* eslint-disable react-refresh/only-export-components */
 
 import * as React from 'react';

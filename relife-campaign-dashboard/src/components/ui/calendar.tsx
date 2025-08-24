@@ -1,3 +1,4 @@
+import React from 'react'; // auto: added missing React import
 import * as React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DayPicker } from 'react-day-picker';

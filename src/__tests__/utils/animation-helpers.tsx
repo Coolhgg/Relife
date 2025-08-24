@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import React from 'react'; // auto: added missing React import
 /**
  * Animation Testing Utilities for Relife Alarm App
  * Provides comprehensive testing utilities for CSS animations, transitions, and React animation libraries

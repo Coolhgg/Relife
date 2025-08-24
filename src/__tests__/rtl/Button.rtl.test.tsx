@@ -1,3 +1,4 @@
+import React from 'react'; // auto: added missing React import
 /**
  * RTL tests for Button component
  */

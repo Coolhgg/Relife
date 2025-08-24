@@ -1,3 +1,4 @@
+import React from 'react'; // auto: added missing React import
 /**
  * Notification and Service Worker Integration Tests
  *

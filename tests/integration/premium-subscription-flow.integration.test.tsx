@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import React from 'react'; // auto: added missing React import
 /**
  * Premium Subscription Flow Integration Tests
  *
