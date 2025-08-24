@@ -515,7 +515,7 @@ export const _createTestUserActivity = (userId?: string): UserActivity => {
   } as any;
 };
 
-export const _createTestSystemEvent = (): SystemEvent => ;
+export const _createTestSystemEvent = (): SystemEvent =>
 ({
   id: generateId("event"),
   type: faker.helpers.arrayElement([

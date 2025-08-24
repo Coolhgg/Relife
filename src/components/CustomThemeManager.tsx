@@ -227,7 +227,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     const success = await soundEffectsService.saveCustomTheme(duplicatedTheme);
     if (success) {
       setThemes((prev: any
-) => [ // auto: implicit anyduplicatedTheme, ...prev]);
+) => [duplicatedTheme, ...prev]);
     }
   };
 

@@ -147,8 +147,8 @@ export class RevenueAnalyticsService {
     if (error) throw error;
 
     let totalMRR = 0;
-    data?.forEach((subscription: any
-) => { const monthlyAmount =
+    data?.forEach((subscription: any) => {
+      const monthlyAmount =
         subscription.billingInterval === 'year'
           ? subscription.amount / 12
           : subscription.amount;
@@ -220,8 +220,7 @@ export class RevenueAnalyticsService {
     if (trialError) throw trialError;
 
     // Get conversions from those trial users
-    const trialUserIds = trialUsers?.map((t: any
-) => t.userId) || [];
+    const trialUserIds = trialUsers?.map((t: any) => t.userId) || [];
     if (trialUserIds.length === 0) return 0;
 
     const { data: conversions, error: conversionError } = await supabase
@@ -252,8 +251,8 @@ export class RevenueAnalyticsService {
     if (error) throw error;
 
     const paths: Record<string, number> = {};
-    data?.forEach((change: any
-) => { const path = `${change.previousTier}_to_${change.newTier}`;
+    data?.forEach((change: any) => {
+      const path = `${change.previousTier}_to_${change.newTier}`;
       paths[path] = (paths[path] || 0) + 1;
     });
 
@@ -279,8 +278,9 @@ export class RevenueAnalyticsService {
       enterprise: 0,
     };
 
-    data?.forEach((subscription: any
-) => { // auto: implicit any});
+    data?.forEach((subscription: any) => {
+      // TODO: implement
+    });
 
     return distribution;
   }
@@ -345,8 +345,7 @@ export class RevenueAnalyticsService {
     const journey: UserJourney = {
       userId,
       events:
-        events?.map((event: any
-) => ({
+        events?.map((event: any) => ({
           type: event.type,
           timestamp: new Date(event.timestamp),
           tier: event.tier,
@@ -361,8 +360,7 @@ export class RevenueAnalyticsService {
     // Calculate metrics
     journey.totalValue = journey.events
       .filter(e => e.amount)
-      .reduce((sum, e
-) => sum + (e.amount || 0), 0);
+      .reduce((sum, e) => sum + (e.amount || 0), 0);
 
     if (journey.events.length > 0) {
       const firstEvent = journey.events[0].timestamp;
@@ -446,8 +444,7 @@ export class RevenueAnalyticsService {
 
     if (!data?.length) return 0;
 
-    const totalRevenue = data.reduce((sum, sub
-) => sum + sub.amount, 0);
+    const totalRevenue = data.reduce((sum, sub) => sum + sub.amount, 0);
     return totalRevenue / data.length / 100; // Convert from cents
   }
 
@@ -539,8 +536,7 @@ export class RevenueAnalyticsService {
       insights.push('Trial conversion rate is below 15% - optimize onboarding');
     }
 
-    const topFeature = features.sort((a, b
-) => b.adoptionRate - a.adoptionRate)[0];
+    const topFeature = features.sort((a, b) => b.adoptionRate - a.adoptionRate)[0];
     if (topFeature) {
       insights.push(
         `${topFeature.feature} has the highest adoption rate at ${(topFeature.adoptionRate * 100).toFixed(1)}%`
