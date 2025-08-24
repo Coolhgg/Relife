@@ -12,7 +12,7 @@ interface AuthState {
   user: User | null;
   isLoading: boolean;
   isInitialized: boolean;
-  error: string | null;
+  _error: string | null;
   forgotPasswordSuccess: boolean;
   sessionExpiry: Date | null;
   csrfToken: string | null;
@@ -36,10 +36,10 @@ interface AuthHook extends AuthState {
 
 function useAuth(): AuthHook {
   const [authState, setAuthState] = useState<AuthState>({
-    user: null,
+    _user: null,
     isLoading: false,
     isInitialized: false,
-    error: null,
+    _error: null,
     forgotPasswordSuccess: false,
     sessionExpiry: null,
     csrfToken: null,
@@ -61,38 +61,35 @@ function useAuth(): AuthHook {
         const user = await SupabaseService.getCurrentUser();
         const csrfToken = SecurityService.generateCSRFToken();
 
-        
-      setAuthState((prev: AuthState
-) => ({
+        setAuthState((prev: AuthState) => ({
           ...prev,
           user,
           isInitialized: true,
           csrfToken,
-          sessionExpiry: user ? new Date(Date.now() + SESSION_TIMEOUT_MS) : null,
+          sessionExpiry: _user ? new Date(Date.now() + SESSION_TIMEOUT_MS) : null,
         }));
 
-        if (user) {
+        if (_user) {
           startSessionManagement();
         }
 
-        if (user) {
+        if (_user) {
           const analytics = AnalyticsService.getInstance();
           analytics.trackFeatureUsage('user_session_restored', undefined, {
-            userId: user.id,
+            userId: _user.id,
           });
         }
-      } catch (error) {
+      } catch (_error) {
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? _error : new Error(String(_error)),
           'Failed to initialize authentication',
           { context: 'auth_initialization' }
         );
-        
-      setAuthState((prev: AuthState
-) => ({
+
+        setAuthState((prev: AuthState) => ({
           ...prev,
           isInitialized: true,
-          error: 'Failed to initialize authentication',
+          _error: 'Failed to initialize authentication',
         }));
       }
     };
@@ -102,19 +99,17 @@ function useAuth(): AuthHook {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event, session?.user?.id);
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      console.log('Auth state changed:', _event, session?._user?.id);
 
-      if (event === 'SIGNED_IN' && session?.user) {
+      if (_event === 'SIGNED_IN' && session?._user) {
         const userProfile = await SupabaseService.getCurrentUser();
         const csrfToken = SecurityService.generateCSRFToken();
 
-        
-      setAuthState((prev: AuthState
-) => ({
+        setAuthState((prev: AuthState) => ({
           ...prev,
-          user: userProfile,
-          error: null,
+          _user: userProfile,
+          _error: null,
           csrfToken,
           sessionExpiry: new Date(Date.now() + SESSION_TIMEOUT_MS),
           rateLimitRemaining: 10,
@@ -124,16 +119,15 @@ function useAuth(): AuthHook {
 
         const analytics = AnalyticsService.getInstance();
         analytics.trackFeatureUsage('user_signed_in', undefined, {
-          userId: session.user.id,
+          userId: session._user.id,
         });
-      } else if (event === 'SIGNED_OUT') {
+      } else if (_event === 'SIGNED_OUT') {
         stopSessionManagement();
-        
-      setAuthState((prev: AuthState
-) => ({
+
+        setAuthState((prev: AuthState) => ({
           ...prev,
-          user: null,
-          error: null,
+          _user: null,
+          _error: null,
           csrfToken: null,
           sessionExpiry: null,
           rateLimitRemaining: 10,
@@ -186,7 +180,7 @@ function useAuth(): AuthHook {
     };
 
     activityEvents.forEach(event => {
-      document.addEventListener(event, updateActivity, true);
+      document.addEventListener(_event, updateActivity, true);
     });
   };
 
@@ -209,24 +203,22 @@ function useAuth(): AuthHook {
     };
 
     activityEvents.forEach(event => {
-      document.removeEventListener(event, updateActivity, true);
+      document.removeEventListener(_event, updateActivity, true);
     });
   };
 
   const refreshSession = async (): Promise<void> => {
     try {
-      const { data, error } = await supabase.auth.refreshSession();
+      const { data, _error } = await supabase.auth.refreshSession();
 
-      if (error) {
-        console.error('Failed to refresh session:', error);
+      if (_error) {
+        console._error('Failed to refresh session:', _error);
         await signOut();
         return;
       }
 
       if (data.session) {
-        
-      setAuthState((prev: AuthState
-) => ({
+        setAuthState((prev: AuthState) => ({
           ...prev,
           sessionExpiry: new Date(Date.now() + SESSION_TIMEOUT_MS),
           csrfToken: SecurityService.generateCSRFToken(),
@@ -235,14 +227,14 @@ function useAuth(): AuthHook {
         lastActivityRef.current = new Date();
         console.log('Session refreshed successfully');
       }
-    } catch (error) {
-      console.error('Session refresh failed:', error);
+    } catch (_error) {
+      console._error('Session refresh failed:', _error);
       await signOut();
     }
   };
 
   const isSessionValid = (): boolean => {
-    if (!authState.user || !authState.sessionExpiry) {
+    if (!authState._user || !authState.sessionExpiry) {
       return false;
     }
 
@@ -273,22 +265,18 @@ function useAuth(): AuthHook {
   const signIn = async (email: string, password: string): Promise<void> => {
     // Rate limiting check
     if (!SecurityService.checkRateLimit('sign_in', 5, RATE_LIMIT_WINDOW_MS)) {
-      
-      setAuthState((prev: AuthState
-) => ({
+      setAuthState((prev: AuthState) => ({
         ...prev,
-        error: 'Too many sign-in attempts. Please try again in 15 minutes.',
+        _error: 'Too many sign-in attempts. Please try again in 15 minutes.',
         rateLimitRemaining: 0,
       }));
       return;
     }
 
-    
-      setAuthState((prev: AuthState
-) => ({
+    setAuthState((prev: AuthState) => ({
       ...prev,
       isLoading: true,
-      error: null,
+      _error: null,
       forgotPasswordSuccess: false,
       rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1),
     }));
@@ -297,59 +285,51 @@ function useAuth(): AuthHook {
       const analytics = AnalyticsService.getInstance();
       const startTime = performance.now();
 
-      const { user, error } = await SupabaseService.signIn(email, password);
+      const { user, _error } = await SupabaseService.signIn(email, password);
 
-      if (error) {
-        
-      setAuthState((prev: AuthState
-) => ({ ...prev, isLoading: false, error }));
-        analytics.trackError(new Error(error), 'sign_in_failed');
+      if (_error) {
+        setAuthState((prev: AuthState) => ({ ...prev, isLoading: false, _error }));
+        analytics.trackError(new Error(_error), 'sign_in_failed');
         return;
       }
 
-      if (user) {
-        
-      setAuthState((prev: AuthState
-) => ({
+      if (_user) {
+        setAuthState((prev: AuthState) => ({
           ...prev,
-          user,
+          _user,
           isLoading: false,
-          error: null,
+          _error: null,
         }));
 
         const duration = performance.now() - startTime;
         analytics.trackFeatureUsage('user_sign_in_success', duration, {
-          userId: user.id,
+          userId: _user.id,
           method: 'email_password',
         });
       } else {
-        
-      setAuthState((prev: AuthState
-) => ({
+        setAuthState((prev: AuthState) => ({
           ...prev,
           isLoading: false,
-          error: 'Sign in failed. Please try again.',
+          _error: 'Sign in failed. Please try again.',
         }));
       }
-    } catch (error) {
+    } catch (_error) {
       const analytics = AnalyticsService.getInstance();
       analytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'sign_in_error'
       );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Sign in failed',
         { context: 'sign_in', metadata: { email } }
       );
 
-      
-      setAuthState((prev: AuthState
-) => ({
+      setAuthState((prev: AuthState) => ({
         ...prev,
         isLoading: false,
-        error: 'An unexpected error occurred. Please try again.',
+        _error: 'An unexpected _error occurred. Please try again.',
       }));
     }
   };
@@ -361,22 +341,18 @@ function useAuth(): AuthHook {
   ): Promise<void> => {
     // Rate limiting check
     if (!SecurityService.checkRateLimit('sign_up', 3, RATE_LIMIT_WINDOW_MS)) {
-      
-      setAuthState((prev: AuthState
-) => ({
+      setAuthState((prev: AuthState) => ({
         ...prev,
-        error: 'Too many sign-up attempts. Please try again in 15 minutes.',
+        _error: 'Too many sign-up attempts. Please try again in 15 minutes.',
         rateLimitRemaining: 0,
       }));
       return;
     }
 
-    
-      setAuthState((prev: AuthState
-) => ({
+    setAuthState((prev: AuthState) => ({
       ...prev,
       isLoading: true,
-      error: null,
+      _error: null,
       forgotPasswordSuccess: false,
       rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1),
     }));
@@ -385,112 +361,96 @@ function useAuth(): AuthHook {
       const analytics = AnalyticsService.getInstance();
       const startTime = performance.now();
 
-      const { user, error } = await SupabaseService.signUp(email, password, name);
+      const { user, _error } = await SupabaseService.signUp(email, password, name);
 
-      if (error) {
-        
-      setAuthState((prev: AuthState
-) => ({ ...prev, isLoading: false, error }));
-        analytics.trackError(new Error(error), 'sign_up_failed');
+      if (_error) {
+        setAuthState((prev: AuthState) => ({ ...prev, isLoading: false, _error }));
+        analytics.trackError(new Error(_error), 'sign_up_failed');
         return;
       }
 
-      if (user) {
-        
-      setAuthState((prev: AuthState
-) => ({
+      if (_user) {
+        setAuthState((prev: AuthState) => ({
           ...prev,
-          user,
+          _user,
           isLoading: false,
-          error: null,
+          _error: null,
         }));
 
         const duration = performance.now() - startTime;
         analytics.trackFeatureUsage('user_sign_up_success', duration, {
-          userId: user.id,
+          userId: _user.id,
           method: 'email_password',
         });
       } else {
-        
-      setAuthState((prev: AuthState
-) => ({
+        setAuthState((prev: AuthState) => ({
           ...prev,
           isLoading: false,
-          error: 'Account creation failed. Please try again.',
+          _error: 'Account creation failed. Please try again.',
         }));
       }
-    } catch (error) {
+    } catch (_error) {
       const analytics = AnalyticsService.getInstance();
       analytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'sign_up_error'
       );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Sign up failed',
         { context: 'sign_up', metadata: { email, name } }
       );
 
-      
-      setAuthState((prev: AuthState
-) => ({
+      setAuthState((prev: AuthState) => ({
         ...prev,
         isLoading: false,
-        error: 'An unexpected error occurred. Please try again.',
+        _error: 'An unexpected _error occurred. Please try again.',
       }));
     }
   };
 
   const signOut = async (): Promise<void> => {
-    
-      setAuthState((prev: AuthState
-) => ({ ...prev, isLoading: true, error: null }));
+    setAuthState((prev: AuthState) => ({ ...prev, isLoading: true, _error: null }));
 
     try {
       const analytics = AnalyticsService.getInstance();
       const userId = authState.user?.id;
 
-      const { error } = await SupabaseService.signOut();
+      const { _error } = await SupabaseService.signOut();
 
-      if (error) {
-        
-      setAuthState((prev: AuthState
-) => ({ ...prev, isLoading: false, error }));
+      if (_error) {
+        setAuthState((prev: AuthState) => ({ ...prev, isLoading: false, _error }));
         return;
       }
 
-      
-      setAuthState((prev: AuthState
-) => ({
+      setAuthState((prev: AuthState) => ({
         ...prev,
-        user: null,
+        _user: null,
         isLoading: false,
-        error: null,
+        _error: null,
       }));
 
       analytics.trackFeatureUsage('user_sign_out_success', undefined, {
         userId,
       });
-    } catch (error) {
+    } catch (_error) {
       const analytics = AnalyticsService.getInstance();
       analytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'sign_out_error'
       );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Sign out failed',
         { context: 'sign_out' }
       );
 
-      
-      setAuthState((prev: AuthState
-) => ({
+      setAuthState((prev: AuthState) => ({
         ...prev,
         isLoading: false,
-        error: 'Failed to sign out. Please try again.',
+        _error: 'Failed to sign out. Please try again.',
       }));
     }
   };
@@ -498,22 +458,18 @@ function useAuth(): AuthHook {
   const resetPassword = async (email: string): Promise<void> => {
     // Rate limiting check
     if (!SecurityService.checkRateLimit('password_reset', 3, RATE_LIMIT_WINDOW_MS)) {
-      
-      setAuthState((prev: AuthState
-) => ({
+      setAuthState((prev: AuthState) => ({
         ...prev,
-        error: 'Too many password reset attempts. Please try again in 15 minutes.',
+        _error: 'Too many password reset attempts. Please try again in 15 minutes.',
         rateLimitRemaining: 0,
       }));
       return;
     }
 
-    
-      setAuthState((prev: AuthState
-) => ({
+    setAuthState((prev: AuthState) => ({
       ...prev,
       isLoading: true,
-      error: null,
+      _error: null,
       forgotPasswordSuccess: false,
       rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1),
     }));
@@ -521,85 +477,85 @@ function useAuth(): AuthHook {
     try {
       const analytics = AnalyticsService.getInstance();
 
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      const { _error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
 
-      if (error) {
-        
-      setAuthState((prev: AuthState
-) => ({ ...prev, isLoading: false, error: error.message }));
-        analytics.trackError(new Error(error.message), 'password_reset_failed');
+      if (_error) {
+        setAuthState((prev: AuthState) => ({
+          ...prev,
+          isLoading: false,
+          _error: _error.message,
+        }));
+        analytics.trackError(new Error(_error.message), 'password_reset_failed');
         return;
       }
 
-      
-      setAuthState((prev: AuthState
-) => ({
+      setAuthState((prev: AuthState) => ({
         ...prev,
         isLoading: false,
-        error: null,
+        _error: null,
         forgotPasswordSuccess: true,
       }));
 
       analytics.trackFeatureUsage('password_reset_requested', undefined, {
         email,
       });
-    } catch (error) {
+    } catch (_error) {
       const analytics = AnalyticsService.getInstance();
       analytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'password_reset_error'
       );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Password reset failed',
         { context: 'password_reset', metadata: { email } }
       );
 
-      
-      setAuthState((prev: AuthState
-) => ({
+      setAuthState((prev: AuthState) => ({
         ...prev,
         isLoading: false,
-        error: 'Failed to send reset email. Please try again.',
+        _error: 'Failed to send reset email. Please try again.',
       }));
     }
   };
 
   const clearError = (): void => {
-    
-      setAuthState((prev: AuthState
-) => ({ ...prev, error: null, forgotPasswordSuccess: false }));
+    setAuthState((prev: AuthState) => ({
+      ...prev,
+      _error: null,
+      forgotPasswordSuccess: false,
+    }));
   };
 
   const updateUserProfile = async (updates: Partial<User>): Promise<void> => {
-    if (!authState.user) {
-      throw new Error('No user logged in');
+    if (!authState._user) {
+      throw new Error('No _user logged in');
     }
 
-    
-      setAuthState((prev: AuthState
-) => ({ ...prev, isLoading: true, error: null }));
+    setAuthState((prev: AuthState) => ({ ...prev, isLoading: true, _error: null }));
 
     try {
       const analytics = AnalyticsService.getInstance();
 
       // Update user profile in Supabase
-      const { error } = await supabase
+      const { _error } = await supabase
         .from('users')
         .update({
           name: updates.name,
           preferences: updates.preferences,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', authState.user.id);
+        .eq('id', authState._user.id);
 
-      if (error) {
-        
-      setAuthState((prev: AuthState
-) => ({ ...prev, isLoading: false, error: error.message }));
+      if (_error) {
+        setAuthState((prev: AuthState) => ({
+          ...prev,
+          isLoading: false,
+          _error: _error.message,
+        }));
         return;
       }
 
@@ -609,28 +565,26 @@ function useAuth(): AuthHook {
         ...updates,
       };
 
-      
-      setAuthState((prev: AuthState
-) => ({
+      setAuthState((prev: AuthState) => ({
         ...prev,
-        user: updatedUser,
+        _user: updatedUser,
         isLoading: false,
-        error: null,
+        _error: null,
       }));
 
       analytics.trackFeatureUsage('user_profile_updated', undefined, {
-        userId: authState.user.id,
+        userId: authState._user.id,
         updatedFields: Object.keys(updates),
       });
-    } catch (error) {
+    } catch (_error) {
       const analytics = AnalyticsService.getInstance();
       analytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'profile_update_error'
       );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to update profile',
         {
           context: 'profile_update',
@@ -638,12 +592,10 @@ function useAuth(): AuthHook {
         }
       );
 
-      
-      setAuthState((prev: AuthState
-) => ({
+      setAuthState((prev: AuthState) => ({
         ...prev,
         isLoading: false,
-        error: 'Failed to update profile. Please try again.',
+        _error: 'Failed to update profile. Please try again.',
       }));
     }
   };

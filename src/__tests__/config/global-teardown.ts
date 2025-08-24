@@ -23,8 +23,8 @@ export default async function globalTeardown() {
           if (typeof task === 'function') {
             await task();
           }
-        } catch (error) {
-          console.warn(`⚠️ Cleanup task ${i + 1} failed:`, error);
+        } catch (_error) {
+          console.warn(`⚠️ Cleanup task ${i + 1} failed:`, _error);
         }
       }
 
@@ -55,13 +55,13 @@ export default async function globalTeardown() {
           }
           await fs.rmdir(testUploadsDir);
           console.log('✅ Test files cleaned up');
-        } catch (error) {
-          if ((error as any).code !== 'ENOENT') {
-            console.warn('⚠️ Could not clean up test files:', error);
+        } catch (_error) {
+          if ((_error as any).code !== 'ENOENT') {
+            console.warn('⚠️ Could not clean up test files:', _error);
           }
         }
-      } catch (error) {
-        console.warn('⚠️ Error during file cleanup:', error);
+      } catch (_error) {
+        console.warn('⚠️ Error during file cleanup:', _error);
       }
     }
 
@@ -76,8 +76,8 @@ export default async function globalTeardown() {
         slowTests
           .sort((a, b) => b.duration - a.duration)
           .slice(0, 10) // Top 10 slowest
-          .forEach((test, index) => {
-            console.log(`${index + 1}. ${test.name}: ${test.duration.toFixed(2)}ms`);
+          .forEach((test, _index) => {
+            console.log(`${_index + 1}. ${test.name}: ${test.duration.toFixed(2)}ms`);
           });
 
         if (slowTests.length > 10) {
@@ -195,12 +195,12 @@ export default async function globalTeardown() {
 
     console.log('🎉 All tests completed successfully!');
     console.log('\n' + '='.repeat(80) + '\n');
-  } catch (error) {
+  } catch (_error) {
     console.error('\n❌ Global test teardown failed:');
-    console.error(error);
+    console.error(_error);
     console.error('\nThis may indicate test cleanup issues.\n');
 
     // Don't throw here as it would mask the actual test results
-    // Just log the error and continue
+    // Just log the _error and continue
   }
 }

@@ -148,14 +148,11 @@ export const _Routes = vi.fn(({ children, location }: any) => {
 });
 
 // Route component mock
-export const _Route = vi.fn(({ path, element, index, children }: any) => {
-  console.log(`🛤️ Mock Route: ${path || (index ? 'index' : 'no path')}`);
+export const _Route = vi.fn(({ path, element, _index, children }: any) => {
+  console.log(`🛤️ Mock Route: ${path || (_index ? '_index' : 'no path')}`);
   return React.createElement(
     'div',
-    {
-      'data-testid': 'mock-route',
-      'data-path': path || (index ? 'index' : ''),
-    },
+    { 'data-testid': 'mock-route', 'data-path': path || (_index ? '_index' : '') },
     element || children
   );
 });

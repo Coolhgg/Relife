@@ -412,7 +412,7 @@ describe('AlarmRinging', () => {
     });
   });
 
-  describe('error handling', () => {
+  describe('_error handling', () => {
     test('handles voice recognition errors gracefully', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
@@ -424,11 +424,11 @@ describe('AlarmRinging', () => {
 
       // Simulate speech recognition error
       const errorHandler = mockSpeechRecognition.addEventListener.mock.calls.find(
-        call => call[0] === 'error'
+        call => call[0] === '_error'
       )?.[1];
 
       if (errorHandler) {
-        errorHandler({ error: 'network', message: 'Network error' });
+        errorHandler({ _error: 'network', message: 'Network _error' });
 
         expect(screen.getByText(/voice recognition unavailable/i)).toBeInTheDocument();
       }
@@ -451,7 +451,7 @@ describe('AlarmRinging', () => {
       const { VoiceService } = require('../../services/voice-pro');
       VoiceService.speak.mockRejectedValueOnce(new Error('Speech synthesis failed'));
 
-      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+      const consoleError = jest.spyOn(console, '_error').mockImplementation();
 
       render(<AlarmRinging {...mockProps} />);
 

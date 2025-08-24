@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /// <reference lib="dom" />
 /**
  * Advanced Frame Rate Management and Animation Optimization
@@ -125,8 +126,8 @@ class FrameRateManager {
       this.performanceObserver.observe({
         entryTypes: ['paint', 'measure', 'navigation'],
       });
-    } catch (error) {
-      console.warn('PerformanceObserver not supported:', error);
+    } catch (_error) {
+      console.warn('PerformanceObserver not supported:', _error);
     }
   }
 
@@ -137,10 +138,10 @@ class FrameRateManager {
     if (typeof window === 'undefined') return;
 
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    this.config.reducedMotion = mediaQuery.matches;
+    this._config.reducedMotion = mediaQuery.matches;
 
     mediaQuery.addEventListener('change', e => {
-      this.config.reducedMotion = e.matches;
+      this._config.reducedMotion = e.matches;
       this.notifyObservers();
     });
   }
@@ -151,7 +152,7 @@ class FrameRateManager {
   private setupAdaptiveFrameRate() {
     // Monitor performance and adjust frame rate target
     setInterval(() => {
-      if (this.config.adaptive) {
+      if (this._config.adaptive) {
         this.adjustFrameRateTarget();
       }
     }, 2000); // Check every 2 seconds
@@ -168,7 +169,7 @@ class FrameRateManager {
     }
 
     // Count dropped frames (>33ms = dropped frame for 30fps, >16.67ms for 60fps)
-    const frameThreshold = (1000 / this.config.target) * 1.5;
+    const frameThreshold = (1000 / this._config.target) * 1.5;
     if (frameTime > frameThreshold) {
       this.currentMetrics.droppedFrames++;
     }
@@ -191,7 +192,7 @@ class FrameRateManager {
     this.currentMetrics.frameTimeMs = averageFrameTime;
 
     // Calculate performance score (0-100)
-    const targetFrameTime = 1000 / this.config.target;
+    const targetFrameTime = 1000 / this._config.target;
     const efficiency = Math.min(targetFrameTime / averageFrameTime, 1);
     this.currentMetrics.performanceScore = Math.round(efficiency * 100);
 
@@ -206,18 +207,18 @@ class FrameRateManager {
     const droppedFrameRatio = this.currentMetrics.droppedFrames / this.frameCount;
 
     // If dropping too many frames, reduce target
-    if (droppedFrameRatio > 0.1 && avgFps < this.config.target * 0.8) {
-      if (this.config.target > 30) {
+    if (droppedFrameRatio > 0.1 && avgFps < this._config.target * 0.8) {
+      if (this._config.target > 30) {
         this.config.target = 30;
-        this.config.budgetMs = 1000 / 30;
+        this._config.budgetMs = 1000 / 30;
         console.log('Adaptive FPS: Reduced to 30fps due to performance');
       }
     }
     // If performing well, try to increase
-    else if (droppedFrameRatio < 0.05 && avgFps >= this.config.target * 0.95) {
-      if (this.config.target < 60) {
+    else if (droppedFrameRatio < 0.05 && avgFps >= this._config.target * 0.95) {
+      if (this._config.target < 60) {
         this.config.target = 60;
-        this.config.budgetMs = 1000 / 60;
+        this._config.budgetMs = 1000 / 60;
         console.log('Adaptive FPS: Increased to 60fps due to good performance');
       }
     }
@@ -226,9 +227,9 @@ class FrameRateManager {
   /**
    * Register an animation configuration
    */
-  registerAnimation(id: string, config: AnimationConfig): void {
-    // Optimize animation config based on performance
-    const optimizedConfig = this.optimizeAnimationConfig(config);
+  registerAnimation(id: string, _config: AnimationConfig): void {
+    // Optimize animation _config based on performance
+    const optimizedConfig = this.optimizeAnimationConfig(_config);
     this.animationRegistry.set(id, optimizedConfig);
   }
 
@@ -260,27 +261,27 @@ class FrameRateManager {
   /**
    * Optimize animation configuration for current performance
    */
-  private optimizeAnimationConfig(config: AnimationConfig): AnimationConfig {
+  private optimizeAnimationConfig(_config: AnimationConfig): AnimationConfig {
     const quality = this.getOptimalAnimationQuality();
 
-    const optimized = { ...config };
+    const optimized = { ..._config };
 
     // Adjust duration based on quality level
     switch (quality.level) {
       case 'minimal':
-        optimized.duration = Math.min(config.duration, 100);
+        optimized.duration = Math.min(_config.duration, 100);
         optimized.gpuAccelerated = false;
         optimized.willChange = false;
         break;
       case 'reduced':
-        optimized.duration = Math.min(config.duration, 200);
+        optimized.duration = Math.min(_config.duration, 200);
         optimized.gpuAccelerated = config.complexity === 'low';
         optimized.willChange = config.complexity === 'low';
         break;
       case 'standard':
-        optimized.duration = Math.min(config.duration, quality.maxDuration);
+        optimized.duration = Math.min(_config.duration, quality.maxDuration);
         optimized.gpuAccelerated = config.complexity !== 'high';
-        optimized.willChange = config.complexity !== 'high';
+        optimized.willChange = _config.complexity !== 'high';
         break;
       case 'enhanced':
         // Keep original configuration
@@ -288,9 +289,9 @@ class FrameRateManager {
     }
 
     // Respect reduced motion preference
-    if (this.config.reducedMotion) {
+    if (this._config.reducedMotion) {
       optimized.duration = Math.min(optimized.duration, 200);
-      if (config.complexity === 'high') {
+      if (_config.complexity === 'high') {
         optimized.complexity = 'medium';
       }
     }
@@ -303,7 +304,7 @@ class FrameRateManager {
    */
   private shouldAllowAnimation(): boolean {
     // Respect reduced motion preference
-    if (this.config.reducedMotion) {
+    if (this._config.reducedMotion) {
       return false;
     }
 
@@ -328,7 +329,7 @@ class FrameRateManager {
     const score = this.currentMetrics.performanceScore;
     const avgFps = this.currentMetrics.averageFps;
 
-    if (this.config.reducedMotion || score < 30 || avgFps < 20) {
+    if (this._config.reducedMotion || score < 30 || avgFps < 20) {
       return {
         level: 'minimal',
         enableTransitions: false,
@@ -421,7 +422,7 @@ class FrameRateManager {
     // Add performance-specific classes
     classes += ` animation-quality-${quality.level}`;
 
-    if (this.config.reducedMotion) {
+    if (this._config.reducedMotion) {
       classes += ' reduced-motion';
     }
 
@@ -443,9 +444,9 @@ class FrameRateManager {
    * Remove metrics observer
    */
   removeObserver(observer: (metrics: FrameMetrics) => void): void {
-    const index = this.observers.indexOf(observer);
-    if (index >= 0) {
-      this.observers.splice(index, 1);
+    const _index = this.observers.indexOf(observer);
+    if (_index >= 0) {
+      this.observers.splice(_index, 1);
     }
   }
 
@@ -467,14 +468,14 @@ class FrameRateManager {
    * Get current configuration
    */
   getConfig(): FrameRateConfig {
-    return { ...this.config };
+    return { ...this._config };
   }
 
   /**
    * Update configuration
    */
   updateConfig(updates: Partial<FrameRateConfig>): void {
-    this.config = { ...this.config, ...updates };
+    this.config = { ...this._config, ...updates };
   }
 
   /**
@@ -531,7 +532,7 @@ export function useFrameRate() {
 /**
  * React hook for optimized animations
  */
-export function useOptimizedAnimation(animationId: string, config: AnimationConfig) {
+export function useOptimizedAnimation(animationId: string, _config: AnimationConfig) {
   const [isActive, setIsActive] = React.useState(false);
   const animationQuality = React.useMemo(
     () => frameRateManager.getOptimalAnimationQuality(),
@@ -539,7 +540,7 @@ export function useOptimizedAnimation(animationId: string, config: AnimationConf
   );
 
   React.useEffect(() => {
-    frameRateManager.registerAnimation(animationId, config);
+    frameRateManager.registerAnimation(animationId, _config);
   }, [animationId, config]);
 
   const startAnimation = React.useCallback(() => {

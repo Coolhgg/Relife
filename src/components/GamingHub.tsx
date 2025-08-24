@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trophy, Users, Sword } from 'lucide-react';
+import { Trophy, Sword } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import RewardsDashboard from './RewardsDashboard';
 import CommunityHub from './CommunityHub';

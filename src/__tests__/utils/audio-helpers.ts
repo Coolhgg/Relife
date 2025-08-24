@@ -31,25 +31,25 @@ export const _audioMocks = {
 
     // Mock common event listeners
     const eventListeners: { [key: string]: Function[] } = {};
-    mockAudio.addEventListener = jest.fn((event: string, callback: Function) => {
-      if (!eventListeners[event]) {
+    mockAudio.addEventListener = jest.fn((_event: string, callback: Function) => {
+      if (!eventListeners[_event]) {
         eventListeners[event] = [];
       }
       eventListeners[event].push(callback);
     });
 
-    mockAudio.removeEventListener = jest.fn((event: string, callback: Function) => {
-      if (eventListeners[event]) {
-        const index = eventListeners[event].indexOf(callback);
-        if (index > -1) {
-          eventListeners[event].splice(index, 1);
+    mockAudio.removeEventListener = jest.fn((_event: string, callback: Function) => {
+      if (eventListeners[_event]) {
+        const _index = eventListeners[event].indexOf(callback);
+        if (_index > -1) {
+          eventListeners[event].splice(_index, 1);
         }
       }
     });
 
-    mockAudio.dispatchEvent = jest.fn((event: Event) => {
-      if (eventListeners[event.type]) {
-        eventListeners[event.type].forEach(callback => callback(event));
+    mockAudio.dispatchEvent = jest.fn((_event: Event) => {
+      if (eventListeners[_event.type]) {
+        eventListeners[event.type].forEach(callback => callback(_event));
       }
     });
 
@@ -101,10 +101,10 @@ export const _audioMocks = {
       audio.dispatchEvent(new Event('ended'));
     },
     error: (errorCode: number = 4) => {
-      const error = new Error('Audio error');
-      (error as any).code = errorCode;
-      audio.error = error;
-      audio.dispatchEvent(new Event('error'));
+      const error = new Error('Audio _error');
+      (_error as any).code = errorCode;
+      audio.error = _error;
+      audio.dispatchEvent(new Event('_error'));
     },
     timeUpdate: (currentTime: number) => {
       audio.currentTime = currentTime;
@@ -302,7 +302,7 @@ export const _playbackUtils = {
       await new Promise(resolve => setTimeout(resolve, 50));
       events.canPlayThrough();
     } else {
-      events.error(4); // MEDIA_ELEMENT_ERROR
+      events._error(4); // MEDIA_ELEMENT_ERROR
     }
   },
 };
@@ -438,7 +438,7 @@ export const _audioHelpers = {
     return new Promise<void>((resolve, reject) => {
       const timer = setTimeout(() => {
         reject(
-          new Error(`Audio event '${eventType}' did not fire within ${timeout}ms`)
+          new Error(`Audio _event '${eventType}' did not fire within ${timeout}ms`)
         );
       }, timeout);
 

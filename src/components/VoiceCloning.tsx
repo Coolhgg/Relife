@@ -30,7 +30,7 @@ interface AudioSample {
   url: string;
 }
 
-const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
+const VoiceCloning: React.FC<VoiceCloningProps> = ({ _user, onClose }) => {
   const [samples, setSamples] = useState<AudioSample[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -51,12 +51,12 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
   const checkAccess = async () => {
     try {
       const access = await PremiumService.getInstance().hasFeatureAccess(
-        user.id,
+        _user.id,
         'voice_cloning'
       );
       setHasAccess(access);
-    } catch (error) {
-      console.error('Error checking voice cloning access:', error);
+    } catch (_error) {
+      console._error('Error checking voice cloning access:', _error);
       setHasAccess(false);
     }
   };
@@ -68,7 +68,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
 
       const chunks: BlobPart[] = [];
       mediaRecorder.ondataavailable = event => {
-        chunks.push(event.data);
+        chunks.push(_event.data);
       };
 
       mediaRecorder.onstop = () => {
@@ -97,8 +97,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
       recordingTimerRef.current = setInterval(() => {
         setRecordingTime((prev: any) => prev + 1);
       }, 1000);
-    } catch (error) {
-      console.error('Error starting recording:', error);
+    } catch (_error) {
+      console._error('Error starting recording:', _error);
       alert('Could not access microphone. Please check permissions.');
     }
   };
@@ -115,30 +115,33 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
     }
   };
 
-  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files) return;
+  const handleFileUpload = useCallback(
+    (_event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
+      if (!files) return;
 
-    Array.from(files).forEach(file => {
-      if (file.type.startsWith('audio/')) {
-        const sampleId = `upload_${Date.now()}_${Math.random()}`;
-        const url = URL.createObjectURL(file);
+      Array.from(files).forEach(file => {
+        if (file.type.startsWith('audio/')) {
+          const sampleId = `upload_${Date.now()}_${Math.random()}`;
+          const url = URL.createObjectURL(file);
 
-        const newSample: AudioSample = {
-          id: sampleId,
-          blob: file,
-          duration: 0, // Would need to calculate from audio
-          name: file.name,
-          url,
-        };
+          const newSample: AudioSample = {
+            id: sampleId,
+            blob: file,
+            duration: 0, // Would need to calculate from audio
+            name: file.name,
+            url,
+          };
 
-        setSamples((prev: any) => [...prev, newSample]);
-      }
-    });
+          setSamples((prev: any) => [...prev, newSample]);
+        }
+      });
 
-    // Reset input
-    event.target.value = '';
-  }, []);
+      // Reset input
+      event.target.value = '';
+    },
+    []
+  );
 
   const playAudio = (sampleId: string) => {
     const sample = samples.find((s: any) => s.id === sampleId);
@@ -164,7 +167,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
     audio.onpause = () => setPlayingId(null);
 
     setPlayingId(sampleId);
-    audio.play().catch(console.error);
+    audio.play().catch(console._error);
   };
 
   const stopAudio = (sampleId: string) => {
@@ -205,10 +208,10 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
     try {
       setIsProcessing(true);
       const audioBlobs = samples.map((sample: any) => sample.blob);
-      const request = await PremiumVoiceService.createVoiceClone(user.id, audioBlobs);
+      const request = await PremiumVoiceService.createVoiceClone(_user.id, audioBlobs);
       setCloneRequest(request);
-    } catch (error) {
-      console.error('Error creating voice clone:', error);
+    } catch (_error) {
+      console._error('Error creating voice clone:', _error);
       alert('Failed to create voice clone. Please try again.');
     } finally {
       setIsProcessing(false);

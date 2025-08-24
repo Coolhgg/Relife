@@ -26,7 +26,7 @@ export interface AlarmUpdateData {
   time?: string;
   label?: string;
   days?: number[];
-  voiceMood?: import('./index').VoiceMood;
+  voiceMood?: import('./_index').VoiceMood;
   sound?: string;
   difficulty?: string;
   snoozeEnabled?: boolean;
@@ -44,11 +44,11 @@ declare module '../services/alarm' {
     // Add method overload for partial updates
     static updateAlarm(
       alarmId: string,
-      updates: Partial<import('./index').Alarm>
+      updates: Partial<import('./_index').Alarm>
     ): Promise<void>;
 
     // Add method overload for creating alarm from full Alarm object
-    static createAlarm(alarm: import('./index').Alarm): Promise<void>;
+    static createAlarm(alarm: import('./_index').Alarm): Promise<void>;
   }
 }
 

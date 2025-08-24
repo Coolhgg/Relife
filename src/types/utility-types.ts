@@ -1,6 +1,6 @@
 /**
  * Utility Types for TypeScript Coverage Enhancement
- * 
+ *
  * These utility types help reduce 'any' usage across the codebase
  * by providing common type patterns and safer alternatives.
  */
@@ -38,7 +38,7 @@ export interface BaseResponse {
 
 export interface ErrorResponse extends BaseResponse {
   success: false;
-  error: string;
+  _error: string;
   code?: string | number;
 }
 
@@ -113,5 +113,7 @@ export interface MotivationalContent {
 
 // Type guards
 export const isNotNull = <T>(value: T | null): value is T => value !== null;
-export const isNotUndefined = <T>(value: T | undefined): value is T => value !== undefined;
-export const isDefined = <T>(value: T | null | undefined): value is T => value !== null && value !== undefined;
+export const isNotUndefined = <T>(value: T | undefined): value is T =>
+  value !== undefined;
+export const isDefined = <T>(value: T | null | undefined): value is T =>
+  value !== null && value !== undefined;

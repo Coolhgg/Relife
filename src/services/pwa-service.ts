@@ -91,8 +91,8 @@ export class PWAService {
       this.isInitialized = true;
       console.log('PWA Service: Initialization complete');
       return true;
-    } catch (error) {
-      console.error('PWA Service: Initialization failed:', error);
+    } catch (_error) {
+      console._error('PWA Service: Initialization failed:', _error);
       return false;
     }
   }
@@ -130,19 +130,19 @@ export class PWAService {
 
       // Set up message listener
       navigator.serviceWorker.addEventListener('message', event => {
-        this.handleServiceWorkerMessage(event);
+        this.handleServiceWorkerMessage(_event);
       });
 
       // Wait for service worker to be ready
       await navigator.serviceWorker.ready;
-    } catch (error) {
-      console.error('PWA Service: Service worker registration failed:', error);
+    } catch (_error) {
+      console._error('PWA Service: Service worker registration failed:', _error);
     }
   }
 
   private setupInstallPromptListener(): void {
     // Listen for beforeinstallprompt event
-    window.addEventListener('beforeinstallprompt', event => {
+    window.addEventListener('beforeinstallprompt', _event => {
       console.log('PWA Service: Install prompt available');
       event.preventDefault();
       this.deferredInstallPrompt = event;
@@ -182,8 +182,8 @@ export class PWAService {
       }
 
       console.log('PWA Service: Background sync registered for all data types');
-    } catch (error) {
-      console.error('PWA Service: Background sync registration failed:', error);
+    } catch (_error) {
+      console._error('PWA Service: Background sync registration failed:', _error);
     }
   }
 
@@ -227,7 +227,7 @@ export class PWAService {
     });
   }
 
-  private handleServiceWorkerMessage(event: MessageEvent): void {
+  private handleServiceWorkerMessage(_event: MessageEvent): void {
     const { type, data } = event.data;
 
     switch (type) {
@@ -287,8 +287,8 @@ export class PWAService {
         console.log('PWA Service: User dismissed install prompt');
         return false;
       }
-    } catch (error) {
-      console.error('PWA Service: Install prompt failed:', error);
+    } catch (_error) {
+      console._error('PWA Service: Install prompt failed:', _error);
       return false;
     }
   }
@@ -328,8 +328,8 @@ export class PWAService {
       });
 
       return true;
-    } catch (error) {
-      console.error('PWA Service: Update failed:', error);
+    } catch (_error) {
+      console._error('PWA Service: Update failed:', _error);
       return false;
     }
   }
@@ -344,8 +344,8 @@ export class PWAService {
     try {
       await this.serviceWorkerRegistration.update();
       return this.updateAvailable;
-    } catch (error) {
-      console.error('PWA Service: Update check failed:', error);
+    } catch (_error) {
+      console._error('PWA Service: Update check failed:', _error);
       return false;
     }
   }
@@ -389,8 +389,8 @@ export class PWAService {
           auth: subscriptionJson.keys?.auth || null,
         },
       };
-    } catch (error) {
-      console.error('PWA Service: Push subscription failed:', error);
+    } catch (_error) {
+      console._error('PWA Service: Push subscription failed:', _error);
       return {
         subscribed: false,
         endpoint: null,
@@ -411,8 +411,8 @@ export class PWAService {
         return true;
       }
       return false;
-    } catch (error) {
-      console.error('PWA Service: Unsubscribe failed:', error);
+    } catch (_error) {
+      console._error('PWA Service: Unsubscribe failed:', _error);
       return false;
     }
   }
@@ -447,8 +447,8 @@ export class PWAService {
         endpoint: null,
         keys: { p256dh: null, auth: null },
       };
-    } catch (error) {
-      console.error('PWA Service: Get subscription info failed:', error);
+    } catch (_error) {
+      console._error('PWA Service: Get subscription info failed:', _error);
       return {
         subscribed: false,
         endpoint: null,
@@ -482,8 +482,8 @@ export class PWAService {
         await this.serviceWorkerRegistration.sync.register(tag);
       }
       console.log('PWA Service: Background sync triggered for tags:', syncTags);
-    } catch (error) {
-      console.error('PWA Service: Background sync trigger failed:', error);
+    } catch (_error) {
+      console._error('PWA Service: Background sync trigger failed:', _error);
     }
   }
 
@@ -523,8 +523,8 @@ export class PWAService {
   }
 
   // Queue analytics for offline processing
-  queueAnalytics(event: any): void {
-    this.sendMessageToServiceWorker('QUEUE_ANALYTICS', { event });
+  queueAnalytics(_event: any): void {
+    this.sendMessageToServiceWorker('QUEUE_ANALYTICS', { _event });
   }
 
   // Event listeners
@@ -533,9 +533,9 @@ export class PWAService {
   }
 
   removeInstallPromptListener(listener: (canInstall: boolean) => void): void {
-    const index = this.installPromptListeners.indexOf(listener);
-    if (index > -1) {
-      this.installPromptListeners.splice(index, 1);
+    const _index = this.installPromptListeners.indexOf(listener);
+    if (_index > -1) {
+      this.installPromptListeners.splice(_index, 1);
     }
   }
 
@@ -544,9 +544,9 @@ export class PWAService {
   }
 
   removeUpdateListener(listener: (hasUpdate: boolean) => void): void {
-    const index = this.updateListeners.indexOf(listener);
-    if (index > -1) {
-      this.updateListeners.splice(index, 1);
+    const _index = this.updateListeners.indexOf(listener);
+    if (_index > -1) {
+      this.updateListeners.splice(_index, 1);
     }
   }
 
@@ -555,9 +555,9 @@ export class PWAService {
   }
 
   removeSyncListener(listener: (status: BackgroundSyncStatus) => void): void {
-    const index = this.syncListeners.indexOf(listener);
-    if (index > -1) {
-      this.syncListeners.splice(index, 1);
+    const _index = this.syncListeners.indexOf(listener);
+    if (_index > -1) {
+      this.syncListeners.splice(_index, 1);
     }
   }
 
@@ -566,9 +566,9 @@ export class PWAService {
   }
 
   removeNetworkListener(listener: (isOnline: boolean) => void): void {
-    const index = this.networkListeners.indexOf(listener);
-    if (index > -1) {
-      this.networkListeners.splice(index, 1);
+    const _index = this.networkListeners.indexOf(listener);
+    if (_index > -1) {
+      this.networkListeners.splice(_index, 1);
     }
   }
 
@@ -577,8 +577,8 @@ export class PWAService {
     this.installPromptListeners.forEach(listener => {
       try {
         listener(canInstall);
-      } catch (error) {
-        console.error('PWA Service: Install prompt listener error:', error);
+      } catch (_error) {
+        console.error('PWA Service: Install prompt listener _error:', _error);
       }
     });
   }
@@ -587,8 +587,8 @@ export class PWAService {
     this.updateListeners.forEach(listener => {
       try {
         listener(hasUpdate);
-      } catch (error) {
-        console.error('PWA Service: Update listener error:', error);
+      } catch (_error) {
+        console.error('PWA Service: Update listener _error:', _error);
       }
     });
   }
@@ -598,8 +598,8 @@ export class PWAService {
     this.syncListeners.forEach(listener => {
       try {
         listener(status);
-      } catch (error) {
-        console.error('PWA Service: Sync listener error:', error);
+      } catch (_error) {
+        console.error('PWA Service: Sync listener _error:', _error);
       }
     });
   }
@@ -608,8 +608,8 @@ export class PWAService {
     this.networkListeners.forEach(listener => {
       try {
         listener(isOnline);
-      } catch (error) {
-        console.error('PWA Service: Network listener error:', error);
+      } catch (_error) {
+        console.error('PWA Service: Network listener _error:', _error);
       }
     });
   }

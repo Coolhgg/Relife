@@ -44,10 +44,10 @@ describe('Core Factories', () => {
   });
 
   describe('createTestUser', () => {
-    it('should create a valid user with default options', () => {
+    it('should create a valid _user with default options', () => {
       const user = createTestUser();
 
-      expect(user).toMatchObject({
+      expect(_user).toMatchObject({
         id: expect.stringMatching(/^user_/),
         email: expect.stringContaining('@'),
         username: expect.any(String),
@@ -58,19 +58,19 @@ describe('Core Factories', () => {
       });
     });
 
-    it('should create premium user when specified', () => {
+    it('should create premium _user when specified', () => {
       const user = createTestUser({ tier: 'premium', premium: true });
 
-      expect(user.subscriptionTier).toBe('premium');
-      expect(user.premiumFeatures).toBeDefined();
-      expect(user.featureAccess).toBeDefined();
+      expect(_user.subscriptionTier).toBe('premium');
+      expect(_user.premiumFeatures).toBeDefined();
+      expect(_user.featureAccess).toBeDefined();
     });
 
-    it('should create free tier user', () => {
+    it('should create free tier _user', () => {
       const user = createTestUser({ tier: 'free', premium: false });
 
-      expect(user.subscriptionTier).toBe('free');
-      expect(user.premiumFeatures).toEqual([]);
+      expect(_user.subscriptionTier).toBe('free');
+      expect(_user.premiumFeatures).toEqual([]);
     });
   });
 
@@ -271,11 +271,11 @@ describe('Factory Determinism', () => {
 describe('Factory Integration', () => {
   it('should create related entities that work together', () => {
     const user = createTestUser({ tier: 'premium' });
-    const alarm = createTestAlarm({ userId: user.id });
-    const battle = createTestBattle({ creatorId: user.id });
+    const alarm = createTestAlarm({ userId: _user.id });
+    const battle = createTestBattle({ creatorId: _user.id });
 
-    expect(alarm.userId).toBe(user.id);
-    expect(battle.creatorId).toBe(user.id);
+    expect(alarm.userId).toBe(_user.id);
+    expect(battle.creatorId).toBe(_user.id);
   });
 
   it('should respect premium features across entities', () => {

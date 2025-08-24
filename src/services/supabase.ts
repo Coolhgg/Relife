@@ -102,22 +102,22 @@ export class SupabaseService {
         );
 
         return result;
-      } catch (error) {
+      } catch (_error) {
         const duration = performance.now() - startTime;
-        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorMessage = error instanceof Error ? _error.message : String(_error);
 
         this.performanceMonitor.trackCustomMetric(
           `supabase_${context}_error`,
           duration,
           {
             attempt: i + 1,
-            error: errorMessage,
+            _error: errorMessage,
           }
         );
 
         if (i === attempts - 1) {
           ErrorHandler.handleError(
-            error instanceof Error ? error : new Error(errorMessage),
+            _error instanceof Error ? _error : new Error(errorMessage),
             `Supabase ${context} failed after ${attempts} attempts`,
             { context: `supabase_${context}`, attempts, duration }
           );
@@ -183,7 +183,7 @@ export class SupabaseService {
     if (!this.isAvailable) return false;
 
     try {
-      const { error } = await supabase.from('users').select('count').limit(1);
+      const { _error } = await supabase.from('users').select('count').limit(1);
       return !error;
     } catch {
       return false;
@@ -194,13 +194,13 @@ export class SupabaseService {
     email: string,
     password: string,
     name?: string
-  ): Promise<{ user: AppUser | null; error: string | null }> {
+  ): Promise<{ user: AppUser | null; _error: string | null }> {
     if (!this.isAvailable) {
-      return { user: null, error: 'Supabase not configured' };
+      return { user: null, _error: 'Supabase not configured' };
     }
 
     return await this.withRetry(async () => {
-      const { data, error } = await supabase.auth.signUp({
+      const { data, _error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -210,65 +210,65 @@ export class SupabaseService {
         },
       });
 
-      if (error) {
-        throw new Error(error.message);
+      if (_error) {
+        throw new Error(_error.message);
       }
 
-      if (data.user) {
+      if (data._user) {
         // Create user profile with retry
-        const userProfile = await this.createUserProfile(data.user);
+        const userProfile = await this.createUserProfile(data._user);
         // Clear any cached user data
-        this.clearCacheByPattern(`user_${data.user.id}`);
-        return { user: userProfile, error: null };
+        this.clearCacheByPattern(`user_${data._user.id}`);
+        return { user: userProfile, _error: null };
       }
 
-      throw new Error('Sign up failed - no user returned');
+      throw new Error('Sign up failed - no _user returned');
     }, 'signup').catch(error => ({
-      user: null,
-      error: error.message || 'Sign up failed',
+      _user: null,
+      _error: _error.message || 'Sign up failed',
     }));
   }
 
   static async signIn(
     email: string,
     password: string
-  ): Promise<{ user: AppUser | null; error: string | null }> {
+  ): Promise<{ user: AppUser | null; _error: string | null }> {
     if (!this.isAvailable) {
-      return { user: null, error: 'Supabase not configured' };
+      return { user: null, _error: 'Supabase not configured' };
     }
 
     return await this.withRetry(async () => {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, _error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) {
-        throw new Error(error.message);
+      if (_error) {
+        throw new Error(_error.message);
       }
 
-      if (data.user) {
-        const userProfile = await this.getUserProfile(data.user.id);
-        return { user: userProfile, error: null };
+      if (data._user) {
+        const userProfile = await this.getUserProfile(data._user.id);
+        return { user: userProfile, _error: null };
       }
 
-      throw new Error('Sign in failed - no user returned');
+      throw new Error('Sign in failed - no _user returned');
     }, 'signin').catch(error => ({
-      user: null,
-      error: error.message || 'Sign in failed',
+      _user: null,
+      _error: _error.message || 'Sign in failed',
     }));
   }
 
-  static async signOut(): Promise<{ error: string | null }> {
+  static async signOut(): Promise<{ _error: string | null }> {
     if (!this.isAvailable) {
-      return { error: 'Supabase not configured' };
+      return { _error: 'Supabase not configured' };
     }
 
     try {
-      const { error } = await supabase.auth.signOut();
-      return { error: error?.message || null };
-    } catch (error) {
-      return { error: (error as Error).message };
+      const { _error } = await supabase.auth.signOut();
+      return { error: _error?.message || null };
+    } catch (_error) {
+      return { _error: (_error as Error).message };
     }
   }
 
@@ -281,7 +281,7 @@ export class SupabaseService {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (user) {
+      if (_user) {
         // Try cache first for better performance
         const cacheKey = `user_profile_${user.id}`;
         const cachedProfile = this.getCachedData<AppUser>(cacheKey);
@@ -289,16 +289,16 @@ export class SupabaseService {
           return cachedProfile;
         }
 
-        const profile = await this.getUserProfile(user.id);
+        const profile = await this.getUserProfile(_user.id);
         if (profile) {
           this.setCachedData(cacheKey, profile);
         }
         return profile;
       }
       return null;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get current user',
         { context: 'getCurrentUser' }
       );
@@ -306,7 +306,7 @@ export class SupabaseService {
     }
   }
 
-  private static async createUserProfile(user: User): Promise<AppUser> {
+  private static async createUserProfile(_user: User): Promise<AppUser> {
     const userProfile: AppUser = {
       id: user.id,
       email: user.email!,
@@ -404,7 +404,7 @@ export class SupabaseService {
 
     // Insert user profile with retry logic
     await this.withRetry(async () => {
-      const { error } = await supabase.from('users').insert([
+      const { _error } = await supabase.from('users').insert([
         {
           id: userProfile.id,
           email: userProfile.email,
@@ -422,8 +422,8 @@ export class SupabaseService {
         },
       ]);
 
-      if (error) {
-        throw new Error(`Failed to create user profile: ${error.message}`);
+      if (_error) {
+        throw new Error(`Failed to create _user profile: ${_error.message}`);
       }
     }, 'createUserProfile');
 
@@ -444,14 +444,14 @@ export class SupabaseService {
 
     try {
       return await this.withRetry(async () => {
-        const { data, error } = await supabase
+        const { data, _error } = await supabase
           .from('users')
           .select('*')
           .eq('id', userId)
           .single();
 
-        if (error) {
-          throw new Error(`Failed to get user profile: ${error.message}`);
+        if (_error) {
+          throw new Error(`Failed to get _user profile: ${_error.message}`);
         }
 
         if (!data) {
@@ -503,9 +503,9 @@ export class SupabaseService {
 
         return profile;
       }, 'getUserProfile');
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get user profile',
         { context: 'getUserProfile', userId }
       );
@@ -513,14 +513,14 @@ export class SupabaseService {
     }
   }
 
-  static async saveAlarm(alarm: Alarm): Promise<{ error: string | null }> {
+  static async saveAlarm(alarm: Alarm): Promise<{ _error: string | null }> {
     if (!this.isAvailable) {
-      return { error: 'Supabase not configured' };
+      return { _error: 'Supabase not configured' };
     }
 
     try {
       return await this.withRetry(async () => {
-        const { error } = await supabase.from('alarms').upsert(
+        const { _error } = await supabase.from('alarms').upsert(
           [
             {
               id: alarm.id,
@@ -542,26 +542,26 @@ export class SupabaseService {
           }
         );
 
-        if (error) {
-          throw new Error(`Failed to save alarm: ${error.message}`);
+        if (_error) {
+          throw new Error(`Failed to save alarm: ${_error.message}`);
         }
 
         // Clear related cache
         this.clearCacheByPattern(`alarms_${alarm.userId}`);
         this.clearCacheByPattern(`alarm_${alarm.id}`);
 
-        return { error: null };
+        return { _error: null };
       }, 'saveAlarm');
-    } catch (error) {
-      return { error: (error as Error).message };
+    } catch (_error) {
+      return { _error: (_error as Error).message };
     }
   }
 
   static async loadUserAlarms(
     userId: string
-  ): Promise<{ alarms: Alarm[]; error: string | null }> {
+  ): Promise<{ alarms: Alarm[]; _error: string | null }> {
     if (!this.isAvailable) {
-      return { alarms: [], error: 'Supabase not configured' };
+      return { alarms: [], _error: 'Supabase not configured' };
     }
 
     const cacheKey = `alarms_${userId}`;
@@ -569,19 +569,19 @@ export class SupabaseService {
     // Check cache first for better performance
     const cached = this.getCachedData<Alarm[]>(cacheKey);
     if (cached) {
-      return { alarms: cached, error: null };
+      return { alarms: cached, _error: null };
     }
 
     try {
       return await this.withRetry(async () => {
-        const { data, error } = await supabase
+        const { data, _error } = await supabase
           .from('alarms')
           .select('*')
           .eq('user_id', userId)
           .order('created_at', { ascending: false });
 
-        if (error) {
-          throw new Error(`Failed to load alarms: ${error.message}`);
+        if (_error) {
+          throw new Error(`Failed to load alarms: ${_error.message}`);
         }
 
         const alarms: Alarm[] = (data || []).map((row: any) => ({
@@ -601,38 +601,38 @@ export class SupabaseService {
         // Cache the result
         this.setCachedData(cacheKey, alarms);
 
-        return { alarms, error: null };
+        return { alarms, _error: null };
       }, 'loadUserAlarms');
-    } catch (error) {
-      return { alarms: [], error: (error as Error).message };
+    } catch (_error) {
+      return { alarms: [], _error: (_error as Error).message };
     }
   }
 
-  static async deleteAlarm(alarmId: string): Promise<{ error: string | null }> {
+  static async deleteAlarm(alarmId: string): Promise<{ _error: string | null }> {
     if (!this.isAvailable) {
-      return { error: 'Supabase not configured' };
+      return { _error: 'Supabase not configured' };
     }
 
     try {
-      const { error } = await supabase.from('alarms').delete().eq('id', alarmId);
+      const { _error } = await supabase.from('alarms').delete().eq('id', alarmId);
 
-      return { error: error?.message || null };
-    } catch (error) {
-      return { error: (error as Error).message };
+      return { error: _error?.message || null };
+    } catch (_error) {
+      return { _error: (_error as Error).message };
     }
   }
 
-  static async logAlarmEvent(event: AlarmEvent): Promise<{ error: string | null }> {
+  static async logAlarmEvent(_event: AlarmEvent): Promise<{ _error: string | null }> {
     if (!this.isAvailable) {
-      return { error: 'Supabase not configured' };
+      return { _error: 'Supabase not configured' };
     }
 
     try {
-      const { error } = await supabase.from('alarm_events').insert([
+      const { _error } = await supabase.from('alarm_events').insert([
         {
           id: event.id,
           alarm_id: event.alarmId,
-          fired_at: event.firedAt.toISOString(),
+          fired_at: _event.firedAt.toISOString(),
           dismissed: event.dismissed,
           snoozed: event.snoozed,
           user_action: event.userAction,
@@ -640,29 +640,29 @@ export class SupabaseService {
         },
       ]);
 
-      return { error: error?.message || null };
-    } catch (error) {
-      return { error: (error as Error).message };
+      return { error: _error?.message || null };
+    } catch (_error) {
+      return { _error: (_error as Error).message };
     }
   }
 
   static async getAlarmEvents(
     alarmId: string
-  ): Promise<{ events: AlarmEvent[]; error: string | null }> {
+  ): Promise<{ events: AlarmEvent[]; _error: string | null }> {
     if (!this.isAvailable) {
-      return { events: [], error: 'Supabase not configured' };
+      return { events: [], _error: 'Supabase not configured' };
     }
 
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('alarm_events')
         .select('*')
         .eq('alarm_id', alarmId)
         .order('fired_at', { ascending: false })
         .limit(50);
 
-      if (error) {
-        return { events: [], error: error.message };
+      if (_error) {
+        return { events: [], error: _error.message };
       }
 
       const events: AlarmEvent[] = (data || []).map((row: any) => ({
@@ -675,9 +675,9 @@ export class SupabaseService {
         dismissMethod: row.dismiss_method,
       }));
 
-      return { events, error: null };
-    } catch (error) {
-      return { events: [], error: (error as Error).message };
+      return { events, _error: null };
+    } catch (_error) {
+      return { events: [], _error: (_error as Error).message };
     }
   }
 
@@ -703,7 +703,7 @@ export class SupabaseService {
       .on(
         'postgres_changes',
         {
-          event: '*',
+          _event: '*',
           schema: 'public',
           table: 'alarms',
           filter: `user_id=eq.${userId}`,
@@ -718,12 +718,12 @@ export class SupabaseService {
             callback(alarms);
 
             this.performanceMonitor.trackCustomMetric('realtime_alarm_update', 1, {
-              event: payload.eventType,
+              _event: payload.eventType,
               userId,
             });
-          } catch (error) {
+          } catch (_error) {
             ErrorHandler.handleError(
-              error instanceof Error ? error : new Error(String(error)),
+              error instanceof Error ? _error : new Error(String(_error)),
               'Failed to handle real-time alarm update',
               { context: 'subscribeToUserAlarms', userId }
             );
@@ -795,7 +795,7 @@ export class SupabaseService {
 
       try {
         await this.withRetry(async () => {
-          const { error } = await supabase.from('alarms').upsert(
+          const { _error } = await supabase.from('alarms').upsert(
             batch.map(alarm => ({
               id: alarm.id,
               user_id: alarm.userId,
@@ -815,8 +815,8 @@ export class SupabaseService {
             }
           );
 
-          if (error) {
-            throw new Error(error.message);
+          if (_error) {
+            throw new Error(_error.message);
           }
 
           success += batch.length;
@@ -825,9 +825,9 @@ export class SupabaseService {
           const userIds = [...new Set(batch.map(alarm => alarm.userId))];
           userIds.forEach(userId => this.clearCacheByPattern(`alarms_${userId}`));
         }, 'bulkSaveAlarms');
-      } catch (error) {
+      } catch (_error) {
         errors.push(
-          `Batch ${i}-${i + batchSize - 1}: ${error instanceof Error ? error.message : String(error)}`
+          `Batch ${i}-${i + batchSize - 1}: ${error instanceof Error ? _error.message : String(_error)}`
         );
       }
     }

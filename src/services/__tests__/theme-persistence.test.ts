@@ -33,7 +33,7 @@ Object.defineProperty(window, 'localStorage', {
 });
 
 // Mock ErrorHandler
-jest.mock('../error-handler', () => ({
+jest.mock('../_error-handler', () => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },

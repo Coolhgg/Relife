@@ -461,7 +461,7 @@ export class AdvancedTranslationValidator {
 
     if (result.performanceMetrics.complexityRating === 'complex') {
       recommendations.push(
-        `✂️ Simplify complex language for better user comprehension`
+        `✂️ Simplify complex language for better _user comprehension`
       );
     }
 

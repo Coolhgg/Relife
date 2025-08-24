@@ -62,11 +62,11 @@ const startApp = async () => {
         </RootErrorBoundary>
       </StrictMode>
     );
-  } catch (error) {
-    console.error('Failed to start app:', error);
+  } catch (_error) {
+    console.error('Failed to start app:', _error);
     hideLoadingScreen();
 
-    // Show error screen
+    // Show _error screen
     const errorElement = document.createElement('div');
     errorElement.className =
       'min-h-screen flex items-center justify-center bg-red-50 dark:bg-red-900/10 p-4';

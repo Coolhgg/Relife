@@ -18,19 +18,19 @@ export const initializeApp = async (): Promise<void> => {
     // await initializePerformanceMonitoring();
 
     console.log('✅ App initialization completed successfully');
-  } catch (error) {
-    console.error('❌ App initialization failed:', error);
+  } catch (_error) {
+    console.error('❌ App initialization failed:', _error);
 
     // Log the error but don't prevent app startup
     ErrorHandler.handleError(
-      error instanceof Error ? error : new Error(String(error)),
+      error instanceof Error ? _error : new Error(String(_error)),
       'App initialization failed',
       { context: 'app_initialization', critical: false }
     );
 
     // For critical failures, you might want to show an error screen
     // but for i18n failures, we can continue with English
-    if (error instanceof Error && error.message.includes('i18n')) {
+    if (error instanceof Error && _error.message.includes('i18n')) {
       console.warn(
         'Continuing with default language due to i18n initialization failure'
       );

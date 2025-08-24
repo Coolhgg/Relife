@@ -82,10 +82,10 @@ class MockAudio {
     (this as any)[`on${type}`] = null;
   }
 
-  dispatchEvent(event: Event): boolean {
+  dispatchEvent(_event: Event): boolean {
     const handler = (this as any)[`on${event.type}`];
     if (handler) {
-      handler.call(this, event);
+      handler.call(this, _event);
     }
     return true;
   }

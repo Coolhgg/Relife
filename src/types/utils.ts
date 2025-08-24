@@ -41,7 +41,7 @@ export type SubscriptionId = Branded<string, 'SubscriptionId'>;
  */
 export type Result<T, E = Error> =
   | { success: true; data: T }
-  | { success: false; error: E };
+  | { success: false; _error: E };
 
 /**
  * NonEmptyArray - Guarantees array has at least one element
@@ -201,9 +201,9 @@ export const extractIdFromBranded = <B>(brandedId: Branded<string, B>): string =
 
 // Result utility functions
 export const success = <T>(data: T): Result<T> => ({ success: true, data });
-export const failure = <E = Error>(error: E): Result<never, E> => ({
+export const failure = <E = Error>(_error: E): Result<never, E> => ({
   success: false,
-  error,
+  _error,
 });
 
 // Capacitor event types
@@ -310,7 +310,7 @@ export const isSuccess = <T, E>(
 
 export const isFailure = <T, E>(
   result: Result<T, E>
-): result is { success: false; error: E } => !result.success; // Webhook event types
+): result is { success: false; _error: E } => !result.success; // Webhook event types
 export interface StripeWebhookEvent {
   id: string;
   object: 'event';

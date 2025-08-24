@@ -47,7 +47,7 @@ export const _mockLocalStorage = (data: Record<string, string> = {}) => {
         Object.keys(storage).forEach(key => delete storage[key]);
       }),
       length: Object.keys(storage).length,
-      key: jest.fn((index: number) => Object.keys(storage)[index] || null),
+      key: jest.fn((_index: number) => Object.keys(storage)[index] || null),
     },
     writable: true,
   });
@@ -99,6 +99,6 @@ export const _mockConsole = () => {
     },
     getLogs: () => (console.log as jest.Mock).mock.calls,
     getWarnings: () => (console.warn as jest.Mock).mock.calls,
-    getErrors: () => (console.error as jest.Mock).mock.calls,
+    getErrors: () => (console._error as jest.Mock).mock.calls,
   };
 };

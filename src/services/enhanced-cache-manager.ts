@@ -100,8 +100,8 @@ export class EnhancedCacheManager {
 
       this.isInitialized = true;
       console.log('Enhanced cache manager initialized');
-    } catch (error) {
-      console.error('Failed to initialize enhanced cache manager:', error);
+    } catch (_error) {
+      console._error('Failed to initialize enhanced cache manager:', _error);
     }
   }
 
@@ -109,14 +109,14 @@ export class EnhancedCacheManager {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open('EnhancedAudioCache', 2);
 
-      request.onerror = () => reject(request.error);
+      request.onerror = () => reject(request._error);
       request.onsuccess = () => {
         this.db = request.result;
         resolve();
       };
 
       request.onupgradeneeded = event => {
-        const db = (event.target as IDBOpenDBRequest).result;
+        const db = (_event.target as IDBOpenDBRequest).result;
 
         // Create enhanced cache store
         if (!db.objectStoreNames.contains('enhancedCache')) {
@@ -148,8 +148,8 @@ export class EnhancedCacheManager {
       // In a real implementation, you'd load an actual compression worker
       // For now, we'll simulate compression
       console.log('Compression worker initialized (simulated)');
-    } catch (error) {
-      console.warn('Compression worker not available:', error);
+    } catch (_error) {
+      console.warn('Compression worker not available:', _error);
     }
   }
 
@@ -160,7 +160,7 @@ export class EnhancedCacheManager {
     const store = transaction.objectStore('enhancedCache');
 
     // Load high-priority and frequently accessed items into memory
-    const frequencyIndex = store.index('frequency');
+    const frequencyIndex = store._index('frequency');
     const request = frequencyIndex.openCursor(null, 'prev'); // Descending order
 
     let loadedCount = 0;
@@ -168,7 +168,7 @@ export class EnhancedCacheManager {
 
     return new Promise((resolve, reject) => {
       request.onsuccess = event => {
-        const cursor = (event.target as IDBRequest).result;
+        const cursor = (_event.target as IDBRequest).result;
 
         if (cursor && loadedCount < maxMemoryEntries) {
           const entry = cursor.value as CacheEntry;
@@ -192,7 +192,7 @@ export class EnhancedCacheManager {
         }
       };
 
-      request.onerror = () => reject(request.error);
+      request.onerror = () => reject(request._error);
     });
   }
 
@@ -225,8 +225,8 @@ export class EnhancedCacheManager {
 
       this.stats.missRate++;
       return null;
-    } catch (error) {
-      console.error('Error getting cache entry:', error);
+    } catch (_error) {
+      console._error('Error getting cache entry:', _error);
       this.stats.missRate++;
       return null;
     }
@@ -265,8 +265,8 @@ export class EnhancedCacheManager {
 
       this.updateStats();
       return true;
-    } catch (error) {
-      console.error('Error setting cache entry:', error);
+    } catch (_error) {
+      console._error('Error setting cache entry:', _error);
       return false;
     }
   }
@@ -288,8 +288,8 @@ export class EnhancedCacheManager {
         };
         request.onerror = () => resolve(false);
       });
-    } catch (error) {
-      console.error('Error deleting cache entry:', error);
+    } catch (_error) {
+      console._error('Error deleting cache entry:', _error);
       return false;
     }
   }
@@ -309,12 +309,12 @@ export class EnhancedCacheManager {
       new Promise<void>((resolve, reject) => {
         const request = transaction.objectStore('enhancedCache').clear();
         request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
+        request.onerror = () => reject(request._error);
       }),
       new Promise<void>((resolve, reject) => {
         const request = transaction.objectStore('accessLog').clear();
         request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
+        request.onerror = () => reject(request._error);
       }),
     ]);
 
@@ -387,8 +387,8 @@ export class EnhancedCacheManager {
 
       await this.set(entry);
       this.stats.preloadHits++;
-    } catch (error) {
-      console.warn(`Failed to warm cache for sound ${sound.id}:`, error);
+    } catch (_error) {
+      console.warn(`Failed to warm cache for sound ${sound.id}:`, _error);
     }
   }
 
@@ -523,8 +523,8 @@ export class EnhancedCacheManager {
       );
 
       return entry;
-    } catch (error) {
-      console.warn('Compression failed:', error);
+    } catch (_error) {
+      console.warn('Compression failed:', _error);
       return entry;
     }
   }
@@ -592,7 +592,7 @@ export class EnhancedCacheManager {
     return new Promise((resolve, reject) => {
       const request = store.put(entry);
       request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
+      request.onerror = () => reject(request._error);
     });
   }
 
@@ -699,7 +699,7 @@ export class EnhancedCacheManager {
 
   updateWarmingConfig(updates: Partial<CacheWarmingConfig>): void {
     this.warmingConfig = { ...this.warmingConfig, ...updates };
-    console.log('Cache warming config updated:', this.warmingConfig);
+    console.log('Cache warming _config updated:', this.warmingConfig);
   }
 
   async optimize(): Promise<void> {

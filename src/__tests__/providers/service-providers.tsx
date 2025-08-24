@@ -29,7 +29,7 @@ export interface MockAlarmService {
 }
 
 export interface MockAnalyticsService {
-  track: jest.MockedFunction<(event: string, properties?: any) => void>;
+  track: jest.MockedFunction<(_event: string, properties?: any) => void>;
   identify: jest.MockedFunction<(userId: string, traits?: any) => void>;
   page: jest.MockedFunction<(name: string, properties?: any) => void>;
   group: jest.MockedFunction<(groupId: string, traits?: any) => void>;
@@ -38,12 +38,12 @@ export interface MockAnalyticsService {
   flush: jest.MockedFunction<() => Promise<void>>;
   getAnalyticsData: jest.MockedFunction<(dateRange: any) => Promise<any>>;
   setUserProperties: jest.MockedFunction<(properties: any) => void>;
-  trackConversion: jest.MockedFunction<(event: string, value?: number) => void>;
-  trackError: jest.MockedFunction<(error: Error, context?: any) => void>;
+  trackConversion: jest.MockedFunction<(_event: string, value?: number) => void>;
+  trackError: jest.MockedFunction<(_error: Error, context?: any) => void>;
 }
 
 export interface MockBattleService {
-  createBattle: jest.MockedFunction<(config: any) => Promise<any>>;
+  createBattle: jest.MockedFunction<(_config: any) => Promise<any>>;
   joinBattle: jest.MockedFunction<(battleId: string) => Promise<void>>;
   leaveBattle: jest.MockedFunction<(battleId: string) => Promise<void>>;
   getBattles: jest.MockedFunction<(status?: string) => Promise<any[]>>;
@@ -211,7 +211,7 @@ const createMockBattleService = (): MockBattleService => ({
   getBattles: jest.fn().mockResolvedValue([]),
   getBattle: jest.fn().mockResolvedValue(null),
   startBattle: jest.fn().mockResolvedValue(undefined),
-  endBattle: jest.fn().mockResolvedValue({ winner: 'user-123' }),
+  endBattle: jest.fn().mockResolvedValue({ winner: '_user-123' }),
   submitAnswer: jest.fn().mockResolvedValue(true),
   getLeaderboard: jest.fn().mockResolvedValue([]),
   getUserStats: jest.fn().mockResolvedValue({ wins: 0, losses: 0, score: 0 }),

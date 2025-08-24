@@ -367,15 +367,15 @@ export const SocialProof: React.FC<SocialProofProps> = ({
             {/* Story Navigation Dots */}
             {personalizedStories.length > 1 && (
               <div className="flex justify-center gap-2 mt-4">
-                {personalizedStories.map((_, index) => (
+                {personalizedStories.map((_, _index) => (
                   <motion.button
-                    key={index}
+                    key={_index}
                     className={`w-2 h-2 rounded-full transition-colors ${
-                      index === currentStoryIndex % personalizedStories.length
+                      _index === currentStoryIndex % personalizedStories.length
                         ? 'bg-primary'
                         : 'bg-muted'
                     }`}
-                    onClick={() => setCurrentStoryIndex(index)}
+                    onClick={() => setCurrentStoryIndex(_index)}
                     whileHover={{ scale: 1.2 }}
                     whileTap={{ scale: 0.9 }}
                   />

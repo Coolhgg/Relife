@@ -394,7 +394,7 @@ export interface SendEmailRequest {
 export interface SendEmailResponse {
   success: boolean;
   messageId?: string;
-  error?: string;
+  _error?: string;
   scheduledAt?: Date;
 }
 
@@ -406,7 +406,8 @@ export interface EmailCampaignStats {
 }
 
 // Integration with existing Relife types
-export interface UserWithEmailData extends Omit<import('./index').User, 'preferences'> {
+export interface UserWithEmailData
+  extends Omit<import('./_index').User, 'preferences'> {
   emailSubscription?: EmailSubscription;
   detectedPersona?: PersonaDetectionResult;
   emailPreferences: EmailPreferences;

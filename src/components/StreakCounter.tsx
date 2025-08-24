@@ -4,7 +4,7 @@ import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
-import { Flame, Zap, Trophy, Share2, Calendar, Target } from 'lucide-react';
+import { Flame, Zap, Trophy, Share2 } from 'lucide-react';
 import { UserStreak, StreakMilestone } from '../types/struggling-sam';
 import { TimeoutHandle } from '../types/timers';
 
@@ -263,7 +263,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <Target className="w-4 h-4 text-primary" />
+                  <div className="w-4 h-4 text-primary" />
                   <span className="text-sm font-medium">Next Milestone</span>
                 </div>
                 <span className="text-sm text-muted-foreground">

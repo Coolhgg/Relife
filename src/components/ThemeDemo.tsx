@@ -167,8 +167,8 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className="group relative">
+            {features.map((feature, _index) => (
+              <div key={_index} className="group relative">
                 <div className="bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-2">
                   {feature.highlight && (
                     <div className="absolute -top-3 -right-3">
@@ -275,7 +275,7 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
                       minHeight: '300px',
                     }}
                   >
-                    {demoAlarms.map((alarm, index) => (
+                    {demoAlarms.map((alarm, _index) => (
                       <div
                         key={alarm.id}
                         className="p-4 rounded-xl border"
@@ -345,13 +345,13 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
                     }}
                   >
                     <div className="flex justify-around">
-                      {[Clock, Bell, Settings].map((Icon, index) => (
+                      {[Clock, Bell, Settings].map((Icon, _index) => (
                         <button
-                          key={index}
-                          className={`p-3 rounded-xl ${index === 1 ? 'opacity-100' : 'opacity-50'}`}
+                          key={_index}
+                          className={`p-3 rounded-xl ${_index === 1 ? 'opacity-100' : 'opacity-50'}`}
                           style={{
                             color:
-                              index === 1
+                              _index === 1
                                 ? themeConfig?.colors?.primary?.[500] || '#0ea5e9'
                                 : themeConfig?.colors?.text?.tertiary || '#999999',
                           }}
@@ -380,8 +380,8 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {themePresets.map((preset, index) => (
-              <div key={index} className="group cursor-pointer">
+            {themePresets.map((preset, _index) => (
+              <div key={_index} className="group cursor-pointer">
                 <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-2">
                   {/* Color Preview */}
                   <div className="h-24 flex">

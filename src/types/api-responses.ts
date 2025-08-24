@@ -20,7 +20,7 @@ export interface SuccessResponse<T = unknown> extends BaseApiResponse {
 
 export interface ErrorResponse extends BaseApiResponse {
   success: false;
-  error: {
+  _error: {
     code: string;
     message: string;
     details?: Record<string, any>;
@@ -86,14 +86,14 @@ export interface CampaignStats {
   id: string;
   campaignId: string;
   status: 'active' | 'draft' | 'sent' | 'scheduled';
-  
+
   // Delivery metrics
   sends: number;
   deliveries: number;
   bounces: number;
   softBounces: number;
   hardBounces: number;
-  
+
   // Engagement metrics
   opens: number;
   uniqueOpens: number;
@@ -102,18 +102,18 @@ export interface CampaignStats {
   uniqueClicks: number;
   clickRate: number; // percentage
   clickThroughRate: number; // percentage
-  
+
   // Response metrics
   unsubscribes: number;
   unsubscribeRate: number; // percentage
   complaints: number;
   complaintRate: number; // percentage
-  
+
   // Revenue metrics (if applicable)
   revenue?: number;
   revenuePerEmail?: number;
   averageOrderValue?: number;
-  
+
   // Timing
   sentAt?: string;
   lastEngagementAt?: string;
@@ -125,24 +125,24 @@ export interface AutomationStats {
   automationId: string;
   name: string;
   status: 'active' | 'inactive' | 'draft';
-  
+
   // Participation metrics
   totalContacts: number;
   activeContacts: number;
   completedContacts: number;
   stoppedContacts: number;
-  
+
   // Performance metrics
   totalSends: number;
   totalOpens: number;
   totalClicks: number;
   averageEngagementRate: number;
-  
+
   // Conversion metrics
   conversionRate: number; // percentage
   totalRevenue?: number;
   averageRevenuePerContact?: number;
-  
+
   // Timing
   createdAt: string;
   lastTriggeredAt?: string;
@@ -150,7 +150,7 @@ export interface AutomationStats {
 }
 
 // =============================================================================
-// CONVERTKIT API RESPONSES  
+// CONVERTKIT API RESPONSES
 // =============================================================================
 
 // ConvertKit Account Response
@@ -160,7 +160,7 @@ export interface ConvertKitAccount {
   email: string;
   timezone: string;
   currency: string;
-  
+
   // Subscription details
   plan: {
     name: string;
@@ -168,12 +168,12 @@ export interface ConvertKitAccount {
     subscriberLimit: number;
     currentSubscribers: number;
   };
-  
+
   // Account status
   status: 'active' | 'suspended' | 'trial';
   trialEndsAt?: string;
   billingInterval?: 'monthly' | 'yearly';
-  
+
   // Features
   features: {
     automations: boolean;
@@ -182,7 +182,7 @@ export interface ConvertKitAccount {
     deliverabilityReporting: boolean;
     prioritySupport: boolean;
   };
-  
+
   // Settings
   settings: {
     doubleOptIn: boolean;
@@ -198,12 +198,12 @@ export interface BroadcastStats {
   id: number;
   broadcastId: number;
   subject: string;
-  
+
   // Delivery metrics
   recipients: number;
   deliveries: number;
   bounces: number;
-  
+
   // Engagement metrics
   opens: number;
   uniqueOpens: number;
@@ -211,15 +211,15 @@ export interface BroadcastStats {
   clicks: number;
   uniqueClicks: number;
   clickRate: number; // percentage
-  
+
   // Response metrics
   unsubscribes: number;
   unsubscribeRate: number; // percentage
-  
+
   // Revenue metrics
   revenue?: number;
   purchases?: number;
-  
+
   // Timing
   sentAt: string;
   statsCalculatedAt: string;
@@ -232,7 +232,7 @@ export interface GrowthStats {
     start: string;
     end: string;
   };
-  
+
   // Subscriber metrics
   subscriberGrowth: {
     netGrowth: number;
@@ -240,7 +240,7 @@ export interface GrowthStats {
     unsubscribes: number;
     growthRate: number; // percentage
   };
-  
+
   // Engagement metrics
   engagementStats: {
     averageOpenRate: number;
@@ -249,7 +249,7 @@ export interface GrowthStats {
     totalOpens: number;
     totalClicks: number;
   };
-  
+
   // Revenue metrics (if applicable)
   revenueStats?: {
     totalRevenue: number;
@@ -257,7 +257,7 @@ export interface GrowthStats {
     conversionRate: number;
     totalPurchases: number;
   };
-  
+
   // Trend data
   dailyBreakdown: {
     date: string;
@@ -280,7 +280,7 @@ export interface UserFeatures {
     deviceType: 'mobile' | 'tablet' | 'desktop';
     timezone: string;
   };
-  
+
   behavioral: {
     averageSessionDuration: number; // minutes
     sessionsPerWeek: number;
@@ -288,7 +288,7 @@ export interface UserFeatures {
     engagementScore: number; // 0-100
     contentPreferences: string[];
   };
-  
+
   engagement: {
     emailOpenRate: number; // percentage
     emailClickRate: number; // percentage
@@ -299,7 +299,7 @@ export interface UserFeatures {
       lastPurchaseDate?: string;
     };
   };
-  
+
   preferences: {
     communicationFrequency: 'daily' | 'weekly' | 'monthly';
     contentTypes: string[];
@@ -313,7 +313,7 @@ export interface EngagementMetrics {
     trend: 'increasing' | 'decreasing' | 'stable';
     lastUpdated: string;
   };
-  
+
   channels: {
     email: {
       openRate: number;
@@ -331,7 +331,7 @@ export interface EngagementMetrics {
       engagementRate: number;
     };
   };
-  
+
   content: {
     preferredTopics: string[];
     avgTimeOnContent: number; // seconds
@@ -352,7 +352,7 @@ export interface ConvertKitCustomFields {
   phone?: string;
   birthday?: string; // YYYY-MM-DD
   location?: string;
-  
+
   // Custom fields (dynamic)
   [customField: string]: string | number | boolean | undefined;
 }
@@ -372,7 +372,7 @@ export interface MailchimpMergeFields {
     zip?: string;
     country?: string;
   };
-  
+
   // Custom merge fields (dynamic)
   [mergeField: string]: any;
 }
@@ -457,18 +457,18 @@ export interface FeatureContext {
   version: string;
   userId?: string;
   sessionId: string;
-  
+
   // Feature state
   enabled: boolean;
   configuration: Record<string, any>;
-  
+
   // Usage tracking
   usageCount: number;
   lastUsed?: string;
-  
+
   // A/B testing
   experimentGroup?: string;
-  
+
   // Performance
   loadTime: number;
   errorCount: number;
@@ -497,7 +497,7 @@ export interface BatchOperationResponse<T> {
     success: T[];
     failed: {
       item: any;
-      error: string;
+      _error: string;
     }[];
   };
   summary: {
@@ -508,7 +508,9 @@ export interface BatchOperationResponse<T> {
 }
 
 // Type guard helpers
-export const isSuccessResponse = <T>(response: ApiResponse<T>): response is SuccessResponse<T> => {
+export const isSuccessResponse = <T>(
+  response: ApiResponse<T>
+): response is SuccessResponse<T> => {
   return response.success === true;
 };
 
@@ -523,9 +525,13 @@ export const createSuccessResponse = <T>(data: T): SuccessResponse<T> => ({
   timestamp: new Date().toISOString(),
 });
 
-export const createErrorResponse = (code: string, message: string, details?: Record<string, any>): ErrorResponse => ({
+export const createErrorResponse = (
+  code: string,
+  message: string,
+  details?: Record<string, any>
+): ErrorResponse => ({
   success: false,
-  error: { code, message, details },
+  _error: { code, message, details },
   timestamp: new Date().toISOString(),
 });
 

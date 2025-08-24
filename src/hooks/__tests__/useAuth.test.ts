@@ -44,7 +44,7 @@ jest.mock('../../services/supabase', () => ({
   },
 }));
 
-jest.mock('../../services/error-handler', () => ({
+jest.mock('../../services/_error-handler', () => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
@@ -89,19 +89,19 @@ describe('useAuth Hook', () => {
     const SecurityService = require('../../services/security').default;
 
     SupabaseService.getCurrentUser.mockResolvedValue(null);
-    SupabaseService.signIn.mockResolvedValue({ user: mockUser, error: null });
-    SupabaseService.signUp.mockResolvedValue({ user: mockUser, error: null });
-    SupabaseService.signOut.mockResolvedValue({ error: null });
+    SupabaseService.signIn.mockResolvedValue({ _user: mockUser, _error: null });
+    SupabaseService.signUp.mockResolvedValue({ _user: mockUser, _error: null });
+    SupabaseService.signOut.mockResolvedValue({ _error: null });
 
     supabase.auth.refreshSession.mockResolvedValue({
-      data: { session: { user: mockUser } },
-      error: null,
+      data: { session: { _user: mockUser } },
+      _error: null,
     });
 
-    supabase.auth.resetPasswordForEmail.mockResolvedValue({ error: null });
+    supabase.auth.resetPasswordForEmail.mockResolvedValue({ _error: null });
     supabase.from.mockReturnValue({
       update: jest.fn().mockReturnValue({
-        eq: jest.fn().mockResolvedValue({ error: null }),
+        eq: jest.fn().mockResolvedValue({ _error: null }),
       }),
     });
 
@@ -117,10 +117,10 @@ describe('useAuth Hook', () => {
     it('should initialize with default state', () => {
       const { result } = renderHookWithProviders(() => useAuth());
 
-      expect(result.current.user).toBeNull();
+      expect(result.current._user).toBeNull();
       expect(result.current.isLoading).toBe(false);
       expect(result.current.isInitialized).toBe(false);
-      expect(result.current.error).toBeNull();
+      expect(result.current._error).toBeNull();
       expect(result.current.forgotPasswordSuccess).toBe(false);
       expect(result.current.sessionExpiry).toBeNull();
       expect(result.current.csrfToken).toBeNull();
@@ -137,7 +137,7 @@ describe('useAuth Hook', () => {
         expect(result.current.isInitialized).toBe(true);
       });
 
-      expect(result.current.user).toEqual(mockUser);
+      expect(result.current._user).toEqual(mockUser);
       expect(result.current.csrfToken).toBe('mock-csrf-token');
       expect(result.current.sessionExpiry).toBeInstanceOf(Date);
     });
@@ -153,15 +153,15 @@ describe('useAuth Hook', () => {
         expect(result.current.isInitialized).toBe(true);
       });
 
-      expect(result.current.error).toBe('Failed to initialize authentication');
-      expect(result.current.user).toBeNull();
+      expect(result.current._error).toBe('Failed to initialize authentication');
+      expect(result.current._user).toBeNull();
     });
   });
 
   describe('Sign In', () => {
     it('should sign in successfully', async () => {
       const { SupabaseService } = require('../../services/supabase');
-      SupabaseService.signIn.mockResolvedValue({ user: mockUser, error: null });
+      SupabaseService.signIn.mockResolvedValue({ _user: mockUser, _error: null });
 
       const { result } = renderHookWithProviders(() => useAuth());
 
@@ -169,9 +169,9 @@ describe('useAuth Hook', () => {
         await result.current.signIn('test@example.com', 'password123');
       });
 
-      expect(result.current.user).toEqual(mockUser);
+      expect(result.current._user).toEqual(mockUser);
       expect(result.current.isLoading).toBe(false);
-      expect(result.current.error).toBeNull();
+      expect(result.current._error).toBeNull();
       expect(SupabaseService.signIn).toHaveBeenCalledWith(
         'test@example.com',
         'password123'
@@ -182,8 +182,8 @@ describe('useAuth Hook', () => {
       const { SupabaseService } = require('../../services/supabase');
       const errorMessage = 'Invalid credentials';
       SupabaseService.signIn.mockResolvedValue({
-        user: null,
-        error: errorMessage,
+        _user: null,
+        _error: errorMessage,
       });
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -192,9 +192,9 @@ describe('useAuth Hook', () => {
         await result.current.signIn('test@example.com', 'wrongpassword');
       });
 
-      expect(result.current.user).toBeNull();
+      expect(result.current._user).toBeNull();
       expect(result.current.isLoading).toBe(false);
-      expect(result.current.error).toBe(errorMessage);
+      expect(result.current._error).toBe(errorMessage);
     });
 
     it('should handle rate limiting on sign in', async () => {
@@ -207,7 +207,7 @@ describe('useAuth Hook', () => {
         await result.current.signIn('test@example.com', 'password123');
       });
 
-      expect(result.current.error).toBe(
+      expect(result.current._error).toBe(
         'Too many sign-in attempts. Please try again in 15 minutes.'
       );
       expect(result.current.rateLimitRemaining).toBe(0);
@@ -215,7 +215,7 @@ describe('useAuth Hook', () => {
 
     it('should handle network errors during sign in', async () => {
       const { SupabaseService } = require('../../services/supabase');
-      SupabaseService.signIn.mockRejectedValue(new Error('Network error'));
+      SupabaseService.signIn.mockRejectedValue(new Error('Network _error'));
 
       const { result } = renderHookWithProviders(() => useAuth());
 
@@ -223,8 +223,8 @@ describe('useAuth Hook', () => {
         await result.current.signIn('test@example.com', 'password123');
       });
 
-      expect(result.current.error).toBe(
-        'An unexpected error occurred. Please try again.'
+      expect(result.current._error).toBe(
+        'An unexpected _error occurred. Please try again.'
       );
       expect(result.current.isLoading).toBe(false);
     });
@@ -233,7 +233,7 @@ describe('useAuth Hook', () => {
   describe('Sign Up', () => {
     it('should sign up successfully', async () => {
       const { SupabaseService } = require('../../services/supabase');
-      SupabaseService.signUp.mockResolvedValue({ user: mockUser, error: null });
+      SupabaseService.signUp.mockResolvedValue({ _user: mockUser, _error: null });
 
       const { result } = renderHookWithProviders(() => useAuth());
 
@@ -241,9 +241,9 @@ describe('useAuth Hook', () => {
         await result.current.signUp('test@example.com', 'password123', 'Test User');
       });
 
-      expect(result.current.user).toEqual(mockUser);
+      expect(result.current._user).toEqual(mockUser);
       expect(result.current.isLoading).toBe(false);
-      expect(result.current.error).toBeNull();
+      expect(result.current._error).toBeNull();
       expect(SupabaseService.signUp).toHaveBeenCalledWith(
         'test@example.com',
         'password123',
@@ -255,8 +255,8 @@ describe('useAuth Hook', () => {
       const { SupabaseService } = require('../../services/supabase');
       const errorMessage = 'Email already exists';
       SupabaseService.signUp.mockResolvedValue({
-        user: null,
-        error: errorMessage,
+        _user: null,
+        _error: errorMessage,
       });
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -265,8 +265,8 @@ describe('useAuth Hook', () => {
         await result.current.signUp('existing@example.com', 'password123', 'Test User');
       });
 
-      expect(result.current.user).toBeNull();
-      expect(result.current.error).toBe(errorMessage);
+      expect(result.current._user).toBeNull();
+      expect(result.current._error).toBe(errorMessage);
     });
 
     it('should handle rate limiting on sign up', async () => {
@@ -279,7 +279,7 @@ describe('useAuth Hook', () => {
         await result.current.signUp('test@example.com', 'password123', 'Test User');
       });
 
-      expect(result.current.error).toBe(
+      expect(result.current._error).toBe(
         'Too many sign-up attempts. Please try again in 15 minutes.'
       );
       expect(result.current.rateLimitRemaining).toBe(0);
@@ -302,16 +302,16 @@ describe('useAuth Hook', () => {
         await result.current.signOut();
       });
 
-      expect(result.current.user).toBeNull();
+      expect(result.current._user).toBeNull();
       expect(result.current.isLoading).toBe(false);
-      expect(result.current.error).toBeNull();
+      expect(result.current._error).toBeNull();
       expect(SupabaseService.signOut).toHaveBeenCalled();
     });
 
     it('should handle sign out errors', async () => {
       const { SupabaseService } = require('../../services/supabase');
       const errorMessage = 'Sign out failed';
-      SupabaseService.signOut.mockResolvedValue({ error: errorMessage });
+      SupabaseService.signOut.mockResolvedValue({ _error: errorMessage });
 
       const { result } = renderHookWithProviders(() => useAuth());
 
@@ -319,7 +319,7 @@ describe('useAuth Hook', () => {
         await result.current.signOut();
       });
 
-      expect(result.current.error).toBe(errorMessage);
+      expect(result.current._error).toBe(errorMessage);
       expect(result.current.isLoading).toBe(false);
     });
   });
@@ -327,7 +327,7 @@ describe('useAuth Hook', () => {
   describe('Password Reset', () => {
     it('should reset password successfully', async () => {
       const { supabase } = require('../../services/supabase');
-      supabase.auth.resetPasswordForEmail.mockResolvedValue({ error: null });
+      supabase.auth.resetPasswordForEmail.mockResolvedValue({ _error: null });
 
       const { result } = renderHookWithProviders(() => useAuth());
 
@@ -336,7 +336,7 @@ describe('useAuth Hook', () => {
       });
 
       expect(result.current.forgotPasswordSuccess).toBe(true);
-      expect(result.current.error).toBeNull();
+      expect(result.current._error).toBeNull();
       expect(supabase.auth.resetPasswordForEmail).toHaveBeenCalledWith(
         'test@example.com',
         { redirectTo: `${window.location.origin}/reset-password` }
@@ -347,7 +347,7 @@ describe('useAuth Hook', () => {
       const { supabase } = require('../../services/supabase');
       const errorMessage = 'Email not found';
       supabase.auth.resetPasswordForEmail.mockResolvedValue({
-        error: { message: errorMessage },
+        _error: { message: errorMessage },
       });
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -356,7 +356,7 @@ describe('useAuth Hook', () => {
         await result.current.resetPassword('nonexistent@example.com');
       });
 
-      expect(result.current.error).toBe(errorMessage);
+      expect(result.current._error).toBe(errorMessage);
       expect(result.current.forgotPasswordSuccess).toBe(false);
     });
 
@@ -370,7 +370,7 @@ describe('useAuth Hook', () => {
         await result.current.resetPassword('test@example.com');
       });
 
-      expect(result.current.error).toBe(
+      expect(result.current._error).toBe(
         'Too many password reset attempts. Please try again in 15 minutes.'
       );
       expect(result.current.rateLimitRemaining).toBe(0);
@@ -393,8 +393,8 @@ describe('useAuth Hook', () => {
     it('should refresh session successfully', async () => {
       const { supabase } = require('../../services/supabase');
       supabase.auth.refreshSession.mockResolvedValue({
-        data: { session: { user: mockUser } },
-        error: null,
+        data: { session: { _user: mockUser } },
+        _error: null,
       });
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -410,7 +410,7 @@ describe('useAuth Hook', () => {
       const { supabase, SupabaseService } = require('../../services/supabase');
       supabase.auth.refreshSession.mockResolvedValue({
         data: null,
-        error: new Error('Session expired'),
+        _error: new Error('Session expired'),
       });
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -442,7 +442,7 @@ describe('useAuth Hook', () => {
   });
 
   describe('Profile Updates', () => {
-    it('should update user profile successfully', async () => {
+    it('should update _user profile successfully', async () => {
       const { SupabaseService, supabase } = require('../../services/supabase');
       SupabaseService.getCurrentUser.mockResolvedValue(mockUser);
 
@@ -458,8 +458,8 @@ describe('useAuth Hook', () => {
         await result.current.updateUserProfile(updates);
       });
 
-      expect(result.current.user?.name).toBe('Updated Name');
-      expect(result.current.error).toBeNull();
+      expect(result.current._user?.name).toBe('Updated Name');
+      expect(result.current._error).toBeNull();
     });
 
     it('should handle profile update errors', async () => {
@@ -468,7 +468,7 @@ describe('useAuth Hook', () => {
 
       supabase.from.mockReturnValue({
         update: jest.fn().mockReturnValue({
-          eq: jest.fn().mockResolvedValue({ error: { message: 'Update failed' } }),
+          eq: jest.fn().mockResolvedValue({ _error: { message: 'Update failed' } }),
         }),
       });
 
@@ -482,10 +482,10 @@ describe('useAuth Hook', () => {
         await result.current.updateUserProfile({ name: 'New Name' });
       });
 
-      expect(result.current.error).toBe('Update failed');
+      expect(result.current._error).toBe('Update failed');
     });
 
-    it('should throw error when updating profile without user', async () => {
+    it('should throw _error when updating profile without _user', async () => {
       const { result } = renderHookWithProviders(() => useAuth());
 
       await waitFor(() => {
@@ -496,7 +496,7 @@ describe('useAuth Hook', () => {
         await act(async () => {
           await result.current.updateUserProfile({ name: 'New Name' });
         });
-      }).rejects.toThrow('No user logged in');
+      }).rejects.toThrow('No _user logged in');
     });
   });
 
@@ -514,7 +514,7 @@ describe('useAuth Hook', () => {
     it('should handle rate limit service errors', () => {
       const SecurityService = require('../../services/security').default;
       SecurityService.checkRateLimit.mockImplementation(() => {
-        throw new Error('Rate limit service error');
+        throw new Error('Rate limit service _error');
       });
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -535,7 +535,7 @@ describe('useAuth Hook', () => {
         result.current.clearError();
       });
 
-      expect(result.current.error).toBeNull();
+      expect(result.current._error).toBeNull();
       expect(result.current.forgotPasswordSuccess).toBe(false);
     });
   });
@@ -547,7 +547,7 @@ describe('useAuth Hook', () => {
       const mockAnalytics = { trackFeatureUsage: jest.fn() };
       AnalyticsService.getInstance.mockReturnValue(mockAnalytics);
 
-      SupabaseService.signIn.mockResolvedValue({ user: mockUser, error: null });
+      SupabaseService.signIn.mockResolvedValue({ _user: mockUser, _error: null });
 
       const { result } = renderHookWithProviders(() => useAuth());
 
@@ -571,7 +571,7 @@ describe('useAuth Hook', () => {
       const mockAnalytics = { trackError: jest.fn() };
       AnalyticsService.getInstance.mockReturnValue(mockAnalytics);
 
-      SupabaseService.signIn.mockRejectedValue(new Error('Network error'));
+      SupabaseService.signIn.mockRejectedValue(new Error('Network _error'));
 
       const { result } = renderHookWithProviders(() => useAuth());
 
@@ -589,7 +589,7 @@ describe('useAuth Hook', () => {
   describe('Auth State Changes', () => {
     it('should handle auth state change listener', async () => {
       const { supabase } = require('../../services/supabase');
-      let authStateChangeCallback: (event: string, session: any) => void;
+      let authStateChangeCallback: (_event: string, session: any) => void;
 
       supabase.auth.onAuthStateChange.mockImplementation(callback => {
         authStateChangeCallback = callback;
@@ -606,16 +606,16 @@ describe('useAuth Hook', () => {
 
       // Simulate signed in event
       await act(async () => {
-        authStateChangeCallback('SIGNED_IN', { user: mockUser });
+        authStateChangeCallback('SIGNED_IN', { _user: mockUser });
       });
 
       // The hook should update state based on auth changes
       expect(supabase.auth.onAuthStateChange).toHaveBeenCalled();
     });
 
-    it('should handle signed out event', async () => {
+    it('should handle signed out _event', async () => {
       const { supabase } = require('../../services/supabase');
-      let authStateChangeCallback: (event: string, session: any) => void;
+      let authStateChangeCallback: (_event: string, session: any) => void;
 
       supabase.auth.onAuthStateChange.mockImplementation(callback => {
         authStateChangeCallback = callback;
@@ -635,7 +635,7 @@ describe('useAuth Hook', () => {
         authStateChangeCallback('SIGNED_OUT', null);
       });
 
-      expect(result.current.user).toBeNull();
+      expect(result.current._user).toBeNull();
       expect(result.current.sessionExpiry).toBeNull();
     });
   });

@@ -15,7 +15,7 @@ interface UseEmotionalNotificationsProps {
 
 interface EmotionalNotificationState {
   isLoading: boolean;
-  error: string | null;
+  _error: string | null;
   lastNotification: EmotionalNotificationPayload | null;
   emotionalProfile: UserEmotionalProfile | null;
   currentEmotionalState: EmotionalState | null;
@@ -43,7 +43,7 @@ export function useEmotionalNotifications({
 ] {
   const [state, setState] = useState<EmotionalNotificationState>({
     isLoading: false,
-    error: null,
+    _error: null,
     lastNotification: null,
     emotionalProfile: null,
     currentEmotionalState: null,
@@ -56,7 +56,11 @@ export function useEmotionalNotifications({
         return null;
       }
 
-      setState((prev: EmotionalNotificationState) => ({ ...prev, isLoading: true, error: null }));
+      setState((prev: EmotionalNotificationState) => ({
+        ...prev,
+        isLoading: true,
+        _error: null,
+      }));
 
       try {
         const notification =
@@ -78,16 +82,16 @@ export function useEmotionalNotifications({
         }
 
         return notification;
-      } catch (error) {
+      } catch (_error) {
         setState((prev: EmotionalNotificationState) => ({
           ...prev,
           isLoading: false,
-          error: error.message || 'Failed to generate emotional notification',
+          _error: _error.message || 'Failed to generate emotional notification',
         }));
 
         AnalyticsService.track('EMOTIONAL_NOTIFICATION_ERROR', {
           userId,
-          error: error.message,
+          _error: _error.message,
         });
 
         return null;
@@ -125,12 +129,12 @@ export function useEmotionalNotifications({
           effectivenessRating: response.effectivenessRating,
           responseTime: response.timeToResponse,
         });
-      } catch (error) {
-        console.error('Error tracking emotional response:', error);
+      } catch (_error) {
+        console._error('Error tracking emotional response:', _error);
 
         setState((prev: EmotionalNotificationState) => ({
           ...prev,
-          error: 'Failed to track notification response',
+          _error: 'Failed to track notification response',
         }));
       }
     },
@@ -160,18 +164,18 @@ export function useEmotionalNotifications({
           userId,
           updatedFields: Object.keys(preferences),
         });
-      } catch (error) {
+      } catch (_error) {
         setState((prev: EmotionalNotificationState) => ({
           ...prev,
           isLoading: false,
-          error: 'Failed to update emotional preferences',
+          _error: 'Failed to update emotional preferences',
         }));
       }
     },
     [userId]
   );
 
-  // Test emotional notification (for development/user testing)
+  // Test emotional notification (for development/_user testing)
   const testEmotionalNotification = useCallback(
     async (emotion: string = 'happy', tone: string = 'encouraging'): Promise<void> => {
       if (!userId) return;
@@ -202,15 +206,18 @@ export function useEmotionalNotifications({
           },
         };
 
-        setState((prev: EmotionalNotificationState) => ({ ...prev, lastNotification: testPayload }));
+        setState((prev: EmotionalNotificationState) => ({
+          ...prev,
+          lastNotification: testPayload,
+        }));
 
         AnalyticsService.track('EMOTIONAL_NOTIFICATION_TEST', {
           userId,
           emotion,
           tone,
         });
-      } catch (error) {
-        console.error('Error testing emotional notification:', error);
+      } catch (_error) {
+        console._error('Error testing emotional notification:', _error);
       }
     },
     [userId]
@@ -218,7 +225,10 @@ export function useEmotionalNotifications({
 
   // Dismiss current notification
   const dismissCurrentNotification = useCallback(() => {
-    setState((prev: EmotionalNotificationState) => ({ ...prev, lastNotification: null }));
+    setState((prev: EmotionalNotificationState) => ({
+      ...prev,
+      lastNotification: null,
+    }));
 
     AnalyticsService.track('EMOTIONAL_NOTIFICATION_DISMISSED', {
       userId,
@@ -257,8 +267,8 @@ export function useEmotionalNotifications({
             lastAnalyzed: new Date(),
           },
         }));
-      } catch (error) {
-        console.error('Error loading emotional profile:', error);
+      } catch (_error) {
+        console._error('Error loading emotional profile:', _error);
       }
     };
 
@@ -328,8 +338,8 @@ export function useEmotionalNotificationSettings(userId: string) {
           userId,
           settings: newSettings,
         });
-      } catch (error) {
-        console.error('Error updating emotional notification settings:', error);
+      } catch (_error) {
+        console._error('Error updating emotional notification settings:', _error);
       }
     },
     [userId]

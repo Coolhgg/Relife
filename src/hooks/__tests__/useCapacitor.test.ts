@@ -259,7 +259,7 @@ describe('useCapacitor', () => {
   });
 
   it('should handle errors gracefully', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
     mockDevice.getInfo.mockRejectedValue(new Error('Device info failed'));
 
     const { result } = renderHook(() => useCapacitor());

@@ -4,14 +4,14 @@
  */
 
 import posthog from 'posthog-js';
-import { config, isEnvironment } from '../config/environment';
+import { _config, isEnvironment } from '../config/environment';
 import { BaseService } from './base/BaseService';
 import { CacheProvider, getCacheManager } from './base/CacheManager';
 import {
   AnalyticsServiceInterface,
   ServiceConfig,
   ServiceHealth,
-  PerformanceTracker
+  PerformanceTracker,
 } from '../types/service-architecture';
 
 // ============================================================================
@@ -25,7 +25,7 @@ export interface AnalyticsServiceConfig extends ServiceConfig {
   enableSessionRecording?: boolean;
   enableHeatmaps?: boolean;
   disableInDevelopment?: boolean;
-  
+
   // Enhanced configuration
   maxQueueSize: number;
   flushInterval: number;
@@ -154,7 +154,10 @@ export const ANALYTICS_EVENTS = {
 // Enhanced Analytics Service Implementation
 // ============================================================================
 
-export class EnhancedAnalyticsService extends BaseService implements AnalyticsServiceInterface {
+export class EnhancedAnalyticsService
+  extends BaseService
+  implements AnalyticsServiceInterface
+{
   private eventQueue: AnalyticsEvent[] = [];
   private sessionId: string | null = null;
   private sessionStartTime: Date | null = null;
@@ -164,11 +167,14 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
   private dependencies: AnalyticsServiceDependencies;
   private isOnline = navigator.onLine;
 
-  constructor(dependencies: AnalyticsServiceDependencies, config: AnalyticsServiceConfig) {
-    super('AnalyticsService', '2.0.0', config);
+  constructor(
+    dependencies: AnalyticsServiceDependencies,
+    _config: AnalyticsServiceConfig
+  ) {
+    super('AnalyticsService', '2.0.0', _config);
     this.dependencies = dependencies;
-    this.cache = getCacheManager().getProvider(config.caching?.strategy || 'memory');
-    
+    this.cache = getCacheManager().getProvider(_config.caching?.strategy || 'memory');
+
     // Listen for online/offline events
     this.setupNetworkListeners();
   }
@@ -184,7 +190,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
       environment: config.env,
       debug: config.features.debugMode,
       enableSessionRecording: config.features.sessionRecording,
-      enableHeatmaps: config.features.heatmaps,
+      enableHeatmaps: _config.features.heatmaps,
       maxQueueSize: 1000,
       flushInterval: 30000, // 30 seconds
       batchSize: 50,
@@ -193,7 +199,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
       enableUserJourney: true,
       privacyMode: 'standard',
       disableInDevelopment: false,
-      ...super.getDefaultConfig?.() || {}
+      ...(super.getDefaultConfig?.() || {}),
     };
   }
 
@@ -202,7 +208,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
 
     try {
       // Initialize PostHog if API key is available
-      if ((this.config as AnalyticsServiceConfig).apiKey) {
+      if ((this._config as AnalyticsServiceConfig).apiKey) {
         await this.initializePostHog();
       }
 
@@ -213,7 +219,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
       this.setupPeriodicFlush();
 
       // Set up web vitals monitoring
-      if ((this.config as AnalyticsServiceConfig).enablePerformanceTracking) {
+      if ((this._config as AnalyticsServiceConfig).enablePerformanceTracking) {
         await this.setupWebVitalsMonitoring();
       }
 
@@ -222,14 +228,13 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
 
       this.emit('analytics:initialized', {
         queueSize: this.eventQueue.length,
-        sessionId: this.sessionId
+        sessionId: this.sessionId,
       });
 
       this.recordMetric('initialize_duration', this.endTimer(timerId) || 0);
-
-    } catch (error) {
-      this.handleError(error, 'Failed to initialize AnalyticsService');
-      throw error;
+    } catch (_error) {
+      this.handleError(_error, 'Failed to initialize AnalyticsService');
+      throw _error;
     }
   }
 
@@ -252,24 +257,23 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
 
       // Clear cache
       await this.cache.clear();
-
-    } catch (error) {
-      this.handleError(error, 'Failed to cleanup AnalyticsService');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to cleanup AnalyticsService');
     }
   }
 
   public async getHealth(): Promise<ServiceHealth> {
     const baseHealth = await super.getHealth();
-    
+
     const queueSize = this.eventQueue.length;
-    const config = this.config as AnalyticsServiceConfig;
-    
+    const config = this._config as AnalyticsServiceConfig;
+
     // Determine health based on queue size and connectivity
     let status = baseHealth.status;
-    if (queueSize > config.maxQueueSize * 0.8) {
+    if (queueSize > _config.maxQueueSize * 0.8) {
       status = 'degraded';
     }
-    if (queueSize >= config.maxQueueSize || (!this.isOnline && queueSize > 100)) {
+    if (queueSize >= _config.maxQueueSize || (!this.isOnline && queueSize > 100)) {
       status = 'unhealthy';
     }
 
@@ -277,12 +281,12 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
       ...baseHealth,
       status,
       metrics: {
-        ...baseHealth.metrics || {},
+        ...(baseHealth.metrics || {}),
         queueSize,
         sessionActive: !!this.sessionId,
         isOnline: this.isOnline,
-        journeySteps: this.userJourney.length
-      }
+        journeySteps: this.userJourney.length,
+      },
     };
   }
 
@@ -290,7 +294,10 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
   // AnalyticsServiceInterface Implementation
   // ============================================================================
 
-  public async track(eventName: string, properties: EventProperties = {}): Promise<void> {
+  public async track(
+    eventName: string,
+    properties: EventProperties = {}
+  ): Promise<void> {
     const timerId = this.startTimer('track');
 
     try {
@@ -302,27 +309,27 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
           sessionId: this.sessionId || undefined,
           sessionDuration: this.getSessionDuration(),
           source: properties.source || 'web',
-          ...this.getContextualProperties()
+          ...this.getContextualProperties(),
         },
         timestamp: new Date(),
         userId: properties.userId,
         sessionId: this.sessionId || undefined,
         retryCount: 0,
-        priority: this.getEventPriority(eventName)
+        priority: this.getEventPriority(eventName),
       };
 
       // Add performance metrics if enabled
-      if ((this.config as AnalyticsServiceConfig).enablePerformanceTracking) {
+      if ((this._config as AnalyticsServiceConfig).enablePerformanceTracking) {
         event.properties.performanceMetrics = await this.getPerformanceMetrics();
       }
 
       // Add user journey if enabled
-      if ((this.config as AnalyticsServiceConfig).enableUserJourney) {
+      if ((this._config as AnalyticsServiceConfig).enableUserJourney) {
         event.properties.userJourney = [...this.userJourney];
       }
 
       // Queue event
-      await this.queueEvent(event);
+      await this.queueEvent(_event);
 
       // Update user journey
       this.updateUserJourney(eventName, properties.context);
@@ -334,13 +341,15 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
 
       this.recordMetric('track_duration', this.endTimer(timerId) || 0);
       this.recordMetric('events_tracked', 1);
-
-    } catch (error) {
-      this.handleError(error, 'Failed to track event', { eventName, properties });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to track _event', { eventName, properties });
     }
   }
 
-  public async identify(userId: string, traits: Record<string, any> = {}): Promise<void> {
+  public async identify(
+    userId: string,
+    traits: Record<string, any> = {}
+  ): Promise<void> {
     const timerId = this.startTimer('identify');
 
     try {
@@ -348,7 +357,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
         id: userId,
         deviceType: this.getDeviceType(),
         ...traits,
-        ...this.getSystemProperties()
+        ...this.getSystemProperties(),
       };
 
       // Queue identify event
@@ -359,16 +368,19 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
         userId,
         sessionId: this.sessionId || undefined,
         retryCount: 0,
-        priority: 'high'
+        priority: 'high',
       });
 
       // Cache user data for offline use
-      await this.cache.set('user_identity', { userId, traits: userProperties }, 86400000); // 24 hours
+      await this.cache.set(
+        'user_identity',
+        { userId, traits: userProperties },
+        86400000
+      ); // 24 hours
 
       this.recordMetric('identify_duration', this.endTimer(timerId) || 0);
-
-    } catch (error) {
-      this.handleError(error, 'Failed to identify user', { userId, traits });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to identify _user', { userId, traits });
     }
   }
 
@@ -378,7 +390,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
       page_url: window.location.href,
       page_path: window.location.pathname,
       referrer: document.referrer,
-      ...properties
+      ...properties,
     });
   }
 
@@ -388,9 +400,8 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
     try {
       await this.processQueue();
       this.recordMetric('flush_duration', this.endTimer(timerId) || 0);
-
-    } catch (error) {
-      this.handleError(error, 'Failed to flush events');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to flush events');
     }
   }
 
@@ -402,12 +413,16 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
   // Enhanced Analytics Methods
   // ============================================================================
 
-  public async trackPerformanceMetric(name: string, value: number, tags?: Record<string, string>): Promise<void> {
+  public async trackPerformanceMetric(
+    name: string,
+    value: number,
+    tags?: Record<string, string>
+  ): Promise<void> {
     return this.track(ANALYTICS_EVENTS.PAGE_LOAD_TIME, {
       metric_name: name,
       metric_value: value,
       metric_tags: tags,
-      category: 'performance'
+      category: 'performance',
     });
   }
 
@@ -415,16 +430,20 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
     return this.track(ANALYTICS_EVENTS.WEB_VITALS_MEASURED, {
       ...vitals,
       category: 'performance',
-      source: 'web_vitals_api'
+      source: 'web_vitals_api',
     });
   }
 
-  public async trackUserJourney(action: string, context?: string, duration?: number): Promise<void> {
+  public async trackUserJourney(
+    action: string,
+    context?: string,
+    duration?: number
+  ): Promise<void> {
     const step: UserJourneyStep = {
       action,
       timestamp: new Date(),
       context,
-      duration
+      duration,
     };
 
     this.userJourney.push(step);
@@ -439,7 +458,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
       context,
       duration,
       journey_length: this.userJourney.length,
-      category: 'user_journey'
+      category: 'user_journey',
     });
   }
 
@@ -456,7 +475,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
   // ============================================================================
 
   private async initializePostHog(): Promise<void> {
-    const config = this.config as AnalyticsServiceConfig;
+    const config = this._config as AnalyticsServiceConfig;
 
     // Don't initialize in test environments
     if (process.env.NODE_ENV === 'test') {
@@ -474,39 +493,38 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
         capture_pageleave: true,
         autocapture: !isEnvironment.production,
         session_recording: {
-          maskAllInputs: config.privacyMode !== 'minimal',
-          recordCrossOriginIframes: false
+          maskAllInputs: _config.privacyMode !== 'minimal',
+          recordCrossOriginIframes: false,
         },
-        property_blacklist: this.getPropertyBlacklist(config.privacyMode),
-        loaded: (posthog) => {
+        property_blacklist: this.getPropertyBlacklist(_config.privacyMode),
+        loaded: posthog => {
           posthog.register({
-            app_environment: config.environment,
+            app_environment: _config.environment,
             app_version: '2.0.0',
-            performance_monitoring_enabled: config.enablePerformanceTracking
+            performance_monitoring_enabled: _config.enablePerformanceTracking,
           });
-        }
+        },
       });
-
-    } catch (error) {
-      this.handleError(error, 'Failed to initialize PostHog');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to initialize PostHog');
     }
   }
 
-  private async queueEvent(event: AnalyticsEvent): Promise<void> {
-    const config = this.config as AnalyticsServiceConfig;
+  private async queueEvent(_event: AnalyticsEvent): Promise<void> {
+    const config = this._config as AnalyticsServiceConfig;
 
     // Check queue size limit
-    if (this.eventQueue.length >= config.maxQueueSize) {
+    if (this.eventQueue.length >= _config.maxQueueSize) {
       // Remove oldest low-priority events
       this.eventQueue = this.eventQueue
         .filter(e => e.priority !== 'low')
-        .slice(-(config.maxQueueSize - 1));
+        .slice(-(_config.maxQueueSize - 1));
     }
 
-    this.eventQueue.push(event);
+    this.eventQueue.push(_event);
 
     // Cache queue for offline persistence
-    if (config.enableOfflineQueue) {
+    if (_config.enableOfflineQueue) {
       await this.saveQueueToCache();
     }
   }
@@ -517,39 +535,40 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
     }
 
     const config = this.config as AnalyticsServiceConfig;
-    const batch = this.eventQueue.splice(0, config.batchSize);
+    const batch = this.eventQueue.splice(0, _config.batchSize);
 
     try {
       // Process batch
-      for (const event of batch) {
-        if (event.name === '_identify') {
-          posthog.identify(event.properties.userId, event.properties.traits);
+      for (const _event of batch) {
+        if (_event.name === '_identify') {
+          posthog.identify(event.properties.userId, _event.properties.traits);
         } else {
-          posthog.capture(event.name, event.properties);
+          posthog.capture(event.name, _event.properties);
         }
       }
 
       // Update cache
       await this.saveQueueToCache();
-
-    } catch (error) {
+    } catch (_error) {
       // Re-queue failed events with increased retry count
-      const retriedEvents = batch.map(event => ({
-        ...event,
-        retryCount: event.retryCount + 1
-      })).filter(event => event.retryCount < 3); // Max 3 retries
+      const retriedEvents = batch
+        .map(event => ({
+          ...event,
+          retryCount: _event.retryCount + 1,
+        }))
+        .filter(event => _event.retryCount < 3); // Max 3 retries
 
       this.eventQueue.unshift(...retriedEvents);
-      this.handleError(error, 'Failed to process analytics batch');
+      this.handleError(_error, 'Failed to process analytics batch');
     }
   }
 
   private setupPeriodicFlush(): void {
-    const config = this.config as AnalyticsServiceConfig;
-    
+    const config = this._config as AnalyticsServiceConfig;
+
     this.flushInterval = setInterval(() => {
-      this.processQueue().catch(error => 
-        this.handleError(error, 'Failed in periodic flush')
+      this.processQueue().catch(_error =>
+        this.handleError(_error, 'Failed in periodic flush')
       );
     }, config.flushInterval);
   }
@@ -557,8 +576,8 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
   private setupNetworkListeners(): void {
     window.addEventListener('online', () => {
       this.isOnline = true;
-      this.processQueue().catch(error => 
-        this.handleError(error, 'Failed to process queue when coming online')
+      this.processQueue().catch(_error =>
+        this.handleError(_error, 'Failed to process queue when coming online')
       );
     });
 
@@ -574,21 +593,21 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
         // Monitor Core Web Vitals
         this.monitorWebVitals();
       }
-    } catch (error) {
-      this.handleError(error, 'Failed to setup web vitals monitoring');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to setup web vitals monitoring');
     }
   }
 
   private monitorWebVitals(): void {
     // Monitor LCP (Largest Contentful Paint)
-    new PerformanceObserver((entryList) => {
+    new PerformanceObserver(entryList => {
       const entries = entryList.getEntries();
       const lastEntry = entries[entries.length - 1];
       this.trackWebVitals({ lcp: lastEntry.startTime });
     }).observe({ entryTypes: ['largest-contentful-paint'] });
 
     // Monitor FID (First Input Delay)
-    new PerformanceObserver((entryList) => {
+    new PerformanceObserver(entryList => {
       const entries = entryList.getEntries();
       entries.forEach((entry: any) => {
         this.trackWebVitals({ fid: entry.processingStart - entry.startTime });
@@ -596,7 +615,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
     }).observe({ entryTypes: ['first-input'] });
 
     // Monitor CLS (Cumulative Layout Shift)
-    new PerformanceObserver((entryList) => {
+    new PerformanceObserver(entryList => {
       let cls = 0;
       entryList.getEntries().forEach((entry: any) => {
         if (!entry.hadRecentInput) {
@@ -614,7 +633,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
 
     this.track(ANALYTICS_EVENTS.APP_LAUNCHED, {
       session_id: this.sessionId,
-      category: 'session'
+      category: 'session',
     });
   }
 
@@ -624,7 +643,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
         session_id: this.sessionId,
         session_duration: Date.now() - this.sessionStartTime.getTime(),
         journey_steps: this.userJourney.length,
-        category: 'session'
+        category: 'session',
       });
     }
 
@@ -643,14 +662,14 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
   }
 
   private updateUserJourney(action: string, context?: string): void {
-    const config = this.config as AnalyticsServiceConfig;
-    
-    if (!config.enableUserJourney) return;
+    const config = this._config as AnalyticsServiceConfig;
+
+    if (!_config.enableUserJourney) return;
 
     const step: UserJourneyStep = {
       action,
       timestamp: new Date(),
-      context
+      context,
     };
 
     this.userJourney.push(step);
@@ -672,7 +691,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
 
     // Medium priority events
     const mediumPriorityEvents = ['alarm_created', 'page_view', 'feature_used'];
-    if (mediumPriorityEvents.some(event => eventName.includes(event))) return 'medium';
+    if (mediumPriorityEvents.some(event => eventName.includes(_event))) return 'medium';
 
     return 'low';
   }
@@ -681,8 +700,10 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
     const metrics: PerformanceMetrics = {};
 
     if (typeof window !== 'undefined' && window.performance) {
-      const navigation = window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-      
+      const navigation = window.performance.getEntriesByType(
+        'navigation'
+      )[0] as PerformanceNavigationTiming;
+
       if (navigation) {
         metrics.pageLoadTime = navigation.loadEventEnd - navigation.loadEventStart;
         metrics.navigationTiming = navigation;
@@ -705,17 +726,19 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
       viewport_size: `${window.innerWidth}x${window.innerHeight}`,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       language: navigator.language,
-      online: navigator.onLine
+      online: navigator.onLine,
     };
   }
 
   private getDeviceType(): string {
     const userAgent = navigator.userAgent.toLowerCase();
-    
+
     if (/tablet|ipad|playbook|silk/.test(userAgent)) {
       return 'tablet';
     }
-    if (/mobile|android|touch|webos|iphone|ipad|ipod|blackberry|kindle/.test(userAgent)) {
+    if (
+      /mobile|android|touch|webos|iphone|ipad|ipod|blackberry|kindle/.test(userAgent)
+    ) {
       return 'mobile';
     }
     return 'desktop';
@@ -726,7 +749,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
       platform: navigator.platform,
       cookies_enabled: navigator.cookieEnabled,
       do_not_track: navigator.doNotTrack === '1',
-      connection_type: this.getConnectionType()
+      connection_type: this.getConnectionType(),
     };
   }
 
@@ -740,11 +763,11 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
 
   private getPropertyBlacklist(privacyMode: string): string[] {
     const baseBlacklist = ['password', 'token', 'key', 'secret', 'auth', 'credential'];
-    
+
     if (privacyMode === 'strict') {
       return [...baseBlacklist, 'email', 'phone', 'address', 'ip'];
     }
-    
+
     return baseBlacklist;
   }
 
@@ -754,16 +777,16 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
       if (cachedQueue && Array.isArray(cachedQueue)) {
         this.eventQueue = cachedQueue;
       }
-    } catch (error) {
-      this.handleError(error, 'Failed to load queue from cache');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to load queue from cache');
     }
   }
 
   private async saveQueueToCache(): Promise<void> {
     try {
       await this.cache.set('analytics_queue', this.eventQueue, 86400000); // 24 hours
-    } catch (error) {
-      this.handleError(error, 'Failed to save queue to cache');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to save queue to cache');
     }
   }
 }
@@ -774,7 +797,7 @@ export class EnhancedAnalyticsService extends BaseService implements AnalyticsSe
 
 export const createAnalyticsService = (
   dependencies: AnalyticsServiceDependencies = {},
-  config: Partial<AnalyticsServiceConfig> = {}
+  _config: Partial<AnalyticsServiceConfig> = {}
 ): EnhancedAnalyticsService => {
   const fullConfig: AnalyticsServiceConfig = {
     enabled: true,
@@ -792,7 +815,7 @@ export const createAnalyticsService = (
     enablePerformanceTracking: config.enablePerformanceTracking ?? true,
     enableUserJourney: config.enableUserJourney ?? true,
     privacyMode: config.privacyMode || 'standard',
-    ...config
+    ..._config,
   };
 
   return new EnhancedAnalyticsService(dependencies, fullConfig);

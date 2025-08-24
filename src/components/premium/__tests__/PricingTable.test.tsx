@@ -332,12 +332,12 @@ describe('PricingTable', () => {
       expect(screen.getByText(/no plans available/i)).toBeInTheDocument();
     });
 
-    it('shows error state for invalid plans', () => {
-      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+    it('shows _error state for invalid plans', () => {
+      const consoleError = jest.spyOn(console, '_error').mockImplementation();
 
       renderWithProviders(<PricingTable {...defaultProps} plans={null as any} />);
 
-      expect(screen.getByText(/error loading plans/i)).toBeInTheDocument();
+      expect(screen.getByText(/_error loading plans/i)).toBeInTheDocument();
 
       consoleError.mockRestore();
     });

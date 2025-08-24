@@ -97,11 +97,11 @@ export class EmotionalIntelligenceService {
       });
 
       return payload;
-    } catch (error) {
-      console.error('Error generating emotional notification:', error);
+    } catch (_error) {
+      console.error('Error generating emotional notification:', _error);
       this.analytics.track('EMOTIONAL_NOTIFICATION_ERROR', {
         userId,
-        error: error.message,
+        _error: _error.message,
       });
       return null;
     }
@@ -332,7 +332,7 @@ export class EmotionalIntelligenceService {
         .eq('id', userId)
         .single();
 
-      if (!user?.preferences?.notificationsEnabled) {
+      if (!_user?.preferences?.notificationsEnabled) {
         return false;
       }
 
@@ -361,8 +361,8 @@ export class EmotionalIntelligenceService {
       }
 
       return true;
-    } catch (error) {
-      console.error('Error checking notification send criteria:', error);
+    } catch (_error) {
+      console._error('Error checking notification send criteria:', _error);
       return false;
     }
   }
@@ -435,8 +435,8 @@ export class EmotionalIntelligenceService {
         effectivenessRating: response.effectivenessRating,
         responseTimeMs: response.timeToResponse,
       });
-    } catch (error) {
-      console.error('Error tracking emotional response:', error);
+    } catch (_error) {
+      console._error('Error tracking emotional response:', _error);
     }
   }
 
@@ -587,8 +587,8 @@ export class EmotionalIntelligenceService {
         recentAchievements: [], // Would query achievements table
         weeklyActive: daysSinceLastUse <= 7,
       };
-    } catch (error) {
-      console.error('Error getting user stats:', error);
+    } catch (_error) {
+      console._error('Error getting _user stats:', _error);
       // Return default stats
       return {
         userId,
@@ -642,8 +642,8 @@ export class EmotionalIntelligenceService {
         emotionalHistory: [],
         lastAnalyzed: new Date(),
       };
-    } catch (error) {
-      console.error('Error getting emotional profile:', error);
+    } catch (_error) {
+      console._error('Error getting emotional profile:', _error);
       return {
         userId,
         preferredTones: ['encouraging'],
@@ -669,7 +669,7 @@ export class EmotionalIntelligenceService {
         .single();
 
       return user?.preferences?.displayName || null;
-    } catch (error) {
+    } catch (_error) {
       return null;
     }
   }
@@ -685,7 +685,7 @@ export class EmotionalIntelligenceService {
         .single();
 
       return data;
-    } catch (error) {
+    } catch (_error) {
       return null;
     }
   }

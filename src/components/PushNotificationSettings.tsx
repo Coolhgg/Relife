@@ -152,9 +152,9 @@ export const PushNotificationSettingsComponent: React.FC<
             </div>
           </div>
 
-          {status.error && (
+          {status._error && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
-              <p className="text-red-800 dark:text-red-300 text-sm">{status.error}</p>
+              <p className="text-red-800 dark:text-red-300 text-sm">{status._error}</p>
             </div>
           )}
         </div>
@@ -181,7 +181,9 @@ export const PushNotificationSettingsComponent: React.FC<
               <input
                 type="checkbox"
                 checked={status.settings.enabled}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleToggleEnabled(e.target.checked)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleToggleEnabled(e.target.checked)
+                }
                 className="sr-only peer"
                 disabled={status.isLoading}
               />

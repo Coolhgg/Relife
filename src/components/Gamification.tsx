@@ -804,9 +804,9 @@ export function Gamification({
                   </div>
 
                   <div className="space-y-2">
-                    {levelReward.rewards.map((reward, index) => (
+                    {levelReward.rewards.map((reward, _index) => (
                       <div
-                        key={index}
+                        key={_index}
                         className="flex items-center gap-2 p-2 bg-muted/30 rounded"
                       >
                         <Award className="h-4 w-4 text-yellow-500" />

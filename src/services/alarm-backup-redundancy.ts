@@ -181,9 +181,9 @@ export class AlarmBackupRedundancyService {
         `[BackupRedundancy] Created backup ${backupId} with ${backupResults.length} redundant copies`
       );
       return backupId;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to create backup with redundancy',
         { context: 'backup_creation', metadata: { userId, type } }
       );
@@ -222,10 +222,10 @@ export class AlarmBackupRedundancyService {
         storedLocations.push(locationId);
 
         console.log(`[BackupRedundancy] Stored backup in location: ${locationId}`);
-      } catch (error) {
-        console.error(
+      } catch (_error) {
+        console._error(
           `[BackupRedundancy] Failed to store backup in ${locationId}:`,
-          error
+          _error
         );
         location.available = false; // Mark as unavailable
       }
@@ -260,7 +260,7 @@ export class AlarmBackupRedundancyService {
 
         // Verify backup integrity
         if (!SecurityService.verifyDataSignature(backupData, backupData.signature)) {
-          console.error(
+          console._error(
             `[BackupRedundancy] Invalid signature in backup ${backupId} from ${locationId}`
           );
           continue;
@@ -269,7 +269,7 @@ export class AlarmBackupRedundancyService {
         // Verify checksum
         const calculatedChecksum = this.calculateBackupChecksum(backupData);
         if (backupData.metadata.checksum !== calculatedChecksum) {
-          console.error(
+          console._error(
             `[BackupRedundancy] Checksum mismatch in backup ${backupId} from ${locationId}`
           );
           continue;
@@ -279,10 +279,10 @@ export class AlarmBackupRedundancyService {
           `[BackupRedundancy] Successfully retrieved backup ${backupId} from ${locationId}`
         );
         return backupData;
-      } catch (error) {
-        console.error(
+      } catch (_error) {
+        console._error(
           `[BackupRedundancy] Failed to retrieve backup from ${locationId}:`,
-          error
+          _error
         );
         location.available = false;
         continue;
@@ -308,7 +308,7 @@ export class AlarmBackupRedundancyService {
       const availableBackups = await this.getAvailableBackups(userId);
 
       if (availableBackups.length === 0) {
-        console.error('[BackupRedundancy] No backups available for disaster recovery');
+        console._error('[BackupRedundancy] No backups available for disaster recovery');
         return { success: false, recoveredAlarms: [], source: 'none' };
       }
 
@@ -361,10 +361,10 @@ export class AlarmBackupRedundancyService {
             recoveredAlarms: backupData.alarms,
             source: `${backup.location.type} (${backup.id})`,
           };
-        } catch (error) {
-          console.error(
+        } catch (_error) {
+          console._error(
             `[BackupRedundancy] Failed to recover from backup ${backup.id}:`,
-            error
+            _error
           );
           continue;
         }
@@ -372,13 +372,13 @@ export class AlarmBackupRedundancyService {
 
       console.error('[BackupRedundancy] All disaster recovery attempts failed');
       return { success: false, recoveredAlarms: [], source: 'failed' };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Disaster recovery failed',
         { context: 'disaster_recovery', metadata: { userId } }
       );
-      return { success: false, recoveredAlarms: [], source: 'error' };
+      return { success: false, recoveredAlarms: [], source: '_error' };
     }
   }
 
@@ -393,8 +393,8 @@ export class AlarmBackupRedundancyService {
     this.backupTimer = setInterval(async () => {
       try {
         await this.createBackup('scheduled');
-      } catch (error) {
-        console.error('[BackupRedundancy] Scheduled backup failed:', error);
+      } catch (_error) {
+        console._error('[BackupRedundancy] Scheduled backup failed:', _error);
       }
     }, AlarmBackupRedundancyService.BACKUP_INTERVAL);
 
@@ -412,8 +412,8 @@ export class AlarmBackupRedundancyService {
     this.verificationTimer = setInterval(async () => {
       try {
         await this.verifyAllBackups();
-      } catch (error) {
-        console.error('[BackupRedundancy] Backup verification failed:', error);
+      } catch (_error) {
+        console._error('[BackupRedundancy] Backup verification failed:', _error);
       }
     }, AlarmBackupRedundancyService.VERIFICATION_INTERVAL);
 
@@ -447,8 +447,8 @@ export class AlarmBackupRedundancyService {
       }
 
       return true;
-    } catch (error) {
-      console.error(`[BackupRedundancy] Failed to verify backup ${backupId}:`, error);
+    } catch (_error) {
+      console._error(`[BackupRedundancy] Failed to verify backup ${backupId}:`, _error);
       return false;
     }
   }
@@ -492,8 +492,8 @@ export class AlarmBackupRedundancyService {
       console.log(
         `[BackupRedundancy] Verification completed: ${results.verified}/${results.total} valid`
       );
-    } catch (error) {
-      console.error('[BackupRedundancy] Backup verification error:', error);
+    } catch (_error) {
+      console.error('[BackupRedundancy] Backup verification _error:', _error);
     }
   }
 
@@ -518,8 +518,8 @@ export class AlarmBackupRedundancyService {
           ...backup,
           created: new Date(backup.created),
         }));
-    } catch (error) {
-      console.error('[BackupRedundancy] Failed to get available backups:', error);
+    } catch (_error) {
+      console._error('[BackupRedundancy] Failed to get available backups:', _error);
       return [];
     }
   }
@@ -610,15 +610,15 @@ export class AlarmBackupRedundancyService {
         redundancyLevel,
         recommendations,
       };
-    } catch (error) {
-      console.error('[BackupRedundancy] Failed to get recovery status:', error);
+    } catch (_error) {
+      console.error('[BackupRedundancy] Failed to get recovery status:', _error);
       return {
         totalBackups: 0,
         verifiedBackups: 0,
         lastBackup: null,
         recoveryPoints: 0,
         redundancyLevel: 'none',
-        recommendations: ['Unable to assess backup status due to error'],
+        recommendations: ['Unable to assess backup status due to _error'],
       };
     }
   }
@@ -641,8 +641,8 @@ export class AlarmBackupRedundancyService {
         key: AlarmBackupRedundancyService.METADATA_KEY,
         value: JSON.stringify(recentMetadata),
       });
-    } catch (error) {
-      console.error('[BackupRedundancy] Failed to update backup metadata:', error);
+    } catch (_error) {
+      console._error('[BackupRedundancy] Failed to update backup metadata:', _error);
     }
   }
 
@@ -673,8 +673,8 @@ export class AlarmBackupRedundancyService {
       console.log(
         `[BackupRedundancy] Cleaned up ${keysToRemove.length} old backup files`
       );
-    } catch (error) {
-      console.error('[BackupRedundancy] Failed to cleanup old backups:', error);
+    } catch (_error) {
+      console._error('[BackupRedundancy] Failed to cleanup old backups:', _error);
     }
   }
 
@@ -723,7 +723,7 @@ export class AlarmBackupRedundancyService {
   /**
    * Log backup events for monitoring
    */
-  private logBackupEvent(event: string, details: any): void {
+  private logBackupEvent(_event: string, details: any): void {
     const logEntry = {
       event,
       details,
@@ -735,7 +735,7 @@ export class AlarmBackupRedundancyService {
 
     // Emit custom event for monitoring
     window.dispatchEvent(
-      new CustomEvent('backup-event', {
+      new CustomEvent('backup-_event', {
         detail: logEntry,
       })
     );
@@ -788,14 +788,14 @@ export class AlarmBackupRedundancyService {
         canRecoverData: testResults.backupRetrieval === 'success',
         testResults,
       };
-    } catch (error) {
-      console.error('[BackupRedundancy] Backup system test failed:', error);
+    } catch (_error) {
+      console.error('[BackupRedundancy] Backup system test failed:', _error);
       return {
         locationsAvailable: 0,
         locationsTotal: this.backupLocations.size,
         canCreateBackup: false,
         canRecoverData: false,
-        testResults: { error: error.message },
+        testResults: { error: _error.message },
       };
     }
   }

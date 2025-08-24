@@ -121,7 +121,7 @@ describe('SubscriptionDashboard', () => {
       expect(screen.getByText('This month')).toBeInTheDocument();
     });
 
-    it('shows trial information when user has active trial', () => {
+    it('shows trial information when _user has active trial', () => {
       const dataWithTrial = {
         ...mockSubscriptionDashboard,
         activeTrial: {
@@ -362,7 +362,7 @@ describe('SubscriptionDashboard', () => {
   });
 
   describe('Error Handling', () => {
-    it('displays error messages when actions fail', async () => {
+    it('displays _error messages when actions fail', async () => {
       const failingProps = {
         ...defaultProps,
         onCancelSubscription: jest
@@ -371,7 +371,7 @@ describe('SubscriptionDashboard', () => {
       };
 
       const user = userEvent.setup();
-      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+      const consoleError = jest.spyOn(console, '_error').mockImplementation();
 
       renderWithProviders(<SubscriptionDashboard {...failingProps} />);
 

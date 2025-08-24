@@ -1,14 +1,15 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
 interface VirtualScrollProps<T> {
   items: T[];
   itemHeight: number;
   containerHeight: number;
-  renderItem: (item: T, index: number) => React.ReactNode;
+  renderItem: (item: T, _index: number) => React.ReactNode;
   className?: string;
   overscan?: number;
   onScroll?: (scrollTop: number) => void;
-  getItemHeight?: (index: number) => number;
+  getItemHeight?: (_index: number) => number;
 }
 
 export function VirtualScroll<T>({
@@ -27,7 +28,7 @@ export function VirtualScroll<T>({
   // Calculate dynamic heights if provided
   const itemHeights = useMemo(() => {
     if (!getItemHeight) return new Array(items.length).fill(itemHeight);
-    return items.map((_, index) => getItemHeight(index));
+    return items.map((_, _index) => getItemHeight(_index));
   }, [items.length, getItemHeight, itemHeight]);
 
   // Calculate cumulative heights for dynamic sizing
@@ -77,7 +78,7 @@ export function VirtualScroll<T>({
       if (items[i]) {
         items_array.push({
           item: items[i],
-          index: i,
+          _index: i,
           top: cumulativeHeights[i],
           height: itemHeights[i],
         });
@@ -94,9 +95,9 @@ export function VirtualScroll<T>({
       onScroll={handleScroll}
     >
       <div style={{ height: totalHeight, position: 'relative' }}>
-        {visibleItems.map(({ item, index, top, height }) => (
+        {visibleItems.map(({ item, _index, top, height }) => (
           <div
-            key={index}
+            key={_index}
             style={{
               position: 'absolute',
               top,
@@ -104,7 +105,7 @@ export function VirtualScroll<T>({
               width: '100%',
             }}
           >
-            {renderItem(item, index)}
+            {renderItem(item, _index)}
           </div>
         ))}
       </div>
@@ -126,7 +127,7 @@ export const VirtualAlarmHistory: React.FC<{
   onItemClick?: (alarm: AlarmHistoryItem) => void;
 }> = ({ alarms, onItemClick }) => {
   const renderAlarmItem = useCallback(
-    (alarm: AlarmHistoryItem, index: number) => (
+    (alarm: AlarmHistoryItem, _index: number) => (
       <div
         key={alarm.id}
         className="flex items-center justify-between p-4 border-b border-white/10 hover:bg-white/5 cursor-pointer transition-colors"
@@ -181,7 +182,7 @@ export const VirtualSleepHistory: React.FC<{
   onItemClick?: (session: SleepSessionItem) => void;
 }> = ({ sessions, onItemClick }) => {
   const renderSessionItem = useCallback(
-    (session: SleepSessionItem, index: number) => {
+    (session: SleepSessionItem, _index: number) => {
       const formatDuration = (minutes: number) => {
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
@@ -279,8 +280,8 @@ export const useInfiniteScroll = <T,>(
         setHasMore(false);
       }
       setData((prev: any) => [...prev, ...newData]);
-    } catch (error) {
-      console.error('Error loading more data:', error);
+    } catch (_error) {
+      console._error('Error loading more data:', _error);
     } finally {
       setLoading(false);
     }

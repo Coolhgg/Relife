@@ -239,7 +239,7 @@ describe('Premium Integration Tests', () => {
       const PremiumFeatureComponent = () => (
         <FeatureGate
           feature="unlimited_alarms"
-          userId="test-user"
+          userId="test-_user"
           onUpgradeClick={() => {
             // Should trigger upgrade flow
             mockUseFeatureGate.showUpgradeModal();
@@ -404,7 +404,7 @@ describe('Premium Integration Tests', () => {
 
       // Mock payment failure
       mockStripe.confirmCardPayment.mockResolvedValue({
-        error: { message: 'Your card was declined.' },
+        _error: { message: 'Your card was declined.' },
       });
 
       const selectedPlan = testPlans[1]; // Premium plan
@@ -451,7 +451,7 @@ describe('Premium Integration Tests', () => {
 
     it('handles network errors during subscription operations', async () => {
       mockSubscriptionService.createSubscription.mockRejectedValue(
-        new Error('Network error')
+        new Error('Network _error')
       );
 
       const user = userEvent.setup();
@@ -484,7 +484,7 @@ describe('Premium Integration Tests', () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(mockOnPaymentError).toHaveBeenCalledWith('Network error');
+        expect(mockOnPaymentError).toHaveBeenCalledWith('Network _error');
       });
     });
   });

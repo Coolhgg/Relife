@@ -24,7 +24,7 @@ import { TimeoutHandle } from '../types/timers';
 interface DiagnosticCheck {
   id: string;
   name: string;
-  status: 'healthy' | 'warning' | 'error' | 'checking';
+  status: 'healthy' | 'warning' | '_error' | 'checking';
   message: string;
   details?: Record<string, any>;
   lastChecked: Date;
@@ -38,7 +38,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
   const [diagnostics, setDiagnostics] = useState<DiagnosticCheck[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [lastCheck, setLastCheck] = useState<Date | null>(null);
-  const [overallHealth, setOverallHealth] = useState<'healthy' | 'warning' | 'error'>(
+  const [overallHealth, setOverallHealth] = useState<'healthy' | 'warning' | '_error'>(
     'healthy'
   );
 
@@ -81,18 +81,18 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
       setLastCheck(new Date());
 
       // Calculate overall health
-      const errorCount = checks.filter(c => c.status === 'error').length;
+      const errorCount = checks.filter(c => c.status === '_error').length;
       const warningCount = checks.filter(c => c.status === 'warning').length;
 
       if (errorCount > 0) {
-        setOverallHealth('error');
+        setOverallHealth('_error');
       } else if (warningCount > 0) {
         setOverallHealth('warning');
       } else {
         setOverallHealth('healthy');
       }
-    } catch (error) {
-      console.error('Diagnostics failed:', error);
+    } catch (_error) {
+      console._error('Diagnostics failed:', _error);
     } finally {
       setIsRunning(false);
     }
@@ -104,7 +104,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         return {
           id: 'service-worker',
           name: 'Service Worker',
-          status: 'error',
+          status: '_error',
           message: 'Service Worker not supported',
           lastChecked: new Date(),
         };
@@ -115,7 +115,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         return {
           id: 'service-worker',
           name: 'Service Worker',
-          status: 'error',
+          status: '_error',
           message: 'Service Worker not registered',
           lastChecked: new Date(),
         };
@@ -136,12 +136,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
       try {
         const status = await new Promise<any>(resolve => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = event => resolve(event.data);
+          channel.port1.onmessage = event => resolve(_event.data);
           controller.postMessage({ type: 'GET_STATUS' }, [channel.port2]);
-          setTimeout(() => resolve({ error: 'timeout' }), 5000);
+          setTimeout(() => resolve({ _error: 'timeout' }), 5000);
         });
 
-        if (status.error) {
+        if (status._error) {
           return {
             id: 'service-worker',
             name: 'Service Worker',
@@ -159,21 +159,21 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           details: status,
           lastChecked: new Date(),
         };
-      } catch (error) {
+      } catch (_error) {
         return {
           id: 'service-worker',
           name: 'Service Worker',
           status: 'warning',
-          message: 'Service Worker communication error',
+          message: 'Service Worker communication _error',
           lastChecked: new Date(),
         };
       }
-    } catch (error) {
+    } catch (_error) {
       return {
         id: 'service-worker',
         name: 'Service Worker',
         status: 'error',
-        message: `Service Worker check failed: ${error.message}`,
+        message: `Service Worker check failed: ${_error.message}`,
         lastChecked: new Date(),
       };
     }
@@ -185,7 +185,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         return {
           id: 'cache',
           name: 'Cache API',
-          status: 'error',
+          status: '_error',
           message: 'Cache API not supported',
           lastChecked: new Date(),
         };
@@ -223,7 +223,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
               );
               totalSize += size;
             }
-          } catch (error) {
+          } catch (_error) {
             // Ignore individual errors
           }
         }
@@ -242,12 +242,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         },
         lastChecked: new Date(),
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         id: 'cache',
         name: 'Cache Storage',
         status: 'error',
-        message: `Cache check failed: ${error.message}`,
+        message: `Cache check failed: ${_error.message}`,
         lastChecked: new Date(),
       };
     }
@@ -259,7 +259,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         return {
           id: 'indexeddb',
           name: 'IndexedDB',
-          status: 'error',
+          status: '_error',
           message: 'IndexedDB not supported',
           lastChecked: new Date(),
         };
@@ -268,7 +268,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
       // Try to open a test database
       const testDB = await new Promise<IDBDatabase>((resolve, reject) => {
         const request = indexedDB.open('RelifeOfflineDB', 1);
-        request.onerror = () => reject(request.error);
+        request.onerror = () => reject(request._error);
         request.onsuccess = () => resolve(request.result);
         request.onupgradeneeded = event => {
           // Database will be created if it doesn't exist
@@ -288,12 +288,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         },
         lastChecked: new Date(),
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         id: 'indexeddb',
         name: 'IndexedDB',
         status: 'error',
-        message: `IndexedDB check failed: ${error.message}`,
+        message: `IndexedDB check failed: ${_error.message}`,
         lastChecked: new Date(),
       };
     }
@@ -315,12 +315,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         details: stats,
         lastChecked: new Date(),
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         id: 'gaming',
         name: 'Gaming Service',
         status: 'error',
-        message: `Gaming service check failed: ${error.message}`,
+        message: `Gaming service check failed: ${_error.message}`,
         lastChecked: new Date(),
       };
     }
@@ -342,12 +342,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         details: stats,
         lastChecked: new Date(),
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         id: 'analytics',
         name: 'Analytics Service',
         status: 'error',
-        message: `Analytics service check failed: ${error.message}`,
+        message: `Analytics service check failed: ${_error.message}`,
         lastChecked: new Date(),
       };
     }
@@ -369,12 +369,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         details: stats,
         lastChecked: new Date(),
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         id: 'sleep',
         name: 'Sleep Tracker',
         status: 'error',
-        message: `Sleep service check failed: ${error.message}`,
+        message: `Sleep service check failed: ${_error.message}`,
         lastChecked: new Date(),
       };
     }
@@ -428,12 +428,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         },
         lastChecked: new Date(),
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         id: 'storage',
         name: 'Storage Quota',
         status: 'error',
-        message: `Storage quota check failed: ${error.message}`,
+        message: `Storage quota check failed: ${_error.message}`,
         lastChecked: new Date(),
       };
     }
@@ -445,7 +445,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case 'warning':
         return <Alert className="h-4 w-4 text-yellow-500" />;
-      case 'error':
+      case '_error':
         return <Alert className="h-4 w-4 text-red-500" />;
       case 'checking':
         return <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />;
@@ -458,7 +458,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
         return 'text-green-600 dark:text-green-400';
       case 'warning':
         return 'text-yellow-600 dark:text-yellow-400';
-      case 'error':
+      case '_error':
         return 'text-red-600 dark:text-red-400';
       case 'checking':
         return 'text-blue-600 dark:text-blue-400';
@@ -468,7 +468,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
   useEffect(() => {
     // Run initial diagnostics
     runDiagnostics();
-  }, []);
+  }, [initial, diagnostics]);
 
   return (
     <Card className={className}>

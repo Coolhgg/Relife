@@ -44,7 +44,7 @@ const directionClasses = {
   'column-reverse': 'flex-col-reverse',
 };
 
-export const RTLFlex: React.FC<RTLFlexProps> = ({
+const RTLFlex: React.FC<RTLFlexProps> = ({
   children,
   className,
   direction = 'row',
@@ -107,3 +107,5 @@ export const RTLFlex: React.FC<RTLFlexProps> = ({
     </Component>
   );
 };
+
+export default RTLFlex;

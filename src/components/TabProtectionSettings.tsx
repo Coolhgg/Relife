@@ -91,7 +91,9 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
             type="checkbox"
             className="sr-only"
             checked={settings.enabled}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSettings({ enabled: e.target.checked })}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              updateSettings({ enabled: e.target.checked })
+            }
           />
           <div
             className={`w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full`}
@@ -337,7 +339,9 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
             <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <textarea
                 value={importText}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setImportText(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  setImportText(e.target.value)
+                }
                 placeholder="Paste your exported settings JSON here..."
                 className="w-full h-32 p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm"
               />

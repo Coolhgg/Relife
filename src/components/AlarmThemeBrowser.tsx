@@ -128,8 +128,8 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               combo.voice === recommendation.voice
           );
         setContextualRecommendations(matchingCombos.slice(0, 3));
-      } catch (error) {
-        console.warn('Failed to load contextual recommendations:', error);
+      } catch (_error) {
+        console.warn('Failed to load contextual recommendations:', _error);
       }
     };
 
@@ -321,7 +321,9 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                 type="text"
                 placeholder="Search themes, moods, or categories..."
                 value={searchQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSearchQuery(e.target.value)
+                }
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                            focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-lg"
               />
@@ -330,7 +332,9 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
             {/* Sort */}
             <select
               value={sortMode}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortMode(e.target.value as SortMode)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setSortMode(e.target.value as SortMode)
+              }
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                          focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 min-w-[150px]"
             >
@@ -446,7 +450,9 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                     <input
                       type="checkbox"
                       checked={showPremiumOnly}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShowPremiumOnly(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setShowPremiumOnly(e.target.checked)
+                      }
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -458,7 +464,9 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                     <input
                       type="checkbox"
                       checked={showFavoritesOnly}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShowFavoritesOnly(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setShowFavoritesOnly(e.target.checked)
+                      }
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -722,8 +730,8 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
       {/* Actions */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-1">
-          {combination.weatherSuitability.slice(0, 3).map((weather, index) => (
-            <span key={index} className="text-gray-400" title={weather}>
+          {combination.weatherSuitability.slice(0, 3).map((weather, _index) => (
+            <span key={_index} className="text-gray-400" title={weather}>
               {getWeatherIcon(weather)}
             </span>
           ))}

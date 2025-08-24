@@ -8,7 +8,7 @@ import { RealTimeSmartAdapter } from '../services/real-time-smart-adapter';
 export interface UseEnhancedSmartAlarmsResult {
   alarms: EnhancedSmartAlarm[];
   loading: boolean;
-  error: string | null;
+  _error: string | null;
   createAlarm: (alarmData: Partial<EnhancedSmartAlarm>) => Promise<boolean>;
   updateAlarm: (id: string, updates: Partial<EnhancedSmartAlarm>) => Promise<boolean>;
   deleteAlarm: (id: string) => Promise<boolean>;
@@ -19,7 +19,7 @@ export interface UseEnhancedSmartAlarmsResult {
 export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
   const [alarms, setAlarms] = useState<EnhancedSmartAlarm[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [_error, setError] = useState<string | null>(null);
 
   // Initialize services and load alarms
   useEffect(() => {
@@ -31,7 +31,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         // Load existing alarms
         await loadAlarms();
       } catch (err) {
-        console.error('Error initializing smart alarm services:', err);
+        console._error('Error initializing smart alarm services:', err);
         setError('Failed to initialize smart alarm system');
       }
     };
@@ -60,7 +60,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         }
       }
     } catch (err) {
-      console.error('Error loading smart alarms:', err);
+      console._error('Error loading smart alarms:', err);
       setError('Failed to load smart alarms');
     } finally {
       setLoading(false);
@@ -89,7 +89,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         setError('Failed to create smart alarm');
         return false;
       } catch (err) {
-        console.error('Error creating smart alarm:', err);
+        console._error('Error creating smart alarm:', err);
         setError('Failed to create smart alarm');
         return false;
       }
@@ -125,7 +125,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         setError('Failed to update smart alarm');
         return false;
       } catch (err) {
-        console.error('Error updating smart alarm:', err);
+        console._error('Error updating smart alarm:', err);
         setError('Failed to update smart alarm');
         return false;
       }
@@ -145,7 +145,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
 
       return true;
     } catch (err) {
-      console.error('Error deleting smart alarm:', err);
+      console._error('Error deleting smart alarm:', err);
       setError('Failed to delete smart alarm');
       return false;
     }
@@ -170,7 +170,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
 
         return true;
       } catch (err) {
-        console.error('Error recording feedback:', err);
+        console._error('Error recording feedback:', err);
         setError('Failed to record feedback');
         return false;
       }
@@ -185,7 +185,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
   return {
     alarms,
     loading,
-    error,
+    _error,
     createAlarm,
     updateAlarm,
     deleteAlarm,

@@ -242,8 +242,9 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
               type="text"
               placeholder="Search themes..."
               value={searchQuery}
-              
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSearchQuery(e.target.value)
+              }
               className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                          focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800"
             />
@@ -251,8 +252,9 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
 
           <select
             value={selectedCategory}
-            
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSelectedCategory(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSelectedCategory(e.target.value)
+            }
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                        focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800"
           >

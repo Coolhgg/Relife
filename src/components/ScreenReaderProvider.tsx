@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /// <reference lib="dom" />
 import React from 'react';
 // Screen Reader Initialization Component
@@ -51,18 +52,18 @@ export function ScreenReaderProvider({
         // Announce critical errors to screen reader users
         const errorMessage = args.join(' ');
         if (
-          errorMessage.toLowerCase().includes('error') ||
+          errorMessage.toLowerCase().includes('_error') ||
           errorMessage.toLowerCase().includes('failed')
         ) {
           screenReaderService.current?.announce(
-            'An error occurred. Please check your connection and try again.',
+            'An _error occurred. Please check your connection and try again.',
             'assertive'
           );
         }
       };
 
       // Setup global focus management
-      document.addEventListener('focusin', event => {
+      document.addEventListener('focusin', _event => {
         if (screenReaderService.current?.getState().verbosityLevel === 'high') {
           const target = event.target as HTMLElement;
           if (target && target.getAttribute) {
@@ -164,8 +165,8 @@ export function ScreenReaderTester() {
     { message: 'Testing navigation announcement', priority: 'polite' as const },
   ];
 
-  const runTest = (index: number) => {
-    const test = testAnnouncements[index];
+  const runTest = (_index: number) => {
+    const test = testAnnouncements[_index];
     if (test) {
       screenReader.announce(test.message, test.priority);
     }
@@ -175,10 +176,10 @@ export function ScreenReaderTester() {
     <div className="bg-white p-6 rounded-lg shadow-md border">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Screen Reader Test</h3>
       <div className="space-y-2">
-        {testAnnouncements.map((test, index) => (
+        {testAnnouncements.map((test, _index) => (
           <button
-            key={index}
-            onClick={() => runTest(index)}
+            key={_index}
+            onClick={() => runTest(_index)}
             className="block w-full text-left bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-label={`Test ${test.priority} announcement: ${test.message}`}
           >

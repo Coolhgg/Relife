@@ -1,7 +1,7 @@
 /**
  * Comprehensive Service Mocks - Legacy and Enhanced
  * Provides both legacy singleton patterns and new enhanced service mocks with dependency injection
- * 
+ *
  * MIGRATION NOTICE:
  * - Legacy static service mocks are maintained for backward compatibility
  * - New tests should use enhanced service mocks from './enhanced-service-mocks'
@@ -62,7 +62,11 @@ export class MockAlarmService {
   private static instance: MockAlarmService;
   private static alarms: Alarm[] = [];
   private static checkInterval: NodeJS.Timeout | null = null;
-  private static callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
+  private static callHistory: Array<{
+    method: string;
+    args: any[];
+    timestamp: number;
+  }> = [];
 
   static getInstance(): MockAlarmService {
     if (!this.instance) {
@@ -88,14 +92,16 @@ export class MockAlarmService {
   private static logCall(method: string, args: any[]): void {
     this.callHistory.push({
       method,
-      args: args.map(arg => typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg),
+      args: args.map(arg =>
+        typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg
+      ),
       timestamp: Date.now(),
     });
   }
 
   static async loadAlarms(userId?: string): Promise<Alarm[]> {
     this.logCall('loadAlarms', [userId]);
-    
+
     const cacheKey = `alarms_${userId || 'anonymous'}`;
     const cached = MockServiceUtils.getCacheEntry<Alarm[]>(cacheKey);
     if (cached) {
@@ -152,23 +158,23 @@ export class MockAlarmService {
 
     this.alarms = mockAlarms;
     MockServiceUtils.setCacheEntry(cacheKey, mockAlarms);
-    
+
     return mockAlarms;
   }
 
   static async saveAlarms(userId?: string): Promise<void> {
     this.logCall('saveAlarms', [userId]);
-    
+
     // Simulate save delay
     await MockServiceUtils.delay(50);
-    
+
     const cacheKey = `alarms_${userId || 'anonymous'}`;
     MockServiceUtils.setCacheEntry(cacheKey, this.alarms);
   }
 
   static async addAlarm(alarm: Partial<Alarm>): Promise<Alarm> {
     this.logCall('addAlarm', [alarm]);
-    
+
     const newAlarm: Alarm = {
       id: MockServiceUtils.generateId('alarm'),
       userId: alarm.userId || 'test-user',
@@ -193,13 +199,13 @@ export class MockAlarmService {
 
     this.alarms.push(newAlarm);
     await this.saveAlarms(newAlarm.userId);
-    
+
     return newAlarm;
   }
 
   static async updateAlarm(id: string, updates: Partial<Alarm>): Promise<Alarm> {
     this.logCall('updateAlarm', [id, updates]);
-    
+
     const alarmIndex = this.alarms.findIndex(alarm => alarm.id === id);
     if (alarmIndex === -1) {
       throw new Error(`Alarm with id ${id} not found`);
@@ -213,13 +219,13 @@ export class MockAlarmService {
 
     this.alarms[alarmIndex] = updatedAlarm;
     await this.saveAlarms(updatedAlarm.userId);
-    
+
     return updatedAlarm;
   }
 
   static async deleteAlarm(id: string): Promise<void> {
     this.logCall('deleteAlarm', [id]);
-    
+
     const alarmIndex = this.alarms.findIndex(alarm => alarm.id === id);
     if (alarmIndex === -1) {
       throw new Error(`Alarm with id ${id} not found`);
@@ -236,7 +242,7 @@ export class MockAlarmService {
 
   static startAlarmChecker(): void {
     this.logCall('startAlarmChecker', []);
-    
+
     if (this.checkInterval) {
       clearInterval(this.checkInterval);
     }
@@ -248,7 +254,11 @@ export class MockAlarmService {
       const currentDay = now.getDay();
 
       this.alarms.forEach(alarm => {
-        if (alarm.isActive && alarm.time === currentTime && alarm.days.includes(currentDay)) {
+        if (
+          alarm.isActive &&
+          alarm.time === currentTime &&
+          alarm.days.includes(currentDay)
+        ) {
           this.logCall('alarmTriggered', [alarm.id]);
         }
       });
@@ -257,7 +267,7 @@ export class MockAlarmService {
 
   static stopAlarmChecker(): void {
     this.logCall('stopAlarmChecker', []);
-    
+
     if (this.checkInterval) {
       clearInterval(this.checkInterval);
       this.checkInterval = null;
@@ -269,7 +279,11 @@ export class MockAlarmService {
 export class MockSubscriptionService {
   private static cache = new Map<string, any>();
   private static cacheExpiry = new Map<string, number>();
-  private static callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
+  private static callHistory: Array<{
+    method: string;
+    args: any[];
+    timestamp: number;
+  }> = [];
   private static readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
   static reset(): void {
@@ -285,7 +299,9 @@ export class MockSubscriptionService {
   private static logCall(method: string, args: any[]): void {
     this.callHistory.push({
       method,
-      args: args.map(arg => typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg),
+      args: args.map(arg =>
+        typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg
+      ),
       timestamp: Date.now(),
     });
   }
@@ -307,7 +323,7 @@ export class MockSubscriptionService {
 
   static async getUserSubscription(userId: string): Promise<Subscription | null> {
     this.logCall('getUserSubscription', [userId]);
-    
+
     const cacheKey = `subscription_${userId}`;
     const cached = this.getCachedData<Subscription>(cacheKey);
     if (cached) {
@@ -343,7 +359,10 @@ export class MockSubscriptionService {
     return null; // Free user
   }
 
-  static async checkFeatureAccess(userId: string, feature: keyof PremiumFeatureAccess): Promise<{
+  static async checkFeatureAccess(
+    userId: string,
+    feature: keyof PremiumFeatureAccess
+  ): Promise<{
     hasAccess: boolean;
     reason?: string;
     upgradeRequired?: boolean;
@@ -351,9 +370,9 @@ export class MockSubscriptionService {
     limit?: number;
   }> {
     this.logCall('checkFeatureAccess', [userId, feature]);
-    
+
     const subscription = await this.getUserSubscription(userId);
-    
+
     if (!subscription || subscription.status !== 'active') {
       return {
         hasAccess: false,
@@ -381,7 +400,7 @@ export class MockSubscriptionService {
 
     // Mock current usage
     const currentUsage = Math.floor(Math.random() * limit * 0.8);
-    
+
     return {
       hasAccess: currentUsage < limit,
       currentUsage,
@@ -390,12 +409,16 @@ export class MockSubscriptionService {
     };
   }
 
-  static async incrementFeatureUsage(userId: string, feature: keyof PremiumFeatureAccess, amount: number = 1): Promise<void> {
+  static async incrementFeatureUsage(
+    userId: string,
+    feature: keyof PremiumFeatureAccess,
+    amount: number = 1
+  ): Promise<void> {
     this.logCall('incrementFeatureUsage', [userId, feature, amount]);
-    
+
     // Simulate usage tracking
     await MockServiceUtils.delay(50);
-    
+
     const usageKey = `usage_${userId}_${feature}`;
     const currentUsage = this.getCachedData<number>(usageKey) || 0;
     this.setCachedData(usageKey, currentUsage + amount);
@@ -403,7 +426,7 @@ export class MockSubscriptionService {
 
   static async getSubscriptionFeatures(tier: string): Promise<PremiumFeatureAccess> {
     this.logCall('getSubscriptionFeatures', [tier]);
-    
+
     if (tier === 'premium') {
       return {
         elevenlabsVoices: true,
@@ -448,7 +471,11 @@ export class MockSubscriptionService {
 // Mock AnalyticsService
 export class MockAnalyticsService {
   private static events: AnalyticsEvent[] = [];
-  private static callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
+  private static callHistory: Array<{
+    method: string;
+    args: any[];
+    timestamp: number;
+  }> = [];
   private static isEnabled: boolean = true;
 
   static reset(): void {
@@ -472,14 +499,20 @@ export class MockAnalyticsService {
   private static logCall(method: string, args: any[]): void {
     this.callHistory.push({
       method,
-      args: args.map(arg => typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg),
+      args: args.map(arg =>
+        typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg
+      ),
       timestamp: Date.now(),
     });
   }
 
-  static async track(event: string, properties?: Record<string, any>, userId?: string): Promise<void> {
-    this.logCall('track', [event, properties, userId]);
-    
+  static async track(
+    _event: string,
+    properties?: Record<string, any>,
+    userId?: string
+  ): Promise<void> {
+    this.logCall('track', [_event, properties, userId]);
+
     if (!this.isEnabled) {
       return;
     }
@@ -492,14 +525,14 @@ export class MockAnalyticsService {
     };
 
     this.events.push(analyticsEvent);
-    
+
     // Simulate API delay
     await MockServiceUtils.delay(50);
   }
 
   static async identify(userId: string, traits?: Record<string, any>): Promise<void> {
     this.logCall('identify', [userId, traits]);
-    
+
     if (!this.isEnabled) {
       return;
     }
@@ -507,9 +540,13 @@ export class MockAnalyticsService {
     await this.track('user_identified', { ...traits, user_id: userId }, userId);
   }
 
-  static async page(name: string, properties?: Record<string, any>, userId?: string): Promise<void> {
+  static async page(
+    name: string,
+    properties?: Record<string, any>,
+    userId?: string
+  ): Promise<void> {
     this.logCall('page', [name, properties, userId]);
-    
+
     if (!this.isEnabled) {
       return;
     }
@@ -517,21 +554,23 @@ export class MockAnalyticsService {
     await this.track('page_view', { page: name, ...properties }, userId);
   }
 
-  static async batch(events: Array<{ event: string; properties?: Record<string, any>; userId?: string }>): Promise<void> {
+  static async batch(
+    events: Array<{ _event: string; properties?: Record<string, any>; userId?: string }>
+  ): Promise<void> {
     this.logCall('batch', [events]);
-    
+
     if (!this.isEnabled) {
       return;
     }
 
     for (const eventData of events) {
-      await this.track(eventData.event, eventData.properties, eventData.userId);
+      await this.track(eventData._event, eventData.properties, eventData.userId);
     }
   }
 
   static async flush(): Promise<void> {
     this.logCall('flush', []);
-    
+
     // Simulate flush delay
     await MockServiceUtils.delay(100);
   }
@@ -540,7 +579,11 @@ export class MockAnalyticsService {
 // Mock BattleService
 export class MockBattleService {
   private static battles: Battle[] = [];
-  private static callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
+  private static callHistory: Array<{
+    method: string;
+    args: any[];
+    timestamp: number;
+  }> = [];
   private static realTimeUpdates: Map<string, NodeJS.Timeout> = new Map();
 
   static reset(): void {
@@ -561,14 +604,16 @@ export class MockBattleService {
   private static logCall(method: string, args: any[]): void {
     this.callHistory.push({
       method,
-      args: args.map(arg => typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg),
+      args: args.map(arg =>
+        typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg
+      ),
       timestamp: Date.now(),
     });
   }
 
   static async createBattle(battleData: Partial<Battle>): Promise<Battle> {
     this.logCall('createBattle', [battleData]);
-    
+
     const battle: Battle = {
       id: MockServiceUtils.generateId('battle'),
       creatorId: battleData.creatorId || 'test-user',
@@ -576,7 +621,9 @@ export class MockBattleService {
       description: battleData.description || 'A test battle',
       type: battleData.type || 'weekly_challenge',
       startDate: battleData.startDate || new Date().toISOString(),
-      endDate: battleData.endDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      endDate:
+        battleData.endDate ||
+        new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       maxParticipants: battleData.maxParticipants || 10,
       currentParticipants: 1,
       prizePool: battleData.prizePool || 100,
@@ -609,17 +656,17 @@ export class MockBattleService {
     };
 
     this.battles.push(battle);
-    
+
     // Simulate real-time updates
     this.simulateRealTimeUpdates(battle.id);
-    
+
     await MockServiceUtils.delay(100);
     return battle;
   }
 
   static async joinBattle(battleId: string, userId: string): Promise<void> {
     this.logCall('joinBattle', [battleId, userId]);
-    
+
     const battle = this.battles.find(b => b.id === battleId);
     if (!battle) {
       throw new Error(`Battle ${battleId} not found`);
@@ -650,17 +697,21 @@ export class MockBattleService {
 
     battle.currentParticipants++;
     battle.updatedAt = new Date().toISOString();
-    
+
     await MockServiceUtils.delay(100);
   }
 
-  static async submitWakeProof(battleId: string, userId: string, proofData: any): Promise<{
+  static async submitWakeProof(
+    battleId: string,
+    userId: string,
+    proofData: any
+  ): Promise<{
     pointsEarned: number;
     newScore: number;
     rank: number;
   }> {
     this.logCall('submitWakeProof', [battleId, userId, proofData]);
-    
+
     const battle = this.battles.find(b => b.id === battleId);
     if (!battle) {
       throw new Error(`Battle ${battleId} not found`);
@@ -674,21 +725,21 @@ export class MockBattleService {
     // Mock scoring logic
     const pointsEarned = Math.floor(Math.random() * 20) + 10;
     const leaderboardEntry = battle.leaderboard.find(l => l.userId === userId);
-    
+
     if (leaderboardEntry) {
       leaderboardEntry.score += pointsEarned;
-      
+
       // Update rankings
       battle.leaderboard.sort((a, b) => b.score - a.score);
-      battle.leaderboard.forEach((entry, index) => {
-        entry.rank = index + 1;
+      battle.leaderboard.forEach((entry, _index) => {
+        entry.rank = _index + 1;
       });
     }
 
     battle.updatedAt = new Date().toISOString();
-    
+
     await MockServiceUtils.delay(100);
-    
+
     return {
       pointsEarned,
       newScore: leaderboardEntry?.score || 0,
@@ -706,10 +757,14 @@ export class MockBattleService {
       }
 
       // Simulate random participant activity
-      if (MockServiceUtils.randomBool(0.1)) { // 10% chance per interval
-        const randomParticipant = battle.participants[Math.floor(Math.random() * battle.participants.length)];
+      if (MockServiceUtils.randomBool(0.1)) {
+        // 10% chance per interval
+        const randomParticipant =
+          battle.participants[Math.floor(Math.random() * battle.participants.length)];
         if (randomParticipant) {
-          this.submitWakeProof(battleId, randomParticipant.userId, { type: 'auto_generated' });
+          this.submitWakeProof(battleId, randomParticipant.userId, {
+            type: 'auto_generated',
+          });
         }
       }
     }, 5000); // Update every 5 seconds
@@ -717,21 +772,26 @@ export class MockBattleService {
     this.realTimeUpdates.set(battleId, timer);
   }
 
-  static async getBattles(filters?: { status?: string; userId?: string }): Promise<Battle[]> {
+  static async getBattles(filters?: {
+    status?: string;
+    userId?: string;
+  }): Promise<Battle[]> {
     this.logCall('getBattles', [filters]);
-    
+
     let filteredBattles = [...this.battles];
-    
+
     if (filters?.status) {
-      filteredBattles = filteredBattles.filter(battle => battle.status === filters.status);
+      filteredBattles = filteredBattles.filter(
+        battle => battle.status === filters.status
+      );
     }
-    
+
     if (filters?.userId) {
-      filteredBattles = filteredBattles.filter(battle => 
+      filteredBattles = filteredBattles.filter(battle =>
         battle.participants.some(p => p.userId === filters.userId)
       );
     }
-    
+
     await MockServiceUtils.delay(100);
     return filteredBattles;
   }
@@ -790,14 +850,14 @@ export {
 
 /**
  * Migration Guide:
- * 
+ *
  * OLD (Legacy):
  * ```typescript
  * import { MockAlarmService } from './service-mocks';
  * MockAlarmService.reset();
  * const alarms = await MockAlarmService.loadAlarms();
  * ```
- * 
+ *
  * NEW (Enhanced):
  * ```typescript
  * import { EnhancedMockAlarmService, createMockServiceContainer } from './service-mocks';
@@ -806,16 +866,16 @@ export {
  * await alarmService.initialize();
  * const alarms = await alarmService.getAlarms();
  * ```
- * 
+ *
  * Or use with React Provider:
  * ```typescript
  * import { EnhancedServiceProvider, useEnhancedAlarmService } from './service-mocks';
- * 
+ *
  * function TestComponent() {
  *   const alarmService = useEnhancedAlarmService();
  *   // Use alarmService...
  * }
- * 
+ *
  * // In test:
  * render(
  *   <EnhancedServiceProvider>

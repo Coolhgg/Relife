@@ -99,8 +99,8 @@ export function UsabilityAnalyticsDashboard() {
       const bugs = userTestingService.getBugReports();
 
       setData({ sessions, events, feedback, bugs });
-    } catch (error) {
-      console.error('Failed to load analytics data:', error);
+    } catch (_error) {
+      console._error('Failed to load analytics data:', _error);
     } finally {
       setIsLoading(false);
     }
@@ -137,7 +137,7 @@ export function UsabilityAnalyticsDashboard() {
     const clicksByPage = events
       .filter((e: any) => e.type === 'click')
       .reduce(
-        (acc, event) => {
+        (acc, _event) => {
           const page = event.page || 'Unknown';
           acc[page] = (acc[page] || 0) + 1;
           return acc;
@@ -148,7 +148,7 @@ export function UsabilityAnalyticsDashboard() {
     const navigationFlow = events
       .filter((e: any) => e.type === 'navigation')
       .reduce(
-        (acc, event) => {
+        (acc, _event) => {
           const key = `${event.metadata.fromPage || 'Unknown'} → ${event.page}`;
           acc[key] = (acc[key] || 0) + 1;
           return acc;
@@ -159,8 +159,8 @@ export function UsabilityAnalyticsDashboard() {
     const errorsByType = events
       .filter((e: any) => e.type === 'error')
       .reduce(
-        (acc, event) => {
-          const errorType = event.metadata.error || 'Unknown';
+        (acc, _event) => {
+          const errorType = event.metadata._error || 'Unknown';
           acc[errorType] = (acc[errorType] || 0) + 1;
           return acc;
         },
@@ -265,13 +265,15 @@ export function UsabilityAnalyticsDashboard() {
         <div>
           <h2 className="text-2xl font-bold">User Testing Analytics</h2>
           <p className="text-gray-600 mt-1">
-            Insights from user behavior and feedback data
+            Insights from _user behavior and feedback data
           </p>
         </div>
         <div className="flex items-center gap-3">
           <select
             value={selectedTimeRange}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSelectedTimeRange(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSelectedTimeRange(e.target.value)
+            }
             className="px-3 py-2 border rounded-lg"
           >
             <option value="1d">Last 24 Hours</option>
@@ -409,10 +411,10 @@ export function UsabilityAnalyticsDashboard() {
                         dataKey="count"
                         label={({ type, count }) => `${type}: ${count}`}
                       >
-                        {eventAnalytics.errorsByType.map((entry, index) => (
+                        {eventAnalytics.errorsByType.map((entry, _index) => (
                           <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
+                            key={`cell-${_index}`}
+                            fill={COLORS[_index % COLORS.length]}
                           />
                         ))}
                       </Pie>
@@ -421,7 +423,7 @@ export function UsabilityAnalyticsDashboard() {
                   </ResponsiveContainer>
                 ) : (
                   <div className="flex items-center justify-center h-300 text-gray-500">
-                    No error data available
+                    No _error data available
                   </div>
                 )}
               </CardContent>
@@ -477,10 +479,10 @@ export function UsabilityAnalyticsDashboard() {
                         dataKey="count"
                         label={({ sentiment, count }) => `${sentiment}: ${count}`}
                       >
-                        {feedbackAnalytics.sentimentBreakdown.map((entry, index) => (
+                        {feedbackAnalytics.sentimentBreakdown.map((entry, _index) => (
                           <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
+                            key={`cell-${_index}`}
+                            fill={COLORS[_index % COLORS.length]}
                           />
                         ))}
                       </Pie>

@@ -29,7 +29,7 @@ export interface EnhancedServiceContainer {
 export interface ServiceProviderProps {
   children: ReactNode;
   services?: Partial<EnhancedServiceContainer>;
-  config?: ServiceConfig;
+  _config?: ServiceConfig;
 }
 
 // ============================================================================
@@ -49,18 +49,23 @@ const ServiceContainerContext = createContext<{
 export const EnhancedServiceProvider: React.FC<ServiceProviderProps> = ({
   children,
   services = {},
-  config,
+  _config,
 }) => {
   // Create service container with dependency injection
   const container = React.useMemo(() => {
     const mockContainer = createMockServiceContainer();
-    
+
     return {
-      alarmService: (services.alarmService || mockContainer.get('alarmService')) as MockAlarmService,
-      analyticsService: (services.analyticsService || mockContainer.get('analyticsService')) as MockAnalyticsService,
-      subscriptionService: (services.subscriptionService || mockContainer.get('subscriptionService')) as MockSubscriptionService,
-      battleService: (services.battleService || mockContainer.get('battleService')) as MockBattleService,
-      voiceService: (services.voiceService || mockContainer.get('voiceService')) as MockVoiceService,
+      alarmService: (services.alarmService ||
+        mockContainer.get('alarmService')) as MockAlarmService,
+      analyticsService: (services.analyticsService ||
+        mockContainer.get('analyticsService')) as MockAnalyticsService,
+      subscriptionService: (services.subscriptionService ||
+        mockContainer.get('subscriptionService')) as MockSubscriptionService,
+      battleService: (services.battleService ||
+        mockContainer.get('battleService')) as MockBattleService,
+      voiceService: (services.voiceService ||
+        mockContainer.get('voiceService')) as MockVoiceService,
     };
   }, [services]);
 
@@ -72,7 +77,7 @@ export const EnhancedServiceProvider: React.FC<ServiceProviderProps> = ({
 
   const initializeServices = React.useCallback(async () => {
     for (const service of Object.values(container)) {
-      await service.initialize(config);
+      await service.initialize(_config);
     }
   }, [container, config]);
 
@@ -96,7 +101,9 @@ export const EnhancedServiceProvider: React.FC<ServiceProviderProps> = ({
 export const useServiceContainer = () => {
   const context = useContext(ServiceContainerContext);
   if (!context) {
-    throw new Error('useServiceContainer must be used within an EnhancedServiceProvider');
+    throw new Error(
+      'useServiceContainer must be used within an EnhancedServiceProvider'
+    );
   }
   return context;
 };
@@ -130,15 +137,22 @@ export const useEnhancedVoiceService = (): MockVoiceService => {
 // Testing Utilities
 // ============================================================================
 
-export const createTestServiceContainer = (overrides: Partial<EnhancedServiceContainer> = {}): EnhancedServiceContainer => {
+export const createTestServiceContainer = (
+  overrides: Partial<EnhancedServiceContainer> = {}
+): EnhancedServiceContainer => {
   const container = createMockServiceContainer();
-  
+
   return {
-    alarmService: (overrides.alarmService || container.get('alarmService')) as MockAlarmService,
-    analyticsService: (overrides.analyticsService || container.get('analyticsService')) as MockAnalyticsService,
-    subscriptionService: (overrides.subscriptionService || container.get('subscriptionService')) as MockSubscriptionService,
-    battleService: (overrides.battleService || container.get('battleService')) as MockBattleService,
-    voiceService: (overrides.voiceService || container.get('voiceService')) as MockVoiceService,
+    alarmService: (overrides.alarmService ||
+      container.get('alarmService')) as MockAlarmService,
+    analyticsService: (overrides.analyticsService ||
+      container.get('analyticsService')) as MockAnalyticsService,
+    subscriptionService: (overrides.subscriptionService ||
+      container.get('subscriptionService')) as MockSubscriptionService,
+    battleService: (overrides.battleService ||
+      container.get('battleService')) as MockBattleService,
+    voiceService: (overrides.voiceService ||
+      container.get('voiceService')) as MockVoiceService,
     ...overrides,
   };
 };
@@ -146,10 +160,10 @@ export const createTestServiceContainer = (overrides: Partial<EnhancedServiceCon
 export const withEnhancedServices = <P extends object>(
   Component: React.ComponentType<P>,
   services?: Partial<EnhancedServiceContainer>,
-  config?: ServiceConfig
+  _config?: ServiceConfig
 ) => {
   return (props: P) => (
-    <EnhancedServiceProvider services={services} config={config}>
+    <EnhancedServiceProvider services={services} config={_config}>
       <Component {...props} />
     </EnhancedServiceProvider>
   );

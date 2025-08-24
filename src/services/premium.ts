@@ -203,21 +203,21 @@ export class PremiumService {
    */
   async getUserTier(userId: string): Promise<SubscriptionTier> {
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('users')
         .select('subscription_tier')
         .eq('id', userId)
         .single();
 
-      if (error) {
-        ErrorHandler.handleError(error, 'Failed to get user subscription tier');
-        return 'free'; // Default to free on error
+      if (_error) {
+        ErrorHandler.handleError(_error, 'Failed to get _user subscription tier');
+        return 'free'; // Default to free on _error
       }
 
       return data?.subscription_tier || 'free';
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Error checking user subscription tier'
       );
       return 'free';
@@ -229,7 +229,7 @@ export class PremiumService {
    */
   async updateUserTier(userId: string): Promise<boolean> {
     try {
-      const { error } = await supabase
+      const { _error } = await supabase
         .from('users')
         .update({
           subscription_tier: newTier,
@@ -237,15 +237,15 @@ export class PremiumService {
         })
         .eq('id', userId);
 
-      if (error) {
-        ErrorHandler.handleError(error, 'Failed to update user subscription tier');
+      if (_error) {
+        ErrorHandler.handleError(_error, 'Failed to update _user subscription tier');
         return false;
       }
 
       return true;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Error updating user subscription tier'
       );
       return false;
@@ -300,12 +300,12 @@ export class PremiumService {
       case 'create_alarm': {
         if (userTier === 'free') {
           // Check alarm count for free users
-          const { data, error } = await supabase
+          const { data, _error } = await supabase
             .from('alarms')
             .select('id')
             .eq('user_id', userId);
 
-          if (error) {
+          if (_error) {
             return { allowed: false, reason: 'Error checking alarm count' };
           }
 

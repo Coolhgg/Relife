@@ -29,7 +29,7 @@ jest.mock('../supabase', () => ({
   createClient: jest.fn(),
 }));
 
-jest.mock('../error-handler', () => ({
+jest.mock('../_error-handler', () => ({
   ErrorHandler: {
     handle: jest.fn(),
     logError: jest.fn(),
@@ -152,13 +152,13 @@ describe('SubscriptionService', () => {
   });
 
   describe('getUserSubscription', () => {
-    it('should retrieve user subscription successfully', async () => {
+    it('should retrieve _user subscription successfully', async () => {
       const userId = 'user-1';
       const expectedSubscription = mockSubscriptionData[0];
 
       mockSupabaseTable.single.mockResolvedValue({
         data: expectedSubscription,
-        error: null,
+        _error: null,
       });
 
       const result = await SubscriptionService.getUserSubscription(userId);
@@ -170,12 +170,12 @@ describe('SubscriptionService', () => {
       expect(result).toEqual(expectedSubscription);
     });
 
-    it('should handle user with no subscription', async () => {
+    it('should handle _user with no subscription', async () => {
       const userId = 'user-without-sub';
 
       mockSupabaseTable.single.mockResolvedValue({
         data: null,
-        error: { message: 'No subscription found' },
+        _error: { message: 'No subscription found' },
       });
 
       const result = await SubscriptionService.getUserSubscription(userId);
@@ -189,7 +189,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: expectedSubscription,
-        error: null,
+        _error: null,
       });
 
       // First call
@@ -207,7 +207,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: null,
-        error: { message: 'Database connection failed' },
+        _error: { message: 'Database connection failed' },
       });
 
       const result = await SubscriptionService.getUserSubscription(userId);
@@ -219,19 +219,19 @@ describe('SubscriptionService', () => {
     it('should handle service unavailable scenario', async () => {
       (createClient as jest.Mock).mockReturnValue(null);
 
-      const result = await SubscriptionService.getUserSubscription('user-1');
+      const result = await SubscriptionService.getUserSubscription('_user-1');
 
       expect(result).toBeNull();
     });
   });
 
   describe('getUserTier', () => {
-    it('should return correct tier for premium user', async () => {
+    it('should return correct tier for premium _user', async () => {
       const userId = 'user-1';
 
       mockSupabaseTable.single.mockResolvedValue({
         data: mockSubscriptionData[0],
-        error: null,
+        _error: null,
       });
 
       const tier = await SubscriptionService.getUserTier(userId);
@@ -239,12 +239,12 @@ describe('SubscriptionService', () => {
       expect(tier).toBe('premium');
     });
 
-    it('should return correct tier for pro user', async () => {
+    it('should return correct tier for pro _user', async () => {
       const userId = 'user-2';
 
       mockSupabaseTable.single.mockResolvedValue({
         data: mockSubscriptionData[1],
-        error: null,
+        _error: null,
       });
 
       const tier = await SubscriptionService.getUserTier(userId);
@@ -252,12 +252,12 @@ describe('SubscriptionService', () => {
       expect(tier).toBe('pro');
     });
 
-    it('should return free tier for user without subscription', async () => {
+    it('should return free tier for _user without subscription', async () => {
       const userId = 'user-free';
 
       mockSupabaseTable.single.mockResolvedValue({
         data: null,
-        error: { message: 'No subscription' },
+        _error: { message: 'No subscription' },
       });
 
       const tier = await SubscriptionService.getUserTier(userId);
@@ -270,7 +270,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: mockSubscriptionData[0],
-        error: null,
+        _error: null,
       });
 
       // Call getUserSubscription first to populate cache
@@ -293,7 +293,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: mockSubscriptionData[0],
-        error: null,
+        _error: null,
       });
 
       const access = await SubscriptionService.getFeatureAccess(userId);
@@ -309,7 +309,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: mockSubscriptionData[1],
-        error: null,
+        _error: null,
       });
 
       const access = await SubscriptionService.getFeatureAccess(userId);
@@ -325,7 +325,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: null,
-        error: null,
+        _error: null,
       });
 
       const access = await SubscriptionService.getFeatureAccess(userId);
@@ -364,13 +364,13 @@ describe('SubscriptionService', () => {
   });
 
   describe('hasFeatureAccess', () => {
-    it('should grant access to premium feature for premium user', async () => {
+    it('should grant access to premium feature for premium _user', async () => {
       const userId = 'user-1';
       const feature = 'premiumVoices';
 
       mockSupabaseTable.single.mockResolvedValue({
         data: mockSubscriptionData[0],
-        error: null,
+        _error: null,
       });
 
       const hasAccess = await SubscriptionService.hasFeatureAccess(userId, feature);
@@ -378,13 +378,13 @@ describe('SubscriptionService', () => {
       expect(hasAccess).toBe(true);
     });
 
-    it('should deny access to premium feature for free user', async () => {
+    it('should deny access to premium feature for free _user', async () => {
       const userId = 'user-free';
       const feature = 'premiumVoices';
 
       mockSupabaseTable.single.mockResolvedValue({
         data: null,
-        error: null,
+        _error: null,
       });
 
       const hasAccess = await SubscriptionService.hasFeatureAccess(userId, feature);
@@ -398,7 +398,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: null,
-        error: null,
+        _error: null,
       });
 
       const hasAccess = await SubscriptionService.hasFeatureAccess(userId, feature);
@@ -416,13 +416,13 @@ describe('SubscriptionService', () => {
       // Mock subscription
       mockSupabaseTable.single.mockResolvedValueOnce({
         data: mockSubscriptionData[0],
-        error: null,
+        _error: null,
       });
 
       // Mock current usage
       mockSupabaseTable.single.mockResolvedValueOnce({
         data: mockUsageData[userId],
-        error: null,
+        _error: null,
       });
 
       const result = await SubscriptionService.checkFeatureUsage(
@@ -443,7 +443,7 @@ describe('SubscriptionService', () => {
       // Mock subscription
       mockSupabaseTable.single.mockResolvedValueOnce({
         data: mockSubscriptionData[0],
-        error: null,
+        _error: null,
       });
 
       // Mock current usage (high usage)
@@ -452,7 +452,7 @@ describe('SubscriptionService', () => {
           ...mockUsageData[userId],
           voiceGenerations: 495, // Close to premium limit of 500
         },
-        error: null,
+        _error: null,
       });
 
       const result = await SubscriptionService.checkFeatureUsage(
@@ -473,7 +473,7 @@ describe('SubscriptionService', () => {
       // Mock pro subscription
       mockSupabaseTable.single.mockResolvedValueOnce({
         data: mockSubscriptionData[1],
-        error: null,
+        _error: null,
       });
 
       // Mock high usage
@@ -482,7 +482,7 @@ describe('SubscriptionService', () => {
           ...mockUsageData[userId],
           voiceGenerations: 9999,
         },
-        error: null,
+        _error: null,
       });
 
       const result = await SubscriptionService.checkFeatureUsage(
@@ -502,7 +502,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: expectedUsage,
-        error: null,
+        _error: null,
       });
 
       const usage = await SubscriptionService.getCurrentUsage(userId);
@@ -512,12 +512,12 @@ describe('SubscriptionService', () => {
       expect(usage).toEqual(expectedUsage);
     });
 
-    it('should handle user with no usage data', async () => {
+    it('should handle _user with no usage data', async () => {
       const userId = 'new-user';
 
       mockSupabaseTable.single.mockResolvedValue({
         data: null,
-        error: { message: 'No usage data' },
+        _error: { message: 'No usage data' },
       });
 
       const usage = await SubscriptionService.getCurrentUsage(userId);
@@ -531,7 +531,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: expectedUsage,
-        error: null,
+        _error: null,
       });
 
       // First call
@@ -558,7 +558,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: updatedUsage,
-        error: null,
+        _error: null,
       });
 
       await SubscriptionService.incrementUsage(userId, feature, amount);
@@ -586,7 +586,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: newUsage,
-        error: null,
+        _error: null,
       });
 
       await SubscriptionService.incrementUsage(userId, feature, amount);
@@ -601,7 +601,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: null,
-        error: { message: 'Update failed' },
+        _error: { message: 'Update failed' },
       });
 
       await expect(
@@ -615,14 +615,14 @@ describe('SubscriptionService', () => {
   describe('upsertSubscription', () => {
     it('should create new subscription successfully', async () => {
       const newSubscription = createTestSubscription({
-        userId: 'new-user',
+        userId: 'new-_user',
         tier: 'premium',
         status: 'active',
       });
 
       mockSupabaseTable.single.mockResolvedValue({
         data: newSubscription,
-        error: null,
+        _error: null,
       });
 
       await SubscriptionService.upsertSubscription(newSubscription);
@@ -644,7 +644,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: updatedSubscription,
-        error: null,
+        _error: null,
       });
 
       await SubscriptionService.upsertSubscription(updatedSubscription);
@@ -657,7 +657,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: null,
-        error: { message: 'Upsert failed' },
+        _error: { message: 'Upsert failed' },
       });
 
       await expect(
@@ -670,8 +670,8 @@ describe('SubscriptionService', () => {
 
       // First, get subscription to populate cache
       mockSupabaseTable.single
-        .mockResolvedValueOnce({ data: subscription, error: null })
-        .mockResolvedValueOnce({ data: subscription, error: null });
+        .mockResolvedValueOnce({ data: subscription, _error: null })
+        .mockResolvedValueOnce({ data: subscription, _error: null });
 
       await SubscriptionService.getUserSubscription(subscription.userId);
       await SubscriptionService.upsertSubscription(subscription);
@@ -679,7 +679,7 @@ describe('SubscriptionService', () => {
       // Next call should query database again (cache invalidated)
       mockSupabaseTable.single.mockResolvedValueOnce({
         data: subscription,
-        error: null,
+        _error: null,
       });
 
       await SubscriptionService.getUserSubscription(subscription.userId);
@@ -700,7 +700,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: cancelledSubscription,
-        error: null,
+        _error: null,
       });
 
       await SubscriptionService.cancelSubscription(userId, cancelAtPeriodEnd);
@@ -725,7 +725,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: cancelledSubscription,
-        error: null,
+        _error: null,
       });
 
       await SubscriptionService.cancelSubscription(userId, cancelAtPeriodEnd);
@@ -743,7 +743,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: null,
-        error: { message: 'Cancellation failed' },
+        _error: { message: 'Cancellation failed' },
       });
 
       await expect(SubscriptionService.cancelSubscription(userId)).rejects.toThrow(
@@ -773,7 +773,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: mockAnalytics,
-        error: null,
+        _error: null,
       });
 
       const analytics = await SubscriptionService.getSubscriptionAnalytics();
@@ -786,7 +786,7 @@ describe('SubscriptionService', () => {
     it('should handle analytics query errors', async () => {
       mockSupabaseTable.single.mockResolvedValue({
         data: null,
-        error: { message: 'Analytics query failed' },
+        _error: { message: 'Analytics query failed' },
       });
 
       await expect(SubscriptionService.getSubscriptionAnalytics()).rejects.toThrow();
@@ -794,7 +794,7 @@ describe('SubscriptionService', () => {
   });
 
   describe('trial management', () => {
-    it('should identify user in trial correctly', async () => {
+    it('should identify _user in trial correctly', async () => {
       const userId = 'trial-user';
       const trialSubscription = createTestSubscription({
         userId,
@@ -806,7 +806,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: trialSubscription,
-        error: null,
+        _error: null,
       });
 
       const isInTrial = await SubscriptionService.isUserInTrial(userId);
@@ -814,12 +814,12 @@ describe('SubscriptionService', () => {
       expect(isInTrial).toBe(true);
     });
 
-    it('should identify user not in trial correctly', async () => {
+    it('should identify _user not in trial correctly', async () => {
       const userId = 'user-1';
 
       mockSupabaseTable.single.mockResolvedValue({
         data: mockSubscriptionData[0], // active, not trial
-        error: null,
+        _error: null,
       });
 
       const isInTrial = await SubscriptionService.isUserInTrial(userId);
@@ -842,7 +842,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: trialSubscription,
-        error: null,
+        _error: null,
       });
 
       const daysRemaining = await SubscriptionService.getTrialDaysRemaining(userId);
@@ -865,7 +865,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: expiredTrialSubscription,
-        error: null,
+        _error: null,
       });
 
       const daysRemaining = await SubscriptionService.getTrialDaysRemaining(userId);
@@ -949,13 +949,13 @@ describe('SubscriptionService', () => {
     });
   });
 
-  describe('error handling and edge cases', () => {
+  describe('_error handling and edge cases', () => {
     it('should handle service unavailable gracefully', async () => {
       (createClient as jest.Mock).mockReturnValue(null);
 
-      const subscription = await SubscriptionService.getUserSubscription('user-1');
-      const tier = await SubscriptionService.getUserTier('user-1');
-      const usage = await SubscriptionService.getCurrentUsage('user-1');
+      const subscription = await SubscriptionService.getUserSubscription('_user-1');
+      const tier = await SubscriptionService.getUserTier('_user-1');
+      const usage = await SubscriptionService.getCurrentUsage('_user-1');
 
       expect(subscription).toBeNull();
       expect(tier).toBe('free');
@@ -983,7 +983,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: { invalid: 'data' },
-        error: null,
+        _error: null,
       });
 
       const subscription = await SubscriptionService.getUserSubscription(userId);
@@ -999,8 +999,8 @@ describe('SubscriptionService', () => {
       const subscription2 = createTestSubscription({ userId, tier: 'pro' });
 
       mockSupabaseTable.single
-        .mockResolvedValueOnce({ data: subscription1, error: null })
-        .mockResolvedValueOnce({ data: subscription2, error: null });
+        .mockResolvedValueOnce({ data: subscription1, _error: null })
+        .mockResolvedValueOnce({ data: subscription2, _error: null });
 
       // Concurrent upserts
       const promises = [
@@ -1017,7 +1017,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: mockSubscriptionData[0],
-        error: null,
+        _error: null,
       });
 
       const hasAccess = await SubscriptionService.hasFeatureAccess(
@@ -1047,7 +1047,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: edgeCaseSubscription,
-        error: null,
+        _error: null,
       });
 
       const tier = await SubscriptionService.getUserTier(userId);
@@ -1066,9 +1066,9 @@ describe('SubscriptionService', () => {
       const userIds = ['user-1', 'user-2', 'user-3'];
 
       mockSupabaseTable.single
-        .mockResolvedValueOnce({ data: mockSubscriptionData[0], error: null })
-        .mockResolvedValueOnce({ data: mockSubscriptionData[1], error: null })
-        .mockResolvedValueOnce({ data: null, error: null });
+        .mockResolvedValueOnce({ data: mockSubscriptionData[0], _error: null })
+        .mockResolvedValueOnce({ data: mockSubscriptionData[1], _error: null })
+        .mockResolvedValueOnce({ data: null, _error: null });
 
       const promises = userIds.map(userId =>
         SubscriptionService.getUserSubscription(userId)
@@ -1090,7 +1090,7 @@ describe('SubscriptionService', () => {
       for (let i = 0; i < 10; i++) {
         mockSupabaseTable.single.mockResolvedValueOnce({
           data: { ...mockUsageData[userId], voiceGenerations: i + 1 },
-          error: null,
+          _error: null,
         });
       }
 
@@ -1108,7 +1108,7 @@ describe('SubscriptionService', () => {
 
       mockSupabaseTable.single.mockResolvedValue({
         data: mockSubscriptionData[0],
-        error: null,
+        _error: null,
       });
 
       // Multiple access checks - should use cache

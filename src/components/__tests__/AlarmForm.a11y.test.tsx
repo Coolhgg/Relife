@@ -331,7 +331,7 @@ describe('AlarmForm - Accessibility Tests', () => {
 
   describe('Error Handling', () => {
     it('should associate errors with form fields', async () => {
-      // This test would require actual error state implementation
+      // This test would require actual _error state implementation
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       const errorRegion = screen.getByRole('alert');

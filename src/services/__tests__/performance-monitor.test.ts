@@ -168,8 +168,8 @@ describe('PerformanceMonitor', () => {
     });
   });
 
-  describe('user action tracking', () => {
-    test('tracks user actions with context', () => {
+  describe('_user action tracking', () => {
+    test('tracks _user actions with context', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.trackUserAction('button-click', {
@@ -181,7 +181,7 @@ describe('PerformanceMonitor', () => {
       expect(localStorage.setItem).toHaveBeenCalled();
     });
 
-    test('includes timestamp in user action', () => {
+    test('includes timestamp in _user action', () => {
       const mockNow = 1234567890;
       performance.now = jest.fn(() => mockNow);
 
@@ -465,7 +465,7 @@ describe('PerformanceMonitor', () => {
     });
   });
 
-  describe('error handling', () => {
+  describe('_error handling', () => {
     test('handles performance API unavailability gracefully', () => {
       const originalPerformance = global.performance;
       delete (global as any).performance;
@@ -491,7 +491,7 @@ describe('PerformanceMonitor', () => {
     });
 
     test('handles localStorage errors gracefully', () => {
-      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+      const consoleError = jest.spyOn(console, '_error').mockImplementation();
 
       localStorage.setItem = jest.fn(() => {
         throw new Error('Storage quota exceeded');

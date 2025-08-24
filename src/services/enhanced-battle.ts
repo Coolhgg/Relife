@@ -21,7 +21,7 @@ import {
   BattleServiceInterface,
   ServiceConfig,
   ServiceHealth,
-  AnalyticsServiceInterface
+  AnalyticsServiceInterface,
 } from '../types/service-architecture';
 
 // ============================================================================
@@ -35,18 +35,18 @@ export interface BattleServiceConfig extends ServiceConfig {
   enableTournaments: boolean;
   enableTeamBattles: boolean;
   enableSeasonalEvents: boolean;
-  
+
   // Persistence configuration
   persistenceStrategy: 'memory' | 'localStorage' | 'supabase' | 'hybrid';
   enableBackgroundSync: boolean;
   syncInterval: number; // minutes
-  
+
   // Battle limits and validation
   maxParticipantsPerBattle: number;
   minParticipantsPerBattle: number;
   maxBattleDuration: number; // hours
   defaultEntryFee: number;
-  
+
   // Features
   enableWeatherBonus: boolean;
   enableTaskChallenges: boolean;
@@ -108,13 +108,13 @@ export interface BattlePersistenceLayer {
   loadBattles(filter?: BattleFilter): Promise<Battle[]>;
   deleteBattle(id: string): Promise<void>;
   updateBattle(id: string, updates: Partial<Battle>): Promise<void>;
-  
+
   saveTournament?(tournament: Tournament): Promise<void>;
   loadTournaments?(filter?: any): Promise<Tournament[]>;
-  
+
   saveTeam?(team: Team): Promise<void>;
   loadTeams?(filter?: any): Promise<Team[]>;
-  
+
   saveSeason?(season: Season): Promise<void>;
   loadSeasons?(filter?: any): Promise<Season[]>;
 }
@@ -123,22 +123,25 @@ export interface BattlePersistenceLayer {
 // Enhanced Battle Service Implementation
 // ============================================================================
 
-export class EnhancedBattleService extends BaseService implements BattleServiceInterface {
+export class EnhancedBattleService
+  extends BaseService
+  implements BattleServiceInterface
+{
   private battles = new Map<string, Battle>();
   private tournaments = new Map<string, Tournament>();
   private teams = new Map<string, Team>();
   private seasons = new Map<string, Season>();
-  
+
   private cleanupInterval: NodeJS.Timeout | null = null;
   private syncInterval: NodeJS.Timeout | null = null;
   private cache: CacheProvider;
   private dependencies: BattleServiceDependencies;
   private persistenceLayer: BattlePersistenceLayer;
 
-  constructor(dependencies: BattleServiceDependencies, config: BattleServiceConfig) {
-    super('BattleService', '2.0.0', config);
+  constructor(dependencies: BattleServiceDependencies, _config: BattleServiceConfig) {
+    super('BattleService', '2.0.0', _config);
     this.dependencies = dependencies;
-    this.cache = getCacheManager().getProvider(config.caching?.strategy || 'memory');
+    this.cache = getCacheManager().getProvider(_config.caching?.strategy || 'memory');
     this.persistenceLayer = this.createPersistenceLayer();
   }
 
@@ -164,7 +167,7 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
       enableWeatherBonus: true,
       enableTaskChallenges: true,
       enableSocialFeatures: true,
-      ...super.getDefaultConfig?.() || {}
+      ...(super.getDefaultConfig?.() || {}),
     };
   }
 
@@ -176,7 +179,7 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
       await this.loadBattlesFromPersistence();
 
       // Initialize sample data if none exists (for development)
-      if (this.battles.size === 0 && this.config.environment === 'development') {
+      if (this.battles.size === 0 && this._config.environment === 'development') {
         await this.initializeSampleData();
       }
 
@@ -188,14 +191,13 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
 
       this.emit('battles:initialized', {
         battleCount: this.battles.size,
-        tournamentCount: this.tournaments.size
+        tournamentCount: this.tournaments.size,
       });
 
       this.recordMetric('initialize_duration', this.endTimer(timerId) || 0);
-
-    } catch (error) {
-      this.handleError(error, 'Failed to initialize BattleService');
-      throw error;
+    } catch (_error) {
+      this.handleError(_error, 'Failed to initialize BattleService');
+      throw _error;
     }
   }
 
@@ -206,7 +208,7 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
         clearInterval(this.cleanupInterval);
         this.cleanupInterval = null;
       }
-      
+
       if (this.syncInterval) {
         clearInterval(this.syncInterval);
         this.syncInterval = null;
@@ -217,30 +219,31 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
 
       // Clear caches
       await this.cache.clear();
-      
+
       // Clear in-memory data
       this.battles.clear();
       this.tournaments.clear();
       this.teams.clear();
       this.seasons.clear();
-
-    } catch (error) {
-      this.handleError(error, 'Failed to cleanup BattleService');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to cleanup BattleService');
     }
   }
 
   public async getHealth(): Promise<ServiceHealth> {
     const baseHealth = await super.getHealth();
-    
-    const config = this.config as BattleServiceConfig;
-    const activeBattles = Array.from(this.battles.values()).filter(b => b.status === 'active').length;
-    
+
+    const config = this._config as BattleServiceConfig;
+    const activeBattles = Array.from(this.battles.values()).filter(
+      b => b.status === 'active'
+    ).length;
+
     // Determine health based on battle load and system resources
     let status = baseHealth.status;
-    if (activeBattles > config.maxActiveBattles * 0.8) {
+    if (activeBattles > _config.maxActiveBattles * 0.8) {
       status = 'degraded';
     }
-    if (activeBattles >= config.maxActiveBattles) {
+    if (activeBattles >= _config.maxActiveBattles) {
       status = 'unhealthy';
     }
 
@@ -248,12 +251,12 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
       ...baseHealth,
       status,
       metrics: {
-        ...baseHealth.metrics || {},
+        ...(baseHealth.metrics || {}),
         totalBattles: this.battles.size,
         activeBattles,
         tournaments: this.tournaments.size,
-        teams: this.teams.size
-      }
+        teams: this.teams.size,
+      },
     };
   }
 
@@ -261,7 +264,9 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
   // BattleServiceInterface Implementation
   // ============================================================================
 
-  public async createBattle(battleData: Omit<Battle, 'id' | 'createdAt'>): Promise<Battle> {
+  public async createBattle(
+    battleData: Omit<Battle, 'id' | 'createdAt'>
+  ): Promise<Battle> {
     const timerId = this.startTimer('createBattle');
 
     try {
@@ -269,10 +274,12 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
       this.validateBattleData(battleData);
 
       // Check active battle limit
-      const activeBattles = Array.from(this.battles.values()).filter(b => b.status === 'active').length;
-      const config = this.config as BattleServiceConfig;
-      
-      if (activeBattles >= config.maxActiveBattles) {
+      const activeBattles = Array.from(this.battles.values()).filter(
+        b => b.status === 'active'
+      ).length;
+      const config = this._config as BattleServiceConfig;
+
+      if (activeBattles >= _config.maxActiveBattles) {
         throw new Error('Maximum active battles reached');
       }
 
@@ -281,13 +288,13 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
         ...battleData,
         id: this.generateBattleId(),
         createdAt: new Date().toISOString(),
-        participants: battleData.participants || []
+        participants: battleData.participants || [],
       };
 
       // Save to persistence and cache
       await this.persistenceLayer.saveBattle(battle);
       await this.cache.set(`battle:${battle.id}`, battle, 3600000); // 1 hour
-      
+
       // Store in memory
       this.battles.set(battle.id, battle);
 
@@ -298,7 +305,7 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
           battleType: battle.type,
           maxParticipants: battle.maxParticipants,
           entryFee: battle.entryFee,
-          creatorId: battle.creatorId
+          creatorId: battle.creatorId,
         });
       }
 
@@ -309,9 +316,8 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
       this.recordMetric('battles_created', 1);
 
       return battle;
-
-    } catch (error) {
-      this.handleError(error, 'Failed to create battle', { battleData });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to create battle', { battleData });
       throw error;
     }
   }
@@ -335,7 +341,7 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
         status: 'joined',
         score: 0,
         wakeTime: null,
-        completedTasks: []
+        completedTasks: [],
       };
 
       // Add participant to battle
@@ -350,7 +356,7 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
           battleId,
           battleType: battle.type,
           participantCount: battle.participants.length,
-          userId
+          userId,
         });
       }
 
@@ -361,9 +367,8 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
       this.recordMetric('battle_joins', 1);
 
       return participant;
-
-    } catch (error) {
-      this.handleError(error, 'Failed to join battle', { battleId, userId });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to join battle', { battleId, userId });
       throw error;
     }
   }
@@ -409,14 +414,16 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
           battleId,
           userId: progress.userId,
           score: progress.score,
-          completed: participant.status === 'completed'
+          completed: participant.status === 'completed',
         });
       }
 
       this.recordMetric('updateBattleProgress_duration', this.endTimer(timerId) || 0);
-
-    } catch (error) {
-      this.handleError(error, 'Failed to update battle progress', { battleId, progress });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to update battle progress', {
+        battleId,
+        progress,
+      });
       throw error;
     }
   }
@@ -435,8 +442,8 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
           userId,
           dateRange: {
             start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
-            end: new Date()
-          }
+            end: new Date(),
+          },
         });
 
         // Cache result
@@ -446,9 +453,8 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
       this.recordMetric('getBattleHistory_duration', this.endTimer(timerId) || 0);
 
       return battles || [];
-
-    } catch (error) {
-      this.handleError(error, 'Failed to get battle history', { userId });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to get battle history', { userId });
       return [];
     }
   }
@@ -484,8 +490,9 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
           battleId,
           battleType: battle.type,
           participantCount: battle.participants.length,
-          duration: new Date(battle.endTime).getTime() - new Date(battle.startTime).getTime(),
-          winner: result.winners[0]?.userId
+          duration:
+            new Date(battle.endTime).getTime() - new Date(battle.startTime).getTime(),
+          winner: result.winners[0]?.userId,
         });
       }
 
@@ -496,9 +503,8 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
       this.recordMetric('battles_ended', 1);
 
       return result;
-
-    } catch (error) {
-      this.handleError(error, 'Failed to end battle', { battleId });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to end battle', { battleId });
       throw error;
     }
   }
@@ -584,9 +590,9 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
   // ============================================================================
 
   private createPersistenceLayer(): BattlePersistenceLayer {
-    const config = this.config as BattleServiceConfig;
+    const config = this._config as BattleServiceConfig;
 
-    switch (config.persistenceStrategy) {
+    switch (_config.persistenceStrategy) {
       case 'supabase':
         return new SupabaseBattlePersistence(this.dependencies.supabaseClient);
       case 'localStorage':
@@ -604,19 +610,18 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
   private async loadBattlesFromPersistence(): Promise<void> {
     try {
       const battles = await this.persistenceLayer.loadBattles();
-      
+
       for (const battle of battles) {
         this.battles.set(battle.id, battle);
         await this.cache.set(`battle:${battle.id}`, battle, 3600000);
       }
 
       // Load tournaments if enabled
-      if ((this.config as BattleServiceConfig).enableTournaments) {
+      if ((this._config as BattleServiceConfig).enableTournaments) {
         await this.loadTournaments();
       }
-
-    } catch (error) {
-      this.handleError(error, 'Failed to load battles from persistence');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to load battles from persistence');
     }
   }
 
@@ -625,13 +630,12 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
 
     try {
       const tournaments = await this.persistenceLayer.loadTournaments();
-      
+
       for (const tournament of tournaments) {
         this.tournaments.set(tournament.id, tournament);
       }
-
-    } catch (error) {
-      this.handleError(error, 'Failed to load tournaments');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to load tournaments');
     }
   }
 
@@ -664,33 +668,38 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
   }
 
   private startPeriodicTasks(): void {
-    const config = this.config as BattleServiceConfig;
+    const config = this._config as BattleServiceConfig;
 
     // Cleanup task
-    this.cleanupInterval = setInterval(() => {
-      this.cleanupExpiredBattles().catch(error =>
-        this.handleError(error, 'Failed in cleanup task')
-      );
-    }, config.cleanupInterval * 60 * 1000);
+    this.cleanupInterval = setInterval(
+      () => {
+        this.cleanupExpiredBattles().catch(_error =>
+          this.handleError(_error, 'Failed in cleanup task')
+        );
+      },
+      config.cleanupInterval * 60 * 1000
+    );
 
     // Sync task
-    if (config.enableBackgroundSync) {
-      this.syncInterval = setInterval(() => {
-        this.syncToPersistence().catch(error =>
-          this.handleError(error, 'Failed in sync task')
-        );
-      }, config.syncInterval * 60 * 1000);
+    if (_config.enableBackgroundSync) {
+      this.syncInterval = setInterval(
+        () => {
+          this.syncToPersistence().catch(_error =>
+            this.handleError(_error, 'Failed in sync task')
+          );
+        },
+        config.syncInterval * 60 * 1000
+      );
     }
   }
 
   private async cleanupExpiredBattles(): Promise<void> {
     const now = new Date();
-    const expiredBattles = Array.from(this.battles.values())
-      .filter(battle => {
-        if (!battle.endTime) return false;
-        const endTime = new Date(battle.endTime);
-        return now.getTime() - endTime.getTime() > 7 * 24 * 60 * 60 * 1000; // 7 days
-      });
+    const expiredBattles = Array.from(this.battles.values()).filter(battle => {
+      if (!battle.endTime) return false;
+      const endTime = new Date(battle.endTime);
+      return now.getTime() - endTime.getTime() > 7 * 24 * 60 * 60 * 1000; // 7 days
+    });
 
     for (const battle of expiredBattles) {
       await this.deleteBattle(battle.id);
@@ -710,47 +719,47 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
 
   private setupEventListeners(): void {
     // Listen for alarm events to update battle progress
-    this.on('alarm:triggered', (data) => {
-      this.handleAlarmTrigger(data).catch(error =>
-        this.handleError(error, 'Failed to handle alarm trigger')
+    this.on('alarm:triggered', data => {
+      this.handleAlarmTrigger(data).catch(_error =>
+        this.handleError(_error, 'Failed to handle alarm trigger')
       );
     });
   }
 
   private async handleAlarmTrigger(data: any): Promise<void> {
     // Find active battles for this user
-    const userBattles = Array.from(this.battles.values())
-      .filter(battle => 
-        battle.status === 'active' && 
+    const userBattles = Array.from(this.battles.values()).filter(
+      battle =>
+        battle.status === 'active' &&
         battle.participants.some(p => p.userId === data.userId)
-      );
+    );
 
     for (const battle of userBattles) {
       await this.updateBattleProgress(battle.id, {
         userId: data.userId,
         wakeTime: new Date().toISOString(),
-        score: this.calculateWakeScore(data.wakeTime, battle.settings)
+        score: this.calculateWakeScore(data.wakeTime, battle.settings),
       });
     }
   }
 
   private validateBattleData(battleData: any): void {
-    const config = this.config as BattleServiceConfig;
+    const config = this._config as BattleServiceConfig;
 
     if (!battleData.type || !battleData.startTime) {
       throw new Error('Missing required battle data');
     }
 
-    if (battleData.maxParticipants > config.maxParticipantsPerBattle) {
+    if (battleData.maxParticipants > _config.maxParticipantsPerBattle) {
       throw new Error('Too many participants allowed');
     }
 
     const startTime = new Date(battleData.startTime);
-    const duration = battleData.endTime 
+    const duration = battleData.endTime
       ? new Date(battleData.endTime).getTime() - startTime.getTime()
       : 0;
 
-    if (duration > config.maxBattleDuration * 60 * 60 * 1000) {
+    if (duration > _config.maxBattleDuration * 60 * 60 * 1000) {
       throw new Error('Battle duration too long');
     }
   }
@@ -760,7 +769,10 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
       throw new Error('Battle registration is closed');
     }
 
-    if (battle.maxParticipants && battle.participants.length >= battle.maxParticipants) {
+    if (
+      battle.maxParticipants &&
+      battle.participants.length >= battle.maxParticipants
+    ) {
       throw new Error('Battle is full');
     }
 
@@ -771,7 +783,9 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
   }
 
   private async checkBattleCompletion(battle: Battle): Promise<void> {
-    const completedParticipants = battle.participants.filter(p => p.status === 'completed');
+    const completedParticipants = battle.participants.filter(
+      p => p.status === 'completed'
+    );
     const totalParticipants = battle.participants.length;
 
     // End battle if all participants completed or time expired
@@ -786,14 +800,14 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
   private async calculateBattleResults(battle: Battle): Promise<BattleResult> {
     // Sort participants by score
     const rankings: BattleRanking[] = battle.participants
-      .map((participant, index) => ({
-        rank: index + 1,
+      .map((participant, _index) => ({
+        rank: _index + 1,
         participant,
         score: participant.score || 0,
-        achievements: this.calculateAchievements(participant, battle)
+        achievements: this.calculateAchievements(participant, battle),
       }))
       .sort((a, b) => b.score - a.score)
-      .map((ranking, index) => ({ ...ranking, rank: index + 1 }));
+      .map((ranking, _index) => ({ ...ranking, rank: _index + 1 }));
 
     const winners = rankings.slice(0, 3).map(r => r.participant);
 
@@ -801,16 +815,22 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
       winner: battle.prizePool?.winner || { experience: 100, coins: 50 },
       secondPlace: battle.prizePool?.secondPlace,
       thirdPlace: battle.prizePool?.thirdPlace,
-      participation: battle.prizePool?.participation || { experience: 10, coins: 5 }
+      participation: battle.prizePool?.participation || { experience: 10, coins: 5 },
     };
 
     const statistics: BattleStatistics = {
       totalParticipants: battle.participants.length,
       averageWakeTime: this.calculateAverageWakeTime(battle.participants),
       fastestWakeUp: this.getFastestWakeUp(battle.participants),
-      completionRate: battle.participants.filter(p => p.status === 'completed').length / battle.participants.length,
-      snoozesUsed: battle.participants.reduce((sum, p) => sum + (p.snoozesUsed || 0), 0),
-      averageScore: rankings.reduce((sum, r) => sum + r.score, 0) / rankings.length || 0
+      completionRate:
+        battle.participants.filter(p => p.status === 'completed').length /
+        battle.participants.length,
+      snoozesUsed: battle.participants.reduce(
+        (sum, p) => sum + (p.snoozesUsed || 0),
+        0
+      ),
+      averageScore:
+        rankings.reduce((sum, r) => sum + r.score, 0) / rankings.length || 0,
     };
 
     return {
@@ -818,11 +838,14 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
       winners,
       rankings,
       rewards,
-      statistics
+      statistics,
     };
   }
 
-  private calculateAchievements(participant: BattleParticipant, battle: Battle): string[] {
+  private calculateAchievements(
+    participant: BattleParticipant,
+    battle: Battle
+  ): string[] {
     const achievements: string[] = [];
 
     if (participant.status === 'completed') {
@@ -874,7 +897,7 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
           userId: ranking.participant.userId,
           rank: ranking.rank,
           experience: reward.experience,
-          coins: reward.coins
+          coins: reward.coins,
         });
       }
     }
@@ -905,7 +928,8 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
 
     if (wakeTimes.length === 0) return 'N/A';
 
-    const averageTime = wakeTimes.reduce((sum, time) => sum + time, 0) / wakeTimes.length;
+    const averageTime =
+      wakeTimes.reduce((sum, time) => sum + time, 0) / wakeTimes.length;
     return new Date(averageTime).toISOString();
   }
 
@@ -929,7 +953,7 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
   // ============================================================================
 
   public async reset(): Promise<void> {
-    if (this.config.environment !== 'test') {
+    if (this._config.environment !== 'test') {
       throw new Error('Reset only allowed in test environment');
     }
 
@@ -941,7 +965,7 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
   }
 
   public getTestState(): any {
-    if (this.config.environment !== 'test') {
+    if (this._config.environment !== 'test') {
       throw new Error('Test state only available in test environment');
     }
 
@@ -949,7 +973,7 @@ export class EnhancedBattleService extends BaseService implements BattleServiceI
       battles: Array.from(this.battles.values()),
       tournaments: Array.from(this.tournaments.values()),
       teams: Array.from(this.teams.values()),
-      seasons: Array.from(this.seasons.values())
+      seasons: Array.from(this.seasons.values()),
     };
   }
 }
@@ -994,7 +1018,8 @@ class MemoryBattlePersistence implements BattlePersistenceLayer {
     return battles.filter(battle => {
       if (filter.type && battle.type !== filter.type) return false;
       if (filter.status && battle.status !== filter.status) return false;
-      if (filter.userId && !battle.participants.some(p => p.userId === filter.userId)) return false;
+      if (filter.userId && !battle.participants.some(p => p.userId === filter.userId))
+        return false;
       if (filter.creatorId && battle.creatorId !== filter.creatorId) return false;
       return true;
     });
@@ -1007,15 +1032,15 @@ class LocalStorageBattlePersistence implements BattlePersistenceLayer {
   async saveBattle(battle: Battle): Promise<void> {
     try {
       localStorage.setItem(`${this.prefix}${battle.id}`, JSON.stringify(battle));
-      
+
       // Update battle index
       const index = this.getBattleIndex();
-      if (!index.includes(battle.id)) {
-        index.push(battle.id);
-        localStorage.setItem(`${this.prefix}index`, JSON.stringify(index));
+      if (!_index.includes(battle.id)) {
+        _index.push(battle.id);
+        localStorage.setItem(`${this.prefix}index`, JSON.stringify(_index));
       }
-    } catch (error) {
-      throw new Error(`Failed to save battle to localStorage: ${error}`);
+    } catch (_error) {
+      throw new Error(`Failed to save battle to localStorage: ${_error}`);
     }
   }
 
@@ -1023,17 +1048,17 @@ class LocalStorageBattlePersistence implements BattlePersistenceLayer {
     try {
       const data = localStorage.getItem(`${this.prefix}${id}`);
       return data ? JSON.parse(data) : null;
-    } catch (error) {
+    } catch (_error) {
       return null;
     }
   }
 
   async loadBattles(filter?: BattleFilter): Promise<Battle[]> {
     try {
-      const index = this.getBattleIndex();
+      const _index = this.getBattleIndex();
       const battles: Battle[] = [];
 
-      for (const id of index) {
+      for (const id of _index) {
         const battle = await this.loadBattle(id);
         if (battle) {
           battles.push(battle);
@@ -1041,7 +1066,7 @@ class LocalStorageBattlePersistence implements BattlePersistenceLayer {
       }
 
       return filter ? this.applyFilter(battles, filter) : battles;
-    } catch (error) {
+    } catch (_error) {
       return [];
     }
   }
@@ -1049,12 +1074,12 @@ class LocalStorageBattlePersistence implements BattlePersistenceLayer {
   async deleteBattle(id: string): Promise<void> {
     try {
       localStorage.removeItem(`${this.prefix}${id}`);
-      
+
       // Update index
       const index = this.getBattleIndex();
       const newIndex = index.filter(battleId => battleId !== id);
-      localStorage.setItem(`${this.prefix}index`, JSON.stringify(newIndex));
-    } catch (error) {
+      localStorage.setItem(`${this.prefix}_index`, JSON.stringify(newIndex));
+    } catch (_error) {
       // Silent fail for localStorage errors
     }
   }
@@ -1069,7 +1094,7 @@ class LocalStorageBattlePersistence implements BattlePersistenceLayer {
 
   private getBattleIndex(): string[] {
     try {
-      const data = localStorage.getItem(`${this.prefix}index`);
+      const data = localStorage.getItem(`${this.prefix}_index`);
       return data ? JSON.parse(data) : [];
     } catch {
       return [];
@@ -1080,7 +1105,8 @@ class LocalStorageBattlePersistence implements BattlePersistenceLayer {
     return battles.filter(battle => {
       if (filter.type && battle.type !== filter.type) return false;
       if (filter.status && battle.status !== filter.status) return false;
-      if (filter.userId && !battle.participants.some(p => p.userId === filter.userId)) return false;
+      if (filter.userId && !battle.participants.some(p => p.userId === filter.userId))
+        return false;
       if (filter.creatorId && battle.creatorId !== filter.creatorId) return false;
       return true;
     });
@@ -1096,13 +1122,11 @@ class SupabaseBattlePersistence implements BattlePersistenceLayer {
     }
 
     try {
-      const { error } = await this.supabase
-        .from('battles')
-        .upsert(battle);
+      const { _error } = await this.supabase.from('battles').upsert(battle);
 
-      if (error) throw error;
-    } catch (error) {
-      throw new Error(`Failed to save battle to Supabase: ${error}`);
+      if (_error) throw error;
+    } catch (_error) {
+      throw new Error(`Failed to save battle to Supabase: ${_error}`);
     }
   }
 
@@ -1110,15 +1134,15 @@ class SupabaseBattlePersistence implements BattlePersistenceLayer {
     if (!this.supabase) return null;
 
     try {
-      const { data, error } = await this.supabase
+      const { data, _error } = await this.supabase
         .from('battles')
         .select('*')
         .eq('id', id)
         .single();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error && _error.code !== 'PGRST116') throw error;
       return data || null;
-    } catch (error) {
+    } catch (_error) {
       return null;
     }
   }
@@ -1140,11 +1164,11 @@ class SupabaseBattlePersistence implements BattlePersistenceLayer {
         }
       }
 
-      const { data, error } = await query.order('createdAt', { ascending: false });
+      const { data, _error } = await query.order('createdAt', { ascending: false });
 
-      if (error) throw error;
+      if (_error) throw error;
       return data || [];
-    } catch (error) {
+    } catch (_error) {
       return [];
     }
   }
@@ -1153,13 +1177,10 @@ class SupabaseBattlePersistence implements BattlePersistenceLayer {
     if (!this.supabase) return;
 
     try {
-      const { error } = await this.supabase
-        .from('battles')
-        .delete()
-        .eq('id', id);
+      const { _error } = await this.supabase.from('battles').delete().eq('id', id);
 
-      if (error) throw error;
-    } catch (error) {
+      if (_error) throw error;
+    } catch (_error) {
       // Silent fail for delete operations
     }
   }
@@ -1168,14 +1189,14 @@ class SupabaseBattlePersistence implements BattlePersistenceLayer {
     if (!this.supabase) return;
 
     try {
-      const { error } = await this.supabase
+      const { _error } = await this.supabase
         .from('battles')
         .update(updates)
         .eq('id', id);
 
-      if (error) throw error;
-    } catch (error) {
-      throw new Error(`Failed to update battle in Supabase: ${error}`);
+      if (_error) throw error;
+    } catch (_error) {
+      throw new Error(`Failed to update battle in Supabase: ${_error}`);
     }
   }
 }
@@ -1189,7 +1210,7 @@ class HybridBattlePersistence implements BattlePersistenceLayer {
   async saveBattle(battle: Battle): Promise<void> {
     try {
       await this.primary.saveBattle(battle);
-    } catch (error) {
+    } catch (_error) {
       await this.fallback.saveBattle(battle);
     }
   }
@@ -1197,7 +1218,7 @@ class HybridBattlePersistence implements BattlePersistenceLayer {
   async loadBattle(id: string): Promise<Battle | null> {
     try {
       return await this.primary.loadBattle(id);
-    } catch (error) {
+    } catch (_error) {
       return await this.fallback.loadBattle(id);
     }
   }
@@ -1205,7 +1226,7 @@ class HybridBattlePersistence implements BattlePersistenceLayer {
   async loadBattles(filter?: BattleFilter): Promise<Battle[]> {
     try {
       return await this.primary.loadBattles(filter);
-    } catch (error) {
+    } catch (_error) {
       return await this.fallback.loadBattles(filter);
     }
   }
@@ -1213,14 +1234,14 @@ class HybridBattlePersistence implements BattlePersistenceLayer {
   async deleteBattle(id: string): Promise<void> {
     await Promise.allSettled([
       this.primary.deleteBattle(id),
-      this.fallback.deleteBattle(id)
+      this.fallback.deleteBattle(id),
     ]);
   }
 
   async updateBattle(id: string, updates: Partial<Battle>): Promise<void> {
     try {
       await this.primary.updateBattle(id, updates);
-    } catch (error) {
+    } catch (_error) {
       await this.fallback.updateBattle(id, updates);
     }
   }
@@ -1232,7 +1253,7 @@ class HybridBattlePersistence implements BattlePersistenceLayer {
 
 export const createBattleService = (
   dependencies: BattleServiceDependencies = {},
-  config: Partial<BattleServiceConfig> = {}
+  _config: Partial<BattleServiceConfig> = {}
 ): EnhancedBattleService => {
   const fullConfig: BattleServiceConfig = {
     enabled: true,
@@ -1253,7 +1274,7 @@ export const createBattleService = (
     enableWeatherBonus: config.enableWeatherBonus ?? true,
     enableTaskChallenges: config.enableTaskChallenges ?? true,
     enableSocialFeatures: config.enableSocialFeatures ?? true,
-    ...config
+    ..._config,
   };
 
   return new EnhancedBattleService(dependencies, fullConfig);

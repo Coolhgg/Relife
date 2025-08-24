@@ -85,7 +85,7 @@ export class SleepAnalysisService {
 
   static async initialize(userId: string): Promise<void> {
     this.userId = userId;
-    console.log('Sleep analysis service initialized for user:', userId);
+    console.log('Sleep analysis service initialized for _user:', userId);
   }
 
   // Sleep session tracking
@@ -95,7 +95,7 @@ export class SleepAnalysisService {
     if (!this.userId) throw new Error('User not initialized');
 
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('sleep_sessions')
         .insert({
           user_id: this.userId,
@@ -113,10 +113,10 @@ export class SleepAnalysisService {
         .select()
         .single();
 
-      if (error) throw error;
+      if (_error) throw error;
       return this.mapDatabaseToSleepSession(data);
-    } catch (error) {
-      console.error('Error recording sleep session:', error);
+    } catch (_error) {
+      console._error('Error recording sleep session:', _error);
       return null;
     }
   }
@@ -128,17 +128,17 @@ export class SleepAnalysisService {
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
 
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('sleep_sessions')
         .select('*')
         .eq('user_id', this.userId)
         .gte('created_at', startDate.toISOString())
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (_error) throw error;
       return data.map(this.mapDatabaseToSleepSession);
-    } catch (error) {
-      console.error('Error fetching sleep history:', error);
+    } catch (_error) {
+      console._error('Error fetching sleep history:', _error);
       return [];
     }
   }
@@ -183,8 +183,8 @@ export class SleepAnalysisService {
       await this.cacheSleepPattern(pattern);
 
       return pattern;
-    } catch (error) {
-      console.error('Error analyzing sleep patterns:', error);
+    } catch (_error) {
+      console._error('Error analyzing sleep patterns:', _error);
       return null;
     }
   }
@@ -245,8 +245,8 @@ export class SleepAnalysisService {
       }
 
       return recommendation;
-    } catch (error) {
-      console.error('Error generating smart alarm recommendation:', error);
+    } catch (_error) {
+      console._error('Error generating smart alarm recommendation:', _error);
       return null;
     }
   }
@@ -566,8 +566,8 @@ export class SleepAnalysisService {
   private static async cacheSleepPattern(pattern: SleepPattern): Promise<void> {
     try {
       localStorage.setItem(`sleep_pattern_${pattern.userId}`, JSON.stringify(pattern));
-    } catch (error) {
-      console.error('Error caching sleep pattern:', error);
+    } catch (_error) {
+      console._error('Error caching sleep pattern:', _error);
     }
   }
 
@@ -577,8 +577,8 @@ export class SleepAnalysisService {
     try {
       const cached = localStorage.getItem(`sleep_pattern_${this.userId}`);
       return cached ? JSON.parse(cached) : null;
-    } catch (error) {
-      console.error('Error loading cached sleep pattern:', error);
+    } catch (_error) {
+      console._error('Error loading cached sleep pattern:', _error);
       return null;
     }
   }

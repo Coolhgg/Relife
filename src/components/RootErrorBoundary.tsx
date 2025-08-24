@@ -1,5 +1,5 @@
 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
-import { Alert, RefreshCw, Clock, Home, Bug, Zap } from 'lucide-react';
+import { Alert, RefreshCw, Clock, Home, Bug } from 'lucide-react';
 import { ErrorHandler } from '../services/error-handler';
 import { TimeoutHandle } from '../types/timers';
 
@@ -9,7 +9,7 @@ interface Props {
 
 interface State {
   hasError: boolean;
-  error: Error | null;
+  _error: Error | null;
   errorInfo: ErrorInfo | null;
   errorId: string | null;
   isRecovering: boolean;
@@ -27,23 +27,23 @@ export class RootErrorBoundary extends Component<Props, State> {
     super(props);
     this.state = {
       hasError: false,
-      error: null,
+      _error: null,
       errorInfo: null,
       errorId: null,
       isRecovering: false,
     };
   }
 
-  static getDerivedStateFromError(error: Error): Partial<State> {
+  static getDerivedStateFromError(_error: Error): Partial<State> {
     return {
       hasError: true,
-      error,
+      _error,
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(_error: Error, errorInfo: ErrorInfo) {
     // Log the error to our error handling service
-    const errorId = ErrorHandler.handleError(error, 'Root component error occurred', {
+    const errorId = ErrorHandler.handleError(_error, 'Root component _error occurred', {
       context: 'RootErrorBoundary',
       componentStack: errorInfo.componentStack,
       timestamp: new Date().toISOString(),
@@ -53,7 +53,7 @@ export class RootErrorBoundary extends Component<Props, State> {
     });
 
     this.setState({
-      error,
+      _error,
       errorInfo,
       errorId,
     });
@@ -61,7 +61,7 @@ export class RootErrorBoundary extends Component<Props, State> {
     // Try to save critical data before the app becomes unusable
     this.saveApplicationState();
 
-    console.error('Root Error Boundary caught an error:', error, errorInfo);
+    console.error('Root Error Boundary caught an error:', _error, errorInfo);
   }
 
   private saveApplicationState = async () => {
@@ -72,12 +72,12 @@ export class RootErrorBoundary extends Component<Props, State> {
         url: window.location.href,
         userAgent: navigator.userAgent,
         error: this.state.error?.message,
-        stack: this.state.error?.stack,
+        stack: this.state._error?.stack,
       };
 
       localStorage.setItem('app_crash_state', JSON.stringify(currentState));
-    } catch (error) {
-      console.error('Failed to save application state:', error);
+    } catch (_error) {
+      console._error('Failed to save application state:', _error);
     }
   };
 
@@ -94,7 +94,7 @@ export class RootErrorBoundary extends Component<Props, State> {
       this.recoveryAttempts++;
       this.setState({
         hasError: false,
-        error: null,
+        _error: null,
         errorInfo: null,
         errorId: null,
         isRecovering: false,
@@ -110,7 +110,7 @@ export class RootErrorBoundary extends Component<Props, State> {
       const subject = encodeURIComponent(`App Error Report - ${this.state.errorId}`);
       const body = encodeURIComponent(
         `Error ID: ${this.state.errorId}\n` +
-          `Error: ${this.state.error?.message}\n` +
+          `Error: ${this.state._error?.message}\n` +
           `URL: ${window.location.href}\n` +
           `User Agent: ${navigator.userAgent}\n` +
           `Timestamp: ${new Date().toISOString()}\n\n` +
@@ -224,7 +224,7 @@ export class RootErrorBoundary extends Component<Props, State> {
             </div>
 
             {/* Developer Info */}
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {process.env.NODE_ENV === 'development' && this.state._error && (
               <details className="mt-6 text-left">
                 <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                   Developer Debug Info
@@ -233,17 +233,17 @@ export class RootErrorBoundary extends Component<Props, State> {
                   <div className="mb-3">
                     <strong className="text-red-800 dark:text-red-200">Error:</strong>
                     <pre className="mt-1 text-red-700 dark:text-red-300 overflow-x-auto">
-                      {this.state.error.toString()}
+                      {this.state._error.toString()}
                     </pre>
                   </div>
 
-                  {this.state.error.stack && (
+                  {this.state._error.stack && (
                     <div className="mb-3">
                       <strong className="text-red-800 dark:text-red-200">
                         Stack Trace:
                       </strong>
                       <pre className="mt-1 text-red-700 dark:text-red-300 overflow-x-auto whitespace-pre-wrap">
-                        {this.state.error.stack}
+                        {this.state._error.stack}
                       </pre>
                     </div>
                   )}

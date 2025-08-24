@@ -2,7 +2,7 @@
 // Additional utility components for feature gating and premium features
 
 import React, { ReactNode } from 'react';
-import { Shield, Star, Lock, TrendingUp, Users, Zap } from 'lucide-react';
+import { Shield, Star, LockZap } from 'lucide-react';
 import { useFeatureAccessContext } from '../../contexts/FeatureAccessContext';
 
 // Feature Badge Component
@@ -77,10 +77,10 @@ export function FeatureBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full border font-medium ${config.colors} ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center gap-1 rounded-full border font-medium ${_config.colors} ${sizeClasses[size]} ${className}`}
     >
       <Icon className={iconSizes[size]} />
-      {config.label}
+      {_config.label}
     </span>
   );
 }
@@ -142,8 +142,11 @@ export function TierComparison({
             {isUpgrade ? "New features you'll get:" : "Features you'll lose:"}
           </h4>
           <ul className="space-y-1">
-            {newFeatures.map((feature, index) => (
-              <li key={index} className="flex items-center gap-2 text-sm text-gray-600">
+            {newFeatures.map((feature, _index) => (
+              <li
+                key={_index}
+                className="flex items-center gap-2 text-sm text-gray-600"
+              >
                 <div
                   className={`w-1.5 h-1.5 rounded-full ${isUpgrade ? 'bg-green-500' : 'bg-red-500'}`}
                 />

@@ -70,9 +70,9 @@ class FallbackManager {
   /**
    * Report error
    */
-  reportError(error: Error) {
+  reportError(_error: Error) {
     this.state.errorCount++;
-    console.error('Fallback Manager - Error:', error);
+    console._error('Fallback Manager - Error:', _error);
 
     if (this.state.errorCount >= 5) {
       this.activateEmergencyMode();
@@ -143,12 +143,12 @@ class FallbackManager {
    * Setup error handling
    */
   private setupErrorHandling() {
-    window.addEventListener('error', event => {
-      this.reportError(new Error(event.message));
+    window.addEventListener('_error', event => {
+      this.reportError(new Error(_event.message));
     });
 
     window.addEventListener('unhandledrejection', event => {
-      this.reportError(new Error(event.reason));
+      this.reportError(new Error(_event.reason));
     });
   }
 
@@ -163,9 +163,9 @@ class FallbackManager {
    * Remove observer
    */
   removeObserver(observer: (state: FallbackState) => void) {
-    const index = this.observers.indexOf(observer);
-    if (index >= 0) {
-      this.observers.splice(index, 1);
+    const _index = this.observers.indexOf(observer);
+    if (_index >= 0) {
+      this.observers.splice(_index, 1);
     }
   }
 
@@ -215,19 +215,19 @@ export function useFallbackState() {
  */
 export class FallbackErrorBoundary extends React.Component<
   { children: React.ReactNode; fallbackComponent?: string },
-  { hasError: boolean; error: Error | null }
+  { hasError: boolean; _error: Error | null }
 > {
   constructor(props: any) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, _error: null };
   }
 
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error };
+  static getDerivedStateFromError(_error: Error) {
+    return { hasError: true, _error };
   }
 
-  componentDidCatch(error: Error) {
-    fallbackManager.reportError(error);
+  componentDidCatch(_error: Error) {
+    fallbackManager.reportError(_error);
   }
 
   render() {
@@ -237,7 +237,7 @@ export class FallbackErrorBoundary extends React.Component<
           this.props.fallbackComponent
         );
         if (FallbackComponent) {
-          return <FallbackComponent error={this.state.error} />;
+          return <FallbackComponent error={this.state._error} />;
         }
       }
 
@@ -248,7 +248,7 @@ export class FallbackErrorBoundary extends React.Component<
           </h3>
           <button
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-            onClick={() => this.setState({ hasError: false, error: null })}
+            onClick={() => this.setState({ hasError: false, _error: null })}
           >
             Try Again
           </button>

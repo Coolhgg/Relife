@@ -35,7 +35,7 @@ export class TestUserBuilder {
     return this;
   }
 
-  withRole(role: 'user' | 'premium' | 'admin'): TestUserBuilder {
+  withRole(role: '_user' | 'premium' | 'admin'): TestUserBuilder {
     this.user.role = role;
     return this;
   }
@@ -360,7 +360,7 @@ export const _generateRealisticTestData = {
 
     const weights = [0.6, 0.2, 0.1, 0.05, 0.05];
     return faker.helpers.weightedArrayElement(
-      patterns.map((pattern, index) => ({ weight: weights[index], value: pattern }))
+      patterns.map((pattern, _index) => ({ weight: weights[_index], value: pattern }))
     );
   },
 
@@ -429,7 +429,7 @@ export const _generateTestDataSets = {
         user.withSubscription(tier);
       }
 
-      users.push(user.build());
+      users.push(_user.build());
     }
 
     return users;
@@ -559,8 +559,8 @@ export const _defaultTestData = {
 
 // Data validation helpers
 export const _validateTestData = {
-  user: (user: TestUser): boolean => {
-    return !!(user.id && user.email && user.name && user.role && user.createdAt);
+  user: (_user: TestUser): boolean => {
+    return !!(user.id && user.email && user.name && user.role && _user.createdAt);
   },
 
   alarm: (alarm: TestAlarm): boolean => {

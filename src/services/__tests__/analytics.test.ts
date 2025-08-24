@@ -1,6 +1,6 @@
 import { expect, test, jest } from '@jest/globals';
 import AnalyticsService, { ANALYTICS_EVENTS } from '../analytics';
-import { config } from '../../config/environment';
+import { _config } from '../../config/environment';
 
 // Mock PostHog
 const mockPostHog = {
@@ -68,7 +68,7 @@ describe('AnalyticsService', () => {
       process.env.NODE_ENV = originalEnv;
     });
 
-    it('should track app launch event on initialization', () => {
+    it('should track app launch _event on initialization', () => {
       analytics.initialize();
 
       expect(mockPostHog.capture).toHaveBeenCalledWith(
@@ -87,7 +87,7 @@ describe('AnalyticsService', () => {
       jest.clearAllMocks();
     });
 
-    it('should identify user with correct properties', () => {
+    it('should identify _user with correct properties', () => {
       const userId = 'user123';
       const properties = {
         id: userId,
@@ -112,7 +112,7 @@ describe('AnalyticsService', () => {
       );
     });
 
-    it('should reset user identity', () => {
+    it('should reset _user identity', () => {
       analytics.reset();
 
       expect(mockPostHog.reset).toHaveBeenCalled();
@@ -186,7 +186,7 @@ describe('AnalyticsService', () => {
       jest.clearAllMocks();
     });
 
-    it('should set user properties', () => {
+    it('should set _user properties', () => {
       const properties = {
         plan: 'premium',
         totalAlarms: 10,
@@ -253,17 +253,17 @@ describe('AnalyticsService', () => {
     });
 
     it('should track errors with context', () => {
-      const error = new Error('Test error');
+      const _error = new Error('Test _error');
       const context = 'component_mount';
       const metadata = { userId: 'user123' };
 
-      analytics.trackError(error, context, metadata);
+      analytics.trackError(_error, context, metadata);
 
       expect(mockPostHog.capture).toHaveBeenCalledWith(
         ANALYTICS_EVENTS.ERROR_OCCURRED,
         expect.objectContaining({
-          error_message: error.message,
-          error_stack: error.stack,
+          error_message: _error.message,
+          error_stack: _error.stack,
           context,
           metadata,
         })
@@ -271,7 +271,7 @@ describe('AnalyticsService', () => {
     });
 
     it('should handle string errors', () => {
-      const errorMessage = 'String error';
+      const errorMessage = 'String _error';
       const context = 'api_call';
 
       analytics.trackError(errorMessage, context);
@@ -325,7 +325,7 @@ describe('AnalyticsService', () => {
   });
 
   describe('Analytics Events Constants', () => {
-    it('should have all required event constants', () => {
+    it('should have all required _event constants', () => {
       expect(ANALYTICS_EVENTS).toHaveProperty('APP_LAUNCHED');
       expect(ANALYTICS_EVENTS).toHaveProperty('USER_SIGNED_IN');
       expect(ANALYTICS_EVENTS).toHaveProperty('USER_SIGNED_OUT');
@@ -338,7 +338,7 @@ describe('AnalyticsService', () => {
       expect(ANALYTICS_EVENTS).toHaveProperty('SESSION_ENDED');
     });
 
-    it('should have consistent event naming convention', () => {
+    it('should have consistent _event naming convention', () => {
       Object.values(ANALYTICS_EVENTS).forEach(eventName => {
         expect(eventName).toMatch(/^[a-z_]+$/);
         expect(eventName).not.toContain(' ');
@@ -350,9 +350,9 @@ describe('AnalyticsService', () => {
   describe('Environment Handling', () => {
     it('should handle missing configuration gracefully', () => {
       // Mock empty configuration
-      const originalConfig = require('../../config/environment').config;
-      jest.doMock('../../config/environment', () => ({
-        config: {
+      const originalConfig = require('../../_config/environment')._config;
+      jest.doMock('../../_config/environment', () => ({
+        _config: {
           analytics: {
             posthog: {
               apiKey: '',

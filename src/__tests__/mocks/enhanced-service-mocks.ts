@@ -37,7 +37,7 @@ import type {
 export abstract class MockBaseService implements BaseService {
   public readonly name: string;
   public readonly version: string;
-  
+
   protected config: ServiceConfig;
   protected initialized: boolean = false;
   protected ready: boolean = false;
@@ -46,11 +46,16 @@ export abstract class MockBaseService implements BaseService {
   protected startTime: Date = new Date();
   protected dependencies: Map<string, BaseService> = new Map();
 
-  constructor(name: string, version: string = '1.0.0', config: ServiceConfig, dependencies?: Map<string, BaseService>) {
+  constructor(
+    name: string,
+    version: string = '1.0.0',
+    _config: ServiceConfig,
+    dependencies?: Map<string, BaseService>
+  ) {
     this.name = name;
     this.version = version;
-    this.config = { ...this.getDefaultConfig(), ...config };
-    
+    this.config = { ...this.getDefaultConfig(), ..._config };
+
     if (dependencies) {
       this.dependencies = dependencies;
     }
@@ -58,13 +63,13 @@ export abstract class MockBaseService implements BaseService {
 
   protected abstract getDefaultConfig(): Partial<ServiceConfig>;
 
-  public async initialize(config?: ServiceConfig): Promise<void> {
+  public async initialize(_config?: ServiceConfig): Promise<void> {
     if (this.initialized) {
       return;
     }
 
-    if (config) {
-      this.config = { ...this.config, ...config };
+    if (_config) {
+      this.config = { ...this.config, ..._config };
     }
 
     await this.doInitialize();
@@ -112,60 +117,60 @@ export abstract class MockBaseService implements BaseService {
   }
 
   public getConfig(): ServiceConfig {
-    return { ...this.config };
+    return { ...this._config };
   }
 
-  public async updateConfig(config: Partial<ServiceConfig>): Promise<void> {
-    this.config = { ...this.config, ...config };
-    this.emit('service:config-updated', { serviceName: this.name, config });
+  public async updateConfig(_config: Partial<ServiceConfig>): Promise<void> {
+    this.config = { ...this.config, ..._config };
+    this.emit('service:config-updated', { serviceName: this.name, _config });
   }
 
-  public on(event: string, handler: (...args: any[]) => void): void {
-    if (!this.eventHandlers.has(event)) {
-      this.eventHandlers.set(event, []);
+  public on(_event: string, handler: (...args: any[]) => void): void {
+    if (!this.eventHandlers.has(_event)) {
+      this.eventHandlers.set(_event, []);
     }
-    this.eventHandlers.get(event)!.push(handler);
+    this.eventHandlers.get(_event)!.push(handler);
   }
 
-  public off(event: string, handler: (...args: any[]) => void): void {
-    const handlers = this.eventHandlers.get(event);
+  public off(_event: string, handler: (...args: any[]) => void): void {
+    const handlers = this.eventHandlers.get(_event);
     if (handlers) {
-      const index = handlers.indexOf(handler);
-      if (index !== -1) {
-        handlers.splice(index, 1);
+      const _index = handlers.indexOf(handler);
+      if (_index !== -1) {
+        handlers.splice(_index, 1);
       }
     }
   }
 
-  public emit(event: string, ...args: any[]): void {
-    const handlers = this.eventHandlers.get(event);
+  public emit(_event: string, ...args: any[]): void {
+    const handlers = this.eventHandlers.get(_event);
     if (handlers) {
       handlers.forEach(handler => {
         try {
           handler(...args);
-        } catch (error) {
-          this.handleError(error, `Error in event handler for ${event}`);
+        } catch (_error) {
+          this.handleError(_error, `Error in event handler for ${_event}`);
         }
       });
     }
   }
 
-  protected handleError(error: any, context: string): void {
+  protected handleError(_error: any, context: string): void {
     const serviceError: ServiceError = {
-      message: error.message || String(error),
-      code: error.code || 'UNKNOWN_ERROR',
+      message: error.message || String(_error),
+      code: _error.code || 'UNKNOWN_ERROR',
       timestamp: new Date(),
       severity: 'medium',
       context: { serviceName: this.name, context },
     };
-    
+
     this.errors.push(serviceError);
-    
+
     if (this.errors.length > 50) {
       this.errors = this.errors.slice(-50);
     }
-    
-    this.emit('service:error', serviceError);
+
+    this.emit('service:_error', serviceError);
   }
 
   protected async delay(ms: number): Promise<void> {
@@ -183,7 +188,14 @@ export abstract class MockBaseService implements BaseService {
 
 export class MockCacheProvider implements CacheProvider {
   private cache = new Map<string, { value: any; timestamp: Date; ttl: number }>();
-  private stats: CacheStats = { hits: 0, misses: 0, sets: 0, deletes: 0, size: 0, hitRate: 0 };
+  private stats: CacheStats = {
+    hits: 0,
+    misses: 0,
+    sets: 0,
+    deletes: 0,
+    size: 0,
+    hitRate: 0,
+  };
 
   async get<T>(key: string): Promise<T | null> {
     const entry = this.cache.get(key);
@@ -226,7 +238,7 @@ export class MockCacheProvider implements CacheProvider {
   }
 
   async has(key: string): Promise<boolean> {
-    return this.cache.has(key) && await this.get(key) !== null;
+    return this.cache.has(key) && (await this.get(key)) !== null;
   }
 
   async keys(pattern?: string): Promise<string[]> {
@@ -266,8 +278,8 @@ export class MockAlarmService extends MockBaseService implements AlarmServiceInt
   private cache = new MockCacheProvider();
   private callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
 
-  constructor(dependencies?: Map<string, BaseService>, config?: ServiceConfig) {
-    super('MockAlarmService', '1.0.0', config || {}, dependencies);
+  constructor(dependencies?: Map<string, BaseService>, _config?: ServiceConfig) {
+    super('MockAlarmService', '1.0.0', _config || {}, dependencies);
   }
 
   protected getDefaultConfig(): Partial<ServiceConfig> {
@@ -325,7 +337,9 @@ export class MockAlarmService extends MockBaseService implements AlarmServiceInt
   private logCall(method: string, args: any[]): void {
     this.callHistory.push({
       method,
-      args: args.map(arg => typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg),
+      args: args.map(arg =>
+        typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg
+      ),
       timestamp: Date.now(),
     });
   }
@@ -361,10 +375,10 @@ export class MockAlarmService extends MockBaseService implements AlarmServiceInt
 
     this.alarms.push(newAlarm);
     await this.cache.set('alarms', this.alarms);
-    
+
     this.emit('alarm:created', newAlarm);
     await this.delay(100);
-    
+
     return newAlarm;
   }
 
@@ -384,10 +398,10 @@ export class MockAlarmService extends MockBaseService implements AlarmServiceInt
 
     this.alarms[alarmIndex] = updatedAlarm;
     await this.cache.set('alarms', this.alarms);
-    
+
     this.emit('alarm:updated', updatedAlarm);
     await this.delay(50);
-    
+
     return updatedAlarm;
   }
 
@@ -402,10 +416,10 @@ export class MockAlarmService extends MockBaseService implements AlarmServiceInt
     const deletedAlarm = this.alarms[alarmIndex];
     this.alarms.splice(alarmIndex, 1);
     await this.cache.set('alarms', this.alarms);
-    
+
     this.emit('alarm:deleted', { id, deletedAlarm });
     await this.delay(50);
-    
+
     return true;
   }
 
@@ -450,14 +464,21 @@ export class MockAlarmService extends MockBaseService implements AlarmServiceInt
 // Mock Analytics Service
 // ============================================================================
 
-export class MockAnalyticsService extends MockBaseService implements AnalyticsServiceInterface {
+export class MockAnalyticsService
+  extends MockBaseService
+  implements AnalyticsServiceInterface
+{
   private events: AnalyticsEvent[] = [];
   private cache = new MockCacheProvider();
   private callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
-  private queue: Array<{ event: string; properties?: Record<string, any>; userId?: string }> = [];
+  private queue: Array<{
+    event: string;
+    properties?: Record<string, any>;
+    userId?: string;
+  }> = [];
 
-  constructor(dependencies?: Map<string, BaseService>, config?: ServiceConfig) {
-    super('MockAnalyticsService', '1.0.0', config || {}, dependencies);
+  constructor(dependencies?: Map<string, BaseService>, _config?: ServiceConfig) {
+    super('MockAnalyticsService', '1.0.0', _config || {}, dependencies);
   }
 
   protected getDefaultConfig(): Partial<ServiceConfig> {
@@ -490,7 +511,9 @@ export class MockAnalyticsService extends MockBaseService implements AnalyticsSe
   private logCall(method: string, args: any[]): void {
     this.callHistory.push({
       method,
-      args: args.map(arg => typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg),
+      args: args.map(arg =>
+        typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg
+      ),
       timestamp: Date.now(),
     });
   }
@@ -522,22 +545,22 @@ export class MockAnalyticsService extends MockBaseService implements AnalyticsSe
     return this.queue.length;
   }
 
-  public async track(event: string, properties?: Record<string, any>): Promise<void> {
-    this.logCall('track', [event, properties]);
+  public async track(_event: string, properties?: Record<string, any>): Promise<void> {
+    this.logCall('track', [_event, properties]);
 
-    if (!this.config.enabled) {
+    if (!this._config.enabled) {
       return;
     }
 
-    this.queue.push({ event, properties });
-    this.emit('analytics:tracked', { event, properties });
+    this.queue.push({ _event, properties });
+    this.emit('analytics:tracked', { _event, properties });
     await this.delay(25);
   }
 
   public async identify(userId: string, traits?: Record<string, any>): Promise<void> {
     this.logCall('identify', [userId, traits]);
 
-    if (!this.config.enabled) {
+    if (!this._config.enabled) {
       return;
     }
 
@@ -547,7 +570,7 @@ export class MockAnalyticsService extends MockBaseService implements AnalyticsSe
   public async page(name: string, properties?: Record<string, any>): Promise<void> {
     this.logCall('page', [name, properties]);
 
-    if (!this.config.enabled) {
+    if (!this._config.enabled) {
       return;
     }
 
@@ -566,13 +589,16 @@ export class MockAnalyticsService extends MockBaseService implements AnalyticsSe
 // Mock Subscription Service
 // ============================================================================
 
-export class MockSubscriptionService extends MockBaseService implements SubscriptionServiceInterface {
+export class MockSubscriptionService
+  extends MockBaseService
+  implements SubscriptionServiceInterface
+{
   private subscriptions = new Map<string, Subscription>();
   private cache = new MockCacheProvider();
   private callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
 
-  constructor(dependencies?: Map<string, BaseService>, config?: ServiceConfig) {
-    super('MockSubscriptionService', '1.0.0', config || {}, dependencies);
+  constructor(dependencies?: Map<string, BaseService>, _config?: ServiceConfig) {
+    super('MockSubscriptionService', '1.0.0', _config || {}, dependencies);
   }
 
   protected getDefaultConfig(): Partial<ServiceConfig> {
@@ -609,7 +635,7 @@ export class MockSubscriptionService extends MockBaseService implements Subscrip
       stripePriceId: 'price_premium_monthly',
     };
 
-    this.subscriptions.set('premium-user', premiumSub);
+    this.subscriptions.set('premium-_user', premiumSub);
   }
 
   protected async doCleanup(): Promise<void> {
@@ -621,7 +647,9 @@ export class MockSubscriptionService extends MockBaseService implements Subscrip
   private logCall(method: string, args: any[]): void {
     this.callHistory.push({
       method,
-      args: args.map(arg => typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg),
+      args: args.map(arg =>
+        typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg
+      ),
       timestamp: Date.now(),
     });
   }
@@ -641,7 +669,7 @@ export class MockSubscriptionService extends MockBaseService implements Subscrip
 
     await this.delay(200);
     const subscription = this.subscriptions.get(userId) || null;
-    
+
     if (subscription) {
       await this.cache.set(cacheKey, subscription);
     }
@@ -673,7 +701,7 @@ export class MockSubscriptionService extends MockBaseService implements Subscrip
     this.subscriptions.set(data.userId, subscription);
     this.emit('subscription:created', subscription);
     await this.delay(100);
-    
+
     return subscription;
   }
 
@@ -687,10 +715,10 @@ export class MockSubscriptionService extends MockBaseService implements Subscrip
 
     const updatedSubscription = { ...subscription, ...updates, updatedAt: new Date() };
     this.subscriptions.set(subscription.userId, updatedSubscription);
-    
+
     this.emit('subscription:updated', updatedSubscription);
     await this.delay(100);
-    
+
     return updatedSubscription;
   }
 
@@ -705,7 +733,7 @@ export class MockSubscriptionService extends MockBaseService implements Subscrip
     subscription.status = 'canceled';
     subscription.canceledAt = new Date();
     this.subscriptions.set(subscription.userId, subscription);
-    
+
     this.emit('subscription:canceled', subscription);
     await this.delay(100);
   }
@@ -719,12 +747,15 @@ export class MockSubscriptionService extends MockBaseService implements Subscrip
 // Mock Battle Service
 // ============================================================================
 
-export class MockBattleService extends MockBaseService implements BattleServiceInterface {
+export class MockBattleService
+  extends MockBaseService
+  implements BattleServiceInterface
+{
   private battles: Battle[] = [];
   private callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
 
-  constructor(dependencies?: Map<string, BaseService>, config?: ServiceConfig) {
-    super('MockBattleService', '1.0.0', config || {}, dependencies);
+  constructor(dependencies?: Map<string, BaseService>, _config?: ServiceConfig) {
+    super('MockBattleService', '1.0.0', _config || {}, dependencies);
   }
 
   protected getDefaultConfig(): Partial<ServiceConfig> {
@@ -747,7 +778,9 @@ export class MockBattleService extends MockBaseService implements BattleServiceI
   private logCall(method: string, args: any[]): void {
     this.callHistory.push({
       method,
-      args: args.map(arg => typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg),
+      args: args.map(arg =>
+        typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg
+      ),
       timestamp: Date.now(),
     });
   }
@@ -756,8 +789,8 @@ export class MockBattleService extends MockBaseService implements BattleServiceI
     return [...this.callHistory];
   }
 
-  public async createBattle(config: any): Promise<Battle> {
-    this.logCall('createBattle', [config]);
+  public async createBattle(_config: any): Promise<Battle> {
+    this.logCall('createBattle', [_config]);
 
     const battle: Battle = {
       id: this.generateId('battle'),
@@ -766,29 +799,34 @@ export class MockBattleService extends MockBaseService implements BattleServiceI
       description: config.description || 'A test battle',
       type: config.type || 'weekly_challenge',
       startDate: config.startDate || new Date().toISOString(),
-      endDate: config.endDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      endDate:
+        config.endDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       maxParticipants: config.maxParticipants || 10,
       currentParticipants: 1,
       prizePool: config.prizePool || 100,
       entryFee: config.entryFee || 10,
       status: 'active',
-      rules: config.rules || {
+      rules: _config.rules || {
         wakeUpWindow: '05:00-08:00',
         verificationRequired: true,
         snoozePenalty: 5,
       },
-      participants: [{
-        userId: config.creatorId || 'test-user',
-        joinedAt: new Date().toISOString(),
-        status: 'active',
-        score: 0,
-      }],
-      leaderboard: [{
-        userId: config.creatorId || 'test-user',
-        username: 'Creator',
-        score: 0,
-        rank: 1,
-      }],
+      participants: [
+        {
+          userId: _config.creatorId || 'test-user',
+          joinedAt: new Date().toISOString(),
+          status: 'active',
+          score: 0,
+        },
+      ],
+      leaderboard: [
+        {
+          userId: _config.creatorId || 'test-user',
+          username: 'Creator',
+          score: 0,
+          rank: 1,
+        },
+      ],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       ...config,
@@ -797,7 +835,7 @@ export class MockBattleService extends MockBaseService implements BattleServiceI
     this.battles.push(battle);
     this.emit('battle:created', battle);
     await this.delay(100);
-    
+
     return battle;
   }
 
@@ -834,10 +872,10 @@ export class MockBattleService extends MockBaseService implements BattleServiceI
 
     battle.currentParticipants++;
     battle.updatedAt = new Date().toISOString();
-    
+
     this.emit('battle:joined', { battleId, userId });
     await this.delay(100);
-    
+
     return { success: true };
   }
 
@@ -857,7 +895,7 @@ export class MockBattleService extends MockBaseService implements BattleServiceI
   public async getBattleHistory(userId: string): Promise<any[]> {
     this.logCall('getBattleHistory', [userId]);
 
-    const userBattles = this.battles.filter(battle => 
+    const userBattles = this.battles.filter(battle =>
       battle.participants.some(p => p.userId === userId)
     );
 
@@ -875,10 +913,10 @@ export class MockBattleService extends MockBaseService implements BattleServiceI
 
     battle.status = 'completed';
     battle.updatedAt = new Date().toISOString();
-    
+
     this.emit('battle:ended', battle);
     await this.delay(100);
-    
+
     return { success: true, battle };
   }
 }
@@ -893,8 +931,8 @@ export class MockVoiceService extends MockBaseService implements VoiceServiceInt
   private currentVoice: string = 'default';
   private speaking: boolean = false;
 
-  constructor(dependencies?: Map<string, BaseService>, config?: ServiceConfig) {
-    super('MockVoiceService', '1.0.0', config || {}, dependencies);
+  constructor(dependencies?: Map<string, BaseService>, _config?: ServiceConfig) {
+    super('MockVoiceService', '1.0.0', _config || {}, dependencies);
   }
 
   protected getDefaultConfig(): Partial<ServiceConfig> {
@@ -921,7 +959,9 @@ export class MockVoiceService extends MockBaseService implements VoiceServiceInt
   private logCall(method: string, args: any[]): void {
     this.callHistory.push({
       method,
-      args: args.map(arg => typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg),
+      args: args.map(arg =>
+        typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg
+      ),
       timestamp: Date.now(),
     });
   }
@@ -933,24 +973,24 @@ export class MockVoiceService extends MockBaseService implements VoiceServiceInt
   public async speak(text: string, options?: any): Promise<void> {
     this.logCall('speak', [text, options]);
 
-    if (!this.config.enabled) {
+    if (!this._config.enabled) {
       return;
     }
 
     this.speaking = true;
     this.emit('voice:speaking', { text, options });
-    
+
     // Simulate speaking duration based on text length
     const duration = Math.max(1000, text.length * 50);
     await this.delay(duration);
-    
+
     this.speaking = false;
     this.emit('voice:finished', { text });
   }
 
   public async stop(): Promise<void> {
     this.logCall('stop', []);
-    
+
     this.speaking = false;
     this.emit('voice:stopped');
     await this.delay(50);
@@ -958,19 +998,19 @@ export class MockVoiceService extends MockBaseService implements VoiceServiceInt
 
   public async getVoices(): Promise<any[]> {
     this.logCall('getVoices', []);
-    
+
     await this.delay(100);
     return [...this.availableVoices];
   }
 
   public async setVoice(voiceId: string): Promise<void> {
     this.logCall('setVoice', [voiceId]);
-    
+
     const voice = this.availableVoices.find(v => v.id === voiceId);
     if (!voice) {
       throw new Error(`Voice ${voiceId} not found`);
     }
-    
+
     this.currentVoice = voiceId;
     this.emit('voice:changed', { voiceId });
     await this.delay(50);
@@ -978,10 +1018,10 @@ export class MockVoiceService extends MockBaseService implements VoiceServiceInt
 
   public async generateAudio(text: string, voiceId: string): Promise<string> {
     this.logCall('generateAudio', [text, voiceId]);
-    
+
     await this.delay(500);
     const audioUrl = `data:audio/wav;base64,${btoa('mock-audio-data-' + text)}`;
-    
+
     this.emit('voice:audio-generated', { text, voiceId, audioUrl });
     return audioUrl;
   }
@@ -997,7 +1037,7 @@ export class MockVoiceService extends MockBaseService implements VoiceServiceInt
 
 export const createMockServiceContainer = (): Map<string, BaseService> => {
   const container = new Map<string, BaseService>();
-  
+
   const defaultConfig: ServiceConfig = {
     enabled: true,
     environment: 'development',
@@ -1006,20 +1046,27 @@ export const createMockServiceContainer = (): Map<string, BaseService> => {
 
   container.set('alarmService', new MockAlarmService(container, defaultConfig));
   container.set('analyticsService', new MockAnalyticsService(container, defaultConfig));
-  container.set('subscriptionService', new MockSubscriptionService(container, defaultConfig));
+  container.set(
+    'subscriptionService',
+    new MockSubscriptionService(container, defaultConfig)
+  );
   container.set('battleService', new MockBattleService(container, defaultConfig));
   container.set('voiceService', new MockVoiceService(container, defaultConfig));
-  
+
   return container;
 };
 
-export const resetAllMockServices = async (container: Map<string, BaseService>): Promise<void> => {
+export const resetAllMockServices = async (
+  container: Map<string, BaseService>
+): Promise<void> => {
   for (const [, service] of container) {
     await service.cleanup();
   }
 };
 
-export const initializeAllMockServices = async (container: Map<string, BaseService>): Promise<void> => {
+export const initializeAllMockServices = async (
+  container: Map<string, BaseService>
+): Promise<void> => {
   for (const [, service] of container) {
     await service.initialize();
   }

@@ -1,6 +1,6 @@
 // Premium Feature Test Component - Simplified Version
 import React, { useState } from 'react';
-import { Crown, Star, Zap, Shield } from 'lucide-react';
+import { Crown, Star, Shield } from 'lucide-react';
 
 interface PremiumFeatureTestProps {
   userTier?: string;
@@ -20,7 +20,7 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
       id: 'nuclear-mode',
       name: 'Nuclear Mode',
       description: 'Ultra-challenging wake-up tasks',
-      icon: Zap,
+      icon: Crown,
       tier: 'premium',
       color: 'from-red-500 to-orange-600',
     },

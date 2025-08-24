@@ -203,8 +203,8 @@ export class CriticalAssetPreloader {
     try {
       await Promise.allSettled(loadPromises);
       this.stats.lastPreloadTime = new Date();
-    } catch (error) {
-      console.error('Error in batch preloading:', error);
+    } catch (_error) {
+      console._error('Error in batch preloading:', _error);
     } finally {
       this.isPreloading = false;
     }
@@ -237,8 +237,8 @@ export class CriticalAssetPreloader {
       this.updateLoadTimeStats(loadTime);
 
       console.log(`Critical asset ${asset.id} preloaded in ${Math.round(loadTime)}ms`);
-    } catch (error) {
-      console.error(`Failed to preload critical asset ${asset.id}:`, error);
+    } catch (_error) {
+      console._error(`Failed to preload critical asset ${asset.id}:`, _error);
       this.stats.failedAssets++;
 
       // Retry with exponential backoff
@@ -279,7 +279,7 @@ export class CriticalAssetPreloader {
 
   private async retryPreload(asset: CriticalAsset, attempt: number = 1): Promise<void> {
     if (attempt > this.strategy.retryAttempts) {
-      console.error(`Max retry attempts reached for asset ${asset.id}`);
+      console._error(`Max retry attempts reached for asset ${asset.id}`);
       return;
     }
 
@@ -287,7 +287,7 @@ export class CriticalAssetPreloader {
 
     try {
       await this.preloadAsset(asset);
-    } catch (error) {
+    } catch (_error) {
       setTimeout(
         () => {
           this.retryPreload(asset, attempt + 1);
@@ -420,8 +420,8 @@ export class CriticalAssetPreloader {
       try {
         await this.preloadDueAssets();
         this.cleanupExpiredAssets();
-      } catch (error) {
-        console.error('Error in preload monitoring:', error);
+      } catch (_error) {
+        console._error('Error in preload monitoring:', _error);
       }
     }, 60000); // 1 minute interval
   }

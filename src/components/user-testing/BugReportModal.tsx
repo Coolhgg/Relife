@@ -122,8 +122,8 @@ export function BugReportModal({
 
         stream.getTracks().forEach(track => track.stop());
       });
-    } catch (error) {
-      console.error('Failed to take screenshot:', error);
+    } catch (_error) {
+      console._error('Failed to take screenshot:', _error);
     }
   };
 
@@ -131,15 +131,15 @@ export function BugReportModal({
     setSteps([...steps, '']);
   };
 
-  const updateStep = (index: number, value: string) => {
+  const updateStep = (_index: number, value: string) => {
     const newSteps = [...steps];
-    newSteps[index] = value;
+    newSteps[_index] = value;
     setSteps(newSteps);
   };
 
-  const removeStep = (index: number) => {
+  const removeStep = (_index: number) => {
     if (steps.length > 1) {
-      const newSteps = steps.filter((_, i) => i !== index);
+      const newSteps = steps.filter((_, i) => i !== _index);
       setSteps(newSteps);
     }
   };
@@ -186,8 +186,8 @@ export function BugReportModal({
         resetForm();
         onClose();
       }, 2000);
-    } catch (error) {
-      console.error('Failed to submit bug report:', error);
+    } catch (_error) {
+      console._error('Failed to submit bug report:', _error);
     } finally {
       setIsSubmitting(false);
     }
@@ -266,7 +266,9 @@ export function BugReportModal({
                   <Input
                     id="title"
                     value={title}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTitle(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      setTitle(e.target.value)
+                    }
                     placeholder="Brief summary of the bug"
                     className="mt-1"
                     required
@@ -278,7 +280,9 @@ export function BugReportModal({
                   <Textarea
                     id="description"
                     value={description}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      setDescription(e.target.value)
+                    }
                     placeholder="Describe the bug in detail..."
                     className="mt-1 min-h-[100px]"
                     rows={4}
@@ -371,7 +375,9 @@ export function BugReportModal({
                   <Textarea
                     id="expected"
                     value={expectedBehavior}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setExpectedBehavior(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      setExpectedBehavior(e.target.value)
+                    }
                     placeholder="Describe what you thought would happen..."
                     className="mt-1"
                     rows={3}
@@ -383,7 +389,9 @@ export function BugReportModal({
                   <Textarea
                     id="actual"
                     value={actualBehavior}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setActualBehavior(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      setActualBehavior(e.target.value)
+                    }
                     placeholder="Describe what actually happened instead..."
                     className="mt-1"
                     rows={3}
@@ -406,17 +414,19 @@ export function BugReportModal({
                       </Button>
                     </div>
                     <div className="space-y-3">
-                      {steps.map((step, index) => (
-                        <div key={index} className="flex items-center gap-3">
+                      {steps.map((step, _index) => (
+                        <div key={_index} className="flex items-center gap-3">
                           <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                             <span className="text-sm font-medium text-primary">
-                              {index + 1}
+                              {_index + 1}
                             </span>
                           </div>
                           <Input
                             value={step}
-                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateStep(index, e.target.value)}
-                            placeholder={`Step ${index + 1}...`}
+                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                              updateStep(_index, e.target.value)
+                            }
+                            placeholder={`Step ${_index + 1}...`}
                             className="flex-1"
                           />
                           {steps.length > 1 && (
@@ -424,7 +434,7 @@ export function BugReportModal({
                               type="button"
                               variant="ghost"
                               size="sm"
-                              onClick={() => removeStep(index)}
+                              onClick={() => removeStep(_index)}
                               className="flex-shrink-0"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -441,7 +451,9 @@ export function BugReportModal({
                   <div className="flex items-center gap-2 mt-2">
                     <Input
                       value={newTag}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewTag(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                        setNewTag(e.target.value)
+                      }
                       placeholder="Add a tag..."
                       className="flex-1"
                       onKeyDown={(e: React.KeyboardEvent) =>

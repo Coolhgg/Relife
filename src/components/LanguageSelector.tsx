@@ -29,8 +29,8 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
     try {
       await changeLanguage(lang);
       setIsOpen(false);
-    } catch (error) {
-      console.error('Failed to change language:', error);
+    } catch (_error) {
+      console._error('Failed to change language:', _error);
     }
   };
 

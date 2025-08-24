@@ -242,9 +242,9 @@ const addMockListener = (pluginName: string, eventName: string, callback: Functi
     remove: vi.fn(() => {
       const listeners = mockEventListeners.get(key);
       if (listeners) {
-        const index = listeners.findIndex(l => l.callback === callback);
-        if (index > -1) {
-          listeners.splice(index, 1);
+        const _index = listeners.findIndex(l => l.callback === callback);
+        if (_index > -1) {
+          listeners.splice(_index, 1);
           log(`🔇 Mock ${pluginName} listener removed: ${eventName}`);
         }
       }
@@ -259,9 +259,9 @@ const triggerMockEvent = (pluginName: string, eventName: string, data?: any) => 
     listeners.forEach(listener => {
       try {
         listener.callback(data);
-        log(`📢 Mock ${pluginName} event triggered: ${eventName}`, data);
-      } catch (error) {
-        log(`❌ Mock ${pluginName} event listener error:`, error);
+        log(`📢 Mock ${pluginName} _event triggered: ${eventName}`, data);
+      } catch (_error) {
+        log(`❌ Mock ${pluginName} _event listener error:`, _error);
       }
     });
   }

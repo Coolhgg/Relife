@@ -112,8 +112,8 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
       try {
         const parsed = JSON.parse(savedCustomThemes);
         setCustomThemes(parsed);
-      } catch (error) {
-        console.error('Failed to load custom themes:', error);
+      } catch (_error) {
+        console._error('Failed to load custom themes:', _error);
       }
     }
   }, []);
@@ -153,7 +153,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
     linkElement.click();
   };
 
-  const importThemes = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const importThemes = (_event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -181,8 +181,8 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
         }
 
         alert('Themes imported successfully!');
-      } catch (error) {
-        console.error('Failed to import themes:', error);
+      } catch (_error) {
+        console._error('Failed to import themes:', _error);
         alert('Failed to import themes. Please check the file format.');
       }
     };
@@ -482,9 +482,9 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                 }`}
               >
                 <div className="flex gap-1 mb-2">
-                  {Object.values(quickTheme.colors).map((color, index) => (
+                  {Object.values(quickTheme.colors).map((color, _index) => (
                     <div
-                      key={index}
+                      key={_index}
                       className="w-4 h-4 rounded-full"
                       style={{ backgroundColor: color }}
                     />

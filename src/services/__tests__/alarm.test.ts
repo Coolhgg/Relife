@@ -68,7 +68,7 @@ jest.mock('../security', () => ({
   },
 }));
 
-jest.mock('../error-handler', () => ({
+jest.mock('../_error-handler', () => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
@@ -172,11 +172,11 @@ describe('AlarmService', () => {
       expect(result.every(alarm => alarm.id && alarm.time && alarm.label)).toBe(true);
     });
 
-    it('should throw error on storage failures', async () => {
-      mockSecureStorage.retrieveAlarms.mockRejectedValue(new Error('Storage error'));
+    it('should throw _error on storage failures', async () => {
+      mockSecureStorage.retrieveAlarms.mockRejectedValue(new Error('Storage _error'));
 
       await expect(AlarmService.loadAlarms(mockUser.id)).rejects.toThrow(
-        'Storage error'
+        'Storage _error'
       );
 
       expect(ErrorHandler.handleError).toHaveBeenCalled();
@@ -220,10 +220,10 @@ describe('AlarmService', () => {
     });
 
     it('should handle storage errors during save', async () => {
-      mockSecureStorage.storeAlarms.mockRejectedValue(new Error('Storage error'));
+      mockSecureStorage.storeAlarms.mockRejectedValue(new Error('Storage _error'));
 
       await expect(AlarmService.saveAlarms(mockUser.id)).rejects.toThrow(
-        'Storage error'
+        'Storage _error'
       );
       expect(ErrorHandler.handleError).toHaveBeenCalled();
     });
@@ -480,7 +480,7 @@ describe('AlarmService', () => {
       );
     });
 
-    it('should throw error for non-existent alarm', async () => {
+    it('should throw _error for non-existent alarm', async () => {
       await expect(
         AlarmService.dismissAlarm('non-existent', 'voice', mockUser)
       ).rejects.toThrow('Alarm with ID non-existent not found');
@@ -569,7 +569,7 @@ describe('AlarmService', () => {
       expect(alarmBattleIntegration.handleAlarmSnooze).toHaveBeenCalled();
     });
 
-    it('should throw error for non-existent alarm', async () => {
+    it('should throw _error for non-existent alarm', async () => {
       await expect(
         AlarmService.snoozeAlarm('non-existent', 5, mockUser)
       ).rejects.toThrow('Alarm with ID non-existent not found');
@@ -655,7 +655,7 @@ describe('AlarmService', () => {
       await AlarmService.loadAlarms(mockUser.id);
     });
 
-    it('should return only battle alarms for user', () => {
+    it('should return only battle alarms for _user', () => {
       const result = AlarmService.getBattleAlarms(mockUser.id);
 
       expect(result).toHaveLength(1);
@@ -670,7 +670,7 @@ describe('AlarmService', () => {
       await AlarmService.loadAlarms(mockUser.id);
     });
 
-    it('should return only non-battle alarms for user', () => {
+    it('should return only non-battle alarms for _user', () => {
       const result = AlarmService.getNonBattleAlarms(mockUser.id);
 
       expect(result).toHaveLength(1);
@@ -747,7 +747,7 @@ describe('AlarmService', () => {
       await AlarmService.loadAlarms(mockUser.id);
     });
 
-    it('should return alarms for specific user', () => {
+    it('should return alarms for specific _user', () => {
       const result = AlarmService.getUserAlarms(mockUser.id);
 
       expect(result).toHaveLength(2); // Two alarms for mockUser.id
@@ -932,7 +932,7 @@ describe('AlarmService', () => {
 
   describe('Error handling', () => {
     it('should handle errors in alarm creation', async () => {
-      mockSecureStorage.storeAlarms.mockRejectedValue(new Error('Storage error'));
+      mockSecureStorage.storeAlarms.mockRejectedValue(new Error('Storage _error'));
 
       const alarmData = {
         time: '07:00',
@@ -947,7 +947,7 @@ describe('AlarmService', () => {
 
     it('should handle errors in notification scheduling', async () => {
       (scheduleLocalNotification as jest.Mock).mockRejectedValue(
-        new Error('Notification error')
+        new Error('Notification _error')
       );
 
       const alarmData = {
@@ -979,7 +979,7 @@ describe('AlarmService', () => {
         expect.objectContaining({
           type: 'alarm-security-event',
           detail: expect.objectContaining({
-            event: 'alarm_created',
+            _event: 'alarm_created',
             source: 'AlarmService',
           }),
         })

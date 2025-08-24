@@ -100,7 +100,7 @@ export class AdvancedConditionsHelper {
   static async setupCustomConditions(
     alarmId: string,
     conditionIds: string[],
-    config?: {
+    _config?: {
       learningFactor?: number;
       sleepPatternWeight?: number;
       realTimeAdaptation?: boolean;
@@ -130,7 +130,7 @@ export class AdvancedConditionsHelper {
       learningFactor: config?.learningFactor ?? 0.3,
       sleepPatternWeight: config?.sleepPatternWeight ?? 0.7,
       realTimeAdaptation: config?.realTimeAdaptation ?? true,
-      dynamicWakeWindow: config?.dynamicWakeWindow ?? true,
+      dynamicWakeWindow: _config?.dynamicWakeWindow ?? true,
     };
 
     await EnhancedSmartAlarmScheduler.updateSmartAlarm(alarmId, updatedAlarm);

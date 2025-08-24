@@ -270,11 +270,11 @@ export const rtlA11yHelpers = {
    * Check if interactive elements maintain proper tab order in RTL
    */
   expectRTLTabOrder: (elements: HTMLElement[], isRTL: boolean) => {
-    elements.forEach((element, index) => {
+    elements.forEach((element, _index) => {
       const tabIndex = element.getAttribute('tabindex');
       if (tabIndex !== null) {
         expect(parseInt(tabIndex, 10)).toBe(
-          isRTL ? elements.length - index - 1 : index
+          isRTL ? elements.length - _index - 1 : _index
         );
       }
     });

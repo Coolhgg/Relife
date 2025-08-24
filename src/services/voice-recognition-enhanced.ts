@@ -84,7 +84,7 @@ class VoiceRecognitionEnhancedService {
   private mediaRecorder: MediaRecorder | null = null;
   private gestureDetector: MediaRecorder | null = null;
 
-  private config: AdvancedRecognitionConfig = {
+  private _config: AdvancedRecognitionConfig = {
     languages: {
       primaryLanguage: 'en-US',
       secondaryLanguages: [
@@ -379,10 +379,10 @@ class VoiceRecognitionEnhancedService {
   /**
    * Initialize the enhanced voice recognition service
    */
-  async initialize(config?: Partial<AdvancedRecognitionConfig>): Promise<boolean> {
+  async initialize(_config?: Partial<AdvancedRecognitionConfig>): Promise<boolean> {
     try {
-      if (config) {
-        this.config = this.mergeConfig(this.config, config);
+      if (_config) {
+        this.config = this.mergeConfig(this._config, _config);
       }
 
       // Initialize audio context for gesture detection
@@ -392,7 +392,7 @@ class VoiceRecognitionEnhancedService {
       await this.loadLanguagePreferences();
 
       // Initialize biometrics if enabled
-      if (this.config.biometrics.enabled) {
+      if (this._config.biometrics.enabled) {
         // Biometrics already initialized via singleton
       }
 
@@ -402,9 +402,9 @@ class VoiceRecognitionEnhancedService {
       );
 
       return true;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error as Error,
+        _error as Error,
         'Failed to initialize enhanced voice recognition'
       );
       return false;
@@ -418,7 +418,7 @@ class VoiceRecognitionEnhancedService {
     onCommand: (command: EnhancedVoiceCommand) => void,
     onInterim?: (transcript: string, confidence: number, language: string) => void,
     onGesture?: (gesture: { type: string; confidence: number; intent: string }) => void,
-    onError?: (error: string) => void,
+    onError?: (_error: string) => void,
     userId?: string
   ): Promise<() => void> {
     try {
@@ -455,12 +455,12 @@ class VoiceRecognitionEnhancedService {
         stopVoice();
         stopGesture();
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error as Error,
+        _error as Error,
         'Failed to start enhanced voice listening'
       );
-      onError?.(error instanceof Error ? error.message : 'Unknown error');
+      onError?.(error instanceof Error ? _error.message : 'Unknown _error');
       return () => {};
     }
   }
@@ -470,8 +470,8 @@ class VoiceRecognitionEnhancedService {
    */
   async detectLanguage(audioBuffer: AudioBuffer): Promise<string> {
     try {
-      if (!this.config.languages.autoDetection) {
-        return this.config.languages.primaryLanguage;
+      if (!this._config.languages.autoDetection) {
+        return this._config.languages.primaryLanguage;
       }
 
       // Simple language detection based on spectral characteristics
@@ -488,9 +488,9 @@ class VoiceRecognitionEnhancedService {
       return this.config.languages.secondaryLanguages.includes(detectedLang)
         ? detectedLang
         : this.config.languages.primaryLanguage;
-    } catch (error) {
-      console.error('Language detection failed:', error);
-      return this.config.languages.fallbackLanguage;
+    } catch (_error) {
+      console._error('Language detection failed:', _error);
+      return this._config.languages.fallbackLanguage;
     }
   }
 
@@ -501,7 +501,7 @@ class VoiceRecognitionEnhancedService {
     try {
       const supportedLanguages = [
         this.config.languages.primaryLanguage,
-        ...this.config.languages.secondaryLanguages,
+        ...this._config.languages.secondaryLanguages,
       ];
 
       if (!supportedLanguages.includes(language)) {
@@ -516,8 +516,8 @@ class VoiceRecognitionEnhancedService {
       this.performanceMonitor.trackCustomMetric('language_switched', 1);
 
       return true;
-    } catch (error) {
-      console.error('Language switch failed:', error);
+    } catch (_error) {
+      console._error('Language switch failed:', _error);
       return false;
     }
   }
@@ -537,7 +537,7 @@ class VoiceRecognitionEnhancedService {
 
     // Analyze emotion from audio if available
     let emotion: EnhancedVoiceCommand['emotion'] = 'neutral';
-    if (audioBuffer && this.config.contextual.emotionDetection) {
+    if (audioBuffer && this._config.contextual.emotionDetection) {
       emotion = this.detectEmotion(audioBuffer);
     }
 
@@ -568,7 +568,7 @@ class VoiceRecognitionEnhancedService {
    */
   private async startGestureRecognition(
     onGesture?: (gesture: { type: string; confidence: number; intent: string }) => void,
-    onError?: (error: string) => void
+    onError?: (_error: string) => void
   ): Promise<() => void> {
     try {
       if (!this.audioContext) {
@@ -600,9 +600,11 @@ class VoiceRecognitionEnhancedService {
         gestureDetection();
         stream.getTracks().forEach(track => track.stop());
       };
-    } catch (error) {
-      console.error('Gesture recognition failed to start:', error);
-      onError?.(error instanceof Error ? error.message : 'Gesture recognition failed');
+    } catch (_error) {
+      console.error('Gesture recognition failed to start:', _error);
+      onError?.(
+        _error instanceof Error ? _error.message : 'Gesture recognition failed'
+      );
       return () => {};
     }
   }
@@ -658,7 +660,7 @@ class VoiceRecognitionEnhancedService {
     frequencyData: Uint8Array,
     analyser: AnalyserNode
   ): { type: string; confidence: number; intent: string } | null {
-    if (!this.config.gestures.patterns.whistle.enabled) return null;
+    if (!this._config.gestures.patterns.whistle.enabled) return null;
 
     const sampleRate = this.audioContext!.sampleRate;
     const binSize = sampleRate / (2 * frequencyData.length);
@@ -702,7 +704,7 @@ class VoiceRecognitionEnhancedService {
     frequencyData: Uint8Array,
     analyser: AnalyserNode
   ): { type: string; confidence: number; intent: string } | null {
-    if (!this.config.gestures.patterns.hum.enabled) return null;
+    if (!this._config.gestures.patterns.hum.enabled) return null;
 
     const sampleRate = this.audioContext!.sampleRate;
     const binSize = sampleRate / (2 * frequencyData.length);
@@ -739,7 +741,7 @@ class VoiceRecognitionEnhancedService {
     timeData: Uint8Array,
     analyser: AnalyserNode
   ): { type: string; confidence: number; intent: string } | null {
-    if (!this.config.gestures.patterns.clap.enabled) return null;
+    if (!this._config.gestures.patterns.clap.enabled) return null;
 
     // Detect sharp amplitude spike characteristic of clapping
     let maxAmplitude = 0;
@@ -776,7 +778,7 @@ class VoiceRecognitionEnhancedService {
     frequencyData: Uint8Array,
     analyser: AnalyserNode
   ): { type: string; confidence: number; intent: string } | null {
-    if (!this.config.gestures.patterns.kiss.enabled) return null;
+    if (!this._config.gestures.patterns.kiss.enabled) return null;
 
     // Kiss sounds have characteristic burst pattern in mid-frequency range
     const pattern = this.gesturePatterns.kiss;
@@ -819,8 +821,8 @@ class VoiceRecognitionEnhancedService {
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
       }
-    } catch (error) {
-      console.error('Failed to initialize audio context:', error);
+    } catch (_error) {
+      console._error('Failed to initialize audio context:', _error);
     }
   }
 
@@ -830,7 +832,7 @@ class VoiceRecognitionEnhancedService {
   private async startMultiLanguageRecognition(
     onCommand: (command: EnhancedVoiceCommand) => void,
     onInterim?: (transcript: string, confidence: number, language: string) => void,
-    onError?: (error: string) => void,
+    onError?: (_error: string) => void,
     userId?: string
   ): Promise<() => void> {
     // Use VoiceProService with language detection
@@ -872,7 +874,7 @@ class VoiceRecognitionEnhancedService {
     );
 
     // Perform voice authentication if enabled and user provided
-    if (this.config.biometrics.enabled && userId) {
+    if (this._config.biometrics.enabled && userId) {
       // Voice authentication would happen here
       // For now, we'll skip the actual authentication
     }
@@ -1016,7 +1018,7 @@ class VoiceRecognitionEnhancedService {
 
     // Time of day context
     const hour = new Date().getHours();
-    if (this.config.contextual.timeAwareness) {
+    if (this._config.contextual.timeAwareness) {
       if (hour >= 5 && hour <= 10 && (intent === 'dismiss' || intent === 'snooze')) {
         score += 0.1;
       }

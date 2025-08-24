@@ -5,13 +5,17 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { MockWebSocket, RealTimeTestUtils, setupRealTimeTesting } from '../realtime/realtime-testing-utilities';
+import {
+  MockWebSocket,
+  RealTimeTestUtils,
+  setupRealTimeTesting,
+} from '../realtime/realtime-testing-utilities';
 import { WebSocketTypeMocks } from '../mocks/websocket-type-mocks';
 import type {
   WebSocketMessage,
   WebSocketConfig,
   WebSocketConnectionInfo,
-  WebSocketEventHandlers
+  WebSocketEventHandlers,
 } from '../../types/websocket';
 
 import type {
@@ -19,7 +23,7 @@ import type {
   UserPresenceUpdatePayload,
   RecommendationGeneratedPayload,
   SystemNotificationPayload,
-  SyncStatusUpdatePayload
+  SyncStatusUpdatePayload,
 } from '../../types/realtime-messages';
 
 // Setup WebSocket testing environment
@@ -34,15 +38,15 @@ class MockRealtimeService {
   private userId: string;
   private sessionId: string;
 
-  constructor(config: WebSocketConfig, userId: string) {
-    this.config = config;
+  constructor(_config: WebSocketConfig, userId: string) {
+    this.config = _config;
     this.userId = userId;
     this.sessionId = `session_${Date.now()}`;
   }
 
   async start(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.websocket = new MockWebSocket(this.config.url);
+      this.websocket = new MockWebSocket(this._config.url);
 
       this.websocket.addEventListener('open', () => {
         this.isConnected = true;
@@ -55,18 +59,18 @@ class MockRealtimeService {
         this.emit('disconnected', { reason: 'Connection closed' });
       });
 
-      this.websocket.addEventListener('error', (error) => {
+      this.websocket.addEventListener('error', _error => {
         this.isConnected = false;
-        this.emit('error', error);
-        reject(error);
+        this.emit('_error', _error);
+        reject(_error);
       });
 
-      this.websocket.addEventListener('message', (event: any) => {
+      this.websocket.addEventListener('message', (_event: any) => {
         try {
-          const message: WebSocketMessage = JSON.parse(event.data);
+          const message: WebSocketMessage = JSON.parse(_event.data);
           this.handleMessage(message);
-        } catch (error) {
-          this.emit('error', { type: 'INVALID_MESSAGE', error });
+        } catch (_error) {
+          this.emit('_error', { type: 'INVALID_MESSAGE', _error });
         }
       });
 
@@ -97,9 +101,9 @@ class MockRealtimeService {
     return () => {
       const handlers = this.eventHandlers.get(eventType);
       if (handlers) {
-        const index = handlers.indexOf(handler);
-        if (index > -1) {
-          handlers.splice(index, 1);
+        const _index = handlers.indexOf(handler);
+        if (_index > -1) {
+          handlers.splice(_index, 1);
         }
       }
     };
@@ -113,8 +117,8 @@ class MockRealtimeService {
     try {
       this.websocket.send(JSON.stringify(message));
       return true;
-    } catch (error) {
-      this.emit('error', { type: 'SEND_FAILED', error });
+    } catch (_error) {
+      this.emit('_error', { type: 'SEND_FAILED', _error });
       return false;
     }
   }
@@ -132,7 +136,7 @@ class MockRealtimeService {
     const message = WebSocketTypeMocks.createMockWebSocketMessage('sync_requested', {
       itemType: 'alarm',
       itemId: alarmId,
-      userId: this.userId
+      userId: this.userId,
     });
 
     await this.sendMessage(message);
@@ -144,36 +148,46 @@ class MockRealtimeService {
   }
 
   async updatePresence(status: 'online' | 'away' | 'busy' | 'offline'): Promise<void> {
-    const message = WebSocketTypeMocks.createMockWebSocketMessage('user_presence_update', {
-      userId: this.userId,
-      status,
-      lastSeen: new Date(),
-      activeDevices: []
-    });
+    const message = WebSocketTypeMocks.createMockWebSocketMessage(
+      'user_presence_update',
+      {
+        userId: this.userId,
+        status,
+        lastSeen: new Date(),
+        activeDevices: [],
+      }
+    );
 
     await this.sendMessage(message);
   }
 
   // AI recommendation methods
-  onRecommendation(handler: (payload: RecommendationGeneratedPayload) => void): () => void {
+  onRecommendation(
+    handler: (payload: RecommendationGeneratedPayload) => void
+  ): () => void {
     return this.on('recommendation_generated', handler);
   }
 
   async requestAnalysis(type: string, data: any): Promise<string> {
     const analysisId = `analysis_${Date.now()}`;
-    const message = WebSocketTypeMocks.createMockWebSocketMessage('ai_analysis_request', {
-      analysisId,
-      type,
-      data,
-      userId: this.userId
-    });
+    const message = WebSocketTypeMocks.createMockWebSocketMessage(
+      'ai_analysis_request',
+      {
+        analysisId,
+        type,
+        data,
+        userId: this.userId,
+      }
+    );
 
     await this.sendMessage(message);
     return analysisId;
   }
 
   // System notification methods
-  onSystemNotification(handler: (payload: SystemNotificationPayload) => void): () => void {
+  onSystemNotification(
+    handler: (payload: SystemNotificationPayload) => void
+  ): () => void {
     return this.on('system_notification', handler);
   }
 
@@ -186,7 +200,7 @@ class MockRealtimeService {
     return {
       connected: this.isConnected,
       userId: this.userId,
-      sessionId: this.sessionId
+      sessionId: this.sessionId,
     };
   }
 
@@ -201,8 +215,8 @@ class MockRealtimeService {
     handlers.forEach(handler => {
       try {
         handler(data);
-      } catch (error) {
-        console.error(`Error in ${eventType} handler:`, error);
+      } catch (_error) {
+        console._error(`Error in ${eventType} handler:`, _error);
       }
     });
   }
@@ -212,7 +226,7 @@ class MockRealtimeService {
     if (this.websocket) {
       const message = WebSocketTypeMocks.createMockWebSocketMessage(type, payload, {
         userId: this.userId,
-        sessionId: this.sessionId
+        sessionId: this.sessionId,
       });
       this.websocket.simulateMessage(message);
     }
@@ -231,14 +245,14 @@ describe('Real-time Service Integration Tests', () => {
   beforeEach(() => {
     RealTimeTestUtils.reset();
     testUserId = 'test-user-123';
-    
-    config = WebSocketTypeMocks.createMockWebSocketConfig({
+
+    _config = WebSocketTypeMocks.createMockWebSocketConfig({
       url: 'wss://test.relife.app/realtime',
       timeout: 5000,
-      heartbeatInterval: 10000
+      heartbeatInterval: 10000,
     });
 
-    realtimeService = new MockRealtimeService(config, testUserId);
+    realtimeService = new MockRealtimeService(_config, testUserId);
   });
 
   afterEach(async () => {
@@ -249,7 +263,7 @@ describe('Real-time Service Integration Tests', () => {
   describe('Service Lifecycle', () => {
     it('should start and connect successfully', async () => {
       const connectionEvents: string[] = [];
-      
+
       realtimeService.on('connected', () => {
         connectionEvents.push('connected');
       });
@@ -257,7 +271,7 @@ describe('Real-time Service Integration Tests', () => {
       await realtimeService.start();
 
       expect(connectionEvents).toContain('connected');
-      
+
       const status = realtimeService.getConnectionStatus();
       expect(status.connected).toBe(true);
       expect(status.userId).toBe(testUserId);
@@ -267,20 +281,20 @@ describe('Real-time Service Integration Tests', () => {
     it('should handle connection failure', async () => {
       const errorConfig = WebSocketTypeMocks.createMockWebSocketConfig({
         url: 'wss://invalid-url.test.com',
-        timeout: 100
+        timeout: 100,
       });
 
       const errorService = new MockRealtimeService(errorConfig, testUserId);
 
       await expect(errorService.start()).rejects.toThrow();
-      
+
       const status = errorService.getConnectionStatus();
       expect(status.connected).toBe(false);
     });
 
     it('should stop and disconnect cleanly', async () => {
       const disconnectionEvents: string[] = [];
-      
+
       realtimeService.on('disconnected', () => {
         disconnectionEvents.push('disconnected');
       });
@@ -301,8 +315,8 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should handle alarm triggered events', async () => {
       const triggeredAlarms: AlarmTriggeredPayload[] = [];
-      
-      const unsubscribe = realtimeService.onAlarmTriggered((payload) => {
+
+      const unsubscribe = realtimeService.onAlarmTriggered(payload => {
         triggeredAlarms.push(payload);
       });
 
@@ -314,15 +328,17 @@ describe('Real-time Service Integration Tests', () => {
       expect(triggeredAlarms).toHaveLength(1);
       expect(triggeredAlarms[0]?.alarm.id).toBe(alarmPayload.alarm.id);
       expect(triggeredAlarms[0]?.triggeredAt).toBeInstanceOf(Date);
-      expect(triggeredAlarms[0]?.deviceInfo.batteryLevel).toBe(alarmPayload.deviceInfo.batteryLevel);
+      expect(triggeredAlarms[0]?.deviceInfo.batteryLevel).toBe(
+        alarmPayload.deviceInfo.batteryLevel
+      );
 
       unsubscribe();
     });
 
     it('should handle alarm dismissed events with voice data', async () => {
       const dismissedAlarms: any[] = [];
-      
-      const unsubscribe = realtimeService.onAlarmDismissed((payload) => {
+
+      const unsubscribe = realtimeService.onAlarmDismissed(payload => {
         dismissedAlarms.push(payload);
       });
 
@@ -341,7 +357,7 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should sync alarm state with server', async () => {
       const sentMessages: any[] = [];
-      
+
       const ws = realtimeService.getWebSocket();
       const originalSend = ws?.send;
       if (ws && originalSend) {
@@ -367,8 +383,8 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should handle presence updates', async () => {
       const presenceUpdates: UserPresenceUpdatePayload[] = [];
-      
-      const unsubscribe = realtimeService.onPresenceUpdate((payload) => {
+
+      const unsubscribe = realtimeService.onPresenceUpdate(payload => {
         presenceUpdates.push(payload);
       });
 
@@ -387,7 +403,7 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should update own presence status', async () => {
       const sentMessages: any[] = [];
-      
+
       const ws = realtimeService.getWebSocket();
       const originalSend = ws?.send;
       if (ws && originalSend) {
@@ -407,20 +423,25 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should track multiple presence states', async () => {
       const presenceUpdates: UserPresenceUpdatePayload[] = [];
-      
-      realtimeService.onPresenceUpdate((payload) => {
+
+      realtimeService.onPresenceUpdate(payload => {
         presenceUpdates.push(payload);
       });
 
-      const statuses: Array<'online' | 'away' | 'busy' | 'offline'> = ['online', 'busy', 'away', 'offline'];
-      
+      const statuses: Array<'online' | 'away' | 'busy' | 'offline'> = [
+        'online',
+        'busy',
+        'away',
+        'offline',
+      ];
+
       for (const status of statuses) {
         const payload = {
           ...WebSocketTypeMocks.createMockUserPresencePayload(),
           status,
-          lastSeen: new Date()
+          lastSeen: new Date(),
         };
-        
+
         realtimeService.simulateServerMessage('user_presence_update', payload);
         await new Promise(resolve => setTimeout(resolve, 50));
       }
@@ -437,13 +458,17 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should handle AI recommendations', async () => {
       const recommendations: RecommendationGeneratedPayload[] = [];
-      
-      const unsubscribe = realtimeService.onRecommendation((payload) => {
+
+      const unsubscribe = realtimeService.onRecommendation(payload => {
         recommendations.push(payload);
       });
 
-      const recommendationPayload = WebSocketTypeMocks.createMockRecommendationPayload();
-      realtimeService.simulateServerMessage('recommendation_generated', recommendationPayload);
+      const recommendationPayload =
+        WebSocketTypeMocks.createMockRecommendationPayload();
+      realtimeService.simulateServerMessage(
+        'recommendation_generated',
+        recommendationPayload
+      );
 
       await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -458,7 +483,7 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should request AI analysis', async () => {
       const sentMessages: any[] = [];
-      
+
       const ws = realtimeService.getWebSocket();
       const originalSend = ws?.send;
       if (ws && originalSend) {
@@ -469,7 +494,7 @@ describe('Real-time Service Integration Tests', () => {
       }
 
       const analysisId = await realtimeService.requestAnalysis('sleep_pattern', {
-        timeRange: { start: new Date(), end: new Date() }
+        timeRange: { start: new Date(), end: new Date() },
       });
 
       expect(analysisId).toBeTruthy();
@@ -480,8 +505,8 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should handle multiple recommendation types', async () => {
       const recommendations: RecommendationGeneratedPayload[] = [];
-      
-      realtimeService.onRecommendation((payload) => {
+
+      realtimeService.onRecommendation(payload => {
         recommendations.push(payload);
       });
 
@@ -489,16 +514,16 @@ describe('Real-time Service Integration Tests', () => {
         'alarm_optimization',
         'sleep_schedule',
         'voice_mood',
-        'challenge_difficulty'
+        'challenge_difficulty',
       ] as const;
 
       for (const type of recommendationTypes) {
         const payload = {
           ...WebSocketTypeMocks.createMockRecommendationPayload(),
           type,
-          recommendationId: `rec-${type}-${Date.now()}`
+          recommendationId: `rec-${type}-${Date.now()}`,
         };
-        
+
         realtimeService.simulateServerMessage('recommendation_generated', payload);
         await new Promise(resolve => setTimeout(resolve, 50));
       }
@@ -515,12 +540,13 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should handle system notifications', async () => {
       const notifications: SystemNotificationPayload[] = [];
-      
-      const unsubscribe = realtimeService.onSystemNotification((payload) => {
+
+      const unsubscribe = realtimeService.onSystemNotification(payload => {
         notifications.push(payload);
       });
 
-      const notificationPayload = WebSocketTypeMocks.createMockSystemNotificationPayload();
+      const notificationPayload =
+        WebSocketTypeMocks.createMockSystemNotificationPayload();
       realtimeService.simulateServerMessage('system_notification', notificationPayload);
 
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -536,8 +562,8 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should handle emergency alerts', async () => {
       const alerts: any[] = [];
-      
-      realtimeService.on('emergency_alert', (payload) => {
+
+      realtimeService.on('emergency_alert', payload => {
         alerts.push(payload);
       });
 
@@ -560,8 +586,8 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should handle sync status updates', async () => {
       const syncUpdates: SyncStatusUpdatePayload[] = [];
-      
-      const unsubscribe = realtimeService.onSyncStatus((payload) => {
+
+      const unsubscribe = realtimeService.onSyncStatus(payload => {
         syncUpdates.push(payload);
       });
 
@@ -581,8 +607,8 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should handle sync conflicts', async () => {
       const conflicts: any[] = [];
-      
-      realtimeService.on('sync_conflict_detected', (payload) => {
+
+      realtimeService.on('sync_conflict_detected', payload => {
         conflicts.push(payload);
       });
 
@@ -605,9 +631,9 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should handle invalid messages gracefully', async () => {
       const errors: any[] = [];
-      
-      realtimeService.on('error', (error) => {
-        errors.push(error);
+
+      realtimeService.on('_error', _error => {
+        errors.push(_error);
       });
 
       const ws = realtimeService.getWebSocket();
@@ -624,9 +650,9 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should handle connection drops', async () => {
       const disconnectionEvents: any[] = [];
-      
-      realtimeService.on('disconnected', (event) => {
-        disconnectionEvents.push(event);
+
+      realtimeService.on('disconnected', _event => {
+        disconnectionEvents.push(_event);
       });
 
       const ws = realtimeService.getWebSocket();
@@ -646,27 +672,36 @@ describe('Real-time Service Integration Tests', () => {
       await realtimeService.start();
     });
 
-    it('should manage multiple event subscriptions', async () => {
+    it('should manage multiple _event subscriptions', async () => {
       const alarmEvents: any[] = [];
       const userEvents: any[] = [];
       const systemEvents: any[] = [];
 
-      const unsubscribeAlarm = realtimeService.onAlarmTriggered((payload) => {
+      const unsubscribeAlarm = realtimeService.onAlarmTriggered(payload => {
         alarmEvents.push(payload);
       });
 
-      const unsubscribeUser = realtimeService.onPresenceUpdate((payload) => {
+      const unsubscribeUser = realtimeService.onPresenceUpdate(payload => {
         userEvents.push(payload);
       });
 
-      const unsubscribeSystem = realtimeService.onSystemNotification((payload) => {
+      const unsubscribeSystem = realtimeService.onSystemNotification(payload => {
         systemEvents.push(payload);
       });
 
       // Send different types of messages
-      realtimeService.simulateServerMessage('alarm_triggered', WebSocketTypeMocks.createMockAlarmTriggeredPayload());
-      realtimeService.simulateServerMessage('user_presence_update', WebSocketTypeMocks.createMockUserPresencePayload());
-      realtimeService.simulateServerMessage('system_notification', WebSocketTypeMocks.createMockSystemNotificationPayload());
+      realtimeService.simulateServerMessage(
+        'alarm_triggered',
+        WebSocketTypeMocks.createMockAlarmTriggeredPayload()
+      );
+      realtimeService.simulateServerMessage(
+        'user_presence_update',
+        WebSocketTypeMocks.createMockUserPresencePayload()
+      );
+      realtimeService.simulateServerMessage(
+        'system_notification',
+        WebSocketTypeMocks.createMockSystemNotificationPayload()
+      );
 
       await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -679,7 +714,10 @@ describe('Real-time Service Integration Tests', () => {
       unsubscribeUser();
       unsubscribeSystem();
 
-      realtimeService.simulateServerMessage('alarm_triggered', WebSocketTypeMocks.createMockAlarmTriggeredPayload());
+      realtimeService.simulateServerMessage(
+        'alarm_triggered',
+        WebSocketTypeMocks.createMockAlarmTriggeredPayload()
+      );
 
       await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -691,13 +729,16 @@ describe('Real-time Service Integration Tests', () => {
 
     it('should handle unsubscription correctly', async () => {
       const events: any[] = [];
-      
-      const unsubscribe = realtimeService.onAlarmTriggered((payload) => {
+
+      const unsubscribe = realtimeService.onAlarmTriggered(payload => {
         events.push(payload);
       });
 
       // Send message before unsubscribe
-      realtimeService.simulateServerMessage('alarm_triggered', WebSocketTypeMocks.createMockAlarmTriggeredPayload());
+      realtimeService.simulateServerMessage(
+        'alarm_triggered',
+        WebSocketTypeMocks.createMockAlarmTriggeredPayload()
+      );
       await new Promise(resolve => setTimeout(resolve, 50));
 
       expect(events).toHaveLength(1);
@@ -706,7 +747,10 @@ describe('Real-time Service Integration Tests', () => {
       unsubscribe();
 
       // Send message after unsubscribe
-      realtimeService.simulateServerMessage('alarm_triggered', WebSocketTypeMocks.createMockAlarmTriggeredPayload());
+      realtimeService.simulateServerMessage(
+        'alarm_triggered',
+        WebSocketTypeMocks.createMockAlarmTriggeredPayload()
+      );
       await new Promise(resolve => setTimeout(resolve, 50));
 
       // Should still be 1

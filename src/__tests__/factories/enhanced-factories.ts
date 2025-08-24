@@ -173,7 +173,7 @@ export const _createTestEmailCampaign = (
       createTestEmailSequence({
         campaignId,
         sequenceOrder: i + 1,
-        persona,
+        _persona,
       })
     ),
     metrics: createTestCampaignMetrics({ campaignId }),

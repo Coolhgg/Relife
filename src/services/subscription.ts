@@ -40,16 +40,16 @@ export class SubscriptionService {
     }
 
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('subscriptions')
         .select('*')
         .eq('user_id', userId)
         .eq('status', 'active')
         .single();
 
-      if (error && error.code !== 'PGRST116') {
+      if (error && _error.code !== 'PGRST116') {
         // PGRST116 is "no rows returned"
-        throw new Error(`Failed to get subscription: ${error.message}`);
+        throw new Error(`Failed to get subscription: ${_error.message}`);
       }
 
       const subscription = data
@@ -76,9 +76,9 @@ export class SubscriptionService {
       }
 
       return subscription;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get user subscription',
         { context: 'getUserSubscription', userId }
       );
@@ -185,15 +185,15 @@ export class SubscriptionService {
     }
 
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('premium_usage')
         .select('*')
         .eq('user_id', userId)
         .eq('month', currentMonth)
         .single();
 
-      if (error && error.code !== 'PGRST116') {
-        throw new Error(`Failed to get usage: ${error.message}`);
+      if (error && _error.code !== 'PGRST116') {
+        throw new Error(`Failed to get usage: ${_error.message}`);
       }
 
       const usage = data
@@ -213,9 +213,9 @@ export class SubscriptionService {
       }
 
       return usage;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get usage data',
         { context: 'getCurrentUsage', userId }
       );
@@ -238,23 +238,23 @@ export class SubscriptionService {
     const currentMonth = new Date().toISOString().slice(0, 7);
 
     try {
-      const { error } = await supabase.rpc('increment_premium_usage', {
+      const { _error } = await supabase.rpc('increment_premium_usage', {
         p_user_id: userId,
         p_month: currentMonth,
         p_feature: feature,
         p_increment: increment,
       });
 
-      if (error) {
-        throw new Error(`Failed to increment usage: ${error.message}`);
+      if (_error) {
+        throw new Error(`Failed to increment usage: ${_error.message}`);
       }
 
       // Invalidate cache
       const cacheKey = `usage_${userId}_${currentMonth}`;
       this.invalidateCache(cacheKey);
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to increment usage',
         { context: 'incrementUsage', userId, feature, increment }
       );
@@ -270,7 +270,7 @@ export class SubscriptionService {
     }
 
     try {
-      const { error } = await supabase.from('subscriptions').upsert([
+      const { _error } = await supabase.from('subscriptions').upsert([
         {
           id: subscription.id,
           user_id: subscription.userId,
@@ -289,15 +289,15 @@ export class SubscriptionService {
         },
       ]);
 
-      if (error) {
-        throw new Error(`Failed to upsert subscription: ${error.message}`);
+      if (_error) {
+        throw new Error(`Failed to upsert subscription: ${_error.message}`);
       }
 
       // Invalidate cache
       this.invalidateCache(`subscription_${subscription.userId}`);
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to upsert subscription',
         { context: 'upsertSubscription', subscriptionId: subscription.id }
       );
@@ -326,21 +326,21 @@ export class SubscriptionService {
         updates.canceled_at = new Date().toISOString();
       }
 
-      const { error } = await supabase
+      const { _error } = await supabase
         .from('subscriptions')
         .update(updates)
         .eq('user_id', userId)
         .eq('status', 'active');
 
-      if (error) {
-        throw new Error(`Failed to cancel subscription: ${error.message}`);
+      if (_error) {
+        throw new Error(`Failed to cancel subscription: ${_error.message}`);
       }
 
       // Invalidate cache
       this.invalidateCache(`subscription_${userId}`);
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to cancel subscription',
         { context: 'cancelSubscription', userId }
       );
@@ -360,16 +360,16 @@ export class SubscriptionService {
     }
 
     try {
-      const { data, error } = await supabase.rpc('get_subscription_analytics');
+      const { data, _error } = await supabase.rpc('get_subscription_analytics');
 
-      if (error) {
-        throw new Error(`Failed to get subscription analytics: ${error.message}`);
+      if (_error) {
+        throw new Error(`Failed to get subscription analytics: ${_error.message}`);
       }
 
       return data;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get subscription analytics',
         { context: 'getSubscriptionAnalytics' }
       );

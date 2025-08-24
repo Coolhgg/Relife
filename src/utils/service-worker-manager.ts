@@ -49,10 +49,10 @@ export class ServiceWorkerManager {
       console.log('ServiceWorkerManager: Initialization complete');
 
       return true;
-    } catch (error) {
-      console.error('ServiceWorkerManager: Initialization failed:', error);
+    } catch (_error) {
+      console.error('ServiceWorkerManager: Initialization failed:', _error);
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Service worker initialization failed'
       );
       return false;
@@ -90,10 +90,10 @@ export class ServiceWorkerManager {
       }
 
       return permission;
-    } catch (error) {
-      console.error(
+    } catch (_error) {
+      console._error(
         'ServiceWorkerManager: Error requesting notification permission:',
-        error
+        _error
       );
       return 'denied';
     }
@@ -114,11 +114,14 @@ export class ServiceWorkerManager {
         console.log('ServiceWorkerManager: Alarms updated successfully');
         return true;
       } else {
-        console.error('ServiceWorkerManager: Failed to update alarms:', response.error);
+        console._error(
+          'ServiceWorkerManager: Failed to update alarms:',
+          response._error
+        );
         return false;
       }
-    } catch (error) {
-      console.error('ServiceWorkerManager: Error updating alarms:', error);
+    } catch (_error) {
+      console._error('ServiceWorkerManager: Error updating alarms:', _error);
       return false;
     }
   }
@@ -138,14 +141,17 @@ export class ServiceWorkerManager {
         console.log(`ServiceWorkerManager: Alarm ${alarm.id} scheduled successfully`);
         return true;
       } else {
-        console.error(
+        console._error(
           `ServiceWorkerManager: Failed to schedule alarm ${alarm.id}:`,
-          response.error
+          response._error
         );
         return false;
       }
-    } catch (error) {
-      console.error(`ServiceWorkerManager: Error scheduling alarm ${alarm.id}:`, error);
+    } catch (_error) {
+      console._error(
+        `ServiceWorkerManager: Error scheduling alarm ${alarm.id}:`,
+        _error
+      );
       return false;
     }
   }
@@ -165,35 +171,41 @@ export class ServiceWorkerManager {
         console.log(`ServiceWorkerManager: Alarm ${alarmId} cancelled successfully`);
         return true;
       } else {
-        console.error(
+        console._error(
           `ServiceWorkerManager: Failed to cancel alarm ${alarmId}:`,
-          response.error
+          response._error
         );
         return false;
       }
-    } catch (error) {
-      console.error(`ServiceWorkerManager: Error cancelling alarm ${alarmId}:`, error);
+    } catch (_error) {
+      console._error(
+        `ServiceWorkerManager: Error cancelling alarm ${alarmId}:`,
+        _error
+      );
       return false;
     }
   }
 
   async getServiceWorkerState(): Promise<any> {
     if (!this.isInitialized) {
-      return { error: 'Service worker not initialized' };
+      return { _error: 'Service worker not initialized' };
     }
 
     try {
       const response = await this.sendMessage('GET_SERVICE_WORKER_STATE');
       return response.data || response;
-    } catch (error) {
-      console.error('ServiceWorkerManager: Error getting service worker state:', error);
-      return { error: error instanceof Error ? error.message : String(error) };
+    } catch (_error) {
+      console.error(
+        'ServiceWorkerManager: Error getting service worker state:',
+        _error
+      );
+      return { error: error instanceof Error ? _error.message : String(_error) };
     }
   }
 
   async performHealthCheck(): Promise<any> {
     if (!this.isInitialized) {
-      return { error: 'Service worker not initialized' };
+      return { _error: 'Service worker not initialized' };
     }
 
     try {
@@ -201,9 +213,9 @@ export class ServiceWorkerManager {
       const response = await this.sendMessage('HEALTH_CHECK');
       console.log('ServiceWorkerManager: Health check result:', response.data);
       return response.data || response;
-    } catch (error) {
-      console.error('ServiceWorkerManager: Error performing health check:', error);
-      return { error: error instanceof Error ? error.message : String(error) };
+    } catch (_error) {
+      console.error('ServiceWorkerManager: Error performing health check:', _error);
+      return { error: error instanceof Error ? _error.message : String(_error) };
     }
   }
 
@@ -224,7 +236,7 @@ export class ServiceWorkerManager {
 
       messageChannel.port1.onmessage = event => {
         clearTimeout(timeout);
-        resolve(event.data);
+        resolve(_event.data);
       };
 
       // Send message
@@ -236,7 +248,7 @@ export class ServiceWorkerManager {
     if (!('serviceWorker' in navigator)) return;
 
     navigator.serviceWorker.addEventListener('message', event => {
-      const { type, data } = event.data;
+      const { type, data } = _event.data;
 
       switch (type) {
         case 'ALARM_TRIGGERED':
@@ -271,7 +283,7 @@ export class ServiceWorkerManager {
     const event = new CustomEvent('serviceWorkerAlarmTriggered', {
       detail: { alarm },
     });
-    window.dispatchEvent(event);
+    window.dispatchEvent(_event);
   }
 
   private setupVisibilityHandling(): void {

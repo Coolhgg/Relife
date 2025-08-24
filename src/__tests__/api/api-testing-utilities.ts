@@ -5,7 +5,11 @@
 
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
-import { allHandlers, scenarioHandlers, MockDataFactory } from './enhanced-msw-handlers';
+import {
+  allHandlers,
+  scenarioHandlers,
+  MockDataFactory,
+} from './enhanced-msw-handlers';
 
 // Test server instance
 export const testServer = setupServer(...allHandlers);
@@ -16,7 +20,7 @@ export interface ApiTestConfig {
   timeout?: number;
   retries?: number;
   headers?: Record<string, string>;
-  scenario?: 'success' | 'error' | 'slow' | 'offline';
+  scenario?: 'success' | '_error' | 'slow' | 'offline';
 }
 
 // Response assertion utilities
@@ -29,16 +33,20 @@ export class ApiAssertions {
     expect(response).toHaveProperty('timestamp');
   }
 
-  static assertErrorResponse(response: any, expectedStatus?: number, expectedMessage?: string) {
+  static assertErrorResponse(
+    response: any,
+    expectedStatus?: number,
+    expectedMessage?: string
+  ) {
     expect(response).toHaveProperty('success', false);
-    expect(response).toHaveProperty('error');
-    
+    expect(response).toHaveProperty('_error');
+
     if (expectedStatus) {
-      expect(response.error).toHaveProperty('status', expectedStatus);
+      expect(response._error).toHaveProperty('status', expectedStatus);
     }
-    
+
     if (expectedMessage) {
-      expect(response.error).toHaveProperty('message', expectedMessage);
+      expect(response._error).toHaveProperty('message', expectedMessage);
     }
   }
 
@@ -49,11 +57,11 @@ export class ApiAssertions {
     expect(response.meta).toHaveProperty('total');
     expect(response.meta).toHaveProperty('page');
     expect(response.meta).toHaveProperty('per_page');
-    
+
     if (expectedItems) {
       expect(response.data).toHaveLength(expectedItems.length);
-      expectedItems.forEach((item, index) => {
-        expect(response.data[index]).toMatchObject(item);
+      expectedItems.forEach((item, _index) => {
+        expect(response.data[_index]).toMatchObject(item);
       });
     }
   }
@@ -67,7 +75,7 @@ export class ApiAssertions {
     expect(headers.get('X-RateLimit-Limit')).toBeTruthy();
     expect(headers.get('X-RateLimit-Remaining')).toBeTruthy();
     expect(headers.get('X-RateLimit-Reset')).toBeTruthy();
-    
+
     if (expectedLimit) {
       expect(headers.get('X-RateLimit-Limit')).toBe(expectedLimit.toString());
     }
@@ -85,15 +93,15 @@ export class ApiTestClient {
   private defaultHeaders: Record<string, string>;
   private scenario: string = 'success';
 
-  constructor(config: ApiTestConfig = {}) {
+  constructor(_config: ApiTestConfig = {}) {
     this.baseUrl = config.baseUrl || 'https://relife-api.workers.dev';
     this.defaultHeaders = {
       'Content-Type': 'application/json',
-      ...config.headers,
+      ..._config.headers,
     };
   }
 
-  setScenario(scenario: 'success' | 'error' | 'slow' | 'offline') {
+  setScenario(scenario: 'success' | '_error' | 'slow' | 'offline') {
     this.scenario = scenario;
     testServer.use(...scenarioHandlers[scenario]);
   }
@@ -114,7 +122,7 @@ export class ApiTestClient {
   }> {
     const startTime = Date.now();
     const url = `${this.baseUrl}${endpoint}`;
-    
+
     const response = await fetch(url, {
       method,
       headers: {
@@ -124,10 +132,10 @@ export class ApiTestClient {
       body: data ? JSON.stringify(data) : undefined,
       ...options,
     });
-    
+
     const responseData = await response.json();
     const timing = Date.now() - startTime;
-    
+
     return {
       response,
       data: responseData,
@@ -156,7 +164,10 @@ export class ApiTestClient {
   }
 
   // Utility methods for common operations
-  async authenticateUser(email: string = 'test@example.com', password: string = 'password') {
+  async authenticateUser(
+    email: string = 'test@example.com',
+    password: string = 'password'
+  ) {
     const { data } = await this.post('/auth/v1/token', { email, password });
     if (data.access_token) {
       this.setAuthToken(data.access_token);
@@ -176,8 +187,10 @@ export class ApiTestClient {
     return data;
   }
 
-  async joinBattle(battleId: string, userId: string = 'test-user-123') {
-    const { data } = await this.post(`/api/battles/${battleId}/join`, { user_id: userId });
+  async joinBattle(battleId: string, userId: string = 'test-_user-123') {
+    const { data } = await this.post(`/api/battles/${battleId}/join`, {
+      user_id: userId,
+    });
     return data;
   }
 }
@@ -202,7 +215,7 @@ export class ApiInterceptors {
         body: options.body,
         timestamp: Date.now(),
       });
-      
+
       return originalFetch(url, options);
     });
 
@@ -227,19 +240,20 @@ export class ApiInterceptors {
       const startTime = Date.now();
       const result = await originalFetch(url, options);
       const duration = Date.now() - startTime;
-      
+
       timings.push({
         url: url.toString(),
         duration,
         timestamp: startTime,
       });
-      
+
       return result;
     });
 
     return {
       getTimings: () => timings,
-      getAverageTiming: () => timings.reduce((sum, t) => sum + t.duration, 0) / timings.length,
+      getAverageTiming: () =>
+        timings.reduce((sum, t) => sum + t.duration, 0) / timings.length,
       clear: () => timings.splice(0, timings.length),
       restore: () => {
         global.fetch = originalFetch;
@@ -252,66 +266,66 @@ export class ApiInterceptors {
 export class ScenarioTester {
   private client: ApiTestClient;
 
-  constructor(config?: ApiTestConfig) {
-    this.client = new ApiTestClient(config);
+  constructor(_config?: ApiTestConfig) {
+    this.client = new ApiTestClient(_config);
   }
 
   async testSuccessScenario() {
     this.client.setScenario('success');
-    
+
     // Test basic operations
     const auth = await this.client.authenticateUser();
     expect(auth.access_token).toBeTruthy();
-    
+
     const alarm = await this.client.createTestAlarm();
     ApiAssertions.assertSuccessResponse(alarm.data);
-    
+
     const battle = await this.client.createTestBattle();
     ApiAssertions.assertSuccessResponse(battle.data);
-    
+
     return { auth, alarm, battle };
   }
 
   async testErrorHandling() {
-    this.client.setScenario('error');
-    
+    this.client.setScenario('_error');
+
     const results = [];
-    
+
     try {
       await this.client.authenticateUser('invalid@example.com', 'wrongpassword');
-    } catch (error) {
-      results.push({ type: 'auth_error', error });
+    } catch (_error) {
+      results.push({ type: 'auth_error', _error });
     }
-    
+
     try {
       await this.client.get('/api/alarms');
-    } catch (error) {
-      results.push({ type: 'api_error', error });
+    } catch (_error) {
+      results.push({ type: 'api_error', _error });
     }
-    
+
     return results;
   }
 
   async testPerformance(maxDuration: number = 5000) {
     this.client.setScenario('success');
-    
+
     const startTime = Date.now();
-    
+
     const requests = await Promise.all([
       this.client.get('/api/health'),
       this.client.get('/api/users'),
       this.client.get('/api/alarms'),
       this.client.get('/api/battles'),
     ]);
-    
+
     const totalTime = Date.now() - startTime;
-    
+
     expect(totalTime).toBeLessThan(maxDuration);
-    
+
     requests.forEach(({ timing }) => {
       expect(timing).toBeLessThan(1000); // Each request under 1 second
     });
-    
+
     return {
       totalTime,
       individualTimings: requests.map(r => r.timing),
@@ -324,75 +338,75 @@ export class ScenarioTester {
     testServer.use(
       http.get('/api/test/rate-limit', ({ request }) => {
         const clientId = request.headers.get('x-client-id') || 'test';
-        
+
         // Simulate rate limiting (5 requests per minute)
         if (Math.random() > 0.5) {
           return HttpResponse.json(
-            { error: 'Rate limit exceeded' },
-            { 
+            { _error: 'Rate limit exceeded' },
+            {
               status: 429,
               headers: {
                 'X-RateLimit-Limit': '5',
                 'X-RateLimit-Remaining': '0',
                 'X-RateLimit-Reset': Math.floor(Date.now() / 1000 + 60).toString(),
-              }
+              },
             }
           );
         }
-        
+
         return HttpResponse.json({ success: true });
       })
     );
-    
+
     const results = [];
-    
+
     // Make multiple requests to trigger rate limiting
     for (let i = 0; i < 10; i++) {
       try {
         const result = await this.client.get('/api/test/rate-limit');
         results.push({ success: true, response: result.data });
-      } catch (error: any) {
-        if (error.status === 429) {
-          ApiAssertions.assertRateLimitHeaders(error.headers);
+      } catch (_error: any) {
+        if (_error.status === 429) {
+          ApiAssertions.assertRateLimitHeaders(_error.headers);
           results.push({ success: false, rateLimited: true });
         } else {
-          results.push({ success: false, error });
+          results.push({ success: false, _error });
         }
       }
     }
-    
+
     return results;
   }
 
   async testOfflineResilience() {
     this.client.setScenario('offline');
-    
+
     const results = [];
-    
+
     try {
       await this.client.get('/api/health');
-    } catch (error) {
-      results.push({ type: 'network_error', error });
+    } catch (_error) {
+      results.push({ type: 'network_error', _error });
     }
-    
+
     // Switch back to success and test recovery
     this.client.setScenario('success');
-    
+
     const recovery = await this.client.get('/api/health');
     results.push({ type: 'recovery', data: recovery.data });
-    
+
     return results;
   }
 }
 
 // Data validation utilities
 export class ApiDataValidation {
-  static validateUser(user: any) {
-    expect(user).toHaveProperty('id');
-    expect(user).toHaveProperty('email');
-    expect(user).toHaveProperty('created_at');
-    expect(user.email).toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
-    expect(new Date(user.created_at)).toBeInstanceOf(Date);
+  static validateUser(_user: any) {
+    expect(_user).toHaveProperty('id');
+    expect(_user).toHaveProperty('email');
+    expect(_user).toHaveProperty('created_at');
+    expect(_user.email).toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+    expect(new Date(_user.created_at)).toBeInstanceOf(Date);
   }
 
   static validateAlarm(alarm: any) {
@@ -420,20 +434,27 @@ export class ApiDataValidation {
     expect(subscription).toHaveProperty('status');
     expect(subscription).toHaveProperty('current_period_start');
     expect(subscription).toHaveProperty('current_period_end');
-    expect(['active', 'canceled', 'incomplete', 'incomplete_expired', 'past_due', 'trialing', 'unpaid'])
-      .toContain(subscription.status);
+    expect([
+      'active',
+      'canceled',
+      'incomplete',
+      'incomplete_expired',
+      'past_due',
+      'trialing',
+      'unpaid',
+    ]).toContain(subscription.status);
   }
 
   static validateApiResponse(response: any) {
     expect(response).toHaveProperty('success');
     expect(typeof response.success).toBe('boolean');
-    
+
     if (response.success) {
       expect(response).toHaveProperty('data');
     } else {
-      expect(response).toHaveProperty('error');
+      expect(response).toHaveProperty('_error');
     }
-    
+
     expect(response).toHaveProperty('timestamp');
     expect(new Date(response.timestamp)).toBeInstanceOf(Date);
   }
@@ -459,13 +480,13 @@ export class AsyncTestUtils {
     let attempts = 0;
     const startTime = Date.now();
 
-    while (attempts < maxAttempts && (Date.now() - startTime) < timeout) {
+    while (attempts < maxAttempts && Date.now() - startTime < timeout) {
       try {
         const result = await operation();
         if (condition(result)) {
           return result;
         }
-      } catch (error) {
+      } catch (_error) {
         // Continue trying unless we've exceeded limits
       }
 
@@ -473,7 +494,9 @@ export class AsyncTestUtils {
       await new Promise(resolve => setTimeout(resolve, interval));
     }
 
-    throw new Error(`Condition not met after ${attempts} attempts in ${Date.now() - startTime}ms`);
+    throw new Error(
+      `Condition not met after ${attempts} attempts in ${Date.now() - startTime}ms`
+    );
   }
 
   static async expectEventually<T>(
@@ -483,7 +506,7 @@ export class AsyncTestUtils {
   ): Promise<void> {
     await AsyncTestUtils.waitFor(
       operation,
-      (result) => {
+      result => {
         try {
           assertion(result);
           return true;
@@ -505,11 +528,11 @@ export class AsyncTestUtils {
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         return await operation();
-      } catch (error) {
-        lastError = error as Error;
-        
+      } catch (_error) {
+        lastError = _error as Error;
+
         if (attempt < maxRetries) {
-          await new Promise(resolve => 
+          await new Promise(resolve =>
             setTimeout(resolve, backoffMs * Math.pow(2, attempt))
           );
         }
@@ -521,12 +544,7 @@ export class AsyncTestUtils {
 }
 
 // Export everything for easy access
-export {
-  testServer,
-  MockDataFactory,
-  allHandlers,
-  scenarioHandlers,
-};
+export { testServer, MockDataFactory, allHandlers, scenarioHandlers };
 
 // Test setup and teardown helpers
 export const setupApiTesting = () => {

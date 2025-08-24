@@ -3,36 +3,36 @@
  * Complete interface for real-time functionality combining WebSockets, push notifications, and Supabase real-time
  */
 
-import type { 
-  WebSocketManager, 
-  WebSocketConfig, 
-  WebSocketConnectionInfo, 
+import type {
+  WebSocketManager,
+  WebSocketConfig,
+  WebSocketConnectionInfo,
   WebSocketEventHandlers,
-  WebSocketMetrics 
+  WebSocketMetrics,
 } from './websocket';
 
-import type { 
-  PushNotificationManager, 
-  PushNotification, 
+import type {
+  PushNotificationManager,
+  PushNotification,
   NotificationPreferences,
-  PushSubscriptionData 
+  PushSubscriptionData,
 } from './push-notifications';
 
-import type { 
-  RealtimeChannelManager, 
-  PresenceManager, 
+import type {
+  RealtimeChannelManager,
+  PresenceManager,
   BroadcastManager,
   SyncCoordinator,
   RealtimeConnectionMetrics,
-  HealthCheckResult 
+  HealthCheckResult,
 } from './supabase-realtime';
 
-import type { 
+import type {
   RealtimeMessage,
   AlarmTriggeredPayload,
   AlarmDismissedPayload,
   UserPresenceUpdatePayload,
-  RecommendationGeneratedPayload 
+  RecommendationGeneratedPayload,
 } from './realtime-messages';
 
 // ===============================
@@ -43,11 +43,11 @@ export interface RealtimeServiceConfig {
   // WebSocket configuration
   websocket: {
     enabled: boolean;
-    config: WebSocketConfig;
+    _config: WebSocketConfig;
     fallbackToPolling: boolean;
     pollingInterval?: number;
   };
-  
+
   // Supabase real-time configuration
   supabase: {
     enabled: boolean;
@@ -56,7 +56,7 @@ export interface RealtimeServiceConfig {
     enableDatabaseChanges: boolean;
     heartbeatInterval: number;
   };
-  
+
   // Push notifications configuration
   pushNotifications: {
     enabled: boolean;
@@ -64,7 +64,7 @@ export interface RealtimeServiceConfig {
     autoSubscribe: boolean;
     defaultPreferences: NotificationPreferences;
   };
-  
+
   // Sync and coordination
   sync: {
     enabled: boolean;
@@ -72,7 +72,7 @@ export interface RealtimeServiceConfig {
     syncInterval: number; // minutes
     conflictResolution: 'auto' | 'manual' | 'ask_user';
   };
-  
+
   // General settings
   enableLogging: boolean;
   enableMetrics: boolean;
@@ -83,13 +83,13 @@ export interface RealtimeServiceConfig {
 
 export interface RealtimeService {
   // Core lifecycle
-  initialize(config: RealtimeServiceConfig): Promise<void>;
+  initialize(_config: RealtimeServiceConfig): Promise<void>;
   start(): Promise<void>;
   stop(): Promise<void>;
   isRunning(): boolean;
   getConfig(): RealtimeServiceConfig;
   updateConfig(updates: Partial<RealtimeServiceConfig>): Promise<void>;
-  
+
   // Component managers
   getWebSocketManager(): WebSocketManager;
   getPushNotificationManager(): PushNotificationManager;
@@ -97,21 +97,21 @@ export interface RealtimeService {
   getPresenceManager(): PresenceManager;
   getBroadcastManager(): BroadcastManager;
   getSyncCoordinator(): SyncCoordinator;
-  
+
   // High-level real-time features
   alarm: AlarmRealtimeFeatures;
   user: UserRealtimeFeatures;
   ai: AIRealtimeFeatures;
   system: SystemRealtimeFeatures;
-  
+
   // Monitoring and diagnostics
   getMetrics(): Promise<RealtimeServiceMetrics>;
   performHealthCheck(): Promise<HealthCheckResult>;
   getDiagnostics(): Promise<RealtimeDiagnostics>;
-  
+
   // Event handling
   onConnectionStatusChange(handler: (status: ConnectionStatus) => void): () => void;
-  onError(handler: (error: RealtimeServiceError) => void): () => void;
+  onError(handler: (_error: RealtimeServiceError) => void): () => void;
   onMessage(handler: (message: RealtimeMessage) => void): () => void;
 }
 
@@ -123,40 +123,42 @@ export interface AlarmRealtimeFeatures {
   // Alarm state synchronization
   syncAlarmState(alarmId: string): Promise<void>;
   subscribeToAlarmChanges(userId: string, handler: (alarm: any) => void): () => void;
-  
+
   // Real-time alarm events
   onAlarmTriggered(handler: (data: AlarmTriggeredPayload) => void): () => void;
   onAlarmDismissed(handler: (data: AlarmDismissedPayload) => void): () => void;
   onAlarmSnoozed(handler: (data: any) => void): () => void;
-  
+
   // Alarm notifications
   sendAlarmNotification(alarmData: any): Promise<string>;
   scheduleAlarmReminder(alarmId: string, time: Date): Promise<string>;
   cancelAlarmNotification(notificationId: string): Promise<boolean>;
-  
+
   // Multi-device coordination
   coordinateMultiDeviceAlarm(alarmId: string): Promise<void>;
   handleAlarmConflict(conflictData: any): Promise<void>;
-  
+
   // Emergency features
   triggerEmergencyAlarm(reason: string): Promise<void>;
-  broadcastAlarmFailure(alarmId: string, error: string): Promise<void>;
+  broadcastAlarmFailure(alarmId: string, _error: string): Promise<void>;
 }
 
 export interface UserRealtimeFeatures {
   // Presence management
   updatePresence(status: UserPresenceUpdatePayload['status']): Promise<void>;
-  subscribeToPresence(handler: (presence: UserPresenceUpdatePayload) => void): () => void;
+  subscribeToPresence(
+    handler: (presence: UserPresenceUpdatePayload) => void
+  ): () => void;
   getOnlineUsers(): Promise<UserPresenceUpdatePayload[]>;
-  
+
   // Activity tracking
   trackActivity(activity: any): Promise<void>;
   subscribeToUserActivity(userId: string, handler: (activity: any) => void): () => void;
-  
+
   // Social features
   sendFriendRequest(toUserId: string): Promise<void>;
   inviteToChallenge(userIds: string[], challengeData: any): Promise<void>;
-  
+
   // Device coordination
   syncDeviceSettings(): Promise<void>;
   onDeviceStatusChange(handler: (status: any) => void): () => void;
@@ -164,17 +166,19 @@ export interface UserRealtimeFeatures {
 
 export interface AIRealtimeFeatures {
   // Recommendations
-  subscribeToRecommendations(handler: (rec: RecommendationGeneratedPayload) => void): () => void;
+  subscribeToRecommendations(
+    handler: (rec: RecommendationGeneratedPayload) => void
+  ): () => void;
   requestAnalysis(type: string, data: any): Promise<string>;
-  
+
   // Voice and mood
   updateVoiceMood(mood: any): Promise<void>;
   onVoiceMoodDetected(handler: (mood: any) => void): () => void;
-  
+
   // Sleep pattern analysis
   onSleepPatternUpdate(handler: (pattern: any) => void): () => void;
   triggerSleepAnalysis(): Promise<void>;
-  
+
   // Personalization
   updatePersonalizationData(data: any): Promise<void>;
   onPersonalizationUpdate(handler: (data: any) => void): () => void;
@@ -184,15 +188,15 @@ export interface SystemRealtimeFeatures {
   // System notifications
   sendSystemNotification(notification: any): Promise<string>;
   subscribeToSystemNotifications(handler: (notification: any) => void): () => void;
-  
+
   // Emergency alerts
   sendEmergencyAlert(alert: any): Promise<void>;
   onEmergencyAlert(handler: (alert: any) => void): () => void;
-  
+
   // Maintenance and updates
   announceMaintenanceWindow(window: any): Promise<void>;
   notifyAppUpdate(updateInfo: any): Promise<void>;
-  
+
   // Performance monitoring
   reportPerformanceMetric(metric: any): Promise<void>;
   onPerformanceAlert(handler: (alert: any) => void): () => void;
@@ -205,16 +209,16 @@ export interface SystemRealtimeFeatures {
 export interface ConnectionStatus {
   overall: 'connected' | 'connecting' | 'disconnected' | 'error';
   websocket: {
-    status: 'connected' | 'connecting' | 'disconnected' | 'error';
+    status: 'connected' | 'connecting' | 'disconnected' | '_error';
     connectionInfo?: WebSocketConnectionInfo;
   };
   supabase: {
-    status: 'connected' | 'connecting' | 'disconnected' | 'error';
+    status: 'connected' | 'connecting' | 'disconnected' | '_error';
     activeChannels: number;
     subscriptions: number;
   };
   pushNotifications: {
-    status: 'subscribed' | 'unsubscribed' | 'error';
+    status: 'subscribed' | 'unsubscribed' | '_error';
     subscription?: PushSubscriptionData;
   };
   lastStatusChange: Date;
@@ -229,7 +233,7 @@ export interface RealtimeServiceMetrics {
     totalUptime: number;
     reconnections: number;
   };
-  
+
   // Message throughput
   messaging: {
     messagesSent: number;
@@ -238,7 +242,7 @@ export interface RealtimeServiceMetrics {
     averageLatency: number;
     failureRate: number;
   };
-  
+
   // Feature usage
   features: {
     alarmEvents: number;
@@ -247,15 +251,15 @@ export interface RealtimeServiceMetrics {
     syncOperations: number;
     aiInteractions: number;
   };
-  
+
   // Performance
   performance: {
     memoryUsage: number; // MB
     cpuUsage: number; // percentage
-    networkUsage: { sent: number; received: number; };
+    networkUsage: { sent: number; received: number };
     cacheHitRate: number;
   };
-  
+
   // Errors and health
   health: {
     errorCount: number;
@@ -263,7 +267,7 @@ export interface RealtimeServiceMetrics {
     lastError?: Date;
     healthScore: number; // 0-100
   };
-  
+
   // Time ranges
   timeRange: {
     start: Date;
@@ -282,7 +286,7 @@ export interface RealtimeDiagnostics {
     networkType?: string;
     memoryInfo?: any;
   };
-  
+
   // Capability detection
   capabilities: {
     webSocket: boolean;
@@ -292,7 +296,7 @@ export interface RealtimeDiagnostics {
     webRTC: boolean;
     indexedDB: boolean;
   };
-  
+
   // Configuration validation
   configuration: {
     isValid: boolean;
@@ -300,7 +304,7 @@ export interface RealtimeDiagnostics {
     recommendations: string[];
     missingFeatures: string[];
   };
-  
+
   // Connection diagnostics
   connectivity: {
     websocketReachable: boolean;
@@ -314,7 +318,7 @@ export interface RealtimeDiagnostics {
       jitter: number;
     };
   };
-  
+
   // Performance analysis
   performance: {
     initializationTime: number;
@@ -324,7 +328,7 @@ export interface RealtimeDiagnostics {
     memoryLeaks: boolean;
     performanceScore: number; // 0-100
   };
-  
+
   // Error analysis
   errors: {
     recentErrors: Array<{
@@ -347,7 +351,14 @@ export interface RealtimeDiagnostics {
 // ===============================
 
 export interface RealtimeServiceError {
-  type: 'websocket' | 'supabase' | 'push_notifications' | 'sync' | 'configuration' | 'network' | 'unknown';
+  type:
+    | 'websocket'
+    | 'supabase'
+    | 'push_notifications'
+    | 'sync'
+    | 'configuration'
+    | 'network'
+    | 'unknown';
   code: string;
   message: string;
   details?: any;
@@ -370,17 +381,17 @@ export interface RealtimeServiceError {
 // ===============================
 
 export interface RealtimeServiceFactory {
-  create(config: RealtimeServiceConfig): RealtimeService;
+  create(_config: RealtimeServiceConfig): RealtimeService;
   createWithDefaults(overrides?: Partial<RealtimeServiceConfig>): RealtimeService;
-  validateConfig(config: RealtimeServiceConfig): { valid: boolean; errors: string[]; };
+  validateConfig(_config: RealtimeServiceConfig): { valid: boolean; errors: string[] };
   getDefaultConfig(): RealtimeServiceConfig;
 }
 
 export interface RealtimeServiceBuilder {
-  withWebSocket(config: WebSocketConfig): RealtimeServiceBuilder;
-  withSupabase(config: any): RealtimeServiceBuilder;
-  withPushNotifications(config: any): RealtimeServiceBuilder;
-  withSync(config: any): RealtimeServiceBuilder;
+  withWebSocket(_config: WebSocketConfig): RealtimeServiceBuilder;
+  withSupabase(_config: any): RealtimeServiceBuilder;
+  withPushNotifications(_config: any): RealtimeServiceBuilder;
+  withSync(_config: any): RealtimeServiceBuilder;
   enableLogging(enabled: boolean): RealtimeServiceBuilder;
   enableMetrics(enabled: boolean): RealtimeServiceBuilder;
   enableOfflineSupport(enabled: boolean): RealtimeServiceBuilder;
@@ -394,23 +405,23 @@ export interface RealtimeServiceBuilder {
 export interface MockRealtimeService extends RealtimeService {
   // Mock-specific methods
   simulateMessage(message: RealtimeMessage): void;
-  simulateError(error: RealtimeServiceError): void;
+  simulateError(_error: RealtimeServiceError): void;
   simulateDisconnection(duration?: number): void;
   simulateLatency(latency: number): void;
-  
+
   // Mock state management
   setMockConnectionStatus(status: ConnectionStatus): void;
   setMockMetrics(metrics: Partial<RealtimeServiceMetrics>): void;
   clearMockState(): void;
-  
+
   // Test helpers
   getReceivedMessages(): RealtimeMessage[];
   getSentMessages(): RealtimeMessage[];
-  getMethodCallHistory(): Array<{ method: string; args: any[]; timestamp: Date; }>;
+  getMethodCallHistory(): Array<{ method: string; args: any[]; timestamp: Date }>;
 }
 
 export interface RealtimeServiceTestHarness {
-  createMockService(config?: Partial<RealtimeServiceConfig>): MockRealtimeService;
+  createMockService(_config?: Partial<RealtimeServiceConfig>): MockRealtimeService;
   createTestScenario(scenario: TestScenario): Promise<TestResult>;
   runIntegrationTests(): Promise<TestSuite>;
   measurePerformance(operations: PerformanceTest[]): Promise<PerformanceResults>;
@@ -439,7 +450,7 @@ export interface TestResult {
     step: number;
     passed: boolean;
     actualResponse?: any;
-    error?: string;
+    _error?: string;
   }>;
   metrics?: Partial<RealtimeServiceMetrics>;
 }

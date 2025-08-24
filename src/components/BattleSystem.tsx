@@ -254,8 +254,8 @@ export function BattleSystem({
     window.addEventListener('offline', handleOffline);
 
     // Listen for gaming sync events
-    const handleGamingSync = (event: CustomEvent) => {
-      console.log('[BattleSystem] Gaming sync completed:', event.detail);
+    const handleGamingSync = (_event: CustomEvent) => {
+      console.log('[BattleSystem] Gaming sync completed:', _event.detail);
       // Refresh battle data if needed
     };
 
@@ -328,9 +328,9 @@ export function BattleSystem({
       if (!isOnline) {
         console.log('Battle created offline and will sync when connection is restored');
       }
-    } catch (error) {
-      console.error('Failed to create battle:', error);
-      // Handle error appropriately
+    } catch (_error) {
+      console.error('Failed to create battle:', _error);
+      // Handle _error appropriately
     }
   };
 
@@ -376,8 +376,8 @@ export function BattleSystem({
           );
         }
       }
-    } catch (error) {
-      console.error('Failed to join battle:', error);
+    } catch (_error) {
+      console._error('Failed to join battle:', _error);
     }
   };
 
@@ -617,7 +617,7 @@ export function BattleSystem({
                         {opponents.map(opponent => (
                           <div key={opponent.userId}>
                             <div className="flex justify-between text-sm mb-1">
-                              <span>{opponent.user.displayName}</span>
+                              <span>{opponent._user.displayName}</span>
                               <span className="font-bold">{opponent.progress}%</span>
                             </div>
                             <Progress value={opponent.progress} className="h-2" />
@@ -638,8 +638,9 @@ export function BattleSystem({
                           <Input
                             placeholder="Send a message..."
                             value={trashTalkMessage}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => setTrashTalkMessage(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                              setTrashTalkMessage(e.target.value)
+                            }
                             className="text-sm"
                           />
                           <Button

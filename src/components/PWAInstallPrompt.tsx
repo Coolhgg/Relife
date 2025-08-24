@@ -104,8 +104,8 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
 
       setDeferredPrompt(null);
       setShowPrompt(false);
-    } catch (error) {
-      console.error('Error showing install prompt:', error);
+    } catch (_error) {
+      console._error('Error showing install prompt:', _error);
     }
   };
 
@@ -182,10 +182,10 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
           Install for the best experience:
         </p>
         <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-          {instructions.steps.map((step, index) => (
-            <li key={index} className="flex items-start gap-2">
+          {instructions.steps.map((step, _index) => (
+            <li key={_index} className="flex items-start gap-2">
               <span className="text-primary-600 dark:text-primary-400 font-medium">
-                {index + 1}.
+                {_index + 1}.
               </span>
               {step}
             </li>

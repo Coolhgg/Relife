@@ -24,7 +24,7 @@ export type {
   WebSocketRateLimitStatus,
   WebSocketMessageQueue,
   QueuedMessage,
-  WebSocketPool
+  WebSocketPool,
 } from '../websocket';
 
 // Real-time message payloads
@@ -34,33 +34,33 @@ export type {
   AlarmDismissedPayload,
   AlarmSnoozedPayload,
   AlarmSyncStatusPayload,
-  
+
   // User activity messages
   UserPresenceUpdatePayload,
   UserActivityPayload,
   DeviceStatusChangePayload,
-  
+
   // AI and recommendation messages
   RecommendationGeneratedPayload,
   AIAnalysisCompletePayload,
   VoiceMoodDetectedPayload,
   SleepPatternUpdatedPayload,
-  
+
   // System messages
   SystemNotificationPayload,
   EmergencyAlertPayload,
-  
+
   // Sync messages
   SyncStatusUpdatePayload,
   SyncConflictDetectedPayload,
-  
+
   // Message type unions
   AlarmRealtimeMessage,
   UserRealtimeMessage,
   AIRealtimeMessage,
   SystemRealtimeMessage,
   SyncRealtimeMessage,
-  RealtimeMessage
+  RealtimeMessage,
 } from '../realtime-messages';
 
 // Message type guards
@@ -69,7 +69,7 @@ export {
   isUserMessage,
   isAIMessage,
   isSystemMessage,
-  isSyncMessage
+  isSyncMessage,
 } from '../realtime-messages';
 
 // Push notification types
@@ -80,7 +80,7 @@ export type {
   PushNotificationBase,
   NotificationAction,
   PushNotification,
-  
+
   // Notification data payloads
   AlarmNotificationData,
   MotivationNotificationData,
@@ -90,28 +90,28 @@ export type {
   SocialNotificationData,
   PromotionalNotificationData,
   NotificationDataPayload,
-  
+
   // Push subscription management
   PushSubscriptionData,
   NotificationPreferences,
-  
+
   // Delivery and tracking
   PushDeliveryStatus,
   PushAnalytics,
-  
+
   // Service worker communication
   ServiceWorkerMessage,
   ServiceWorkerMessageType,
   PushReceivedPayload,
   NotificationClickedPayload,
   NotificationClosedPayload,
-  
+
   // Testing and validation
   PushTestResults,
-  
+
   // Manager interface
   PushNotificationManager,
-  PushSubscriptionOptions
+  PushSubscriptionOptions,
 } from '../push-notifications';
 
 // Supabase real-time types
@@ -124,23 +124,23 @@ export type {
   PushSubscriptionChangePayload,
   AnalyticsEventChangePayload,
   DatabaseChange,
-  
+
   // Channel management
   RealtimeChannelConfig,
   RealtimeSubscription,
   RealtimeChannelManager,
-  
+
   // Presence management
   PresenceState,
   PresenceInfo,
   PresenceManager,
-  
+
   // Broadcast messaging
   BroadcastMessage,
   BroadcastMessageType,
   BroadcastManager,
   BroadcastDeliveryStatus,
-  
+
   // Sync coordination
   SyncCoordinator,
   SyncCoordinationResult,
@@ -148,7 +148,7 @@ export type {
   SyncConflictResolution,
   SyncTriggerReason,
   SyncStatus,
-  
+
   // Monitoring and health
   ChannelStatus,
   RealtimeConnectionMetrics,
@@ -156,32 +156,32 @@ export type {
   RealtimeRecoveryStrategy,
   RealtimeHealthCheck,
   HealthCheckResult,
-  HealthStatus
+  HealthStatus,
 } from '../supabase-realtime';
 
 // Main service interface
 export type {
   RealtimeServiceConfig,
   RealtimeService,
-  
+
   // Feature interfaces
   AlarmRealtimeFeatures,
   UserRealtimeFeatures,
   AIRealtimeFeatures,
   SystemRealtimeFeatures,
-  
+
   // Status and metrics
   ConnectionStatus,
   RealtimeServiceMetrics,
   RealtimeDiagnostics,
-  
+
   // Error handling
   RealtimeServiceError,
-  
+
   // Factory and builder
   RealtimeServiceFactory,
   RealtimeServiceBuilder,
-  
+
   // Testing
   MockRealtimeService,
   RealtimeServiceTestHarness,
@@ -190,7 +190,7 @@ export type {
   TestResult,
   TestSuite,
   PerformanceTest,
-  PerformanceResults
+  PerformanceResults,
 } from '../realtime-service';
 
 // ===============================
@@ -205,7 +205,10 @@ export type ExtractPayload<T> = T extends WebSocketMessage<infer P> ? P : never;
 /**
  * Create a typed WebSocket message
  */
-export type TypedWebSocketMessage<T extends WebSocketMessageType, P = any> = WebSocketMessage<P> & {
+export type TypedWebSocketMessage<
+  T extends WebSocketMessageType,
+  P = any,
+> = WebSocketMessage<P> & {
   type: T;
 };
 
@@ -227,7 +230,7 @@ export interface RealtimeConfigValidation {
   errors: Array<{
     field: string;
     message: string;
-    severity: 'error' | 'warning';
+    severity: '_error' | 'warning';
   }>;
   warnings: string[];
   recommendations: string[];
@@ -298,7 +301,7 @@ export const DEFAULT_WEBSOCKET_CONFIG: WebSocketConfig = {
   enableCompression: true,
   bufferMaxItems: 100,
   bufferMaxTime: 5000,
-  enableLogging: false
+  enableLogging: false,
 };
 
 /**
@@ -312,43 +315,43 @@ export const DEFAULT_NOTIFICATION_PREFERENCES: NotificationPreferences = {
     system: true,
     emergency: true,
     social: false,
-    promotional: false
+    promotional: false,
   },
   priority: {
     min: false,
     low: true,
     default: true,
     high: true,
-    max: true
+    max: true,
   },
   schedule: {
     enabled: true,
     allowedHours: {
       start: '07:00',
-      end: '22:00'
+      end: '22:00',
     },
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     weekdays: [true, true, true, true, true, true, true],
-    exceptions: []
+    exceptions: [],
   },
   sound: {
     enabled: true,
     volume: 80,
-    customSounds: {}
+    customSounds: {},
   },
   vibration: {
     enabled: true,
-    pattern: [200, 100, 200]
+    pattern: [200, 100, 200],
   },
   batching: {
     enabled: false,
     maxBatchSize: 5,
-    batchWindow: 10
+    batchWindow: 10,
   },
   doNotDisturb: {
     enabled: false,
     schedule: [],
-  }
+  },
 };
 
 /**
@@ -357,34 +360,34 @@ export const DEFAULT_NOTIFICATION_PREFERENCES: NotificationPreferences = {
 export const DEFAULT_REALTIME_CONFIG: RealtimeServiceConfig = {
   websocket: {
     enabled: true,
-    config: DEFAULT_WEBSOCKET_CONFIG,
+    _config: DEFAULT_WEBSOCKET_CONFIG,
     fallbackToPolling: true,
-    pollingInterval: 30000
+    pollingInterval: 30000,
   },
   supabase: {
     enabled: true,
     enablePresence: true,
     enableBroadcast: true,
     enableDatabaseChanges: true,
-    heartbeatInterval: 30000
+    heartbeatInterval: 30000,
   },
   pushNotifications: {
     enabled: true,
     vapidKey: '',
     autoSubscribe: true,
-    defaultPreferences: DEFAULT_NOTIFICATION_PREFERENCES
+    defaultPreferences: DEFAULT_NOTIFICATION_PREFERENCES,
   },
   sync: {
     enabled: true,
     autoSync: true,
     syncInterval: 15,
-    conflictResolution: 'ask_user'
+    conflictResolution: 'ask_user',
   },
   enableLogging: false,
   enableMetrics: true,
   enableOfflineSupport: true,
   maxReconnectionAttempts: 5,
-  healthCheckInterval: 5
+  healthCheckInterval: 5,
 };
 
 /**
@@ -395,27 +398,27 @@ export const REALTIME_MESSAGE_TYPES = {
   CONNECTION_ESTABLISHED: 'connection_established',
   HEARTBEAT_PING: 'heartbeat_ping',
   HEARTBEAT_PONG: 'heartbeat_pong',
-  
+
   // Alarm events
   ALARM_TRIGGERED: 'alarm_triggered',
   ALARM_DISMISSED: 'alarm_dismissed',
   ALARM_SNOOZED: 'alarm_snoozed',
-  
+
   // User activity
   USER_PRESENCE_UPDATE: 'user_presence_update',
   USER_ACTIVITY: 'user_activity',
-  
+
   // AI and recommendations
   RECOMMENDATION_GENERATED: 'recommendation_generated',
   VOICE_MOOD_DETECTED: 'voice_mood_detected',
-  
+
   // System notifications
   SYSTEM_NOTIFICATION: 'system_notification',
   EMERGENCY_ALERT: 'emergency_alert',
-  
+
   // Sync operations
   SYNC_STATUS_UPDATE: 'sync_status_update',
-  SYNC_CONFLICT_DETECTED: 'sync_conflict_detected'
+  SYNC_CONFLICT_DETECTED: 'sync_conflict_detected',
 } as const;
 
 /**
@@ -430,5 +433,5 @@ export const NOTIFICATION_ACTIONS = {
   QUICK_REPLY: 'quick_reply',
   OPEN_APP: 'open_app',
   SHARE: 'share',
-  FEEDBACK: 'feedback'
+  FEEDBACK: 'feedback',
 } as const;

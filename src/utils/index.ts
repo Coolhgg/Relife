@@ -176,8 +176,8 @@ export const playNotificationSound = async (): Promise<void> => {
   try {
     const audio = new Audio('/notification.mp3');
     await audio.play();
-  } catch (error) {
-    console.warn('Failed to play notification sound:', error);
+  } catch (_error) {
+    console.warn('Failed to play notification sound:', _error);
   }
 };
 

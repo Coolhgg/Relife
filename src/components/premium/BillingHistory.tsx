@@ -108,8 +108,8 @@ export function BillingHistory({
     try {
       setActionLoading(`download-${invoiceId}`);
       await onDownloadInvoice(invoiceId);
-    } catch (error) {
-      console.error('Failed to download invoice:', error);
+    } catch (_error) {
+      console._error('Failed to download invoice:', _error);
     } finally {
       setActionLoading(null);
     }
@@ -120,8 +120,8 @@ export function BillingHistory({
     try {
       setActionLoading(`pay-${invoiceId}`);
       await onPayInvoice(invoiceId);
-    } catch (error) {
-      console.error('Failed to pay invoice:', error);
+    } catch (_error) {
+      console._error('Failed to pay invoice:', _error);
     } finally {
       setActionLoading(null);
     }

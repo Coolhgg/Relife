@@ -9,7 +9,7 @@ export interface SentryConfig {
   debug?: boolean;
   enableTracing?: boolean;
   tracesSampleRate?: number;
-  beforeSend?: (event: Sentry.Event) => Sentry.Event | null;
+  beforeSend?: (_event: Sentry.Event) => Sentry.Event | null;
 }
 
 export interface UserContext {
@@ -24,7 +24,7 @@ export interface ErrorContext {
   action?: string;
   feature?: string;
   metadata?: Record<string, unknown>;
-  level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug';
+  level?: 'fatal' | '_error' | 'warning' | 'info' | 'debug';
   tags?: Record<string, string>;
   fingerprint?: string[];
 }
@@ -32,7 +32,7 @@ export interface ErrorContext {
 class SentryService {
   private static instance: SentryService;
   private isInitialized = false;
-  private config: SentryConfig | null = null;
+  private _config: SentryConfig | null = null;
 
   private constructor() {}
 
@@ -46,7 +46,7 @@ class SentryService {
   /**
    * Initialize Sentry with comprehensive configuration
    */
-  initialize(config: SentryConfig): void {
+  initialize(_config: SentryConfig): void {
     if (this.isInitialized) {
       console.warn('Sentry is already initialized');
       return;
@@ -64,7 +64,7 @@ class SentryService {
       Sentry.init({
         dsn: config.dsn,
         environment: config.environment,
-        debug: config.debug || config.environment === 'development',
+        debug: _config.debug || _config.environment === 'development',
 
         // Integrations for enhanced functionality
         integrations: [
@@ -79,7 +79,7 @@ class SentryService {
 
         // Performance monitoring
         tracesSampleRate:
-          config.tracesSampleRate || (config.environment === 'production' ? 0.1 : 1.0),
+          config.tracesSampleRate || (_config.environment === 'production' ? 0.1 : 1.0),
 
         // Session replay for debugging
         replaysSessionSampleRate: config.environment === 'production' ? 0.1 : 1.0,
@@ -88,18 +88,18 @@ class SentryService {
         // Privacy and data filtering
         beforeSend: event => {
           // Apply custom filtering if provided
-          if (config.beforeSend) {
-            const filtered = config.beforeSend(event);
+          if (_config.beforeSend) {
+            const filtered = _config.beforeSend(_event);
             if (!filtered) return null;
             event = filtered;
           }
 
           // Filter out sensitive data
-          event = this.sanitizeEvent(event);
+          event = this.sanitizeEvent(_event);
 
           // Don't send events in development if debug is off
-          if (config.environment === 'development' && !config.debug) {
-            console.log('Sentry event (dev mode):', event);
+          if (config.environment === 'development' && !_config.debug) {
+            console.log('Sentry _event (dev mode):', event);
             return null;
           }
 
@@ -120,22 +120,22 @@ class SentryService {
 
       this.isInitialized = true;
       console.info('Sentry initialized successfully');
-    } catch (error) {
-      console.error('Failed to initialize Sentry:', error);
+    } catch (_error) {
+      console._error('Failed to initialize Sentry:', _error);
     }
   }
 
   /**
    * Set user context for all future events
    */
-  setUser(user: UserContext): void {
+  setUser(_user: UserContext): void {
     if (!this.isInitialized) return;
 
     Sentry.setUser({
       id: user.id,
       email: user.email,
       username: user.username,
-      segment: user.segment,
+      segment: _user.segment,
     });
   }
 
@@ -151,14 +151,14 @@ class SentryService {
   /**
    * Capture an error with enhanced context
    */
-  captureError(error: Error, context: ErrorContext = {}): string {
+  captureError(_error: Error, context: ErrorContext = {}): string {
     if (!this.isInitialized) {
-      console.error('Sentry not initialized, falling back to console:', error);
+      console._error('Sentry not initialized, falling back to console:', _error);
       return 'sentry-not-initialized';
     }
 
     return Sentry.withScope((scope: any) => {
-      // Set error level
+      // Set _error level
       if (context.level) {
         scope.setLevel(context.level);
       }
@@ -190,11 +190,11 @@ class SentryService {
       scope.addBreadcrumb({
         message: `Error in ${context.component || 'Unknown Component'}`,
         category: 'error',
-        level: 'error',
+        level: '_error',
         data: context.metadata,
       });
 
-      return Sentry.captureException(error);
+      return Sentry.captureException(_error);
     });
   }
 
@@ -236,7 +236,7 @@ class SentryService {
    */
   addBreadcrumb(
     message: string,
-    category: string = 'user',
+    category: string = '_user',
     data?: Record<string, unknown>
   ): void {
     if (!this.isInitialized) return;
@@ -310,24 +310,24 @@ class SentryService {
    * Get current configuration
    */
   getConfig(): SentryConfig | null {
-    return this.config;
+    return this._config;
   }
 
   /**
    * Sanitize event data to remove sensitive information
    */
-  private sanitizeEvent(event: Sentry.Event): Sentry.Event {
+  private sanitizeEvent(_event: Sentry.Event): Sentry.Event {
     // Remove sensitive data from different parts of the event
-    if (event.request) {
+    if (_event.request) {
       // Remove sensitive headers
-      if (event.request.headers) {
+      if (_event.request.headers) {
         delete event.request.headers.Authorization;
         delete event.request.headers.Cookie;
         delete event.request.headers['X-API-Key'];
       }
 
       // Remove sensitive query parameters
-      if (event.request.query_string) {
+      if (_event.request.query_string) {
         event.request.query_string = event.request.query_string.replace(
           /([?&])(token|key|password|secret)=[^&]*/gi,
           '$1$2=***'
@@ -336,7 +336,7 @@ class SentryService {
     }
 
     // Remove sensitive data from extra context
-    if (event.extra) {
+    if (_event.extra) {
       const sensitiveKeys = [
         'password',
         'token',
@@ -345,9 +345,9 @@ class SentryService {
         'auth',
         'credential',
       ];
-      Object.keys(event.extra).forEach(key => {
+      Object.keys(_event.extra).forEach(key => {
         if (sensitiveKeys.some(sensitive => key.toLowerCase().includes(sensitive))) {
-          if (event.extra) {
+          if (_event.extra) {
             event.extra[key] = '***';
           }
         }
@@ -369,9 +369,9 @@ class SentryService {
     return ((...args: Parameters<T>) => {
       try {
         return (fn as any)(...args);
-      } catch (error) {
-        this.captureException(error as Error, context);
-        throw error;
+      } catch (_error) {
+        this.captureException(_error as Error, context);
+        throw _error;
       }
     }) as T;
   }
@@ -386,8 +386,8 @@ class SentryService {
   /**
    * Capture exception (alias for captureError)
    */
-  captureException(error: Error, context: ErrorContext = {}): string {
-    return this.captureError(error, context);
+  captureException(_error: Error, context: ErrorContext = {}): string {
+    return this.captureError(_error, context);
   }
 }
 

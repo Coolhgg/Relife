@@ -8,7 +8,7 @@ import { TimeoutHandle } from '../types/timers';
 export interface SoundUploadResult {
   success: boolean;
   customSound?: CustomSound;
-  error?: string;
+  _error?: string;
 }
 
 export interface SoundUploadProgress {
@@ -20,7 +20,7 @@ export interface SoundUploadProgress {
 
 export interface SoundValidationResult {
   valid: boolean;
-  error?: string;
+  _error?: string;
   metadata?: {
     duration: number;
     format: string;
@@ -88,7 +88,7 @@ export class CustomSoundManager {
 
       const validation = await this.validateAudioFile(file);
       if (!validation.valid) {
-        return { success: false, error: validation.error };
+        return { success: false, error: validation._error };
       }
 
       // Stage 2: Upload to storage
@@ -101,7 +101,7 @@ export class CustomSoundManager {
 
       const fileName = `custom-sounds/${userId}/${Date.now()}-${this.sanitizeFileName(file.name)}`;
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { data: uploadData, _error: uploadError } = await supabase.storage
         .from('audio-files')
         .upload(fileName, file, {
           cacheControl: '31536000', // 1 year
@@ -141,7 +141,7 @@ export class CustomSoundManager {
       };
 
       // Stage 4: Save metadata to database
-      const { error: dbError } = await supabase
+      const { _error: dbError } = await supabase
         .from('custom_sounds')
         .insert([customSound]);
 
@@ -163,7 +163,7 @@ export class CustomSoundManager {
         await this.audioManager.preloadCustomSoundFile(customSound);
       } catch (cacheError) {
         console.warn('Failed to cache custom sound:', cacheError);
-        // Non-fatal error, don't fail the upload
+        // Non-fatal _error, don't fail the upload
       }
 
       onProgress?.({
@@ -174,14 +174,14 @@ export class CustomSoundManager {
       });
 
       return { success: true, customSound };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.getInstance().handleError(
-        error,
+        _error,
         'CustomSoundManager.uploadCustomSound'
       );
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Upload failed',
+        error: error instanceof Error ? _error.message : 'Upload failed',
       };
     }
   }
@@ -195,7 +195,7 @@ export class CustomSoundManager {
       if (!CustomSoundManager.SUPPORTED_FORMATS.includes(file.type)) {
         return {
           valid: false,
-          error: `Unsupported format. Please use: ${CustomSoundManager.SUPPORTED_FORMATS.join(', ')}`,
+          _error: `Unsupported format. Please use: ${CustomSoundManager.SUPPORTED_FORMATS.join(', ')}`,
         };
       }
 
@@ -203,14 +203,14 @@ export class CustomSoundManager {
       if (file.size > CustomSoundManager.MAX_FILE_SIZE) {
         return {
           valid: false,
-          error: `File too large. Maximum size is ${this.formatFileSize(CustomSoundManager.MAX_FILE_SIZE)}`,
+          _error: `File too large. Maximum size is ${this.formatFileSize(CustomSoundManager.MAX_FILE_SIZE)}`,
         };
       }
 
       if (file.size < CustomSoundManager.MIN_FILE_SIZE) {
         return {
           valid: false,
-          error: 'File too small. Minimum size is 1KB',
+          _error: 'File too small. Minimum size is 1KB',
         };
       }
 
@@ -228,7 +228,7 @@ export class CustomSoundManager {
           if (duration > CustomSoundManager.MAX_DURATION) {
             resolve({
               valid: false,
-              error: `Audio too long. Maximum duration is ${this.formatDuration(CustomSoundManager.MAX_DURATION)}`,
+              _error: `Audio too long. Maximum duration is ${this.formatDuration(CustomSoundManager.MAX_DURATION)}`,
             });
             return;
           }
@@ -236,7 +236,7 @@ export class CustomSoundManager {
           if (duration < CustomSoundManager.MIN_DURATION) {
             resolve({
               valid: false,
-              error: 'Audio too short. Minimum duration is 1 second',
+              _error: 'Audio too short. Minimum duration is 1 second',
             });
             return;
           }
@@ -253,11 +253,11 @@ export class CustomSoundManager {
           });
         });
 
-        audio.addEventListener('error', () => {
+        audio.addEventListener('_error', () => {
           URL.revokeObjectURL(audioUrl);
           resolve({
             valid: false,
-            error: 'Invalid audio file or corrupted',
+            _error: 'Invalid audio file or corrupted',
           });
         });
 
@@ -266,14 +266,14 @@ export class CustomSoundManager {
           URL.revokeObjectURL(audioUrl);
           resolve({
             valid: false,
-            error: 'File validation timeout',
+            _error: 'File validation timeout',
           });
         }, 10000);
       });
-    } catch (error) {
+    } catch (_error) {
       return {
         valid: false,
-        error: 'File validation failed',
+        _error: 'File validation failed',
       };
     }
   }
@@ -283,20 +283,20 @@ export class CustomSoundManager {
    */
   async getUserCustomSounds(userId: string): Promise<CustomSound[]> {
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('custom_sounds')
         .select('*')
         .eq('uploadedBy', userId)
         .order('uploadedAt', { ascending: false });
 
-      if (error) {
-        throw error;
+      if (_error) {
+        throw _error;
       }
 
       return data || [];
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.getInstance().handleError(
-        error,
+        _error,
         'CustomSoundManager.getUserCustomSounds'
       );
       return [];
@@ -309,7 +309,7 @@ export class CustomSoundManager {
   async deleteCustomSound(soundId: string, userId: string): Promise<boolean> {
     try {
       // Get sound details first
-      const { data: sound, error: fetchError } = await supabase
+      const { data: sound, _error: fetchError } = await supabase
         .from('custom_sounds')
         .select('*')
         .eq('id', soundId)
@@ -329,7 +329,7 @@ export class CustomSoundManager {
       }
 
       // Delete from database
-      const { error: deleteError } = await supabase
+      const { _error: deleteError } = await supabase
         .from('custom_sounds')
         .delete()
         .eq('id', soundId)
@@ -340,9 +340,9 @@ export class CustomSoundManager {
       }
 
       return true;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.getInstance().handleError(
-        error,
+        _error,
         'CustomSoundManager.deleteCustomSound'
       );
       return false;
@@ -382,20 +382,20 @@ export class CustomSoundManager {
     updates: Partial<Pick<CustomSound, 'name' | 'description' | 'category' | 'tags'>>
   ): Promise<boolean> {
     try {
-      const { error } = await supabase
+      const { _error } = await supabase
         .from('custom_sounds')
         .update(updates)
         .eq('id', soundId)
         .eq('uploadedBy', userId);
 
-      if (error) {
-        throw error;
+      if (_error) {
+        throw _error;
       }
 
       return true;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.getInstance().handleError(
-        error,
+        _error,
         'CustomSoundManager.updateCustomSound'
       );
       return false;

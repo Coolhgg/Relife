@@ -101,7 +101,7 @@ export const _performanceCore = {
     for (let i = 0; i < warmup; i++) {
       try {
         await fn();
-      } catch (error) {
+      } catch (_error) {
         // Ignore warmup errors
       }
     }
@@ -112,7 +112,7 @@ export const _performanceCore = {
         const { duration } = await performanceCore.timeFunction(fn);
         times.push(duration);
         successCount++;
-      } catch (error) {
+      } catch (_error) {
         times.push(Infinity); // Mark failed runs
       }
     }
@@ -241,9 +241,9 @@ export const _reactPerformance = {
 
     // Check for violations
     const entries = performance.getEntriesByType('measure');
-    entries.forEach((entry, index) => {
+    entries.forEach((entry, _index) => {
       if (entry.duration > maxRenderTime) {
-        violations.push({ iteration: index, time: entry.duration });
+        violations.push({ iteration: _index, time: entry.duration });
       }
     });
 

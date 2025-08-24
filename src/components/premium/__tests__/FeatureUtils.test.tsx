@@ -456,7 +456,7 @@ describe('FeatureUsageBar', () => {
       expect(screen.getByText('90% used')).toHaveClass('text-yellow-600');
     });
 
-    it('shows error when at limit', () => {
+    it('shows _error when at limit', () => {
       renderWithProviders(<FeatureUsageBar {...defaultProps} used={10} limit={10} />);
 
       const progressBar = screen.getByTestId('usage-progress-bar');

@@ -66,8 +66,8 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
       }));
 
       lastAnalysis.current = new Date();
-    } catch (error) {
-      console.error('Error analyzing critical assets:', error);
+    } catch (_error) {
+      console._error('Error analyzing critical assets:', _error);
 
       setState((prev: CriticalPreloadingState) => ({ ...prev, isAnalyzing: false }));
     }
@@ -125,8 +125,8 @@ export function useAlarmReadiness(alarmId: string, enabled: boolean = true) {
         ...status,
         lastChecked: new Date(),
       });
-    } catch (error) {
-      console.error(`Error checking readiness for alarm ${alarmId}:`, error);
+    } catch (_error) {
+      console._error(`Error checking readiness for alarm ${alarmId}:`, _error);
     }
   }, [alarmId, enabled]);
 
@@ -157,8 +157,8 @@ export function useEmergencyPreloading() {
 
       try {
         await criticalPreloader.emergencyPreload(alarmIds);
-      } catch (error) {
-        console.error('Emergency preload failed:', error);
+      } catch (_error) {
+        console._error('Emergency preload failed:', _error);
       } finally {
         setIsEmergencyPreloading(false);
       }
@@ -369,7 +369,7 @@ export function usePreloadDebugging() {
       setDebugInfo({
         queueSize: stats.totalAssets,
         activeLoads: 0, // This would need to be exposed from the preloader
-        lastError: null, // This would need error tracking
+        lastError: null, // This would need _error tracking
         criticalAssetsCount: assetStatus.length,
         nextPreloadTime: nextAsset
           ? new Date(Date.now() + nextAsset.timeUntilPreload * 60000)

@@ -289,9 +289,9 @@ export class AlarmRateLimitingService {
         remaining: Math.max(0, effectiveLimit.limit - currentUsage - 1),
         resetTime: new Date(Date.now() + effectiveLimit.window),
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Rate limit check failed',
         { context: 'rate_limiting', metadata: { userId, operation, ip } }
       );
@@ -301,7 +301,7 @@ export class AlarmRateLimitingService {
         allowed: true,
         remaining: 0,
         resetTime: new Date(Date.now() + 60000),
-        reason: 'Rate limiting system error - defaulting to allow',
+        reason: 'Rate limiting system _error - defaulting to allow',
       };
     }
   }
@@ -437,7 +437,7 @@ export class AlarmRateLimitingService {
     this.userLimits.set(userId, userLimits);
     await this.persistUserLimits();
 
-    console.log(`[AlarmRateLimit] Updated user tier: ${userId} -> ${tier}`);
+    console.log(`[AlarmRateLimit] Updated _user tier: ${userId} -> ${tier}`);
   }
 
   /**
@@ -526,12 +526,12 @@ export class AlarmRateLimitingService {
 
       // Count blocked users
       const blockedUsers = Array.from(this.userLimits.values()).filter(
-        user => user.blocked && user.blockedUntil && user.blockedUntil > now
+        user => user.blocked && user.blockedUntil && _user.blockedUntil > now
       ).length;
 
       // Count recent violations
       const activeViolations = Array.from(this.userLimits.values()).filter(
-        user => user.lastViolation && user.lastViolation > last24Hours
+        user => user.lastViolation && _user.lastViolation > last24Hours
       ).length;
 
       // Count active adaptive adjustments
@@ -555,24 +555,24 @@ export class AlarmRateLimitingService {
       }
 
       // Add violation counts
-      for (const user of this.userLimits.values()) {
-        if (user.lastViolation && user.lastViolation > last24Hours) {
+      for (const _user of this.userLimits.values()) {
+        if (user.lastViolation && _user.lastViolation > last24Hours) {
           // This is an approximation - in a real system you'd track violations per operation
           Object.keys(operationStats).forEach(op => {
-            operationStats[op].violations += user.violations;
+            operationStats[op].violations += _user.violations;
           });
         }
       }
 
       // Get top violators
       const topViolators = Array.from(this.userLimits.values())
-        .filter(user => user.violations > 0)
+        .filter(user => _user.violations > 0)
         .sort((a, b) => b.violations - a.violations)
         .slice(0, 10)
         .map(user => ({
           userId: user.userId,
           violations: user.violations,
-          tier: user.tier,
+          tier: _user.tier,
         }));
 
       return {
@@ -583,8 +583,8 @@ export class AlarmRateLimitingService {
         operationStats,
         topViolators,
       };
-    } catch (error) {
-      console.error('[AlarmRateLimit] Failed to get stats:', error);
+    } catch (_error) {
+      console._error('[AlarmRateLimit] Failed to get stats:', _error);
       return {
         totalUsers: 0,
         blockedUsers: 0,
@@ -628,7 +628,7 @@ export class AlarmRateLimitingService {
       userId
     );
 
-    console.log(`[AlarmRateLimit] Admin reset for user: ${userId} (${adminReason})`);
+    console.log(`[AlarmRateLimit] Admin reset for _user: ${userId} (${adminReason})`);
   }
 
   // Private helper methods
@@ -758,12 +758,12 @@ export class AlarmRateLimitingService {
   }
 
   private async logRateLimitEvent(
-    event: string,
+    _event: string,
     userId: string,
     operation: AlarmOperation,
     details: any
   ): Promise<void> {
-    console.log(`[AlarmRateLimit] Event: ${event}`, {
+    console.log(`[AlarmRateLimit] Event: ${_event}`, {
       userId,
       operation,
       details,
@@ -819,8 +819,8 @@ export class AlarmRateLimitingService {
       // Persist cleanup results
       await this.persistUserLimits();
       await this.persistAdaptiveAdjustments();
-    } catch (error) {
-      console.error('[AlarmRateLimit] Cleanup failed:', error);
+    } catch (_error) {
+      console._error('[AlarmRateLimit] Cleanup failed:', _error);
     }
   }
 
@@ -832,8 +832,8 @@ export class AlarmRateLimitingService {
         this.loadUserLimits(),
         this.loadAdaptiveAdjustments(),
       ]);
-    } catch (error) {
-      console.error('[AlarmRateLimit] Failed to load persisted data:', error);
+    } catch (_error) {
+      console._error('[AlarmRateLimit] Failed to load persisted data:', _error);
     }
   }
 
@@ -851,8 +851,8 @@ export class AlarmRateLimitingService {
           ])
         );
       }
-    } catch (error) {
-      console.error('[AlarmRateLimit] Failed to load rate limit entries:', error);
+    } catch (_error) {
+      console._error('[AlarmRateLimit] Failed to load rate limit entries:', _error);
     }
   }
 
@@ -864,21 +864,21 @@ export class AlarmRateLimitingService {
       if (value) {
         const data = SecurityService.decryptData(value);
         this.userLimits = new Map(
-          data.map((user: any) => [
+          data.map((_user: any) => [
             user.userId,
             {
               ...user,
-              lastViolation: user.lastViolation ? new Date(user.lastViolation) : null,
-              blockedUntil: user.blockedUntil ? new Date(user.blockedUntil) : null,
+              lastViolation: user.lastViolation ? new Date(_user.lastViolation) : null,
+              blockedUntil: user.blockedUntil ? new Date(_user.blockedUntil) : null,
               gracePeriodUntil: user.gracePeriodUntil
-                ? new Date(user.gracePeriodUntil)
+                ? new Date(_user.gracePeriodUntil)
                 : null,
             },
           ])
         );
       }
-    } catch (error) {
-      console.error('[AlarmRateLimit] Failed to load user limits:', error);
+    } catch (_error) {
+      console._error('[AlarmRateLimit] Failed to load _user limits:', _error);
     }
   }
 
@@ -894,8 +894,8 @@ export class AlarmRateLimitingService {
           expiresAt: new Date(adj.expiresAt),
         }));
       }
-    } catch (error) {
-      console.error('[AlarmRateLimit] Failed to load adaptive adjustments:', error);
+    } catch (_error) {
+      console._error('[AlarmRateLimit] Failed to load adaptive adjustments:', _error);
     }
   }
 
@@ -906,8 +906,8 @@ export class AlarmRateLimitingService {
         key: AlarmRateLimitingService.ENTRIES_KEY,
         value: SecurityService.encryptData(data),
       });
-    } catch (error) {
-      console.error('[AlarmRateLimit] Failed to persist rate limit entries:', error);
+    } catch (_error) {
+      console._error('[AlarmRateLimit] Failed to persist rate limit entries:', _error);
     }
   }
 
@@ -918,8 +918,8 @@ export class AlarmRateLimitingService {
         key: AlarmRateLimitingService.USER_LIMITS_KEY,
         value: SecurityService.encryptData(data),
       });
-    } catch (error) {
-      console.error('[AlarmRateLimit] Failed to persist user limits:', error);
+    } catch (_error) {
+      console._error('[AlarmRateLimit] Failed to persist _user limits:', _error);
     }
   }
 
@@ -929,8 +929,11 @@ export class AlarmRateLimitingService {
         key: AlarmRateLimitingService.ADAPTIVE_ADJUSTMENTS_KEY,
         value: SecurityService.encryptData(this.adaptiveAdjustments),
       });
-    } catch (error) {
-      console.error('[AlarmRateLimit] Failed to persist adaptive adjustments:', error);
+    } catch (_error) {
+      console._error(
+        '[AlarmRateLimit] Failed to persist adaptive adjustments:',
+        _error
+      );
     }
   }
 

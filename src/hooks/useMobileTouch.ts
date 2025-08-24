@@ -40,7 +40,7 @@ export function useEnhancedButton(hapticType: 'light' | 'medium' | 'heavy' = 'li
 export function useHaptic() {
   return useCallback(
     (
-      type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
+      type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | '_error' = 'light'
     ) => {
       mobileTouchService.triggerHaptic(type);
     },
@@ -101,7 +101,7 @@ export function useMobileBehavior() {
 
     // Prevent zoom on double-tap (iOS Safari)
     let lastTouchEnd = 0;
-    const preventZoom = (event: TouchEvent) => {
+    const preventZoom = (_event: TouchEvent) => {
       const now = new Date().getTime();
       if (now - lastTouchEnd <= 300) {
         event.preventDefault();
@@ -110,8 +110,8 @@ export function useMobileBehavior() {
     };
 
     // Prevent pull-to-refresh on body (except for designated areas)
-    const preventPullToRefresh = (event: TouchEvent) => {
-      if ((event.target as HTMLElement).closest('[data-pull-to-refresh]')) {
+    const preventPullToRefresh = (_event: TouchEvent) => {
+      if ((_event.target as HTMLElement).closest('[data-pull-to-refresh]')) {
         return; // Allow pull-to-refresh in designated areas
       }
 

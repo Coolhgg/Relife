@@ -220,7 +220,7 @@ describe('AlarmForm', () => {
       expect(mockOnSave).not.toHaveBeenCalled();
     });
 
-    test('shows field-specific error styling', async () => {
+    test('shows field-specific _error styling', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
@@ -238,7 +238,7 @@ describe('AlarmForm', () => {
       });
     });
 
-    test('shows general error summary', async () => {
+    test('shows general _error summary', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 

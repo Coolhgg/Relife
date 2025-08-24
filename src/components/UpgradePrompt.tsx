@@ -266,9 +266,9 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           <div className="mb-6">
             <div className="text-sm text-gray-500 mb-2">What you'll get:</div>
             <div className="space-y-1">
-              {featureInfo.benefits.slice(0, 3).map((benefit, index) => (
+              {featureInfo.benefits.slice(0, 3).map((benefit, _index) => (
                 <div
-                  key={index}
+                  key={_index}
                   className="flex items-center gap-2 text-sm text-gray-700"
                 >
                   <Check className="h-4 w-4 text-green-500" />
@@ -327,8 +327,8 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
               What you'll get with {featureInfo.title}:
             </h3>
             <div className="grid gap-3">
-              {featureInfo.benefits.map((benefit, index) => (
-                <div key={index} className="flex items-center gap-3">
+              {featureInfo.benefits.map((benefit, _index) => (
+                <div key={_index} className="flex items-center gap-3">
                   <div className="bg-green-100 text-green-600 p-1 rounded-full">
                     <Check className="h-4 w-4" />
                   </div>
@@ -382,9 +382,9 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                         </div>
 
                         <div className="space-y-2 mb-6">
-                          {plan.features.map((feature, index) => (
+                          {plan.features.map((feature, _index) => (
                             <div
-                              key={index}
+                              key={_index}
                               className="flex items-center gap-2 text-sm text-gray-600"
                             >
                               <Check className="h-4 w-4 text-green-500 flex-shrink-0" />

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /// <reference lib="dom" />
 import React, { createContext, useContext, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
@@ -16,7 +17,7 @@ interface AnalyticsContextType {
     action: string,
     properties?: Record<string, any>
   ) => void;
-  trackError: (error: Error, context?: string) => void;
+  trackError: (_error: Error, context?: string) => void;
   trackPerformance: (metric: string, value: number, context?: string) => void;
   trackUserInteraction: (
     element: string,
@@ -144,13 +145,13 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     });
   };
 
-  const trackErrorEnhanced = (error: Error, context?: string) => {
+  const trackErrorEnhanced = (_error: Error, context?: string) => {
     track(ANALYTICS_EVENTS.ERROR_OCCURRED, {
       timestamp: new Date().toISOString(),
       metadata: {
         error_message: error.message,
         error_stack: error.stack,
-        error_name: error.name,
+        error_name: _error.name,
         context: context || 'unknown',
         user_agent: navigator.userAgent,
         url: window.location.href,

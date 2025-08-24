@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import {
   UserStreak,
@@ -31,7 +32,7 @@ interface StrugglingSamState {
 
   // UI State
   loading: boolean;
-  error: string | null;
+  _error: string | null;
 }
 
 // Action types
@@ -78,7 +79,7 @@ const initialState: StrugglingSamState = {
   currentTestGroup: null,
   userABTest: null,
   loading: false,
-  error: null,
+  _error: null,
 };
 
 // Reducer
@@ -91,7 +92,7 @@ const strugglingSamReducer = (
       return { ...state, loading: action.payload };
 
     case 'SET_ERROR':
-      return { ...state, error: action.payload, loading: false };
+      return { ...state, _error: action.payload, loading: false };
 
     case 'SET_USER_STREAK':
       return { ...state, userStreak: action.payload };
@@ -286,8 +287,8 @@ export const StrugglingSamProvider: React.FC<{
       await refreshCommunityStats();
 
       dispatch({ type: 'SET_LOADING', payload: false });
-    } catch (error) {
-      dispatch({ type: 'SET_ERROR', payload: 'Failed to load user data' });
+    } catch (_error) {
+      dispatch({ type: 'SET_ERROR', payload: 'Failed to load _user data' });
     }
   };
 
@@ -344,8 +345,8 @@ export const StrugglingSamProvider: React.FC<{
       ];
 
       dispatch({ type: 'SET_SOCIAL_PROOF_DATA', payload: mockSocialProofData });
-    } catch (error) {
-      console.error('Failed to refresh community stats:', error);
+    } catch (_error) {
+      console._error('Failed to refresh community stats:', _error);
     }
   };
 

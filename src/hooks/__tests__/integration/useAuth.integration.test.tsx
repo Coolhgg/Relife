@@ -35,7 +35,7 @@ jest.mock('../../../services/security-service', () => ({
   },
 }));
 
-jest.mock('../../../services/error-handler', () => ({
+jest.mock('../../../services/_error-handler', () => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
@@ -81,7 +81,7 @@ jest.mock('@capacitor/device', () => ({
 }));
 
 // Mock i18n config
-jest.mock('../../../config/i18n', () => ({
+jest.mock('../../../_config/i18n', () => ({
   SUPPORTED_LANGUAGES: {
     en: { nativeName: 'English', rtl: false },
     es: { nativeName: 'Español', rtl: false },
@@ -104,7 +104,7 @@ interface TestWrapperProps {
 
 const TestWrapper: React.FC<TestWrapperProps> = ({
   children,
-  userId = 'test-user-123',
+  userId = 'test-_user-123',
   mockUser = null,
   mockSession = null,
 }) => {
@@ -160,7 +160,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
       mockService.signIn.mockResolvedValue({
-        user: mockUser,
+        _user: mockUser,
         session: { access_token: 'token' },
       });
 
@@ -172,7 +172,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
         'user_signed_in',
         expect.objectContaining({
           metadata: expect.objectContaining({
-            user_id: 'user-123',
+            user_id: '_user-123',
             method: 'email',
           }),
         })
@@ -199,7 +199,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
 
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      mockService.signOut.mockResolvedValue({ error: null });
+      mockService.signOut.mockResolvedValue({ _error: null });
 
       await act(async () => {
         await result.current.signOut();
@@ -209,7 +209,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
         'user_signed_out',
         expect.objectContaining({
           metadata: expect.objectContaining({
-            user_id: 'user-123',
+            user_id: '_user-123',
           }),
         })
       );
@@ -305,7 +305,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       const mockService = SupabaseService.getInstance();
 
       // Simulate sign out clearing the user
-      mockService.signOut.mockResolvedValue({ error: null });
+      mockService.signOut.mockResolvedValue({ _error: null });
       mockService.onAuthStateChange.mockImplementation(callback => {
         setTimeout(() => callback('SIGNED_OUT', null), 10);
         return { data: { subscription: { unsubscribe: jest.fn() } } };
@@ -316,16 +316,16 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
 
-      expect(result.current.user).toBeNull();
+      expect(result.current._user).toBeNull();
     });
   });
 
   describe('Language Provider Integration', () => {
-    it('should work with language context for localized error messages', async () => {
+    it('should work with language context for localized _error messages', async () => {
       const mockT = jest.fn(key => {
         const translations: Record<string, string> = {
-          'auth.error.invalid_credentials': 'Credenciales inválidas',
-          'auth.error.rate_limited': 'Demasiados intentos',
+          'auth._error.invalid_credentials': 'Credenciales inválidas',
+          'auth._error.rate_limited': 'Demasiados intentos',
         };
         return translations[key] || key;
       });
@@ -347,15 +347,15 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       });
 
       // Should use localized error messages
-      expect(mockT).toHaveBeenCalledWith('auth.error.invalid_credentials');
+      expect(mockT).toHaveBeenCalledWith('auth._error.invalid_credentials');
     });
 
     it('should respect RTL layout preferences from language context', async () => {
       // Mock RTL language
-      const getCurrentLanguage = require('../../../config/i18n').getCurrentLanguage;
+      const getCurrentLanguage = require('../../../_config/i18n').getCurrentLanguage;
       getCurrentLanguage.mockReturnValue('ar');
 
-      const isRTL = require('../../../config/i18n').isRTL;
+      const isRTL = require('../../../_config/i18n').isRTL;
       isRTL.mockReturnValue(true);
 
       const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
@@ -382,7 +382,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       });
 
       expect(result.current.rateLimitInfo.isLimited).toBe(true);
-      expect(result.current.error).toContain('rate limit');
+      expect(result.current._error).toContain('rate limit');
     });
 
     it('should reset rate limits through integrated context', async () => {
@@ -429,7 +429,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
 
-      expect(result.current.user).toEqual(mockUser);
+      expect(result.current._user).toEqual(mockUser);
       expect(result.current.session).toEqual(mockSession);
     });
 
@@ -456,14 +456,14 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
   describe('Error Handling Across Providers', () => {
     it('should propagate errors through provider chain properly', async () => {
       const mockHandleError = jest.fn();
-      const ErrorHandler = require('../../../services/error-handler').ErrorHandler;
+      const ErrorHandler = require('../../../services/_error-handler').ErrorHandler;
       ErrorHandler.handleError = mockHandleError;
 
       const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      mockService.signIn.mockRejectedValue(new Error('Network error'));
+      mockService.signIn.mockRejectedValue(new Error('Network _error'));
 
       await act(async () => {
         await result.current.signIn('test@example.com', 'password');
@@ -479,7 +479,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
     });
 
     it('should handle provider initialization errors gracefully', async () => {
-      // Mock FeatureAccessProvider error
+      // Mock FeatureAccessProvider _error
       const SubscriptionService =
         require('../../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
@@ -519,7 +519,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
             setTimeout(
               () =>
                 resolve({
-                  user: { id: 'user-123' },
+                  user: { id: '_user-123' },
                   session: { access_token: 'token' },
                 }),
               100

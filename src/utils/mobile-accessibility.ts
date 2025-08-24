@@ -7,7 +7,7 @@ import { TimeoutHandle } from '../types/timers';
 
 export interface TouchGesture {
   name: string;
-  action: (event: TouchEvent) => void;
+  action: (_event: TouchEvent) => void;
   description: string;
   fingers: number;
   direction?: 'up' | 'down' | 'left' | 'right' | 'none';
@@ -254,7 +254,7 @@ export class MobileAccessibilityService {
   /**
    * Handle touch start events
    */
-  private handleTouchStart(event: TouchEvent): void {
+  private handleTouchStart(_event: TouchEvent): void {
     if (!this.state.gesturesEnabled) return;
 
     this.activeTouch = event.touches[0];
@@ -265,15 +265,15 @@ export class MobileAccessibilityService {
     };
 
     // Handle multi-finger gestures
-    if (event.touches.length > 1) {
-      this.handleMultiTouchStart(event);
+    if (_event.touches.length > 1) {
+      this.handleMultiTouchStart(_event);
     }
   }
 
   /**
    * Handle touch move events
    */
-  private handleTouchMove(event: TouchEvent): void {
+  private handleTouchMove(_event: TouchEvent): void {
     if (!this.state.gesturesEnabled || !this.activeTouch) return;
 
     // Prevent default for custom gestures but allow scrolling for screen readers
@@ -292,7 +292,7 @@ export class MobileAccessibilityService {
   /**
    * Handle touch end events
    */
-  private handleTouchEnd(event: TouchEvent): void {
+  private handleTouchEnd(_event: TouchEvent): void {
     if (!this.state.gesturesEnabled || !this.activeTouch) return;
 
     const touchEndTime = Date.now();
@@ -306,13 +306,13 @@ export class MobileAccessibilityService {
     // Handle different gesture types
     if (touchDuration > 500 && distance < 10) {
       // Long press
-      this.executeGesture('long-press', event);
+      this.executeGesture('long-press', _event);
     } else if (distance > 50 && touchDuration < 300) {
       // Swipe gesture
-      this.handleSwipeGesture(deltaX, deltaY, event);
+      this.handleSwipeGesture(deltaX, deltaY, _event);
     } else if (distance < 10 && touchDuration < 300) {
       // Tap gesture
-      this.handleTapGesture(event);
+      this.handleTapGesture(_event);
     }
 
     this.activeTouch = undefined;
@@ -321,11 +321,11 @@ export class MobileAccessibilityService {
   /**
    * Handle multi-touch start
    */
-  private handleMultiTouchStart(event: TouchEvent): void {
-    if (event.touches.length === 2) {
+  private handleMultiTouchStart(_event: TouchEvent): void {
+    if (_event.touches.length === 2) {
       // Two finger gesture
-      this.executeGesture('two-finger-tap', event);
-    } else if (event.touches.length === 3) {
+      this.executeGesture('two-finger-tap', _event);
+    } else if (_event.touches.length === 3) {
       // Three finger gesture - start tracking for swipe
       this.touchStartTime = Date.now();
     }
@@ -334,7 +334,7 @@ export class MobileAccessibilityService {
   /**
    * Handle swipe gestures
    */
-  private handleSwipeGesture(deltaX: number, deltaY: number, event: TouchEvent): void {
+  private handleSwipeGesture(deltaX: number, deltaY: number, _event: TouchEvent): void {
     if (!this.state.swipeGesturesEnabled) return;
 
     const absX = Math.abs(deltaX);
@@ -343,16 +343,16 @@ export class MobileAccessibilityService {
     if (absX > absY) {
       // Horizontal swipe
       if (deltaX > 0) {
-        this.executeGesture('swipe-right', event);
+        this.executeGesture('swipe-right', _event);
       } else {
-        this.executeGesture('swipe-left', event);
+        this.executeGesture('swipe-left', _event);
       }
     } else {
       // Vertical swipe
       if (deltaY > 0) {
-        this.executeGesture('swipe-down', event);
+        this.executeGesture('swipe-down', _event);
       } else {
-        this.executeGesture('swipe-up', event);
+        this.executeGesture('swipe-up', _event);
       }
     }
   }
@@ -360,7 +360,7 @@ export class MobileAccessibilityService {
   /**
    * Handle tap gestures (including double tap)
    */
-  private handleTapGesture(event: TouchEvent): void {
+  private handleTapGesture(_event: TouchEvent): void {
     const currentTime = Date.now();
 
     if (currentTime - this.lastTapTime < this.state.doubleTapDelay) {
@@ -373,7 +373,7 @@ export class MobileAccessibilityService {
 
     // Handle double tap
     if (this.tapCount === 2) {
-      this.handleDoubleTap(event);
+      this.handleDoubleTap(_event);
       this.tapCount = 0;
     }
   }
@@ -381,7 +381,7 @@ export class MobileAccessibilityService {
   /**
    * Execute a gesture action
    */
-  private executeGesture(gestureName: string, event: TouchEvent): void {
+  private executeGesture(gestureName: string, _event: TouchEvent): void {
     const gesture = this.gestures.get(gestureName);
     if (!gesture || !gesture.enabled) return;
 
@@ -393,9 +393,9 @@ export class MobileAccessibilityService {
 
     // Execute gesture action
     try {
-      gesture.action(event);
-    } catch (error) {
-      console.error('Error executing gesture:', error);
+      gesture.action(_event);
+    } catch (_error) {
+      console._error('Error executing gesture:', _error);
     }
   }
 
@@ -566,8 +566,8 @@ export class MobileAccessibilityService {
 
     try {
       navigator.vibrate(patterns[intensity]);
-    } catch (error) {
-      console.warn('Haptic feedback not available:', error);
+    } catch (_error) {
+      console.warn('Haptic feedback not available:', _error);
     }
   }
 
@@ -586,28 +586,28 @@ export class MobileAccessibilityService {
     const event = new CustomEvent('mobile-gesture', {
       detail: { gesture: 'swipe-left', action: 'next-alarm' },
     });
-    document.dispatchEvent(event);
+    document.dispatchEvent(_event);
   }
 
   private handleSwipeRight(): void {
     const event = new CustomEvent('mobile-gesture', {
       detail: { gesture: 'swipe-right', action: 'previous-alarm' },
     });
-    document.dispatchEvent(event);
+    document.dispatchEvent(_event);
   }
 
   private handleSwipeUp(): void {
     const event = new CustomEvent('mobile-gesture', {
       detail: { gesture: 'swipe-up', action: 'dismiss-alarm' },
     });
-    document.dispatchEvent(event);
+    document.dispatchEvent(_event);
   }
 
   private handleSwipeDown(): void {
     const event = new CustomEvent('mobile-gesture', {
       detail: { gesture: 'swipe-down', action: 'snooze-alarm' },
     });
-    document.dispatchEvent(event);
+    document.dispatchEvent(_event);
   }
 
   private handleTwoFingerTap(): void {
@@ -621,17 +621,17 @@ export class MobileAccessibilityService {
     const event = new CustomEvent('mobile-gesture', {
       detail: { gesture: 'three-finger-swipe-up', action: 'read-page' },
     });
-    document.dispatchEvent(event);
+    document.dispatchEvent(_event);
   }
 
   private handleLongPress(): void {
     const event = new CustomEvent('mobile-gesture', {
       detail: { gesture: 'long-press', action: 'context-menu' },
     });
-    document.dispatchEvent(event);
+    document.dispatchEvent(_event);
   }
 
-  private handleDoubleTap(event: TouchEvent): void {
+  private handleDoubleTap(_event: TouchEvent): void {
     // Standard double-tap activation
     const target = event.target as HTMLElement;
     if (

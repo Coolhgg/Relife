@@ -86,8 +86,8 @@ class VoiceBiometricsService {
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
       }
-    } catch (error) {
-      console.error('Failed to initialize audio context:', error);
+    } catch (_error) {
+      console._error('Failed to initialize audio context:', _error);
     }
   }
 
@@ -120,8 +120,8 @@ class VoiceBiometricsService {
       this.performanceMonitor.trackCustomMetric('voice_training_started', 1);
 
       return sessionId;
-    } catch (error) {
-      ErrorHandler.handleError(error as Error, 'Failed to start voice training', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error as Error, 'Failed to start voice training', {
         userId,
       });
       throw error;
@@ -157,8 +157,8 @@ class VoiceBiometricsService {
         });
 
         this.mediaRecorder.ondataavailable = event => {
-          if (event.data.size > 0) {
-            chunks.push(event.data);
+          if (_event.data.size > 0) {
+            chunks.push(_event.data);
           }
         };
 
@@ -170,8 +170,8 @@ class VoiceBiometricsService {
 
             stream.getTracks().forEach(track => track.stop());
             resolve(audioBuffer);
-          } catch (error) {
-            reject(error);
+          } catch (_error) {
+            reject(_error);
           }
         };
 
@@ -185,8 +185,8 @@ class VoiceBiometricsService {
             this.isRecording = false;
           }
         }, duration);
-      } catch (error) {
-        reject(error);
+      } catch (_error) {
+        reject(_error);
       }
     });
   }
@@ -259,8 +259,8 @@ class VoiceBiometricsService {
       this.performanceMonitor.trackCustomMetric('voice_analysis_duration', duration);
 
       return voicePrint;
-    } catch (error) {
-      ErrorHandler.handleError(error as Error, 'Voice analysis failed', { userId });
+    } catch (_error) {
+      ErrorHandler.handleError(_error as Error, 'Voice analysis failed', { userId });
       throw error;
     }
   }
@@ -318,8 +318,8 @@ class VoiceBiometricsService {
       this.performanceMonitor.trackCustomMetric('voice_authentication_attempt', 1);
 
       return authentication;
-    } catch (error) {
-      ErrorHandler.handleError(error as Error, 'Voice authentication failed', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error as Error, 'Voice authentication failed', {
         userId: expectedUserId,
       });
       throw error;
@@ -363,8 +363,8 @@ class VoiceBiometricsService {
         stressLevel,
         recommendations,
       };
-    } catch (error) {
-      console.error('Mood analysis failed:', error);
+    } catch (_error) {
+      console._error('Mood analysis failed:', _error);
       return {
         detectedMood: 'neutral',
         confidence: 0,
@@ -407,8 +407,8 @@ class VoiceBiometricsService {
         improvements,
         nextSteps,
       };
-    } catch (error) {
-      console.error('Failed to get training progress:', error);
+    } catch (_error) {
+      console._error('Failed to get training progress:', _error);
       return {
         sessionsCompleted: 0,
         totalSamples: 0,
@@ -939,7 +939,7 @@ class VoiceBiometricsService {
 
   private async storeVoicePrint(voicePrint: VoicePrint): Promise<void> {
     try {
-      const { error } = await SupabaseService.getInstance()
+      const { _error } = await SupabaseService.getInstance()
         .client.from('voice_prints')
         .insert({
           user_id: voicePrint.userId,
@@ -951,15 +951,15 @@ class VoiceBiometricsService {
           recorded_at: voicePrint.recordedAt.toISOString(),
         });
 
-      if (error) throw error;
-    } catch (error) {
-      console.error('Failed to store voice print:', error);
+      if (_error) throw error;
+    } catch (_error) {
+      console._error('Failed to store voice print:', _error);
     }
   }
 
   private async logAuthenticationAttempt(auth: VoiceAuthentication): Promise<void> {
     try {
-      const { error } = await SupabaseService.getInstance()
+      const { _error } = await SupabaseService.getInstance()
         .client.from('voice_authentication_logs')
         .insert({
           user_id: auth.userId,
@@ -970,9 +970,9 @@ class VoiceBiometricsService {
           timestamp: auth.timestamp.toISOString(),
         });
 
-      if (error) throw error;
-    } catch (error) {
-      console.error('Failed to log authentication attempt:', error);
+      if (_error) throw error;
+    } catch (_error) {
+      console._error('Failed to log authentication attempt:', _error);
     }
   }
 }

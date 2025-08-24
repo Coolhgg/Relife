@@ -42,15 +42,15 @@ export class MobileTouchService {
     try {
       // Check if we're in a Capacitor environment
       this.isCapacitorAvailable = !!(window as any).Capacitor;
-    } catch (error) {
-      console.warn('Capacitor not available:', error);
+    } catch (_error) {
+      console.warn('Capacitor not available:', _error);
       this.isCapacitorAvailable = false;
     }
   }
 
   // Haptic Feedback Methods
   async triggerHaptic(
-    type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
+    type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | '_error' = 'light'
   ) {
     if (!this.isCapacitorAvailable) {
       // Fallback to vibration API if available
@@ -61,7 +61,7 @@ export class MobileTouchService {
           heavy: [50],
           success: [10, 50, 10],
           warning: [25, 25, 25],
-          error: [100, 50, 100],
+          _error: [100, 50, 100],
         };
         navigator.vibrate(patterns[type]);
       }
@@ -89,8 +89,8 @@ export class MobileTouchService {
           await Haptics.notification({ type: NotificationType.ERROR });
           break;
       }
-    } catch (error) {
-      console.warn('Haptic feedback failed:', error);
+    } catch (_error) {
+      console.warn('Haptic feedback failed:', _error);
     }
   }
 

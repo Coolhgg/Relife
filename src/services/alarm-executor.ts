@@ -27,9 +27,9 @@ export class AlarmExecutor {
 
   static async applySmartOptimizations(
     alarm: Alarm,
-    config: SchedulingConfig
+    _config: SchedulingConfig
   ): Promise<Alarm> {
-    if (!alarm.smartOptimizations || !config.enableSmartAdjustments) {
+    if (!alarm.smartOptimizations || !_config.enableSmartAdjustments) {
       return alarm;
     }
 
@@ -40,10 +40,10 @@ export class AlarmExecutor {
         optimizedAlarm = await this.applyOptimization(
           optimizedAlarm,
           optimization,
-          config
+          _config
         );
-      } catch (error) {
-        console.error('Error applying optimization:', optimization.type, error);
+      } catch (_error) {
+        console._error('Error applying optimization:', optimization.type, _error);
       }
     }
 
@@ -53,7 +53,7 @@ export class AlarmExecutor {
   private static async applyOptimization(
     alarm: Alarm,
     optimization: SmartOptimization,
-    config: SchedulingConfig
+    _config: SchedulingConfig
   ): Promise<Alarm> {
     const { type, parameters } = optimization;
     let adjustmentMinutes = 0;
@@ -352,8 +352,8 @@ export class AlarmExecutor {
       }
 
       return this.formatTimeToHHMM(adjustedTime);
-    } catch (error) {
-      console.error('Error calculating sun-based time:', error);
+    } catch (_error) {
+      console._error('Error calculating sun-based time:', _error);
       return '07:00'; // Fallback time
     }
   }
@@ -422,8 +422,8 @@ export class AlarmExecutor {
             conditionMet = true;
             break;
         }
-      } catch (error) {
-        console.error(`Error evaluating conditional rule ${rule.type}:`, error);
+      } catch (_error) {
+        console._error(`Error evaluating conditional rule ${rule.type}:`, _error);
         conditionMet = true; // Default to allowing the alarm
       }
 

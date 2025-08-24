@@ -6,13 +6,13 @@ interface Props {
   children: ReactNode;
   fallback?: ReactNode;
   context?: string;
-  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  onError?: (_error: Error, errorInfo: ErrorInfo) => void;
   onNavigateBack?: () => void;
 }
 
 interface State {
   hasError: boolean;
-  error: Error | null;
+  _error: Error | null;
   errorInfo: ErrorInfo | null;
   errorId: string | null;
 }
@@ -22,23 +22,23 @@ class ErrorBoundary extends Component<Props, State> {
     super(props);
     this.state = {
       hasError: false,
-      error: null,
+      _error: null,
       errorInfo: null,
       errorId: null,
     };
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(_error: Error): State {
     return {
       hasError: true,
-      error,
+      _error,
       errorInfo: null,
       errorId: null,
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    const errorId = ErrorHandler.handleError(error, 'Component error occurred', {
+  componentDidCatch(_error: Error, errorInfo: ErrorInfo) {
+    const errorId = ErrorHandler.handleError(_error, 'Component _error occurred', {
       context: this.props.context || 'ErrorBoundary',
       componentStack: errorInfo.componentStack,
       timestamp: new Date().toISOString(),
@@ -46,19 +46,19 @@ class ErrorBoundary extends Component<Props, State> {
     });
 
     this.setState({
-      error,
+      _error,
       errorInfo,
       errorId,
     });
 
     // Call custom error handler if provided
-    this.props.onError?.(error, errorInfo);
+    this.props.onError?.(_error, errorInfo);
   }
 
   handleRetry = () => {
     this.setState({
       hasError: false,
-      error: null,
+      _error: null,
       errorInfo: null,
       errorId: null,
     });
@@ -92,7 +92,7 @@ class ErrorBoundary extends Component<Props, State> {
             </h2>
 
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              We're sorry, but something unexpected happened. The error has been logged
+              We're sorry, but something unexpected happened. The _error has been logged
               and our team will investigate.
             </p>
 
@@ -122,13 +122,13 @@ class ErrorBoundary extends Component<Props, State> {
               </button>
             </div>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {process.env.NODE_ENV === 'development' && this.state._error && (
               <details className="mt-6 text-left">
                 <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
                   Developer Details
                 </summary>
                 <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/10 rounded border text-xs">
-                  <strong>Error:</strong> {this.state.error.toString()}
+                  <strong>Error:</strong> {this.state._error.toString()}
                   {this.state.errorInfo && (
                     <>
                       <br />

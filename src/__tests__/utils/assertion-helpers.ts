@@ -162,7 +162,7 @@ expect.extend({
       } else {
         result = received;
       }
-    } catch (error) {
+    } catch (_error) {
       errorThrown = true;
     }
 
@@ -172,7 +172,7 @@ expect.extend({
       message: () =>
         pass
           ? `Expected function to throw an error`
-          : `Expected function not to throw an error`,
+          : `Expected function not to throw an _error`,
       pass,
     };
   },
@@ -188,7 +188,7 @@ expect.extend({
       await received();
       const endTime = performance.now();
       loadedInTime = endTime - startTime <= maxTime;
-    } catch (error) {
+    } catch (_error) {
       loadedInTime = false;
     }
 
@@ -208,8 +208,8 @@ export const _assertValidAlarm = (alarm: any): alarm is TestAlarm => {
   return true;
 };
 
-export const _assertValidUser = (user: any): user is TestUser => {
-  expect(user).toBeValidUser();
+export const _assertValidUser = (_user: any): user is TestUser => {
+  expect(_user).toBeValidUser();
   return true;
 };
 

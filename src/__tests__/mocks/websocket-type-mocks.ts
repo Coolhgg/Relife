@@ -14,7 +14,7 @@ import type {
   WebSocketSubscription,
   DeviceInfo,
   WebSocketState,
-  WebSocketErrorType
+  WebSocketErrorType,
 } from '../../types/websocket';
 
 import type {
@@ -31,14 +31,15 @@ import type {
   SystemNotificationPayload,
   EmergencyAlertPayload,
   SyncStatusUpdatePayload,
-  SyncConflictDetectedPayload
+  SyncConflictDetectedPayload,
 } from '../../types/realtime-messages';
 
 // Mock Data Factories
 export class WebSocketTypeMocks {
-  
   // Basic WebSocket Type Factories
-  static createMockWebSocketConfig(overrides: Partial<WebSocketConfig> = {}): WebSocketConfig {
+  static createMockWebSocketConfig(
+    overrides: Partial<WebSocketConfig> = {}
+  ): WebSocketConfig {
     return {
       url: 'wss://test.relife.app/ws',
       protocols: ['relife-v1'],
@@ -52,11 +53,13 @@ export class WebSocketTypeMocks {
       bufferMaxItems: 100,
       bufferMaxTime: 5000,
       enableLogging: false,
-      ...overrides
+      ...overrides,
     };
   }
 
-  static createMockConnectionInfo(overrides: Partial<WebSocketConnectionInfo> = {}): WebSocketConnectionInfo {
+  static createMockConnectionInfo(
+    overrides: Partial<WebSocketConnectionInfo> = {}
+  ): WebSocketConnectionInfo {
     return {
       id: `conn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       state: 'OPEN',
@@ -68,11 +71,13 @@ export class WebSocketTypeMocks {
       latency: 125,
       userId: 'test-user-123',
       sessionId: 'test-session-456',
-      ...overrides
+      ...overrides,
     };
   }
 
-  static createMockDeviceInfo(type: 'mobile' | 'tablet' | 'desktop' | 'smartwatch' | 'smart_speaker' = 'mobile'): DeviceInfo {
+  static createMockDeviceInfo(
+    type: 'mobile' | 'tablet' | 'desktop' | 'smartwatch' | 'smart_speaker' = 'mobile'
+  ): DeviceInfo {
     const baseInfo: DeviceInfo = {
       type,
       platform: type === 'mobile' ? 'iOS' : 'Windows',
@@ -81,8 +86,8 @@ export class WebSocketTypeMocks {
         notifications: true,
         serviceWorker: true,
         webSocket: true,
-        webRTC: type !== 'smartwatch'
-      }
+        webRTC: type !== 'smartwatch',
+      },
     };
 
     switch (type) {
@@ -90,34 +95,36 @@ export class WebSocketTypeMocks {
         return {
           ...baseInfo,
           screen: { width: 375, height: 812, pixelRatio: 3 },
-          network: { type: 'cellular', effectiveType: '4g', downlink: 25, rtt: 50 }
+          network: { type: 'cellular', effectiveType: '4g', downlink: 25, rtt: 50 },
         };
       case 'tablet':
         return {
           ...baseInfo,
           screen: { width: 768, height: 1024, pixelRatio: 2 },
-          network: { type: 'wifi', downlink: 100, rtt: 20 }
+          network: { type: 'wifi', downlink: 100, rtt: 20 },
         };
       case 'desktop':
         return {
           ...baseInfo,
           platform: 'Windows',
           screen: { width: 1920, height: 1080, pixelRatio: 1 },
-          network: { type: 'ethernet', downlink: 1000, rtt: 10 }
+          network: { type: 'ethernet', downlink: 1000, rtt: 10 },
         };
       case 'smartwatch':
         return {
           ...baseInfo,
           platform: 'WatchOS',
           screen: { width: 184, height: 224, pixelRatio: 2 },
-          network: { type: 'bluetooth', rtt: 100 }
+          network: { type: 'bluetooth', rtt: 100 },
         };
       default:
         return baseInfo;
     }
   }
 
-  static createMockWebSocketError(type: WebSocketErrorType = 'CONNECTION_FAILED'): WebSocketError {
+  static createMockWebSocketError(
+    type: WebSocketErrorType = 'CONNECTION_FAILED'
+  ): WebSocketError {
     const errorMessages = {
       CONNECTION_FAILED: 'Failed to establish connection',
       AUTHENTICATION_FAILED: 'Authentication credentials invalid',
@@ -126,7 +133,7 @@ export class WebSocketTypeMocks {
       TIMEOUT: 'Operation timed out',
       RATE_LIMITED: 'Rate limit exceeded',
       INVALID_MESSAGE: 'Message format is invalid',
-      RECONNECTION_FAILED: 'Failed to reconnect after multiple attempts'
+      RECONNECTION_FAILED: 'Failed to reconnect after multiple attempts',
     };
 
     return {
@@ -136,7 +143,7 @@ export class WebSocketTypeMocks {
       details: { errorType: type, timestamp: Date.now() },
       timestamp: new Date(),
       recoverable: type !== 'AUTHENTICATION_FAILED',
-      retryAfter: type === 'RATE_LIMITED' ? 60000 : undefined
+      retryAfter: type === 'RATE_LIMITED' ? 60000 : undefined,
     };
   }
 
@@ -153,7 +160,7 @@ export class WebSocketTypeMocks {
       uptime: 3600000, // 1 hour
       dataTransferred: {
         sent: 524288, // 512KB
-        received: 1048576 // 1MB
+        received: 1048576, // 1MB
       },
       errorCounts: {
         CONNECTION_FAILED: 2,
@@ -163,20 +170,22 @@ export class WebSocketTypeMocks {
         TIMEOUT: 1,
         RATE_LIMITED: 0,
         INVALID_MESSAGE: 0,
-        RECONNECTION_FAILED: 1
+        RECONNECTION_FAILED: 1,
       },
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
     };
   }
 
-  static createMockAuthPayload(overrides: Partial<WebSocketAuthPayload> = {}): WebSocketAuthPayload {
+  static createMockAuthPayload(
+    overrides: Partial<WebSocketAuthPayload> = {}
+  ): WebSocketAuthPayload {
     return {
       token: 'mock-jwt-token-123',
       userId: 'test-user-456',
       sessionId: 'test-session-789',
       deviceInfo: this.createMockDeviceInfo('mobile'),
       capabilities: ['realtime_messaging', 'push_notifications', 'voice_commands'],
-      ...overrides
+      ...overrides,
     };
   }
 
@@ -184,18 +193,24 @@ export class WebSocketTypeMocks {
     return {
       success,
       sessionId: success ? 'authenticated-session-123' : 'failed-session',
-      permissions: success ? ['alarm_management', 'user_presence', 'ai_recommendations'] : [],
-      serverCapabilities: success ? ['heartbeat', 'compression', 'binary_messages'] : [],
+      permissions: success
+        ? ['alarm_management', 'user_presence', 'ai_recommendations']
+        : [],
+      serverCapabilities: success
+        ? ['heartbeat', 'compression', 'binary_messages']
+        : [],
       heartbeatInterval: success ? 30000 : 0,
       maxMessageSize: success ? 65536 : 0,
       rateLimit: {
         messagesPerSecond: success ? 10 : 0,
-        burstLimit: success ? 50 : 0
-      }
+        burstLimit: success ? 50 : 0,
+      },
     };
   }
 
-  static createMockSubscription(overrides: Partial<WebSocketSubscription> = {}): WebSocketSubscription {
+  static createMockSubscription(
+    overrides: Partial<WebSocketSubscription> = {}
+  ): WebSocketSubscription {
     return {
       id: `sub_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       type: 'alarm_updates',
@@ -203,7 +218,7 @@ export class WebSocketTypeMocks {
       priority: 'normal',
       createdAt: new Date(),
       lastActivity: new Date(),
-      ...overrides
+      ...overrides,
     };
   }
 
@@ -217,24 +232,24 @@ export class WebSocketTypeMocks {
         enabled: true,
         days: [1, 2, 3, 4, 5],
         sound: 'gentle_bells.wav',
-        volume: 0.8
+        volume: 0.8,
       } as any,
       triggeredAt: new Date(),
       location: {
         latitude: 40.7128,
-        longitude: -74.0060,
-        accuracy: 5
+        longitude: -74.006,
+        accuracy: 5,
       },
       deviceInfo: {
         batteryLevel: 85,
         networkType: 'wifi',
-        isCharging: false
+        isCharging: false,
       },
       contextualData: {
         weatherCondition: 'sunny',
         ambientLightLevel: 80,
-        noiseLevel: 25
-      }
+        noiseLevel: 25,
+      },
     };
   }
 
@@ -248,14 +263,14 @@ export class WebSocketTypeMocks {
         mood: 'tired',
         confidenceScore: 0.75,
         wakefulness: 0.4,
-        responseText: 'okay I am awake'
+        responseText: 'okay I am awake',
       },
       challengeData: {
         type: 'math',
         completed: true,
         attempts: 2,
-        duration: 45000
-      }
+        duration: 45000,
+      },
     };
   }
 
@@ -268,8 +283,8 @@ export class WebSocketTypeMocks {
       snoozeCount: 1,
       voiceData: {
         mood: 'sleepy',
-        responseText: 'five more minutes'
-      }
+        responseText: 'five more minutes',
+      },
     };
   }
 
@@ -283,14 +298,14 @@ export class WebSocketTypeMocks {
           deviceId: 'device-789',
           type: 'mobile',
           lastActivity: new Date(),
-          location: 'home'
-        }
+          location: 'home',
+        },
       ],
       currentActivity: {
         type: 'viewing_alarms',
         details: { page: 'dashboard', section: 'active_alarms' },
-        startedAt: new Date()
-      }
+        startedAt: new Date(),
+      },
     };
   }
 
@@ -302,19 +317,19 @@ export class WebSocketTypeMocks {
         action: 'create_alarm',
         feature: 'smart_scheduling',
         duration: 120000,
-        metadata: { 
+        metadata: {
           alarmType: 'recurring',
           hasVoiceCommand: true,
-          difficulty: 'medium'
-        }
+          difficulty: 'medium',
+        },
       },
       timestamp: new Date(),
       sessionId: 'session-789',
       deviceInfo: {
         type: 'mobile',
         userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)',
-        screen: { width: 375, height: 812 }
-      }
+        screen: { width: 375, height: 812 },
+      },
     };
   }
 
@@ -329,19 +344,19 @@ export class WebSocketTypeMocks {
         batteryLevel: 85,
         isCharging: false,
         version: 'iOS 15.0',
-        capabilities: ['notifications', 'voice_recognition', 'biometrics']
+        capabilities: ['notifications', 'voice_recognition', 'biometrics'],
       },
       location: {
         latitude: 40.7589,
         longitude: -73.9851,
         accuracy: 10,
-        timestamp: new Date()
+        timestamp: new Date(),
       },
       networkInfo: {
         type: 'wifi',
         strength: 85,
-        provider: 'Home Network'
-      }
+        provider: 'Home Network',
+      },
     };
   }
 
@@ -353,32 +368,34 @@ export class WebSocketTypeMocks {
       priority: 'medium',
       recommendation: {
         title: 'Optimize your wake-up time',
-        description: 'Based on your sleep patterns, consider adjusting your alarm by 15 minutes',
+        description:
+          'Based on your sleep patterns, consider adjusting your alarm by 15 minutes',
         actionText: 'Apply suggestion',
         benefits: [
           'Better sleep quality',
           'Easier wake-up experience',
-          'More consistent schedule'
+          'More consistent schedule',
         ],
-        estimatedImpact: 7
+        estimatedImpact: 7,
       },
       data: {
-        currentState: { 
-          avgWakeTime: '07:00', 
+        currentState: {
+          avgWakeTime: '07:00',
           avgSleepDuration: 6.5,
-          consistency: 0.72 
+          consistency: 0.72,
         },
-        suggestedChanges: { 
+        suggestedChanges: {
           optimalWakeTime: '06:45',
           targetSleepDuration: 7.5,
-          improvedConsistency: 0.89 
+          improvedConsistency: 0.89,
         },
-        reasoning: 'Your natural wake patterns align better with 6:45 AM based on movement and voice analysis',
+        reasoning:
+          'Your natural wake patterns align better with 6:45 AM based on movement and voice analysis',
         confidence: 0.87,
-        basedOn: ['sleep_tracker', 'voice_analysis', 'movement_patterns']
+        basedOn: ['sleep_tracker', 'voice_analysis', 'movement_patterns'],
       },
       validUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      autoApply: false
+      autoApply: false,
     };
   }
 
@@ -394,51 +411,51 @@ export class WebSocketTypeMocks {
             category: 'duration',
             finding: 'Average sleep duration is within healthy range (7.2 hours)',
             confidence: 0.92,
-            impact: 'positive'
+            impact: 'positive',
           },
           {
             category: 'consistency',
             finding: 'Bedtime varies significantly on weekends (+2.5 hours)',
             confidence: 0.89,
-            impact: 'negative'
-          }
+            impact: 'negative',
+          },
         ],
         metrics: {
           avgBedtime: 23.25, // 11:15 PM
-          avgWakeTime: 6.75,  // 6:45 AM
+          avgWakeTime: 6.75, // 6:45 AM
           avgDuration: 7.2,
           efficiency: 0.85,
-          consistency: 0.68
+          consistency: 0.68,
         },
         trends: [
           {
             metric: 'sleep_duration',
             direction: 'stable',
             rate: 0.02,
-            significance: 0.3
+            significance: 0.3,
           },
           {
             metric: 'bedtime_consistency',
             direction: 'declining',
             rate: -0.15,
-            significance: 0.82
-          }
-        ]
+            significance: 0.82,
+          },
+        ],
       },
       recommendations: [
         {
           action: 'Maintain consistent weekend bedtime',
           priority: 1,
-          expectedOutcome: 'Improved sleep quality and easier Monday mornings'
+          expectedOutcome: 'Improved sleep quality and easier Monday mornings',
         },
         {
           action: 'Consider a 30-minute wind-down routine',
           priority: 2,
-          expectedOutcome: 'Better sleep onset and deeper rest'
-        }
+          expectedOutcome: 'Better sleep onset and deeper rest',
+        },
       ],
       generatedAt: new Date(),
-      validFor: 30
+      validFor: 30,
     };
   }
 
@@ -453,32 +470,35 @@ export class WebSocketTypeMocks {
         volume: -12.5,
         pitch: 180.5,
         clarity: 0.85,
-        responseTime: 1200
+        responseTime: 1200,
       },
       contextualFactors: {
         timeOfDay: '07:15',
         dayOfWeek: 'Monday',
         weatherCondition: 'rainy',
         recentAlarmActivity: true,
-        stressIndicators: 0.6
+        stressIndicators: 0.6,
       },
       recommendations: [
         {
           type: 'mood_improvement',
           suggestion: 'Consider a gentler wake-up routine on rainy mornings',
-          priority: 2
+          priority: 2,
         },
         {
           type: 'voice_training',
           suggestion: 'Practice morning voice commands for better recognition',
-          priority: 3
-        }
+          priority: 3,
+        },
       ],
       historicalComparison: {
         averageMood: 'neutral',
         moodTrend: 'declining',
-        unusualPatterns: ['Lower energy on rainy days', 'Slower response times on Mondays']
-      }
+        unusualPatterns: [
+          'Lower energy on rainy days',
+          'Slower response times on Mondays',
+        ],
+      },
     };
   }
 
@@ -492,36 +512,36 @@ export class WebSocketTypeMocks {
         averageSleepDuration: 7.5,
         sleepEfficiency: 0.87,
         deepSleepPercentage: 22,
-        remSleepPercentage: 20
+        remSleepPercentage: 20,
       },
       trends: {
         bedtimeConsistency: 0.73,
         wakeTimeConsistency: 0.81,
         weekendShift: 1.25,
-        seasonalTrend: 'winter_delay'
+        seasonalTrend: 'winter_delay',
       },
       insights: [
         {
           category: 'quality',
           finding: 'Sleep efficiency is above average',
           impact: 'positive',
-          confidence: 0.91
+          confidence: 0.91,
         },
         {
           category: 'consistency',
           finding: 'Weekend schedule disrupts weekday rhythm',
           impact: 'negative',
-          confidence: 0.84
-        }
+          confidence: 0.84,
+        },
       ],
       recommendations: [
         {
           type: 'bedtime_adjustment',
           description: 'Try to maintain weekday bedtime on weekends',
           expectedImprovement: 'Better Monday morning alertness',
-          difficulty: 'medium'
-        }
-      ]
+          difficulty: 'medium',
+        },
+      ],
     };
   }
 
@@ -532,25 +552,26 @@ export class WebSocketTypeMocks {
       severity: 'medium',
       title: 'New Feature Available',
       message: 'Smart sleep analysis is now available in your dashboard',
-      details: 'This feature uses AI to provide personalized sleep insights and recommendations',
+      details:
+        'This feature uses AI to provide personalized sleep insights and recommendations',
       actionRequired: false,
       actions: [
         {
           id: 'try_now',
           label: 'Try Now',
           type: 'primary',
-          url: '/dashboard/sleep-analysis'
+          url: '/dashboard/sleep-analysis',
         },
         {
           id: 'learn_more',
           label: 'Learn More',
           type: 'secondary',
-          url: '/help/sleep-analysis'
-        }
+          url: '/help/sleep-analysis',
+        },
       ],
       affectedFeatures: ['sleep_tracking', 'ai_recommendations'],
       dismissible: true,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     };
   }
 
@@ -560,21 +581,22 @@ export class WebSocketTypeMocks {
       type: 'service_outage',
       severity: 'critical',
       title: 'Service Temporarily Unavailable',
-      description: 'We are experiencing technical difficulties that may affect alarm reliability',
+      description:
+        'We are experiencing technical difficulties that may affect alarm reliability',
       immediateActions: [
         'Set backup alarms on your device',
         'Check our status page for updates',
-        'Contact support if issues persist'
+        'Contact support if issues persist',
       ],
       affectedUsers: ['premium_users', 'voice_feature_users'],
       estimatedImpact: 'Alarms may not trigger reliably for the next 30 minutes',
       statusUrl: 'https://status.relife.app',
       contactInfo: {
         email: 'support@relife.app',
-        supportUrl: 'https://help.relife.app/emergency'
+        supportUrl: 'https://help.relife.app/emergency',
       },
       issuedAt: new Date(),
-      resolvedAt: undefined
+      resolvedAt: undefined,
     };
   }
 
@@ -588,12 +610,12 @@ export class WebSocketTypeMocks {
         current: 75,
         total: 100,
         percentage: 75,
-        estimatedTimeRemaining: 30
+        estimatedTimeRemaining: 30,
       },
       items: {
         alarms: { processed: 8, total: 10, errors: 0 },
         settings: { processed: 15, total: 15, errors: 0 },
-        analytics: { processed: 52, total: 75, errors: 1 }
+        analytics: { processed: 52, total: 75, errors: 1 },
       },
       conflicts: [],
       errors: [
@@ -601,9 +623,9 @@ export class WebSocketTypeMocks {
           code: 'ANALYTICS_PARSE_ERROR',
           message: 'Unable to parse analytics data from 2023-12-01',
           itemType: 'analytics',
-          itemId: 'analytics-2023-12-01'
-        }
-      ]
+          itemId: 'analytics-2023-12-01',
+        },
+      ],
     };
   }
 
@@ -614,48 +636,48 @@ export class WebSocketTypeMocks {
       itemId: 'alarm-123',
       conflictType: 'data_mismatch',
       localVersion: {
-        data: { 
-          label: 'Morning Alarm', 
-          time: '07:00', 
-          enabled: true 
+        data: {
+          label: 'Morning Alarm',
+          time: '07:00',
+          enabled: true,
         },
         lastModified: new Date(Date.now() - 60000), // 1 minute ago
         version: 5,
-        source: 'mobile_app'
+        source: 'mobile_app',
       },
       remoteVersion: {
-        data: { 
-          label: 'Morning Routine', 
-          time: '07:15', 
-          enabled: true 
+        data: {
+          label: 'Morning Routine',
+          time: '07:15',
+          enabled: true,
         },
         lastModified: new Date(Date.now() - 30000), // 30 seconds ago
         version: 6,
-        source: 'web_app'
+        source: 'web_app',
       },
       autoResolution: {
         possible: false,
         strategy: 'use_latest',
-        confidence: 0.6
+        confidence: 0.6,
       },
       userActionRequired: true,
       suggestedActions: [
         {
           action: 'accept_remote',
           description: 'Use the version from web app (Morning Routine, 07:15)',
-          consequences: 'Local changes will be overwritten'
+          consequences: 'Local changes will be overwritten',
         },
         {
           action: 'accept_local',
           description: 'Keep the mobile app version (Morning Alarm, 07:00)',
-          consequences: 'Remote changes will be overwritten'
+          consequences: 'Remote changes will be overwritten',
         },
         {
           action: 'merge',
           description: 'Combine both versions manually',
-          consequences: 'You will need to resolve conflicts manually'
-        }
-      ]
+          consequences: 'You will need to resolve conflicts manually',
+        },
+      ],
     };
   }
 
@@ -673,71 +695,113 @@ export class WebSocketTypeMocks {
       userId: 'test-user-456',
       sessionId: 'test-session-789',
       version: '1.0',
-      ...overrides
+      ...overrides,
     };
   }
 
   // Batch Message Creators
   static createMockAlarmMessages(): WebSocketMessage<any>[] {
     return [
-      this.createMockWebSocketMessage('alarm_triggered', this.createMockAlarmTriggeredPayload()),
-      this.createMockWebSocketMessage('alarm_dismissed', this.createMockAlarmDismissedPayload()),
-      this.createMockWebSocketMessage('alarm_snoozed', this.createMockAlarmSnoozedPayload())
+      this.createMockWebSocketMessage(
+        'alarm_triggered',
+        this.createMockAlarmTriggeredPayload()
+      ),
+      this.createMockWebSocketMessage(
+        'alarm_dismissed',
+        this.createMockAlarmDismissedPayload()
+      ),
+      this.createMockWebSocketMessage(
+        'alarm_snoozed',
+        this.createMockAlarmSnoozedPayload()
+      ),
     ];
   }
 
   static createMockUserMessages(): WebSocketMessage<any>[] {
     return [
-      this.createMockWebSocketMessage('user_presence_update', this.createMockUserPresencePayload()),
-      this.createMockWebSocketMessage('user_activity', this.createMockUserActivityPayload()),
-      this.createMockWebSocketMessage('device_status_change', this.createMockDeviceStatusChangePayload())
+      this.createMockWebSocketMessage(
+        'user_presence_update',
+        this.createMockUserPresencePayload()
+      ),
+      this.createMockWebSocketMessage(
+        'user_activity',
+        this.createMockUserActivityPayload()
+      ),
+      this.createMockWebSocketMessage(
+        'device_status_change',
+        this.createMockDeviceStatusChangePayload()
+      ),
     ];
   }
 
   static createMockAIMessages(): WebSocketMessage<any>[] {
     return [
-      this.createMockWebSocketMessage('recommendation_generated', this.createMockRecommendationPayload()),
-      this.createMockWebSocketMessage('ai_analysis_complete', this.createMockAIAnalysisPayload()),
-      this.createMockWebSocketMessage('voice_mood_detected', this.createMockVoiceMoodPayload()),
-      this.createMockWebSocketMessage('sleep_pattern_updated', this.createMockSleepPatternPayload())
+      this.createMockWebSocketMessage(
+        'recommendation_generated',
+        this.createMockRecommendationPayload()
+      ),
+      this.createMockWebSocketMessage(
+        'ai_analysis_complete',
+        this.createMockAIAnalysisPayload()
+      ),
+      this.createMockWebSocketMessage(
+        'voice_mood_detected',
+        this.createMockVoiceMoodPayload()
+      ),
+      this.createMockWebSocketMessage(
+        'sleep_pattern_updated',
+        this.createMockSleepPatternPayload()
+      ),
     ];
   }
 
   static createMockSystemMessages(): WebSocketMessage<any>[] {
     return [
-      this.createMockWebSocketMessage('system_notification', this.createMockSystemNotificationPayload()),
-      this.createMockWebSocketMessage('emergency_alert', this.createMockEmergencyAlertPayload())
+      this.createMockWebSocketMessage(
+        'system_notification',
+        this.createMockSystemNotificationPayload()
+      ),
+      this.createMockWebSocketMessage(
+        'emergency_alert',
+        this.createMockEmergencyAlertPayload()
+      ),
     ];
   }
 
   static createMockSyncMessages(): WebSocketMessage<any>[] {
     return [
-      this.createMockWebSocketMessage('sync_status_update', this.createMockSyncStatusPayload()),
-      this.createMockWebSocketMessage('sync_conflict_detected', this.createMockSyncConflictPayload())
+      this.createMockWebSocketMessage(
+        'sync_status_update',
+        this.createMockSyncStatusPayload()
+      ),
+      this.createMockWebSocketMessage(
+        'sync_conflict_detected',
+        this.createMockSyncConflictPayload()
+      ),
     ];
   }
 
   // Test Scenario Builders
   static createConnectionScenario(state: WebSocketState = 'OPEN') {
     return {
-      config: this.createMockWebSocketConfig(),
+      _config: this.createMockWebSocketConfig(),
       connectionInfo: this.createMockConnectionInfo({ state }),
       deviceInfo: this.createMockDeviceInfo('mobile'),
       authPayload: this.createMockAuthPayload(),
-      authResponse: this.createMockAuthResponse(state === 'OPEN')
+      authResponse: this.createMockAuthResponse(state === 'OPEN'),
     };
   }
 
   static createErrorScenario(errorType: WebSocketErrorType = 'CONNECTION_FAILED') {
     return {
-      error: this.createMockWebSocketError(errorType),
+      _error: this.createMockWebSocketError(errorType),
       metrics: {
         ...this.createMockWebSocketMetrics(),
         errorCounts: {
           ...this.createMockWebSocketMetrics().errorCounts,
-          [errorType]: 1
-        }
-      }
+          [errorType]: 1,
+        },
+      },
     };
   }
 
@@ -747,7 +811,7 @@ export class WebSocketTypeMocks {
       userMessages: this.createMockUserMessages(),
       aiMessages: this.createMockAIMessages(),
       systemMessages: this.createMockSystemMessages(),
-      syncMessages: this.createMockSyncMessages()
+      syncMessages: this.createMockSyncMessages(),
     };
   }
 
@@ -778,7 +842,9 @@ export class WebSocketTypeMocks {
   static isValidDeviceInfo(device: any): device is DeviceInfo {
     return (
       device &&
-      ['mobile', 'tablet', 'desktop', 'smartwatch', 'smart_speaker'].includes(device.type) &&
+      ['mobile', 'tablet', 'desktop', 'smartwatch', 'smart_speaker'].includes(
+        device.type
+      ) &&
       typeof device.platform === 'string' &&
       typeof device.userAgent === 'string' &&
       device.capabilities &&

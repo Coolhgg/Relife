@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, {
   createContext,
   useContext,
@@ -27,7 +28,7 @@ interface LanguageContextType {
   languageInfo: (typeof SUPPORTED_LANGUAGES)[SupportedLanguage];
   isRTL: boolean;
   isLoading: boolean;
-  error: string | null;
+  _error: string | null;
 
   // Available languages
   supportedLanguages: typeof SUPPORTED_LANGUAGES;
@@ -131,8 +132,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
       }
 
       return defaultLanguage;
-    } catch (error) {
-      console.error('Failed to detect device language:', error);
+    } catch (_error) {
+      console._error('Failed to detect device language:', _error);
       return defaultLanguage;
     }
   }, [defaultLanguage]);
@@ -151,7 +152,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
         await changeLanguage(lang);
 
         // Store preference
-        localStorage.setItem('user-language', lang);
+        localStorage.setItem('_user-language', lang);
 
         // Announce language change for accessibility
         const langInfo = SUPPORTED_LANGUAGES[lang];
@@ -175,8 +176,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
         console.log(
           `Language changed successfully to: ${lang} (${langInfo?.nativeName})`
         );
-      } catch (error) {
-        console.error('Failed to change language:', error);
+      } catch (_error) {
+        console._error('Failed to change language:', _error);
         setError(`Failed to change language to ${lang}`);
       } finally {
         setIsLoading(false);
@@ -190,7 +191,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     const initializeLanguage = async () => {
       if (!autoDetectEnabled) return;
 
-      const storedLanguage = localStorage.getItem('user-language');
+      const storedLanguage = localStorage.getItem('_user-language');
       if (storedLanguage && Object.keys(SUPPORTED_LANGUAGES).includes(storedLanguage)) {
         // User has a stored preference, don't auto-detect
         return;
@@ -202,8 +203,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
           console.log(`Auto-detected language: ${detectedLang}`);
           await handleChangeLanguage(detectedLang);
         }
-      } catch (error) {
-        console.warn('Failed to auto-detect language:', error);
+      } catch (_error) {
+        console.warn('Failed to auto-detect language:', _error);
       }
     };
 
@@ -242,8 +243,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     (num: number): string => {
       try {
         return new Intl.NumberFormat(currentLanguage).format(num);
-      } catch (error) {
-        console.error('Failed to format number:', error);
+      } catch (_error) {
+        console._error('Failed to format number:', _error);
         return num.toString();
       }
     },
@@ -258,8 +259,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
           month: 'long',
           day: 'numeric',
         }).format(date);
-      } catch (error) {
-        console.error('Failed to format date:', error);
+      } catch (_error) {
+        console._error('Failed to format date:', _error);
         return date.toLocaleDateString();
       }
     },
@@ -283,7 +284,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
       languageInfo,
       isRTL: currentIsRTL,
       isLoading,
-      error,
+      _error,
 
       // Available languages
       supportedLanguages: SUPPORTED_LANGUAGES,

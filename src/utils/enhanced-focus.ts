@@ -123,19 +123,18 @@ export class EnhancedFocusService {
         outline-offset: ${this.settings.focusRingOffset}px !important;
       }
 
-      .skip-link {
-        position: absolute !important;
+      .skip-link { position: absolute !important;
         top: -40px !important;
         left: 6px !important;
         background: #000 !important;
         color: white !important;
         padding: 8px 16px !important;
-        z-index: 100000 !important;
+        z-_index: 100000 !important;
         text-decoration: none !important;
         border-radius: 4px !important;
         font-size: 14px !important;
         transition: top 0.2s ease-in-out !important;
-      }
+       }
 
       .skip-link:focus,
       .skip-link-visible {
@@ -143,16 +142,15 @@ export class EnhancedFocusService {
         outline: 2px solid #fff !important;
       }
 
-      .focus-ring-indicator {
-        position: fixed;
+      .focus-ring-indicator { position: fixed;
         pointer-events: none;
-        z-index: 10000;
+        z-_index: 10000;
         background: transparent;
         transition: all 0.15s ease-out;
         border-radius: 4px;
         opacity: 0;
         box-sizing: border-box;
-      }
+       }
     `;
     document.head.appendChild(this.styleElement);
   }
@@ -165,7 +163,7 @@ export class EnhancedFocusService {
     window.addEventListener('resize', this.handleResize.bind(this));
   }
 
-  private handleFocusIn(event: FocusEvent): void {
+  private handleFocusIn(_event: FocusEvent): void {
     const element = event.target as HTMLElement;
     if (!element) return;
 
@@ -182,7 +180,7 @@ export class EnhancedFocusService {
     this.updateFocusIndicator(element);
   }
 
-  private handleFocusOut(event: FocusEvent): void {
+  private handleFocusOut(_event: FocusEvent): void {
     const element = event.target as HTMLElement;
     if (!element) return;
 
@@ -193,14 +191,14 @@ export class EnhancedFocusService {
     }
   }
 
-  private handleKeyDown(event: KeyboardEvent): void {
+  private handleKeyDown(_event: KeyboardEvent): void {
     // Show focus rings only when navigating with keyboard
     if (
       event.key === 'Tab' ||
       event.key === 'ArrowUp' ||
       event.key === 'ArrowDown' ||
       event.key === 'ArrowLeft' ||
-      event.key === 'ArrowRight'
+      _event.key === 'ArrowRight'
     ) {
       this.isKeyboardNavigating = true;
       document.body.classList.add('keyboard-navigation');
@@ -246,9 +244,9 @@ export class EnhancedFocusService {
       this.focusIndicator.style.width = `${rect.width + offset * 2}px`;
       this.focusIndicator.style.height = `${rect.height + offset * 2}px`;
       this.focusIndicator.style.opacity = '1';
-    } catch (error) {
+    } catch (_error) {
       // Handle getBoundingClientRect errors gracefully
-      console.warn('Focus indicator positioning error:', error);
+      console.warn('Focus indicator positioning _error:', _error);
     }
   }
 
@@ -295,7 +293,7 @@ export class EnhancedFocusService {
             text: `Focused on ${label}`,
           },
         });
-        document.dispatchEvent(event);
+        document.dispatchEvent(_event);
       }
     };
 
@@ -433,8 +431,8 @@ export class EnhancedFocusService {
         if (!indicator.parentNode) {
           document.body.appendChild(indicator);
         }
-      } catch (error) {
-        console.warn('Custom focus indicator positioning error:', error);
+      } catch (_error) {
+        console.warn('Custom focus indicator positioning _error:', _error);
       }
     };
 

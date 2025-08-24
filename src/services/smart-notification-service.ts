@@ -78,7 +78,7 @@ export interface AdaptiveNotification {
 class SmartNotificationService {
   private static instance: SmartNotificationService;
   private isInitialized = false;
-  private config: SmartNotificationConfig;
+  private _config: SmartNotificationConfig;
   private scheduledNotifications: Map<string, AdaptiveNotification> = new Map();
   private userBehaviorPatterns: Map<string, any> = new Map();
   private currentContext: NotificationContext;
@@ -91,7 +91,7 @@ class SmartNotificationService {
   }> = [];
 
   private constructor() {
-    this.config = this.getDefaultConfig();
+    this._config = this.getDefaultConfig();
     this.currentContext = this.getDefaultContext();
   }
 
@@ -140,9 +140,9 @@ class SmartNotificationService {
       this.startContextMonitoring();
 
       this.isInitialized = true;
-    } catch (error) {
-      console.error('Failed to initialize SmartNotificationService:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to initialize SmartNotificationService:', _error);
+      throw _error;
     }
   }
 
@@ -195,27 +195,29 @@ class SmartNotificationService {
     let adaptedTime = new Date(notification.scheduledTime);
     const adaptations: string[] = [];
 
-    if (!this.config.adaptiveEnabled) {
+    if (!this._config.adaptiveEnabled) {
       return adaptedTime;
     }
 
     // 1. Respect quiet hours
     if (this.isInQuietHours(adaptedTime)) {
-      if (notification.priority === 'urgent' && this.config.emergencyOverride) {
+      if (notification.priority === 'urgent' && this._config.emergencyOverride) {
         adaptations.push('Emergency override - quiet hours ignored');
       } else {
-        const quietEnd = this.parseTimeString(this.config.quietHoursEnd);
+        const quietEnd = this.parseTimeString(this._config.quietHoursEnd);
         adaptedTime = new Date(adaptedTime);
         adaptedTime.setHours(quietEnd.hours, quietEnd.minutes, 0, 0);
         if (adaptedTime < notification.scheduledTime) {
           adaptedTime.setDate(adaptedTime.getDate() + 1);
         }
-        adaptations.push(`Delayed to after quiet hours (${this.config.quietHoursEnd})`);
+        adaptations.push(
+          `Delayed to after quiet hours (${this._config.quietHoursEnd})`
+        );
       }
     }
 
     // 2. Check Do Not Disturb
-    if (this.config.respectDoNotDisturb && notification.context.doNotDisturb) {
+    if (this._config.respectDoNotDisturb && notification.context.doNotDisturb) {
       if (notification.priority !== 'urgent') {
         adaptedTime = new Date(adaptedTime.getTime() + 30 * 60 * 1000); // Delay by 30 minutes
         adaptations.push('Delayed due to Do Not Disturb mode');
@@ -224,7 +226,7 @@ class SmartNotificationService {
 
     // 3. Battery optimization
     if (
-      this.config.batteryOptimization &&
+      this._config.batteryOptimization &&
       notification.context.batteryLevel < 20 &&
       !notification.context.isCharging
     ) {
@@ -247,7 +249,7 @@ class SmartNotificationService {
     }
 
     // 5. Location-based adjustments
-    if (this.config.locationAware && notification.context.location) {
+    if (this._config.locationAware && notification.context.location) {
       const locationAdjustment = this.getLocationBasedAdjustment(
         notification.context.location,
         notification.type
@@ -386,7 +388,7 @@ class SmartNotificationService {
       }
     );
 
-    if (notificationsInHour.length >= this.config.maxNotificationsPerHour) {
+    if (notificationsInHour.length >= this._config.maxNotificationsPerHour) {
       // Find next available slot
       const nextSlot = new Date(hourEnd);
       return nextSlot.getTime() - proposedTime.getTime();
@@ -602,8 +604,8 @@ class SmartNotificationService {
   /**
    * Update configuration
    */
-  public async updateConfig(config: Partial<SmartNotificationConfig>): Promise<void> {
-    this.config = { ...this.config, ...config };
+  public async updateConfig(_config: Partial<SmartNotificationConfig>): Promise<void> {
+    this.config = { ...this.config, ..._config };
     await this.saveConfiguration();
   }
 
@@ -643,15 +645,15 @@ class SmartNotificationService {
   private getVibrationPattern(priority: string): number[] {
     return (
       this.config.vibrationPatterns[
-        priority as keyof typeof this.config.vibrationPatterns
-      ] || this.config.vibrationPatterns.normal
+        priority as keyof typeof this._config.vibrationPatterns
+      ] || this._config.vibrationPatterns.normal
     );
   }
 
   private getSoundProfile(timeOfDay: string): string {
     return (
-      this.config.soundProfiles[timeOfDay as keyof typeof this.config.soundProfiles] ||
-      this.config.soundProfiles.morning
+      this.config.soundProfiles[timeOfDay as keyof typeof this._config.soundProfiles] ||
+      this._config.soundProfiles.morning
     );
   }
 
@@ -705,7 +707,7 @@ class SmartNotificationService {
       originalTime,
       adaptedTime,
       reason,
-      effectiveness: 0, // Will be updated when user responds
+      effectiveness: 0, // Will be updated when _user responds
       timestamp: new Date(),
     });
 
@@ -823,7 +825,7 @@ class SmartNotificationService {
   // Persistence methods
   private async saveConfiguration(): Promise<void> {
     if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('smart_notification_config', JSON.stringify(this.config));
+      localStorage.setItem('smart_notification_config', JSON.stringify(this._config));
     }
   }
 
@@ -831,7 +833,7 @@ class SmartNotificationService {
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem('smart_notification_config');
       if (saved) {
-        this.config = { ...this.config, ...JSON.parse(saved) };
+        this.config = { ...this._config, ...JSON.parse(saved) };
       }
     }
   }

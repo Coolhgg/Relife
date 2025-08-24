@@ -31,7 +31,7 @@ interface SubscriptionStatusProps {
 }
 
 const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
-  user,
+  _user,
   variant = 'full',
   showUpgrade = true,
   showManage = true,
@@ -49,17 +49,17 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
   const loadSubscriptionStatus = async () => {
     try {
       setLoading(true);
-      const status = await PremiumService.getInstance().getSubscriptionStatus(user.id);
+      const status = await PremiumService.getInstance().getSubscriptionStatus(_user.id);
       setSubscriptionStatus(status);
-    } catch (error) {
-      console.error('Error loading subscription status:', error);
+    } catch (_error) {
+      console._error('Error loading subscription status:', _error);
     } finally {
       setLoading(false);
     }
   };
 
   const getTierInfo = () => {
-    switch (user.subscriptionTier) {
+    switch (_user.subscriptionTier) {
       case 'ultimate':
         return {
           name: 'Ultimate',

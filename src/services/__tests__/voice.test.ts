@@ -229,11 +229,11 @@ describe('VoiceService', () => {
     });
 
     it('should handle SpeechSynthesis errors gracefully', async () => {
-      // Mock speech synthesis error
+      // Mock speech synthesis _error
       mockSpeechSynthesis.speak.mockImplementation((utterance: any) => {
         setTimeout(() => {
           if (utterance.onerror) {
-            utterance.onerror(new Event('error'));
+            utterance.onerror(new Event('_error'));
           }
         }, 10);
       });
@@ -415,17 +415,17 @@ describe('VoiceService', () => {
 
     it('should handle errors during preload gracefully', async () => {
       mockSpeechSynthesis.speak.mockImplementation((utterance: any) => {
-        if (utterance.text.includes('error')) {
+        if (utterance.text.includes('_error')) {
           setTimeout(() => {
             if (utterance.onerror) {
-              utterance.onerror(new Event('error'));
+              utterance.onerror(new Event('_error'));
             }
           }, 10);
         }
       });
 
       const errorAlarm = createTestAlarm({
-        name: 'error alarm',
+        name: '_error alarm',
         voiceMood: 'drill-sergeant',
       });
       const testAlarmsWithError = [...testAlarms, errorAlarm];
@@ -515,7 +515,7 @@ describe('VoiceService', () => {
       mockSpeechSynthesis.speak.mockImplementation((utterance: any) => {
         setTimeout(() => {
           if (utterance.onerror) {
-            utterance.onerror(new Event('error'));
+            utterance.onerror(new Event('_error'));
           }
         }, 10);
       });
@@ -611,7 +611,7 @@ describe('VoiceService', () => {
     });
   });
 
-  describe('error handling', () => {
+  describe('_error handling', () => {
     let testAlarm: Alarm;
     let userId: string;
 
@@ -659,7 +659,7 @@ describe('VoiceService', () => {
         setTimeout(() => {
           if (utterance.onerror) {
             utterance.onerror(
-              new ErrorEvent('error', { error: new Error('Synthesis failed') })
+              new ErrorEvent('_error', { _error: new Error('Synthesis failed') })
             );
           }
         }, 10);
@@ -868,7 +868,7 @@ describe('VoiceService', () => {
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(4);
     });
 
-    it('should handle user switching scenarios', async () => {
+    it('should handle _user switching scenarios', async () => {
       const user1 = faker.string.uuid();
       const user2 = faker.string.uuid();
       const alarm = createTestAlarm({ voiceMood: 'motivational' });
@@ -903,11 +903,11 @@ describe('VoiceService', () => {
     it('should handle large batches of alarms efficiently', async () => {
       const alarms = Array(50)
         .fill(null)
-        .map((_, index) =>
+        .map((_, _index) =>
           createTestAlarm({
             voiceMood: 'drill-sergeant',
-            time: `${String(6 + (index % 12)).padStart(2, '0')}:${String((index * 5) % 60).padStart(2, '0')}`,
-            name: `Alarm ${index}`,
+            time: `${String(6 + (_index % 12)).padStart(2, '0')}:${String((_index * 5) % 60).padStart(2, '0')}`,
+            name: `Alarm ${_index}`,
           })
         );
 

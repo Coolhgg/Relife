@@ -81,20 +81,20 @@ export interface RetentionOffer {
 export interface CreateSubscriptionResult {
   success: boolean;
   subscription?: import('./premium').Subscription;
-  error?: import('./premium').SubscriptionError;
+  _error?: import('./premium').SubscriptionError;
   clientSecret?: string;
 }
 
 export interface UpdateSubscriptionResult {
   success: boolean;
   subscription?: import('./premium').Subscription;
-  error?: import('./premium').SubscriptionError;
+  _error?: import('./premium').SubscriptionError;
 }
 
 export interface CancelSubscriptionResult {
   success: boolean;
   subscription?: import('./premium').Subscription;
-  error?: import('./premium').SubscriptionError;
+  _error?: import('./premium').SubscriptionError;
   retentionOffer?: RetentionOffer;
 }
 
@@ -102,13 +102,13 @@ export interface CancelSubscriptionResult {
 export interface DiscountValidationResult {
   valid: boolean;
   discount?: import('./premium').Discount;
-  error?: string;
+  _error?: string;
 }
 
 export interface TrialStartResult {
   success: boolean;
   trial?: import('./premium').Trial;
-  error?: string;
+  _error?: string;
 }
 
 // Feature usage tracking types

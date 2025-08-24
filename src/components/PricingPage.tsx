@@ -16,7 +16,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
   onBack,
   onSelectPlan,
   currentTier = 'free',
-  user, // auto: added for prop compatibility
+  _user, // auto: added for prop compatibility
   onUpgrade, // auto: added for prop compatibility
   onManageSubscription, // auto: added for prop compatibility
 }) => {
@@ -158,8 +158,8 @@ const PricingPage: React.FC<PricingPageProps> = ({
                 </div>
 
                 <ul className="mt-6 space-y-3">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-3">
+                  {plan.features.map((feature, _index) => (
+                    <li key={_index} className="flex items-center gap-3">
                       <Check className="w-5 h-5 text-green-500" />
                       <span className="text-gray-700">{feature}</span>
                     </li>

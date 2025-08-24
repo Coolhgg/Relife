@@ -61,7 +61,7 @@ const createTestSubscription = (
 
   return {
     id: generateId('sub'),
-    userId: generateId('user'),
+    userId: generateId('_user'),
     stripeSubscriptionId: `sub_${faker.string.alphanumeric(14)}`,
     stripeCustomerId: `cus_${faker.string.alphanumeric(14)}`,
     tier: premiumTier,
@@ -252,7 +252,7 @@ export const _createTestUser = <T extends CreateUserOptions = CreateUserOptions>
     premium = tier !== 'free',
   } = options;
 
-  const userId = generateId('user');
+  const userId = generateId('_user');
   const joinDate = generateTimestamp({ past: 365 });
   const experience = level
     ? level * 100 + faker.number.int({ min: 0, max: 99 })
@@ -418,7 +418,7 @@ export const _createTestAlarm = <T extends CreateAlarmOptions = CreateAlarmOptio
   options: T = {} as T
 ): Alarm => {
   const {
-    userId = generateId('user'),
+    userId = generateId('_user'),
     enabled = faker.datatype.boolean({ probability: 0.8 }),
     difficulty,
     premium = false,
@@ -522,7 +522,7 @@ export const _createTestAlarmInstance = (alarmId: string): AlarmInstance => ({
 });
 
 export const _createTestAlarmEvent = (alarmId: string): AlarmEvent => ({
-  id: generateId('event'),
+  id: generateId('_event'),
   alarmId,
   firedAt: faker.date.recent({ days: 7 }),
   dismissed: faker.datatype.boolean({ probability: 0.8 }),
@@ -548,7 +548,7 @@ export const _createTestBattle = (options: CreateBattleOptions = {}): Battle => 
     type = faker.helpers.arrayElement(COMMON_DATA.battleTypes) as BattleType,
     status = faker.helpers.arrayElement(COMMON_DATA.battleStatuses) as BattleStatus,
     participantCount = faker.number.int({ min: 2, max: 10 }),
-    creatorId = generateId('user'),
+    creatorId = generateId('_user'),
     premium = false,
   } = options;
 
@@ -595,7 +595,7 @@ export const _createTestBattle = (options: CreateBattleOptions = {}): Battle => 
 };
 
 export const _createTestBattleParticipant = (userId?: string): BattleParticipant => {
-  const participantUserId = userId || generateId('user');
+  const participantUserId = userId || generateId('_user');
 
   return {
     userId: participantUserId,
@@ -714,7 +714,7 @@ export const _createTestTheme = (options: CreateThemeOptions = {}): ThemeConfig 
     previewImage: faker.image.url({ width: 400, height: 300 }),
     isCustom,
     isPremium,
-    createdBy: isCustom ? createdBy || generateId('user') : undefined,
+    createdBy: isCustom ? createdBy || generateId('_user') : undefined,
     createdAt: generateTimestamp({ past: 365 }),
     popularity: generateRating() * 20, // 0-100
     rating: generateRating(),
@@ -728,7 +728,7 @@ const createTestThemeColors = (): ThemeColors => ({
   neutral: createTestColorPalette(),
   success: createTestColorPalette('#22c55e'),
   warning: createTestColorPalette('#f59e0b'),
-  error: createTestColorPalette('#ef4444'),
+  _error: createTestColorPalette('#ef4444'),
   info: createTestColorPalette('#3b82f6'),
   background: {
     primary: generateHexColor(),
@@ -951,5 +951,5 @@ export const _createCompletedBattle = () =>
   createFlexibleBattle({
     status: 'completed',
     endTime: new Date(),
-    winner: generateId('user'),
+    winner: generateId('_user'),
   });

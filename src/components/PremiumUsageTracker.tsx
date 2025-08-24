@@ -49,7 +49,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
     setUsageData((prev: any) => ({
       ...prev,
       isLoading: true,
-      error: undefined,
+      _error: undefined,
     }));
 
     try {
@@ -59,11 +59,11 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
         isLoading: false,
       });
       setLastRefresh(new Date());
-    } catch (error) {
+    } catch (_error) {
       setUsageData((prev: any) => ({
         ...prev,
         isLoading: false,
-        error: error instanceof Error ? error.message : 'Failed to load usage data',
+        error: _error instanceof Error ? _error.message : 'Failed to load usage data',
       }));
     }
   };
@@ -197,11 +197,11 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
         </motion.button>
       </div>
 
-      {usageData.error ? (
+      {usageData._error ? (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
           <div className="flex items-center space-x-2">
             <AlertCircle className="w-4 h-4" />
-            <span>{usageData.error}</span>
+            <span>{usageData._error}</span>
           </div>
         </div>
       ) : (

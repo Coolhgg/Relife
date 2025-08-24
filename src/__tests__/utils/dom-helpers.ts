@@ -7,13 +7,13 @@ import { TEST_CONSTANTS } from './index';
 
 // Element query helpers with enhanced error messages
 export const _domQuery = {
-  // Get element with better error messaging
+  // Get element with better _error messaging
   getByTestId: (testId: string, container?: HTMLElement) => {
     try {
       return container
         ? within(container).getByTestId(testId)
         : screen.getByTestId(testId);
-    } catch (error) {
+    } catch (_error) {
       throw new Error(
         `Element with testid="${testId}" not found. Available test ids: ${getAvailableTestIds(container).join(', ')}`
       );
@@ -27,7 +27,7 @@ export const _domQuery = {
       return container
         ? within(container).getByRole(role as any, options)
         : screen.getByRole(role as any, options);
-    } catch (error) {
+    } catch (_error) {
       const availableRoles = getAvailableRoles(container);
       throw new Error(
         `Element with role="${role}"${name ? ` and name="${name}"` : ''} not found. Available roles: ${availableRoles.join(', ')}`
@@ -60,7 +60,7 @@ export const _domQuery = {
       return await (container
         ? within(container).findByTestId(testId, { timeout })
         : screen.findByTestId(testId, { timeout }));
-    } catch (error) {
+    } catch (_error) {
       throw new Error(
         `Element with testid="${testId}" not found within ${timeout}ms. Available test ids: ${getAvailableTestIds(container).join(', ')}`
       );
@@ -242,10 +242,10 @@ export const _forms = {
 
   // Validate form errors
   expectFormErrors: (expectedErrors: string[], container?: HTMLElement) => {
-    expectedErrors.forEach(error => {
+    expectedErrors.forEach(_error => {
       const errorElement = container
-        ? within(container).getByText(error)
-        : screen.getByText(error);
+        ? within(container).getByText(_error)
+        : screen.getByText(_error);
       expect(errorElement).toBeVisible();
     });
   },

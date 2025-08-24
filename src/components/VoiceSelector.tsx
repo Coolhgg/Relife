@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Crown, Play, Lock, Info, Volume2, Star, Heart, Zap } from 'lucide-react';
+import { Crown, Play, Lock, Info, Volume2, Star, Heart } from 'lucide-react';
 import type { VoiceMood, VoiceMoodConfig, VoicePersonality, User } from '../types';
 import { PremiumVoiceService } from '../services/premium-voice';
 import { PremiumService } from '../services/premium';
@@ -43,8 +43,8 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
       setTimeout(() => {
         setIsTestingVoice(false);
       }, 3000);
-    } catch (error) {
-      console.error('Error testing voice:', error);
+    } catch (_error) {
+      console._error('Error testing voice:', _error);
       setIsTestingVoice(false);
     }
   };
@@ -185,7 +185,7 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
 const VoiceSelector: React.FC<VoiceSelectorProps> = ({
   selectedVoice,
   onVoiceChange,
-  user,
+  _user,
   showUpgradePrompts = true,
 }) => {
   const [availableVoices, setAvailableVoices] = useState<VoiceMoodConfig[]>([]);
@@ -202,17 +202,17 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
   const loadAvailableVoices = async () => {
     try {
       setLoading(true);
-      const voices = await PremiumVoiceService.getAvailableVoices(user.id);
+      const voices = await PremiumVoiceService.getAvailableVoices(_user.id);
       setAvailableVoices(voices);
-    } catch (error) {
-      console.error('Error loading available voices:', error);
+    } catch (_error) {
+      console._error('Error loading available voices:', _error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleVoiceSelect = async (voiceMood: VoiceMood) => {
-    const canAccess = await PremiumVoiceService.canAccessVoice(user.id, voiceMood);
+    const canAccess = await PremiumVoiceService.canAccessVoice(_user.id, voiceMood);
     if (canAccess) {
       onVoiceChange(voiceMood);
     }
@@ -220,9 +220,9 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
 
   const handleVoiceTest = async (voiceMood: VoiceMood) => {
     try {
-      await PremiumVoiceService.testPremiumVoice(voiceMood, user.id);
-    } catch (error) {
-      console.error('Error testing voice:', error);
+      await PremiumVoiceService.testPremiumVoice(voiceMood, _user.id);
+    } catch (_error) {
+      console._error('Error testing voice:', _error);
     }
   };
 
@@ -349,7 +349,8 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
               {voices.map(voice => {
                 const personality = PremiumVoiceService.getVoicePersonality(voice.id);
                 const isLocked =
-                  personality && !availableVoices.some((av: any) => a.v.id === voice.id);
+                  personality &&
+                  !availableVoices.some((av: any) => a.v.id === voice.id);
 
                 return (
                   <VoiceCard

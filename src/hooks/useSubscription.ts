@@ -35,7 +35,7 @@ interface SubscriptionHookState {
   // UI state
   isLoading: boolean;
   isInitialized: boolean;
-  error: string | null;
+  _error: string | null;
   uiState: PremiumUIState;
 
   // Available data
@@ -53,13 +53,13 @@ interface SubscriptionHookActions {
   // Core subscription actions
   createSubscription: (
     request: CreateSubscriptionRequest
-  ) => Promise<{ success: boolean; error?: string; requiresAction?: boolean }>;
+  ) => Promise<{ success: boolean; _error?: string; requiresAction?: boolean }>;
   updateSubscription: (
     request: UpdateSubscriptionRequest
-  ) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; _error?: string }>;
   cancelSubscription: (
     request: CancelSubscriptionRequest
-  ) => Promise<{ success: boolean; error?: string; retentionOffer?: any }>;
+  ) => Promise<{ success: boolean; _error?: string; retentionOffer?: any }>;
 
   // Feature access
   hasFeatureAccess: (featureId: string) => boolean;
@@ -69,17 +69,17 @@ interface SubscriptionHookActions {
   // Payment methods
   addPaymentMethod: (
     paymentMethodId: string
-  ) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; _error?: string }>;
   removePaymentMethod: (
     paymentMethodId: string
-  ) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; _error?: string }>;
   setDefaultPaymentMethod: (
     paymentMethodId: string
-  ) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; _error?: string }>;
 
   // Trials and discounts
-  startFreeTrial: (planId: string) => Promise<{ success: boolean; error?: string }>;
-  validateDiscountCode: (code: string) => Promise<{ valid: boolean; error?: string }>;
+  startFreeTrial: (planId: string) => Promise<{ success: boolean; _error?: string }>;
+  validateDiscountCode: (code: string) => Promise<{ valid: boolean; _error?: string }>;
 
   // Utility functions
   refreshSubscription: () => Promise<void>;
@@ -124,7 +124,7 @@ function useSubscription(
     usage: null,
     isLoading: false,
     isInitialized: false,
-    error: null,
+    _error: null,
     uiState: {
       selectedPlan: undefined,
       isLoading: false,
@@ -154,7 +154,7 @@ function useSubscription(
     const initializeSubscription = async () => {
       if (!userId) return;
 
-      setState((prev: any) => ({ ...prev, isLoading: true, error: null }));
+      setState((prev: any) => ({ ...prev, isLoading: true, _error: null }));
 
       try {
         const dashboardData =
@@ -185,9 +185,9 @@ function useSubscription(
             hasActiveSubscription: !!dashboardData.subscription,
           });
         }
-      } catch (error) {
+      } catch (_error) {
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? _error : new Error(String(_error)),
           'Failed to initialize subscription data',
           { context: 'useSubscription_init', metadata: { userId } }
         );
@@ -196,7 +196,7 @@ function useSubscription(
           ...prev,
           isLoading: false,
           isInitialized: true,
-          error: 'Failed to load subscription data. Please refresh the page.',
+          _error: 'Failed to load subscription data. Please refresh the page.',
         }));
       }
     };
@@ -286,19 +286,19 @@ function useSubscription(
               isProcessingPayment: false,
               currentStep: 'plan_selection',
               errors: {
-                general: result.error || 'Failed to create subscription',
+                general: result._error || 'Failed to create subscription',
               },
             },
           }));
 
           return {
             success: false,
-            error: result.error || 'Failed to create subscription',
+            error: result._error || 'Failed to create subscription',
           };
         }
-      } catch (error) {
+      } catch (_error) {
         const errorMessage =
-          error instanceof Error ? error.message : 'An unexpected error occurred';
+          error instanceof Error ? error.message : 'An unexpected _error occurred';
 
         setState((prev: any) => ({
           ...prev,
@@ -310,7 +310,7 @@ function useSubscription(
           },
         }));
 
-        return { success: false, error: errorMessage };
+        return { success: false, _error: errorMessage };
       }
     },
     [userId]
@@ -319,10 +319,10 @@ function useSubscription(
   const updateSubscription = useCallback(
     async (request: UpdateSubscriptionRequest) => {
       if (!state.subscription) {
-        return { success: false, error: 'No active subscription found' };
+        return { success: false, _error: 'No active subscription found' };
       }
 
-      setState((prev: any) => ({ ...prev, isLoading: true, error: null }));
+      setState((prev: any) => ({ ...prev, isLoading: true, _error: null }));
 
       try {
         const result = await subscriptionService.current.updateSubscription(
@@ -348,16 +348,16 @@ function useSubscription(
 
         setState((prev: any) => ({ ...prev, isLoading: false }));
         return result;
-      } catch (error) {
+      } catch (_error) {
         const errorMessage =
-          error instanceof Error ? error.message : 'Failed to update subscription';
+          error instanceof Error ? _error.message : 'Failed to update subscription';
 
         setState((prev: any) => ({
           ...prev,
           isLoading: false,
-          error: errorMessage,
+          _error: errorMessage,
         }));
-        return { success: false, error: errorMessage };
+        return { success: false, _error: errorMessage };
       }
     },
     [userId, state.subscription]
@@ -366,10 +366,10 @@ function useSubscription(
   const cancelSubscription = useCallback(
     async (request: CancelSubscriptionRequest) => {
       if (!state.subscription) {
-        return { success: false, error: 'No active subscription found' };
+        return { success: false, _error: 'No active subscription found' };
       }
 
-      setState((prev: any) => ({ ...prev, isLoading: true, error: null }));
+      setState((prev: any) => ({ ...prev, isLoading: true, _error: null }));
 
       try {
         const result = await subscriptionService.current.cancelSubscription(
@@ -395,16 +395,16 @@ function useSubscription(
 
         setState((prev: any) => ({ ...prev, isLoading: false }));
         return result;
-      } catch (error) {
+      } catch (_error) {
         const errorMessage =
-          error instanceof Error ? error.message : 'Failed to cancel subscription';
+          error instanceof Error ? _error.message : 'Failed to cancel subscription';
 
         setState((prev: any) => ({
           ...prev,
           isLoading: false,
-          error: errorMessage,
+          _error: errorMessage,
         }));
-        return { success: false, error: errorMessage };
+        return { success: false, _error: errorMessage };
       }
     },
     [userId, state.subscription]
@@ -446,8 +446,8 @@ function useSubscription(
             featureAccess: updatedFeatureAccess,
           }));
         }
-      } catch (error) {
-        console.error('Failed to track feature usage:', error);
+      } catch (_error) {
+        console._error('Failed to track feature usage:', _error);
       }
     },
     [userId, state.featureAccess]
@@ -470,11 +470,11 @@ function useSubscription(
         await stripeService.current.addPaymentMethod(userId, paymentMethodId);
         await refreshSubscription();
         return { success: true };
-      } catch (error) {
+      } catch (_error) {
         return {
           success: false,
           error:
-            error instanceof Error ? error.message : 'Failed to add payment method',
+            error instanceof Error ? _error.message : 'Failed to add payment method',
         };
       }
     },
@@ -486,11 +486,11 @@ function useSubscription(
       await stripeService.current.removePaymentMethod(paymentMethodId);
       await refreshSubscription();
       return { success: true };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         error:
-          error instanceof Error ? error.message : 'Failed to remove payment method',
+          error instanceof Error ? _error.message : 'Failed to remove payment method',
       };
     }
   }, []);
@@ -501,12 +501,12 @@ function useSubscription(
       // Call API to set default payment method
       await refreshSubscription();
       return { success: true };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         error:
           error instanceof Error
-            ? error.message
+            ? _error.message
             : 'Failed to set default payment method',
       };
     }
@@ -523,10 +523,10 @@ function useSubscription(
         }
 
         return result;
-      } catch (error) {
+      } catch (_error) {
         return {
           success: false,
-          error: error instanceof Error ? error.message : 'Failed to start free trial',
+          error: error instanceof Error ? _error.message : 'Failed to start free trial',
         };
       }
     },
@@ -537,11 +537,13 @@ function useSubscription(
     async (code: string) => {
       try {
         return await subscriptionService.current.validateDiscountCode(userId, code);
-      } catch (error) {
+      } catch (_error) {
         return {
           valid: false,
           error:
-            error instanceof Error ? error.message : 'Failed to validate discount code',
+            error instanceof Error
+              ? _error.message
+              : 'Failed to validate discount code',
         };
       }
     },
@@ -568,13 +570,13 @@ function useSubscription(
         invoiceHistory: dashboardData.invoiceHistory,
         upcomingInvoice: dashboardData.upcomingInvoice,
       }));
-    } catch (error) {
-      console.error('Failed to refresh subscription data:', error);
+    } catch (_error) {
+      console._error('Failed to refresh subscription data:', _error);
     }
   }, [userId]);
 
   const clearError = useCallback(() => {
-    setState((prev: any) => ({ ...prev, error: null }));
+    setState((prev: any) => ({ ...prev, _error: null }));
   }, []);
 
   const resetUIState = useCallback(() => {

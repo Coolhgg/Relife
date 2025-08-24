@@ -25,7 +25,7 @@ export class MobilePerformanceService {
   private observers: Map<string, IntersectionObserver> = new Map();
   private performanceMetrics: PerformanceMetrics;
   private listeners: Array<(metrics: PerformanceMetrics) => void> = [];
-  private config: PerformanceConfig;
+  private _config: PerformanceConfig;
   private monitoringInterval?: number;
   private isLowPowerMode = false;
 
@@ -39,7 +39,7 @@ export class MobilePerformanceService {
   };
 
   private constructor() {
-    this.config = { ...this.defaultConfig };
+    this._config = { ...this.defaultConfig };
     this.performanceMetrics = {
       memoryUsage: 0,
       memoryLimit: 0,
@@ -57,22 +57,22 @@ export class MobilePerformanceService {
   }
 
   // Initialize performance monitoring with config
-  initialize(config?: Partial<PerformanceConfig>): void {
-    if (config) {
-      this.config = { ...this.config, ...config };
+  initialize(_config?: Partial<PerformanceConfig>): void {
+    if (_config) {
+      this.config = { ...this.config, ..._config };
     }
 
     this.setupIntersectionObserver();
 
-    if (this.config.enableMemoryMonitoring) {
+    if (this._config.enableMemoryMonitoring) {
       this.setupMemoryMonitoring();
     }
 
-    if (this.config.enableBatteryOptimization) {
+    if (this._config.enableBatteryOptimization) {
       this.setupBatteryOptimization();
     }
 
-    if (this.config.enableNetworkOptimization) {
+    if (this._config.enableNetworkOptimization) {
       this.setupNetworkOptimization();
     }
 
@@ -81,7 +81,7 @@ export class MobilePerformanceService {
 
     console.log(
       '[Performance] Mobile optimizations initialized with config:',
-      this.config
+      this._config
     );
   }
 
@@ -90,7 +90,7 @@ export class MobilePerformanceService {
     const options = {
       root: null,
       rootMargin: '50px',
-      threshold: this.config.lazyLoadingThreshold,
+      threshold: this._config.lazyLoadingThreshold,
     };
 
     const imageObserver = new IntersectionObserver(entries => {
@@ -149,7 +149,7 @@ export class MobilePerformanceService {
       this.performanceMetrics.lastUpdated = Date.now();
 
       // Trigger warnings and optimizations
-      if (usagePercent > this.config.memoryWarningThreshold) {
+      if (usagePercent > this._config.memoryWarningThreshold) {
         this.handleHighMemoryUsage();
       }
 
@@ -180,7 +180,7 @@ export class MobilePerformanceService {
     if ('gc' in window && typeof (window as any).gc === 'function') {
       try {
         (window as any).gc();
-      } catch (e) {
+      } catch (_e) {
         console.warn('[Performance] Manual GC failed:', e);
       }
     }
@@ -189,8 +189,8 @@ export class MobilePerformanceService {
     this.listeners.forEach(listener => {
       try {
         listener(this.performanceMetrics);
-      } catch (e) {
-        console.error('[Performance] Listener error:', e);
+      } catch (_e) {
+        console._error('[Performance] Listener _error:', e);
       }
     });
   }
@@ -210,7 +210,7 @@ export class MobilePerformanceService {
           this.performanceMetrics.batteryCharging = battery.charging;
           this.performanceMetrics.lastUpdated = Date.now();
 
-          const isLowBattery = battery.level < this.config.batteryLowThreshold;
+          const isLowBattery = battery.level < this._config.batteryLowThreshold;
           const shouldOptimize = isLowBattery && !battery.charging;
 
           if (shouldOptimize && !this.isLowPowerMode) {
@@ -231,8 +231,8 @@ export class MobilePerformanceService {
         battery.addEventListener('chargingtimechange', updateBatteryStatus);
         battery.addEventListener('dischargingtimechange', updateBatteryStatus);
       })
-      .catch((error: any) => {
-        console.warn('[Performance] Battery API error:', error);
+      .catch((_error: any) => {
+        console.warn('[Performance] Battery API _error:', _error);
       });
   }
 
@@ -355,7 +355,7 @@ export class MobilePerformanceService {
         });
 
         observer.observe({ entryTypes: ['measure', 'mark'] });
-      } catch (e) {
+      } catch (_e) {
         console.warn('[Performance] PerformanceObserver setup failed:', e);
       }
     }
@@ -425,9 +425,9 @@ export class MobilePerformanceService {
   subscribe(listener: (metrics: PerformanceMetrics) => void): () => void {
     this.listeners.push(listener);
     return () => {
-      const index = this.listeners.indexOf(listener);
-      if (index > -1) {
-        this.listeners.splice(index, 1);
+      const _index = this.listeners.indexOf(listener);
+      if (_index > -1) {
+        this.listeners.splice(_index, 1);
       }
     };
   }
@@ -437,8 +437,8 @@ export class MobilePerformanceService {
     this.listeners.forEach(listener => {
       try {
         listener(this.getMetrics());
-      } catch (error) {
-        console.error('[Performance] Listener error:', error);
+      } catch (_error) {
+        console.error('[Performance] Listener _error:', _error);
       }
     });
   }
@@ -451,7 +451,7 @@ export class MobilePerformanceService {
 
     // Clear any unnecessary intervals
     this.cleanup();
-    this.initialize(this.config);
+    this.initialize(this._config);
   }
 
   // Cleanup method

@@ -165,10 +165,10 @@ export function useProfileAnnouncements() {
 
   // Announce profile save error
   const announceSaveError = useCallback(
-    (error: string) => {
+    (_error: string) => {
       announce({
-        type: 'error',
-        message: `Failed to update profile: ${error}`,
+        type: '_error',
+        message: `Failed to update profile: ${_error}`,
         priority: 'assertive',
       });
     },

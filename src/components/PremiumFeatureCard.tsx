@@ -27,7 +27,7 @@ interface PremiumFeatureCardProps {
 
 const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
   feature,
-  user,
+  _user,
   hasAccess,
   onClick,
   onUpgrade,

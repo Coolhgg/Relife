@@ -33,11 +33,11 @@ const mockT = jest.fn((key, options) => {
     'error.permission': 'Permission denied',
     'error.not_found': 'Resource not found',
     'error.server': 'Server error occurred',
-    'error.validation': 'Validation failed: {{details}}',
+    '_error.validation': 'Validation failed: {{details }}',
     'loading.started': 'Loading started',
     'loading.progress': 'Loading {{progress}}% complete',
     'loading.completed': 'Loading completed',
-    'loading.failed': 'Loading failed: {{error}}',
+    'loading.failed': 'Loading failed: { {_error }}',
     'retry.attempting': 'Attempting retry {{attempt}} of {{maxAttempts}}',
     'retry.succeeded': 'Operation succeeded after retry',
     'retry.failed': 'All retry attempts failed',
@@ -79,9 +79,9 @@ describe('useErrorLoadingAnnouncements', () => {
       await result.current.announceError('general');
     });
 
-    expect(mockT).toHaveBeenCalledWith('error.general');
+    expect(mockT).toHaveBeenCalledWith('_error.general');
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
-      'An error occurred'
+      'An _error occurred'
     );
   });
 
@@ -92,7 +92,7 @@ describe('useErrorLoadingAnnouncements', () => {
       await result.current.announceError('network');
     });
 
-    expect(mockT).toHaveBeenCalledWith('error.network');
+    expect(mockT).toHaveBeenCalledWith('_error.network');
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
       'Network connection failed'
     );
@@ -105,13 +105,13 @@ describe('useErrorLoadingAnnouncements', () => {
       await result.current.announceError('authentication');
     });
 
-    expect(mockT).toHaveBeenCalledWith('error.authentication');
+    expect(mockT).toHaveBeenCalledWith('_error.authentication');
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
       'Authentication failed'
     );
   });
 
-  it('should announce custom error messages', async () => {
+  it('should announce custom _error messages', async () => {
     const { result } = renderHook(() => useErrorLoadingAnnouncements());
 
     const customError = {
@@ -137,7 +137,7 @@ describe('useErrorLoadingAnnouncements', () => {
       });
     });
 
-    expect(mockT).toHaveBeenCalledWith('error.validation', {
+    expect(mockT).toHaveBeenCalledWith('_error.validation', {
       details: 'Email format is invalid',
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
@@ -194,7 +194,7 @@ describe('useErrorLoadingAnnouncements', () => {
     });
 
     expect(mockT).toHaveBeenCalledWith('loading.failed', {
-      error: 'Connection timeout',
+      _error: 'Connection timeout',
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
       'Loading failed: Connection timeout'
@@ -243,7 +243,7 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should handle error objects with proper extraction', async () => {
+  it('should handle _error objects with proper extraction', async () => {
     const { result } = renderHook(() => useErrorLoadingAnnouncements());
 
     const errorObj = new Error('Network request failed');
@@ -257,7 +257,7 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should handle API error responses', async () => {
+  it('should handle API _error responses', async () => {
     const { result } = renderHook(() => useErrorLoadingAnnouncements());
 
     const apiError = {
@@ -322,7 +322,7 @@ describe('useErrorLoadingAnnouncements', () => {
     expect(mockAnnouncementService.announceAssertive).not.toHaveBeenCalled();
   });
 
-  it('should handle complex error scenarios', async () => {
+  it('should handle complex _error scenarios', async () => {
     const { result } = renderHook(() => useErrorLoadingAnnouncements());
 
     const complexError = {
@@ -364,7 +364,7 @@ describe('useErrorLoadingAnnouncements', () => {
   });
 
   it('should handle errors in announcement service gracefully', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
     mockAnnouncementService.announceAssertive.mockRejectedValue(
       new Error('Announcement failed')
     );
@@ -376,14 +376,14 @@ describe('useErrorLoadingAnnouncements', () => {
     });
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      'Failed to announce error:',
+      'Failed to announce _error:',
       expect.any(Error)
     );
 
     consoleSpy.mockRestore();
   });
 
-  it('should support contextual error announcements', async () => {
+  it('should support contextual _error announcements', async () => {
     const { result } = renderHook(() => useErrorLoadingAnnouncements());
 
     const context = {
@@ -401,7 +401,7 @@ describe('useErrorLoadingAnnouncements', () => {
     });
 
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
-      'Alarm creation error: Time format is invalid. Check the help section for time format examples.'
+      'Alarm creation _error: Time format is invalid. Check the help section for time format examples.'
     );
   });
 
@@ -426,7 +426,7 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should support error recovery suggestions', async () => {
+  it('should support _error recovery suggestions', async () => {
     const { result } = renderHook(() => useErrorLoadingAnnouncements());
 
     const errorWithSuggestion = {

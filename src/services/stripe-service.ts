@@ -26,7 +26,7 @@ class StripeService {
   private static instance: StripeService;
   private stripe: Stripe | null = null;
   private isInitialized = false;
-  private config: StripeConfig | null = null;
+  private _config: StripeConfig | null = null;
 
   private constructor() {}
 
@@ -40,13 +40,13 @@ class StripeService {
   /**
    * Initialize Stripe with configuration
    */
-  public async initialize(config: StripeConfig): Promise<void> {
+  public async initialize(_config: StripeConfig): Promise<void> {
     try {
       if (typeof window !== 'undefined') {
         const { loadStripe } = await import('@stripe/stripe-js');
         this.stripe = await loadStripe(config.publishableKey, {
-          apiVersion: config.apiVersion as any,
-          appInfo: config.appInfo,
+          apiVersion: _config.apiVersion as any,
+          appInfo: _config.appInfo,
         });
       }
 
@@ -54,9 +54,9 @@ class StripeService {
       this.isInitialized = true;
 
       console.log('Stripe service initialized successfully');
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to initialize Stripe service',
         { context: 'stripe_initialization' }
       );
@@ -104,9 +104,9 @@ class StripeService {
 
       const data = await response.json();
       return data.customerId;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to create Stripe customer',
         { context: 'create_customer', metadata: { userId, email } }
       );
@@ -161,17 +161,17 @@ class StripeService {
           details: data.error?.details,
           retryable: data.error?.retryable || false,
           userFriendlyMessage:
-            data.error?.userFriendlyMessage ||
+            data._error?.userFriendlyMessage ||
             'Unable to create subscription. Please try again.',
         };
 
-        analytics.trackError(new Error(error.message), 'subscription_creation_failed', {
-          userId,
-          planId: request.planId,
-          errorCode: error.code,
-        });
+        analytics.trackError(
+          new Error(_error.message),
+          'subscription_creation_failed',
+          { userId, planId: request.planId, errorCode: _error.code }
+        );
 
-        return { subscription: null as any, requiresAction: false, error };
+        return { subscription: null as any, requiresAction: false, _error };
       }
 
       // Save subscription to our database
@@ -193,23 +193,23 @@ class StripeService {
         clientSecret: data.client_secret,
         requiresAction: data.requires_action || false,
       };
-    } catch (error) {
+    } catch (_error) {
       const analytics = AnalyticsService.getInstance();
       analytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'subscription_creation_error',
         { userId, planId: request.planId }
       );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'Failed to create subscription',
         { context: 'create_subscription', metadata: { userId, request } }
       );
 
       const subscriptionError: SubscriptionError = {
         code: 'subscription_creation_failed',
-        message: error instanceof Error ? error.message : String(error),
+        message: error instanceof Error ? _error.message : String(_error),
         retryable: true,
         userFriendlyMessage:
           'Unable to create subscription. Please check your payment method and try again.',
@@ -218,7 +218,7 @@ class StripeService {
       return {
         subscription: null as any,
         requiresAction: false,
-        error: subscriptionError,
+        _error: subscriptionError,
       };
     }
   }
@@ -250,11 +250,11 @@ class StripeService {
           details: data.error?.details,
           retryable: data.error?.retryable || false,
           userFriendlyMessage:
-            data.error?.userFriendlyMessage ||
+            data._error?.userFriendlyMessage ||
             'Unable to update subscription. Please try again.',
         };
 
-        return { subscription: null as any, effectiveDate: new Date(), error };
+        return { subscription: null as any, effectiveDate: new Date(), _error };
       }
 
       // Update subscription in our database
@@ -270,9 +270,9 @@ class StripeService {
         prorationAmount: data.proration_amount,
         effectiveDate: new Date(data.effective_date),
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to update subscription',
         {
           context: 'update_subscription',
@@ -282,7 +282,7 @@ class StripeService {
 
       const subscriptionError: SubscriptionError = {
         code: 'subscription_update_failed',
-        message: error instanceof Error ? error.message : String(error),
+        message: error instanceof Error ? _error.message : String(_error),
         retryable: true,
         userFriendlyMessage: 'Unable to update subscription. Please try again.',
       };
@@ -290,7 +290,7 @@ class StripeService {
       return {
         subscription: null as any,
         effectiveDate: new Date(),
-        error: subscriptionError,
+        _error: subscriptionError,
       };
     }
   }
@@ -325,11 +325,11 @@ class StripeService {
           details: data.error?.details,
           retryable: data.error?.retryable || false,
           userFriendlyMessage:
-            data.error?.userFriendlyMessage ||
+            data._error?.userFriendlyMessage ||
             'Unable to cancel subscription. Please contact support.',
         };
 
-        return { subscription: null as any, effectiveDate: new Date(), error };
+        return { subscription: null as any, effectiveDate: new Date(), _error };
       }
 
       // Update subscription in our database
@@ -356,9 +356,9 @@ class StripeService {
         effectiveDate: new Date(data.effective_date),
         retentionOffer: data.retention_offer,
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to cancel subscription',
         {
           context: 'cancel_subscription',
@@ -368,7 +368,7 @@ class StripeService {
 
       const subscriptionError: SubscriptionError = {
         code: 'subscription_cancel_failed',
-        message: error instanceof Error ? error.message : String(error),
+        message: error instanceof Error ? _error.message : String(_error),
         retryable: true,
         userFriendlyMessage: 'Unable to cancel subscription. Please contact support.',
       };
@@ -376,7 +376,7 @@ class StripeService {
       return {
         subscription: null as any,
         effectiveDate: new Date(),
-        error: subscriptionError,
+        _error: subscriptionError,
       };
     }
   }
@@ -411,9 +411,9 @@ class StripeService {
 
       const data = await response.json();
       return await this.savePaymentMethodToDatabase(userId, data.paymentMethod);
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to add payment method',
         {
           context: 'add_payment_method',
@@ -442,9 +442,9 @@ class StripeService {
         .from('payment_methods')
         .delete()
         .eq('stripe_payment_method_id', paymentMethodId);
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to remove payment method',
         { context: 'remove_payment_method', metadata: { paymentMethodId } }
       );
@@ -457,20 +457,20 @@ class StripeService {
    */
   public async getPaymentMethods(userId: string): Promise<PaymentMethod[]> {
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('payment_methods')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        throw error;
+      if (_error) {
+        throw _error;
       }
 
       return data.map(this.mapDatabasePaymentMethod) || [];
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get payment methods',
         { context: 'get_payment_methods', metadata: { userId } }
       );
@@ -515,9 +515,9 @@ class StripeService {
         clientSecret: data.client_secret,
         id: data.id,
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to create payment intent',
         {
           context: 'create_payment_intent',
@@ -549,14 +549,14 @@ class StripeService {
         redirect: 'if_required',
       });
 
-      if (result.error) {
-        throw new Error(result.error.message);
+      if (result._error) {
+        throw new Error(result._error.message);
       }
 
       return result.paymentIntent;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to confirm payment',
         { context: 'confirm_payment' }
       );
@@ -569,7 +569,7 @@ class StripeService {
    */
   public async getSubscription(subscriptionId: string): Promise<Subscription | null> {
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('subscriptions')
         .select(
           `
@@ -580,14 +580,14 @@ class StripeService {
         .eq('id', subscriptionId)
         .single();
 
-      if (error || !data) {
+      if (_error || !data) {
         return null;
       }
 
       return this.mapDatabaseSubscription(data);
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get subscription',
         { context: 'get_subscription', metadata: { subscriptionId } }
       );
@@ -600,7 +600,7 @@ class StripeService {
    */
   public async getUserSubscription(userId: string): Promise<Subscription | null> {
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('subscriptions')
         .select(
           `
@@ -612,14 +612,14 @@ class StripeService {
         .eq('status', 'active')
         .single();
 
-      if (error || !data) {
+      if (_error || !data) {
         return null;
       }
 
       return this.mapDatabaseSubscription(data);
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get user subscription',
         { context: 'get_user_subscription', metadata: { userId } }
       );
@@ -632,21 +632,21 @@ class StripeService {
    */
   public async getUserInvoices(userId: string, limit: number = 20): Promise<Invoice[]> {
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('invoices')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(limit);
 
-      if (error) {
-        throw error;
+      if (_error) {
+        throw _error;
       }
 
       return data.map(this.mapDatabaseInvoice) || [];
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get user invoices',
         { context: 'get_user_invoices', metadata: { userId } }
       );
@@ -682,9 +682,9 @@ class StripeService {
         valid: data.valid,
         discount: data.discount,
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to apply discount code',
         { context: 'apply_discount_code', metadata: { customerId, code } }
       );
@@ -707,9 +707,9 @@ class StripeService {
 
       const data = await response.json();
       return this.mapStripeInvoice(data.invoice);
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get upcoming invoice',
         { context: 'get_upcoming_invoice', metadata: { subscriptionId } }
       );
@@ -729,7 +729,7 @@ class StripeService {
       .eq('id', userId)
       .single();
 
-    if (!user) {
+    if (!_user) {
       throw new Error('User not found');
     }
 
@@ -747,20 +747,20 @@ class StripeService {
     }
 
     // Create new Stripe customer
-    return await this.createCustomer(userId, user.email, user.name);
+    return await this.createCustomer(userId, user.email, _user.name);
   }
 
   private async getPriceIdForPlan(
     planId: string,
     billingInterval: string
   ): Promise<string> {
-    const { data: plan, error } = await supabase
+    const { data: plan, _error } = await supabase
       .from('subscription_plans')
       .select('pricing')
       .eq('id', planId)
       .single();
 
-    if (error || !plan) {
+    if (_error || !plan) {
       throw new Error('Subscription plan not found');
     }
 
@@ -809,14 +809,14 @@ class StripeService {
       metadata: stripeSubscription.metadata || {},
     };
 
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('subscriptions')
       .insert(subscriptionData)
       .select()
       .single();
 
-    if (error) {
-      throw error;
+    if (_error) {
+      throw _error;
     }
 
     return this.mapDatabaseSubscription(data);
@@ -843,15 +843,15 @@ class StripeService {
       updated_at: new Date(),
     };
 
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('subscriptions')
       .update(updateData)
       .eq('stripe_subscription_id', stripeSubscription.id)
       .select()
       .single();
 
-    if (error) {
-      throw error;
+    if (_error) {
+      throw _error;
     }
 
     return this.mapDatabaseSubscription(data);
@@ -878,14 +878,14 @@ class StripeService {
       billing_details: stripePaymentMethod.billing_details,
     };
 
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('payment_methods')
       .insert(paymentMethodData)
       .select()
       .single();
 
-    if (error) {
-      throw error;
+    if (_error) {
+      throw _error;
     }
 
     return this.mapDatabasePaymentMethod(data);

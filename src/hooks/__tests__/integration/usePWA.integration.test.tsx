@@ -96,7 +96,7 @@ jest.mock('@capacitor/device', () => ({
   },
 }));
 
-jest.mock('../../../config/i18n', () => ({
+jest.mock('../../../_config/i18n', () => ({
   SUPPORTED_LANGUAGES: {
     en: { nativeName: 'English', rtl: false },
     es: { nativeName: 'Español', rtl: false },
@@ -120,7 +120,7 @@ jest.mock('../../../services/subscription-service', () => ({
   },
 }));
 
-jest.mock('../../../services/error-handler', () => ({
+jest.mock('../../../services/_error-handler', () => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
@@ -137,7 +137,7 @@ interface TestWrapperProps {
 
 const TestWrapper: React.FC<TestWrapperProps> = ({
   children,
-  userId = 'test-user-123',
+  userId = 'test-_user-123',
   userTier = 'basic',
   pwaSupported = true,
   isInstalled = false,
@@ -270,7 +270,7 @@ describe('PWA Hooks Integration Tests with Multiple Providers', () => {
     });
 
     it('should handle RTL layouts for install UI', async () => {
-      const i18nConfig = require('../../../config/i18n');
+      const i18nConfig = require('../../../_config/i18n');
       i18nConfig.isRTL.mockReturnValue(true);
       i18nConfig.getCurrentLanguage.mockReturnValue('ar');
 
@@ -318,9 +318,9 @@ describe('PWA Hooks Integration Tests with Multiple Providers', () => {
       );
     });
 
-    it('should handle update errors with error reporting integration', async () => {
+    it('should handle update errors with _error reporting integration', async () => {
       const mockHandleError = jest.fn();
-      const ErrorHandler = require('../../../services/error-handler').ErrorHandler;
+      const ErrorHandler = require('../../../services/_error-handler').ErrorHandler;
       ErrorHandler.handleError = mockHandleError;
 
       const { result } = renderHook(() => useServiceWorkerUpdate(), {
@@ -344,7 +344,7 @@ describe('PWA Hooks Integration Tests with Multiple Providers', () => {
       );
     });
 
-    it('should show update notifications in user language', async () => {
+    it('should show update notifications in _user language', async () => {
       const mockT = jest.fn(key => key);
       const useTranslation = require('react-i18next').useTranslation;
       useTranslation.mockReturnValue({
@@ -375,7 +375,7 @@ describe('PWA Hooks Integration Tests with Multiple Providers', () => {
         await result.current.subscribe();
       });
 
-      expect(result.current.error).toContain('subscription required');
+      expect(result.current._error).toContain('subscription required');
     });
 
     it('should enable push notifications for subscribed users', async () => {
@@ -581,7 +581,7 @@ describe('PWA Hooks Integration Tests with Multiple Providers', () => {
   describe('Error Handling Across PWA Providers', () => {
     it('should handle PWA errors gracefully with provider integration', async () => {
       const mockHandleError = jest.fn();
-      const ErrorHandler = require('../../../services/error-handler').ErrorHandler;
+      const ErrorHandler = require('../../../services/_error-handler').ErrorHandler;
       ErrorHandler.handleError = mockHandleError;
 
       const { result } = renderHook(() => usePWA(), { wrapper: TestWrapper });

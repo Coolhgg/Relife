@@ -51,7 +51,7 @@ jest.mock('../../services/stripe-service', () => ({
   },
 }));
 
-jest.mock('../../services/error-handler', () => ({
+jest.mock('../../services/_error-handler', () => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
@@ -189,7 +189,7 @@ describe('useSubscription Hook', () => {
       expect(result.current.usage).toBeNull();
       expect(result.current.isLoading).toBe(false);
       expect(result.current.isInitialized).toBe(false);
-      expect(result.current.error).toBeNull();
+      expect(result.current._error).toBeNull();
       expect(result.current.availablePlans).toEqual([]);
       expect(result.current.paymentMethods).toEqual([]);
       expect(result.current.invoiceHistory).toEqual([]);
@@ -225,7 +225,7 @@ describe('useSubscription Hook', () => {
         expect(result.current.isInitialized).toBe(true);
       });
 
-      expect(result.current.error).toBe(
+      expect(result.current._error).toBe(
         'Failed to load subscription data. Please refresh the page.'
       );
       expect(result.current.subscription).toBeNull();
@@ -309,7 +309,7 @@ describe('useSubscription Hook', () => {
       const mockService = SubscriptionService.getInstance();
       mockService.createSubscription.mockResolvedValue({
         success: false,
-        error: 'Payment failed',
+        _error: 'Payment failed',
       });
 
       const { result } = renderHookWithProviders(() =>
@@ -333,7 +333,7 @@ describe('useSubscription Hook', () => {
 
       expect(createResult).toEqual({
         success: false,
-        error: 'Payment failed',
+        _error: 'Payment failed',
       });
       expect(result.current.uiState.errors.general).toBe('Payment failed');
     });
@@ -389,7 +389,7 @@ describe('useSubscription Hook', () => {
 
       expect(updateResult).toEqual({
         success: false,
-        error: 'No active subscription found',
+        _error: 'No active subscription found',
       });
     });
   });
@@ -634,7 +634,7 @@ describe('useSubscription Hook', () => {
       const mockService = SubscriptionService.getInstance();
       mockService.validateDiscountCode.mockResolvedValue({
         valid: false,
-        error: 'Invalid discount code',
+        _error: 'Invalid discount code',
       });
 
       const { result } = renderHookWithProviders(() =>
@@ -652,7 +652,7 @@ describe('useSubscription Hook', () => {
 
       expect(validationResult).toEqual({
         valid: false,
-        error: 'Invalid discount code',
+        _error: 'Invalid discount code',
       });
     });
   });
@@ -805,7 +805,7 @@ describe('useSubscription Hook', () => {
         result.current.clearError();
       });
 
-      expect(result.current.error).toBeNull();
+      expect(result.current._error).toBeNull();
     });
 
     it('should reset UI state', async () => {

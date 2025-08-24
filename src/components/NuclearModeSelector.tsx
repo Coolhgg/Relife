@@ -102,8 +102,8 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
         setUserTier(access.userTier);
         setUpgradeUrl(access.upgradeUrl);
         setChallengeTypes(types);
-      } catch (error) {
-        console.error('Error checking nuclear mode access:', error);
+      } catch (_error) {
+        console._error('Error checking nuclear mode access:', _error);
       } finally {
         setIsLoading(false);
       }

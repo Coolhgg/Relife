@@ -337,7 +337,9 @@ export function ActiveAlarm({
                       <Input
                         type="number"
                         value={challengeAnswer}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setChallengeAnswer(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setChallengeAnswer(e.target.value)
+                        }
                         placeholder="Your answer"
                         className="text-center text-lg"
                         autoFocus
@@ -360,9 +362,9 @@ export function ActiveAlarm({
                       <p className="text-sm">Complete all tasks below:</p>
                     </div>
 
-                    {currentChallenge.tasks.map((task: string, index: number) => (
+                    {currentChallenge.tasks.map((task: string, _index: number) => (
                       <div
-                        key={index}
+                        key={_index}
                         className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
                       >
                         <span

@@ -158,9 +158,8 @@
 //         setTestProgress(((i + 1) / tests.length) * 100);
 //         // Small delay between tests
 //         await new Promise(resolve => setTimeout(resolve, 200));
-//       } catch (error) {
-//         console.error(`Test ${tests[i].name} failed:`, error);
-//         updateTestResult(tests[i].name, 'fail', `Test failed: ${error}`);
+//       } catch (_error) { //         console._error(`Test ${tests[i].name } failed:`, _error);
+//         updateTestResult(tests[i].name, 'fail', `Test failed: ${_error}`);
 //       }
 //     }
 //
@@ -613,9 +612,9 @@
 //             <div className="space-y-4">
 //               <h3 className="text-lg font-medium">Test Results</h3>
 //               <div className="space-y-3">
-//                 {testResults.map((result, index
+//                 {testResults.map((result, _index
 // ) => (
-//                   <div key={index} className="border rounded-lg p-4">
+//                   <div key={_index} className="border rounded-lg p-4">
 //                     <div className="flex items-center justify-between">
 //                       <div className="flex items-center space-x-3">
 //                         <span className="text-xl">{getStatusIcon(result.status)}</span>

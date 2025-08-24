@@ -14,7 +14,7 @@ import type {
   WebSocketAuthResponse,
   WebSocketState,
   WebSocketErrorType,
-  DeviceInfo
+  DeviceInfo,
 } from '../../types/websocket';
 
 import type {
@@ -23,7 +23,7 @@ import type {
   UserPresenceUpdatePayload,
   RecommendationGeneratedPayload,
   SystemNotificationPayload,
-  RealtimeMessage
+  RealtimeMessage,
 } from '../../types/realtime-messages';
 
 import {
@@ -31,7 +31,7 @@ import {
   isUserMessage,
   isAIMessage,
   isSystemMessage,
-  isSyncMessage
+  isSyncMessage,
 } from '../../types/realtime-messages';
 
 describe('WebSocket Types Unit Tests', () => {
@@ -46,22 +46,22 @@ describe('WebSocket Types Unit Tests', () => {
             label: 'Morning Alarm',
             time: '07:00',
             enabled: true,
-            days: [1, 2, 3, 4, 5]
+            days: [1, 2, 3, 4, 5],
           } as any,
           triggeredAt: new Date(),
           deviceInfo: {
             batteryLevel: 85,
             networkType: 'wifi',
-            isCharging: false
+            isCharging: false,
           },
           contextualData: {
             weatherCondition: 'sunny',
             ambientLightLevel: 75,
-            noiseLevel: 30
-          }
+            noiseLevel: 30,
+          },
         },
         timestamp: new Date().toISOString(),
-        userId: 'user-123'
+        userId: 'user-123',
       };
 
       const userMessage: WebSocketMessage<UserPresenceUpdatePayload> = {
@@ -71,9 +71,9 @@ describe('WebSocket Types Unit Tests', () => {
           userId: 'user-123',
           status: 'online',
           lastSeen: new Date(),
-          activeDevices: []
+          activeDevices: [],
         },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       expect(isAlarmMessage(alarmMessage)).toBe(true);
@@ -96,18 +96,18 @@ describe('WebSocket Types Unit Tests', () => {
             description: 'Adjust wake time by 15 minutes',
             actionText: 'Apply suggestion',
             benefits: ['Better sleep quality', 'Easier wake-up'],
-            estimatedImpact: 7
+            estimatedImpact: 7,
           },
           data: {
             currentState: { wakeTime: '07:00' },
             suggestedChanges: { wakeTime: '06:45' },
             reasoning: 'Based on sleep pattern analysis',
             confidence: 0.85,
-            basedOn: ['sleep_tracker', 'voice_mood']
-          }
+            basedOn: ['sleep_tracker', 'voice_mood'],
+          },
         },
         timestamp: new Date().toISOString(),
-        userId: 'user-123'
+        userId: 'user-123',
       };
 
       expect(isAIMessage(aiMessage)).toBe(true);
@@ -126,9 +126,9 @@ describe('WebSocket Types Unit Tests', () => {
           title: 'Service Update',
           message: 'Scheduled maintenance in 1 hour',
           actionRequired: false,
-          dismissible: true
+          dismissible: true,
         },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       expect(isSystemMessage(systemMessage)).toBe(true);
@@ -141,7 +141,7 @@ describe('WebSocket Types Unit Tests', () => {
         id: 'invalid',
         type: 'unknown_type',
         payload: {},
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       } as any;
 
       expect(isAlarmMessage(invalidMessage)).toBe(false);
@@ -153,8 +153,8 @@ describe('WebSocket Types Unit Tests', () => {
   });
 
   describe('WebSocket Configuration Validation', () => {
-    it('should validate complete WebSocket config', () => {
-      const config: WebSocketConfig = {
+    it('should validate complete WebSocket _config', () => {
+      const _config: WebSocketConfig = {
         url: 'wss://api.relife.app/ws',
         protocols: ['relife-v1'],
         timeout: 10000,
@@ -166,21 +166,21 @@ describe('WebSocket Types Unit Tests', () => {
         enableCompression: true,
         bufferMaxItems: 100,
         bufferMaxTime: 5000,
-        enableLogging: false
+        enableLogging: false,
       };
 
       // Validate required fields
-      expect(config.url).toMatch(/^wss?:\/\//);
-      expect(config.timeout).toBeGreaterThan(0);
-      expect(config.heartbeatInterval).toBeGreaterThan(0);
-      expect(config.reconnectAttempts).toBeGreaterThanOrEqual(0);
-      expect(config.reconnectDelay).toBeGreaterThan(0);
-      expect(config.maxReconnectDelay).toBeGreaterThanOrEqual(config.reconnectDelay);
-      expect(config.bufferMaxItems).toBeGreaterThan(0);
-      expect(config.bufferMaxTime).toBeGreaterThan(0);
+      expect(_config.url).toMatch(/^wss?:\/\//);
+      expect(_config.timeout).toBeGreaterThan(0);
+      expect(_config.heartbeatInterval).toBeGreaterThan(0);
+      expect(_config.reconnectAttempts).toBeGreaterThanOrEqual(0);
+      expect(_config.reconnectDelay).toBeGreaterThan(0);
+      expect(_config.maxReconnectDelay).toBeGreaterThanOrEqual(_config.reconnectDelay);
+      expect(_config.bufferMaxItems).toBeGreaterThan(0);
+      expect(_config.bufferMaxTime).toBeGreaterThan(0);
     });
 
-    it('should validate minimal WebSocket config', () => {
+    it('should validate minimal WebSocket _config', () => {
       const minimalConfig: WebSocketConfig = {
         url: 'ws://localhost:3001',
         timeout: 5000,
@@ -192,7 +192,7 @@ describe('WebSocket Types Unit Tests', () => {
         enableCompression: false,
         bufferMaxItems: 50,
         bufferMaxTime: 2000,
-        enableLogging: true
+        enableLogging: true,
       };
 
       expect(minimalConfig.url).toBeTruthy();
@@ -210,20 +210,20 @@ describe('WebSocket Types Unit Tests', () => {
         screen: {
           width: 375,
           height: 812,
-          pixelRatio: 3
+          pixelRatio: 3,
         },
         network: {
           type: 'cellular',
           effectiveType: '4g',
           downlink: 25.5,
-          rtt: 50
+          rtt: 50,
         },
         capabilities: {
           notifications: true,
           serviceWorker: true,
           webSocket: true,
-          webRTC: false
-        }
+          webRTC: false,
+        },
       };
 
       expect(mobileDevice.type).toBe('mobile');
@@ -242,14 +242,14 @@ describe('WebSocket Types Unit Tests', () => {
         screen: {
           width: 1920,
           height: 1080,
-          pixelRatio: 1
+          pixelRatio: 1,
         },
         capabilities: {
           notifications: true,
           serviceWorker: true,
           webSocket: true,
-          webRTC: true
-        }
+          webRTC: true,
+        },
       };
 
       expect(desktopDevice.type).toBe('desktop');
@@ -266,24 +266,24 @@ describe('WebSocket Types Unit Tests', () => {
           label: 'Morning Routine',
           time: '07:00',
           enabled: true,
-          days: [1, 2, 3, 4, 5]
+          days: [1, 2, 3, 4, 5],
         } as any,
         triggeredAt: new Date(),
         location: {
           latitude: 40.7128,
-          longitude: -74.0060,
-          accuracy: 10
+          longitude: -74.006,
+          accuracy: 10,
         },
         deviceInfo: {
           batteryLevel: 65,
           networkType: 'wifi',
-          isCharging: true
+          isCharging: true,
         },
         contextualData: {
           weatherCondition: 'cloudy',
           ambientLightLevel: 45,
-          noiseLevel: 25
-        }
+          noiseLevel: 25,
+        },
       };
 
       expect(payload.alarm.id).toBeTruthy();
@@ -306,19 +306,21 @@ describe('WebSocket Types Unit Tests', () => {
           mood: 'tired',
           confidenceScore: 0.75,
           wakefulness: 0.4,
-          responseText: 'okay'
+          responseText: 'okay',
         },
         challengeData: {
           type: 'math',
           completed: true,
           attempts: 2,
-          duration: 45000
-        }
+          duration: 45000,
+        },
       };
 
       expect(payload.alarmId).toBeTruthy();
       expect(payload.dismissedAt).toBeInstanceOf(Date);
-      expect(['voice', 'button', 'shake', 'challenge', 'timeout']).toContain(payload.dismissMethod);
+      expect(['voice', 'button', 'shake', 'challenge', 'timeout']).toContain(
+        payload.dismissMethod
+      );
       expect(payload.timeToReact).toBeGreaterThan(0);
       expect(payload.voiceData?.confidenceScore).toBeGreaterThanOrEqual(0);
       expect(payload.voiceData?.confidenceScore).toBeLessThanOrEqual(1);
@@ -326,7 +328,7 @@ describe('WebSocket Types Unit Tests', () => {
       expect(payload.voiceData?.wakefulness).toBeLessThanOrEqual(1);
     });
 
-    it('should validate user presence payload', () => {
+    it('should validate _user presence payload', () => {
       const payload: UserPresenceUpdatePayload = {
         userId: 'user-123',
         status: 'online',
@@ -336,18 +338,20 @@ describe('WebSocket Types Unit Tests', () => {
             deviceId: 'device-1',
             type: 'mobile',
             lastActivity: new Date(),
-            location: 'home'
-          }
+            location: 'home',
+          },
         ],
         currentActivity: {
           type: 'viewing_alarms',
           details: { page: 'dashboard' },
-          startedAt: new Date()
-        }
+          startedAt: new Date(),
+        },
       };
 
       expect(payload.userId).toBeTruthy();
-      expect(['online', 'away', 'busy', 'offline', 'do_not_disturb']).toContain(payload.status);
+      expect(['online', 'away', 'busy', 'offline', 'do_not_disturb']).toContain(
+        payload.status
+      );
       expect(payload.lastSeen).toBeInstanceOf(Date);
       expect(payload.activeDevices).toBeInstanceOf(Array);
       expect(payload.activeDevices[0]?.deviceId).toBeTruthy();
@@ -355,28 +359,28 @@ describe('WebSocket Types Unit Tests', () => {
   });
 
   describe('Error Handling Types', () => {
-    it('should validate WebSocket error structure', () => {
-      const error: WebSocketError = {
+    it('should validate WebSocket _error structure', () => {
+      const _error: WebSocketError = {
         type: 'CONNECTION_FAILED',
         code: 1006,
         message: 'Connection lost unexpectedly',
         details: { reason: 'Network timeout' },
         timestamp: new Date(),
         recoverable: true,
-        retryAfter: 5000
+        retryAfter: 5000,
       };
 
-      expect(error.type).toBeTruthy();
-      expect(error.message).toBeTruthy();
-      expect(error.timestamp).toBeInstanceOf(Date);
-      expect(typeof error.recoverable).toBe('boolean');
-      
-      if (error.retryAfter) {
-        expect(error.retryAfter).toBeGreaterThan(0);
+      expect(_error.type).toBeTruthy();
+      expect(_error.message).toBeTruthy();
+      expect(_error.timestamp).toBeInstanceOf(Date);
+      expect(typeof _error.recoverable).toBe('boolean');
+
+      if (_error.retryAfter) {
+        expect(_error.retryAfter).toBeGreaterThan(0);
       }
     });
 
-    it('should validate all error types', () => {
+    it('should validate all _error types', () => {
       const errorTypes: WebSocketErrorType[] = [
         'CONNECTION_FAILED',
         'AUTHENTICATION_FAILED',
@@ -385,33 +389,39 @@ describe('WebSocket Types Unit Tests', () => {
         'TIMEOUT',
         'RATE_LIMITED',
         'INVALID_MESSAGE',
-        'RECONNECTION_FAILED'
+        'RECONNECTION_FAILED',
       ];
 
       errorTypes.forEach(type => {
-        const error: WebSocketError = {
+        const _error: WebSocketError = {
           type,
-          message: `Test ${type} error`,
+          message: `Test ${type} _error`,
           timestamp: new Date(),
-          recoverable: type !== 'AUTHENTICATION_FAILED'
+          recoverable: type !== 'AUTHENTICATION_FAILED',
         };
 
-        expect(error.type).toBe(type);
-        expect(error.message).toContain(type.toLowerCase().replace('_', ' '));
+        expect(_error.type).toBe(type);
+        expect(_error.message).toContain(type.toLowerCase().replace('_', ' '));
       });
     });
   });
 
   describe('Connection State Validation', () => {
     it('should validate WebSocket states', () => {
-      const states: WebSocketState[] = ['CONNECTING', 'OPEN', 'CLOSING', 'CLOSED', 'ERROR'];
-      
+      const states: WebSocketState[] = [
+        'CONNECTING',
+        'OPEN',
+        'CLOSING',
+        'CLOSED',
+        'ERROR',
+      ];
+
       states.forEach(state => {
         const connectionInfo: WebSocketConnectionInfo = {
           id: `conn-${Date.now()}`,
           state,
           url: 'wss://test.example.com',
-          reconnectCount: 0
+          reconnectCount: 0,
         };
 
         expect(connectionInfo.state).toBe(state);
@@ -441,9 +451,9 @@ describe('WebSocket Types Unit Tests', () => {
             notifications: true,
             serviceWorker: true,
             webSocket: true,
-            webRTC: false
-          }
-        }
+            webRTC: false,
+          },
+        },
       };
 
       expect(connectionInfo.connectedAt).toBeInstanceOf(Date);
@@ -467,10 +477,10 @@ describe('WebSocket Types Unit Tests', () => {
             notifications: true,
             serviceWorker: true,
             webSocket: true,
-            webRTC: false
-          }
+            webRTC: false,
+          },
         },
-        capabilities: ['realtime_messaging', 'push_notifications', 'voice_commands']
+        capabilities: ['realtime_messaging', 'push_notifications', 'voice_commands'],
       };
 
       expect(authPayload.token).toBeTruthy();
@@ -491,8 +501,8 @@ describe('WebSocket Types Unit Tests', () => {
         maxMessageSize: 65536,
         rateLimit: {
           messagesPerSecond: 10,
-          burstLimit: 50
-        }
+          burstLimit: 50,
+        },
       };
 
       expect(authResponse.success).toBe(true);
@@ -520,7 +530,7 @@ describe('WebSocket Types Unit Tests', () => {
         uptime: 3600000, // 1 hour in ms
         dataTransferred: {
           sent: 524288, // 512KB
-          received: 1048576 // 1MB
+          received: 1048576, // 1MB
         },
         errorCounts: {
           CONNECTION_FAILED: 2,
@@ -530,9 +540,9 @@ describe('WebSocket Types Unit Tests', () => {
           TIMEOUT: 1,
           RATE_LIMITED: 0,
           INVALID_MESSAGE: 0,
-          RECONNECTION_FAILED: 1
+          RECONNECTION_FAILED: 1,
         },
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
       };
 
       expect(metrics.connectionId).toBeTruthy();
@@ -552,7 +562,10 @@ describe('WebSocket Types Unit Tests', () => {
         expect(count).toBeGreaterThanOrEqual(0);
       });
 
-      const totalErrors = Object.values(metrics.errorCounts).reduce((sum, count) => sum + count, 0);
+      const totalErrors = Object.values(metrics.errorCounts).reduce(
+        (sum, count) => sum + count,
+        0
+      );
       expect(totalErrors).toBeGreaterThanOrEqual(0);
     });
   });

@@ -50,8 +50,8 @@ export const PWAUtils = {
         (await navigator.serviceWorker.register('/sw-unified.js'));
       console.log('Service Worker registered successfully:', registration);
       return registration;
-    } catch (error) {
-      console.error('Service Worker registration failed:', error);
+    } catch (_error) {
+      console._error('Service Worker registration failed:', _error);
       return null;
     }
   },
@@ -92,7 +92,7 @@ export const PWAUtils = {
           ],
         },
       });
-      window.dispatchEvent(event);
+      window.dispatchEvent(_event);
     }
   },
 
@@ -113,8 +113,8 @@ export const PWAUtils = {
         const manifest = await cachedManifest.json();
         return manifest.version || '1.0.0';
       }
-    } catch (error) {
-      console.error('Error getting app version:', error);
+    } catch (_error) {
+      console._error('Error getting app version:', _error);
     }
     return '1.0.0';
   },
@@ -178,8 +178,8 @@ export const PWAUtils = {
       await prompt.prompt();
       const choice = await prompt.userChoice;
       return choice.outcome === 'accepted';
-    } catch (error) {
-      console.error('Install failed:', error);
+    } catch (_error) {
+      console._error('Install failed:', _error);
       return false;
     }
   },
@@ -193,8 +193,8 @@ export const PWAUtils = {
           console.log('Wake lock acquired');
           return wakeLock;
         }
-      } catch (error) {
-        console.error('Wake lock failed:', error);
+      } catch (_error) {
+        console._error('Wake lock failed:', _error);
       }
     }
     return null;

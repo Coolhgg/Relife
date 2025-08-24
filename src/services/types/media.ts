@@ -104,7 +104,7 @@ export interface AudioPlaybackOptions {
   playbackRate?: number; // 0.5-2.0
   onEnded?: () => void;
   onProgress?: (currentTime: number, duration: number) => void;
-  onError?: (error: Error) => void;
+  onError?: (_error: Error) => void;
 }
 
 export interface MediaLibrary {
@@ -253,7 +253,7 @@ export interface ProgressiveLoadingStatus {
   totalBytes: number;
   speed?: number; // bytes per second
   estimatedTimeRemaining?: number; // seconds
-  error?: string;
+  _error?: string;
 }
 
 // Audio analysis (for future features)

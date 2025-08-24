@@ -31,8 +31,8 @@ export function useAuthAnnouncements() {
   );
 
   const announceLoginError = useCallback(
-    (error: string, suggestion?: string) => {
-      let message = `Login failed: ${error}.`;
+    (_error: string, suggestion?: string) => {
+      let message = `Login failed: ${_error}.`;
       if (suggestion) {
         message += ` ${suggestion}`;
       }
@@ -57,9 +57,9 @@ export function useAuthAnnouncements() {
   );
 
   const announceRegistrationError = useCallback(
-    (error: string) => {
+    (_error: string) => {
       announce(
-        `Registration failed: ${error}. Please correct the errors and try again.`,
+        `Registration failed: ${_error}. Please correct the errors and try again.`,
         'assertive'
       );
     },
@@ -85,8 +85,8 @@ export function useAuthAnnouncements() {
   }, [announce]);
 
   const announcePasswordResetError = useCallback(
-    (error: string) => {
-      announce(`Password reset failed: ${error}. Please try again.`, 'assertive');
+    (_error: string) => {
+      announce(`Password reset failed: ${_error}. Please try again.`, 'assertive');
     },
     [announce]
   );
@@ -110,9 +110,9 @@ export function useAuthAnnouncements() {
   }, [announce]);
 
   const announceEmailVerificationError = useCallback(
-    (error: string) => {
+    (_error: string) => {
       announce(
-        `Email verification failed: ${error}. Please try again or contact support.`,
+        `Email verification failed: ${_error}. Please try again or contact support.`,
         'assertive'
       );
     },
@@ -140,9 +140,9 @@ export function useAuthAnnouncements() {
   );
 
   const announceBiometricError = useCallback(
-    (type: 'fingerprint' | 'face' | 'voice', error: string) => {
+    (type: 'fingerprint' | 'face' | 'voice', _error: string) => {
       announce(
-        `${type} authentication failed: ${error}. Please try again or use alternative method.`,
+        `${type} authentication failed: ${_error}. Please try again or use alternative method.`,
         'assertive'
       );
     },
@@ -170,8 +170,8 @@ export function useAuthAnnouncements() {
   }, [announce]);
 
   const announceTwoFactorError = useCallback(
-    (error: string, attemptsRemaining?: number) => {
-      let message = `Two-factor authentication failed: ${error}.`;
+    (_error: string, attemptsRemaining?: number) => {
+      let message = `Two-factor authentication failed: ${_error}.`;
       if (attemptsRemaining !== undefined && attemptsRemaining > 0) {
         message += ` You have ${attemptsRemaining} attempt${attemptsRemaining === 1 ? '' : 's'} remaining.`;
       } else if (attemptsRemaining === 0) {
@@ -217,9 +217,9 @@ export function useAuthAnnouncements() {
   }, [announce]);
 
   const announceLogoutError = useCallback(
-    (error: string) => {
+    (_error: string) => {
       announce(
-        `Logout failed: ${error}. Your session may still be active.`,
+        `Logout failed: ${_error}. Your session may still be active.`,
         'assertive'
       );
     },

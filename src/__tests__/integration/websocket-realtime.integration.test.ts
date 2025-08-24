@@ -4,14 +4,18 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { MockWebSocket, RealTimeTestUtils, setupRealTimeTesting } from '../realtime/realtime-testing-utilities';
+import {
+  MockWebSocket,
+  RealTimeTestUtils,
+  setupRealTimeTesting,
+} from '../realtime/realtime-testing-utilities';
 import type {
   WebSocketMessage,
   WebSocketConfig,
   WebSocketConnectionInfo,
   WebSocketManager,
   WebSocketAuthPayload,
-  WebSocketAuthResponse
+  WebSocketAuthResponse,
 } from '../../types/websocket';
 
 import type {
@@ -20,7 +24,7 @@ import type {
   UserPresenceUpdatePayload,
   RecommendationGeneratedPayload,
   SystemNotificationPayload,
-  AIAnalysisCompletePayload
+  AIAnalysisCompletePayload,
 } from '../../types/realtime-messages';
 
 // Setup WebSocket testing environment
@@ -47,7 +51,7 @@ describe('WebSocket Real-time Integration Tests', () => {
       enableCompression: false,
       bufferMaxItems: 100,
       bufferMaxTime: 5000,
-      enableLogging: true
+      enableLogging: true,
     };
   });
 
@@ -58,7 +62,7 @@ describe('WebSocket Real-time Integration Tests', () => {
   describe('Connection Management', () => {
     it('should establish WebSocket connection successfully', async () => {
       const ws = new MockWebSocket(mockConfig.url);
-      const connectionPromise = new Promise<WebSocketConnectionInfo>((resolve) => {
+      const connectionPromise = new Promise<WebSocketConnectionInfo>(resolve => {
         ws.addEventListener('open', () => {
           resolve({
             id: ws.id,
@@ -67,7 +71,7 @@ describe('WebSocket Real-time Integration Tests', () => {
             connectedAt: new Date(),
             reconnectCount: 0,
             userId: testUserId,
-            sessionId: testSessionId
+            sessionId: testSessionId,
           });
         });
       });
@@ -84,7 +88,7 @@ describe('WebSocket Real-time Integration Tests', () => {
 
     it('should handle connection timeout', async () => {
       const timeoutConfig = { ...mockConfig, timeout: 100 };
-      
+
       // Mock a WebSocket that doesn't connect
       const SlowMockWebSocket = class extends MockWebSocket {
         constructor(url: string) {
@@ -95,7 +99,7 @@ describe('WebSocket Real-time Integration Tests', () => {
       };
 
       const ws = new SlowMockWebSocket(timeoutConfig.url);
-      
+
       const timeoutPromise = new Promise((resolve, reject) => {
         const timeoutId = setTimeout(() => {
           reject(new Error('Connection timeout'));
@@ -113,8 +117,8 @@ describe('WebSocket Real-time Integration Tests', () => {
 
     it('should authenticate connection with valid credentials', async () => {
       const ws = new MockWebSocket(mockConfig.url);
-      
-      await new Promise<void>((resolve) => {
+
+      await new Promise<void>(resolve => {
         ws.addEventListener('open', () => resolve());
       });
 
@@ -130,17 +134,17 @@ describe('WebSocket Real-time Integration Tests', () => {
             notifications: true,
             serviceWorker: true,
             webSocket: true,
-            webRTC: false
-          }
+            webRTC: false,
+          },
         },
-        capabilities: ['realtime_messaging', 'push_notifications']
+        capabilities: ['realtime_messaging', 'push_notifications'],
       };
 
       // Mock server authentication response
-      const authResponsePromise = new Promise<WebSocketAuthResponse>((resolve) => {
-        ws.addEventListener('message', (event: any) => {
+      const authResponsePromise = new Promise<WebSocketAuthResponse>(resolve => {
+        ws.addEventListener('message', (_event: any) => {
           try {
-            const data = JSON.parse(event.data);
+            const data = JSON.parse(_event.data);
             if (data.type === 'authentication_request') {
               // Simulate server auth response
               setTimeout(() => {
@@ -154,33 +158,35 @@ describe('WebSocket Real-time Integration Tests', () => {
                   maxMessageSize: 65536,
                   rateLimit: {
                     messagesPerSecond: 10,
-                    burstLimit: 50
-                  }
+                    burstLimit: 50,
+                  },
                 });
               }, 50);
             }
-          } catch (e) {
+          } catch (_e) {
             // Ignore parsing errors
           }
         });
 
-        ws.addEventListener('message', (event: any) => {
+        ws.addEventListener('message', (_event: any) => {
           try {
-            const data = JSON.parse(event.data);
+            const data = JSON.parse(_event.data);
             if (data.type === 'authentication_response' && data.success) {
               resolve(data);
             }
-          } catch (e) {
+          } catch (_e) {
             // Ignore parsing errors
           }
         });
       });
 
       // Send authentication request
-      ws.send(JSON.stringify({
-        type: 'authentication_request',
-        payload: authPayload
-      }));
+      ws.send(
+        JSON.stringify({
+          type: 'authentication_request',
+          payload: authPayload,
+        })
+      );
 
       const authResponse = await authResponsePromise;
       expect(authResponse.success).toBe(true);
@@ -196,7 +202,7 @@ describe('WebSocket Real-time Integration Tests', () => {
 
     beforeEach(async () => {
       ws = new MockWebSocket(mockConfig.url);
-      await new Promise<void>((resolve) => {
+      await new Promise<void>(resolve => {
         ws.addEventListener('open', () => resolve());
       });
     });
@@ -212,34 +218,36 @@ describe('WebSocket Real-time Integration Tests', () => {
           label: 'Morning Alarm',
           time: '07:00',
           enabled: true,
-          days: [1, 2, 3, 4, 5]
+          days: [1, 2, 3, 4, 5],
         } as any,
         triggeredAt: new Date(),
         location: {
           latitude: 40.7128,
-          longitude: -74.0060,
-          accuracy: 5
+          longitude: -74.006,
+          accuracy: 5,
         },
         deviceInfo: {
           batteryLevel: 85,
           networkType: 'wifi',
-          isCharging: false
+          isCharging: false,
         },
         contextualData: {
           weatherCondition: 'sunny',
           ambientLightLevel: 80,
-          noiseLevel: 20
-        }
+          noiseLevel: 20,
+        },
       };
 
-      const messageReceived = new Promise<AlarmTriggeredPayload>((resolve) => {
-        ws.addEventListener('message', (event: any) => {
+      const messageReceived = new Promise<AlarmTriggeredPayload>(resolve => {
+        ws.addEventListener('message', (_event: any) => {
           try {
-            const message: WebSocketMessage<AlarmTriggeredPayload> = JSON.parse(event.data);
+            const message: WebSocketMessage<AlarmTriggeredPayload> = JSON.parse(
+              _event.data
+            );
             if (message.type === 'alarm_triggered') {
               resolve(message.payload);
             }
-          } catch (e) {
+          } catch (_e) {
             // Ignore parsing errors
           }
         });
@@ -251,7 +259,7 @@ describe('WebSocket Real-time Integration Tests', () => {
         type: 'alarm_triggered',
         payload: alarmPayload,
         timestamp: new Date().toISOString(),
-        userId: testUserId
+        userId: testUserId,
       });
 
       const receivedPayload = await messageReceived;
@@ -271,18 +279,20 @@ describe('WebSocket Real-time Integration Tests', () => {
           mood: 'tired',
           confidenceScore: 0.75,
           wakefulness: 0.4,
-          responseText: 'okay I am awake'
-        }
+          responseText: 'okay I am awake',
+        },
       };
 
-      const messageReceived = new Promise<AlarmDismissedPayload>((resolve) => {
-        ws.addEventListener('message', (event: any) => {
+      const messageReceived = new Promise<AlarmDismissedPayload>(resolve => {
+        ws.addEventListener('message', (_event: any) => {
           try {
-            const message: WebSocketMessage<AlarmDismissedPayload> = JSON.parse(event.data);
+            const message: WebSocketMessage<AlarmDismissedPayload> = JSON.parse(
+              _event.data
+            );
             if (message.type === 'alarm_dismissed') {
               resolve(message.payload);
             }
-          } catch (e) {
+          } catch (_e) {
             // Ignore parsing errors
           }
         });
@@ -293,7 +303,7 @@ describe('WebSocket Real-time Integration Tests', () => {
         type: 'alarm_dismissed',
         payload: dismissPayload,
         timestamp: new Date().toISOString(),
-        userId: testUserId
+        userId: testUserId,
       });
 
       const receivedPayload = await messageReceived;
@@ -309,7 +319,7 @@ describe('WebSocket Real-time Integration Tests', () => {
 
     beforeEach(async () => {
       ws = new MockWebSocket(mockConfig.url);
-      await new Promise<void>((resolve) => {
+      await new Promise<void>(resolve => {
         ws.addEventListener('open', () => resolve());
       });
     });
@@ -318,16 +328,18 @@ describe('WebSocket Real-time Integration Tests', () => {
       ws.close();
     });
 
-    it('should track user presence changes', async () => {
+    it('should track _user presence changes', async () => {
       const presenceUpdates: UserPresenceUpdatePayload[] = [];
 
-      ws.addEventListener('message', (event: any) => {
+      ws.addEventListener('message', (_event: any) => {
         try {
-          const message: WebSocketMessage<UserPresenceUpdatePayload> = JSON.parse(event.data);
+          const message: WebSocketMessage<UserPresenceUpdatePayload> = JSON.parse(
+            _event.data
+          );
           if (message.type === 'user_presence_update') {
             presenceUpdates.push(message.payload);
           }
-        } catch (e) {
+        } catch (_e) {
           // Ignore parsing errors
         }
       });
@@ -337,7 +349,7 @@ describe('WebSocket Real-time Integration Tests', () => {
         { status: 'online' as const, activity: 'viewing_alarms' as const },
         { status: 'busy' as const, activity: 'in_meeting' as const },
         { status: 'away' as const, activity: undefined },
-        { status: 'offline' as const, activity: undefined }
+        { status: 'offline' as const, activity: undefined },
       ];
 
       for (const scenario of presenceScenarios) {
@@ -345,16 +357,20 @@ describe('WebSocket Real-time Integration Tests', () => {
           userId: testUserId,
           status: scenario.status,
           lastSeen: new Date(),
-          activeDevices: [{
-            deviceId: 'device-123',
-            type: 'mobile',
-            lastActivity: new Date(),
-            location: 'home'
-          }],
-          currentActivity: scenario.activity ? {
-            type: scenario.activity,
-            startedAt: new Date()
-          } : undefined
+          activeDevices: [
+            {
+              deviceId: 'device-123',
+              type: 'mobile',
+              lastActivity: new Date(),
+              location: 'home',
+            },
+          ],
+          currentActivity: scenario.activity
+            ? {
+                type: scenario.activity,
+                startedAt: new Date(),
+              }
+            : undefined,
         };
 
         ws.simulateMessage({
@@ -362,7 +378,7 @@ describe('WebSocket Real-time Integration Tests', () => {
           type: 'user_presence_update',
           payload,
           timestamp: new Date().toISOString(),
-          userId: testUserId
+          userId: testUserId,
         });
 
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -384,7 +400,7 @@ describe('WebSocket Real-time Integration Tests', () => {
 
     beforeEach(async () => {
       ws = new MockWebSocket(mockConfig.url);
-      await new Promise<void>((resolve) => {
+      await new Promise<void>(resolve => {
         ws.addEventListener('open', () => resolve());
       });
     });
@@ -396,13 +412,15 @@ describe('WebSocket Real-time Integration Tests', () => {
     it('should receive and process AI recommendations', async () => {
       const recommendations: RecommendationGeneratedPayload[] = [];
 
-      ws.addEventListener('message', (event: any) => {
+      ws.addEventListener('message', (_event: any) => {
         try {
-          const message: WebSocketMessage<RecommendationGeneratedPayload> = JSON.parse(event.data);
+          const message: WebSocketMessage<RecommendationGeneratedPayload> = JSON.parse(
+            _event.data
+          );
           if (message.type === 'recommendation_generated') {
             recommendations.push(message.payload);
           }
-        } catch (e) {
+        } catch (_e) {
           // Ignore parsing errors
         }
       });
@@ -414,19 +432,25 @@ describe('WebSocket Real-time Integration Tests', () => {
         priority: 'high',
         recommendation: {
           title: 'Optimize your morning routine',
-          description: 'Based on your sleep patterns, consider moving your alarm 15 minutes earlier',
+          description:
+            'Based on your sleep patterns, consider moving your alarm 15 minutes earlier',
           actionText: 'Apply suggestion',
-          benefits: ['Better sleep quality', 'Easier wake-up', 'More consistent schedule'],
-          estimatedImpact: 8
+          benefits: [
+            'Better sleep quality',
+            'Easier wake-up',
+            'More consistent schedule',
+          ],
+          estimatedImpact: 8,
         },
         data: {
           currentState: { wakeTime: '07:00', avgSleepDuration: 6.5 },
           suggestedChanges: { wakeTime: '06:45', targetSleepDuration: 7.5 },
-          reasoning: 'Your sleep data shows you naturally wake up around 6:45 AM. Aligning your alarm with this pattern will improve wake-up experience.',
+          reasoning:
+            'Your sleep data shows you naturally wake up around 6:45 AM. Aligning your alarm with this pattern will improve wake-up experience.',
           confidence: 0.89,
-          basedOn: ['sleep_tracker', 'voice_mood_analysis', 'dismissal_patterns']
+          basedOn: ['sleep_tracker', 'voice_mood_analysis', 'dismissal_patterns'],
         },
-        validUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Valid for 7 days
+        validUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Valid for 7 days
       };
 
       ws.simulateMessage({
@@ -434,7 +458,7 @@ describe('WebSocket Real-time Integration Tests', () => {
         type: 'recommendation_generated',
         payload: recommendationPayload,
         timestamp: new Date().toISOString(),
-        userId: testUserId
+        userId: testUserId,
       });
 
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -449,13 +473,15 @@ describe('WebSocket Real-time Integration Tests', () => {
     it('should handle AI analysis completion', async () => {
       const analysisResults: AIAnalysisCompletePayload[] = [];
 
-      ws.addEventListener('message', (event: any) => {
+      ws.addEventListener('message', (_event: any) => {
         try {
-          const message: WebSocketMessage<AIAnalysisCompletePayload> = JSON.parse(event.data);
+          const message: WebSocketMessage<AIAnalysisCompletePayload> = JSON.parse(
+            _event.data
+          );
           if (message.type === 'ai_analysis_complete') {
             analysisResults.push(message.payload);
           }
-        } catch (e) {
+        } catch (_e) {
           // Ignore parsing errors
         }
       });
@@ -465,45 +491,46 @@ describe('WebSocket Real-time Integration Tests', () => {
         type: 'sleep_pattern',
         userId: testUserId,
         results: {
-          summary: 'Your sleep pattern analysis shows room for improvement in consistency.',
+          summary:
+            'Your sleep pattern analysis shows room for improvement in consistency.',
           insights: [
             {
               category: 'consistency',
               finding: 'Bedtime varies by up to 2 hours on weekends',
               confidence: 0.92,
-              impact: 'negative'
+              impact: 'negative',
             },
             {
               category: 'duration',
               finding: 'Average sleep duration is within healthy range',
               confidence: 0.87,
-              impact: 'positive'
-            }
+              impact: 'positive',
+            },
           ],
           metrics: {
             avgBedtime: 23.5, // 11:30 PM in decimal hours
-            avgWakeTime: 7.0,  // 7:00 AM
+            avgWakeTime: 7.0, // 7:00 AM
             avgDuration: 7.5,
-            consistency: 0.72
+            consistency: 0.72,
           },
           trends: [
             {
               metric: 'bedtime_consistency',
               direction: 'declining',
               rate: -0.1,
-              significance: 0.8
-            }
-          ]
+              significance: 0.8,
+            },
+          ],
         },
         recommendations: [
           {
             action: 'Set a consistent bedtime routine',
             priority: 1,
-            expectedOutcome: 'Improved sleep quality and easier wake-ups'
-          }
+            expectedOutcome: 'Improved sleep quality and easier wake-ups',
+          },
         ],
         generatedAt: new Date(),
-        validFor: 30
+        validFor: 30,
       };
 
       ws.simulateMessage({
@@ -511,7 +538,7 @@ describe('WebSocket Real-time Integration Tests', () => {
         type: 'ai_analysis_complete',
         payload: analysisPayload,
         timestamp: new Date().toISOString(),
-        userId: testUserId
+        userId: testUserId,
       });
 
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -538,25 +565,28 @@ describe('WebSocket Real-time Integration Tests', () => {
 
         ws.addEventListener('close', () => {
           connectionStates.push('disconnected');
-          
+
           // Simulate reconnection logic
           if (reconnectionAttempts < mockConfig.reconnectAttempts) {
             reconnectionAttempts++;
-            const delay = mockConfig.exponentialBackoff 
+            const delay = mockConfig.exponentialBackoff
               ? mockConfig.reconnectDelay * Math.pow(2, reconnectionAttempts - 1)
               : mockConfig.reconnectDelay;
 
-            setTimeout(() => {
-              connectionStates.push(`reconnect_attempt_${reconnectionAttempts}`);
-              createConnection();
-            }, Math.min(delay, mockConfig.maxReconnectDelay));
+            setTimeout(
+              () => {
+                connectionStates.push(`reconnect_attempt_${reconnectionAttempts}`);
+                createConnection();
+              },
+              Math.min(delay, mockConfig.maxReconnectDelay)
+            );
           } else {
             connectionStates.push('reconnection_failed');
           }
         });
 
-        ws.addEventListener('error', () => {
-          connectionStates.push('error');
+        ws.addEventListener('_error', () => {
+          connectionStates.push('_error');
         });
 
         // Simulate connection drop after 1 second
@@ -577,7 +607,9 @@ describe('WebSocket Real-time Integration Tests', () => {
       expect(connectionStates).toContain('connecting');
       expect(connectionStates).toContain('connected');
       expect(connectionStates).toContain('disconnected');
-      expect(connectionStates.filter(s => s.startsWith('reconnect_attempt')).length).toBe(mockConfig.reconnectAttempts);
+      expect(
+        connectionStates.filter(s => s.startsWith('reconnect_attempt')).length
+      ).toBe(mockConfig.reconnectAttempts);
       expect(reconnectionAttempts).toBe(mockConfig.reconnectAttempts);
     });
 
@@ -585,17 +617,17 @@ describe('WebSocket Real-time Integration Tests', () => {
       const ws = new MockWebSocket(mockConfig.url);
       const heartbeats: number[] = [];
 
-      await new Promise<void>((resolve) => {
+      await new Promise<void>(resolve => {
         ws.addEventListener('open', () => resolve());
       });
 
-      ws.addEventListener('message', (event: any) => {
+      ws.addEventListener('message', (_event: any) => {
         try {
-          const data = JSON.parse(event.data);
+          const data = JSON.parse(_event.data);
           if (data.type === 'heartbeat_pong') {
             heartbeats.push(data.timestamp);
           }
-        } catch (e) {
+        } catch (_e) {
           // Ignore parsing errors
         }
       });
@@ -603,17 +635,19 @@ describe('WebSocket Real-time Integration Tests', () => {
       // Send multiple heartbeat pings
       const pingCount = 3;
       for (let i = 0; i < pingCount; i++) {
-        ws.send(JSON.stringify({
-          type: 'heartbeat_ping',
-          timestamp: Date.now()
-        }));
+        ws.send(
+          JSON.stringify({
+            type: 'heartbeat_ping',
+            timestamp: Date.now(),
+          })
+        );
         await new Promise(resolve => setTimeout(resolve, 200));
       }
 
       await new Promise(resolve => setTimeout(resolve, 500));
 
       expect(heartbeats.length).toBeGreaterThanOrEqual(pingCount);
-      
+
       // Verify timestamps are recent
       heartbeats.forEach(timestamp => {
         expect(Date.now() - timestamp).toBeLessThan(5000);
@@ -628,7 +662,7 @@ describe('WebSocket Real-time Integration Tests', () => {
 
     beforeEach(async () => {
       ws = new MockWebSocket(mockConfig.url);
-      await new Promise<void>((resolve) => {
+      await new Promise<void>(resolve => {
         ws.addEventListener('open', () => resolve());
       });
     });
@@ -640,13 +674,15 @@ describe('WebSocket Real-time Integration Tests', () => {
     it('should handle system notifications', async () => {
       const notifications: SystemNotificationPayload[] = [];
 
-      ws.addEventListener('message', (event: any) => {
+      ws.addEventListener('message', (_event: any) => {
         try {
-          const message: WebSocketMessage<SystemNotificationPayload> = JSON.parse(event.data);
+          const message: WebSocketMessage<SystemNotificationPayload> = JSON.parse(
+            _event.data
+          );
           if (message.type === 'system_notification') {
             notifications.push(message.payload);
           }
-        } catch (e) {
+        } catch (_e) {
           // Ignore parsing errors
         }
       });
@@ -656,27 +692,28 @@ describe('WebSocket Real-time Integration Tests', () => {
         type: 'warning',
         severity: 'medium',
         title: 'Scheduled Maintenance',
-        message: 'The service will be temporarily unavailable for maintenance in 30 minutes.',
+        message:
+          'The service will be temporarily unavailable for maintenance in 30 minutes.',
         details: 'Expected downtime: 15 minutes. All data will be preserved.',
         actionRequired: false,
         actions: [
           {
             id: 'acknowledge',
             label: 'Acknowledge',
-            type: 'primary'
-          }
+            type: 'primary',
+          },
         ],
         affectedFeatures: ['real_time_sync', 'push_notifications'],
         estimatedResolution: new Date(Date.now() + 45 * 60 * 1000), // 45 minutes from now
         dismissible: true,
-        expiresAt: new Date(Date.now() + 60 * 60 * 1000) // 1 hour from now
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour from now
       };
 
       ws.simulateMessage({
         id: 'sys-notif-123',
         type: 'system_notification',
         payload: notificationPayload,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -694,15 +731,15 @@ describe('WebSocket Real-time Integration Tests', () => {
   describe('Message Queue and Rate Limiting', () => {
     it('should handle message queuing when connection is closed', async () => {
       const ws = new MockWebSocket(mockConfig.url);
-      
-      await new Promise<void>((resolve) => {
+
+      await new Promise<void>(resolve => {
         ws.addEventListener('open', () => resolve());
       });
 
       // Close the connection
       ws.close();
-      
-      await new Promise<void>((resolve) => {
+
+      await new Promise<void>(resolve => {
         ws.addEventListener('close', () => resolve());
       });
 
@@ -710,7 +747,7 @@ describe('WebSocket Real-time Integration Tests', () => {
       const messagesToSend = [
         { type: 'test_message_1', data: 'test1' },
         { type: 'test_message_2', data: 'test2' },
-        { type: 'test_message_3', data: 'test3' }
+        { type: 'test_message_3', data: 'test3' },
       ];
 
       messagesToSend.forEach(message => {
@@ -720,15 +757,15 @@ describe('WebSocket Real-time Integration Tests', () => {
       // Verify messages weren't sent (connection was closed)
       const events = MockWebSocket.getEvents();
       const sendEvents = events.filter(e => e.type === 'send');
-      
+
       // Should have some send attempts, but they won't actually be transmitted
       expect(sendEvents.length).toBeGreaterThanOrEqual(3);
     });
 
     it('should enforce rate limiting', async () => {
       const ws = new MockWebSocket(mockConfig.url);
-      
-      await new Promise<void>((resolve) => {
+
+      await new Promise<void>(resolve => {
         ws.addEventListener('open', () => resolve());
       });
 
@@ -740,12 +777,14 @@ describe('WebSocket Real-time Integration Tests', () => {
       for (let i = 0; i < messageCount; i++) {
         const sendTime = Date.now();
         messageTimes.push(sendTime);
-        
-        ws.send(JSON.stringify({
-          type: 'rate_limit_test',
-          messageId: i,
-          timestamp: sendTime
-        }));
+
+        ws.send(
+          JSON.stringify({
+            type: 'rate_limit_test',
+            messageId: i,
+            timestamp: sendTime,
+          })
+        );
 
         // Small delay to simulate rapid sending
         await new Promise(resolve => setTimeout(resolve, 10));
@@ -760,7 +799,9 @@ describe('WebSocket Real-time Integration Tests', () => {
 
       // In a real implementation, you would check against rate limits here
       // For testing purposes, we just verify the mechanism works
-      const timeDifferences = messageTimes.slice(1).map((time, i) => time - messageTimes[i]);
+      const timeDifferences = messageTimes
+        .slice(1)
+        .map((time, i) => time - messageTimes[i]);
       expect(timeDifferences.every(diff => diff >= 0)).toBe(true);
 
       ws.close();

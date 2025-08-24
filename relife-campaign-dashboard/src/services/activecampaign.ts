@@ -307,7 +307,10 @@ export class ActiveCampaignService {
     }
   }
 
-  async subscribeContactToList(contactId: string, listId: string): Promise<ActiveCampaign.SubscribeResponse> {
+  async subscribeContactToList(
+    contactId: string,
+    listId: string
+  ): Promise<ActiveCampaign.SubscribeResponse> {
     this.ensureConfigured();
 
     try {
@@ -349,7 +352,10 @@ export class ActiveCampaignService {
     }
   }
 
-  async addContactToAutomation(contactId: string, automationId: string): Promise<ActiveCampaign.AutomationResponse> {
+  async addContactToAutomation(
+    contactId: string,
+    automationId: string
+  ): Promise<ActiveCampaign.AutomationResponse> {
     this.ensureConfigured();
 
     try {
@@ -378,7 +384,10 @@ export class ActiveCampaignService {
     }
   }
 
-  async addTagToContact(contactId: string, tagId: string): Promise<ActiveCampaign.TagResponse> {
+  async addTagToContact(
+    contactId: string,
+    tagId: string
+  ): Promise<ActiveCampaign.TagResponse> {
     this.ensureConfigured();
 
     try {
@@ -408,7 +417,9 @@ export class ActiveCampaignService {
   }
 
   // Analytics methods
-  async getCampaignStats(campaignId: string): Promise<ActiveCampaign.CampaignStatsResponse> {
+  async getCampaignStats(
+    campaignId: string
+  ): Promise<ActiveCampaign.CampaignStatsResponse> {
     this.ensureConfigured();
 
     try {
@@ -438,7 +449,9 @@ export class ActiveCampaignService {
     }
   }
 
-  async getAutomationStats(automationId: string): Promise<ActiveCampaign.AutomationStatsResponse> {
+  async getAutomationStats(
+    automationId: string
+  ): Promise<ActiveCampaign.AutomationStatsResponse> {
     this.ensureConfigured();
 
     try {

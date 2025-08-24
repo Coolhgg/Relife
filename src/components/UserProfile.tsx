@@ -22,20 +22,20 @@ interface UserProfileProps {
   onUpdateProfile: (updates: Partial<AppUser>) => Promise<void>;
   onSignOut: () => void;
   isLoading: boolean;
-  error: string | null;
+  _error: string | null;
 }
 
 export default function UserProfile({
-  user,
+  _user,
   onUpdateProfile,
   onSignOut,
   isLoading,
-  error,
+  _error,
 }: UserProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     name: user.name || '',
-    preferences: { ...user.preferences },
+    preferences: { ..._user.preferences },
   });
   const [hasChanges, setHasChanges] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -65,15 +65,15 @@ export default function UserProfile({
 
       // Clear success message after 3 seconds
       setTimeout(() => setSaveSuccess(false), 3000);
-    } catch (error) {
-      console.error('Failed to update profile:', error);
+    } catch (_error) {
+      console._error('Failed to update profile:', _error);
     }
   };
 
   const handleCancel = () => {
     setEditForm({
       name: user.name || '',
-      preferences: { ...user.preferences },
+      preferences: { ..._user.preferences },
     });
     setIsEditing(false);
     setHasChanges(false);

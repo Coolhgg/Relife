@@ -23,7 +23,7 @@ export interface E2ETestContext {
   page?: any; // Browser page object
   browser?: any; // Browser instance
   context?: any; // Browser context
-  config: E2ETestConfig;
+  _config: E2ETestConfig;
   helpers: TestHelpers;
 }
 
@@ -36,7 +36,7 @@ export interface E2EFlowResult {
     passed: boolean;
     duration: number;
     screenshot?: string;
-    error?: string;
+    _error?: string;
   }>;
   metrics: {
     pageLoads: number;
@@ -53,11 +53,11 @@ export interface E2EFlowResult {
 
 // E2E testing utilities class
 export class E2ETestingUtils {
-  private config: E2ETestConfig;
+  private _config: E2ETestConfig;
   private helpers = new TestHelpers();
 
-  constructor(config: Partial<E2ETestConfig> = {}) {
-    this.config = {
+  constructor(_config: Partial<E2ETestConfig> = {}) {
+    this._config = {
       baseUrl: 'http://localhost:3000',
       headless: true,
       slowMo: 0,
@@ -74,14 +74,14 @@ export class E2ETestingUtils {
   async createBrowserContext(): Promise<E2ETestContext> {
     // In a real implementation, this would create actual browser instances
     // For this mock implementation, we'll simulate browser behavior
-    
+
     const mockPage = {
       goto: async (url: string) => {
         console.log(`[E2E] Navigating to ${url}`);
         await this.helpers.wait(100);
         return { status: () => 200 };
       },
-      
+
       click: async (selector: string) => {
         console.log(`[E2E] Clicking ${selector}`);
         await this.helpers.wait(50);
@@ -90,7 +90,7 @@ export class E2ETestingUtils {
           (element as HTMLElement).click();
         }
       },
-      
+
       fill: async (selector: string, value: string) => {
         console.log(`[E2E] Filling ${selector} with "${value}"`);
         await this.helpers.wait(30);
@@ -100,37 +100,38 @@ export class E2ETestingUtils {
           element.dispatchEvent(new Event('input', { bubbles: true }));
         }
       },
-      
+
       waitForSelector: async (selector: string, options: any = {}) => {
         console.log(`[E2E] Waiting for ${selector}`);
         const timeout = options.timeout || this.config.timeout;
-        return this.helpers.waitForElement(() => 
-          document.querySelector(selector) as HTMLElement,
+        return this.helpers.waitForElement(
+          () => document.querySelector(selector) as HTMLElement,
           { timeout }
         );
       },
-      
+
       screenshot: async (options: any = {}) => {
         console.log(`[E2E] Taking screenshot`);
         const timestamp = Date.now();
         return `screenshot-${timestamp}.png`;
       },
-      
+
       evaluate: async (fn: Function, ...args: any[]) => {
         console.log(`[E2E] Evaluating function`);
         return fn(...args);
       },
-      
+
       waitForLoadState: async (state: string = 'load') => {
         console.log(`[E2E] Waiting for load state: ${state}`);
         await this.helpers.wait(200);
       },
-      
+
       getByTestId: (testId: string) => ({
         click: () => mockPage.click(`[data-testid="${testId}"]`),
         fill: (value: string) => mockPage.fill(`[data-testid="${testId}"]`, value),
         isVisible: () => !!document.querySelector(`[data-testid="${testId}"]`),
-        textContent: () => document.querySelector(`[data-testid="${testId}"]`)?.textContent,
+        textContent: () =>
+          document.querySelector(`[data-testid="${testId}"]`)?.textContent,
       }),
     };
 
@@ -148,7 +149,7 @@ export class E2ETestingUtils {
       page: mockPage,
       browser: mockBrowser,
       context: mockContext,
-      config: this.config,
+      config: this._config,
       helpers: this.helpers,
     };
   }
@@ -165,27 +166,27 @@ export class E2ETestingUtils {
       // Step 1: Landing Page
       const step1Start = performance.now();
       try {
-        await context.page!.goto(this.config.baseUrl);
+        await context.page!.goto(this._config.baseUrl);
         pageLoads++;
-        
+
         await context.page!.waitForLoadState('networkidle');
-        
-        if (this.config.screenshots) {
+
+        if (this._config.screenshots) {
           const screenshot = await context.page!.screenshot();
           artifacts.screenshots.push(screenshot);
         }
-        
+
         steps.push({
           name: 'Load Landing Page',
           passed: true,
           duration: performance.now() - step1Start,
         });
-      } catch (error) {
+      } catch (_error) {
         steps.push({
           name: 'Load Landing Page',
           passed: false,
           duration: performance.now() - step1Start,
-          error: error instanceof Error ? error.message : String(error),
+          error: error instanceof Error ? _error.message : String(_error),
         });
       }
 
@@ -194,28 +195,34 @@ export class E2ETestingUtils {
       try {
         await context.page!.click('[data-testid="register-button"]');
         await context.page!.waitForSelector('[data-testid="register-form"]');
-        
+
         await context.page!.fill('[data-testid="email-input"]', 'test@example.com');
-        await context.page!.fill('[data-testid="password-input"]', 'SecurePassword123!');
-        await context.page!.fill('[data-testid="confirm-password-input"]', 'SecurePassword123!');
+        await context.page!.fill(
+          '[data-testid="password-input"]',
+          'SecurePassword123!'
+        );
+        await context.page!.fill(
+          '[data-testid="confirm-password-input"]',
+          'SecurePassword123!'
+        );
         await context.page!.fill('[data-testid="name-input"]', 'Test User');
-        
+
         await context.page!.click('[data-testid="submit-registration"]');
         apiCalls++;
-        
+
         await context.page!.waitForSelector('[data-testid="registration-success"]');
-        
+
         steps.push({
           name: 'User Registration',
           passed: true,
           duration: performance.now() - step2Start,
         });
-      } catch (error) {
+      } catch (_error) {
         steps.push({
           name: 'User Registration',
           passed: false,
           duration: performance.now() - step2Start,
-          error: error instanceof Error ? error.message : String(error),
+          error: error instanceof Error ? _error.message : String(_error),
         });
       }
 
@@ -223,29 +230,29 @@ export class E2ETestingUtils {
       const step3Start = performance.now();
       try {
         await context.page!.waitForSelector('[data-testid="profile-setup"]');
-        
+
         await context.page!.click('[data-testid="timezone-select"]');
         await context.page!.click('[data-testid="timezone-option-est"]');
-        
+
         await context.page!.click('[data-testid="language-select"]');
         await context.page!.click('[data-testid="language-option-en"]');
-        
+
         await context.page!.click('[data-testid="theme-dark"]');
-        
+
         await context.page!.click('[data-testid="continue-setup"]');
         apiCalls++;
-        
+
         steps.push({
           name: 'Profile Setup',
           passed: true,
           duration: performance.now() - step3Start,
         });
-      } catch (error) {
+      } catch (_error) {
         steps.push({
           name: 'Profile Setup',
           passed: false,
           duration: performance.now() - step3Start,
-          error: error instanceof Error ? error.message : String(error),
+          error: error instanceof Error ? _error.message : String(_error),
         });
       }
 
@@ -254,35 +261,35 @@ export class E2ETestingUtils {
       try {
         await context.page!.waitForSelector('[data-testid="create-alarm-button"]');
         await context.page!.click('[data-testid="create-alarm-button"]');
-        
+
         await context.page!.fill('[data-testid="alarm-time"]', '07:00');
         await context.page!.fill('[data-testid="alarm-label"]', 'My First Alarm');
-        
+
         await context.page!.click('[data-testid="monday-toggle"]');
         await context.page!.click('[data-testid="tuesday-toggle"]');
         await context.page!.click('[data-testid="wednesday-toggle"]');
         await context.page!.click('[data-testid="thursday-toggle"]');
         await context.page!.click('[data-testid="friday-toggle"]');
-        
+
         await context.page!.click('[data-testid="voice-mood-gentle"]');
         await context.page!.click('[data-testid="difficulty-medium"]');
-        
+
         await context.page!.click('[data-testid="save-alarm"]');
         apiCalls++;
-        
+
         await context.page!.waitForSelector('[data-testid="alarm-created-success"]');
-        
+
         steps.push({
           name: 'Create First Alarm',
           passed: true,
           duration: performance.now() - step4Start,
         });
-      } catch (error) {
+      } catch (_error) {
         steps.push({
           name: 'Create First Alarm',
           passed: false,
           duration: performance.now() - step4Start,
-          error: error instanceof Error ? error.message : String(error),
+          error: error instanceof Error ? _error.message : String(_error),
         });
       }
 
@@ -291,28 +298,28 @@ export class E2ETestingUtils {
       try {
         await context.page!.click('[data-testid="test-alarm-button"]');
         await context.page!.waitForSelector('[data-testid="alarm-modal"]');
-        
+
         // Wait for challenge to appear
         await context.page!.waitForSelector('[data-testid="math-challenge"]');
-        
+
         // Solve challenge (mock)
         await context.page!.click('[data-testid="answer-option-1"]');
         await context.page!.click('[data-testid="submit-answer"]');
-        
+
         await context.page!.waitForSelector('[data-testid="challenge-success"]');
         await context.page!.click('[data-testid="dismiss-alarm"]');
-        
+
         steps.push({
           name: 'Test Alarm Trigger',
           passed: true,
           duration: performance.now() - step5Start,
         });
-      } catch (error) {
+      } catch (_error) {
         steps.push({
           name: 'Test Alarm Trigger',
           passed: false,
           duration: performance.now() - step5Start,
-          error: error instanceof Error ? error.message : String(error),
+          error: error instanceof Error ? _error.message : String(_error),
         });
       }
 
@@ -321,27 +328,27 @@ export class E2ETestingUtils {
       try {
         await context.page!.click('[data-testid="dashboard-link"]');
         await context.page!.waitForSelector('[data-testid="dashboard"]');
-        
+
         // Check stats
-        await context.page!.waitForSelector('[data-testid="user-stats"]');
-        
+        await context.page!.waitForSelector('[data-testid="_user-stats"]');
+
         // Take final screenshot
-        if (this.config.screenshots) {
+        if (this._config.screenshots) {
           const screenshot = await context.page!.screenshot();
           artifacts.screenshots.push(screenshot);
         }
-        
+
         steps.push({
           name: 'Explore Dashboard',
           passed: true,
           duration: performance.now() - step6Start,
         });
-      } catch (error) {
+      } catch (_error) {
         steps.push({
           name: 'Explore Dashboard',
           passed: false,
           duration: performance.now() - step6Start,
-          error: error instanceof Error ? error.message : String(error),
+          error: error instanceof Error ? _error.message : String(_error),
         });
       }
 
@@ -360,8 +367,7 @@ export class E2ETestingUtils {
         },
         artifacts,
       };
-
-    } catch (error) {
+    } catch (_error) {
       return {
         passed: false,
         duration: performance.now() - startTime,
@@ -382,7 +388,7 @@ export class E2ETestingUtils {
     const startTime = performance.now();
     const steps: any[] = [];
     const artifacts = { screenshots: [] as string[] };
-    
+
     const viewports = [
       { name: 'iPhone SE', width: 375, height: 667 },
       { name: 'iPad', width: 768, height: 1024 },
@@ -393,35 +399,37 @@ export class E2ETestingUtils {
       const stepStart = performance.now();
       try {
         // Set viewport size (simulated)
-        console.log(`[E2E] Setting viewport to ${viewport.name}: ${viewport.width}x${viewport.height}`);
-        
-        await context.page!.goto(this.config.baseUrl);
+        console.log(
+          `[E2E] Setting viewport to ${viewport.name}: ${viewport.width}x${viewport.height}`
+        );
+
+        await context.page!.goto(this._config.baseUrl);
         await context.page!.waitForLoadState('networkidle');
-        
+
         // Test navigation menu
         await context.page!.click('[data-testid="mobile-menu-button"]');
         await context.page!.waitForSelector('[data-testid="mobile-menu"]');
-        
+
         // Test swipe gestures (simulated)
         await this.simulateSwipeGesture(context.page!, 'left');
-        
+
         // Take screenshot
-        if (this.config.screenshots) {
+        if (this._config.screenshots) {
           const screenshot = await context.page!.screenshot();
           artifacts.screenshots.push(screenshot);
         }
-        
+
         steps.push({
           name: `Test ${viewport.name} Responsiveness`,
           passed: true,
           duration: performance.now() - stepStart,
         });
-      } catch (error) {
+      } catch (_error) {
         steps.push({
           name: `Test ${viewport.name} Responsiveness`,
           passed: false,
           duration: performance.now() - stepStart,
-          error: error instanceof Error ? error.message : String(error),
+          error: error instanceof Error ? error.message : String(_error),
         });
       }
     }
@@ -453,30 +461,30 @@ export class E2ETestingUtils {
       const stepStart = performance.now();
       try {
         console.log(`[E2E] Testing ${browserType} compatibility`);
-        
+
         // Simulate browser-specific testing
         const context = await this.createBrowserContext();
-        
-        await context.page!.goto(this.config.baseUrl);
+
+        await context.page!.goto(this._config.baseUrl);
         await context.page!.waitForLoadState('networkidle');
-        
+
         // Test basic functionality
         await context.page!.click('[data-testid="login-button"]');
         await context.page!.waitForSelector('[data-testid="login-form"]');
-        
+
         await context.browser!.close();
-        
+
         steps.push({
           name: `Test ${browserType} Compatibility`,
           passed: true,
           duration: performance.now() - stepStart,
         });
-      } catch (error) {
+      } catch (_error) {
         steps.push({
           name: `Test ${browserType} Compatibility`,
           passed: false,
           duration: performance.now() - stepStart,
-          error: error instanceof Error ? error.message : String(error),
+          error: error instanceof Error ? error.message : String(_error),
         });
       }
     }
@@ -507,30 +515,34 @@ export class E2ETestingUtils {
     // Step 1: Baseline performance
     const baselineStart = performance.now();
     try {
-      await context.page!.goto(this.config.baseUrl);
-      
+      await context.page!.goto(this._config.baseUrl);
+
       const performanceMetrics = await context.page!.evaluate(() => {
-        const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+        const navigation = performance.getEntriesByType(
+          'navigation'
+        )[0] as PerformanceNavigationTiming;
         return {
           loadTime: navigation.loadEventEnd - navigation.loadEventStart,
-          domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
-          firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0,
+          domContentLoaded:
+            navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
+          firstContentfulPaint:
+            performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0,
         };
       });
-      
+
       performanceMonitor.recordMetric('e2e_performance', performanceMetrics);
-      
+
       steps.push({
         name: 'Baseline Performance',
         passed: true,
         duration: performance.now() - baselineStart,
       });
-    } catch (error) {
+    } catch (_error) {
       steps.push({
         name: 'Baseline Performance',
         passed: false,
         duration: performance.now() - baselineStart,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? _error.message : String(_error),
       });
     }
 
@@ -542,18 +554,18 @@ export class E2ETestingUtils {
         await context.page!.waitForLoadState('networkidle');
         await this.helpers.wait(100);
       }
-      
+
       steps.push({
         name: 'Load Test Multiple Actions',
         passed: true,
         duration: performance.now() - loadTestStart,
       });
-    } catch (error) {
+    } catch (_error) {
       steps.push({
         name: 'Load Test Multiple Actions',
         passed: false,
         duration: performance.now() - loadTestStart,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? _error.message : String(_error),
       });
     }
 
@@ -562,28 +574,30 @@ export class E2ETestingUtils {
     try {
       const memoryUsage = await context.page!.evaluate(() => {
         const memory = (performance as any).memory;
-        return memory ? {
-          usedJSHeapSize: memory.usedJSHeapSize,
-          totalJSHeapSize: memory.totalJSHeapSize,
-          jsHeapSizeLimit: memory.jsHeapSizeLimit,
-        } : null;
+        return memory
+          ? {
+              usedJSHeapSize: memory.usedJSHeapSize,
+              totalJSHeapSize: memory.totalJSHeapSize,
+              jsHeapSizeLimit: memory.jsHeapSizeLimit,
+            }
+          : null;
       });
-      
+
       if (memoryUsage) {
         performanceMonitor.recordMetric('e2e_memory', memoryUsage);
       }
-      
+
       steps.push({
         name: 'Memory Usage Test',
         passed: true,
         duration: performance.now() - memoryTestStart,
       });
-    } catch (error) {
+    } catch (_error) {
       steps.push({
         name: 'Memory Usage Test',
         passed: false,
         duration: performance.now() - memoryTestStart,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? _error.message : String(_error),
       });
     }
 
@@ -605,15 +619,18 @@ export class E2ETestingUtils {
   }
 
   // Simulate swipe gesture (mock implementation)
-  private async simulateSwipeGesture(page: any, direction: 'left' | 'right' | 'up' | 'down'): Promise<void> {
+  private async simulateSwipeGesture(
+    page: any,
+    direction: 'left' | 'right' | 'up' | 'down'
+  ): Promise<void> {
     console.log(`[E2E] Simulating ${direction} swipe gesture`);
     await this.helpers.wait(100);
-    
+
     // In a real implementation, this would perform actual touch events
     // For mock, we just simulate the delay and action
     await page.evaluate((dir: string) => {
       const event = new CustomEvent('swipe', { detail: { direction: dir } });
-      document.dispatchEvent(event);
+      document.dispatchEvent(_event);
     }, direction);
   }
 
@@ -636,8 +653,8 @@ export class E2ETestSuite {
   private utils: E2ETestingUtils;
   private results: Map<string, E2EFlowResult> = new Map();
 
-  constructor(config: Partial<E2ETestConfig> = {}) {
-    this.utils = new E2ETestingUtils(config);
+  constructor(_config: Partial<E2ETestConfig> = {}) {
+    this.utils = new E2ETestingUtils(_config);
   }
 
   async runFullE2ESuite(): Promise<Map<string, E2EFlowResult>> {
@@ -646,7 +663,7 @@ export class E2ETestSuite {
     try {
       // Run user journey test
       const userJourneyResult = await this.utils.testCompleteUserJourney(context);
-      this.results.set('user-journey', userJourneyResult);
+      this.results.set('_user-journey', userJourneyResult);
 
       // Run mobile responsiveness test
       const mobileResult = await this.utils.testMobileResponsiveness(context);
@@ -661,7 +678,6 @@ export class E2ETestSuite {
       this.results.set('performance-load', performanceResult);
 
       return this.results;
-
     } finally {
       await this.utils.cleanup(context);
     }
@@ -714,10 +730,7 @@ export class E2ETestSuite {
 }
 
 // Export utilities and classes
-export {
-  E2ETestingUtils,
-  E2ETestSuite,
-};
+export { E2ETestingUtils, E2ETestSuite };
 
 // Create singleton instance for easy use
 export const e2eTestSuite = new E2ETestSuite();

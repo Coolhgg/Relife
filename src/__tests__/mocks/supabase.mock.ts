@@ -33,11 +33,11 @@ const mockSupabaseClient = {
           const data = mockDataStore[table]?.find(
             (item: any) => item[column] === value
           );
-          return Promise.resolve({ data, error: null });
+          return Promise.resolve({ data, _error: null });
         }),
         limit: jest.fn((count: number) => ({
           data: mockDataStore[table]?.slice(0, count) || [],
-          error: null,
+          _error: null,
         })),
         order: jest.fn((column: string, options?: any) => ({
           data:
@@ -53,54 +53,54 @@ const mockSupabaseClient = {
         })),
         range: jest.fn((from: number, to: number) => ({
           data: mockDataStore[table]?.slice(from, to + 1) || [],
-          error: null,
+          _error: null,
         })),
         then: jest.fn((callback: any) => {
           const data =
             mockDataStore[table]?.filter((item: any) => item[column] === value) || [];
-          return Promise.resolve(callback({ data, error: null }));
+          return Promise.resolve(callback({ data, _error: null }));
         }),
       })),
       neq: jest.fn((column: string, value: any) => ({
         data: mockDataStore[table]?.filter((item: any) => item[column] !== value) || [],
-        error: null,
+        _error: null,
       })),
       gt: jest.fn((column: string, value: any) => ({
         data: mockDataStore[table]?.filter((item: any) => item[column] > value) || [],
-        error: null,
+        _error: null,
       })),
       gte: jest.fn((column: string, value: any) => ({
         data: mockDataStore[table]?.filter((item: any) => item[column] >= value) || [],
-        error: null,
+        _error: null,
       })),
       lt: jest.fn((column: string, value: any) => ({
         data: mockDataStore[table]?.filter((item: any) => item[column] < value) || [],
-        error: null,
+        _error: null,
       })),
       lte: jest.fn((column: string, value: any) => ({
         data: mockDataStore[table]?.filter((item: any) => item[column] <= value) || [],
-        error: null,
+        _error: null,
       })),
       like: jest.fn((column: string, pattern: string) => ({
         data:
           mockDataStore[table]?.filter((item: any) =>
             String(item[column]).includes(pattern.replace('%', ''))
           ) || [],
-        error: null,
+        _error: null,
       })),
       in: jest.fn((column: string, values: any[]) => ({
         data:
           mockDataStore[table]?.filter((item: any) => values.includes(item[column])) ||
           [],
-        error: null,
+        _error: null,
       })),
       is: jest.fn((column: string, value: any) => ({
         data: mockDataStore[table]?.filter((item: any) => item[column] === value) || [],
-        error: null,
+        _error: null,
       })),
       then: jest.fn((callback: any) => {
         const data = mockDataStore[table] || [];
-        return Promise.resolve(callback({ data, error: null }));
+        return Promise.resolve(callback({ data, _error: null }));
       }),
     })),
 
@@ -118,7 +118,7 @@ const mockSupabaseClient = {
         if (!mockDataStore[table]) mockDataStore[table] = [];
         mockDataStore[table].push(...withIds);
 
-        return Promise.resolve({ data: withIds, error: null });
+        return Promise.resolve({ data: withIds, _error: null });
       }),
       single: jest.fn(() => {
         const insertItem = Array.isArray(data) ? data[0] : data;
@@ -132,7 +132,7 @@ const mockSupabaseClient = {
         if (!mockDataStore[table]) mockDataStore[table] = [];
         mockDataStore[table].push(withId);
 
-        return Promise.resolve({ data: withId, error: null });
+        return Promise.resolve({ data: withId, _error: null });
       }),
       then: jest.fn((callback: any) => {
         const insertData = Array.isArray(data) ? data : [data];
@@ -146,7 +146,7 @@ const mockSupabaseClient = {
         if (!mockDataStore[table]) mockDataStore[table] = [];
         mockDataStore[table].push(...withIds);
 
-        return Promise.resolve(callback({ data: withIds, error: null }));
+        return Promise.resolve(callback({ data: withIds, _error: null }));
       }),
     })),
 
@@ -163,7 +163,7 @@ const mockSupabaseClient = {
           });
           mockDataStore[table] = updated;
           const updatedItems = updated.filter((item: any) => item[column] === value);
-          return Promise.resolve({ data: updatedItems, error: null });
+          return Promise.resolve({ data: updatedItems, _error: null });
         }),
         single: jest.fn(() => {
           if (!mockDataStore[table]) mockDataStore[table] = [];
@@ -178,12 +178,12 @@ const mockSupabaseClient = {
             };
             return Promise.resolve({
               data: mockDataStore[table][itemIndex],
-              error: null,
+              _error: null,
             });
           }
           return Promise.resolve({
             data: null,
-            error: { message: 'Record not found' },
+            _error: { message: 'Record not found' },
           });
         }),
         then: jest.fn((callback: any) => {
@@ -196,7 +196,7 @@ const mockSupabaseClient = {
           });
           mockDataStore[table] = updated;
           const updatedItems = updated.filter((item: any) => item[column] === value);
-          return Promise.resolve(callback({ data: updatedItems, error: null }));
+          return Promise.resolve(callback({ data: updatedItems, _error: null }));
         }),
       })),
     })),
@@ -212,7 +212,7 @@ const mockSupabaseClient = {
           mockDataStore[table] = mockDataStore[table].filter(
             (item: any) => item[column] !== value
           );
-          return Promise.resolve({ data: toDelete, error: null });
+          return Promise.resolve({ data: toDelete, _error: null });
         }),
         then: jest.fn((callback: any) => {
           if (!mockDataStore[table]) mockDataStore[table] = [];
@@ -222,7 +222,7 @@ const mockSupabaseClient = {
           mockDataStore[table] = mockDataStore[table].filter(
             (item: any) => item[column] !== value
           );
-          return Promise.resolve(callback({ data: toDelete, error: null }));
+          return Promise.resolve(callback({ data: toDelete, _error: null }));
         }),
       })),
     })),
@@ -262,7 +262,7 @@ const mockSupabaseClient = {
           }
         });
 
-        return Promise.resolve({ data: result, error: null });
+        return Promise.resolve({ data: result, _error: null });
       }),
     })),
   })),
@@ -274,7 +274,7 @@ const mockSupabaseClient = {
       console.log('🔐 Mock Supabase getSession');
       return Promise.resolve({
         data: { session: mockAuthState.session },
-        error: null,
+        _error: null,
       });
     }),
 
@@ -282,8 +282,8 @@ const mockSupabaseClient = {
     getUser: jest.fn(() => {
       console.log('👤 Mock Supabase getUser');
       return Promise.resolve({
-        data: { user: mockAuthState.user },
-        error: null,
+        data: { user: mockAuthState._user },
+        _error: null,
       });
     }),
 
@@ -311,8 +311,8 @@ const mockSupabaseClient = {
       mockAuthState = { user, session, isAuthenticated: true };
 
       return Promise.resolve({
-        data: { user, session },
-        error: null,
+        data: { _user, session },
+        _error: null,
       });
     }),
 
@@ -330,8 +330,8 @@ const mockSupabaseClient = {
       };
 
       return Promise.resolve({
-        data: { user, session: null },
-        error: null,
+        data: { _user, session: null },
+        _error: null,
       });
     }),
 
@@ -339,7 +339,7 @@ const mockSupabaseClient = {
     signOut: jest.fn(() => {
       console.log('🚪 Mock Supabase signOut');
       mockAuthState = { user: null, session: null, isAuthenticated: false };
-      return Promise.resolve({ error: null });
+      return Promise.resolve({ _error: null });
     }),
 
     // OAuth providers
@@ -347,7 +347,7 @@ const mockSupabaseClient = {
       console.log(`🔗 Mock Supabase signInWithOAuth: ${provider}`);
       return Promise.resolve({
         data: { url: `https://mock-oauth-url.com/${provider}` },
-        error: null,
+        _error: null,
       });
     }),
 
@@ -356,12 +356,12 @@ const mockSupabaseClient = {
       console.log(`🔄 Mock Supabase resetPasswordForEmail: ${email}`);
       return Promise.resolve({
         data: {},
-        error: null,
+        _error: null,
       });
     }),
 
     // Auth state changes
-    onAuthStateChange: jest.fn((callback: (event: string, session: any) => void) => {
+    onAuthStateChange: jest.fn((callback: (_event: string, session: any) => void) => {
       console.log('👀 Mock Supabase onAuthStateChange');
 
       // Simulate initial session check
@@ -389,7 +389,7 @@ const mockSupabaseClient = {
       getUserById: jest.fn((id: string) => {
         console.log(`👑 Mock Supabase admin getUserById: ${id}`);
         return Promise.resolve({
-          data: { user: mockDataStore.users?.find((u: any) => u.id === id) },
+          data: { _user: mockDataStore.users?.find((u: any) => u.id === id) },
           error: null,
         });
       }),
@@ -397,8 +397,8 @@ const mockSupabaseClient = {
       updateUserById: jest.fn((id: string, attributes: any) => {
         console.log(`👑 Mock Supabase admin updateUserById: ${id}`);
         return Promise.resolve({
-          data: { user: { id, ...attributes } },
-          error: null,
+          data: { _user: { id, ...attributes } },
+          _error: null,
         });
       }),
     },
@@ -424,7 +424,7 @@ const mockSupabaseClient = {
         const mockBlob = new Blob(['mock file content'], { type: 'text/plain' });
         return Promise.resolve({
           data: mockBlob,
-          error: null,
+          _error: null,
         });
       }),
 
@@ -461,7 +461,7 @@ const mockSupabaseClient = {
           data: {
             signedUrl: `https://mock-storage-url.com/${bucket}/${path}?token=mock-token`,
           },
-          error: null,
+          _error: null,
         });
       }),
 
@@ -478,8 +478,8 @@ const mockSupabaseClient = {
 
   // Real-time subscriptions
   channel: jest.fn((topic: string) => ({
-    on: jest.fn((event: string, callback: (payload: any) => void) => {
-      console.log(`📡 Mock Supabase channel.on: ${topic} - ${event}`);
+    on: jest.fn((_event: string, callback: (payload: any) => void) => {
+      console.log(`📡 Mock Supabase channel.on: ${topic} - ${_event}`);
       return {
         subscribe: jest.fn(() => {
           console.log(`📻 Mock Supabase subscribe: ${topic}`);
@@ -499,7 +499,7 @@ const mockSupabaseClient = {
       console.log(`⚡ Mock Supabase functions.invoke: ${functionName}`, options);
       return Promise.resolve({
         data: { message: 'Mock function response', result: true },
-        error: null,
+        _error: null,
       });
     }),
   },
@@ -517,7 +517,7 @@ const mockSupabaseClient = {
     console.log('🧹 Mock Supabase reset');
   }),
 
-  _mockSetUser: jest.fn((user: any, session?: any) => {
+  _mockSetUser: jest.fn((_user: any, session?: any) => {
     mockAuthState = {
       user,
       session: session || {
@@ -529,7 +529,7 @@ const mockSupabaseClient = {
       },
       isAuthenticated: true,
     };
-    console.log('👤 Mock Supabase user set', user);
+    console.log('👤 Mock Supabase user set', _user);
   }),
 
   _mockAddData: jest.fn((table: string, data: any[]) => {

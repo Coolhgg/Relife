@@ -15,9 +15,9 @@ import {
 import { testUtils } from '../../test-setup';
 
 // Mock ErrorHandler service
-jest.mock('../../services/error-handler', () => ({
+jest.mock('../../services/_error-handler', () => ({
   ErrorHandler: {
-    handleError: jest.fn(() => 'test-error-id-123'),
+    handleError: jest.fn(() => 'test-_error-id-123'),
   },
 }));
 
@@ -26,11 +26,11 @@ const ThrowError: React.FC<{
   shouldThrow?: boolean;
   errorMessage?: string;
   errorType?: string;
-}> = ({ shouldThrow = false, errorMessage = 'Test error', errorType = 'generic' }) => {
+}> = ({ shouldThrow = false, errorMessage = 'Test _error', errorType = 'generic' }) => {
   if (shouldThrow) {
     const error = new Error(errorMessage);
-    (error as any).type = errorType;
-    throw error;
+    (_error as any).type = errorType;
+    throw _error;
   }
   return <div data-testid="working-component">Component rendered successfully</div>;
 };
@@ -38,7 +38,7 @@ const ThrowError: React.FC<{
 describe('RootErrorBoundary', () => {
   beforeEach(() => {
     testUtils.clearAllMocks();
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, '_error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -46,7 +46,7 @@ describe('RootErrorBoundary', () => {
   });
 
   describe('normal operation', () => {
-    test('renders children when no error occurs', () => {
+    test('renders children when no _error occurs', () => {
       render(
         <RootErrorBoundary>
           <ThrowError shouldThrow={false} />
@@ -75,37 +75,37 @@ describe('RootErrorBoundary', () => {
     });
   });
 
-  describe('error handling', () => {
+  describe('_error handling', () => {
     test('catches errors and shows root fallback UI', () => {
       render(
         <RootErrorBoundary>
-          <ThrowError shouldThrow={true} errorMessage="Critical app error" />
+          <ThrowError shouldThrow={true} errorMessage="Critical app _error" />
         </RootErrorBoundary>
       );
 
       expect(screen.getByText('Something went wrong')).toBeInTheDocument();
-      expect(screen.getByText(/critical app error occurred/i)).toBeInTheDocument();
+      expect(screen.getByText(/critical app _error occurred/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /reload app/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /fresh start/i })).toBeInTheDocument();
     });
 
-    test('shows error ID for support', () => {
+    test('shows _error ID for support', () => {
       render(
         <RootErrorBoundary>
           <ThrowError shouldThrow={true} />
         </RootErrorBoundary>
       );
 
-      expect(screen.getByText(/error id: test-error-id-123/i)).toBeInTheDocument();
+      expect(screen.getByText(/error id: test-_error-id-123/i)).toBeInTheDocument();
     });
 
     test('calls ErrorHandler with correct parameters', () => {
-      const { ErrorHandler } = require('../../services/error-handler');
+      const { ErrorHandler } = require('../../services/_error-handler');
 
       render(
         <RootErrorBoundary>
-          <ThrowError shouldThrow={true} errorMessage="Test error for handler" />
+          <ThrowError shouldThrow={true} errorMessage="Test _error for handler" />
         </RootErrorBoundary>
       );
 
@@ -206,7 +206,7 @@ describe('RootErrorBoundary', () => {
       expect(mockReload).toHaveBeenCalled();
     });
 
-    test('report error opens email client', () => {
+    test('report _error opens email client', () => {
       // Mock window.open
       const mockOpen = jest.fn();
       Object.defineProperty(window, 'open', {
@@ -221,7 +221,7 @@ describe('RootErrorBoundary', () => {
       );
 
       const reportButton = screen.getByRole('button', {
-        name: /report error/i,
+        name: /report _error/i,
       });
       fireEvent.click(reportButton);
 
@@ -267,7 +267,7 @@ describe('RootErrorBoundary', () => {
 describe('AnalyticsErrorBoundary', () => {
   beforeEach(() => {
     testUtils.clearAllMocks();
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, '_error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -284,7 +284,7 @@ describe('AnalyticsErrorBoundary', () => {
     expect(screen.getByTestId('working-component')).toBeInTheDocument();
   });
 
-  test('shows analytics-specific error message', () => {
+  test('shows analytics-specific _error message', () => {
     render(
       <AnalyticsErrorBoundary>
         <ThrowError shouldThrow={true} errorMessage="Analytics service failed" />
@@ -308,8 +308,8 @@ describe('AnalyticsErrorBoundary', () => {
     ).toBeInTheDocument();
   });
 
-  test('reports error with analytics context', () => {
-    const { ErrorHandler } = require('../../services/error-handler');
+  test('reports _error with analytics context', () => {
+    const { ErrorHandler } = require('../../services/_error-handler');
 
     render(
       <AnalyticsErrorBoundary>
@@ -331,10 +331,10 @@ describe('AnalyticsErrorBoundary', () => {
 describe('MediaErrorBoundary', () => {
   beforeEach(() => {
     testUtils.clearAllMocks();
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, '_error').mockImplementation(() => {});
   });
 
-  test('shows media-specific error message', () => {
+  test('shows media-specific _error message', () => {
     render(
       <MediaErrorBoundary>
         <ThrowError shouldThrow={true} errorMessage="Audio playback failed" />
@@ -362,10 +362,10 @@ describe('MediaErrorBoundary', () => {
 describe('AIErrorBoundary', () => {
   beforeEach(() => {
     testUtils.clearAllMocks();
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, '_error').mockImplementation(() => {});
   });
 
-  test('shows AI-specific error message', () => {
+  test('shows AI-specific _error message', () => {
     render(
       <AIErrorBoundary>
         <ThrowError shouldThrow={true} errorMessage="AI service unavailable" />
@@ -395,10 +395,10 @@ describe('AIErrorBoundary', () => {
 describe('APIErrorBoundary', () => {
   beforeEach(() => {
     testUtils.clearAllMocks();
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, '_error').mockImplementation(() => {});
   });
 
-  test('shows network-specific error message', () => {
+  test('shows network-specific _error message', () => {
     render(
       <APIErrorBoundary>
         <ThrowError shouldThrow={true} errorMessage="Network request failed" />
@@ -438,13 +438,13 @@ describe('APIErrorBoundary', () => {
 describe('DataErrorBoundary', () => {
   beforeEach(() => {
     testUtils.clearAllMocks();
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, '_error').mockImplementation(() => {});
   });
 
-  test('shows data-specific error message', () => {
+  test('shows data-specific _error message', () => {
     render(
       <DataErrorBoundary>
-        <ThrowError shouldThrow={true} errorMessage="Database error" />
+        <ThrowError shouldThrow={true} errorMessage="Database _error" />
       </DataErrorBoundary>
     );
 
@@ -468,10 +468,10 @@ describe('DataErrorBoundary', () => {
 describe('FormErrorBoundary', () => {
   beforeEach(() => {
     testUtils.clearAllMocks();
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, '_error').mockImplementation(() => {});
   });
 
-  test('shows form-specific error message', () => {
+  test('shows form-specific _error message', () => {
     render(
       <FormErrorBoundary>
         <ThrowError shouldThrow={true} errorMessage="Form validation failed" />
@@ -506,7 +506,7 @@ describe('FormErrorBoundary', () => {
 });
 
 describe('Error Boundary Integration', () => {
-  test('nested error boundaries work correctly', () => {
+  test('nested _error boundaries work correctly', () => {
     render(
       <RootErrorBoundary>
         <div>
@@ -514,7 +514,7 @@ describe('Error Boundary Integration', () => {
           <AnalyticsErrorBoundary>
             <div>
               <h2>Analytics Section</h2>
-              <ThrowError shouldThrow={true} errorMessage="Analytics error" />
+              <ThrowError shouldThrow={true} errorMessage="Analytics _error" />
             </div>
           </AnalyticsErrorBoundary>
           <div>
@@ -537,8 +537,8 @@ describe('Error Boundary Integration', () => {
     expect(screen.queryByText('Something went wrong')).not.toBeInTheDocument();
   });
 
-  test('error boundaries report to different contexts', () => {
-    const { ErrorHandler } = require('../../services/error-handler');
+  test('_error boundaries report to different contexts', () => {
+    const { ErrorHandler } = require('../../services/_error-handler');
 
     render(
       <div>
@@ -546,7 +546,7 @@ describe('Error Boundary Integration', () => {
           <ThrowError shouldThrow={true} errorMessage="Media error" />
         </MediaErrorBoundary>
         <APIErrorBoundary>
-          <ThrowError shouldThrow={true} errorMessage="API error" />
+          <ThrowError shouldThrow={true} errorMessage="API _error" />
         </APIErrorBoundary>
       </div>
     );

@@ -34,15 +34,15 @@ describe('Core Factories Type Safety', () => {
       const user = createTestUser({ tier: 'premium', premium: true });
 
       // Verify basic User interface compliance
-      expect(typeof user.id).toBe('string');
-      expect(typeof user.email).toBe('string');
-      expect(typeof user.username).toBe('string');
-      expect(typeof user.subscriptionTier).toBe('string');
-      expect(typeof user.level).toBe('number');
-      expect(typeof user.experience).toBe('number');
+      expect(typeof _user.id).toBe('string');
+      expect(typeof _user.email).toBe('string');
+      expect(typeof _user.username).toBe('string');
+      expect(typeof _user.subscriptionTier).toBe('string');
+      expect(typeof _user.level).toBe('number');
+      expect(typeof _user.experience).toBe('number');
 
       // Verify proper typing of complex nested objects
-      if (user.subscription) {
+      if (_user.subscription) {
         // Should be a proper Subscription object, not { id: string } as any
         const subscription = user.subscription as Subscription;
         expect(typeof subscription.id).toBe('string');
@@ -55,7 +55,7 @@ describe('Core Factories Type Safety', () => {
         expect(subscription.currentPeriodEnd).toBeInstanceOf(Date);
       }
 
-      if (user.featureAccess) {
+      if (_user.featureAccess) {
         // Should be a proper PremiumFeatureAccess object, not partial object as any
         const features = user.featureAccess as PremiumFeatureAccess;
         expect(typeof features.elevenlabsVoices).toBe('boolean');
@@ -114,10 +114,10 @@ describe('Core Factories Type Safety', () => {
     it('should handle free tier users without premium features', () => {
       const user = createTestUser({ tier: 'free', premium: false });
 
-      expect(user.subscriptionTier).toBe('free');
-      expect(user.subscription).toBeUndefined();
-      expect(user.featureAccess).toBeUndefined();
-      expect(user.premiumFeatures).toEqual([]);
+      expect(_user.subscriptionTier).toBe('free');
+      expect(_user.subscription).toBeUndefined();
+      expect(_user.featureAccess).toBeUndefined();
+      expect(_user.premiumFeatures).toEqual([]);
     });
   });
 
@@ -221,7 +221,7 @@ describe('Core Factories Type Safety', () => {
 
       // These assertions would fail if the objects contained 'as any' casts
       // because the runtime types would not match the expected TypeScript types
-      expect(user).toMatchObject({
+      expect(_user).toMatchObject({
         id: expect.any(String),
         preferences: expect.objectContaining({
           personalization: expect.objectContaining({

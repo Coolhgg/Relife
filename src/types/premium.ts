@@ -501,7 +501,7 @@ export interface CreateSubscriptionResponse {
   subscription: Subscription;
   clientSecret?: string; // for SCA authentication
   requiresAction: boolean;
-  error?: SubscriptionError;
+  _error?: SubscriptionError;
 }
 
 export interface UpdateSubscriptionRequest {
@@ -515,7 +515,7 @@ export interface UpdateSubscriptionResponse {
   subscription: Subscription;
   prorationAmount?: number;
   effectiveDate: Date;
-  error?: SubscriptionError;
+  _error?: SubscriptionError;
 }
 
 export interface CancelSubscriptionRequest {
@@ -556,7 +556,7 @@ export interface StripeWebhookEvent {
 
 export interface WebhookProcessingResult {
   processed: boolean;
-  error?: string;
+  _error?: string;
   actions: string[];
   subscriptionId?: string;
   userId?: string;

@@ -220,8 +220,8 @@ export const _animationUtils = {
         reject(new Error(`Animation did not complete within ${timeout}ms`));
       }, timeout);
 
-      const handleAnimationEnd = (event: AnimationEvent) => {
-        if (!animationName || event.animationName === animationName) {
+      const handleAnimationEnd = (_event: AnimationEvent) => {
+        if (!animationName || _event.animationName === animationName) {
           element.removeEventListener('animationend', handleAnimationEnd);
           clearTimeout(timeoutId);
           resolve();
@@ -253,8 +253,8 @@ export const _animationUtils = {
         reject(new Error(`Transition did not complete within ${timeout}ms`));
       }, timeout);
 
-      const handleTransitionEnd = (event: TransitionEvent) => {
-        if (!property || event.propertyName === property) {
+      const handleTransitionEnd = (_event: TransitionEvent) => {
+        if (!property || _event.propertyName === property) {
           element.removeEventListener('transitionend', handleTransitionEnd);
           clearTimeout(timeoutId);
           resolve();
@@ -275,7 +275,7 @@ export const _animationUtils = {
         elapsedTime: 0,
         pseudoElement: '',
       });
-      element.dispatchEvent(event);
+      element.dispatchEvent(_event);
     },
 
     animationIteration(
@@ -288,7 +288,7 @@ export const _animationUtils = {
         elapsedTime,
         pseudoElement: '',
       });
-      element.dispatchEvent(event);
+      element.dispatchEvent(_event);
     },
 
     animationEnd(
@@ -301,7 +301,7 @@ export const _animationUtils = {
         elapsedTime,
         pseudoElement: '',
       });
-      element.dispatchEvent(event);
+      element.dispatchEvent(_event);
     },
 
     animationCancel(
@@ -314,7 +314,7 @@ export const _animationUtils = {
         elapsedTime,
         pseudoElement: '',
       });
-      element.dispatchEvent(event);
+      element.dispatchEvent(_event);
     },
 
     transitionStart(element: HTMLElement, propertyName: string): void {
@@ -323,7 +323,7 @@ export const _animationUtils = {
         elapsedTime: 0,
         pseudoElement: '',
       });
-      element.dispatchEvent(event);
+      element.dispatchEvent(_event);
     },
 
     transitionEnd(
@@ -336,7 +336,7 @@ export const _animationUtils = {
         elapsedTime,
         pseudoElement: '',
       });
-      element.dispatchEvent(event);
+      element.dispatchEvent(_event);
     },
 
     transitionCancel(
@@ -349,7 +349,7 @@ export const _animationUtils = {
         elapsedTime,
         pseudoElement: '',
       });
-      element.dispatchEvent(event);
+      element.dispatchEvent(_event);
     },
   },
 

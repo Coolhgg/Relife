@@ -11,24 +11,24 @@ export interface ConvertKitAutomationParameters {
   // Sequence parameters
   sequence_id?: number;
   delay_days?: number;
-  
+
   // Tag parameters
   tag_id?: number;
   tag_name?: string;
-  
+
   // Email parameters
   email_template_id?: number;
   subject?: string;
   content?: string;
-  
+
   // Field update parameters
   field_name?: string;
   field_value?: string | number | boolean;
-  
+
   // Conditional parameters
   condition_type?: 'has_tag' | 'field_equals' | 'date_based' | 'engagement_based';
   condition_value?: any;
-  
+
   // Custom parameters
   webhook_url?: string;
   custom_data?: {
@@ -45,28 +45,28 @@ export interface EmotionalMessageVariables {
   userName?: string;
   firstName?: string;
   lastName?: string;
-  
+
   // Time-based variables
   timeOfDay?: 'morning' | 'afternoon' | 'evening' | 'night';
   currentTime?: string; // HH:MM format
   dayOfWeek?: string;
-  
+
   // Streak and achievement data
   currentStreak?: number;
   longestStreak?: number;
   totalAlarms?: number;
   successRate?: number;
-  
+
   // Motivational content
   achievementType?: string;
   goalProgress?: number;
   nextMilestone?: string;
-  
+
   // Contextual information
   weatherCondition?: string;
   location?: string;
   difficulty?: 'easy' | 'medium' | 'hard' | 'expert';
-  
+
   // Custom variables for specific contexts
   customMessage?: string;
   urgencyLevel?: 'low' | 'medium' | 'high';
@@ -82,7 +82,7 @@ export interface PerformanceEventMetadata {
   userId?: string;
   sessionId?: string;
   deviceId?: string;
-  
+
   // Technical context
   userAgent?: string;
   viewport?: {
@@ -92,25 +92,25 @@ export interface PerformanceEventMetadata {
   connectionType?: string;
   memoryUsage?: number;
   batteryLevel?: number;
-  
+
   // Application context
   appVersion?: string;
   buildVersion?: string;
   featureFlags?: string[];
   experimentGroups?: string[];
-  
+
   // Performance context
   renderTime?: number;
   loadTime?: number;
   interactionTime?: number;
   errorCount?: number;
   warningCount?: number;
-  
+
   // Business context
   userTier?: string;
   subscriptionStatus?: string;
   trialDaysRemaining?: number;
-  
+
   // Custom tracking
   customMetrics?: {
     [metricName: string]: number | string | boolean;
@@ -127,32 +127,32 @@ export interface AnalyticsEventProperties {
   action?: string;
   label?: string;
   value?: number;
-  
+
   // User properties
   userId?: string;
   userTier?: 'free' | 'basic' | 'premium' | 'pro' | 'ultimate';
   signupDate?: string;
   lastActiveDate?: string;
-  
+
   // Session properties
   sessionId?: string;
   sessionDuration?: number;
   pageViews?: number;
   isFirstSession?: boolean;
-  
+
   // Device properties
   deviceType?: 'mobile' | 'tablet' | 'desktop';
   operatingSystem?: string;
   browserName?: string;
   browserVersion?: string;
   screenResolution?: string;
-  
+
   // Location properties
   country?: string;
   region?: string;
   city?: string;
   timezone?: string;
-  
+
   // Marketing properties
   referrer?: string;
   utmSource?: string;
@@ -160,25 +160,25 @@ export interface AnalyticsEventProperties {
   utmCampaign?: string;
   utmTerm?: string;
   utmContent?: string;
-  
+
   // Feature-specific properties
   featureUsed?: string;
   featureVersion?: string;
   experimentVariant?: string;
-  
+
   // Alarm-specific properties (for alarm events)
   alarmId?: string;
   alarmType?: string;
   alarmDifficulty?: string;
   snoozeCount?: number;
   dismissalTime?: number;
-  
+
   // Business metrics
   revenue?: number;
   conversionValue?: number;
   subscriptionTier?: string;
   planType?: 'monthly' | 'yearly' | 'lifetime';
-  
+
   // Custom properties
   customDimensions?: {
     [dimensionName: string]: string | number | boolean;
@@ -197,19 +197,19 @@ export interface FormFieldData {
   phone?: string;
   company?: string;
   website?: string;
-  
+
   // Address fields
   address?: string;
   city?: string;
   state?: string;
   zipCode?: string;
   country?: string;
-  
+
   // Preference fields
   preferences?: string[];
   interests?: string[];
   communicationFrequency?: 'daily' | 'weekly' | 'monthly' | 'never';
-  
+
   // Custom fields with validation
   customFields?: {
     [fieldName: string]: {
@@ -230,32 +230,32 @@ export interface FeatureTrackingContext {
   featureName: string;
   featureCategory?: string;
   featureVersion?: string;
-  
+
   // User context
   userId?: string;
   userTier?: string;
   subscriptionStatus?: string;
-  
+
   // Usage context
   usageCount?: number;
   firstUsedAt?: Date;
   lastUsedAt?: Date;
-  
+
   // A/B testing context
   experimentId?: string;
   experimentVariant?: string;
   experimentStartDate?: Date;
-  
+
   // Performance context
   loadTime?: number;
   renderTime?: number;
   errorCount?: number;
-  
+
   // Business context
   hasAccess?: boolean;
   isPremiumFeature?: boolean;
   upgradePromptShown?: boolean;
-  
+
   // Custom context
   customAttributes?: {
     [attributeName: string]: string | number | boolean | Date;
@@ -272,36 +272,36 @@ export interface NotificationExtrasData {
   body?: string;
   icon?: string;
   image?: string;
-  
+
   // Action configuration
   actions?: Array<{
     action: string;
     title: string;
     icon?: string;
   }>;
-  
+
   // Behavior configuration
   silent?: boolean;
   vibrate?: number[];
   sound?: string;
-  
+
   // Deep linking
   deepLink?: string;
   url?: string;
-  
+
   // Scheduling
   scheduledAt?: Date;
   expiresAt?: Date;
-  
+
   // Categorization
   category?: string;
   priority?: 'min' | 'low' | 'default' | 'high' | 'max';
-  
+
   // Tracking
   trackingId?: string;
   campaignId?: string;
   userId?: string;
-  
+
   // Custom data
   customData?: {
     [key: string]: string | number | boolean;
@@ -316,29 +316,29 @@ export interface CacheConfiguration {
   // TTL settings
   ttl?: number; // seconds
   maxAge?: number; // seconds
-  
+
   // Size limits
   maxSize?: number; // bytes
   maxEntries?: number;
-  
+
   // Eviction policy
   evictionPolicy?: 'lru' | 'lfu' | 'fifo' | 'ttl';
-  
+
   // Serialization
   serialize?: boolean;
   compression?: boolean;
-  
+
   // Persistence
   persistent?: boolean;
   storageLocation?: string;
-  
+
   // Validation
   validator?: (value: any) => boolean;
-  
+
   // Custom metadata
   tags?: string[];
   priority?: number;
-  
+
   // Callback configuration
   onHit?: (key: string, value: any) => void;
   onMiss?: (key: string) => void;
@@ -351,15 +351,21 @@ export interface CacheConfiguration {
 // =============================================================================
 
 // Type guards
-export const isEmotionalMessageVariables = (value: any): value is EmotionalMessageVariables => {
+export const isEmotionalMessageVariables = (
+  value: any
+): value is EmotionalMessageVariables => {
   return typeof value === 'object' && value !== null;
 };
 
-export const isAnalyticsEventProperties = (value: any): value is AnalyticsEventProperties => {
+export const isAnalyticsEventProperties = (
+  value: any
+): value is AnalyticsEventProperties => {
   return typeof value === 'object' && value !== null;
 };
 
-export const isPerformanceEventMetadata = (value: any): value is PerformanceEventMetadata => {
+export const isPerformanceEventMetadata = (
+  value: any
+): value is PerformanceEventMetadata => {
   return typeof value === 'object' && value !== null;
 };
 
@@ -382,18 +388,18 @@ export const validateFormFieldData = (data: FormFieldData): boolean => {
   if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
     return false;
   }
-  
+
   // Phone validation if provided
   if (data.phone && !/^\+?[\d\s\-\(\)]+$/.test(data.phone)) {
     return false;
   }
-  
+
   return true;
 };
 
 export const sanitizeCustomFields = (customFields: any): Record<string, any> => {
   const sanitized: Record<string, any> = {};
-  
+
   if (typeof customFields === 'object' && customFields !== null) {
     for (const [key, value] of Object.entries(customFields)) {
       // Only allow safe types
@@ -402,6 +408,6 @@ export const sanitizeCustomFields = (customFields: any): Record<string, any> => 
       }
     }
   }
-  
+
   return sanitized;
 };

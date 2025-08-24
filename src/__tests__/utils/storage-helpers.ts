@@ -80,7 +80,7 @@ export const _storageMocks = {
       clear: jest.fn(() => {
         Object.keys(store).forEach(key => delete store[key]);
       }),
-      key: jest.fn((index: number) => Object.keys(store)[index] || null),
+      key: jest.fn((_index: number) => Object.keys(store)[index] || null),
       get length() {
         return Object.keys(store).length;
       },
@@ -136,7 +136,7 @@ export const _indexedDBMocks = {
 
     const mockIDBRequest = {
       result: null,
-      error: null,
+      _error: null,
       onsuccess: null,
       onerror: null,
       onupgradeneeded: null,
@@ -388,9 +388,9 @@ export const _storageUtils = {
     try {
       localStorage.setItem('large_data', largeData);
       expect(mockStorage.setItem).toHaveBeenCalledWith('large_data', largeData);
-    } catch (error) {
-      // Handle quota exceeded error
-      expect(error).toBeInstanceOf(Error);
+    } catch (_error) {
+      // Handle quota exceeded _error
+      expect(_error).toBeInstanceOf(Error);
     }
   },
 
@@ -499,11 +499,11 @@ export const _storageDataFactory = {
    * Create multiple test alarms
    */
   createMultipleAlarms(count: number): AlarmStorageData[] {
-    return Array.from({ length: count }, (_, index) =>
+    return Array.from({ length: count }, (_, _index) =>
       this.createAlarmData({
-        id: `alarm-${index + 1}`,
-        time: `0${7 + index}:00`,
-        label: `Alarm ${index + 1}`,
+        id: `alarm-${_index + 1}`,
+        time: `0${7 + _index}:00`,
+        label: `Alarm ${_index + 1}`,
       })
     );
   },
@@ -575,7 +575,7 @@ export const _createStorageTestSuite = () => ({
   testStorageErrorHandling(): void {
     const mockStorage = storageMocks.mockLocalStorage();
 
-    // Simulate storage error
+    // Simulate storage _error
     mockStorage.setItem.mockImplementation(() => {
       throw new Error('QuotaExceededError');
     });

@@ -88,9 +88,9 @@ export class BattleService {
       });
 
       return newBattle;
-    } catch (error) {
-      console.error('Failed to create battle:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to create battle:', _error);
+      throw _error;
     }
   }
 
@@ -136,9 +136,9 @@ export class BattleService {
       });
 
       return true;
-    } catch (error) {
-      console.error('Failed to join battle:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to join battle:', _error);
+      throw _error;
     }
   }
 
@@ -168,9 +168,9 @@ export class BattleService {
       });
 
       return true;
-    } catch (error) {
-      console.error('Failed to leave battle:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to leave battle:', _error);
+      throw _error;
     }
   }
 
@@ -201,9 +201,9 @@ export class BattleService {
       }
 
       return battles;
-    } catch (error) {
-      console.error('Failed to get battles:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to get battles:', _error);
+      throw _error;
     }
   }
 
@@ -211,9 +211,9 @@ export class BattleService {
     try {
       const battle = this.mockData.battles.find(b => b.id === battleId);
       return battle || null;
-    } catch (error) {
-      console.error('Failed to get battle:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to get battle:', _error);
+      throw _error;
     }
   }
 
@@ -239,9 +239,9 @@ export class BattleService {
       });
 
       return true;
-    } catch (error) {
-      console.error('Failed to start battle:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to start battle:', _error);
+      throw _error;
     }
   }
 
@@ -279,9 +279,9 @@ export class BattleService {
       }
 
       return true;
-    } catch (error) {
-      console.error('Failed to record wake up:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to record wake up:', _error);
+      throw _error;
     }
   }
 
@@ -335,8 +335,8 @@ export class BattleService {
           battle.participants.reduce((acc, p) => acc + (p.score || 0), 0) /
           battle.participants.length,
       });
-    } catch (error) {
-      console.error('Failed to complete battle:', error);
+    } catch (_error) {
+      console._error('Failed to complete battle:', _error);
     }
   }
 
@@ -363,8 +363,8 @@ export class BattleService {
           );
         }
       }
-    } catch (error) {
-      console.error('Failed to award battle prizes:', error);
+    } catch (_error) {
+      console._error('Failed to award battle prizes:', _error);
     }
   }
 
@@ -392,8 +392,8 @@ export class BattleService {
         source,
         newTotal: amount, // Would be actual total in production
       });
-    } catch (error) {
-      console.error('Failed to award experience:', error);
+    } catch (_error) {
+      console._error('Failed to award experience:', _error);
     }
   }
 
@@ -417,9 +417,9 @@ export class BattleService {
       });
 
       return newTournament;
-    } catch (error) {
-      console.error('Failed to create tournament:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to create tournament:', _error);
+      throw _error;
     }
   }
 
@@ -441,9 +441,9 @@ export class BattleService {
       }
 
       return tournaments;
-    } catch (error) {
-      console.error('Failed to get tournaments:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to get tournaments:', _error);
+      throw _error;
     }
   }
 
@@ -465,9 +465,9 @@ export class BattleService {
       });
 
       return newTeam;
-    } catch (error) {
-      console.error('Failed to create team:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to create team:', _error);
+      throw _error;
     }
   }
 
@@ -486,9 +486,9 @@ export class BattleService {
       }
 
       return teams;
-    } catch (error) {
-      console.error('Failed to get teams:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to get teams:', _error);
+      throw _error;
     }
   }
 
@@ -504,9 +504,9 @@ export class BattleService {
       });
 
       return true;
-    } catch (error) {
-      console.error('Failed to link alarm to battle:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to link alarm to battle:', _error);
+      throw _error;
     }
   }
 
@@ -519,9 +519,9 @@ export class BattleService {
       });
 
       return true;
-    } catch (error) {
-      console.error('Failed to unlink alarm from battle:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to unlink alarm from battle:', _error);
+      throw _error;
     }
   }
 
@@ -556,9 +556,9 @@ export class BattleService {
         winRate,
         averageScore,
       };
-    } catch (error) {
-      console.error('Failed to get battle stats:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to get battle stats:', _error);
+      throw _error;
     }
   }
 }

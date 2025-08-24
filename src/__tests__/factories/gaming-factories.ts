@@ -331,7 +331,7 @@ export const _createTestTournament = (
 };
 
 export const _createTestTournamentParticipant = (): TournamentParticipant => ({
-  userId: generateId('user'),
+  userId: generateId('_user'),
   user: createTestUser(),
   registeredAt: generateTimestamp({ past: 14 }),
   seed: faker.number.int({ min: 1, max: 64 }),
@@ -404,8 +404,8 @@ export const _createTestTournamentRounds = (
 
 export const _createTestTournamentMatch = () => ({
   id: generateId('match'),
-  participant1: generateId('user'),
-  participant2: generateId('user'),
+  participant1: generateId('_user'),
+  participant2: generateId('_user'),
   winner: faker.helpers.arrayElement([null, 'participant1', 'participant2']),
   score: {
     participant1: faker.number.int({ min: 0, max: 100 }),
@@ -441,7 +441,7 @@ export const _createTestTeam = (options: CreateTeamOptions = {}): Team => {
   const {
     memberCount = faker.number.int({ min: 2, max: 20 }),
     isPublic = faker.datatype.boolean({ probability: 0.7 }),
-    createdBy = generateId('user'),
+    createdBy = generateId('_user'),
   } = options;
 
   const teamId = generateId('team');
@@ -488,7 +488,7 @@ export const _createTestTeam = (options: CreateTeamOptions = {}): Team => {
 };
 
 export const _createTestTeamMember = (userId?: string): TeamMember => ({
-  userId: userId || generateId('user'),
+  userId: userId || generateId('_user'),
   user: createTestUser(),
   role: faker.helpers.arrayElement(['member', 'moderator', 'admin', 'owner']),
   joinedAt: generateTimestamp({ past: 60 }),
@@ -596,7 +596,7 @@ export const _createTestSeason = (options: CreateSeasonOptions = {}): Season => 
       generateId('tournament')
     ),
     specialEvents: Array.from({ length: faker.number.int({ min: 1, max: 4 }) }, () => ({
-      id: generateId('event'),
+      id: generateId('_event'),
       name: faker.lorem.words(3),
       description: faker.lorem.sentence(),
       startDate: generateTimestamp({ past: 30 }),
@@ -649,7 +649,7 @@ export const _createTestLeaderboard = (entryCount = 100): Leaderboard => {
 export const _createTestLeaderboardEntry = (rank: number): LeaderboardEntry =>
   ({
     rank,
-    userId: generateId('user'),
+    userId: generateId('_user'),
     user: createTestUser(),
     score: faker.number.int({
       min: Math.max(1000 - rank * 10, 100),
@@ -672,7 +672,7 @@ export const _createTestBattle = (overrides: Partial<Battle> = {}): Battle => ({
     createTestBattleParticipant(),
     createTestBattleParticipant(),
   ],
-  creatorId: overrides.creatorId || generateId('user'),
+  creatorId: overrides.creatorId || generateId('_user'),
   status:
     overrides.status || faker.helpers.arrayElement(['pending', 'active', 'completed']),
   startTime:
@@ -694,7 +694,7 @@ export const _createTestBattle = (overrides: Partial<Battle> = {}): Battle => ({
 export const _createTestBattleParticipant = (
   overrides: Partial<BattleParticipant> = {}
 ): BattleParticipant => ({
-  userId: overrides.userId || generateId('user'),
+  userId: overrides.userId || generateId('_user'),
   user: overrides.user || createTestUser(),
   joinedAt: overrides.joinedAt || generateTimestamp({ past: 7 }),
   progress:
@@ -753,7 +753,7 @@ export const _createTestTrashTalkMessage = (
 ): TrashTalkMessage => ({
   id: overrides.id || generateId('trash-talk'),
   battleId: overrides.battleId || generateId('battle'),
-  userId: overrides.userId || generateId('user'),
+  userId: overrides.userId || generateId('_user'),
   user: overrides.user || createTestUser(),
   message:
     overrides.message ||

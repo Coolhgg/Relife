@@ -15,19 +15,16 @@ export interface AnalyticsEnvironmentConfig {
 export interface InitializationStatus {
   sentry: {
     initialized: boolean;
-    error?: string;
+    _error?: string;
   };
-  analytics: {
-    initialized: boolean;
-    error?: string;
-  };
+  analytics: { initialized: boolean; _error?: string };
   timestamp: string;
 }
 
 class AnalyticsConfigService {
   private static instance: AnalyticsConfigService;
   private initializationStatus: InitializationStatus;
-  private config: AnalyticsEnvironmentConfig | null = null;
+  private _config: AnalyticsEnvironmentConfig | null = null;
 
   private constructor() {
     this.initializationStatus = {
@@ -48,7 +45,7 @@ class AnalyticsConfigService {
    * Initialize analytics services based on environment
    */
   async initialize(
-    config?: Partial<AnalyticsEnvironmentConfig>
+    _config?: Partial<AnalyticsEnvironmentConfig>
   ): Promise<InitializationStatus> {
     // Determine environment
     const environment = this.getEnvironment();
@@ -60,36 +57,36 @@ class AnalyticsConfigService {
       enableAnalytics: true,
       enableDebugMode: environment === 'development',
       privacyMode: false,
-      ...config,
+      ..._config,
     };
 
     console.info('Initializing analytics services for environment:', environment);
 
     // Initialize Sentry
-    if (this.config.enableSentry) {
+    if (this._config.enableSentry) {
       try {
         await this.initializeSentry();
         this.initializationStatus.sentry.initialized = true;
         console.info('✅ Sentry initialized successfully');
-      } catch (error) {
+      } catch (_error) {
         this.initializationStatus.sentry.error =
-          error instanceof Error ? error.message : String(error);
-        console.error('❌ Failed to initialize Sentry:', error);
+          error instanceof Error ? error.message : String(_error);
+        console._error('❌ Failed to initialize Sentry:', _error);
       }
     } else {
       console.info('🔇 Sentry disabled by configuration');
     }
 
     // Initialize PostHog Analytics
-    if (this.config.enableAnalytics) {
+    if (this._config.enableAnalytics) {
       try {
         await this.initializeAnalytics();
         this.initializationStatus.analytics.initialized = true;
         console.info('✅ Analytics initialized successfully');
-      } catch (error) {
+      } catch (_error) {
         this.initializationStatus.analytics.error =
-          error instanceof Error ? error.message : String(error);
-        console.error('❌ Failed to initialize Analytics:', error);
+          error instanceof Error ? error.message : String(_error);
+        console._error('❌ Failed to initialize Analytics:', _error);
       }
     } else {
       console.info('🔇 Analytics disabled by configuration');
@@ -123,15 +120,15 @@ class AnalyticsConfigService {
       ...defaultConfig,
       dsn,
       debug: this.config!.enableDebugMode,
-      beforeSend: this.config!.privacyMode ? this.createPrivacyFilter() : undefined,
+      beforeSend: this._config!.privacyMode ? this.createPrivacyFilter() : undefined,
     };
 
     sentryService.initialize(sentryConfig);
 
     // Add initial context
     sentryService.addBreadcrumb('Analytics services initialized', 'system', {
-      environment: this.config!.environment,
-      privacyMode: this.config!.privacyMode,
+      environment: this._config!.environment,
+      privacyMode: this._config!.privacyMode,
       timestamp: new Date().toISOString(),
     });
   }
@@ -157,7 +154,7 @@ class AnalyticsConfigService {
       apiKey,
       debug: this.config!.enableDebugMode,
       enableSessionRecording:
-        !this.config!.privacyMode && defaultConfig.enableSessionRecording,
+        !this._config!.privacyMode && defaultConfig.enableSessionRecording,
       host: process.env.REACT_APP_POSTHOG_HOST,
     };
 
@@ -175,7 +172,7 @@ class AnalyticsConfigService {
     const userProperties = {
       id: userId,
       environment: this.config?.environment,
-      privacyMode: this.config?.privacyMode,
+      privacyMode: this._config?.privacyMode,
       timestamp: new Date().toISOString(),
       ...properties,
     };
@@ -195,7 +192,7 @@ class AnalyticsConfigService {
 
     console.debug('User context set:', {
       userId,
-      environment: this.config?.environment,
+      environment: this._config?.environment,
     });
   }
 
@@ -238,15 +235,15 @@ class AnalyticsConfigService {
    * Get current configuration
    */
   getConfig(): AnalyticsEnvironmentConfig | null {
-    return this.config;
+    return this._config;
   }
 
   /**
    * Enable/disable privacy mode
    */
   setPrivacyMode(enabled: boolean): void {
-    if (this.config) {
-      this.config.privacyMode = enabled;
+    if (this._config) {
+      this._config.privacyMode = enabled;
 
       // Update analytics session recording
       const analyticsService = AnalyticsService.getInstance();
@@ -262,8 +259,8 @@ class AnalyticsConfigService {
    * Update debug mode
    */
   setDebugMode(enabled: boolean): void {
-    if (this.config) {
-      this.config.enableDebugMode = enabled;
+    if (this._config) {
+      this._config.enableDebugMode = enabled;
       console.info('Debug mode', enabled ? 'enabled' : 'disabled');
     }
   }
@@ -279,11 +276,11 @@ class AnalyticsConfigService {
         sentry_initialized: this.initializationStatus.sentry.initialized,
         analytics_initialized: this.initializationStatus.analytics.initialized,
         environment: this.config?.environment,
-        privacy_mode: this.config?.privacyMode,
-        debug_mode: this.config?.enableDebugMode,
+        privacy_mode: this._config?.privacyMode,
+        debug_mode: this._config?.enableDebugMode,
         initialization_time: this.initializationStatus.timestamp,
-        sentry_error: this.initializationStatus.sentry.error,
-        analytics_error: this.initializationStatus.analytics.error,
+        sentry_error: this.initializationStatus.sentry._error,
+        analytics_error: this.initializationStatus.analytics._error,
       });
     }
   }
@@ -313,9 +310,9 @@ class AnalyticsConfigService {
    * Create privacy filter for Sentry events
    */
   private createPrivacyFilter() {
-    return (event: any) => {
+    return (_event: any) => {
       // In privacy mode, limit data collection
-      if (event.user) {
+      if (_event._user) {
         // Keep only essential user data
         event.user = {
           id: event.user.id, // Only keep user ID
@@ -323,14 +320,14 @@ class AnalyticsConfigService {
       }
 
       // Remove request data
-      if (event.request) {
+      if (_event.request) {
         delete event.request.cookies;
         delete event.request.headers;
         delete event.request.data;
       }
 
       // Limit breadcrumbs
-      if (event.breadcrumbs) {
+      if (_event.breadcrumbs) {
         event.breadcrumbs = event.breadcrumbs.slice(-3); // Keep only last 3
       }
 
@@ -348,22 +345,24 @@ class AnalyticsConfigService {
       : '❌';
 
     console.group('📊 Analytics Services Initialization Summary');
-    console.log(`Environment: ${this.config?.environment}`);
+    console.log(`Environment: ${this._config?.environment}`);
     console.log(
       `Sentry: ${sentryStatus} ${this.initializationStatus.sentry.initialized ? 'Ready' : 'Failed'}`
     );
     console.log(
       `Analytics: ${analyticsStatus} ${this.initializationStatus.analytics.initialized ? 'Ready' : 'Failed'}`
     );
-    console.log(`Privacy Mode: ${this.config?.privacyMode ? 'Enabled' : 'Disabled'}`);
-    console.log(`Debug Mode: ${this.config?.enableDebugMode ? 'Enabled' : 'Disabled'}`);
+    console.log(`Privacy Mode: ${this._config?.privacyMode ? 'Enabled' : 'Disabled'}`);
+    console.log(
+      `Debug Mode: ${this._config?.enableDebugMode ? 'Enabled' : 'Disabled'}`
+    );
 
-    if (this.initializationStatus.sentry.error) {
-      console.error('Sentry Error:', this.initializationStatus.sentry.error);
+    if (this.initializationStatus.sentry._error) {
+      console._error('Sentry Error:', this.initializationStatus.sentry._error);
     }
 
-    if (this.initializationStatus.analytics.error) {
-      console.error('Analytics Error:', this.initializationStatus.analytics.error);
+    if (this.initializationStatus.analytics._error) {
+      console._error('Analytics Error:', this.initializationStatus.analytics._error);
     }
 
     console.groupEnd();

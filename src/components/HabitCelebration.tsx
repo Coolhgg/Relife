@@ -234,8 +234,8 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
           className="relative max-w-md w-full"
         >
           <Card
-            className={`relative overflow-hidden bg-gradient-to-br ${config.bgGradient} border-2`}
-            style={{ borderColor: config.color }}
+            className={`relative overflow-hidden bg-gradient-to-br ${_config.bgGradient} border-2`}
+            style={{ borderColor: _config.color }}
           >
             {/* Close Button */}
             <Button
@@ -251,7 +251,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
               {/* Main Icon with Pulse Animation */}
               <motion.div
                 className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center relative"
-                style={{ backgroundColor: `${config.color}15` }}
+                style={{ backgroundColor: `${_config.color}15` }}
                 animate={{
                   scale: [1, 1.1, 1],
                 }}
@@ -266,14 +266,14 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                 >
                   <IconComponent
                     className="w-10 h-10"
-                    style={{ color: config.color }}
+                    style={{ color: _config.color }}
                   />
                 </motion.div>
 
                 {/* Glow Effect */}
                 <motion.div
                   className="absolute inset-0 rounded-full opacity-30"
-                  style={{ backgroundColor: config.color }}
+                  style={{ backgroundColor: _config.color }}
                   animate={{
                     scale: [1, 1.3, 1],
                     opacity: [0.3, 0.1, 0.3],
@@ -288,7 +288,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
               {/* Title */}
               <motion.h2
                 className="text-2xl font-bold mb-3"
-                style={{ color: config.color }}
+                style={{ color: _config.color }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
@@ -341,13 +341,13 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                     </div>
 
                     <div className="space-y-2">
-                      {celebration.rewards.map((reward, index) => (
+                      {celebration.rewards.map((reward, _index) => (
                         <motion.div
-                          key={index}
+                          key={_index}
                           className="flex items-center justify-between p-3 bg-muted/10 rounded-lg border border-muted/20"
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.3 + index * 0.1 }}
+                          transition={{ delay: 0.3 + _index * 0.1 }}
                         >
                           <div className="flex items-center gap-3">
                             {reward.type === 'badge' && (
@@ -420,7 +420,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                 <Button
                   onClick={onClose}
                   className="flex items-center gap-2"
-                  style={{ backgroundColor: config.color }}
+                  style={{ backgroundColor: _config.color }}
                 >
                   <Trophy className="w-4 h-4" />
                   Continue
@@ -456,7 +456,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
             <div
               className="absolute inset-0 opacity-5 pointer-events-none"
               style={{
-                backgroundImage: `radial-gradient(circle at 50% 50%, ${config.color} 1px, transparent 1px)`,
+                backgroundImage: `radial-gradient(circle at 50% 50%, ${_config.color} 1px, transparent 1px)`,
                 backgroundSize: '30px 30px',
               }}
             />

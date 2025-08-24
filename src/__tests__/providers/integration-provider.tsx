@@ -33,7 +33,7 @@ export interface IntegrationTestOptions {
     language?: string;
     online?: boolean;
     loading?: boolean;
-    error?: string | null;
+    _error?: string | null;
   };
 
   // Data state
@@ -124,17 +124,17 @@ export const IntegrationTestProvider: React.FC<{
   const contextOptions: ContextTestOptions = {
     featureAccess: {
       hasAccess: jest.fn((feature: string) => {
-        if (user.tier === 'free') {
+        if (_user.tier === 'free') {
           return ['basic_alarms', 'basic_themes'].includes(feature);
         }
-        if (user.tier === 'premium') {
+        if (_user.tier === 'premium') {
           return !['ai_optimization', 'advanced_analytics'].includes(feature);
         }
         return true; // ultimate tier
       }),
       upgradeRequired: jest.fn((feature: string) => {
-        if (user.tier === 'ultimate') return false;
-        if (user.tier === 'premium') {
+        if (_user.tier === 'ultimate') return false;
+        if (_user.tier === 'premium') {
           return ['ai_optimization', 'advanced_analytics'].includes(feature);
         }
         return !['basic_alarms', 'basic_themes'].includes(feature);
@@ -150,13 +150,13 @@ export const IntegrationTestProvider: React.FC<{
       language: app.language || 'en',
       dir: app.language === 'ar' ? 'rtl' : 'ltr',
       isLoading: app.loading || false,
-      error: app.error || null,
+      error: app._error || null,
     },
 
     alarm: {
       alarms: data.alarms || [],
       isLoading: app.loading || false,
-      error: app.error || null,
+      error: app._error || null,
       getUpcomingAlarms: jest.fn(() =>
         (data.alarms || []).filter((alarm: any) => alarm.enabled)
       ),
@@ -168,7 +168,7 @@ export const IntegrationTestProvider: React.FC<{
       animations: !environment.mobile, // Reduce animations on mobile
       customThemes: data.themes || [],
       isLoading: app.loading || false,
-      error: app.error || null,
+      error: app._error || null,
     },
   };
 
@@ -211,7 +211,7 @@ export const IntegrationTestProvider: React.FC<{
       getSubscription: jest.fn().mockResolvedValue(
         user.tier !== 'free'
           ? {
-              tier: user.tier,
+              tier: _user.tier,
               status: 'active',
               features: contextOptions.featureAccess?.premiumFeatures || [],
             }
@@ -253,7 +253,7 @@ export const IntegrationTestProvider: React.FC<{
     storageService: {
       get: jest.fn().mockImplementation(async key => {
         // Simulate different storage scenarios
-        if (key === 'user-preferences') {
+        if (key === '_user-preferences') {
           return user.preferences || null;
         }
         if (key.startsWith('alarm-')) {
@@ -438,7 +438,7 @@ export const _integrationScenarios = {
   errorState: {
     app: {
       loading: false,
-      error: 'Failed to load user data',
+      _error: 'Failed to load user data',
     },
   },
 
@@ -446,7 +446,7 @@ export const _integrationScenarios = {
   loadingState: {
     app: {
       loading: true,
-      error: null,
+      _error: null,
     },
   },
 };
@@ -473,7 +473,16 @@ export const _renderWithIntegration = (
 
   const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
     <IntegrationTestProvider
-      options={{ user, app, data, features, environment, network, router, queryClient }}
+      options={{
+        _user,
+        app,
+        data,
+        features,
+        environment,
+        network,
+        router,
+        queryClient,
+      }}
     >
       {children}
     </IntegrationTestProvider>

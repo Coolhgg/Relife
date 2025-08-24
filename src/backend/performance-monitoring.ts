@@ -123,7 +123,7 @@ export class PerformanceMonitoringAPI {
         return await this.getPerformanceDashboard(request, corsHeaders);
       }
 
-      if (url.pathname === '/api/performance/user-metrics' && method === 'GET') {
+      if (url.pathname === '/api/performance/_user-metrics' && method === 'GET') {
         return await this.getUserMetrics(request, corsHeaders);
       }
 
@@ -154,17 +154,17 @@ export class PerformanceMonitoringAPI {
       }
 
       return Response.json(
-        { error: 'Not Found', path: url.pathname },
+        { _error: 'Not Found', path: url.pathname },
         { status: 404, headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Performance API Error:', error);
+    } catch (_error) {
+      console._error('Performance API Error:', _error);
 
       // Log critical errors to monitoring
-      await this.logCriticalError(error, request);
+      await this.logCriticalError(_error, request);
 
       return Response.json(
-        { error: 'Internal Server Error' },
+        { _error: 'Internal Server Error' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -180,7 +180,7 @@ export class PerformanceMonitoringAPI {
 
       if (!Array.isArray(metrics)) {
         return Response.json(
-          { error: 'Metrics must be an array' },
+          { _error: 'Metrics must be an array' },
           { status: 400, headers: corsHeaders }
         );
       }
@@ -251,10 +251,10 @@ export class PerformanceMonitoringAPI {
         },
         { headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Error collecting performance metrics:', error);
+    } catch (_error) {
+      console._error('Error collecting performance metrics:', _error);
       return Response.json(
-        { error: 'Failed to collect metrics' },
+        { _error: 'Failed to collect metrics' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -327,10 +327,10 @@ export class PerformanceMonitoringAPI {
         },
         { headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Error collecting Web Vitals:', error);
+    } catch (_error) {
+      console._error('Error collecting Web Vitals:', _error);
       return Response.json(
-        { error: 'Failed to collect Web Vitals' },
+        { _error: 'Failed to collect Web Vitals' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -363,7 +363,7 @@ export class PerformanceMonitoringAPI {
         .first();
 
       if (existingError) {
-        // Update existing error count
+        // Update existing _error count
         await this.env.DB.prepare(
           `
           UPDATE error_logs
@@ -434,10 +434,10 @@ export class PerformanceMonitoringAPI {
         },
         { headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Error logging error:', error);
+    } catch (_error) {
+      console.error('Error logging error:', _error);
       return Response.json(
-        { error: 'Failed to log error' },
+        { _error: 'Failed to log _error' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -497,10 +497,10 @@ export class PerformanceMonitoringAPI {
         },
         { headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Error tracking analytics event:', error);
+    } catch (_error) {
+      console._error('Error tracking analytics _event:', _error);
       return Response.json(
-        { error: 'Failed to track event' },
+        { _error: 'Failed to track _event' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -611,10 +611,10 @@ export class PerformanceMonitoringAPI {
       };
 
       return Response.json(dashboard, { headers: corsHeaders });
-    } catch (error) {
-      console.error('Error getting performance dashboard:', error);
+    } catch (_error) {
+      console._error('Error getting performance dashboard:', _error);
       return Response.json(
-        { error: 'Failed to get dashboard data' },
+        { _error: 'Failed to get dashboard data' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -633,7 +633,7 @@ export class PerformanceMonitoringAPI {
 
       if (!userId && !sessionId) {
         return Response.json(
-          { error: 'Either userId or sessionId is required' },
+          { _error: 'Either userId or sessionId is required' },
           { status: 400, headers: corsHeaders }
         );
       }
@@ -702,10 +702,10 @@ export class PerformanceMonitoringAPI {
       };
 
       return Response.json(userMetrics, { headers: corsHeaders });
-    } catch (error) {
-      console.error('Error getting user metrics:', error);
+    } catch (_error) {
+      console._error('Error getting _user metrics:', _error);
       return Response.json(
-        { error: 'Failed to get user metrics' },
+        { _error: 'Failed to get _user metrics' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -719,7 +719,7 @@ export class PerformanceMonitoringAPI {
     try {
       const currentTime = new Date().toISOString();
 
-      // Check recent error rates
+      // Check recent _error rates
       const recentErrors = await this.env.DB.prepare(
         `
         SELECT COUNT(*) as error_count, SUM(occurrence_count) as total_occurrences
@@ -770,12 +770,12 @@ export class PerformanceMonitoringAPI {
       };
 
       return Response.json(healthStatus, { headers: corsHeaders });
-    } catch (error) {
-      console.error('Error getting system health:', error);
+    } catch (_error) {
+      console._error('Error getting system health:', _error);
       return Response.json(
         {
           status: 'critical',
-          error: 'Failed to get system health',
+          _error: 'Failed to get system health',
           timestamp: new Date().toISOString(),
         },
         { status: 500, headers: corsHeaders }
@@ -806,10 +806,10 @@ export class PerformanceMonitoringAPI {
       });
 
       return Response.json(realtimeData, { headers: corsHeaders });
-    } catch (error) {
-      console.error('Error getting real-time metrics:', error);
+    } catch (_error) {
+      console._error('Error getting real-time metrics:', _error);
       return Response.json(
-        { error: 'Failed to get real-time metrics' },
+        { _error: 'Failed to get real-time metrics' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -857,10 +857,10 @@ export class PerformanceMonitoringAPI {
       };
 
       return Response.json(trends, { headers: corsHeaders });
-    } catch (error) {
-      console.error('Error getting performance trends:', error);
+    } catch (_error) {
+      console._error('Error getting performance trends:', _error);
       return Response.json(
-        { error: 'Failed to get performance trends' },
+        { _error: 'Failed to get performance trends' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -887,10 +887,10 @@ export class PerformanceMonitoringAPI {
         },
         { headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Error detecting anomalies:', error);
+    } catch (_error) {
+      console._error('Error detecting anomalies:', _error);
       return Response.json(
-        { error: 'Failed to detect anomalies' },
+        { _error: 'Failed to detect anomalies' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -920,10 +920,10 @@ export class PerformanceMonitoringAPI {
         },
         { headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Error getting optimization recommendations:', error);
+    } catch (_error) {
+      console._error('Error getting optimization recommendations:', _error);
       return Response.json(
-        { error: 'Failed to get recommendations' },
+        { _error: 'Failed to get recommendations' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -962,8 +962,8 @@ export class PerformanceMonitoringAPI {
     return 'desktop';
   }
 
-  private generateErrorFingerprint(error: ErrorEvent): string {
-    const content = `${error.error_message}${error.error_category}${error.page_path}`;
+  private generateErrorFingerprint(_error: ErrorEvent): string {
+    const content = `${_error.error_message}${_error.error_category}${_error.page_path}`;
     return btoa(content).substring(0, 32);
   }
 
@@ -1086,7 +1086,7 @@ export class PerformanceMonitoringAPI {
     } catch (_error) {
       return {
         status: 'critical',
-        error: 'Database connection failed',
+        _error: 'Database connection failed',
         timestamp: new Date().toISOString(),
       };
     }
@@ -1335,16 +1335,16 @@ export class PerformanceMonitoringAPI {
   }
 
   private async cacheAnalyticsEvent(
-    event: AnalyticsEvent,
+    _event: AnalyticsEvent,
     eventId: string
   ): Promise<void> {
     const key = `analytics:${event.session_id}:${eventId}`;
-    await this.env.KV.put(key, JSON.stringify(event), { expirationTtl: 3600 });
+    await this.env.KV.put(key, JSON.stringify(_event), { expirationTtl: 3600 });
   }
 
-  private async cacheCriticalError(error: ErrorEvent, errorId: string): Promise<void> {
-    const key = `error:critical:${errorId}`;
-    await this.env.KV.put(key, JSON.stringify(error), { expirationTtl: 3600 });
+  private async cacheCriticalError(_error: ErrorEvent, errorId: string): Promise<void> {
+    const key = `_error:critical:${errorId}`;
+    await this.env.KV.put(key, JSON.stringify(_error), { expirationTtl: 3600 });
   }
 
   private async updateRealTimeAggregations(
@@ -1410,7 +1410,7 @@ export class PerformanceMonitoringAPI {
   }
 
   // External service integrations
-  private async sendToSentry(error: ErrorEvent): Promise<void> {
+  private async sendToSentry(_error: ErrorEvent): Promise<void> {
     if (!this.env.SENTRY_DSN) return;
 
     try {
@@ -1430,22 +1430,22 @@ export class PerformanceMonitoringAPI {
               {
                 type: error.error_category,
                 value: error.error_message,
-                stacktrace: error.error_stack,
+                stacktrace: _error.error_stack,
               },
             ],
           },
-          user: { id: error.user_id },
+          _user: { id: _error.user_id },
           contexts: {
-            device: error.device_info,
+            device: _error.device_info,
           },
         }),
       });
-    } catch (e) {
-      console.error('Failed to send to Sentry:', e);
+    } catch (_e) {
+      console._error('Failed to send to Sentry:', e);
     }
   }
 
-  private async forwardToPostHog(event: AnalyticsEvent): Promise<void> {
+  private async forwardToPostHog(_event: AnalyticsEvent): Promise<void> {
     if (!this.env.POSTHOG_API_KEY) return;
 
     try {
@@ -1462,16 +1462,16 @@ export class PerformanceMonitoringAPI {
             ...event.properties,
             $current_url: event.page_path,
             $device_type: event.device_type,
-            timestamp: event.timestamp,
+            timestamp: _event.timestamp,
           },
         }),
       });
-    } catch (e) {
-      console.error('Failed to forward to PostHog:', e);
+    } catch (_e) {
+      console._error('Failed to forward to PostHog:', e);
     }
   }
 
-  private async logCriticalError(error: any, request: Request): Promise<void> {
+  private async logCriticalError(_error: any, request: Request): Promise<void> {
     try {
       const errorData: ErrorEvent = {
         session_id: 'system',
@@ -1484,7 +1484,7 @@ export class PerformanceMonitoringAPI {
         app_version: '2.0.0',
         fingerprint: this.generateErrorFingerprint({
           session_id: 'system',
-          error_message: error.message || 'Unknown error',
+          error_message: _error.message || 'Unknown _error',
           error_category: 'system_error',
           severity: 'critical',
           fingerprint: '',
@@ -1520,7 +1520,7 @@ export class PerformanceMonitoringAPI {
         )
         .run();
     } catch (logError) {
-      console.error('Failed to log critical error:', logError);
+      console._error('Failed to log critical _error:', logError);
     }
   }
 }

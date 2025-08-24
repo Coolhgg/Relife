@@ -240,13 +240,13 @@ export const AdaptiveSkeleton = memo<AdaptiveSkeletonProps>(
     const shouldAnimate = animated && !shouldReduceAnimations && !isLowEnd;
 
     const skeletonLines = useMemo(() => {
-      return Array.from({ length: lines }, (_, index) => (
+      return Array.from({ length: lines }, (_, _index) => (
         <div
-          key={index}
+          key={_index}
           className={`
           bg-gray-200 rounded
           ${shouldAnimate ? 'animate-pulse' : ''}
-          ${index < lines - 1 ? 'mb-2' : ''}
+          ${_index < lines - 1 ? 'mb-2' : ''}
           ${className}
         `.trim()}
           style={{ height }}
