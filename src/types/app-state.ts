@@ -37,37 +37,199 @@ import type {
 // ALARM STATE INTERFACE
 // =============================================================================
 
+/**
+ * Comprehensive state interface for alarm management in the Relife application.
+ * 
+ * This interface manages all aspects of alarm functionality including:
+ * - Core alarm data and lifecycle management
+ * - Advanced scheduling with smart optimizations
+ * - Voice and audio settings
+ * - Battle mode integration for gamified wake-up experiences
+ * - Performance analytics and user behavior tracking
+ * - UI state for complex alarm management interfaces
+ * 
+ * @interface AlarmState
+ * @example
+ * ```typescript
+ * const alarmState: AlarmState = {
+ *   alarms: [{
+ *     id: 'alarm_123',
+ *     time: '07:30',
+ *     label: 'Morning Workout',
+ *     days: [1, 2, 3, 4, 5], // Weekdays
+ *     voiceMood: 'motivational',
+ *     enabled: true
+ *   }],
+ *   isLoading: false,
+ *   activeAlarms: [],
+ *   // ... other properties
+ * };
+ * ```
+ */
 export interface AlarmState {
-  // Core alarm data
+  /**
+   * Complete list of all user-created alarms.
+   * @type {Alarm[]}
+   * @description Contains all alarms regardless of their enabled/disabled state
+   * @example [{ id: '1', time: '07:00', label: 'Work', enabled: true }]
+   */
   alarms: Alarm[];
+  
+  /**
+   * Subset of alarms that are currently enabled and scheduled to trigger.
+   * @type {Alarm[]}
+   * @description Filtered from the main alarms array based on enabled status
+   * @example [{ id: '1', time: '07:00', enabled: true }]
+   */
   activeAlarms: Alarm[];
+  
+  /**
+   * Calculated instances of upcoming alarm triggers with precise timing.
+   * @type {AlarmInstance[]}
+   * @description Generated instances that account for recurrence patterns and scheduling rules
+   * @example [{ alarmId: '1', scheduledFor: '2024-01-15T07:00:00Z', instance: 1 }]
+   */
   upcomingAlarms: AlarmInstance[];
   
-  // Alarm management
+  /**
+   * Indicates if alarms are currently being loaded from storage/API.
+   * @type {boolean}
+   * @description Used to show loading spinners and prevent concurrent operations
+   * @default false
+   */
   isLoading: boolean;
+  
+  /**
+   * Indicates if an alarm save operation is in progress.
+   * @type {boolean}
+   * @description Prevents form submission during save operations
+   * @default false
+   */
   isSaving: boolean;
+  
+  /**
+   * Error message from the last failed alarm load operation.
+   * @type {string | null}
+   * @description null when no error, string message when load fails
+   * @example "Failed to load alarms: Network error"
+   */
   loadError: string | null;
+  
+  /**
+   * Error message from the last failed alarm save operation.
+   * @type {string | null}
+   * @description null when no error, string message when save fails
+   * @example "Failed to save alarm: Validation error"
+   */
   saveError: string | null;
+  
+  /**
+   * Timestamp of the last successful alarm data update.
+   * @type {Date | null}
+   * @description Used for cache invalidation and sync status
+   * @example new Date('2024-01-15T10:30:00Z')
+   */
   lastUpdated: Date | null;
   
-  // Current alarm execution
-  currentlyTriggering: string[]; // alarm IDs
-  snoozing: Record<string, { snoozeCount: number; snoozeUntil: Date }>;
-  dismissing: string[]; // alarm IDs being dismissed
+  /**
+   * Array of alarm IDs that are currently triggering and playing.
+   * @type {string[]}
+   * @description Alarms actively ringing that require user interaction to dismiss
+   * @example ['alarm_123', 'alarm_456']
+   */
+  currentlyTriggering: string[];
   
-  // Alarm creation/editing state
+  /**
+   * Map of snoozed alarms with their snooze count and next trigger time.
+   * @type {Record<string, { snoozeCount: number; snoozeUntil: Date }>}
+   * @description Tracks snooze state for each alarm to enforce limits
+   * @example { 'alarm_123': { snoozeCount: 2, snoozeUntil: new Date('2024-01-15T07:15:00Z') } }
+   */
+  snoozing: Record<string, { snoozeCount: number; snoozeUntil: Date }>;
+  
+  /**
+   * Array of alarm IDs currently in the process of being dismissed.
+   * @type {string[]}
+   * @description Prevents duplicate dismissal requests during async operations
+   * @example ['alarm_789']
+   */
+  dismissing: string[];
+  
+  /**
+   * State management for alarm creation and editing workflows.
+   * @type {Object}
+   * @description Tracks form state, validation, and editing mode
+   */
   editing: {
+    /**
+     * ID of the alarm being edited, null for new alarm creation.
+     * @type {string | null}
+     * @example 'alarm_123' | null
+     */
     alarmId: string | null;
+    
+    /**
+     * Indicates if the form is in creation mode (true) vs edit mode (false).
+     * @type {boolean}
+     * @default false
+     */
     isCreating: boolean;
+    
+    /**
+     * Indicates if the form has unsaved changes.
+     * @type {boolean}
+     * @description Used to show unsaved changes warnings
+     * @default false
+     */
     isDirty: boolean;
+    
+    /**
+     * Draft alarm data being edited, contains partial alarm properties.
+     * @type {Partial<Alarm> | null}
+     * @description Allows incremental form updates without affecting saved alarm
+     * @example { time: '08:00', label: 'Updated label' }
+     */
     draftAlarm: Partial<Alarm> | null;
+    
+    /**
+     * Map of field names to validation error messages.
+     * @type {Record<string, string>}
+     * @description Used to display field-specific validation errors
+     * @example { time: 'Time is required', label: 'Label must be under 100 characters' }
+     */
     validationErrors: Record<string, string>;
   };
   
-  // Advanced scheduling
-  schedulingConfigs: Record<string, SchedulingConfig>; // keyed by alarmId
+  /**
+   * Advanced scheduling configurations mapped by alarm ID.
+   * @type {Record<string, SchedulingConfig>}
+   * @description Stores complex scheduling rules, recurrence patterns, and optimization settings per alarm
+   * @example { 'alarm_123': { enableSmartAdjustments: true, maxDailyAdjustment: 30 } }
+   */
+  schedulingConfigs: Record<string, SchedulingConfig>;
+  
+  /**
+   * Array of active smart optimizations applied across all alarms.
+   * @type {SmartOptimization[]}
+   * @description Global optimizations like sleep cycle analysis, weather integration, etc.
+   * @example [{ type: 'sleep_cycle', isEnabled: true, parameters: { sensitivity: 0.8 } }]
+   */
   enabledOptimizations: SmartOptimization[];
+  
+  /**
+   * Location-based triggers that can modify alarm behavior.
+   * @type {LocationTrigger[]}
+   * @description Geofenced actions that enable/disable or adjust alarms based on location
+   * @example [{ id: '1', location: 'home', action: 'enable_alarm', radius: 100 }]
+   */
   locationTriggers: LocationTrigger[];
+  
+  /**
+   * Conditional rules that automatically modify alarms based on external factors.
+   * @type {ConditionalRule[]}
+   * @description Rules like 'if raining, delay alarm by 15 minutes'
+   * @example [{ condition: 'weather', operator: 'equals', value: 'rain', action: 'adjust_time' }]
+   */
   conditionalRules: ConditionalRule[];
   
   // Voice and audio
