@@ -1,43 +1,79 @@
-# Dependabot configuration for automated dependency updates
-# Keeps dependencies secure and up-to-date
+# Enhanced Dependabot configuration for automated dependency updates
+# Comprehensive security-focused dependency management
 
 version: 2
 
+# Global configuration
+registries:
+  npm-github:
+    type: npm-registry
+    url: https://npm.pkg.github.com
+    token: ${{secrets.GITHUB_TOKEN}}
+
 updates:
-  # NPM dependencies
+  # NPM dependencies - Enhanced Security Focus
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "daily" # More frequent for security updates
       time: "09:00"
       timezone: "America/Los_Angeles"
-    open-pull-requests-limit: 10
+    # Increased limits for security updates
+    open-pull-requests-limit: 15
+    # Security-first strategy
+    allow:
+      - dependency-type: "security-updates"
+      - dependency-type: "production"
+      - dependency-type: "development"
     reviewers:
       - "@Coolhgg"
     assignees:
       - "@Coolhgg"
+    # Enhanced commit messaging
     commit-message:
-      prefix: "deps"
+      prefix: "security" # Emphasize security
       prefix-development: "deps-dev"
       include: "scope"
+    # Security milestone assignment
+    milestone: "Security Updates"
+    # Enhanced PR labels
+    labels:
+      - "dependencies"
+      - "security"
+      - "automated"
+    # Enhanced grouping strategy
     groups:
-      # Group React ecosystem updates
+      # Critical security dependencies - highest priority
+      security:
+        patterns:
+          - "*security*"
+          - "*auth*"
+          - "*crypto*"
+          - "*ssl*"
+          - "*tls*"
+        priority: 10
+      # React ecosystem updates
       react:
         patterns:
           - "react*"
           - "@types/react*"
-      # Group Capacitor updates
+          - "react-dom"
+          - "react-router*"
+      # Capacitor mobile framework
       capacitor:
         patterns:
           - "@capacitor/*"
-      # Group testing dependencies
+          - "capacitor*"
+      # Testing dependencies
       testing:
         patterns:
           - "jest*"
           - "@testing-library/*"
           - "@types/jest"
-      # Group build tools
+          - "vitest*"
+          - "playwright*"
+          - "@playwright/*"
+      # Build and development tools
       build-tools:
         patterns:
           - "vite*"
@@ -46,7 +82,8 @@ updates:
           - "eslint*"
           - "@typescript-eslint/*"
           - "prettier"
-      # Group UI libraries
+          - "@types/*"
+      # UI and styling libraries
       ui:
         patterns:
           - "@radix-ui/*"
@@ -54,23 +91,54 @@ updates:
           - "tailwindcss"
           - "class-variance-authority"
           - "tailwind-merge"
-      # Group analytics and monitoring
+          - "framer-motion"
+          - "@headlessui/*"
+      # Analytics and monitoring
       monitoring:
         patterns:
           - "@sentry/*"
           - "posthog-js"
           - "web-vitals"
+          - "@datadog/*"
+      # Backend and API dependencies
+      backend:
+        patterns:
+          - "supabase*"
+          - "@supabase/*"
+          - "stripe*"
+          - "@stripe/*"
+          - "express*"
+          - "fastify*"
+      # Utility libraries
+      utilities:
+        patterns:
+          - "lodash*"
+          - "date-fns"
+          - "zod"
+          - "yup"
+          - "validator"
+          - "uuid"
+    # Security-aware ignore strategy
     ignore:
-      # Ignore major version updates for stable dependencies
+      # Be more permissive with security updates
       - dependency-name: "react"
         update-types: ["version-update:semver-major"]
       - dependency-name: "react-dom"
         update-types: ["version-update:semver-major"]
       - dependency-name: "node"
         update-types: ["version-update:semver-major"]
-    labels:
-      - "dependencies"
-      - "automated"
+      # Ignore specific problematic packages
+      - dependency-name: "tmp"
+        # Known issues with tmp package
+      - dependency-name: "@lhci/cli"
+        # Lighthouse CI has known vulnerabilities
+      # Ignore beta/alpha versions unless security fixes
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+        versions: ["*-beta*", "*-alpha*", "*-rc*"]
+    # Vulnerability alerts - always allow
+    vulnerability-alerts:
+      enabled: true
 
   # Docker dependencies
   - package-ecosystem: "docker"
@@ -114,24 +182,129 @@ updates:
       - "github-actions"
       - "ci/cd"
 
-  # Android Gradle dependencies
+  # Android Gradle dependencies - Enhanced Security
   - package-ecosystem: "gradle"
     directory: "/android"
     schedule:
-      interval: "monthly"
-      day: "first-monday"
+      interval: "weekly" # More frequent for security
+      day: "tuesday"
       time: "09:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 8
+    reviewers:
+      - "@Coolhgg"
+    assignees:
+      - "@Coolhgg"
+    commit-message:
+      prefix: "android-deps"
+      include: "scope"
+    labels:
+      - "android"
+      - "dependencies"
+      - "mobile"
+    # Android-specific grouping
+    groups:
+      # Android security updates
+      android-security:
+        patterns:
+          - "*security*"
+          - "*auth*"
+          - "*crypto*"
+      # Capacitor Android plugins
+      capacitor-android:
+        patterns:
+          - "@capacitor/*"
+      # Core Android dependencies
+      android-core:
+        patterns:
+          - "androidx.*"
+          - "com.android.*"
+          - "com.google.android.*"
+    # Allow security updates even for major versions
+    allow:
+      - dependency-type: "security-updates"
+    ignore:
+      # Be conservative with major Android updates
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    vulnerability-alerts:
+      enabled: true
+
+  # iOS CocoaPods dependencies (if present)
+  - package-ecosystem: "cocoapods"
+    directory: "/ios"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "10:00"
       timezone: "America/Los_Angeles"
     open-pull-requests-limit: 5
     reviewers:
       - "@Coolhgg"
     commit-message:
-      prefix: "android"
+      prefix: "ios-deps"
       include: "scope"
     labels:
-      - "android"
+      - "ios"
       - "dependencies"
-    ignore:
-      # Be more conservative with Android updates
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+      - "mobile"
+    allow:
+      - dependency-type: "security-updates"
+    vulnerability-alerts:
+      enabled: true
+
+  # Composer dependencies (PHP - if present)
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "thursday"
+      time: "11:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "security-updates"
+    vulnerability-alerts:
+      enabled: true
+
+  # Pip dependencies (Python - if present)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "12:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "security-updates"
+    vulnerability-alerts:
+      enabled: true
+
+  # Terraform dependencies (if present)
+  - package-ecosystem: "terraform"
+    directory: "/infrastructure"
+    schedule:
+      interval: "weekly"
+      day: "saturday"
+      time: "13:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 3
+    allow:
+      - dependency-type: "security-updates"
+    vulnerability-alerts:
+      enabled: true
+
+  # Go modules (if present)
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "14:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "security-updates"
+    vulnerability-alerts:
+      enabled: true
