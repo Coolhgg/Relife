@@ -19,8 +19,8 @@ import {
 } from 'lucide-react';
 import AlarmSecurityIntegrationService from '../services/alarm-security-integration';
 import SecurityMonitoringForensicsService from '../services/security-monitoring-forensics';
-import AlarmBackupRedundancyService from '../services/alarm-backup-redundancy';
-import AlarmRateLimitingService from '../services/alarm-rate-limiting';
+import _AlarmBackupRedundancyService from '../services/alarm-backup-redundancy';
+import _AlarmRateLimitingService from '../services/alarm-rate-limiting';
 
 interface SecurityStatus {
   overall: 'secure' | 'warning' | 'critical' | 'compromised';
@@ -742,9 +742,9 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                           </p>
                           {test.recommendations && test.recommendations.length > 0 && (
                             <div className="mt-3">
-                              <h7 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+                              <h6 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">
                                 Recommendations:
-                              </h7>
+                              </h6>
                               <ul className="space-y-1" role="list">
                                 {test.recommendations.map(
                                   (rec: string, recIndex: number) => (

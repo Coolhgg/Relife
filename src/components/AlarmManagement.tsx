@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, _CardHeader, _CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -140,7 +140,7 @@ export function AlarmManagement({
 
   const getNextAlarmTime = (alarm: Alarm) => {
     const now = new Date();
-    const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const _currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
     const dayMap = {
       sunday: 0,
       monday: 1,
@@ -597,7 +597,6 @@ export function AlarmManagement({
                         <div key={diff.value} className="px-2 py-1.5 text-sm">
                           <PremiumGate
                             feature="nuclearMode"
-                            userId={userId}
                             mode="replace"
                             fallback={
                               <div className="flex items-center justify-between text-muted-foreground">

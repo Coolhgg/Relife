@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Avatar, AvatarFallback, _AvatarImage } from './ui/avatar';
 import {
   Users,
   Trophy,
@@ -14,19 +14,19 @@ import {
   Plus,
   Crown,
   Flame,
-  Star,
+  _Star,
   Share2,
   MessageCircle,
   TrendingUp,
-  Award,
-  ChevronRight,
+  _Award,
+  _ChevronRight,
   Filter,
 } from 'lucide-react';
 import {
   SocialChallenge,
   SocialChallengeType,
-  ChallengeParticipant,
-  ChallengeLeaderboard,
+  _ChallengeParticipant,
+  _ChallengeLeaderboard,
 } from '../types/struggling-sam';
 
 interface CommunityChallengeProps {
@@ -289,7 +289,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                     size="sm"
                     variant="outline"
                     className="flex-1"
-                    onClick={e => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       onShareProgress?.(challenge);
                     }}
@@ -300,7 +300,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={e => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       onLeaveChallenge?.(challenge);
                     }}
@@ -312,7 +312,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <Button
                   size="sm"
                   className="w-full"
-                  onClick={e => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     onJoinChallenge?.(challenge);
                   }}

@@ -184,7 +184,6 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
           `}
           style={{
             backgroundColor: isUnlocked ? rarityConfig.bgColor : '#f8fafc',
-            ringColor: isHovered ? rarityConfig.color : undefined,
           }}
         >
           <CardContent
@@ -344,7 +343,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                         size="sm"
                         variant="outline"
                         className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 opacity-0 hover:opacity-100 transition-opacity"
-                        onClick={e => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           onShare(achievement);
                         }}

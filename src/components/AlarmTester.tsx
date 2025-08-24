@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { _Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
@@ -15,10 +15,10 @@ import type {
   Alarm,
   AlarmInstance,
   AlarmDifficulty,
-  VoiceMood,
+  _VoiceMood,
   DayOfWeek,
 } from '../types/index';
-import { PremiumGate } from './PremiumGate';
+import PremiumGate from './PremiumGate';
 import { SubscriptionService } from '../services/subscription';
 
 interface AlarmTesterProps {
@@ -73,7 +73,7 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
     setShowActiveAlarm(true);
   };
 
-  const handleAlarmResult = (type: string) => {
+  const handleAlarmResult = (_type: string) => {
     setShowActiveAlarm(false);
     // Could show a result toast or modal here
   };
@@ -165,7 +165,6 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
                   <div className="px-2 py-1.5 text-sm">
                     <PremiumGate
                       feature="nuclearMode"
-                      userId={userId}
                       mode="replace"
                       fallback={
                         <div className="flex items-center justify-between text-muted-foreground">
@@ -211,7 +210,6 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
                     <div className="px-2 py-1.5 text-sm">
                       <PremiumGate
                         feature="nuclearMode"
-                        userId={userId}
                         mode="replace"
                         fallback={
                           <div className="flex items-center justify-between text-muted-foreground">
@@ -257,7 +255,6 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
                     <div className="px-2 py-1.5 text-sm">
                       <PremiumGate
                         feature="nuclearMode"
-                        userId={userId}
                         mode="replace"
                         fallback={
                           <div className="flex items-center justify-between text-muted-foreground">
@@ -303,7 +300,6 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
                       <div className="px-2 py-1.5 text-sm">
                         <PremiumGate
                           feature="nuclearMode"
-                          userId={userId}
                           mode="replace"
                           fallback={
                             <div className="flex items-center justify-between text-muted-foreground">
@@ -349,7 +345,6 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
                       <div className="px-2 py-1.5 text-sm">
                         <PremiumGate
                           feature="nuclearMode"
-                          userId={userId}
                           mode="replace"
                           fallback={
                             <div className="flex items-center justify-between text-muted-foreground">
@@ -397,7 +392,6 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
                       <div className="px-2 py-1.5 text-sm">
                         <PremiumGate
                           feature="nuclearMode"
-                          userId={userId}
                           mode="replace"
                           fallback={
                             <div className="flex items-center justify-between text-muted-foreground">
@@ -443,7 +437,6 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
                     <div className="px-2 py-1.5 text-sm">
                       <PremiumGate
                         feature="nuclearMode"
-                        userId={userId}
                         mode="replace"
                         fallback={
                           <div className="flex items-center justify-between text-muted-foreground">
@@ -489,7 +482,6 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
                   <div className="px-2 py-1.5 text-sm">
                     <PremiumGate
                       feature="nuclearMode"
-                      userId={userId}
                       mode="replace"
                       fallback={
                         <div className="flex items-center justify-between text-muted-foreground">
@@ -535,7 +527,6 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
                 <div className="px-2 py-1.5 text-sm">
                   <PremiumGate
                     feature="nuclearMode"
-                    userId={userId}
                     mode="replace"
                     fallback={
                       <div className="flex items-center justify-between text-muted-foreground">

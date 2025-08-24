@@ -23,7 +23,7 @@ import { useDynamicFocus } from '../hooks/useDynamicFocus';
 import { useFormAnnouncements } from '../hooks/useFormAnnouncements';
 import { useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
 import { PremiumService } from '../services/premium';
-import NuclearModeSelector from './NuclearModeSelector';
+import _NuclearModeSelector from './_NuclearModeSelector';
 import UpgradePrompt from './UpgradePrompt';
 
 interface AlarmFormProps {
@@ -130,7 +130,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
     announceFieldDescription,
   } = useFormAnnouncements();
 
-  const { announceEnter } = useFocusAnnouncements('Alarm Form');
+  const { _announceEnter } = useFocusAnnouncements('Alarm Form');
 
   useEffect(() => {
     if (alarm) {
@@ -139,6 +139,8 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
         label: alarm.label,
         days: alarm.days,
         voiceMood: alarm.voiceMood,
+        difficulty: alarm.difficulty || 'easy',
+        nuclearChallenges: alarm.nuclearChallenges || [],
         soundType: alarm.soundType || 'voice-only',
         customSoundId: alarm.customSoundId || '',
         snoozeEnabled: alarm.snoozeEnabled ?? true,
@@ -200,7 +202,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
   }, [onCancel]);
 
   // Handle voice mood keyboard navigation
-  const handleVoiceMoodKeyDown = (
+  const _handleVoiceMoodKeyDown = (
     e: React.KeyboardEvent<HTMLButtonElement>,
     mood: VoiceMood
   ) => {
@@ -378,7 +380,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
           previewAudio.parentNode?.replaceChild(cleanAudio, previewAudio);
           previewAudio.removeAttribute('src');
           previewAudio.load();
-        } catch (error) {
+        } catch (_error) {
           // Silently handle cleanup errors
         }
       }
@@ -395,7 +397,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
             previewAudio.parentNode?.replaceChild(oldAudio, previewAudio);
             previewAudio.removeAttribute('src');
             previewAudio.load();
-          } catch (cleanupError) {
+          } catch (_cleanupError) {
             // Continue even if cleanup fails
           }
         }

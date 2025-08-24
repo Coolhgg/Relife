@@ -6,10 +6,9 @@ import {
   CheckCircle,
   Settings,
   Play,
-  Eye,
+  _Eye,
   Tags,
   Share,
-  Publish,
   ChevronLeft,
   ChevronRight,
   Check,
@@ -35,7 +34,7 @@ import {
   SelectValue,
 } from './ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Separator } from './ui/separator';
+import { _Separator } from './ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { SoundUploader } from './SoundUploader';
 import { soundEffectsService } from '../services/sound-effects';
@@ -46,7 +45,7 @@ import type {
   CustomSoundThemeCategory,
   CustomSound,
   ValidationResult,
-  CustomSoundAssignment,
+  _CustomSoundAssignment,
   CustomThemeUISounds,
   CustomThemeNotificationSounds,
   CustomThemeAlarmSounds,
@@ -103,7 +102,7 @@ const CREATION_STEPS: Array<{
     description: 'Set privacy and sharing options',
     icon: Share,
   },
-  { id: 'publish', title: 'Publish', description: 'Save your theme', icon: Publish },
+  { id: 'publish', title: 'Publish', description: 'Save your theme', icon: Upload },
 ];
 
 const THEME_CATEGORIES: Array<{
@@ -696,7 +695,7 @@ const AssignmentStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
   availableSounds: CustomSound[];
   onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
-}> = ({ theme, availableSounds, onUpdate }) => (
+}> = ({ _theme, _availableSounds, _onUpdate }) => (
   <div className="space-y-6">
     <Alert>
       <Info className="w-4 h-4" />
@@ -751,7 +750,7 @@ const AssignmentStep: React.FC<{
 const CustomizationStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
   onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
-}> = ({ theme, onUpdate }) => (
+}> = ({ _theme, _onUpdate }) => (
   <div className="text-center py-12 text-gray-500">
     <Settings className="w-12 h-12 mx-auto mb-4 opacity-50" />
     <p>Sound customization interface will be implemented</p>
@@ -763,7 +762,7 @@ const CustomizationStep: React.FC<{
 
 const PreviewStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
-}> = ({ theme }) => (
+}> = ({ _theme }) => (
   <div className="text-center py-12 text-gray-500">
     <Play className="w-12 h-12 mx-auto mb-4 opacity-50" />
     <p>Theme preview and testing interface will be implemented</p>
@@ -802,7 +801,7 @@ const MetadataStep: React.FC<{
 const SharingStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
   onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
-}> = ({ theme, onUpdate }) => (
+}> = ({ _theme, _onUpdate }) => (
   <div className="text-center py-12 text-gray-500">
     <Share className="w-12 h-12 mx-auto mb-4 opacity-50" />
     <p>Sharing and privacy settings will be implemented</p>

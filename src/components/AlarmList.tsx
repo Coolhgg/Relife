@@ -47,25 +47,6 @@ const AlarmList: React.FC<AlarmListProps> = ({
     useScreenReaderAnnouncements();
   const { announceEnter } = useFocusAnnouncements('Alarm List');
 
-  // Load advanced features status and optimizations
-  useEffect(() => {
-    loadAdvancedFeatureStatus();
-    loadAlarmOptimizations();
-  }, [alarms, loadAlarmOptimizations]);
-
-  // Announce when entering the alarm list
-  useEffect(() => {
-    announceEnter(`Showing ${alarms.length} alarms`);
-  }, [announceEnter, alarms.length]);
-
-  const loadAdvancedFeatureStatus = () => {
-    setAdvancedFeaturesEnabled({
-      ml: MLAlarmOptimizer.isMLEnabled(),
-      location: EnhancedLocationService.isLocationEnabled(),
-      analytics: PredictiveAnalyticsService.isAnalyticsEnabled(),
-    });
-  };
-
   const loadAlarmOptimizations = useCallback(async () => {
     if (!MLAlarmOptimizer.isMLEnabled()) return;
 
@@ -90,6 +71,25 @@ const AlarmList: React.FC<AlarmListProps> = ({
     }
     setAlarmOptimizations(optimizations);
   }, [alarms, setAlarmOptimizations]);
+
+  // Load advanced features status and optimizations
+  useEffect(() => {
+    loadAdvancedFeatureStatus();
+    loadAlarmOptimizations();
+  }, [alarms, loadAlarmOptimizations]);
+
+  // Announce when entering the alarm list
+  useEffect(() => {
+    announceEnter(`Showing ${alarms.length} alarms`);
+  }, [announceEnter, alarms.length]);
+
+  const loadAdvancedFeatureStatus = () => {
+    setAdvancedFeaturesEnabled({
+      ml: MLAlarmOptimizer.isMLEnabled(),
+      location: EnhancedLocationService.isLocationEnabled(),
+      analytics: PredictiveAnalyticsService.isAnalyticsEnabled(),
+    });
+  };
 
   // Announce when alarm count changes
   useEffect(() => {
