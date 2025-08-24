@@ -205,7 +205,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
 
   const pricing = getPricingInfo();
 
-  const handleUpgrade = (interval: 'monthly' | 'yearly' = 'monthly') => {
+  const handleUpgrade = (_tier?: any /* auto: placeholder param - adjust */, interval: 'monthly' | 'yearly' = 'monthly') => {
     // Add smooth transition effect
     setIsAnimating(true);
     setTimeout(() => {

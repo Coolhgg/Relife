@@ -616,7 +616,8 @@ export class VoiceProService {
 
   static async startVoiceRecognition(
     onResult: (result: RecognitionResult) => void,
-    onError?: (error: string) => void
+    onError?: (error: string) => void,
+    _options?: any /* auto: placeholder param - adjust */
   ): Promise<() => void> {
     await this.initialize();
 

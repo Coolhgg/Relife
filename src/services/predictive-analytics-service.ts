@@ -645,7 +645,8 @@ export class PredictiveAnalyticsService {
 
   private static async generateInsightsFromPattern(
     userId: string,
-    pattern: DetectedPattern
+    pattern: DetectedPattern,
+    _alarms?: any /* auto: placeholder param - adjust */
   ): Promise<PredictiveInsight[]> {
     const insights: PredictiveInsight[] = [];
     const now = new Date();
@@ -747,7 +748,8 @@ export class PredictiveAnalyticsService {
   }
 
   private static async generateTrendInsights(
-    userId: string
+    userId: string,
+    _alarms?: any /* auto: placeholder param - adjust */
   ): Promise<PredictiveInsight[]> {
     const insights: PredictiveInsight[] = [];
     // Implementation for trend-based insights would go here
@@ -755,7 +757,8 @@ export class PredictiveAnalyticsService {
   }
 
   private static async generateOptimizationInsights(
-    userId: string
+    userId: string,
+    _alarms?: any /* auto: placeholder param - adjust */
   ): Promise<PredictiveInsight[]> {
     const insights: PredictiveInsight[] = [];
 
