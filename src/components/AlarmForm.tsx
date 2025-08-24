@@ -1299,7 +1299,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                       setFormData((prev: any) => ({
                         ...prev,
                         snoozeInterval: parseInt(e.target.value),
-                      }))
+                      }));
                     }
                     className="alarm-input text-sm"
                   >
@@ -1329,7 +1329,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                       setFormData((prev: any) => ({
                         ...prev,
                         maxSnoozes: parseInt(e.target.value),
-                      }))
+                      }));
                     }
                     className="alarm-input text-sm"
                   >
