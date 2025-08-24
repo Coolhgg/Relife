@@ -27,6 +27,9 @@ export {
   createTestVoice,
   createTestCustomSound,
   createTestAnalytics,
+  createTestSubscriptionPlan,
+  createTestPaymentMethod,
+  createTestPricing,
 } from './premium-factories';
 
 export {
