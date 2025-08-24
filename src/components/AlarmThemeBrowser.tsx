@@ -354,7 +354,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
             <select
               value={sortMode}
               onChange={(e: any
-) => setSortMode(e.target.value as SortMode)}
+) => setSortMode(e.target.value as SortMode)} // type-safe replacement
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                          focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 min-w-[150px]"
             >
