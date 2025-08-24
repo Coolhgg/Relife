@@ -91,7 +91,8 @@ export class AlarmIntegrityMonitor {
   private initializeMonitoring(): void {
     // Register for storage tamper detection events
     const secureStorage = SecureAlarmStorageService.getInstance();
-    secureStorage.onTamperDetected((details: any) => { // auto: implicit any
+    secureStorage.onTamperDetected((details: any) => {
+      // auto: implicit any
       this.handleStorageTamperDetection(details);
     });
 
