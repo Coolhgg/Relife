@@ -58,7 +58,8 @@
     "tests/**/*.spec.ts",
     "tests/**/*.spec.tsx",
     "src/test-setup.ts",
-    "tests/utils/**/*"
+    "tests/utils/**/*",
+    "test-setup/global.d.ts"
   ],
   "exclude": ["node_modules", "dist", "build", "android", "ios", ".next"]
 }
