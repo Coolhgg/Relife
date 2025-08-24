@@ -5,10 +5,10 @@ name: 📑 Translation Reports
 
 on:
   schedule:
-    # Generate reports every Monday at 9 AM UTC
-    - cron: '0 9 * * 1'
-    # Generate monthly comprehensive reports on the 1st at 10 AM UTC
-    - cron: '0 10 1 * *'
+    # Generate reports every Tuesday at 11 AM UTC (distributed load, avoids Monday conflicts)
+    - cron: '0 11 * * 2'
+    # Generate monthly comprehensive reports on the 1st at 2 PM UTC
+    - cron: '0 14 1 * *'
   workflow_dispatch:
     inputs:
       report_type:

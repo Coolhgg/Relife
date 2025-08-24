@@ -5,10 +5,10 @@ name: 📊 Translation Quality Monitoring
 
 on:
   schedule:
-    # Run daily at 6 AM UTC (adjust for your timezone)
-    - cron: '0 6 * * *'
-    # Run weekly comprehensive analysis on Sundays at 8 AM UTC
-    - cron: '0 8 * * 0'
+    # Run daily at 1 AM UTC (distributed load, before main CI conflicts)
+    - cron: '0 1 * * *'
+    # Run weekly comprehensive analysis on Saturdays at 11 PM UTC
+    - cron: '0 23 * * 6'
   workflow_dispatch:
     inputs:
       monitoring_type:
