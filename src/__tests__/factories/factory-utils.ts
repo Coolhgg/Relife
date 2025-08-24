@@ -298,3 +298,21 @@ export function _createFlexibleFactory<T, O = Record<string, unknown>>(
     return { ...base, ...overrides };
   };
 }
+
+// ALIAS EXPORTS (without underscores)
+// ===================================
+// Export functions without underscore prefixes to match import expectations
+
+export const generateId = _generateId;
+export const generateTimestamp = _generateTimestamp;
+export const generateTimeString = _generateTimeString;
+export const generateRealisticAlarmTime = _generateRealisticAlarmTime;
+export const generateRealisticAlarmDays = _generateRealisticAlarmDays;
+export const generateUsername = _generateUsername;
+export const generateExperience = _generateExperience;
+export const generateRating = _generateRating;
+export const generateHexColor = _generateHexColor;
+export const weightedRandom = _weightedRandom;
+export const randomSubset = _randomSubset;
+export const withDefaults = _withDefaults;
+export const createFlexibleFactory = _createFlexibleFactory;
