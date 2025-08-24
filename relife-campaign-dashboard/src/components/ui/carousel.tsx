@@ -131,7 +131,7 @@ function Carousel({
 }
 
 function CarouselContent({ className, ...props }: React.ComponentProps<'div'>) {
-  const { _carouselRef: carouselRef, _orientation: orientation } = useCarousel();
+  const { carouselRef, orientation } = useCarousel();
 
   return (
     <div ref={carouselRef} className="overflow-hidden" data-slot="carousel-content">
@@ -148,7 +148,7 @@ function CarouselContent({ className, ...props }: React.ComponentProps<'div'>) {
 }
 
 function CarouselItem({ className, ...props }: React.ComponentProps<'div'>) {
-  const { _orientation } = useCarousel();
+  const { orientation } = useCarousel();
 
   return (
     <div
@@ -171,7 +171,7 @@ function CarouselPrevious({
   size = 'icon',
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { _orientation: orientation, _scrollPrev: scrollPrev, _canScrollPrev: canScrollPrev } = useCarousel();
+  const { orientation, scrollPrev, canScrollPrev } = useCarousel();
 
   return (
     <Button
@@ -201,7 +201,7 @@ function CarouselNext({
   size = 'icon',
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { _orientation, _scrollNext, _canScrollNext } = useCarousel();
+  const { orientation, scrollNext, canScrollNext } = useCarousel();
 
   return (
     <Button

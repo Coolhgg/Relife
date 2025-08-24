@@ -71,9 +71,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
       // Load optimal times for each alarm
       const timesMap = new Map<string, OptimalTimeSlot[]>();
 
-      
-      for (const alarm of alarms.filter((a: any
-) => a.smartEnabled)) {
+      for (const alarm of alarms.filter((a: any) => a.smartEnabled)) {
         try {
           const times =
             await EnhancedSmartAlarmScheduler.calculateOptimalTimeSlots(alarm);
@@ -118,9 +116,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
     return <Alert className="w-4 h-4 text-red-400" />;
   };
 
-  
-  const smartAlarms = alarms.filter((alarm: any
-) => alarm.smartEnabled);
+  const smartAlarms = alarms.filter((alarm: any) => a.larm.smartEnabled);
 
   if (smartAlarms.length === 0) {
     return (

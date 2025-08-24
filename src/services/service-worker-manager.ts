@@ -1,3 +1,4 @@
+/* global ExtendableEvent, FetchEvent, PushEvent, NotificationEvent, BufferSource, IDBObjectStoreParameters, IDBTransactionMode, IDBDatabaseEventMap, AddEventListenerOptions, RegistrationOptions, ServiceWorkerContainerEventMap */
 /// <reference lib="dom" />
 // 🚀 SERVICE WORKER REGISTRATION - ENHANCED VERSION
 // Handles registration, updates, and emotional intelligence integration

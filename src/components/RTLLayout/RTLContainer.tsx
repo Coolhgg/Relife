@@ -1,3 +1,4 @@
+/* global JSX */
 /**
  * RTL-aware Container component that automatically handles direction-based styling
  */

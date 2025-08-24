@@ -49,7 +49,6 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   userId = 'demo-user',
 }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
-
   const enabledAlarms = alarms?.filter((a: any) => a.enabled) || [];
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);

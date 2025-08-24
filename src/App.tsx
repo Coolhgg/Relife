@@ -1406,7 +1406,6 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('edit', alarmId, { voiceMood: alarmData.voiceMood });
-
       const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
@@ -1510,14 +1509,9 @@ function AppContent() {
       }
 
       const alarmToDelete = appState.alarms.find((a: any) => a.id === alarmId);
-
-      const updatedAlarms = appState.alarms.filter(
-        (alarm: any) => alarm.id !== alarmId
-      );
-      setAppState((prev: AppState
-) => ({
-        
-
+      const updatedAlarms = appState.alarms.filter((alarm: any) => alarm.id !== alarmId);
+      setAppState((prev: any) => ({
+          
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1577,7 +1571,6 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('toggle', alarmId, { enabled });
-
       const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
@@ -1858,7 +1851,6 @@ function AppContent() {
       case 'dashboard':
         appAnalytics.trackPageView('dashboard', {
           totalAlarms: appState.alarms.length,
-
           activeAlarms: appState.alarms.filter((a: any) => a.enabled).length,
         });
         return (
@@ -2104,9 +2096,7 @@ function AppContent() {
                     tabProtectionSettings.settings.visualSettings.showVisualWarning && (
                       <TabProtectionWarning
                         activeAlarm={appState.activeAlarm}
-                        enabledAlarms={appState.alarms.filter(
-                          (alarm: any) => alarm.enabled
-                        )}
+                        enabledAlarms={appState.alarms.filter((alarm: any) => alarm.enabled)}
                         settings={tabProtectionSettings.settings}
                       />
                     )}

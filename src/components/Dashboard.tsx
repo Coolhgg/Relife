@@ -46,7 +46,6 @@ const Dashboard: React.FC<DashboardProps> = ({
   onNavigateToAdvanced,
 }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
-
   const enabledAlarms = alarms.filter((a: any) => a.enabled);
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
@@ -361,6 +360,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             ))}
 
             {/* Smart Insights */}
+
             {smartInsights.map((insight: any) => (
               <div
                 key={insight.id}

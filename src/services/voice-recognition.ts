@@ -1,3 +1,4 @@
+/* global TimeoutHandle, SpeechRecognition */
 import { VoiceProService, RecognitionResult } from './voice-pro';
 
 export interface VoiceCommand {

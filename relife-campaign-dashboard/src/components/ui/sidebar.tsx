@@ -168,7 +168,7 @@ function Sidebar({
   variant?: 'sidebar' | 'floating' | 'inset';
   collapsible?: 'offcanvas' | 'icon' | 'none';
 }) {
-  const { _isMobile, _state, _openMobile, _setOpenMobile } = useSidebar();
+  const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 
   if (collapsible === 'none') {
     return (
@@ -263,7 +263,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { _toggleSidebar } = useSidebar();
+  const { toggleSidebar } = useSidebar();
 
   return (
     <Button
@@ -285,7 +285,7 @@ function SidebarTrigger({
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {
-  const { _toggleSidebar } = useSidebar();
+  const { toggleSidebar } = useSidebar();
 
   return (
     <button
@@ -508,7 +508,7 @@ function SidebarMenuButton({
   tooltip?: string | React.ComponentProps<typeof TooltipContent>;
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const Comp = asChild ? Slot : 'button';
-  const { _isMobile, _state } = useSidebar();
+  const { isMobile, state } = useSidebar();
 
   const button = (
     <Comp
