@@ -116,7 +116,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
   const handleDeleteConfirm = (alarmId?: string) => {
     const idToDelete = alarmId || deleteConfirmId;
     if (idToDelete) {
-      const alarm = alarms.find(a => a.id === idToDelete);
+      const alarm = alarms.find((a: any) => a.id === idToDelete); // auto
       onDeleteAlarm(idToDelete);
       setDeleteConfirmId(null);
 
@@ -141,7 +141,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
   };
 
   const handleToggleAlarm = (alarmId: string, enabled: boolean) => {
-    const alarm = alarms.find(a => a.id === alarmId);
+    const alarm = alarms.find((a: any) => a.id === alarmId); // auto
     onToggleAlarm(alarmId, enabled);
 
     // Announce toggle
@@ -211,7 +211,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
       </h2>
 
       <ul className="space-y-3" role="list" aria-label="List of alarms">
-        {alarms.map(alarm => {
+        {alarms.map((alarm: any) => { // auto
           const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
           return (
@@ -456,7 +456,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
       >
         <div className="text-center">
           <div className="text-sm text-gray-600 dark:text-gray-400">
-            {alarms.filter(a => a.enabled).length} of {alarms.length} alarms active
+            {alarms.filter((a: any) => a.enabled).length} of {alarms.length} alarms active // auto
           </div>
         </div>
       </div>
