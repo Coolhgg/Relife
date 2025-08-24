@@ -92,8 +92,7 @@ function AIWakeUpCoach() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {Object.entries(personalities).map(([key, personality]
-) => (
+              {Object.entries(personalities).map(([key, personality]) => (
                 <SelectItem key={key} value={key}>
                   {personality.name}
                 </SelectItem>
@@ -120,10 +119,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.speed]}
-                onValueChange={(value: any
-) => 
-                  setVoiceSettings((prev: any
-) => ({ ...prev, speed: value[0] }))
+                onValueChange={(value: any) =>
+                  setVoiceSettings((prev: any) => ({ ...prev, speed: value[0] }))
                 }
                 min={0.5}
                 max={2.0}
@@ -137,10 +134,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.pitch]}
-                onValueChange={(value: any
-) => 
-                  setVoiceSettings((prev: any
-) => ({ ...prev, pitch: value[0] }))
+                onValueChange={(value: any) =>
+                  setVoiceSettings((prev: any) => ({ ...prev, pitch: value[0] }))
                 }
                 min={0.5}
                 max={2.0}
@@ -156,10 +151,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.volume]}
-                onValueChange={(value: any
-) => 
-                  setVoiceSettings((prev: any
-) => ({ ...prev, volume: value[0] }))
+                onValueChange={(value: any) =>
+                  setVoiceSettings((prev: any) => ({ ...prev, volume: value[0] }))
                 }
                 min={0.1}
                 max={1.0}
@@ -185,15 +178,14 @@ function AIWakeUpCoach() {
                   type="checkbox"
                   id={goal}
                   checked={coachingGoals.includes(goal)}
-                  onChange={(e: any
-) => { // auto: implicit any
+                  onChange={(e: any) => {
+                    // auto: implicit any
                     if (e.target.checked) {
-                      setCoachingGoals((prev: any
-) => [...prev, goal]);
+                      setCoachingGoals((prev: any) => [...prev, goal]);
                     } else {
-                      setCoachingGoals((prev: any
-) => prev.filter((g: any
-) => g !== goal));
+                      setCoachingGoals((prev: any) =>
+                        prev.filter((g: any) => g !== goal)
+                      );
                     }
                   }}
                 />
@@ -255,8 +247,7 @@ function VoiceCommandRecognition() {
           <div className="mt-2">
             <Slider
               value={[sensitivity]}
-              onValueChange={(value: any
-) => setSensitivity(value[0])}
+              onValueChange={(value: any) => setSensitivity(value[0])}
               min={0.1}
               max={1.0}
               step={0.1}
@@ -273,8 +264,7 @@ function VoiceCommandRecognition() {
         <div>
           <Label>Custom Commands</Label>
           <div className="space-y-2 mt-2 max-h-40 overflow-y-auto">
-            {commands.map((command, index
-) => (
+            {commands.map((command, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between p-3 border rounded-lg"
@@ -296,16 +286,16 @@ function VoiceCommandRecognition() {
           <Input
             placeholder="Say this phrase..."
             value={newCommand.phrase}
-            onChange={(e: any
-) => setNewCommand((prev: any
-) => ({ ...prev, phrase: e.target.value }))}
+            onChange={(e: any) =>
+              setNewCommand((prev: any) => ({ ...prev, phrase: e.target.value }))
+            }
           />
           <Input
             placeholder="To do this action..."
             value={newCommand.action}
-            onChange={(e: any
-) => setNewCommand((prev: any
-) => ({ ...prev, action: e.target.value }))}
+            onChange={(e: any) =>
+              setNewCommand((prev: any) => ({ ...prev, action: e.target.value }))
+            }
           />
           <Button size="sm" className="w-full">
             Add Command
@@ -356,18 +346,15 @@ function PersonalizedAudioMessages() {
         <div>
           <Label>Message Types</Label>
           <div className="space-y-2 mt-2">
-            {Object.entries(messageTypes).map(([key, enabled]
-) => (
+            {Object.entries(messageTypes).map(([key, enabled]) => (
               <div key={key} className="flex items-center justify-between">
                 <span className="text-sm capitalize">
                   {key.replace(/([A-Z])/g, ' $1').trim()}
                 </span>
                 <Switch
                   checked={enabled}
-                  onCheckedChange={(checked: any
-) => 
-                    setMessageTypes((prev: any
-) => ({ ...prev, [key]: checked }))
+                  onCheckedChange={(checked: any) =>
+                    setMessageTypes((prev: any) => ({ ...prev, [key]: checked }))
                   }
                 />
               </div>
@@ -399,8 +386,7 @@ function PersonalizedAudioMessages() {
               </p>
             ) : (
               <div className="space-y-1 max-h-32 overflow-y-auto">
-                {customMessages.map((message, index
-) => (
+                {customMessages.map((message, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between p-2 border rounded"
@@ -418,16 +404,13 @@ function PersonalizedAudioMessages() {
             <Input
               placeholder="Add a personal message..."
               value={newMessage}
-              onChange={(e: any
-) => setNewMessage(e.target.value)}
+              onChange={(e: any) => setNewMessage(e.target.value)}
             />
             <Button
               size="sm"
-              onClick={(
-) => {
+              onClick={() => {
                 if (newMessage.trim()) {
-                  setCustomMessages((prev: any
-) => [...prev, newMessage]);
+                  setCustomMessages((prev: any) => [...prev, newMessage]);
                   setNewMessage('');
                 }
               }}
@@ -480,8 +463,7 @@ function VoiceControlledSnooze() {
         <div>
           <Label>Snooze Commands</Label>
           <div className="space-y-2 mt-2 max-h-40 overflow-y-auto">
-            {Object.entries(snoozeCommands).map(([phrase, minutes]
-) => (
+            {Object.entries(snoozeCommands).map(([phrase, minutes]) => (
               <div
                 key={phrase}
                 className="flex items-center justify-between p-2 border rounded"
@@ -508,8 +490,7 @@ function VoiceControlledSnooze() {
           <div className="mt-2">
             <Slider
               value={[customSnoozeTime]}
-              onValueChange={(value: any
-) => setCustomSnoozeTime(value[0])}
+              onValueChange={(value: any) => setCustomSnoozeTime(value[0])}
               min={1}
               max={60}
               step={1}
@@ -599,8 +580,7 @@ function VoiceProfileTraining() {
                 size="lg"
                 variant={isRecording ? 'destructive' : 'default'}
                 className="rounded-full w-16 h-16"
-                onClick={(
-) => setIsRecording(!isRecording)}
+                onClick={() => setIsRecording(!isRecording)}
               >
                 <Mic className={`w-6 h-6 ${isRecording ? 'animate-pulse' : ''}`} />
               </Button>
@@ -616,15 +596,13 @@ function VoiceProfileTraining() {
           <Button
             variant="outline"
             disabled={currentPhrase === 0}
-            onClick={(
-) => setCurrentPhrase(Math.max(0, currentPhrase - 1))}
+            onClick={() => setCurrentPhrase(Math.max(0, currentPhrase - 1))}
           >
             Previous
           </Button>
           <Button
             disabled={currentPhrase === trainingPhrases.length - 1}
-            onClick={(
-) =>
+            onClick={() =>
               setCurrentPhrase(Math.min(trainingPhrases.length - 1, currentPhrase + 1))
             }
           >

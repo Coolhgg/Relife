@@ -11,8 +11,7 @@ interface FeatureGateProps {
   softGate?: boolean;
   customMessage?: string;
   className?: string;
-  onUpgradeClick?: (
-) => void;
+  onUpgradeClick?: () => void;
 }
 
 function FeatureGate({

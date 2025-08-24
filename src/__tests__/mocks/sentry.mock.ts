@@ -7,55 +7,43 @@
 
 const mockSentry = {
   // Initialization
-  init: jest.fn((options: any
-) => {
+  init: jest.fn((options: any) => {
     console.log('🔍 Mock Sentry initialized', options);
   }),
 
   // Error capturing
-  captureException: jest.fn((exception: any, hint?: any
-) => {
+  captureException: jest.fn((exception: any, hint?: any) => {
     console.log('❌ Mock Sentry captureException', exception, hint);
     return 'mock-event-id-' + Math.random().toString(36).substr(2, 9);
   }),
 
-  captureMessage: jest.fn((message: string, level?: any
-) => {
+  captureMessage: jest.fn((message: string, level?: any) => {
     console.log(`📝 Mock Sentry captureMessage: ${message}`, level);
     return 'mock-event-id-' + Math.random().toString(36).substr(2, 9);
   }),
 
   // Context and scope management
-  withScope: jest.fn((callback: (scope: any
-) => void
-) => {
+  withScope: jest.fn((callback: (scope: any) => void) => {
     const mockScope = {
-      setTag: jest.fn((key: string, value: string
-) => {
+      setTag: jest.fn((key: string, value: string) => {
         console.log(`🏷️ Mock Sentry setTag: ${key} = ${value}`);
       }),
-      setContext: jest.fn((key: string, context: any
-) => {
+      setContext: jest.fn((key: string, context: any) => {
         console.log(`📋 Mock Sentry setContext: ${key}`, context);
       }),
-      setLevel: jest.fn((level: string
-) => {
+      setLevel: jest.fn((level: string) => {
         console.log(`📊 Mock Sentry setLevel: ${level}`);
       }),
-      setUser: jest.fn((user: any
-) => {
+      setUser: jest.fn((user: any) => {
         console.log('👤 Mock Sentry setUser', user);
       }),
-      setExtra: jest.fn((key: string, extra: any
-) => {
+      setExtra: jest.fn((key: string, extra: any) => {
         console.log(`➕ Mock Sentry setExtra: ${key}`, extra);
       }),
-      setFingerprint: jest.fn((fingerprint: string[]
-) => {
+      setFingerprint: jest.fn((fingerprint: string[]) => {
         console.log('👆 Mock Sentry setFingerprint', fingerprint);
       }),
-      clear: jest.fn((
-) => {
+      clear: jest.fn(() => {
         console.log('🧹 Mock Sentry scope clear');
       }),
     };
@@ -64,70 +52,57 @@ const mockSentry = {
   }),
 
   // Global scope management
-  setTag: jest.fn((key: string, value: string
-) => {
+  setTag: jest.fn((key: string, value: string) => {
     console.log(`🏷️ Mock Sentry global setTag: ${key} = ${value}`);
   }),
 
-  setContext: jest.fn((key: string, context: any
-) => {
+  setContext: jest.fn((key: string, context: any) => {
     console.log(`📋 Mock Sentry global setContext: ${key}`, context);
   }),
 
-  setUser: jest.fn((user: any
-) => {
+  setUser: jest.fn((user: any) => {
     console.log('👤 Mock Sentry global setUser', user);
   }),
 
-  setLevel: jest.fn((level: string
-) => {
+  setLevel: jest.fn((level: string) => {
     console.log(`📊 Mock Sentry global setLevel: ${level}`);
   }),
 
-  setExtra: jest.fn((key: string, extra: any
-) => {
+  setExtra: jest.fn((key: string, extra: any) => {
     console.log(`➕ Mock Sentry global setExtra: ${key}`, extra);
   }),
 
   // User feedback
-  showReportDialog: jest.fn((options?: any
-) => {
+  showReportDialog: jest.fn((options?: any) => {
     console.log('💬 Mock Sentry showReportDialog', options);
   }),
 
   // Breadcrumbs
-  addBreadcrumb: jest.fn((breadcrumb: any
-) => {
+  addBreadcrumb: jest.fn((breadcrumb: any) => {
     console.log('🍞 Mock Sentry addBreadcrumb', breadcrumb);
   }),
 
   // Performance monitoring
-  startTransaction: jest.fn((context: any
-) => {
+  startTransaction: jest.fn((context: any) => {
     console.log('🚀 Mock Sentry startTransaction', context);
     return {
       setTag: jest.fn(),
       setData: jest.fn(),
       setStatus: jest.fn(),
-      finish: jest.fn((
-) => {
+      finish: jest.fn(() => {
         console.log('✅ Mock Sentry transaction finished');
       }),
-      startChild: jest.fn((
-) => mockSentry.startTransaction({})),
+      startChild: jest.fn(() => mockSentry.startTransaction({})),
     };
   }),
 
   // Hub management
-  getCurrentHub: jest.fn((
-) => ({
-    getClient: jest.fn((
-) => ({
+  getCurrentHub: jest.fn(() => ({
+    getClient: jest.fn(() => ({
       captureException: mockSentry.captureException,
       captureMessage: mockSentry.captureMessage,
     })),
-    getScope: jest.fn((
-) => ({
+    getScope: jest.fn(() => ({
       setTag: mockSentry.setTag,
       setContext: mockSentry.setContext,
       setUser: mockSentry.setUser,
@@ -138,18 +113,14 @@ const mockSentry = {
   })),
 
   // Configuration
-  configureScope: jest.fn((callback: (scope: any
-) => void
-) => {
+  configureScope: jest.fn((callback: (scope: any) => void) => {
     console.log('⚙️ Mock Sentry configureScope');
     mockSentry.withScope(callback);
   }),
 
   // Browser specific
-  wrap: jest.fn((fn: Function
-) => {
-    return (...args: any[]
-) => {
+  wrap: jest.fn((fn: Function) => {
+    return (...args: any[]) => {
       try {
         return fn(...args);
       } catch (error) {
@@ -160,26 +131,21 @@ const mockSentry = {
   }),
 
   // React integration
-  ErrorBoundary: jest.fn(({ children, fallback, onError }: any
-) => {
+  ErrorBoundary: jest.fn(({ children, fallback, onError }: any) => {
     // Mock error boundary component
     return children;
   }),
 
-  withErrorBoundary: jest.fn((component: any, options?: any
-) => {
+  withErrorBoundary: jest.fn((component: any, options?: any) => {
     console.log('🛡️ Mock Sentry withErrorBoundary', options);
     return component;
   }),
 
   // Profiling
-  Profiler: jest.fn(({ children }: any
-) => children),
+  Profiler: jest.fn(({ children }: any) => children),
 
   // Tracing
-  trace: jest.fn((operation: string, callback: (
-) => any
-) => {
+  trace: jest.fn((operation: string, callback: () => any) => {
     console.log(`📊 Mock Sentry trace: ${operation}`);
     return callback();
   }),
@@ -200,46 +166,38 @@ const mockSentry = {
 
   // Integration mocks
   Integrations: {
-    BrowserTracing: jest.fn((
-) => ({
+    BrowserTracing: jest.fn(() => ({
       name: 'BrowserTracing',
       setupOnce: jest.fn(),
     })),
-    Replay: jest.fn((
-) => ({
+    Replay: jest.fn(() => ({
       name: 'Replay',
       setupOnce: jest.fn(),
     })),
-    CaptureConsole: jest.fn((
-) => ({
+    CaptureConsole: jest.fn(() => ({
       name: 'CaptureConsole',
       setupOnce: jest.fn(),
     })),
   },
 
   // Transport and client
-  close: jest.fn((timeout?: number
-) => {
+  close: jest.fn((timeout?: number) => {
     console.log(`🔒 Mock Sentry close: ${timeout}ms`);
     return Promise.resolve(true);
   }),
 
-  flush: jest.fn((timeout?: number
-) => {
+  flush: jest.fn((timeout?: number) => {
     console.log(`🚽 Mock Sentry flush: ${timeout}ms`);
     return Promise.resolve(true);
   }),
 
   // Event processors
-  addGlobalEventProcessor: jest.fn((processor: (event: any
-) => any
-) => {
+  addGlobalEventProcessor: jest.fn((processor: (event: any) => any) => {
     console.log('🔄 Mock Sentry addGlobalEventProcessor');
   }),
 
   // Internal methods for testing
-  _mockReset: jest.fn((
-) => {
+  _mockReset: jest.fn(() => {
     // Reset all mocks for clean testing
     Object.values(mockSentry).forEach(value => {
       if (typeof value === 'function' && value.mockClear) {
@@ -248,20 +206,17 @@ const mockSentry = {
     });
   }),
 
-  _mockSetUser: jest.fn((user: any
-) => {
+  _mockSetUser: jest.fn((user: any) => {
     mockSentry.setUser(user);
   }),
 
-  _mockClearContext: jest.fn((
-) => {
+  _mockClearContext: jest.fn(() => {
     console.log('🧹 Mock Sentry clear all context');
   }),
 };
 
 // Create a factory function for creating fresh mocks
-export const _createMockSentry = (
-) => ({
+export const _createMockSentry = () => ({
   ...mockSentry,
   Integrations: { ...mockSentry.Integrations },
   Severity: { ...mockSentry.Severity },

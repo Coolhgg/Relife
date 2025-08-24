@@ -6,8 +6,7 @@ export function useErrorLoadingAnnouncements() {
 
   // Loading state announcements
   const announceLoadingStart = useCallback(
-    (operation: string, context?: string
-) => {
+    (operation: string, context?: string) => {
       let message = `Loading ${operation}`;
       if (context) {
         message += ` for ${context}`;
@@ -19,8 +18,7 @@ export function useErrorLoadingAnnouncements() {
   );
 
   const announceLoadingComplete = useCallback(
-    (operation: string, context?: string, result?: string
-) => {
+    (operation: string, context?: string, result?: string) => {
       let message = `${operation} loaded successfully`;
       if (context) {
         message += ` for ${context}`;
@@ -34,8 +32,7 @@ export function useErrorLoadingAnnouncements() {
   );
 
   const announceLoadingProgress = useCallback(
-    (operation: string, progress: number, total?: number
-) => {
+    (operation: string, progress: number, total?: number) => {
       let message;
       if (total) {
         message = `Loading ${operation}: ${progress} of ${total} items completed.`;
@@ -53,8 +50,7 @@ export function useErrorLoadingAnnouncements() {
       error: string,
       operation?: string,
       severity: 'warning' | 'error' | 'critical' = 'error'
-    
-) => {
+    ) => {
       let message = '';
 
       switch (severity) {
@@ -81,8 +77,7 @@ export function useErrorLoadingAnnouncements() {
   );
 
   const announceNetworkError = useCallback(
-    (operation?: string
-) => {
+    (operation?: string) => {
       let message = 'Network connection error.';
       if (operation) {
         message += ` Unable to ${operation}.`;
@@ -94,16 +89,14 @@ export function useErrorLoadingAnnouncements() {
   );
 
   const announceValidationError = useCallback(
-    (field: string, errorMessage: string
-) => {
+    (field: string, errorMessage: string) => {
       announce(`Validation error in ${field}: ${errorMessage}`, 'assertive');
     },
     [announce]
   );
 
   const announceFormError = useCallback(
-    (errors: Record<string, string>
-) => {
+    (errors: Record<string, string>) => {
       const errorCount = Object.keys(errors).length;
       const fields = Object.keys(errors).join(', ');
 
@@ -122,8 +115,7 @@ export function useErrorLoadingAnnouncements() {
 
   // Success announcements
   const announceSuccess = useCallback(
-    (operation: string, context?: string, details?: string
-) => {
+    (operation: string, context?: string, details?: string) => {
       let message = `${operation} successful`;
       if (context) {
         message += ` for ${context}`;
@@ -137,8 +129,7 @@ export function useErrorLoadingAnnouncements() {
   );
 
   const announceFormSuccess = useCallback(
-    (operation: string, details?: string
-) => {
+    (operation: string, details?: string) => {
       let message = `Form ${operation} successfully`;
       if (details) {
         message += `. ${details}`;
@@ -150,8 +141,7 @@ export function useErrorLoadingAnnouncements() {
 
   // Permission and access announcements
   const announcePermissionError = useCallback(
-    (permission: string, reason?: string
-) => {
+    (permission: string, reason?: string) => {
       let message = `Permission denied for ${permission}.`;
       if (reason) {
         message += ` ${reason}`;
@@ -162,8 +152,7 @@ export function useErrorLoadingAnnouncements() {
   );
 
   const announceAccessError = useCallback(
-    (resource: string, reason?: string
-) => {
+    (resource: string, reason?: string) => {
       let message = `Cannot access ${resource}.`;
       if (reason) {
         message += ` ${reason}`;
@@ -176,22 +165,19 @@ export function useErrorLoadingAnnouncements() {
   );
 
   // Offline/online status announcements
-  const announceOfflineMode = useCallback((
-) => {
+  const announceOfflineMode = useCallback(() => {
     announce(
       'You are currently offline. Some features may be limited. The app will sync when connection is restored.',
       'assertive'
     );
   }, [announce]);
 
-  const announceOnlineMode = useCallback((
-) => {
+  const announceOnlineMode = useCallback(() => {
     announce('You are back online. Syncing data now.', 'polite');
   }, [announce]);
 
   const announceDataSync = useCallback(
-    (status: 'started' | 'completed' | 'failed', details?: string
-) => {
+    (status: 'started' | 'completed' | 'failed', details?: string) => {
       let message = '';
 
       switch (status) {
@@ -220,8 +206,7 @@ export function useErrorLoadingAnnouncements() {
 
   // Timeout and retry announcements
   const announceTimeout = useCallback(
-    (operation: string
-) => {
+    (operation: string) => {
       announce(
         `${operation} timed out. Please try again. If the problem persists, check your internet connection.`,
         'assertive'
@@ -231,8 +216,7 @@ export function useErrorLoadingAnnouncements() {
   );
 
   const announceRetry = useCallback(
-    (operation: string, attemptNumber: number, maxAttempts: number
-) => {
+    (operation: string, attemptNumber: number, maxAttempts: number) => {
       announce(
         `Retrying ${operation}. Attempt ${attemptNumber} of ${maxAttempts}.`,
         'polite'
@@ -242,8 +226,7 @@ export function useErrorLoadingAnnouncements() {
   );
 
   const announceMaxRetriesReached = useCallback(
-    (operation: string
-) => {
+    (operation: string) => {
       announce(
         `Maximum retry attempts reached for ${operation}. Please try again later or contact support if the problem persists.`,
         'assertive'
@@ -254,8 +237,7 @@ export function useErrorLoadingAnnouncements() {
 
   // Data state announcements
   const announceDataEmpty = useCallback(
-    (dataType: string
-) => {
+    (dataType: string) => {
       announce(
         `No ${dataType} available. Try refreshing or adding some content.`,
         'polite'
@@ -269,8 +251,7 @@ export function useErrorLoadingAnnouncements() {
       dataType: string,
       updateType: 'added' | 'updated' | 'deleted',
       itemName?: string
-    
-) => {
+    ) => {
       let message = `${dataType} ${updateType}`;
       if (itemName) {
         message += `: ${itemName}`;
@@ -283,8 +264,7 @@ export function useErrorLoadingAnnouncements() {
 
   // API and service announcements
   const announceApiError = useCallback(
-    (endpoint: string, statusCode?: number, statusText?: string
-) => {
+    (endpoint: string, statusCode?: number, statusText?: string) => {
       let message = `API request failed for ${endpoint}.`;
       if (statusCode) {
         message += ` Status: ${statusCode}`;
@@ -299,8 +279,7 @@ export function useErrorLoadingAnnouncements() {
   );
 
   const announceServiceUnavailable = useCallback(
-    (serviceName: string
-) => {
+    (serviceName: string) => {
       announce(
         `${serviceName} is temporarily unavailable. Please try again later.`,
         'assertive'
@@ -315,8 +294,7 @@ export function useErrorLoadingAnnouncements() {
       operation: 'upload' | 'download' | 'delete' | 'read',
       filename: string,
       error: string
-    
-) => {
+    ) => {
       announce(`File ${operation} failed for ${filename}: ${error}`, 'assertive');
     },
     [announce]
@@ -327,8 +305,7 @@ export function useErrorLoadingAnnouncements() {
       operation: 'uploaded' | 'downloaded' | 'deleted' | 'saved',
       filename: string,
       details?: string
-    
-) => {
+    ) => {
       let message = `File ${operation} successfully: ${filename}`;
       if (details) {
         message += `. ${details}`;
@@ -339,14 +316,12 @@ export function useErrorLoadingAnnouncements() {
   );
 
   // Session and authentication announcements
-  const announceSessionExpired = useCallback((
-) => {
+  const announceSessionExpired = useCallback(() => {
     announce('Your session has expired. Please log in again to continue.', 'assertive');
   }, [announce]);
 
   const announceAuthenticationRequired = useCallback(
-    (action?: string
-) => {
+    (action?: string) => {
       let message = 'Authentication required';
       if (action) {
         message += ` to ${action}`;

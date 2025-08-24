@@ -26,15 +26,13 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
     className = '',
     label = 'Loading...',
     showLabel = false,
-  }
-) => {
+  }) => {
     const { isLowEnd, tier } = useDeviceCapabilities();
     const { shouldReduceAnimations } = usePerformanceOptimizations();
 
     // Animation configuration
     const animationConfig: AnimationConfig = useMemo(
-      (
-) => ({
+      () => ({
         duration: isLowEnd ? 800 : 600, // Slower on low-end devices to reduce CPU usage
         easing: 'linear',
         complexity: 'low',
@@ -50,8 +48,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
     );
 
     // Size configurations
-    const sizeClasses = useMemo((
-) => {
+    const sizeClasses = useMemo(() => {
       const sizes = {
         xs: 'w-3 h-3',
         sm: 'w-4 h-4',
@@ -63,8 +60,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
     }, [size]);
 
     // Color configurations
-    const colorClasses = useMemo((
-) => {
+    const colorClasses = useMemo(() => {
       const colors = {
         primary: 'text-blue-600',
         secondary: 'text-gray-600',
@@ -75,8 +71,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
     }, [color]);
 
     // Animation classes based on device capabilities
-    const animationClasses = useMemo((
-) => {
+    const animationClasses = useMemo(() => {
       if (!canAnimate || shouldReduceAnimations) {
         return 'animate-pulse'; // Fallback to simple pulse animation
       }
@@ -85,8 +80,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
     }, [canAnimate, shouldReduceAnimations, isLowEnd]);
 
     // Different spinner types based on device capabilities
-    const SpinnerContent = useMemo((
-) => {
+    const SpinnerContent = useMemo(() => {
       // Simple dots for very low-end devices
       if (shouldReduceAnimations && isLowEnd) {
         return (
@@ -192,13 +186,11 @@ export const AdaptiveLoadingOverlay = memo<AdaptiveLoadingOverlayProps>(
     className = '',
     overlayClassName = '',
     blur = true,
-  }
-) => {
+  }) => {
     const { isLowEnd, tier } = useDeviceCapabilities();
     const { shouldReduceAnimations } = usePerformanceOptimizations();
 
-    const overlayStyles = useMemo((
-) => {
+    const overlayStyles = useMemo(() => {
       let baseClass =
         'absolute inset-0 flex items-center justify-center bg-white/80 z-50';
 
@@ -241,17 +233,14 @@ export interface AdaptiveSkeletonProps {
 }
 
 export const AdaptiveSkeleton = memo<AdaptiveSkeletonProps>(
-  ({ lines = 1, height = '1rem', className = '', animated = true }
-) => {
+  ({ lines = 1, height = '1rem', className = '', animated = true }) => {
     const { isLowEnd } = useDeviceCapabilities();
     const { shouldReduceAnimations } = usePerformanceOptimizations();
 
     const shouldAnimate = animated && !shouldReduceAnimations && !isLowEnd;
 
-    const skeletonLines = useMemo((
-) => {
-      return Array.from({ length: lines }, (_, index
-) => (
+    const skeletonLines = useMemo(() => {
+      return Array.from({ length: lines }, (_, index) => (
         <div
           key={index}
           className={`
@@ -292,12 +281,10 @@ export const AdaptiveLoadingButton = memo<AdaptiveLoadingButtonProps>(
     disabled,
     className = '',
     ...props
-  }
-) => {
+  }) => {
     const { isLowEnd } = useDeviceCapabilities();
 
-    const variantClasses = useMemo((
-) => {
+    const variantClasses = useMemo(() => {
       const variants = {
         primary: 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600',
         secondary: 'bg-gray-600 hover:bg-gray-700 text-white border-gray-600',

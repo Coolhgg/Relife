@@ -30,25 +30,17 @@ import type {
 interface SubscriptionDashboardProps {
   data: SubscriptionDashboardData;
   isLoading?: boolean;
-  onUpgrade: (planId: string, billingInterval: BillingInterval
-) => Promise<void>;
-  onDowngrade: (planId: string, billingInterval: BillingInterval
-) => Promise<void>;
-  onCancelSubscription: (reason?: string
-) => Promise<void>;
-  onReactivateSubscription: (
-) => Promise<void>;
-  onAddPaymentMethod: (
-) => Promise<void>;
-  onRemovePaymentMethod: (paymentMethodId: string
-) => Promise<void>;
-  onSetDefaultPaymentMethod: (paymentMethodId: string
-) => Promise<void>;
+  onUpgrade: (planId: string, billingInterval: BillingInterval) => Promise<void>;
+  onDowngrade: (planId: string, billingInterval: BillingInterval) => Promise<void>;
+  onCancelSubscription: (reason?: string) => Promise<void>;
+  onReactivateSubscription: () => Promise<void>;
+  onAddPaymentMethod: () => Promise<void>;
+  onRemovePaymentMethod: (paymentMethodId: string) => Promise<void>;
+  onSetDefaultPaymentMethod: (paymentMethodId: string) => Promise<void>;
   onUpdateBillingDetails: (
     paymentMethodId: string,
     billingDetails: any
-  
-) => Promise<void>;
+  ) => Promise<void>;
   className?: string;
 }
 
@@ -69,8 +61,7 @@ export function SubscriptionDashboard({
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
 
-  const formatDate = (date: Date
-) => {
+  const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
       month: 'long',
       day: 'numeric',
@@ -78,16 +69,14 @@ export function SubscriptionDashboard({
     }).format(new Date(date));
   };
 
-  const formatCurrency = (amount: number, currency: string = 'usd'
-) => {
+  const formatCurrency = (amount: number, currency: string = 'usd') => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency.toUpperCase(),
     }).format(amount / 100);
   };
 
-  const getTierIcon = (tier: SubscriptionTier
-) => {
+  const getTierIcon = (tier: SubscriptionTier) => {
     switch (tier) {
       case 'basic':
         return <Zap className="w-5 h-5 text-blue-600" />;
@@ -100,8 +89,7 @@ export function SubscriptionDashboard({
     }
   };
 
-  const getStatusBadge = (status: SubscriptionStatus
-) => {
+  const getStatusBadge = (status: SubscriptionStatus) => {
     switch (status) {
       case 'active':
         return <Badge className="bg-green-100 text-green-800">Active</Badge>;
@@ -118,16 +106,14 @@ export function SubscriptionDashboard({
     }
   };
 
-  const getUsageColor = (used: number, limit: number
-) => {
+  const getUsageColor = (used: number, limit: number) => {
     const percentage = (used / limit) * 100;
     if (percentage >= 90) return 'bg-red-500';
     if (percentage >= 75) return 'bg-yellow-500';
     return 'bg-blue-500';
   };
 
-  const handlePlanSelect = async (plan: any, billingInterval: BillingInterval
-) => {
+  const handlePlanSelect = async (plan: any, billingInterval: BillingInterval) => {
     try {
       setActionLoading('plan-change');
 
@@ -156,8 +142,7 @@ export function SubscriptionDashboard({
     }
   };
 
-  const handleCancelSubscription = async (
-) => {
+  const handleCancelSubscription = async () => {
     try {
       setActionLoading('cancel');
       await onCancelSubscription('User initiated cancellation');
@@ -168,8 +153,7 @@ export function SubscriptionDashboard({
     }
   };
 
-  const handleReactivateSubscription = async (
-) => {
+  const handleReactivateSubscription = async () => {
     try {
       setActionLoading('reactivate');
       await onReactivateSubscription();
@@ -302,8 +286,7 @@ export function SubscriptionDashboard({
                   <>
                     <div className="text-2xl font-bold">
                       {Object.values(data.usage.features).reduce(
-                        (sum, feature
-) => sum + feature.used,
+                        (sum, feature) => sum + feature.used,
                         0
                       )}
                     </div>
@@ -336,8 +319,7 @@ export function SubscriptionDashboard({
                       (1000 * 60 * 60 * 24)
                   )}
                 </p>
-                <Button className="mt-4" onClick={(
-) => setShowUpgradeModal(true)}>
+                <Button className="mt-4" onClick={() => setShowUpgradeModal(true)}>
                   Choose a Plan
                 </Button>
               </CardContent>
@@ -354,8 +336,7 @@ export function SubscriptionDashboard({
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-3">
-                <Button variant="outline" onClick={(
-) => setShowUpgradeModal(true)}>
+                <Button variant="outline" onClick={() => setShowUpgradeModal(true)}>
                   Change Plan
                 </Button>
 
@@ -382,8 +363,7 @@ export function SubscriptionDashboard({
         <TabsContent value="usage" className="space-y-6">
           {data.usage && data.currentPlan ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {Object.entries(data.usage.features).map(([featureKey, featureUsage]
-) => {
+              {Object.entries(data.usage.features).map(([featureKey, featureUsage]) => {
                 const limit =
                   data.currentPlan?.limits?.[
                     featureKey as keyof typeof data.currentPlan.limits

@@ -1240,8 +1240,7 @@ class SoundEffectsService {
   // ========== ORIGINAL METHODS (UPDATED FOR CUSTOM THEME SUPPORT) ==========
 
   private refreshSoundUrls(): void {
-    this.soundEffects.forEach((config, key
-) => {
+    this.soundEffects.forEach((config, key) => {
       const pathParts = config.url.split('/');
       const filename = pathParts[pathParts.length - 1];
       let category = pathParts[pathParts.length - 2];
@@ -1387,8 +1386,7 @@ class SoundEffectsService {
   }
 
   stopAllSounds(): void {
-    this.loadedSounds.forEach((source, soundId
-) => {
+    this.loadedSounds.forEach((source, soundId) => {
       if (source) {
         try {
           source.stop();
@@ -1401,8 +1399,7 @@ class SoundEffectsService {
   }
 
   stopSoundsByCategory(category: SoundEffectConfig['category']): void {
-    this.soundEffects.forEach((config, soundId
-) => {
+    this.soundEffects.forEach((config, soundId) => {
       if (config.category === category) {
         this.stopSound(soundId as SoundEffectId);
       }
@@ -1795,8 +1792,7 @@ class SoundEffectsService {
 
   // UI integration helpers
   createSoundHandler(soundType: 'click' | 'hover' | 'success' | 'error') {
-    return (
-) => this.playUISound(soundType);
+    return () => this.playUISound(soundType);
   }
 
   // React hook integration
@@ -1809,25 +1805,24 @@ class SoundEffectsService {
     };
   }
 
-  // auto: added missing community theme methods
   getCommunityThemes(): Promise<any> {
     // Placeholder implementation
-    return Promise.resolve([]); // auto: placeholder
+    return Promise.resolve([]);
   }
 
   shareThemeWithCommunity(theme: any): Promise<any> {
     // Placeholder implementation
-    return Promise.resolve({}); // auto: placeholder
+    return Promise.resolve({});
   }
 
   rateTheme(themeId: string, rating: number): Promise<any> {
     // Placeholder implementation
-    return Promise.resolve({}); // auto: placeholder
+    return Promise.resolve({});
   }
 
   incrementThemeDownloads(themeId: string): Promise<any> {
     // Placeholder implementation
-    return Promise.resolve({}); // auto: placeholder
+    return Promise.resolve({});
   }
 }
 

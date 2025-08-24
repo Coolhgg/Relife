@@ -18,12 +18,9 @@ import {
 } from '../../../../tests/utils/a11y-testing-utils';
 import { Input } from '../input';
 
-describe('Input - Accessibility Tests', (
-) => {
-  describe('Basic Accessibility Compliance', (
-) => {
-    it('should have no axe violations with basic input', async (
-) => {
+describe('Input - Accessibility Tests', () => {
+  describe('Basic Accessibility Compliance', () => {
+    it('should have no axe violations with basic input', async () => {
       await axeRender(
         <div>
           <label htmlFor="test-input">Test Input</label>
@@ -33,8 +30,7 @@ describe('Input - Accessibility Tests', (
       );
     });
 
-    it('should have no axe violations with different input types', async (
-) => {
+    it('should have no axe violations with different input types', async () => {
       const inputTypes = [
         'text',
         'email',
@@ -56,8 +52,7 @@ describe('Input - Accessibility Tests', (
       }
     });
 
-    it('should have no axe violations when disabled', async (
-) => {
+    it('should have no axe violations when disabled', async () => {
       await axeRender(
         <div>
           <label htmlFor="disabled-input">Disabled Input</label>
@@ -67,8 +62,7 @@ describe('Input - Accessibility Tests', (
       );
     });
 
-    it('should have no axe violations with readonly state', async (
-) => {
+    it('should have no axe violations with readonly state', async () => {
       await axeRender(
         <div>
           <label htmlFor="readonly-input">Readonly Input</label>
@@ -79,10 +73,8 @@ describe('Input - Accessibility Tests', (
     });
   });
 
-  describe('Form Labels and Associations', (
-) => {
-    it('should be properly associated with label via htmlFor', async (
-) => {
+  describe('Form Labels and Associations', () => {
+    it('should be properly associated with label via htmlFor', async () => {
       await axeRender(
         <div>
           <label htmlFor="labeled-input">Email Address</label>
@@ -95,8 +87,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toHaveAttribute('type', 'email');
     });
 
-    it('should support aria-label when no visible label', async (
-) => {
+    it('should support aria-label when no visible label', async () => {
       await axeRender(<Input aria-label="Search products" type="search" />, {
         axeOptions: axeRulesets.forms,
       });
@@ -105,8 +96,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toBeInTheDocument();
     });
 
-    it('should support aria-labelledby for complex labels', async (
-) => {
+    it('should support aria-labelledby for complex labels', async () => {
       await axeRender(
         <div>
           <h3 id="password-heading">Create Password</h3>
@@ -124,19 +114,15 @@ describe('Input - Accessibility Tests', (
       );
     });
 
-    it('should fail axe test without accessible name', async (
-) => {
-      await expect(async (
-) => {
+    it('should fail axe test without accessible name', async () => {
+      await expect(async () => {
         await axeRender(<Input />, { axeOptions: axeRulesets.forms });
       }).rejects.toThrow();
     });
   });
 
-  describe('Focus Management', (
-) => {
-    it('should be focusable by default', async (
-) => {
+  describe('Focus Management', () => {
+    it('should be focusable by default', async () => {
       await axeRender(
         <div>
           <label htmlFor="focus-test">Focus Test</label>
@@ -148,8 +134,7 @@ describe('Input - Accessibility Tests', (
       await accessibilityPatterns.testFocusable(input);
     });
 
-    it('should not be focusable when disabled', async (
-) => {
+    it('should not be focusable when disabled', async () => {
       await axeRender(
         <div>
           <label htmlFor="disabled-focus">Disabled Focus</label>
@@ -164,8 +149,7 @@ describe('Input - Accessibility Tests', (
       expect(document.activeElement).not.toBe(input);
     });
 
-    it('should have proper focus indicators', async (
-) => {
+    it('should have proper focus indicators', async () => {
       await axeRender(
         <div>
           <label htmlFor="focus-indicator">Focus Indicator Test</label>
@@ -178,8 +162,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toHaveClass('focus-visible:ring-ring/50');
     });
 
-    it('should maintain focus order in forms', async (
-) => {
+    it('should maintain focus order in forms', async () => {
       const { container } = await axeRender(
         <form>
           <label htmlFor="first">First</label>
@@ -199,10 +182,8 @@ describe('Input - Accessibility Tests', (
     });
   });
 
-  describe('Error States and Validation', (
-) => {
-    it('should handle aria-invalid state', async (
-) => {
+  describe('Error States and Validation', () => {
+    it('should handle aria-invalid state', async () => {
       await axeRender(
         <div>
           <label htmlFor="invalid-input">Required Field</label>
@@ -216,8 +197,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toHaveClass('aria-invalid:ring-destructive/20');
     });
 
-    it('should associate with error messages via aria-describedby', async (
-) => {
+    it('should associate with error messages via aria-describedby', async () => {
       await axeRender(
         <div>
           <label htmlFor="error-input">Email</label>
@@ -241,8 +221,7 @@ describe('Input - Accessibility Tests', (
       expect(errorMessage).toHaveTextContent('Please enter a valid email address');
     });
 
-    it('should support multiple describedby references', async (
-) => {
+    it('should support multiple describedby references', async () => {
       await axeRender(
         <div>
           <label htmlFor="help-input">Password</label>
@@ -264,10 +243,8 @@ describe('Input - Accessibility Tests', (
     });
   });
 
-  describe('Required Fields', (
-) => {
-    it('should handle required attribute', async (
-) => {
+  describe('Required Fields', () => {
+    it('should handle required attribute', async () => {
       await axeRender(
         <div>
           <label htmlFor="required-input">
@@ -282,8 +259,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toBeRequired();
     });
 
-    it('should use aria-required for custom validation', async (
-) => {
+    it('should use aria-required for custom validation', async () => {
       await axeRender(
         <div>
           <label htmlFor="aria-required-input">Custom Required Field</label>
@@ -297,10 +273,8 @@ describe('Input - Accessibility Tests', (
     });
   });
 
-  describe('Placeholder and Help Text', (
-) => {
-    it('should have accessible placeholder text', async (
-) => {
+  describe('Placeholder and Help Text', () => {
+    it('should have accessible placeholder text', async () => {
       await axeRender(
         <div>
           <label htmlFor="placeholder-input">Search</label>
@@ -312,8 +286,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toBeInTheDocument();
     });
 
-    it('should not rely only on placeholder for labeling', async (
-) => {
+    it('should not rely only on placeholder for labeling', async () => {
       // This should pass because we have a proper label
       await axeRender(
         <div>
@@ -324,8 +297,7 @@ describe('Input - Accessibility Tests', (
       );
     });
 
-    it('should support help text via aria-describedby', async (
-) => {
+    it('should support help text via aria-describedby', async () => {
       await axeRender(
         <div>
           <label htmlFor="help-input">Username</label>
@@ -340,10 +312,8 @@ describe('Input - Accessibility Tests', (
     });
   });
 
-  describe('Keyboard Navigation', (
-) => {
-    it('should accept text input via keyboard', async (
-) => {
+  describe('Keyboard Navigation', () => {
+    it('should accept text input via keyboard', async () => {
       await axeRender(
         <div>
           <label htmlFor="text-input">Text Input</label>
@@ -358,8 +328,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toHaveValue('Hello world');
     });
 
-    it('should support keyboard navigation in number inputs', async (
-) => {
+    it('should support keyboard navigation in number inputs', async () => {
       await axeRender(
         <div>
           <label htmlFor="number-input">Age</label>
@@ -379,8 +348,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toHaveValue(26); // Number inputs return numeric values
     });
 
-    it('should handle Enter key in forms', async (
-) => {
+    it('should handle Enter key in forms', async () => {
       const handleSubmit = vi.fn(e => e.preventDefault());
       await axeRender(
         <form onSubmit={handleSubmit}>
@@ -400,10 +368,8 @@ describe('Input - Accessibility Tests', (
     });
   });
 
-  describe('RTL (Right-to-Left) Support', (
-) => {
-    it('should render correctly in RTL context', async (
-) => {
+  describe('RTL (Right-to-Left) Support', () => {
+    it('should render correctly in RTL context', async () => {
       // Use axeRender with RTL options to avoid router conflicts
       await axeRender(
         <div>
@@ -417,8 +383,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toHaveAttribute('dir', 'rtl');
     });
 
-    it('should handle explicit dir prop', async (
-) => {
+    it('should handle explicit dir prop', async () => {
       await axeRender(
         <div>
           <label htmlFor="explicit-rtl">RTL Text</label>
@@ -430,8 +395,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toHaveAttribute('dir', 'rtl');
     });
 
-    it('should handle mixed content with dir="auto"', async (
-) => {
+    it('should handle mixed content with dir="auto"', async () => {
       await axeRender(
         <div>
           <label htmlFor="auto-dir">Auto Direction</label>
@@ -444,10 +408,8 @@ describe('Input - Accessibility Tests', (
     });
   });
 
-  describe('Input Types Accessibility', (
-) => {
-    it('should handle password input accessibility', async (
-) => {
+  describe('Input Types Accessibility', () => {
+    it('should handle password input accessibility', async () => {
       await axeRender(
         <div>
           <label htmlFor="password">Password</label>
@@ -461,8 +423,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toHaveAttribute('type', 'password');
     });
 
-    it('should handle email input with proper semantics', async (
-) => {
+    it('should handle email input with proper semantics', async () => {
       await axeRender(
         <div>
           <label htmlFor="email">Email</label>
@@ -475,8 +436,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toHaveAttribute('type', 'email');
     });
 
-    it('should handle tel input accessibility', async (
-) => {
+    it('should handle tel input accessibility', async () => {
       await axeRender(
         <div>
           <label htmlFor="phone">Phone Number</label>
@@ -489,8 +449,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toHaveAttribute('type', 'tel');
     });
 
-    it('should handle search input with proper role', async (
-) => {
+    it('should handle search input with proper role', async () => {
       await axeRender(
         <div>
           <label htmlFor="search">Search</label>
@@ -504,10 +463,8 @@ describe('Input - Accessibility Tests', (
     });
   });
 
-  describe('File Input Accessibility', (
-) => {
-    it('should handle file input accessibility', async (
-) => {
+  describe('File Input Accessibility', () => {
+    it('should handle file input accessibility', async () => {
       await axeRender(
         <div>
           <label htmlFor="file-input">Upload File</label>
@@ -521,8 +478,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toHaveAttribute('accept', '.jpg,.png');
     });
 
-    it('should handle multiple file selection', async (
-) => {
+    it('should handle multiple file selection', async () => {
       await axeRender(
         <div>
           <label htmlFor="multi-file">Select Multiple Files</label>
@@ -536,10 +492,8 @@ describe('Input - Accessibility Tests', (
     });
   });
 
-  describe('Color Contrast', (
-) => {
-    it('should maintain sufficient contrast for text', async (
-) => {
+  describe('Color Contrast', () => {
+    it('should maintain sufficient contrast for text', async () => {
       await axeRender(
         <div>
           <label htmlFor="contrast-test">Contrast Test</label>
@@ -553,8 +507,7 @@ describe('Input - Accessibility Tests', (
       expect(input).toBeInTheDocument();
     });
 
-    it('should maintain contrast for placeholder text', async (
-) => {
+    it('should maintain contrast for placeholder text', async () => {
       await axeRender(
         <div>
           <label htmlFor="placeholder-contrast">Placeholder Test</label>

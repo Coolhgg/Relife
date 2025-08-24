@@ -31,16 +31,12 @@ interface PaymentFlowProps {
   existingPaymentMethods?: PaymentMethod[];
   discountCode?: string;
   trialDays?: number;
-  onPaymentSuccess: (subscriptionId: string
-) => void;
-  onPaymentError: (error: string
-) => void;
-  onCancel: (
-) => void;
+  onPaymentSuccess: (subscriptionId: string) => void;
+  onPaymentError: (error: string) => void;
+  onCancel: () => void;
   onCreateSubscription: (
     request: CreateSubscriptionRequest
-  
-) => Promise<{ clientSecret: string; subscriptionId: string }>;
+  ) => Promise<{ clientSecret: string; subscriptionId: string }>;
   className?: string;
 }
 
@@ -99,16 +95,14 @@ export function PaymentFlow({
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const formatCurrency = (amount: number, currency: string = 'usd'
-) => {
+  const formatCurrency = (amount: number, currency: string = 'usd') => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency.toUpperCase(),
     }).format(amount / 100);
   };
 
-  const getPlanPrice = (
-) => {
+  const getPlanPrice = () => {
     const pricing = selectedPlan.pricing;
     return billingInterval === 'year' ? pricing.yearly : pricing.monthly;
   };
@@ -154,8 +148,7 @@ export function PaymentFlow({
     return Object.keys(errors).length === 0;
   };
 
-  const formatCardNumber = (value: string
-) => {
+  const formatCardNumber = (value: string) => {
     const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
     const matches = v.match(/\d{4,16}/g);
     const match = (matches && matches[0]) || '';
@@ -172,8 +165,7 @@ export function PaymentFlow({
     }
   };
 
-  const formatExpiryDate = (value: string
-) => {
+  const formatExpiryDate = (value: string) => {
     const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
     if (v.length >= 2) {
       return v.substring(0, 2) + (v.length > 2 ? '/' + v.substring(2, 4) : '');
@@ -181,8 +173,7 @@ export function PaymentFlow({
     return v;
   };
 
-  const handleInputChange = (field: keyof PaymentFormData | string, value: string
-) => {
+  const handleInputChange = (field: keyof PaymentFormData | string, value: string) => {
     if (field === 'cardNumber') {
       value = formatCardNumber(value);
     } else if (field === 'expiryDate') {
@@ -193,9 +184,8 @@ export function PaymentFlow({
 
     if (field.startsWith('billingAddress.')) {
       const addressField = field.replace('billingAddress.', '');
-      
-      setFormData((prev: any
-) => ({
+
+      setFormData((prev: any) => ({
         ...prev,
         billingAddress: {
           ...prev.billingAddress,
@@ -203,9 +193,7 @@ export function PaymentFlow({
         },
       }));
     } else {
-      
-      setFormData((prev: any
-) => ({
+      setFormData((prev: any) => ({
         ...prev,
         [field]: value,
       }));
@@ -213,17 +201,14 @@ export function PaymentFlow({
 
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
-      
-      setValidationErrors((prev: any
-) => ({
+      setValidationErrors((prev: any) => ({
         ...prev,
         [field]: '',
       }));
     }
   };
 
-  const handleSubmitPayment = async (
-) => {
+  const handleSubmitPayment = async () => {
     if (!validateForm()) return;
 
     setIsProcessing(true);
@@ -250,11 +235,9 @@ export function PaymentFlow({
 
       // In a real implementation, you would integrate with Stripe Elements here
       // For now, we'll simulate successful payment
-      setTimeout((
-) => {
+      setTimeout(() => {
         setCurrentStep('success');
-        setTimeout((
-) => {
+        setTimeout(() => {
           onPaymentSuccess(result.subscriptionId);
         }, 2000);
       }, 2000);
@@ -278,8 +261,7 @@ export function PaymentFlow({
       {/* Progress Steps */}
       <div className="mb-8">
         <div className="flex items-center justify-between">
-          {steps.map((step, index
-) => (
+          {steps.map((step, index) => (
             <div key={step.id} className="flex items-center">
               <div
                 className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
@@ -379,8 +361,7 @@ export function PaymentFlow({
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
               </Button>
-              <Button onClick={(
-) => setCurrentStep('payment')} className="flex-1">
+              <Button onClick={() => setCurrentStep('payment')} className="flex-1">
                 Continue to Payment
               </Button>
             </div>
@@ -418,8 +399,7 @@ export function PaymentFlow({
                           ? 'border-blue-500 bg-blue-50'
                           : 'hover:bg-gray-50'
                       }`}
-                      onClick={(
-) =>
+                      onClick={() =>
                         handleInputChange('useExistingPaymentMethod', method.id)
                       }
                     >
@@ -429,8 +409,7 @@ export function PaymentFlow({
                             <input
                               type="radio"
                               checked={formData.useExistingPaymentMethod === method.id}
-                              onChange={(
-) =>
+                              onChange={() =>
                                 handleInputChange('useExistingPaymentMethod', method.id)
                               }
                               className="text-blue-600"
@@ -456,8 +435,7 @@ export function PaymentFlow({
                   <input
                     type="radio"
                     checked={!formData.useExistingPaymentMethod}
-                    onChange={(
-) => handleInputChange('useExistingPaymentMethod', '')}
+                    onChange={() => handleInputChange('useExistingPaymentMethod', '')}
                     className="text-blue-600"
                   />
                   <Label>Use a new payment method</Label>
@@ -476,8 +454,9 @@ export function PaymentFlow({
                     <Input
                       id="cardNumber"
                       value={formData.cardNumber}
-                      onChange={(e: any
-) => handleInputChange('cardNumber', e.target.value)}
+                      onChange={(e: any) =>
+                        handleInputChange('cardNumber', e.target.value)
+                      }
                       placeholder="1234 5678 9012 3456"
                       maxLength={19}
                       className={validationErrors.cardNumber ? 'border-red-300' : ''}
@@ -494,8 +473,9 @@ export function PaymentFlow({
                     <Input
                       id="expiryDate"
                       value={formData.expiryDate}
-                      onChange={(e: any
-) => handleInputChange('expiryDate', e.target.value)}
+                      onChange={(e: any) =>
+                        handleInputChange('expiryDate', e.target.value)
+                      }
                       placeholder="MM/YY"
                       maxLength={5}
                       className={validationErrors.expiryDate ? 'border-red-300' : ''}
@@ -512,8 +492,7 @@ export function PaymentFlow({
                     <Input
                       id="cvc"
                       value={formData.cvc}
-                      onChange={(e: any
-) => handleInputChange('cvc', e.target.value)}
+                      onChange={(e: any) => handleInputChange('cvc', e.target.value)}
                       placeholder="123"
                       maxLength={4}
                       className={validationErrors.cvc ? 'border-red-300' : ''}
@@ -530,8 +509,9 @@ export function PaymentFlow({
                     <Input
                       id="cardName"
                       value={formData.cardName}
-                      onChange={(e: any
-) => handleInputChange('cardName', e.target.value)}
+                      onChange={(e: any) =>
+                        handleInputChange('cardName', e.target.value)
+                      }
                       placeholder="John Doe"
                       className={validationErrors.cardName ? 'border-red-300' : ''}
                     />
@@ -554,8 +534,7 @@ export function PaymentFlow({
                       <Input
                         id="line1"
                         value={formData.billingAddress.line1}
-                        onChange={(e: any
-) => 
+                        onChange={(e: any) =>
                           handleInputChange('billingAddress.line1', e.target.value)
                         }
                         placeholder="123 Main Street"
@@ -575,8 +554,7 @@ export function PaymentFlow({
                       <Input
                         id="line2"
                         value={formData.billingAddress.line2}
-                        onChange={(e: any
-) => 
+                        onChange={(e: any) =>
                           handleInputChange('billingAddress.line2', e.target.value)
                         }
                         placeholder="Apartment, suite, etc."
@@ -588,8 +566,7 @@ export function PaymentFlow({
                       <Input
                         id="city"
                         value={formData.billingAddress.city}
-                        onChange={(e: any
-) => 
+                        onChange={(e: any) =>
                           handleInputChange('billingAddress.city', e.target.value)
                         }
                         placeholder="New York"
@@ -607,8 +584,7 @@ export function PaymentFlow({
                       <Input
                         id="state"
                         value={formData.billingAddress.state}
-                        onChange={(e: any
-) => 
+                        onChange={(e: any) =>
                           handleInputChange('billingAddress.state', e.target.value)
                         }
                         placeholder="NY"
@@ -620,8 +596,7 @@ export function PaymentFlow({
                       <Input
                         id="postalCode"
                         value={formData.billingAddress.postalCode}
-                        onChange={(e: any
-) => 
+                        onChange={(e: any) =>
                           handleInputChange('billingAddress.postalCode', e.target.value)
                         }
                         placeholder="10001"
@@ -639,8 +614,7 @@ export function PaymentFlow({
                       <Input
                         id="country"
                         value={formData.billingAddress.country}
-                        onChange={(e: any
-) => 
+                        onChange={(e: any) =>
                           handleInputChange('billingAddress.country', e.target.value)
                         }
                         placeholder="US"
@@ -658,8 +632,7 @@ export function PaymentFlow({
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e: any
-) => handleInputChange('email', e.target.value)}
+                onChange={(e: any) => handleInputChange('email', e.target.value)}
                 placeholder="john@example.com"
                 className={validationErrors.email ? 'border-red-300' : ''}
               />
@@ -681,8 +654,7 @@ export function PaymentFlow({
             <div className="flex gap-4">
               <Button
                 variant="outline"
-                onClick={(
-) => setCurrentStep('review')}
+                onClick={() => setCurrentStep('review')}
                 className="flex-1"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />

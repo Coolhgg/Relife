@@ -4,8 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 // Device orientation utilities
 export const _orientation = {
-  setPortrait: (
-) => {
+  setPortrait: () => {
     Object.defineProperty(screen, 'orientation', {
       writable: true,
       value: {
@@ -16,8 +15,7 @@ export const _orientation = {
     window.dispatchEvent(new Event('orientationchange'));
   },
 
-  setLandscape: (
-) => {
+  setLandscape: () => {
     Object.defineProperty(screen, 'orientation', {
       writable: true,
       value: {
@@ -28,24 +26,19 @@ export const _orientation = {
     window.dispatchEvent(new Event('orientationchange'));
   },
 
-  testOrientationChange: async (callback: (
-) => void | Promise<void>
-) => {
+  testOrientationChange: async (callback: () => void | Promise<void>) => {
     orientation.setPortrait();
-    await waitFor((
-) => {});
+    await waitFor(() => {});
 
     if (callback) await callback();
 
     orientation.setLandscape();
-    await waitFor((
-) => {});
+    await waitFor(() => {});
 
     if (callback) await callback();
 
     orientation.setPortrait();
-    await waitFor((
-) => {});
+    await waitFor(() => {});
   },
 };
 
@@ -55,8 +48,7 @@ export const _gestures = {
     element: HTMLElement,
     direction: 'left' | 'right' | 'up' | 'down',
     distance: number = 100
-  
-) => {
+  ) => {
     const rect = element.getBoundingClientRect();
     const startX = rect.left + rect.width / 2;
     const startY = rect.top + rect.height / 2;
@@ -92,8 +84,7 @@ export const _gestures = {
     });
   },
 
-  longPress: async (element: HTMLElement, duration: number = 500
-) => {
+  longPress: async (element: HTMLElement, duration: number = 500) => {
     const rect = element.getBoundingClientRect();
     const x = rect.left + rect.width / 2;
     const y = rect.top + rect.height / 2;
@@ -109,8 +100,7 @@ export const _gestures = {
     });
   },
 
-  pinchZoom: async (element: HTMLElement, scale: number = 2
-) => {
+  pinchZoom: async (element: HTMLElement, scale: number = 2) => {
     const rect = element.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -138,8 +128,7 @@ export const _gestures = {
 
 // PWA utilities
 export const _pwa = {
-  mockInstallPrompt: (
-) => {
+  mockInstallPrompt: () => {
     const mockInstallPrompt = {
       prompt: jest.fn(),
       userChoice: Promise.resolve({ outcome: 'accepted' }),
@@ -154,8 +143,7 @@ export const _pwa = {
     return mockInstallPrompt;
   },
 
-  mockStandalone: (isStandalone: boolean = true
-) => {
+  mockStandalone: (isStandalone: boolean = true) => {
     Object.defineProperty(window.navigator, 'standalone', {
       writable: true,
       value: isStandalone,
@@ -176,9 +164,7 @@ export const _pwa = {
     });
   },
 
-  testOfflineMode: async (callback: (
-) => void | Promise<void>
-) => {
+  testOfflineMode: async (callback: () => void | Promise<void>) => {
     const originalOnLine = navigator.onLine;
     Object.defineProperty(navigator, 'onLine', {
       writable: true,
@@ -200,8 +186,7 @@ export const _pwa = {
 
 // Device API mocks
 export const _deviceAPIs = {
-  mockVibration: (
-) => {
+  mockVibration: () => {
     const mockVibrate = jest.fn();
     Object.defineProperty(navigator, 'vibrate', {
       writable: true,
@@ -210,8 +195,7 @@ export const _deviceAPIs = {
     return mockVibrate;
   },
 
-  mockBattery: (level: number = 0.5, charging: boolean = false
-) => {
+  mockBattery: (level: number = 0.5, charging: boolean = false) => {
     const mockBattery = {
       level,
       charging,
@@ -223,15 +207,13 @@ export const _deviceAPIs = {
 
     Object.defineProperty(navigator, 'getBattery', {
       writable: true,
-      value: (
-) => Promise.resolve(mockBattery),
+      value: () => Promise.resolve(mockBattery),
     });
 
     return mockBattery;
   },
 
-  mockWakeLock: (
-) => {
+  mockWakeLock: () => {
     const mockWakeLock = {
       request: jest.fn().mockResolvedValue({
         release: jest.fn(),
@@ -248,10 +230,8 @@ export const _deviceAPIs = {
     return mockWakeLock;
   },
 
-  mockDeviceOrientation: (
-) => {
-    const mockDeviceOrientationEvent = (alpha: number, beta: number, gamma: number
-) => {
+  mockDeviceOrientation: () => {
+    const mockDeviceOrientationEvent = (alpha: number, beta: number, gamma: number) => {
       const event = new Event('deviceorientation') as any;
       event.alpha = alpha;
       event.beta = beta;
@@ -260,8 +240,7 @@ export const _deviceAPIs = {
     };
 
     return {
-      simulateRotation: (alpha: number = 0, beta: number = 0, gamma: number = 0
-) => {
+      simulateRotation: (alpha: number = 0, beta: number = 0, gamma: number = 0) => {
         window.dispatchEvent(mockDeviceOrientationEvent(alpha, beta, gamma));
       },
     };
@@ -270,8 +249,7 @@ export const _deviceAPIs = {
 
 // Network condition simulation
 export const _network = {
-  mockSlowConnection: (
-) => {
+  mockSlowConnection: () => {
     Object.defineProperty(navigator, 'connection', {
       writable: true,
       value: {
@@ -283,8 +261,7 @@ export const _network = {
     });
   },
 
-  mockFastConnection: (
-) => {
+  mockFastConnection: () => {
     Object.defineProperty(navigator, 'connection', {
       writable: true,
       value: {
@@ -296,8 +273,7 @@ export const _network = {
     });
   },
 
-  mockSaveDataMode: (
-) => {
+  mockSaveDataMode: () => {
     Object.defineProperty(navigator, 'connection', {
       writable: true,
       value: {
@@ -312,8 +288,7 @@ export const _network = {
 
 // Mobile viewport utilities
 export const _viewport = {
-  setMobileViewport: (width: number = 375, height: number = 667
-) => {
+  setMobileViewport: (width: number = 375, height: number = 667) => {
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
@@ -327,8 +302,7 @@ export const _viewport = {
     window.dispatchEvent(new Event('resize'));
   },
 
-  setTabletViewport: (width: number = 768, height: number = 1024
-) => {
+  setTabletViewport: (width: number = 768, height: number = 1024) => {
     viewport.setMobileViewport(width, height);
   },
 
@@ -337,8 +311,7 @@ export const _viewport = {
     right: number = 0,
     bottom: number = 34,
     left: number = 0
-  
-) => {
+  ) => {
     const style = document.createElement('style');
     style.textContent = `
       :root {
@@ -355,20 +328,17 @@ export const _viewport = {
 
 // Mobile-specific testing helpers
 export const _mobileHelpers = {
-  expectResponsiveDesign: async (element: HTMLElement
-) => {
+  expectResponsiveDesign: async (element: HTMLElement) => {
     const initialStyles = window.getComputedStyle(element);
 
     // Test mobile viewport
     viewport.setMobileViewport();
-    await waitFor((
-) => {});
+    await waitFor(() => {});
     const mobileStyles = window.getComputedStyle(element);
 
     // Test tablet viewport
     viewport.setTabletViewport();
-    await waitFor((
-) => {});
+    await waitFor(() => {});
     const tabletStyles = window.getComputedStyle(element);
 
     return {
@@ -378,8 +348,7 @@ export const _mobileHelpers = {
     };
   },
 
-  testTouchFriendly: (element: HTMLElement
-) => {
+  testTouchFriendly: (element: HTMLElement) => {
     const rect = element.getBoundingClientRect();
     const minTouchTarget = 44; // iOS recommended minimum
 
@@ -390,15 +359,13 @@ export const _mobileHelpers = {
     };
   },
 
-  simulateAppBackground: async (
-) => {
+  simulateAppBackground: async () => {
     document.dispatchEvent(new Event('visibilitychange'));
     Object.defineProperty(document, 'hidden', { value: true, writable: true });
     window.dispatchEvent(new Event('blur'));
   },
 
-  simulateAppForeground: async (
-) => {
+  simulateAppForeground: async () => {
     Object.defineProperty(document, 'hidden', { value: false, writable: true });
     document.dispatchEvent(new Event('visibilitychange'));
     window.dispatchEvent(new Event('focus'));

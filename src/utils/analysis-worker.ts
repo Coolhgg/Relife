@@ -4,10 +4,8 @@ class SleepAnalysisWorker {
   private jobQueue: Map<
     string,
     {
-      resolve: (result: any
-) => void;
-      reject: (error: Error
-) => void;
+      resolve: (result: any) => void;
+      reject: (error: Error) => void;
     }
   > = new Map();
 
@@ -216,8 +214,7 @@ class SleepAnalysisWorker {
 
     const jobId = this.generateJobId();
 
-    return new Promise((resolve, reject
-) => {
+    return new Promise((resolve, reject) => {
       this.jobQueue.set(jobId, { resolve, reject });
 
       this.worker!.postMessage({
@@ -227,8 +224,7 @@ class SleepAnalysisWorker {
       });
 
       // Timeout after 30 seconds
-      setTimeout((
-) => {
+      setTimeout(() => {
         if (this.jobQueue.has(jobId)) {
           this.jobQueue.delete(jobId);
           reject(new Error('Analysis timeout'));
@@ -244,8 +240,7 @@ class SleepAnalysisWorker {
 
     const jobId = this.generateJobId();
 
-    return new Promise((resolve, reject
-) => {
+    return new Promise((resolve, reject) => {
       this.jobQueue.set(jobId, { resolve, reject });
 
       this.worker!.postMessage({
@@ -254,8 +249,7 @@ class SleepAnalysisWorker {
         jobId,
       });
 
-      setTimeout((
-) => {
+      setTimeout(() => {
         if (this.jobQueue.has(jobId)) {
           this.jobQueue.delete(jobId);
           reject(new Error('Prediction timeout'));
@@ -271,8 +265,7 @@ class SleepAnalysisWorker {
 
     const jobId = this.generateJobId();
 
-    return new Promise((resolve, reject
-) => {
+    return new Promise((resolve, reject) => {
       this.jobQueue.set(jobId, { resolve, reject });
 
       this.worker!.postMessage({
@@ -281,8 +274,7 @@ class SleepAnalysisWorker {
         jobId,
       });
 
-      setTimeout((
-) => {
+      setTimeout(() => {
         if (this.jobQueue.has(jobId)) {
           this.jobQueue.delete(jobId);
           reject(new Error('Voice analysis timeout'));
@@ -297,11 +289,9 @@ class SleepAnalysisWorker {
     // Simplified main thread implementation
     return {
       averageDuration:
-        sessions.reduce((sum, s
-) => sum + s.duration, 0) / sessions.length || 0,
+        sessions.reduce((sum, s) => sum + s.duration, 0) / sessions.length || 0,
       averageQuality:
-        sessions.reduce((sum, s
-) => sum + s.quality, 0) / sessions.length || 0,
+        sessions.reduce((sum, s) => sum + s.quality, 0) / sessions.length || 0,
       sleepEfficiency: 85, // Default value
       chronotype: 'normal',
       consistency: 75,
@@ -369,16 +359,13 @@ export const terminateAnalysisWorker = (): void => {
 import { useEffect, useRef } from 'react';
 import { TimeoutHandle } from '../types/timers';
 
-export const useAnalysisWorker = (
-) => {
+export const useAnalysisWorker = () => {
   const workerRef = useRef<SleepAnalysisWorker>();
 
-  useEffect((
-) => {
+  useEffect(() => {
     workerRef.current = getAnalysisWorker();
 
-    return (
-) => {
+    return () => {
       // Don't terminate on unmount, keep worker alive for other components
     };
   }, []);

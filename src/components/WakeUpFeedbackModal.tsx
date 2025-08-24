@@ -15,13 +15,11 @@ import { TimeoutHandle } from '../types/timers';
 
 interface WakeUpFeedbackModalProps {
   isOpen: boolean;
-  onClose: (
-) => void;
+  onClose: () => void;
   alarmId: string;
   alarmTime: string;
   actualWakeTime?: string;
-  onSubmit: (feedback: WakeUpFeedback
-) => Promise<boolean>;
+  onSubmit: (feedback: WakeUpFeedback) => Promise<boolean>;
 }
 
 const difficultyOptions = [
@@ -47,8 +45,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
   alarmTime,
   actualWakeTime,
   onSubmit,
-}
-) => {
+}) => {
   const [feedback, setFeedback] = useState<Partial<WakeUpFeedback>>({
     date: new Date(),
     originalTime: alarmTime,
@@ -65,8 +62,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (isOpen) {
       // Reset form when modal opens
       setFeedback({
@@ -85,8 +81,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
     }
   }, [isOpen, alarmTime, actualWakeTime]);
 
-  const handleSubmit = async (
-) => {
+  const handleSubmit = async () => {
     if (submitting) return;
 
     setSubmitting(true);
@@ -94,8 +89,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
       const success = await onSubmit(feedback as WakeUpFeedback);
       if (success) {
         setSubmitted(true);
-        setTimeout((
-) => {
+        setTimeout(() => {
           onClose();
         }, 2000);
       }
@@ -106,11 +100,8 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
     }
   };
 
-  const updateFeedback = (updates: Partial<WakeUpFeedback>
-) => {
-    
-      setFeedback((prev: any
-) => ({ ...prev, ...updates }));
+  const updateFeedback = (updates: Partial<WakeUpFeedback>) => {
+    setFeedback((prev: any) => ({ ...prev, ...updates }));
   };
 
   if (!isOpen) return null;
@@ -173,8 +164,9 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="time"
                   value={feedback.actualWakeTime}
-                  onChange={(e: any
-) => updateFeedback({ actualWakeTime: e.target.value })}
+                  onChange={(e: any) =>
+                    updateFeedback({ actualWakeTime: e.target.value })
+                  }
                   className="w-full bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-mono text-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
                 />
               </div>
@@ -191,8 +183,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
               {difficultyOptions.map(option => (
                 <button
                   key={option.value}
-                  onClick={(
-) => updateFeedback({ difficulty: option.value as any })}
+                  onClick={() => updateFeedback({ difficulty: option.value as any })}
                   className={`p-3 rounded-lg border transition-all text-center ${
                     feedback.difficulty === option.value
                       ? 'border-purple-400 bg-purple-500/20'
@@ -216,8 +207,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
               {feelingOptions.map(option => (
                 <button
                   key={option.value}
-                  onClick={(
-) => updateFeedback({ feeling: option.value as any })}
+                  onClick={() => updateFeedback({ feeling: option.value as any })}
                   className={`p-3 rounded-lg border transition-all text-center ${
                     feedback.feeling === option.value
                       ? 'border-purple-400 bg-purple-500/20'
@@ -244,8 +234,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 min="1"
                 max="10"
                 value={feedback.sleepQuality}
-                onChange={(e: any
-) => 
+                onChange={(e: any) =>
                   updateFeedback({ sleepQuality: parseInt(e.target.value) })
                 }
                 className="flex-1 accent-purple-500"
@@ -255,8 +244,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
 
             {/* Visual stars */}
             <div className="flex justify-center gap-1 mt-2">
-              {[...Array(10)].map((_, i
-) => (
+              {[...Array(10)].map((_, i) => (
                 <Star
                   key={i}
                   className={`w-4 h-4 ${
@@ -281,8 +269,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
               max="60"
               step="5"
               value={feedback.timeToFullyAwake}
-              onChange={(e: any
-) => 
+              onChange={(e: any) =>
                 updateFeedback({ timeToFullyAwake: parseInt(e.target.value) })
               }
               className="w-full accent-purple-500"
@@ -304,8 +291,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="checkbox"
                   checked={feedback.wouldPreferEarlier}
-                  onChange={(e: any
-) => 
+                  onChange={(e: any) =>
                     updateFeedback({
                       wouldPreferEarlier: e.target.checked,
                       wouldPreferLater: e.target.checked
@@ -323,8 +309,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="checkbox"
                   checked={feedback.wouldPreferLater}
-                  onChange={(e: any
-) => 
+                  onChange={(e: any) =>
                     updateFeedback({
                       wouldPreferLater: e.target.checked,
                       wouldPreferEarlier: e.target.checked
@@ -345,8 +330,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
             <h3 className="text-white font-medium mb-3">Additional Notes (optional)</h3>
             <textarea
               value={feedback.notes}
-              onChange={(e: any
-) => updateFeedback({ notes: e.target.value })}
+              onChange={(e: any) => updateFeedback({ notes: e.target.value })}
               placeholder="Any additional thoughts about your wake-up experience..."
               className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
               rows={3}

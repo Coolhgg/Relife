@@ -15,8 +15,7 @@ interface FocusTrapOptions {
   preventScroll?: boolean;
   initialFocusRef?: React.RefObject<HTMLElement>;
   finalFocusRef?: React.RefObject<HTMLElement>;
-  onEscape?: (
-) => void;
+  onEscape?: () => void;
   announceOnOpen?: string;
   announceOnClose?: string;
 }
@@ -92,8 +91,7 @@ export function useFocusTrap({
           element,
           tabIndex: parseInt(element.getAttribute('tabindex') || '0', 10),
         }))
-        .sort((a, b
-) => {
+        .sort((a, b) => {
           // Sort by tabindex, then by DOM order
           if (a.tabIndex !== b.tabIndex) {
             if (a.tabIndex === 0) return 1;
@@ -120,8 +118,7 @@ export function useFocusTrap({
   /**
    * Move focus to the first focusable element
    */
-  const focusFirst = useCallback((
-) => {
+  const focusFirst = useCallback(() => {
     if (!containerRef.current) return;
 
     // Try initial focus ref first
@@ -143,8 +140,7 @@ export function useFocusTrap({
   /**
    * Move focus to the last focusable element
    */
-  const focusLast = useCallback((
-) => {
+  const focusLast = useCallback(() => {
     if (!containerRef.current) return;
 
     const focusableElements = getFocusableElements(containerRef.current);
@@ -160,8 +156,7 @@ export function useFocusTrap({
    * Handle keydown events for focus trapping
    */
   const handleKeyDown = useCallback(
-    (event: KeyboardEvent
-) => {
+    (event: KeyboardEvent) => {
       if (!isEnabled || !containerRef.current) return;
 
       // Handle Escape key
@@ -215,8 +210,7 @@ export function useFocusTrap({
    * Handle click events outside the focus trap
    */
   const handleOutsideClick = useCallback(
-    (event: MouseEvent
-) => {
+    (event: MouseEvent) => {
       if (!isEnabled || !containerRef.current || allowOutsideClick) return;
 
       const target = event.target as HTMLElement;
@@ -241,16 +235,14 @@ export function useFocusTrap({
   /**
    * Create focus sentinels to detect when focus tries to leave the trap
    */
-  const createSentinels = useCallback((
-) => {
+  const createSentinels = useCallback(() => {
     if (!containerRef.current) return;
 
     // Remove existing sentinels
     const existingSentinels = containerRef.current.querySelectorAll(
       '[data-focus-sentinel]'
     );
-    existingSentinels.forEach((sentinel: any
-) => sentinel.remove());
+    existingSentinels.forEach((sentinel: any) => sentinel.remove());
 
     // Create start sentinel
     const startSentinel = document.createElement('div');
@@ -269,8 +261,7 @@ export function useFocusTrap({
       border: 0;
     `;
 
-    startSentinel.addEventListener('focus', (
-) => focusLast());
+    startSentinel.addEventListener('focus', () => focusLast());
     containerRef.current.insertBefore(startSentinel, containerRef.current.firstChild);
     sentinelStartRef.current = startSentinel;
 
@@ -281,8 +272,7 @@ export function useFocusTrap({
     endSentinel.setAttribute('aria-hidden', 'true');
     endSentinel.style.cssText = startSentinel.style.cssText;
 
-    endSentinel.addEventListener('focus', (
-) => focusFirst());
+    endSentinel.addEventListener('focus', () => focusFirst());
     containerRef.current.appendChild(endSentinel);
     sentinelEndRef.current = endSentinel;
   }, [focusFirst, focusLast]);
@@ -290,8 +280,7 @@ export function useFocusTrap({
   /**
    * Announce to screen readers
    */
-  const announceToScreenReader = useCallback((message: string
-) => {
+  const announceToScreenReader = useCallback((message: string) => {
     const announcement = document.createElement('div');
     announcement.setAttribute('role', 'status');
     announcement.setAttribute('aria-live', 'polite');
@@ -312,8 +301,7 @@ export function useFocusTrap({
     document.body.appendChild(announcement);
 
     // Remove after announcement
-    setTimeout((
-) => {
+    setTimeout(() => {
       if (announcement.parentNode) {
         announcement.parentNode.removeChild(announcement);
       }
@@ -323,8 +311,7 @@ export function useFocusTrap({
   /**
    * Setup focus trap
    */
-  const setupFocusTrap = useCallback((
-) => {
+  const setupFocusTrap = useCallback(() => {
     if (!isEnabled || !containerRef.current) return;
 
     // Store previously focused element
@@ -339,8 +326,7 @@ export function useFocusTrap({
     document.addEventListener('touchstart', handleOutsideClick, true);
 
     // Set initial focus
-    setTimeout((
-) => {
+    setTimeout(() => {
       focusFirst();
       isInitialFocusSet.current = true;
 
@@ -350,8 +336,7 @@ export function useFocusTrap({
       }
     }, 0);
 
-    return (
-) => {
+    return () => {
       // Cleanup
       document.removeEventListener('keydown', handleKeyDown, true);
       document.removeEventListener('mousedown', handleOutsideClick, true);
@@ -378,8 +363,7 @@ export function useFocusTrap({
   /**
    * Restore focus when trap is disabled
    */
-  const restorePreviousFocus = useCallback((
-) => {
+  const restorePreviousFocus = useCallback(() => {
     if (!restoreFocus) return;
 
     const elementToFocus = finalFocusRef?.current || previousActiveElementRef.current;
@@ -412,8 +396,7 @@ export function useFocusTrap({
   /**
    * Effect to setup/cleanup focus trap
    */
-  useEffect((
-) => {
+  useEffect(() => {
     if (isEnabled) {
       return setupFocusTrap();
     } else if (isInitialFocusSet.current) {
@@ -429,10 +412,8 @@ export function useFocusTrap({
    * not when restorePreviousFocus changes, to avoid unwanted focus restoration
    * during component lifecycle.
    */
-  useEffect((
-) => {
-    return (
-) => {
+  useEffect(() => {
+    return () => {
       if (isInitialFocusSet.current) {
         restorePreviousFocus();
       }
@@ -443,8 +424,7 @@ export function useFocusTrap({
     containerRef,
     focusFirst,
     focusLast,
-    getFocusableElements: (
-) =>
+    getFocusableElements: () =>
       containerRef.current ? getFocusableElements(containerRef.current) : [],
   };
 }

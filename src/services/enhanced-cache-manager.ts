@@ -106,14 +106,11 @@ export class EnhancedCacheManager {
   }
 
   private async initializeDatabase(): Promise<void> {
-    return new Promise((resolve, reject
-) => {
+    return new Promise((resolve, reject) => {
       const request = indexedDB.open('EnhancedAudioCache', 2);
 
-      request.onerror = (
-) => reject(request.error);
-      request.onsuccess = (
-) => {
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
         this.db = request.result;
         resolve();
       };
@@ -169,8 +166,7 @@ export class EnhancedCacheManager {
     let loadedCount = 0;
     const maxMemoryEntries = 50; // Limit memory cache size
 
-    return new Promise((resolve, reject
-) => {
+    return new Promise((resolve, reject) => {
       request.onsuccess = event => {
         const cursor = (event.target as IDBRequest).result;
 
@@ -196,8 +192,7 @@ export class EnhancedCacheManager {
         }
       };
 
-      request.onerror = (
-) => reject(request.error);
+      request.onerror = () => reject(request.error);
     });
   }
 
@@ -287,13 +282,11 @@ export class EnhancedCacheManager {
 
       return new Promise(resolve => {
         const request = store.delete(id);
-        request.onsuccess = (
-) => {
+        request.onsuccess = () => {
           this.updateStats();
           resolve(true);
         };
-        request.onerror = (
-) => resolve(false);
+        request.onerror = () => resolve(false);
       });
     } catch (error) {
       console.error('Error deleting cache entry:', error);
@@ -313,21 +306,15 @@ export class EnhancedCacheManager {
     );
 
     await Promise.all([
-      new Promise<void>((resolve, reject
-) => {
+      new Promise<void>((resolve, reject) => {
         const request = transaction.objectStore('enhancedCache').clear();
-        request.onsuccess = (
-) => resolve();
-        request.onerror = (
-) => reject(request.error);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
       }),
-      new Promise<void>((resolve, reject
-) => {
+      new Promise<void>((resolve, reject) => {
         const request = transaction.objectStore('accessLog').clear();
-        request.onsuccess = (
-) => resolve();
-        request.onerror = (
-) => reject(request.error);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
       }),
     ]);
 
@@ -352,8 +339,7 @@ export class EnhancedCacheManager {
           this.warmingConfig.priorityCategories.includes(sound.category) ||
           (sound.rating && sound.rating > 4)
       )
-      .sort((a, b
-) => (b.rating || 0) - (a.rating || 0))
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0))
       .slice(0, this.warmingConfig.maxWarmingEntries);
 
     // Warm cache in batches
@@ -485,8 +471,7 @@ export class EnhancedCacheManager {
     });
 
     // Sort by score (lowest first) and return top candidates
-    scored.sort((a, b
-) => a.score - b.score);
+    scored.sort((a, b) => a.score - b.score);
 
     // Evict up to 10% of entries or until under limits
     const maxEvict = Math.min(
@@ -498,22 +483,19 @@ export class EnhancedCacheManager {
 
   private selectLRUEntries(entries: CacheEntry[]): CacheEntry[] {
     return entries
-      .sort((a, b
-) => a.lastAccessed.getTime() - b.lastAccessed.getTime())
+      .sort((a, b) => a.lastAccessed.getTime() - b.lastAccessed.getTime())
       .slice(0, Math.min(50, entries.length * 0.1));
   }
 
   private selectLFUEntries(entries: CacheEntry[]): CacheEntry[] {
     return entries
-      .sort((a, b
-) => a.frequency - b.frequency)
+      .sort((a, b) => a.frequency - b.frequency)
       .slice(0, Math.min(50, entries.length * 0.1));
   }
 
   private selectFIFOEntries(entries: CacheEntry[]): CacheEntry[] {
     return entries
-      .sort((a, b
-) => a.cachedAt.getTime() - b.cachedAt.getTime())
+      .sort((a, b) => a.cachedAt.getTime() - b.cachedAt.getTime())
       .slice(0, Math.min(50, entries.length * 0.1));
   }
 
@@ -596,10 +578,8 @@ export class EnhancedCacheManager {
 
     return new Promise(resolve => {
       const request = store.get(id);
-      request.onsuccess = (
-) => resolve(request.result || null);
-      request.onerror = (
-) => resolve(null);
+      request.onsuccess = () => resolve(request.result || null);
+      request.onerror = () => resolve(null);
     });
   }
 
@@ -609,13 +589,10 @@ export class EnhancedCacheManager {
     const transaction = this.db.transaction(['enhancedCache'], 'readwrite');
     const store = transaction.objectStore('enhancedCache');
 
-    return new Promise((resolve, reject
-) => {
+    return new Promise((resolve, reject) => {
       const request = store.put(entry);
-      request.onsuccess = (
-) => resolve();
-      request.onerror = (
-) => reject(request.error);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
     });
   }
 
@@ -627,10 +604,8 @@ export class EnhancedCacheManager {
 
     return new Promise(resolve => {
       const request = store.getAll();
-      request.onsuccess = (
-) => resolve(request.result || []);
-      request.onerror = (
-) => resolve([]);
+      request.onsuccess = () => resolve(request.result || []);
+      request.onerror = () => resolve([]);
     });
   }
 
@@ -641,8 +616,7 @@ export class EnhancedCacheManager {
     const entries = await this.getAllEntries();
 
     return {
-      totalSize: entries.reduce((sum, entry
-) => sum + (entry.metadata.size || 0), 0),
+      totalSize: entries.reduce((sum, entry) => sum + (entry.metadata.size || 0), 0),
       totalEntries: entries.length,
     };
   }
@@ -676,8 +650,7 @@ export class EnhancedCacheManager {
   private async startMaintenanceTasks(): Promise<void> {
     // Cleanup expired entries every hour
     setInterval(
-      async (
-) => {
+      async () => {
         await this.cleanupExpiredEntries();
       },
       60 * 60 * 1000
@@ -685,8 +658,7 @@ export class EnhancedCacheManager {
 
     // Update stats every 5 minutes
     setInterval(
-      async (
-) => {
+      async () => {
         await this.updateStats();
       },
       5 * 60 * 1000
@@ -694,8 +666,7 @@ export class EnhancedCacheManager {
 
     // Enforce policy every 10 minutes
     setInterval(
-      async (
-) => {
+      async () => {
         await this.enforcePolicy();
       },
       10 * 60 * 1000

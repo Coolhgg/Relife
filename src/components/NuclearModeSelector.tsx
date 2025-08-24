@@ -41,12 +41,9 @@ interface NuclearModeSelectorProps {
   isEnabled: boolean;
   selectedChallenges: NuclearChallengeType[];
   customDifficulty: number;
-  onEnabledChange: (enabled: boolean
-) => void;
-  onChallengesChange: (challenges: NuclearChallengeType[]
-) => void;
-  onDifficultyChange: (difficulty: number
-) => void;
+  onEnabledChange: (enabled: boolean) => void;
+  onChallengesChange: (challenges: NuclearChallengeType[]) => void;
+  onDifficultyChange: (difficulty: number) => void;
   userId: string;
   className?: string;
 }
@@ -78,10 +75,9 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
   onDifficultyChange,
   userId,
   className,
-}
-) => {
+}) => {
   const [hasAccess, setHasAccess] = useState(false);
-  const [userTier, setUserTier] = useState<string>('free'); // auto: added missing userTier state
+  const [userTier, setUserTier] = useState<string>('free');
   const [upgradeUrl, setUpgradeUrl] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const [challengeTypes, setChallengeTypes] = useState<
@@ -95,10 +91,8 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
   >([]);
   const [showPreview, setShowPreview] = useState(false);
 
-  useEffect((
-) => {
-    const checkAccess = async (
-) => {
+  useEffect(() => {
+    const checkAccess = async () => {
       setIsLoading(true);
       try {
         const access = await nuclearModeService.canAccessNuclearMode(userId);
@@ -121,30 +115,24 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
   const handleChallengeToggle = (
     challengeType: NuclearChallengeType,
     checked: boolean
-  
-) => {
+  ) => {
     if (checked) {
       onChallengesChange([...selectedChallenges, challengeType]);
     } else {
-      onChallengesChange(selectedChallenges.filter((c: any
-) => c !== challengeType));
+      onChallengesChange(selectedChallenges.filter((c: any) => c !== challengeType));
     }
   };
 
-  const getDifficultyLabel = (difficulty: number
-) => {
+  const getDifficultyLabel = (difficulty: number) => {
     if (difficulty <= 3) return { label: 'Moderate', color: 'bg-yellow-500' };
     if (difficulty <= 6) return { label: 'Intense', color: 'bg-orange-500' };
     if (difficulty <= 8) return { label: 'Extreme', color: 'bg-red-500' };
     return { label: 'NUCLEAR', color: 'bg-red-600' };
   };
 
-  const calculateEstimatedTime = (
-) => {
-    const totalTime = selectedChallenges.reduce((total, challengeType
-) => {
-      const challenge = challengeTypes.find((c: any
-) => c.type === challengeType);
+  const calculateEstimatedTime = () => {
+    const totalTime = selectedChallenges.reduce((total, challengeType) => {
+      const challenge = challengeTypes.find((c: any) => c.type === challengeType);
       return total + (challenge?.estimatedTime || 300);
     }, 0);
     return Math.round(totalTime / 60); // Convert to minutes
@@ -212,8 +200,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           </Alert>
 
           <div className="mt-4 grid grid-cols-2 gap-2">
-            {challengeTypes.slice(0, 4).map((challenge: any
-) => {
+            {challengeTypes.slice(0, 4).map((challenge: any) => {
               // auto
               const Icon = challengeIcons[challenge.type];
               return (
@@ -232,8 +219,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           <div className="mt-4 flex flex-col gap-2">
             <Button
               className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
-              onClick={(
-) => window.open(upgradeUrl, '_blank')}
+              onClick={() => window.open(upgradeUrl, '_blank')}
             >
               <Crown className="w-4 h-4 mr-2" />
               Upgrade to Premium
@@ -259,8 +245,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                 </DialogHeader>
 
                 <div className="space-y-4 max-h-96 overflow-y-auto">
-                  {challengeTypes.map((challenge: any
-) => {
+                  {challengeTypes.map((challenge: any) => {
                     // auto
                     const Icon = challengeIcons[challenge.type];
                     return (
@@ -292,14 +277,12 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                 </div>
 
                 <DialogFooter>
-                  <Button variant="outline" onClick={(
-) => setShowPreview(false)}>
+                  <Button variant="outline" onClick={() => setShowPreview(false)}>
                     Close Preview
                   </Button>
                   <Button
                     className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
-                    onClick={(
-) => window.open(upgradeUrl, '_blank')}
+                    onClick={() => window.open(upgradeUrl, '_blank')}
                   >
                     <Crown className="w-4 h-4 mr-2" />
                     Get Premium
@@ -368,8 +351,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
             </div>
             <Slider
               value={[customDifficulty]}
-              onValueChange={(value: any
-) => onDifficultyChange(value[0])}
+              onValueChange={(value: any) => onDifficultyChange(value[0])}
               min={1}
               max={10}
               step={1}
@@ -392,8 +374,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {challengeTypes.map((challenge: any
-) => {
+              {challengeTypes.map((challenge: any) => {
                 // auto
                 const Icon = challengeIcons[challenge.type];
                 const isSelected = selectedChallenges.includes(challenge.type);
@@ -407,14 +388,12 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                         ? 'border-red-200 bg-red-50 shadow-sm'
                         : 'border-gray-200 bg-white hover:border-gray-300'
                     )}
-                    onClick={(
-) => handleChallengeToggle(challenge.type, !isSelected)}
+                    onClick={() => handleChallengeToggle(challenge.type, !isSelected)}
                   >
                     <div className="flex items-start gap-3">
                       <Checkbox
                         checked={isSelected}
-                        onCheckedChange={(checked: any 
-) =>
+                        onCheckedChange={(checked: any) =>
                           handleChallengeToggle(challenge.type, checked as boolean)
                         }
                         className="mt-1"

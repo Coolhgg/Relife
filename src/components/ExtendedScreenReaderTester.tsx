@@ -48,8 +48,7 @@ interface ExtendedScreenReaderTesterProps {
   userName?: string;
   isPremium?: boolean;
   embedded?: boolean;
-  onTestComplete?: (testId: string, success: boolean
-) => void;
+  onTestComplete?: (testId: string, success: boolean) => void;
 }
 
 interface TestResult {
@@ -72,8 +71,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
   isPremium = false,
   embedded = false,
   onTestComplete,
-}
-) => {
+}) => {
   // Core state
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTestIndex, setCurrentTestIndex] = useState(0);
@@ -81,8 +79,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
   const [testResults, setTestResults] = useState<TestResult[]>([]);
 
   // Screen Reader Service
-  const [screenReaderService] = useState((
-) => ScreenReaderService.getInstance());
+  const [screenReaderService] = useState(() => ScreenReaderService.getInstance());
 
   // User preferences
   const [preferences, setPreferences] = useState<TestPreferences>({
@@ -94,8 +91,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
   // Dynamic user context
   const userContext: UserContext = useMemo(
-    (
-) => ({
+    () => ({
       userId,
       userName,
       isPremium: isPremium || preferences.simulatePremium,
@@ -189,15 +185,13 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
   };
 
   // Merge base, custom, app-specific, and additional app-specific categories
-  const allCategories = useMemo((
-) => {
+  const allCategories = useMemo(() => {
     const customCategories = getEnabledCustomCategories();
     const effectiveUserPremium = isPremium || preferences.simulatePremium;
 
     // Filter custom categories by premium access
     const filteredCustomCategories = Object.fromEntries(
-      Object.entries(customCategories).filter(([key, category]
-) => {
+      Object.entries(customCategories).filter(([key, category]) => {
         if (category.isPremium && !effectiveUserPremium) {
           return false;
         }
@@ -207,8 +201,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
     // Filter app-specific categories by premium access
     const filteredAppSpecificCategories = Object.fromEntries(
-      Object.entries(appSpecificTestCategories).filter(([key, category]
-) => {
+      Object.entries(appSpecificTestCategories).filter(([key, category]) => {
         const config =
           appSpecificCategoryConfig[key as keyof typeof appSpecificCategoryConfig];
         if (config?.requiresPremium && !effectiveUserPremium) {
@@ -220,8 +213,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
     // Filter additional app-specific categories by premium access
     const filteredAdditionalAppSpecificCategories = Object.fromEntries(
-      Object.entries(additionalAppSpecificTestCategories).filter(([key, category]
-) => {
+      Object.entries(additionalAppSpecificTestCategories).filter(([key, category]) => {
         const config =
           additionalAppSpecificCategoryConfig[
             key as keyof typeof additionalAppSpecificCategoryConfig
@@ -242,8 +234,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
   }, [isPremium, preferences.simulatePremium]);
 
   // Get tests for active category
-  const currentTests = useMemo((
-) => {
+  const currentTests = useMemo(() => {
     const category = allCategories[activeCategory];
     if (!category) return [];
 
@@ -275,8 +266,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
   // Play test announcement
   const playTest = useCallback(
-    async (test: TestScenario
-) => {
+    async (test: TestScenario) => {
       if (!screenReaderService || !test) return;
 
       try {
@@ -305,9 +295,10 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           category: activeCategory,
         };
 
-        setTestResults((prev: any
-) => [...prev.filter((r: any
-) => r.testId !== test.id), result]);
+        setTestResults((prev: any) => [
+          ...prev.filter((r: any) => r.testId !== test.id),
+          result,
+        ]);
         onTestComplete?.(test.id, true);
       } catch (error) {
         console.error('Test playback failed:', error);
@@ -317,9 +308,10 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           timestamp: new Date(),
           category: activeCategory,
         };
-        setTestResults((prev: any
-) => [...prev.filter((r: any
-) => r.testId !== test.id), result]);
+        setTestResults((prev: any) => [
+          ...prev.filter((r: any) => r.testId !== test.id),
+          result,
+        ]);
         onTestComplete?.(test.id, false);
       }
     },
@@ -327,23 +319,19 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
   );
 
   // Auto-advance logic
-  useEffect((
-) => {
+  useEffect(() => {
     if (!isPlaying || !preferences.autoAdvance || !currentTest) return;
 
-    const timer = setTimeout((
-) => {
+    const timer = setTimeout(() => {
       if (currentTestIndex < currentTests.length - 1) {
-        setCurrentTestIndex((prev: any
-) => prev + 1);
+        setCurrentTestIndex((prev: any) => prev + 1);
       } else {
         setIsPlaying(false);
         setCurrentTestIndex(0);
       }
     }, preferences.delayBetweenTests);
 
-    return (
-) => clearTimeout(timer);
+    return () => clearTimeout(timer);
   }, [
     isPlaying,
     currentTestIndex,
@@ -354,47 +342,39 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
   ]);
 
   // Play current test when playing state changes
-  useEffect((
-) => {
+  useEffect(() => {
     if (isPlaying && currentTest) {
       playTest(currentTest);
     }
   }, [isPlaying, currentTest, playTest]);
 
   // Handlers
-  const handlePlay = (
-) => {
+  const handlePlay = () => {
     if (currentTests.length === 0) return;
     setIsPlaying(true);
   };
 
-  const handlePause = (
-) => {
+  const handlePause = () => {
     setIsPlaying(false);
   };
 
-  const handleNext = (
-) => {
+  const handleNext = () => {
     if (currentTestIndex < currentTests.length - 1) {
-      setCurrentTestIndex((prev: any
-) => prev + 1);
+      setCurrentTestIndex((prev: any) => prev + 1);
     }
   };
 
-  const handlePlaySingle = (test: TestScenario
-) => {
+  const handlePlaySingle = (test: TestScenario) => {
     playTest(test);
   };
 
-  const handleCategoryChange = (categoryKey: string
-) => {
+  const handleCategoryChange = (categoryKey: string) => {
     setActiveCategory(categoryKey);
     setCurrentTestIndex(0);
     setIsPlaying(false);
   };
 
-  const handleRunAllCategories = async (
-) => {
+  const handleRunAllCategories = async () => {
     const categories = Object.keys(allCategories);
     for (const categoryKey of categories) {
       setActiveCategory(categoryKey);
@@ -416,19 +396,15 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
   };
 
   // Get test result status
-  const getTestStatus = (testId: string
-) => {
-    const result = testResults.find((r: any
-) => r.testId === testId);
+  const getTestStatus = (testId: string) => {
+    const result = testResults.find((r: any) => r.testId === testId);
     return result?.success ? 'success' : result ? 'error' : 'pending';
   };
 
   // Test results summary
-  const testSummary = useMemo((
-) => {
+  const testSummary = useMemo(() => {
     const total = testResults.length;
-    const successful = testResults.filter((r: any
-) => r.success).length;
+    const successful = testResults.filter((r: any) => r.success).length;
     const failed = total - successful;
 
     return { total, successful, failed };
@@ -495,12 +471,10 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
       {/* Category Tabs */}
       <div className="mb-6 border-b dark:border-gray-700">
         <div className="flex flex-wrap -mb-px">
-          {Object.entries(allCategories).map(([key, category]
-) => (
+          {Object.entries(allCategories).map(([key, category]) => (
             <button
               key={key}
-              onClick={(
-) => handleCategoryChange(key)}
+              onClick={() => handleCategoryChange(key)}
               className={`mr-2 py-2 px-4 border-b-2 font-medium text-sm rounded-t-lg transition-colors
                 ${
                   activeCategory === key
@@ -594,10 +568,11 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             <input
               type="checkbox"
               checked={preferences.autoAdvance}
-              onChange={(e: any
-) => 
-                setPreferences((prev: any
-) => ({ ...prev, autoAdvance: e.target.checked }))
+              onChange={(e: any) =>
+                setPreferences((prev: any) => ({
+                  ...prev,
+                  autoAdvance: e.target.checked,
+                }))
               }
               className="mr-2 rounded"
             />
@@ -608,10 +583,11 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             <input
               type="checkbox"
               checked={preferences.simulatePremium}
-              onChange={(e: any
-) => 
-                setPreferences((prev: any
-) => ({ ...prev, simulatePremium: e.target.checked }))
+              onChange={(e: any) =>
+                setPreferences((prev: any) => ({
+                  ...prev,
+                  simulatePremium: e.target.checked,
+                }))
               }
               className="mr-2 rounded"
             />
@@ -620,10 +596,8 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
           <select
             value={preferences.delayBetweenTests}
-            onChange={(e: any
-) => 
-              setPreferences((prev: any
-) => ({ 
+            onChange={(e: any) =>
+              setPreferences((prev: any) => ({
                 ...prev,
                 delayBetweenTests: Number(e.target.value),
               }))
@@ -655,9 +629,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
                 </p>
               )}
               <div className="flex flex-wrap gap-1 mt-2">
-                {currentTest.tags
-      .map((tag: any
-) => (
+                {currentTest.tags.map((tag: any) => (
                   <span
                     key={tag}
                     className="px-2 py-1 bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-200 text-xs rounded"
@@ -684,8 +656,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
       {/* Test List */}
       <div className="space-y-2 max-h-96 overflow-y-auto">
-        {currentTests.map((test, index
-) => (
+        {currentTests.map((test, index) => (
           <div
             key={test.id}
             className={`p-3 border rounded-lg transition-colors
@@ -720,8 +691,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
               </div>
               <div className="ml-4 flex items-center space-x-2">
                 <button
-                  onClick={(
-) => handlePlaySingle(test)}
+                  onClick={() => handlePlaySingle(test)}
                   className="p-1 text-indigo-600 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 rounded"
                   title="Play this test"
                 >

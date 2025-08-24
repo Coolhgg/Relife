@@ -15,23 +15,17 @@ import {
 
 interface AdaptiveAlarmListProps {
   alarms: Alarm[];
-  onToggleAlarm: (alarmId: string
-) => void;
-  onEditAlarm: (alarmId: string
-) => void;
-  onDeleteAlarm: (alarmId: string
-) => void;
+  onToggleAlarm: (alarmId: string) => void;
+  onEditAlarm: (alarmId: string) => void;
+  onDeleteAlarm: (alarmId: string) => void;
   className?: string;
 }
 
 interface AlarmItemProps {
   alarm: Alarm;
-  onToggleAlarm: (alarmId: string
-) => void;
-  onEditAlarm: (alarmId: string
-) => void;
-  onDeleteAlarm: (alarmId: string
-) => void;
+  onToggleAlarm: (alarmId: string) => void;
+  onEditAlarm: (alarmId: string) => void;
+  onDeleteAlarm: (alarmId: string) => void;
   isLowEnd: boolean;
   shouldReduceAnimations: boolean;
 }
@@ -45,13 +39,11 @@ const AlarmItem = memo<AlarmItemProps>(
     onDeleteAlarm,
     isLowEnd,
     shouldReduceAnimations,
-  }
-) => {
+  }) => {
     const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
     // Optimize for low-end devices by reducing complex styling
-    const itemClassName = useMemo((
-) => {
+    const itemClassName = useMemo(() => {
       const baseClasses = 'bg-white rounded-lg p-4 shadow-sm border border-gray-200';
       const animationClasses = shouldReduceAnimations
         ? ''
@@ -63,30 +55,25 @@ const AlarmItem = memo<AlarmItemProps>(
       return `${baseClasses} ${animationClasses} ${optimizedClasses}`.trim();
     }, [shouldReduceAnimations, isLowEnd]);
 
-    const handleToggle = useCallback((
-) => {
+    const handleToggle = useCallback(() => {
       onToggleAlarm(alarm.id);
     }, [alarm.id, onToggleAlarm]);
 
-    const handleEdit = useCallback((
-) => {
+    const handleEdit = useCallback(() => {
       onEditAlarm(alarm.id);
     }, [alarm.id, onEditAlarm]);
 
-    const handleDelete = useCallback((
-) => {
+    const handleDelete = useCallback(() => {
       onDeleteAlarm(alarm.id);
     }, [alarm.id, onDeleteAlarm]);
 
     // Format days display
-    const daysText = useMemo((
-) => {
+    const daysText = useMemo(() => {
       const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       if (alarm.days.length === 7) return 'Every day';
       if (alarm.days.length === 0) return 'Never';
-      
-      return alarm.days.map((day: any
-) => dayNames[day]).join(', ');
+
+      return alarm.days.map((day: any) => dayNames[day]).join(', ');
     }, [alarm.days]);
 
     return (
@@ -194,17 +181,13 @@ const VirtualAlarmItem = memo<{
   style: React.CSSProperties;
   data: {
     alarms: Alarm[];
-    onToggleAlarm: (alarmId: string
-) => void;
-    onEditAlarm: (alarmId: string
-) => void;
-    onDeleteAlarm: (alarmId: string
-) => void;
+    onToggleAlarm: (alarmId: string) => void;
+    onEditAlarm: (alarmId: string) => void;
+    onDeleteAlarm: (alarmId: string) => void;
     isLowEnd: boolean;
     shouldReduceAnimations: boolean;
   };
-}>(({ index, style, data }
-) => {
+}>(({ index, style, data }) => {
   const {
     alarms,
     onToggleAlarm,
@@ -240,24 +223,20 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
   onEditAlarm,
   onDeleteAlarm,
   className = '',
-}
-) => {
+}) => {
   const { shouldUseVirtualScrolling, isLowEnd } = useDeviceCapabilities();
   const { shouldReduceAnimations, shouldUseMemoization } =
     usePerformanceOptimizations();
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Memoize expensive operations for performance
-  const memoizedAlarms = useMemo((
-) => {
+  const memoizedAlarms = useMemo(() => {
     return shouldUseMemoization ? alarms : alarms;
   }, [alarms, shouldUseMemoization]);
 
   // Sort alarms for consistent rendering
-  const sortedAlarms = useMemo((
-) => {
-    return [...memoizedAlarms].sort((a, b
-) => {
+  const sortedAlarms = useMemo(() => {
+    return [...memoizedAlarms].sort((a, b) => {
       // Sort by enabled status first, then by time
       if (a.enabled !== b.enabled) {
         return a.enabled ? -1 : 1;
@@ -268,8 +247,7 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
 
   // Virtual list data
   const virtualListData = useMemo(
-    (
-) => ({
+    () => ({
       alarms: sortedAlarms,
       onToggleAlarm,
       onEditAlarm,
@@ -288,8 +266,7 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
   );
 
   // Performance monitoring
-  useEffect((
-) => {
+  useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       const listType = shouldUseVirtualScrolling ? 'virtual' : 'standard';
       const itemCount = alarms.length;
@@ -333,8 +310,7 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
   return (
     <div className={`space-y-3 ${className}`}>
       {}
-      {sortedAlarms.map((alarm: any
-) => (
+      {sortedAlarms.map((alarm: any) => (
         <AlarmItem
           key={alarm.id}
           alarm={alarm}
@@ -355,7 +331,10 @@ interface AdaptiveAlarmListWrapperProps extends AdaptiveAlarmListProps {
 }
 
 class AlarmListErrorBoundary extends React.Component<
-  { children: React.ReactNode; fallback?: React.ComponentType<{ error: Error }> },
+  {
+    children: React.ReactNode;
+    fallback?: React.ComponentType<{ error: Error }>;
+  },
   { hasError: boolean; error: Error | null }
 > {
   constructor(props: any) {
@@ -382,8 +361,7 @@ class AlarmListErrorBoundary extends React.Component<
         <div className="p-4 text-center text-red-600">
           <p>Something went wrong with the alarm list.</p>
           <button
-            onClick={(
-) => this.setState({ hasError: false, error: null })}
+            onClick={() => this.setState({ hasError: false, error: null })}
             className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           >
             Try Again

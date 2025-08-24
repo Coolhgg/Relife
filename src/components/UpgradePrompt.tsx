@@ -20,11 +20,9 @@ interface UpgradePromptProps {
   /** Whether to show as modal or inline */
   variant?: 'modal' | 'inline' | 'banner';
   /** Callback when user clicks upgrade */
-  onUpgrade?: ((...args: any[]
-) => void) | undefined; // auto: widened function prop
+  onUpgrade?: ((...args: any[]) => void) | undefined;
   /** Callback when user dismisses prompt */
-  onDismiss?: (
-) => void;
+  onDismiss?: () => void;
   /** Custom title override */
   title?: string;
   /** Custom description override */
@@ -32,7 +30,7 @@ interface UpgradePromptProps {
   /** Whether to show pricing */
   showPricing?: boolean;
   /** Current user tier for comparison */
-  currentTier?: string; // auto: added for prop compatibility
+  currentTier?: string;
 }
 
 const UpgradePrompt: React.FC<UpgradePromptProps> = ({
@@ -44,10 +42,8 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
   description,
   showPricing = true,
   currentTier = 'free',
-}
-) => {
-  const getFeatureInfo = (featureId: string
-) => {
+}) => {
+  const getFeatureInfo = (featureId: string) => {
     const featureMap: Record<
       string,
       {
@@ -212,8 +208,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
     },
   ];
 
-  const getRequiredPlan = (
-) => {
+  const getRequiredPlan = () => {
     return plans.find(plan => plan.tier === featureInfo.tier) || plans[0];
   };
 
@@ -236,8 +231,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={(
-) => onUpgrade(featureInfo.tier)}
+              onClick={() => onUpgrade(featureInfo.tier)}
               className="bg-white text-orange-600 px-4 py-2 rounded-lg font-medium hover:bg-orange-50 transition-colors text-sm"
             >
               Upgrade Now
@@ -272,8 +266,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           <div className="mb-6">
             <div className="text-sm text-gray-500 mb-2">What you'll get:</div>
             <div className="space-y-1">
-              {featureInfo.benefits.slice(0, 3).map((benefit, index
-) => (
+              {featureInfo.benefits.slice(0, 3).map((benefit, index) => (
                 <div
                   key={index}
                   className="flex items-center gap-2 text-sm text-gray-700"
@@ -285,8 +278,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
             </div>
           </div>
           <button
-            onClick={(
-) => onUpgrade(featureInfo.tier)}
+            onClick={() => onUpgrade(featureInfo.tier)}
             className={`bg-gradient-to-r ${requiredPlan.color} text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 w-full`}
           >
             <requiredPlan.icon className="h-4 w-4" />
@@ -335,8 +327,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
               What you'll get with {featureInfo.title}:
             </h3>
             <div className="grid gap-3">
-              {featureInfo.benefits.map((benefit, index
-) => (
+              {featureInfo.benefits.map((benefit, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="bg-green-100 text-green-600 p-1 rounded-full">
                     <Check className="h-4 w-4" />
@@ -391,8 +382,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                         </div>
 
                         <div className="space-y-2 mb-6">
-                          {plan.features.map((feature, index
-) => (
+                          {plan.features.map((feature, index) => (
                             <div
                               key={index}
                               className="flex items-center gap-2 text-sm text-gray-600"
@@ -404,8 +394,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                         </div>
 
                         <button
-                          onClick={(
-) => onUpgrade(plan.tier)}
+                          onClick={() => onUpgrade(plan.tier)}
                           className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
                             isRequired
                               ? `bg-gradient-to-r ${plan.color} text-white hover:shadow-lg`
@@ -428,8 +417,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           {!showPricing && (
             <div className="text-center">
               <button
-                onClick={(
-) => onUpgrade(featureInfo.tier)}
+                onClick={() => onUpgrade(featureInfo.tier)}
                 className={`bg-gradient-to-r ${requiredPlan.color} text-white px-8 py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 mx-auto`}
               >
                 <requiredPlan.icon className="h-5 w-5" />

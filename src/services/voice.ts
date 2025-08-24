@@ -125,13 +125,11 @@ export class VoiceService {
         // Configure voice based on mood
         this.configureVoiceForMood(utterance, voiceMood);
 
-        utterance.onstart = (
-) => {
+        utterance.onstart = () => {
           console.log('Speech synthesis started');
         };
 
-        utterance.onend = (
-) => {
+        utterance.onend = () => {
           console.log('Speech synthesis ended');
           // For now, return null as we can't easily capture Web Speech API output
           // In a real app, you'd use a TTS service like ElevenLabs or Google Cloud TTS
@@ -146,8 +144,7 @@ export class VoiceService {
         speechSynthesis.speak(utterance);
 
         // Fallback timeout
-        setTimeout((
-) => {
+        setTimeout(() => {
           resolve(null);
         }, 10000);
       } catch (error) {

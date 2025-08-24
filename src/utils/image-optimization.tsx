@@ -26,7 +26,11 @@ export interface OptimizedImageData {
 
 class ImageOptimizer {
   private cache = new Map<string, OptimizedImageData>();
-  private loadQueue: Array<{ url: string; resolve: Function; reject: Function }> = [];
+  private loadQueue: Array<{
+    url: string;
+    resolve: Function;
+    reject: Function;
+  }> = [];
   private isProcessing = false;
   private observer?: IntersectionObserver;
 
@@ -88,8 +92,7 @@ class ImageOptimizer {
 
     return new Promise(resolve => {
       const webP = new Image();
-      webP.onload = webP.onerror = (
-) => {
+      webP.onload = webP.onerror = () => {
         resolve(webP.height === 2);
       };
       webP.src =
@@ -152,8 +155,7 @@ class ImageOptimizer {
       canvas.width = 10;
       canvas.height = 10;
 
-      img.onload = (
-) => {
+      img.onload = () => {
         if (ctx) {
           ctx.filter = 'blur(5px)';
           ctx.drawImage(img, 0, 0, 10, 10);
@@ -165,8 +167,7 @@ class ImageOptimizer {
         }
       };
 
-      img.onerror = (
-) => {
+      img.onerror = () => {
         resolve(
           'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo='
         );
@@ -186,12 +187,10 @@ class ImageOptimizer {
     const batch = this.loadQueue.splice(0, 3); // Process 3 images at a time
 
     await Promise.allSettled(
-      batch.map(async ({ url, resolve, reject }
-) => {
+      batch.map(async ({ url, resolve, reject }) => {
         try {
           const img = new Image();
-          img.onload = (
-) => resolve(img);
+          img.onload = () => resolve(img);
           img.onerror = reject;
           img.src = url;
         } catch (error) {
@@ -202,8 +201,7 @@ class ImageOptimizer {
 
     this.isProcessing = false;
     if (this.loadQueue.length > 0) {
-      setTimeout((
-) => this.processLoadQueue(), 10);
+      setTimeout(() => this.processLoadQueue(), 10);
     }
   }
 
@@ -257,7 +255,10 @@ class ImageOptimizer {
     }
 
     // Generate optimized sources
-    const optimizedSrc = this.getOptimizedSrc(src, { quality, format: finalFormat });
+    const optimizedSrc = this.getOptimizedSrc(src, {
+      quality,
+      format: finalFormat,
+    });
     const srcSet = this.generateSrcSet(src, sizes, finalFormat);
 
     // Generate placeholder if needed
@@ -316,12 +317,10 @@ class ImageOptimizer {
     src: string,
     priority: boolean = false
   ): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject
-) => {
+    return new Promise((resolve, reject) => {
       if (priority) {
         const img = new Image();
-        img.onload = (
-) => resolve(img);
+        img.onload = () => resolve(img);
         img.onerror = reject;
         img.src = src;
       } else {
@@ -352,12 +351,10 @@ export function useOptimizedImage(src: string, options: ImageOptimizationOptions
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<Error | null>(null);
 
-  React.useEffect((
-) => {
+  React.useEffect(() => {
     let mounted = true;
 
-    const loadOptimizedImage = async (
-) => {
+    const loadOptimizedImage = async () => {
       try {
         setIsLoading(true);
         setError(null);
@@ -378,8 +375,7 @@ export function useOptimizedImage(src: string, options: ImageOptimizationOptions
 
     loadOptimizedImage();
 
-    return (
-) => {
+    return () => {
       mounted = false;
     };
   }, [src, JSON.stringify(options)]);
@@ -394,10 +390,8 @@ export interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageEl
   src: string;
   alt: string;
   optimization?: ImageOptimizationOptions;
-  onLoad?: (
-) => void;
-  onError?: (error: Error
-) => void;
+  onLoad?: () => void;
+  onError?: (error: Error) => void;
 }
 
 export const OptimizedImage: React.FC<OptimizedImageProps> = ({
@@ -409,21 +403,18 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   className = '',
   style = {},
   ...props
-}
-) => {
+}) => {
   const imgRef = React.useRef<HTMLImageElement>(null);
   const { imageData, isLoading, error } = useOptimizedImage(src, optimization);
   const [loaded, setLoaded] = React.useState(false);
 
-  React.useEffect((
-) => {
+  React.useEffect(() => {
     if (error && onError) {
       onError(error);
     }
   }, [error, onError]);
 
-  React.useEffect((
-) => {
+  React.useEffect(() => {
     if (imgRef.current && imageData) {
       const img = imgRef.current;
 
@@ -437,8 +428,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     }
   }, [imageData, optimization]);
 
-  const handleLoad = React.useCallback((
-) => {
+  const handleLoad = React.useCallback(() => {
     setLoaded(true);
     onLoad?.();
   }, [onLoad]);

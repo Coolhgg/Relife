@@ -196,8 +196,7 @@ export interface PerformanceAlert {
   timestamp: number;
   metrics: Partial<PerformanceSnapshot>;
   suggestions: string[];
-  autoFix?: (
-) => Promise<void>;
+  autoFix?: () => Promise<void>;
 }
 
 export interface DeviceAdaptation {

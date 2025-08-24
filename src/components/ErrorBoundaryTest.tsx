@@ -3,16 +3,14 @@ import { Bug, Zap, Alert, Database, Wifi, Brain, Volume2 } from 'lucide-react';
 import { TimeoutHandle } from '../types/timers';
 
 interface ErrorBoundaryTestProps {
-  onClose?: (
-) => void;
+  onClose?: () => void;
 }
 
 /**
  * Error Boundary Test Component
  * Only available in development mode for testing error boundaries
  */
-const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }
-) => {
+const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
   const [errorType, setErrorType] = useState<string>('');
 
   // Only render in development mode
@@ -20,8 +18,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }
     return null;
   }
 
-  const triggerError = (type: string
-) => {
+  const triggerError = (type: string) => {
     setErrorType(type);
 
     // Trigger different types of errors
@@ -34,8 +31,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }
 
       case 'async':
         // Simulate async error
-        setTimeout((
-) => {
+        setTimeout(() => {
           throw new Error(
             'Test async error - This is intentional for testing error boundaries'
           );
@@ -83,8 +79,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }
     }
   };
 
-  const CrashComponent = (
-) => {
+  const CrashComponent = () => {
     if (errorType === 'render') {
       throw new Error(
         'Test render error - This is intentional for testing error boundaries'
@@ -147,8 +142,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }
           </h3>
 
           <button
-            onClick={(
-) => triggerError('render')}
+            onClick={() => triggerError('render')}
             className="w-full flex items-center gap-3 p-3 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg text-red-800 dark:text-red-200 transition-colors"
           >
             <Zap className="w-4 h-4" />
@@ -159,8 +153,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }
           </button>
 
           <button
-            onClick={(
-) => triggerError('network-simulation')}
+            onClick={() => triggerError('network-simulation')}
             className="w-full flex items-center gap-3 p-3 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg text-blue-800 dark:text-blue-200 transition-colors"
           >
             <Wifi className="w-4 h-4" />
@@ -171,8 +164,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }
           </button>
 
           <button
-            onClick={(
-) => triggerError('media-error')}
+            onClick={() => triggerError('media-error')}
             className="w-full flex items-center gap-3 p-3 bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/20 dark:hover:bg-purple-900/30 border border-purple-200 dark:border-purple-800 rounded-lg text-purple-800 dark:text-purple-200 transition-colors"
           >
             <Volume2 className="w-4 h-4" />
@@ -183,8 +175,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }
           </button>
 
           <button
-            onClick={(
-) => triggerError('ai-error')}
+            onClick={() => triggerError('ai-error')}
             className="w-full flex items-center gap-3 p-3 bg-green-50 hover:bg-green-100 dark:bg-green-900/20 dark:hover:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg text-green-800 dark:text-green-200 transition-colors"
           >
             <Brain className="w-4 h-4" />
@@ -195,8 +186,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }
           </button>
 
           <button
-            onClick={(
-) => triggerError('data-error')}
+            onClick={() => triggerError('data-error')}
             className="w-full flex items-center gap-3 p-3 bg-orange-50 hover:bg-orange-100 dark:bg-orange-900/20 dark:hover:bg-orange-900/30 border border-orange-200 dark:border-orange-800 rounded-lg text-orange-800 dark:text-orange-200 transition-colors"
           >
             <Database className="w-4 h-4" />
@@ -209,8 +199,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }
           </button>
 
           <button
-            onClick={(
-) => triggerError('null-reference')}
+            onClick={() => triggerError('null-reference')}
             className="w-full flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-800 dark:text-gray-200 transition-colors"
           >
             <Alert className="w-4 h-4" />

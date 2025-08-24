@@ -20,8 +20,7 @@ export function ScreenReaderProvider({
   const isInitialized = useRef(false);
   const screenReaderService = useRef<ScreenReaderService>();
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (!isInitialized.current && enabled) {
       // Initialize screen reader service
       screenReaderService.current = ScreenReaderService.getInstance();
@@ -34,8 +33,7 @@ export function ScreenReaderProvider({
       });
 
       // Announce app initialization
-      setTimeout((
-) => {
+      setTimeout(() => {
         screenReaderService.current?.announce(
           'Smart Alarm app loaded. Navigation available with keyboard shortcuts or touch.',
           'polite',
@@ -47,8 +45,7 @@ export function ScreenReaderProvider({
 
       // Setup global error announcement handler
       const originalError = window.console.error;
-      window.console.error = (...args
-) => {
+      window.console.error = (...args) => {
         originalError.apply(console, args);
 
         // Announce critical errors to screen reader users
@@ -93,8 +90,7 @@ export function ScreenReaderProvider({
       console.log('Screen Reader Provider initialized');
     }
 
-    return (
-) => {
+    return () => {
       if (screenReaderService.current) {
         screenReaderService.current.cleanup();
       }
@@ -102,8 +98,7 @@ export function ScreenReaderProvider({
   }, [enabled, verbosity]);
 
   // Update settings when props change
-  useEffect((
-) => {
+  useEffect(() => {
     if (screenReaderService.current) {
       screenReaderService.current.updateSettings({
         isEnabled: enabled,
@@ -120,8 +115,7 @@ export function useScreenReaderLifecycle(componentName: string) {
   const screenReaderRef = useRef<ScreenReaderService>();
   const mountedRef = useRef(false);
 
-  useEffect((
-) => {
+  useEffect(() => {
     screenReaderRef.current = ScreenReaderService.getInstance();
     mountedRef.current = true;
 
@@ -132,8 +126,7 @@ export function useScreenReaderLifecycle(componentName: string) {
       });
     }
 
-    return (
-) => {
+    return () => {
       mountedRef.current = false;
       // Announce component unmount for high verbosity
       if (screenReaderRef.current?.getState().verbosityLevel === 'high') {
@@ -145,8 +138,7 @@ export function useScreenReaderLifecycle(componentName: string) {
   const announceIfMounted = (
     message: string,
     priority: 'polite' | 'assertive' = 'polite'
-  
-) => {
+  ) => {
     if (mountedRef.current && screenReaderRef.current) {
       screenReaderRef.current.announce(message, priority);
     }
@@ -161,13 +153,18 @@ export function ScreenReaderTester() {
 
   const testAnnouncements = [
     { message: 'This is a polite announcement', priority: 'polite' as const },
-    { message: 'This is an assertive announcement', priority: 'assertive' as const },
-    { message: 'Testing alarm creation announcement', priority: 'polite' as const },
+    {
+      message: 'This is an assertive announcement',
+      priority: 'assertive' as const,
+    },
+    {
+      message: 'Testing alarm creation announcement',
+      priority: 'polite' as const,
+    },
     { message: 'Testing navigation announcement', priority: 'polite' as const },
   ];
 
-  const runTest = (index: number
-) => {
+  const runTest = (index: number) => {
     const test = testAnnouncements[index];
     if (test) {
       screenReader.announce(test.message, test.priority);
@@ -178,12 +175,10 @@ export function ScreenReaderTester() {
     <div className="bg-white p-6 rounded-lg shadow-md border">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Screen Reader Test</h3>
       <div className="space-y-2">
-        {testAnnouncements.map((test, index
-) => (
+        {testAnnouncements.map((test, index) => (
           <button
             key={index}
-            onClick={(
-) => runTest(index)}
+            onClick={() => runTest(index)}
             className="block w-full text-left bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-label={`Test ${test.priority} announcement: ${test.message}`}
           >

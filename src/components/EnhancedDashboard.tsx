@@ -35,12 +35,9 @@ import { useABTesting } from '../hooks/useABTesting';
 
 interface EnhancedDashboardProps {
   alarms?: Alarm[];
-  onAddAlarm: (
-) => void;
-  onQuickSetup?: (presetType: 'morning' | 'work' | 'custom'
-) => void;
-  onNavigateToAdvanced?: (
-) => void;
+  onAddAlarm: () => void;
+  onQuickSetup?: (presetType: 'morning' | 'work' | 'custom') => void;
+  onNavigateToAdvanced?: () => void;
   userId?: string; // For Struggling Sam optimization
 }
 
@@ -50,12 +47,10 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   onQuickSetup,
   onNavigateToAdvanced,
   userId = 'demo-user',
-}
-) => {
+}) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
-  
-  const enabledAlarms = alarms?.filter((a: any
-) => a.enabled) || [];
+
+  const enabledAlarms = alarms?.filter((a: any) => a.enabled) || [];
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
@@ -93,13 +88,11 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
     loading: abLoading,
   } = useABTesting(userId);
 
-  useEffect((
-) => {
+  useEffect(() => {
     loadSmartInsights();
   }, [alarms]);
 
-  const loadSmartInsights = async (
-) => {
+  const loadSmartInsights = async () => {
     try {
       // Check if advanced features are enabled
       const mlEnabled = MLAlarmOptimizer.isMLEnabled();
@@ -125,15 +118,15 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   };
 
   // Handle milestone celebrations
-  const handleMilestoneReached = (milestone: any
-) => {
-    trackFeatureUsage('streaks', 'milestone_reached', { days: milestone.streakDays });
+  const handleMilestoneReached = (milestone: any) => {
+    trackFeatureUsage('streaks', 'milestone_reached', {
+      days: milestone.streakDays,
+    });
     // Trigger celebration in context
   };
 
   // Handle upgrade prompt actions
-  const handleUpgradeClick = (promptId: string, triggerType: string
-) => {
+  const handleUpgradeClick = (promptId: string, triggerType: string) => {
     trackFeatureUsage('upgrade_prompts', 'converted', { trigger: triggerType });
     trackABConversion('upgrade');
     dismissUpgradePrompt(promptId);
@@ -150,8 +143,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
         </div>
         <div className="space-y-4">
-          {[...Array(3)].map((_, i
-) => (
+          {[...Array(3)].map((_, i) => (
             <div
               key={i}
               data-testid="alarm-skeleton"
@@ -225,8 +217,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             {/* Quick Setup Options for New Users */}
             <div className="space-y-3 mb-6">
               <button
-                onClick={(
-) => (onQuickSetup ? onQuickSetup('morning') : onAddAlarm())}
+                onClick={() => (onQuickSetup ? onQuickSetup('morning') : onAddAlarm())}
                 className="w-full bg-white text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
                 aria-label="Quick setup - Morning routine alarm at 7:00 AM"
               >
@@ -235,8 +226,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
               </button>
 
               <button
-                onClick={(
-) => (onQuickSetup ? onQuickSetup('work') : onAddAlarm())}
+                onClick={() => (onQuickSetup ? onQuickSetup('work') : onAddAlarm())}
                 className="w-full bg-white/90 text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-white transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
                 aria-label="Quick setup - Work day alarm at 6:30 AM"
               >
@@ -279,13 +269,11 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           <StreakCounter
             userStreak={userStreak}
             onMilestoneReached={handleMilestoneReached}
-            onStreakShare={(
-) => {
+            onStreakShare={() => {
               trackFeatureUsage('streaks', 'shared');
               shareAchievement('streak-achievement');
             }}
-            onStreakFreeze={(
-) => {
+            onStreakFreeze={() => {
               trackFeatureUsage('streaks', 'freeze_used');
               // Handle streak freeze in context
             }}
@@ -295,14 +283,14 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           {shouldShowAchievements && achievements.length > 0 && (
             <AchievementBadges
               achievements={achievements}
-              onAchievementClick={(achievement: any
-) => { // auto: implicit any
+              onAchievementClick={(achievement: any) => {
+                // auto: implicit any
                 trackFeatureUsage('achievements', 'clicked', {
                   type: achievement.achievementType,
                 });
               }}
-              onAchievementShare={(achievement: any
-) => { // auto: implicit any
+              onAchievementShare={(achievement: any) => {
+                // auto: implicit any
                 trackFeatureUsage('achievements', 'shared', {
                   type: achievement.achievementType,
                 });
@@ -319,8 +307,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
         <SocialProof
           communityStats={communityStats}
           socialProofData={socialProofData}
-          onUpgradeClick={(
-) => {
+          onUpgradeClick={() => {
             trackFeatureUsage('social_proof', 'upgrade_clicked');
             trackABConversion('upgrade');
           }}
@@ -331,18 +318,18 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       {shouldShowChallenges && activeChallenges.length > 0 && (
         <CommunityChallenge
           challenges={activeChallenges}
-          onJoinChallenge={(challengeId: any
-) => { // auto: implicit any
+          onJoinChallenge={(challengeId: any) => {
+            // auto: implicit any
             trackFeatureUsage('challenges', 'joined', { challengeId });
             joinChallenge(challengeId);
           }}
-          onLeaveChallenge={(challengeId: any
-) => { // auto: implicit any
+          onLeaveChallenge={(challengeId: any) => {
+            // auto: implicit any
             trackFeatureUsage('challenges', 'left', { challengeId });
             leaveChallenge(challengeId);
           }}
-          onChallengeShare={(challengeId: any
-) => { // auto: implicit any
+          onChallengeShare={(challengeId: any) => {
+            // auto: implicit any
             trackFeatureUsage('challenges', 'shared', { challengeId });
           }}
         />
@@ -388,16 +375,12 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
       {/* Smart Upgrade Prompts for Struggling Sam */}
       {shouldShowUpgradePrompts &&
-        upgradePrompts
-      .map((prompt: any
-) => (
+        upgradePrompts.map((prompt: any) => (
           <SmartUpgradePrompt
             key={prompt.id}
             prompt={prompt}
-            onUpgrade={(
-) => handleUpgradeClick(prompt.id, prompt.triggerType)}
-            onDismiss={(
-) => {
+            onUpgrade={() => handleUpgradeClick(prompt.id, prompt.triggerType)}
+            onDismiss={() => {
               trackFeatureUsage('upgrade_prompts', 'dismissed', {
                 trigger: prompt.triggerType,
               });
@@ -420,8 +403,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             Recent Alarms
           </h3>
           <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
-            {alarms.slice(0, 3).map((alarm: any
-) => { // auto: implicit any
+            {alarms.slice(0, 3).map((alarm: any) => {
+              // auto: implicit any
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
               return (
@@ -506,8 +489,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
           <div className="space-y-3">
             {/* Optimization Suggestions */}
-            {optimizationSuggestions.map((suggestion, index
-) => (
+            {optimizationSuggestions.map((suggestion, index) => (
               <div
                 key={index}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
@@ -536,9 +518,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             ))}
 
             {/* Smart Insights */}
-            {smartInsights
-      .map((insight: any
-) => (
+            {smartInsights.map((insight: any) => (
               <div
                 key={insight.id}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
@@ -669,8 +649,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           {alarms.length > 0 && onQuickSetup && (
             <>
               <button
-                onClick={(
-) => onQuickSetup('morning')}
+                onClick={() => onQuickSetup('morning')}
                 className="alarm-button alarm-button-secondary p-4 text-left"
                 aria-label="Quick morning routine - Add 7:00 AM motivational alarm"
               >
@@ -686,8 +665,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
               </button>
 
               <button
-                onClick={(
-) => onQuickSetup('work')}
+                onClick={() => onQuickSetup('work')}
                 className="alarm-button alarm-button-secondary p-4 text-left"
                 aria-label="Work day setup - Add 6:30 AM professional alarm"
               >
@@ -706,21 +684,18 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
       {/* Habit Celebrations */}
       {shouldShowCelebrations &&
-        pendingCelebrations
-      .map((celebration: any
-) => (
+        pendingCelebrations.map((celebration: any) => (
           <HabitCelebration
             key={celebration.id}
             celebration={celebration}
-            onShare={(platform: any
-) => { // auto: implicit any
+            onShare={(platform: any) => {
+              // auto: implicit any
               trackFeatureUsage('celebrations', 'shared', {
                 platform,
                 type: celebration.celebrationType,
               });
             }}
-            onClose={(
-) => {
+            onClose={() => {
               dismissCelebration(celebration.id);
             }}
           />

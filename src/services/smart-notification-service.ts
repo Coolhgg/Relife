@@ -474,25 +474,21 @@ class SmartNotificationService {
   private startContextMonitoring(): void {
     // Update context every 5 minutes
     setInterval(
-      async (
-) => {
+      async () => {
         this.currentContext = await this.getCurrentContext();
       },
       5 * 60 * 1000
     );
 
     // Monitor device events
-    document.addEventListener('visibilitychange', (
-) => {
+    document.addEventListener('visibilitychange', () => {
       this.currentContext.userActivity = document.hidden ? 'idle' : 'active';
     });
 
     // Battery monitoring (if supported)
     if ('getBattery' in navigator) {
-      (navigator as any).getBattery().then((battery: any
-) => {
-        const updateBatteryInfo = (
-) => {
+      (navigator as any).getBattery().then((battery: any) => {
+        const updateBatteryInfo = () => {
           this.currentContext.batteryLevel = Math.round(battery.level * 100);
           this.currentContext.isCharging = battery.charging;
         };
@@ -862,8 +858,7 @@ class SmartNotificationService {
       const notifications = Object.fromEntries(this.scheduledNotifications);
       localStorage.setItem(
         'scheduled_adaptive_notifications',
-        JSON.stringify(notifications, (key, value
-) => {
+        JSON.stringify(notifications, (key, value) => {
           if (value instanceof Date) {
             return { __type: 'Date', value: value.toISOString() };
           }

@@ -51,22 +51,22 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
   size = 'medium',
   animate = true,
   className = '',
-}
-) => {
-  const [timeLeft, setTimeLeft] = useState({ hours: 23, minutes: 47, seconds: 32 });
+}) => {
+  const [timeLeft, setTimeLeft] = useState({
+    hours: 23,
+    minutes: 47,
+    seconds: 32,
+  });
   const [userCount, setUserCount] = useState(10847);
   const [isHovered, setIsHovered] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
 
   // Countdown timer for urgency
-  useEffect((
-) => {
+  useEffect(() => {
     if (trigger !== 'urgency') return;
 
-    const interval = setInterval((
-) => {
-      setTimeLeft((prev: any
-) => {
+    const interval = setInterval(() => {
+      setTimeLeft((prev: any) => {
         // auto
         if (prev.seconds > 0) {
           return { ...prev, seconds: prev.seconds - 1 };
@@ -79,38 +79,30 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
       });
     }, 1000);
 
-    return (
-) => clearInterval(interval);
+    return () => clearInterval(interval);
   }, [trigger]);
 
   // Simulate growing user count for social proof
-  useEffect((
-) => {
+  useEffect(() => {
     if (trigger !== 'social_proof') return;
 
-    const interval = setInterval((
-) => {
-      setUserCount((prev: any
-) => prev + Math.floor(Math.random() * 3));
+    const interval = setInterval(() => {
+      setUserCount((prev: any) => prev + Math.floor(Math.random() * 3));
     }, 5000);
 
-    return (
-) => clearInterval(interval);
+    return () => clearInterval(interval);
   }, [trigger]);
 
   // Animation on mount
-  useEffect((
-) => {
+  useEffect(() => {
     if (animate) {
-      setTimeout((
-) => setHasAnimated(true), 100);
+      setTimeout(() => setHasAnimated(true), 100);
     } else {
       setHasAnimated(true);
     }
   }, [animate]);
 
-  const getTierInfo = (
-) => {
+  const getTierInfo = () => {
     const tierMap = {
       premium: {
         price: '$4.99',
@@ -138,8 +130,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
     return tierMap[targetTier] || tierMap.premium;
   };
 
-  const getPsychologyContent = (
-) => {
+  const getPsychologyContent = () => {
     const tierInfo = getTierInfo();
 
     switch (trigger) {
@@ -207,8 +198,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
     }
   };
 
-  const getVariantStyles = (
-) => {
+  const getVariantStyles = () => {
     const tierInfo = getTierInfo();
 
     switch (variant) {
@@ -250,8 +240,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
     }
   };
 
-  const getSizeStyles = (
-) => {
+  const getSizeStyles = () => {
     switch (size) {
       case 'small':
         return {
@@ -305,10 +294,8 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
       ${isHovered ? 'scale-102' : 'scale-100'}
       ${className}
     `}
-      onMouseEnter={(
-) => setIsHovered(true)}
-      onMouseLeave={(
-) => setIsHovered(false)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Background effects */}
       {variant === 'neon' && (
@@ -376,8 +363,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
       {/* CTA Button */}
       <div className="text-center mb-4">
         <button
-          onClick={(
-) => onUpgrade(targetTier)}
+          onClick={() => onUpgrade(targetTier)}
           className={`
             inline-flex items-center justify-center space-x-3 font-medium transition-all duration-200
             ${sizeStyles.button} ${styles.button}

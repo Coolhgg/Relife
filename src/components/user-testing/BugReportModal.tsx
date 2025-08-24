@@ -36,10 +36,8 @@ import { TimeoutHandle } from '../types/timers';
 
 interface BugReportModalProps {
   isOpen: boolean;
-  onClose: (
-) => void;
-  onBugReported?: (bugId: string
-) => void;
+  onClose: () => void;
+  onBugReported?: (bugId: string) => void;
 }
 
 export function BugReportModal({
@@ -103,16 +101,14 @@ export function BugReportModal({
     { value: 'always', label: 'Always happens' },
   ] as const;
 
-  const takeScreenshot = async (
-) => {
+  const takeScreenshot = async () => {
     try {
       const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
       const video = document.createElement('video');
       video.srcObject = stream;
       video.play();
 
-      video.addEventListener('loadedmetadata', (
-) => {
+      video.addEventListener('loadedmetadata', () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
@@ -131,43 +127,35 @@ export function BugReportModal({
     }
   };
 
-  const addStep = (
-) => {
+  const addStep = () => {
     setSteps([...steps, '']);
   };
 
-  const updateStep = (index: number, value: string
-) => {
+  const updateStep = (index: number, value: string) => {
     const newSteps = [...steps];
     newSteps[index] = value;
     setSteps(newSteps);
   };
 
-  const removeStep = (index: number
-) => {
+  const removeStep = (index: number) => {
     if (steps.length > 1) {
-      const newSteps = steps.filter((_, i
-) => i !== index);
+      const newSteps = steps.filter((_, i) => i !== index);
       setSteps(newSteps);
     }
   };
 
-  const addTag = (
-) => {
+  const addTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
       setTags([...tags, newTag.trim()]);
       setNewTag('');
     }
   };
 
-  const removeTag = (tagToRemove: string
-) => {
-    setTags(tags.filter((tag: any
-) => tag !== tagToRemove));
+  const removeTag = (tagToRemove: string) => {
+    setTags(tags.filter((tag: any) => tag !== tagToRemove));
   };
 
-  const handleSubmit = async (e: React.FormEvent
-) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting || !title.trim() || !description.trim()) return;
 
@@ -177,8 +165,7 @@ export function BugReportModal({
       const bugData: Partial<BugReport> = {
         title: title.trim(),
         description: description.trim(),
-        steps: steps.filter((step: any
-) => step.trim() !== ''),
+        steps: steps.filter((step: any) => step.trim() !== ''),
         expectedBehavior: expectedBehavior.trim(),
         actualBehavior: actualBehavior.trim(),
         severity,
@@ -195,8 +182,7 @@ export function BugReportModal({
       onBugReported?.(bugId);
 
       // Reset form after short delay
-      setTimeout((
-) => {
+      setTimeout(() => {
         resetForm();
         onClose();
       }, 2000);
@@ -207,8 +193,7 @@ export function BugReportModal({
     }
   };
 
-  const resetForm = (
-) => {
+  const resetForm = () => {
     setTitle('');
     setDescription('');
     setExpectedBehavior('');
@@ -225,8 +210,7 @@ export function BugReportModal({
     setIsSubmitting(false);
   };
 
-  const handleClose = (
-) => {
+  const handleClose = () => {
     resetForm();
     onClose();
   };
@@ -282,8 +266,7 @@ export function BugReportModal({
                   <Input
                     id="title"
                     value={title}
-                    onChange={(e: any
-) => setTitle(e.target.value)}
+                    onChange={(e: any) => setTitle(e.target.value)}
                     placeholder="Brief summary of the bug"
                     className="mt-1"
                     required
@@ -295,8 +278,7 @@ export function BugReportModal({
                   <Textarea
                     id="description"
                     value={description}
-                    onChange={(e: any
-) => setDescription(e.target.value)}
+                    onChange={(e: any) => setDescription(e.target.value)}
                     placeholder="Describe the bug in detail..."
                     className="mt-1 min-h-[100px]"
                     rows={4}
@@ -312,8 +294,7 @@ export function BugReportModal({
                         <button
                           key={option.value}
                           type="button"
-                          onClick={(
-) => setSeverity(option.value)}
+                          onClick={() => setSeverity(option.value)}
                           className={`flex items-center gap-2 p-3 rounded-lg border transition-colors ${
                             severity === option.value
                               ? 'border-primary bg-primary/10'
@@ -334,8 +315,7 @@ export function BugReportModal({
                         <button
                           key={option.value}
                           type="button"
-                          onClick={(
-) => setCategory(option.value)}
+                          onClick={() => setCategory(option.value)}
                           className={`flex items-center gap-2 p-3 rounded-lg border transition-colors ${
                             category === option.value
                               ? 'border-primary bg-primary/10'
@@ -357,8 +337,7 @@ export function BugReportModal({
                       <button
                         key={option.value}
                         type="button"
-                        onClick={(
-) => setFrequency(option.value)}
+                        onClick={() => setFrequency(option.value)}
                         className={`px-4 py-2 rounded-lg border transition-colors ${
                           frequency === option.value
                             ? 'border-primary bg-primary text-primary-foreground'
@@ -392,8 +371,7 @@ export function BugReportModal({
                   <Textarea
                     id="expected"
                     value={expectedBehavior}
-                    onChange={(e: any
-) => setExpectedBehavior(e.target.value)}
+                    onChange={(e: any) => setExpectedBehavior(e.target.value)}
                     placeholder="Describe what you thought would happen..."
                     className="mt-1"
                     rows={3}
@@ -405,8 +383,7 @@ export function BugReportModal({
                   <Textarea
                     id="actual"
                     value={actualBehavior}
-                    onChange={(e: any
-) => setActualBehavior(e.target.value)}
+                    onChange={(e: any) => setActualBehavior(e.target.value)}
                     placeholder="Describe what actually happened instead..."
                     className="mt-1"
                     rows={3}
@@ -429,8 +406,7 @@ export function BugReportModal({
                       </Button>
                     </div>
                     <div className="space-y-3">
-                      {steps.map((step, index
-) => (
+                      {steps.map((step, index) => (
                         <div key={index} className="flex items-center gap-3">
                           <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                             <span className="text-sm font-medium text-primary">
@@ -439,8 +415,7 @@ export function BugReportModal({
                           </div>
                           <Input
                             value={step}
-                            onChange={(e: any
-) => updateStep(index, e.target.value)}
+                            onChange={(e: any) => updateStep(index, e.target.value)}
                             placeholder={`Step ${index + 1}...`}
                             className="flex-1"
                           />
@@ -449,8 +424,7 @@ export function BugReportModal({
                               type="button"
                               variant="ghost"
                               size="sm"
-                              onClick={(
-) => removeStep(index)}
+                              onClick={() => removeStep(index)}
                               className="flex-shrink-0"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -467,12 +441,10 @@ export function BugReportModal({
                   <div className="flex items-center gap-2 mt-2">
                     <Input
                       value={newTag}
-                      onChange={(e: any
-) => setNewTag(e.target.value)}
+                      onChange={(e: any) => setNewTag(e.target.value)}
                       placeholder="Add a tag..."
                       className="flex-1"
-                      onKeyDown={(e: any
-) => 
+                      onKeyDown={(e: any) =>
                         e.key === 'Enter' && (e.preventDefault(), addTag())
                       }
                     />
@@ -487,9 +459,7 @@ export function BugReportModal({
                   </div>
                   {tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
-                      {tags
-      .map((tag: any
-) => (
+                      {tags.map((tag: any) => (
                         <Badge
                           key={tag}
                           variant="secondary"
@@ -498,8 +468,7 @@ export function BugReportModal({
                           {tag}
                           <button
                             type="button"
-                            onClick={(
-) => removeTag(tag)}
+                            onClick={() => removeTag(tag)}
                             className="ml-1 hover:text-red-600"
                           >
                             <X className="w-3 h-3" />
@@ -535,8 +504,7 @@ export function BugReportModal({
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={(
-) => setScreenshot(null)}
+                            onClick={() => setScreenshot(null)}
                           >
                             <X className="w-4 h-4" />
                             Remove

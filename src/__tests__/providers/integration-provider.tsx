@@ -93,8 +93,7 @@ export interface IntegrationTestOptions {
 export const IntegrationTestProvider: React.FC<{
   children: ReactNode;
   options?: IntegrationTestOptions;
-}> = ({ children, options = {} }
-) => {
+}> = ({ children, options = {} }) => {
   const {
     user = {},
     app = {},
@@ -124,8 +123,7 @@ export const IntegrationTestProvider: React.FC<{
   // Configure context options based on integration options
   const contextOptions: ContextTestOptions = {
     featureAccess: {
-      hasAccess: jest.fn((feature: string
-) => {
+      hasAccess: jest.fn((feature: string) => {
         if (user.tier === 'free') {
           return ['basic_alarms', 'basic_themes'].includes(feature);
         }
@@ -134,8 +132,7 @@ export const IntegrationTestProvider: React.FC<{
         }
         return true; // ultimate tier
       }),
-      upgradeRequired: jest.fn((feature: string
-) => {
+      upgradeRequired: jest.fn((feature: string) => {
         if (user.tier === 'ultimate') return false;
         if (user.tier === 'premium') {
           return ['ai_optimization', 'advanced_analytics'].includes(feature);
@@ -160,10 +157,8 @@ export const IntegrationTestProvider: React.FC<{
       alarms: data.alarms || [],
       isLoading: app.loading || false,
       error: app.error || null,
-      getUpcomingAlarms: jest.fn((
-) =>
-        (data.alarms || []).filter((alarm: any
-) => alarm.enabled)
+      getUpcomingAlarms: jest.fn(() =>
+        (data.alarms || []).filter((alarm: any) => alarm.enabled)
       ),
     },
 
@@ -190,8 +185,7 @@ export const IntegrationTestProvider: React.FC<{
         }
         return { ...alarm, id: 'new-alarm-' + Date.now() };
       }),
-      syncAlarms: jest.fn().mockImplementation(async (
-) => {
+      syncAlarms: jest.fn().mockImplementation(async () => {
         if (network.offline) {
           throw new Error('Sync failed - no internet connection');
         }
@@ -223,8 +217,7 @@ export const IntegrationTestProvider: React.FC<{
             }
           : null
       ),
-      checkAccess: contextOptions.featureAccess?.hasAccess || jest.fn((
-) => true),
+      checkAccess: contextOptions.featureAccess?.hasAccess || jest.fn(() => true),
     },
 
     voiceService: {
@@ -238,8 +231,7 @@ export const IntegrationTestProvider: React.FC<{
       requestPermission: jest
         .fn()
         .mockResolvedValue(environment.notifications || 'granted'),
-      showNotification: jest.fn().mockImplementation(async (title, options
-) => {
+      showNotification: jest.fn().mockImplementation(async (title, options) => {
         if (environment.notifications === 'denied') {
           throw new Error('Notifications not permitted');
         }
@@ -266,13 +258,11 @@ export const IntegrationTestProvider: React.FC<{
         }
         if (key.startsWith('alarm-')) {
           const alarmId = key.replace('alarm-', '');
-          return (data.alarms || []).find((a: any
-) => a.id === alarmId) || null;
+          return (data.alarms || []).find((a: any) => a.id === alarmId) || null;
         }
         return null;
       }),
-      set: jest.fn().mockImplementation(async (key, value
-) => {
+      set: jest.fn().mockImplementation(async (key, value) => {
         if (environment.offline) {
           // Store locally when offline
           return;
@@ -468,7 +458,6 @@ export const _integrationScenarios = {
 export const _renderWithIntegration = (
   ui: React.ReactElement,
   options: IntegrationTestOptions & RenderOptions = {}
-
 ) => {
   const {
     user,
@@ -482,8 +471,7 @@ export const _renderWithIntegration = (
     ...renderOptions
   } = options;
 
-  const Wrapper: React.FC<{ children: ReactNode }> = ({ children }
-) => (
+  const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
     <IntegrationTestProvider
       options={{ user, app, data, features, environment, network, router, queryClient }}
     >
@@ -499,7 +487,6 @@ export const _renderWithIntegrationScenario = (
   ui: React.ReactElement,
   scenario: keyof typeof integrationScenarios,
   additionalOptions: IntegrationTestOptions = {}
-
 ) => {
   const scenarioOptions = integrationScenarios[scenario];
   const mergedOptions = {

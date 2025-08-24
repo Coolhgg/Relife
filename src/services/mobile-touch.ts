@@ -4,20 +4,13 @@ import { TimeoutHandle } from '../types/timers';
 
 export interface TouchGestureOptions {
   element: HTMLElement;
-  onSwipeLeft?: (
-) => void;
-  onSwipeRight?: (
-) => void;
-  onSwipeUp?: (
-) => void;
-  onSwipeDown?: (
-) => void;
-  onTap?: (
-) => void;
-  onDoubleTap?: (
-) => void;
-  onLongPress?: (
-) => void;
+  onSwipeLeft?: () => void;
+  onSwipeRight?: () => void;
+  onSwipeUp?: () => void;
+  onSwipeDown?: () => void;
+  onTap?: () => void;
+  onDoubleTap?: () => void;
+  onLongPress?: () => void;
   swipeThreshold?: number;
   longPressDelay?: number;
   preventScroll?: boolean;
@@ -102,13 +95,11 @@ export class MobileTouchService {
   }
 
   // Touch Gesture Registration
-  registerGestures(options: TouchGestureOptions): (
-) => void {
+  registerGestures(options: TouchGestureOptions): () => void {
     const handler = new TouchGestureHandler(options);
     this.activeGestures.set(options.element, handler);
 
-    return (
-) => this.unregisterGestures(options.element);
+    return () => this.unregisterGestures(options.element);
   }
 
   unregisterGestures(element: HTMLElement) {
@@ -124,14 +115,12 @@ export class MobileTouchService {
     button: HTMLElement,
     hapticType: 'light' | 'medium' | 'heavy' = 'light'
   ) {
-    const handleTouchStart = (
-) => {
+    const handleTouchStart = () => {
       button.style.transform = 'scale(0.95)';
       this.triggerHaptic(hapticType);
     };
 
-    const handleTouchEnd = (
-) => {
+    const handleTouchEnd = () => {
       button.style.transform = '';
     };
 
@@ -142,8 +131,7 @@ export class MobileTouchService {
     // Add visual feedback classes
     button.classList.add('mobile-tap-highlight', 'touch-target');
 
-    return (
-) => {
+    return () => {
       button.removeEventListener('touchstart', handleTouchStart);
       button.removeEventListener('touchend', handleTouchEnd);
       button.removeEventListener('touchcancel', handleTouchEnd);
@@ -152,23 +140,20 @@ export class MobileTouchService {
   }
 
   // Pull-to-Refresh Implementation
-  addPullToRefresh(container: HTMLElement, onRefresh: (
-) => Promise<void>) {
+  addPullToRefresh(container: HTMLElement, onRefresh: () => Promise<void>) {
     let startY = 0;
     let currentY = 0;
     let isRefreshing = false;
     let pullDistance = 0;
     const threshold = 80;
 
-    const handleTouchStart = (e: TouchEvent
-) => {
+    const handleTouchStart = (e: TouchEvent) => {
       if (container.scrollTop === 0) {
         startY = e.touches[0].clientY;
       }
     };
 
-    const handleTouchMove = (e: TouchEvent
-) => {
+    const handleTouchMove = (e: TouchEvent) => {
       if (isRefreshing || container.scrollTop > 0) return;
 
       currentY = e.touches[0].clientY;
@@ -186,8 +171,7 @@ export class MobileTouchService {
       }
     };
 
-    const handleTouchEnd = async (
-) => {
+    const handleTouchEnd = async () => {
       if (pullDistance > threshold && !isRefreshing) {
         isRefreshing = true;
         await this.triggerHaptic('success');
@@ -205,12 +189,15 @@ export class MobileTouchService {
       pullDistance = 0;
     };
 
-    container.addEventListener('touchstart', handleTouchStart, { passive: false });
-    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchstart', handleTouchStart, {
+      passive: false,
+    });
+    container.addEventListener('touchmove', handleTouchMove, {
+      passive: false,
+    });
     container.addEventListener('touchend', handleTouchEnd, { passive: true });
 
-    return (
-) => {
+    return () => {
       container.removeEventListener('touchstart', handleTouchStart);
       container.removeEventListener('touchmove', handleTouchMove);
       container.removeEventListener('touchend', handleTouchEnd);
@@ -247,14 +234,15 @@ class TouchGestureHandler {
     this.element.addEventListener('touchmove', this.handleTouchMove, {
       passive: !this.options.preventScroll,
     });
-    this.element.addEventListener('touchend', this.handleTouchEnd, { passive: true });
+    this.element.addEventListener('touchend', this.handleTouchEnd, {
+      passive: true,
+    });
     this.element.addEventListener('touchcancel', this.handleTouchCancel, {
       passive: true,
     });
   }
 
-  private handleTouchStart = (e: TouchEvent
-) => {
+  private handleTouchStart = (e: TouchEvent) => {
     const touch = e.touches[0];
     this.startPoint = {
       x: touch.clientX,
@@ -264,8 +252,7 @@ class TouchGestureHandler {
 
     // Start long press timer
     if (this.options.onLongPress) {
-      this.longPressTimer = window.setTimeout((
-) => {
+      this.longPressTimer = window.setTimeout(() => {
         this.options.onLongPress?.();
         MobileTouchService.getInstance().triggerHaptic('medium');
       }, this.options.longPressDelay);
@@ -276,8 +263,7 @@ class TouchGestureHandler {
     }
   };
 
-  private handleTouchMove = (e: TouchEvent
-) => {
+  private handleTouchMove = (e: TouchEvent) => {
     if (!this.startPoint) return;
 
     const touch = e.touches[0];
@@ -295,8 +281,7 @@ class TouchGestureHandler {
     }
   };
 
-  private handleTouchEnd = (e: TouchEvent
-) => {
+  private handleTouchEnd = (e: TouchEvent) => {
     if (!this.startPoint) return;
 
     // Clear long press timer
@@ -348,8 +333,7 @@ class TouchGestureHandler {
       } else if (this.options.onTap) {
         // Single tap (with delay to check for double tap)
         this.tapTimeout = window.setTimeout(
-          (
-) => {
+          () => {
             this.options.onTap?.();
             MobileTouchService.getInstance().triggerHaptic('light');
           },
@@ -363,8 +347,7 @@ class TouchGestureHandler {
     this.startPoint = null;
   };
 
-  private handleTouchCancel = (
-) => {
+  private handleTouchCancel = () => {
     if (this.longPressTimer) {
       clearTimeout(this.longPressTimer);
       this.longPressTimer = null;

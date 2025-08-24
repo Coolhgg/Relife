@@ -32,7 +32,9 @@ export class StripeWebhookHandler {
     try {
       return this.stripe.webhooks.constructEvent(body, signature, this.endpointSecret);
     } catch (error) {
-      ErrorHandler.logError(error as Error, { context: 'webhook_verification' });
+      ErrorHandler.logError(error as Error, {
+        context: 'webhook_verification',
+      });
       throw new Error('Invalid webhook signature');
     }
   }

@@ -150,13 +150,11 @@ export const RTLGrid: React.FC<RTLGridProps> = ({
   placeItems,
   as: Component = 'div',
   style,
-}
-) => {
+}) => {
   const { isRTL } = useRTL();
 
   // Generate column classes
-  const getColsClasses = (
-) => {
+  const getColsClasses = () => {
     if (typeof cols === 'number') {
       return colsClasses[cols as keyof typeof colsClasses] || 'grid-cols-1';
     }
@@ -169,8 +167,7 @@ export const RTLGrid: React.FC<RTLGridProps> = ({
     }
 
     // Responsive classes
-    Object.entries(cols).forEach(([breakpoint, value]
-) => {
+    Object.entries(cols).forEach(([breakpoint, value]) => {
       if (
         breakpoint !== 'sm' &&
         value &&
@@ -188,8 +185,7 @@ export const RTLGrid: React.FC<RTLGridProps> = ({
   };
 
   // Handle RTL-aware auto flow
-  const getAutoFlowClass = (
-) => {
+  const getAutoFlowClass = () => {
     if (autoFlow === 'rtl-row') {
       return isRTL ? 'grid-flow-row-dense' : 'grid-flow-row';
     }

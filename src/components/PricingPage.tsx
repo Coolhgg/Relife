@@ -4,16 +4,12 @@ import { ArrowLeft, Crown, Check } from 'lucide-react';
 import type { User } from '../types';
 
 interface PricingPageProps {
-  onBack?: (
-) => void;
-  onSelectPlan?: (planId: string
-) => void;
+  onBack?: () => void;
+  onSelectPlan?: (planId: string) => void;
   currentTier?: string;
   user?: User;
-  onUpgrade?: ((...args: any[]
-) => void) | undefined; // auto: widened function prop
-  onManageSubscription?: ((...args: any[]
-) => void) | undefined; // auto: widened function prop
+  onUpgrade?: ((...args: any[]) => void) | undefined;
+  onManageSubscription?: ((...args: any[]) => void) | undefined;
 }
 
 const PricingPage: React.FC<PricingPageProps> = ({
@@ -23,8 +19,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
   user, // auto: added for prop compatibility
   onUpgrade, // auto: added for prop compatibility
   onManageSubscription, // auto: added for prop compatibility
-}
-) => {
+}) => {
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>(
     'monthly'
   );
@@ -76,8 +71,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
     },
   ];
 
-  const handlePlanSelect = (planId: string
-) => {
+  const handlePlanSelect = (planId: string) => {
     onSelectPlan?.(planId);
   };
 
@@ -107,8 +101,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
           <div className="flex justify-center mb-8">
             <div className="flex rounded-lg bg-gray-100 p-1">
               <button
-                onClick={(
-) => setBillingInterval('monthly')}
+                onClick={() => setBillingInterval('monthly')}
                 className={`px-4 py-2 rounded-md text-sm font-medium ${
                   billingInterval === 'monthly'
                     ? 'bg-white text-gray-900 shadow-sm'
@@ -118,8 +111,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
                 Monthly
               </button>
               <button
-                onClick={(
-) => setBillingInterval('yearly')}
+                onClick={() => setBillingInterval('yearly')}
                 className={`px-4 py-2 rounded-md text-sm font-medium ${
                   billingInterval === 'yearly'
                     ? 'bg-white text-gray-900 shadow-sm'
@@ -166,8 +158,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
                 </div>
 
                 <ul className="mt-6 space-y-3">
-                  {plan.features.map((feature, index
-) => (
+                  {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-center gap-3">
                       <Check className="w-5 h-5 text-green-500" />
                       <span className="text-gray-700">{feature}</span>
@@ -176,8 +167,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
                 </ul>
 
                 <button
-                  onClick={(
-) => handlePlanSelect(plan.id)}
+                  onClick={() => handlePlanSelect(plan.id)}
                   disabled={currentTier === plan.tier}
                   className={`w-full mt-8 px-6 py-3 rounded-lg font-medium ${
                     currentTier === plan.tier

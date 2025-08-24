@@ -23,18 +23,15 @@ interface PersonaUIProps {
     | 'enterprise_emma'
     | 'student_sarah'
     | 'lifetime_larry';
-  onPersonaDetected?: (persona: string
-) => void;
+  onPersonaDetected?: (persona: string) => void;
 }
 
 // Persona detection based on user behavior and preferences
 export function usePersonaDetection(userId: string, userBehavior: any) {
   const [detectedPersona, setDetectedPersona] = useState<string>('');
 
-  useEffect((
-) => {
-    const detectPersona = (
-) => {
+  useEffect(() => {
+    const detectPersona = () => {
       const {
         subscriptionTier,
         ageRange,
@@ -100,11 +97,9 @@ export function PersonaDrivenPricingCard({
 }: {
   userPersona: string;
   currentTier: string;
-  onUpgrade: (tier: string
-) => void;
+  onUpgrade: (tier: string) => void;
 }) {
-  const getPersonaMessaging = (persona: string
-) => {
+  const getPersonaMessaging = (persona: string) => {
     const messaging = {
       struggling_sam: {
         headline: 'Start Free, Upgrade When Ready',
@@ -166,8 +161,7 @@ export function PersonaDrivenPricingCard({
       <h3 className="text-xl font-bold mb-2">{msg.headline}</h3>
       <p className="text-sm mb-3">{msg.subheadline}</p>
       <button
-        onClick={(
-) => onUpgrade(userPersona)}
+        onClick={() => onUpgrade(userPersona)}
         className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all"
       >
         {msg.cta}
@@ -183,14 +177,12 @@ export function PersonaDrivenOnboarding({
   onComplete,
 }: {
   userPersona: string;
-  onComplete: (preferences: any
-) => void;
+  onComplete: (preferences: any) => void;
 }) {
   const [step, setStep] = useState(0);
   const [preferences, setPreferences] = useState({});
 
-  const getPersonaOnboarding = (persona: string
-) => {
+  const getPersonaOnboarding = (persona: string) => {
     const flows = {
       struggling_sam: {
         steps: [
@@ -301,8 +293,7 @@ export function PersonaDrivenOnboarding({
       </div>
 
       <button
-        onClick={(
-) => {
+        onClick={() => {
           if (step < flow.steps.length - 1) {
             setStep(step + 1);
           } else {
@@ -319,8 +310,7 @@ export function PersonaDrivenOnboarding({
 
 // Persona-specific feature highlights
 export function PersonaFeatureHighlights({ userPersona }: { userPersona: string }) {
-  const getPersonaFeatures = (persona: string
-) => {
+  const getPersonaFeatures = (persona: string) => {
     const features = {
       struggling_sam: [
         {
@@ -433,8 +423,7 @@ export function PersonaFeatureHighlights({ userPersona }: { userPersona: string 
 
   return (
     <div className="grid md:grid-cols-3 gap-4 my-6">
-      {features.map((feature, index
-) => (
+      {features.map((feature, index) => (
         <div key={index} className="p-4 bg-gray-50 rounded-lg text-center">
           <div className="text-3xl mb-2">{feature.icon}</div>
           <h4 className="font-semibold mb-1">{feature.title}</h4>
@@ -454,8 +443,7 @@ export function PersonaDrivenUI({
 }: PersonaUIProps) {
   const [showOnboarding, setShowOnboarding] = useState(false);
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (userPersona && onPersonaDetected) {
       onPersonaDetected(userPersona);
     }
@@ -466,8 +454,7 @@ export function PersonaDrivenUI({
       {showOnboarding && userPersona && (
         <PersonaDrivenOnboarding
           userPersona={userPersona}
-          onComplete={(
-) => setShowOnboarding(false)}
+          onComplete={() => setShowOnboarding(false)}
         />
       )}
 

@@ -14,8 +14,7 @@ export function useMediaContentAnnouncements() {
 
   // Tab navigation announcements
   const announceTabChange = useCallback(
-    (tabName: string
-) => {
+    (tabName: string) => {
       const tabDescriptions: Record<string, string> = {
         sounds: 'Sounds tab selected. Browse and manage audio content for alarms.',
         playlists: 'Playlists tab selected. Create and manage custom sound playlists.',
@@ -32,8 +31,7 @@ export function useMediaContentAnnouncements() {
 
   // Audio playback announcements
   const announceAudioPlayback = useCallback(
-    (sound: CustomSound, isPlaying: boolean
-) => {
+    (sound: CustomSound, isPlaying: boolean) => {
       const action = isPlaying ? 'playing' : 'paused';
       const message = `${sound.name} ${action}. Duration: ${Math.floor(sound.duration / 60)} minutes and ${sound.duration % 60} seconds. Category: ${sound.category}.`;
       announce(message, 'polite');
@@ -42,8 +40,7 @@ export function useMediaContentAnnouncements() {
   );
 
   const announceAudioEnd = useCallback(
-    (sound: CustomSound
-) => {
+    (sound: CustomSound) => {
       announce(`${sound.name} finished playing.`, 'polite');
     },
     [announce]
@@ -51,8 +48,7 @@ export function useMediaContentAnnouncements() {
 
   // Search announcements
   const announceSearchResults = useCallback(
-    (query: string, resultCount: number
-) => {
+    (query: string, resultCount: number) => {
       if (query.trim() === '') {
         announce('Search cleared. Showing all sounds.', 'polite');
       } else {
@@ -67,16 +63,14 @@ export function useMediaContentAnnouncements() {
 
   // Upload announcements
   const announceUploadStart = useCallback(
-    (fileName: string
-) => {
+    (fileName: string) => {
       announce(`Starting upload of ${fileName}. Please wait...`, 'polite');
     },
     [announce]
   );
 
   const announceUploadComplete = useCallback(
-    (sound: CustomSound
-) => {
+    (sound: CustomSound) => {
       announce(
         `Upload completed! ${sound.name} has been added to your custom sounds library.`,
         'assertive'
@@ -86,8 +80,7 @@ export function useMediaContentAnnouncements() {
   );
 
   const announceUploadError = useCallback(
-    (error: string
-) => {
+    (error: string) => {
       announce(`Upload failed: ${error}. Please try again.`, 'assertive');
     },
     [announce]
@@ -95,8 +88,7 @@ export function useMediaContentAnnouncements() {
 
   // Storage announcements
   const announceStorageStatus = useCallback(
-    (used: number, total: number, percentage: number
-) => {
+    (used: number, total: number, percentage: number) => {
       const usedMB = Math.round(used / (1024 * 1024));
       const totalMB = Math.round(total / (1024 * 1024));
 
@@ -115,8 +107,7 @@ export function useMediaContentAnnouncements() {
 
   // Playlist announcements
   const announcePlaylistAction = useCallback(
-    (action: 'created' | 'updated' | 'deleted' | 'played', playlist: Playlist
-) => {
+    (action: 'created' | 'updated' | 'deleted' | 'played', playlist: Playlist) => {
       let message = '';
 
       switch (action) {
@@ -140,8 +131,7 @@ export function useMediaContentAnnouncements() {
   );
 
   const announcePlaylistProgress = useCallback(
-    (playlist: Playlist, currentIndex: number, totalSounds: number
-) => {
+    (playlist: Playlist, currentIndex: number, totalSounds: number) => {
       const currentSound = playlist.sounds[currentIndex]?.sound;
       if (currentSound) {
         announce(
@@ -155,8 +145,7 @@ export function useMediaContentAnnouncements() {
 
   // Quote announcements
   const announceQuoteAction = useCallback(
-    (action: 'submitted' | 'liked' | 'used' | 'browsing', quote: MotivationalQuote
-) => {
+    (action: 'submitted' | 'liked' | 'used' | 'browsing', quote: MotivationalQuote) => {
       let message = '';
 
       switch (action) {
@@ -185,8 +174,7 @@ export function useMediaContentAnnouncements() {
       action: 'started' | 'completed' | 'failed' | 'uploaded',
       challenge: PhotoChallenge,
       details?: { xp?: number; badge?: string }
-    
-) => {
+    ) => {
       let message = '';
 
       switch (action) {
@@ -217,8 +205,7 @@ export function useMediaContentAnnouncements() {
   );
 
   const announcePhotoChallengeProgress = useCallback(
-    (challenge: PhotoChallenge, timeRemaining: number
-) => {
+    (challenge: PhotoChallenge, timeRemaining: number) => {
       const minutes = Math.floor(timeRemaining / 60);
       const seconds = timeRemaining % 60;
 
@@ -235,8 +222,7 @@ export function useMediaContentAnnouncements() {
 
   // Content preferences announcements
   const announcePreferenceChange = useCallback(
-    (setting: string, newValue: any, description: string
-) => {
+    (setting: string, newValue: any, description: string) => {
       let message = '';
 
       if (typeof newValue === 'boolean') {
@@ -252,8 +238,7 @@ export function useMediaContentAnnouncements() {
 
   // Sharing announcements
   const announceShare = useCallback(
-    (contentType: 'sound' | 'playlist' | 'quote', contentName: string
-) => {
+    (contentType: 'sound' | 'playlist' | 'quote', contentName: string) => {
       announce(`${contentType} "${contentName}" shared successfully!`, 'polite');
     },
     [announce]
@@ -265,8 +250,7 @@ export function useMediaContentAnnouncements() {
       contentType: 'sound' | 'playlist',
       contentName: string,
       action: 'started' | 'completed' | 'failed'
-    
-) => {
+    ) => {
       let message = '';
 
       switch (action) {
@@ -293,8 +277,7 @@ export function useMediaContentAnnouncements() {
       contentName: string,
       rating: number,
       maxRating: number
-    
-) => {
+    ) => {
       announce(
         `${contentType} "${contentName}" rated ${rating} out of ${maxRating} stars.`,
         'polite'
@@ -305,8 +288,7 @@ export function useMediaContentAnnouncements() {
 
   // Click-to-hear detailed information
   const announceDetailedSoundInfo = useCallback(
-    (sound: CustomSound
-) => {
+    (sound: CustomSound) => {
       const duration = `${Math.floor(sound.duration / 60)} minutes and ${sound.duration % 60} seconds`;
       const tags = sound.tags.join(', ');
 
@@ -330,8 +312,7 @@ export function useMediaContentAnnouncements() {
   );
 
   const announceDetailedPlaylistInfo = useCallback(
-    (playlist: Playlist
-) => {
+    (playlist: Playlist) => {
       let message = `Detailed playlist information: ${playlist.name}. ${playlist.description}. Contains ${playlist.sounds.length} sound${playlist.sounds.length === 1 ? '' : 's'}.`;
 
       if (playlist.playCount) {
@@ -362,8 +343,7 @@ export function useMediaContentAnnouncements() {
   );
 
   const announceDetailedQuoteInfo = useCallback(
-    (quote: MotivationalQuote
-) => {
+    (quote: MotivationalQuote) => {
       let message = `Detailed quote information: "${quote.text}" by ${quote.author || 'Anonymous'}.`;
 
       message += ` Category: ${quote.category}. ${quote.likes} likes, used in ${quote.uses} alarms.`;
@@ -382,8 +362,7 @@ export function useMediaContentAnnouncements() {
   );
 
   const announceDetailedChallengeInfo = useCallback(
-    (challenge: PhotoChallenge
-) => {
+    (challenge: PhotoChallenge) => {
       let message = `Detailed photo challenge: ${challenge.name}. ${challenge.description}. Difficulty: ${challenge.difficulty}.`;
 
       if (challenge.timeLimit) {

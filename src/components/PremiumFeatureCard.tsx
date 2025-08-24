@@ -19,10 +19,8 @@ interface PremiumFeatureCardProps {
   feature: PremiumFeature;
   user: User;
   hasAccess: boolean;
-  onClick?: (
-) => void;
-  onUpgrade?: (
-) => void;
+  onClick?: () => void;
+  onUpgrade?: () => void;
   variant?: 'default' | 'compact' | 'detailed';
   showPreview?: boolean;
 }
@@ -35,13 +33,11 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
   onUpgrade,
   variant = 'default',
   showPreview = false,
-}
-) => {
+}) => {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const getTierBadge = (
-) => {
+  const getTierBadge = () => {
     if (feature.tier === 'ultimate') {
       return (
         <div className="flex items-center gap-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-1 rounded-full text-xs font-bold">
@@ -68,8 +64,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
     );
   };
 
-  const getTierColor = (
-) => {
+  const getTierColor = () => {
     switch (feature.tier) {
       case 'ultimate':
         return 'from-purple-500 to-pink-500';
@@ -80,8 +75,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
     }
   };
 
-  const handleUpgrade = (
-) => {
+  const handleUpgrade = () => {
     if (onUpgrade) {
       onUpgrade();
     } else {
@@ -89,8 +83,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
     }
   };
 
-  const handleCardClick = (
-) => {
+  const handleCardClick = () => {
     if (hasAccess) {
       onClick?.();
     } else {
@@ -107,10 +100,8 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
             : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
         }`}
         onClick={handleCardClick}
-        onMouseEnter={(
-) => setIsHovered(true)}
-        onMouseLeave={(
-) => setIsHovered(false)}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -140,10 +131,8 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
         hasAccess ? 'border-green-200' : 'border-gray-200'
       }`}
       onClick={handleCardClick}
-      onMouseEnter={(
-) => setIsHovered(true)}
-      onMouseLeave={(
-) => setIsHovered(false)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Tier Badge */}
       <div className="absolute top-4 right-4">{getTierBadge()}</div>
@@ -178,9 +167,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
         <div className="flex items-center justify-between">
           {hasAccess ? (
             <button
-              onClick={(e: any
-) => {
-                // auto: implicit any
+              onClick={(e: any) => {
                 e.stopPropagation();
                 onClick?.();
               }}
@@ -191,9 +178,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
             </button>
           ) : (
             <button
-              onClick={(e: any
-) => {
-                // auto: implicit any
+              onClick={(e: any) => {
                 e.stopPropagation();
                 handleUpgrade();
               }}

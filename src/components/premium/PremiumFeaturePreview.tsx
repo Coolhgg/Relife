@@ -52,8 +52,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
       const interval = setInterval((
 ) => {
         
-      setNuclearIntensity((prev: any
-) => ((prev + 1) % 100);
+      setNuclearIntensity((prev: any) => (prev + 1) % 100)
       }, 50);
       return (
 ) => clearInterval(interval);

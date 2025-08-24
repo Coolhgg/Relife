@@ -19,12 +19,9 @@ export class EnhancedAlarmService {
   private static checkInterval: TimeoutHandle | null = null;
   private static isInitialized = false;
   private static currentUser: string | null = null;
-  private static listeners: Array<(alarms: Alarm[]
-) => void> = [];
-  private static activeAlarmListeners: Array<(alarm: Alarm | null
-) => void> = [];
-  private static supabaseSubscription: ((
-) => void) | null = null;
+  private static listeners: Array<(alarms: Alarm[]) => void> = [];
+  private static activeAlarmListeners: Array<(alarm: Alarm | null) => void> = [];
+  private static supabaseSubscription: (() => void) | null = null;
 
   static async initialize(userId?: string): Promise<void> {
     if (this.isInitialized && this.currentUser === userId) return;
@@ -424,8 +421,7 @@ export class EnhancedAlarmService {
     }
 
     // Check for triggered alarms
-    this.checkInterval = setInterval((
-) => {
+    this.checkInterval = setInterval(() => {
       this.checkForTriggeredAlarms();
     }, ALARM_CHECK_INTERVAL);
 
@@ -501,8 +497,7 @@ export class EnhancedAlarmService {
   }
 
   private static setupVisibilityListener(): void {
-    document.addEventListener('visibilitychange', (
-) => {
+    document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
         // Page became visible, check for missed alarms
         this.checkForTriggeredAlarms();
@@ -528,8 +523,7 @@ export class EnhancedAlarmService {
 
   private static setupTimeZoneListener(): void {
     // Check for timezone changes (rare but possible)
-    setInterval((
-) => {
+    setInterval(() => {
       const currentOffset = new Date().getTimezoneOffset();
       const storedOffset = localStorage.getItem('timezone_offset');
 
@@ -595,12 +589,9 @@ export class EnhancedAlarmService {
     return this.alarms.find(alarm => alarm.id === id);
   }
 
-  static addListener(listener: (alarms: Alarm[]
-) => void): (
-) => void {
+  static addListener(listener: (alarms: Alarm[]) => void): () => void {
     this.listeners.push(listener);
-    return (
-) => {
+    return () => {
       const index = this.listeners.indexOf(listener);
       if (index > -1) {
         this.listeners.splice(index, 1);
@@ -608,12 +599,9 @@ export class EnhancedAlarmService {
     };
   }
 
-  static addActiveAlarmListener(listener: (alarm: Alarm | null
-) => void): (
-) => void {
+  static addActiveAlarmListener(listener: (alarm: Alarm | null) => void): () => void {
     this.activeAlarmListeners.push(listener);
-    return (
-) => {
+    return () => {
       const index = this.activeAlarmListeners.indexOf(listener);
       if (index > -1) {
         this.activeAlarmListeners.splice(index, 1);

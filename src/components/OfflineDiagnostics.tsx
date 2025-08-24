@@ -34,8 +34,7 @@ interface OfflineDiagnosticsProps {
   className?: string;
 }
 
-const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' }
-) => {
+const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' }) => {
   const [diagnostics, setDiagnostics] = useState<DiagnosticCheck[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [lastCheck, setLastCheck] = useState<Date | null>(null);
@@ -43,8 +42,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
     'healthy'
   );
 
-  const runDiagnostics = async (
-) => {
+  const runDiagnostics = async () => {
     setIsRunning(true);
     const checks: DiagnosticCheck[] = [];
 
@@ -140,8 +138,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           const channel = new MessageChannel();
           channel.port1.onmessage = event => resolve(event.data);
           controller.postMessage({ type: 'GET_STATUS' }, [channel.port2]);
-          setTimeout((
-) => resolve({ error: 'timeout' }), 5000);
+          setTimeout(() => resolve({ error: 'timeout' }), 5000);
         });
 
         if (status.error) {
@@ -269,13 +266,10 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
       }
 
       // Try to open a test database
-      const testDB = await new Promise<IDBDatabase>((resolve, reject
-) => {
+      const testDB = await new Promise<IDBDatabase>((resolve, reject) => {
         const request = indexedDB.open('RelifeOfflineDB', 1);
-        request.onerror = (
-) => reject(request.error);
-        request.onsuccess = (
-) => resolve(request.result);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
         request.onupgradeneeded = event => {
           // Database will be created if it doesn't exist
         };
@@ -445,8 +439,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
     }
   };
 
-  const getStatusIcon = (status: DiagnosticCheck['status']
-) => {
+  const getStatusIcon = (status: DiagnosticCheck['status']) => {
     switch (status) {
       case 'healthy':
         return <CheckCircle className="h-4 w-4 text-green-500" />;
@@ -459,8 +452,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
     }
   };
 
-  const getStatusColor = (status: DiagnosticCheck['status']
-) => {
+  const getStatusColor = (status: DiagnosticCheck['status']) => {
     switch (status) {
       case 'healthy':
         return 'text-green-600 dark:text-green-400';
@@ -473,8 +465,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
     }
   };
 
-  useEffect((
-) => {
+  useEffect(() => {
     // Run initial diagnostics
     runDiagnostics();
   }, []);
@@ -520,9 +511,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {diagnostics
-      .map((check: any
-) => (
+        {diagnostics.map((check: any) => (
           <div key={check.id} className="flex items-start gap-3 p-3 border rounded-lg">
             <div className="flex-shrink-0 mt-1">{getStatusIcon(check.status)}</div>
 

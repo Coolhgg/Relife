@@ -18,18 +18,15 @@ const mockHaptics = {
 };
 
 // Mock Capacitor haptics
-jest.mock('@capacitor/haptics', (
-) => ({
+jest.mock('@capacitor/haptics', () => ({
   Haptics: mockHaptics,
 }));
 
 // Mock DOM element for touch events
-const createMockElement = (
-) => ({
+const createMockElement = () => ({
   addEventListener: jest.fn(),
   removeEventListener: jest.fn(),
-  getBoundingClientRect: jest.fn((
-) => ({
+  getBoundingClientRect: jest.fn(() => ({
     left: 0,
     top: 0,
     width: 300,
@@ -38,8 +35,7 @@ const createMockElement = (
 });
 
 // Mock touch event
-const createMockTouchEvent = (type: string, touches: any[] = []
-) => ({
+const createMockTouchEvent = (type: string, touches: any[] = []) => ({
   type,
   touches,
   changedTouches: touches,
@@ -49,12 +45,10 @@ const createMockTouchEvent = (type: string, touches: any[] = []
   target: createMockElement(),
 });
 
-describe('useMobileTouch', (
-) => {
+describe('useMobileTouch', () => {
   let mockElement: ReturnType<typeof createMockElement>;
 
-  beforeEach((
-) => {
+  beforeEach(() => {
     jest.clearAllMocks();
     mockElement = createMockElement();
 
@@ -66,25 +60,20 @@ describe('useMobileTouch', (
       .mockReturnValueOnce(1200); // next event
   });
 
-  afterEach((
-) => {
+  afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  it('should initialize with default touch state', (
-) => {
-    const { result } = renderHook((
-) => useMobileTouch(mockElement));
+  it('should initialize with default touch state', () => {
+    const { result } = renderHook(() => useMobileTouch(mockElement));
 
     expect(result.current.isActive).toBe(false);
     expect(result.current.touchData).toBeNull();
     expect(result.current.gestureData).toBeNull();
   });
 
-  it('should enable touch listeners when element is provided', (
-) => {
-    renderHook((
-) => useMobileTouch(mockElement));
+  it('should enable touch listeners when element is provided', () => {
+    renderHook(() => useMobileTouch(mockElement));
 
     expect(mockElement.addEventListener).toHaveBeenCalledWith(
       'touchstart',
@@ -103,11 +92,9 @@ describe('useMobileTouch', (
     );
   });
 
-  it('should handle touchstart events', (
-) => {
+  it('should handle touchstart events', () => {
     const onTouchStart = jest.fn();
-    const { result } = renderHook((
-) => useMobileTouch(mockElement, { onTouchStart }));
+    const { result } = renderHook(() => useMobileTouch(mockElement, { onTouchStart }));
 
     const touchEvent = createMockTouchEvent('touchstart', [
       { clientX: 100, clientY: 200, identifier: 0 },
@@ -118,8 +105,7 @@ describe('useMobileTouch', (
       call => call[0] === 'touchstart'
     )?.[1];
 
-    act((
-) => {
+    act(() => {
       touchStartHandler?.(touchEvent);
     });
 
@@ -133,11 +119,9 @@ describe('useMobileTouch', (
     expect(onTouchStart).toHaveBeenCalledWith(touchEvent);
   });
 
-  it('should handle touchmove events and calculate deltas', (
-) => {
+  it('should handle touchmove events and calculate deltas', () => {
     const onTouchMove = jest.fn();
-    const { result } = renderHook((
-) => useMobileTouch(mockElement, { onTouchMove }));
+    const { result } = renderHook(() => useMobileTouch(mockElement, { onTouchMove }));
 
     // Start touch
     const touchStartEvent = createMockTouchEvent('touchstart', [
@@ -147,8 +131,7 @@ describe('useMobileTouch', (
       call => call[0] === 'touchstart'
     )?.[1];
 
-    act((
-) => {
+    act(() => {
       touchStartHandler?.(touchStartEvent);
     });
 
@@ -160,8 +143,7 @@ describe('useMobileTouch', (
       call => call[0] === 'touchmove'
     )?.[1];
 
-    act((
-) => {
+    act(() => {
       touchMoveHandler?.(touchMoveEvent);
     });
 
@@ -176,11 +158,9 @@ describe('useMobileTouch', (
     expect(onTouchMove).toHaveBeenCalledWith(touchMoveEvent);
   });
 
-  it('should handle touchend events and calculate gesture data', (
-) => {
+  it('should handle touchend events and calculate gesture data', () => {
     const onTouchEnd = jest.fn();
-    const { result } = renderHook((
-) => useMobileTouch(mockElement, { onTouchEnd }));
+    const { result } = renderHook(() => useMobileTouch(mockElement, { onTouchEnd }));
 
     // Start touch
     const touchStartEvent = createMockTouchEvent('touchstart', [
@@ -190,8 +170,7 @@ describe('useMobileTouch', (
       call => call[0] === 'touchstart'
     )?.[1];
 
-    act((
-) => {
+    act(() => {
       touchStartHandler?.(touchStartEvent);
     });
 
@@ -203,8 +182,7 @@ describe('useMobileTouch', (
       call => call[0] === 'touchend'
     )?.[1];
 
-    act((
-) => {
+    act(() => {
       touchEndHandler?.(touchEndEvent);
     });
 
@@ -219,11 +197,9 @@ describe('useMobileTouch', (
     expect(onTouchEnd).toHaveBeenCalledWith(touchEndEvent);
   });
 
-  it('should detect swipe gestures', (
-) => {
+  it('should detect swipe gestures', () => {
     const onSwipe = jest.fn();
-    const { result } = renderHook((
-) =>
+    const { result } = renderHook(() =>
       useMobileTouch(mockElement, {
         onSwipe,
         swipeThreshold: 50, // pixels
@@ -245,8 +221,7 @@ describe('useMobileTouch', (
       call => call[0] === 'touchend'
     )?.[1];
 
-    act((
-) => {
+    act(() => {
       touchStartHandler?.(touchStartEvent);
       touchEndHandler?.(touchEndEvent);
     });
@@ -258,11 +233,9 @@ describe('useMobileTouch', (
     });
   });
 
-  it('should detect swipe directions correctly', (
-) => {
+  it('should detect swipe directions correctly', () => {
     const onSwipe = jest.fn();
-    const { result } = renderHook((
-) =>
+    const { result } = renderHook(() =>
       useMobileTouch(mockElement, {
         onSwipe,
         swipeThreshold: 50,
@@ -277,8 +250,7 @@ describe('useMobileTouch', (
     )?.[1];
 
     // Test left swipe
-    act((
-) => {
+    act(() => {
       touchStartHandler?.(
         createMockTouchEvent('touchstart', [
           { clientX: 150, clientY: 200, identifier: 0 },
@@ -295,8 +267,7 @@ describe('useMobileTouch', (
 
     // Test up swipe
     onSwipe.mockClear();
-    act((
-) => {
+    act(() => {
       touchStartHandler?.(
         createMockTouchEvent('touchstart', [
           { clientX: 100, clientY: 200, identifier: 0 },
@@ -313,8 +284,7 @@ describe('useMobileTouch', (
 
     // Test down swipe
     onSwipe.mockClear();
-    act((
-) => {
+    act(() => {
       touchStartHandler?.(
         createMockTouchEvent('touchstart', [
           { clientX: 100, clientY: 100, identifier: 0 },
@@ -332,11 +302,9 @@ describe('useMobileTouch', (
     );
   });
 
-  it('should detect tap gestures', (
-) => {
+  it('should detect tap gestures', () => {
     const onTap = jest.fn();
-    renderHook((
-) =>
+    renderHook(() =>
       useMobileTouch(mockElement, {
         onTap,
         tapTimeout: 200,
@@ -352,8 +320,7 @@ describe('useMobileTouch', (
     )?.[1];
 
     // Quick tap within threshold
-    act((
-) => {
+    act(() => {
       touchStartHandler?.(
         createMockTouchEvent('touchstart', [
           { clientX: 100, clientY: 200, identifier: 0 },
@@ -373,11 +340,9 @@ describe('useMobileTouch', (
     });
   });
 
-  it('should detect long press gestures', (
-) => {
+  it('should detect long press gestures', () => {
     const onLongPress = jest.fn();
-    renderHook((
-) =>
+    renderHook(() =>
       useMobileTouch(mockElement, {
         onLongPress,
         longPressTimeout: 500,
@@ -388,8 +353,7 @@ describe('useMobileTouch', (
       call => call[0] === 'touchstart'
     )?.[1];
 
-    act((
-) => {
+    act(() => {
       touchStartHandler?.(
         createMockTouchEvent('touchstart', [
           { clientX: 100, clientY: 200, identifier: 0 },
@@ -398,8 +362,7 @@ describe('useMobileTouch', (
     });
 
     // Simulate long press timeout
-    act((
-) => {
+    act(() => {
       jest.advanceTimersByTime(500);
     });
 
@@ -409,36 +372,30 @@ describe('useMobileTouch', (
     });
   });
 
-  it('should provide haptic feedback when enabled', async (
-) => {
-    const { result } = renderHook((
-) =>
+  it('should provide haptic feedback when enabled', async () => {
+    const { result } = renderHook(() =>
       useMobileTouch(mockElement, {
         enableHaptics: true,
         hapticIntensity: 'medium',
       })
     );
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.triggerHapticFeedback('impact');
     });
 
     expect(mockHaptics.impact).toHaveBeenCalledWith({ style: 'medium' });
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.triggerHapticFeedback('selection');
     });
 
     expect(mockHaptics.selectionStart).toHaveBeenCalled();
   });
 
-  it('should handle multi-touch gestures', (
-) => {
+  it('should handle multi-touch gestures', () => {
     const onPinch = jest.fn();
-    renderHook((
-) => useMobileTouch(mockElement, { onPinch }));
+    renderHook(() => useMobileTouch(mockElement, { onPinch }));
 
     const touchStartHandler = mockElement.addEventListener.mock.calls.find(
       call => call[0] === 'touchstart'
@@ -448,8 +405,7 @@ describe('useMobileTouch', (
     )?.[1];
 
     // Start with two touches
-    act((
-) => {
+    act(() => {
       touchStartHandler?.(
         createMockTouchEvent('touchstart', [
           { clientX: 100, clientY: 200, identifier: 0 },
@@ -459,8 +415,7 @@ describe('useMobileTouch', (
     });
 
     // Move touches apart (zoom out)
-    act((
-) => {
+    act(() => {
       touchMoveHandler?.(
         createMockTouchEvent('touchmove', [
           { clientX: 50, clientY: 200, identifier: 0 },
@@ -475,10 +430,8 @@ describe('useMobileTouch', (
     });
   });
 
-  it('should clean up event listeners on unmount', (
-) => {
-    const { unmount } = renderHook((
-) => useMobileTouch(mockElement));
+  it('should clean up event listeners on unmount', () => {
+    const { unmount } = renderHook(() => useMobileTouch(mockElement));
 
     unmount();
 
@@ -496,11 +449,9 @@ describe('useMobileTouch', (
     );
   });
 
-  it('should handle element changes gracefully', (
-) => {
+  it('should handle element changes gracefully', () => {
     const newElement = createMockElement();
-    const { rerender } = renderHook(({ element }
-) => useMobileTouch(element), {
+    const { rerender } = renderHook(({ element }) => useMobileTouch(element), {
       initialProps: { element: mockElement },
     });
 
@@ -514,11 +465,9 @@ describe('useMobileTouch', (
     expect(newElement.addEventListener).toHaveBeenCalled();
   });
 
-  it('should respect disabled state', (
-) => {
+  it('should respect disabled state', () => {
     const onTouchStart = jest.fn();
-    renderHook((
-) =>
+    renderHook(() =>
       useMobileTouch(mockElement, {
         onTouchStart,
         disabled: true,
@@ -529,8 +478,7 @@ describe('useMobileTouch', (
       call => call[0] === 'touchstart'
     )?.[1];
 
-    act((
-) => {
+    act(() => {
       touchStartHandler?.(
         createMockTouchEvent('touchstart', [
           { clientX: 100, clientY: 200, identifier: 0 },

@@ -5,10 +5,8 @@ interface PricingTableProps {
   plans?: any[];
   currentTier?: string;
   billingInterval?: 'month' | 'year';
-  onPlanSelect?: (planId: string
-) => void;
-  onBillingIntervalChange?: (interval: 'month' | 'year'
-) => void;
+  onPlanSelect?: (planId: string) => void;
+  onBillingIntervalChange?: (interval: 'month' | 'year') => void;
   loading?: boolean;
   className?: string;
 }
@@ -24,14 +22,12 @@ export function PricingTable({
 }: PricingTableProps) {
   const [selectedInterval, setSelectedInterval] = useState(billingInterval);
 
-  const handleIntervalChange = (interval: 'month' | 'year'
-) => {
+  const handleIntervalChange = (interval: 'month' | 'year') => {
     setSelectedInterval(interval);
     onBillingIntervalChange?.(interval);
   };
 
-  const handlePlanSelect = (planId: string
-) => {
+  const handlePlanSelect = (planId: string) => {
     onPlanSelect?.(planId);
   };
 
@@ -48,8 +44,7 @@ export function PricingTable({
       <div className="flex justify-center mb-8">
         <div className="flex rounded-lg bg-gray-100 p-1">
           <button
-            onClick={(
-) => handleIntervalChange('month')}
+            onClick={() => handleIntervalChange('month')}
             className={`px-4 py-2 rounded-md text-sm font-medium ${
               selectedInterval === 'month'
                 ? 'bg-white text-gray-900 shadow-sm'
@@ -59,8 +54,7 @@ export function PricingTable({
             Monthly
           </button>
           <button
-            onClick={(
-) => handleIntervalChange('year')}
+            onClick={() => handleIntervalChange('year')}
             className={`px-4 py-2 rounded-md text-sm font-medium ${
               selectedInterval === 'year'
                 ? 'bg-white text-gray-900 shadow-sm'
@@ -86,8 +80,7 @@ export function PricingTable({
               </span>
             </p>
             <button
-              onClick={(
-) => handlePlanSelect(plan.id)}
+              onClick={() => handlePlanSelect(plan.id)}
               className="w-full mt-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
               disabled={currentTier === plan.tier}
             >

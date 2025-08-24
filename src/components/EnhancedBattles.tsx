@@ -27,14 +27,10 @@ import type { Tournament, Team, Season, User as UserType } from '../types/index'
 
 interface EnhancedBattlesProps {
   currentUser: UserType;
-  onCreateTournament?: (tournament: Partial<Tournament>
-) => void;
-  onJoinTournament?: (tournamentId: string
-) => void;
-  onCreateTeam?: (team: Partial<Team>
-) => void;
-  onJoinTeam?: (teamId: string
-) => void;
+  onCreateTournament?: (tournament: Partial<Tournament>) => void;
+  onJoinTournament?: (tournamentId: string) => void;
+  onCreateTeam?: (team: Partial<Team>) => void;
+  onJoinTeam?: (teamId: string) => void;
 }
 
 // Mock data for enhanced battles
@@ -139,7 +135,12 @@ const MOCK_SEASON: Season = {
       badge: 'Golden Sun',
       exclusiveContent: 'Champion Avatar Frame',
     },
-    { rank: 2, experience: 3000, title: 'Summer Runner-up', badge: 'Silver Moon' },
+    {
+      rank: 2,
+      experience: 3000,
+      title: 'Summer Runner-up',
+      badge: 'Silver Moon',
+    },
     { rank: 3, experience: 2000, title: 'Summer Bronze', badge: 'Bronze Star' },
   ],
   theme: 'Summer Vibes',
@@ -160,8 +161,7 @@ export function EnhancedBattles({
   // Gaming announcements
   const { announceTournamentEvent, announceGaming } = useGamingAnnouncements();
 
-  const formatTimeLeft = (endTime: string
-) => {
+  const formatTimeLeft = (endTime: string) => {
     const now = new Date();
     const end = new Date(endTime);
     const diff = end.getTime() - now.getTime();
@@ -269,8 +269,7 @@ export function EnhancedBattles({
                   />
                   <Button
                     size="sm"
-                    onClick={(
-) => {
+                    onClick={() => {
                       if (tournament.status === 'registration') {
                         announceTournamentEvent('joined', {
                           name: tournament.name,
@@ -357,8 +356,7 @@ export function EnhancedBattles({
                   </div>
                   <Button
                     size="sm"
-                    onClick={(
-) => {
+                    onClick={() => {
                       if (team.members.length < team.maxMembers) {
                         announceGaming({
                           type: 'friend',
@@ -392,9 +390,7 @@ export function EnhancedBattles({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {MOCK_SEASON.rewards
-      .map((reward: any
-) => (
+              {MOCK_SEASON.rewards.map((reward: any) => (
                 <div
                   key={reward.rank}
                   className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
@@ -468,8 +464,7 @@ export function EnhancedBattles({
                   </div>
                   <Button
                     className="w-full"
-                    onClick={(
-) => {
+                    onClick={() => {
                       announceTournamentEvent('joined', {
                         name: 'New Tournament',
                         description: 'Tournament created successfully!',
@@ -510,8 +505,7 @@ export function EnhancedBattles({
                   </div>
                   <Button
                     className="w-full"
-                    onClick={(
-) => {
+                    onClick={() => {
                       announceGaming({
                         type: 'friend',
                         customMessage:

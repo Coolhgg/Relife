@@ -534,8 +534,7 @@ export class MonitoringIntegrationService {
         deployments: {
           frequency: deploymentResults.results || [],
           totalCount: (deploymentResults.results || []).reduce(
-            (sum: number, d: any
-) => sum + asNumber(d.deployment_count, 0),
+            (sum: number, d: any) => sum + asNumber(d.deployment_count, 0),
             0
           ),
           latest: latestDeployment,
@@ -698,8 +697,7 @@ export class MonitoringIntegrationService {
     if (!deployments || deployments.length === 0) return 1.0;
 
     const totalDeployments = deployments.reduce(
-      (sum, d
-) => sum + asNumber(d.deployment_count, 0),
+      (sum, d) => sum + asNumber(d.deployment_count, 0),
       0
     );
     const errorCount = asNumber(errors?.error_count, 0);

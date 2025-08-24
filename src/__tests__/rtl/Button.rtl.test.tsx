@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 /**
  * RTL tests for Button component
  */
@@ -13,18 +13,15 @@ import {
   rtlA11yHelpers,
 } from '../../utils/rtl-testing';
 
-describe('Button RTL Support', (
-) => {
-  const createButton = (props = {}
-) => (
+describe('Button RTL Support', () => {
+  const createButton = (props = {}) => (
     <Button {...props}>
       <span>Icon</span>
       Test Button
     </Button>
   );
 
-  rtlTestScenarios.testBothDirections(createButton, (element, isRTL, language
-) => {
+  rtlTestScenarios.testBothDirections(createButton, (element, isRTL, language) => {
     // Check direction attribute
     rtlTestHelpers.expectCorrectDirection(element, isRTL ? 'rtl' : 'ltr');
 
@@ -38,8 +35,7 @@ describe('Button RTL Support', (
     rtlA11yHelpers.expectScreenReaderDirection(element, isRTL);
   });
 
-  test('icon positioning in RTL', (
-) => {
+  test('icon positioning in RTL', () => {
     const { container } = renderWithRTL(createButton(), { language: 'ar' });
     const button = container.firstChild as HTMLElement;
 
@@ -47,8 +43,7 @@ describe('Button RTL Support', (
     expect(button).toHaveClass('flex-row-reverse');
   });
 
-  test('icon positioning in LTR', (
-) => {
+  test('icon positioning in LTR', () => {
     const { container } = renderWithRTL(createButton(), { language: 'en' });
     const button = container.firstChild as HTMLElement;
 
@@ -56,8 +51,7 @@ describe('Button RTL Support', (
     expect(button).toHaveClass('flex-row');
   });
 
-  test('custom direction override', (
-) => {
+  test('custom direction override', () => {
     const { container } = renderWithRTL(<Button dir="ltr">Force LTR</Button>, {
       language: 'ar',
     });
@@ -67,8 +61,7 @@ describe('Button RTL Support', (
     expect(button).toHaveAttribute('dir', 'ltr');
   });
 
-  rtlTestScenarios.testAllRTLLanguages(createButton, (element, language
-) => {
+  rtlTestScenarios.testAllRTLLanguages(createButton, (element, language) => {
     rtlTestHelpers.expectCorrectDirection(element, 'rtl');
     rtlTestHelpers.expectRTLDataAttribute(element, true);
   });

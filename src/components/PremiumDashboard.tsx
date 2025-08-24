@@ -51,8 +51,7 @@ interface FeatureCardProps {
   status: 'available' | 'locked' | 'limited';
   usage?: { current: number; limit: number };
   upgradeRequired?: string;
-  onClick?: (
-) => void;
+  onClick?: () => void;
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({
@@ -63,10 +62,8 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   usage,
   upgradeRequired,
   onClick,
-}
-) => {
-  const getStatusColor = (
-) => {
+}) => {
+  const getStatusColor = () => {
     switch (status) {
       case 'available':
         return 'border-green-200 bg-green-50';
@@ -79,8 +76,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
     }
   };
 
-  const getStatusIcon = (
-) => {
+  const getStatusIcon = () => {
     switch (status) {
       case 'available':
         return <Shield className="w-4 h-4 text-green-500" />;
@@ -163,8 +159,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
   userId,
   className = '',
-}
-) => {
+}) => {
   const [state, setState] = useState<DashboardState>({
     tier: 'free',
     featureAccess: {} as PremiumFeatureAccess,
@@ -180,16 +175,12 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
     showSubscriptionModal: false,
   });
 
-  useEffect((
-) => {
+  useEffect(() => {
     loadDashboardData();
   }, [userId]);
 
-  const loadDashboardData = async (
-) => {
-    
-    setState((prev: any
-) => ({ ...prev, loading: true }));
+  const loadDashboardData = async () => {
+    setState((prev: any) => ({ ...prev, loading: true }));
 
     try {
       const [tier, featureAccess, trialDays, isTrialing, upgradeRec] =
@@ -201,9 +192,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
           PremiumVoiceService.getUpgradeRecommendation(userId),
         ]);
 
-      
-      setState((prev: any
-) => ({
+      setState((prev: any) => ({
         ...prev,
         tier,
         featureAccess,
@@ -214,14 +203,12 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
       }));
     } catch (error) {
       console.error('Error loading dashboard data:', error);
-      
-      setState((prev: any
-) => ({ ...prev, loading: false }));
+
+      setState((prev: any) => ({ ...prev, loading: false }));
     }
   };
 
-  const getTierInfo = (
-) => {
+  const getTierInfo = () => {
     const tierInfo = {
       free: { name: 'Free', icon: Shield, color: 'from-gray-500 to-gray-600' },
       premium: { name: 'Premium', icon: Crown, color: 'from-amber-500 to-orange-500' },
@@ -231,15 +218,11 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
     return tierInfo[state.tier] || tierInfo.free;
   };
 
-  const handleUpgrade = (
-) => {
-    
-    setState((prev: any
-) => ({ ...prev, showSubscriptionModal: true }));
+  const handleUpgrade = () => {
+    setState((prev: any) => ({ ...prev, showSubscriptionModal: true }));
   };
 
-  const renderHeader = (
-) => {
+  const renderHeader = () => {
     const tierInfo = getTierInfo();
     const TierIcon = tierInfo.icon;
 
@@ -289,8 +272,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
                 <div className="flex flex-wrap gap-2">
                   {state.upgradeRecommendation.benefits
                     .slice(0, 2)
-                    .map((benefit, index
-) => (
+                    .map((benefit, index) => (
                       <span
                         key={index}
                         className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full"
@@ -307,8 +289,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
     );
   };
 
-  const renderFeatureGrid = (
-) => {
+  const renderFeatureGrid = () => {
     const features = [
       {
         icon: Mic,
@@ -356,8 +337,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
 
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {features.map((feature, index
-) => (
+        {features.map((feature, index) => (
           <FeatureCard
             key={feature.title}
             icon={feature.icon}
@@ -445,11 +425,8 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
         {state.showSubscriptionModal && (
           <SubscriptionModal
             isOpen={state.showSubscriptionModal}
-            onClose={(
-) =>
-              
-              setState((prev: any
-) => ({ ...prev, showSubscriptionModal: false }))
+            onClose={() =>
+              setState((prev: any) => ({ ...prev, showSubscriptionModal: false }))
             }
             userId={userId}
           />

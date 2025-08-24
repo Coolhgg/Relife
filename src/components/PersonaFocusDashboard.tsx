@@ -47,15 +47,13 @@ interface PersonaMetrics {
 
 interface PersonaDashboardProps {
   timeRange: '7d' | '30d' | '90d' | '1y';
-  onTimeRangeChange: (range: string
-) => void;
+  onTimeRangeChange: (range: string) => void;
 }
 
 const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
   timeRange,
   onTimeRangeChange,
-}
-) => {
+}) => {
   const [metrics, setMetrics] = useState<PersonaMetrics[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPersona, setSelectedPersona] = useState<string>('all');
@@ -142,38 +140,30 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
     },
   ];
 
-  useEffect((
-) => {
+  useEffect(() => {
     // Simulate API call
-    setTimeout((
-) => {
+    setTimeout(() => {
       setMetrics(mockPersonaData);
       setLoading(false);
     }, 1000);
   }, [timeRange]);
 
   const totalUsers = useMemo(
-    (
-) => metrics.reduce((sum, persona
-) => sum + persona.count, 0),
+    () => metrics.reduce((sum, persona) => sum + persona.count, 0),
     [metrics]
   );
 
   const totalRevenue = useMemo(
-    (
-) =>
+    () =>
       metrics.reduce(
-        (sum, persona
-) => sum + persona.ltv * persona.count * persona.conversionRate,
+        (sum, persona) => sum + persona.ltv * persona.count * persona.conversionRate,
         0
       ),
     [metrics]
   );
 
-  const PersonaCard = ({ persona }: { persona: PersonaMetrics }
-) => {
-    const getTrendIcon = (trend: string
-) => {
+  const PersonaCard = ({ persona }: { persona: PersonaMetrics }) => {
+    const getTrendIcon = (trend: string) => {
       switch (trend) {
         case 'up':
           return <ArrowUp className="w-4 h-4 text-green-500" />;
@@ -263,11 +253,8 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
     );
   };
 
-  const ConversionFunnel = (
-) => {
-    const funnelData = metrics
-      .map((persona: any
-) => ({
+  const ConversionFunnel = () => {
+    const funnelData = metrics.map((persona: any) => ({
       name: persona.personaName,
       users: persona.count,
       conversions: Math.round(persona.count * persona.conversionRate),
@@ -286,8 +273,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
             <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
             <YAxis />
             <Tooltip
-              formatter={(value, name
-) => [
+              formatter={(value, name) => [
                 name === 'users'
                   ? `${value.toLocaleString()} users`
                   : `${value.toLocaleString()} conversions`,
@@ -302,11 +288,8 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
     );
   };
 
-  const RevenueDistribution = (
-) => {
-    const pieData = metrics
-      .map((persona: any
-) => ({
+  const RevenueDistribution = () => {
+    const pieData = metrics.map((persona: any) => ({
       name: persona.personaName,
       value: persona.revenueContribution,
       revenue: persona.ltv * persona.count * persona.conversionRate,
@@ -325,20 +308,18 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={({ name, value }
-) => `${name}: ${(value * 100).toFixed(1)}%`}
+              label={({ name, value }) => `${name}: ${(value * 100).toFixed(1)}%`}
               outerRadius={80}
               fill="#8884d8"
               dataKey="value"
             >
-              {pieData.map((entry, index
-) => (
+              {pieData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.fill} />
               ))}
             </Pie>
             <Tooltip
-              formatter={(value: any
-) => [ // auto: implicit any
+              formatter={(value: any) => [
+                // auto: implicit any
                 `${((value as number) * 100).toFixed(1)}%`,
                 'Revenue Share',
               ]}
@@ -355,8 +336,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
         <div className="animate-pulse">
           <div className="h-8 bg-gray-200 rounded w-64 mb-6"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i
-) => (
+            {[...Array(6)].map((_, i) => (
               <div key={i} className="h-64 bg-gray-200 rounded"></div>
             ))}
           </div>
@@ -381,9 +361,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
           <div className="flex items-center space-x-4">
             <select
               value={timeRange}
-              
-              onChange={(e: any
-) => onTimeRangeChange(e.target.value)}
+              onChange={(e: any) => onTimeRangeChange(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
               <option value="7d">Last 7 days</option>
@@ -426,8 +404,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
                 <p className="text-sm font-medium text-gray-600">Avg Conversion</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {(
-                    (metrics.reduce((sum, p
-) => sum + p.conversionRate, 0) /
+                    (metrics.reduce((sum, p) => sum + p.conversionRate, 0) /
                       metrics.length) *
                     100
                   ).toFixed(1)}
@@ -445,8 +422,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
                 <p className="text-2xl font-bold text-gray-900">
                   $
                   {(
-                    metrics.reduce((sum, p
-) => sum + p.ltv, 0) / metrics.length
+                    metrics.reduce((sum, p) => sum + p.ltv, 0) / metrics.length
                   ).toFixed(0)}
                 </p>
               </div>
@@ -457,9 +433,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
 
         {/* Persona Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {metrics
-      .map((persona: any
-) => (
+          {metrics.map((persona: any) => (
             <PersonaCard key={persona.personaId} persona={persona} />
           ))}
         </div>

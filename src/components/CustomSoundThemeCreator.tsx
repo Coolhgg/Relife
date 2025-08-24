@@ -712,9 +712,7 @@ const SoundsStep: React.FC<{
       onSoundUploaded={(sound: any
 ) => onSoundsUpdated([...uploadedSounds, sound])}
       
-      onSoundDeleted={(soundId: any
-) => 
-        onSoundsUpdated(uploadedSounds.filter((s: any
+      onSoundDeleted={(soundId: any) => onSoundsUpdated(uploadedSounds.filter((s: any
 ) => s.id !== soundId)))
       }
       maxFiles={20}
@@ -820,9 +818,7 @@ const MetadataStep: React.FC<{
       <Input
         id="theme-tags"
         value={theme.tags?.join(', ') || ''}
-        onChange={(e: any
-) => 
-          onUpdate(
+        onChange={(e: any) => onUpdate(
             'tags',
             e.target.value
               .split(',')

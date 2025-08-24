@@ -29,8 +29,7 @@ const mockSubscriptionService = {
   getUsage: jest.fn(),
 };
 
-jest.mock('../../../services/subscriptionService', (
-) => ({
+jest.mock('../../../services/subscriptionService', () => ({
   subscriptionService: mockSubscriptionService,
 }));
 
@@ -40,14 +39,11 @@ const mockStripe = {
   confirmCardPayment: jest.fn(),
 };
 
-jest.mock('../../../lib/stripe', (
-) => ({
-  getStripe: (
-) => Promise.resolve(mockStripe),
+jest.mock('../../../lib/stripe', () => ({
+  getStripe: () => Promise.resolve(mockStripe),
 }));
 
-describe('Premium Integration Tests', (
-) => {
+describe('Premium Integration Tests', () => {
   const testPlans = [
     createTestSubscriptionPlan({
       tier: 'free',
@@ -72,8 +68,7 @@ describe('Premium Integration Tests', (
     }),
   ];
 
-  beforeEach((
-) => {
+  beforeEach(() => {
     jest.clearAllMocks();
     mockStripe.createPaymentMethod.mockResolvedValue({
       paymentMethod: { id: 'pm_test_123' },
@@ -87,10 +82,8 @@ describe('Premium Integration Tests', (
     });
   });
 
-  describe('Complete Upgrade Flow', (
-) => {
-    it('completes full upgrade journey from free to premium', async (
-) => {
+  describe('Complete Upgrade Flow', () => {
+    it('completes full upgrade journey from free to premium', async () => {
       const user = userEvent.setup();
 
       // Start with free tier user
@@ -118,7 +111,12 @@ describe('Premium Integration Tests', (
         invoiceHistory: [],
         availablePlans: testPlans,
         discountCodes: [],
-        referralStats: { code: 'USER123', referrals: 0, rewards: 0, pendingRewards: 0 },
+        referralStats: {
+          code: 'USER123',
+          referrals: 0,
+          rewards: 0,
+          pendingRewards: 0,
+        },
       };
 
       const { rerender } = renderWithProviders(
@@ -131,8 +129,7 @@ describe('Premium Integration Tests', (
                 <PricingTable
                   plans={testPlans}
                   currentTier="free"
-                  onPlanSelect={(plan, interval
-) => {
+                  onPlanSelect={(plan, interval) => {
                     // Mock navigation to payment flow
                     rerender(
                       <PaymentFlow
@@ -150,10 +147,8 @@ describe('Premium Integration Tests', (
                           };
                           rerender(<SubscriptionDashboard data={upgradedData} />);
                         }}
-                        onPaymentError={(
-) => {}}
-                        onCancel={(
-) => {}}
+                        onPaymentError={() => {}}
+                        onCancel={() => {}}
                         onCreateSubscription={
                           mockSubscriptionService.createSubscription
                         }
@@ -176,8 +171,7 @@ describe('Premium Integration Tests', (
       await user.click(upgradeButton);
 
       // 3. Should see pricing table
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByText('Premium Plan')).toBeInTheDocument();
         expect(screen.getByText('$9.99 / month')).toBeInTheDocument();
       });
@@ -189,8 +183,7 @@ describe('Premium Integration Tests', (
       await user.click(selectPremiumButton);
 
       // 5. Should see payment flow
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByText('Complete Your Subscription')).toBeInTheDocument();
         expect(screen.getByLabelText(/card number/i)).toBeInTheDocument();
       });
@@ -212,8 +205,7 @@ describe('Premium Integration Tests', (
       await user.click(submitButton);
 
       // 8. Should complete and show success
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByText('Premium Plan')).toBeInTheDocument();
         expect(screen.queryByText('5 / 5')).not.toBeInTheDocument(); // No longer limited
       });
@@ -226,10 +218,8 @@ describe('Premium Integration Tests', (
     });
   });
 
-  describe('Feature Gating Integration', (
-) => {
-    it('integrates feature gating with subscription status', async (
-) => {
+  describe('Feature Gating Integration', () => {
+    it('integrates feature gating with subscription status', async () => {
       const user = userEvent.setup();
 
       // Mock feature gate hook to simulate gated feature
@@ -241,20 +231,16 @@ describe('Premium Integration Tests', (
         showUpgradeModal: jest.fn(),
       };
 
-      jest.doMock('../../../hooks/useFeatureGate', (
-) => ({
+      jest.doMock('../../../hooks/useFeatureGate', () => ({
         __esModule: true,
-        default: jest.fn((
-) => mockUseFeatureGate),
+        default: jest.fn(() => mockUseFeatureGate),
       }));
 
-      const PremiumFeatureComponent = (
-) => (
+      const PremiumFeatureComponent = () => (
         <FeatureGate
           feature="unlimited_alarms"
           userId="test-user"
-          onUpgradeClick={(
-) => {
+          onUpgradeClick={() => {
             // Should trigger upgrade flow
             mockUseFeatureGate.showUpgradeModal();
           }}
@@ -272,17 +258,17 @@ describe('Premium Integration Tests', (
       ).toBeInTheDocument();
 
       // Click upgrade
-      const upgradeButton = screen.getByRole('button', { name: /upgrade to premium/i });
+      const upgradeButton = screen.getByRole('button', {
+        name: /upgrade to premium/i,
+      });
       await user.click(upgradeButton);
 
       expect(mockUseFeatureGate.showUpgradeModal).toHaveBeenCalled();
     });
   });
 
-  describe('Subscription Management Integration', (
-) => {
-    it('handles plan changes within subscription dashboard', async (
-) => {
+  describe('Subscription Management Integration', () => {
+    it('handles plan changes within subscription dashboard', async () => {
       const user = userEvent.setup();
 
       const mockPremiumSubscription = createTestSubscription({
@@ -309,7 +295,12 @@ describe('Premium Integration Tests', (
         invoiceHistory: [],
         availablePlans: testPlans,
         discountCodes: [],
-        referralStats: { code: 'USER123', referrals: 2, rewards: 1, pendingRewards: 0 },
+        referralStats: {
+          code: 'USER123',
+          referrals: 2,
+          rewards: 1,
+          pendingRewards: 0,
+        },
       };
 
       const mockOnUpgrade = jest.fn();
@@ -343,8 +334,7 @@ describe('Premium Integration Tests', (
       expect(mockOnUpgrade).toHaveBeenCalledWith('pro');
     });
 
-    it('handles subscription cancellation flow', async (
-) => {
+    it('handles subscription cancellation flow', async () => {
       const user = userEvent.setup();
 
       const mockPremiumSubscription = createTestSubscription({
@@ -371,7 +361,12 @@ describe('Premium Integration Tests', (
         invoiceHistory: [],
         availablePlans: testPlans,
         discountCodes: [],
-        referralStats: { code: 'USER123', referrals: 0, rewards: 0, pendingRewards: 0 },
+        referralStats: {
+          code: 'USER123',
+          referrals: 0,
+          rewards: 0,
+          pendingRewards: 0,
+        },
       };
 
       const mockOnCancel = jest.fn();
@@ -381,26 +376,30 @@ describe('Premium Integration Tests', (
       );
 
       // Navigate to settings/cancel area (might be in a menu or separate tab)
-      const moreOptionsButton = screen.getByRole('button', { name: /more options/i });
+      const moreOptionsButton = screen.getByRole('button', {
+        name: /more options/i,
+      });
       await user.click(moreOptionsButton);
 
-      const cancelButton = screen.getByRole('button', { name: /cancel subscription/i });
+      const cancelButton = screen.getByRole('button', {
+        name: /cancel subscription/i,
+      });
       await user.click(cancelButton);
 
       // Should show confirmation dialog
       expect(screen.getByText(/are you sure/i)).toBeInTheDocument();
 
-      const confirmCancelButton = screen.getByRole('button', { name: /yes, cancel/i });
+      const confirmCancelButton = screen.getByRole('button', {
+        name: /yes, cancel/i,
+      });
       await user.click(confirmCancelButton);
 
       expect(mockOnCancel).toHaveBeenCalled();
     });
   });
 
-  describe('Error Handling Integration', (
-) => {
-    it('handles payment failures gracefully across components', async (
-) => {
+  describe('Error Handling Integration', () => {
+    it('handles payment failures gracefully across components', async () => {
       const user = userEvent.setup();
 
       // Mock payment failure
@@ -415,11 +414,9 @@ describe('Premium Integration Tests', (
         <PaymentFlow
           selectedPlan={selectedPlan}
           billingInterval="month"
-          onPaymentSuccess={(
-) => {}}
+          onPaymentSuccess={() => {}}
           onPaymentError={mockOnPaymentError}
-          onCancel={(
-) => {}}
+          onCancel={() => {}}
           onCreateSubscription={mockSubscriptionService.createSubscription}
         />
       );
@@ -441,8 +438,7 @@ describe('Premium Integration Tests', (
       await user.click(submitButton);
 
       // Should handle error
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(mockOnPaymentError).toHaveBeenCalledWith('Your card was declined.');
       });
 
@@ -453,8 +449,7 @@ describe('Premium Integration Tests', (
       expect(screen.getByLabelText(/card number/i)).not.toBeDisabled();
     });
 
-    it('handles network errors during subscription operations', async (
-) => {
+    it('handles network errors during subscription operations', async () => {
       mockSubscriptionService.createSubscription.mockRejectedValue(
         new Error('Network error')
       );
@@ -466,11 +461,9 @@ describe('Premium Integration Tests', (
         <PaymentFlow
           selectedPlan={testPlans[1]}
           billingInterval="month"
-          onPaymentSuccess={(
-) => {}}
+          onPaymentSuccess={() => {}}
           onPaymentError={mockOnPaymentError}
-          onCancel={(
-) => {}}
+          onCancel={() => {}}
           onCreateSubscription={mockSubscriptionService.createSubscription}
         />
       );
@@ -490,17 +483,14 @@ describe('Premium Integration Tests', (
       });
       await user.click(submitButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(mockOnPaymentError).toHaveBeenCalledWith('Network error');
       });
     });
   });
 
-  describe('Mobile Integration', (
-) => {
-    beforeEach((
-) => {
+  describe('Mobile Integration', () => {
+    beforeEach(() => {
       // Mock mobile viewport
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
@@ -514,8 +504,7 @@ describe('Premium Integration Tests', (
       });
     });
 
-    it('adapts premium flows for mobile devices', (
-) => {
+    it('adapts premium flows for mobile devices', () => {
       const mockData = {
         subscription: createTestSubscription({ tier: 'free' }),
         currentPlan: testPlans[0],
@@ -534,7 +523,12 @@ describe('Premium Integration Tests', (
         invoiceHistory: [],
         availablePlans: testPlans,
         discountCodes: [],
-        referralStats: { code: 'USER123', referrals: 0, rewards: 0, pendingRewards: 0 },
+        referralStats: {
+          code: 'USER123',
+          referrals: 0,
+          rewards: 0,
+          pendingRewards: 0,
+        },
       };
 
       renderWithProviders(<SubscriptionDashboard data={mockData} />);

@@ -23,8 +23,7 @@ interface ThemeDemoProps {
   className?: string;
 }
 
-const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }
-) => {
+const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
   const { theme, themeConfig } = useTheme();
   const [showStudio, setShowStudio] = useState(false);
   const [demoMode, setDemoMode] = useState<'preview' | 'interactive'>('preview');
@@ -133,16 +132,14 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  onClick={(
-) => setShowStudio(true)}
+                  onClick={() => setShowStudio(true)}
                   className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-xl"
                 >
                   <Wand2 size={24} />
                   <span>Create Your Theme</span>
                 </button>
                 <button
-                  onClick={(
-) =>
+                  onClick={() =>
                     setDemoMode(demoMode === 'preview' ? 'interactive' : 'preview')
                   }
                   className="inline-flex items-center gap-3 px-8 py-4 bg-white text-gray-700 border-2 border-gray-200 rounded-xl font-semibold text-lg hover:border-gray-300 hover:bg-gray-50 transition-all duration-300"
@@ -170,8 +167,7 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index
-) => (
+            {features.map((feature, index) => (
               <div key={index} className="group relative">
                 <div className="bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-2">
                   {feature.highlight && (
@@ -279,8 +275,7 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }
                       minHeight: '300px',
                     }}
                   >
-                    {demoAlarms.map((alarm, index
-) => (
+                    {demoAlarms.map((alarm, index) => (
                       <div
                         key={alarm.id}
                         className="p-4 rounded-xl border"
@@ -350,8 +345,7 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }
                     }}
                   >
                     <div className="flex justify-around">
-                      {[Clock, Bell, Settings].map((Icon, index
-) => (
+                      {[Clock, Bell, Settings].map((Icon, index) => (
                         <button
                           key={index}
                           className={`p-3 rounded-xl ${index === 1 ? 'opacity-100' : 'opacity-50'}`}
@@ -386,14 +380,12 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {themePresets.map((preset, index
-) => (
+            {themePresets.map((preset, index) => (
               <div key={index} className="group cursor-pointer">
                 <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-2">
                   {/* Color Preview */}
                   <div className="h-24 flex">
-                    {preset.colors.map((color, colorIndex
-) => (
+                    {preset.colors.map((color, colorIndex) => (
                       <div
                         key={colorIndex}
                         className="flex-1"
@@ -436,8 +428,7 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  onClick={(
-) => setShowStudio(true)}
+                  onClick={() => setShowStudio(true)}
                   className="inline-flex items-center gap-3 px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg"
                 >
                   <Palette size={24} />
@@ -454,8 +445,7 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }
       </div>
 
       {/* Theme Studio Modal */}
-      {showStudio && <ThemeStudio onClose={(
-) => setShowStudio(false)} />}
+      {showStudio && <ThemeStudio onClose={() => setShowStudio(false)} />}
     </>
   );
 };

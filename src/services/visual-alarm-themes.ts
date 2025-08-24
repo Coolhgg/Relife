@@ -945,11 +945,9 @@ class VisualAlarmThemesService {
 
     this.activeAnimations.add(flashId);
 
-    const flash = (
-) => {
+    const flash = () => {
       document.body.style.backgroundColor = theme.screen.flashColor;
-      setTimeout((
-) => {
+      setTimeout(() => {
         document.body.style.backgroundColor = '';
       }, 100);
     };
@@ -1005,8 +1003,7 @@ class VisualAlarmThemesService {
     document.body.appendChild(preview);
 
     // Auto remove preview
-    setTimeout((
-) => {
+    setTimeout(() => {
       if (preview.parentNode) {
         preview.parentNode.removeChild(preview);
       }

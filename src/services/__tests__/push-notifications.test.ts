@@ -36,8 +36,7 @@ Object.defineProperty(navigator, 'serviceWorker', {
   writable: true,
 });
 
-describe('PushNotificationService', (
-) => {
+describe('PushNotificationService', () => {
   const mockAlarm = {
     id: 'test-alarm-1',
     userId: 'user-1',
@@ -57,8 +56,7 @@ describe('PushNotificationService', (
     updatedAt: new Date(),
   };
 
-  beforeEach((
-) => {
+  beforeEach(() => {
     jest.clearAllMocks();
 
     // Reset service state
@@ -77,13 +75,13 @@ describe('PushNotificationService', (
       receive: 'granted',
     });
     (PushNotifications.register as jest.Mock).mockResolvedValue();
-    (PushNotifications.addListener as jest.Mock).mockReturnValue({ remove: jest.fn() });
+    (PushNotifications.addListener as jest.Mock).mockReturnValue({
+      remove: jest.fn(),
+    });
   });
 
-  describe('initialize', (
-) => {
-    it('should initialize successfully on web platform', async (
-) => {
+  describe('initialize', () => {
+    it('should initialize successfully on web platform', async () => {
       mockNotification.requestPermission.mockResolvedValue('granted');
 
       const result = await PushNotificationService.initialize();
@@ -92,8 +90,7 @@ describe('PushNotificationService', (
       expect(PushNotificationService.hasPermission()).toBe(true);
     });
 
-    it('should initialize successfully on native platform', async (
-) => {
+    it('should initialize successfully on native platform', async () => {
       (Capacitor.isNativePlatform as jest.Mock).mockReturnValue(true);
 
       const result = await PushNotificationService.initialize();
@@ -103,8 +100,7 @@ describe('PushNotificationService', (
       expect(PushNotifications.register).toHaveBeenCalled();
     });
 
-    it('should handle initialization failure gracefully', async (
-) => {
+    it('should handle initialization failure gracefully', async () => {
       mockNotification.requestPermission.mockRejectedValue(
         new Error('Permission denied')
       );
@@ -115,8 +111,7 @@ describe('PushNotificationService', (
       expect(PushNotificationService.hasPermission()).toBe(false);
     });
 
-    it('should not re-initialize if already initialized', async (
-) => {
+    it('should not re-initialize if already initialized', async () => {
       // First initialization
       mockNotification.requestPermission.mockResolvedValue('granted');
       await PushNotificationService.initialize();
@@ -129,10 +124,8 @@ describe('PushNotificationService', (
     });
   });
 
-  describe('settings management', (
-) => {
-    it('should load default settings', (
-) => {
+  describe('settings management', () => {
+    it('should load default settings', () => {
       const settings = PushNotificationService.getSettings();
 
       expect(settings).toMatchObject({
@@ -148,8 +141,7 @@ describe('PushNotificationService', (
       });
     });
 
-    it('should load saved settings from preferences', async (
-) => {
+    it('should load saved settings from preferences', async () => {
       const savedSettings = {
         enabled: false,
         alarmReminders: false,
@@ -168,8 +160,7 @@ describe('PushNotificationService', (
       expect(settings.dailyMotivation).toBe(false);
     });
 
-    it('should update settings and save to preferences', async (
-) => {
+    it('should update settings and save to preferences', async () => {
       await PushNotificationService.initialize();
 
       const newSettings = {
@@ -190,16 +181,13 @@ describe('PushNotificationService', (
     });
   });
 
-  describe('notification scheduling', (
-) => {
-    beforeEach(async (
-) => {
+  describe('notification scheduling', () => {
+    beforeEach(async () => {
       mockNotification.requestPermission.mockResolvedValue('granted');
       await PushNotificationService.initialize();
     });
 
-    it('should schedule alarm push notification', async (
-) => {
+    it('should schedule alarm push notification', async () => {
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
 
       await PushNotificationService.scheduleAlarmPush(mockAlarm);
@@ -216,8 +204,7 @@ describe('PushNotificationService', (
       consoleSpy.mockRestore();
     });
 
-    it('should not schedule if no permission', async (
-) => {
+    it('should not schedule if no permission', async () => {
       // Override permission
       (PushNotificationService as any).hasPermission = false;
 
@@ -234,8 +221,7 @@ describe('PushNotificationService', (
       consoleSpy.mockRestore();
     });
 
-    it('should not schedule if alarm reminders disabled', async (
-) => {
+    it('should not schedule if alarm reminders disabled', async () => {
       await PushNotificationService.updateSettings({ alarmReminders: false });
 
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -252,16 +238,13 @@ describe('PushNotificationService', (
     });
   });
 
-  describe('daily motivation', (
-) => {
-    beforeEach(async (
-) => {
+  describe('daily motivation', () => {
+    beforeEach(async () => {
       mockNotification.requestPermission.mockResolvedValue('granted');
       await PushNotificationService.initialize();
     });
 
-    it('should send daily motivation notification', async (
-) => {
+    it('should send daily motivation notification', async () => {
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
 
       await PushNotificationService.sendDailyMotivation('Stay motivated!');
@@ -278,8 +261,7 @@ describe('PushNotificationService', (
       consoleSpy.mockRestore();
     });
 
-    it('should not send if daily motivation disabled', async (
-) => {
+    it('should not send if daily motivation disabled', async () => {
       await PushNotificationService.updateSettings({ dailyMotivation: false });
 
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -296,16 +278,13 @@ describe('PushNotificationService', (
     });
   });
 
-  describe('weekly progress', (
-) => {
-    beforeEach(async (
-) => {
+  describe('weekly progress', () => {
+    beforeEach(async () => {
       mockNotification.requestPermission.mockResolvedValue('granted');
       await PushNotificationService.initialize();
     });
 
-    it('should send weekly progress notification', async (
-) => {
+    it('should send weekly progress notification', async () => {
       const stats = {
         alarmsTriggered: 12,
         streak: 5,
@@ -329,8 +308,7 @@ describe('PushNotificationService', (
       consoleSpy.mockRestore();
     });
 
-    it('should not send if weekly progress disabled', async (
-) => {
+    it('should not send if weekly progress disabled', async () => {
       await PushNotificationService.updateSettings({ weeklyProgress: false });
 
       const stats = { alarmsTriggered: 12, streak: 5 };
@@ -348,16 +326,13 @@ describe('PushNotificationService', (
     });
   });
 
-  describe('quiet hours', (
-) => {
-    beforeEach(async (
-) => {
+  describe('quiet hours', () => {
+    beforeEach(async () => {
       mockNotification.requestPermission.mockResolvedValue('granted');
       await PushNotificationService.initialize();
     });
 
-    it('should respect quiet hours for motivation notifications', async (
-) => {
+    it('should respect quiet hours for motivation notifications', async () => {
       // Set quiet hours from 10 PM to 7 AM
       await PushNotificationService.updateSettings({
         quietHours: {
@@ -369,8 +344,7 @@ describe('PushNotificationService', (
 
       // Mock current time to be midnight (within quiet hours)
       const mockDate = new Date('2024-01-01T00:00:00');
-      jest.spyOn(global, 'Date').mockImplementation((
-) => mockDate);
+      jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
 
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
 
@@ -388,16 +362,13 @@ describe('PushNotificationService', (
     });
   });
 
-  describe('emergency alerts', (
-) => {
-    beforeEach(async (
-) => {
+  describe('emergency alerts', () => {
+    beforeEach(async () => {
       mockNotification.requestPermission.mockResolvedValue('granted');
       await PushNotificationService.initialize();
     });
 
-    it('should send emergency alert even during quiet hours', async (
-) => {
+    it('should send emergency alert even during quiet hours', async () => {
       // Set quiet hours
       await PushNotificationService.updateSettings({
         quietHours: {
@@ -427,16 +398,13 @@ describe('PushNotificationService', (
     });
   });
 
-  describe('test notifications', (
-) => {
-    beforeEach(async (
-) => {
+  describe('test notifications', () => {
+    beforeEach(async () => {
       mockNotification.requestPermission.mockResolvedValue('granted');
       await PushNotificationService.initialize();
     });
 
-    it('should send test notification', async (
-) => {
+    it('should send test notification', async () => {
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
 
       await PushNotificationService.testPushNotification();
@@ -454,10 +422,8 @@ describe('PushNotificationService', (
     });
   });
 
-  describe('error handling', (
-) => {
-    it('should handle permission request errors gracefully', async (
-) => {
+  describe('error handling', () => {
+    it('should handle permission request errors gracefully', async () => {
       mockNotification.requestPermission.mockRejectedValue(
         new Error('User denied permission')
       );
@@ -468,8 +434,7 @@ describe('PushNotificationService', (
       expect(PushNotificationService.hasPermission()).toBe(false);
     });
 
-    it('should handle notification sending errors gracefully', async (
-) => {
+    it('should handle notification sending errors gracefully', async () => {
       await PushNotificationService.initialize();
 
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -492,8 +457,7 @@ describe('PushNotificationService', (
       consoleSpy.mockRestore();
     });
 
-    it('should handle settings update errors gracefully', async (
-) => {
+    it('should handle settings update errors gracefully', async () => {
       await PushNotificationService.initialize();
 
       (Preferences.set as jest.Mock).mockRejectedValue(new Error('Storage error'));
@@ -511,10 +475,8 @@ describe('PushNotificationService', (
     });
   });
 
-  describe('web push integration', (
-) => {
-    beforeEach((
-) => {
+  describe('web push integration', () => {
+    beforeEach(() => {
       // Mock web push manager
       const mockSubscription = {
         endpoint: 'https://fcm.googleapis.com/fcm/send/test',
@@ -532,8 +494,7 @@ describe('PushNotificationService', (
       });
     });
 
-    it('should register for web push notifications', async (
-) => {
+    it('should register for web push notifications', async () => {
       mockNotification.requestPermission.mockResolvedValue('granted');
 
       await PushNotificationService.initialize();
@@ -543,17 +504,14 @@ describe('PushNotificationService', (
   });
 });
 
-describe('PushNotificationService - Integration Tests', (
-) => {
+describe('PushNotificationService - Integration Tests', () => {
   let eventListeners: { [key: string]: EventListener[] } = {};
 
-  beforeEach((
-) => {
+  beforeEach(() => {
     eventListeners = {};
 
     // Mock addEventListener and dispatchEvent
-    jest.spyOn(window, 'addEventListener').mockImplementation((event, listener
-) => {
+    jest.spyOn(window, 'addEventListener').mockImplementation((event, listener) => {
       if (!eventListeners[event]) {
         eventListeners[event] = [];
       }
@@ -567,13 +525,11 @@ describe('PushNotificationService - Integration Tests', (
     });
   });
 
-  afterEach((
-) => {
+  afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  it('should handle custom events correctly', async (
-) => {
+  it('should handle custom events correctly', async () => {
     mockNotification.requestPermission.mockResolvedValue('granted');
     await PushNotificationService.initialize();
 

@@ -21,8 +21,7 @@ interface ThemeCardProps {
     accentColor: string;
   };
   isActive: boolean;
-  onSelect: (theme: Theme
-) => void;
+  onSelect: (theme: Theme) => void;
   isPremium: boolean;
 }
 
@@ -34,15 +33,12 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
   isActive,
   onSelect,
   isPremium,
-}
-) => {
+}) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const handleSelect = useCallback((
-) => {
+  const handleSelect = useCallback(() => {
     setIsAnimating(true);
-    setTimeout((
-) => {
+    setTimeout(() => {
       onSelect(themeId);
       setIsAnimating(false);
     }, 300);
@@ -107,8 +103,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
   );
 };
 
-const PremiumThemeShowcase: React.FC = (
-) => {
+const PremiumThemeShowcase: React.FC = () => {
   const {
     theme,
     availableThemes,
@@ -141,15 +136,13 @@ const PremiumThemeShowcase: React.FC = (
   });
 
   const handleThemeSelect = useCallback(
-    (selectedTheme: Theme
-) => {
+    (selectedTheme: Theme) => {
       setTheme(selectedTheme);
 
       // Initialize animations for premium themes
       const selectedThemeData = availableThemes.find(t => t.theme === selectedTheme);
       if (selectedThemeData?.isPremium) {
-        setTimeout((
-) => {
+        setTimeout(() => {
           initializePremiumAnimations();
         }, 100);
       }
@@ -158,16 +151,14 @@ const PremiumThemeShowcase: React.FC = (
   );
 
   const handleAnimationIntensityChange = useCallback(
-    (intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic'
-) => {
+    (intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic') => {
       setAnimationIntensityState(intensity);
       setAnimationIntensity(intensity);
     },
     [setAnimationIntensity]
   );
 
-  useEffect((
-) => {
+  useEffect(() => {
     // Initialize animations when component mounts
     const currentThemeData = availableThemes.find(t => t.theme === theme);
     if (currentThemeData?.isPremium) {
@@ -184,8 +175,7 @@ const PremiumThemeShowcase: React.FC = (
         </div>
 
         <div className="header-actions">
-          <button className="studio-button" onClick={(
-) => setShowStudio(!showStudio)}>
+          <button className="studio-button" onClick={() => setShowStudio(!showStudio)}>
             <span className="studio-icon">🛠️</span>
             {showStudio ? 'Hide Studio' : 'Open Studio'}
           </button>
@@ -205,9 +195,7 @@ const PremiumThemeShowcase: React.FC = (
               type="text"
               placeholder="Search themes..."
               value={searchTerm}
-              
-              onChange={(e: any
-) => setSearchTerm(e.target.value)}
+              onChange={(e: any) => setSearchTerm(e.target.value)}
               className="search-input"
             />
             <span className="search-icon">🔍</span>
@@ -222,8 +210,7 @@ const PremiumThemeShowcase: React.FC = (
               <button
                 key={category.key}
                 className={`category-button ${selectedCategory === category.key ? 'active' : ''}`}
-                onClick={(
-) => setSelectedCategory(category.key as any)}
+                onClick={() => setSelectedCategory(category.key as any)}
               >
                 {category.label}
                 <span className="category-count">{category.count}</span>
@@ -244,8 +231,7 @@ const PremiumThemeShowcase: React.FC = (
               <button
                 key={intensity.key}
                 className={`intensity-button ${animationIntensity === intensity.key ? 'active' : ''}`}
-                onClick={(
-) => handleAnimationIntensityChange(intensity.key as any)}
+                onClick={() => handleAnimationIntensityChange(intensity.key as any)}
               >
                 <span className="intensity-icon">{intensity.icon}</span>
                 <span className="intensity-label">{intensity.label}</span>
@@ -324,8 +310,7 @@ const PremiumThemeShowcase: React.FC = (
               <h4>Animation Effects</h4>
               <div className="effects-list">
                 {Object.entries(getDefaultAnimationEffects()).map(
-                  ([effect, enabled]
-) =>
+                  ([effect, enabled]) =>
                     enabled && (
                       <div key={effect} className="effect-item">
                         <span className="effect-dot"></span>

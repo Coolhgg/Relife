@@ -313,8 +313,7 @@ class AnalyticsConfigService {
    * Create privacy filter for Sentry events
    */
   private createPrivacyFilter() {
-    return (event: any
-) => {
+    return (event: any) => {
       // In privacy mode, limit data collection
       if (event.user) {
         // Keep only essential user data

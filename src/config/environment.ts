@@ -240,7 +240,10 @@ export function logEnvironmentInfo(): void {
 }
 
 // Validate configuration
-export function validateEnvironmentConfig(): { isValid: boolean; errors: string[] } {
+export function validateEnvironmentConfig(): {
+  isValid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   // Required fields

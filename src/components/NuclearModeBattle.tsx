@@ -21,10 +21,8 @@ import { ErrorHandler } from '../services/error-handler';
 interface NuclearModeBattleProps {
   alarm: Alarm;
   user: User;
-  onDismiss: (method: 'nuclear-challenge' | 'nuclear-failed'
-) => void;
-  onSnooze: (
-) => void;
+  onDismiss: (method: 'nuclear-challenge' | 'nuclear-failed') => void;
+  onSnooze: () => void;
   isActive: boolean;
 }
 
@@ -92,8 +90,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   onDismiss,
   onSnooze,
   isActive,
-}
-) => {
+}) => {
   const [currentChallenge, setCurrentChallenge] = useState<NuclearChallenge | null>(
     null
   );
@@ -107,27 +104,24 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     'green' | 'yellow' | 'red' | 'critical'
   >('green');
 
-  const timerRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
+  const timerRef = useRef<TimeoutHandle | undefined>(undefined);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const requiredChallenges = 3; // Must complete 3 nuclear challenges to dismiss
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (isActive && !currentChallenge) {
       initializeNuclearMode();
     }
 
-    return (
-) => {
+    return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
     };
   }, [isActive]);
 
-  const initializeNuclearMode = useCallback((
-) => {
+  const initializeNuclearMode = useCallback(() => {
     // Play nuclear alarm sound
     playNuclearAlarm();
 
@@ -146,16 +140,13 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     return NUCLEAR_CHALLENGES[Math.floor(Math.random() * NUCLEAR_CHALLENGES.length)];
   }, []);
 
-  const startChallengeTimer = useCallback((duration: number
-) => {
+  const startChallengeTimer = useCallback((duration: number) => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
 
-    timerRef.current = setInterval((
-) => {
-      setTimeRemaining((prev: any
-) => {
+    timerRef.current = setInterval(() => {
+      setTimeRemaining((prev: any) => {
         // auto
         if (prev <= 1) {
           handleChallengeTimeout();
@@ -177,8 +168,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     }, 1000);
   }, []);
 
-  const handleChallengeTimeout = useCallback((
-) => {
+  const handleChallengeTimeout = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
@@ -188,27 +178,22 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   }, []);
 
   const handleChallengeComplete = useCallback(
-    (success: boolean, score: number = 0
-) => {
+    (success: boolean, score: number = 0) => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
 
       if (success) {
-        
-        setTotalScore((prev: any
-) => prev + score);
-        
-        setChallengesCompleted((prev: any
-) => prev + 1);
+        setTotalScore((prev: any) => prev + score);
+
+        setChallengesCompleted((prev: any) => prev + 1);
 
         // Check if all challenges completed
         if (challengesCompleted + 1 >= requiredChallenges) {
           handleNuclearSuccess();
         } else {
           // Move to next challenge
-          setTimeout((
-) => {
+          setTimeout(() => {
             const nextChallenge = getRandomChallenge();
             setCurrentChallenge(nextChallenge);
             setTimeRemaining(nextChallenge.timeLimit);
@@ -223,8 +208,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     [challengesCompleted]
   );
 
-  const handleNuclearSuccess = useCallback((
-) => {
+  const handleNuclearSuccess = useCallback(() => {
     setWarningLevel('green');
     setNuclearEffects(false);
 
@@ -233,19 +217,16 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
 
     // Award bonus points for nuclear completion
     const bonusScore = totalScore * 0.5;
-    
-    setTotalScore((prev: any
-) => prev + bonusScore);
+
+    setTotalScore((prev: any) => prev + bonusScore);
 
     // Dismiss alarm with nuclear success
-    setTimeout((
-) => {
+    setTimeout(() => {
       onDismiss('nuclear-challenge');
     }, 2000);
   }, [totalScore, onDismiss]);
 
-  const triggerNuclearMeltdown = useCallback((
-) => {
+  const triggerNuclearMeltdown = useCallback(() => {
     setIsExploding(true);
     setWarningLevel('critical');
 
@@ -253,14 +234,12 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     SoundService.playSystemSound('nuclear-meltdown');
 
     // Prevent dismissal - must snooze and try again
-    setTimeout((
-) => {
+    setTimeout(() => {
       onSnooze();
     }, 3000);
   }, [onSnooze]);
 
-  const playNuclearAlarm = useCallback((
-) => {
+  const playNuclearAlarm = useCallback(() => {
     try {
       // Play intense nuclear alarm sound
       SoundService.playSystemSound('nuclear-alarm');
@@ -269,8 +248,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     }
   }, []);
 
-  const renderChallenge = (
-) => {
+  const renderChallenge = () => {
     if (!currentChallenge) return null;
 
     switch (currentChallenge.type) {
@@ -464,17 +442,14 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
 // Placeholder challenge components - would be implemented with actual game logic
 const SequenceChallenge: React.FC<{
   challenge: NuclearChallenge;
-  onComplete: (success: boolean, score: number
-) => void;
+  onComplete: (success: boolean, score: number) => void;
   timeRemaining: number;
-}> = ({ challenge, onComplete, timeRemaining }
-) => (
+}> = ({ challenge, onComplete, timeRemaining }) => (
   <div className="text-center">
     <h2 className="text-xl font-bold mb-4">{challenge.title}</h2>
     <p className="mb-6">{challenge.description}</p>
     <button
-      onClick={(
-) => onComplete(true, challenge.points)}
+      onClick={() => onComplete(true, challenge.points)}
       className="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-bold transition-colors"
     >
       Complete Sequence
@@ -484,17 +459,14 @@ const SequenceChallenge: React.FC<{
 
 const MathChallenge: React.FC<{
   challenge: NuclearChallenge;
-  onComplete: (success: boolean, score: number
-) => void;
+  onComplete: (success: boolean, score: number) => void;
   timeRemaining: number;
-}> = ({ challenge, onComplete, timeRemaining }
-) => (
+}> = ({ challenge, onComplete, timeRemaining }) => (
   <div className="text-center">
     <h2 className="text-xl font-bold mb-4">{challenge.title}</h2>
     <p className="mb-6">{challenge.description}</p>
     <button
-      onClick={(
-) => onComplete(true, challenge.points)}
+      onClick={() => onComplete(true, challenge.points)}
       className="px-6 py-3 bg-orange-600 hover:bg-orange-700 rounded-lg font-bold transition-colors"
     >
       Solve Equation
@@ -504,17 +476,14 @@ const MathChallenge: React.FC<{
 
 const PatternChallenge: React.FC<{
   challenge: NuclearChallenge;
-  onComplete: (success: boolean, score: number
-) => void;
+  onComplete: (success: boolean, score: number) => void;
   timeRemaining: number;
-}> = ({ challenge, onComplete, timeRemaining }
-) => (
+}> = ({ challenge, onComplete, timeRemaining }) => (
   <div className="text-center">
     <h2 className="text-xl font-bold mb-4">{challenge.title}</h2>
     <p className="mb-6">{challenge.description}</p>
     <button
-      onClick={(
-) => onComplete(true, challenge.points)}
+      onClick={() => onComplete(true, challenge.points)}
       className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 rounded-lg font-bold transition-colors"
     >
       Match Pattern
@@ -524,17 +493,14 @@ const PatternChallenge: React.FC<{
 
 const EnduranceChallenge: React.FC<{
   challenge: NuclearChallenge;
-  onComplete: (success: boolean, score: number
-) => void;
+  onComplete: (success: boolean, score: number) => void;
   timeRemaining: number;
-}> = ({ challenge, onComplete, timeRemaining }
-) => (
+}> = ({ challenge, onComplete, timeRemaining }) => (
   <div className="text-center">
     <h2 className="text-xl font-bold mb-4">{challenge.title}</h2>
     <p className="mb-6">{challenge.description}</p>
     <button
-      onClick={(
-) => onComplete(true, challenge.points)}
+      onClick={() => onComplete(true, challenge.points)}
       className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-bold transition-colors"
     >
       Maintain Focus
@@ -544,17 +510,14 @@ const EnduranceChallenge: React.FC<{
 
 const PrecisionChallenge: React.FC<{
   challenge: NuclearChallenge;
-  onComplete: (success: boolean, score: number
-) => void;
+  onComplete: (success: boolean, score: number) => void;
   timeRemaining: number;
-}> = ({ challenge, onComplete, timeRemaining }
-) => (
+}> = ({ challenge, onComplete, timeRemaining }) => (
   <div className="text-center">
     <h2 className="text-xl font-bold mb-4">{challenge.title}</h2>
     <p className="mb-6">{challenge.description}</p>
     <button
-      onClick={(
-) => onComplete(true, challenge.points)}
+      onClick={() => onComplete(true, challenge.points)}
       className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold transition-colors"
     >
       Precision Strike

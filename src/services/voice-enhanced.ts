@@ -25,8 +25,7 @@ export class VoiceServiceEnhanced {
         await new Promise<void>(resolve => {
           speechSynthesis.addEventListener(
             'voiceschanged',
-            (
-) => {
+            () => {
               resolve();
             },
             { once: true }
@@ -56,15 +55,13 @@ export class VoiceServiceEnhanced {
   static async startRepeatingAlarmMessage(
     alarm: Alarm,
     intervalMs: number = 30000
-  ): Promise<(
-) => void> {
+  ): Promise<() => void> {
     await this.initialize();
 
     let isActive = true;
     const message = this.generateMessageText(alarm);
 
-    const playMessage = async (
-) => {
+    const playMessage = async () => {
       if (!isActive) return;
 
       try {
@@ -78,8 +75,7 @@ export class VoiceServiceEnhanced {
     playMessage();
 
     // Set up interval for repeated playback
-    this.repeatInterval = setInterval((
-) => {
+    this.repeatInterval = setInterval(() => {
       if (isActive) {
         playMessage();
       } else {
@@ -89,8 +85,7 @@ export class VoiceServiceEnhanced {
     }, intervalMs);
 
     // Return stop function
-    return (
-) => {
+    return () => {
       isActive = false;
       if (this.repeatInterval) {
         clearInterval(this.repeatInterval);
@@ -174,13 +169,11 @@ export class VoiceServiceEnhanced {
         // Configure voice based on mood
         this.configureVoiceForMood(utterance, voiceMood);
 
-        utterance.onstart = (
-) => {
+        utterance.onstart = () => {
           console.log('Speech synthesis started:', text.substring(0, 50) + '...');
         };
 
-        utterance.onend = (
-) => {
+        utterance.onend = () => {
           console.log('Speech synthesis ended');
           this.currentUtterance = null;
           resolve(true);
@@ -195,8 +188,7 @@ export class VoiceServiceEnhanced {
         speechSynthesis.speak(utterance);
 
         // Fallback timeout
-        setTimeout((
-) => {
+        setTimeout(() => {
           if (this.currentUtterance === utterance) {
             speechSynthesis.cancel();
             this.currentUtterance = null;
@@ -378,16 +370,13 @@ export class VoiceServiceEnhanced {
       testUtterance.volume = 0; // Silent test
 
       return new Promise(resolve => {
-        testUtterance.onend = (
-) => resolve(true);
-        testUtterance.onerror = (
-) => resolve(false);
+        testUtterance.onend = () => resolve(true);
+        testUtterance.onerror = () => resolve(false);
 
         speechSynthesis.speak(testUtterance);
 
         // Timeout fallback
-        setTimeout((
-) => resolve(true), 1000);
+        setTimeout(() => resolve(true), 1000);
       });
     } catch (error) {
       console.error('Error requesting speech permissions:', error);

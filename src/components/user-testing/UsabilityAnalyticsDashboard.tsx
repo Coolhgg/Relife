@@ -85,13 +85,11 @@ export function UsabilityAnalyticsDashboard() {
 
   const userTestingService = UserTestingService.getInstance();
 
-  useEffect((
-) => {
+  useEffect(() => {
     loadAnalyticsData();
   }, [selectedTimeRange]);
 
-  const loadAnalyticsData = async (
-) => {
+  const loadAnalyticsData = async () => {
     setIsLoading(true);
     try {
       // In a real app, you'd fetch from your backend
@@ -115,8 +113,7 @@ export function UsabilityAnalyticsDashboard() {
       totalSessions: sessions.length,
       averageSessionDuration:
         sessions.length > 0
-          ? sessions.reduce((sum, session
-) => {
+          ? sessions.reduce((sum, session) => {
               if (session.endTime) {
                 return sum + (session.endTime.getTime() - session.startTime.getTime());
               }
@@ -129,8 +126,7 @@ export function UsabilityAnalyticsDashboard() {
       totalEvents: events.length,
       averageEventsPerSession:
         sessions.length > 0 ? events.length / sessions.length : 0,
-      uniqueUsers: new Set(sessions.map((s: any
-) => s.userId)).size,
+      uniqueUsers: new Set(sessions.map((s: any) => s.userId)).size,
       bounceRate: 0.15, // Mock value
     };
   };
@@ -139,11 +135,9 @@ export function UsabilityAnalyticsDashboard() {
     const { events } = data;
 
     const clicksByPage = events
-      .filter((e: any
-) => e.type === 'click')
+      .filter((e: any) => e.type === 'click')
       .reduce(
-        (acc, event
-) => {
+        (acc, event) => {
           const page = event.page || 'Unknown';
           acc[page] = (acc[page] || 0) + 1;
           return acc;
@@ -152,11 +146,9 @@ export function UsabilityAnalyticsDashboard() {
       );
 
     const navigationFlow = events
-      .filter((e: any
-) => e.type === 'navigation')
+      .filter((e: any) => e.type === 'navigation')
       .reduce(
-        (acc, event
-) => {
+        (acc, event) => {
           const key = `${event.metadata.fromPage || 'Unknown'} → ${event.page}`;
           acc[key] = (acc[key] || 0) + 1;
           return acc;
@@ -165,11 +157,9 @@ export function UsabilityAnalyticsDashboard() {
       );
 
     const errorsByType = events
-      .filter((e: any
-) => e.type === 'error')
+      .filter((e: any) => e.type === 'error')
       .reduce(
-        (acc, event
-) => {
+        (acc, event) => {
           const errorType = event.metadata.error || 'Unknown';
           acc[errorType] = (acc[errorType] || 0) + 1;
           return acc;
@@ -178,18 +168,15 @@ export function UsabilityAnalyticsDashboard() {
       );
 
     return {
-      clicksByPage: Object.entries(clicksByPage).map(([page, clicks]
-) => ({
+      clicksByPage: Object.entries(clicksByPage).map(([page, clicks]) => ({
         page,
         clicks,
       })),
-      navigationFlow: Object.entries(navigationFlow).map(([flow, count]
-) => {
+      navigationFlow: Object.entries(navigationFlow).map(([flow, count]) => {
         const [from, to] = flow.split(' → ');
         return { from, to, count };
       }),
-      errorsByType: Object.entries(errorsByType).map(([type, count]
-) => ({
+      errorsByType: Object.entries(errorsByType).map(([type, count]) => ({
         type,
         count,
       })),
@@ -205,11 +192,9 @@ export function UsabilityAnalyticsDashboard() {
     const { feedback } = data;
 
     const ratingDistribution = feedback
-      .filter((f: any
-) => f.rating)
+      .filter((f: any) => f.rating)
       .reduce(
-        (acc, f
-) => {
+        (acc, f) => {
           acc[f.rating!] = (acc[f.rating!] || 0) + 1;
           return acc;
         },
@@ -217,8 +202,7 @@ export function UsabilityAnalyticsDashboard() {
       );
 
     const sentimentBreakdown = feedback.reduce(
-      (acc, f
-) => {
+      (acc, f) => {
         acc[f.sentiment] = (acc[f.sentiment] || 0) + 1;
         return acc;
       },
@@ -226,8 +210,7 @@ export function UsabilityAnalyticsDashboard() {
     );
 
     const categoryBreakdown = feedback.reduce(
-      (acc, f
-) => {
+      (acc, f) => {
         acc[f.category] = (acc[f.category] || 0) + 1;
         return acc;
       },
@@ -235,8 +218,7 @@ export function UsabilityAnalyticsDashboard() {
     );
 
     const priorityLevels = feedback.reduce(
-      (acc, f
-) => {
+      (acc, f) => {
         acc[f.priority] = (acc[f.priority] || 0) + 1;
         return acc;
       },
@@ -244,25 +226,21 @@ export function UsabilityAnalyticsDashboard() {
     );
 
     return {
-      ratingDistribution: Object.entries(ratingDistribution).map(([rating, count]
-) => ({
+      ratingDistribution: Object.entries(ratingDistribution).map(([rating, count]) => ({
         rating: Number(rating),
         count,
       })),
       sentimentBreakdown: Object.entries(sentimentBreakdown).map(
-        ([sentiment, count]
-) => ({
+        ([sentiment, count]) => ({
           sentiment,
           count,
         })
       ),
-      categoryBreakdown: Object.entries(categoryBreakdown).map(([category, count]
-) => ({
+      categoryBreakdown: Object.entries(categoryBreakdown).map(([category, count]) => ({
         category,
         count,
       })),
-      priorityLevels: Object.entries(priorityLevels).map(([priority, count]
-) => ({
+      priorityLevels: Object.entries(priorityLevels).map(([priority, count]) => ({
         priority,
         count,
       })),
@@ -293,8 +271,7 @@ export function UsabilityAnalyticsDashboard() {
         <div className="flex items-center gap-3">
           <select
             value={selectedTimeRange}
-            onChange={(e: any
-) => setSelectedTimeRange(e.target.value)}
+            onChange={(e: any) => setSelectedTimeRange(e.target.value)}
             className="px-3 py-2 border rounded-lg"
           >
             <option value="1d">Last 24 Hours</option>
@@ -430,11 +407,9 @@ export function UsabilityAnalyticsDashboard() {
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="count"
-                        label={({ type, count }
-) => `${type}: ${count}`}
+                        label={({ type, count }) => `${type}: ${count}`}
                       >
-                        {eventAnalytics.errorsByType.map((entry, index
-) => (
+                        {eventAnalytics.errorsByType.map((entry, index) => (
                           <Cell
                             key={`cell-${index}`}
                             fill={COLORS[index % COLORS.length]}
@@ -500,11 +475,9 @@ export function UsabilityAnalyticsDashboard() {
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="count"
-                        label={({ sentiment, count }
-) => `${sentiment}: ${count}`}
+                        label={({ sentiment, count }) => `${sentiment}: ${count}`}
                       >
-                        {feedbackAnalytics.sentimentBreakdown.map((entry, index
-) => (
+                        {feedbackAnalytics.sentimentBreakdown.map((entry, index) => (
                           <Cell
                             key={`cell-${index}`}
                             fill={COLORS[index % COLORS.length]}
@@ -530,9 +503,7 @@ export function UsabilityAnalyticsDashboard() {
             <CardContent>
               {data.feedback.length > 0 ? (
                 <div className="space-y-4">
-                  {data.feedback.slice(0, 5)
-      .map((feedback: any
-) => (
+                  {data.feedback.slice(0, 5).map((feedback: any) => (
                     <div key={feedback.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{feedback.title}</h4>
@@ -587,9 +558,7 @@ export function UsabilityAnalyticsDashboard() {
             <CardContent>
               {data.bugs.length > 0 ? (
                 <div className="space-y-4">
-                  {data.bugs.slice(0, 10)
-      .map((bug: any
-) => (
+                  {data.bugs.slice(0, 10).map((bug: any) => (
                     <div key={bug.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{bug.title}</h4>

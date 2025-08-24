@@ -58,18 +58,14 @@ import type {
 interface EnhancedMediaContentProps {
   currentUser: { id: string; username: string; displayName: string };
   mediaLibrary?: MediaLibrary;
-  onUploadSound?: (file: File
-) => Promise<void>;
-  onCreatePlaylist?: (playlist: Partial<Playlist>
-) => Promise<void>;
-  onSubmitQuote?: (quote: Partial<MotivationalQuote>
-) => Promise<void>;
+  onUploadSound?: (file: File) => Promise<void>;
+  onCreatePlaylist?: (playlist: Partial<Playlist>) => Promise<void>;
+  onSubmitQuote?: (quote: Partial<MotivationalQuote>) => Promise<void>;
   onCompletePhotoChallenge?: (
     challengeId: string,
     photo: File,
     caption?: string
-  
-) => Promise<void>;
+  ) => Promise<void>;
 }
 
 // Enhanced mock data with real audio capabilities
@@ -247,8 +243,7 @@ export function EnhancedMediaContent({
   };
 
   // Initialize audio manager
-  useEffect((
-) => {
+  useEffect(() => {
     audioManager.initialize();
 
     // Warm cache with popular sounds
@@ -272,11 +267,8 @@ export function EnhancedMediaContent({
   );
 
   const playSound = useCallback(
-    async (sound: CustomSound
-) => {
-      
-      setPlayerState((prev: any
-) => ({ ...prev, loading: true, error: null }));
+    async (sound: CustomSound) => {
+      setPlayerState((prev: any) => ({ ...prev, loading: true, error: null }));
 
       try {
         // Stop current audio if playing
@@ -288,11 +280,8 @@ export function EnhancedMediaContent({
         // Load and play audio using our audio manager
         const audioSource = await audioManager.playAudioFile(sound.fileUrl, {
           volume: playerState.volume,
-          onEnded: (
-) => {
-            
-      setPlayerState((prev: any
-) => ({
+          onEnded: () => {
+            setPlayerState((prev: any) => ({
               ...prev,
               isPlaying: false,
               currentTrack: null,
@@ -303,9 +292,8 @@ export function EnhancedMediaContent({
 
         if (audioSource) {
           currentAudioSource.current = audioSource;
-          
-      setPlayerState((prev: any
-) => ({
+
+          setPlayerState((prev: any) => ({
             ...prev,
             isPlaying: true,
             currentTrack: sound.id,
@@ -316,13 +304,11 @@ export function EnhancedMediaContent({
 
           // Set up time updates
           const startTime = performance.now();
-          const updateTime = (
-) => {
+          const updateTime = () => {
             if (currentAudioSource.current === audioSource) {
               const elapsed = (performance.now() - startTime) / 1000;
-              
-      setPlayerState((prev: any
-) => ({
+
+              setPlayerState((prev: any) => ({
                 ...prev,
                 currentTime: Math.min(elapsed, sound.duration),
               }));
@@ -338,9 +324,8 @@ export function EnhancedMediaContent({
         }
       } catch (error) {
         console.error('Error playing sound:', error);
-        
-      setPlayerState((prev: any
-) => ({
+
+        setPlayerState((prev: any) => ({
           ...prev,
           loading: false,
           error: error instanceof Error ? error.message : 'Unknown error',
@@ -357,27 +342,23 @@ export function EnhancedMediaContent({
     [playerState.volume]
   );
 
-  const pauseSound = useCallback((
-) => {
+  const pauseSound = useCallback(() => {
     if (currentAudioSource.current) {
       currentAudioSource.current.stop();
       currentAudioSource.current = null;
     }
-    
-      setPlayerState((prev: any
-) => ({
+
+    setPlayerState((prev: any) => ({
       ...prev,
       isPlaying: false,
       currentTrack: null,
     }));
   }, []);
 
-  const handleVolumeChange = useCallback((newVolume: number[]
-) => {
+  const handleVolumeChange = useCallback((newVolume: number[]) => {
     const volume = newVolume[0] / 100;
-    
-    setPlayerState((prev: any
-) => ({ ...prev, volume }));
+
+    setPlayerState((prev: any) => ({ ...prev, volume }));
 
     // Update current audio volume if playing
     // Note: Web Audio API doesn't allow real-time volume changes easily
@@ -385,25 +366,23 @@ export function EnhancedMediaContent({
   }, []);
 
   const playPlaylist = useCallback(
-    async (playlist: Playlist
-) => {
+    async (playlist: Playlist) => {
       if (playlist.sounds.length === 0) return;
 
-      
-      setPlayerState((prev: any
-) => ({ ...prev, currentPlaylist: playlist.id }));
+      setPlayerState((prev: any) => ({
+        ...prev,
+        currentPlaylist: playlist.id,
+      }));
 
       // Start with the first sound
-      const firstSound = playlist.sounds.sort((a, b
-) => a.order - b.order)[0];
+      const firstSound = playlist.sounds.sort((a, b) => a.order - b.order)[0];
 
       await playSound(firstSound.sound);
     },
     [playSound]
   );
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>
-) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -424,10 +403,9 @@ export function EnhancedMediaContent({
 
     try {
       // Simulate upload progress
-      const progressInterval = setInterval((
-) => {
-        setUploadProgress((prev: any
-) => { // auto: implicit any
+      const progressInterval = setInterval(() => {
+        setUploadProgress((prev: any) => {
+          // auto: implicit any
           const next = prev + 10;
           if (next >= 100) {
             clearInterval(progressInterval);
@@ -470,15 +448,13 @@ export function EnhancedMediaContent({
     ...new Set(effectiveMediaLibrary.sounds.map(s => s.category)),
   ];
 
-  const formatDuration = (seconds: number
-) => {
+  const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const formatFileSize = (bytes: number
-) => {
+  const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -486,8 +462,7 @@ export function EnhancedMediaContent({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const getCategoryIcon = (category: string
-) => {
+  const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'nature':
         return <Music className="h-4 w-4 text-green-500" />;
@@ -502,8 +477,7 @@ export function EnhancedMediaContent({
     }
   };
 
-  const renderAudioPlayer = (
-) => (
+  const renderAudioPlayer = () => (
     <Card className="border-2 border-primary/20">
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-3">
@@ -536,8 +510,7 @@ export function EnhancedMediaContent({
               onClick={
                 playerState.isPlaying
                   ? pauseSound
-                  : (
-) => {
+                  : () => {
                       if (playerState.currentTrack) {
                         const sound = effectiveMediaLibrary.sounds.find(
                           s => s.id === playerState.currentTrack
@@ -646,9 +619,7 @@ export function EnhancedMediaContent({
                 <Input
                   placeholder="Search sounds..."
                   value={searchQuery}
-                  
-                  onChange={(e: any
-) => setSearchQuery(e.target.value)}
+                  onChange={(e: any) => setSearchQuery(e.target.value)}
                 />
               </div>
               <label htmlFor="category-filter" className="sr-only">
@@ -657,9 +628,7 @@ export function EnhancedMediaContent({
               <select
                 id="category-filter"
                 value={selectedCategory}
-                
-                onChange={(e: any
-) => setSelectedCategory(e.target.value)}
+                onChange={(e: any) => setSelectedCategory(e.target.value)}
                 className="px-3 py-2 border rounded-md bg-background"
                 aria-label="Filter media by category"
               >
@@ -691,8 +660,7 @@ export function EnhancedMediaContent({
               />
               <Button
                 variant="outline"
-                onClick={(
-) => warmCache(filteredSounds.slice(0, 5))}
+                onClick={() => warmCache(filteredSounds.slice(0, 5))}
               >
                 <Download className="h-4 w-4 mr-2" />
                 Preload Popular
@@ -765,8 +733,7 @@ export function EnhancedMediaContent({
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={(
-) => {
+                          onClick={() => {
                             if (isCurrentTrack && playerState.isPlaying) {
                               pauseSound();
                             } else {
@@ -820,8 +787,7 @@ export function EnhancedMediaContent({
         <TabsContent value="playlists" className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Your Playlists</h3>
-            <Button onClick={(
-) => onCreatePlaylist?.({ name: 'New Playlist' })}>
+            <Button onClick={() => onCreatePlaylist?.({ name: 'New Playlist' })}>
               <Plus className="h-4 w-4 mr-2" />
               Create Playlist
             </Button>
@@ -868,8 +834,7 @@ export function EnhancedMediaContent({
                   <div className="flex gap-2">
                     <Button
                       size="sm"
-                      onClick={(
-) => playPlaylist(playlist)}
+                      onClick={() => playPlaylist(playlist)}
                       disabled={playlist.sounds.length === 0}
                     >
                       <Play className="h-4 w-4 mr-2" />
@@ -886,8 +851,7 @@ export function EnhancedMediaContent({
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Motivational Quotes</h3>
             <Button
-              onClick={(
-) => onSubmitQuote?.({ text: '', category: 'motivation' })}
+              onClick={() => onSubmitQuote?.({ text: '', category: 'motivation' })}
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Quote

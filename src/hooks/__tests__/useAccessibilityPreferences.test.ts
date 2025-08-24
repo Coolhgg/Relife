@@ -18,21 +18,17 @@ const mockService = {
 };
 
 // Mock module
-jest.mock('../../services/accessibility-preferences', (
-) => {
+jest.mock('../../services/accessibility-preferences', () => {
   return {
     __esModule: true,
     default: {
-      getInstance: (
-) => mockService,
+      getInstance: () => mockService,
     },
   };
 });
 
-describe('useAccessibilityPreferences', (
-) => {
-  beforeEach((
-) => {
+describe('useAccessibilityPreferences', () => {
+  beforeEach(() => {
     jest.clearAllMocks();
 
     // Default mock returns
@@ -58,10 +54,8 @@ describe('useAccessibilityPreferences', (
     });
   });
 
-  it('should initialize with current preferences and state', (
-) => {
-    const { result } = renderHook((
-) => useAccessibilityPreferences());
+  it('should initialize with current preferences and state', () => {
+    const { result } = renderHook(() => useAccessibilityPreferences());
 
     expect(result.current.preferences).toEqual({
       highContrast: false,
@@ -83,25 +77,21 @@ describe('useAccessibilityPreferences', (
     expect(mockService.getState).toHaveBeenCalledTimes(1);
   });
 
-  it('should subscribe to preference changes on mount', (
-) => {
-    renderHook((
-) => useAccessibilityPreferences());
+  it('should subscribe to preference changes on mount', () => {
+    renderHook(() => useAccessibilityPreferences());
 
     expect(mockService.subscribe).toHaveBeenCalledTimes(1);
     expect(typeof mockService.subscribe.mock.calls[0][0]).toBe('function');
   });
 
-  it('should update preferences and state when service notifies changes', (
-) => {
+  it('should update preferences and state when service notifies changes', () => {
     let subscribeCallback: Function;
     mockService.subscribe.mockImplementation(callback => {
       subscribeCallback = callback;
       return jest.fn();
     });
 
-    const { result } = renderHook((
-) => useAccessibilityPreferences());
+    const { result } = renderHook(() => useAccessibilityPreferences());
 
     // Simulate service notifying of changes
     const newPreferences = {
@@ -122,8 +112,7 @@ describe('useAccessibilityPreferences', (
 
     mockService.getState.mockReturnValue(newState);
 
-    act((
-) => {
+    act(() => {
       subscribeCallback(newPreferences);
     });
 
@@ -131,12 +120,10 @@ describe('useAccessibilityPreferences', (
     expect(result.current.state).toEqual(newState);
   });
 
-  it('should update preferences when updatePreferences is called', async (
-) => {
+  it('should update preferences when updatePreferences is called', async () => {
     mockService.updatePreferences.mockResolvedValue(undefined);
 
-    const { result } = renderHook((
-) => useAccessibilityPreferences());
+    const { result } = renderHook(() => useAccessibilityPreferences());
 
     const newPreferences = {
       highContrast: true,
@@ -146,39 +133,32 @@ describe('useAccessibilityPreferences', (
       colorScheme: 'dark',
     };
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.updatePreferences(newPreferences);
     });
 
     expect(mockService.updatePreferences).toHaveBeenCalledWith(newPreferences);
   });
 
-  it('should reset preferences when resetToDefaults is called', async (
-) => {
+  it('should reset preferences when resetToDefaults is called', async () => {
     mockService.resetToDefaults.mockResolvedValue(undefined);
 
-    const { result } = renderHook((
-) => useAccessibilityPreferences());
+    const { result } = renderHook(() => useAccessibilityPreferences());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.resetToDefaults();
     });
 
     expect(mockService.resetToDefaults).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle errors in updatePreferences gracefully', async (
-) => {
+  it('should handle errors in updatePreferences gracefully', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
     mockService.updatePreferences.mockRejectedValue(new Error('Update failed'));
 
-    const { result } = renderHook((
-) => useAccessibilityPreferences());
+    const { result } = renderHook(() => useAccessibilityPreferences());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.updatePreferences({
         highContrast: true,
         reducedMotion: false,
@@ -196,16 +176,13 @@ describe('useAccessibilityPreferences', (
     consoleSpy.mockRestore();
   });
 
-  it('should handle errors in resetToDefaults gracefully', async (
-) => {
+  it('should handle errors in resetToDefaults gracefully', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
     mockService.resetToDefaults.mockRejectedValue(new Error('Reset failed'));
 
-    const { result } = renderHook((
-) => useAccessibilityPreferences());
+    const { result } = renderHook(() => useAccessibilityPreferences());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.resetToDefaults();
     });
 
@@ -217,29 +194,24 @@ describe('useAccessibilityPreferences', (
     consoleSpy.mockRestore();
   });
 
-  it('should unsubscribe when component unmounts', (
-) => {
+  it('should unsubscribe when component unmounts', () => {
     const mockUnsubscribe = jest.fn();
     mockService.subscribe.mockReturnValue(mockUnsubscribe);
 
-    const { unmount } = renderHook((
-) => useAccessibilityPreferences());
+    const { unmount } = renderHook(() => useAccessibilityPreferences());
 
     unmount();
 
     expect(mockUnsubscribe).toHaveBeenCalledTimes(1);
   });
 
-  it('should provide helper functions for specific preference updates', async (
-) => {
+  it('should provide helper functions for specific preference updates', async () => {
     mockService.updatePreferences.mockResolvedValue(undefined);
 
-    const { result } = renderHook((
-) => useAccessibilityPreferences());
+    const { result } = renderHook(() => useAccessibilityPreferences());
 
     // Test high contrast toggle
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.toggleHighContrast();
     });
 
@@ -248,8 +220,7 @@ describe('useAccessibilityPreferences', (
     );
 
     // Test reduced motion toggle
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.toggleReducedMotion();
     });
 
@@ -258,8 +229,7 @@ describe('useAccessibilityPreferences', (
     );
 
     // Test font size update
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.setFontSize('large');
     });
 
@@ -268,15 +238,12 @@ describe('useAccessibilityPreferences', (
     );
   });
 
-  it('should handle rapid preference updates without race conditions', async (
-) => {
+  it('should handle rapid preference updates without race conditions', async () => {
     mockService.updatePreferences.mockImplementation(
-      (
-) => new Promise(resolve => setTimeout(resolve, 10))
+      () => new Promise(resolve => setTimeout(resolve, 10))
     );
 
-    const { result } = renderHook((
-) => useAccessibilityPreferences());
+    const { result } = renderHook(() => useAccessibilityPreferences());
 
     // Fire multiple updates rapidly
     const promises = [
@@ -303,8 +270,7 @@ describe('useAccessibilityPreferences', (
       }),
     ];
 
-    await act(async (
-) => {
+    await act(async () => {
       await Promise.all(promises);
     });
 

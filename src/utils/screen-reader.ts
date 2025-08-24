@@ -115,8 +115,7 @@ export class ScreenReaderService {
 
     // Ensure the region is inserted after page load
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', (
-) => {
+      document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(this.liveRegion!);
       });
     } else {
@@ -135,8 +134,7 @@ export class ScreenReaderService {
 
     // Ensure the region is inserted after page load
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', (
-) => {
+      document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(this.statusRegion!);
       });
     } else {
@@ -220,8 +218,7 @@ export class ScreenReaderService {
     if (verbosity === 'low' && this.state.verbosityLevel !== 'high') return;
     if (verbosity === 'medium' && this.state.verbosityLevel === 'low') return;
 
-    const processAnnouncement = (
-) => {
+    const processAnnouncement = () => {
       if (interrupt) {
         this.clearQueue();
       }
@@ -235,8 +232,7 @@ export class ScreenReaderService {
         console.warn('Live regions not found, reinitializing...');
         this.initializeLiveRegions();
         // Retry announcement after reinitializing
-        setTimeout((
-) => {
+        setTimeout(() => {
           const retryRegion =
             priority === 'assertive' ? this.statusRegion : this.liveRegion;
           if (retryRegion) {
@@ -498,13 +494,11 @@ export class ScreenReaderService {
     region.textContent = '';
 
     // Use RAF to ensure the clear is processed before setting new content
-    requestAnimationFrame((
-) => {
+    requestAnimationFrame(() => {
       region.textContent = message;
 
       // Method 2: Retry textContent as a fallback
-      setTimeout((
-) => {
+      setTimeout(() => {
         if (region.textContent === message) {
           region.textContent = '';
           region.textContent = message;
@@ -512,19 +506,16 @@ export class ScreenReaderService {
       }, 50);
 
       // Method 3: Force a reflow by temporarily changing aria-live
-      setTimeout((
-) => {
+      setTimeout(() => {
         const currentLive = region.getAttribute('aria-live');
         region.setAttribute('aria-live', 'off');
-        requestAnimationFrame((
-) => {
+        requestAnimationFrame(() => {
           region.setAttribute('aria-live', currentLive || 'polite');
         });
       }, 100);
 
       // Clear after 3 seconds to prevent accumulation
-      setTimeout((
-) => {
+      setTimeout(() => {
         if (region.textContent === message) {
           region.textContent = '';
         }
@@ -586,13 +577,11 @@ export class ARIAPatterns {
   /**
    * Create accessible accordion pattern
    */
-  static setupAccordion(container: HTMLElement): (
-) => void {
+  static setupAccordion(container: HTMLElement): () => void {
     const headers = container.querySelectorAll('[role="button"]');
     const panels = container.querySelectorAll('[role="region"]');
 
-    headers.forEach((header, index
-) => {
+    headers.forEach((header, index) => {
       const panel = panels[index] as HTMLElement;
       if (!panel) return;
 
@@ -606,8 +595,7 @@ export class ARIAPatterns {
       panel.setAttribute('aria-labelledby', headerId);
       panel.setAttribute('aria-hidden', 'true');
 
-      const handleToggle = (
-) => {
+      const handleToggle = () => {
         const isExpanded = header.getAttribute('aria-expanded') === 'true';
         header.setAttribute('aria-expanded', (!isExpanded).toString());
         panel.setAttribute('aria-hidden', isExpanded.toString());
@@ -627,13 +615,10 @@ export class ARIAPatterns {
       });
     });
 
-    return (
-) => {
+    return () => {
       headers.forEach(header => {
-        header.removeEventListener('click', (
-) => {});
-        header.removeEventListener('keydown', (
-) => {});
+        header.removeEventListener('click', () => {});
+        header.removeEventListener('keydown', () => {});
       });
     };
   }
@@ -641,21 +626,17 @@ export class ARIAPatterns {
   /**
    * Create accessible tab pattern
    */
-  static setupTabs(container: HTMLElement): (
-) => void {
+  static setupTabs(container: HTMLElement): () => void {
     const tabList = container.querySelector('[role="tablist"]');
     const tabs = container.querySelectorAll('[role="tab"]');
     const panels = container.querySelectorAll('[role="tabpanel"]');
 
-    if (!tabList || tabs.length === 0 || panels.length === 0) return (
-) => {};
+    if (!tabList || tabs.length === 0 || panels.length === 0) return () => {};
 
     let activeIndex = 0;
 
-    const setActiveTab = (index: number
-) => {
-      tabs.forEach((tab, i
-) => {
+    const setActiveTab = (index: number) => {
+      tabs.forEach((tab, i) => {
         const panel = panels[i] as HTMLElement;
         if (i === index) {
           tab.setAttribute('aria-selected', 'true');
@@ -676,8 +657,7 @@ export class ARIAPatterns {
       );
     };
 
-    const handleKeydown = (e: KeyboardEvent
-) => {
+    const handleKeydown = (e: KeyboardEvent) => {
       let newIndex = activeIndex;
 
       switch (e.key) {
@@ -703,10 +683,8 @@ export class ARIAPatterns {
       setActiveTab(newIndex);
     };
 
-    tabs.forEach((tab, index
-) => {
-      tab.addEventListener('click', (
-) => setActiveTab(index));
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => setActiveTab(index));
     });
 
     tabList.addEventListener('keydown', handleKeydown);
@@ -714,11 +692,9 @@ export class ARIAPatterns {
     // Initialize first tab as active
     setActiveTab(0);
 
-    return (
-) => {
+    return () => {
       tabs.forEach(tab => {
-        tab.removeEventListener('click', (
-) => {});
+        tab.removeEventListener('click', () => {});
       });
       tabList.removeEventListener('keydown', handleKeydown);
     };
@@ -727,8 +703,7 @@ export class ARIAPatterns {
   /**
    * Create accessible combobox pattern
    */
-  static setupCombobox(input: HTMLInputElement, listbox: HTMLElement): (
-) => void {
+  static setupCombobox(input: HTMLInputElement, listbox: HTMLElement): () => void {
     const options = listbox.querySelectorAll('[role="option"]');
     let activeIndex = -1;
 
@@ -741,10 +716,8 @@ export class ARIAPatterns {
     input.setAttribute('aria-owns', listboxId);
     listbox.id = listboxId;
 
-    const setActiveOption = (index: number
-) => {
-      options.forEach((option, i
-) => {
+    const setActiveOption = (index: number) => {
+      options.forEach((option, i) => {
         if (i === index) {
           option.setAttribute('aria-selected', 'true');
           input.setAttribute('aria-activedescendant', option.id || `option-${i}`);
@@ -755,8 +728,7 @@ export class ARIAPatterns {
       activeIndex = index;
     };
 
-    const handleKeydown = (e: KeyboardEvent
-) => {
+    const handleKeydown = (e: KeyboardEvent) => {
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();
@@ -783,8 +755,7 @@ export class ARIAPatterns {
 
     input.addEventListener('keydown', handleKeydown);
 
-    return (
-) => {
+    return () => {
       input.removeEventListener('keydown', handleKeydown);
     };
   }

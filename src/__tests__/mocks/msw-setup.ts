@@ -12,8 +12,7 @@ import { handlers } from './msw-handlers';
 export const server = setupServer(...handlers);
 
 // Establish API mocking before all tests
-beforeAll((
-) => {
+beforeAll(() => {
   server.listen({
     onUnhandledRequest: 'warn', // Warn about unhandled requests instead of erroring
   });
@@ -21,14 +20,12 @@ beforeAll((
 
 // Reset any request handlers that we may add during the tests,
 // so they don't affect other tests
-afterEach((
-) => {
+afterEach(() => {
   server.resetHandlers();
 });
 
 // Clean up after the tests are finished
-afterAll((
-) => {
+afterAll(() => {
   server.close();
 });
 
@@ -37,32 +34,26 @@ export const mockApiError = (
   endpoint: string,
   status: number = 500,
   message: string = 'Server Error'
-
 ) => {
   server.use(
-    http.all(endpoint, (
-) => {
+    http.all(endpoint, () => {
       return HttpResponse.json({ error: message }, { status });
     })
   );
 };
 
-export const mockApiDelay = (endpoint: string, delay: number = 1000
-) => {
+export const mockApiDelay = (endpoint: string, delay: number = 1000) => {
   server.use(
-    http.all(endpoint, async (
-) => {
+    http.all(endpoint, async () => {
       await new Promise(resolve => setTimeout(resolve, delay));
       return HttpResponse.json({ success: true });
     })
   );
 };
 
-export const mockApiSuccess = (endpoint: string, data: any
-) => {
+export const mockApiSuccess = (endpoint: string, data: any) => {
   server.use(
-    http.all(endpoint, (
-) => {
+    http.all(endpoint, () => {
       return HttpResponse.json(data);
     })
   );
