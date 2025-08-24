@@ -97,7 +97,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
     }
 
     setParticles(newParticles);
-  }, [theme]);
+  }, [theme, createParticle]);
 
   const createParticle = (id: number): ParticleEffect => {
     if (!theme) {
