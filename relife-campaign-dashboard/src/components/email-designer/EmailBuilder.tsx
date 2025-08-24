@@ -652,7 +652,7 @@ export function EmailBuilder({
               <Droppable droppableId="email-canvas">
                 {provided => (
                   <div {...provided.droppableProps} ref={provided.innerRef}>
-                    {template.blocks.map((block, _index) => (
+                    {template.blocks.map((block, index) => (
                       <Draggable key={block.id} draggableId={block.id} index={index}>
                         {provided => (
                           <div
@@ -670,9 +670,9 @@ export function EmailBuilder({
                             {/* Block Controls */}
                             <div
                               className={`absolute top-2 right-2 flex gap-1 transition-opacity ${
-                                selectedBlockId === block.id || 'group-hover:'
+                                selectedBlockId === block.id
                                   ? 'opacity-100'
-                                  : 'opacity-0'
+                                  : 'opacity-0 group-hover:opacity-100'
                               }`}
                             >
                               <Button

@@ -237,7 +237,7 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
                   <td className="p-2 text-center">
                     <Badge variant="secondary">{cohort.size.toLocaleString()}</Badge>
                   </td>
-                  {periodKeys.map((key, _index) => (
+                  {periodKeys.map((key, index) => (
                     <td key={key} className="p-2 text-center">
                       <TooltipProvider>
                         <Tooltip>
@@ -276,7 +276,7 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
                     ).toLocaleString()}
                   </Badge>
                 </td>
-                {averages.map((avg, _index) => (
+                {averages.map((avg, index) => (
                   <td key={index} className="p-2 text-center">
                     <div
                       className={`

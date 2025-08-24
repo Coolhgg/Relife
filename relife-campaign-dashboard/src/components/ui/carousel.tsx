@@ -76,10 +76,10 @@ function Carousel({
 
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (_event.key === 'ArrowLeft') {
+      if (event.key === 'ArrowLeft') {
         event.preventDefault();
         scrollPrev();
-      } else if (_event.key === 'ArrowRight') {
+      } else if (event.key === 'ArrowRight') {
         event.preventDefault();
         scrollNext();
       }
@@ -131,7 +131,7 @@ function Carousel({
 }
 
 function CarouselContent({ className, ...props }: React.ComponentProps<'div'>) {
-  const { _carouselRef, _orientation } = useCarousel();
+  const { _carouselRef: carouselRef, _orientation: orientation } = useCarousel();
 
   return (
     <div ref={carouselRef} className="overflow-hidden" data-slot="carousel-content">
@@ -171,7 +171,7 @@ function CarouselPrevious({
   size = 'icon',
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { _orientation, _scrollPrev, _canScrollPrev } = useCarousel();
+  const { _orientation: orientation, _scrollPrev: scrollPrev, _canScrollPrev: canScrollPrev } = useCarousel();
 
   return (
     <Button

@@ -48,7 +48,7 @@ class EmailCampaignSetup {
     console.log('Select your email marketing platform:\n');
 
     const platforms = Object.keys(emailPlatforms);
-    platforms.forEach((key, _index) => {
+    platforms.forEach((key, index) => {
       const platform = emailPlatforms[key];
       console.log(`${index + 1}. ${platform.name}`);
       console.log(`   Features: ${platform.features.join(', ')}`);
@@ -95,7 +95,7 @@ class EmailCampaignSetup {
       config.sequences[persona] = {
         name: `${this.getPersonaDisplayName(persona)} - Welcome Series`,
         trigger: `Tag added: persona:${persona}`,
-        emails: campaign.sequences.map((email, _index) => ({
+        emails: campaign.sequences.map((email, index) => ({
           subject: email.subject,
           delay_days: Math.floor(email.delay_hours / 24),
           delay_hours: email.delay_hours % 24,
@@ -158,7 +158,7 @@ class EmailCampaignSetup {
     const templates = {};
 
     Object.entries(campaignConfig).forEach(([persona, campaign]) => {
-      templates[persona] = campaign.sequences.map((email, _index) => {
+      templates[persona] = campaign.sequences.map((email, index) => {
         const personaColor = templateVariables.persona_specific[persona].primary_color;
         const messagingTone =
           templateVariables.persona_specific[persona].messaging_tone;
@@ -471,7 +471,7 @@ Your campaigns are ready to launch! 🎉
       console.log('2. Follow the setup-instructions.md guide');
       console.log('3. Import configurations into your email platform');
       console.log('4. Test and launch your campaigns\n');
-    } catch (_error) {
+    } catch (error) {
       console.error('❌ Setup failed:', error.message);
       process.exit(1);
     }

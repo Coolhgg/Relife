@@ -194,7 +194,7 @@ export default {
         { error: 'Not Found', path: url.pathname },
         { status: 404, headers: corsHeaders(origin) }
       );
-    } catch (_error) {
+    } catch (error) {
       console.error('API Error:', error);
       return Response.json(
         { error: 'Internal Server Error' },

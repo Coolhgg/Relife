@@ -456,7 +456,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                             Why this prediction?
                           </h4>
                           <ul className="space-y-2">
-                            {prediction.reasons.map((reason, _index) => (
+                            {prediction.reasons.map((reason, index) => (
                               <li
                                 key={index}
                                 className="flex items-start gap-2 text-sm"
@@ -477,7 +477,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                             Recommended Campaigns
                           </h4>
                           <div className="space-y-2">
-                            {prediction.recommendedCampaigns.map((campaign, _index) => (
+                            {prediction.recommendedCampaigns.map((campaign, index) => (
                               <div
                                 key={index}
                                 className="flex items-center justify-between p-2 bg-gray-50 rounded"

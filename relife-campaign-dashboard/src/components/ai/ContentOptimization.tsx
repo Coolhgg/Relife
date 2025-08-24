@@ -408,7 +408,7 @@ Ready to transform your mornings?`);
                               Key Improvements:
                             </div>
                             {optimizedContent.improvements.map(
-                              (improvement, _index) => (
+                              (improvement, index) => (
                                 <div
                                   key={index}
                                   className="flex items-start gap-2 text-sm"
@@ -551,7 +551,7 @@ Ready to transform your mornings?`);
             <TabsContent value="history" className="space-y-4">
               {optimizationHistory.length > 0 ? (
                 <div className="space-y-3">
-                  {optimizationHistory.map((opt, _index) => (
+                  {optimizationHistory.map((opt, index) => (
                     <Card key={index}>
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">
