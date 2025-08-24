@@ -328,7 +328,7 @@ export const _createTestVoice = (options: CreateVoiceOptions = {}): PremiumVoice
   };
 };
 
-const createTestVoicePersonality = (): VoicePersonality =>
+const createTestVoicePersonality = (): SafeVoicePersonality =>
   ({
     energy: faker.number.int({ min: 1, max: 10 }),
     humor: faker.number.int({ min: 1, max: 10 }),
@@ -352,9 +352,9 @@ const createTestVoicePersonality = (): VoicePersonality =>
       2,
       4
     ),
-  }) as any;
+  });
 
-const createTestVoiceSample = (): VoiceSample =>
+const createTestVoiceSample = (): SafeVoiceSample =>
   ({
     id: generateId('sample'),
     text: faker.helpers.arrayElement([
@@ -368,15 +368,15 @@ const createTestVoiceSample = (): VoiceSample =>
     audioUrl: generateUrl() + '/sample.mp3',
     duration: faker.number.int({ min: 2, max: 10 }), // seconds
     context: faker.helpers.arrayElement([
-      'wake-up',
+      'wake_up', // auto: adjusted to match enum
       'motivation',
-      'reminder',
-      'celebration',
+      'challenge', // auto: adjusted to match enum
+      'success', // auto: adjusted to match enum
     ]),
     emotion: faker.helpers.arrayElement(['excited', 'calm', 'determined', 'playful']),
-  }) as any;
+  });
 
-const createTestVoiceFeatures = (): VoiceFeatures =>
+const createTestVoiceFeatures = (): SafeVoiceFeatures =>
   ({
     emotionalAdaptation: faker.datatype.boolean({ probability: 0.7 }),
     contextAwareness: faker.datatype.boolean({ probability: 0.6 }),
@@ -386,7 +386,7 @@ const createTestVoiceFeatures = (): VoiceFeatures =>
     backgroundMusic: faker.datatype.boolean({ probability: 0.3 }),
     voiceEffects: faker.datatype.boolean({ probability: 0.4 }),
     realTimeGeneration: faker.datatype.boolean({ probability: 0.2 }),
-  }) as any;
+  });
 
 // ===============================
 // CUSTOM SOUND FACTORIES
@@ -493,7 +493,7 @@ export const _createTestAnalytics = (
   };
 };
 
-const createTestSleepInsights = (): SleepInsights =>
+const createTestSleepInsights = (): SafeSleepInsights =>
   ({
     averageBedtime: faker.date.recent().toTimeString().slice(0, 5),
     averageWakeTime: faker.date.recent().toTimeString().slice(0, 5),
@@ -503,9 +503,9 @@ const createTestSleepInsights = (): SleepInsights =>
     optimalBedtime: faker.date.recent().toTimeString().slice(0, 5),
     sleepDebt: faker.number.float({ min: -2.0, max: 2.0, multipleOf: 0.1 }),
     weekendShift: faker.number.float({ min: -2.0, max: 3.0, multipleOf: 0.1 }),
-  }) as any;
+  });
 
-const createTestWakeUpPatterns = (): WakeUpPatterns =>
+const createTestWakeUpPatterns = (): SafeWakeUpPatterns =>
   ({
     mostCommonWakeTime: faker.date.recent().toTimeString().slice(0, 5),
     wakeTimeVariability: faker.number.float({ min: 0.1, max: 2.0, multipleOf: 0.1 }),
@@ -518,9 +518,9 @@ const createTestWakeUpPatterns = (): WakeUpPatterns =>
       weekendAvg: faker.date.recent().toTimeString().slice(0, 5),
       difference: faker.number.float({ min: -2.0, max: 4.0, multipleOf: 0.1 }),
     },
-  }) as any;
+  });
 
-const createTestPerformanceMetrics = (): PerformanceMetrics =>
+const createTestPerformanceMetrics = (): SafePerformanceMetrics =>
   ({
     completionRate: faker.number.float({ min: 0.6, max: 1.0, multipleOf: 0.01 }),
     averageResponseTime: faker.number.int({ min: 5, max: 300 }), // seconds
@@ -531,7 +531,7 @@ const createTestPerformanceMetrics = (): PerformanceMetrics =>
     totalBattles: faker.number.int({ min: 1, max: 100 }),
     winRate: faker.number.float({ min: 0.1, max: 0.9, multipleOf: 0.01 }),
     experienceGained: faker.number.int({ min: 100, max: 10000 }),
-  }) as any;
+  });
 
 const createTestAnalyticsRecommendation = () => ({
   id: generateId('recommendation'),
@@ -671,3 +671,15 @@ export const _createTestPricing = (options: any = {}) => {
 export const createTestSubscriptionPlan = _createTestSubscriptionPlan;
 export const createTestPaymentMethod = _createTestPaymentMethod;
 export const createTestPricing = _createTestPricing;
+
+// ===============================
+// SAFE TYPE WIDENINGS
+// ===============================
+
+// auto: widened type - factory functions can return partial interfaces
+export type SafeVoicePersonality = Partial<VoicePersonality> & { energy: number; humor: number; };
+export type SafeVoiceSample = Partial<VoiceSample> & { id: string; text: string; audioUrl: string; duration: number; };
+export type SafeVoiceFeatures = Partial<VoiceFeatures>;
+export type SafeSleepInsights = Partial<SleepInsights> & { averageSleepDuration?: number; sleepQualityScore?: number; };
+export type SafeWakeUpPatterns = Partial<WakeUpPatterns> & { averageWakeTime?: string; };
+export type SafePerformanceMetrics = Partial<PerformanceMetrics> & { wakeUpSuccessRate?: number; };
