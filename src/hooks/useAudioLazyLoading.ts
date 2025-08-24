@@ -31,12 +31,12 @@ export function useAudioLazyLoading(
   const loadSound = useCallback(async () => {
     if (!sound) return;
 
-    setState((prev: any) => ({ // auto: implicit any{ ...prev, state: 'loading', error: null }));
+    setState((prev: any) => ({ // auto: implicit any ...prev, state: 'loading', error: null }));
 
     try {
       const entry = await lazyAudioLoader.queueSound(sound, priority, {
         onProgress: (progress: AudioLoadProgress) => {
-          setState((prev: any) => ({ // auto: implicit any{
+          setState((prev: any) => ({ // auto: implicit any
             ...prev,
             progress: progress.percentage,
             speed: progress.speed,
@@ -44,7 +44,7 @@ export function useAudioLazyLoading(
           }));
         },
         onComplete: (entry: AudioCacheEntry) => {
-          setState((prev: any) => ({ // auto: implicit any{
+          setState((prev: any) => ({ // auto: implicit any
             ...prev,
             state: 'loaded',
             progress: 100,
@@ -52,7 +52,7 @@ export function useAudioLazyLoading(
           }));
         },
         onError: (error: Error) => {
-          setState((prev: any) => ({ // auto: implicit any{
+          setState((prev: any) => ({ // auto: implicit any
             ...prev,
             state: 'error',
             error: error.message,
@@ -61,14 +61,14 @@ export function useAudioLazyLoading(
       });
 
       // If promise resolves immediately (cached), update state
-      setState((prev: any) => ({ // auto: implicit any{
+      setState((prev: any) => ({ // auto: implicit any
         ...prev,
         state: 'loaded',
         progress: 100,
         entry,
       }));
     } catch (error) {
-      setState((prev: any) => ({ // auto: implicit any{
+      setState((prev: any) => ({ // auto: implicit any
         ...prev,
         state: 'error',
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -211,13 +211,13 @@ export function useAlarmSoundPreloading(alarms: any[]) {
     try {
       await lazyAudioLoader.queueAlarmSounds(alarms);
 
-      setPreloadingStatus((prev: any) => ({ // auto: implicit any{
+      setPreloadingStatus((prev: any) => ({ // auto: implicit any
         ...prev,
         isPreloading: false,
         preloadedCount: alarmsWithSounds.length,
       }));
     } catch (error) {
-      setPreloadingStatus((prev: any) => ({ // auto: implicit any{
+      setPreloadingStatus((prev: any) => ({ // auto: implicit any
         ...prev,
         isPreloading: false,
         errors: [

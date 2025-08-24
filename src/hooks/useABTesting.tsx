@@ -74,7 +74,7 @@ export const useABTesting = (userId?: string) => {
   }, [userId]);
 
   const initializeABTesting = async (userId: string) => {
-    setState((prev: any) => ({ // auto: implicit any{ ...prev, loading: true, error: null }));
+    setState((prev: any) => ({ // auto: implicit any ...prev, loading: true, error: null }));
 
     try {
       // Check if user already has an A/B test assignment
@@ -119,7 +119,7 @@ export const useABTesting = (userId?: string) => {
           'session_start'
         );
       } else {
-        setState((prev: any) => ({ // auto: implicit any{
+        setState((prev: any) => ({ // auto: implicit any
           ...prev,
           loading: false,
           error: 'Failed to initialize A/B testing',
@@ -127,7 +127,7 @@ export const useABTesting = (userId?: string) => {
       }
     } catch (error) {
       console.error('A/B Testing initialization error:', error);
-      setState((prev: any) => ({ // auto: implicit any{
+      setState((prev: any) => ({ // auto: implicit any
         ...prev,
         loading: false,
         error: 'Failed to initialize A/B testing',

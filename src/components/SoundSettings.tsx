@@ -142,7 +142,10 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
     try {
       const userCustomThemes = soundEffectsService.getCustomThemesByUser(userId);
       // Transform custom themes to match built-in theme format
-      const transformedThemes = userCustomThemes.map((theme: any) => ({ // auto: implicit any{
+      const transformedThemes = userCustomThemes.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
         id: theme.id,
         name: theme.displayName || theme.name,
         description: theme.description || 'Custom theme',
@@ -174,18 +177,18 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
 
   // Test individual sound
   const handleTestSound = async (soundId: SoundEffectId) => {
-    setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [soundId]: null }));
+    setTestResults((prev: any) => ({ // auto: implicit any ...prev, [soundId]: null }));
 
     try {
       const result = await testSound(soundId);
-      setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [soundId]: result }));
+      setTestResults((prev: any) => ({ // auto: implicit any ...prev, [soundId]: result }));
 
       // Clear result after 3 seconds
       setTimeout(() => {
-        setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [soundId]: null }));
+        setTestResults((prev: any) => ({ // auto: implicit any ...prev, [soundId]: null }));
       }, 3000);
     } catch (error) {
-      setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [soundId]: false }));
+      setTestResults((prev: any) => ({ // auto: implicit any ...prev, [soundId]: false }));
     }
   };
 
@@ -309,7 +312,10 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
             </Badge>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-            {allThemes.map((theme: any) => ({ // auto: implicit any
+            {allThemes.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
               <Card
                 key={theme.id}
                 className={`cursor-pointer transition-colors ${
@@ -338,7 +344,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={(e: any) => { // auto: implicit any
+                        onClick={(e: any) => { // auto
                           e.stopPropagation();
                           handleThemePreview(theme.id);
                         }}
@@ -744,7 +750,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
               <CustomSoundThemeCreator
                 userId={userId}
                 onClose={() => setShowCustomThemeCreator(false)}
-                onThemeCreated={(theme: any) => { // auto: implicit any
+                onThemeCreated={(theme: any) => { // auto
                   // Refresh available themes
                   refreshThemes();
                   setShowCustomThemeCreator(false);
@@ -767,7 +773,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
               <CustomThemeManager
                 userId={userId}
                 onClose={() => setShowCustomThemeManager(false)}
-                onThemeUpdated={(theme: any) => { // auto: implicit any
+                onThemeUpdated={(theme: any) => { // auto
                   // Refresh available themes
                   refreshThemes();
                 }}

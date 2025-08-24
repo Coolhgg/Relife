@@ -91,7 +91,7 @@ export default function SignUpForm({
   };
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
-    setFormData((prev: any) => ({ // auto: implicit any{ ...prev, [field]: value }));
+    setFormData((prev: any) => ({ // auto: implicit any ...prev, [field]: value }));
 
     // Check password strength in real-time
     if (field === 'password') {
@@ -100,7 +100,7 @@ export default function SignUpForm({
 
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
-      setValidationErrors((prev: any) => ({ // auto: implicit any{ ...prev, [field]: undefined }));
+      setValidationErrors((prev: any) => ({ // auto: implicit any ...prev, [field]: undefined }));
     }
   };
 

@@ -276,7 +276,7 @@ export const useInfiniteScroll = <T,>(
       if (newData.length < pageSize) {
         setHasMore(false);
       }
-      setData((prev: any) => [ // auto: implicit any...prev, ...newData]);
+      setData((prev: any) => [...prev, ...newData]);
     } catch (error) {
       console.error('Error loading more data:', error);
     } finally {

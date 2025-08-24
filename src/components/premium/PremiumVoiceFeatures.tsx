@@ -120,7 +120,7 @@ function AIWakeUpCoach() {
               <Slider
                 value={[voiceSettings.speed]}
                 onValueChange={(value: any) => // auto: implicit any
-                  setVoiceSettings((prev: any) => ({ // auto: implicit any{ ...prev, speed: value[0] }))
+                  setVoiceSettings((prev: any) => ({ // auto: implicit any ...prev, speed: value[0] }))
                 }
                 min={0.5}
                 max={2.0}
@@ -135,7 +135,7 @@ function AIWakeUpCoach() {
               <Slider
                 value={[voiceSettings.pitch]}
                 onValueChange={(value: any) => // auto: implicit any
-                  setVoiceSettings((prev: any) => ({ // auto: implicit any{ ...prev, pitch: value[0] }))
+                  setVoiceSettings((prev: any) => ({ // auto: implicit any ...prev, pitch: value[0] }))
                 }
                 min={0.5}
                 max={2.0}
@@ -152,7 +152,7 @@ function AIWakeUpCoach() {
               <Slider
                 value={[voiceSettings.volume]}
                 onValueChange={(value: any) => // auto: implicit any
-                  setVoiceSettings((prev: any) => ({ // auto: implicit any{ ...prev, volume: value[0] }))
+                  setVoiceSettings((prev: any) => ({ // auto: implicit any ...prev, volume: value[0] }))
                 }
                 min={0.1}
                 max={1.0}
@@ -178,9 +178,9 @@ function AIWakeUpCoach() {
                   type="checkbox"
                   id={goal}
                   checked={coachingGoals.includes(goal)}
-                  onChange={(e: any) => { // auto: implicit any
+                  onChange={(e: any) => { // auto
                     if (e.target.checked) {
-                      setCoachingGoals((prev: any) => [ // auto: implicit any...prev, goal]);
+                      setCoachingGoals((prev: any) => [...prev, goal]);
                     } else {
                       setCoachingGoals((prev: any) => p // auto: implicit anyrev.filter((g: any) => g // auto: implicit any !== goal));
                     }
@@ -244,7 +244,7 @@ function VoiceCommandRecognition() {
           <div className="mt-2">
             <Slider
               value={[sensitivity]}
-              onValueChange={(value: any) => s // auto: implicit anyetSensitivity(value[0])}
+              onValueChange={(value: any) => setSensitivity(value[0])}
               min={0.1}
               max={1.0}
               step={0.1}
@@ -283,12 +283,12 @@ function VoiceCommandRecognition() {
           <Input
             placeholder="Say this phrase..."
             value={newCommand.phrase}
-            onChange={(e: any) => s // auto: implicit anyetNewCommand((prev: any) => ({ // auto: implicit any{ ...prev, phrase: e.target.value }))}
+            onChange={(e: any) => s // auto: implicit anyetNewCommand((prev: any) => ({ // auto: implicit any ...prev, phrase: e.target.value }))}
           />
           <Input
             placeholder="To do this action..."
             value={newCommand.action}
-            onChange={(e: any) => s // auto: implicit anyetNewCommand((prev: any) => ({ // auto: implicit any{ ...prev, action: e.target.value }))}
+            onChange={(e: any) => s // auto: implicit anyetNewCommand((prev: any) => ({ // auto: implicit any ...prev, action: e.target.value }))}
           />
           <Button size="sm" className="w-full">
             Add Command
@@ -347,7 +347,7 @@ function PersonalizedAudioMessages() {
                 <Switch
                   checked={enabled}
                   onCheckedChange={(checked: any) => // auto: implicit any
-                    setMessageTypes((prev: any) => ({ // auto: implicit any{ ...prev, [key]: checked }))
+                    setMessageTypes((prev: any) => ({ // auto: implicit any ...prev, [key]: checked }))
                   }
                 />
               </div>
@@ -403,7 +403,7 @@ function PersonalizedAudioMessages() {
               size="sm"
               onClick={() => {
                 if (newMessage.trim()) {
-                  setCustomMessages((prev: any) => [ // auto: implicit any...prev, newMessage]);
+                  setCustomMessages((prev: any) => [...prev, newMessage]);
                   setNewMessage('');
                 }
               }}

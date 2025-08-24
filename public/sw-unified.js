@@ -326,8 +326,8 @@ function shouldCache(request, response) {
 }
 
 // App state
-let alarmTimeouts = new Map();
-let pushSubscription = null;
+const alarmTimeouts = new Map();
+const pushSubscription = null;
 let analyticsQueue = [];
 let emotionalQueue = [];
 let isOnline = false;
@@ -1131,7 +1131,7 @@ const SYNC_CONFIG = {
 };
 
 // Sync state tracking
-let syncState = {
+const syncState = {
   activeSync: null,
   syncHistory: [],
   conflicts: [],
@@ -1155,7 +1155,7 @@ async function performDataSync(dataType, options = {}) {
       return { success: true, synced: 0, conflicts: 0 };
     }
 
-    let syncResults = { success: 0, failed: 0, conflicts: 0 };
+    const syncResults = { success: 0, failed: 0, conflicts: 0 };
 
     // Process in batches to avoid overwhelming the server
     for (let i = 0; i < localData.length; i += SYNC_CONFIG.batchSize) {

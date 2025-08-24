@@ -135,7 +135,10 @@ const MathChallenge: React.FC<{
       if (newErrors >= 2) {
         // Reset sequence on too many errors
         setCurrentProblem(0);
-        setProblems(problems.map((p: any) => ({ // auto: implicit any{ ...p, userAnswer: '', correct: undefined })));
+        setProblems(problems.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
         setErrors(0);
         setUserAnswer('');
         return;
@@ -177,7 +180,7 @@ const MathChallenge: React.FC<{
             placeholder="Enter your answer"
             className="text-center text-2xl h-16"
             autoFocus
-            onKeyPress={(e: any) => e // auto: implicit any.key === 'Enter' && handleSubmit()}
+            onKeyPress={(e: any) => e.key === 'Enter' && handleSubmit()}
           />
 
           <Button
@@ -586,7 +589,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeRemaining((prev: any) => { // auto: implicit any
+      setTimeRemaining((prev: any) => { // auto
         if (prev <= 1) {
           // Time's up!
           onChallengeComplete(false, { reason: 'timeout' });

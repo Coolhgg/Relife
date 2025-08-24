@@ -984,7 +984,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     aria-checked={hapticFeedback}
                     aria-label={`Haptic feedback ${hapticFeedback ? 'enabled' : 'disabled'}`}
                     aria-describedby="haptic-desc"
-                    onKeyDown={(e: any) => { // auto: implicit any
+                    onKeyDown={(e: any) => { // auto
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
                         handleSettingDescriptionClick(

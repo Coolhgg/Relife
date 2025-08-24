@@ -174,8 +174,8 @@ const SoundThemeDemo: React.FC = () => {
     if (!soundEnabled) return;
 
     const key = `${themeId}-${soundId}`;
-    setIsPlaying((prev: any) => ({ // auto: implicit any{ ...prev, [key]: true }));
-    setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [key]: 'testing' }));
+    setIsPlaying((prev: any) => ({ // auto: implicit any ...prev, [key]: true }));
+    setTestResults((prev: any) => ({ // auto: implicit any ...prev, [key]: 'testing' }));
 
     try {
       // Temporarily switch to theme for testing
@@ -192,13 +192,13 @@ const SoundThemeDemo: React.FC = () => {
         await soundEffectsService.setSoundTheme(originalTheme);
       }
 
-      setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [key]: 'success' }));
+      setTestResults((prev: any) => ({ // auto: implicit any ...prev, [key]: 'success' }));
     } catch (error) {
       console.error('Sound test failed:', error);
-      setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [key]: 'error' }));
+      setTestResults((prev: any) => ({ // auto: implicit any ...prev, [key]: 'error' }));
     } finally {
       setTimeout(() => {
-        setIsPlaying((prev: any) => ({ // auto: implicit any{ ...prev, [key]: false }));
+        setIsPlaying((prev: any) => ({ // auto: implicit any ...prev, [key]: false }));
       }, 500);
     }
   };
@@ -208,13 +208,13 @@ const SoundThemeDemo: React.FC = () => {
     if (!soundEnabled) return;
 
     const key = `${themeId}-alarm-${alarmType}`;
-    setIsPlaying((prev: any) => ({ // auto: implicit any{ ...prev, [key]: true }));
+    setIsPlaying((prev: any) => ({ // auto: implicit any ...prev, [key]: true }));
 
     // Simulate alarm sound by playing success sound with loop simulation
     await playSound('ui.success', themeId);
 
     setTimeout(() => {
-      setIsPlaying((prev: any) => ({ // auto: implicit any{ ...prev, [key]: false }));
+      setIsPlaying((prev: any) => ({ // auto: implicit any ...prev, [key]: false }));
     }, 2000);
   };
 

@@ -97,8 +97,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     message: string,
     details?: string
   ) => {
-    setTestResults((prev: any) => { // auto: implicit any
-      const existing = prev.find((r: any) => r // auto: implicit any.name === name);
+    setTestResults((prev: any) => { // auto
+      const existing = prev.find((r: any) => r.name === name);
       if (existing) {
         return prev.map((r: any) => // auto: implicit any
           r.name === name ? { ...r, status, message, details } : r
@@ -607,25 +607,25 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
                 <div className="grid grid-cols-4 gap-4 text-center text-sm">
                   <div>
                     <div className="text-green-600 font-medium">
-                      {testResults.filter((r: any) => r // auto: implicit any.status === 'pass').length}
+                      {testResults.filter((r: any) => r.status === 'pass').length}
                     </div>
                     <div className="text-gray-600">Passed</div>
                   </div>
                   <div>
                     <div className="text-red-600 font-medium">
-                      {testResults.filter((r: any) => r // auto: implicit any.status === 'fail').length}
+                      {testResults.filter((r: any) => r.status === 'fail').length}
                     </div>
                     <div className="text-gray-600">Failed</div>
                   </div>
                   <div>
                     <div className="text-yellow-600 font-medium">
-                      {testResults.filter((r: any) => r // auto: implicit any.status === 'warning').length}
+                      {testResults.filter((r: any) => r.status === 'warning').length}
                     </div>
                     <div className="text-gray-600">Warnings</div>
                   </div>
                   <div>
                     <div className="text-blue-600 font-medium">
-                      {testResults.filter((r: any) => r // auto: implicit any.status === 'info').length}
+                      {testResults.filter((r: any) => r.status === 'info').length}
                     </div>
                     <div className="text-gray-600">Info</div>
                   </div>

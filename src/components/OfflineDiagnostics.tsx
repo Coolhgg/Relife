@@ -511,7 +511,10 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {diagnostics.map((check: any) => ({ // auto: implicit any
+        {diagnostics.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
           <div key={check.id} className="flex items-start gap-3 p-3 border rounded-lg">
             <div className="flex-shrink-0 mt-1">{getStatusIcon(check.status)}</div>
 

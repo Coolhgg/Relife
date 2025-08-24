@@ -42,9 +42,9 @@ export default function UserProfile({
 
   const handleInputChange = (field: string, value: any) => {
     if (field === 'name') {
-      setEditForm((prev: any) => ({ // auto: implicit any{ ...prev, name: value }));
+      setEditForm((prev: any) => ({ // auto: implicit any ...prev, name: value }));
     } else {
-      setEditForm((prev: any) => ({ // auto: implicit any{
+      setEditForm((prev: any) => ({ // auto: implicit any
         ...prev,
         preferences: { ...prev.preferences, [field]: value },
       }));

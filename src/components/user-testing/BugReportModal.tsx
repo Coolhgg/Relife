@@ -459,7 +459,10 @@ export function BugReportModal({
                   </div>
                   {tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
-                      {tags.map((tag: any) => ({ // auto: implicit any
+                      {tags.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                         <Badge
                           key={tag}
                           variant="secondary"

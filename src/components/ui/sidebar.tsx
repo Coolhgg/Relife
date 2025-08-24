@@ -266,7 +266,7 @@ function SidebarTrigger({
       variant="ghost"
       size="icon"
       className={cn('size-7', className)}
-      onClick={(event: any) => { // auto: implicit any
+      onClick={(event: any) => { // auto
         onClick?.(event);
         toggleSidebar();
       }}

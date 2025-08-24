@@ -242,7 +242,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
               type="text"
               placeholder="Search themes..."
               value={searchQuery}
-              onChange={(e: any) => s // auto: implicit anyetSearchQuery(e.target.value)}
+              onChange={(e: any) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                          focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800"
             />
@@ -250,7 +250,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
 
           <select
             value={selectedCategory}
-            onChange={(e: any) => s // auto: implicit anyetSelectedCategory(e.target.value)}
+            onChange={(e: any) => setSelectedCategory(e.target.value)}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                        focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800"
           >
@@ -321,7 +321,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
 
                   {/* Favorite Button */}
                   <button
-                    onClick={(e: any) => { // auto: implicit any
+                    onClick={(e: any) => { // auto
                       e.stopPropagation();
                       toggleFavorite(combination.id);
                     }}
@@ -373,7 +373,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
 
                   {/* Preview Button */}
                   <button
-                    onClick={(e: any) => { // auto: implicit any
+                    onClick={(e: any) => { // auto
                       e.stopPropagation();
                       handlePreviewTheme(combination.visual);
                     }}
@@ -423,7 +423,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                   </span>
 
                   <button
-                    onClick={(e: any) => { // auto: implicit any
+                    onClick={(e: any) => { // auto
                       e.stopPropagation();
                       handlePreviewTheme(theme.id as VisualAlarmThemeId);
                     }}

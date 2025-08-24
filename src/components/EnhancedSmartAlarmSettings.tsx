@@ -133,7 +133,10 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
 
   const updateCondition = (id: string, updates: Partial<ConditionBasedAdjustment>) => {
     setConditions((prev: any) => // auto: implicit any
-      prev.map((cond: any) => ({ // auto: implicit anycond.id === id ? { ...cond, ...updates } : cond))
+      prev.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
     );
   };
 
@@ -391,7 +394,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={smartEnabled}
-                      onChange={(e: any) => s // auto: implicit anyetSmartEnabled(e.target.checked)}
+                      onChange={(e: any) => setSmartEnabled(e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
@@ -496,7 +499,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                 Condition-Based Adjustments
               </h3>
 
-              {conditions.map((condition: any) => { // auto: implicit any
+              {conditions.map((condition: any) => { // auto
                 const Icon = conditionIcons[condition.type] || Settings;
                 return (
                   <div

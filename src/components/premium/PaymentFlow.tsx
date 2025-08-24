@@ -184,7 +184,7 @@ export function PaymentFlow({
 
     if (field.startsWith('billingAddress.')) {
       const addressField = field.replace('billingAddress.', '');
-      setFormData((prev: any) => ({ // auto: implicit any{
+      setFormData((prev: any) => ({ // auto: implicit any
         ...prev,
         billingAddress: {
           ...prev.billingAddress,
@@ -192,7 +192,7 @@ export function PaymentFlow({
         },
       }));
     } else {
-      setFormData((prev: any) => ({ // auto: implicit any{
+      setFormData((prev: any) => ({ // auto: implicit any
         ...prev,
         [field]: value,
       }));
@@ -200,7 +200,7 @@ export function PaymentFlow({
 
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
-      setValidationErrors((prev: any) => ({ // auto: implicit any{
+      setValidationErrors((prev: any) => ({ // auto: implicit any
         ...prev,
         [field]: '',
       }));

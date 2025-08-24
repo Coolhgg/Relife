@@ -684,7 +684,7 @@ const SoundsStep: React.FC<{
       userId={userId}
       onSoundUploaded={(sound: any) => o // auto: implicit anynSoundsUpdated([...uploadedSounds, sound])}
       onSoundDeleted={(soundId: any) => // auto: implicit any
-        onSoundsUpdated(uploadedSounds.filter((s: any) => s // auto: implicit any.id !== soundId))
+        onSoundsUpdated(uploadedSounds.filter((s: any) => s.id !== soundId))
       }
       maxFiles={20}
     />

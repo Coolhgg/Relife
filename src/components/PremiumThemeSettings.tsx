@@ -216,14 +216,14 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
   }, [userId]);
 
   const checkPremiumAccess = async () => {
-    setState((prev: any) => ({ // auto: implicit any{ ...prev, loading: true }));
+    setState((prev: any) => ({ // auto: implicit any ...prev, loading: true }));
 
     try {
       const hasAccess = await SubscriptionService.hasFeatureAccess(
         userId,
         'premiumThemes'
       );
-      setState((prev: any) => ({ // auto: implicit any{
+      setState((prev: any) => ({ // auto: implicit any
         ...prev,
         hasAccess,
         availableThemes: hasAccess ? [...FREE_THEMES, ...PREMIUM_THEMES] : FREE_THEMES,
@@ -231,7 +231,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
       }));
     } catch (error) {
       console.error('Error checking premium theme access:', error);
-      setState((prev: any) => ({ // auto: implicit any{ ...prev, loading: false }));
+      setState((prev: any) => ({ // auto: implicit any ...prev, loading: false }));
     }
   };
 
@@ -240,7 +240,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
       return; // Premium gate will handle this
     }
 
-    setState((prev: any) => ({ // auto: implicit any{ ...prev, selectedTheme: theme }));
+    setState((prev: any) => ({ // auto: implicit any ...prev, selectedTheme: theme }));
     onThemeChange(theme);
   };
 

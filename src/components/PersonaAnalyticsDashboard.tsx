@@ -102,7 +102,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const personaMetrics = useMemo((): PersonaMetrics[] => {
     const metrics = new Map<UserPersona, PersonaMetrics>();
 
-    analyticsData.forEach((data: any) => { // auto: implicit any
+    analyticsData.forEach((data: any) => { // auto
       const existing = metrics.get(data.persona) || {
         persona: data.persona,
         detections: 0,
@@ -135,7 +135,10 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   // Calculate campaign metrics
   const campaignMetrics = useMemo((): CampaignMetrics[] => {
-    return campaignData.map((data: any) => ({ // auto: implicit any{
+    return campaignData.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
       campaign: data.campaignId,
       persona: data.persona,
       impressions: data.metrics.impressions,

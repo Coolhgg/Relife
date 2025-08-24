@@ -101,7 +101,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
   };
 
   const updateFeedback = (updates: Partial<WakeUpFeedback>) => {
-    setFeedback((prev: any) => ({ // auto: implicit any{ ...prev, ...updates }));
+    setFeedback((prev: any) => ({ // auto: implicit any ...prev, ...updates }));
   };
 
   if (!isOpen) return null;

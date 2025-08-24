@@ -65,7 +65,10 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
 
         {/* Navigation Items */}
         <div className="flex justify-around items-center px-4 pb-2">
-          {items.slice(0, 4).map((item: any) => ({ // auto: implicit any
+          {items.slice(0, 4).map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
             <NavigationButton
               key={item.id}
               item={item}
@@ -189,7 +192,7 @@ const ExtendedNavigationPanel: React.FC<ExtendedNavigationPanelProps> = ({
         </div>
 
         <div className="grid grid-cols-3 gap-4">
-          {items.map((item: any) => { // auto: implicit any
+          {items.map((item: any) => { // auto
             const { icon: Icon } = item;
             return (
               <button

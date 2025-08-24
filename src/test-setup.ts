@@ -41,7 +41,7 @@ if (typeof global !== 'undefined') {
 
   // Mock window.matchMedia only if it doesn't exist
   if (!global.matchMedia) {
-    global.matchMedia = vi.fn().mockImplementation((query: any) => ({ // auto: implicit any{
+    global.matchMedia = vi.fn().mockImplementation((query: any) => ({ // auto: implicit any
       matches: false,
       media: query,
       onchange: null,

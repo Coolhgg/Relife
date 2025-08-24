@@ -308,7 +308,10 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
   // Standard list rendering for better devices or short lists
   return (
     <div className={`space-y-3 ${className}`}>
-      {sortedAlarms.map((alarm: any) => ({ // auto: implicit any
+      {sortedAlarms.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
         <AlarmItem
           key={alarm.id}
           alarm={alarm}

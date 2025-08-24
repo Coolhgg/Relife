@@ -46,7 +46,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
   }, [userId]);
 
   const loadUsageData = async () => {
-    setUsageData((prev: any) => ({ // auto: implicit any{ ...prev, isLoading: true, error: undefined }));
+    setUsageData((prev: any) => ({ // auto: implicit any ...prev, isLoading: true, error: undefined }));
 
     try {
       const summary = await PremiumVoiceService.getUsageSummary(userId);
@@ -56,7 +56,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
       });
       setLastRefresh(new Date());
     } catch (error) {
-      setUsageData((prev: any) => ({ // auto: implicit any{
+      setUsageData((prev: any) => ({ // auto: implicit any
         ...prev,
         isLoading: false,
         error: error instanceof Error ? error.message : 'Failed to load usage data',
