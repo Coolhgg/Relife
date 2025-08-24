@@ -283,7 +283,7 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
           className={`${sizeClasses} ${className}`.trim()}
           style={finalModalStyles}
           tabIndex={-1}
-          onClick={(e: any) => e // auto: implicit any.stopPropagation()}
+          onClick={(e: any) => e.stopPropagation()}
           role="document"
         >
           {/* Header */}

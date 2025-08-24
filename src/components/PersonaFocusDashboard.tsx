@@ -254,7 +254,10 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
   };
 
   const ConversionFunnel = () => {
-    const funnelData = metrics.map((persona: any) => ({ // auto: implicit any{
+    const funnelData = metrics.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
       name: persona.personaName,
       users: persona.count,
       conversions: Math.round(persona.count * persona.conversionRate),
@@ -289,7 +292,10 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
   };
 
   const RevenueDistribution = () => {
-    const pieData = metrics.map((persona: any) => ({ // auto: implicit any{
+    const pieData = metrics.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
       name: persona.personaName,
       value: persona.revenueContribution,
       revenue: persona.ltv * persona.count * persona.conversionRate,
@@ -432,7 +438,10 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
 
         {/* Persona Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {metrics.map((persona: any) => ({ // auto: implicit any
+          {metrics.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
             <PersonaCard key={persona.personaId} persona={persona} />
           ))}
         </div>

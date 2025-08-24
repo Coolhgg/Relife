@@ -46,7 +46,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   onNavigateToAdvanced,
 }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
-  const enabledAlarms = alarms.filter((a: any) => a // auto: implicit any.enabled);
+  const enabledAlarms = alarms.filter((a: any) => a.enabled);
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
@@ -246,7 +246,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             Recent Alarms
           </h3>
           <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
-            {alarms.slice(0, 3).map((alarm: any) => { // auto: implicit any
+            {alarms.slice(0, 3).map((alarm: any) => { // auto
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
               return (
@@ -360,7 +360,10 @@ const Dashboard: React.FC<DashboardProps> = ({
             ))}
 
             {/* Smart Insights */}
-            {smartInsights.map((insight: any) => ({ // auto: implicit any
+            {smartInsights.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
               <div
                 key={insight.id}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"

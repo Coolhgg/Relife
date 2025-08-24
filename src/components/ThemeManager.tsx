@@ -263,7 +263,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
 
                 {/* Favorite button */}
                 <button
-                  onClick={(e: any) => { // auto: implicit any
+                  onClick={(e: any) => { // auto
                     e.stopPropagation();
                     toggleFavorite(quickTheme.id);
                   }}
@@ -292,7 +292,10 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                 </span>
               </div>
               <div className="flex gap-1 overflow-x-auto pb-2">
-                {customThemes.slice(0, 4).map((customTheme: any) => ({ // auto: implicit any
+                {customThemes.slice(0, 4).map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                   <button
                     key={customTheme.id}
                     onClick={() => applyTheme(customTheme.name)}
@@ -515,7 +518,10 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
               Custom Themes ({customThemes.length})
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {customThemes.slice(0, 6).map((customTheme: any) => ({ // auto: implicit any
+              {customThemes.slice(0, 6).map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                 <button
                   key={customTheme.id}
                   onClick={() => applyTheme(customTheme.name)}

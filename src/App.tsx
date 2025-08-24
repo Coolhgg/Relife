@@ -1108,7 +1108,7 @@ function AppContent() {
 
       // Check if there are enabled alarms that could ring soon
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
-        const enabledAlarms = appState.alarms.filter((alarm: any) => a // auto: implicit anylarm.enabled);
+        const enabledAlarms = appState.alarms.filter((alarm: any) => alarm.enabled);
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold
           const now = new Date();
@@ -1119,7 +1119,7 @@ function AppContent() {
                 1000
           );
 
-          const upcomingAlarms = enabledAlarms.filter((alarm: any) => { // auto: implicit any
+          const upcomingAlarms = enabledAlarms.filter((alarm: any) => { // auto
             const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
             // Check if alarm is set for today
@@ -1384,7 +1384,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('edit', alarmId, { voiceMood: alarmData.voiceMood });
-      const existingAlarm = appState.alarms.find((a: any) => a // auto: implicit any.id === alarmId);
+      const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1484,8 +1484,8 @@ function AppContent() {
         await OfflineStorage.deleteAlarm(alarmId);
       }
 
-      const alarmToDelete = appState.alarms.find((a: any) => a // auto: implicit any.id === alarmId);
-      const updatedAlarms = appState.alarms.filter((alarm: any) => a // auto: implicit anylarm.id !== alarmId);
+      const alarmToDelete = appState.alarms.find((a: any) => a.id === alarmId);
+      const updatedAlarms = appState.alarms.filter((alarm: any) => alarm.id !== alarmId);
       setAppState((prev: any) => ({ // auto: implicit any
           
         ...prev,
@@ -1547,7 +1547,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('toggle', alarmId, { enabled });
-      const existingAlarm = appState.alarms.find((a: any) => a // auto: implicit any.id === alarmId);
+      const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1811,7 +1811,7 @@ function AppContent() {
       case 'dashboard':
         appAnalytics.trackPageView('dashboard', {
           totalAlarms: appState.alarms.length,
-          activeAlarms: appState.alarms.filter((a: any) => a // auto: implicit any.enabled).length,
+          activeAlarms: appState.alarms.filter((a: any) => a.enabled).length,
         });
         return (
           <ErrorBoundary context="Dashboard">
@@ -1842,7 +1842,7 @@ function AppContent() {
             <AlarmList
               alarms={appState.alarms}
               onToggleAlarm={handleToggleAlarm}
-              onEditAlarm={(alarm: any) => { // auto: implicit any
+              onEditAlarm={(alarm: any) => { // auto
                 appAnalytics.trackFeatureUsage('edit_alarm', 'button_clicked', {
                   alarmId: alarm.id,
                   alarmLabel: alarm.label,
@@ -1872,7 +1872,7 @@ function AppContent() {
               rewardSystem={appState.rewardSystem}
               activeBattles={appState.activeBattles || []}
               friends={appState.friends || []}
-              onCreateBattle={(battle: any) => { // auto: implicit any
+              onCreateBattle={(battle: any) => { // auto
                 // Add battle to state with complete Battle object
                 const completeBattle: Battle = {
                   id: battle.id || Math.random().toString(36).substr(2, 9),
@@ -1900,7 +1900,7 @@ function AppContent() {
                   battleType: completeBattle.type,
                 });
               }}
-              onJoinBattle={(battleId: any) => { // auto: implicit any
+              onJoinBattle={(battleId: any) => { // auto
                 appAnalytics.trackFeatureUsage('battle_participation', 'joined', {
                   battleId,
                 });
@@ -1965,7 +1965,7 @@ function AppContent() {
           <ErrorBoundary context="PricingPage">
             <PricingPage
               user={auth.user as User}
-              onUpgrade={(plan: any) => { // auto: implicit any
+              onUpgrade={(plan: any) => { // auto
                 appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
                   plan: plan.id,
                   price: plan.price,
@@ -2053,7 +2053,7 @@ function AppContent() {
                     tabProtectionSettings.settings.visualSettings.showVisualWarning && (
                       <TabProtectionWarning
                         activeAlarm={appState.activeAlarm}
-                        enabledAlarms={appState.alarms.filter((alarm: any) => a // auto: implicit anylarm.enabled)}
+                        enabledAlarms={appState.alarms.filter((alarm: any) => alarm.enabled)}
                         settings={tabProtectionSettings.settings}
                       />
                     )}
@@ -2126,14 +2126,14 @@ function AppContent() {
                         borderColor: 'transparent',
                       }
                 }
-                onMouseEnter={(e: any) => { // auto: implicit any
+                onMouseEnter={(e: any) => { // auto
                   if (appState.currentView !== 'dashboard') {
                     e.currentTarget.style.backgroundColor =
                       'var(--theme-surface-hover)';
                     e.currentTarget.style.color = 'var(--theme-text-primary)';
                   }
                 }}
-                onMouseLeave={(e: any) => { // auto: implicit any
+                onMouseLeave={(e: any) => { // auto
                   if (appState.currentView !== 'dashboard') {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = 'var(--theme-text-secondary)';
@@ -2175,14 +2175,14 @@ function AppContent() {
                         borderColor: 'transparent',
                       }
                 }
-                onMouseEnter={(e: any) => { // auto: implicit any
+                onMouseEnter={(e: any) => { // auto
                   if (appState.currentView !== 'alarms') {
                     e.currentTarget.style.backgroundColor =
                       'var(--theme-surface-hover)';
                     e.currentTarget.style.color = 'var(--theme-text-primary)';
                   }
                 }}
-                onMouseLeave={(e: any) => { // auto: implicit any
+                onMouseLeave={(e: any) => { // auto
                   if (appState.currentView !== 'alarms') {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = 'var(--theme-text-secondary)';

@@ -239,7 +239,7 @@ export const CustomThemeCreator: React.FC = () => {
                       <input
                         type="checkbox"
                         value={time}
-                        onChange={(e: any) => { // auto: implicit any
+                        onChange={(e: any) => { // auto
                           if (e.target.checked) {
                             setCustomTheme({
                               ...customTheme,
@@ -552,11 +552,11 @@ export const AudioSetupDemo: React.FC = () => {
   const testSingleSound = async (soundId: string) => {
     try {
       const result = await soundEffectsService.testSound(soundId as any);
-      setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [soundId]: result }));
+      setTestResults((prev: any) => ({ // auto: implicit any ...prev, [soundId]: result }));
       return result;
     } catch (error) {
       console.error('Sound test failed:', error);
-      setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [soundId]: false }));
+      setTestResults((prev: any) => ({ // auto: implicit any ...prev, [soundId]: false }));
       return false;
     }
   };
@@ -754,7 +754,7 @@ export const CompleteThemeSystemDemo: React.FC = () => {
   });
 
   const handleAlarmUpdate = (updates: Partial<Alarm>) => {
-    setMockAlarm((prev: any) => ({ // auto: implicit any{ ...prev, ...updates }));
+    setMockAlarm((prev: any) => ({ // auto: implicit any ...prev, ...updates }));
   };
 
   return (

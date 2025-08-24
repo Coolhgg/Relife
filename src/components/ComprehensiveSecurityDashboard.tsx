@@ -588,7 +588,10 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {activeAlerts.map((alert: any) => ({ // auto: implicit any
+                {activeAlerts.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                   <div
                     key={alert.id}
                     className="alarm-card glass-card backdrop-blur-lg border hover:transform hover:scale-[1.02] transition-all"

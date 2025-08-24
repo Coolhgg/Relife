@@ -115,7 +115,7 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
           </label>
           <Select
             value={selectedDifficulty}
-            onValueChange={(value: any) => s // auto: implicit anyetSelectedDifficulty(value as AlarmDifficulty)}
+            onValueChange={(value: any) => setSelectedDifficulty(value as AlarmDifficulty)}
           >
             <SelectTrigger>
               <SelectValue />

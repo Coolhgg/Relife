@@ -484,7 +484,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       const y = e.clientY - rect.top;
       const newRipple = { id: Date.now().toString(), x, y };
 
-      setRipples((prev: any) => [ // auto: implicit any...prev, newRipple]);
+      setRipples((prev: any) => [...prev, newRipple]);
 
       // Remove ripple after animation
       setTimeout(() => {
@@ -526,7 +526,10 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
     >
       {/* Ripple effects */}
       <AnimatePresence>
-        {ripples.map((ripple: any) => ({ // auto: implicit any
+        {ripples.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
           <motion.div
             key={ripple.id}
             className="absolute bg-white/30 rounded-full pointer-events-none"

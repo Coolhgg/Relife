@@ -92,7 +92,7 @@ const ThemeCustomizationStudio: React.FC = () => {
 
   const handleColorChange = useCallback(
     (category: string, shade: string, color: string) => {
-      setCustomTheme((prev: any) => ({ // auto: implicit any{
+      setCustomTheme((prev: any) => ({ // auto: implicit any
         ...prev,
         colors: {
           ...prev.colors,
@@ -107,7 +107,7 @@ const ThemeCustomizationStudio: React.FC = () => {
   );
 
   const handleTypographyChange = useCallback((property: string, value: any) => {
-    setCustomTheme((prev: any) => ({ // auto: implicit any{
+    setCustomTheme((prev: any) => ({ // auto: implicit any
       ...prev,
       typography: {
         ...prev.typography,
@@ -118,7 +118,7 @@ const ThemeCustomizationStudio: React.FC = () => {
 
   const handleAnimationEffectChange = useCallback(
     (effect: keyof PremiumAnimationEffects, enabled: boolean) => {
-      setAnimationEffects((prev: any) => ({ // auto: implicit any{
+      setAnimationEffects((prev: any) => ({ // auto: implicit any
         ...prev,
         [effect]: enabled,
       }));
@@ -502,7 +502,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                             type="text"
                             value={shadow}
                             onChange={(e: any) => // auto: implicit any
-                              setCustomTheme((prev: any) => ({ // auto: implicit any{
+                              setCustomTheme((prev: any) => ({ // auto: implicit any
                                 ...prev,
                                 effects: {
                                   ...prev.effects,
@@ -534,7 +534,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                             step="0.1"
                             value={value}
                             onChange={(e: any) => // auto: implicit any
-                              setCustomTheme((prev: any) => ({ // auto: implicit any{
+                              setCustomTheme((prev: any) => ({ // auto: implicit any
                                 ...prev,
                                 effects: {
                                   ...prev.effects,

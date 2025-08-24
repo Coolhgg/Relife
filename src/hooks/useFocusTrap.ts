@@ -242,7 +242,7 @@ export function useFocusTrap({
     const existingSentinels = containerRef.current.querySelectorAll(
       '[data-focus-sentinel]'
     );
-    existingSentinels.forEach((sentinel: any) => s // auto: implicit anyentinel.remove());
+    existingSentinels.forEach((sentinel: any) => sentinel.remove());
 
     // Create start sentinel
     const startSentinel = document.createElement('div');

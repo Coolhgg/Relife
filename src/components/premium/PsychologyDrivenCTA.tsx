@@ -62,7 +62,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
     if (trigger !== 'urgency') return;
 
     const interval = setInterval(() => {
-      setTimeLeft((prev: any) => { // auto: implicit any
+      setTimeLeft((prev: any) => { // auto
         if (prev.seconds > 0) {
           return { ...prev, seconds: prev.seconds - 1 };
         } else if (prev.minutes > 0) {

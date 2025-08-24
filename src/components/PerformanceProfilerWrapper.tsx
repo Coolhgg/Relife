@@ -123,7 +123,10 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               🐌 Slow Components ({summary.slowComponents.length})
             </div>
             <div className="space-y-1 max-h-20 overflow-y-auto">
-              {summary.slowComponents.slice(0, 3).map((comp: any) => ({ // auto: implicit any
+              {summary.slowComponents.slice(0, 3).map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                 <div
                   key={comp.id}
                   className="text-xs bg-red-50 dark:bg-red-900/20 p-1 rounded"
@@ -145,7 +148,10 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               🔄 Frequent Renders
             </div>
             <div className="space-y-1 max-h-20 overflow-y-auto">
-              {summary.frequentComponents.slice(0, 3).map((comp: any) => ({ // auto: implicit any
+              {summary.frequentComponents.slice(0, 3).map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                 <div
                   key={comp.id}
                   className="text-xs bg-orange-50 dark:bg-orange-900/20 p-1 rounded"

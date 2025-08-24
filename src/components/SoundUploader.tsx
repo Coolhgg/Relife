@@ -196,7 +196,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
       isPlaying: false,
     }));
 
-    setUploadItems((prev: any) => [ // auto: implicit any...prev, ...newItems]);
+    setUploadItems((prev: any) => [...prev, ...newItems]);
 
     // Start uploading each file
     newItems.forEach(item => {
@@ -239,7 +239,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
         });
 
         // Add to uploaded sounds list
-        setUploadedSounds((prev: any) => [ // auto: implicit any...prev, result.customSound!]);
+        setUploadedSounds((prev: any) => [...prev, result.customSound!]);
         onSoundUploaded?.(result.customSound);
       } else {
         updateUploadItem(item.id, {
@@ -257,20 +257,23 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
 
   const updateUploadItem = (id: string, updates: Partial<UploadItem>) => {
     setUploadItems((prev: any) => // auto: implicit any
-      prev.map((item: any) => ({ // auto: implicit anyitem.id === id ? { ...item, ...updates } : item))
+      prev.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
     );
   };
 
   const removeUploadItem = (id: string) => {
-    setUploadItems((prev: any) => { // auto: implicit any
-      const item = prev.find((i: any) => i // auto: implicit any.id === id);
+    setUploadItems((prev: any) => { // auto
+      const item = prev.find((i: any) => i.id === id);
       if (item?.previewUrl) {
         URL.revokeObjectURL(item.previewUrl);
       }
       if (item?.audio) {
         item.audio.pause();
       }
-      return prev.filter((i: any) => i // auto: implicit any.id !== id);
+      return prev.filter((i: any) => i.id !== id);
     });
   };
 
@@ -278,7 +281,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
     try {
       const success = await customSoundManager.deleteCustomSound(sound.id, userId);
       if (success) {
-        setUploadedSounds((prev: any) => p // auto: implicit anyrev.filter((s: any) => s // auto: implicit any.id !== sound.id));
+        setUploadedSounds((prev: any) => p // auto: implicit anyrev.filter((s: any) => s.id !== sound.id));
         onSoundDeleted?.(sound.id);
       }
     } catch (error) {
@@ -295,7 +298,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
       updateUploadItem(item.id, { isPlaying: false });
     } else {
       // Stop all other previews
-      uploadItems.forEach((i: any) => { // auto: implicit any
+      uploadItems.forEach((i: any) => { // auto
         if (i.audio && i.isPlaying) {
           i.audio.pause();
           updateUploadItem(i.id, { isPlaying: false });
@@ -410,7 +413,10 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
             <div className="mt-6 space-y-3">
               <h4 className="font-medium">Uploading Files</h4>
               <ScrollArea className="h-64">
-                {uploadItems.map((item: any) => ({ // auto: implicit any
+                {uploadItems.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                   <div
                     key={item.id}
                     className="flex items-center gap-3 p-3 border rounded-lg"
@@ -494,7 +500,10 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
           ) : (
             <ScrollArea className="h-96">
               <div className="space-y-3">
-                {uploadedSounds.map((sound: any) => ({ // auto: implicit any
+                {uploadedSounds.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                   <div
                     key={sound.id}
                     className="flex items-center gap-3 p-4 border rounded-lg hover:bg-gray-50"
@@ -552,7 +561,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                           </DialogHeader>
                           <SoundEditForm
                             sound={sound}
-                            onSave={(updatedSound: any) => { // auto: implicit any
+                            onSave={(updatedSound: any) => { // auto
                               setUploadedSounds((prev: any) => // auto: implicit any
                                 prev.map((s: any) => // auto: implicit any
                                   s.id === updatedSound.id ? updatedSound : s

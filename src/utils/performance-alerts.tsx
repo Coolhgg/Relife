@@ -926,7 +926,10 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
         <div className="active-alerts mb-4">
           <h4 className="font-semibold text-gray-800 mb-2">Performance Alerts</h4>
           <div className="space-y-2">
-            {displayAlerts.map((alert: any) => ({ // auto: implicit any
+            {displayAlerts.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
               <div
                 key={alert.id}
                 className={`alert-item p-3 rounded border-l-4 ${
@@ -965,7 +968,10 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
         <div className="optimization-suggestions">
           <h4 className="font-semibold text-gray-800 mb-2">Optimization Suggestions</h4>
           <div className="space-y-2">
-            {suggestions.slice(0, 3).map((suggestion: any) => ({ // auto: implicit any
+            {suggestions.slice(0, 3).map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
               <div
                 key={suggestion.id}
                 className={`suggestion-item p-3 rounded border ${

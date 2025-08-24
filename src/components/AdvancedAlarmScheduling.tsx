@@ -205,7 +205,10 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
         </Button>
       </div>
 
-      {alarms.map((alarm: any) => ({ // auto: implicit any
+      {alarms.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
         <Card
           key={alarm.id}
           className={`transition-all ${!alarm.isActive ? 'opacity-60' : ''}`}
@@ -233,7 +236,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     <div className="flex items-center gap-1">
                       <Brain size={12} />
                       <span>
-                        {alarm.smartOptimizations.filter((o: any) => o // auto: implicit any.isEnabled).length}{' '}
+                        {alarm.smartOptimizations.filter((o: any) => o.isEnabled).length}{' '}
                         optimizations
                       </span>
                     </div>
@@ -243,7 +246,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     <div className="flex items-center gap-1">
                       <Zap size={12} />
                       <span>
-                        {alarm.conditionalRules.filter((r: any) => r // auto: implicit any.isActive).length}{' '}
+                        {alarm.conditionalRules.filter((r: any) => r.isActive).length}{' '}
                         conditions
                       </span>
                     </div>
@@ -253,7 +256,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     <div className="flex items-center gap-1">
                       <MapPin size={12} />
                       <span>
-                        {alarm.locationTriggers.filter((t: any) => t // auto: implicit any.isActive).length}{' '}
+                        {alarm.locationTriggers.filter((t: any) => t.isActive).length}{' '}
                         locations
                       </span>
                     </div>
@@ -346,7 +349,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   type="time"
                   value={formData.time}
                   onChange={(e: any) => // auto: implicit any
-                    setFormData((prev: any) => ({ // auto: implicit any{ ...prev, time: e.target.value }))
+                    setFormData((prev: any) => ({ // auto: implicit any ...prev, time: e.target.value }))
                   }
                 />
               </div>
@@ -356,7 +359,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   id="alarm-label"
                   value={formData.label}
                   onChange={(e: any) => // auto: implicit any
-                    setFormData((prev: any) => ({ // auto: implicit any{ ...prev, label: e.target.value }))
+                    setFormData((prev: any) => ({ // auto: implicit any ...prev, label: e.target.value }))
                   }
                   placeholder="Enter alarm name"
                 />
@@ -366,7 +369,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                 <Select
                   value={formData.scheduleType}
                   onValueChange={(value: any) => // auto: implicit any
-                    setFormData((prev: any) => ({ // auto: implicit any{ ...prev, scheduleType: value as any }))
+                    setFormData((prev: any) => ({ // auto: implicit any ...prev, scheduleType: value as any }))
                   }
                 >
                   <SelectTrigger>
@@ -389,7 +392,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                 <Select
                   value={formData.voiceMood}
                   onValueChange={(value: any) => // auto: implicit any
-                    setFormData((prev: any) => ({ // auto: implicit any{ ...prev, voiceMood: value as any }))
+                    setFormData((prev: any) => ({ // auto: implicit any ...prev, voiceMood: value as any }))
                   }
                 >
                   <SelectTrigger>
@@ -411,7 +414,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
               <Switch
                 checked={formData.isActive}
                 onCheckedChange={(checked: any) => // auto: implicit any
-                  setFormData((prev: any) => ({ // auto: implicit any{ ...prev, isActive: checked }))
+                  setFormData((prev: any) => ({ // auto: implicit any ...prev, isActive: checked }))
                 }
               />
               <Label>Enable alarm</Label>
@@ -441,7 +444,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     max="365"
                     value={formData.recurrencePattern?.interval || 1}
                     onChange={(e: any) => // auto: implicit any
-                      setFormData((prev: any) => ({ // auto: implicit any{
+                      setFormData((prev: any) => ({ // auto: implicit any
                         ...prev,
                         recurrencePattern: {
                           ...prev.recurrencePattern,
@@ -455,7 +458,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   <Select
                     value={formData.recurrencePattern?.type || 'daily'}
                     onValueChange={(value: any) => // auto: implicit any
-                      setFormData((prev: any) => ({ // auto: implicit any{
+                      setFormData((prev: any) => ({ // auto: implicit any
                         ...prev,
                         recurrencePattern: {
                           ...prev.recurrencePattern,
@@ -486,9 +489,9 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       checked={!!formData.recurrencePattern?.endDate}
-                      onCheckedChange={(checked: any) => { // auto: implicit any
+                      onCheckedChange={(checked: any) => { // auto
                         if (checked) {
-                          setFormData((prev: any) => ({ // auto: implicit any{
+                          setFormData((prev: any) => ({ // auto: implicit any
                             ...prev,
                             recurrencePattern: {
                               ...prev.recurrencePattern,
@@ -498,7 +501,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                             } as RecurrencePattern,
                           }));
                         } else {
-                          setFormData((prev: any) => ({ // auto: implicit any{
+                          setFormData((prev: any) => ({ // auto: implicit any
                             ...prev,
                             recurrencePattern: {
                               ...prev.recurrencePattern,
@@ -519,7 +522,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                         formData.recurrencePattern.endDate.toISOString().split('T')[0]
                       }
                       onChange={(e: any) => // auto: implicit any
-                        setFormData((prev: any) => ({ // auto: implicit any{
+                        setFormData((prev: any) => ({ // auto: implicit any
                           ...prev,
                           recurrencePattern: {
                             ...prev.recurrencePattern!,
@@ -600,7 +603,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                             o => o.type === type && o.isEnabled
                           ) || false
                         }
-                        onCheckedChange={(checked: any) => { // auto: implicit any
+                        onCheckedChange={(checked: any) => { // auto
                           const currentOptimizations =
                             formData.smartOptimizations || [];
                           const existingIndex = currentOptimizations.findIndex(
@@ -632,7 +635,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                             newOptimizations = currentOptimizations;
                           }
 
-                          setFormData((prev: any) => ({ // auto: implicit any{
+                          setFormData((prev: any) => ({ // auto: implicit any
                             ...prev,
                             smartOptimizations: newOptimizations,
                           }));

@@ -254,7 +254,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
         themeDescription || `Custom theme based on ${baseTheme}`;
 
       setCurrentEditingTheme(customTheme);
-      setSavedThemes((prev: any) => [ // auto: implicit any...prev, customTheme]);
+      setSavedThemes((prev: any) => [...prev, customTheme]);
 
       // Save to localStorage
       const savedCustomThemes = JSON.parse(
@@ -306,7 +306,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
   };
 
   const handleColorChange = (colorKey: keyof ColorPaletteState, color: string) => {
-    setColorPalette((prev: any) => ({ // auto: implicit any{
+    setColorPalette((prev: any) => ({ // auto: implicit any
       ...prev,
       [colorKey]: color,
     }));

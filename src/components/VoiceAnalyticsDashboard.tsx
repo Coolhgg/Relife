@@ -579,7 +579,10 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                     Voice Mood Effectiveness
                   </h3>
                   <div className="space-y-4">
-                    {analytics.personalization.moodEffectiveness.map((mood: any) => ({ // auto: implicit any
+                    {analytics.personalization.moodEffectiveness.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                       <div
                         key={mood.mood}
                         className="p-4 bg-gradient-to-r from-slate-50 to-purple-50 rounded-xl"

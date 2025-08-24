@@ -146,7 +146,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     }
 
     timerRef.current = setInterval(() => {
-      setTimeRemaining((prev: any) => { // auto: implicit any
+      setTimeRemaining((prev: any) => { // auto
         if (prev <= 1) {
           handleChallengeTimeout();
           return 0;
