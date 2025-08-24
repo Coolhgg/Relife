@@ -249,15 +249,15 @@ export function useNotificationEvents() {
     };
 
     const handleAlarmSnoozed = (data: any) => {
-      setNotificationActions((prev: any) => [...prev, `snoozed-${data.alarmId}`]);
+      setNotificationActions((prev: string[]) => [...prev, `snoozed-${data.alarmId}`]);
     };
 
     const handleAlarmDismissed = (data: any) => {
-      setNotificationActions((prev: any) => [...prev, `dismissed-${data.alarmId}`]);
+      setNotificationActions((prev: string[]) => [...prev, `dismissed-${data.alarmId}`]);
     };
 
     const handleAlarmTapped = (data: any) => {
-      setNotificationActions((prev: any) => [...prev, `tapped-${data.alarmId}`]);
+      setNotificationActions((prev: string[]) => [...prev, `tapped-${data.alarmId}`]);
     };
 
     capacitorEnhanced.on('notification-received', handleNotificationReceived);

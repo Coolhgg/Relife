@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { criticalPreloader } from '../services/critical-preloader';
 import type { Alarm } from '../types';
 import { TimeoutHandle } from '../types/timers';
+import type { PerformanceHistoryEntry } from '../types/state-updaters';
 import type {
   CriticalAsset,
   PreloadStats,
@@ -43,7 +44,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
   const analyzeAndPreload = useCallback(async () => {
     if (state.isAnalyzing) return;
 
-    setState((prev: any) => ({ ...prev, isAnalyzing: true }));
+    setState((prev: CriticalPreloadingState) => ({ ...prev, isAnalyzing: true }));
 
     try {
       const criticalAssets = await criticalPreloader.analyzeCriticalAssets(alarms);
@@ -57,7 +58,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
         }
       }
 
-      setState((prev: any) => ({
+      setState((prev: CriticalPreloadingState) => ({
         ...prev,
         criticalAssets,
         readinessStatus,
@@ -68,14 +69,14 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
     } catch (error) {
       console.error('Error analyzing critical assets:', error);
 
-      setState((prev: any) => ({ ...prev, isAnalyzing: false }));
+      setState((prev: CriticalPreloadingState) => ({ ...prev, isAnalyzing: false }));
     }
   }, [alarms, state.isAnalyzing]);
 
   const updateStats = useCallback(() => {
     const stats = criticalPreloader.getStats();
 
-    setState((prev: any) => ({ ...prev, stats }));
+    setState((prev: CriticalPreloadingState) => ({ ...prev, stats }));
   }, []);
 
   // Initial analysis and periodic re-analysis
@@ -320,7 +321,7 @@ export function usePreloadPerformance() {
       setPerformance(newPerformance);
 
       // Update history
-      setPerformanceHistory((prev: any) => {
+      setPerformanceHistory((prev: PerformanceHistoryEntry[]) => {
         const newEntry = {
           timestamp: new Date(),
           successRate: stats.successRate,

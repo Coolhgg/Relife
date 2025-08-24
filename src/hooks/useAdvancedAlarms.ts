@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { AlarmService } from '../services/alarm';
+import type { Alarm } from '../types';
 
 export function useAdvancedAlarms() {
-  const [alarms, setAlarms] = useState<any[]>([]);
+  const [alarms, setAlarms] = useState<Alarm[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,7 +44,7 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       const newAlarm = await AlarmService.createAlarm(alarmData);
-      setAlarms((prev: any) => [...prev, newAlarm]);
+      setAlarms((prev: Alarm[]) => [...prev, newAlarm]);
       setError(null);
       return newAlarm;
     } catch (error) {
@@ -60,8 +61,8 @@ export function useAdvancedAlarms() {
       setLoading(true);
       await AlarmService.updateAlarm(id, alarmData);
 
-      setAlarms((prev: any) =>
-        prev.map((alarm: any) => (alarm.id === id ? { ...alarm, ...alarmData } : alarm))
+      setAlarms((prev: Alarm[]) =>
+        prev.map((alarm: Alarm) => (alarm.id === id ? { ...alarm, ...alarmData } : alarm))
       );
       setError(null);
     } catch (error) {
@@ -77,7 +78,7 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       await AlarmService.deleteAlarm(id);
-      setAlarms((prev: any) => prev.filter((alarm: any) => a.larm.id !== id));
+      setAlarms((prev: Alarm[]) => prev.filter((alarm: Alarm) => alarm.id !== id));
       setError(null);
     } catch (error) {
       console.error('Error deleting alarm:', error);

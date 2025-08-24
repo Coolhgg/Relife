@@ -4,6 +4,7 @@ import { lazyAudioLoader } from '../services/lazy-audio-loader';
 import type { AudioLoadProgress, AudioCacheEntry } from '../services/audio-manager';
 import type { CustomSound, Playlist, LoadingState } from '../services/types/media';
 import { TimeoutHandle } from '../types/timers';
+import type { PreloadingStatus, PerformanceHistoryEntry } from '../types/state-updaters';
 
 export interface AudioLoadingState {
   state: LoadingState;
@@ -31,12 +32,12 @@ export function useAudioLazyLoading(
   const loadSound = useCallback(async () => {
     if (!sound) return;
 
-    setState((prev: any) => ({ ...prev, state: 'loading', error: null }));
+    setState((prev: AudioLoadingState) => ({ ...prev, state: 'loading', error: null }));
 
     try {
       const entry = await lazyAudioLoader.queueSound(sound, priority, {
         onProgress: (progress: AudioLoadProgress) => {
-          setState((prev: any) => ({
+          setState((prev: AudioLoadingState) => ({
             ...prev,
             progress: progress.percentage,
             speed: progress.speed,
@@ -44,7 +45,7 @@ export function useAudioLazyLoading(
           }));
         },
         onComplete: (entry: AudioCacheEntry) => {
-          setState((prev: any) => ({
+          setState((prev: AudioLoadingState) => ({
             ...prev,
             state: 'loaded',
             progress: 100,
@@ -52,7 +53,7 @@ export function useAudioLazyLoading(
           }));
         },
         onError: (error: Error) => {
-          setState((prev: any) => ({
+          setState((prev: AudioLoadingState) => ({
             ...prev,
             state: 'error',
             error: error.message,
@@ -62,14 +63,14 @@ export function useAudioLazyLoading(
 
       // If promise resolves immediately (cached), update state
 
-      setState((prev: any) => ({
+      setState((prev: AudioLoadingState) => ({
         ...prev,
         state: 'loaded',
         progress: 100,
         entry,
       }));
     } catch (error) {
-      setState((prev: any) => ({
+      setState((prev: AudioLoadingState) => ({
         ...prev,
         state: 'error',
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -138,7 +139,7 @@ export function usePlaylistLazyLoading(
       setOverallProgress(100);
     } catch (error) {
       setOverallState('error');
-      setErrors((prev: any) => [
+      setErrors((prev: Array<{ soundId: string; error: string }>) => [
         ...prev,
         {
           soundId: 'playlist',
@@ -212,13 +213,13 @@ export function useAlarmSoundPreloading(alarms: any[]) {
     try {
       await lazyAudioLoader.queueAlarmSounds(alarms);
 
-      setPreloadingStatus((prev: any) => ({
+      setPreloadingStatus((prev: PreloadingStatus) => ({
         ...prev,
         isPreloading: false,
         preloadedCount: alarmsWithSounds.length,
       }));
     } catch (error) {
-      setPreloadingStatus((prev: any) => ({
+      setPreloadingStatus((prev: PreloadingStatus) => ({
         ...prev,
         isPreloading: false,
         errors: [
