@@ -70,7 +70,8 @@ class ServiceWorkerManager {
       }
 
       // Listen for updates
-      this.registration.addEventListener('updatefound', () => {
+      this.registration.addEventListener('updatefound', (
+) => {
         console.log('🔄 Service Worker update found');
         this.handleUpdateFound();
       });
@@ -81,7 +82,8 @@ class ServiceWorkerManager {
   }
 
   trackInstallProgress(worker: ServiceWorker): void {
-    worker.addEventListener('statechange', () => {
+    worker.addEventListener('statechange', (
+) => {
       console.log('🔄 Service Worker state:', worker.state);
 
       switch (worker.state) {
@@ -135,7 +137,8 @@ class ServiceWorkerManager {
 
       // Wait for the new service worker to take control
       await new Promise<void>(resolve => {
-        navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), {
+        navigator.serviceWorker.addEventListener('controllerchange', (
+) => resolve(), {
           once: true,
         });
       });
@@ -253,7 +256,8 @@ class ServiceWorkerManager {
     }
 
     // Fallback: periodic manual sync
-    setInterval(() => {
+    setInterval((
+) => {
       if (this.isOnline && this.emotionalEventsQueue.length > 0) {
         this.flushEventQueue();
       }
@@ -289,19 +293,22 @@ class ServiceWorkerManager {
   // Setup event listeners
   setupEventListeners() {
     // Online/offline detection
-    window.addEventListener('online', () => {
+    window.addEventListener('online', (
+) => {
       console.log('🌐 Back online');
       this.isOnline = true;
       this.flushEventQueue();
     });
 
-    window.addEventListener('offline', () => {
+    window.addEventListener('offline', (
+) => {
       console.log('📱 Gone offline');
       this.isOnline = false;
     });
 
     // Page visibility changes
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', (
+) => {
       if (!document.hidden && this.isOnline) {
         // Page became visible, flush any pending events
         this.flushEventQueue();
@@ -352,7 +359,8 @@ class ServiceWorkerManager {
       new CustomEvent('sw-update-available', {
         detail: {
           registration: this.registration,
-          applyUpdate: () => this.applyUpdate(),
+          applyUpdate: (
+) => this.applyUpdate(),
         },
       })
     );

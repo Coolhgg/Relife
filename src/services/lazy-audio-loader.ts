@@ -9,9 +9,12 @@ export interface LazyLoadQueueItem {
   priority: 'low' | 'medium' | 'high' | 'critical';
   options: AudioLoadOptions;
   callbacks: {
-    onProgress?: (progress: AudioLoadProgress) => void;
-    onComplete?: (entry: AudioCacheEntry) => void;
-    onError?: (error: Error) => void;
+    onProgress?: (progress: AudioLoadProgress
+) => void;
+    onComplete?: (entry: AudioCacheEntry
+) => void;
+    onError?: (error: Error
+) => void;
   };
 }
 
@@ -62,9 +65,12 @@ export class LazyAudioLoader {
     sound: CustomSound,
     priority: 'low' | 'medium' | 'high' | 'critical' = 'medium',
     callbacks?: {
-      onProgress?: (progress: AudioLoadProgress) => void;
-      onComplete?: (entry: AudioCacheEntry) => void;
-      onError?: (error: Error) => void;
+      onProgress?: (progress: AudioLoadProgress
+) => void;
+      onComplete?: (entry: AudioCacheEntry
+) => void;
+      onError?: (error: Error
+) => void;
     }
   ): Promise<AudioCacheEntry> {
     const id = `sound_${sound.id}`;
@@ -86,7 +92,8 @@ export class LazyAudioLoader {
       }
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject
+) => {
       const queueItem: LazyLoadQueueItem = {
         id,
         url: sound.fileUrl,
@@ -125,8 +132,10 @@ export class LazyAudioLoader {
     priority: 'low' | 'medium' | 'high' = 'medium'
   ): Promise<AudioCacheEntry[]> {
     const promises = playlist.sounds
-      .sort((a, b) => a.order - b.order) // Load in play order
-      .map((playlistSound, index) => {
+      .sort((a, b
+) => a.order - b.order) // Load in play order
+      .map((playlistSound, index
+) => {
         // First few sounds get higher priority
         const adjustedPriority = index < 3 ? 'high' : priority;
 
@@ -152,7 +161,8 @@ export class LazyAudioLoader {
     // Sort alarms by proximity to current time
     const sortedAlarms = alarms
       .filter(alarm => alarm.enabled && alarm.customSound)
-      .sort((a, b) => {
+      .sort((a, b
+) => {
         const timeA = this.getNextAlarmTime(a.time, a.days);
         const timeB = this.getNextAlarmTime(b.time, b.days);
         return timeA.getTime() - timeB.getTime();
@@ -264,7 +274,8 @@ export class LazyAudioLoader {
       this.totalRequests > 0 ? this.cacheHits / this.totalRequests : 0;
     this.stats.averageLoadTime =
       this.loadTimes.length > 0
-        ? this.loadTimes.reduce((sum, time) => sum + time, 0) / this.loadTimes.length
+        ? this.loadTimes.reduce((sum, time
+) => sum + time, 0) / this.loadTimes.length
         : 0;
 
     return { ...this.stats };
@@ -312,13 +323,15 @@ export class LazyAudioLoader {
       this.loadQueue.length === 0
     ) {
       // Check again in 1 second
-      setTimeout(() => this.processQueue(), 1000);
+      setTimeout((
+) => this.processQueue(), 1000);
       return;
     }
 
     const item = this.loadQueue.shift();
     if (!item) {
-      setTimeout(() => this.processQueue(), 1000);
+      setTimeout((
+) => this.processQueue(), 1000);
       return;
     }
 
@@ -348,7 +361,8 @@ export class LazyAudioLoader {
     }
 
     // Continue processing queue
-    setTimeout(() => this.processQueue(), 100);
+    setTimeout((
+) => this.processQueue(), 100);
   }
 
   private async loadAudioItem(item: LazyLoadQueueItem): Promise<AudioCacheEntry> {

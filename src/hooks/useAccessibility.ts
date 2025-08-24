@@ -17,7 +17,8 @@ import {
 /**
  * Main accessibility hook for managing preferences and state
  */
-export const useAccessibility = () => {
+export const useAccessibility = (
+) => {
   const [preferences, setPreferences] = useState<AccessibilityPreferences>(
     {} as AccessibilityPreferences
   );
@@ -25,7 +26,8 @@ export const useAccessibility = () => {
   const [isInitialized, setIsInitialized] = useState(false);
   const accessibilityService = useRef<AccessibilityPreferencesService>();
 
-  useEffect(() => {
+  useEffect((
+) => {
     accessibilityService.current = AccessibilityPreferencesService.getInstance();
 
     const initialPreferences = accessibilityService.current.getPreferences();
@@ -36,7 +38,9 @@ export const useAccessibility = () => {
     setIsInitialized(true);
 
     // Subscribe to changes
-    const unsubscribe = accessibilityService.current.subscribe((newPrefs: any) => { // auto
+    const unsubscribe = accessibilityService.current.subscribe((newPrefs: any
+) => {
+      // auto
       setPreferences(newPrefs);
       setState(accessibilityService.current!.getState());
     });
@@ -45,7 +49,8 @@ export const useAccessibility = () => {
   }, []);
 
   const updatePreferences = useCallback(
-    (updates: Partial<AccessibilityPreferences>) => {
+    (updates: Partial<AccessibilityPreferences>
+) => {
       if (accessibilityService.current) {
         accessibilityService.current.updatePreferences(updates);
       }
@@ -53,13 +58,15 @@ export const useAccessibility = () => {
     []
   );
 
-  const resetToDefaults = useCallback(() => {
+  const resetToDefaults = useCallback((
+) => {
     if (accessibilityService.current) {
       accessibilityService.current.resetToDefaults();
     }
   }, []);
 
-  const testColorContrast = useCallback((foreground: string, background: string) => {
+  const testColorContrast = useCallback((foreground: string, background: string
+) => {
     if (accessibilityService.current) {
       return accessibilityService.current.testColorContrast(foreground, background);
     }
@@ -79,11 +86,13 @@ export const useAccessibility = () => {
 /**
  * Hook for screen reader announcements
  */
-export const useScreenReader = () => {
+export const useScreenReader = (
+) => {
   const { preferences } = useAccessibility();
 
   const announce = useCallback(
-    (message: string, priority: 'polite' | 'assertive' = 'polite') => {
+    (message: string, priority: 'polite' | 'assertive' = 'polite'
+) => {
       if (preferences.announceTransitions) {
         createAriaAnnouncement(message, priority);
       }
@@ -92,7 +101,8 @@ export const useScreenReader = () => {
   );
 
   const announceError = useCallback(
-    (message: string) => {
+    (message: string
+) => {
       if (preferences.announceErrors) {
         createAriaAnnouncement(`Error: ${message}`, 'assertive');
       }
@@ -101,7 +111,8 @@ export const useScreenReader = () => {
   );
 
   const announceSuccess = useCallback(
-    (message: string) => {
+    (message: string
+) => {
       if (preferences.announceSuccess) {
         createAriaAnnouncement(`Success: ${message}`, 'polite');
       }
@@ -110,7 +121,8 @@ export const useScreenReader = () => {
   );
 
   const announceNavigation = useCallback(
-    (pageName: string) => {
+    (pageName: string
+) => {
       if (preferences.announceTransitions) {
         announcePageChange(pageName);
       }
@@ -129,12 +141,15 @@ export const useScreenReader = () => {
 /**
  * Hook for focus management
  */
-export const useFocusManagement = () => {
+export const useFocusManagement = (
+) => {
   const { preferences } = useAccessibility();
-  const trapCleanupRef = useRef<(() => void) | null>(null);
+  const trapCleanupRef = useRef<((
+) => void) | null>(null);
 
   const pushFocus = useCallback(
-    (element: HTMLElement) => {
+    (element: HTMLElement
+) => {
       if (preferences.keyboardNavigation) {
         FocusManager.pushFocus(element);
       }
@@ -142,18 +157,21 @@ export const useFocusManagement = () => {
     [preferences.keyboardNavigation]
   );
 
-  const popFocus = useCallback(() => {
+  const popFocus = useCallback((
+) => {
     if (preferences.keyboardNavigation) {
       FocusManager.popFocus();
     }
   }, [preferences.keyboardNavigation]);
 
-  const clearFocusStack = useCallback(() => {
+  const clearFocusStack = useCallback((
+) => {
     FocusManager.clearFocusStack();
   }, []);
 
   const trapFocus = useCallback(
-    (container: HTMLElement) => {
+    (container: HTMLElement
+) => {
       if (preferences.keyboardNavigation) {
         // Clear any existing trap
         if (trapCleanupRef.current) {
@@ -163,12 +181,14 @@ export const useFocusManagement = () => {
         trapCleanupRef.current = FocusManager.trapFocus(container);
         return trapCleanupRef.current;
       }
-      return () => {};
+      return (
+) => {};
     },
     [preferences.keyboardNavigation]
   );
 
-  const clearTrap = useCallback(() => {
+  const clearTrap = useCallback((
+) => {
     if (trapCleanupRef.current) {
       trapCleanupRef.current();
       trapCleanupRef.current = null;
@@ -176,8 +196,10 @@ export const useFocusManagement = () => {
   }, []);
 
   // Cleanup on unmount
-  useEffect(() => {
-    return () => {
+  useEffect((
+) => {
+    return (
+) => {
       clearTrap();
     };
   }, [clearTrap]);
@@ -194,8 +216,10 @@ export const useFocusManagement = () => {
 /**
  * Hook for accessible tooltips
  */
-export const useAccessibleTooltip = () => {
-  const tooltipCleanupRef = useRef<Map<HTMLElement, () => void>>(new Map());
+export const useAccessibleTooltip = (
+) => {
+  const tooltipCleanupRef = useRef<Map<HTMLElement, (
+) => void>>(new Map());
 
   const addTooltip = useCallback(
     (
@@ -205,7 +229,8 @@ export const useAccessibleTooltip = () => {
         position?: 'top' | 'bottom' | 'left' | 'right';
         delay?: number;
       }
-    ) => {
+    
+) => {
       // Remove existing tooltip if any
       const existingCleanup = tooltipCleanupRef.current.get(element);
       if (existingCleanup) {
@@ -221,7 +246,8 @@ export const useAccessibleTooltip = () => {
     []
   );
 
-  const removeTooltip = useCallback((element: HTMLElement) => {
+  const removeTooltip = useCallback((element: HTMLElement
+) => {
     const cleanup = tooltipCleanupRef.current.get(element);
     if (cleanup) {
       cleanup();
@@ -229,14 +255,18 @@ export const useAccessibleTooltip = () => {
     }
   }, []);
 
-  const removeAllTooltips = useCallback(() => {
-    tooltipCleanupRef.current.forEach((cleanup: any) => cleanup());
+  const removeAllTooltips = useCallback((
+) => {
+    tooltipCleanupRef.current.forEach((cleanup: any
+) => cleanup());
     tooltipCleanupRef.current.clear();
   }, []);
 
   // Cleanup on unmount
-  useEffect(() => {
-    return () => {
+  useEffect((
+) => {
+    return (
+) => {
       removeAllTooltips();
     };
   }, [removeAllTooltips]);
@@ -251,21 +281,25 @@ export const useAccessibleTooltip = () => {
 /**
  * Hook for mobile accessibility features
  */
-export const useMobileAccessibility = () => {
+export const useMobileAccessibility = (
+) => {
   const { preferences, state } = useAccessibility();
   const [isVoiceOverActive, setIsVoiceOverActive] = useState(false);
   const [isTalkBackActive, setIsTalkBackActive] = useState(false);
 
-  useEffect(() => {
+  useEffect((
+) => {
     // Detect iOS VoiceOver
-    const detectVoiceOver = () => {
+    const detectVoiceOver = (
+) => {
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       const hasVoiceOver = preferences.screenReaderOptimized && isIOS;
       setIsVoiceOverActive(hasVoiceOver);
     };
 
     // Detect Android TalkBack
-    const detectTalkBack = () => {
+    const detectTalkBack = (
+) => {
       const isAndroid = /Android/.test(navigator.userAgent);
       const hasTalkBack = preferences.screenReaderOptimized && isAndroid;
       setIsTalkBackActive(hasTalkBack);
@@ -275,7 +309,8 @@ export const useMobileAccessibility = () => {
     detectTalkBack();
   }, [preferences.screenReaderOptimized]);
 
-  const optimizeForMobileScreenReader = useCallback(() => {
+  const optimizeForMobileScreenReader = useCallback((
+) => {
     if (isVoiceOverActive || isTalkBackActive) {
       // Apply mobile screen reader optimizations
       document.body.classList.add('mobile-screen-reader');
@@ -288,12 +323,14 @@ export const useMobileAccessibility = () => {
     }
   }, [isVoiceOverActive, isTalkBackActive]);
 
-  useEffect(() => {
+  useEffect((
+) => {
     optimizeForMobileScreenReader();
   }, [optimizeForMobileScreenReader]);
 
   const getMobileAccessibilityProps = useCallback(
-    (elementType: 'button' | 'link' | 'input' | 'select') => {
+    (elementType: 'button' | 'link' | 'input' | 'select'
+) => {
       const baseProps = {
         style: preferences.largerTouchTargets
           ? {
@@ -351,12 +388,15 @@ export const useMobileAccessibility = () => {
 /**
  * Hook for high contrast mode
  */
-export const useHighContrast = () => {
+export const useHighContrast = (
+) => {
   const { preferences } = useAccessibility();
   const [systemHighContrast, setSystemHighContrast] = useState(false);
 
-  useEffect(() => {
-    const checkSystemHighContrast = () => {
+  useEffect((
+) => {
+    const checkSystemHighContrast = (
+) => {
       setSystemHighContrast(isHighContrastMode());
     };
 
@@ -369,7 +409,8 @@ export const useHighContrast = () => {
     mediaQuery.addEventListener('change', checkSystemHighContrast);
     forcedColorsQuery.addEventListener('change', checkSystemHighContrast);
 
-    return () => {
+    return (
+) => {
       mediaQuery.removeEventListener('change', checkSystemHighContrast);
       forcedColorsQuery.removeEventListener('change', checkSystemHighContrast);
     };
@@ -378,7 +419,8 @@ export const useHighContrast = () => {
   const isHighContrastActive = preferences.highContrastMode || systemHighContrast;
 
   const getHighContrastStyles = useCallback(
-    (baseStyles: React.CSSProperties = {}) => {
+    (baseStyles: React.CSSProperties = {}
+) => {
       if (!isHighContrastActive) return baseStyles;
 
       return {
@@ -402,12 +444,15 @@ export const useHighContrast = () => {
 /**
  * Hook for reduced motion preferences
  */
-export const useReducedMotion = () => {
+export const useReducedMotion = (
+) => {
   const { preferences } = useAccessibility();
   const [systemReducedMotion, setSystemReducedMotion] = useState(false);
 
-  useEffect(() => {
-    const checkSystemReducedMotion = () => {
+  useEffect((
+) => {
+    const checkSystemReducedMotion = (
+) => {
       setSystemReducedMotion(prefersReducedMotion());
     };
 
@@ -416,7 +461,8 @@ export const useReducedMotion = () => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     mediaQuery.addEventListener('change', checkSystemReducedMotion);
 
-    return () => {
+    return (
+) => {
       mediaQuery.removeEventListener('change', checkSystemReducedMotion);
     };
   }, []);
@@ -424,7 +470,8 @@ export const useReducedMotion = () => {
   const shouldReduceMotion = preferences.reducedMotion || systemReducedMotion;
 
   const getAnimationProps = useCallback(
-    (duration: number = 300, easing: string = 'ease-in-out') => {
+    (duration: number = 300, easing: string = 'ease-in-out'
+) => {
       if (shouldReduceMotion) {
         return {
           transition: 'none',
@@ -453,11 +500,13 @@ export const useReducedMotion = () => {
 /**
  * Hook for color blind friendly colors
  */
-export const useColorBlindFriendly = () => {
+export const useColorBlindFriendly = (
+) => {
   const { preferences } = useAccessibility();
 
   const getColorBlindFriendlyColor = useCallback(
-    (colorType: 'red' | 'green' | 'blue' | 'orange' | 'purple') => {
+    (colorType: 'red' | 'green' | 'blue' | 'orange' | 'purple'
+) => {
       if (!preferences.colorBlindFriendly) {
         // Return default colors
         const defaultColors = {
@@ -492,7 +541,8 @@ export const useColorBlindFriendly = () => {
 /**
  * Hook for keyboard navigation
  */
-export const useKeyboardNavigation = () => {
+export const useKeyboardNavigation = (
+) => {
   const { preferences } = useAccessibility();
   const [currentFocusIndex, setCurrentFocusIndex] = useState(0);
 
@@ -500,8 +550,10 @@ export const useKeyboardNavigation = () => {
     (
       event: React.KeyboardEvent,
       items: HTMLElement[],
-      onSelect?: (index: number) => void
-    ) => {
+      onSelect?: (index: number
+) => void
+    
+) => {
       if (!preferences.keyboardNavigation) return;
 
       switch (event.key) {

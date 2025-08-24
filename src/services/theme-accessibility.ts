@@ -121,10 +121,12 @@ class ThemeAccessibilityService {
     }
 
     // Clear and set new message with small delay for screen reader reliability
-    setTimeout(() => {
+    setTimeout((
+) => {
       if (this.ariaLiveRegion) {
         this.ariaLiveRegion.textContent = '';
-        setTimeout(() => {
+        setTimeout((
+) => {
           if (this.ariaLiveRegion) {
             this.ariaLiveRegion.textContent = message;
           }
@@ -423,7 +425,8 @@ class ThemeAccessibilityService {
   private addDescriptiveText(): void {
     // Add aria-descriptions for theme controls
     const themeButtons = document.querySelectorAll('[data-theme-toggle]');
-    themeButtons.forEach((button, index) => {
+    themeButtons.forEach((button, index
+) => {
       if (!button.getAttribute('aria-describedby')) {
         const descId = `theme-desc-${index}`;
         const desc = document.createElement('span');
@@ -635,7 +638,8 @@ class FocusManager {
  * Keyboard Navigation Helper
  */
 class KeyboardNavigationManager {
-  private shortcuts: Map<string, () => void> = new Map();
+  private shortcuts: Map<string, (
+) => void> = new Map();
 
   constructor() {
     this.setupKeyboardListeners();
@@ -668,7 +672,8 @@ class KeyboardNavigationManager {
 
   private registerDefaultShortcuts(): void {
     // Alt + T for theme toggle
-    this.shortcuts.set('alt+t', () => {
+    this.shortcuts.set('alt+t', (
+) => {
       const themeToggle = document.querySelector('[data-theme-toggle]') as HTMLElement;
       if (themeToggle) {
         themeToggle.click();
@@ -676,7 +681,8 @@ class KeyboardNavigationManager {
     });
 
     // Alt + M for main content
-    this.shortcuts.set('alt+m', () => {
+    this.shortcuts.set('alt+m', (
+) => {
       const mainContent = document.querySelector('#main-content, main') as HTMLElement;
       if (mainContent) {
         mainContent.focus();
@@ -684,7 +690,8 @@ class KeyboardNavigationManager {
     });
   }
 
-  registerShortcut(key: string, handler: () => void): void {
+  registerShortcut(key: string, handler: (
+) => void): void {
     this.shortcuts.set(key, handler);
   }
 

@@ -6,7 +6,8 @@ export function useAuthAnnouncements() {
 
   // Login announcements
   const announceLoginStart = useCallback(
-    (method: 'email' | 'google' | 'apple' | 'biometric') => {
+    (method: 'email' | 'google' | 'apple' | 'biometric'
+) => {
       const methodNames = {
         email: 'email and password',
         google: 'Google account',
@@ -19,7 +20,8 @@ export function useAuthAnnouncements() {
   );
 
   const announceLoginSuccess = useCallback(
-    (username?: string) => {
+    (username?: string
+) => {
       let message = 'Login successful!';
       if (username) {
         message += ` Welcome back, ${username}.`;
@@ -31,7 +33,8 @@ export function useAuthAnnouncements() {
   );
 
   const announceLoginError = useCallback(
-    (error: string, suggestion?: string) => {
+    (error: string, suggestion?: string
+) => {
       let message = `Login failed: ${error}.`;
       if (suggestion) {
         message += ` ${suggestion}`;
@@ -42,12 +45,14 @@ export function useAuthAnnouncements() {
   );
 
   // Registration announcements
-  const announceRegistrationStart = useCallback(() => {
+  const announceRegistrationStart = useCallback((
+) => {
     announce('Creating your account. Please wait...', 'polite');
   }, [announce]);
 
   const announceRegistrationSuccess = useCallback(
-    (email: string) => {
+    (email: string
+) => {
       announce(
         `Account created successfully for ${email}! Please check your email for verification instructions.`,
         'assertive'
@@ -57,7 +62,8 @@ export function useAuthAnnouncements() {
   );
 
   const announceRegistrationError = useCallback(
-    (error: string) => {
+    (error: string
+) => {
       announce(
         `Registration failed: ${error}. Please correct the errors and try again.`,
         'assertive'
@@ -68,7 +74,8 @@ export function useAuthAnnouncements() {
 
   // Password reset announcements
   const announcePasswordResetRequest = useCallback(
-    (email: string) => {
+    (email: string
+) => {
       announce(
         `Password reset email sent to ${email}. Please check your inbox and follow the instructions.`,
         'polite'
@@ -77,7 +84,8 @@ export function useAuthAnnouncements() {
     [announce]
   );
 
-  const announcePasswordResetSuccess = useCallback(() => {
+  const announcePasswordResetSuccess = useCallback((
+) => {
     announce(
       'Password reset successful! You can now sign in with your new password.',
       'assertive'
@@ -85,7 +93,8 @@ export function useAuthAnnouncements() {
   }, [announce]);
 
   const announcePasswordResetError = useCallback(
-    (error: string) => {
+    (error: string
+) => {
       announce(`Password reset failed: ${error}. Please try again.`, 'assertive');
     },
     [announce]
@@ -93,7 +102,8 @@ export function useAuthAnnouncements() {
 
   // Email verification announcements
   const announceEmailVerificationSent = useCallback(
-    (email: string) => {
+    (email: string
+) => {
       announce(
         `Verification email sent to ${email}. Please check your inbox and click the verification link.`,
         'polite'
@@ -102,7 +112,8 @@ export function useAuthAnnouncements() {
     [announce]
   );
 
-  const announceEmailVerificationSuccess = useCallback(() => {
+  const announceEmailVerificationSuccess = useCallback((
+) => {
     announce(
       'Email verified successfully! Your account is now fully activated.',
       'assertive'
@@ -110,7 +121,8 @@ export function useAuthAnnouncements() {
   }, [announce]);
 
   const announceEmailVerificationError = useCallback(
-    (error: string) => {
+    (error: string
+) => {
       announce(
         `Email verification failed: ${error}. Please try again or contact support.`,
         'assertive'
@@ -121,7 +133,8 @@ export function useAuthAnnouncements() {
 
   // Biometric authentication announcements
   const announceBiometricPrompt = useCallback(
-    (type: 'fingerprint' | 'face' | 'voice') => {
+    (type: 'fingerprint' | 'face' | 'voice'
+) => {
       const typeNames = {
         fingerprint: 'fingerprint scanner',
         face: 'face recognition camera',
@@ -133,14 +146,16 @@ export function useAuthAnnouncements() {
   );
 
   const announceBiometricSuccess = useCallback(
-    (type: 'fingerprint' | 'face' | 'voice') => {
+    (type: 'fingerprint' | 'face' | 'voice'
+) => {
       announce(`${type} authentication successful!`, 'polite');
     },
     [announce]
   );
 
   const announceBiometricError = useCallback(
-    (type: 'fingerprint' | 'face' | 'voice', error: string) => {
+    (type: 'fingerprint' | 'face' | 'voice', error: string
+) => {
       announce(
         `${type} authentication failed: ${error}. Please try again or use alternative method.`,
         'assertive'
@@ -151,7 +166,8 @@ export function useAuthAnnouncements() {
 
   // Two-factor authentication announcements
   const announceTwoFactorPrompt = useCallback(
-    (method: 'sms' | 'email' | 'authenticator') => {
+    (method: 'sms' | 'email' | 'authenticator'
+) => {
       const methodNames = {
         sms: 'SMS text message',
         email: 'email',
@@ -165,12 +181,14 @@ export function useAuthAnnouncements() {
     [announce]
   );
 
-  const announceTwoFactorSuccess = useCallback(() => {
+  const announceTwoFactorSuccess = useCallback((
+) => {
     announce('Two-factor authentication successful!', 'polite');
   }, [announce]);
 
   const announceTwoFactorError = useCallback(
-    (error: string, attemptsRemaining?: number) => {
+    (error: string, attemptsRemaining?: number
+) => {
       let message = `Two-factor authentication failed: ${error}.`;
       if (attemptsRemaining !== undefined && attemptsRemaining > 0) {
         message += ` You have ${attemptsRemaining} attempt${attemptsRemaining === 1 ? '' : 's'} remaining.`;
@@ -184,7 +202,8 @@ export function useAuthAnnouncements() {
 
   // Session management announcements
   const announceSessionExpiring = useCallback(
-    (minutesRemaining: number) => {
+    (minutesRemaining: number
+) => {
       announce(
         `Your session will expire in ${minutesRemaining} minute${minutesRemaining === 1 ? '' : 's'}. Please save your work and extend your session if needed.`,
         'assertive'
@@ -193,23 +212,27 @@ export function useAuthAnnouncements() {
     [announce]
   );
 
-  const announceSessionExpired = useCallback(() => {
+  const announceSessionExpired = useCallback((
+) => {
     announce(
       'Your session has expired for security reasons. Please sign in again to continue.',
       'assertive'
     );
   }, [announce]);
 
-  const announceSessionExtended = useCallback(() => {
+  const announceSessionExtended = useCallback((
+) => {
     announce('Session extended successfully. You can continue working.', 'polite');
   }, [announce]);
 
   // Logout announcements
-  const announceLogoutStart = useCallback(() => {
+  const announceLogoutStart = useCallback((
+) => {
     announce('Signing out. Please wait...', 'polite');
   }, [announce]);
 
-  const announceLogoutSuccess = useCallback(() => {
+  const announceLogoutSuccess = useCallback((
+) => {
     announce(
       'You have been signed out successfully. Thank you for using the app!',
       'polite'
@@ -217,7 +240,8 @@ export function useAuthAnnouncements() {
   }, [announce]);
 
   const announceLogoutError = useCallback(
-    (error: string) => {
+    (error: string
+) => {
       announce(
         `Logout failed: ${error}. Your session may still be active.`,
         'assertive'
@@ -228,7 +252,8 @@ export function useAuthAnnouncements() {
 
   // Account security announcements
   const announcePasswordStrength = useCallback(
-    (strength: 'weak' | 'fair' | 'good' | 'strong') => {
+    (strength: 'weak' | 'fair' | 'good' | 'strong'
+) => {
       const messages = {
         weak: 'Password strength: Weak. Consider using a longer password with mixed characters.',
         fair: 'Password strength: Fair. Add numbers and special characters for better security.',
@@ -241,7 +266,8 @@ export function useAuthAnnouncements() {
   );
 
   const announceSecurityAlert = useCallback(
-    (alertType: string, details: string) => {
+    (alertType: string, details: string
+) => {
       announce(
         `Security alert: ${alertType}. ${details}. Please review your account security settings.`,
         'assertive'
@@ -251,7 +277,8 @@ export function useAuthAnnouncements() {
   );
 
   const announceAccountLocked = useCallback(
-    (reason: string, unlockTime?: Date) => {
+    (reason: string, unlockTime?: Date
+) => {
       let message = `Account temporarily locked: ${reason}.`;
       if (unlockTime) {
         message += ` You can try again at ${unlockTime.toLocaleTimeString()}.`;
@@ -263,7 +290,8 @@ export function useAuthAnnouncements() {
 
   // Privacy and permissions announcements
   const announcePermissionRequest = useCallback(
-    (permission: string, reason: string) => {
+    (permission: string, reason: string
+) => {
       announce(
         `Permission request: The app needs access to ${permission}. ${reason} You can change this later in settings.`,
         'polite'
@@ -273,14 +301,16 @@ export function useAuthAnnouncements() {
   );
 
   const announcePermissionGranted = useCallback(
-    (permission: string) => {
+    (permission: string
+) => {
       announce(`Permission granted for ${permission}. Thank you!`, 'polite');
     },
     [announce]
   );
 
   const announcePermissionDenied = useCallback(
-    (permission: string, impact: string) => {
+    (permission: string, impact: string
+) => {
       announce(
         `Permission denied for ${permission}. ${impact} You can enable this in your device settings if needed.`,
         'polite'
@@ -290,7 +320,8 @@ export function useAuthAnnouncements() {
   );
 
   const announceDataUsageInfo = useCallback(
-    (info: string) => {
+    (info: string
+) => {
       announce(`Data usage information: ${info}`, 'polite');
     },
     [announce]

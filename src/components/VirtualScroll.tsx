@@ -4,11 +4,14 @@ interface VirtualScrollProps<T> {
   items: T[];
   itemHeight: number;
   containerHeight: number;
-  renderItem: (item: T, index: number) => React.ReactNode;
+  renderItem: (item: T, index: number
+) => React.ReactNode;
   className?: string;
   overscan?: number;
-  onScroll?: (scrollTop: number) => void;
-  getItemHeight?: (index: number) => number;
+  onScroll?: (scrollTop: number
+) => void;
+  getItemHeight?: (index: number
+) => number;
 }
 
 export function VirtualScroll<T>({
@@ -25,13 +28,16 @@ export function VirtualScroll<T>({
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Calculate dynamic heights if provided
-  const itemHeights = useMemo(() => {
+  const itemHeights = useMemo((
+) => {
     if (!getItemHeight) return new Array(items.length).fill(itemHeight);
-    return items.map((_, index) => getItemHeight(index));
+    return items.map((_, index
+) => getItemHeight(index));
   }, [items.length, getItemHeight, itemHeight]);
 
   // Calculate cumulative heights for dynamic sizing
-  const cumulativeHeights = useMemo(() => {
+  const cumulativeHeights = useMemo((
+) => {
     const heights = [0];
     for (let i = 0; i < itemHeights.length; i++) {
       heights.push(heights[i] + itemHeights[i]);
@@ -42,15 +48,20 @@ export function VirtualScroll<T>({
   const totalHeight = cumulativeHeights[cumulativeHeights.length - 1];
 
   // Find visible range
-  const visibleRange = useMemo(() => {
+  const visibleRange = useMemo((
+) => {
     const startIndex = Math.max(
       0,
-      cumulativeHeights.findIndex((height: any) => height >= scrollTop) - 1
+      cumulativeHeights.findIndex((height: any
+) => height >= scrollTop) - 1
     );
 
     const endIndex = Math.min(
       items.length - 1,
-      cumulativeHeights.findIndex((height: any) => height >= scrollTop + containerHeight)
+      cumulativeHeights.findIndex(
+        (height: any
+) => height >= scrollTop + containerHeight
+      )
     );
 
     return {
@@ -60,7 +71,8 @@ export function VirtualScroll<T>({
   }, [scrollTop, containerHeight, cumulativeHeights, items.length, overscan]);
 
   const handleScroll = useCallback(
-    (e: React.UIEvent<HTMLDivElement>) => {
+    (e: React.UIEvent<HTMLDivElement>
+) => {
       const newScrollTop = e.currentTarget.scrollTop;
       setScrollTop(newScrollTop);
       onScroll?.(newScrollTop);
@@ -69,7 +81,8 @@ export function VirtualScroll<T>({
   );
 
   // Visible items with their positions
-  const visibleItems = useMemo(() => {
+  const visibleItems = useMemo((
+) => {
     const items_array = [];
     for (let i = visibleRange.start; i <= visibleRange.end; i++) {
       if (items[i]) {
@@ -92,7 +105,8 @@ export function VirtualScroll<T>({
       onScroll={handleScroll}
     >
       <div style={{ height: totalHeight, position: 'relative' }}>
-        {visibleItems.map(({ item, index, top, height }) => (
+        {visibleItems.map(({ item, index, top, height }
+) => (
           <div
             key={index}
             style={{
@@ -121,14 +135,18 @@ interface AlarmHistoryItem {
 
 export const VirtualAlarmHistory: React.FC<{
   alarms: AlarmHistoryItem[];
-  onItemClick?: (alarm: AlarmHistoryItem) => void;
-}> = ({ alarms, onItemClick }) => {
+  onItemClick?: (alarm: AlarmHistoryItem
+) => void;
+}> = ({ alarms, onItemClick }
+) => {
   const renderAlarmItem = useCallback(
-    (alarm: AlarmHistoryItem, index: number) => (
+    (alarm: AlarmHistoryItem, index: number
+) => (
       <div
         key={alarm.id}
         className="flex items-center justify-between p-4 border-b border-white/10 hover:bg-white/5 cursor-pointer transition-colors"
-        onClick={() => onItemClick?.(alarm)}
+        onClick={(
+) => onItemClick?.(alarm)}
       >
         <div className="flex items-center gap-3">
           <div
@@ -176,11 +194,15 @@ interface SleepSessionItem {
 
 export const VirtualSleepHistory: React.FC<{
   sessions: SleepSessionItem[];
-  onItemClick?: (session: SleepSessionItem) => void;
-}> = ({ sessions, onItemClick }) => {
+  onItemClick?: (session: SleepSessionItem
+) => void;
+}> = ({ sessions, onItemClick }
+) => {
   const renderSessionItem = useCallback(
-    (session: SleepSessionItem, index: number) => {
-      const formatDuration = (minutes: number) => {
+    (session: SleepSessionItem, index: number
+) => {
+      const formatDuration = (minutes: number
+) => {
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
         return `${hours}h ${mins}m`;
@@ -190,14 +212,16 @@ export const VirtualSleepHistory: React.FC<{
         <div
           key={session.id}
           className="p-4 border-b border-white/10 hover:bg-white/5 cursor-pointer transition-colors"
-          onClick={() => onItemClick?.(session)}
+          onClick={(
+) => onItemClick?.(session)}
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-white font-medium">
               {session.bedtime.toLocaleDateString()}
             </span>
             <div className="flex items-center gap-1">
-              {Array.from({ length: 5 }, (_, i) => (
+              {Array.from({ length: 5 }, (_, i
+) => (
                 <div
                   key={i}
                   className={`w-2 h-2 rounded-full ${
@@ -255,19 +279,22 @@ export const VirtualSleepHistory: React.FC<{
 
 // Infinite scroll hook for pagination
 export const useInfiniteScroll = <T,>(
-  fetchMore: (offset: number) => Promise<T[]>,
+  fetchMore: (offset: number
+) => Promise<T[]>,
   initialData: T[] = [],
   options: {
     threshold?: number;
     pageSize?: number;
   } = {}
+
 ) => {
   const { threshold = 200, pageSize = 20 } = options;
   const [data, setData] = useState<T[]>(initialData);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  const loadMore = useCallback(async () => {
+  const loadMore = useCallback(async (
+) => {
     if (loading || !hasMore) return;
 
     setLoading(true);
@@ -276,7 +303,8 @@ export const useInfiniteScroll = <T,>(
       if (newData.length < pageSize) {
         setHasMore(false);
       }
-      setData((prev: any) => [...prev, ...newData]);
+      setData((prev: any
+) => [...prev, ...newData]);
     } catch (error) {
       console.error('Error loading more data:', error);
     } finally {
@@ -285,7 +313,8 @@ export const useInfiniteScroll = <T,>(
   }, [fetchMore, data.length, loading, hasMore, pageSize]);
 
   const handleScroll = useCallback(
-    (scrollTop: number) => {
+    (scrollTop: number
+) => {
       const container = document.querySelector('.virtual-scroll-container');
       if (!container) return;
 

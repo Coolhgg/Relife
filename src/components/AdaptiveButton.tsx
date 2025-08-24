@@ -37,14 +37,16 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(
     onMouseEnter,
     onMouseLeave,
     ...props
-  }) => {
+  }
+) => {
     const { isLowEnd, tier } = useDeviceCapabilities();
     const { shouldReduceAnimations } = usePerformanceOptimizations();
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     // Animation configuration based on device capabilities
     const animationConfig: AnimationConfig = useMemo(
-      () => ({
+      (
+) => ({
         duration: isLowEnd ? 100 : animationIntensity === 'enhanced' ? 300 : 200,
         easing: 'ease-in-out',
         complexity: isLowEnd
@@ -67,7 +69,8 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(
     } = useOptimizedAnimation(`button-${variant}-${size}`, animationConfig);
 
     // Base styles configuration
-    const baseStyles = useMemo(() => {
+    const baseStyles = useMemo((
+) => {
       const sizeClasses = {
         sm: 'px-3 py-1.5 text-sm',
         md: 'px-4 py-2 text-base',
@@ -101,7 +104,8 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(
     }, [variant, size, fullWidth, className, isLowEnd]);
 
     // Enhanced styles for better devices
-    const enhancedStyles: React.CSSProperties = useMemo(() => {
+    const enhancedStyles: React.CSSProperties = useMemo((
+) => {
       if (isLowEnd || shouldReduceAnimations) {
         return {};
       }
@@ -134,7 +138,8 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(
 
     // Optimized event handlers
     const handleMouseEnter = useCallback(
-      (event: React.MouseEvent<HTMLButtonElement>) => {
+      (event: React.MouseEvent<HTMLButtonElement>
+) => {
         if (canAnimate && !disabled && !loading) {
           startAnimation();
         }
@@ -144,7 +149,8 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(
     );
 
     const handleMouseLeave = useCallback(
-      (event: React.MouseEvent<HTMLButtonElement>) => {
+      (event: React.MouseEvent<HTMLButtonElement>
+) => {
         if (canAnimate) {
           stopAnimation();
         }
@@ -154,7 +160,8 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(
     );
 
     const handleClick = useCallback(
-      (event: React.MouseEvent<HTMLButtonElement>) => {
+      (event: React.MouseEvent<HTMLButtonElement>
+) => {
         if (loading || disabled) return;
 
         // Add haptic feedback on supported devices
@@ -177,7 +184,8 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(
     const finalClasses = getOptimizedClasses(baseStyles);
 
     // Loading spinner component (simplified for low-end devices)
-    const LoadingSpinner = useMemo(() => {
+    const LoadingSpinner = useMemo((
+) => {
       if (!loading) return null;
 
       if (isLowEnd) {
@@ -208,7 +216,8 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(
     }, [loading, isLowEnd]);
 
     // Icon rendering (optimized for performance)
-    const IconElement = useMemo(() => {
+    const IconElement = useMemo((
+) => {
       if (!icon || loading) return null;
 
       return <span className={children ? 'mr-2' : ''}>{icon}</span>;
@@ -265,7 +274,8 @@ function createRippleEffect(
     }
     container.appendChild(ripple);
 
-    setTimeout(() => {
+    setTimeout((
+) => {
       if (ripple.parentNode) {
         ripple.parentNode.removeChild(ripple);
       }

@@ -26,9 +26,12 @@ import {
 
 interface HabitCelebrationProps {
   celebration: HabitCelebrationType | null;
-  onShare?: (celebration: HabitCelebrationType) => void;
-  onClose?: () => void;
-  onRewardClaim?: (reward: CelebrationReward) => void;
+  onShare?: (celebration: HabitCelebrationType
+) => void;
+  onClose?: (
+) => void;
+  onRewardClaim?: (reward: CelebrationReward
+) => void;
 }
 
 interface ConfettiPiece {
@@ -92,7 +95,8 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
   onShare,
   onClose,
   onRewardClaim,
-}) => {
+}
+) => {
   const [confettiPieces, setConfettiPieces] = useState<ConfettiPiece[]>([]);
   const [showRewards, setShowRewards] = useState(false);
   const [claimedRewards, setClaimedRewards] = useState<string[]>([]);
@@ -100,7 +104,8 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Create confetti animation
-  const createConfetti = (colors: string[], intensity: string) => {
+  const createConfetti = (colors: string[], intensity: string
+) => {
     const pieces: ConfettiPiece[] = [];
     const pieceCount = intensity === 'subtle' ? 20 : intensity === 'moderate' ? 40 : 60;
 
@@ -121,24 +126,29 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
   };
 
   // Animate confetti
-  const animateConfetti = () => {
-    setConfettiPieces((pieces: any) => /* auto: implicit any */
+  const animateConfetti = (
+) => {
+    setConfettiPieces((pieces: any
+) => 
       pieces
-        /* auto: implicit any */
-      &.map((piece: any) => ({
+        
+      .map((piece: any
+) => ({
           ...piece,
           x: piece.x + piece.velocityX,
           y: piece.y + piece.velocityY,
           rotation: piece.rotation + 5,
           velocityY: piece.velocityY + 0.1,
         }))
-        .filter((piece: any) => piece.y < window.innerHeight + 50)
+        .filter((piece: any
+) => piece.y < window.innerHeight + 50)
     );
 
     animationRef.current = requestAnimationFrame(animateConfetti);
   };
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (celebration && celebration.animation.type === 'confetti') {
       const pieces = createConfetti(
         celebration.animation.colors,
@@ -148,10 +158,12 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
       animateConfetti();
 
       // Show rewards after animation
-      setTimeout(() => setShowRewards(true), 1500);
+      setTimeout((
+) => setShowRewards(true), 1500);
 
       // Auto cleanup
-      setTimeout(() => {
+      setTimeout((
+) => {
         setConfettiPieces([]);
         if (animationRef.current) {
           cancelAnimationFrame(animationRef.current);
@@ -159,21 +171,25 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
       }, celebration.animation.duration);
     }
 
-    return () => {
+    return (
+) => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
   }, [celebration]);
 
-  const handleRewardClaim = (reward: CelebrationReward) => {
+  const handleRewardClaim = (reward: CelebrationReward
+) => {
     if (reward.immediate && !claimedRewards.includes(reward.type)) {
-      setClaimedRewards((prev: any) => [ // auto: implicit any...prev, reward.type]);
+      setClaimedRewards((prev: any
+) => [...prev, reward.type]);
       onRewardClaim?.(reward);
     }
   };
 
-  const handleShare = () => {
+  const handleShare = (
+) => {
     if (celebration) {
       onShare?.(celebration);
     }
@@ -195,8 +211,9 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
         {/* Confetti Layer */}
         {confettiPieces.length > 0 && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {confettiPieces/* auto: implicit any */
-      &.map((piece: any) => (
+            {confettiPieces
+      .map((piece: any
+) => (
               <motion.div
                 key={piece.id}
                 className="absolute w-2 h-2 rounded-sm"
@@ -342,7 +359,8 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                     </div>
 
                     <div className="space-y-2">
-                      {celebration.rewards.map((reward, index) => (
+                      {celebration.rewards.map((reward, index
+) => (
                         <motion.div
                           key={index}
                           className="flex items-center justify-between p-3 bg-muted/10 rounded-lg border border-muted/20"
@@ -386,7 +404,8 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                                   : 'default'
                               }
                               disabled={claimedRewards.includes(reward.type)}
-                              onClick={() => handleRewardClaim(reward)}
+                              onClick={(
+) => handleRewardClaim(reward)}
                             >
                               {claimedRewards.includes(reward.type)
                                 ? 'Claimed'
@@ -443,8 +462,9 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                     {celebration.socialShare.defaultMessage}
                   </div>
                   <div className="flex gap-1 mt-2">
-                    {celebration.socialShare.hashtags/* auto: implicit any */
-      &.map((tag: any) => (
+                    {celebration.socialShare.hashtags
+      .map((tag: any
+) => (
                       <Badge key={tag} variant="secondary" className="text-xs">
                         {tag}
                       </Badge>

@@ -106,7 +106,8 @@ export class EnhancedLocationService {
       if (value) {
         const data = JSON.parse(value);
         this.geofences = new Map(
-          Object.entries(data).map(([k, v]) => [
+          Object.entries(data).map(([k, v]
+) => [
             k,
             {
               ...(v as any),
@@ -128,7 +129,8 @@ export class EnhancedLocationService {
       const { value } = await Preferences.get({ key: LOCATION_HISTORY_KEY });
       if (value) {
         const data = JSON.parse(value);
-        this.locationHistory = data.map((point: any) => ({
+        this.locationHistory = data.map((point: any
+) => ({
           ...point,
           timestamp: new Date(point.timestamp),
         }));
@@ -150,7 +152,8 @@ export class EnhancedLocationService {
 
       // Start periodic tracking
       this.trackingInterval = setInterval(
-        async () => {
+        async (
+) => {
           try {
             await this.updateCurrentLocation();
           } catch (error) {
@@ -482,13 +485,16 @@ export class EnhancedLocationService {
   ): LocationPattern {
     // Calculate cluster center
     const centerLat =
-      cluster.reduce((sum, p) => sum + p.location.latitude, 0) / cluster.length;
+      cluster.reduce((sum, p
+) => sum + p.location.latitude, 0) / cluster.length;
     const centerLon =
-      cluster.reduce((sum, p) => sum + p.location.longitude, 0) / cluster.length;
+      cluster.reduce((sum, p
+) => sum + p.location.longitude, 0) / cluster.length;
 
     // Calculate average radius
     const avgRadius =
-      cluster.reduce((sum, p) => {
+      cluster.reduce((sum, p
+) => {
         return (
           sum +
           this.calculateDistance(
@@ -538,8 +544,10 @@ export class EnhancedLocationService {
 
     // Check for home patterns (evening/night visits, consistent across days)
     const eveningNightVisits = Object.entries(timePatterns)
-      .filter(([hour]) => parseInt(hour) >= 18 || parseInt(hour) <= 7)
-      .reduce((sum, [, count]) => sum + count, 0);
+      .filter(([hour]
+) => parseInt(hour) >= 18 || parseInt(hour) <= 7)
+      .reduce((sum, [, count]
+) => sum + count, 0);
 
     if (eveningNightVisits / totalVisits > 0.6) {
       return 'home';
@@ -547,12 +555,16 @@ export class EnhancedLocationService {
 
     // Check for work patterns (business hours, weekdays)
     const businessHourVisits = Object.entries(timePatterns)
-      .filter(([hour]) => parseInt(hour) >= 9 && parseInt(hour) <= 17)
-      .reduce((sum, [, count]) => sum + count, 0);
+      .filter(([hour]
+) => parseInt(hour) >= 9 && parseInt(hour) <= 17)
+      .reduce((sum, [, count]
+) => sum + count, 0);
 
     const weekdayVisits = Object.entries(dayPatterns)
-      .filter(([day]) => parseInt(day) >= 1 && parseInt(day) <= 5)
-      .reduce((sum, [, count]) => sum + count, 0);
+      .filter(([day]
+) => parseInt(day) >= 1 && parseInt(day) <= 5)
+      .reduce((sum, [, count]
+) => sum + count, 0);
 
     if (businessHourVisits / totalVisits > 0.5 && weekdayVisits / totalVisits > 0.7) {
       return 'work';
@@ -561,11 +573,13 @@ export class EnhancedLocationService {
     // Check for gym patterns (early morning or evening, regular schedule)
     const gymHours = Object.entries(timePatterns)
       .filter(
-        ([hour]) =>
+        ([hour]
+) =>
           (parseInt(hour) >= 6 && parseInt(hour) <= 9) ||
           (parseInt(hour) >= 17 && parseInt(hour) <= 21)
       )
-      .reduce((sum, [, count]) => sum + count, 0);
+      .reduce((sum, [, count]
+) => sum + count, 0);
 
     if (
       gymHours / totalVisits > 0.8 &&
@@ -582,9 +596,11 @@ export class EnhancedLocationService {
     dayPatterns: Record<string, number>
   ): number {
     const values = Object.values(dayPatterns);
-    const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
+    const mean = values.reduce((sum, v
+) => sum + v, 0) / values.length;
     const variance =
-      values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length;
+      values.reduce((sum, v
+) => sum + Math.pow(v - mean, 2), 0) / values.length;
     return 1 - Math.sqrt(variance) / mean; // Lower variance = higher regularity
   }
 
@@ -614,7 +630,8 @@ export class EnhancedLocationService {
     let dwellSessions = 0;
 
     const sortedCluster = cluster.sort(
-      (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+      (a, b
+) => a.timestamp.getTime() - b.timestamp.getTime()
     );
 
     let sessionStart = sortedCluster[0].timestamp;

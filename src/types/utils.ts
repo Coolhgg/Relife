@@ -136,17 +136,20 @@ export type FactoryOptions<T> = DeepPartial<T> & {
 
 export type FactoryFunction<T, TOptions = FactoryOptions<T>> = (
   options?: TOptions
+
 ) => T;
 
 // Event handler type utilities
 export type EventHandler<TElement = Element, TEvent = Event> = (
   this: TElement,
   ev: TEvent
+
 ) => void | boolean;
 
 export type AsyncEventHandler<TElement = Element, TEvent = Event> = (
   this: TElement,
   ev: TEvent
+
 ) => Promise<void | boolean>;
 
 // API response type utilities
@@ -172,14 +175,17 @@ export type PaginatedResponse<T> = {
 };
 
 // Validation type utilities
-export type ValidationRule<T> = (value: T) => Result<T, string>;
+export type ValidationRule<T> = (value: T
+) => Result<T, string>;
 export type ValidationSchema<T> = {
   [K in keyof T]?: ValidationRule<T[K]>[];
 };
 
 // Type guards utilities
-export type TypeGuard<T> = (value: unknown) => value is T;
-export type AsyncTypeGuard<T> = (value: unknown) => Promise<boolean>;
+export type TypeGuard<T> = (value: unknown
+) => value is T;
+export type AsyncTypeGuard<T> = (value: unknown
+) => Promise<boolean>;
 
 // Configuration type utilities
 export type ConfigKey = string;
@@ -192,7 +198,8 @@ export type Discriminated<T, K extends keyof T> =
 
 // Brand utility functions
 export const createBrandedId =
-  <B>(prefix: string) =>
+  <B>(prefix: string
+) =>
   (id: string): Branded<string, B> =>
     `${prefix}_${id}` as Branded<string, B>;
 

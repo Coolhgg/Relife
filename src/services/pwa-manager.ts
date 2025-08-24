@@ -115,10 +115,12 @@ export class PWAManager {
       this.serviceWorkerRegistration = registration;
 
       // Handle updates
-      registration.addEventListener('updatefound', () => {
+      registration.addEventListener('updatefound', (
+) => {
         const newWorker = registration.installing;
         if (newWorker) {
-          newWorker.addEventListener('statechange', () => {
+          newWorker.addEventListener('statechange', (
+) => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               this.emit('sw-update-available', { registration });
             }
@@ -151,7 +153,8 @@ export class PWAManager {
       this.emit('installable', { prompt: this.state.installPrompt });
     });
 
-    window.addEventListener('appinstalled', () => {
+    window.addEventListener('appinstalled', (
+) => {
       console.log('[PWA] App installed');
       this.state.isInstalled = true;
       this.state.isInstallable = false;

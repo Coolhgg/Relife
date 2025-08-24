@@ -22,9 +22,12 @@ import { TimeoutHandle } from '../types/timers';
 interface ActiveAlarmProps {
   alarm: Alarm;
   alarmInstance: AlarmInstance;
-  onSnooze: (snoozeCount: number) => void;
-  onDismiss: (completedAt: string, snoozeCount: number) => void;
-  onMiss: () => void;
+  onSnooze: (snoozeCount: number
+) => void;
+  onDismiss: (completedAt: string, snoozeCount: number
+) => void;
+  onMiss: (
+) => void;
   battleMode?: boolean;
 }
 
@@ -90,22 +93,27 @@ export function ActiveAlarm({
   const [_challengePhase, _setChallengePhase] = useState(0);
 
   // Auto-miss alarm after timeout
-  useEffect(() => {
+  useEffect((
+) => {
     if (timeLeft <= 0) {
       onMiss();
       return;
     }
 
-    const timer = setInterval(() => {
-      /* auto: implicit any */
-      setTimeLeft((prev: any) => prev - 1);
+    const timer = setInterval((
+) => {
+      
+      setTimeLeft((prev: any
+) => prev - 1);
     }, 1000);
 
-    return () => clearInterval(timer);
+    return (
+) => clearInterval(timer);
   }, [timeLeft, onMiss]);
 
   // Initialize challenge based on difficulty
-  useEffect(() => {
+  useEffect((
+) => {
     if (!showChallenge) return;
 
     switch (alarm.difficulty) {
@@ -135,19 +143,22 @@ export function ActiveAlarm({
     }
   }, [showChallenge, alarm.difficulty]);
 
-  const formatTime = (seconds: number) => {
+  const formatTime = (seconds: number
+) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleSnooze = () => {
+  const handleSnooze = (
+) => {
     if (alarm.snoozeEnabled && alarmInstance.snoozeCount < 3) {
       onSnooze(alarmInstance.snoozeCount + 1);
     }
   };
 
-  const handleDismissAttempt = () => {
+  const handleDismissAttempt = (
+) => {
     if (alarm.difficulty === 'easy') {
       onDismiss(new Date().toISOString(), alarmInstance.snoozeCount);
     } else if (alarm.difficulty === 'nuclear') {
@@ -159,7 +170,8 @@ export function ActiveAlarm({
     }
   };
 
-  const handleChallengeSubmit = () => {
+  const handleChallengeSubmit = (
+) => {
     if (alarm.difficulty === 'medium' && currentChallenge) {
       if (parseInt(challengeAnswer) === currentChallenge.answer) {
         onDismiss(new Date().toISOString(), alarmInstance.snoozeCount);
@@ -173,7 +185,8 @@ export function ActiveAlarm({
     }
   };
 
-  const handleTaskComplete = (task: string) => {
+  const handleTaskComplete = (task: string
+) => {
     const newCompleted = [...completedTasks, task];
     setCompletedTasks(newCompleted);
 
@@ -183,7 +196,8 @@ export function ActiveAlarm({
     }
   };
 
-  const getDifficultyColor = (difficulty: AlarmDifficulty) => {
+  const getDifficultyColor = (difficulty: AlarmDifficulty
+) => {
     switch (difficulty) {
       case 'easy':
         return 'text-green-500';
@@ -198,7 +212,8 @@ export function ActiveAlarm({
     }
   };
 
-  const getDifficultyEmoji = (difficulty: AlarmDifficulty) => {
+  const getDifficultyEmoji = (difficulty: AlarmDifficulty
+) => {
     switch (difficulty) {
       case 'easy':
         return '😴';
@@ -279,7 +294,8 @@ export function ActiveAlarm({
                   </Button>
                   <Button
                     variant="secondary"
-                    onClick={() => setIsMuted(!isMuted)}
+                    onClick={(
+) => setIsMuted(!isMuted)}
                     className="flex-1"
                   >
                     {isMuted ? (
@@ -338,8 +354,9 @@ export function ActiveAlarm({
                       <Input
                         type="number"
                         value={challengeAnswer}
-                        /* auto: implicit any */
-                        onChange={(e: any) => setChallengeAnswer(e.target.value)}
+                        
+                        onChange={(e: any
+) => setChallengeAnswer(e.target.value)}
                         placeholder="Your answer"
                         className="text-center text-lg"
                         autoFocus
@@ -362,7 +379,8 @@ export function ActiveAlarm({
                       <p className="text-sm">Complete all tasks below:</p>
                     </div>
 
-                    {currentChallenge.tasks.map((task: string, index: number) => (
+                    {currentChallenge.tasks.map((task: string, index: number
+) => (
                       <div
                         key={index}
                         className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
@@ -375,7 +393,8 @@ export function ActiveAlarm({
                         {completedTasks.includes(task) ? (
                           <CheckCircle className="h-5 w-5 text-green-500" />
                         ) : (
-                          <Button size="sm" onClick={() => handleTaskComplete(task)}>
+                          <Button size="sm" onClick={(
+) => handleTaskComplete(task)}>
                             Done
                           </Button>
                         )}
@@ -393,7 +412,8 @@ export function ActiveAlarm({
 
                 <Button
                   variant="outline"
-                  onClick={() => {
+                  onClick={(
+) => {
                     setShowChallenge(false);
                     setChallengeAnswer('');
                     setCompletedTasks([]);

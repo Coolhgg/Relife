@@ -45,10 +45,14 @@ interface AIAutomationProps {
   automations: SmartAutomation[];
   sleepData: SleepPattern[];
   wakeUpData: WakeUpBehavior[];
-  onApplyRecommendation?: (recommendationId: string) => void;
-  onToggleOptimization?: (optimizationId: string, enabled: boolean) => void;
-  onCreateAutomation?: (automation: Partial<SmartAutomation>) => void;
-  onToggleAutomation?: (automationId: string, enabled: boolean) => void;
+  onApplyRecommendation?: (recommendationId: string
+) => void;
+  onToggleOptimization?: (optimizationId: string, enabled: boolean
+) => void;
+  onCreateAutomation?: (automation: Partial<SmartAutomation>
+) => void;
+  onToggleAutomation?: (automationId: string, enabled: boolean
+) => void;
 }
 
 // Mock data for AI & Automation
@@ -317,13 +321,15 @@ const MOCK_SLEEP_DATA: SleepPattern[] = [
   },
 ];
 
-const getConfidenceColor = (confidence: number) => {
+const getConfidenceColor = (confidence: number
+) => {
   if (confidence >= 0.8) return 'text-green-600 bg-green-100';
   if (confidence >= 0.6) return 'text-yellow-600 bg-yellow-100';
   return 'text-orange-600 bg-orange-100';
 };
 
-const getImpactIcon = (impact: string) => {
+const getImpactIcon = (impact: string
+) => {
   switch (impact) {
     case 'high':
       return <TrendingUp className="h-4 w-4 text-red-500" />;
@@ -356,10 +362,12 @@ export function AIAutomation({
   const enabledAutomations = automations.filter(auto => auto.isEnabled);
 
   const averageConfidence =
-    aiOptimizations.reduce((sum, opt) => sum + opt.confidence, 0) /
+    aiOptimizations.reduce((sum, opt
+) => sum + opt.confidence, 0) /
     aiOptimizations.length;
   const totalAutomationExecutions = automations.reduce(
-    (sum, auto) => sum + auto.executionCount,
+    (sum, auto
+) => sum + auto.executionCount,
     0
   );
 
@@ -482,7 +490,8 @@ export function AIAutomation({
                     </Badge>
                     <Switch
                       checked={optimization.isEnabled}
-                      onCheckedChange={(checked: boolean) =>
+                      onCheckedChange={(checked: boolean
+) =>
                         onToggleOptimization?.(optimization.id, checked)
                       }
                     />
@@ -590,7 +599,8 @@ export function AIAutomation({
                       </Button>
                       <Button
                         size="sm"
-                        onClick={() => onApplyRecommendation?.(recommendation.id)}
+                        onClick={(
+) => onApplyRecommendation?.(recommendation.id)}
                       >
                         Apply
                       </Button>
@@ -648,7 +658,8 @@ export function AIAutomation({
                         Personalization Factors:
                       </h4>
                       <div className="space-y-1">
-                        {challenge.personalizedFactors.map((factor, index) => (
+                        {challenge.personalizedFactors.map((factor, index
+) => (
                           <div
                             key={index}
                             className="flex items-center justify-between text-sm"
@@ -680,7 +691,8 @@ export function AIAutomation({
                 </span>
                 <Button
                   size="sm"
-                  onClick={() => onCreateAutomation?.({ name: 'New Automation' })}
+                  onClick={(
+) => onCreateAutomation?.({ name: 'New Automation' })}
                 >
                   Create Rule
                 </Button>
@@ -702,7 +714,8 @@ export function AIAutomation({
                       </Badge>
                       <Switch
                         checked={automation.isEnabled}
-                        onCheckedChange={(checked: boolean) =>
+                        onCheckedChange={(checked: boolean
+) =>
                           onToggleAutomation?.(automation.id, checked)
                         }
                       />
@@ -713,7 +726,8 @@ export function AIAutomation({
                     <div>
                       <span className="text-muted-foreground">Triggers:</span>
                       <div className="mt-1">
-                        {automation.triggers.map((trigger, index) => (
+                        {automation.triggers.map((trigger, index
+) => (
                           <Badge key={index} variant="outline" className="mr-1 mb-1">
                             {trigger.type}
                           </Badge>
@@ -723,7 +737,8 @@ export function AIAutomation({
                     <div>
                       <span className="text-muted-foreground">Actions:</span>
                       <div className="mt-1">
-                        {automation.actions.map((action, index) => (
+                        {automation.actions.map((action, index
+) => (
                           <Badge key={index} variant="outline" className="mr-1 mb-1">
                             {action.type}
                           </Badge>

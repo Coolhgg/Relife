@@ -37,7 +37,8 @@ export function useGamingAnnouncements(enabled = true) {
   const previousValues = useRef<Record<string, any>>({});
 
   const announceGaming = useCallback(
-    (announcement: GamingAnnouncement) => {
+    (announcement: GamingAnnouncement
+) => {
       if (!enabled) return;
 
       const { type, action, data, priority = 'polite', customMessage } = announcement;
@@ -89,7 +90,8 @@ export function useGamingAnnouncements(enabled = true) {
     (
       action: 'created' | 'joined' | 'started' | 'won' | 'lost' | 'ended',
       battleData: Partial<Battle>
-    ) => {
+    
+) => {
       announceGaming({
         type: 'battle',
         action,
@@ -105,7 +107,8 @@ export function useGamingAnnouncements(enabled = true) {
     (
       action: 'unlocked' | 'progress' | 'completed',
       achievementData: Partial<Achievement>
-    ) => {
+    
+) => {
       announceGaming({
         type: 'achievement',
         action,
@@ -121,7 +124,8 @@ export function useGamingAnnouncements(enabled = true) {
     (
       action: 'level-up' | 'xp-gained',
       levelData: Partial<PlayerLevel> | ExperienceGain
-    ) => {
+    
+) => {
       announceGaming({
         type: 'level',
         action,
@@ -137,7 +141,8 @@ export function useGamingAnnouncements(enabled = true) {
     (
       action: 'added' | 'request-sent' | 'request-received' | 'removed',
       friendData: Partial<UserType>
-    ) => {
+    
+) => {
       announceGaming({
         type: 'friend',
         action,
@@ -150,7 +155,8 @@ export function useGamingAnnouncements(enabled = true) {
 
   // Reward announcements
   const announceRewardEvent = useCallback(
-    (action: 'claimed' | 'available' | 'expired', rewardData: Partial<Reward>) => {
+    (action: 'claimed' | 'available' | 'expired', rewardData: Partial<Reward>
+) => {
       announceGaming({
         type: 'reward',
         action,
@@ -166,7 +172,8 @@ export function useGamingAnnouncements(enabled = true) {
     (
       action: 'started' | 'completed' | 'progress' | 'failed',
       questData: Partial<Quest>
-    ) => {
+    
+) => {
       announceGaming({
         type: 'quest',
         action,
@@ -182,7 +189,8 @@ export function useGamingAnnouncements(enabled = true) {
     (
       action: 'rank-up' | 'rank-down' | 'new-record',
       leaderboardData: { oldRank?: number; newRank: number; score?: number }
-    ) => {
+    
+) => {
       announceGaming({
         type: 'leaderboard',
         action,
@@ -195,7 +203,8 @@ export function useGamingAnnouncements(enabled = true) {
 
   // Tournament announcements
   const announceTournamentEvent = useCallback(
-    (action: 'joined' | 'eliminated' | 'advanced' | 'won', tournamentData: any) => {
+    (action: 'joined' | 'eliminated' | 'advanced' | 'won', tournamentData: any
+) => {
       announceGaming({
         type: 'tournament',
         action,
@@ -208,7 +217,8 @@ export function useGamingAnnouncements(enabled = true) {
 
   // Auto-tracking for common state changes
   const trackBattleCount = useCallback(
-    (battles: Battle[]) => {
+    (battles: Battle[]
+) => {
       const activeBattleCount = battles.filter(b => b.status === 'active').length;
       const previousCount = previousValues.current.activeBattles || 0;
 
@@ -228,7 +238,8 @@ export function useGamingAnnouncements(enabled = true) {
   );
 
   const trackAchievements = useCallback(
-    (achievements: Achievement[]) => {
+    (achievements: Achievement[]
+) => {
       const unlockedCount = achievements.filter(a => a.unlockedAt).length;
       const previousCount = previousValues.current.achievements || 0;
 

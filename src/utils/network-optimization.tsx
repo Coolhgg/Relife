@@ -81,18 +81,21 @@ class NetworkOptimizer {
       const connection = (navigator as any).connection;
       this.updateConnectionStats(connection);
 
-      connection.addEventListener('change', () => {
+      connection.addEventListener('change', (
+) => {
         this.updateConnectionStats(connection);
         this.adjustBatchingStrategy();
       });
     }
 
     // Monitor online/offline status
-    window.addEventListener('online', () => {
+    window.addEventListener('online', (
+) => {
       this.processOfflineQueue();
     });
 
-    window.addEventListener('offline', () => {
+    window.addEventListener('offline', (
+) => {
       this.pauseNonCriticalRequests();
     });
   }
@@ -112,12 +115,14 @@ class NetworkOptimizer {
    */
   private setupCacheManagement() {
     // Clean expired cache entries every 5 minutes
-    setInterval(() => {
+    setInterval((
+) => {
       this.cleanExpiredCache();
     }, 300000);
 
     // Listen for memory pressure
-    window.addEventListener('memory-pressure', () => {
+    window.addEventListener('memory-pressure', (
+) => {
       this.clearCache();
     });
   }
@@ -187,14 +192,16 @@ class NetworkOptimizer {
 
     // Set timer for batch processing
     if (!this.batchTimers.has(batchKey)) {
-      const timer = window.setTimeout(() => {
+      const timer = window.setTimeout((
+) => {
         this.processBatch(batchKey, concurrencyLimit);
       }, batchDelay);
       this.batchTimers.set(batchKey, timer);
     }
 
     // Return promise that resolves when this request is processed
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject
+) => {
       request.resolve = resolve;
       request.reject = reject;
     });
@@ -281,7 +288,8 @@ class NetworkOptimizer {
     const controller = new AbortController();
     const timeout = request.timeout || this.defaultTimeout;
 
-    const timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout((
+) => {
       controller.abort();
     }, timeout);
 
@@ -350,7 +358,8 @@ class NetworkOptimizer {
     const now = Date.now();
     const expiredKeys: string[] = [];
 
-    this.cache.forEach((entry, key) => {
+    this.cache.forEach((entry, key
+) => {
       if (now - entry.timestamp > entry.ttl) {
         expiredKeys.push(key);
       }
@@ -366,7 +375,8 @@ class NetworkOptimizer {
     let oldestKey: string | undefined;
     let oldestTimestamp = Date.now();
 
-    this.cache.forEach((entry, key) => {
+    this.cache.forEach((entry, key
+) => {
       if (entry.timestamp < oldestTimestamp) {
         oldestTimestamp = entry.timestamp;
         oldestKey = key;
@@ -398,7 +408,8 @@ class NetworkOptimizer {
 
     // Update average
     this.stats.averageResponseTime =
-      this.responseTimeHistory.reduce((a, b) => a + b, 0) /
+      this.responseTimeHistory.reduce((a, b
+) => a + b, 0) /
       this.responseTimeHistory.length;
   }
 
@@ -409,7 +420,8 @@ class NetworkOptimizer {
     // Reduce batching on slow connections
     if (this.stats.effectiveType === 'slow-2g' || this.stats.effectiveType === '2g') {
       // Process batches more aggressively on slow connections
-      this.batchTimers.forEach((timer, batchKey) => {
+      this.batchTimers.forEach((timer, batchKey
+) => {
         clearTimeout(timer);
         this.processBatch(batchKey, 2); // Lower concurrency
       });
@@ -421,7 +433,8 @@ class NetworkOptimizer {
    */
   private processOfflineQueue() {
     // Process all pending batches when back online
-    this.batchTimers.forEach((timer, batchKey) => {
+    this.batchTimers.forEach((timer, batchKey
+) => {
       clearTimeout(timer);
       this.processBatch(batchKey, 6);
     });
@@ -432,7 +445,8 @@ class NetworkOptimizer {
    */
   private pauseNonCriticalRequests() {
     // Cancel timers for non-critical batches
-    this.batchTimers.forEach((timer, batchKey) => {
+    this.batchTimers.forEach((timer, batchKey
+) => {
       const queue = this.requestQueue.get(batchKey) || [];
       const hasCriticalRequests = queue.some(req => req.priority === 'critical');
 
@@ -493,8 +507,10 @@ class NetworkOptimizer {
 // Extend NetworkRequest with resolve/reject for batch processing
 declare module './network-optimization' {
   interface NetworkRequest {
-    resolve?: (value: any) => void;
-    reject?: (reason: any) => void;
+    resolve?: (value: any
+) => void;
+    reject?: (reason: any
+) => void;
   }
 }
 
@@ -509,7 +525,8 @@ export function useOptimizedRequest<T = any>() {
   const [error, setError] = React.useState<Error | null>(null);
   const [data, setData] = React.useState<T | null>(null);
 
-  const execute = React.useCallback(async (request: NetworkRequest) => {
+  const execute = React.useCallback(async (request: NetworkRequest
+) => {
     setIsLoading(true);
     setError(null);
 
@@ -527,7 +544,8 @@ export function useOptimizedRequest<T = any>() {
   }, []);
 
   const executeBatch = React.useCallback(
-    async (request: NetworkRequest, options?: BatchRequestOptions) => {
+    async (request: NetworkRequest, options?: BatchRequestOptions
+) => {
       setIsLoading(true);
       setError(null);
 
@@ -546,7 +564,8 @@ export function useOptimizedRequest<T = any>() {
     []
   );
 
-  const reset = React.useCallback(() => {
+  const reset = React.useCallback((
+) => {
     setIsLoading(false);
     setError(null);
     setData(null);
@@ -566,16 +585,20 @@ export function useOptimizedRequest<T = any>() {
  * React hook for network statistics
  */
 export function useNetworkStats() {
-  const [stats, setStats] = React.useState<NetworkStats>(() =>
+  const [stats, setStats] = React.useState<NetworkStats>((
+) =>
     networkOptimizer.getStats()
   );
 
-  React.useEffect(() => {
-    const interval = setInterval(() => {
+  React.useEffect((
+) => {
+    const interval = setInterval((
+) => {
       setStats(networkOptimizer.getStats());
     }, 5000); // Update every 5 seconds
 
-    return () => clearInterval(interval);
+    return (
+) => clearInterval(interval);
   }, []);
 
   return stats;
@@ -666,18 +689,23 @@ export interface NetworkStatusProps {
 export const NetworkStatus: React.FC<NetworkStatusProps> = ({
   className = '',
   showDetails = false,
-}) => {
+}
+) => {
   const stats = useNetworkStats();
   const [isOnline, setIsOnline] = React.useState(navigator.onLine);
 
-  React.useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
+  React.useEffect((
+) => {
+    const handleOnline = (
+) => setIsOnline(true);
+    const handleOffline = (
+) => setIsOnline(false);
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    return () => {
+    return (
+) => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };

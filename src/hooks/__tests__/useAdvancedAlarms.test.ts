@@ -3,7 +3,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { useAdvancedAlarms } from '../useAdvancedAlarms';
 
 // Mock services
-vi.mock('../../services/alarm', () => ({
+vi.mock('../../services/alarm', (
+) => ({
   AlarmService: {
     loadAlarms: vi.fn(),
     createAlarm: vi.fn(),
@@ -12,7 +13,8 @@ vi.mock('../../services/alarm', () => ({
   },
 }));
 
-vi.mock('../../services/advanced-alarm-scheduler', () => ({
+vi.mock('../../services/advanced-alarm-scheduler', (
+) => ({
   default: {
     initialize: vi.fn(),
     applySmartOptimizations: vi.fn(),
@@ -45,9 +47,12 @@ const mockBasicAlarm = {
   isActive: true,
 };
 
-describe('useAdvancedAlarms Tests', () => {
-  describe('Setup and Teardown', () => {
-    beforeEach(() => {
+describe('useAdvancedAlarms Tests', (
+) => {
+  describe('Setup and Teardown', (
+) => {
+    beforeEach((
+) => {
       vi.clearAllMocks();
       vi.clearAllTimers();
       vi.useFakeTimers();
@@ -58,7 +63,8 @@ describe('useAdvancedAlarms Tests', () => {
       AlarmService.updateAlarm.mockResolvedValue(mockBasicAlarm);
       AlarmService.deleteAlarm.mockResolvedValue(true);
 
-      mockGeolocation.getCurrentPosition.mockImplementation((success) =>
+      mockGeolocation.getCurrentPosition.mockImplementation((success
+) =>
         success({
           coords: {
             latitude: 40.7128,
@@ -70,14 +76,17 @@ describe('useAdvancedAlarms Tests', () => {
       );
     });
 
-    afterEach(() => {
+    afterEach((
+) => {
       vi.clearAllTimers();
       vi.useRealTimers();
     });
   });
 
-  describe('Initialization', () => {
-    it('should compile placeholder', () => {
+  describe('Initialization', (
+) => {
+    it('should compile placeholder', (
+) => {
       expect(true).toBe(true);
     });
 
@@ -88,8 +97,10 @@ describe('useAdvancedAlarms Tests', () => {
     it.todo('should handle scheduler initialization errors');
   });
 
-  describe('Creating Alarms', () => {
-    it('should compile placeholder', () => {
+  describe('Creating Alarms', (
+) => {
+    it('should compile placeholder', (
+) => {
       expect(true).toBe(true);
     });
 
@@ -98,8 +109,10 @@ describe('useAdvancedAlarms Tests', () => {
     it.todo('should handle alarm creation errors');
   });
 
-  describe('Updating Alarms', () => {
-    it('should compile placeholder', () => {
+  describe('Updating Alarms', (
+) => {
+    it('should compile placeholder', (
+) => {
       expect(true).toBe(true);
     });
 
@@ -109,8 +122,10 @@ describe('useAdvancedAlarms Tests', () => {
     it.todo('should handle alarm update errors');
   });
 
-  describe('Deleting Alarms', () => {
-    it('should compile placeholder', () => {
+  describe('Deleting Alarms', (
+) => {
+    it('should compile placeholder', (
+) => {
       expect(true).toBe(true);
     });
 
@@ -119,8 +134,10 @@ describe('useAdvancedAlarms Tests', () => {
     it.todo('should handle alarm deletion errors');
   });
 
-  describe('Alarm Duplication', () => {
-    it('should compile placeholder', () => {
+  describe('Alarm Duplication', (
+) => {
+    it('should compile placeholder', (
+) => {
       expect(true).toBe(true);
     });
 
@@ -130,8 +147,10 @@ describe('useAdvancedAlarms Tests', () => {
     it.todo('should use default label when duplicating without modifications');
   });
 
-  describe('Bulk Operations', () => {
-    it('should compile placeholder', () => {
+  describe('Bulk Operations', (
+) => {
+    it('should compile placeholder', (
+) => {
       expect(true).toBe(true);
     });
 
@@ -140,8 +159,10 @@ describe('useAdvancedAlarms Tests', () => {
     it.todo('should handle partial failures in bulk update');
   });
 
-  describe('Next Occurrence Calculation', () => {
-    it('should compile placeholder', () => {
+  describe('Next Occurrence Calculation', (
+) => {
+    it('should compile placeholder', (
+) => {
       expect(true).toBe(true);
     });
 
@@ -150,8 +171,10 @@ describe('useAdvancedAlarms Tests', () => {
     it.todo('should handle calculation errors');
   });
 
-  describe('Import/Export', () => {
-    it('should compile placeholder', () => {
+  describe('Import/Export', (
+) => {
+    it('should compile placeholder', (
+) => {
       expect(true).toBe(true);
     });
 
@@ -162,8 +185,10 @@ describe('useAdvancedAlarms Tests', () => {
     it.todo('should handle import errors');
   });
 
-  describe('Scheduling Features', () => {
-    it('should compile placeholder', () => {
+  describe('Scheduling Features', (
+) => {
+    it('should compile placeholder', (
+) => {
       expect(true).toBe(true);
     });
 
@@ -173,8 +198,10 @@ describe('useAdvancedAlarms Tests', () => {
     it.todo('should handle geolocation errors gracefully');
   });
 
-  describe('Statistics', () => {
-    it('should compile placeholder', () => {
+  describe('Statistics', (
+) => {
+    it('should compile placeholder', (
+) => {
       expect(true).toBe(true);
     });
 
@@ -183,8 +210,10 @@ describe('useAdvancedAlarms Tests', () => {
     it.todo('should handle statistics errors');
   });
 
-  describe('Refresh Functionality', () => {
-    it('should compile placeholder', () => {
+  describe('Refresh Functionality', (
+) => {
+    it('should compile placeholder', (
+) => {
       expect(true).toBe(true);
     });
 

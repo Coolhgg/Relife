@@ -18,17 +18,24 @@ const MockAuthProvider: React.FC<
     isLoading?: boolean;
     isAuthenticated?: boolean;
   }
-> = ({ children, user = null, isLoading = false, isAuthenticated = false }) => {
+> = ({ children, user = null, isLoading = false, isAuthenticated = false }
+) => {
   const mockAuthValue = {
     user,
     isLoading,
     isAuthenticated,
-    signIn: jest.fn(() => Promise.resolve({ user: user || null, error: null })),
-    signOut: jest.fn(() => Promise.resolve({ error: null })),
-    signUp: jest.fn(() => Promise.resolve({ user: user || null, error: null })),
-    updateProfile: jest.fn(() => Promise.resolve({ user: user || null, error: null })),
-    resetPassword: jest.fn(() => Promise.resolve({ error: null })),
-    refreshSession: jest.fn(() => Promise.resolve({ user: user || null, error: null })),
+    signIn: jest.fn((
+) => Promise.resolve({ user: user || null, error: null })),
+    signOut: jest.fn((
+) => Promise.resolve({ error: null })),
+    signUp: jest.fn((
+) => Promise.resolve({ user: user || null, error: null })),
+    updateProfile: jest.fn((
+) => Promise.resolve({ user: user || null, error: null })),
+    resetPassword: jest.fn((
+) => Promise.resolve({ error: null })),
+    refreshSession: jest.fn((
+) => Promise.resolve({ user: user || null, error: null })),
   };
 
   return React.createElement(
@@ -44,17 +51,22 @@ const MockThemeProvider: React.FC<
     theme?: TestTheme;
     themes?: TestTheme[];
   }
-> = ({ children, theme, themes = [] }) => {
+> = ({ children, theme, themes = [] }
+) => {
   const mockThemeValue = {
     currentTheme: theme || null,
     availableThemes: themes,
-    setTheme: jest.fn((themeId: string) => {
+    setTheme: jest.fn((themeId: string
+) => {
       testConsole.debug(`Mock theme set to: ${themeId}`);
       return Promise.resolve();
     }),
-    createCustomTheme: jest.fn(() => Promise.resolve({ theme: null, error: null })),
-    deleteTheme: jest.fn(() => Promise.resolve({ error: null })),
-    syncThemes: jest.fn(() => Promise.resolve({ themes: [], error: null })),
+    createCustomTheme: jest.fn((
+) => Promise.resolve({ theme: null, error: null })),
+    deleteTheme: jest.fn((
+) => Promise.resolve({ error: null })),
+    syncThemes: jest.fn((
+) => Promise.resolve({ themes: [], error: null })),
     isLoading: false,
     isDarkMode: theme?.category === 'dark' || false,
   };
@@ -76,7 +88,8 @@ const MockSubscriptionProvider: React.FC<
     tier?: 'free' | 'premium' | 'ultimate';
     isActive?: boolean;
   }
-> = ({ children, tier = 'free', isActive = true }) => {
+> = ({ children, tier = 'free', isActive = true }
+) => {
   const mockSubscriptionValue = {
     tier,
     isActive,
@@ -103,15 +116,18 @@ const MockSubscriptionProvider: React.FC<
       advancedAnalytics: tier === 'ultimate',
       prioritySupport: tier === 'ultimate',
     },
-    subscribe: jest.fn((newTier: string) => {
+    subscribe: jest.fn((newTier: string
+) => {
       testConsole.debug(`Mock subscription upgrade to: ${newTier}`);
       return Promise.resolve({ subscription: null, error: null });
     }),
-    cancel: jest.fn(() => {
+    cancel: jest.fn((
+) => {
       testConsole.debug('Mock subscription cancellation');
       return Promise.resolve({ error: null });
     }),
-    reactivate: jest.fn(() => {
+    reactivate: jest.fn((
+) => {
       testConsole.debug('Mock subscription reactivation');
       return Promise.resolve({ error: null });
     }),
@@ -134,16 +150,19 @@ const MockI18nProvider: React.FC<
     language?: string;
     direction?: 'ltr' | 'rtl';
   }
-> = ({ children, language = 'en', direction = 'ltr' }) => {
+> = ({ children, language = 'en', direction = 'ltr' }
+) => {
   const mockI18nValue = {
     language,
     direction,
     isLoading: false,
-    t: jest.fn((key: string, options?: any) => {
+    t: jest.fn((key: string, options?: any
+) => {
       // Simple mock translation - returns key with options interpolated
       let translated = key;
       if (options) {
-        Object.entries(options).forEach(([param, value]) => {
+        Object.entries(options).forEach(([param, value]
+) => {
           translated = translated.replace(
             new RegExp(`{{${param}}}`, 'g'),
             String(value)
@@ -152,11 +171,13 @@ const MockI18nProvider: React.FC<
       }
       return translated;
     }),
-    changeLanguage: jest.fn((lang: string) => {
+    changeLanguage: jest.fn((lang: string
+) => {
       testConsole.debug(`Mock language changed to: ${lang}`);
       return Promise.resolve();
     }),
-    getAvailableLanguages: jest.fn(() => [
+    getAvailableLanguages: jest.fn((
+) => [
       'en',
       'es',
       'fr',
@@ -170,9 +191,12 @@ const MockI18nProvider: React.FC<
       'ko',
       'zh',
     ]),
-    formatDate: jest.fn((date: Date) => date.toLocaleDateString(language)),
-    formatTime: jest.fn((date: Date) => date.toLocaleTimeString(language)),
-    formatNumber: jest.fn((num: number) => num.toLocaleString(language)),
+    formatDate: jest.fn((date: Date
+) => date.toLocaleDateString(language)),
+    formatTime: jest.fn((date: Date
+) => date.toLocaleTimeString(language)),
+    formatNumber: jest.fn((num: number
+) => num.toLocaleString(language)),
   };
 
   return React.createElement(
@@ -194,22 +218,26 @@ const MockPWAProvider: React.FC<
     canInstall?: boolean;
     isOnline?: boolean;
   }
-> = ({ children, isInstalled = false, canInstall = true, isOnline = true }) => {
+> = ({ children, isInstalled = false, canInstall = true, isOnline = true }
+) => {
   const mockPWAValue = {
     isInstalled,
     canInstall,
     isOnline,
     isLoading: false,
     updateAvailable: false,
-    install: jest.fn(() => {
+    install: jest.fn((
+) => {
       testConsole.debug('Mock PWA installation');
       return Promise.resolve({ success: true, error: null });
     }),
-    update: jest.fn(() => {
+    update: jest.fn((
+) => {
       testConsole.debug('Mock PWA update');
       return Promise.resolve({ success: true, error: null });
     }),
-    share: jest.fn((data: any) => {
+    share: jest.fn((data: any
+) => {
       testConsole.debug('Mock PWA share', data);
       return Promise.resolve({ success: true, error: null });
     }),
@@ -228,47 +256,59 @@ const MockPWAProvider: React.FC<
 };
 
 // Mock Analytics Context Provider (Enhanced)
-const MockAnalyticsProvider: React.FC<MockProviderProps> = ({ children }) => {
+const MockAnalyticsProvider: React.FC<MockProviderProps> = ({ children }
+) => {
   const mockAnalyticsValue = {
-    track: jest.fn((event: string, properties?: any) => {
+    track: jest.fn((event: string, properties?: any
+) => {
       testConsole.debug(`Mock analytics track: ${event}`, properties);
     }),
-    trackPageView: jest.fn((pageName?: string, properties?: any) => {
+    trackPageView: jest.fn((pageName?: string, properties?: any
+) => {
       testConsole.debug(`Mock analytics page view: ${pageName}`, properties);
     }),
     trackFeatureUsage: jest.fn(
-      (featureName: string, action: string, properties?: any) => {
+      (featureName: string, action: string, properties?: any
+) => {
         testConsole.debug(
           `Mock analytics feature usage: ${featureName}.${action}`,
           properties
         );
       }
     ),
-    trackError: jest.fn((error: Error, context?: string) => {
+    trackError: jest.fn((error: Error, context?: string
+) => {
       testConsole.debug(`Mock analytics error: ${error.message}`, context);
     }),
-    trackPerformance: jest.fn((metric: string, value: number, context?: string) => {
+    trackPerformance: jest.fn((metric: string, value: number, context?: string
+) => {
       testConsole.debug(`Mock analytics performance: ${metric} = ${value}`, context);
     }),
     trackUserInteraction: jest.fn(
-      (element: string, action: string, properties?: any) => {
+      (element: string, action: string, properties?: any
+) => {
         testConsole.debug(
           `Mock analytics interaction: ${element}.${action}`,
           properties
         );
       }
     ),
-    identify: jest.fn((userId: string, traits?: any) => {
+    identify: jest.fn((userId: string, traits?: any
+) => {
       testConsole.debug(`Mock analytics identify: ${userId}`, traits);
     }),
-    page: jest.fn((name: string, properties?: any) => {
+    page: jest.fn((name: string, properties?: any
+) => {
       testConsole.debug(`Mock analytics page: ${name}`, properties);
     }),
-    isEnabled: jest.fn(() => true),
-    opt_out: jest.fn(() => {
+    isEnabled: jest.fn((
+) => true),
+    opt_out: jest.fn((
+) => {
       testConsole.debug('Mock analytics opt out');
     }),
-    opt_in: jest.fn(() => {
+    opt_in: jest.fn((
+) => {
       testConsole.debug('Mock analytics opt in');
     }),
   };
@@ -286,7 +326,8 @@ const MockFeatureAccessProvider: React.FC<
     tier?: 'free' | 'premium' | 'ultimate';
     userId?: string;
   }
-> = ({ children, tier = 'free', userId = 'test-user-123' }) => {
+> = ({ children, tier = 'free', userId = 'test-user-123' }
+) => {
   const mockFeatureAccessValue = {
     featureAccess: {
       tier,
@@ -306,18 +347,21 @@ const MockFeatureAccessProvider: React.FC<
     userTier: tier,
     isLoading: false,
     error: null,
-    hasFeatureAccess: jest.fn((featureId: string) => {
+    hasFeatureAccess: jest.fn((featureId: string
+) => {
       const access =
         tier !== 'free' || ['basic_alarms', 'themes_browse'].includes(featureId);
       testConsole.debug(`Mock feature access check: ${featureId} = ${access}`);
       return access;
     }),
-    getFeatureUsage: jest.fn((featureId: string) => {
+    getFeatureUsage: jest.fn((featureId: string
+) => {
       const usage = faker.number.int({ min: 0, max: 10 });
       const limit = tier === 'free' ? 5 : tier === 'premium' ? 50 : 100;
       return { used: usage, limit, remaining: limit - usage };
     }),
-    getUpgradeRequirement: jest.fn((featureId: string) => {
+    getUpgradeRequirement: jest.fn((featureId: string
+) => {
       if (tier === 'free') return 'premium';
       if (
         tier === 'premium' &&
@@ -326,12 +370,15 @@ const MockFeatureAccessProvider: React.FC<
         return 'ultimate';
       return null;
     }),
-    trackFeatureAttempt: jest.fn((featureId: string, context?: Record<string, any>) => {
+    trackFeatureAttempt: jest.fn((featureId: string, context?: Record<string, any>
+) => {
       testConsole.debug(`Mock feature attempt tracked: ${featureId}`, context);
     }),
-    refreshFeatureAccess: jest.fn(() => Promise.resolve()),
+    refreshFeatureAccess: jest.fn((
+) => Promise.resolve()),
     grantTemporaryAccess: jest.fn(
-      (featureId: string, durationMinutes: number, reason: string) => {
+      (featureId: string, durationMinutes: number, reason: string
+) => {
         testConsole.debug(
           `Mock temporary access granted: ${featureId} for ${durationMinutes}min - ${reason}`
         );
@@ -356,22 +403,27 @@ const MockScreenReaderProvider: React.FC<
     enabled?: boolean;
     verbosity?: 'low' | 'medium' | 'high';
   }
-> = ({ children, enabled = true, verbosity = 'medium' }) => {
+> = ({ children, enabled = true, verbosity = 'medium' }
+) => {
   const mockScreenReaderValue = {
     isEnabled: enabled,
     verbosityLevel: verbosity,
-    announce: jest.fn((message: string, priority?: string) => {
+    announce: jest.fn((message: string, priority?: string
+) => {
       testConsole.debug(
         `Mock screen reader announcement: ${message} [${priority || 'polite'}]`
       );
     }),
-    updateSettings: jest.fn((settings: any) => {
+    updateSettings: jest.fn((settings: any
+) => {
       testConsole.debug('Mock screen reader settings updated', settings);
     }),
-    describeElement: jest.fn((element: string) => {
+    describeElement: jest.fn((element: string
+) => {
       return `Mock description for ${element}`;
     }),
-    setFocusAnnouncement: jest.fn((message: string) => {
+    setFocusAnnouncement: jest.fn((message: string
+) => {
       testConsole.debug(`Mock focus announcement: ${message}`);
     }),
   };
@@ -394,7 +446,8 @@ const MockEnhancedThemeProvider: React.FC<
     themes?: TestTheme[];
     personalization?: any;
   }
-> = ({ children, theme, themes = [], personalization = {} }) => {
+> = ({ children, theme, themes = [], personalization = {} }
+) => {
   const mockThemeValue = {
     theme: theme || { id: 'default', name: 'Default', category: 'light' },
     themeConfig: {
@@ -414,59 +467,82 @@ const MockEnhancedThemeProvider: React.FC<
     },
     isDarkMode: theme?.category === 'dark' || false,
     isSystemTheme: false,
-    setTheme: jest.fn((newTheme: any) => {
+    setTheme: jest.fn((newTheme: any
+) => {
       testConsole.debug(`Mock enhanced theme set to:`, newTheme);
     }),
-    toggleTheme: jest.fn(() => {
+    toggleTheme: jest.fn((
+) => {
       testConsole.debug('Mock enhanced theme toggled');
     }),
-    resetTheme: jest.fn(() => {
+    resetTheme: jest.fn((
+) => {
       testConsole.debug('Mock enhanced theme reset');
     }),
-    updatePersonalization: jest.fn((updates: any) => {
+    updatePersonalization: jest.fn((updates: any
+) => {
       testConsole.debug('Mock personalization updated', updates);
     }),
-    updateColorPreference: jest.fn((property: string, value: any) => {
+    updateColorPreference: jest.fn((property: string, value: any
+) => {
       testConsole.debug(`Mock color preference updated: ${property} = ${value}`);
     }),
-    updateTypographyPreference: jest.fn((property: string, value: any) => {
+    updateTypographyPreference: jest.fn((property: string, value: any
+) => {
       testConsole.debug(`Mock typography preference updated: ${property} = ${value}`);
     }),
-    updateMotionPreference: jest.fn((property: string, value: any) => {
+    updateMotionPreference: jest.fn((property: string, value: any
+) => {
       testConsole.debug(`Mock motion preference updated: ${property} = ${value}`);
     }),
-    updateSoundPreference: jest.fn((property: string, value: any) => {
+    updateSoundPreference: jest.fn((property: string, value: any
+) => {
       testConsole.debug(`Mock sound preference updated: ${property} = ${value}`);
     }),
-    updateLayoutPreference: jest.fn((property: string, value: any) => {
+    updateLayoutPreference: jest.fn((property: string, value: any
+) => {
       testConsole.debug(`Mock layout preference updated: ${property} = ${value}`);
     }),
-    updateAccessibilityPreference: jest.fn((property: string, value: any) => {
+    updateAccessibilityPreference: jest.fn((property: string, value: any
+) => {
       testConsole.debug(
         `Mock accessibility preference updated: ${property} = ${value}`
       );
     }),
     availableThemes: themes,
-    createCustomTheme: jest.fn(() => Promise.resolve({ theme: null, error: null })),
-    saveThemePreset: jest.fn(() => Promise.resolve()),
-    loadThemePreset: jest.fn(() => Promise.resolve()),
+    createCustomTheme: jest.fn((
+) => Promise.resolve({ theme: null, error: null })),
+    saveThemePreset: jest.fn((
+) => Promise.resolve()),
+    loadThemePreset: jest.fn((
+) => Promise.resolve()),
     themeAnalytics: {
       mostUsedThemes: themes.slice(0, 3),
       totalThemeChanges: faker.number.int({ min: 5, max: 100 }),
       averageSessionTime: faker.number.int({ min: 600, max: 7200 }),
     },
-    getThemeRecommendations: jest.fn(() => themes.slice(0, 5)),
-    exportThemes: jest.fn(() => Promise.resolve(JSON.stringify({ themes }))),
-    importThemes: jest.fn(() => Promise.resolve(true)),
-    syncThemes: jest.fn(() => Promise.resolve()),
+    getThemeRecommendations: jest.fn((
+) => themes.slice(0, 5)),
+    exportThemes: jest.fn((
+) => Promise.resolve(JSON.stringify({ themes }))),
+    importThemes: jest.fn((
+) => Promise.resolve(true)),
+    syncThemes: jest.fn((
+) => Promise.resolve()),
     cloudSyncStatus: { status: 'synced', lastSync: new Date() },
-    enableCloudSync: jest.fn((enabled: boolean) => {
+    enableCloudSync: jest.fn((enabled: boolean
+) => {
       testConsole.debug(`Mock cloud sync ${enabled ? 'enabled' : 'disabled'}`);
     }),
-    forceCloudSync: jest.fn(() => Promise.resolve()),
-    resetCloudData: jest.fn(() => Promise.resolve()),
-    onCloudSyncStatusChange: jest.fn(() => () => {}),
-    getCSSVariables: jest.fn(() => ({
+    forceCloudSync: jest.fn((
+) => Promise.resolve()),
+    resetCloudData: jest.fn((
+) => Promise.resolve()),
+    onCloudSyncStatusChange: jest.fn((
+) => (
+) => {}),
+    getCSSVariables: jest.fn((
+) => ({
       '--color-primary': '#3B82F6',
       '--color-secondary': '#8B5CF6',
     })),
@@ -488,25 +564,30 @@ const MockPersonaAnalyticsProvider: React.FC<
   MockProviderProps & {
     currentPersona?: string;
   }
-> = ({ children, currentPersona = 'struggling_sam' }) => {
+> = ({ children, currentPersona = 'struggling_sam' }
+) => {
   const mockPersonaAnalyticsValue = {
     currentPersona,
     personaConfidence: 0.85,
-    trackPersonaAction: jest.fn((action: string, context?: any) => {
+    trackPersonaAction: jest.fn((action: string, context?: any
+) => {
       testConsole.debug(
         `Mock persona action tracked: ${action} for ${currentPersona}`,
         context
       );
     }),
-    updatePersonaDetection: jest.fn((factors: any) => {
+    updatePersonaDetection: jest.fn((factors: any
+) => {
       testConsole.debug(`Mock persona detection updated`, factors);
     }),
-    getPersonaInsights: jest.fn(() => ({
+    getPersonaInsights: jest.fn((
+) => ({
       conversionLikelihood: faker.number.float({ min: 0.1, max: 0.9 }),
       recommendedFeatures: ['basic_alarms', 'theme_browser'],
       suggestedUpgrade: currentPersona === 'struggling_sam' ? null : 'premium',
     })),
-    triggerPersonaRecalculation: jest.fn(() => Promise.resolve(currentPersona)),
+    triggerPersonaRecalculation: jest.fn((
+) => Promise.resolve(currentPersona)),
   };
 
   return React.createElement(
@@ -561,9 +642,11 @@ const AllProviders: React.FC<AllProvidersProps> = ({
   personaAnalytics = false,
   currentPersona = 'struggling_sam',
   personalization = {},
-}) => {
+}
+) => {
   // Create router history with initial route
-  const RouterWrapper = ({ children }: { children: ReactNode }) => {
+  const RouterWrapper = ({ children }: { children: ReactNode }
+) => {
     if (initialRoute !== '/') {
       // Mock location for non-root routes
       Object.defineProperty(window, 'location', {
@@ -732,11 +815,13 @@ export const _renderWithProviders = (
   let Wrapper: React.ComponentType<{ children: ReactNode }>;
 
   if (skipProviders) {
-    Wrapper = ({ children }) => React.createElement('div', {}, children);
+    Wrapper = ({ children }
+) => React.createElement('div', {}, children);
   } else if (customWrapper) {
     Wrapper = customWrapper;
   } else {
-    Wrapper = ({ children }) =>
+    Wrapper = ({ children }
+) =>
       React.createElement(AllProviders, {
         initialRoute,
         user,
@@ -763,7 +848,8 @@ export const _renderWithProviders = (
 };
 
 // Convenience render functions for common scenarios
-export const _renderAsGuest = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderAsGuest = (ui: ReactElement, options: CustomRenderOptions = {}
+) => {
   return _renderWithProviders(ui, {
     ...options,
     user: null,
@@ -776,6 +862,7 @@ export const _renderAsUser = (
   ui: ReactElement,
   user?: TestUser,
   options: CustomRenderOptions = {}
+
 ) => {
   const defaultUser: TestUser = user || {
     id: 'test-user-123',
@@ -797,6 +884,7 @@ export const _renderAsUser = (
 export const _renderAsPremiumUser = (
   ui: ReactElement,
   options: CustomRenderOptions = {}
+
 ) => {
   const premiumUser: TestUser = {
     id: 'test-premium-user-123',
@@ -823,6 +911,7 @@ export const _renderAsPremiumUser = (
 export const _renderAsUltimateUser = (
   ui: ReactElement,
   options: CustomRenderOptions = {}
+
 ) => {
   const ultimateUser: TestUser = {
     id: 'test-ultimate-user-123',
@@ -846,7 +935,8 @@ export const _renderAsUltimateUser = (
   });
 };
 
-export const _renderMobile = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderMobile = (ui: ReactElement, options: CustomRenderOptions = {}
+) => {
   // Set mobile viewport
   Object.defineProperty(window, 'innerWidth', { value: 375, writable: true });
   Object.defineProperty(window, 'innerHeight', { value: 667, writable: true });
@@ -857,7 +947,8 @@ export const _renderMobile = (ui: ReactElement, options: CustomRenderOptions = {
   return _renderWithProviders(ui, options);
 };
 
-export const _renderTablet = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderTablet = (ui: ReactElement, options: CustomRenderOptions = {}
+) => {
   // Set tablet viewport
   Object.defineProperty(window, 'innerWidth', { value: 768, writable: true });
   Object.defineProperty(window, 'innerHeight', { value: 1024, writable: true });
@@ -868,7 +959,8 @@ export const _renderTablet = (ui: ReactElement, options: CustomRenderOptions = {
   return _renderWithProviders(ui, options);
 };
 
-export const _renderDesktop = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderDesktop = (ui: ReactElement, options: CustomRenderOptions = {}
+) => {
   // Set desktop viewport
   Object.defineProperty(window, 'innerWidth', { value: 1200, writable: true });
   Object.defineProperty(window, 'innerHeight', { value: 800, writable: true });
@@ -879,14 +971,16 @@ export const _renderDesktop = (ui: ReactElement, options: CustomRenderOptions = 
   return _renderWithProviders(ui, options);
 };
 
-export const _renderOffline = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderOffline = (ui: ReactElement, options: CustomRenderOptions = {}
+) => {
   return _renderWithProviders(ui, {
     ...options,
     isOnline: false,
   });
 };
 
-export const _renderRTL = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderRTL = (ui: ReactElement, options: CustomRenderOptions = {}
+) => {
   return _renderWithProviders(ui, {
     ...options,
     direction: 'rtl',
@@ -899,6 +993,7 @@ export const _renderWithFeatureAccess = (
   ui: ReactElement,
   tier: 'free' | 'premium' | 'ultimate' = 'premium',
   options: CustomRenderOptions = {}
+
 ) => {
   return _renderWithProviders(ui, {
     ...options,
@@ -920,6 +1015,7 @@ export const _renderWithScreenReader = (
   ui: ReactElement,
   verbosity: 'low' | 'medium' | 'high' = 'medium',
   options: CustomRenderOptions = {}
+
 ) => {
   return _renderWithProviders(ui, {
     ...options,
@@ -932,6 +1028,7 @@ export const _renderWithEnhancedTheme = (
   ui: ReactElement,
   theme?: TestTheme,
   options: CustomRenderOptions = {}
+
 ) => {
   return _renderWithProviders(ui, {
     ...options,
@@ -949,6 +1046,7 @@ export const _renderWithPersonaAnalytics = (
   ui: ReactElement,
   persona: string = 'struggling_sam',
   options: CustomRenderOptions = {}
+
 ) => {
   return _renderWithProviders(ui, {
     ...options,
@@ -960,6 +1058,7 @@ export const _renderWithPersonaAnalytics = (
 export const _renderWithAllEnhancements = (
   ui: ReactElement,
   options: CustomRenderOptions = {}
+
 ) => {
   return _renderWithProviders(ui, {
     ...options,

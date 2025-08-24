@@ -152,7 +152,8 @@ export class AdvancedConditionsHelper {
     }
 
     const conditions = alarm.conditionBasedAdjustments || [];
-    const enabledConditions = conditions.filter((c: any) => c.isEnabled).length;
+    const enabledConditions = conditions.filter((c: any
+) => c.isEnabled).length;
     const totalConditions = conditions.length;
 
     const issues: string[] = [];
@@ -168,7 +169,9 @@ export class AdvancedConditionsHelper {
 
     // Score for variety of condition types
     const conditionTypes = new Set(
-      conditions.filter((c: any) => c.isEnabled).map((c: any) => c.type)
+      conditions.filter((c: any
+) => c.isEnabled).map((c: any
+) => c.type)
     );
     if (conditionTypes.size >= 3) {
       score += 25;
@@ -182,7 +185,8 @@ export class AdvancedConditionsHelper {
 
     // Score for effectiveness
     const avgEffectiveness =
-      conditions.reduce((sum, c) => sum + c.effectivenessScore, 0) / conditions.length;
+      conditions.reduce((sum, c
+) => sum + c.effectivenessScore, 0) / conditions.length;
     if (avgEffectiveness >= 0.8) {
       score += 25;
     } else if (avgEffectiveness >= 0.6) {
@@ -237,7 +241,8 @@ export class AdvancedConditionsHelper {
     // Calculate overall effectiveness
     const overallEffectiveness =
       conditions.length > 0
-        ? conditions.reduce((sum, c) => sum + c.effectivenessScore, 0) /
+        ? conditions.reduce((sum, c
+) => sum + c.effectivenessScore, 0) /
           conditions.length
         : 0;
 
@@ -245,7 +250,8 @@ export class AdvancedConditionsHelper {
     const recentFeedback = feedback.slice(-30); // Last 30 days
     const userSatisfaction =
       recentFeedback.length > 0
-        ? recentFeedback.reduce((sum, f) => {
+        ? recentFeedback.reduce((sum, f
+) => {
             const feelingScore =
               ['terrible', 'tired', 'okay', 'good', 'excellent'].indexOf(f.feeling) / 4;
             return sum + feelingScore;
@@ -261,12 +267,16 @@ export class AdvancedConditionsHelper {
 
     // Identify top and under performers
     const topPerformers = conditions
-      .filter((c: any) => c.effectivenessScore >= 0.8)
-      .map((c: any) => c.id);
+      .filter((c: any
+) => c.effectivenessScore >= 0.8)
+      .map((c: any
+) => c.id);
 
     const underPerformers = conditions
-      .filter((c: any) => c.effectivenessScore < 0.5)
-      .map((c: any) => c.id);
+      .filter((c: any
+) => c.effectivenessScore < 0.5)
+      .map((c: any
+) => c.id);
 
     // Generate recommended actions
     const recommendedActions: string[] = [];
@@ -284,14 +294,16 @@ export class AdvancedConditionsHelper {
 
     // Calculate condition breakdown
     const conditionBreakdown = {
-      excellent: conditions.filter((c: any) => c.effectivenessScore >= 0.9).length,
+      excellent: conditions.filter((c: any
+) => c.effectivenessScore >= 0.9).length,
       good: conditions.filter(
         c => c.effectivenessScore >= 0.7 && c.effectivenessScore < 0.9
       ).length,
       fair: conditions.filter(
         c => c.effectivenessScore >= 0.5 && c.effectivenessScore < 0.7
       ).length,
-      poor: conditions.filter((c: any) => c.effectivenessScore < 0.5).length,
+      poor: conditions.filter((c: any
+) => c.effectivenessScore < 0.5).length,
     };
 
     return {
@@ -318,7 +330,9 @@ export class AdvancedConditionsHelper {
     const conditions = alarm.conditionBasedAdjustments || [];
 
     // Optimize underperforming conditions
-    const optimizedConditions = conditions.map((condition: any) => { // auto
+    const optimizedConditions = conditions.map((condition: any
+) => {
+      // auto
       if (condition.effectivenessScore < 0.5) {
         // Reduce adjustment magnitude for poor performers
         const adjustedCondition = { ...condition };

@@ -12,8 +12,10 @@ interface AdaptiveImageProps {
   height?: number;
   priority?: boolean; // For above-the-fold images
   placeholder?: 'blur' | 'empty' | string; // Blur, empty, or custom placeholder URL
-  onLoad?: () => void;
-  onError?: (error: Event) => void;
+  onLoad?: (
+) => void;
+  onError?: (error: Event
+) => void;
   sizes?: string; // Responsive image sizes
   quality?: 'auto' | 'low' | 'medium' | 'high';
 }
@@ -39,7 +41,8 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
     onError,
     sizes,
     quality = 'auto',
-  }) => {
+  }
+) => {
     const { imageQuality, shouldPreloadImages } = usePerformanceOptimizations();
     const { isLowEnd } = useDeviceCapabilities();
 
@@ -149,7 +152,8 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
     );
 
     // Intersection observer for lazy loading
-    useEffect(() => {
+    useEffect((
+) => {
       if (priority || !imgRef.current) return;
 
       // Create intersection observer
@@ -170,7 +174,8 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
 
       observerRef.current.observe(imgRef.current);
 
-      return () => {
+      return (
+) => {
         if (observerRef.current) {
           observerRef.current.disconnect();
           observerRef.current = null;
@@ -179,7 +184,8 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
     }, [priority, isLowEnd]);
 
     // Handle image load
-    const handleLoad = useCallback(() => {
+    const handleLoad = useCallback((
+) => {
       setIsLoaded(true);
       setHasError(false);
       onLoad?.();
@@ -187,7 +193,8 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
 
     // Handle image error
     const handleError = useCallback(
-      (event: React.SyntheticEvent<HTMLImageElement>) => {
+      (event: React.SyntheticEvent<HTMLImageElement>
+) => {
         setHasError(true);
         onError?.(event.nativeEvent);
       },
@@ -235,14 +242,16 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
     const generateSrcSet = useCallback((): string => {
       if (!shouldPreloadImages || isLowEnd) return '';
 
-      /* auto: implicit any */
+      
       const webpVariants = variants.filter(
-        (v: any) => v.format === 'webp' && supportsWebP()
+        (v: any
+) => v.format === 'webp' && supportsWebP()
       );
       if (webpVariants.length === 0) return '';
 
       return webpVariants
-        .map((variant: any) => {
+        .map((variant: any
+) => {
           // auto: implicit any
           const descriptor =
             variant.quality === 'low'

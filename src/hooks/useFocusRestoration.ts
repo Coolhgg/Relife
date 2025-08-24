@@ -96,7 +96,8 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
   /**
    * Save current focus for later restoration
    */
-  const saveFocus = useCallback((customElement?: HTMLElement) => {
+  const saveFocus = useCallback((customElement?: HTMLElement
+) => {
     const elementToSave = customElement || (document.activeElement as HTMLElement);
 
     if (elementToSave && elementToSave !== document.body) {
@@ -148,7 +149,8 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
             announcement.textContent = `Focus restored to ${label}`;
 
             document.body.appendChild(announcement);
-            setTimeout(() => {
+            setTimeout((
+) => {
               if (announcement.parentNode) {
                 announcement.parentNode.removeChild(announcement);
               }
@@ -185,7 +187,8 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
   /**
    * Clear saved focus reference
    */
-  const clearSavedFocus = useCallback(() => {
+  const clearSavedFocus = useCallback((
+) => {
     savedFocusRef.current = null;
     fallbackSavedRef.current = null;
   }, []);
@@ -233,9 +236,11 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
   /**
    * Create a focus restoration function for cleanup
    */
-  const createRestorationCleanup = useCallback(() => {
+  const createRestorationCleanup = useCallback((
+) => {
     const currentFocus = savedFocusRef.current;
-    return () => {
+    return (
+) => {
       if (currentFocus && isElementFocusable(currentFocus)) {
         try {
           currentFocus.focus({ preventScroll });

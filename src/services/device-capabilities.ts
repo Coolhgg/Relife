@@ -66,7 +66,8 @@ export class DeviceCapabilityDetector {
   private tier: DeviceTier | null = null;
   private config: AdaptiveConfig | null = null;
   private isDetecting = false;
-  private listeners: Array<(config: AdaptiveConfig) => void> = [];
+  private listeners: Array<(config: AdaptiveConfig
+) => void> = [];
 
   private constructor() {}
 
@@ -82,7 +83,8 @@ export class DeviceCapabilityDetector {
     if (this.isDetecting) {
       // Wait for ongoing detection to complete
       return new Promise(resolve => {
-        const checkComplete = () => {
+        const checkComplete = (
+) => {
           if (this.config) {
             resolve(this.config);
           } else {
@@ -259,7 +261,8 @@ export class DeviceCapabilityDetector {
       let frames = 0;
       const duration = 1000; // Measure for 1 second
 
-      const measureFrame = (currentTime: number) => {
+      const measureFrame = (currentTime: number
+) => {
         frames++;
         const elapsed = currentTime - lastTime;
 
@@ -567,11 +570,14 @@ export class DeviceCapabilityDetector {
   }
 
   // Event listeners
-  onConfigChange(callback: (config: AdaptiveConfig) => void): () => void {
+  onConfigChange(callback: (config: AdaptiveConfig
+) => void): (
+) => void {
     this.listeners.push(callback);
 
     // Return unsubscribe function
-    return () => {
+    return (
+) => {
       const index = this.listeners.indexOf(callback);
       if (index > -1) {
         this.listeners.splice(index, 1);

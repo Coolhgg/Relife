@@ -4,7 +4,8 @@ import { Crown, Star, Zap, Shield } from 'lucide-react';
 
 interface PremiumFeatureTestProps {
   userTier?: string;
-  onUpgrade?: () => void;
+  onUpgrade?: (
+) => void;
   className?: string;
 }
 
@@ -12,7 +13,8 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
   userTier = 'free',
   onUpgrade,
   className = '',
-}) => {
+}
+) => {
   const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
 
   const features = [
@@ -50,11 +52,13 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
     ultimate: 4,
   };
 
-  const hasAccess = (requiredTier: string) => {
+  const hasAccess = (requiredTier: string
+) => {
     return (tierHierarchy[userTier] || 0) >= (tierHierarchy[requiredTier] || 0);
   };
 
-  const handleFeatureSelect = (featureId: string) => {
+  const handleFeatureSelect = (featureId: string
+) => {
     setSelectedFeature(featureId);
     const feature = features.find(f => f.id === featureId);
     if (feature && !hasAccess(feature.tier)) {
@@ -83,7 +87,8 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
             return (
               <div
                 key={feature.id}
-                onClick={() => handleFeatureSelect(feature.id)}
+                onClick={(
+) => handleFeatureSelect(feature.id)}
                 className={`relative cursor-pointer rounded-lg p-4 border transition-all duration-200 ${
                   isSelected
                     ? 'border-blue-500 bg-blue-50'
@@ -118,7 +123,8 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
 
                   {!isAccessible && (
                     <button
-                      onClick={(e: any) => {
+                      onClick={(e: any
+) => {
                         // auto: implicit any
                         e.stopPropagation();
                         onUpgrade?.();

@@ -33,7 +33,8 @@ interface DashboardState {
   autoRefresh: boolean;
 }
 
-const PerformanceDashboard: React.FC = () => {
+const PerformanceDashboard: React.FC = (
+) => {
   const [state, setState] = useState<DashboardState>({
     performanceData: {
       webVitals: [],
@@ -56,7 +57,8 @@ const PerformanceDashboard: React.FC = () => {
     'performance'
   );
 
-  const refreshData = useCallback(async () => {
+  const refreshData = useCallback(async (
+) => {
     try {
       const performanceMonitor = PerformanceMonitor;
       const analytics = AnalyticsService.getInstance();
@@ -64,8 +66,9 @@ const PerformanceDashboard: React.FC = () => {
       const performanceSummary = performanceMonitor.getPerformanceSummary();
       const analyticsSummary = analytics.getAnalyticsSummary();
 
-      /* auto: implicit any */
-      setState((prev: any) => ({{
+      
+      setState((prev: any
+) => ({
         ...prev,
         performanceData: {
           webVitals: [
@@ -125,17 +128,20 @@ const PerformanceDashboard: React.FC = () => {
       }));
     } catch (error) {
       console.error('Failed to refresh dashboard data:', error);
-      /* auto: implicit any */
-      setState((prev: any) => ({ ...prev, isLoading: false }));
+      
+      setState((prev: any
+) => ({ ...prev, isLoading: false }));
     }
   }, []);
 
-  useEffect(() => {
+  useEffect((
+) => {
     refreshData();
 
     if (state.autoRefresh) {
       const interval = setInterval(refreshData, 5000); // Refresh every 5 seconds
-      return () => clearInterval(interval);
+      return (
+) => clearInterval(interval);
     }
   }, [refreshData, state.autoRefresh]);
 
@@ -161,7 +167,8 @@ const PerformanceDashboard: React.FC = () => {
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   };
 
-  const exportData = () => {
+  const exportData = (
+) => {
     const performanceMonitor = PerformanceMonitor;
     const analytics = AnalyticsService.getInstance();
 
@@ -182,7 +189,8 @@ const PerformanceDashboard: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
-  const clearData = () => {
+  const clearData = (
+) => {
     if (
       window.confirm(
         'Are you sure you want to clear all performance and analytics data?'
@@ -202,7 +210,8 @@ const PerformanceDashboard: React.FC = () => {
     value: string | number;
     subtitle?: string;
     rating?: string;
-  }> = ({ title, value, subtitle, rating }) => (
+  }> = ({ title, value, subtitle, rating }
+) => (
     <div
       className={`bg-white rounded-lg p-4 shadow-sm border ${
         rating === 'good'
@@ -246,9 +255,11 @@ const PerformanceDashboard: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-900">Performance Dashboard</h1>
         <div className="flex gap-3">
           <button
-            onClick={() =>
-              /* auto: implicit any */
-              setState((prev: any) => ({ ...prev, autoRefresh: !prev.autoRefresh }))
+            onClick={(
+) =>
+              
+              setState((prev: any
+) => ({ ...prev, autoRefresh: !prev.autoRefresh }))
             }
             className={`px-4 py-2 rounded-lg font-medium ${
               state.autoRefresh
@@ -285,7 +296,8 @@ const PerformanceDashboard: React.FC = () => {
           {(['performance', 'analytics', 'behavior'] as const).map(tab => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={(
+) => setActiveTab(tab)}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab
                   ? 'border-blue-500 text-blue-600'
@@ -306,8 +318,9 @@ const PerformanceDashboard: React.FC = () => {
               Core Web Vitals
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              {state.performanceData.webVitals/* auto: implicit any */
-      &.map((vital: any) => (
+              {state.performanceData.webVitals
+      .map((vital: any
+) => (
                 <MetricCard
                   key={vital.name}
                   title={vital.name}
@@ -370,7 +383,8 @@ const PerformanceDashboard: React.FC = () => {
               </h2>
               <div className="bg-white rounded-lg shadow-sm border p-4">
                 <div className="space-y-2">
-                  {state.performanceData.customMetrics.map((metric, index) => (
+                  {state.performanceData.customMetrics.map((metric, index
+) => (
                     <div
                       key={index}
                       className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
@@ -537,7 +551,8 @@ const PerformanceDashboard: React.FC = () => {
                     <div className="space-y-3">
                       {state.analyticsData.behavior.mostUsedFeatures
                         .slice(0, 10)
-                        .map((feature, index) => (
+                        .map((feature, index
+) => (
                           <div
                             key={feature.feature}
                             className="flex justify-between items-center py-2"
@@ -604,7 +619,8 @@ const PerformanceDashboard: React.FC = () => {
                     .length > 0 ? (
                     <div className="space-y-3">
                       {state.analyticsData.behavior.navigationPatterns.mostVisitedPages.map(
-                        (page, index) => (
+                        (page, index
+) => (
                           <div
                             key={page.page}
                             className="flex justify-between items-center py-2"

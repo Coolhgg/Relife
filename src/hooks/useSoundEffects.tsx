@@ -12,13 +12,20 @@ import {
 } from '../services/sound-effects';
 
 export interface SoundEffectHandlers {
-  playClick: () => void;
-  playHover: () => void;
-  playSuccess: () => void;
-  playError: () => void;
-  playNotification: () => void;
-  playAlarmNotification: () => void;
-  playBeep: () => void;
+  playClick: (
+) => void;
+  playHover: (
+) => void;
+  playSuccess: (
+) => void;
+  playError: (
+) => void;
+  playNotification: (
+) => void;
+  playAlarmNotification: (
+) => void;
+  playBeep: (
+) => void;
 }
 
 export interface SoundEffectControls {
@@ -31,20 +38,29 @@ export interface SoundEffectControls {
       fadeOut?: number;
       force?: boolean;
     }
-  ) => Promise<AudioBufferSourceNode | null>;
-  stopSound: (soundId: SoundEffectId) => void;
-  stopAllSounds: () => void;
-  testSound: (soundId: SoundEffectId) => Promise<boolean>;
+  
+) => Promise<AudioBufferSourceNode | null>;
+  stopSound: (soundId: SoundEffectId
+) => void;
+  stopAllSounds: (
+) => void;
+  testSound: (soundId: SoundEffectId
+) => Promise<boolean>;
   settings: SoundEffectSettings;
-  updateSettings: (newSettings: Partial<SoundEffectSettings>) => Promise<void>;
-  setSoundTheme: (theme: SoundTheme) => Promise<void>;
-  getSoundTheme: () => SoundTheme;
-  getAvailableThemes: () => Array<{
+  updateSettings: (newSettings: Partial<SoundEffectSettings>
+) => Promise<void>;
+  setSoundTheme: (theme: SoundTheme
+) => Promise<void>;
+  getSoundTheme: (
+) => SoundTheme;
+  getAvailableThemes: (
+) => Array<{
     id: SoundTheme;
     name: string;
     description: string;
   }>;
-  previewTheme: (theme: SoundTheme) => Promise<void>;
+  previewTheme: (theme: SoundTheme
+) => Promise<void>;
   isInitialized: boolean;
 }
 
@@ -55,10 +71,12 @@ export function useSoundEffects(): SoundEffectControls & SoundEffectHandlers {
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Initialize sound effects service
-  useEffect(() => {
+  useEffect((
+) => {
     let mounted = true;
 
-    const initializeSounds = async () => {
+    const initializeSounds = async (
+) => {
       try {
         await soundEffectsService.initialize();
         if (mounted) {
@@ -72,37 +90,45 @@ export function useSoundEffects(): SoundEffectControls & SoundEffectHandlers {
 
     initializeSounds();
 
-    return () => {
+    return (
+) => {
       mounted = false;
     };
   }, []);
 
   // Sound effect handlers
-  const playClick = useCallback(() => {
+  const playClick = useCallback((
+) => {
     soundEffectsService.playUISound('click');
   }, []);
 
-  const playHover = useCallback(() => {
+  const playHover = useCallback((
+) => {
     soundEffectsService.playUISound('hover');
   }, []);
 
-  const playSuccess = useCallback(() => {
+  const playSuccess = useCallback((
+) => {
     soundEffectsService.playUISound('success');
   }, []);
 
-  const playError = useCallback(() => {
+  const playError = useCallback((
+) => {
     soundEffectsService.playUISound('error');
   }, []);
 
-  const playNotification = useCallback(() => {
+  const playNotification = useCallback((
+) => {
     soundEffectsService.playNotificationSound('default');
   }, []);
 
-  const playAlarmNotification = useCallback(() => {
+  const playAlarmNotification = useCallback((
+) => {
     soundEffectsService.playNotificationSound('alarm');
   }, []);
 
-  const playBeep = useCallback(() => {
+  const playBeep = useCallback((
+) => {
     soundEffectsService.playNotificationSound('beep');
   }, []);
 
@@ -117,26 +143,31 @@ export function useSoundEffects(): SoundEffectControls & SoundEffectHandlers {
         fadeOut?: number;
         force?: boolean;
       }
-    ) => {
+    
+) => {
       return await soundEffectsService.playSound(soundId, options);
     },
     []
   );
 
-  const stopSound = useCallback((soundId: SoundEffectId) => {
+  const stopSound = useCallback((soundId: SoundEffectId
+) => {
     soundEffectsService.stopSound(soundId);
   }, []);
 
-  const stopAllSounds = useCallback(() => {
+  const stopAllSounds = useCallback((
+) => {
     soundEffectsService.stopAllSounds();
   }, []);
 
-  const testSound = useCallback(async (soundId: SoundEffectId) => {
+  const testSound = useCallback(async (soundId: SoundEffectId
+) => {
     return await soundEffectsService.testSound(soundId);
   }, []);
 
   const updateSettings = useCallback(
-    async (newSettings: Partial<SoundEffectSettings>) => {
+    async (newSettings: Partial<SoundEffectSettings>
+) => {
       await soundEffectsService.updateSettings(newSettings);
       setSettings(soundEffectsService.getSettings());
     },
@@ -144,20 +175,24 @@ export function useSoundEffects(): SoundEffectControls & SoundEffectHandlers {
   );
 
   // Theme management methods
-  const setSoundTheme = useCallback(async (theme: SoundTheme) => {
+  const setSoundTheme = useCallback(async (theme: SoundTheme
+) => {
     await soundEffectsService.setSoundTheme(theme);
     setSettings(soundEffectsService.getSettings());
   }, []);
 
-  const getSoundTheme = useCallback(() => {
+  const getSoundTheme = useCallback((
+) => {
     return soundEffectsService.getSoundTheme();
   }, []);
 
-  const getAvailableThemes = useCallback(() => {
+  const getAvailableThemes = useCallback((
+) => {
     return soundEffectsService.getAvailableThemes();
   }, []);
 
-  const previewTheme = useCallback(async (theme: SoundTheme) => {
+  const previewTheme = useCallback(async (theme: SoundTheme
+) => {
     await soundEffectsService.previewTheme(theme);
   }, []);
 
@@ -191,8 +226,11 @@ export function useUISound() {
   const { playClick, playHover, playSuccess, playError, settings } = useSoundEffects();
 
   const createClickHandler = useCallback(
-    (originalHandler?: () => void) => {
-      return () => {
+    (originalHandler?: (
+) => void
+) => {
+      return (
+) => {
         if (settings.uiSoundsEnabled) {
           playClick();
         }
@@ -203,8 +241,11 @@ export function useUISound() {
   );
 
   const createHoverHandler = useCallback(
-    (originalHandler?: () => void) => {
-      return () => {
+    (originalHandler?: (
+) => void
+) => {
+      return (
+) => {
         if (settings.uiSoundsEnabled) {
           playHover();
         }
@@ -215,8 +256,11 @@ export function useUISound() {
   );
 
   const createSuccessHandler = useCallback(
-    (originalHandler?: () => void) => {
-      return () => {
+    (originalHandler?: (
+) => void
+) => {
+      return (
+) => {
         if (settings.uiSoundsEnabled) {
           playSuccess();
         }
@@ -227,8 +271,11 @@ export function useUISound() {
   );
 
   const createErrorHandler = useCallback(
-    (originalHandler?: () => void) => {
-      return () => {
+    (originalHandler?: (
+) => void
+) => {
+      return (
+) => {
         if (settings.uiSoundsEnabled) {
           playError();
         }
@@ -256,7 +303,8 @@ export function useNotificationSounds() {
     useSoundEffects();
 
   const playCustomNotification = useCallback(
-    async (type: 'default' | 'alarm' | 'beep' = 'default') => {
+    async (type: 'default' | 'alarm' | 'beep' = 'default'
+) => {
       if (!settings.notificationSoundsEnabled) return;
 
       switch (type) {
@@ -297,7 +345,8 @@ export function useAlarmSounds() {
         | 'ocean_waves'
         | 'energetic_beep',
       options: { volume?: number; fadeIn?: number } = {}
-    ) => {
+    
+) => {
       if (!settings.alarmSoundsEnabled) return null;
 
       const soundId = `alarm.${soundType}` as SoundEffectId;
@@ -318,7 +367,8 @@ export function useAlarmSounds() {
         | 'classic_beep'
         | 'ocean_waves'
         | 'energetic_beep'
-    ) => {
+    
+) => {
       const soundId = `alarm.${soundType}` as SoundEffectId;
       stopSound(soundId);
     },
@@ -337,7 +387,8 @@ export function withSoundEffects<T extends object>(
   Component: React.ComponentType<T>,
   soundType: 'click' | 'hover' | 'success' | 'error' = 'click'
 ) {
-  return React.forwardRef<any, T>((props: T, ref) => {
+  return React.forwardRef<any, T>((props: T, ref
+) => {
     const {
       createClickHandler,
       createHoverHandler,
@@ -345,7 +396,8 @@ export function withSoundEffects<T extends object>(
       createErrorHandler,
     } = useUISound();
 
-    const getSoundHandler = () => {
+    const getSoundHandler = (
+) => {
       switch (soundType) {
         case 'hover':
           return createHoverHandler;

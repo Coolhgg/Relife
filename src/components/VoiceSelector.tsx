@@ -7,7 +7,8 @@ import { TimeoutHandle } from '../types/timers';
 
 interface VoiceSelectorProps {
   selectedVoice: VoiceMood;
-  onVoiceChange: (voice: VoiceMood) => void;
+  onVoiceChange: (voice: VoiceMood
+) => void;
   user: User;
   showUpgradePrompts?: boolean;
 }
@@ -17,9 +18,12 @@ interface VoiceCardProps {
   personality?: VoicePersonality;
   isSelected: boolean;
   isLocked: boolean;
-  onSelect: () => void;
-  onTest: () => void;
-  onUpgrade?: () => void;
+  onSelect: (
+) => void;
+  onTest: (
+) => void;
+  onUpgrade?: (
+) => void;
 }
 
 const VoiceCard: React.FC<VoiceCardProps> = ({
@@ -30,17 +34,20 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
   onSelect,
   onTest,
   onUpgrade,
-}) => {
+}
+) => {
   const [isTestingVoice, setIsTestingVoice] = useState(false);
 
-  const handleTest = async () => {
+  const handleTest = async (
+) => {
     if (isLocked || isTestingVoice) return;
 
     setIsTestingVoice(true);
     try {
       onTest();
       // Simulate test duration
-      setTimeout(() => {
+      setTimeout((
+) => {
         setIsTestingVoice(false);
       }, 3000);
     } catch (error) {
@@ -64,7 +71,8 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
     return colors[characteristic] || 'bg-gray-100 text-gray-700';
   };
 
-  const getTierBadge = () => {
+  const getTierBadge = (
+) => {
     if (!personality) return null;
 
     if (personality.premiumTier === 'ultimate') {
@@ -123,8 +131,9 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
         {personality && personality.characteristics.length > 0 && (
           <div className="mb-3">
             <div className="flex flex-wrap gap-1">
-              {personality.characteristics.slice(0, 3)/* auto: implicit any */
-      &.map((characteristic: any) => (
+              {personality.characteristics.slice(0, 3)
+      .map((characteristic: any
+) => (
                 <span
                   key={characteristic}
                   className={`px-2 py-1 rounded-full text-xs font-medium ${getCharacteristicColor(characteristic)}`}
@@ -188,7 +197,8 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
   onVoiceChange,
   user,
   showUpgradePrompts = true,
-}) => {
+}
+) => {
   const [availableVoices, setAvailableVoices] = useState<VoiceMoodConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'free' | 'premium' | 'ultimate'>('all');
@@ -196,11 +206,13 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
     null
   );
 
-  useEffect(() => {
+  useEffect((
+) => {
     loadAvailableVoices();
   }, [user.id]);
 
-  const loadAvailableVoices = async () => {
+  const loadAvailableVoices = async (
+) => {
     try {
       setLoading(true);
       const voices = await PremiumVoiceService.getAvailableVoices(user.id);
@@ -212,14 +224,16 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
     }
   };
 
-  const handleVoiceSelect = async (voiceMood: VoiceMood) => {
+  const handleVoiceSelect = async (voiceMood: VoiceMood
+) => {
     const canAccess = await PremiumVoiceService.canAccessVoice(user.id, voiceMood);
     if (canAccess) {
       onVoiceChange(voiceMood);
     }
   };
 
-  const handleVoiceTest = async (voiceMood: VoiceMood) => {
+  const handleVoiceTest = async (voiceMood: VoiceMood
+) => {
     try {
       await PremiumVoiceService.testPremiumVoice(voiceMood, user.id);
     } catch (error) {
@@ -227,16 +241,19 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
     }
   };
 
-  const handleUpgrade = () => {
+  const handleUpgrade = (
+) => {
     // In a real app, this would open the pricing/upgrade modal
     console.log('Opening upgrade modal...');
     alert('Upgrade to Premium to unlock this voice!');
   };
 
-  const getFilteredVoices = () => {
+  const getFilteredVoices = (
+) => {
     if (filter === 'all') return availableVoices;
 
-    return availableVoices.filter((voice: any) => { // auto: implicit any
+    return availableVoices.filter((voice: any
+) => { // auto: implicit any
       const personality = PremiumVoiceService.getVoicePersonality(voice.id);
       if (!personality) {
         return filter === 'free';
@@ -245,11 +262,13 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
     });
   };
 
-  const getVoicesByCategory = () => {
+  const getVoicesByCategory = (
+) => {
     const filteredVoices = getFilteredVoices();
     const categories: Record<string, VoiceMoodConfig[]> = {};
 
-    filteredVoices.forEach((voice: any) => { // auto: implicit any
+    filteredVoices.forEach((voice: any
+) => { // auto: implicit any
       const personality = PremiumVoiceService.getVoicePersonality(voice.id);
       const category = personality?.category || 'basic';
 
@@ -285,7 +304,8 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
         <div className="animate-pulse">
           <div className="h-6 bg-gray-200 rounded mb-4"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, i) => (
+            {[...Array(6)].map((_, i
+) => (
               <div key={i} className="bg-gray-100 rounded-lg h-48"></div>
             ))}
           </div>
@@ -314,10 +334,12 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
             { key: 'free', label: 'Free', icon: Heart },
             { key: 'premium', label: 'Premium', icon: Crown },
             { key: 'ultimate', label: 'Ultimate', icon: Star },
-          ].map(({ key, label, icon: Icon }) => (
+          ].map(({ key, label, icon: Icon }
+) => (
             <button
               key={key}
-              onClick={() => setFilter(key as any)}
+              onClick={(
+) => setFilter(key as any)}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
                 filter === key
                   ? 'bg-white text-blue-600 shadow-sm'
@@ -333,7 +355,8 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
 
       {/* Voice categories */}
       <div className="space-y-8">
-        {Object.entries(voicesByCategory).map(([category, voices]) => (
+        {Object.entries(voicesByCategory).map(([category, voices]
+) => (
           <div key={category}>
             <div className="flex items-center gap-2 mb-4">
               <h3 className="text-lg font-semibold text-gray-900">
@@ -348,7 +371,8 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
               {voices.map(voice => {
                 const personality = PremiumVoiceService.getVoicePersonality(voice.id);
                 const isLocked =
-                  personality && !availableVoices.some((av: any) => av.id === voice.id);
+                  personality && !availableVoices.some((av: any
+) => av.id === voice.id);
 
                 return (
                   <VoiceCard
@@ -357,8 +381,10 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
                     personality={personality || undefined}
                     isSelected={selectedVoice === voice.id}
                     isLocked={isLocked}
-                    onSelect={() => handleVoiceSelect(voice.id)}
-                    onTest={() => handleVoiceTest(voice.id)}
+                    onSelect={(
+) => handleVoiceSelect(voice.id)}
+                    onTest={(
+) => handleVoiceTest(voice.id)}
                     onUpgrade={showUpgradePrompts ? handleUpgrade : undefined}
                   />
                 );

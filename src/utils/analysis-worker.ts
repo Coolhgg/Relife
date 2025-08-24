@@ -4,8 +4,10 @@ class SleepAnalysisWorker {
   private jobQueue: Map<
     string,
     {
-      resolve: (result: any) => void;
-      reject: (error: Error) => void;
+      resolve: (result: any
+) => void;
+      reject: (error: Error
+) => void;
     }
   > = new Map();
 
@@ -22,7 +24,8 @@ class SleepAnalysisWorker {
     // Create worker from inline script
     const workerScript = `
       // Sleep analysis algorithms
-      const analyzeSleepPatterns = (sessions) => {
+      const analyzeSleepPatterns = (sessions
+) => {
         const results = {
           averageDuration: 0,
           averageQuality: 0,
@@ -35,14 +38,17 @@ class SleepAnalysisWorker {
         if (sessions.length === 0) return results;
 
         // Calculate averages
-        const totalDuration = sessions.reduce((sum, s) => sum + s.duration, 0);
-        const totalQuality = sessions.reduce((sum, s) => sum + s.quality, 0);
+        const totalDuration = sessions.reduce((sum, s
+) => sum + s.duration, 0);
+        const totalQuality = sessions.reduce((sum, s
+) => sum + s.quality, 0);
 
         results.averageDuration = totalDuration / sessions.length;
         results.averageQuality = totalQuality / sessions.length;
 
         // Calculate sleep efficiency
-        const totalTimeInBed = sessions.reduce((sum, s) => {
+        const totalTimeInBed = sessions.reduce((sum, s
+) => {
           const bedtime = new Date(s.bedtime).getTime();
           const wakeTime = new Date(s.wakeTime).getTime();
           return sum + (wakeTime - bedtime);
@@ -52,7 +58,8 @@ class SleepAnalysisWorker {
         results.sleepEfficiency = (totalSleepTime / totalTimeInBed) * 100;
 
         // Determine chronotype
-        const avgBedtimeHour = sessions.reduce((sum, s) => {
+        const avgBedtimeHour = sessions.reduce((sum, s
+) => {
           const hour = new Date(s.bedtime).getHours();
           return sum + (hour >= 12 ? hour : hour + 24); // Handle midnight crossover
         }, 0) / sessions.length;
@@ -85,13 +92,17 @@ class SleepAnalysisWorker {
         return results;
       };
 
-      const calculateVariance = (values) => {
-        const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
+      const calculateVariance = (values
+) => {
+        const mean = values.reduce((sum, val
+) => sum + val, 0) / values.length;
         const squaredDiffs = values.map(val => Math.pow(val - mean, 2));
-        return squaredDiffs.reduce((sum, diff) => sum + diff, 0) / values.length;
+        return squaredDiffs.reduce((sum, diff
+) => sum + diff, 0) / values.length;
       };
 
-      const predictOptimalWakeTime = (bedtime, sleepCycles = 5) => {
+      const predictOptimalWakeTime = (bedtime, sleepCycles = 5
+) => {
         const bedtimeMs = new Date(bedtime).getTime();
         const cycleLength = 90 * 60 * 1000; // 90 minutes in ms
 
@@ -108,7 +119,8 @@ class SleepAnalysisWorker {
         return optimalTimes;
       };
 
-      const analyzeVoicePatterns = (voiceCommands) => {
+      const analyzeVoicePatterns = (voiceCommands
+) => {
         const commandStats = {};
         const confidenceStats = {
           average: 0,
@@ -123,7 +135,8 @@ class SleepAnalysisWorker {
           else confidenceStats.distribution.low++;
         });
 
-        confidenceStats.average = voiceCommands.reduce((sum, cmd) => sum + cmd.confidence, 0) / voiceCommands.length;
+        confidenceStats.average = voiceCommands.reduce((sum, cmd
+) => sum + cmd.confidence, 0) / voiceCommands.length;
 
         return { commandStats, confidenceStats };
       };
@@ -203,7 +216,8 @@ class SleepAnalysisWorker {
 
     const jobId = this.generateJobId();
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject
+) => {
       this.jobQueue.set(jobId, { resolve, reject });
 
       this.worker!.postMessage({
@@ -213,7 +227,8 @@ class SleepAnalysisWorker {
       });
 
       // Timeout after 30 seconds
-      setTimeout(() => {
+      setTimeout((
+) => {
         if (this.jobQueue.has(jobId)) {
           this.jobQueue.delete(jobId);
           reject(new Error('Analysis timeout'));
@@ -229,7 +244,8 @@ class SleepAnalysisWorker {
 
     const jobId = this.generateJobId();
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject
+) => {
       this.jobQueue.set(jobId, { resolve, reject });
 
       this.worker!.postMessage({
@@ -238,7 +254,8 @@ class SleepAnalysisWorker {
         jobId,
       });
 
-      setTimeout(() => {
+      setTimeout((
+) => {
         if (this.jobQueue.has(jobId)) {
           this.jobQueue.delete(jobId);
           reject(new Error('Prediction timeout'));
@@ -254,7 +271,8 @@ class SleepAnalysisWorker {
 
     const jobId = this.generateJobId();
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject
+) => {
       this.jobQueue.set(jobId, { resolve, reject });
 
       this.worker!.postMessage({
@@ -263,7 +281,8 @@ class SleepAnalysisWorker {
         jobId,
       });
 
-      setTimeout(() => {
+      setTimeout((
+) => {
         if (this.jobQueue.has(jobId)) {
           this.jobQueue.delete(jobId);
           reject(new Error('Voice analysis timeout'));
@@ -278,9 +297,11 @@ class SleepAnalysisWorker {
     // Simplified main thread implementation
     return {
       averageDuration:
-        sessions.reduce((sum, s) => sum + s.duration, 0) / sessions.length || 0,
+        sessions.reduce((sum, s
+) => sum + s.duration, 0) / sessions.length || 0,
       averageQuality:
-        sessions.reduce((sum, s) => sum + s.quality, 0) / sessions.length || 0,
+        sessions.reduce((sum, s
+) => sum + s.quality, 0) / sessions.length || 0,
       sleepEfficiency: 85, // Default value
       chronotype: 'normal',
       consistency: 75,
@@ -348,13 +369,16 @@ export const terminateAnalysisWorker = (): void => {
 import { useEffect, useRef } from 'react';
 import { TimeoutHandle } from '../types/timers';
 
-export const useAnalysisWorker = () => {
+export const useAnalysisWorker = (
+) => {
   const workerRef = useRef<SleepAnalysisWorker>();
 
-  useEffect(() => {
+  useEffect((
+) => {
     workerRef.current = getAnalysisWorker();
 
-    return () => {
+    return (
+) => {
       // Don't terminate on unmount, keep worker alive for other components
     };
   }, []);

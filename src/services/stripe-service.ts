@@ -991,7 +991,8 @@ class StripeService {
       downloadUrl: stripeInvoice.invoice_pdf,
       receiptUrl: stripeInvoice.hosted_invoice_url,
       items:
-        stripeInvoice.lines?.data?.map((item: any) => ({
+        stripeInvoice.lines?.data?.map((item: any
+) => ({
           id: item.id,
           description: item.description,
           amount: item.amount,

@@ -66,7 +66,8 @@ const PERSONA_NAMES: Record<UserPersona, string> = {
 
 export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   className = '',
-}) => {
+}
+) => {
   const [analyticsData, setAnalyticsData] = useState<PersonaAnalyticsData[]>([]);
   const [campaignData, setCampaignData] = useState<CampaignPerformanceData[]>([]);
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d' | '90d'>('7d');
@@ -74,8 +75,10 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const analytics = usePersonaAnalytics();
 
   // Fetch analytics data
-  useEffect(() => {
-    const fetchAnalyticsData = async () => {
+  useEffect((
+) => {
+    const fetchAnalyticsData = async (
+) => {
       setLoading(true);
       try {
         // Replace with actual API calls
@@ -102,7 +105,8 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const personaMetrics = useMemo((): PersonaMetrics[] => {
     const metrics = new Map<UserPersona, PersonaMetrics>();
 
-    analyticsData.forEach((data: any) => { // auto: implicit any
+    analyticsData.forEach((data: any
+) => { // auto: implicit any
       const existing = metrics.get(data.persona) || {
         persona: data.persona,
         detections: 0,
@@ -135,8 +139,9 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   // Calculate campaign metrics
   const campaignMetrics = useMemo((): CampaignMetrics[] => {
-    return campaignData/* auto: implicit any */
-      &.map((data: any) => ({
+    return campaignData
+      .map((data: any
+) => ({
       campaign: data.campaignId,
       persona: data.persona,
       impressions: data.metrics.impressions,
@@ -149,12 +154,17 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   }, [campaignData]);
 
   // Overall statistics
-  const overallStats = useMemo(() => {
-    const totalDetections = personaMetrics.reduce((sum, p) => sum + p.detections, 0);
-    const totalConversions = personaMetrics.reduce((sum, p) => sum + p.conversions, 0);
-    const totalRevenue = personaMetrics.reduce((sum, p) => sum + p.revenue, 0);
+  const overallStats = useMemo((
+) => {
+    const totalDetections = personaMetrics.reduce((sum, p
+) => sum + p.detections, 0);
+    const totalConversions = personaMetrics.reduce((sum, p
+) => sum + p.conversions, 0);
+    const totalRevenue = personaMetrics.reduce((sum, p
+) => sum + p.revenue, 0);
     const avgConfidence =
-      personaMetrics.reduce((sum, p) => sum + p.avgConfidence, 0) /
+      personaMetrics.reduce((sum, p
+) => sum + p.avgConfidence, 0) /
         personaMetrics.length || 0;
 
     return {
@@ -194,7 +204,8 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           {(['24h', '7d', '30d', '90d'] as const).map(range => (
             <button
               key={range}
-              onClick={() => setTimeRange(range)}
+              onClick={(
+) => setTimeRange(range)}
               className={`px-4 py-2 rounded-md text-sm font-medium ${
                 timeRange === range
                   ? 'bg-indigo-600 text-white'
@@ -328,14 +339,16 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ persona, detections }) =>
+                label={({ persona, detections }
+) =>
                   `${PERSONA_NAMES[persona]} (${detections})`
                 }
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="detections"
               >
-                {personaMetrics.map((entry, index) => (
+                {personaMetrics.map((entry, index
+) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
@@ -355,14 +368,17 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: any) => /* auto: implicit any */
+                tickFormatter={(value: any
+) => 
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 } // Show only first name
               />
               <YAxis />
               <Tooltip
-                labelFormatter={(value: any) => PERSONA_NAMES[value as UserPersona]}
-                formatter={(value: any) => [`${value.toFixed(1)}%`, 'Conversion Rate']}
+                labelFormatter={(value: any
+) => PERSONA_NAMES[value as UserPersona]}
+                formatter={(value: any
+) => [`${value.toFixed(1)}%`, 'Conversion Rate']}
               />
               <Bar dataKey="conversionRate" fill="#3B82F6" />
             </BarChart>
@@ -381,14 +397,17 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: any) => /* auto: implicit any */
+                tickFormatter={(value: any
+) => 
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 }
               />
               <YAxis />
               <Tooltip
-                labelFormatter={(value: any) => PERSONA_NAMES[value as UserPersona]}
-                formatter={(value: any) => [`$${value.toLocaleString()}`, 'Revenue']}
+                labelFormatter={(value: any
+) => PERSONA_NAMES[value as UserPersona]}
+                formatter={(value: any
+) => [`$${value.toLocaleString()}`, 'Revenue']}
               />
               <Bar dataKey="revenue" fill="#10B981" />
             </BarChart>
@@ -406,14 +425,17 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: any) => /* auto: implicit any */
+                tickFormatter={(value: any
+) => 
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 }
               />
               <YAxis domain={[0, 100]} />
               <Tooltip
-                labelFormatter={(value: any) => PERSONA_NAMES[value as UserPersona]}
-                formatter={(value: any) => [`${value.toFixed(1)}%`, 'Avg Confidence']}
+                labelFormatter={(value: any
+) => PERSONA_NAMES[value as UserPersona]}
+                formatter={(value: any
+) => [`${value.toFixed(1)}%`, 'Avg Confidence']}
               />
               <Bar dataKey="avgConfidence" fill="#8B5CF6" />
             </BarChart>
@@ -454,7 +476,8 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {campaignMetrics.map((campaign, index) => (
+              {campaignMetrics.map((campaign, index
+) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {campaign.campaign}

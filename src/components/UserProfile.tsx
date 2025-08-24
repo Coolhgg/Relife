@@ -19,8 +19,10 @@ import { TimeoutHandle } from '../types/timers';
 
 interface UserProfileProps {
   user: AppUser;
-  onUpdateProfile: (updates: Partial<AppUser>) => Promise<void>;
-  onSignOut: () => void;
+  onUpdateProfile: (updates: Partial<AppUser>
+) => Promise<void>;
+  onSignOut: (
+) => void;
   isLoading: boolean;
   error: string | null;
 }
@@ -40,13 +42,16 @@ export default function UserProfile({
   const [hasChanges, setHasChanges] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: any
+) => {
     if (field === 'name') {
-      /* auto: implicit any */
-      setEditForm((prev: any) => ({{ ...prev, name: value }));
+      
+      setEditForm((prev: any
+) => ({ ...prev, name: value }));
     } else {
-      /* auto: implicit any */
-      setEditForm((prev: any) => ({{
+      
+      setEditForm((prev: any
+) => ({
         ...prev,
         preferences: { ...prev.preferences, [field]: value },
       }));
@@ -55,7 +60,8 @@ export default function UserProfile({
     setSaveSuccess(false);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (
+) => {
     try {
       await onUpdateProfile({
         name: editForm.name,
@@ -66,13 +72,15 @@ export default function UserProfile({
       setSaveSuccess(true);
 
       // Clear success message after 3 seconds
-      setTimeout(() => setSaveSuccess(false), 3000);
+      setTimeout((
+) => setSaveSuccess(false), 3000);
     } catch (error) {
       console.error('Failed to update profile:', error);
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = (
+) => {
     setEditForm({
       name: user.name || '',
       preferences: { ...user.preferences },

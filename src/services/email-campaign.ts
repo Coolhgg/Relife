@@ -159,9 +159,11 @@ export class EmailCampaignService {
       }
 
       // Calculate final confidence score
-      const totalWeight = factors.reduce((sum, factor) => sum + factor.weight, 0);
+      const totalWeight = factors.reduce((sum, factor
+) => sum + factor.weight, 0);
       const weightedConfidence =
-        factors.reduce((sum, factor) => {
+        factors.reduce((sum, factor
+) => {
           return sum + factor.influence * factor.weight;
         }, 0) / totalWeight;
 
@@ -372,7 +374,8 @@ export class EmailCampaignService {
         if (sequenceId) {
           // Add delay if specified
           if (delay > 0) {
-            setTimeout(async () => {
+            setTimeout(async (
+) => {
               await this.convertKitService.addToSequence(email, sequenceId);
             }, delay * 1000);
           } else {

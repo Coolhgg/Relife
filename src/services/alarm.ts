@@ -26,8 +26,9 @@ export class AlarmService {
 
       // Convert date strings back to Date objects and validate
       this.alarms = alarmData
-        /* auto: implicit any */
-        .map((alarm: any) => ({
+        
+        .map((alarm: any
+) => ({
           ...alarm,
           createdAt: new Date(alarm.createdAt),
           updatedAt: new Date(alarm.updatedAt),
@@ -35,7 +36,8 @@ export class AlarmService {
             ? new Date(alarm.lastTriggered)
             : undefined,
         }))
-        .filter((alarm: any) => {
+        .filter((alarm: any
+) => {
           // auto: implicit any
           // Additional validation for loaded alarms
           return (
@@ -524,7 +526,8 @@ export class AlarmService {
     }
 
     // Check every minute for triggered alarms
-    this.checkInterval = setInterval(() => {
+    this.checkInterval = setInterval((
+) => {
       this.checkForTriggeredAlarms();
     }, 60000); // 1 minute
 

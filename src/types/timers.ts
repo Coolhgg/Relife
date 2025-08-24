@@ -27,6 +27,7 @@ export function safeClearTimeout(handle: MaybeTimeoutHandle): void {
  * @param delay Delay in milliseconds
  * @returns TimeoutHandle
  */
-export function safeSetTimeout(callback: () => void, delay: number): TimeoutHandle {
+export function safeSetTimeout(callback: (
+) => void, delay: number): TimeoutHandle {
   return setTimeout(callback, delay);
 }

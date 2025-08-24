@@ -71,8 +71,10 @@ export class AlarmIntegrityMonitor {
     successfulRecoveries: 0,
   };
 
-  private alertCallbacks: Array<(event: TamperDetectionEvent) => void> = [];
-  private recoveryCallbacks: Array<(result: any) => void> = [];
+  private alertCallbacks: Array<(event: TamperDetectionEvent
+) => void> = [];
+  private recoveryCallbacks: Array<(result: any
+) => void> = [];
 
   private constructor() {
     this.initializeMonitoring();
@@ -91,18 +93,21 @@ export class AlarmIntegrityMonitor {
   private initializeMonitoring(): void {
     // Register for storage tamper detection events
     const secureStorage = SecureAlarmStorageService.getInstance();
-    secureStorage.onTamperDetected((details: any) => {
+    secureStorage.onTamperDetected((details: any
+) => {
       // auto: implicit any
       this.handleStorageTamperDetection(details);
     });
 
     // Register for general security events
-    window.addEventListener('alarm-security-event', (event: CustomEvent) => {
+    window.addEventListener('alarm-security-event', (event: CustomEvent
+) => {
       this.handleSecurityEvent(event.detail);
     });
 
     // Register for visibility changes to perform integrity checks
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', (
+) => {
       if (!document.hidden) {
         this.performIntegrityCheck();
       }
@@ -127,7 +132,8 @@ export class AlarmIntegrityMonitor {
     this.performIntegrityCheck();
 
     // Start periodic checks
-    this.monitoringInterval = setInterval(() => {
+    this.monitoringInterval = setInterval((
+) => {
       this.performIntegrityCheck();
     }, this.integrityCheckInterval);
 
@@ -745,11 +751,13 @@ export class AlarmIntegrityMonitor {
   }
 
   // Public API methods
-  onTamperDetected(callback: (event: TamperDetectionEvent) => void): void {
+  onTamperDetected(callback: (event: TamperDetectionEvent
+) => void): void {
     this.alertCallbacks.push(callback);
   }
 
-  onRecoveryAttempt(callback: (result: any) => void): void {
+  onRecoveryAttempt(callback: (result: any
+) => void): void {
     this.recoveryCallbacks.push(callback);
   }
 

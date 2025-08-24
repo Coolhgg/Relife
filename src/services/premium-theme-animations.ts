@@ -210,7 +210,8 @@ class PremiumThemeAnimationService {
   private createFloatingCards(): void {
     const cards = document.querySelectorAll('.card, .alarm-card, [class*="card"]');
 
-    cards.forEach((card, index) => {
+    cards.forEach((card, index
+) => {
       const element = card as HTMLElement;
       element.style.animation = `cardFloat ${3 + index * 0.5}s ease-in-out infinite`;
       element.style.animationDelay = `${index * 0.2}s`;
@@ -228,7 +229,8 @@ class PremiumThemeAnimationService {
    * Ripple effect on hover
    */
   private createRippleEffect(): void {
-    const addRipple = (e: MouseEvent) => {
+    const addRipple = (e: MouseEvent
+) => {
       const target = e.currentTarget as HTMLElement;
       const rect = target.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -241,7 +243,8 @@ class PremiumThemeAnimationService {
 
       target.appendChild(ripple);
 
-      setTimeout(() => {
+      setTimeout((
+) => {
         ripple.remove();
       }, 1000);
     };

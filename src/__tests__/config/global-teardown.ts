@@ -74,9 +74,11 @@ export default async function globalTeardown() {
         console.log('\n⏱️ Slow Tests Report:');
         console.log('==================');
         slowTests
-          .sort((a, b) => b.duration - a.duration)
+          .sort((a, b
+) => b.duration - a.duration)
           .slice(0, 10) // Top 10 slowest
-          .forEach((test, index) => {
+          .forEach((test, index
+) => {
             console.log(`${index + 1}. ${test.name}: ${test.duration.toFixed(2)}ms`);
           });
 
@@ -109,7 +111,8 @@ export default async function globalTeardown() {
     // Clear any remaining intervals/timeouts from tests
     if ((global as any).mockGeoWatchIntervals) {
       console.log('🌍 Cleaning up geolocation watchers...');
-      (global as any).mockGeoWatchIntervals.forEach((interval: any) => {
+      (global as any).mockGeoWatchIntervals.forEach((interval: any
+) => {
         clearInterval(interval);
       });
       (global as any).mockGeoWatchIntervals.clear();

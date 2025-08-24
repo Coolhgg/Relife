@@ -73,13 +73,18 @@ export {
 } from './integration-provider';
 
 // Utility functions for common test patterns
-export const _createTestSuite = (name: string, tests: () => void) => {
-  describe(name, () => {
-    beforeEach(() => {
+export const _createTestSuite = (name: string, tests: (
+) => void
+) => {
+  describe(name, (
+) => {
+    beforeEach((
+) => {
       jest.clearAllMocks();
     });
 
-    afterEach(() => {
+    afterEach((
+) => {
       jest.restoreAllMocks();
     });
 
@@ -87,15 +92,20 @@ export const _createTestSuite = (name: string, tests: () => void) => {
   });
 };
 
-export const _createAsyncTestSuite = (name: string, tests: () => void) => {
-  describe(name, () => {
-    beforeEach(async () => {
+export const _createAsyncTestSuite = (name: string, tests: (
+) => void
+) => {
+  describe(name, (
+) => {
+    beforeEach(async (
+) => {
       jest.clearAllMocks();
       // Allow for async setup
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
-    afterEach(async () => {
+    afterEach(async (
+) => {
       jest.restoreAllMocks();
       // Allow for async cleanup
       await new Promise(resolve => setTimeout(resolve, 0));
@@ -110,16 +120,19 @@ export const _testUtils = {
   /**
    * Wait for async operations to complete
    */
-  waitForAsync: (timeout: number = 100) => {
+  waitForAsync: (timeout: number = 100
+) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   },
 
   /**
    * Create a mock function with predefined responses
    */
-  createMockWithResponses: <T extends any[]>(responses: T) => {
+  createMockWithResponses: <T extends any[]>(responses: T
+) => {
     const mock = jest.fn();
-    responses.forEach((response, index) => {
+    responses.forEach((response, index
+) => {
       mock.mockReturnValueOnce(response);
     });
     return mock;
@@ -132,9 +145,12 @@ export const _testUtils = {
     value: T,
     delay: number = 100,
     shouldReject: boolean = false
-  ) => {
-    return new Promise<T>((resolve, reject) => {
-      setTimeout(() => {
+  
+) => {
+    return new Promise<T>((resolve, reject
+) => {
+      setTimeout((
+) => {
         if (shouldReject) {
           reject(new Error(String(value)));
         } else {
@@ -148,7 +164,8 @@ export const _testUtils = {
    * Generate realistic test data
    */
   generateTestData: {
-    user: (overrides: any = {}) => ({
+    user: (overrides: any = {}
+) => ({
       id: 'test-user-' + Math.random().toString(36).substr(2, 9),
       email: 'test@example.com',
       name: 'Test User',
@@ -156,7 +173,8 @@ export const _testUtils = {
       ...overrides,
     }),
 
-    alarm: (overrides: any = {}) => ({
+    alarm: (overrides: any = {}
+) => ({
       id: 'test-alarm-' + Math.random().toString(36).substr(2, 9),
       time: '07:00',
       label: 'Test Alarm',
@@ -167,7 +185,8 @@ export const _testUtils = {
       ...overrides,
     }),
 
-    battle: (overrides: any = {}) => ({
+    battle: (overrides: any = {}
+) => ({
       id: 'test-battle-' + Math.random().toString(36).substr(2, 9),
       status: 'pending',
       participants: [],
@@ -182,7 +201,9 @@ export const _performanceUtils = {
   /**
    * Measure component render time
    */
-  measureRenderTime: async (renderFn: () => any) => {
+  measureRenderTime: async (renderFn: (
+) => any
+) => {
     const start = performance.now();
     await renderFn();
     const end = performance.now();
@@ -192,7 +213,8 @@ export const _performanceUtils = {
   /**
    * Test memory usage
    */
-  measureMemoryUsage: () => {
+  measureMemoryUsage: (
+) => {
     if ('memory' in performance) {
       return (performance as any).memory.usedJSHeapSize;
     }
@@ -202,13 +224,16 @@ export const _performanceUtils = {
   /**
    * Simulate slow network conditions
    */
-  simulateSlowNetwork: (delay: number = 1000) => {
+  simulateSlowNetwork: (delay: number = 1000
+) => {
     const originalFetch = global.fetch;
-    global.fetch = jest.fn().mockImplementation(async (...args) => {
+    global.fetch = jest.fn().mockImplementation(async (...args
+) => {
       await new Promise(resolve => setTimeout(resolve, delay));
       return originalFetch(...args);
     });
-    return () => {
+    return (
+) => {
       global.fetch = originalFetch;
     };
   },
@@ -219,7 +244,8 @@ export const _a11yUtils = {
   /**
    * Check for required ARIA attributes
    */
-  checkAriaAttributes: (element: HTMLElement, requiredAttributes: string[]) => {
+  checkAriaAttributes: (element: HTMLElement, requiredAttributes: string[]
+) => {
     const missing = requiredAttributes.filter(attr => !element.hasAttribute(attr));
     return {
       hasAll: missing.length === 0,
@@ -230,7 +256,8 @@ export const _a11yUtils = {
   /**
    * Check color contrast
    */
-  checkColorContrast: (foreground: string, background: string) => {
+  checkColorContrast: (foreground: string, background: string
+) => {
     // Simplified contrast check - in real tests you'd use a proper library
     return {
       ratio: 4.5, // Mock ratio
@@ -241,7 +268,8 @@ export const _a11yUtils = {
   /**
    * Test keyboard navigation
    */
-  testKeyboardNavigation: (element: HTMLElement) => {
+  testKeyboardNavigation: (element: HTMLElement
+) => {
     const focusableElements = element.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
@@ -257,7 +285,8 @@ export const _mobileUtils = {
   /**
    * Simulate mobile viewport
    */
-  setMobileViewport: () => {
+  setMobileViewport: (
+) => {
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
@@ -274,7 +303,8 @@ export const _mobileUtils = {
   /**
    * Simulate tablet viewport
    */
-  setTabletViewport: () => {
+  setTabletViewport: (
+) => {
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
@@ -291,7 +321,8 @@ export const _mobileUtils = {
   /**
    * Reset viewport to desktop
    */
-  setDesktopViewport: () => {
+  setDesktopViewport: (
+) => {
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,

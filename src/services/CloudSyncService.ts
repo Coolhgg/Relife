@@ -34,7 +34,8 @@ class CloudSyncService {
   private options: CloudSyncOptions;
   private status: CloudSyncStatus;
   private syncTimer: TimeoutHandle | null = null;
-  private listeners: Set<(status: CloudSyncStatus) => void> = new Set();
+  private listeners: Set<(status: CloudSyncStatus
+) => void> = new Set();
   private deviceId: string;
   private apiEndpoint: string;
 
@@ -81,27 +82,31 @@ class CloudSyncService {
 
   private initializeListeners(): void {
     // Online/offline status
-    window.addEventListener('online', () => {
+    window.addEventListener('online', (
+) => {
       this.updateStatus({ isOnline: true });
       if (this.options.autoSync) {
         this.sync();
       }
     });
 
-    window.addEventListener('offline', () => {
+    window.addEventListener('offline', (
+) => {
       this.updateStatus({ isOnline: false });
       this.stopAutoSync();
     });
 
     // Visibility change (when app becomes active)
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', (
+) => {
       if (!document.hidden && this.status.isOnline && this.options.autoSync) {
         this.sync();
       }
     });
 
     // Before unload - save any pending changes
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener('beforeunload', (
+) => {
       this.saveToCache();
     });
   }
@@ -141,9 +146,12 @@ class CloudSyncService {
     this.notifyListeners();
   }
 
-  onStatusChange(listener: (status: CloudSyncStatus) => void): () => void {
+  onStatusChange(listener: (status: CloudSyncStatus
+) => void): (
+) => void {
     this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
+    return (
+) => this.listeners.delete(listener);
   }
 
   private notifyListeners(): void {
@@ -484,7 +492,8 @@ class CloudSyncService {
       return;
     }
 
-    this.syncTimer = setInterval(() => {
+    this.syncTimer = setInterval((
+) => {
       if (this.status.isOnline) {
         this.sync();
       }

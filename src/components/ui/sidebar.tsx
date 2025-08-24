@@ -37,11 +37,14 @@ const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 type SidebarContextProps = {
   state: 'expanded' | 'collapsed';
   open: boolean;
-  setOpen: (open: boolean) => void;
+  setOpen: (open: boolean
+) => void;
   openMobile: boolean;
-  setOpenMobile: (open: boolean) => void;
+  setOpenMobile: (open: boolean
+) => void;
   isMobile: boolean;
-  toggleSidebar: () => void;
+  toggleSidebar: (
+) => void;
 };
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null);
@@ -66,7 +69,8 @@ function SidebarProvider({
 }: React.ComponentProps<'div'> & {
   defaultOpen?: boolean;
   open?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (open: boolean
+) => void;
 }) {
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = React.useState(false);
@@ -76,7 +80,9 @@ function SidebarProvider({
   const [_open, _setOpen] = React.useState(defaultOpen);
   const open = openProp ?? _open;
   const setOpen = React.useCallback(
-    (value: boolean | ((value: boolean) => boolean)) => {
+    (value: boolean | ((value: boolean
+) => boolean)
+) => {
       const openState = typeof value === 'function' ? value(open) : value;
       if (setOpenProp) {
         setOpenProp(openState);
@@ -91,13 +97,18 @@ function SidebarProvider({
   );
 
   // Helper to toggle the sidebar.
-  const toggleSidebar = React.useCallback(() => {
-    return isMobile ? setOpenMobile((open: any) => ! // auto: implicit anyopen) : setOpen((open: any) => ! // auto: implicit anyopen);
+  const toggleSidebar = React.useCallback((
+) => {
+    return isMobile ? setOpenMobile((open: any
+) => ! // auto: implicit any open) : setOpen((open: any
+) => ! // auto: implicit any open);
   }, [isMobile, setOpen, setOpenMobile]);
 
   // Adds a keyboard shortcut to toggle the sidebar.
-  React.useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+  React.useEffect((
+) => {
+    const handleKeyDown = (event: KeyboardEvent
+) => {
       if (event.key === SIDEBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
         toggleSidebar();
@@ -105,7 +116,8 @@ function SidebarProvider({
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return (
+) => window.removeEventListener('keydown', handleKeyDown);
   }, [toggleSidebar]);
 
   // We add a state so that we can do data-state="expanded" or "collapsed".
@@ -113,7 +125,8 @@ function SidebarProvider({
   const state = open ? 'expanded' : 'collapsed';
 
   const contextValue = React.useMemo<SidebarContextProps>(
-    () => ({
+    (
+) => ({
       state,
       open,
       setOpen,
@@ -266,7 +279,8 @@ function SidebarTrigger({
       variant="ghost"
       size="icon"
       className={cn('size-7', className)}
-      onClick={(event: any) => { // auto
+      onClick={(event: any
+) => { // auto
         onClick?.(event);
         toggleSidebar();
       }}
@@ -597,7 +611,8 @@ function SidebarMenuSkeleton({
   showIcon?: boolean;
 }) {
   // Random width between 50 to 90%.
-  const width = React.useMemo(() => {
+  const width = React.useMemo((
+) => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);
 

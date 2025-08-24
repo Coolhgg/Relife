@@ -9,20 +9,26 @@ import {
 } from '../hooks/useAnalytics';
 
 interface AnalyticsContextType {
-  track: (eventName: string, properties?: Record<string, any>) => void;
-  trackPageView: (pageName?: string, properties?: Record<string, any>) => void;
+  track: (eventName: string, properties?: Record<string, any>
+) => void;
+  trackPageView: (pageName?: string, properties?: Record<string, any>
+) => void;
   trackFeatureUsage: (
     featureName: string,
     action: string,
     properties?: Record<string, any>
-  ) => void;
-  trackError: (error: Error, context?: string) => void;
-  trackPerformance: (metric: string, value: number, context?: string) => void;
+  
+) => void;
+  trackError: (error: Error, context?: string
+) => void;
+  trackPerformance: (metric: string, value: number, context?: string
+) => void;
   trackUserInteraction: (
     element: string,
     action: string,
     properties?: Record<string, any>
-  ) => void;
+  
+) => void;
 }
 
 const AnalyticsContext = createContext<AnalyticsContextType | null>(null);
@@ -31,7 +37,8 @@ interface AnalyticsProviderProps {
   children: ReactNode;
 }
 
-export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }) => {
+export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
+) => {
   const { track, trackPageView, trackFeatureUsage } = useAnalytics();
   const { trackFeatureDiscovery } = useEngagementAnalytics();
   const { trackComponentRenderTime } = usePerformanceAnalytics();
@@ -42,8 +49,10 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
   const featuresUsed = useRef<Set<string>>(new Set());
 
   // Track session metrics
-  useEffect(() => {
-    const handleBeforeUnload = () => {
+  useEffect((
+) => {
+    const handleBeforeUnload = (
+) => {
       const sessionDuration = Date.now() - sessionStartTime.current;
       track(ANALYTICS_EVENTS.SESSION_ENDED, {
         timestamp: new Date().toISOString(),
@@ -56,7 +65,8 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
       });
     };
 
-    const handleVisibilityChange = () => {
+    const handleVisibilityChange = (
+) => {
       if (document.hidden) {
         // Track when user minimizes/backgrounds the app
         track('app_backgrounded', {
@@ -76,14 +86,16 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     window.addEventListener('beforeunload', handleBeforeUnload);
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    return () => {
+    return (
+) => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [track]);
 
   // Enhanced tracking functions
-  const trackEnhanced = (eventName: string, properties?: Record<string, any>) => {
+  const trackEnhanced = (eventName: string, properties?: Record<string, any>
+) => {
     interactionCount.current += 1;
     track(eventName, {
       ...properties,
@@ -98,7 +110,8 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
   const trackPageViewEnhanced = (
     pageName?: string,
     properties?: Record<string, any>
-  ) => {
+  
+) => {
     if (pageName) {
       pageViews.current.add(pageName);
 
@@ -124,7 +137,8 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     featureName: string,
     action: string,
     properties?: Record<string, any>
-  ) => {
+  
+) => {
     featuresUsed.current.add(featureName);
 
     // Track feature discovery if first time using
@@ -144,7 +158,8 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     });
   };
 
-  const trackErrorEnhanced = (error: Error, context?: string) => {
+  const trackErrorEnhanced = (error: Error, context?: string
+) => {
     track(ANALYTICS_EVENTS.ERROR_OCCURRED, {
       timestamp: new Date().toISOString(),
       metadata: {
@@ -162,7 +177,8 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     metric: string,
     value: number,
     context?: string
-  ) => {
+  
+) => {
     track('performance_metric', {
       timestamp: new Date().toISOString(),
       metadata: {
@@ -178,7 +194,8 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     element: string,
     action: string,
     properties?: Record<string, any>
-  ) => {
+  
+) => {
     interactionCount.current += 1;
 
     track('user_interaction', {
@@ -220,16 +237,19 @@ export const useAnalyticsContext = (): AnalyticsContextType => {
 export const withAnalytics = <P extends object>(
   WrappedComponent: React.ComponentType<P>,
   componentName: string
+
 ) => {
   const WithAnalyticsComponent: React.FC<P> = props => {
     const { trackPerformance } = useAnalyticsContext();
     const renderStartTime = useRef<TimeoutHandle>();
 
-    useEffect(() => {
+    useEffect((
+) => {
       renderStartTime.current = performance.now();
     });
 
-    useEffect(() => {
+    useEffect((
+) => {
       if (renderStartTime.current) {
         const renderTime = performance.now() - renderStartTime.current;
         trackPerformance(
@@ -248,19 +268,22 @@ export const withAnalytics = <P extends object>(
 };
 
 // Hook for component-specific analytics
-export const useComponentAnalytics = (componentName: string) => {
+export const useComponentAnalytics = (componentName: string
+) => {
   const analytics = useAnalyticsContext();
   const mountTime = useRef<TimeoutHandle>(Date.now());
   const interactionCount = useRef<TimeoutHandle>(0);
 
-  useEffect(() => {
+  useEffect((
+) => {
     // Track component mount
     analytics.track('component_mounted', {
       component_name: componentName,
       timestamp: new Date().toISOString(),
     });
 
-    return () => {
+    return (
+) => {
       // Track component unmount and usage duration
       const usageDuration = Date.now() - mountTime.current;
       analytics.track('component_unmounted', {
@@ -272,7 +295,8 @@ export const useComponentAnalytics = (componentName: string) => {
     };
   }, [componentName, analytics]);
 
-  const trackInteraction = (action: string, properties?: Record<string, any>) => {
+  const trackInteraction = (action: string, properties?: Record<string, any>
+) => {
     interactionCount.current += 1;
     analytics.trackUserInteraction(componentName, action, {
       ...properties,
@@ -284,7 +308,8 @@ export const useComponentAnalytics = (componentName: string) => {
     featureName: string,
     action: string,
     properties?: Record<string, any>
-  ) => {
+  
+) => {
     analytics.trackFeatureUsage(`${componentName}_${featureName}`, action, properties);
   };
 

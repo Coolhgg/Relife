@@ -14,9 +14,12 @@ interface StrugglingSamWrapperProps {
   // Dashboard props for when we want to use the enhanced version
   useDashboard?: boolean;
   alarms?: Alarm[];
-  onAddAlarm?: () => void;
-  onQuickSetup?: (presetType: 'morning' | 'work' | 'custom') => void;
-  onNavigateToAdvanced?: () => void;
+  onAddAlarm?: (
+) => void;
+  onQuickSetup?: (presetType: 'morning' | 'work' | 'custom'
+) => void;
+  onNavigateToAdvanced?: (
+) => void;
 }
 
 export const StrugglingSamWrapper: React.FC<StrugglingSamWrapperProps> = ({
@@ -27,13 +30,15 @@ export const StrugglingSamWrapper: React.FC<StrugglingSamWrapperProps> = ({
   onAddAlarm,
   onQuickSetup,
   onNavigateToAdvanced,
-}) => {
+}
+) => {
   return (
     <StrugglingSamProvider userId={userId}>
       {useDashboard ? (
         <EnhancedDashboard
           alarms={alarms}
-          onAddAlarm={onAddAlarm || (() => {})}
+          onAddAlarm={onAddAlarm || ((
+) => {})}
           onQuickSetup={onQuickSetup}
           onNavigateToAdvanced={onNavigateToAdvanced}
           userId={userId}
@@ -46,7 +51,8 @@ export const StrugglingSamWrapper: React.FC<StrugglingSamWrapperProps> = ({
 };
 
 // Hook to determine if we should show Struggling Sam features based on user type
-export const usePersonaBasedFeatures = (user?: any) => {
+export const usePersonaBasedFeatures = (user?: any
+) => {
   // For now, we'll show Struggling Sam features to all users
   // In production, this would check user persona and subscription level
   const shouldShowStrugglingSamFeatures = true;

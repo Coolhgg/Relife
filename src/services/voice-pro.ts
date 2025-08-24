@@ -215,14 +215,16 @@ export class VoiceProService {
     // Wait for voices to load
     if (speechSynthesis.getVoices().length === 0) {
       await new Promise<void>(resolve => {
-        const checkVoices = () => {
+        const checkVoices = (
+) => {
           if (speechSynthesis.getVoices().length > 0) {
             resolve();
           } else {
             setTimeout(checkVoices, 100);
           }
         };
-        speechSynthesis.addEventListener('voiceschanged', () => resolve(), {
+        speechSynthesis.addEventListener('voiceschanged', (
+) => resolve(), {
           once: true,
         });
         checkVoices();
@@ -233,7 +235,8 @@ export class VoiceProService {
     const webProvider = this.providers.find(p => p.id === 'web-speech');
     if (webProvider) {
       const voices = speechSynthesis.getVoices();
-      webProvider.voices = voices.map((voice, index) => ({
+      webProvider.voices = voices.map((voice, index
+) => ({
         id: voice.voiceURI || `voice_${index}`,
         name: voice.name,
         gender: this.detectGender(voice.name),
@@ -477,14 +480,17 @@ export class VoiceProService {
       this.configureWebSpeechUtterance(utterance, settings);
 
       return new Promise(resolve => {
-        utterance.onend = () => resolve(true);
-        utterance.onerror = () => resolve(false);
+        utterance.onend = (
+) => resolve(true);
+        utterance.onerror = (
+) => resolve(false);
 
         speechSynthesis.speak(utterance);
         this.currentUtterance = utterance;
 
         // Fallback timeout
-        setTimeout(() => resolve(false), 15000);
+        setTimeout((
+) => resolve(false), 15000);
       });
     } catch (error) {
       console.error('Error playing web speech:', error);
@@ -497,16 +503,21 @@ export class VoiceProService {
       const audio = new Audio(url);
 
       return new Promise(resolve => {
-        audio.onended = () => resolve(true);
-        audio.onerror = () => resolve(false);
-        audio.oncanplaythrough = () => {
-          audio.play().catch(() => resolve(false));
+        audio.onended = (
+) => resolve(true);
+        audio.onerror = (
+) => resolve(false);
+        audio.oncanplaythrough = (
+) => {
+          audio.play().catch((
+) => resolve(false));
         };
 
         audio.load();
 
         // Fallback timeout
-        setTimeout(() => {
+        setTimeout((
+) => {
           audio.pause();
           resolve(false);
         }, 30000);
@@ -520,12 +531,14 @@ export class VoiceProService {
   static async startRepeatingAlarmMessage(
     alarm: Alarm,
     intervalMs: number = 30000
-  ): Promise<() => void> {
+  ): Promise<(
+) => void> {
     await this.initialize();
 
     let isActive = true;
 
-    const playMessage = async () => {
+    const playMessage = async (
+) => {
       if (!isActive) return;
 
       try {
@@ -539,7 +552,8 @@ export class VoiceProService {
     playMessage();
 
     // Set up interval for repeated playback
-    this.repeatInterval = setInterval(() => {
+    this.repeatInterval = setInterval((
+) => {
       if (isActive) {
         playMessage();
       } else {
@@ -549,7 +563,8 @@ export class VoiceProService {
     }, intervalMs);
 
     // Return stop function
-    return () => {
+    return (
+) => {
       isActive = false;
       if (this.repeatInterval) {
         clearInterval(this.repeatInterval);
@@ -615,24 +630,30 @@ export class VoiceProService {
   }
 
   static async startVoiceRecognition(
-    onResult: (result: RecognitionResult) => void,
-    onError?: (error: string) => void,
+    onResult: (result: RecognitionResult
+) => void,
+    onError?: (error: string
+) => void,
     _options?: any /* auto: placeholder param - adjust */
-  ): Promise<() => void> {
+  ): Promise<(
+) => void> {
     await this.initialize();
 
     if (!this.recognition) {
       onError?.('Speech recognition not supported');
-      return () => {};
+      return (
+) => {};
     }
 
     let isActive = true;
 
-    this.recognition.onstart = () => {
+    this.recognition.onstart = (
+) => {
       console.log('Voice recognition started');
     };
 
-    this.recognition.onresult = (event: SpeechRecognitionEvent) => {
+    this.recognition.onresult = (event: SpeechRecognitionEvent
+) => {
       if (!isActive) return;
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -652,15 +673,18 @@ export class VoiceProService {
       }
     };
 
-    this.recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+    this.recognition.onerror = (event: SpeechRecognitionErrorEvent
+) => {
       console.error('Speech recognition error:', event.error);
       onError?.(event.error);
     };
 
-    this.recognition.onend = () => {
+    this.recognition.onend = (
+) => {
       if (isActive) {
         // Auto-restart recognition if still active
-        setTimeout(() => {
+        setTimeout((
+) => {
           if (isActive && this.recognition) {
             try {
               this.recognition.start();
@@ -680,7 +704,8 @@ export class VoiceProService {
     }
 
     // Return stop function
-    return () => {
+    return (
+) => {
       isActive = false;
       if (this.recognition) {
         this.recognition.stop();
@@ -863,7 +888,8 @@ export class VoiceProService {
     const mapping = this.moodVoiceMappings[mood];
     const voices: VoiceOption[] = [];
 
-    Object.entries(mapping).forEach(([providerId, voiceId]) => {
+    Object.entries(mapping).forEach(([providerId, voiceId]
+) => {
       const provider = this.providers.find(p => p.id === providerId);
       if (provider) {
         const voice = provider.voices.find(v => v.id === voiceId);

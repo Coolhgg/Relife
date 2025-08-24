@@ -196,7 +196,8 @@ export class OfflineAnalyticsService {
       clearInterval(this.flushTimer);
     }
 
-    this.flushTimer = setInterval(() => {
+    this.flushTimer = setInterval((
+) => {
       if (this.isOnline && this.eventQueue.length > 0) {
         this.flushEvents();
       }

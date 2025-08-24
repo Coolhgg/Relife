@@ -24,7 +24,8 @@ class ThemePerformanceService {
   private pendingUpdate: TimeoutHandle | null = null;
   private lastAppliedHash: string | null = null;
   private observer: MutationObserver | null = null;
-  private transitionCleanup: (() => void) | null = null;
+  private transitionCleanup: ((
+) => void) | null = null;
 
   static getInstance(): ThemePerformanceService {
     if (!this.instance) {
@@ -72,7 +73,8 @@ class ThemePerformanceService {
     // Limit cache size to prevent memory leaks
     if (this.variableCache.size > 10) {
       const oldest = Array.from(this.variableCache.entries()).sort(
-        ([, a], [, b]) => a.timestamp - b.timestamp
+        ([, a], [, b]
+) => a.timestamp - b.timestamp
       )[0];
       this.variableCache.delete(oldest[0]);
     }
@@ -171,7 +173,8 @@ class ThemePerformanceService {
     this.batchClassNames(body, classes);
 
     // Clean up transition after completion
-    this.transitionCleanup = () => {
+    this.transitionCleanup = (
+) => {
       if (transitionStyle.parentNode) {
         transitionStyle.parentNode.removeChild(transitionStyle);
       }
@@ -188,10 +191,12 @@ class ThemePerformanceService {
     variables: Record<string, string>
   ): void {
     // Use requestAnimationFrame for optimal timing
-    requestAnimationFrame(() => {
+    requestAnimationFrame((
+) => {
       // Group updates to minimize layout thrashing
       const cssText = Object.entries(variables)
-        .map(([prop, value]) => `${prop}: ${value}`)
+        .map(([prop, value]
+) => `${prop}: ${value}`)
         .join('; ');
 
       // Apply all variables at once using cssText (more efficient than individual setProperty calls)
@@ -205,7 +210,8 @@ class ThemePerformanceService {
    * Efficiently update class names
    */
   private batchClassNames(element: HTMLElement, newClasses: string[]): void {
-    requestAnimationFrame(() => {
+    requestAnimationFrame((
+) => {
       // Get current classes and filter out old theme classes
       const currentClasses = Array.from(element.classList);
       const filteredClasses = currentClasses.filter(
@@ -268,11 +274,14 @@ class ThemePerformanceService {
   /**
    * Debounced performance check
    */
-  private debouncePerformanceCheck = (() => {
+  private debouncePerformanceCheck = ((
+) => {
     let timeout: TimeoutHandle;
-    return () => {
+    return (
+) => {
       clearTimeout(timeout);
-      timeout = setTimeout(() => {
+      timeout = setTimeout((
+) => {
         this.checkPerformanceMetrics();
       }, 100);
     };
@@ -289,7 +298,8 @@ class ThemePerformanceService {
       if ('measureUserAgentSpecificMemory' in performance) {
         (performance as any)
           .measureUserAgentSpecificMemory?.()
-          .then((result: any) => {
+          .then((result: any
+) => {
             if (result.bytes > 50 * 1024 * 1024) {
               // 50MB threshold
               console.warn(
@@ -298,7 +308,8 @@ class ThemePerformanceService {
               );
             }
           })
-          .catch(() => {
+          .catch((
+) => {
             // Silently fail if not supported
           });
       }
@@ -318,7 +329,8 @@ class ThemePerformanceService {
       clearTimeout(this.pendingUpdate);
     }
 
-    this.pendingUpdate = setTimeout(() => {
+    this.pendingUpdate = setTimeout((
+) => {
       this.applyTheme(variables, classes, options);
     }, delay);
   }
@@ -335,14 +347,16 @@ class ThemePerformanceService {
 
     // Preload critical CSS properties
     const criticalVars = Object.entries(variables).filter(
-      ([key]) =>
+      ([key]
+) =>
         key.includes('background') || key.includes('text') || key.includes('primary')
     );
 
     // Create invisible element to trigger CSS parsing
     const preloader = document.createElement('div');
     preloader.style.cssText = criticalVars
-      .map(([prop, value]) => `${prop}: ${value}`)
+      .map(([prop, value]
+) => `${prop}: ${value}`)
       .join('; ');
     preloader.style.position = 'absolute';
     preloader.style.left = '-9999px';
@@ -350,7 +364,8 @@ class ThemePerformanceService {
     preloader.style.pointerEvents = 'none';
 
     document.body.appendChild(preloader);
-    requestAnimationFrame(() => {
+    requestAnimationFrame((
+) => {
       document.body.removeChild(preloader);
     });
   }

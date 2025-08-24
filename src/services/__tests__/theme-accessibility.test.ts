@@ -9,7 +9,8 @@ import { PersonalizationSettings } from '../../types';
 
 // Mock DOM APIs
 const mockDocument = {
-  createElement: jest.fn(() => ({
+  createElement: jest.fn((
+) => ({
     setAttribute: jest.fn(),
     appendChild: jest.fn(),
     textContent: '',
@@ -19,7 +20,8 @@ const mockDocument = {
     classList: {
       add: jest.fn(),
       remove: jest.fn(),
-      contains: jest.fn(() => false),
+      contains: jest.fn((
+) => false),
     },
   })),
   body: {
@@ -28,7 +30,8 @@ const mockDocument = {
     classList: {
       add: jest.fn(),
       remove: jest.fn(),
-      contains: jest.fn(() => false),
+      contains: jest.fn((
+) => false),
     },
   },
   documentElement: {
@@ -36,11 +39,14 @@ const mockDocument = {
       setProperty: jest.fn(),
     },
     classList: {
-      contains: jest.fn(() => false),
+      contains: jest.fn((
+) => false),
     },
   },
-  querySelector: jest.fn(() => null),
-  querySelectorAll: jest.fn(() => []),
+  querySelector: jest.fn((
+) => null),
+  querySelectorAll: jest.fn((
+) => []),
   addEventListener: jest.fn(),
   removeEventListener: jest.fn(),
   head: {
@@ -50,7 +56,8 @@ const mockDocument = {
 
 // Mock window APIs
 const mockWindow = {
-  matchMedia: jest.fn(() => ({
+  matchMedia: jest.fn((
+) => ({
     matches: false,
     addEventListener: jest.fn(),
   })),
@@ -59,33 +66,40 @@ const mockWindow = {
 global.document = mockDocument as any;
 global.window = mockWindow as any;
 
-describe('ThemeAccessibilityService', () => {
+describe('ThemeAccessibilityService', (
+) => {
   let service: ThemeAccessibilityService;
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     service = ThemeAccessibilityService.getInstance();
     jest.clearAllMocks();
   });
 
-  afterEach(() => {
+  afterEach((
+) => {
     service.destroy();
   });
 
-  describe('Contrast Ratio Calculation', () => {
-    test('should calculate correct contrast ratio for black and white', () => {
+  describe('Contrast Ratio Calculation', (
+) => {
+    test('should calculate correct contrast ratio for black and white', (
+) => {
       const result = service.calculateContrastRatio('#000000', '#ffffff');
       expect(result.ratio).toBe(21);
       expect(result.level).toBe('AAA');
       expect(result.isAccessible).toBe(true);
     });
 
-    test('should calculate contrast ratio for similar colors', () => {
+    test('should calculate contrast ratio for similar colors', (
+) => {
       const result = service.calculateContrastRatio('#444444', '#666666');
       expect(result.ratio).toBeGreaterThan(1);
       expect(result.isAccessible).toBeFalsy();
     });
 
-    test('should cache contrast ratio calculations', () => {
+    test('should cache contrast ratio calculations', (
+) => {
       // First calculation
       const result1 = service.calculateContrastRatio('#000000', '#ffffff');
       // Second calculation should use cache
@@ -95,8 +109,10 @@ describe('ThemeAccessibilityService', () => {
     });
   });
 
-  describe('Color Blindness Simulation', () => {
-    test('should simulate different types of color blindness', () => {
+  describe('Color Blindness Simulation', (
+) => {
+    test('should simulate different types of color blindness', (
+) => {
       const result = service.simulateColorBlindness('#ff0000');
 
       expect(result).toHaveProperty('protanopia');
@@ -110,7 +126,8 @@ describe('ThemeAccessibilityService', () => {
       });
     });
 
-    test('should handle invalid color input gracefully', () => {
+    test('should handle invalid color input gracefully', (
+) => {
       const result = service.simulateColorBlindness('invalid-color');
 
       // Should return original color for all variants when invalid
@@ -121,8 +138,10 @@ describe('ThemeAccessibilityService', () => {
     });
   });
 
-  describe('Accessibility Enhancements', () => {
-    test('should apply high contrast mode', () => {
+  describe('Accessibility Enhancements', (
+) => {
+    test('should apply high contrast mode', (
+) => {
       const settings: PersonalizationSettings = {
         theme: 'light',
         colorPreferences: {
@@ -193,7 +212,8 @@ describe('ThemeAccessibilityService', () => {
       expect(mockDocument.body.classList.add).toHaveBeenCalledWith('high-contrast');
     });
 
-    test('should apply reduced motion settings', () => {
+    test('should apply reduced motion settings', (
+) => {
       const settings: PersonalizationSettings = {
         theme: 'light',
         colorPreferences: {
@@ -264,7 +284,8 @@ describe('ThemeAccessibilityService', () => {
       expect(mockDocument.body.classList.add).toHaveBeenCalledWith('reduce-motion');
     });
 
-    test('should apply dyslexia-friendly fonts', () => {
+    test('should apply dyslexia-friendly fonts', (
+) => {
       const settings: PersonalizationSettings = {
         theme: 'light',
         colorPreferences: {
@@ -336,8 +357,10 @@ describe('ThemeAccessibilityService', () => {
     });
   });
 
-  describe('Theme Accessibility Testing', () => {
-    test('should test theme accessibility and provide scores', () => {
+  describe('Theme Accessibility Testing', (
+) => {
+    test('should test theme accessibility and provide scores', (
+) => {
       const themeColors = {
         '--theme-text-primary': '#000000',
         '--theme-background': '#ffffff',
@@ -355,7 +378,8 @@ describe('ThemeAccessibilityService', () => {
       expect(Array.isArray(result.recommendations)).toBe(true);
     });
 
-    test('should identify accessibility issues', () => {
+    test('should identify accessibility issues', (
+) => {
       const themeColors = {
         '--theme-text-primary': '#777777',
         '--theme-background': '#888888',
@@ -370,8 +394,10 @@ describe('ThemeAccessibilityService', () => {
     });
   });
 
-  describe('Accessibility Status', () => {
-    test('should return current accessibility status', () => {
+  describe('Accessibility Status', (
+) => {
+    test('should return current accessibility status', (
+) => {
       const status = service.getAccessibilityStatus();
 
       expect(status).toHaveProperty('hasHighContrast');
@@ -386,15 +412,19 @@ describe('ThemeAccessibilityService', () => {
     });
   });
 
-  describe('ARIA Announcements', () => {
-    test('should announce theme changes', () => {
+  describe('ARIA Announcements', (
+) => {
+    test('should announce theme changes', (
+) => {
       // This would require more complex DOM mocking to fully test
       // For now, just ensure the method doesn't throw
-      expect(() => {
+      expect((
+) => {
         service.announceThemeChange('Dark Mode');
       }).not.toThrow();
 
-      expect(() => {
+      expect((
+) => {
         service.announceThemeChange('Light Mode', {
           includePreviousTheme: true,
           previousTheme: 'Dark Mode',

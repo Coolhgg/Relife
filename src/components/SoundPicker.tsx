@@ -45,8 +45,10 @@ interface SoundPickerProps {
   title: string;
   description?: string;
   selectedSound?: CustomSoundAssignment;
-  onSoundSelected: (assignment: CustomSoundAssignment) => void;
-  onClear?: () => void;
+  onSoundSelected: (assignment: CustomSoundAssignment
+) => void;
+  onClear?: (
+) => void;
   availableCustomSounds?: CustomSound[];
   allowedSoundTypes?: CustomSoundType[];
   category?: SoundCategory;
@@ -70,7 +72,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
   allowedSoundTypes = ['uploaded', 'builtin', 'generated', 'url'],
   category,
   className = '',
-}) => {
+}
+) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<CustomSoundType>('uploaded');
   const [searchQuery, setSearchQuery] = useState('');
@@ -86,7 +89,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
   const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
 
   // Get built-in sounds
-  const builtInSounds: BuiltInSound[] = React.useMemo(() => {
+  const builtInSounds: BuiltInSound[] = React.useMemo((
+) => {
     const allSounds = soundEffectsService.getAllSoundEffects();
     return allSounds.map(sound => ({
       id: sound.id as SoundEffectId,
@@ -101,7 +105,10 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
     const matchesSearch =
       sound.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       sound.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sound.tags?.some((tag: any) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+      sound.tags?.some((tag: any
+) =>
+        tag.toLowerCase().includes(searchQuery.toLowerCase())
+      );
 
     const matchesCategory =
       filterCategory === 'all' || sound.category === filterCategory;
@@ -118,7 +125,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
   });
 
   // Audio playback functions
-  const playSound = async (soundId: string, soundUrl: string) => {
+  const playSound = async (soundId: string, soundUrl: string
+) => {
     // Stop any currently playing sound
     stopAllSounds();
 
@@ -128,7 +136,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
         audio = new Audio(soundUrl);
         audioRefs.current.set(soundId, audio);
 
-        audio.addEventListener('ended', () => {
+        audio.addEventListener('ended', (
+) => {
           setPlayingSound(null);
         });
       }
@@ -140,8 +149,11 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
     }
   };
 
-  const stopAllSounds = () => {
-    audioRefs.current.forEach((audio: any) => { // auto: implicit any
+  const stopAllSounds = (
+) => {
+    audioRefs.current.forEach((audio: any
+) => {
+      // auto: implicit any
       if (!audio.paused) {
         audio.pause();
         audio.currentTime = 0;
@@ -150,7 +162,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
     setPlayingSound(null);
   };
 
-  const selectCustomSound = (sound: CustomSound) => {
+  const selectCustomSound = (sound: CustomSound
+) => {
     const assignment: CustomSoundAssignment = {
       type: 'uploaded',
       source: sound.fileUrl,
@@ -162,7 +175,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
     stopAllSounds();
   };
 
-  const selectBuiltInSound = (sound: BuiltInSound) => {
+  const selectBuiltInSound = (sound: BuiltInSound
+) => {
     const assignment: CustomSoundAssignment = {
       type: 'builtin',
       source: sound.url,
@@ -174,7 +188,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
     stopAllSounds();
   };
 
-  const selectUrlSound = () => {
+  const selectUrlSound = (
+) => {
     if (!urlInput.trim()) return;
 
     const assignment: CustomSoundAssignment = {
@@ -187,7 +202,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
     setUrlInput('');
   };
 
-  const generateSound = () => {
+  const generateSound = (
+) => {
     // This would integrate with a sound generation system
     const assignment: CustomSoundAssignment = {
       type: 'generated',
@@ -213,7 +229,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const getSoundTypeIcon = (type: CustomSoundType) => {
+  const getSoundTypeIcon = (type: CustomSoundType
+) => {
     switch (type) {
       case 'uploaded':
         return <Upload className="w-4 h-4" />;
@@ -261,7 +278,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => playSound('selected', selectedSound.source)}
+                onClick={(
+) => playSound('selected', selectedSound.source)}
               >
                 {playingSound === 'selected' ? (
                   <Pause className="w-4 h-4" />
@@ -295,7 +313,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                       <Input
                         placeholder="Search sounds..."
                         value={searchQuery}
-                        onChange={(e: any) => setSearchQuery(e.target.value)}
+                        onChange={(e: any
+) => setSearchQuery(e.target.value)}
                         className="pl-10"
                       />
                     </div>
@@ -318,7 +337,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                 {/* Sound Type Tabs */}
                 <Tabs
                   value={activeTab}
-                  onValueChange={(value: any) => setActiveTab(value as CustomSoundType)}
+                  onValueChange={(value: any
+) => setActiveTab(value as CustomSoundType)}
                 >
                   <TabsList>
                     {allowedSoundTypes.includes('uploaded') && (
@@ -362,7 +382,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                             <div
                               key={sound.id}
                               className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
-                              onClick={() => selectCustomSound(sound)}
+                              onClick={(
+) => selectCustomSound(sound)}
                             >
                               <Upload className="w-8 h-8 text-blue-500" />
 
@@ -398,7 +419,9 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={(e: any) => { // auto: implicit any
+                                onClick={(e: any
+) => {
+                                  // auto: implicit any
                                   e.stopPropagation();
                                   playSound(sound.id, sound.fileUrl);
                                 }}
@@ -424,7 +447,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                           <div
                             key={sound.id}
                             className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
-                            onClick={() => selectBuiltInSound(sound)}
+                            onClick={(
+) => selectBuiltInSound(sound)}
                           >
                             <Music className="w-8 h-8 text-green-500" />
 
@@ -440,7 +464,9 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={(e: any) => { // auto: implicit any
+                              onClick={(e: any
+) => {
+                                // auto: implicit any
                                 e.stopPropagation();
                                 playSound(sound.id, sound.url);
                               }}
@@ -471,8 +497,10 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                             </label>
                             <Select
                               value={generatedSoundConfig.type}
-                              onValueChange={(value: any) =>
-                                setGeneratedSoundConfig((prev: any) => ({ 
+                              onValueChange={(value: any
+) =>
+                                setGeneratedSoundConfig((prev: any
+) => ({
                                   ...prev,
                                   type: value,
                                 }))
@@ -504,8 +532,10 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               min="100"
                               max="2000"
                               value={generatedSoundConfig.frequency}
-                              onChange={(e: any) => /* auto: implicit any */
-                                setGeneratedSoundConfig((prev: any) => ({ 
+                              onChange={(e: any 
+) =>
+                                setGeneratedSoundConfig((prev: any
+) => ({
                                   ...prev,
                                   frequency: parseInt(e.target.value),
                                 }))
@@ -524,8 +554,10 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               max="10"
                               step="0.5"
                               value={generatedSoundConfig.duration}
-                              onChange={(e: any) => /* auto: implicit any */
-                                setGeneratedSoundConfig((prev: any) => ({ 
+                              onChange={(e: any 
+) =>
+                                setGeneratedSoundConfig((prev: any
+) => ({
                                   ...prev,
                                   duration: parseFloat(e.target.value),
                                 }))
@@ -561,7 +593,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                           <Input
                             placeholder="https://example.com/sound.mp3"
                             value={urlInput}
-                            onChange={(e: any) => setUrlInput(e.target.value)}
+                            onChange={(e: any
+) => setUrlInput(e.target.value)}
                           />
                         </div>
 

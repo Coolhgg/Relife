@@ -274,7 +274,8 @@ export class EmailCampaignService {
       }
 
       // Determine the persona with highest score
-      const topPersona = Object.entries(scores).reduce((a, b) =>
+      const topPersona = Object.entries(scores).reduce((a, b
+) =>
         scores[a[0] as PersonaType] > scores[b[0] as PersonaType] ? a : b
       ) as [PersonaType, number];
 
@@ -482,7 +483,8 @@ export class EmailCampaignService {
 
     try {
       const campaignData = campaignConfig[persona];
-      const sequence = campaignData.sequences.find((seq: any) => seq.id === sequenceId);
+      const sequence = campaignData.sequences.find((seq: any
+) => seq.id === sequenceId);
 
       if (!sequence) {
         throw new Error(`Sequence ${sequenceId} not found for persona ${persona}`);

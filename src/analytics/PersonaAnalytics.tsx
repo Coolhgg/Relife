@@ -98,12 +98,14 @@ class PersonaAnalyticsTracker {
 
   private initializeTracking(): void {
     // Flush events every 30 seconds
-    this.flushInterval = setInterval(() => {
+    this.flushInterval = setInterval((
+) => {
       this.flushEvents();
     }, 30000);
 
     // Flush events before page unload
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener('beforeunload', (
+) => {
       this.flushEvents();
     });
   }
@@ -394,46 +396,53 @@ class PersonaAnalyticsTracker {
 }
 
 // React Hook for Analytics Tracking
-export const usePersonaAnalytics = () => {
+export const usePersonaAnalytics = (
+) => {
   const tracker = useRef(PersonaAnalyticsTracker.getInstance());
 
   const trackPersonaDetection = useCallback(
-    (persona: UserPersona, detectionData: PersonaDetectionData, confidence: number) => {
+    (persona: UserPersona, detectionData: PersonaDetectionData, confidence: number
+) => {
       tracker.current.trackPersonaDetection(persona, detectionData, confidence);
     },
     []
   );
 
   const trackPersonaChange = useCallback(
-    (oldPersona: UserPersona, newPersona: UserPersona, reason: string) => {
+    (oldPersona: UserPersona, newPersona: UserPersona, reason: string
+) => {
       tracker.current.trackPersonaChange(oldPersona, newPersona, reason);
     },
     []
   );
 
   const trackPricingInteraction = useCallback(
-    (persona: UserPersona, action: 'view' | 'click' | 'hover', tier?: string) => {
+    (persona: UserPersona, action: 'view' | 'click' | 'hover', tier?: string
+) => {
       tracker.current.trackPersonaPricingInteraction(persona, action, tier);
     },
     []
   );
 
   const trackCTAClick = useCallback(
-    (persona: UserPersona, ctaText: string, tier: string, position: string) => {
+    (persona: UserPersona, ctaText: string, tier: string, position: string
+) => {
       tracker.current.trackPersonaCTAClick(persona, ctaText, tier, position);
     },
     []
   );
 
   const trackOnboardingProgress = useCallback(
-    (persona: UserPersona, step: number, completed: boolean) => {
+    (persona: UserPersona, step: number, completed: boolean
+) => {
       tracker.current.trackOnboardingProgress(persona, step, completed);
     },
     []
   );
 
   const trackSubscriptionConversion = useCallback(
-    (persona: UserPersona, tier: string, revenue: number, campaignSource?: string) => {
+    (persona: UserPersona, tier: string, revenue: number, campaignSource?: string
+) => {
       tracker.current.trackSubscriptionConversion(
         persona,
         tier,
@@ -445,7 +454,8 @@ export const usePersonaAnalytics = () => {
   );
 
   const trackCampaignPerformance = useCallback(
-    (campaignData: CampaignPerformanceData) => {
+    (campaignData: CampaignPerformanceData
+) => {
       tracker.current.trackCampaignPerformance(campaignData);
     },
     []
@@ -457,7 +467,8 @@ export const usePersonaAnalytics = () => {
       campaignId: string,
       action: 'opened' | 'clicked',
       linkUrl?: string
-    ) => {
+    
+) => {
       tracker.current.trackMarketingEmailInteraction(
         persona,
         campaignId,
@@ -468,11 +479,13 @@ export const usePersonaAnalytics = () => {
     []
   );
 
-  const setUserId = useCallback((userId: string) => {
+  const setUserId = useCallback((userId: string
+) => {
     tracker.current.setUserId(userId);
   }, []);
 
-  const getSessionSummary = useCallback(() => {
+  const getSessionSummary = useCallback((
+) => {
     return tracker.current.getSessionSummary();
   }, []);
 
@@ -493,15 +506,18 @@ export const usePersonaAnalytics = () => {
 // Analytics Provider Component
 export const PersonaAnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
-}) => {
+}
+) => {
   const analytics = usePersonaAnalytics();
 
-  useEffect(() => {
+  useEffect((
+) => {
     // Initialize analytics on mount
     console.log('[PersonaAnalytics] Analytics provider initialized');
 
     // Clean up on unmount
-    return () => {
+    return (
+) => {
       console.log('[PersonaAnalytics] Analytics provider cleaned up');
     };
   }, []);

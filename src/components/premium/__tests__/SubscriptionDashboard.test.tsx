@@ -46,7 +46,8 @@ const mockSubscriptionDashboard = {
   },
 };
 
-describe('SubscriptionDashboard', () => {
+describe('SubscriptionDashboard', (
+) => {
   const defaultProps = {
     data: mockSubscriptionDashboard,
     onUpgrade: jest.fn(),
@@ -59,12 +60,15 @@ describe('SubscriptionDashboard', () => {
     onUpdateBillingDetails: jest.fn(),
   };
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
   });
 
-  describe('Loading State', () => {
-    it('displays loading skeleton when isLoading is true', () => {
+  describe('Loading State', (
+) => {
+    it('displays loading skeleton when isLoading is true', (
+) => {
       renderWithProviders(<SubscriptionDashboard {...defaultProps} isLoading={true} />);
 
       // Should show loading skeletons
@@ -75,7 +79,8 @@ describe('SubscriptionDashboard', () => {
       expect(screen.queryByText('Current Plan')).not.toBeInTheDocument();
     });
 
-    it('displays content when loading is complete', () => {
+    it('displays content when loading is complete', (
+) => {
       renderWithProviders(
         <SubscriptionDashboard {...defaultProps} isLoading={false} />
       );
@@ -85,8 +90,10 @@ describe('SubscriptionDashboard', () => {
     });
   });
 
-  describe('Overview Tab', () => {
-    it('displays current subscription information', () => {
+  describe('Overview Tab', (
+) => {
+    it('displays current subscription information', (
+) => {
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 
       expect(screen.getByText('Current Plan')).toBeInTheDocument();
@@ -94,7 +101,8 @@ describe('SubscriptionDashboard', () => {
       expect(screen.getByText('Active')).toBeInTheDocument();
     });
 
-    it('shows next billing information for paid plans', () => {
+    it('shows next billing information for paid plans', (
+) => {
       const dataWithBilling = {
         ...mockSubscriptionDashboard,
         subscription: createTestSubscription({
@@ -113,7 +121,8 @@ describe('SubscriptionDashboard', () => {
       expect(screen.getByText('$9.99')).toBeInTheDocument();
     });
 
-    it('displays features used count', () => {
+    it('displays features used count', (
+) => {
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 
       expect(screen.getByText('Features Used')).toBeInTheDocument();
@@ -121,7 +130,8 @@ describe('SubscriptionDashboard', () => {
       expect(screen.getByText('This month')).toBeInTheDocument();
     });
 
-    it('shows trial information when user has active trial', () => {
+    it('shows trial information when user has active trial', (
+) => {
       const dataWithTrial = {
         ...mockSubscriptionDashboard,
         activeTrial: {
@@ -151,8 +161,10 @@ describe('SubscriptionDashboard', () => {
     });
   });
 
-  describe('Subscription Status Alerts', () => {
-    it('shows past due alert when subscription is past due', () => {
+  describe('Subscription Status Alerts', (
+) => {
+    it('shows past due alert when subscription is past due', (
+) => {
       const pastDueData = {
         ...mockSubscriptionDashboard,
         subscription: createTestSubscription({ status: 'past_due' }),
@@ -165,7 +177,8 @@ describe('SubscriptionDashboard', () => {
       expect(screen.getByText(/payment is past due/i)).toBeInTheDocument();
     });
 
-    it('shows cancellation notice when subscription will cancel at period end', () => {
+    it('shows cancellation notice when subscription will cancel at period end', (
+) => {
       const cancelingData = {
         ...mockSubscriptionDashboard,
         subscription: {
@@ -183,7 +196,8 @@ describe('SubscriptionDashboard', () => {
       expect(screen.getByRole('button', { name: /reactivate/i })).toBeInTheDocument();
     });
 
-    it('handles reactivation when reactivate button is clicked', async () => {
+    it('handles reactivation when reactivate button is clicked', async (
+) => {
       const cancelingData = {
         ...mockSubscriptionDashboard,
         subscription: {
@@ -204,8 +218,10 @@ describe('SubscriptionDashboard', () => {
     });
   });
 
-  describe('Usage Tab', () => {
-    it('displays usage statistics for each feature', async () => {
+  describe('Usage Tab', (
+) => {
+    it('displays usage statistics for each feature', async (
+) => {
       const user = userEvent.setup();
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 
@@ -222,7 +238,8 @@ describe('SubscriptionDashboard', () => {
       expect(screen.getByText('100 limit')).toBeInTheDocument();
     });
 
-    it('shows progress bars for usage visualization', async () => {
+    it('shows progress bars for usage visualization', async (
+) => {
       const user = userEvent.setup();
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 
@@ -233,7 +250,8 @@ describe('SubscriptionDashboard', () => {
       expect(progressBars.length).toBeGreaterThan(0);
     });
 
-    it('displays no usage data message when usage is null', async () => {
+    it('displays no usage data message when usage is null', async (
+) => {
       const dataWithoutUsage = {
         ...mockSubscriptionDashboard,
         usage: null,
@@ -255,14 +273,17 @@ describe('SubscriptionDashboard', () => {
     });
   });
 
-  describe('Quick Actions', () => {
-    it('provides change plan action', () => {
+  describe('Quick Actions', (
+) => {
+    it('provides change plan action', (
+) => {
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 
       expect(screen.getByRole('button', { name: /change plan/i })).toBeInTheDocument();
     });
 
-    it('provides cancel subscription action for active subscriptions', () => {
+    it('provides cancel subscription action for active subscriptions', (
+) => {
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 
       expect(
@@ -270,7 +291,8 @@ describe('SubscriptionDashboard', () => {
       ).toBeInTheDocument();
     });
 
-    it('does not show cancel button for already cancelled subscriptions', () => {
+    it('does not show cancel button for already cancelled subscriptions', (
+) => {
       const cancelledData = {
         ...mockSubscriptionDashboard,
         subscription: {
@@ -288,7 +310,8 @@ describe('SubscriptionDashboard', () => {
       ).not.toBeInTheDocument();
     });
 
-    it('handles subscription cancellation', async () => {
+    it('handles subscription cancellation', async (
+) => {
       const user = userEvent.setup();
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 
@@ -301,8 +324,10 @@ describe('SubscriptionDashboard', () => {
     });
   });
 
-  describe('Plan Management', () => {
-    it('handles plan upgrades correctly', async () => {
+  describe('Plan Management', (
+) => {
+    it('handles plan upgrades correctly', async (
+) => {
       const availablePlans = [
         {
           id: 'pro-plan',
@@ -329,7 +354,8 @@ describe('SubscriptionDashboard', () => {
       // The actual plan selection would be tested in PricingTable tests
     });
 
-    it('handles plan downgrades correctly', async () => {
+    it('handles plan downgrades correctly', async (
+) => {
       const currentPremiumUser = {
         ...mockSubscriptionDashboard,
         subscription: createTestSubscription({ tier: 'pro' }),
@@ -357,8 +383,10 @@ describe('SubscriptionDashboard', () => {
     });
   });
 
-  describe('Error Handling', () => {
-    it('displays error messages when actions fail', async () => {
+  describe('Error Handling', (
+) => {
+    it('displays error messages when actions fail', async (
+) => {
       const failingProps = {
         ...defaultProps,
         onCancelSubscription: jest
@@ -374,7 +402,8 @@ describe('SubscriptionDashboard', () => {
       const cancelButton = screen.getByRole('button', { name: /cancel subscription/i });
       await user.click(cancelButton);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(consoleError).toHaveBeenCalledWith(
           'Failed to cancel subscription:',
           expect.any(Error)
@@ -384,7 +413,8 @@ describe('SubscriptionDashboard', () => {
       consoleError.mockRestore();
     });
 
-    it('handles missing subscription data gracefully', () => {
+    it('handles missing subscription data gracefully', (
+) => {
       const dataWithoutSubscription = {
         ...mockSubscriptionDashboard,
         subscription: null,
@@ -400,8 +430,10 @@ describe('SubscriptionDashboard', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('provides proper ARIA labels for tabs', () => {
+  describe('Accessibility', (
+) => {
+    it('provides proper ARIA labels for tabs', (
+) => {
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 
       expect(screen.getByRole('tab', { name: /overview/i })).toHaveAccessibleName();
@@ -410,7 +442,8 @@ describe('SubscriptionDashboard', () => {
       expect(screen.getByRole('tab', { name: /plans/i })).toHaveAccessibleName();
     });
 
-    it('supports keyboard navigation between tabs', async () => {
+    it('supports keyboard navigation between tabs', async (
+) => {
       const user = userEvent.setup();
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 
@@ -426,7 +459,8 @@ describe('SubscriptionDashboard', () => {
       expect(usageTab).toHaveFocus();
     });
 
-    it('provides screen reader friendly content', () => {
+    it('provides screen reader friendly content', (
+) => {
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />, {
         screenReaderEnabled: true,
       });
@@ -438,8 +472,10 @@ describe('SubscriptionDashboard', () => {
     });
   });
 
-  describe('Responsive Behavior', () => {
-    it('adapts layout for mobile screens', () => {
+  describe('Responsive Behavior', (
+) => {
+    it('adapts layout for mobile screens', (
+) => {
       Object.defineProperty(window, 'innerWidth', { value: 375, writable: true });
       window.dispatchEvent(new Event('resize'));
 
@@ -451,8 +487,10 @@ describe('SubscriptionDashboard', () => {
     });
   });
 
-  describe('Integration with Child Components', () => {
-    it('passes correct props to PaymentMethodManager', async () => {
+  describe('Integration with Child Components', (
+) => {
+    it('passes correct props to PaymentMethodManager', async (
+) => {
       const user = userEvent.setup();
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 
@@ -462,7 +500,8 @@ describe('SubscriptionDashboard', () => {
       // This is implicitly tested by the component not crashing
     });
 
-    it('passes correct props to BillingHistory', async () => {
+    it('passes correct props to BillingHistory', async (
+) => {
       const user = userEvent.setup();
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 
@@ -472,7 +511,8 @@ describe('SubscriptionDashboard', () => {
       // This is implicitly tested by the component not crashing
     });
 
-    it('passes correct props to PricingTable', async () => {
+    it('passes correct props to PricingTable', async (
+) => {
       const user = userEvent.setup();
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 

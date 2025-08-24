@@ -82,8 +82,10 @@ export class OfflineManager {
   private static db: IDBPDatabase<OfflineDB> | null = null;
   private static isInitialized = false;
   private static syncInProgress = false;
-  private static onlineListeners: (() => void)[] = [];
-  private static offlineListeners: (() => void)[] = [];
+  private static onlineListeners: ((
+) => void)[] = [];
+  private static offlineListeners: ((
+) => void)[] = [];
 
   static async initialize(): Promise<boolean> {
     if (this.isInitialized) return true;
@@ -177,13 +179,15 @@ export class OfflineManager {
   }
 
   private static setupNetworkListeners(): void {
-    window.addEventListener('online', () => {
+    window.addEventListener('online', (
+) => {
       console.log('Network: Online');
       this.onlineListeners.forEach(listener => listener());
       this.syncWhenOnline();
     });
 
-    window.addEventListener('offline', () => {
+    window.addEventListener('offline', (
+) => {
       console.log('Network: Offline');
       this.offlineListeners.forEach(listener => listener());
     });
@@ -192,7 +196,8 @@ export class OfflineManager {
   private static schedulePeriodicSync(): void {
     // Sync every 5 minutes when online
     setInterval(
-      async () => {
+      async (
+) => {
         if (navigator.onLine) {
           await this.syncPendingOperations();
         }
@@ -229,8 +234,10 @@ export class OfflineManager {
     try {
       const alarms = await this.db.getAll('alarms');
       return alarms
-        .filter((alarm: any) => alarm.operation !== 'delete')
-        .map(({ syncStatus, lastModified, operation, ...alarm }) => alarm as Alarm);
+        .filter((alarm: any
+) => alarm.operation !== 'delete')
+        .map(({ syncStatus, lastModified, operation, ...alarm }
+) => alarm as Alarm);
     } catch (error) {
       console.error('Failed to get offline alarms:', error);
       return [];
@@ -342,7 +349,8 @@ export class OfflineManager {
 
     try {
       const queueItems = await this.db.getAll('syncQueue');
-      const sortedItems = queueItems.sort((a, b) => a.timestamp - b.timestamp);
+      const sortedItems = queueItems.sort((a, b
+) => a.timestamp - b.timestamp);
 
       for (const item of sortedItems) {
         try {
@@ -438,7 +446,8 @@ export class OfflineManager {
 
   private static async syncWhenOnline(): Promise<void> {
     // Trigger sync when coming back online
-    setTimeout(() => {
+    setTimeout((
+) => {
       this.syncPendingOperations();
     }, 1000); // Wait 1 second for network to stabilize
   }
@@ -513,7 +522,9 @@ export class OfflineManager {
   static async getStatus(): Promise<SyncStatus> {
     const pendingOperations = this.db ? await this.db.count('syncQueue') : 0;
     const failedOperations = this.db
-      ? (await this.db.getAll('syncQueue')).filter((item: any) => item.retryCount > 0).length
+      ? (await this.db.getAll('syncQueue')).filter((item: any
+) => item.retryCount > 0)
+          .length
       : 0;
 
     return {
@@ -538,22 +549,26 @@ export class OfflineManager {
   }
 
   // Event listeners
-  static addOnlineListener(callback: () => void): void {
+  static addOnlineListener(callback: (
+) => void): void {
     this.onlineListeners.push(callback);
   }
 
-  static addOfflineListener(callback: () => void): void {
+  static addOfflineListener(callback: (
+) => void): void {
     this.offlineListeners.push(callback);
   }
 
-  static removeOnlineListener(callback: () => void): void {
+  static removeOnlineListener(callback: (
+) => void): void {
     const index = this.onlineListeners.indexOf(callback);
     if (index > -1) {
       this.onlineListeners.splice(index, 1);
     }
   }
 
-  static removeOfflineListener(callback: () => void): void {
+  static removeOfflineListener(callback: (
+) => void): void {
     const index = this.offlineListeners.indexOf(callback);
     if (index > -1) {
       this.offlineListeners.splice(index, 1);
@@ -617,7 +632,8 @@ export class OfflineManager {
       alarms,
       sleepSessions,
       settings,
-      voiceCache: voiceCache.map(({ audioBlob, ...rest }) => rest), // Exclude blobs for export
+      voiceCache: voiceCache.map(({ audioBlob, ...rest }
+) => rest), // Exclude blobs for export
     };
   }
 

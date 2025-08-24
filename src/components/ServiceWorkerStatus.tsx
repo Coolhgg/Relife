@@ -13,11 +13,13 @@ import {
   Bell,
 } from 'lucide-react';
 
-export const ServiceWorkerStatus: React.FC = () => {
+export const ServiceWorkerStatus: React.FC = (
+) => {
   const { state, performHealthCheck, requestNotificationPermission, refreshState } =
     useEnhancedServiceWorker();
 
-  const getPermissionBadge = () => {
+  const getPermissionBadge = (
+) => {
     switch (state.notificationPermission) {
       case 'granted':
         return (
@@ -43,14 +45,16 @@ export const ServiceWorkerStatus: React.FC = () => {
     }
   };
 
-  const handleHealthCheck = async () => {
+  const handleHealthCheck = async (
+) => {
     const result = await performHealthCheck();
     if (result) {
       console.log('Health check result:', result);
     }
   };
 
-  const handleRequestPermission = async () => {
+  const handleRequestPermission = async (
+) => {
     const permission = await requestNotificationPermission();
     console.log('Permission result:', permission);
   };

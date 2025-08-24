@@ -135,7 +135,8 @@ class VoiceBiometricsService {
     duration: number = 5000,
     phrase?: string
   ): Promise<AudioBuffer> {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve, reject
+) => {
       try {
         if (!this.audioContext) {
           await this.initializeAudioContext();
@@ -162,7 +163,8 @@ class VoiceBiometricsService {
           }
         };
 
-        this.mediaRecorder.onstop = async () => {
+        this.mediaRecorder.onstop = async (
+) => {
           try {
             const blob = new Blob(chunks, { type: 'audio/webm' });
             const arrayBuffer = await blob.arrayBuffer();
@@ -179,7 +181,8 @@ class VoiceBiometricsService {
         this.isRecording = true;
 
         // Stop recording after specified duration
-        setTimeout(() => {
+        setTimeout((
+) => {
           if (this.mediaRecorder && this.isRecording) {
             this.mediaRecorder.stop();
             this.isRecording = false;
@@ -293,7 +296,8 @@ class VoiceBiometricsService {
       );
       const maxSimilarity = Math.max(...similarities);
       const averageSimilarity =
-        similarities.reduce((sum, sim) => sum + sim, 0) / similarities.length;
+        similarities.reduce((sum, sim
+) => sum + sim, 0) / similarities.length;
 
       const matchedFeatures = this.identifyMatchedFeatures(voicePrint, storedPrints);
 
@@ -392,7 +396,8 @@ class VoiceBiometricsService {
       const sessionsCompleted = sessions.length;
       const totalSamples = voicePrints.length;
       const averageQuality =
-        voicePrints.reduce((sum, print) => sum + print.confidence, 0) / totalSamples ||
+        voicePrints.reduce((sum, print
+) => sum + print.confidence, 0) / totalSamples ||
         0;
 
       const allImprovements = sessions.flatMap(session => session.improvements);
@@ -601,7 +606,8 @@ class VoiceBiometricsService {
 
   private calculateConfidence(audioData: Float32Array): number {
     const rms = Math.sqrt(
-      audioData.reduce((sum, sample) => sum + sample * sample, 0) / audioData.length
+      audioData.reduce((sum, sample
+) => sum + sample * sample, 0) / audioData.length
     );
     const snr = this.estimateSignalToNoiseRatio(audioData);
     const duration = audioData.length / 44100;
@@ -676,7 +682,8 @@ class VoiceBiometricsService {
     numMFCC: number
   ): number[] {
     // Simplified MFCC computation
-    return new Array(numMFCC).fill(0).map(() => Math.random() * 0.1 - 0.05);
+    return new Array(numMFCC).fill(0).map((
+) => Math.random() * 0.1 - 0.05);
   }
 
   private extractAmplitudeEnvelope(audioData: Float32Array): number[] {
@@ -686,7 +693,8 @@ class VoiceBiometricsService {
     for (let i = 0; i < audioData.length - windowSize; i += windowSize) {
       const window = audioData.slice(i, i + windowSize);
       const rms = Math.sqrt(
-        window.reduce((sum, sample) => sum + sample * sample, 0) / window.length
+        window.reduce((sum, sample
+) => sum + sample * sample, 0) / window.length
       );
       envelope.push(rms);
     }
@@ -703,7 +711,8 @@ class VoiceBiometricsService {
 
   private calculateMean(values: number[]): number {
     return values.length > 0
-      ? values.reduce((sum, val) => sum + val, 0) / values.length
+      ? values.reduce((sum, val
+) => sum + val, 0) / values.length
       : 0;
   }
 
@@ -711,7 +720,8 @@ class VoiceBiometricsService {
     if (values.length === 0) return 0;
     const mean = this.calculateMean(values);
     const variance =
-      values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;
+      values.reduce((sum, val
+) => sum + Math.pow(val - mean, 2), 0) / values.length;
     return Math.sqrt(variance);
   }
 
@@ -723,7 +733,8 @@ class VoiceBiometricsService {
 
   private calculateEnergyLevel(audioData: Float32Array): number {
     const rms = Math.sqrt(
-      audioData.reduce((sum, sample) => sum + sample * sample, 0) / audioData.length
+      audioData.reduce((sum, sample
+) => sum + sample * sample, 0) / audioData.length
     );
     return Math.min(1.0, rms * 10); // Normalized energy level
   }
@@ -736,11 +747,13 @@ class VoiceBiometricsService {
     for (let i = 0; i < audioData.length - windowSize; i += windowSize) {
       const window = audioData.slice(i, i + windowSize);
       const energy =
-        window.reduce((sum, sample) => sum + sample * sample, 0) / window.length;
+        window.reduce((sum, sample
+) => sum + sample * sample, 0) / window.length;
       energies.push(energy);
     }
 
-    energies.sort((a, b) => a - b);
+    energies.sort((a, b
+) => a - b);
     return Math.sqrt(energies[Math.floor(energies.length * 0.1)]); // 10th percentile as noise estimate
   }
 

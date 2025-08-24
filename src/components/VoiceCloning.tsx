@@ -19,7 +19,8 @@ import { PremiumService } from '../services/premium';
 
 interface VoiceCloningProps {
   user: User;
-  onClose: () => void;
+  onClose: (
+) => void;
 }
 
 interface AudioSample {
@@ -30,7 +31,8 @@ interface AudioSample {
   url: string;
 }
 
-const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
+const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }
+) => {
   const [samples, setSamples] = useState<AudioSample[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -44,11 +46,13 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
   const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
 
   // Check access on mount
-  React.useEffect(() => {
+  React.useEffect((
+) => {
     checkAccess();
   }, [user.id]);
 
-  const checkAccess = async () => {
+  const checkAccess = async (
+) => {
     try {
       const access = await PremiumService.getInstance().hasFeatureAccess(
         user.id,
@@ -61,7 +65,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
     }
   };
 
-  const startRecording = async () => {
+  const startRecording = async (
+) => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
@@ -71,7 +76,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
         chunks.push(event.data);
       };
 
-      mediaRecorder.onstop = () => {
+      mediaRecorder.onstop = (
+) => {
         const blob = new Blob(chunks, { type: 'audio/wav' });
         const sampleId = `sample_${Date.now()}`;
         const url = URL.createObjectURL(blob);
@@ -84,7 +90,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
           url,
         };
 
-        setSamples((prev: any) => [ // auto: implicit any...prev, newSample]);
+        setSamples((prev: any
+) => [...prev, newSample]);
         stream.getTracks().forEach(track => track.stop());
       };
 
@@ -94,8 +101,10 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
       setRecordingTime(0);
 
       // Start timer
-      recordingTimerRef.current = setInterval(() => {
-        setRecordingTime((prev: any) => prev + 1);
+      recordingTimerRef.current = setInterval((
+) => {
+        setRecordingTime((prev: any
+) => prev + 1);
       }, 1000);
     } catch (error) {
       console.error('Error starting recording:', error);
@@ -103,7 +112,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
     }
   };
 
-  const stopRecording = () => {
+  const stopRecording = (
+) => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
@@ -115,7 +125,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
     }
   };
 
-  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>
+) => {
     const files = event.target.files;
     if (!files) return;
 
@@ -132,7 +143,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
           url,
         };
 
-        setSamples((prev: any) => [ // auto: implicit any...prev, newSample]);
+        setSamples((prev: any
+) => [...prev, newSample]);
       }
     });
 
@@ -140,8 +152,10 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
     event.target.value = '';
   }, []);
 
-  const playAudio = (sampleId: string) => {
-    const sample = samples.find((s: any) => s.id === sampleId);
+  const playAudio = (sampleId: string
+) => {
+    const sample = samples.find((s: any
+) => s.id === sampleId);
     if (!sample) return;
 
     // Stop any currently playing audio
@@ -160,14 +174,17 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
       audioRefs.current.set(sampleId, audio);
     }
 
-    audio.onended = () => setPlayingId(null);
-    audio.onpause = () => setPlayingId(null);
+    audio.onended = (
+) => setPlayingId(null);
+    audio.onpause = (
+) => setPlayingId(null);
 
     setPlayingId(sampleId);
     audio.play().catch(console.error);
   };
 
-  const stopAudio = (sampleId: string) => {
+  const stopAudio = (sampleId: string
+) => {
     const audio = audioRefs.current.get(sampleId);
     if (audio) {
       audio.pause();
@@ -176,8 +193,11 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
     setPlayingId(null);
   };
 
-  const removeSample = (sampleId: string) => {
-    setSamples((prev: any) => prev.filter((s: any) => s.id !== sampleId));
+  const removeSample = (sampleId: string
+) => {
+    setSamples((prev: any
+) => prev.filter((s: any
+) => s.id !== sampleId));
 
     // Clean up audio and URL
     const audio = audioRefs.current.get(sampleId);
@@ -186,7 +206,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
       audioRefs.current.delete(sampleId);
     }
 
-    const sample = samples.find((s: any) => s.id === sampleId);
+    const sample = samples.find((s: any
+) => s.id === sampleId);
     if (sample) {
       URL.revokeObjectURL(sample.url);
     }
@@ -196,7 +217,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
     }
   };
 
-  const createVoiceClone = async () => {
+  const createVoiceClone = async (
+) => {
     if (samples.length < 3) {
       alert('Please provide at least 3 voice samples for better quality.');
       return;
@@ -204,7 +226,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
 
     try {
       setIsProcessing(true);
-      const audioBlobs = samples.map((sample: any) => sample.blob);
+      const audioBlobs = samples.map((sample: any
+) => sample.blob);
       const request = await PremiumVoiceService.createVoiceClone(user.id, audioBlobs);
       setCloneRequest(request);
     } catch (error) {
@@ -242,7 +265,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
                 Cancel
               </button>
               <button
-                onClick={() => {
+                onClick={(
+) => {
                   // In a real app, this would open the upgrade flow
                   alert('Redirecting to upgrade page...');
                 }}
@@ -414,14 +438,16 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
                 Voice Samples
               </h3>
               <div className="space-y-3">
-                {samples/* auto: implicit any */
-      &.map((sample: any) => (
+                {samples
+      .map((sample: any
+) => (
                   <div
                     key={sample.id}
                     className="bg-gray-50 rounded-lg p-4 flex items-center gap-3"
                   >
                     <button
-                      onClick={() =>
+                      onClick={(
+) =>
                         playingId === sample.id
                           ? stopAudio(sample.id)
                           : playAudio(sample.id)
@@ -443,7 +469,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
                     </div>
 
                     <button
-                      onClick={() => removeSample(sample.id)}
+                      onClick={(
+) => removeSample(sample.id)}
                       className="text-red-500 hover:text-red-700 transition-colors p-1"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -467,7 +494,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
                 </span>
               </div>
               <div
-                className={`flex items-center gap-2 ${samples.some((s: any) => s.duration >= 10) ? 'text-green-600' : 'text-gray-400'}`}
+                className={`flex items-center gap-2 ${samples.some((s: any
+) => s.duration >= 10) ? 'text-green-600' : 'text-gray-400'}`}
               >
                 <CheckCircle className="h-4 w-4" />
                 <span className="text-sm">Samples should be 10+ seconds each</span>

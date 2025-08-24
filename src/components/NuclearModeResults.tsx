@@ -36,8 +36,10 @@ import { cn } from '../lib/utils';
 
 interface NuclearModeResultsProps {
   session: NuclearModeSession;
-  onRestart?: () => void;
-  onDismiss: () => void;
+  onRestart?: (
+) => void;
+  onDismiss: (
+) => void;
   className?: string;
 }
 
@@ -54,13 +56,16 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
   onRestart,
   onDismiss,
   className,
-}) => {
+}
+) => {
   const [stats, setStats] = useState<any>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const loadStats = async () => {
+  useEffect((
+) => {
+    const loadStats = async (
+) => {
       try {
         const userStats = await nuclearModeService.getNuclearStats(session.userId);
         setStats(userStats);
@@ -142,7 +147,8 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
     return { label: 'Training Needed', color: 'text-gray-600', icon: RefreshCw };
   };
 
-  const formatDuration = (ms: number) => {
+  const formatDuration = (ms: number
+) => {
     const minutes = Math.floor(ms / 60000);
     const seconds = Math.floor((ms % 60000) / 1000);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
@@ -212,7 +218,8 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
 
         {/* Performance Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {performanceMetrics.map((metric, index) => {
+          {performanceMetrics.map((metric, index
+) => {
             const Icon = metric.icon;
             return (
               <Card key={metric.label} className="text-center">
@@ -338,7 +345,8 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
-                {performance.achievements.map((achievement, index) => (
+                {performance.achievements.map((achievement, index
+) => (
                   <Badge
                     key={achievement}
                     className="bg-yellow-100 text-yellow-800 px-3 py-2"
@@ -365,7 +373,8 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setShowDetails(!showDetails)}
+                onClick={(
+) => setShowDetails(!showDetails)}
               >
                 {showDetails ? 'Hide Details' : 'Show Details'}
               </Button>
@@ -373,7 +382,8 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {session.challenges.map((attempt: NuclearChallengeAttempt, index) => (
+              {session.challenges.map((attempt: NuclearChallengeAttempt, index
+) => (
                 <div
                   key={index}
                   className={cn(
@@ -438,7 +448,8 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
               <Button
                 variant="outline"
                 className="flex-1 h-12"
-                onClick={() => {
+                onClick={(
+) => {
                   // Share functionality
                   if (navigator.share) {
                     navigator.share({

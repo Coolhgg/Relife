@@ -11,13 +11,16 @@ import { ThemeProvider, useTheme } from '../useTheme';
 import type { Theme, PersonalizationSettings } from '../../types';
 
 // Mock services
-jest.mock('../../services/CloudSyncService', () => ({
+jest.mock('../../services/CloudSyncService', (
+) => ({
   __esModule: true,
-  default: jest.fn().mockImplementation(() => ({
+  default: jest.fn().mockImplementation((
+) => ({
     initialize: jest.fn(),
     setPreferences: jest.fn(),
     sync: jest.fn(),
-    getStatus: jest.fn(() => ({
+    getStatus: jest.fn((
+) => ({
       isOnline: true,
       isSyncing: false,
       hasConflicts: false,
@@ -26,10 +29,12 @@ jest.mock('../../services/CloudSyncService', () => ({
   })),
 }));
 
-jest.mock('../../services/theme-persistence', () => ({
+jest.mock('../../services/theme-persistence', (
+) => ({
   __esModule: true,
   default: {
-    getInstance: jest.fn(() => ({
+    getInstance: jest.fn((
+) => ({
       loadThemeData: jest.fn().mockResolvedValue({
         version: '2.0.0',
         theme: 'light',
@@ -52,18 +57,23 @@ jest.mock('../../services/theme-persistence', () => ({
 }));
 
 // Mock localStorage
-const mockLocalStorage = (() => {
+const mockLocalStorage = ((
+) => {
   let store: Record<string, string> = {};
 
   return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
+    getItem: (key: string
+) => store[key] || null,
+    setItem: (key: string, value: string
+) => {
       store[key] = value;
     },
-    removeItem: (key: string) => {
+    removeItem: (key: string
+) => {
       delete store[key];
     },
-    clear: () => {
+    clear: (
+) => {
       store = {};
     },
   };
@@ -88,30 +98,39 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
+const wrapper = ({ children }: { children: React.ReactNode }
+) => (
   <ThemeProvider defaultTheme="light" storageKey="test-theme">
     {children}
   </ThemeProvider>
 );
 
-describe('useTheme Hook', () => {
-  beforeEach(() => {
+describe('useTheme Hook', (
+) => {
+  beforeEach((
+) => {
     mockLocalStorage.clear();
     jest.clearAllMocks();
   });
 
-  describe('Theme Management', () => {
-    it('should initialize with default theme', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+  describe('Theme Management', (
+) => {
+    it('should initialize with default theme', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       expect(result.current.theme).toBe('light');
       expect(result.current.themeConfig).toBeDefined();
     });
 
-    it('should set theme correctly', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should set theme correctly', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
-      act(() => {
+      act((
+) => {
         result.current.setTheme('dark');
       });
 
@@ -119,46 +138,57 @@ describe('useTheme Hook', () => {
       expect(result.current.isDarkMode).toBe(true);
     });
 
-    it('should toggle between light and dark themes', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should toggle between light and dark themes', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       // Start with light theme
       expect(result.current.theme).toBe('light');
 
-      act(() => {
+      act((
+) => {
         result.current.toggleTheme();
       });
 
       expect(result.current.theme).toBe('dark');
 
-      act(() => {
+      act((
+) => {
         result.current.toggleTheme();
       });
 
       expect(result.current.theme).toBe('light');
     });
 
-    it('should reset theme to default', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should reset theme to default', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
-      act(() => {
+      act((
+) => {
         result.current.setTheme('dark');
       });
 
       expect(result.current.theme).toBe('dark');
 
-      act(() => {
+      act((
+) => {
         result.current.resetTheme();
       });
 
       expect(result.current.theme).toBe('light');
     });
 
-    it('should handle invalid theme gracefully', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should handle invalid theme gracefully', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
 
-      act(() => {
+      act((
+) => {
         // @ts-expect-error Testing invalid theme
         result.current.setTheme('invalid-theme');
       });
@@ -172,9 +202,12 @@ describe('useTheme Hook', () => {
     });
   });
 
-  describe('Personalization', () => {
-    it('should update personalization settings', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+  describe('Personalization', (
+) => {
+    it('should update personalization settings', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       const updates: Partial<PersonalizationSettings> = {
         colorPreferences: {
@@ -182,7 +215,8 @@ describe('useTheme Hook', () => {
         },
       };
 
-      act(() => {
+      act((
+) => {
         result.current.updatePersonalization(updates);
       });
 
@@ -191,10 +225,13 @@ describe('useTheme Hook', () => {
       );
     });
 
-    it('should update color preferences', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should update color preferences', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
-      act(() => {
+      act((
+) => {
         result.current.updateColorPreference('primaryColor', '#00ff00');
       });
 
@@ -203,10 +240,13 @@ describe('useTheme Hook', () => {
       );
     });
 
-    it('should update typography preferences', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should update typography preferences', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
-      act(() => {
+      act((
+) => {
         result.current.updateTypographyPreference('fontSize', 'large');
       });
 
@@ -215,40 +255,52 @@ describe('useTheme Hook', () => {
       );
     });
 
-    it('should update motion preferences', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should update motion preferences', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
-      act(() => {
+      act((
+) => {
         result.current.updateMotionPreference('reduceMotion', true);
       });
 
       expect(result.current.personalization.motionPreferences?.reduceMotion).toBe(true);
     });
 
-    it('should update sound preferences', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should update sound preferences', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
-      act(() => {
+      act((
+) => {
         result.current.updateSoundPreference('enabled', false);
       });
 
       expect(result.current.personalization.soundPreferences?.enabled).toBe(false);
     });
 
-    it('should update layout preferences', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should update layout preferences', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
-      act(() => {
+      act((
+) => {
         result.current.updateLayoutPreference('density', 'compact');
       });
 
       expect(result.current.personalization.layoutPreferences?.density).toBe('compact');
     });
 
-    it('should update accessibility preferences', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should update accessibility preferences', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
-      act(() => {
+      act((
+) => {
         result.current.updateAccessibilityPreference('highContrast', true);
       });
 
@@ -258,25 +310,32 @@ describe('useTheme Hook', () => {
     });
   });
 
-  describe('CSS Variables and Classes', () => {
-    it('should generate CSS variables', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+  describe('CSS Variables and Classes', (
+) => {
+    it('should generate CSS variables', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       const cssVars = result.current.getCSSVariables();
       expect(typeof cssVars).toBe('object');
       expect(Object.keys(cssVars).length).toBeGreaterThan(0);
     });
 
-    it('should generate theme classes', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should generate theme classes', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       const classes = result.current.getThemeClasses();
       expect(Array.isArray(classes)).toBe(true);
       expect(classes.length).toBeGreaterThan(0);
     });
 
-    it('should check accessibility contrast', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should check accessibility contrast', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       const isAccessible = result.current.isAccessibleContrast('#000000', '#ffffff');
       expect(typeof isAccessible).toBe('boolean');
@@ -287,12 +346,16 @@ describe('useTheme Hook', () => {
     });
   });
 
-  describe('Custom Themes and Presets', () => {
-    it('should create custom theme', async () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+  describe('Custom Themes and Presets', (
+) => {
+    it('should create custom theme', async (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       let customTheme;
-      await act(async () => {
+      await act(async (
+) => {
         customTheme = await result.current.createCustomTheme('light', {
           primaryColor: '#ff0000',
         });
@@ -302,8 +365,10 @@ describe('useTheme Hook', () => {
       expect(customTheme?.baseTheme).toBe('light');
     });
 
-    it('should save theme preset', async () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should save theme preset', async (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       const preset = {
         id: 'test-preset',
@@ -315,7 +380,8 @@ describe('useTheme Hook', () => {
         category: 'custom' as const,
       };
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.saveThemePreset(preset);
       });
 
@@ -323,10 +389,13 @@ describe('useTheme Hook', () => {
       expect(true).toBe(true);
     });
 
-    it('should load theme preset', async () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should load theme preset', async (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.loadThemePreset('test-preset-id');
       });
 
@@ -334,28 +403,36 @@ describe('useTheme Hook', () => {
       expect(true).toBe(true);
     });
 
-    it('should get theme recommendations', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should get theme recommendations', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       const recommendations = result.current.getThemeRecommendations();
       expect(Array.isArray(recommendations)).toBe(true);
     });
   });
 
-  describe('Import/Export', () => {
-    it('should export themes', async () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+  describe('Import/Export', (
+) => {
+    it('should export themes', async (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       let exportData;
-      await act(async () => {
+      await act(async (
+) => {
         exportData = await result.current.exportThemes();
       });
 
       expect(typeof exportData).toBe('string');
     });
 
-    it('should import themes', async () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should import themes', async (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       const testData = JSON.stringify({
         version: '2.0.0',
@@ -367,18 +444,22 @@ describe('useTheme Hook', () => {
       });
 
       let success;
-      await act(async () => {
+      await act(async (
+) => {
         success = await result.current.importThemes(testData);
       });
 
       expect(success).toBe(true);
     });
 
-    it('should handle invalid import data', async () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should handle invalid import data', async (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       let success;
-      await act(async () => {
+      await act(async (
+) => {
         success = await result.current.importThemes('invalid-json');
       });
 
@@ -386,11 +467,15 @@ describe('useTheme Hook', () => {
     });
   });
 
-  describe('Cloud Sync', () => {
-    it('should sync themes to cloud', async () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+  describe('Cloud Sync', (
+) => {
+    it('should sync themes to cloud', async (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.syncThemes();
       });
 
@@ -398,14 +483,18 @@ describe('useTheme Hook', () => {
       expect(true).toBe(true);
     });
 
-    it('should enable/disable cloud sync', () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should enable/disable cloud sync', (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
-      act(() => {
+      act((
+) => {
         result.current.enableCloudSync(true);
       });
 
-      act(() => {
+      act((
+) => {
         result.current.enableCloudSync(false);
       });
 
@@ -413,10 +502,13 @@ describe('useTheme Hook', () => {
       expect(true).toBe(true);
     });
 
-    it('should force cloud sync', async () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+    it('should force cloud sync', async (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.forceCloudSync();
       });
 
@@ -425,15 +517,19 @@ describe('useTheme Hook', () => {
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle cloud sync errors gracefully', async () => {
-      const { result } = renderHook(() => useTheme(), { wrapper });
+  describe('Error Handling', (
+) => {
+    it('should handle cloud sync errors gracefully', async (
+) => {
+      const { result } = renderHook((
+) => useTheme(), { wrapper });
 
       // Mock cloud sync service to throw error
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
       try {
-        await act(async () => {
+        await act(async (
+) => {
           await result.current.syncThemes();
         });
       } catch (error) {
@@ -444,21 +540,28 @@ describe('useTheme Hook', () => {
     });
   });
 
-  describe('Theme Context', () => {
-    it('should throw error when used outside provider', () => {
+  describe('Theme Context', (
+) => {
+    it('should throw error when used outside provider', (
+) => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
-      expect(() => {
-        renderHook(() => useTheme());
+      expect((
+) => {
+        renderHook((
+) => useTheme());
       }).toThrow('useTheme must be used within a ThemeProvider');
 
       consoleSpy.mockRestore();
     });
   });
 
-  describe('System Theme Detection', () => {
-    it('should detect system theme when enableSystem is true', () => {
-      const wrapperWithSystem = ({ children }: { children: React.ReactNode }) => (
+  describe('System Theme Detection', (
+) => {
+    it('should detect system theme when enableSystem is true', (
+) => {
+      const wrapperWithSystem = ({ children }: { children: React.ReactNode }
+) => (
         <ThemeProvider
           defaultTheme="light"
           enableSystem={true}
@@ -468,7 +571,8 @@ describe('useTheme Hook', () => {
         </ThemeProvider>
       );
 
-      const { result } = renderHook(() => useTheme(), { wrapper: wrapperWithSystem });
+      const { result } = renderHook((
+) => useTheme(), { wrapper: wrapperWithSystem });
 
       expect(result.current.isSystemTheme).toBe(true);
     });

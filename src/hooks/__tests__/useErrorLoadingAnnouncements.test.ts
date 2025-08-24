@@ -14,18 +14,22 @@ const mockAnnouncementService = {
   announceAssertive: jest.fn(),
   clearQueue: jest.fn(),
   setEnabled: jest.fn(),
-  isEnabled: jest.fn(() => true),
+  isEnabled: jest.fn((
+) => true),
 };
 
-jest.mock('../../services/accessibility-announcement', () => ({
+jest.mock('../../services/accessibility-announcement', (
+) => ({
   __esModule: true,
   default: {
-    getInstance: () => mockAnnouncementService,
+    getInstance: (
+) => mockAnnouncementService,
   },
 }));
 
 // Mock i18n hook for error/loading translations
-const mockT = jest.fn((key, options) => {
+const mockT = jest.fn((key, options
+) => {
   const translations: Record<string, string> = {
     'error.general': 'An error occurred',
     'error.network': 'Network connection failed',
@@ -54,17 +58,23 @@ const mockT = jest.fn((key, options) => {
   return translation;
 });
 
-jest.mock('../useI18n', () => ({
-  useErrorI18n: () => ({ t: mockT }),
+jest.mock('../useI18n', (
+) => ({
+  useErrorI18n: (
+) => ({ t: mockT }),
 }));
 
-describe('useErrorLoadingAnnouncements', () => {
-  beforeEach(() => {
+describe('useErrorLoadingAnnouncements', (
+) => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
   });
 
-  it('should initialize with default state', () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should initialize with default state', (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
     expect(result.current.isEnabled).toBe(true);
     expect(typeof result.current.announceError).toBe('function');
@@ -72,10 +82,13 @@ describe('useErrorLoadingAnnouncements', () => {
     expect(typeof result.current.announceSuccess).toBe('function');
   });
 
-  it('should announce general errors', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should announce general errors', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceError('general');
     });
 
@@ -85,10 +98,13 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should announce network errors', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should announce network errors', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceError('network');
     });
 
@@ -98,10 +114,13 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should announce authentication errors', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should announce authentication errors', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceError('authentication');
     });
 
@@ -111,15 +130,18 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should announce custom error messages', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should announce custom error messages', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
     const customError = {
       type: 'custom',
       message: 'Unable to save your settings. Please try again.',
     };
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceCustomError(customError.message);
     });
 
@@ -128,10 +150,13 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should announce validation errors with details', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should announce validation errors with details', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceError('validation', {
         details: 'Email format is invalid',
       });
@@ -145,10 +170,13 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should announce loading states', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should announce loading states', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceLoading('started');
     });
 
@@ -158,10 +186,13 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should announce loading progress', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should announce loading progress', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceLoadingProgress(75);
     });
 
@@ -173,10 +204,13 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should announce loading completion', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should announce loading completion', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceLoading('completed');
     });
 
@@ -186,10 +220,13 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should announce loading failures', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should announce loading failures', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceLoadingFailed('Connection timeout');
     });
 
@@ -201,10 +238,13 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should announce retry attempts', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should announce retry attempts', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceRetry(2, 3);
     });
 
@@ -217,10 +257,13 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should announce successful retry', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should announce successful retry', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceRetrySuccess();
     });
 
@@ -230,10 +273,13 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should announce failed retries', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should announce failed retries', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceRetryFailed();
     });
 
@@ -243,12 +289,15 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should handle error objects with proper extraction', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should handle error objects with proper extraction', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
     const errorObj = new Error('Network request failed');
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceErrorObject(errorObj);
     });
 
@@ -257,8 +306,10 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should handle API error responses', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should handle API error responses', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
     const apiError = {
       status: 404,
@@ -266,7 +317,8 @@ describe('useErrorLoadingAnnouncements', () => {
       code: 'USER_NOT_FOUND',
     };
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceApiError(apiError);
     });
 
@@ -275,26 +327,33 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should respect priority levels for announcements', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should respect priority levels for announcements', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
     // Critical errors should use assertive
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceError('authentication');
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalled();
 
     // Loading states should use polite
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceLoading('started');
     });
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalled();
   });
 
-  it('should debounce rapid loading progress updates', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should debounce rapid loading progress updates', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       result.current.announceLoadingProgress(10);
       result.current.announceLoadingProgress(20);
       result.current.announceLoadingProgress(30);
@@ -308,22 +367,27 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should respect enabled/disabled state', async () => {
+  it('should respect enabled/disabled state', async (
+) => {
     mockAnnouncementService.isEnabled.mockReturnValue(false);
 
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
     expect(result.current.isEnabled).toBe(false);
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceError('general');
     });
 
     expect(mockAnnouncementService.announceAssertive).not.toHaveBeenCalled();
   });
 
-  it('should handle complex error scenarios', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should handle complex error scenarios', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
     const complexError = {
       type: 'multi-step',
@@ -332,7 +396,8 @@ describe('useErrorLoadingAnnouncements', () => {
       canRetry: true,
     };
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceComplexError(complexError);
     });
 
@@ -341,10 +406,13 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should handle loading timeouts', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should handle loading timeouts', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceTimeout(30);
     });
 
@@ -353,25 +421,31 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should clear announcement queue', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should clear announcement queue', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       result.current.clearQueue();
     });
 
     expect(mockAnnouncementService.clearQueue).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle errors in announcement service gracefully', async () => {
+  it('should handle errors in announcement service gracefully', async (
+) => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
     mockAnnouncementService.announceAssertive.mockRejectedValue(
       new Error('Announcement failed')
     );
 
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceError('general');
     });
 
@@ -383,8 +457,10 @@ describe('useErrorLoadingAnnouncements', () => {
     consoleSpy.mockRestore();
   });
 
-  it('should support contextual error announcements', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should support contextual error announcements', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
     const context = {
       feature: 'alarm_creation',
@@ -392,7 +468,8 @@ describe('useErrorLoadingAnnouncements', () => {
       userLevel: 'beginner',
     };
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceContextualError(
         'validation',
         context,
@@ -405,8 +482,10 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should handle progressive loading announcements', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should handle progressive loading announcements', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
     const stages = [
       { name: 'Authenticating', progress: 25 },
@@ -416,7 +495,8 @@ describe('useErrorLoadingAnnouncements', () => {
     ];
 
     for (const stage of stages) {
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.announceLoadingStage(stage.name, stage.progress);
       });
     }
@@ -426,8 +506,10 @@ describe('useErrorLoadingAnnouncements', () => {
     );
   });
 
-  it('should support error recovery suggestions', async () => {
-    const { result } = renderHook(() => useErrorLoadingAnnouncements());
+  it('should support error recovery suggestions', async (
+) => {
+    const { result } = renderHook((
+) => useErrorLoadingAnnouncements());
 
     const errorWithSuggestion = {
       type: 'network',
@@ -439,7 +521,8 @@ describe('useErrorLoadingAnnouncements', () => {
       ],
     };
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceErrorWithSuggestions(errorWithSuggestion);
     });
 

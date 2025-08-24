@@ -12,11 +12,13 @@ export function batchCSSUpdates(
   properties: Record<string, string>
 ): void {
   // Use DocumentFragment for batch updates to minimize reflows
-  requestAnimationFrame(() => {
+  requestAnimationFrame((
+) => {
     element.style.cssText +=
       '; ' +
       Object.entries(properties)
-        .map(([prop, value]) => `${prop}: ${value}`)
+        .map(([prop, value]
+) => `${prop}: ${value}`)
         .join('; ');
   });
 }
@@ -94,7 +96,8 @@ export function generateColorScale(
  */
 export function stylesToCSSString(styles: Record<string, any>): string {
   return Object.entries(styles)
-    .map(([property, value]) => {
+    .map(([property, value]
+) => {
       // Convert camelCase to kebab-case
       const cssProperty = property.replace(/([A-Z])/g, '-$1').toLowerCase();
       return `${cssProperty}: ${value}`;
@@ -113,7 +116,8 @@ export function createDebouncedStyler(delay: number = 16) {
       clearTimeout(timeout);
     }
 
-    timeout = setTimeout(() => {
+    timeout = setTimeout((
+) => {
       batchCSSUpdates(element, styles);
     }, delay);
   };
@@ -161,7 +165,8 @@ export class CSSCustomPropertiesManager {
       return;
     }
 
-    this.batchTimeout = setTimeout(() => {
+    this.batchTimeout = setTimeout((
+) => {
       this.flushBatch();
     }, 16); // One frame delay
   }
@@ -174,11 +179,13 @@ export class CSSCustomPropertiesManager {
       return;
     }
 
-    requestAnimationFrame(() => {
+    requestAnimationFrame((
+) => {
       const root = document.documentElement;
 
       // Apply all queued updates at once
-      this.batchQueue.forEach(({ property, value }) => {
+      this.batchQueue.forEach(({ property, value }
+) => {
         root.style.setProperty(property, value);
       });
 

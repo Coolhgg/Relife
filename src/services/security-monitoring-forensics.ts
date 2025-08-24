@@ -676,7 +676,8 @@ export class SecurityMonitoringForensicsService {
       clearInterval(this.analysisTimer);
     }
 
-    this.analysisTimer = setInterval(async () => {
+    this.analysisTimer = setInterval(async (
+) => {
       try {
         await this.performPeriodicAnalysis();
       } catch (error) {
@@ -695,7 +696,8 @@ export class SecurityMonitoringForensicsService {
       clearInterval(this.cleanupTimer);
     }
 
-    this.cleanupTimer = setInterval(async () => {
+    this.cleanupTimer = setInterval(async (
+) => {
       try {
         await this.cleanupOldData();
       } catch (error) {
@@ -847,7 +849,8 @@ export class SecurityMonitoringForensicsService {
       if (!value) return [];
 
       const events = SecurityService.decryptData(value);
-      return events.map((e: any) => ({
+      return events.map((e: any
+) => ({
         ...e,
         timestamp: new Date(e.timestamp),
       }));
@@ -924,7 +927,8 @@ export class SecurityMonitoringForensicsService {
     const threatTypes = events
       .filter(e => e.type === 'threat_detected')
       .reduce(
-        (acc, event) => {
+        (acc, event
+) => {
           const threatName = event.details.threatName || 'unknown';
           acc[threatName] = (acc[threatName] || 0) + 1;
           return acc;
@@ -935,7 +939,8 @@ export class SecurityMonitoringForensicsService {
     return {
       totalThreats: events.filter(e => e.type === 'threat_detected').length,
       threatTypes,
-      mostCommonThreat: Object.entries(threatTypes).sort(([, a], [, b]) => b - a)[0],
+      mostCommonThreat: Object.entries(threatTypes).sort(([, a], [, b]
+) => b - a)[0],
       severity: this.calculateOverallThreatSeverity(events),
     };
   }
@@ -1003,7 +1008,8 @@ export class SecurityMonitoringForensicsService {
     events: SecurityEvent[]
   ): 'low' | 'medium' | 'high' | 'critical' {
     const severityCounts = events.reduce(
-      (acc, event) => {
+      (acc, event
+) => {
         acc[event.severity] = (acc[event.severity] || 0) + 1;
         return acc;
       },
@@ -1020,7 +1026,8 @@ export class SecurityMonitoringForensicsService {
     const resolvedEvents = events.filter(e => e.resolved);
     if (resolvedEvents.length === 0) return 0;
 
-    const totalTime = resolvedEvents.reduce((acc, event) => {
+    const totalTime = resolvedEvents.reduce((acc, event
+) => {
       // Calculate response time based on event actions
       return acc + event.actions.length * 300000; // Estimate 5 minutes per action
     }, 0);

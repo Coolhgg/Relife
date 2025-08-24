@@ -10,7 +10,8 @@ interface PremiumGateProps {
   mode?: string;
   fallback?: ReactNode;
   showUpgradePrompt?: boolean;
-  onUpgrade?: () => void;
+  onUpgrade?: (
+) => void;
   className?: string;
 }
 
@@ -24,7 +25,8 @@ const PremiumGate: React.FC<PremiumGateProps> = ({
   showUpgradePrompt = true,
   onUpgrade,
   className = '',
-}) => {
+}
+) => {
   // Simple tier hierarchy check
   const tierHierarchy = {
     free: 0,

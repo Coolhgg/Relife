@@ -38,7 +38,8 @@ export const easingCurves = {
 
 interface AnimatedButtonProps {
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (
+) => void;
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
@@ -54,7 +55,8 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   disabled = false,
   loading = false,
   className = '',
-}) => {
+}
+) => {
   const [isPressed, setIsPressed] = useState(false);
 
   const baseClasses = {
@@ -106,9 +108,12 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
         scale: 1.01,
         transition: { type: 'spring' as const, stiffness: 120, damping: 20 },
       }}
-      onMouseDown={() => setIsPressed(true)}
-      onMouseUp={() => setIsPressed(false)}
-      onMouseLeave={() => setIsPressed(false)}
+      onMouseDown={(
+) => setIsPressed(true)}
+      onMouseUp={(
+) => setIsPressed(false)}
+      onMouseLeave={(
+) => setIsPressed(false)}
     >
       {/* Ripple effect */}
       <AnimatePresence>
@@ -163,7 +168,8 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'md',
   color = 'text-blue-500',
   className = '',
-}) => {
+}
+) => {
   const sizes = {
     xs: 'w-3 h-3',
     sm: 'w-4 h-4',
@@ -201,7 +207,8 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 export const PulseLoader: React.FC<{ size?: string; className?: string }> = ({
   size = 'w-2 h-2',
   className = '',
-}) => {
+}
+) => {
   return (
     <div className={`flex space-x-1 ${className}`}>
       {[0, 1, 2].map(i => (
@@ -227,10 +234,12 @@ export const SkeletonLoader: React.FC<{
   lines?: number;
   className?: string;
   animated?: boolean;
-}> = ({ lines = 3, className = '', animated = true }) => {
+}> = ({ lines = 3, className = '', animated = true }
+) => {
   return (
     <div className={`space-y-3 ${className}`}>
-      {Array.from({ length: lines }).map((_, i) => (
+      {Array.from({ length: lines }).map((_, i
+) => (
         <motion.div
           key={i}
           className="h-4 bg-gray-200 rounded-lg"
@@ -267,7 +276,8 @@ interface AnimatedCardProps {
   hoverEffect?: boolean;
   pressEffect?: boolean;
   glowEffect?: boolean;
-  onClick?: () => void;
+  onClick?: (
+) => void;
 }
 
 export const AnimatedCard: React.FC<AnimatedCardProps> = ({
@@ -277,7 +287,8 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
   pressEffect = true,
   glowEffect = false,
   onClick,
-}) => {
+}
+) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -288,8 +299,10 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
         ${glowEffect ? 'shadow-xl shadow-blue-500/10' : ''}
       `}
       onClick={onClick}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
+      onHoverStart={(
+) => setIsHovered(true)}
+      onHoverEnd={(
+) => setIsHovered(false)}
       // Hover animations
       whileHover={
         hoverEffect
@@ -357,7 +370,8 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   distance = 50,
   once = true,
   className = '',
-}) => {
+}
+) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once, margin: '-100px' });
 
@@ -402,7 +416,8 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
 interface AnimatedToggleProps {
   checked: boolean;
-  onChange: (checked: boolean) => void;
+  onChange: (checked: boolean
+) => void;
   size?: 'sm' | 'md' | 'lg';
   color?: 'blue' | 'green' | 'purple' | 'red';
   disabled?: boolean;
@@ -414,7 +429,8 @@ export const AnimatedToggle: React.FC<AnimatedToggleProps> = ({
   size = 'md',
   color = 'blue',
   disabled = false,
-}) => {
+}
+) => {
   const sizes = {
     sm: { container: 'w-8 h-5', thumb: 'w-3 h-3' },
     md: { container: 'w-11 h-6', thumb: 'w-4 h-4' },
@@ -435,7 +451,8 @@ export const AnimatedToggle: React.FC<AnimatedToggleProps> = ({
         ${sizes[size].container} ${colors[color]}
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
       `}
-      onClick={() => !disabled && onChange(!checked)}
+      onClick={(
+) => !disabled && onChange(!checked)}
       whileTap={!disabled ? { scale: 0.95 } : {}}
     >
       <motion.div
@@ -478,7 +495,8 @@ export const AnimatedToggle: React.FC<AnimatedToggleProps> = ({
 
 interface FloatingActionButtonProps {
   icon: React.ReactNode;
-  onClick: () => void;
+  onClick: (
+) => void;
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   size?: 'md' | 'lg';
   color?: 'blue' | 'green' | 'purple' | 'red';
@@ -492,7 +510,8 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   size = 'lg',
   color = 'blue',
   tooltip,
-}) => {
+}
+) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const positions = {
@@ -542,8 +561,10 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
           z-50 relative overflow-hidden
         `}
         onClick={onClick}
-        onHoverStart={() => setShowTooltip(true)}
-        onHoverEnd={() => setShowTooltip(false)}
+        onHoverStart={(
+) => setShowTooltip(true)}
+        onHoverEnd={(
+) => setShowTooltip(false)}
         whileHover={{
           scale: 1.1,
           y: -2,
@@ -594,7 +615,8 @@ interface NotificationProps {
   title: string;
   message?: string;
   duration?: number;
-  onClose: () => void;
+  onClose: (
+) => void;
 }
 
 export const AnimatedNotification: React.FC<NotificationProps> = ({
@@ -603,16 +625,21 @@ export const AnimatedNotification: React.FC<NotificationProps> = ({
   message,
   duration = 5000,
   onClose,
-}) => {
+}
+) => {
   const [progress, setProgress] = useState(100);
 
-  useEffect(() => {
+  useEffect((
+) => {
     const timer = setTimeout(onClose, duration);
-    const interval = setInterval(() => {
-      setProgress((prev: any) => Math.max(0, prev - 100 / (duration / 100)));
+    const interval = setInterval((
+) => {
+      setProgress((prev: any
+) => Math.max(0, prev - 100 / (duration / 100)));
     }, 100);
 
-    return () => {
+    return (
+) => {
       clearTimeout(timer);
       clearInterval(interval);
     };
@@ -702,7 +729,8 @@ export const StaggerContainer: React.FC<StaggerContainerProps> = ({
   children,
   staggerDelay = 0.1,
   className = '',
-}) => {
+}
+) => {
   return (
     <motion.div
       className={className}
@@ -725,7 +753,8 @@ export const StaggerContainer: React.FC<StaggerContainerProps> = ({
 export const StaggerItem: React.FC<{
   children: React.ReactNode;
   className?: string;
-}> = ({ children, className = '' }) => {
+}> = ({ children, className = '' }
+) => {
   return (
     <motion.div
       className={className}

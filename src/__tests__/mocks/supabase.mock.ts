@@ -25,23 +25,31 @@ let mockAuthState = {
 
 const mockSupabaseClient = {
   // Database operations
-  from: jest.fn((table: string) => ({
+  from: jest.fn((table: string
+) => ({
     // SELECT operations
-    select: jest.fn((columns?: string) => ({
-      eq: jest.fn((column: string, value: any) => ({
-        single: jest.fn(() => {
+    select: jest.fn((columns?: string
+) => ({
+      eq: jest.fn((column: string, value: any
+) => ({
+        single: jest.fn((
+) => {
           const data = mockDataStore[table]?.find(
-            (item: any) => item[column] === value
+            (item: any
+) => item[column] === value
           );
           return Promise.resolve({ data, error: null });
         }),
-        limit: jest.fn((count: number) => ({
+        limit: jest.fn((count: number
+) => ({
           data: mockDataStore[table]?.slice(0, count) || [],
           error: null,
         })),
-        order: jest.fn((column: string, options?: any) => ({
+        order: jest.fn((column: string, options?: any
+) => ({
           data:
-            mockDataStore[table]?.sort((a: any, b: any) => {
+            mockDataStore[table]?.sort((a: any, b: any
+) => {
               const aVal = a[column];
               const bVal = b[column];
               if (options?.ascending === false) {
@@ -51,64 +59,87 @@ const mockSupabaseClient = {
             }) || [],
           error: null,
         })),
-        range: jest.fn((from: number, to: number) => ({
+        range: jest.fn((from: number, to: number
+) => ({
           data: mockDataStore[table]?.slice(from, to + 1) || [],
           error: null,
         })),
-        then: jest.fn((callback: any) => {
+        then: jest.fn((callback: any
+) => {
           const data =
-            mockDataStore[table]?.filter((item: any) => item[column] === value) || [];
+            mockDataStore[table]?.filter((item: any
+) => item[column] === value) || [];
           return Promise.resolve(callback({ data, error: null }));
         }),
       })),
-      neq: jest.fn((column: string, value: any) => ({
-        data: mockDataStore[table]?.filter((item: any) => item[column] !== value) || [],
+      neq: jest.fn((column: string, value: any
+) => ({
+        data: mockDataStore[table]?.filter((item: any
+) => item[column] !== value) || [],
         error: null,
       })),
-      gt: jest.fn((column: string, value: any) => ({
-        data: mockDataStore[table]?.filter((item: any) => item[column] > value) || [],
+      gt: jest.fn((column: string, value: any
+) => ({
+        data: mockDataStore[table]?.filter((item: any
+) => item[column] > value) || [],
         error: null,
       })),
-      gte: jest.fn((column: string, value: any) => ({
-        data: mockDataStore[table]?.filter((item: any) => item[column] >= value) || [],
+      gte: jest.fn((column: string, value: any
+) => ({
+        data: mockDataStore[table]?.filter((item: any
+) => item[column] >= value) || [],
         error: null,
       })),
-      lt: jest.fn((column: string, value: any) => ({
-        data: mockDataStore[table]?.filter((item: any) => item[column] < value) || [],
+      lt: jest.fn((column: string, value: any
+) => ({
+        data: mockDataStore[table]?.filter((item: any
+) => item[column] < value) || [],
         error: null,
       })),
-      lte: jest.fn((column: string, value: any) => ({
-        data: mockDataStore[table]?.filter((item: any) => item[column] <= value) || [],
+      lte: jest.fn((column: string, value: any
+) => ({
+        data: mockDataStore[table]?.filter((item: any
+) => item[column] <= value) || [],
         error: null,
       })),
-      like: jest.fn((column: string, pattern: string) => ({
+      like: jest.fn((column: string, pattern: string
+) => ({
         data:
-          mockDataStore[table]?.filter((item: any) =>
+          mockDataStore[table]?.filter((item: any
+) =>
             String(item[column]).includes(pattern.replace('%', ''))
           ) || [],
         error: null,
       })),
-      in: jest.fn((column: string, values: any[]) => ({
+      in: jest.fn((column: string, values: any[]
+) => ({
         data:
-          mockDataStore[table]?.filter((item: any) => values.includes(item[column])) ||
+          mockDataStore[table]?.filter((item: any
+) => values.includes(item[column])) ||
           [],
         error: null,
       })),
-      is: jest.fn((column: string, value: any) => ({
-        data: mockDataStore[table]?.filter((item: any) => item[column] === value) || [],
+      is: jest.fn((column: string, value: any
+) => ({
+        data: mockDataStore[table]?.filter((item: any
+) => item[column] === value) || [],
         error: null,
       })),
-      then: jest.fn((callback: any) => {
+      then: jest.fn((callback: any
+) => {
         const data = mockDataStore[table] || [];
         return Promise.resolve(callback({ data, error: null }));
       }),
     })),
 
     // INSERT operations
-    insert: jest.fn((data: any | any[]) => ({
-      select: jest.fn(() => {
+    insert: jest.fn((data: any | any[]
+) => ({
+      select: jest.fn((
+) => {
         const insertData = Array.isArray(data) ? data : [data];
-        const withIds = insertData.map((item: any) => ({
+        const withIds = insertData.map((item: any
+) => ({
           ...item,
           id: item.id || `mock-id-${Math.random().toString(36).substr(2, 9)}`,
           created_at: item.created_at || new Date().toISOString(),
@@ -120,7 +151,8 @@ const mockSupabaseClient = {
 
         return Promise.resolve({ data: withIds, error: null });
       }),
-      single: jest.fn(() => {
+      single: jest.fn((
+) => {
         const insertItem = Array.isArray(data) ? data[0] : data;
         const withId = {
           ...insertItem,
@@ -134,9 +166,11 @@ const mockSupabaseClient = {
 
         return Promise.resolve({ data: withId, error: null });
       }),
-      then: jest.fn((callback: any) => {
+      then: jest.fn((callback: any
+) => {
         const insertData = Array.isArray(data) ? data : [data];
-        const withIds = insertData.map((item: any) => ({
+        const withIds = insertData.map((item: any
+) => ({
           ...item,
           id: item.id || `mock-id-${Math.random().toString(36).substr(2, 9)}`,
           created_at: item.created_at || new Date().toISOString(),
@@ -151,24 +185,31 @@ const mockSupabaseClient = {
     })),
 
     // UPDATE operations
-    update: jest.fn((data: any) => ({
-      eq: jest.fn((column: string, value: any) => ({
-        select: jest.fn(() => {
+    update: jest.fn((data: any
+) => ({
+      eq: jest.fn((column: string, value: any
+) => ({
+        select: jest.fn((
+) => {
           if (!mockDataStore[table]) mockDataStore[table] = [];
-          const updated = mockDataStore[table].map((item: any) => {
+          const updated = mockDataStore[table].map((item: any
+) => {
             if (item[column] === value) {
               return { ...item, ...data, updated_at: new Date().toISOString() };
             }
             return item;
           });
           mockDataStore[table] = updated;
-          const updatedItems = updated.filter((item: any) => item[column] === value);
+          const updatedItems = updated.filter((item: any
+) => item[column] === value);
           return Promise.resolve({ data: updatedItems, error: null });
         }),
-        single: jest.fn(() => {
+        single: jest.fn((
+) => {
           if (!mockDataStore[table]) mockDataStore[table] = [];
           const itemIndex = mockDataStore[table].findIndex(
-            (item: any) => item[column] === value
+            (item: any
+) => item[column] === value
           );
           if (itemIndex >= 0) {
             mockDataStore[table][itemIndex] = {
@@ -186,41 +227,52 @@ const mockSupabaseClient = {
             error: { message: 'Record not found' },
           });
         }),
-        then: jest.fn((callback: any) => {
+        then: jest.fn((callback: any
+) => {
           if (!mockDataStore[table]) mockDataStore[table] = [];
-          const updated = mockDataStore[table].map((item: any) => {
+          const updated = mockDataStore[table].map((item: any
+) => {
             if (item[column] === value) {
               return { ...item, ...data, updated_at: new Date().toISOString() };
             }
             return item;
           });
           mockDataStore[table] = updated;
-          const updatedItems = updated.filter((item: any) => item[column] === value);
+          const updatedItems = updated.filter((item: any
+) => item[column] === value);
           return Promise.resolve(callback({ data: updatedItems, error: null }));
         }),
       })),
     })),
 
     // DELETE operations
-    delete: jest.fn(() => ({
-      eq: jest.fn((column: string, value: any) => ({
-        select: jest.fn(() => {
+    delete: jest.fn((
+) => ({
+      eq: jest.fn((column: string, value: any
+) => ({
+        select: jest.fn((
+) => {
           if (!mockDataStore[table]) mockDataStore[table] = [];
           const toDelete = mockDataStore[table].filter(
-            (item: any) => item[column] === value
+            (item: any
+) => item[column] === value
           );
           mockDataStore[table] = mockDataStore[table].filter(
-            (item: any) => item[column] !== value
+            (item: any
+) => item[column] !== value
           );
           return Promise.resolve({ data: toDelete, error: null });
         }),
-        then: jest.fn((callback: any) => {
+        then: jest.fn((callback: any
+) => {
           if (!mockDataStore[table]) mockDataStore[table] = [];
           const toDelete = mockDataStore[table].filter(
-            (item: any) => item[column] === value
+            (item: any
+) => item[column] === value
           );
           mockDataStore[table] = mockDataStore[table].filter(
-            (item: any) => item[column] !== value
+            (item: any
+) => item[column] !== value
           );
           return Promise.resolve(callback({ data: toDelete, error: null }));
         }),
@@ -228,14 +280,18 @@ const mockSupabaseClient = {
     })),
 
     // UPSERT operations
-    upsert: jest.fn((data: any | any[], options?: any) => ({
-      select: jest.fn(() => {
+    upsert: jest.fn((data: any | any[], options?: any
+) => ({
+      select: jest.fn((
+) => {
         const upsertData = Array.isArray(data) ? data : [data];
         if (!mockDataStore[table]) mockDataStore[table] = [];
 
-        const result = upsertData.map((item: any) => {
+        const result = upsertData.map((item: any
+) => {
           const existingIndex = mockDataStore[table].findIndex(
-            (existing: any) =>
+            (existing: any
+) =>
               existing.id === item.id ||
               (options?.onConflict &&
                 existing[options.onConflict] === item[options.onConflict])
@@ -270,7 +326,8 @@ const mockSupabaseClient = {
   // Authentication
   auth: {
     // Current session
-    getSession: jest.fn(() => {
+    getSession: jest.fn((
+) => {
       console.log('🔐 Mock Supabase getSession');
       return Promise.resolve({
         data: { session: mockAuthState.session },
@@ -279,7 +336,8 @@ const mockSupabaseClient = {
     }),
 
     // Get current user
-    getUser: jest.fn(() => {
+    getUser: jest.fn((
+) => {
       console.log('👤 Mock Supabase getUser');
       return Promise.resolve({
         data: { user: mockAuthState.user },
@@ -288,7 +346,8 @@ const mockSupabaseClient = {
     }),
 
     // Sign in with email/password
-    signInWithPassword: jest.fn(({ email, password }: any) => {
+    signInWithPassword: jest.fn(({ email, password }: any
+) => {
       console.log(`🔑 Mock Supabase signInWithPassword: ${email}`);
       const user = {
         id: `mock-user-${Math.random().toString(36).substr(2, 9)}`,
@@ -317,7 +376,8 @@ const mockSupabaseClient = {
     }),
 
     // Sign up with email/password
-    signUp: jest.fn(({ email, password, options }: any) => {
+    signUp: jest.fn(({ email, password, options }: any
+) => {
       console.log(`📝 Mock Supabase signUp: ${email}`);
       const user = {
         id: `mock-user-${Math.random().toString(36).substr(2, 9)}`,
@@ -336,14 +396,16 @@ const mockSupabaseClient = {
     }),
 
     // Sign out
-    signOut: jest.fn(() => {
+    signOut: jest.fn((
+) => {
       console.log('🚪 Mock Supabase signOut');
       mockAuthState = { user: null, session: null, isAuthenticated: false };
       return Promise.resolve({ error: null });
     }),
 
     // OAuth providers
-    signInWithOAuth: jest.fn(({ provider, options }: any) => {
+    signInWithOAuth: jest.fn(({ provider, options }: any
+) => {
       console.log(`🔗 Mock Supabase signInWithOAuth: ${provider}`);
       return Promise.resolve({
         data: { url: `https://mock-oauth-url.com/${provider}` },
@@ -352,7 +414,8 @@ const mockSupabaseClient = {
     }),
 
     // Password reset
-    resetPasswordForEmail: jest.fn((email: string, options?: any) => {
+    resetPasswordForEmail: jest.fn((email: string, options?: any
+) => {
       console.log(`🔄 Mock Supabase resetPasswordForEmail: ${email}`);
       return Promise.resolve({
         data: {},
@@ -361,11 +424,14 @@ const mockSupabaseClient = {
     }),
 
     // Auth state changes
-    onAuthStateChange: jest.fn((callback: (event: string, session: any) => void) => {
+    onAuthStateChange: jest.fn((callback: (event: string, session: any
+) => void
+) => {
       console.log('👀 Mock Supabase onAuthStateChange');
 
       // Simulate initial session check
-      setTimeout(() => {
+      setTimeout((
+) => {
         callback(
           mockAuthState.session ? 'SIGNED_IN' : 'SIGNED_OUT',
           mockAuthState.session
@@ -375,7 +441,8 @@ const mockSupabaseClient = {
       return {
         data: {
           subscription: {
-            unsubscribe: jest.fn(() => {
+            unsubscribe: jest.fn((
+) => {
               console.log('🔌 Mock Supabase auth subscription unsubscribed');
             }),
           },
@@ -386,15 +453,18 @@ const mockSupabaseClient = {
 
     // Admin functions (for testing)
     admin: {
-      getUserById: jest.fn((id: string) => {
+      getUserById: jest.fn((id: string
+) => {
         console.log(`👑 Mock Supabase admin getUserById: ${id}`);
         return Promise.resolve({
-          data: { user: mockDataStore.users?.find((u: any) => u.id === id) },
+          data: { user: mockDataStore.users?.find((u: any
+) => u.id === id) },
           error: null,
         });
       }),
 
-      updateUserById: jest.fn((id: string, attributes: any) => {
+      updateUserById: jest.fn((id: string, attributes: any
+) => {
         console.log(`👑 Mock Supabase admin updateUserById: ${id}`);
         return Promise.resolve({
           data: { user: { id, ...attributes } },
@@ -406,8 +476,10 @@ const mockSupabaseClient = {
 
   // Storage
   storage: {
-    from: jest.fn((bucket: string) => ({
-      upload: jest.fn((path: string, file: any, options?: any) => {
+    from: jest.fn((bucket: string
+) => ({
+      upload: jest.fn((path: string, file: any, options?: any
+) => {
         console.log(`📦 Mock Supabase storage upload: ${bucket}/${path}`);
         return Promise.resolve({
           data: {
@@ -419,7 +491,8 @@ const mockSupabaseClient = {
         });
       }),
 
-      download: jest.fn((path: string) => {
+      download: jest.fn((path: string
+) => {
         console.log(`📥 Mock Supabase storage download: ${bucket}/${path}`);
         const mockBlob = new Blob(['mock file content'], { type: 'text/plain' });
         return Promise.resolve({
@@ -428,7 +501,8 @@ const mockSupabaseClient = {
         });
       }),
 
-      remove: jest.fn((paths: string[]) => {
+      remove: jest.fn((paths: string[]
+) => {
         console.log(`🗑️ Mock Supabase storage remove: ${bucket}`, paths);
         return Promise.resolve({
           data: paths.map(path => ({ name: path })),
@@ -436,7 +510,8 @@ const mockSupabaseClient = {
         });
       }),
 
-      list: jest.fn((path?: string, options?: any) => {
+      list: jest.fn((path?: string, options?: any
+) => {
         console.log(`📋 Mock Supabase storage list: ${bucket}/${path || ''}`);
         return Promise.resolve({
           data: [
@@ -455,7 +530,8 @@ const mockSupabaseClient = {
         });
       }),
 
-      createSignedUrl: jest.fn((path: string, expiresIn: number) => {
+      createSignedUrl: jest.fn((path: string, expiresIn: number
+) => {
         console.log(`🔗 Mock Supabase storage createSignedUrl: ${bucket}/${path}`);
         return Promise.resolve({
           data: {
@@ -465,7 +541,8 @@ const mockSupabaseClient = {
         });
       }),
 
-      getPublicUrl: jest.fn((path: string) => {
+      getPublicUrl: jest.fn((path: string
+) => {
         console.log(`🌐 Mock Supabase storage getPublicUrl: ${bucket}/${path}`);
         return {
           data: {
@@ -477,15 +554,20 @@ const mockSupabaseClient = {
   },
 
   // Real-time subscriptions
-  channel: jest.fn((topic: string) => ({
-    on: jest.fn((event: string, callback: (payload: any) => void) => {
+  channel: jest.fn((topic: string
+) => ({
+    on: jest.fn((event: string, callback: (payload: any
+) => void
+) => {
       console.log(`📡 Mock Supabase channel.on: ${topic} - ${event}`);
       return {
-        subscribe: jest.fn(() => {
+        subscribe: jest.fn((
+) => {
           console.log(`📻 Mock Supabase subscribe: ${topic}`);
           return Promise.resolve('SUBSCRIBED');
         }),
-        unsubscribe: jest.fn(() => {
+        unsubscribe: jest.fn((
+) => {
           console.log(`📻 Mock Supabase unsubscribe: ${topic}`);
           return Promise.resolve('CLOSED');
         }),
@@ -495,7 +577,8 @@ const mockSupabaseClient = {
 
   // Edge functions
   functions: {
-    invoke: jest.fn((functionName: string, options?: any) => {
+    invoke: jest.fn((functionName: string, options?: any
+) => {
       console.log(`⚡ Mock Supabase functions.invoke: ${functionName}`, options);
       return Promise.resolve({
         data: { message: 'Mock function response', result: true },
@@ -505,7 +588,8 @@ const mockSupabaseClient = {
   },
 
   // Internal methods for testing
-  _mockReset: jest.fn(() => {
+  _mockReset: jest.fn((
+) => {
     // Reset mock data store
     Object.keys(mockDataStore).forEach(key => {
       mockDataStore[key] = [];
@@ -517,7 +601,8 @@ const mockSupabaseClient = {
     console.log('🧹 Mock Supabase reset');
   }),
 
-  _mockSetUser: jest.fn((user: any, session?: any) => {
+  _mockSetUser: jest.fn((user: any, session?: any
+) => {
     mockAuthState = {
       user,
       session: session || {
@@ -532,19 +617,22 @@ const mockSupabaseClient = {
     console.log('👤 Mock Supabase user set', user);
   }),
 
-  _mockAddData: jest.fn((table: string, data: any[]) => {
+  _mockAddData: jest.fn((table: string, data: any[]
+) => {
     if (!mockDataStore[table]) mockDataStore[table] = [];
     mockDataStore[table].push(...data);
     console.log(`📊 Mock Supabase data added to ${table}`, data.length, 'records');
   }),
 
-  _mockGetData: jest.fn((table: string) => {
+  _mockGetData: jest.fn((table: string
+) => {
     return mockDataStore[table] || [];
   }),
 };
 
 // Factory function for creating fresh mocks
-export const _createMockSupabase = (url: string, anonKey: string) => {
+export const _createMockSupabase = (url: string, anonKey: string
+) => {
   console.log(`🗄️ Mock Supabase client created: ${url}`);
   return mockSupabaseClient;
 };

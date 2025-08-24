@@ -31,9 +31,12 @@ interface AlarmThemeSelectorProps {
   selectedVisualTheme?: VisualAlarmThemeId;
   selectedSoundTheme?: SoundTheme;
   selectedVoiceMood?: VoiceMood;
-  onVisualThemeChange: (themeId: VisualAlarmThemeId) => void;
-  onSoundThemeChange: (themeId: SoundTheme) => void;
-  onVoiceMoodChange: (mood: VoiceMood) => void;
+  onVisualThemeChange: (themeId: VisualAlarmThemeId
+) => void;
+  onSoundThemeChange: (themeId: SoundTheme
+) => void;
+  onVoiceMoodChange: (mood: VoiceMood
+) => void;
   className?: string;
 }
 
@@ -45,7 +48,8 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
   onSoundThemeChange,
   onVoiceMoodChange,
   className = '',
-}) => {
+}
+) => {
   const [activeTab, setActiveTab] = useState<
     'visual' | 'sound' | 'voice' | 'combinations'
   >('combinations');
@@ -199,19 +203,22 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
   ];
 
   // Preview theme
-  const handlePreviewTheme = (themeId: VisualAlarmThemeId) => {
+  const handlePreviewTheme = (themeId: VisualAlarmThemeId
+) => {
     setPreviewTheme(themeId);
     setIsPreviewActive(true);
     visualAlarmThemes.previewTheme(themeId, 3000);
 
-    setTimeout(() => {
+    setTimeout((
+) => {
       setIsPreviewActive(false);
       setPreviewTheme(null);
     }, 3000);
   };
 
   // Toggle favorite
-  const toggleFavorite = (id: string) => {
+  const toggleFavorite = (id: string
+) => {
     const newFavorites = new Set(favorites);
     if (newFavorites.has(id)) {
       newFavorites.delete(id);
@@ -222,7 +229,8 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
   };
 
   // Apply theme combination
-  const applyThemeCombination = (combination: ThemeCombination) => {
+  const applyThemeCombination = (combination: ThemeCombination
+) => {
     onVisualThemeChange(combination.visual);
     onSoundThemeChange(combination.sound);
     onVoiceMoodChange(combination.voice);
@@ -242,8 +250,9 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
               type="text"
               placeholder="Search themes..."
               value={searchQuery}
-              /* auto: implicit any */
-              onChange={(e: any) => setSearchQuery(e.target.value)}
+              
+              onChange={(e: any
+) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                          focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800"
             />
@@ -251,8 +260,9 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
 
           <select
             value={selectedCategory}
-            /* auto: implicit any */
-            onChange={(e: any) => setSelectedCategory(e.target.value)}
+            
+            onChange={(e: any
+) => setSelectedCategory(e.target.value)}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                        focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800"
           >
@@ -276,7 +286,8 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={(
+) => setActiveTab(tab.id as any)}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors
                   ${
                     activeTab === tab.id
@@ -312,7 +323,8 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                     ${combination.premium ? 'border-yellow-400 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20' : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'}
                     hover:shadow-lg hover:border-blue-400
                   `}
-                  onClick={() => applyThemeCombination(combination)}
+                  onClick={(
+) => applyThemeCombination(combination)}
                 >
                   {/* Premium Badge */}
                   {combination.premium && (
@@ -323,7 +335,8 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
 
                   {/* Favorite Button */}
                   <button
-                    onClick={(e: any) => {
+                    onClick={(e: any
+) => {
                       // auto: implicit any
                       e.stopPropagation();
                       toggleFavorite(combination.id);
@@ -376,7 +389,8 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
 
                   {/* Preview Button */}
                   <button
-                    onClick={(e: any) => {
+                    onClick={(e: any
+) => {
                       // auto: implicit any
                       e.stopPropagation();
                       handlePreviewTheme(combination.visual);
@@ -407,7 +421,8 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                   className={`visual-theme-card p-4 rounded-lg border-2 cursor-pointer transition-all
                     ${selectedVisualTheme === theme.id ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'}
                   `}
-                  onClick={() => onVisualThemeChange(theme.id as VisualAlarmThemeId)}
+                  onClick={(
+) => onVisualThemeChange(theme.id as VisualAlarmThemeId)}
                   style={{
                     background: `linear-gradient(135deg, ${theme.colors.gradientStart}20, ${theme.colors.gradientEnd}20)`,
                   }}
@@ -427,7 +442,8 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                   </span>
 
                   <button
-                    onClick={(e: any) => {
+                    onClick={(e: any
+) => {
                       // auto: implicit any
                       e.stopPropagation();
                       handlePreviewTheme(theme.id as VisualAlarmThemeId);
@@ -457,7 +473,8 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                   className={`sound-theme-card p-4 rounded-lg border-2 cursor-pointer transition-all
                     ${selectedSoundTheme === theme.id ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'}
                   `}
-                  onClick={() => onSoundThemeChange(theme.id)}
+                  onClick={(
+) => onSoundThemeChange(theme.id)}
                 >
                   <div
                     className={`w-12 h-12 rounded-full mb-3 flex items-center justify-center text-white text-xl font-bold`}
@@ -499,7 +516,8 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                   className={`voice-mood-card p-4 rounded-lg border-2 cursor-pointer transition-all
                     ${selectedVoiceMood === mood ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'}
                   `}
-                  onClick={() => onVoiceMoodChange(mood)}
+                  onClick={(
+) => onVoiceMoodChange(mood)}
                 >
                   <div className="text-2xl mb-2">
                     {mood === 'drill-sergeant'

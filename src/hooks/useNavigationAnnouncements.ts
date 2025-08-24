@@ -6,7 +6,8 @@ export function useNavigationAnnouncements() {
 
   // Page navigation announcements
   const announcePageChange = useCallback(
-    (pageName: string, pageDescription?: string) => {
+    (pageName: string, pageDescription?: string
+) => {
       let message = `Navigated to ${pageName} page`;
       if (pageDescription) {
         message += `. ${pageDescription}`;
@@ -17,7 +18,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceRouteChange = useCallback(
-    (fromRoute: string, toRoute: string) => {
+    (fromRoute: string, toRoute: string
+) => {
       announce(`Navigating from ${fromRoute} to ${toRoute}.`, 'polite');
     },
     [announce]
@@ -25,7 +27,8 @@ export function useNavigationAnnouncements() {
 
   // Tab navigation announcements
   const announceTabChange = useCallback(
-    (tabName: string, tabIndex: number, totalTabs: number, description?: string) => {
+    (tabName: string, tabIndex: number, totalTabs: number, description?: string
+) => {
       let message = `${tabName} tab selected. Tab ${tabIndex + 1} of ${totalTabs}`;
       if (description) {
         message += `. ${description}`;
@@ -36,7 +39,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceTabNavigation = useCallback(
-    (direction: 'next' | 'previous' | 'first' | 'last', currentTab: string) => {
+    (direction: 'next' | 'previous' | 'first' | 'last', currentTab: string
+) => {
       let message = '';
       switch (direction) {
         case 'next':
@@ -59,7 +63,8 @@ export function useNavigationAnnouncements() {
 
   // Section navigation announcements
   const announceSectionChange = useCallback(
-    (sectionName: string, sectionDescription?: string) => {
+    (sectionName: string, sectionDescription?: string
+) => {
       let message = `Navigated to ${sectionName} section`;
       if (sectionDescription) {
         message += `. ${sectionDescription}`;
@@ -70,7 +75,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceModalOpen = useCallback(
-    (modalName: string, purpose?: string) => {
+    (modalName: string, purpose?: string
+) => {
       let message = `${modalName} dialog opened`;
       if (purpose) {
         message += ` for ${purpose}`;
@@ -82,7 +88,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceModalClose = useCallback(
-    (modalName: string) => {
+    (modalName: string
+) => {
       announce(`${modalName} dialog closed. Returning to main content.`, 'polite');
     },
     [announce]
@@ -90,7 +97,8 @@ export function useNavigationAnnouncements() {
 
   // Menu navigation announcements
   const announceMenuOpen = useCallback(
-    (menuName: string, itemCount?: number) => {
+    (menuName: string, itemCount?: number
+) => {
       let message = `${menuName} menu opened`;
       if (itemCount) {
         message += ` with ${itemCount} item${itemCount === 1 ? '' : 's'}`;
@@ -102,14 +110,16 @@ export function useNavigationAnnouncements() {
   );
 
   const announceMenuClose = useCallback(
-    (menuName: string) => {
+    (menuName: string
+) => {
       announce(`${menuName} menu closed.`, 'polite');
     },
     [announce]
   );
 
   const announceMenuItemFocus = useCallback(
-    (itemName: string, itemIndex: number, totalItems: number, description?: string) => {
+    (itemName: string, itemIndex: number, totalItems: number, description?: string
+) => {
       let message = `${itemName}. Item ${itemIndex + 1} of ${totalItems}`;
       if (description) {
         message += `. ${description}`;
@@ -120,7 +130,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceSubmenuOpen = useCallback(
-    (submenuName: string, parentMenu: string) => {
+    (submenuName: string, parentMenu: string
+) => {
       announce(
         `${submenuName} submenu opened from ${parentMenu}. Use arrow keys to navigate, Escape to return to parent menu.`,
         'polite'
@@ -131,7 +142,8 @@ export function useNavigationAnnouncements() {
 
   // Breadcrumb navigation announcements
   const announceBreadcrumbNavigation = useCallback(
-    (breadcrumbs: string[], currentIndex: number) => {
+    (breadcrumbs: string[], currentIndex: number
+) => {
       const breadcrumbPath = breadcrumbs.join(' > ');
       announce(
         `Navigation path: ${breadcrumbPath}. Currently at ${breadcrumbs[currentIndex]}.`,
@@ -142,7 +154,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceBreadcrumbClick = useCallback(
-    (targetPage: string, currentPage: string) => {
+    (targetPage: string, currentPage: string
+) => {
       announce(`Navigating from ${currentPage} back to ${targetPage}.`, 'polite');
     },
     [announce]
@@ -155,7 +168,8 @@ export function useNavigationAnnouncements() {
       totalPages: number,
       itemsPerPage?: number,
       totalItems?: number
-    ) => {
+    
+) => {
       let message = `Page ${currentPage} of ${totalPages}`;
       if (itemsPerPage && totalItems) {
         const startItem = (currentPage - 1) * itemsPerPage + 1;
@@ -171,7 +185,8 @@ export function useNavigationAnnouncements() {
     (
       direction: 'next' | 'previous' | 'first' | 'last' | 'jump',
       targetPage?: number
-    ) => {
+    
+) => {
       let message = '';
       switch (direction) {
         case 'next':
@@ -197,7 +212,8 @@ export function useNavigationAnnouncements() {
 
   // Scroll and focus announcements
   const announceScrollPosition = useCallback(
-    (position: 'top' | 'bottom' | 'middle', elementName?: string) => {
+    (position: 'top' | 'bottom' | 'middle', elementName?: string
+) => {
       let message = '';
       switch (position) {
         case 'top':
@@ -219,7 +235,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceFocusChange = useCallback(
-    (elementName: string, elementType: string, context?: string) => {
+    (elementName: string, elementType: string, context?: string
+) => {
       let message = `Focus moved to ${elementName} ${elementType}`;
       if (context) {
         message += ` in ${context}`;
@@ -230,7 +247,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceFocusTrap = useCallback(
-    (containerName: string) => {
+    (containerName: string
+) => {
       announce(
         `Focus is now trapped within ${containerName}. Use Tab and Shift+Tab to navigate, Escape to exit.`,
         'polite'
@@ -240,7 +258,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceFocusReturn = useCallback(
-    (elementName: string) => {
+    (elementName: string
+) => {
       announce(`Focus returned to ${elementName}.`, 'polite');
     },
     [announce]
@@ -248,7 +267,8 @@ export function useNavigationAnnouncements() {
 
   // Search and filter navigation announcements
   const announceSearchNavigation = useCallback(
-    (query: string, resultCount: number, currentIndex?: number) => {
+    (query: string, resultCount: number, currentIndex?: number
+) => {
       let message = `Search for "${query}" found ${resultCount} result${resultCount === 1 ? '' : 's'}`;
       if (currentIndex !== undefined && resultCount > 0) {
         message += `. Currently at result ${currentIndex + 1}`;
@@ -259,7 +279,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceFilterChange = useCallback(
-    (filterName: string, filterValue: string, resultCount: number) => {
+    (filterName: string, filterValue: string, resultCount: number
+) => {
       announce(
         `Filter "${filterName}" set to "${filterValue}". Showing ${resultCount} result${resultCount === 1 ? '' : 's'}.`,
         'polite'
@@ -269,7 +290,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceSortChange = useCallback(
-    (sortBy: string, sortOrder: 'ascending' | 'descending', resultCount: number) => {
+    (sortBy: string, sortOrder: 'ascending' | 'descending', resultCount: number
+) => {
       announce(
         `Content sorted by ${sortBy} in ${sortOrder} order. ${resultCount} item${resultCount === 1 ? '' : 's'} displayed.`,
         'polite'
@@ -285,7 +307,8 @@ export function useNavigationAnnouncements() {
       isExpanded: boolean,
       sectionIndex?: number,
       totalSections?: number
-    ) => {
+    
+) => {
       let message = `${sectionName} section ${isExpanded ? 'expanded' : 'collapsed'}`;
       if (sectionIndex !== undefined && totalSections !== undefined) {
         message += `. Section ${sectionIndex + 1} of ${totalSections}`;
@@ -296,7 +319,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceCollapsibleToggle = useCallback(
-    (elementName: string, isExpanded: boolean) => {
+    (elementName: string, isExpanded: boolean
+) => {
       announce(`${elementName} ${isExpanded ? 'expanded' : 'collapsed'}.`, 'polite');
     },
     [announce]
@@ -309,7 +333,8 @@ export function useNavigationAnnouncements() {
       currentSlide: number,
       totalSlides: number,
       slideTitle?: string
-    ) => {
+    
+) => {
       let message = `Moved to ${direction} slide. Slide ${currentSlide + 1} of ${totalSlides}`;
       if (slideTitle) {
         message += `: ${slideTitle}`;
@@ -320,7 +345,8 @@ export function useNavigationAnnouncements() {
   );
 
   const announceCarouselAutoplay = useCallback(
-    (isPlaying: boolean) => {
+    (isPlaying: boolean
+) => {
       announce(`Carousel autoplay ${isPlaying ? 'started' : 'stopped'}.`, 'polite');
     },
     [announce]
@@ -328,7 +354,8 @@ export function useNavigationAnnouncements() {
 
   // Navigation shortcuts and help announcements
   const announceKeyboardShortcuts = useCallback(
-    (context: string) => {
+    (context: string
+) => {
       announce(
         `Keyboard shortcuts available for ${context}. Press F1 or Ctrl+? for help.`,
         'polite'
@@ -338,14 +365,16 @@ export function useNavigationAnnouncements() {
   );
 
   const announceNavigationHelp = useCallback(
-    (helpText: string) => {
+    (helpText: string
+) => {
       announce(`Navigation help: ${helpText}`, 'polite');
     },
     [announce]
   );
 
   const announceSkipLink = useCallback(
-    (targetSection: string) => {
+    (targetSection: string
+) => {
       announce(`Skipped to ${targetSection} section.`, 'polite');
     },
     [announce]

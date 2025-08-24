@@ -407,7 +407,8 @@ export class AlarmAPISecurityService {
 
     // Clean up old tokens for this user
     const userTokens = Array.from(this.csrfTokens.entries()).filter(
-      ([, tokenData]) => !tokenData.used && tokenData.expiresAt > new Date()
+      ([, tokenData]
+) => !tokenData.used && tokenData.expiresAt > new Date()
     );
 
     if (userTokens.length > 10) {
@@ -456,7 +457,8 @@ export class AlarmAPISecurityService {
             } else if (sanitizedData.alarms.length > 100) {
               errors.push('Bulk operation limited to 100 alarms per request');
             } else {
-              sanitizedData.alarms = sanitizedData.alarms.map((alarm: any) => {
+              sanitizedData.alarms = sanitizedData.alarms.map((alarm: any
+) => {
                 const validation = this.validateAlarmData(alarm);
                 errors.push(...validation.errors);
                 warnings.push(...validation.warnings);
@@ -610,7 +612,8 @@ export class AlarmAPISecurityService {
       return { valid: false, errors, warnings };
     }
 
-    sanitizedData.alarms = data.alarms.map((alarm: any, index: number) => {
+    sanitizedData.alarms = data.alarms.map((alarm: any, index: number
+) => {
       const validation = this.validateAlarmData(alarm);
       validation.errors.forEach(error => errors.push(`Alarm ${index}: ${error}`));
       validation.warnings.forEach(warning =>
@@ -645,7 +648,8 @@ export class AlarmAPISecurityService {
     const errors: string[] = [];
     const warnings: string[] = [];
 
-    Object.entries(query).forEach(([key, value]) => {
+    Object.entries(query).forEach(([key, value]
+) => {
       // Sanitize all query values
       const sanitized = SecurityService.sanitizeInput(value);
       if (sanitized !== value) {
@@ -686,7 +690,8 @@ export class AlarmAPISecurityService {
     const errors: string[] = [];
     const warnings: string[] = [];
 
-    Object.entries(params).forEach(([key, value]) => {
+    Object.entries(params).forEach(([key, value]
+) => {
       switch (key) {
         case 'id':
           if (
@@ -735,7 +740,8 @@ export class AlarmAPISecurityService {
       }
 
       // Check for suspicious headers
-      Object.entries(request.headers).forEach(([key, value]) => {
+      Object.entries(request.headers).forEach(([key, value]
+) => {
         if (this.isSuspiciousHeader(key, value)) {
           errors.push(`Suspicious header detected: ${key}`);
         }
@@ -1032,7 +1038,8 @@ export class AlarmAPISecurityService {
 
     if (typeof data === 'object' && data !== null) {
       const sanitized: any = {};
-      Object.entries(data).forEach(([key, value]) => {
+      Object.entries(data).forEach(([key, value]
+) => {
         const sanitizedKey = SecurityService.sanitizeInput(key);
         sanitized[sanitizedKey] = this.sanitizeForSecurity(value);
       });
@@ -1131,7 +1138,8 @@ export class AlarmAPISecurityService {
 
   private startCleanupTimer(): void {
     setInterval(
-      () => {
+      (
+) => {
         this.cleanupExpiredData();
       },
       15 * 60 * 1000
@@ -1176,7 +1184,8 @@ export class AlarmAPISecurityService {
   }> {
     const activeRequests = this.activeRequests.size;
     const threatCount = Array.from(this.activeRequests.values()).reduce(
-      (sum, context) => sum + context.threats.length,
+      (sum, context
+) => sum + context.threats.length,
       0
     );
 

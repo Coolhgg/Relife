@@ -75,7 +75,8 @@ export class CustomSoundManager {
       tags?: string[];
     },
     userId: string,
-    onProgress?: (progress: SoundUploadProgress) => void
+    onProgress?: (progress: SoundUploadProgress
+) => void
   ): Promise<SoundUploadResult> {
     try {
       // Stage 1: Validation
@@ -195,7 +196,8 @@ export class CustomSoundManager {
       return new Promise(resolve => {
         const audio = new Audio(audioUrl);
 
-        audio.addEventListener('loadedmetadata', () => {
+        audio.addEventListener('loadedmetadata', (
+) => {
           URL.revokeObjectURL(audioUrl);
 
           const duration = audio.duration;
@@ -228,7 +230,8 @@ export class CustomSoundManager {
           });
         });
 
-        audio.addEventListener('error', () => {
+        audio.addEventListener('error', (
+) => {
           URL.revokeObjectURL(audioUrl);
           resolve({
             valid: false,
@@ -237,7 +240,8 @@ export class CustomSoundManager {
         });
 
         // Set a timeout in case the file never loads
-        setTimeout(() => {
+        setTimeout((
+) => {
           URL.revokeObjectURL(audioUrl);
           resolve({
             valid: false,
@@ -329,11 +333,13 @@ export class CustomSoundManager {
    */
   async previewSound(
     file: File
-  ): Promise<{ audio: HTMLAudioElement; cleanup: () => void }> {
+  ): Promise<{ audio: HTMLAudioElement; cleanup: (
+) => void }> {
     const audioUrl = URL.createObjectURL(file);
     const audio = new Audio(audioUrl);
 
-    const cleanup = () => {
+    const cleanup = (
+) => {
       URL.revokeObjectURL(audioUrl);
     };
 

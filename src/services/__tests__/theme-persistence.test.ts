@@ -8,18 +8,23 @@ import ThemePersistenceService from '../theme-persistence';
 import type { Theme } from '../../types';
 
 // Mock localStorage
-const mockLocalStorage = (() => {
+const mockLocalStorage = ((
+) => {
   let store: Record<string, string> = {};
 
   return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
+    getItem: (key: string
+) => store[key] || null,
+    setItem: (key: string, value: string
+) => {
       store[key] = value.toString();
     },
-    removeItem: (key: string) => {
+    removeItem: (key: string
+) => {
       delete store[key];
     },
-    clear: () => {
+    clear: (
+) => {
       store = {};
     },
     get store() {
@@ -33,16 +38,19 @@ Object.defineProperty(window, 'localStorage', {
 });
 
 // Mock ErrorHandler
-jest.mock('../error-handler', () => ({
+jest.mock('../error-handler', (
+) => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
 }));
 
-describe('ThemePersistenceService', () => {
+describe('ThemePersistenceService', (
+) => {
   let persistenceService: ThemePersistenceService;
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     // Clear localStorage before each test
     mockLocalStorage.clear();
 
@@ -50,13 +58,16 @@ describe('ThemePersistenceService', () => {
     persistenceService = ThemePersistenceService.getInstance();
   });
 
-  afterEach(() => {
+  afterEach((
+) => {
     mockLocalStorage.clear();
     jest.clearAllMocks();
   });
 
-  describe('Initialization', () => {
-    it('should create default storage on first run', () => {
+  describe('Initialization', (
+) => {
+    it('should create default storage on first run', (
+) => {
       const stored = mockLocalStorage.getItem('relife-theme-data');
       expect(stored).toBeTruthy();
 
@@ -67,7 +78,8 @@ describe('ThemePersistenceService', () => {
       expect(data.version).toBe('2.0.0');
     });
 
-    it('should create metadata on initialization', () => {
+    it('should create metadata on initialization', (
+) => {
       const metadata = mockLocalStorage.getItem('relife-theme-metadata');
       expect(metadata).toBeTruthy();
 
@@ -78,8 +90,10 @@ describe('ThemePersistenceService', () => {
     });
   });
 
-  describe('Theme Data Management', () => {
-    it('should save theme data successfully', async () => {
+  describe('Theme Data Management', (
+) => {
+    it('should save theme data successfully', async (
+) => {
       const testData = {
         theme: 'dark' as Theme,
         timestamp: new Date().toISOString(),
@@ -93,7 +107,8 @@ describe('ThemePersistenceService', () => {
       expect(parsedData.theme).toBe('dark');
     });
 
-    it('should load theme data successfully', async () => {
+    it('should load theme data successfully', async (
+) => {
       // Save test data first
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme,
@@ -109,7 +124,8 @@ describe('ThemePersistenceService', () => {
       expect(loadedData.personalization).toHaveProperty('colorPreferences');
     });
 
-    it('should return default data when storage is empty', async () => {
+    it('should return default data when storage is empty', async (
+) => {
       mockLocalStorage.clear();
 
       const data = await persistenceService.loadThemeData();
@@ -117,7 +133,8 @@ describe('ThemePersistenceService', () => {
       expect(data.version).toBe('2.0.0');
     });
 
-    it('should handle corrupted data gracefully', async () => {
+    it('should handle corrupted data gracefully', async (
+) => {
       // Set invalid JSON
       mockLocalStorage.setItem('relife-theme-data', 'invalid-json');
 
@@ -127,8 +144,10 @@ describe('ThemePersistenceService', () => {
     });
   });
 
-  describe('Backup and Restore', () => {
-    it('should create backups when saving data', async () => {
+  describe('Backup and Restore', (
+) => {
+    it('should create backups when saving data', async (
+) => {
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme,
       });
@@ -141,7 +160,8 @@ describe('ThemePersistenceService', () => {
       expect(backupKeys.length).toBeGreaterThan(0);
     });
 
-    it('should restore from backup when main data is corrupted', async () => {
+    it('should restore from backup when main data is corrupted', async (
+) => {
       // Save valid data (creates backup)
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme,
@@ -155,7 +175,8 @@ describe('ThemePersistenceService', () => {
       expect(data.theme).toBe('dark');
     });
 
-    it('should limit number of backups', async () => {
+    it('should limit number of backups', async (
+) => {
       // Create more backups than the limit (3)
       for (let i = 0; i < 5; i++) {
         await persistenceService.saveThemeData({
@@ -174,8 +195,10 @@ describe('ThemePersistenceService', () => {
     });
   });
 
-  describe('Import and Export', () => {
-    it('should export theme data as JSON string', async () => {
+  describe('Import and Export', (
+) => {
+    it('should export theme data as JSON string', async (
+) => {
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme,
         personalization: {
@@ -194,7 +217,8 @@ describe('ThemePersistenceService', () => {
       expect(parsedExport).toHaveProperty('exportVersion');
     });
 
-    it('should import theme data from JSON string', async () => {
+    it('should import theme data from JSON string', async (
+) => {
       const importData = {
         version: '2.0.0',
         theme: 'dark' as Theme,
@@ -222,14 +246,17 @@ describe('ThemePersistenceService', () => {
       expect(loadedData.analytics.usageCount).toBe(5);
     });
 
-    it('should handle invalid import data', async () => {
+    it('should handle invalid import data', async (
+) => {
       const success = await persistenceService.importThemes('invalid-json');
       expect(success).toBe(false);
     });
   });
 
-  describe('Data Validation', () => {
-    it('should update analytics when saving theme data', async () => {
+  describe('Data Validation', (
+) => {
+    it('should update analytics when saving theme data', async (
+) => {
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme,
       });
@@ -239,7 +266,8 @@ describe('ThemePersistenceService', () => {
       expect(data.analytics.lastUsed).toBeTruthy();
     });
 
-    it('should preserve existing data when partial updates are made', async () => {
+    it('should preserve existing data when partial updates are made', async (
+) => {
       // Initial save
       await persistenceService.saveThemeData({
         theme: 'light' as Theme,
@@ -261,8 +289,10 @@ describe('ThemePersistenceService', () => {
     });
   });
 
-  describe('Storage Statistics', () => {
-    it('should provide accurate storage statistics', async () => {
+  describe('Storage Statistics', (
+) => {
+    it('should provide accurate storage statistics', async (
+) => {
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme,
       });
@@ -276,8 +306,10 @@ describe('ThemePersistenceService', () => {
     });
   });
 
-  describe('Data Clearing', () => {
-    it('should clear all data and reset to defaults', async () => {
+  describe('Data Clearing', (
+) => {
+    it('should clear all data and reset to defaults', async (
+) => {
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme,
       });
@@ -290,11 +322,14 @@ describe('ThemePersistenceService', () => {
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle localStorage errors gracefully', async () => {
+  describe('Error Handling', (
+) => {
+    it('should handle localStorage errors gracefully', async (
+) => {
       // Mock localStorage to throw errors
       const originalSetItem = mockLocalStorage.setItem;
-      mockLocalStorage.setItem = jest.fn(() => {
+      mockLocalStorage.setItem = jest.fn((
+) => {
         throw new Error('Storage quota exceeded');
       });
 
@@ -307,7 +342,8 @@ describe('ThemePersistenceService', () => {
       mockLocalStorage.setItem = originalSetItem;
     });
 
-    it('should validate data integrity', async () => {
+    it('should validate data integrity', async (
+) => {
       // Test with missing required fields
       const invalidData = {
         theme: 'dark',

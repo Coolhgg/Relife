@@ -14,7 +14,8 @@ import { TimeoutHandle } from '../types/timers';
 setupGlobalMocks();
 
 // Mock localStorage and sessionStorage only if they don't exist or are not functional
-const createMockStorage = () => ({
+const createMockStorage = (
+) => ({
   getItem: vi.fn(),
   setItem: vi.fn(),
   removeItem: vi.fn(),
@@ -41,7 +42,9 @@ if (typeof global !== 'undefined') {
 
   // Mock window.matchMedia only if it doesn't exist
   if (!global.matchMedia) {
-    global.matchMedia = vi.fn().mockImplementation((query: any) => ({ // auto: implicit any
+    global.matchMedia = vi.fn().mockImplementation((query: any
+) => ({
+      // auto: implicit any
       matches: false,
       media: query,
       onchange: null,
@@ -56,7 +59,8 @@ if (typeof global !== 'undefined') {
 
 // Mock Speech API only if it doesn't exist
 if (!global.SpeechSynthesisUtterance) {
-  const MockSpeechSynthesisUtterance = vi.fn().mockImplementation(() => ({
+  const MockSpeechSynthesisUtterance = vi.fn().mockImplementation((
+) => ({
     text: '',
     rate: 1,
     pitch: 1,
@@ -73,7 +77,8 @@ if (!global.speechSynthesis) {
     cancel: vi.fn(),
     pause: vi.fn(),
     resume: vi.fn(),
-    getVoices: vi.fn(() => []),
+    getVoices: vi.fn((
+) => []),
     speaking: false,
     pending: false,
     paused: false,
@@ -84,7 +89,8 @@ if (!global.speechSynthesis) {
 
 // Mock observers only if they don't exist
 if (!global.ResizeObserver) {
-  global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  global.ResizeObserver = vi.fn().mockImplementation((
+) => ({
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
@@ -92,7 +98,8 @@ if (!global.ResizeObserver) {
 }
 
 if (!global.IntersectionObserver) {
-  global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+  global.IntersectionObserver = vi.fn().mockImplementation((
+) => ({
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
@@ -101,14 +108,17 @@ if (!global.IntersectionObserver) {
 
 // Mock animation frame functions only if they don't exist
 if (!global.requestAnimationFrame) {
-  global.requestAnimationFrame = vi.fn((cb: any) => setTimeout(cb, 0));
+  global.requestAnimationFrame = vi.fn((cb: any
+) => setTimeout(cb, 0));
 }
 if (!global.cancelAnimationFrame) {
-  global.cancelAnimationFrame = vi.fn((id: any) => clearTimeout(id));
+  global.cancelAnimationFrame = vi.fn((id: any
+) => clearTimeout(id));
 }
 
 // Mock window timer functions only if they don't exist or need enhancement
-const createTimerMock = (originalTimer: any) => {
+const createTimerMock = (originalTimer: any
+) => {
   const mockFn = vi.fn(originalTimer) as any;
   mockFn.__promisify__ = vi.fn();
   return mockFn;
@@ -117,13 +127,15 @@ const createTimerMock = (originalTimer: any) => {
 if (typeof window !== 'undefined') {
   // Only mock if window timer functions don't exist
   if (!window.setInterval) {
-    (window as any).setInterval = createTimerMock(() => 1);
+    (window as any).setInterval = createTimerMock((
+) => 1);
   }
   if (!window.clearInterval) {
     (window as any).clearInterval = vi.fn();
   }
   if (!window.setTimeout) {
-    (window as any).setTimeout = createTimerMock(() => 1);
+    (window as any).setTimeout = createTimerMock((
+) => 1);
   }
   if (!window.clearTimeout) {
     (window as any).clearTimeout = vi.fn();
@@ -131,13 +143,15 @@ if (typeof window !== 'undefined') {
 } else {
   // For global scope
   if (!(global as any).setInterval) {
-    (global as any).setInterval = createTimerMock(() => 1);
+    (global as any).setInterval = createTimerMock((
+) => 1);
   }
   if (!(global as any).clearInterval) {
     (global as any).clearInterval = vi.fn();
   }
   if (!(global as any).setTimeout) {
-    (global as any).setTimeout = createTimerMock(() => 1);
+    (global as any).setTimeout = createTimerMock((
+) => 1);
   }
   if (!(global as any).clearTimeout) {
     (global as any).clearTimeout = vi.fn();
@@ -145,7 +159,8 @@ if (typeof window !== 'undefined') {
 }
 
 // Clean up after each test
-afterEach(() => {
+afterEach((
+) => {
   cleanup();
 });
 
@@ -173,13 +188,16 @@ if (typeof HTMLCanvasElement !== 'undefined') {
       return {
         fillText: vi.fn(),
         strokeText: vi.fn(),
-        measureText: vi.fn(() => ({ width: 100 })),
-        getImageData: vi.fn(() => ({
+        measureText: vi.fn((
+) => ({ width: 100 })),
+        getImageData: vi.fn((
+) => ({
           data: new Uint8ClampedArray(4).fill(255), // Fill with white pixels
           width: 1,
           height: 1,
         })),
-        createImageData: vi.fn(() => ({
+        createImageData: vi.fn((
+) => ({
           data: new Uint8ClampedArray(4).fill(255),
           width: 1,
           height: 1,
@@ -217,7 +235,8 @@ if (typeof HTMLCanvasElement !== 'undefined') {
 if (typeof window !== 'undefined') {
   window.getComputedStyle = vi
     .fn()
-    .mockImplementation((element: Element, pseudoElt?: string) => {
+    .mockImplementation((element: Element, pseudoElt?: string
+) => {
       const mockStyle = {
         color: 'rgb(0, 0, 0)',
         backgroundColor: 'rgb(255, 255, 255)',
@@ -234,7 +253,8 @@ if (typeof window !== 'undefined') {
         borderColor: 'rgb(0, 0, 0)',
         borderStyle: 'none',
         borderWidth: '0px',
-        getPropertyValue: vi.fn((prop: string) => {
+        getPropertyValue: vi.fn((prop: string
+) => {
           switch (prop) {
             case 'color':
               return 'rgb(0, 0, 0)';
@@ -288,12 +308,15 @@ if (typeof window !== 'undefined') {
 
 // Mock i18next for tests that need translation
 const mockI18n = {
-  t: vi.fn((key: string) => key),
+  t: vi.fn((key: string
+) => key),
   changeLanguage: vi.fn(),
   language: 'en',
   languages: ['en'],
-  use: vi.fn(() => mockI18n),
-  init: vi.fn(() => Promise.resolve()),
+  use: vi.fn((
+) => mockI18n),
+  init: vi.fn((
+) => Promise.resolve()),
   on: vi.fn(),
   off: vi.fn(),
 };
@@ -338,7 +361,8 @@ export const testUtils = {
     createdAt: '2023-01-01T00:00:00.000Z',
   },
 
-  clearAllMocks: () => {
+  clearAllMocks: (
+) => {
     vi.clearAllMocks();
     mockStorage.getItem.mockClear();
     mockStorage.setItem.mockClear();

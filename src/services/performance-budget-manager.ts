@@ -18,8 +18,10 @@ export class PerformanceBudgetManager {
   private activeAlerts: Map<string, PerformanceAlert> = new Map();
   private monitoringInterval: TimeoutHandle | null = null;
   private adaptations: DeviceAdaptation | null = null;
-  private listeners: Array<(snapshot: PerformanceSnapshot) => void> = [];
-  private alertListeners: Array<(alert: PerformanceAlert) => void> = [];
+  private listeners: Array<(snapshot: PerformanceSnapshot
+) => void> = [];
+  private alertListeners: Array<(alert: PerformanceAlert
+) => void> = [];
   private isMonitoring = false;
   private performanceObserver: PerformanceObserver | null = null;
   private frameRateTracker: FrameRateTracker | null = null;
@@ -372,7 +374,8 @@ export class PerformanceBudgetManager {
 
     const frequency = this.adaptations?.monitoringFrequency || 30000;
 
-    this.monitoringInterval = setInterval(() => {
+    this.monitoringInterval = setInterval((
+) => {
       this.capturePerformanceSnapshot();
     }, frequency);
 
@@ -704,7 +707,8 @@ export class PerformanceBudgetManager {
     message: string,
     metrics?: any,
     suggestions: string[] = [],
-    autoFix?: () => Promise<void>
+    autoFix?: (
+) => Promise<void>
   ): void {
     const alert: PerformanceAlert = {
       id,
@@ -722,7 +726,8 @@ export class PerformanceBudgetManager {
 
     // Auto-resolve after some time for non-critical alerts
     if (severity === 'warning') {
-      setTimeout(() => {
+      setTimeout((
+) => {
         this.resolveAlert(id);
       }, 300000); // 5 minutes
     }
@@ -736,8 +741,10 @@ export class PerformanceBudgetManager {
     return 'user';
   }
 
-  private createMemoryAutoFix(): () => Promise<void> {
-    return async () => {
+  private createMemoryAutoFix(): (
+) => Promise<void> {
+    return async (
+) => {
       // Trigger garbage collection if available
       if ('gc' in window) {
         (window as any).gc();
@@ -758,8 +765,10 @@ export class PerformanceBudgetManager {
     };
   }
 
-  private createFPSAutoFix(): () => Promise<void> {
-    return async () => {
+  private createFPSAutoFix(): (
+) => Promise<void> {
+    return async (
+) => {
       // Enable reduced motion
       document.documentElement.style.setProperty('--animation-duration', '0s');
 
@@ -824,9 +833,12 @@ export class PerformanceBudgetManager {
   }
 
   // Event listeners
-  onSnapshot(callback: (snapshot: PerformanceSnapshot) => void): () => void {
+  onSnapshot(callback: (snapshot: PerformanceSnapshot
+) => void): (
+) => void {
     this.listeners.push(callback);
-    return () => {
+    return (
+) => {
       const index = this.listeners.indexOf(callback);
       if (index > -1) {
         this.listeners.splice(index, 1);
@@ -834,9 +846,12 @@ export class PerformanceBudgetManager {
     };
   }
 
-  onAlert(callback: (alert: PerformanceAlert) => void): () => void {
+  onAlert(callback: (alert: PerformanceAlert
+) => void): (
+) => void {
     this.alertListeners.push(callback);
-    return () => {
+    return (
+) => {
       const index = this.alertListeners.indexOf(callback);
       if (index > -1) {
         this.alertListeners.splice(index, 1);
@@ -907,7 +922,8 @@ class FrameRateTracker {
   private track(): void {
     const start = performance.now();
 
-    this.animationId = requestAnimationFrame(() => {
+    this.animationId = requestAnimationFrame((
+) => {
       const frameDuration = performance.now() - start;
       const fps = 1000 / frameDuration;
 
@@ -938,7 +954,8 @@ class FrameRateTracker {
     }
 
     const current = this.frames[this.frames.length - 1] || 60;
-    const average = this.frames.reduce((a, b) => a + b, 0) / this.frames.length;
+    const average = this.frames.reduce((a, b
+) => a + b, 0) / this.frames.length;
     const min = Math.min(...this.frames);
     const max = Math.max(...this.frames);
     const drops = this.frames.filter(fps => fps < 55).length;

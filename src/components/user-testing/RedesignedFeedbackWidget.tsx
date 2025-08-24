@@ -45,7 +45,8 @@ interface QuickAction {
   icon: React.ElementType;
   color: string;
   bgColor: string;
-  action: () => void;
+  action: (
+) => void;
 }
 
 export function RedesignedFeedbackWidget({
@@ -89,7 +90,8 @@ export function RedesignedFeedbackWidget({
       icon: Heart,
       color: 'text-pink-600',
       bgColor: 'hover:bg-pink-50 dark:hover:bg-pink-900/20',
-      action: () => handleQuickFeedback('rating', '💖 I love this app!'),
+      action: (
+) => handleQuickFeedback('rating', '💖 I love this app!'),
     },
     {
       id: 'suggestion',
@@ -98,7 +100,8 @@ export function RedesignedFeedbackWidget({
       icon: Lightbulb,
       color: 'text-yellow-600',
       bgColor: 'hover:bg-yellow-50 dark:hover:bg-yellow-900/20',
-      action: () => handleQuickFeedback('suggestion', ''),
+      action: (
+) => handleQuickFeedback('suggestion', ''),
     },
     {
       id: 'bug',
@@ -107,7 +110,8 @@ export function RedesignedFeedbackWidget({
       icon: Bug,
       color: 'text-red-600',
       bgColor: 'hover:bg-red-50 dark:hover:bg-red-900/20',
-      action: () => handleQuickFeedback('bug', ''),
+      action: (
+) => handleQuickFeedback('bug', ''),
     },
     {
       id: 'general',
@@ -116,46 +120,59 @@ export function RedesignedFeedbackWidget({
       icon: MessageSquare,
       color: 'text-blue-600',
       bgColor: 'hover:bg-blue-50 dark:hover:bg-blue-900/20',
-      action: () => handleQuickFeedback('text', ''),
+      action: (
+) => handleQuickFeedback('text', ''),
     },
   ];
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (autoHide && isExpanded) {
-      const timer = setTimeout(() => {
+      const timer = setTimeout((
+) => {
         setIsExpanded(false);
       }, autoHideDelay);
-      return () => clearTimeout(timer);
+      return (
+) => clearTimeout(timer);
     }
   }, [autoHide, autoHideDelay, isExpanded]);
 
   // Pulse animation for engagement
-  useEffect(() => {
-    const interval = setInterval(() => {
+  useEffect((
+) => {
+    const interval = setInterval((
+) => {
       if (!isExpanded && Math.random() > 0.7) {
         setPulseAnimation(true);
-        setTimeout(() => setPulseAnimation(false), 1000);
+        setTimeout((
+) => setPulseAnimation(false), 1000);
       }
     }, 30000); // Every 30 seconds
 
-    return () => clearInterval(interval);
+    return (
+) => clearInterval(interval);
   }, [isExpanded]);
 
-  const handleQuickFeedback = (type: typeof feedbackType, prefilledText?: string) => {
+  const handleQuickFeedback = (type: typeof feedbackType, prefilledText?: string
+) => {
     setFeedbackType(type);
     setShowFeedbackModal(true);
     setIsExpanded(false);
   };
 
-  const handleFeedbackSubmitted = (feedbackId: string, rewardPoints: number) => {
+  const handleFeedbackSubmitted = (feedbackId: string, rewardPoints: number
+) => {
     console.log('Feedback submitted:', feedbackId);
     if (enableGamification) {
-      setCurrentPoints((prev: any) => prev + rewardPoints);
-      setRecentFeedbackCount((prev: any) => prev + 1);
+      setCurrentPoints((prev: any
+) => prev + rewardPoints);
+      setRecentFeedbackCount((prev: any
+) => prev + 1);
     }
   };
 
-  const getLevelProgress = () => {
+  const getLevelProgress = (
+) => {
     const levels = [
       { name: 'Beginner', min: 0, max: 100, color: 'from-gray-400 to-gray-500' },
       { name: 'Contributor', min: 100, max: 300, color: 'from-green-400 to-green-500' },
@@ -217,7 +234,8 @@ export function RedesignedFeedbackWidget({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setIsExpanded(false)}
+                    onClick={(
+) => setIsExpanded(false)}
                     className="h-8 w-8 p-0 rounded-full"
                   >
                     <X className="w-4 h-4" />
@@ -295,7 +313,8 @@ export function RedesignedFeedbackWidget({
 
                 {/* Detailed Feedback Button */}
                 <button
-                  onClick={() => {
+                  onClick={(
+) => {
                     setFeedbackType('text');
                     setShowFeedbackModal(true);
                     setIsExpanded(false);
@@ -331,7 +350,8 @@ export function RedesignedFeedbackWidget({
         ) : (
           <div className="relative">
             <Button
-              onClick={() => setIsExpanded(true)}
+              onClick={(
+) => setIsExpanded(true)}
               className={`rounded-full w-14 h-14 shadow-2xl hover:scale-110 transition-all duration-300 bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 border-4 border-white/20 ${
                 pulseAnimation ? 'animate-pulse' : ''
               }`}
@@ -366,7 +386,8 @@ export function RedesignedFeedbackWidget({
 
       <RedesignedFeedbackModal
         isOpen={showFeedbackModal}
-        onClose={() => setShowFeedbackModal(false)}
+        onClose={(
+) => setShowFeedbackModal(false)}
         initialType={feedbackType}
         onFeedbackSubmitted={handleFeedbackSubmitted}
         enableGamification={enableGamification}

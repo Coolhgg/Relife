@@ -237,7 +237,8 @@ export const AccessibilityFocused: Story = {
 };
 
 export const UserJourneyScenarios: Story = {
-  render: () => (
+  render: (
+) => (
     <div className="space-y-8">
       <div>
         <h3 className="text-xl font-bold mb-4">New User - First Time Experience</h3>

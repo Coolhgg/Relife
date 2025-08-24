@@ -182,7 +182,8 @@ export class CapacitorEnhancedService {
   private async initializeAppListeners(): Promise<void> {
     if (!Capacitor.isNativePlatform()) return;
 
-    App.addListener('appStateChange', (state: AppState) => {
+    App.addListener('appStateChange', (state: AppState
+) => {
       console.log('[Capacitor] App state changed:', state);
       this.emit('app-state-change', state);
 
@@ -212,7 +213,8 @@ export class CapacitorEnhancedService {
       const status = await Network.getStatus();
       console.log('[Capacitor] Initial network status:', status);
 
-      Network.addListener('networkStatusChange', (status: ConnectionStatus) => {
+      Network.addListener('networkStatusChange', (status: ConnectionStatus
+) => {
         console.log('[Capacitor] Network status changed:', status);
         this.emit('network-change', status);
       });
@@ -306,7 +308,8 @@ export class CapacitorEnhancedService {
 
     try {
       const pending = await LocalNotifications.getPending();
-      return pending.notifications.filter((n: any) => n.extra?.type === 'alarm');
+      return pending.notifications.filter((n: any
+) => n.extra?.type === 'alarm');
     } catch (error) {
       console.error('[Capacitor] Failed to get pending alarms:', error);
       return [];

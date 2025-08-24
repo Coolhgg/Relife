@@ -398,7 +398,8 @@ export class SmartAlarmScheduler {
     if (!this.sleepGoal) return 0;
 
     const last7Days = sessions.slice(0, 7);
-    const totalSleepDeficit = last7Days.reduce((debt, session) => {
+    const totalSleepDeficit = last7Days.reduce((debt, session
+) => {
       const deficit = Math.max(
         0,
         this.sleepGoal!.targetDuration - session.sleepDuration
@@ -434,9 +435,11 @@ export class SmartAlarmScheduler {
   }
 
   private static calculateVariance(values: number[]): number {
-    const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
+    const mean = values.reduce((sum, val
+) => sum + val, 0) / values.length;
     const squaredDiffs = values.map(val => Math.pow(val - mean, 2));
-    return squaredDiffs.reduce((sum, diff) => sum + diff, 0) / values.length;
+    return squaredDiffs.reduce((sum, diff
+) => sum + diff, 0) / values.length;
   }
 
   private static calculateChronotypeAlignment(
@@ -492,7 +495,8 @@ export class SmartAlarmScheduler {
     const enabledAlarms = alarms.filter(a => a.enabled);
     if (enabledAlarms.length === 0) return { hours: 7, minutes: 0 };
 
-    const totalMinutes = enabledAlarms.reduce((sum, alarm) => {
+    const totalMinutes = enabledAlarms.reduce((sum, alarm
+) => {
       const time = this.parseTimeString(alarm.time);
       return sum + (time.hours * 60 + time.minutes);
     }, 0);
@@ -608,16 +612,17 @@ export class SmartAlarmScheduler {
       const { data, error } = await query;
       if (error) throw error;
 
-      return data/* auto: implicit any */
-        .map((item: any) => ({
-        alarmId: item.alarm_id,
-        optimizationType: item.optimization_type,
-        oldTime: item.old_time,
-        newTime: item.new_time,
-        reason: item.reason,
-        effectiveDate: new Date(item.effective_date),
-        accepted: item.accepted,
-      }));
+      return data 
+        .map((item: any
+) => ({
+          alarmId: item.alarm_id,
+          optimizationType: item.optimization_type,
+          oldTime: item.old_time,
+          newTime: item.new_time,
+          reason: item.reason,
+          effectiveDate: new Date(item.effective_date),
+          accepted: item.accepted,
+        }));
     } catch (error) {
       console.error('Error fetching optimization history:', error);
       return [];

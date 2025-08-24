@@ -340,7 +340,8 @@ export class SleepAnalysisService {
   private static calculateAverageTime(dates: Date[]): string {
     if (dates.length === 0) return '22:00';
 
-    const totalMinutes = dates.reduce((sum, date) => {
+    const totalMinutes = dates.reduce((sum, date
+) => {
       const hours = date.getHours();
       const minutes = date.getMinutes();
       return sum + (hours * 60 + minutes);
@@ -352,7 +353,8 @@ export class SleepAnalysisService {
 
   private static calculateAverage(values: number[]): number {
     if (values.length === 0) return 0;
-    return values.reduce((sum, val) => sum + val, 0) / values.length;
+    return values.reduce((sum, val
+) => sum + val, 0) / values.length;
   }
 
   private static calculateSleepLatency(sessions: SleepSession[]): number {
@@ -408,7 +410,8 @@ export class SleepAnalysisService {
 
     const variations: { [season: string]: Partial<SleepPattern> } = {};
 
-    Object.entries(seasons).forEach(([season, seasonSessions]) => {
+    Object.entries(seasons).forEach(([season, seasonSessions]
+) => {
       if (seasonSessions.length > 0) {
         variations[season] = {
           averageBedtime: this.calculateAverageTime(seasonSessions.map(s => s.bedtime)),
@@ -432,7 +435,8 @@ export class SleepAnalysisService {
     sessions: SleepSession[]
   ): 'extreme_early' | 'early' | 'normal' | 'late' | 'extreme_late' {
     const averageBedtimeMinutes =
-      sessions.reduce((sum, session) => {
+      sessions.reduce((sum, session
+) => {
         return sum + (session.bedtime.getHours() * 60 + session.bedtime.getMinutes());
       }, 0) / sessions.length;
 
@@ -461,7 +465,8 @@ export class SleepAnalysisService {
     if (validStages.length === 0) return null;
 
     // Sort by quality (light sleep is best)
-    const sortedStages = validStages.sort((a, b) => b.quality - a.quality);
+    const sortedStages = validStages.sort((a, b
+) => b.quality - a.quality);
     const bestStage = sortedStages[0];
     const bestStageTime = this.parseTimeString(bestStage.time);
 
@@ -475,7 +480,8 @@ export class SleepAnalysisService {
     sleepStages: Array<{ time: number; stage: 'light' | 'deep' | 'rem' }>,
     timeInMinutes: number
   ): 'light' | 'deep' | 'rem' | 'unknown' {
-    const closestStage = sleepStages.reduce((closest, stage) => {
+    const closestStage = sleepStages.reduce((closest, stage
+) => {
       const closestDistance = Math.abs(closest.time - timeInMinutes);
       const stageDistance = Math.abs(stage.time - timeInMinutes);
       return stageDistance < closestDistance ? stage : closest;

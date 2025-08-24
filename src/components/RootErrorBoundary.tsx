@@ -64,7 +64,8 @@ export class RootErrorBoundary extends Component<Props, State> {
     console.error('Root Error Boundary caught an error:', error, errorInfo);
   }
 
-  private saveApplicationState = async () => {
+  private saveApplicationState = async (
+) => {
     try {
       // Save any critical data to localStorage as a backup
       const currentState = {
@@ -81,15 +82,18 @@ export class RootErrorBoundary extends Component<Props, State> {
     }
   };
 
-  private handleReload = () => {
+  private handleReload = (
+) => {
     this.setState({ isRecovering: true });
 
-    setTimeout(() => {
+    setTimeout((
+) => {
       window.location.reload();
     }, 500);
   };
 
-  private handleRetry = () => {
+  private handleRetry = (
+) => {
     if (this.recoveryAttempts < this.maxRecoveryAttempts) {
       this.recoveryAttempts++;
       this.setState({
@@ -105,7 +109,8 @@ export class RootErrorBoundary extends Component<Props, State> {
     }
   };
 
-  private handleReportError = () => {
+  private handleReportError = (
+) => {
     if (this.state.errorId) {
       const subject = encodeURIComponent(`App Error Report - ${this.state.errorId}`);
       const body = encodeURIComponent(
@@ -195,7 +200,8 @@ export class RootErrorBoundary extends Component<Props, State> {
               )}
 
               <button
-                onClick={() => {
+                onClick={(
+) => {
                   localStorage.clear();
                   window.location.href = '/';
                 }}

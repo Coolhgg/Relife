@@ -84,13 +84,15 @@ export const RTLText: React.FC<RTLTextProps> = ({
   truncate = false,
   dir = 'auto',
   style,
-}) => {
+}
+) => {
   const { text, isRTL } = useRTLText();
 
   const textDir = dir === 'auto' ? text.direction : dir;
 
   // Get alignment class based on RTL direction
-  const getAlignClass = () => {
+  const getAlignClass = (
+) => {
     switch (align) {
       case 'start':
         return text.alignClass('start');
@@ -106,7 +108,8 @@ export const RTLText: React.FC<RTLTextProps> = ({
   };
 
   // Handle truncation
-  const getTruncateClass = () => {
+  const getTruncateClass = (
+) => {
     if (truncate === true) {
       return 'truncate';
     }

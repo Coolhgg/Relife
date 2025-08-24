@@ -23,7 +23,8 @@ let mockNavigationState = {
 };
 
 // Mock navigate function
-const mockNavigate = jest.fn((to: string | number | any, options?: any) => {
+const mockNavigate = jest.fn((to: string | number | any, options?: any
+) => {
   if (typeof to === 'number') {
     // Navigate back/forward
     console.log(`🔙 Mock navigate: ${to > 0 ? 'forward' : 'back'} ${Math.abs(to)}`);
@@ -55,13 +56,15 @@ const mockNavigate = jest.fn((to: string | number | any, options?: any) => {
 });
 
 // useNavigate hook mock
-export const _useNavigate = vi.fn(() => {
+export const _useNavigate = vi.fn((
+) => {
   console.log('🧭 Mock useNavigate hook called');
   return mockNavigate;
 });
 
 // useLocation hook mock
-export const _useLocation = vi.fn(() => {
+export const _useLocation = vi.fn((
+) => {
   console.log('📍 Mock useLocation hook called');
   return {
     ...mockNavigationState.location,
@@ -74,17 +77,20 @@ export const _useLocation = vi.fn(() => {
 });
 
 // useParams hook mock
-export const _useParams = vi.fn(() => {
+export const _useParams = vi.fn((
+) => {
   console.log('🏷️ Mock useParams hook called');
   return mockNavigationState.params;
 });
 
 // useSearchParams hook mock
-export const _useSearchParams = vi.fn(() => {
+export const _useSearchParams = vi.fn((
+) => {
   console.log('🔍 Mock useSearchParams hook called');
 
   const setSearchParams = vi.fn(
-    (params: URLSearchParams | Record<string, string> | string) => {
+    (params: URLSearchParams | Record<string, string> | string
+) => {
       if (params instanceof URLSearchParams) {
         mockNavigationState.searchParams = params;
         mockNavigationState.location.search = params.toString();
@@ -104,7 +110,8 @@ export const _useSearchParams = vi.fn(() => {
 });
 
 // useRoutes hook mock
-export const _useRoutes = vi.fn((routes: any[], locationArg?: any) => {
+export const _useRoutes = vi.fn((routes: any[], locationArg?: any
+) => {
   console.log('🗺️ Mock useRoutes hook called', routes.length, 'routes');
 
   // Simple route matching for testing
@@ -127,7 +134,8 @@ export const _useRoutes = vi.fn((routes: any[], locationArg?: any) => {
 });
 
 // BrowserRouter component mock
-export const _BrowserRouter = vi.fn(({ children, basename }: any) => {
+export const _BrowserRouter = vi.fn(({ children, basename }: any
+) => {
   console.log(
     '🌐 Mock BrowserRouter rendered',
     basename ? `with basename: ${basename}` : ''
@@ -136,19 +144,22 @@ export const _BrowserRouter = vi.fn(({ children, basename }: any) => {
 });
 
 // Router component mock
-export const _Router = vi.fn(({ children, location, navigator }: any) => {
+export const _Router = vi.fn(({ children, location, navigator }: any
+) => {
   console.log('🌐 Mock Router rendered');
   return React.createElement('div', { 'data-testid': 'mock-router' }, children);
 });
 
 // Routes component mock
-export const _Routes = vi.fn(({ children, location }: any) => {
+export const _Routes = vi.fn(({ children, location }: any
+) => {
   console.log('🗺️ Mock Routes rendered');
   return React.createElement('div', { 'data-testid': 'mock-routes' }, children);
 });
 
 // Route component mock
-export const _Route = vi.fn(({ path, element, index, children }: any) => {
+export const _Route = vi.fn(({ path, element, index, children }: any
+) => {
   console.log(`🛤️ Mock Route: ${path || (index ? 'index' : 'no path')}`);
   return React.createElement(
     'div',
@@ -162,10 +173,12 @@ export const _Route = vi.fn(({ path, element, index, children }: any) => {
 
 // Link component mock
 export const _Link = vi.fn(
-  ({ to, children, replace, state, className, style, ...props }: any) => {
+  ({ to, children, replace, state, className, style, ...props }: any
+) => {
     console.log(`🔗 Mock Link to: ${typeof to === 'string' ? to : JSON.stringify(to)}`);
 
-    const handleClick = (e: React.MouseEvent) => {
+    const handleClick = (e: React.MouseEvent
+) => {
       e.preventDefault();
       console.log(`👆 Mock Link clicked: ${to}`);
       mockNavigate(to, { replace, state });
@@ -186,9 +199,11 @@ export const _Link = vi.fn(
 );
 
 // NavLink component mock
-export const _NavLink = vi.fn(({ to, children, className, style, ...props }) => {
+export const _NavLink = vi.fn(({ to, children, className, style, ...props }
+) => {
   const href = typeof to === 'string' ? to : to.pathname || '#';
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent
+) => {
     e.preventDefault();
     console.log(`👆 Mock NavLink clicked: ${to}`);
     mockNavigate(to, { replace: false, state: undefined });
@@ -219,7 +234,8 @@ export const NavLink = jest.fn(
     end,
     caseSensitive,
     ...props
-  }: any) => {
+  }: any
+) => {
     console.log(
       `🔗 Mock NavLink to: ${typeof to === 'string' ? to : JSON.stringify(to)}`
     );
@@ -235,7 +251,8 @@ export const NavLink = jest.fn(
       isActive = currentPath.startsWith(linkPath);
     }
 
-    const handleClick = (e: React.MouseEvent) => {
+    const handleClick = (e: React.MouseEvent
+) => {
       e.preventDefault();
       console.log(`👆 Mock NavLink clicked: ${to}`);
       mockNavigate(to);
@@ -269,10 +286,12 @@ export const NavLink = jest.fn(
 );
 
 // Navigate component mock
-export const _Navigate = vi.fn(({ to, replace, state }: any) => {
+export const _Navigate = vi.fn(({ to, replace, state }: any
+) => {
   console.log(`🚀 Mock Navigate component: ${to}`, { replace, state });
 
-  React.useEffect(() => {
+  React.useEffect((
+) => {
     mockNavigate(to, { replace, state });
   }, [to, replace, state]);
 
@@ -280,7 +299,8 @@ export const _Navigate = vi.fn(({ to, replace, state }: any) => {
 });
 
 // Outlet component mock
-export const _Outlet = vi.fn(({ context }: any) => {
+export const _Outlet = vi.fn(({ context }: any
+) => {
   console.log('🔌 Mock Outlet rendered', context ? 'with context' : '');
   return React.createElement(
     'div',
@@ -293,19 +313,22 @@ export const _Outlet = vi.fn(({ context }: any) => {
 });
 
 // useOutletContext hook mock
-export const _useOutletContext = vi.fn(() => {
+export const _useOutletContext = vi.fn((
+) => {
   console.log('🔌 Mock useOutletContext hook called');
   return {};
 });
 
 // useNavigationType hook mock
-export const _useNavigationType = vi.fn(() => {
+export const _useNavigationType = vi.fn((
+) => {
   console.log('🧭 Mock useNavigationType hook called');
   return 'PUSH'; // Default to PUSH navigation
 });
 
 // useResolvedPath hook mock
-export const _useResolvedPath = vi.fn((to: string) => {
+export const _useResolvedPath = vi.fn((to: string
+) => {
   console.log(`🎯 Mock useResolvedPath: ${to}`);
   return {
     pathname: to,
@@ -315,7 +338,8 @@ export const _useResolvedPath = vi.fn((to: string) => {
 });
 
 // matchPath function mock
-export const _matchPath = vi.fn((pattern: any, pathname: string) => {
+export const _matchPath = vi.fn((pattern: any, pathname: string
+) => {
   console.log(`🎯 Mock matchPath: ${JSON.stringify(pattern)} against ${pathname}`);
 
   if (typeof pattern === 'string') {
@@ -343,13 +367,15 @@ export const _matchPath = vi.fn((pattern: any, pathname: string) => {
 });
 
 // generatePath function mock
-export const _generatePath = vi.fn((path: string, params?: Record<string, string>) => {
+export const _generatePath = vi.fn((path: string, params?: Record<string, string>
+) => {
   console.log(`🛠️ Mock generatePath: ${path}`, params);
 
   if (!params) return path;
 
   let generatedPath = path;
-  Object.entries(params).forEach(([key, value]) => {
+  Object.entries(params).forEach(([key, value]
+) => {
     generatedPath = generatedPath.replace(`:${key}`, value);
     generatedPath = generatedPath.replace(`{${key}}`, value);
   });
@@ -358,7 +384,8 @@ export const _generatePath = vi.fn((path: string, params?: Record<string, string
 });
 
 // createBrowserRouter function mock
-export const _createBrowserRouter = vi.fn((routes: any[], options?: any) => {
+export const _createBrowserRouter = vi.fn((routes: any[], options?: any
+) => {
   console.log('🏗️ Mock createBrowserRouter', routes.length, 'routes', options);
   return {
     routes,
@@ -370,7 +397,8 @@ export const _createBrowserRouter = vi.fn((routes: any[], options?: any) => {
 });
 
 // RouterProvider component mock
-export const _RouterProvider = vi.fn(({ router, fallbackElement }: any) => {
+export const _RouterProvider = vi.fn(({ router, fallbackElement }: any
+) => {
   console.log('🎭 Mock RouterProvider rendered');
   return React.createElement(
     'div',
@@ -383,7 +411,8 @@ export const _RouterProvider = vi.fn(({ router, fallbackElement }: any) => {
 
 // Internal methods for testing
 export const _mockRouterSetup = {
-  setLocation: (pathname: string, search?: string, hash?: string, state?: any) => {
+  setLocation: (pathname: string, search?: string, hash?: string, state?: any
+) => {
     mockNavigationState.location.pathname = pathname;
     if (search !== undefined) mockNavigationState.location.search = search;
     if (hash !== undefined) mockNavigationState.location.hash = hash;
@@ -391,14 +420,16 @@ export const _mockRouterSetup = {
     console.log(`📍 Mock location set: ${pathname}${search || ''}${hash || ''}`);
   },
 
-  setParams: (params: Record<string, string>) => {
+  setParams: (params: Record<string, string>
+) => {
     mockNavigationState.params = params;
     console.log('🏷️ Mock params set:', params);
   },
 
   setSearchParams: (
     searchParams: URLSearchParams | string | Record<string, string>
-  ) => {
+  
+) => {
     if (typeof searchParams === 'string') {
       mockNavigationState.searchParams = new URLSearchParams(searchParams);
       mockNavigationState.location.search = searchParams;
@@ -412,16 +443,19 @@ export const _mockRouterSetup = {
     console.log('🔍 Mock search params set:', mockNavigationState.location.search);
   },
 
-  getHistory: () => {
+  getHistory: (
+) => {
     return [...mockNavigationState.history];
   },
 
-  clearHistory: () => {
+  clearHistory: (
+) => {
     mockNavigationState.history = [];
     console.log('🧹 Mock router history cleared');
   },
 
-  reset: () => {
+  reset: (
+) => {
     mockNavigationState = {
       location: {
         pathname: '/',

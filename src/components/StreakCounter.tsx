@@ -10,9 +10,12 @@ import { TimeoutHandle } from '../types/timers';
 
 interface StreakCounterProps {
   userStreak: UserStreak;
-  onMilestoneReached?: (milestone: StreakMilestone) => void;
-  onStreakShare?: () => void;
-  onStreakFreeze?: () => void;
+  onMilestoneReached?: (milestone: StreakMilestone
+) => void;
+  onStreakShare?: (
+) => void;
+  onStreakFreeze?: (
+) => void;
   className?: string;
   compact?: boolean;
 }
@@ -43,13 +46,15 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
   onStreakFreeze,
   className = '',
   compact = false,
-}) => {
+}
+) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [previousStreak, setPreviousStreak] = useState(userStreak.currentStreak);
 
   // Detect streak increase and trigger celebration
-  useEffect(() => {
+  useEffect((
+) => {
     if (userStreak.currentStreak > previousStreak) {
       setIsAnimating(true);
       setShowCelebration(true);
@@ -60,7 +65,8 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
       );
 
       if (milestone && onMilestoneReached) {
-        setTimeout(() => {
+        setTimeout((
+) => {
           onMilestoneReached({
             id: `milestone-${milestone.days}`,
             streakDays: milestone.days,
@@ -77,7 +83,8 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
       }
 
       // Reset animations
-      setTimeout(() => {
+      setTimeout((
+) => {
         setIsAnimating(false);
         setShowCelebration(false);
       }, 3000);
@@ -85,18 +92,21 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
     setPreviousStreak(userStreak.currentStreak);
   }, [userStreak.currentStreak, previousStreak, onMilestoneReached]);
 
-  const getFireLevel = (streak: number) => {
+  const getFireLevel = (streak: number
+) => {
     return (
       STREAK_FIRE_LEVELS.find(level => streak >= level.min && streak <= level.max) ||
       STREAK_FIRE_LEVELS[0]
     );
   };
 
-  const getNextMilestone = () => {
+  const getNextMilestone = (
+) => {
     return MILESTONE_REWARDS.find(m => m.days > userStreak.currentStreak);
   };
 
-  const getMilestoneProgress = () => {
+  const getMilestoneProgress = (
+) => {
     const nextMilestone = getNextMilestone();
     if (!nextMilestone) return 100;
 
