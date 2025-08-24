@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import {
   Card,
@@ -32,8 +32,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: (
-) => (
+  render: () => (
     <Card className="w-[350px]">
       <CardHeader>
         <CardTitle>Card Title</CardTitle>
@@ -47,8 +46,7 @@ export const Default: Story = {
 };
 
 export const WithFooter: Story = {
-  render: (
-) => (
+  render: () => (
     <Card className="w-[350px]">
       <CardHeader>
         <CardTitle>Notifications</CardTitle>
@@ -76,8 +74,7 @@ export const WithFooter: Story = {
 };
 
 export const AlarmCard: Story = {
-  render: (
-) => (
+  render: () => (
     <Card className="w-[350px]">
       <CardHeader>
         <div className="flex items-center justify-between">
@@ -114,8 +111,7 @@ export const AlarmCard: Story = {
 };
 
 export const UserProfile: Story = {
-  render: (
-) => (
+  render: () => (
     <Card className="w-[350px]">
       <CardHeader>
         <div className="flex items-center space-x-4">
@@ -149,8 +145,7 @@ export const UserProfile: Story = {
 };
 
 export const FeatureCard: Story = {
-  render: (
-) => (
+  render: () => (
     <Card className="w-[350px]">
       <CardHeader>
         <div className="flex items-center space-x-2">
@@ -183,8 +178,7 @@ export const FeatureCard: Story = {
 };
 
 export const StatsCard: Story = {
-  render: (
-) => (
+  render: () => (
     <Card className="w-[280px]">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
@@ -201,8 +195,7 @@ export const StatsCard: Story = {
 };
 
 export const CardVariations: Story = {
-  render: (
-) => (
+  render: () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 max-w-6xl">
       {/* Simple card */}
       <Card>

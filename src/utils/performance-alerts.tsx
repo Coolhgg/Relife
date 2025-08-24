@@ -65,8 +65,7 @@ class PerformanceAlertManager {
   private alertCooldowns: Map<string, TimeoutHandle> = new Map();
   private metricHistory: Map<string, Array<{ value: number; timestamp: number }>> =
     new Map();
-  private observers: Array<(alert: PerformanceAlert
-) => void> = [];
+  private observers: Array<(alert: PerformanceAlert) => void> = [];
   private isMonitoring = false;
   private monitoringInterval?: number;
 
@@ -112,7 +111,10 @@ class PerformanceAlertManager {
         cooldownPeriod: 3,
         autoResolve: true,
         actions: [
-          { type: 'notification', config: { title: 'Input Responsiveness Issue' } },
+          {
+            type: 'notification',
+            config: { title: 'Input Responsiveness Issue' },
+          },
           { type: 'console', config: { level: 'warn' } },
         ],
       },
@@ -159,7 +161,10 @@ class PerformanceAlertManager {
         cooldownPeriod: 5,
         autoResolve: false,
         actions: [
-          { type: 'notification', config: { title: 'Network Issues Detected' } },
+          {
+            type: 'notification',
+            config: { title: 'Network Issues Detected' },
+          },
         ],
       },
       {
@@ -174,7 +179,10 @@ class PerformanceAlertManager {
         cooldownPeriod: 2,
         autoResolve: false,
         actions: [
-          { type: 'notification', config: { title: 'Critical Error Frequency' } },
+          {
+            type: 'notification',
+            config: { title: 'Critical Error Frequency' },
+          },
           { type: 'storage', config: { key: 'critical_errors' } },
         ],
       },
@@ -206,8 +214,7 @@ class PerformanceAlertManager {
     if (this.isMonitoring) return;
 
     this.isMonitoring = true;
-    this.monitoringInterval = window.setInterval((
-) => {
+    this.monitoringInterval = window.setInterval(() => {
       this.checkAllMetrics();
       this.analyzePerformanceTrends();
       this.cleanupResolvedAlerts();
@@ -428,12 +435,10 @@ class PerformanceAlertManager {
 
       // Auto-close after 10 seconds unless persistent
       if (!config.persistent && alert.severity < 4) {
-        setTimeout((
-) => notification.close(), 10000);
+        setTimeout(() => notification.close(), 10000);
       }
 
-      notification.onclick = (
-) => {
+      notification.onclick = () => {
         window.focus();
         this.resolveAlert(alert.id);
         notification.close();
@@ -560,8 +565,7 @@ class PerformanceAlertManager {
    * Analyze performance trends
    */
   private analyzePerformanceTrends() {
-    this.metricHistory.forEach((history, metric
-) => {
+    this.metricHistory.forEach((history, metric) => {
       const trend = this.calculateTrend(history);
 
       if (trend.trend === 'degrading' && Math.abs(trend.changePercent) > 20) {
@@ -591,24 +595,18 @@ class PerformanceAlertManager {
 
     // Simple linear regression to detect trend
     const n = values.length;
-    const sumX = timestamps.reduce((a, b
-) => a + b, 0);
-    const sumY = values.reduce((a, b
-) => a + b, 0);
-    const sumXY = timestamps.reduce((sum, x, i
-) => sum + x * values[i], 0);
-    const sumXX = timestamps.reduce((sum, x
-) => sum + x * x, 0);
+    const sumX = timestamps.reduce((a, b) => a + b, 0);
+    const sumY = values.reduce((a, b) => a + b, 0);
+    const sumXY = timestamps.reduce((sum, x, i) => sum + x * values[i], 0);
+    const sumXX = timestamps.reduce((sum, x) => sum + x * x, 0);
 
     const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
 
     // Calculate percent change
     const first =
-      values.slice(0, Math.floor(n / 3)).reduce((a, b
-) => a + b) / Math.floor(n / 3);
+      values.slice(0, Math.floor(n / 3)).reduce((a, b) => a + b) / Math.floor(n / 3);
     const last =
-      values.slice(-Math.floor(n / 3)).reduce((a, b
-) => a + b) / Math.floor(n / 3);
+      values.slice(-Math.floor(n / 3)).reduce((a, b) => a + b) / Math.floor(n / 3);
     const changePercent = ((last - first) / first) * 100;
 
     let trend: PerformanceTrend['trend'];
@@ -717,12 +715,10 @@ class PerformanceAlertManager {
 
     // Remove duplicates and sort by priority
     const unique = suggestions.filter(
-      (suggestion, index, arr
-) => arr.findIndex(s => s.id === suggestion.id) === index
+      (suggestion, index, arr) => arr.findIndex(s => s.id === suggestion.id) === index
     );
 
-    return unique.sort((a, b
-) => {
+    return unique.sort((a, b) => {
       const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
       return priorityOrder[b.priority] - priorityOrder[a.priority];
     });
@@ -824,16 +820,14 @@ class PerformanceAlertManager {
   /**
    * Add alert observer
    */
-  addObserver(observer: (alert: PerformanceAlert
-) => void) {
+  addObserver(observer: (alert: PerformanceAlert) => void) {
     this.observers.push(observer);
   }
 
   /**
    * Remove alert observer
    */
-  removeObserver(observer: (alert: PerformanceAlert
-) => void) {
+  removeObserver(observer: (alert: PerformanceAlert) => void) {
     const index = this.observers.indexOf(observer);
     if (index >= 0) {
       this.observers.splice(index, 1);
@@ -869,10 +863,8 @@ export function usePerformanceAlerts() {
   const [alerts, setAlerts] = React.useState<PerformanceAlert[]>([]);
   const [suggestions, setSuggestions] = React.useState<OptimizationSuggestion[]>([]);
 
-  React.useEffect((
-) => {
-    const updateAlerts = (alert: PerformanceAlert
-) => {
+  React.useEffect(() => {
+    const updateAlerts = (alert: PerformanceAlert) => {
       setAlerts(performanceAlertManager.getActiveAlerts());
       setSuggestions(performanceAlertManager.getOptimizationSuggestions());
     };
@@ -881,22 +873,19 @@ export function usePerformanceAlerts() {
     setAlerts(performanceAlertManager.getActiveAlerts());
     setSuggestions(performanceAlertManager.getOptimizationSuggestions());
 
-    return (
-) => {
+    return () => {
       performanceAlertManager.removeObserver(updateAlerts);
     };
   }, []);
 
   const recordMetric = React.useCallback(
-    (name: string, value: number, metadata?: Record<string, any>
-) => {
+    (name: string, value: number, metadata?: Record<string, any>) => {
       performanceAlertManager.recordMetric(name, value, metadata);
     },
     []
   );
 
-  const resolveAlert = React.useCallback((alertId: string
-) => {
+  const resolveAlert = React.useCallback((alertId: string) => {
     performanceAlertManager.resolveAlert(alertId);
   }, []);
 
@@ -921,13 +910,11 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
   maxAlerts = 5,
   showSuggestions = true,
   className = '',
-}
-) => {
+}) => {
   const { alerts, suggestions, resolveAlert } = usePerformanceAlerts();
 
   const displayAlerts = alerts.slice(0, maxAlerts);
-  const criticalAlerts = alerts.filter((alert: any
-) => alert.severity >= 4);
+  const criticalAlerts = alerts.filter((alert: any) => alert.severity >= 4);
 
   if (displayAlerts.length === 0 && (!showSuggestions || suggestions.length === 0)) {
     return null;
@@ -948,9 +935,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
         <div className="active-alerts mb-4">
           <h4 className="font-semibold text-gray-800 mb-2">Performance Alerts</h4>
           <div className="space-y-2">
-            {displayAlerts
-      .map((alert: any
-) => (
+            {displayAlerts.map((alert: any) => (
               <div
                 key={alert.id}
                 className={`alert-item p-3 rounded border-l-4 ${
@@ -972,8 +957,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
                     </p>
                   </div>
                   <button
-                    onClick={(
-) => resolveAlert(alert.id)}
+                    onClick={() => resolveAlert(alert.id)}
                     className="ml-2 text-gray-400 hover:text-gray-600 text-sm"
                   >
                     ✕
@@ -990,9 +974,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
         <div className="optimization-suggestions">
           <h4 className="font-semibold text-gray-800 mb-2">Optimization Suggestions</h4>
           <div className="space-y-2">
-            {suggestions.slice(0, 3)
-      .map((suggestion: any
-) => (
+            {suggestions.slice(0, 3).map((suggestion: any) => (
               <div
                 key={suggestion.id}
                 className={`suggestion-item p-3 rounded border ${

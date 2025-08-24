@@ -1,18 +1,14 @@
-import React, { useState } from 'react'; // auto: added missing React import
+import React, { useState } from 'react';
 import { Clock } from 'lucide-react';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
 import ForgotPasswordForm from './ForgotPasswordForm';
 
 interface AuthenticationFlowProps {
-  onAuthSuccess: (user: any
-) => void;
-  onSignUp: (email: string, password: string, name: string
-) => Promise<void>;
-  onSignIn: (email: string, password: string
-) => Promise<void>;
-  onForgotPassword: (email: string
-) => Promise<void>;
+  onAuthSuccess: (user: any) => void;
+  onSignUp: (email: string, password: string, name: string) => Promise<void>;
+  onSignIn: (email: string, password: string) => Promise<void>;
+  onForgotPassword: (email: string) => Promise<void>;
   isLoading: boolean;
   error: string | null;
   forgotPasswordSuccess: boolean;
@@ -31,17 +27,14 @@ export default function AuthenticationFlow({
 }: AuthenticationFlowProps) {
   const [currentView, setCurrentView] = useState<AuthView>('login');
 
-  const renderCurrentView = (
-) => {
+  const renderCurrentView = () => {
     switch (currentView) {
       case 'login':
         return (
           <LoginForm
             onLogin={onSignIn}
-            onSwitchToSignUp={(
-) => setCurrentView('signup')}
-            onForgotPassword={(
-) => setCurrentView('forgot-password')}
+            onSwitchToSignUp={() => setCurrentView('signup')}
+            onForgotPassword={() => setCurrentView('forgot-password')}
             isLoading={isLoading}
             error={error}
           />
@@ -50,8 +43,7 @@ export default function AuthenticationFlow({
         return (
           <SignUpForm
             onSignUp={onSignUp}
-            onSwitchToLogin={(
-) => setCurrentView('login')}
+            onSwitchToLogin={() => setCurrentView('login')}
             isLoading={isLoading}
             error={error}
           />
@@ -60,8 +52,7 @@ export default function AuthenticationFlow({
         return (
           <ForgotPasswordForm
             onResetPassword={onForgotPassword}
-            onBackToLogin={(
-) => setCurrentView('login')}
+            onBackToLogin={() => setCurrentView('login')}
             isLoading={isLoading}
             error={error}
             success={forgotPasswordSuccess}

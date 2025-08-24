@@ -530,7 +530,7 @@ export function BetaTestingProgram() {
                           {tester.name
                             .split(' ')
                             .map((n: any
-) => n // auto: implicit any[0])
+) => n[0])
                             .join('')}
                         </span>
                       </div>

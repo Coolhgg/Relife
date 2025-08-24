@@ -42,8 +42,7 @@ export const RTLContainer: React.FC<RTLContainerProps> = ({
   center = true,
   dir = 'auto',
   as: Component = 'div',
-}
-) => {
+}) => {
   const { direction, isRTL } = useRTL();
 
   const containerDir = dir === 'auto' ? direction : dir;

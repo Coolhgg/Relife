@@ -191,8 +191,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
         </div>
 
         {smartAlarms.map((alarm: any
-) => { // auto: implicit any
-          const status = alarmStatuses.get(alarm.id);
+) => { const status = alarmStatuses.get(alarm.id);
           const optimal = optimalTimes.get(alarm.id) || [];
           const isExpanded = selectedAlarm === alarm.id;
 
@@ -252,8 +251,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                   <div className="flex items-center gap-2">
                     <button
                       onClick={(e: any
-) => { // auto: implicit any
-                        e.stopPropagation();
+) => { e.stopPropagation();
                         onEditAlarm(alarm);
                       }}
                       className="p-2 hover:bg-white/10 rounded-md text-white/60 hover:text-white transition-colors"
@@ -438,7 +436,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 ) => c.isEnabled)
                             
                             .map((condition: any) => (
-        <div
+                              <div
                                 key={condition.id}
                                 className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"
                               >

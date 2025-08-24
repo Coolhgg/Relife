@@ -15,13 +15,11 @@ import { TimeoutHandle } from '../types/timers';
 
 interface WakeUpFeedbackModalProps {
   isOpen: boolean;
-  onClose: (
-) => void;
+  onClose: () => void;
   alarmId: string;
   alarmTime: string;
   actualWakeTime?: string;
-  onSubmit: (feedback: WakeUpFeedback
-) => Promise<boolean>;
+  onSubmit: (feedback: WakeUpFeedback) => Promise<boolean>;
 }
 
 const difficultyOptions = [
@@ -47,8 +45,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
   alarmTime,
   actualWakeTime,
   onSubmit,
-}
-) => {
+}) => {
   const [feedback, setFeedback] = useState<Partial<WakeUpFeedback>>({
     date: new Date(),
     originalTime: alarmTime,
@@ -65,8 +62,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (isOpen) {
       // Reset form when modal opens
       setFeedback({
@@ -85,8 +81,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
     }
   }, [isOpen, alarmTime, actualWakeTime]);
 
-  const handleSubmit = async (
-) => {
+  const handleSubmit = async () => {
     if (submitting) return;
 
     setSubmitting(true);
@@ -94,8 +89,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
       const success = await onSubmit(feedback as WakeUpFeedback);
       if (success) {
         setSubmitted(true);
-        setTimeout((
-) => {
+        setTimeout(() => {
           onClose();
         }, 2000);
       }
@@ -106,11 +100,8 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
     }
   };
 
-  const updateFeedback = (updates: Partial<WakeUpFeedback>
-) => {
-    
-      setFeedback((prev: any
-) => ({ ...prev, ...updates }));
+  const updateFeedback = (updates: Partial<WakeUpFeedback>) => {
+    setFeedback((prev: any) => ({ ...prev, ...updates }));
   };
 
   if (!isOpen) return null;
@@ -190,8 +181,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
               {difficultyOptions.map(option => (
                 <button
                   key={option.value}
-                  onClick={(
-) => updateFeedback({ difficulty: option.value as any })}
+                  onClick={() => updateFeedback({ difficulty: option.value as any })}
                   className={`p-3 rounded-lg border transition-all text-center ${
                     feedback.difficulty === option.value
                       ? 'border-purple-400 bg-purple-500/20'
@@ -215,8 +205,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
               {feelingOptions.map(option => (
                 <button
                   key={option.value}
-                  onClick={(
-) => updateFeedback({ feeling: option.value as any })}
+                  onClick={() => updateFeedback({ feeling: option.value as any })}
                   className={`p-3 rounded-lg border transition-all text-center ${
                     feedback.feeling === option.value
                       ? 'border-purple-400 bg-purple-500/20'
@@ -253,8 +242,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
 
             {/* Visual stars */}
             <div className="flex justify-center gap-1 mt-2">
-              {[...Array(10)].map((_, i
-) => (
+              {[...Array(10)].map((_, i) => (
                 <Star
                   key={i}
                   className={`w-4 h-4 ${

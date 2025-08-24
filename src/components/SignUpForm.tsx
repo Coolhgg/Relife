@@ -15,10 +15,8 @@ import { validateEmail, validatePassword } from '../utils/validation';
 import SecurityService from '../services/security';
 
 interface SignUpFormProps {
-  onSignUp: (email: string, password: string, name: string
-) => Promise<void>;
-  onSwitchToLogin: (
-) => void;
+  onSignUp: (email: string, password: string, name: string) => Promise<void>;
+  onSwitchToLogin: () => void;
   isLoading: boolean;
   error: string | null;
 }
@@ -82,8 +80,7 @@ export default function SignUpForm({
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent
-) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -93,11 +90,8 @@ export default function SignUpForm({
     await onSignUp(formData.email, formData.password, formData.name);
   };
 
-  const handleInputChange = (field: keyof typeof formData, value: string
-) => {
-    
-    setFormData((prev: any
-) => ({ ...prev, [field]: value }));
+  const handleInputChange = (field: keyof typeof formData, value: string) => {
+    setFormData((prev: any) => ({ ...prev, [field]: value }));
 
     // Check password strength in real-time
     if (field === 'password') {
@@ -106,14 +100,11 @@ export default function SignUpForm({
 
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
-      
-      setValidationErrors((prev: any
-) => ({ ...prev, [field]: undefined }));
+      setValidationErrors((prev: any) => ({ ...prev, [field]: undefined }));
     }
   };
 
-  const getPasswordStrengthDisplay = (
-) => {
+  const getPasswordStrengthDisplay = () => {
     if (!passwordStrength || !formData.password) {
       return { strength: 0, label: '', color: '', width: '0%' };
     }
@@ -285,8 +276,7 @@ export default function SignUpForm({
             />
             <button
               type="button"
-              onClick={(
-) => setShowPassword(!showPassword)}
+              onClick={() => setShowPassword(!showPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
@@ -396,8 +386,7 @@ export default function SignUpForm({
             />
             <button
               type="button"
-              onClick={(
-) => setShowConfirmPassword(!showConfirmPassword)}
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               aria-label={
                 showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'

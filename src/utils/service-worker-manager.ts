@@ -208,8 +208,7 @@ export class ServiceWorkerManager {
   }
 
   private async sendMessage(type: string, data?: any): Promise<any> {
-    return new Promise((resolve, reject
-) => {
+    return new Promise((resolve, reject) => {
       if (!this.registration?.active) {
         reject(new Error('Service worker not active'));
         return;
@@ -219,8 +218,7 @@ export class ServiceWorkerManager {
       const messageChannel = new MessageChannel();
 
       // Set up timeout
-      const timeout = setTimeout((
-) => {
+      const timeout = setTimeout(() => {
         reject(new Error('Service worker message timeout'));
       }, 10000); // 10 second timeout
 
@@ -277,8 +275,7 @@ export class ServiceWorkerManager {
   }
 
   private setupVisibilityHandling(): void {
-    document.addEventListener('visibilitychange', (
-) => {
+    document.addEventListener('visibilitychange', () => {
       if (!this.isInitialized || !this.registration?.active) return;
 
       if (document.visibilityState === 'hidden') {
@@ -294,8 +291,7 @@ export class ServiceWorkerManager {
       }
     });
 
-    window.addEventListener('beforeunload', (
-) => {
+    window.addEventListener('beforeunload', () => {
       if (this.registration?.active) {
         this.registration.active.postMessage({
           type: 'TAB_CLOSING',

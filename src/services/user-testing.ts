@@ -409,8 +409,7 @@ export class UserTestingService {
 
     // Assign variant based on user ID hash
     const userHash = this.hashUserId(this.currentSession?.userId || '');
-    const variants = test.variants.sort((a, b
-) => a.percentage - b.percentage);
+    const variants = test.variants.sort((a, b) => a.percentage - b.percentage);
 
     let cumulativePercentage = 0;
     for (const variant of variants) {
@@ -522,8 +521,7 @@ export class UserTestingService {
     }
 
     // Page visibility changes
-    document.addEventListener('visibilitychange', (
-) => {
+    document.addEventListener('visibilitychange', () => {
       this.trackEvent({
         type: 'focus',
         metadata: {

@@ -1,0 +1,599 @@
+Checking formatting...
+[warn] ci/step-outputs/eslint_after_cleanup.json
+[error] ci/step-outputs/eslint_after_manual_fixes.json: SyntaxError: The input should contain exactly one expression, but the first expression is followed by the unexpected character `!`. (2:5)
+[error]   1 |
+[error] > 2 | Oops! Something went wrong! :(
+[error]     |     ^
+[error]   3 |
+[error]   4 | ESLint: 9.33.0
+[error]   5 |
+[warn] cleanup-unused.cjs
+[warn] comment-dead-code.cjs
+[warn] eslint.config.js
+[warn] scripts/setup-convertkit.js
+[warn] src/__tests__/config/global-setup.ts
+[warn] src/__tests__/config/global-teardown.ts
+[warn] src/__tests__/factories/core-factories-type-safety.test.ts
+[warn] src/__tests__/factories/core-factories.ts
+[warn] src/__tests__/factories/enhanced-factories.test.ts
+[warn] src/__tests__/factories/enhanced-factories.ts
+[warn] src/__tests__/factories/factories.test.ts
+[warn] src/__tests__/factories/factory-utils.ts
+[warn] src/__tests__/factories/gaming-factories.ts
+[warn] src/__tests__/factories/premium-factories.ts
+[warn] src/__tests__/factories/support-factories.ts
+[warn] src/__tests__/mocks/audio-mock.ts
+[warn] src/__tests__/mocks/capacitor.mock.ts
+[warn] src/__tests__/mocks/msw-handlers.ts
+[warn] src/__tests__/mocks/msw-setup.ts
+[warn] src/__tests__/mocks/posthog.mock.ts
+[warn] src/__tests__/mocks/react-router.mock.ts
+[warn] src/__tests__/mocks/sentry.mock.ts
+[warn] src/__tests__/mocks/stripe.mock.ts
+[warn] src/__tests__/mocks/supabase.mock.ts
+[warn] src/__tests__/providers/context-providers.tsx
+[warn] src/__tests__/providers/index.ts
+[warn] src/__tests__/providers/integration-provider.tsx
+[warn] src/__tests__/providers/service-providers.tsx
+[warn] src/__tests__/providers/test-providers.tsx
+[warn] src/__tests__/rtl/Button.rtl.test.tsx
+[warn] src/__tests__/rtl/Card.rtl.test.tsx
+[warn] src/__tests__/rtl/Dialog.rtl.test.tsx
+[warn] src/__tests__/setup/after-env-setup.ts
+[warn] src/__tests__/setup/global-setup.ts
+[warn] src/__tests__/theme-integration.test.tsx
+[warn] src/__tests__/utils/accessibility-helpers.ts
+[warn] src/__tests__/utils/animation-helpers.tsx
+[warn] src/__tests__/utils/assertion-helpers.ts
+[warn] src/__tests__/utils/async-helpers.ts
+[warn] src/__tests__/utils/audio-helpers.ts
+[warn] src/__tests__/utils/data-builders.ts
+[warn] src/__tests__/utils/dom-helpers.ts
+[warn] src/__tests__/utils/hook-testing-utils.tsx
+[warn] src/__tests__/utils/i18n-helpers.ts
+[warn] src/__tests__/utils/index.ts
+[warn] src/__tests__/utils/mobile-helpers.ts
+[warn] src/__tests__/utils/mock-helpers.ts
+[warn] src/__tests__/utils/performance-helpers.ts
+[warn] src/__tests__/utils/render-helpers.ts
+[warn] src/__tests__/utils/storage-helpers.ts
+[warn] src/analytics/PersonaAnalytics.tsx
+[warn] src/App.tsx
+[warn] src/backend/cloudflare-functions.ts
+[warn] src/backend/monitoring-integration.ts
+[warn] src/backend/performance-monitoring.ts
+[warn] src/backend/webhook-endpoint.ts
+[warn] src/components/__tests__/AccessibilityDashboard.test.tsx
+[warn] src/components/__tests__/AccessibilityIntegration.test.tsx
+[warn] src/components/__tests__/AccessibilityTester.test.tsx
+[warn] src/components/__tests__/AlarmForm.a11y.test.tsx
+[warn] src/components/__tests__/AlarmForm.test.tsx
+[warn] src/components/__tests__/AlarmRinging.test.tsx
+[warn] src/components/__tests__/BattleSystem.test.tsx
+[warn] src/components/__tests__/Dashboard.test.tsx
+[warn] src/components/__tests__/ErrorBoundary.test.tsx
+[warn] src/components/__tests__/GamingHub.test.tsx
+[warn] src/components/__tests__/GamingIntegration.test.tsx
+[warn] src/components/__tests__/RootErrorBoundary.test.tsx
+[warn] src/components/__tests__/SimpleTest.test.tsx
+[warn] src/components/AccessibilityDashboard.tsx
+[warn] src/components/AccessibilityTester.tsx
+[warn] src/components/AchievementBadges.tsx
+[warn] src/components/ActiveAlarm.tsx
+[warn] src/components/AdaptiveAlarmList.tsx
+[warn] src/components/AdaptiveButton.tsx
+[warn] src/components/AdaptiveImage.tsx
+[warn] src/components/AdaptiveModal.tsx
+[warn] src/components/AdaptiveSpinner.tsx
+[warn] src/components/AdvancedAlarmScheduling.tsx
+[warn] src/components/AdvancedAnalytics.tsx
+[warn] src/components/AdvancedSchedulingDashboard.tsx
+[warn] src/components/AIAutomation.tsx
+[error] src/components/AlarmForm.tsx: SyntaxError: ',' expected. (361:12)
+[error]   359 |           soundType: 'custom',
+[error]   360 |           customSoundId: result.customSound!.id,
+[error] > 361 |         }));
+[error]       |            ^
+[error]   362 |         announceSuccess(
+[error]   363 |           `Custom sound "${result.customSound.name}" uploaded successfully`
+[error]   364 |         );
+[warn] src/components/AlarmList.tsx
+[warn] src/components/AlarmManagement.tsx
+[warn] src/components/AlarmRinging.tsx
+[warn] src/components/AlarmTester.tsx
+[warn] src/components/AlarmThemeBrowser.tsx
+[warn] src/components/AlarmThemeSelector.tsx
+[warn] src/components/AnalyticsDashboard.tsx
+[warn] src/components/AnalyticsProvider.tsx
+[warn] src/components/animations/AnimationLibrary.tsx
+[warn] src/components/animations/LoadingStates.tsx
+[warn] src/components/animations/MicroInteractions.tsx
+[warn] src/components/AuthenticationFlow.tsx
+[warn] src/components/BattleSystem.tsx
+[warn] src/components/CloudSyncControls.tsx
+[warn] src/components/CommunityChallenge.tsx
+[warn] src/components/CommunityHub.tsx
+[warn] src/components/CompleteThemeSystemDemo.tsx
+[warn] src/components/ComprehensiveSecurityDashboard.tsx
+[warn] src/components/ConsentBanner.tsx
+[warn] src/components/CSRFProtection.tsx
+[error] src/components/CustomSoundThemeCreator.tsx: SyntaxError: '}' expected. (718:24)
+[error]   716 | ) => 
+[error]   717 |         onSoundsUpdated(uploadedSounds.filter((s: any
+[error] > 718 | ) => s.id !== soundId)))
+[error]       |                        ^
+[error]   719 |       }
+[error]   720 |       maxFiles={20}
+[error]   721 |     />
+[error] src/components/CustomThemeManager.tsx: SyntaxError: ',' expected. (189:26)
+[error]   187 |     setThemes((prev: any
+[error]   188 | ) => [ // auto: implicit any theme, ...prev]);
+[error] > 189 |     setShowCreator(false);
+[error]       |                          ^
+[error]   190 |   };
+[error]   191 |
+[error]   192 |   const handleThemeUpdated = (theme: CustomSoundTheme
+[warn] src/components/Dashboard.tsx
+[warn] src/components/EmotionalNudgeModal.tsx
+[warn] src/components/EnhancedBattles.tsx
+[warn] src/components/EnhancedDashboard.tsx
+[warn] src/components/EnhancedMediaContent.tsx
+[warn] src/components/EnhancedSettings.tsx
+[warn] src/components/EnhancedSmartAlarmSettings.tsx
+[warn] src/components/ErrorBoundary.tsx
+[warn] src/components/ErrorBoundaryTest.tsx
+[warn] src/components/ExtendedScreenReaderTester.tsx
+[warn] src/components/FeatureLockOverlay.tsx
+[warn] src/components/ForgotPasswordForm.tsx
+[warn] src/components/FriendsManager.tsx
+[warn] src/components/Gamification.tsx
+[warn] src/components/GamingHub.tsx
+[warn] src/components/HabitCelebration.tsx
+[warn] src/components/LanguageSelector.tsx
+[warn] src/components/LoginForm.tsx
+[warn] src/components/MediaContent.tsx
+[warn] src/components/MobileAccessibilityProvider.tsx
+[warn] src/components/MobileAlarmCard.tsx
+[warn] src/components/MobileNavigation.tsx
+[error] src/components/MobileTester.tsx: SyntaxError: Declaration or statement expected. (25:1)
+[error]   23 | // TODO: verify removal - MobileTester component appears to be unused
+[error]   24 | // const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }
+[error] > 25 | ) => {
+[error]      | ^
+[error]   26 |   const [testResults, setTestResults] = useState<TestResult[]>([]);
+[error]   27 |   const [isRunningTests, setIsRunningTests] = useState(false);
+[error]   28 |   const [testProgress, setTestProgress] = useState(0);
+[warn] src/components/NuclearModeBattle.tsx
+[warn] src/components/NuclearModeChallenge.tsx
+[warn] src/components/NuclearModeResults.tsx
+[warn] src/components/NuclearModeSelector.tsx
+[warn] src/components/OfflineDiagnostics.tsx
+[warn] src/components/OfflineIndicator.tsx
+[warn] src/components/OnboardingFlow.tsx
+[warn] src/components/PerformanceDashboard.tsx
+[warn] src/components/PerformanceProfilerWrapper.tsx
+[warn] src/components/PersonaAnalyticsDashboard.tsx
+[warn] src/components/PersonaDrivenUI.tsx
+[warn] src/components/PersonaFocusDashboard.tsx
+[warn] src/components/PersonalizationSettings.tsx
+[warn] src/components/premium/__tests__/FeatureGate.test.tsx
+[warn] src/components/premium/__tests__/FeatureUtils.test.tsx
+[warn] src/components/premium/__tests__/PaymentFlow.test.tsx
+[warn] src/components/premium/__tests__/PremiumIntegration.test.tsx
+[warn] src/components/premium/__tests__/PricingTable.test.tsx
+[warn] src/components/premium/__tests__/SubscriptionDashboard.test.tsx
+[warn] src/components/premium/BillingHistory.tsx
+[error] src/components/premium/EnhancedUpgradePrompt.tsx: SyntaxError: ')' expected. (86:40)
+[error]   84 |       
+[error]   85 |       setCurrentTestimonial((prev: any
+[error] > 86 | ) => ((prev + 1) % testimonials.length);
+[error]      |                                        ^
+[error]   87 |     }, 4000);
+[error]   88 |     return (
+[error]   89 | ) => clearInterval(interval);
+[warn] src/components/premium/FeatureGate.tsx
+[warn] src/components/premium/FeatureUtils.tsx
+[warn] src/components/premium/PaymentFlow.tsx
+[warn] src/components/premium/PaymentMethodManager.tsx
+[warn] src/components/premium/PremiumAlarmFeatures.tsx
+[warn] src/components/premium/PremiumAnalytics.tsx
+[error] src/components/premium/PremiumFeaturePreview.tsx: SyntaxError: ')' expected. (56:24)
+[error]   54 |         
+[error]   55 |       setNuclearIntensity((prev: any
+[error] > 56 | ) => ((prev + 1) % 100);
+[error]      |                        ^
+[error]   57 |       }, 50);
+[error]   58 |       return (
+[error]   59 | ) => clearInterval(interval);
+[warn] src/components/premium/PremiumTeamFeatures.tsx
+[warn] src/components/premium/PremiumVoiceFeatures.tsx
+[warn] src/components/premium/PricingTable.tsx
+[warn] src/components/premium/PsychologyDrivenCTA.tsx
+[warn] src/components/premium/SubscriptionDashboard.tsx
+[warn] src/components/premium/SubscriptionManagement.tsx
+[warn] src/components/premium/SubscriptionPage.tsx
+[warn] src/components/PremiumDashboard.tsx
+[warn] src/components/PremiumFeatureCard.tsx
+[warn] src/components/PremiumFeatureTest.tsx
+[warn] src/components/PremiumGate.tsx
+[warn] src/components/PremiumThemeSettings.tsx
+[warn] src/components/PremiumThemeShowcase.tsx
+[warn] src/components/PremiumUsageTracker.tsx
+[warn] src/components/PricingPage.tsx
+[warn] src/components/PushNotificationSettings.tsx
+[warn] src/components/PushNotificationTester.tsx
+[warn] src/components/PWAInstallPrompt.tsx
+[warn] src/components/PWAStatusDashboard.tsx
+[warn] src/components/QuickAlarmSetup.tsx
+[warn] src/components/RewardsDashboard.tsx
+[warn] src/components/RootErrorBoundary.tsx
+[warn] src/components/RTLLayout/RTLContainer.tsx
+[warn] src/components/RTLLayout/RTLFlex.tsx
+[warn] src/components/RTLLayout/RTLForm.tsx
+[warn] src/components/RTLLayout/RTLGrid.tsx
+[warn] src/components/RTLLayout/RTLText.tsx
+[warn] src/components/ScreenReaderProvider.tsx
+[warn] src/components/ServiceWorkerStatus.tsx
+[error] src/components/SettingsPage.tsx: SyntaxError: '}' expected. (771:35)
+[error]   769 |             
+[error]   770 |             onKeyDown={(e: any
+[error] > 771 | ) => handleKeyDown(e, 'cloudsync'))
+[error]       |                                   ^
+[error]   772 |             className="w-full flex items-center justify-between p-1"
+[error]   773 |             aria-expanded={activeSection === 'cloudsync'}
+[error]   774 |             aria-controls="cloudsync-content"
+[error] src/components/SignUpForm.tsx: SyntaxError: '}' expected. (189:47)
+[error]   187 |               
+[error]   188 |               onChange={(e: any
+[error] > 189 | ) => handleInputChange('name', e.target.value))
+[error]       |                                               ^
+[error]   190 |               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+[error]   191 |                 validationErrors.name
+[error]   192 |                   ? 'border-red-500'
+[warn] src/components/SleepTracker.tsx
+[error] src/components/SmartAlarmDashboard.tsx: SyntaxError: Property assignment expected. (448:31)
+[error]   446 |                             .map((condition: any
+[error]   447 | ) => ({
+[error] > 448 |                               <div
+[error]       |                               ^
+[error]   449 |                                 key={condition.id}
+[error]   450 |                                 className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"
+[error]   451 |                               >
+[warn] src/components/SmartAlarmSettings.tsx
+[warn] src/components/SmartFeatures.tsx
+[warn] src/components/SmartUpgradePrompt.tsx
+[warn] src/components/SocialProof.tsx
+[warn] src/components/SoundPicker.tsx
+[warn] src/components/SoundPreviewSystem.tsx
+[warn] src/components/SoundSettings.tsx
+[warn] src/components/SoundThemeDemo.tsx
+[warn] src/components/SoundUploader.tsx
+[warn] src/components/SpecializedErrorBoundaries.tsx
+[warn] src/components/Statistics.tsx
+[warn] src/components/StreakCounter.tsx
+[warn] src/components/StrugglingSamWrapper.tsx
+[warn] src/components/SubscriptionModal.tsx
+[warn] src/components/SubscriptionStatus.tsx
+[warn] src/components/SyncStatus.tsx
+[warn] src/components/TabProtectionSettings.tsx
+[warn] src/components/TabProtectionWarning.tsx
+[warn] src/components/ThemeCreator.tsx
+[warn] src/components/ThemeCustomizationStudio.tsx
+[warn] src/components/ThemeDemo.tsx
+[warn] src/components/ThemeGallery.tsx
+[warn] src/components/ThemeManager.tsx
+[warn] src/components/ThemeSelector.tsx
+[warn] src/components/ThemeStudio.tsx
+[warn] src/components/TranslationDashboard.tsx
+[warn] src/components/ui/__tests__/button.a11y.test.tsx
+[warn] src/components/ui/__tests__/input.a11y.test.tsx
+[warn] src/components/ui/calendar.tsx
+[warn] src/components/ui/carousel.tsx
+[warn] src/components/ui/chart.tsx
+[warn] src/components/ui/form.tsx
+[error] src/components/ui/sidebar.tsx: SyntaxError: Expression expected. (104:1)
+[error]   102 |     return isMobile ? setOpenMobile((open: any
+[error]   103 | ) => ! // auto: implicit any open) : setOpen((open: any
+[error] > 104 | ) => ! // auto: implicit any open);
+[error]       | ^
+[error]   105 |   }, [isMobile, setOpen, setOpenMobile]);
+[error]   106 |
+[error]   107 |   // Adds a keyboard shortcut to toggle the sidebar.
+[warn] src/components/ui/slider.tsx
+[warn] src/components/ui/sonner.tsx
+[warn] src/components/UpgradePrompt.tsx
+[warn] src/components/user-testing/ABTestWrapper.tsx
+[error] src/components/user-testing/BetaTestingProgram.tsx: SyntaxError: ',' expected. (536:38)
+[error]   534 |                             .map((n: any
+[error]   535 | ) => n // auto: implicit any[0])
+[error] > 536 |                             .join('')}
+[error]       |                                      ^
+[error]   537 |                         </span>
+[error]   538 |                       </div>
+[error]   539 |                       <div>
+[warn] src/components/user-testing/BugReportModal.tsx
+[warn] src/components/user-testing/FeedbackModal.tsx
+[warn] src/components/user-testing/FeedbackWidget.tsx
+[warn] src/components/user-testing/RedesignedFeedbackModal.tsx
+[warn] src/components/user-testing/RedesignedFeedbackWidget.tsx
+[warn] src/components/user-testing/UsabilityAnalyticsDashboard.tsx
+[warn] src/components/UserProfile.tsx
+[warn] src/components/VirtualScroll.tsx
+[warn] src/components/VisualAlarmDisplay.tsx
+[warn] src/components/VoiceAnalyticsDashboard.tsx
+[warn] src/components/VoiceCloning.tsx
+[warn] src/components/VoicePersonalitySelector.tsx
+[warn] src/components/VoiceSelector.tsx
+[warn] src/components/VoiceSettings.tsx
+[warn] src/components/WakeUpFeedbackModal.tsx
+[warn] src/config/i18n.ts
+[warn] src/config/stripe.ts
+[warn] src/config/themes.ts
+[error] src/contexts/FeatureAccessContext.tsx: SyntaxError: Merge conflict marker encountered. (297:1)
+[error]   295 |   userId: string,
+[error]   296 |   options?: {
+[error] > 297 | <<<<<<< HEAD
+[error]       | ^
+[error]   298 |     onFeatureBlocked?: (
+[error]   299 |       featureId: string,
+[error]   300 |       _requiredTier?: any /* auto: placeholder param - adjust */
+[warn] src/contexts/LanguageContext.tsx
+[warn] src/contexts/StrugglingsamContext.tsx
+[warn] src/data/emotional-message-templates.ts
+[warn] src/hooks/__tests__/edge-cases/useAdvancedAlarms.edge.test.ts
+[warn] src/hooks/__tests__/edge-cases/useAuth.edge.test.ts
+[warn] src/hooks/__tests__/edge-cases/usePWA.edge.test.ts
+[warn] src/hooks/__tests__/edge-cases/useSubscription.edge.test.ts
+[warn] src/hooks/__tests__/integration/cross-hook.integration.test.tsx
+[warn] src/hooks/__tests__/integration/useAdvancedAlarms.integration.test.tsx
+[warn] src/hooks/__tests__/integration/useAuth.integration.test.tsx
+[warn] src/hooks/__tests__/integration/useFeatureGate.integration.test.tsx
+[warn] src/hooks/__tests__/integration/usePWA.integration.test.tsx
+[warn] src/hooks/__tests__/useABTesting.test.tsx
+[warn] src/hooks/__tests__/useAccessibilityPreferences.test.ts
+[error] src/hooks/__tests__/useAdvancedAlarms.test.ts: SyntaxError: Declaration or statement expected. (224:1)
+[error]   222 |   });
+[error]   223 | })
+[error] > 224 | });
+[error]       | ^
+[error]   225 |
+[warn] src/hooks/__tests__/useAlarmRingingAnnouncements.test.ts
+[warn] src/hooks/__tests__/useAuth.test.ts
+[warn] src/hooks/__tests__/useCapacitor.test.ts
+[warn] src/hooks/__tests__/useEnhancedSmartAlarms.test.ts
+[warn] src/hooks/__tests__/useErrorLoadingAnnouncements.test.ts
+[warn] src/hooks/__tests__/useFeatureGate.test.ts
+[warn] src/hooks/__tests__/useFormAnnouncements.test.ts
+[warn] src/hooks/__tests__/useMobileTouch.test.ts
+[warn] src/hooks/__tests__/usePushNotifications.test.ts
+[warn] src/hooks/__tests__/usePWA.test.ts
+[warn] src/hooks/__tests__/useSubscription.test.ts
+[warn] src/hooks/__tests__/useTheme.test.tsx
+[warn] src/hooks/use-mobile.ts
+[warn] src/hooks/useABTesting.tsx
+[warn] src/hooks/useAccessibility.ts
+[warn] src/hooks/useAccessibilityPreferences.ts
+[warn] src/hooks/useAdvancedAlarms.ts
+[warn] src/hooks/useAlarmRingingAnnouncements.ts
+[warn] src/hooks/useAnalytics.ts
+[warn] src/hooks/useAnimations.ts
+[warn] src/hooks/useAudioLazyLoading.ts
+[warn] src/hooks/useAuth.ts
+[warn] src/hooks/useAuthAnnouncements.ts
+[warn] src/hooks/useCapacitor.ts
+[warn] src/hooks/useCriticalPreloading.ts
+[warn] src/hooks/useCulturalTheme.tsx
+[warn] src/hooks/useDeviceCapabilities.tsx
+[warn] src/hooks/useDynamicFocus.ts
+[warn] src/hooks/useEmotionalNotifications.ts
+[warn] src/hooks/useEnhancedCaching.ts
+[warn] src/hooks/useEnhancedServiceWorker.ts
+[warn] src/hooks/useEnhancedSmartAlarms.ts
+[warn] src/hooks/useErrorLoadingAnnouncements.ts
+[warn] src/hooks/useFeatureGate.ts
+[warn] src/hooks/useFocusRestoration.ts
+[warn] src/hooks/useFocusTrap.ts
+[warn] src/hooks/useFormAnnouncements.ts
+[warn] src/hooks/useGamingAnnouncements.ts
+[warn] src/hooks/useI18n.ts
+[warn] src/hooks/useKeyboardNavigation.ts
+[warn] src/hooks/useMediaContentAnnouncements.ts
+[warn] src/hooks/useMobilePerformance.ts
+[warn] src/hooks/useMobileTouch.ts
+[warn] src/hooks/useNavigationAnnouncements.ts
+[warn] src/hooks/useProfileAnnouncements.ts
+[warn] src/hooks/usePushNotifications.ts
+[warn] src/hooks/usePWA.ts
+[warn] src/hooks/useRTL.ts
+[warn] src/hooks/useScreenReaderAnnouncements.ts
+[warn] src/hooks/useSettingsAnnouncements.ts
+[warn] src/hooks/useSmartFeaturesAnnouncements.ts
+[warn] src/hooks/useSoundEffects.tsx
+[warn] src/hooks/useSubscription.ts
+[warn] src/hooks/useTabProtectionAnnouncements.ts
+[warn] src/hooks/useTabProtectionSettings.ts
+[error] src/hooks/useTheme.tsx: SyntaxError: Expression expected. (2482:3)
+[error]   2480 |     return availableThemes.filter((theme: any
+[error]   2481 | ) => ! // auto: implicit any theme.isDefault).slice(0, 3);
+[error] > 2482 |   }, [availableThemes]);
+[error]        |   ^
+[error]   2483 |
+[error]   2484 |   const exportThemes = useCallback(async (): Promise<string> => {
+[error]   2485 |     if (persistenceServiceRef.current) {
+[warn] src/main.tsx
+[warn] src/services/__tests__/alarm.test.ts
+[warn] src/services/__tests__/analytics.test.ts
+[warn] src/services/__tests__/error-handler.test.ts
+[warn] src/services/__tests__/performance-monitor.test.ts
+[warn] src/services/__tests__/push-notifications.test.ts
+[warn] src/services/__tests__/subscription.test.ts
+[warn] src/services/__tests__/test-setup.ts
+[warn] src/services/__tests__/theme-accessibility.test.ts
+[warn] src/services/__tests__/theme-persistence.test.ts
+[warn] src/services/__tests__/voice.test.ts
+[warn] src/services/accessibility-preferences.ts
+[warn] src/services/advanced-analytics.ts
+[warn] src/services/advanced-conditions-helper.ts
+[warn] src/services/ai-rewards.ts
+[warn] src/services/alarm-access-control.ts
+[warn] src/services/alarm-api-security.ts
+[warn] src/services/alarm-backup-redundancy.ts
+[warn] src/services/alarm-battle-integration.ts
+[warn] src/services/alarm-enhanced.ts
+[warn] src/services/alarm-integrity-monitor.ts
+[warn] src/services/alarm-parser.ts
+[warn] src/services/alarm-rate-limiting.ts
+[warn] src/services/alarm-security-integration.ts
+[warn] src/services/alarm.ts
+[warn] src/services/analytics-config.ts
+[warn] src/services/analytics.ts
+[warn] src/services/animation-manager.ts
+[warn] src/services/app-analytics.ts
+[warn] src/services/audio-manager.ts
+[warn] src/services/battle.ts
+[warn] src/services/capacitor-enhanced.ts
+[warn] src/services/CloudSyncService.ts
+[warn] src/services/contextual-themes.ts
+[warn] src/services/critical-preloader.ts
+[warn] src/services/custom-sound-manager.ts
+[warn] src/services/custom-test-scenarios.ts
+[warn] src/services/device-capabilities.ts
+[warn] src/services/email-campaign.ts
+[warn] src/services/email-campaigns.ts
+[warn] src/services/enhanced-cache-manager.ts
+[warn] src/services/enhanced-calendar-service.ts
+[warn] src/services/enhanced-location-service.ts
+[warn] src/services/enhanced-offline-storage.ts
+[warn] src/services/enhanced-smart-alarm-scheduler.ts
+[warn] src/services/error-handler.ts
+[warn] src/services/feature-gate-service.ts
+[warn] src/services/health-tracker-integration.ts
+[warn] src/services/lazy-audio-loader.ts
+[warn] src/services/ml-alarm-optimizer.ts
+[warn] src/services/mobile-performance.ts
+[warn] src/services/mobile-touch.ts
+[warn] src/services/notification.ts
+[warn] src/services/nuclear-mode.ts
+[warn] src/services/offline-analytics.ts
+[warn] src/services/offline-manager.ts
+[warn] src/services/offline-sleep-tracker.ts
+[warn] src/services/performance-analytics.ts
+[warn] src/services/performance-budget-manager.ts
+[warn] src/services/performance-monitor.ts
+[warn] src/services/predictive-analytics-service.ts
+[warn] src/services/premium-theme-animations.ts
+[warn] src/services/premium.ts
+[warn] src/services/privacy-compliance.ts
+[warn] src/services/push-notifications.ts
+[warn] src/services/pwa-manager.ts
+[warn] src/services/pwa-service.ts
+[warn] src/services/real-time-smart-adapter.ts
+[warn] src/services/realtime-service.ts
+[error] src/services/revenue-analytics.ts: SyntaxError: ',' expected. (293:3)
+[error]   291 |    * Get cohort analysis data
+[error]   292 |    */
+[error] > 293 |   private async getCohortAnalysis(): Promise<CohortData[]> {
+[error]       |   ^
+[error]   294 |     // This would be complex SQL query - simplified for example
+[error]   295 |     const cohorts: CohortData[] = [];
+[error]   296 |
+[warn] src/services/scheduler-core.ts
+[warn] src/services/secure-alarm-storage.ts
+[warn] src/services/secure-push-notification.ts
+[warn] src/services/security-monitoring-forensics.ts
+[warn] src/services/security.ts
+[warn] src/services/sentry.ts
+[warn] src/services/service-worker-manager.ts
+[warn] src/services/sleep-analysis.ts
+[warn] src/services/smart-alarm-scheduler.ts
+[warn] src/services/smart-notification-service.ts
+[warn] src/services/sound-effects.ts
+[warn] src/services/stripe-service.ts
+[error] src/services/subscription-service.ts: SyntaxError: Expression expected. (839:7)
+[error]   837 |     return (
+[error]   838 |       data?
+[error] > 839 |       .map((item: any
+[error]       |       ^
+[error]   840 | ) => ({
+[error]   841 |         id: item.id,
+[error]   842 |         userId: item.user_id,
+[warn] src/services/supabase.ts
+[warn] src/services/theme-accessibility.ts
+[warn] src/services/theme-combinations.ts
+[warn] src/services/theme-performance.ts
+[warn] src/services/types/media.ts
+[warn] src/services/types/performance.ts
+[warn] src/services/user-testing.ts
+[warn] src/services/visual-alarm-themes.ts
+[error] src/services/voice-ai-enhanced.ts: SyntaxError: Expression expected. (1035:9)
+[error]   1033 |       const learningData =
+[error]   1034 |         data?
+[error] > 1035 |         .map((row: any
+[error]        |         ^
+[error]   1036 | ) => ({
+[error]   1037 |           userId: row.user_id,
+[error]   1038 |           voiceMood: row.voice_mood,
+[warn] src/services/voice-biometrics.ts
+[warn] src/services/voice-enhanced.ts
+[warn] src/services/voice-pro.ts
+[warn] src/services/voice-recognition-enhanced.ts
+[warn] src/services/voice-recognition.ts
+[warn] src/services/voice-smart-integration.ts
+[warn] src/services/voice.ts
+[warn] src/stories/Button.tsx
+[warn] src/stories/components/AlarmForm.stories.tsx
+[warn] src/stories/components/Dashboard.stories.tsx
+[warn] src/stories/Header.tsx
+[warn] src/stories/Page.stories.ts
+[warn] src/stories/Page.tsx
+[warn] src/stories/ui/Button.stories.tsx
+[warn] src/stories/ui/Card.stories.tsx
+[warn] src/test-setup.ts
+[warn] src/tests/alarm-themes-integration.test.ts
+[warn] src/types/browser-apis.d.ts
+[warn] src/types/helpers.d.ts
+[warn] src/types/manual-fixes.d.ts
+[warn] src/types/struggling-sam.ts
+[warn] src/types/timers.ts
+[warn] src/types/utils.ts
+[warn] src/utils/accessibility.ts
+[warn] src/utils/advancedTranslationValidator.ts
+[warn] src/utils/analysis-worker.ts
+[warn] src/utils/css-optimization.ts
+[warn] src/utils/enhanced-focus.ts
+[warn] src/utils/fallback-strategies.tsx
+[warn] src/utils/frame-rate-manager.tsx
+[warn] src/utils/image-optimization.tsx
+[warn] src/utils/keyboard-navigation.ts
+[warn] src/utils/lazy-loading.tsx
+[warn] src/utils/manual-stubs.ts
+[warn] src/utils/mobile-accessibility.ts
+[warn] src/utils/network-optimization.tsx
+[warn] src/utils/performance-alerts.tsx
+[warn] src/utils/performance-profiler.ts
+[warn] src/utils/progressive-loading.tsx
+[warn] src/utils/rtl-testing.tsx
+[warn] src/utils/rtl-utilities.ts
+[warn] src/utils/screen-reader.ts
+[warn] src/utils/service-worker-manager.ts
+[warn] src/utils/translationValidation.ts
+[warn] src/utils/validation.ts
+[warn] src/utils/voice-accessibility.ts
+[warn] src/vite-env.d.ts
+[error] tests/utils/a11y-testing-utils.js: SyntaxError: Unexpected token, expected "," (21:5)
+[error]   19 |  */
+[error]   20 | export async function axeRender(
+[error] > 21 |   ui: React.ReactElement,
+[error]      |     ^
+[error]   22 |   options?: RenderOptions & {
+[error]   23 |     /**
+[error]   24 |      * Axe configuration options
+[error] tests/utils/a11y-testing-utils.ts: SyntaxError: Unterminated regular expression literal. (45:6)
+[error]   43 |     <TestProviders>
+[error]   44 |       {ui}
+[error] > 45 |     </TestProviders>
+[error]      |      ^
+[error]   46 |   );
+[error]   47 |
+[error]   48 |   const renderResult = render(<WrappedComponent />, options);
+Error occurred when checking code style in 20 files.

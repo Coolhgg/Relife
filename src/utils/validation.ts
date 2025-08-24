@@ -221,8 +221,7 @@ export const sanitizeHtmlInput = (input: string): string => {
 };
 
 // Password validation with enhanced security
-export const validatePassword = (password: string
-) => {
+export const validatePassword = (password: string) => {
   return SecurityService.validatePasswordSecurity(password);
 };
 

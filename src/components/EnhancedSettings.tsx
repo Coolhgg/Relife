@@ -19,10 +19,8 @@ import type { AppState, User } from '../types';
 interface EnhancedSettingsProps {
   appState: AppState;
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
-  onUpdateProfile: (profile: Partial<User>
-) => Promise<void>;
-  onSignOut: (
-) => void;
+  onUpdateProfile: (profile: Partial<User>) => Promise<void>;
+  onSignOut: () => void;
   isLoading: boolean;
   error: string | null;
 }
@@ -34,8 +32,7 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
   onSignOut,
   isLoading,
   error,
-}
-) => {
+}) => {
   const [activeTab, setActiveTab] = useState('settings');
 
   return (

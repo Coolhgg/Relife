@@ -302,8 +302,7 @@ export const _createTestVoice = (options: CreateVoiceOptions = {}): PremiumVoice
     gender: faker.helpers.arrayElement(['male', 'female', 'neutral', 'custom']),
     ageRange: faker.helpers.arrayElement(['young', 'adult', 'mature', 'elderly']),
     personality: createTestVoicePersonality(),
-    samples: Array.from({ length: faker.number.int({ min: 3, max: 8 }) }, (
-) =>
+    samples: Array.from({ length: faker.number.int({ min: 3, max: 8 }) }, () =>
       createTestVoiceSample()
     ),
     isCustom,
@@ -474,21 +473,17 @@ export const _createTestAnalytics = (
     sleepInsights: createTestSleepInsights(),
     wakeUpPatterns: createTestWakeUpPatterns(),
     performanceMetrics: createTestPerformanceMetrics(),
-    recommendations: Array.from({ length: faker.number.int({ min: 3, max: 8 }) }, (
-) =>
+    recommendations: Array.from({ length: faker.number.int({ min: 3, max: 8 }) }, () =>
       createTestAnalyticsRecommendation()
     ),
-    trends: Array.from({ length: faker.number.int({ min: 5, max: 15 }) }, (
-) =>
+    trends: Array.from({ length: faker.number.int({ min: 5, max: 15 }) }, () =>
       createTestAnalyticsTrend()
     ),
     comparisons: createTestAnalyticsComparison(),
-    goals: Array.from({ length: faker.number.int({ min: 2, max: 6 }) }, (
-) =>
+    goals: Array.from({ length: faker.number.int({ min: 2, max: 6 }) }, () =>
       createTestAnalyticsGoal()
     ),
-    achievements: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (
-) =>
+    achievements: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, () =>
       createTestAnalyticsAchievement()
     ),
     exportOptions: premium ? createTestAnalyticsExportOptions() : [],
@@ -532,8 +527,7 @@ const createTestPerformanceMetrics = (): SafePerformanceMetrics => ({
   experienceGained: faker.number.int({ min: 100, max: 10000 }),
 });
 
-const createTestAnalyticsRecommendation = (
-) => ({
+const createTestAnalyticsRecommendation = () => ({
   id: generateId('recommendation'),
   type: faker.helpers.arrayElement(['sleep', 'wake', 'habit', 'battle', 'voice']),
   title: faker.lorem.words(4),
@@ -549,8 +543,7 @@ const createTestAnalyticsRecommendation = (
   ]),
 });
 
-const createTestAnalyticsTrend = (
-) => ({
+const createTestAnalyticsTrend = () => ({
   id: generateId('trend'),
   metric: faker.helpers.arrayElement([
     'wake-time',
@@ -565,8 +558,7 @@ const createTestAnalyticsTrend = (
   significance: faker.helpers.arrayElement(['minor', 'moderate', 'significant']),
 });
 
-const createTestAnalyticsComparison = (
-) => ({
+const createTestAnalyticsComparison = () => ({
   previousPeriod: {
     completionRate: faker.number.float({ min: 0.5, max: 1.0, multipleOf: 0.01 }),
     avgWakeTime: faker.date.recent().toTimeString().slice(0, 5),
@@ -584,8 +576,7 @@ const createTestAnalyticsComparison = (
   },
 });
 
-const createTestAnalyticsGoal = (
-) => ({
+const createTestAnalyticsGoal = () => ({
   id: generateId('goal'),
   type: faker.helpers.arrayElement(['wake-time', 'consistency', 'streak', 'battles']),
   target: faker.number.int({ min: 5, max: 100 }),
@@ -595,8 +586,7 @@ const createTestAnalyticsGoal = (
   status: faker.helpers.arrayElement(['active', 'paused', 'completed', 'failed']),
 });
 
-const createTestAnalyticsAchievement = (
-) => ({
+const createTestAnalyticsAchievement = () => ({
   id: generateId('achievement'),
   name: faker.helpers.arrayElement([
     'Early Bird',
@@ -619,8 +609,7 @@ const createTestAnalyticsAchievement = (
   points: faker.number.int({ min: 50, max: 500 }),
 });
 
-const createTestAnalyticsExportOptions = (
-) => [
+const createTestAnalyticsExportOptions = () => [
   {
     format: 'pdf',
     name: 'Detailed Sleep Report',
@@ -660,19 +649,16 @@ export const createTestAnalytics = _createTestAnalytics;
 // ===============================
 
 // Placeholder exports to satisfy imports - please refine
-export const _createTestSubscriptionPlan = (options: any = {}
-) => {
-  return {} as any; // auto: placeholder - please refine
+export const _createTestSubscriptionPlan = (options: any = {}) => {
+  return {} as any;
 };
 
-export const _createTestPaymentMethod = (options: any = {}
-) => {
-  return {} as any; // auto: placeholder - please refine
+export const _createTestPaymentMethod = (options: any = {}) => {
+  return {} as any;
 };
 
-export const _createTestPricing = (options: any = {}
-) => {
-  return {} as any; // auto: placeholder - please refine
+export const _createTestPricing = (options: any = {}) => {
+  return {} as any;
 };
 
 // Placeholder exports
@@ -684,7 +670,6 @@ export const createTestPricing = _createTestPricing;
 // SAFE TYPE WIDENINGS
 // ===============================
 
-// auto: widened type - factory functions can return partial interfaces
 export type SafeVoicePersonality = Partial<VoicePersonality> & {
   energy: number;
   humor: number;

@@ -513,8 +513,7 @@ class SubscriptionService {
 
       // Map feature usage to billing format
       usageData?.forEach((item: any
-) => { // auto: implicit any
-        const limit = (limits as any)[item.feature] || item.limit_count;
+) => { const limit = (limits as any)[item.feature] || item.limit_count;
         usage[item.feature] = {
           used: item.usage_count,
           limit,
@@ -781,8 +780,7 @@ class SubscriptionService {
 
     this.planCache.clear();
     plans?.forEach((plan: any
-) => { // auto: implicit any
-      this.planCache.set(plan.id, this.mapDatabasePlan(plan));
+) => { this.planCache.set(plan.id, this.mapDatabasePlan(plan));
     });
   }
 
@@ -835,8 +833,7 @@ class SubscriptionService {
       .eq('user_id', userId);
 
     return (
-      data?
-      .map((item: any
+      data?.map((item: any
 ) => ({
         id: item.id,
         userId: item.user_id,

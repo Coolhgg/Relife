@@ -14,10 +14,8 @@ export function useCapacitor() {
   const [deviceFeatures, setDeviceFeatures] = useState<DeviceFeatures | null>(null);
   const [isNative, setIsNative] = useState(false);
 
-  useEffect((
-) => {
-    const initializeCapacitor = async (
-) => {
+  useEffect(() => {
+    const initializeCapacitor = async () => {
       try {
         await capacitorEnhanced.initialize();
         setIsInitialized(true);
@@ -30,16 +28,14 @@ export function useCapacitor() {
 
     initializeCapacitor();
 
-    const handleInitialized = (data: { features: DeviceFeatures }
-) => {
+    const handleInitialized = (data: { features: DeviceFeatures }) => {
       setDeviceFeatures(data.features);
       setIsInitialized(true);
     };
 
     capacitorEnhanced.on('initialized', handleInitialized);
 
-    return (
-) => {
+    return () => {
       capacitorEnhanced.off('initialized', handleInitialized);
     };
   }, []);
@@ -57,8 +53,7 @@ export function useAlarmNotifications() {
   const [pendingAlarms, setPendingAlarms] = useState<any[]>([]);
   const [isScheduling, setIsScheduling] = useState(false);
 
-  const scheduleAlarm = useCallback(async (alarm: AlarmNotification
-) => {
+  const scheduleAlarm = useCallback(async (alarm: AlarmNotification) => {
     setIsScheduling(true);
     try {
       await capacitorEnhanced.scheduleAlarmNotification(alarm);
@@ -73,8 +68,7 @@ export function useAlarmNotifications() {
     }
   }, []);
 
-  const cancelAlarm = useCallback(async (alarmId: number
-) => {
+  const cancelAlarm = useCallback(async (alarmId: number) => {
     try {
       await capacitorEnhanced.cancelAlarmNotification(alarmId);
       const pending = await capacitorEnhanced.getPendingAlarms();
@@ -86,8 +80,7 @@ export function useAlarmNotifications() {
     }
   }, []);
 
-  const refreshPendingAlarms = useCallback(async (
-) => {
+  const refreshPendingAlarms = useCallback(async () => {
     try {
       const pending = await capacitorEnhanced.getPendingAlarms();
       setPendingAlarms(pending);
@@ -96,20 +89,16 @@ export function useAlarmNotifications() {
     }
   }, []);
 
-  useEffect((
-) => {
+  useEffect(() => {
     refreshPendingAlarms();
 
-    const handleAlarmScheduled = (
-) => refreshPendingAlarms();
-    const handleAlarmCancelled = (
-) => refreshPendingAlarms();
+    const handleAlarmScheduled = () => refreshPendingAlarms();
+    const handleAlarmCancelled = () => refreshPendingAlarms();
 
     capacitorEnhanced.on('alarm-scheduled', handleAlarmScheduled);
     capacitorEnhanced.on('alarm-cancelled', handleAlarmCancelled);
 
-    return (
-) => {
+    return () => {
       capacitorEnhanced.off('alarm-scheduled', handleAlarmScheduled);
       capacitorEnhanced.off('alarm-cancelled', handleAlarmCancelled);
     };
@@ -128,8 +117,7 @@ export function useAlarmNotifications() {
 export function useHapticFeedback() {
   const [isSupported, setIsSupported] = useState(false);
 
-  useEffect((
-) => {
+  useEffect(() => {
     const features = capacitorEnhanced.getDeviceFeatures();
     setIsSupported(features?.hasHaptics || false);
   }, []);
@@ -137,8 +125,7 @@ export function useHapticFeedback() {
   const triggerHaptic = useCallback(
     async (
       type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
-    
-) => {
+    ) => {
       if (!isSupported) return;
 
       try {
@@ -161,18 +148,15 @@ export function useAppState() {
   const [appState, setAppState] = useState<AppState>({ isActive: true });
   const [isBackground, setIsBackground] = useState(false);
 
-  useEffect((
-) => {
-    const handleAppStateChange = (state: AppState
-) => {
+  useEffect(() => {
+    const handleAppStateChange = (state: AppState) => {
       setAppState(state);
       setIsBackground(!state.isActive);
     };
 
     capacitorEnhanced.on('app-state-change', handleAppStateChange);
 
-    return (
-) => {
+    return () => {
       capacitorEnhanced.off('app-state-change', handleAppStateChange);
     };
   }, []);
@@ -191,17 +175,14 @@ export function useNetworkStatus() {
     connectionType: 'unknown',
   });
 
-  useEffect((
-) => {
-    const handleNetworkChange = (status: ConnectionStatus
-) => {
+  useEffect(() => {
+    const handleNetworkChange = (status: ConnectionStatus) => {
       setNetworkStatus(status);
     };
 
     capacitorEnhanced.on('network-change', handleNetworkChange);
 
-    return (
-) => {
+    return () => {
       capacitorEnhanced.off('network-change', handleNetworkChange);
     };
   }, []);
@@ -218,14 +199,12 @@ export function useWakeLock() {
   const [isAwake, setIsAwake] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
 
-  useEffect((
-) => {
+  useEffect(() => {
     const features = capacitorEnhanced.getDeviceFeatures();
     setIsSupported(features?.hasWakeLock || false);
   }, []);
 
-  const keepAwake = useCallback(async (
-) => {
+  const keepAwake = useCallback(async () => {
     if (!isSupported) return false;
 
     try {
@@ -238,8 +217,7 @@ export function useWakeLock() {
     }
   }, [isSupported]);
 
-  const allowSleep = useCallback(async (
-) => {
+  const allowSleep = useCallback(async () => {
     if (!isSupported) return false;
 
     try {
@@ -265,29 +243,21 @@ export function useNotificationEvents() {
   const [lastNotification, setLastNotification] = useState<any>(null);
   const [notificationActions, setNotificationActions] = useState<string[]>([]);
 
-  useEffect((
-) => {
-    const handleNotificationReceived = (notification: any
-) => {
+  useEffect(() => {
+    const handleNotificationReceived = (notification: any) => {
       setLastNotification(notification);
     };
 
-    const handleAlarmSnoozed = (data: any
-) => {
-      setNotificationActions((prev: any
-) => [...prev, `snoozed-${data.alarmId}`]);
+    const handleAlarmSnoozed = (data: any) => {
+      setNotificationActions((prev: any) => [...prev, `snoozed-${data.alarmId}`]);
     };
 
-    const handleAlarmDismissed = (data: any
-) => {
-      setNotificationActions((prev: any
-) => [...prev, `dismissed-${data.alarmId}`]);
+    const handleAlarmDismissed = (data: any) => {
+      setNotificationActions((prev: any) => [...prev, `dismissed-${data.alarmId}`]);
     };
 
-    const handleAlarmTapped = (data: any
-) => {
-      setNotificationActions((prev: any
-) => [...prev, `tapped-${data.alarmId}`]);
+    const handleAlarmTapped = (data: any) => {
+      setNotificationActions((prev: any) => [...prev, `tapped-${data.alarmId}`]);
     };
 
     capacitorEnhanced.on('notification-received', handleNotificationReceived);
@@ -295,8 +265,7 @@ export function useNotificationEvents() {
     capacitorEnhanced.on('alarm-dismissed', handleAlarmDismissed);
     capacitorEnhanced.on('alarm-tapped', handleAlarmTapped);
 
-    return (
-) => {
+    return () => {
       capacitorEnhanced.off('notification-received', handleNotificationReceived);
       capacitorEnhanced.off('alarm-snoozed', handleAlarmSnoozed);
       capacitorEnhanced.off('alarm-dismissed', handleAlarmDismissed);
@@ -304,8 +273,7 @@ export function useNotificationEvents() {
     };
   }, []);
 
-  const clearActions = useCallback((
-) => {
+  const clearActions = useCallback(() => {
     setNotificationActions([]);
   }, []);
 
@@ -321,21 +289,17 @@ export function useNotificationEvents() {
 export function useBackButton() {
   const [backButtonPressed, setBackButtonPressed] = useState(false);
 
-  useEffect((
-) => {
-    const handleBackButton = (event: any
-) => {
+  useEffect(() => {
+    const handleBackButton = (event: any) => {
       setBackButtonPressed(true);
 
       // Reset after a short delay
-      setTimeout((
-) => setBackButtonPressed(false), 100);
+      setTimeout(() => setBackButtonPressed(false), 100);
     };
 
     capacitorEnhanced.on('back-button', handleBackButton);
 
-    return (
-) => {
+    return () => {
       capacitorEnhanced.off('back-button', handleBackButton);
     };
   }, []);
@@ -349,17 +313,14 @@ export function useBackButton() {
 export function useAppUrlOpen() {
   const [lastUrl, setLastUrl] = useState<string | null>(null);
 
-  useEffect((
-) => {
-    const handleAppUrlOpen = (event: any
-) => {
+  useEffect(() => {
+    const handleAppUrlOpen = (event: any) => {
       setLastUrl(event.url);
     };
 
     capacitorEnhanced.on('app-url-open', handleAppUrlOpen);
 
-    return (
-) => {
+    return () => {
       capacitorEnhanced.off('app-url-open', handleAppUrlOpen);
     };
   }, []);

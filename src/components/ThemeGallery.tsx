@@ -29,10 +29,8 @@ import type { CustomThemeConfig, ThemePreset, Theme } from '../types';
 
 interface ThemeGalleryProps {
   className?: string;
-  onCreateNew?: (
-) => void;
-  onEditTheme?: (theme: CustomThemeConfig
-) => void;
+  onCreateNew?: () => void;
+  onEditTheme?: (theme: CustomThemeConfig) => void;
 }
 
 interface ThemeCard {
@@ -61,8 +59,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   className = '',
   onCreateNew,
   onEditTheme,
-}
-) => {
+}) => {
   const { theme, setTheme, availableThemes, saveThemePreset } = useTheme();
 
   const [view, setView] = useState<'grid' | 'list'>('grid');
@@ -208,8 +205,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   ];
 
   // Load custom themes and favorites from localStorage
-  useEffect((
-) => {
+  useEffect(() => {
     const savedFavorites = localStorage.getItem('theme-favorites');
     if (savedFavorites) {
       setFavorites(new Set(JSON.parse(savedFavorites)));
@@ -220,8 +216,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       try {
         const parsed = JSON.parse(savedCustomThemes);
         const customThemeCards: ThemeCard[] = parsed.map(
-          (theme: CustomThemeConfig
-) => ({
+          (theme: CustomThemeConfig) => ({
             id: theme.id,
             name: theme.displayName || theme.name,
             description: theme.description,
@@ -248,8 +243,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   }, [favorites]);
 
   // Save favorites to localStorage
-  const toggleFavorite = (themeId: string
-) => {
+  const toggleFavorite = (themeId: string) => {
     const newFavorites = new Set(favorites);
     if (newFavorites.has(themeId)) {
       newFavorites.delete(themeId);
@@ -272,9 +266,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       searchQuery &&
       !theme.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
       !theme.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      
-      !theme.tags.some((tag: any
-) =>
+      !theme.tags.some((tag: any) =>
         tag.toLowerCase().includes(searchQuery.toLowerCase())
       )
     ) {
@@ -296,8 +288,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   });
 
   // Sort themes
-  const sortedThemes = [...filteredThemes].sort((a, b
-) => {
+  const sortedThemes = [...filteredThemes].sort((a, b) => {
     switch (sortBy) {
       case 'name':
         return a.name.localeCompare(b.name);
@@ -312,8 +303,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
     }
   });
 
-  const applyTheme = async (themeCard: ThemeCard
-) => {
+  const applyTheme = async (themeCard: ThemeCard) => {
     if (themeCard.isCustom && themeCard.config) {
       // Apply custom theme
       try {
@@ -340,24 +330,19 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
     }
   };
 
-  const deleteCustomTheme = (themeId: string
-) => {
-    
-    const updatedThemes = customThemes.filter((t: any
-) => t.id !== themeId);
+  const deleteCustomTheme = (themeId: string) => {
+    const updatedThemes = customThemes.filter((t: any) => t.id !== themeId);
     setCustomThemes(updatedThemes);
 
     // Update localStorage
-    
-    const savedThemes = updatedThemes.map((t: any
-) => t.config).filter(Boolean);
+
+    const savedThemes = updatedThemes.map((t: any) => t.config).filter(Boolean);
     localStorage.setItem('custom-themes', JSON.stringify(savedThemes));
 
     setShowDeleteConfirm(null);
   };
 
-  const duplicateTheme = (themeCard: ThemeCard
-) => {
+  const duplicateTheme = (themeCard: ThemeCard) => {
     if (onEditTheme && themeCard.config) {
       onEditTheme(themeCard.config);
     }
@@ -367,8 +352,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   const ThemeCardComponent: React.FC<{ theme: ThemeCard; isCompact?: boolean }> = ({
     theme: themeCard,
     isCompact = false,
-  }
-) => (
+  }) => (
     <div
       className={`group relative rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 ${
         theme === themeCard.id ? 'ring-2 ring-blue-500 border-blue-300' : ''
@@ -420,8 +404,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         {/* Action buttons */}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
           <button
-            onClick={(
-) => applyTheme(themeCard)}
+            onClick={() => applyTheme(themeCard)}
             className="flex items-center gap-1 px-3 py-1 bg-white rounded-full text-gray-800 font-medium hover:bg-gray-100 transition-colors"
           >
             <Eye size={14} />
@@ -429,8 +412,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
           </button>
           {themeCard.isCustom && onEditTheme && themeCard.config && (
             <button
-              onClick={(
-) => onEditTheme(themeCard.config!)}
+              onClick={() => onEditTheme(themeCard.config!)}
               className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-colors"
             >
               <Edit3 size={14} />
@@ -452,8 +434,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             )}
           </div>
           <button
-            onClick={(
-) => toggleFavorite(themeCard.id)}
+            onClick={() => toggleFavorite(themeCard.id)}
             className="ml-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
           >
             <Heart
@@ -471,8 +452,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         {!isCompact && (
           <div className="flex flex-wrap gap-1 mb-3">
             {}
-            {themeCard.tags.slice(0, 3).map((tag: any
-) => (
+            {themeCard.tags.slice(0, 3).map((tag: any) => (
               <span
                 key={tag}
                 className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
@@ -506,16 +486,14 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             {themeCard.isCustom && (
               <>
                 <button
-                  onClick={(
-) => duplicateTheme(themeCard)}
+                  onClick={() => duplicateTheme(themeCard)}
                   className="p-1 rounded-full hover:bg-gray-100 transition-colors"
                   title="Duplicate theme"
                 >
                   <Copy size={14} className="text-gray-400 hover:text-gray-600" />
                 </button>
                 <button
-                  onClick={(
-) => setShowDeleteConfirm(themeCard.id)}
+                  onClick={() => setShowDeleteConfirm(themeCard.id)}
                   className="p-1 rounded-full hover:bg-gray-100 transition-colors"
                   title="Delete theme"
                 >
@@ -607,15 +585,13 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
 
           <div className="flex border border-gray-200 rounded-lg">
             <button
-              onClick={(
-) => setView('grid')}
+              onClick={() => setView('grid')}
               className={`p-2 ${view === 'grid' ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
             >
               <Grid size={18} />
             </button>
             <button
-              onClick={(
-) => setView('list')}
+              onClick={() => setView('list')}
               className={`p-2 ${view === 'list' ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
             >
               <List size={18} />
@@ -665,8 +641,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={(
-) => toggleFavorite(themeCard.id)}
+                      onClick={() => toggleFavorite(themeCard.id)}
                       className="p-2 rounded-full hover:bg-gray-100 transition-colors"
                     >
                       <Heart
@@ -679,8 +654,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                       />
                     </button>
                     <button
-                      onClick={(
-) => applyTheme(themeCard)}
+                      onClick={() => applyTheme(themeCard)}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     >
                       Apply
@@ -732,15 +706,13 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             </p>
             <div className="flex gap-3 justify-end">
               <button
-                onClick={(
-) => setShowDeleteConfirm(null)}
+                onClick={() => setShowDeleteConfirm(null)}
                 className="px-4 py-2 text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
-                onClick={(
-) => deleteCustomTheme(showDeleteConfirm)}
+                onClick={() => deleteCustomTheme(showDeleteConfirm)}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
                 Delete Theme

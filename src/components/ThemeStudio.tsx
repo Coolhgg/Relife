@@ -18,38 +18,32 @@ import type { CustomThemeConfig } from '../types';
 
 interface ThemeStudioProps {
   className?: string;
-  onClose?: (
-) => void;
+  onClose?: () => void;
 }
 
 type StudioView = 'gallery' | 'creator' | 'editor';
 
-const ThemeStudio: React.FC<ThemeStudioProps> = ({ className = '', onClose }
-) => {
+const ThemeStudio: React.FC<ThemeStudioProps> = ({ className = '', onClose }) => {
   const { theme, themeConfig } = useTheme();
   const [currentView, setCurrentView] = useState<StudioView>('gallery');
   const [editingTheme, setEditingTheme] = useState<CustomThemeConfig | null>(null);
 
-  const handleCreateNew = (
-) => {
+  const handleCreateNew = () => {
     setEditingTheme(null);
     setCurrentView('creator');
   };
 
-  const handleEditTheme = (themeConfig: CustomThemeConfig
-) => {
+  const handleEditTheme = (themeConfig: CustomThemeConfig) => {
     setEditingTheme(themeConfig);
     setCurrentView('editor');
   };
 
-  const handleBackToGallery = (
-) => {
+  const handleBackToGallery = () => {
     setCurrentView('gallery');
     setEditingTheme(null);
   };
 
-  const renderHeader = (
-) => {
+  const renderHeader = () => {
     switch (currentView) {
       case 'creator':
         return (
@@ -138,8 +132,7 @@ const ThemeStudio: React.FC<ThemeStudioProps> = ({ className = '', onClose }
     }
   };
 
-  const renderContent = (
-) => {
+  const renderContent = () => {
     switch (currentView) {
       case 'creator':
       case 'editor':

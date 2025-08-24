@@ -115,8 +115,7 @@ export class PerformanceMonitor {
       try {
         const fidObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
-          entries.forEach((entry: any
-) => {
+          entries.forEach((entry: any) => {
             this.webVitals.FID = entry.processingStart - entry.startTime;
             this.trackCustomMetric('FID', this.webVitals.FID);
           });
@@ -132,8 +131,7 @@ export class PerformanceMonitor {
         let clsValue = 0;
         const clsObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
-          entries.forEach((entry: any
-) => {
+          entries.forEach((entry: any) => {
             if (!entry.hadRecentInput) {
               clsValue += entry.value;
               this.webVitals.CLS = clsValue;
@@ -151,8 +149,7 @@ export class PerformanceMonitor {
     // First Contentful Paint (FCP) and Time to First Byte (TTFB)
     if (performance.getEntriesByType) {
       const observer = new PerformanceObserver(list => {
-        list.getEntries().forEach((entry: any
-) => {
+        list.getEntries().forEach((entry: any) => {
           if (entry.name === 'first-contentful-paint') {
             this.webVitals.FCP = entry.startTime;
             this.trackCustomMetric('FCP', entry.startTime);
@@ -208,20 +205,17 @@ export class PerformanceMonitor {
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
 
-    history.pushState = (...args
-) => {
+    history.pushState = (...args) => {
       this.trackNavigation((args[2] as string) || window.location.pathname);
       return originalPushState.apply(history, args);
     };
 
-    history.replaceState = (...args
-) => {
+    history.replaceState = (...args) => {
       this.trackNavigation((args[2] as string) || window.location.pathname);
       return originalReplaceState.apply(history, args);
     };
 
-    window.addEventListener('popstate', (
-) => {
+    window.addEventListener('popstate', () => {
       this.trackNavigation(window.location.pathname);
     });
   }
@@ -231,8 +225,7 @@ export class PerformanceMonitor {
     if ('PerformanceObserver' in window) {
       try {
         const resourceObserver = new PerformanceObserver(list => {
-          list.getEntries().forEach((entry: PerformanceEntry
-) => {
+          list.getEntries().forEach((entry: PerformanceEntry) => {
             const resourceEntry = entry as PerformanceResourceTiming;
 
             // Track slow resources
@@ -267,8 +260,7 @@ export class PerformanceMonitor {
   // Memory usage tracking
   private setupMemoryTracking(): void {
     if ('memory' in performance) {
-      const trackMemory = (
-) => {
+      const trackMemory = () => {
         const memory = (performance as any).memory;
         this.trackCustomMetric('memory_used', memory.usedJSHeapSize, {
           total: memory.totalJSHeapSize,
@@ -490,39 +482,33 @@ export class PerformanceMonitor {
   private startPeriodicReporting(): void {
     // Send report every 5 minutes
     this.reportingInterval = window.setInterval(
-      (
-) => {
+      () => {
         this.sendReport();
       },
       5 * 60 * 1000
     );
 
     // Send report on page unload
-    window.addEventListener('beforeunload', (
-) => {
+    window.addEventListener('beforeunload', () => {
       this.sendReport();
     });
 
     // Send report when page becomes hidden
-    document.addEventListener('visibilitychange', (
-) => {
+    document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') {
         this.sendReport();
       }
     });
 
     // Retry failed reports when connection is restored
-    window.addEventListener('online', (
-) => {
+    window.addEventListener('online', () => {
       this.trackCustomMetric('network_connection_restored', 1);
       this.retryFailedReports();
       // Send current report immediately when back online
-      setTimeout((
-) => this.sendReport(), 1000);
+      setTimeout(() => this.sendReport(), 1000);
     });
 
-    window.addEventListener('offline', (
-) => {
+    window.addEventListener('offline', () => {
       this.trackCustomMetric('network_connection_lost', 1);
     });
   }
@@ -578,8 +564,7 @@ export class PerformanceMonitor {
         } else {
           // Fallback to fetch with retry logic
           const controller = new AbortController();
-          const timeoutId = setTimeout((
-) => controller.abort(), 5000); // 5 second timeout
+          const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
           const response = await fetch('/api/performance', {
             method: 'POST',
@@ -608,8 +593,7 @@ export class PerformanceMonitor {
         if (attempt < maxRetries) {
           // Exponential backoff: 1s, 2s, 4s
           const delay = Math.pow(2, attempt - 1) * 1000;
-          setTimeout((
-) => sendWithRetry(attempt + 1), delay);
+          setTimeout(() => sendWithRetry(attempt + 1), delay);
         } else {
           console.error(
             '[PerformanceMonitor] All retry attempts failed, storing report locally'
@@ -709,10 +693,8 @@ export class PerformanceMonitor {
     if (reports.length === 0) return {};
 
     const totals = reports.reduce(
-      (acc, report
-) => {
-        Object.entries(report.webVitals).forEach(([key, value]
-) => {
+      (acc, report) => {
+        Object.entries(report.webVitals).forEach(([key, value]) => {
           acc[key] = (acc[key] || 0) + value;
         });
         return acc;
@@ -721,8 +703,7 @@ export class PerformanceMonitor {
     );
 
     const averages: Partial<WebVitalsMetrics> = {};
-    Object.entries(totals).forEach(([key, total]
-) => {
+    Object.entries(totals).forEach(([key, total]) => {
       averages[key as keyof WebVitalsMetrics] = total / reports.length;
     });
 
@@ -743,13 +724,11 @@ export class PerformanceMonitor {
     });
 
     return Object.entries(interactionCounts)
-      .map(([key, count]
-) => {
+      .map(([key, count]) => {
         const [type, target] = key.split(':');
         return { type: `${type} - ${target}`, count };
       })
-      .sort((a, b
-) => b.count - a.count)
+      .sort((a, b) => b.count - a.count)
       .slice(0, 10);
   }
 
@@ -805,15 +784,13 @@ PerformanceMonitor.prototype.getPerformanceTrends = function (): PerformanceTren
   const pageLoadMetrics = allMetrics.filter(m => m.name === 'page_load_complete');
   const averagePageLoadTime =
     pageLoadMetrics.length > 0
-      ? pageLoadMetrics.reduce((sum, m
-) => sum + m.value, 0) / pageLoadMetrics.length
+      ? pageLoadMetrics.reduce((sum, m) => sum + m.value, 0) / pageLoadMetrics.length
       : 0;
 
   const interactionDelays = allMetrics.filter(m => m.name.includes('interaction_'));
   const averageInteractionDelay =
     interactionDelays.length > 0
-      ? interactionDelays.reduce((sum, m
-) => sum + m.value, 0) /
+      ? interactionDelays.reduce((sum, m) => sum + m.value, 0) /
         interactionDelays.length
       : 0;
 
@@ -829,10 +806,8 @@ PerformanceMonitor.prototype.getPerformanceTrends = function (): PerformanceTren
   });
 
   const mostUsedFeatures = Object.entries(featureUsage)
-    .map(([feature, usage]
-) => ({ feature, usage }))
-    .sort((a, b
-) => b.usage - a.usage)
+    .map(([feature, usage]) => ({ feature, usage }))
+    .sort((a, b) => b.usage - a.usage)
     .slice(0, 10);
 
   // Calculate performance score (0-100)

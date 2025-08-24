@@ -34,12 +34,9 @@ import { useABTesting } from '../hooks/useABTesting';
 
 interface DashboardProps {
   alarms?: Alarm[];
-  onAddAlarm: (
-) => void;
-  onQuickSetup?: (presetType: 'morning' | 'work' | 'custom'
-) => void;
-  onNavigateToAdvanced?: (
-) => void;
+  onAddAlarm: () => void;
+  onQuickSetup?: (presetType: 'morning' | 'work' | 'custom') => void;
+  onNavigateToAdvanced?: () => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -47,23 +44,19 @@ const Dashboard: React.FC<DashboardProps> = ({
   onAddAlarm,
   onQuickSetup,
   onNavigateToAdvanced,
-}
-) => {
+}) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
-  
-  const enabledAlarms = alarms.filter((a: any
-) => a.enabled);
+
+  const enabledAlarms = alarms.filter((a: any) => a.enabled);
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
 
-  useEffect((
-) => {
+  useEffect(() => {
     loadSmartInsights();
   }, [alarms]);
 
-  const loadSmartInsights = async (
-) => {
+  const loadSmartInsights = async () => {
     try {
       // Check if advanced features are enabled
       const mlEnabled = MLAlarmOptimizer.isMLEnabled();
@@ -99,8 +92,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
         </div>
         <div className="space-y-4">
-          {[...Array(3)].map((_, i
-) => (
+          {[...Array(3)].map((_, i) => (
             <div
               key={i}
               data-testid="alarm-skeleton"
@@ -173,8 +165,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             {/* Quick Setup Options for New Users */}
             <div className="space-y-3 mb-6">
               <button
-                onClick={(
-) => (onQuickSetup ? onQuickSetup('morning') : onAddAlarm())}
+                onClick={() => (onQuickSetup ? onQuickSetup('morning') : onAddAlarm())}
                 className="w-full bg-white text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
                 aria-label="Quick setup - Morning routine alarm at 7:00 AM"
               >
@@ -183,8 +174,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               </button>
 
               <button
-                onClick={(
-) => (onQuickSetup ? onQuickSetup('work') : onAddAlarm())}
+                onClick={() => (onQuickSetup ? onQuickSetup('work') : onAddAlarm())}
                 className="w-full bg-white/90 text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-white transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
                 aria-label="Quick setup - Work day alarm at 6:30 AM"
               >
@@ -257,8 +247,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             Recent Alarms
           </h3>
           <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
-            {alarms.slice(0, 3).map((alarm: any
-) => { // auto: implicit any
+            {alarms.slice(0, 3).map((alarm: any) => {
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
               return (
@@ -343,8 +332,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 
           <div className="space-y-3">
             {/* Optimization Suggestions */}
-            {optimizationSuggestions.map((suggestion, index
-) => (
+            {optimizationSuggestions.map((suggestion, index) => (
               <div
                 key={index}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
@@ -373,9 +361,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             ))}
 
             {/* Smart Insights */}
-            {smartInsights
-      .map((insight: any
-) => (
+            {smartInsights.map((insight: any) => (
               <div
                 key={insight.id}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
@@ -506,8 +492,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           {alarms.length > 0 && onQuickSetup && (
             <>
               <button
-                onClick={(
-) => onQuickSetup('morning')}
+                onClick={() => onQuickSetup('morning')}
                 className="alarm-button alarm-button-secondary p-4 text-left"
                 aria-label="Quick morning routine - Add 7:00 AM motivational alarm"
               >
@@ -523,8 +508,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               </button>
 
               <button
-                onClick={(
-) => onQuickSetup('work')}
+                onClick={() => onQuickSetup('work')}
                 className="alarm-button alarm-button-secondary p-4 text-left"
                 aria-label="Work day setup - Add 6:30 AM professional alarm"
               >

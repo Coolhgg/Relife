@@ -57,8 +57,7 @@ export class AlarmAccessControl {
   private initializeAccessControl(): void {
     // Clean up old sessions every 10 minutes
     setInterval(
-      (
-) => {
+      () => {
         this.cleanupExpiredSessions();
       },
       10 * 60 * 1000
@@ -66,8 +65,7 @@ export class AlarmAccessControl {
 
     // Reset suspicious activity counters every hour
     setInterval(
-      (
-) => {
+      () => {
         this.suspiciousActivity.clear();
       },
       60 * 60 * 1000
@@ -112,7 +110,11 @@ export class AlarmAccessControl {
     action: AlarmAction,
     alarm?: Alarm,
     sessionId?: string
-  ): Promise<{ granted: boolean; reason?: string; context?: AccessControlContext }> {
+  ): Promise<{
+    granted: boolean;
+    reason?: string;
+    context?: AccessControlContext;
+  }> {
     try {
       // Get or validate session context
       const context = await this.getValidatedContext(userId, sessionId);
@@ -136,7 +138,10 @@ export class AlarmAccessControl {
           'denied',
           'user_blocked'
         );
-        return { granted: false, reason: 'Access blocked due to security violations' };
+        return {
+          granted: false,
+          reason: 'Access blocked due to security violations',
+        };
       }
 
       // Rate limiting per user
@@ -257,8 +262,7 @@ export class AlarmAccessControl {
     this.blockedUsers.add(userId);
 
     if (duration) {
-      setTimeout((
-) => {
+      setTimeout(() => {
         this.blockedUsers.delete(userId);
         this.logAccessEvent('user_unblocked', userId, 'system', 'granted', 'timeout');
       }, duration);
@@ -286,8 +290,7 @@ export class AlarmAccessControl {
 
     return history
       .slice(-limit)
-      .sort((a, b
-) => b.timestamp.getTime() - a.timestamp.getTime());
+      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
 
   /**

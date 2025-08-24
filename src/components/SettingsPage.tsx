@@ -34,12 +34,9 @@ import { TimeoutHandle } from '../types/timers';
 interface SettingsPageProps {
   appState: AppState;
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
-  onTestVoice?: (mood: VoiceMood
-) => Promise<void>;
-  onUpdateProfile?: (updates: any
-) => Promise<void>;
-  onSignOut?: (
-) => void;
+  onTestVoice?: (mood: VoiceMood) => Promise<void>;
+  onUpdateProfile?: (updates: any) => Promise<void>;
+  onSignOut?: () => void;
   isLoading?: boolean;
   error?: string | null;
 }
@@ -50,25 +47,21 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   onSignOut,
   isLoading = false,
   error = null,
-}
-) => {
+}) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [showErrorTest, setShowErrorTest] = useState(false);
 
   // Announce page entry
-  useEffect((
-) => {
+  useEffect(() => {
     announceEnter(
       'Settings page loaded. Use tab to navigate through different setting categories.'
     );
   }, [announceEnter]);
 
   // Announce permission status on component mount
-  useEffect((
-) => {
+  useEffect(() => {
     if (appState.permissions) {
-      setTimeout((
-) => {
+      setTimeout(() => {
         announcePermissionStatus(
           'Notifications',
           appState.permissions.notifications.granted,
@@ -95,8 +88,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   const [hapticFeedback, setHapticFeedback] = useState(true);
   const [snoozeDuration, setSnoozeDuration] = useState('10');
   const [maxSnoozes, setMaxSnoozes] = useState('5');
-  const [_tabProtectionEnabled, _setTabProtectionEnabled] = useState((
-) => {
+  const [_tabProtectionEnabled, _setTabProtectionEnabled] = useState(() => {
     // Get from localStorage or default to true
     const stored = localStorage.getItem('tabProtectionEnabled');
     return stored !== null ? JSON.parse(stored) : true;
@@ -116,8 +108,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
 
   const { announceEnter } = useFocusAnnouncements('Settings');
 
-  const toggleSection = (section: string
-) => {
+  const toggleSection = (section: string) => {
     const wasActive = activeSection === section;
     const newState = wasActive ? null : section;
     setActiveSection(newState);
@@ -144,37 +135,32 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent, section: string
-) => {
+  const handleKeyDown = (e: React.KeyboardEvent, section: string) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       toggleSection(section);
     }
   };
 
-  const handleThemeChange = (theme: Theme
-) => {
+  const handleThemeChange = (theme: Theme) => {
     setTheme(theme);
     announceThemeChange(theme);
     console.log('Theme changed to:', theme);
   };
 
-  const handleDefaultVoiceMoodChange = (mood: VoiceMood
-) => {
+  const handleDefaultVoiceMoodChange = (mood: VoiceMood) => {
     setDefaultVoiceMood(mood);
     announceVoiceMoodChange(mood);
     console.log('Default voice mood changed to:', mood);
   };
 
   // Handler functions for interactive elements
-  const handleVoiceSensitivityChange = (value: number
-) => {
+  const handleVoiceSensitivityChange = (value: number) => {
     setVoiceSensitivity(value);
     announceSliderChange('Voice dismissal sensitivity', value, 1, 10);
   };
 
-  const _handlePushNotificationsToggle = (
-) => {
+  const _handlePushNotificationsToggle = () => {
     const newValue = !pushNotifications;
     setPushNotifications(newValue);
     announceToggleSwitch(
@@ -186,8 +172,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     );
   };
 
-  const handleHapticFeedbackToggle = (
-) => {
+  const handleHapticFeedbackToggle = () => {
     const newValue = !hapticFeedback;
     setHapticFeedback(newValue);
     announceToggleSwitch(
@@ -199,8 +184,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     );
   };
 
-  const handleSnoozeDurationChange = (value: string
-) => {
+  const handleSnoozeDurationChange = (value: string) => {
     setSnoozeDuration(value);
     announceDropdownChange(
       'Snooze duration',
@@ -209,8 +193,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     );
   };
 
-  const handleMaxSnoozesChange = (value: string
-) => {
+  const handleMaxSnoozesChange = (value: string) => {
     setMaxSnoozes(value);
     const description =
       value === '-1'
@@ -223,8 +206,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     );
   };
 
-  const handleLinkClick = (linkName: string
-) => {
+  const handleLinkClick = (linkName: string) => {
     announceLinkActivation(linkName, true);
     // In a real app, this would open the link
     console.log(`Opening ${linkName}`);
@@ -235,13 +217,11 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     settingName: string,
     currentValue: string,
     description: string
-  
-) => {
+  ) => {
     announceSettingDescription(settingName, currentValue, description);
   };
 
-  const renderPermissionStatus = (granted: boolean, label: string
-) => (
+  const renderPermissionStatus = (granted: boolean, label: string) => (
     <div
       className={`flex items-center gap-2 text-sm ${
         granted
@@ -275,10 +255,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           <section className="mb-6">
             <UserProfile
               user={appState.user}
-              onUpdateProfile={onUpdateProfile || ((
-) => Promise.resolve())}
-              onSignOut={onSignOut || ((
-) => {})}
+              onUpdateProfile={onUpdateProfile || (() => Promise.resolve())}
+              onSignOut={onSignOut || (() => {})}
               isLoading={isLoading}
               error={error}
             />
@@ -288,11 +266,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* App Permissions */}
         <section className="alarm-card">
           <button
-            onClick={(
-) => toggleSection('permissions')}
-            
-            onKeyDown={(e: any
-) => handleKeyDown(e, 'permissions')}
+            onClick={() => toggleSection('permissions')}
+            onKeyDown={(e: any) => handleKeyDown(e, 'permissions')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'permissions'}
             aria-controls="permissions-content"
@@ -342,11 +317,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Appearance */}
         <section className="alarm-card">
           <button
-            onClick={(
-) => toggleSection('appearance')}
-            
-            onKeyDown={(e: any
-) => handleKeyDown(e, 'appearance')}
+            onClick={() => toggleSection('appearance')}
+            onKeyDown={(e: any) => handleKeyDown(e, 'appearance')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'appearance'}
             aria-controls="appearance-content"
@@ -391,8 +363,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     {['light', 'dark', 'auto'].map(theme => (
                       <button
                         key={theme}
-                        onClick={(
-) => handleThemeChange(theme as Theme)}
+                        onClick={() => handleThemeChange(theme as Theme)}
                         className={`alarm-button ${
                           currentTheme === theme
                             ? 'alarm-button-primary'
@@ -430,8 +401,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   </div>
                   <div className="grid grid-cols-1 gap-2">
                     <button
-                      onClick={(
-) => handleThemeChange('high-contrast')}
+                      onClick={() => handleThemeChange('high-contrast')}
                       className={`alarm-button ${
                         currentTheme === 'high-contrast'
                           ? 'alarm-button-primary'
@@ -450,8 +420,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                       </div>
                     </button>
                     <button
-                      onClick={(
-) => handleThemeChange('focus')}
+                      onClick={() => handleThemeChange('focus')}
                       className={`alarm-button ${
                         currentTheme === 'focus'
                           ? 'alarm-button-primary'
@@ -506,8 +475,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     ].map(theme => (
                       <button
                         key={theme.id}
-                        onClick={(
-) => handleThemeChange(theme.id as Theme)}
+                        onClick={() => handleThemeChange(theme.id as Theme)}
                         className={`alarm-button ${
                           currentTheme === theme.id
                             ? 'alarm-button-primary'
@@ -565,8 +533,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     ].map(theme => (
                       <button
                         key={theme.id}
-                        onClick={(
-) => handleThemeChange(theme.id as Theme)}
+                        onClick={() => handleThemeChange(theme.id as Theme)}
                         className={`alarm-button ${
                           currentTheme === theme.id
                             ? 'alarm-button-primary'
@@ -634,8 +601,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                         return (
                           <button
                             key={theme}
-                            onClick={(
-) => handleThemeChange(theme as Theme)}
+                            onClick={() => handleThemeChange(theme as Theme)}
                             className={`alarm-button ${
                               currentTheme === theme
                                 ? 'alarm-button-primary'
@@ -686,11 +652,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Themes & Appearance */}
         <section className="alarm-card">
           <button
-            onClick={(
-) => toggleSection('themes')}
-            
-            onKeyDown={(e: any
-) => handleKeyDown(e, 'themes')}
+            onClick={() => toggleSection('themes')}
+            onKeyDown={(e: any) => handleKeyDown(e, 'themes')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'themes'}
             aria-controls="themes-content"
@@ -725,11 +688,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Advanced Personalization */}
         <section className="alarm-card">
           <button
-            onClick={(
-) => toggleSection('personalization')}
-            
-            onKeyDown={(e: any
-) => handleKeyDown(e, 'personalization')}
+            onClick={() => toggleSection('personalization')}
+            onKeyDown={(e: any) => handleKeyDown(e, 'personalization')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'personalization'}
             aria-controls="personalization-content"
@@ -764,11 +724,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Cloud Sync */}
         <section className="alarm-card">
           <button
-            onClick={(
-) => toggleSection('cloudsync')}
-            
-            onKeyDown={(e: any
-) => handleKeyDown(e, 'cloudsync'))
+            onClick={() => toggleSection('cloudsync')}
+            onKeyDown={(e: any) => handleKeyDown(e, 'cloudsync')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'cloudsync'}
             aria-controls="cloudsync-content"
@@ -833,11 +790,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Voice Settings */}
         <section className="alarm-card">
           <button
-            onClick={(
-) => toggleSection('voice')}
-            
-            onKeyDown={(e: any
-) => handleKeyDown(e, 'voice'))
+            onClick={() => toggleSection('voice')}
+            onKeyDown={(e: any) => handleKeyDown(e, 'voice')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'voice'}
             aria-controls="voice-content"
@@ -876,8 +830,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   {VOICE_MOODS.slice(0, 4).map(mood => (
                     <button
                       key={mood.id}
-                      onClick={(
-) => handleDefaultVoiceMoodChange(mood.id)}
+                      onClick={() => handleDefaultVoiceMoodChange(mood.id)}
                       className={`alarm-button ${defaultVoiceMood === mood.id ? 'alarm-button-primary' : 'alarm-button-secondary'} p-3 text-left`}
                       role="radio"
                       aria-checked={mood.id === defaultVoiceMood}
@@ -919,7 +872,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   aria-valuemin={1}
                   aria-valuemax={10}
                   aria-valuenow={voiceSensitivity}
-                  aria-valuetext={`${voiceSensitivity} out of 10, ${voiceSensitivity <= 2 ? 'Very low' : voiceSensitivity <= 4 ? 'Low' : voiceSensitivity <= 6 ? 'Medium' : voiceSensitivity <= 8 ? 'High' : 'Very high'} sensitivity`}
+                  aria-valuetext={`Sensitivity level ${voiceSensitivity} out of 10`}
                 />
                 <div
                   id="sensitivity-help"
@@ -936,11 +889,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Sound Settings */}
         <section className="alarm-card">
           <button
-            onClick={(
-) => toggleSection('sounds')}
-            
-            onKeyDown={(e: any
-) => handleKeyDown(e, 'sounds'))
+            onClick={() => toggleSection('sounds')}
+            onKeyDown={(e: any) => handleKeyDown(e, 'sounds')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'sounds'}
             aria-controls="sounds-content"
@@ -975,11 +925,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Notification Settings */}
         <section className="alarm-card">
           <button
-            onClick={(
-) => toggleSection('notifications')}
-            
-            onKeyDown={(e: any
-) => handleKeyDown(e, 'notifications'))
+            onClick={() => toggleSection('notifications')}
+            onKeyDown={(e: any) => handleKeyDown(e, 'notifications')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'notifications'}
             aria-controls="notifications-content"
@@ -1038,8 +985,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     aria-checked={hapticFeedback}
                     aria-label={`Haptic feedback ${hapticFeedback ? 'enabled' : 'disabled'}`}
                     aria-describedby="haptic-desc"
-                    onKeyDown={(e: any
-) => { // auto
+                    onKeyDown={(e: any) => {
+                      // auto
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
                         handleSettingDescriptionClick(
@@ -1116,11 +1063,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Security & Privacy */}
         <section className="alarm-card">
           <button
-            onClick={(
-) => toggleSection('security')}
-            
-            onKeyDown={(e: any
-) => handleKeyDown(e, 'security'))
+            onClick={() => toggleSection('security')}
+            onKeyDown={(e: any) => handleKeyDown(e, 'security')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'security'}
             aria-controls="security-content"
@@ -1155,11 +1099,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* About */}
         <section className="alarm-card">
           <button
-            onClick={(
-) => toggleSection('about')}
-            
-            onKeyDown={(e: any
-) => handleKeyDown(e, 'about'))
+            onClick={() => toggleSection('about')}
+            onKeyDown={(e: any) => handleKeyDown(e, 'about')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'about'}
             aria-controls="about-content"
@@ -1204,8 +1145,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 aria-label="App information links"
               >
                 <button
-                  onClick={(
-) => handleLinkClick('Privacy Policy')}
+                  onClick={() => handleLinkClick('Privacy Policy')}
                   className="alarm-button alarm-button-secondary w-full flex items-center justify-center gap-2"
                   aria-label="Open privacy policy in new window"
                 >
@@ -1214,8 +1154,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 </button>
 
                 <button
-                  onClick={(
-) => handleLinkClick('Terms of Service')}
+                  onClick={() => handleLinkClick('Terms of Service')}
                   className="alarm-button alarm-button-secondary w-full flex items-center justify-center gap-2"
                   aria-label="Open terms of service in new window"
                 >
@@ -1224,8 +1163,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 </button>
 
                 <button
-                  onClick={(
-) => handleLinkClick('Contact Support')}
+                  onClick={() => handleLinkClick('Contact Support')}
                   className="alarm-button alarm-button-secondary w-full flex items-center justify-center gap-2"
                   aria-label="Contact support team"
                 >
@@ -1241,11 +1179,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {process.env.NODE_ENV === 'development' && (
           <section className="alarm-card bg-orange-50 dark:bg-orange-900/10 border-orange-200 dark:border-orange-800">
             <button
-              onClick={(
-) => toggleSection('development')}
-              
-              onKeyDown={(e: any
-) => handleKeyDown(e, 'development'))
+              onClick={() => toggleSection('development')}
+              onKeyDown={(e: any) => handleKeyDown(e, 'development')}
               className="w-full flex items-center justify-between p-1"
               aria-expanded={activeSection === 'development'}
               aria-controls="development-content"
@@ -1284,8 +1219,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                         helps ensure the app handles errors gracefully.
                       </p>
                       <button
-                        onClick={(
-) => setShowErrorTest(true)}
+                        onClick={() => setShowErrorTest(true)}
                         className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                       >
                         Open Error Boundary Test
@@ -1308,8 +1242,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       </main>
 
       {/* Error Boundary Test Modal */}
-      {showErrorTest && <ErrorBoundaryTest onClose={(
-) => setShowErrorTest(false)} />}
+      {showErrorTest && <ErrorBoundaryTest onClose={() => setShowErrorTest(false)} />}
     </>
   );
 };

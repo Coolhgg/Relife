@@ -40,13 +40,10 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
   const statsUpdateInterval = useRef<TimeoutHandle>();
   const lastAnalysis = useRef<Date>();
 
-  const analyzeAndPreload = useCallback(async (
-) => {
+  const analyzeAndPreload = useCallback(async () => {
     if (state.isAnalyzing) return;
 
-    
-      setState((prev: any
-) => ({ ...prev, isAnalyzing: true }));
+    setState((prev: any) => ({ ...prev, isAnalyzing: true }));
 
     try {
       const criticalAssets = await criticalPreloader.analyzeCriticalAssets(alarms);
@@ -60,9 +57,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
         }
       }
 
-      
-      setState((prev: any
-) => ({
+      setState((prev: any) => ({
         ...prev,
         criticalAssets,
         readinessStatus,
@@ -72,23 +67,19 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
       lastAnalysis.current = new Date();
     } catch (error) {
       console.error('Error analyzing critical assets:', error);
-      
-      setState((prev: any
-) => ({ ...prev, isAnalyzing: false }));
+
+      setState((prev: any) => ({ ...prev, isAnalyzing: false }));
     }
   }, [alarms, state.isAnalyzing]);
 
-  const updateStats = useCallback((
-) => {
+  const updateStats = useCallback(() => {
     const stats = criticalPreloader.getStats();
-    
-      setState((prev: any
-) => ({ ...prev, stats }));
+
+    setState((prev: any) => ({ ...prev, stats }));
   }, []);
 
   // Initial analysis and periodic re-analysis
-  useEffect((
-) => {
+  useEffect(() => {
     const shouldAnalyze =
       !lastAnalysis.current ||
       new Date().getTime() - lastAnalysis.current.getTime() > 5 * 60 * 1000; // 5 minutes
@@ -99,12 +90,10 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
   }, [alarms, analyzeAndPreload]);
 
   // Start stats monitoring
-  useEffect((
-) => {
+  useEffect(() => {
     statsUpdateInterval.current = setInterval(updateStats, 10000); // Every 10 seconds
 
-    return (
-) => {
+    return () => {
       if (statsUpdateInterval.current) {
         clearInterval(statsUpdateInterval.current);
       }
@@ -126,8 +115,7 @@ export function useAlarmReadiness(alarmId: string, enabled: boolean = true) {
     lastChecked: null as Date | null,
   });
 
-  const checkReadiness = useCallback(async (
-) => {
+  const checkReadiness = useCallback(async () => {
     if (!enabled) return;
 
     try {
@@ -141,15 +129,13 @@ export function useAlarmReadiness(alarmId: string, enabled: boolean = true) {
     }
   }, [alarmId, enabled]);
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (enabled) {
       checkReadiness();
 
       // Check readiness every 30 seconds
       const interval = setInterval(checkReadiness, 30000);
-      return (
-) => clearInterval(interval);
+      return () => clearInterval(interval);
     }
   }, [enabled, checkReadiness]);
 
@@ -163,8 +149,7 @@ export function useEmergencyPreloading() {
   const [isEmergencyPreloading, setIsEmergencyPreloading] = useState(false);
 
   const triggerEmergencyPreload = useCallback(
-    async (alarmIds: string[]
-) => {
+    async (alarmIds: string[]) => {
       if (isEmergencyPreloading) return;
 
       setIsEmergencyPreloading(true);
@@ -200,8 +185,7 @@ export function usePreloadStrategy() {
   });
 
   const updateStrategy = useCallback(
-    (updates: Partial<PreloadStrategy>
-) => {
+    (updates: Partial<PreloadStrategy>) => {
       const newStrategy = { ...currentStrategy, ...updates };
       setCurrentStrategy(newStrategy);
       criticalPreloader.updateStrategy(updates);
@@ -209,8 +193,7 @@ export function usePreloadStrategy() {
     [currentStrategy]
   );
 
-  const setQuickStrategy = useCallback((
-) => {
+  const setQuickStrategy = useCallback(() => {
     updateStrategy({
       name: 'aggressive',
       description: 'Aggressive preloading for instant response',
@@ -221,8 +204,7 @@ export function usePreloadStrategy() {
     });
   }, [updateStrategy]);
 
-  const setBatteryOptimizedStrategy = useCallback((
-) => {
+  const setBatteryOptimizedStrategy = useCallback(() => {
     updateStrategy({
       name: 'battery-optimized',
       description: 'Conservative preloading to save battery',
@@ -233,8 +215,7 @@ export function usePreloadStrategy() {
     });
   }, [updateStrategy]);
 
-  const setBalancedStrategy = useCallback((
-) => {
+  const setBalancedStrategy = useCallback(() => {
     updateStrategy({
       name: 'balanced',
       description: 'Balanced preloading strategy',
@@ -270,10 +251,8 @@ export function useCriticalAssetStatus() {
     }>
   >([]);
 
-  useEffect((
-) => {
-    const updateStatus = (
-) => {
+  useEffect(() => {
+    const updateStatus = () => {
       const status = criticalPreloader.getCriticalAssetsStatus();
       setAssetStatus(status);
     };
@@ -281,8 +260,7 @@ export function useCriticalAssetStatus() {
     updateStatus();
     const interval = setInterval(updateStatus, 15000); // Every 15 seconds
 
-    return (
-) => clearInterval(interval);
+    return () => clearInterval(interval);
   }, []);
 
   return assetStatus;
@@ -309,10 +287,8 @@ export function usePreloadPerformance() {
     }[]
   >([]);
 
-  useEffect((
-) => {
-    const updatePerformance = (
-) => {
+  useEffect(() => {
+    const updatePerformance = () => {
       const stats = criticalPreloader.getStats();
 
       const newPerformance = {
@@ -330,11 +306,9 @@ export function usePreloadPerformance() {
         const earlier = performanceHistory.slice(-6, -3);
 
         const recentAvg =
-          recent.reduce((sum, p
-) => sum + p.successRate, 0) / recent.length;
+          recent.reduce((sum, p) => sum + p.successRate, 0) / recent.length;
         const earlierAvg =
-          earlier.reduce((sum, p
-) => sum + p.successRate, 0) / earlier.length;
+          earlier.reduce((sum, p) => sum + p.successRate, 0) / earlier.length;
 
         if (recentAvg > earlierAvg + 0.1) {
           newPerformance.trend = 'improving';
@@ -346,8 +320,7 @@ export function usePreloadPerformance() {
       setPerformance(newPerformance);
 
       // Update history
-      setPerformanceHistory((prev: any
-) => { // auto: implicit any
+      setPerformanceHistory((prev: any) => {
         const newEntry = {
           timestamp: new Date(),
           successRate: stats.successRate,
@@ -362,8 +335,7 @@ export function usePreloadPerformance() {
     updatePerformance();
     const interval = setInterval(updatePerformance, 30000); // Every 30 seconds
 
-    return (
-) => clearInterval(interval);
+    return () => clearInterval(interval);
   }, [performanceHistory]);
 
   return {
@@ -384,17 +356,14 @@ export function usePreloadDebugging() {
     nextPreloadTime: null as Date | null,
   });
 
-  useEffect((
-) => {
-    const updateDebugInfo = (
-) => {
+  useEffect(() => {
+    const updateDebugInfo = () => {
       const stats = criticalPreloader.getStats();
       const assetStatus = criticalPreloader.getCriticalAssetsStatus();
 
       const nextAsset = assetStatus
         .filter(asset => !asset.isLoaded && asset.timeUntilPreload > 0)
-        .sort((a, b
-) => a.timeUntilPreload - b.timeUntilPreload)[0];
+        .sort((a, b) => a.timeUntilPreload - b.timeUntilPreload)[0];
 
       setDebugInfo({
         queueSize: stats.totalAssets,
@@ -410,8 +379,7 @@ export function usePreloadDebugging() {
     updateDebugInfo();
     const interval = setInterval(updateDebugInfo, 5000); // Every 5 seconds
 
-    return (
-) => clearInterval(interval);
+    return () => clearInterval(interval);
   }, []);
 
   return debugInfo;

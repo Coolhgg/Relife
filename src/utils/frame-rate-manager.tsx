@@ -58,8 +58,7 @@ class FrameRateManager {
     performanceScore: 100,
   };
 
-  private observers: Array<(metrics: FrameMetrics
-) => void> = [];
+  private observers: Array<(metrics: FrameMetrics) => void> = [];
   private animationRegistry = new Map<string, AnimationConfig>();
   private activeAnimations = new Set<string>();
   private performanceObserver?: PerformanceObserver;
@@ -81,8 +80,7 @@ class FrameRateManager {
    * Initialize frame rate monitoring
    */
   private initializeFrameMonitoring() {
-    const measureFrame = (timestamp: number
-) => {
+    const measureFrame = (timestamp: number) => {
       if (this.lastTime) {
         const frameTime = timestamp - this.lastTime;
         this.recordFrameTime(frameTime);
@@ -152,8 +150,7 @@ class FrameRateManager {
    */
   private setupAdaptiveFrameRate() {
     // Monitor performance and adjust frame rate target
-    setInterval((
-) => {
+    setInterval(() => {
       if (this.config.adaptive) {
         this.adjustFrameRateTarget();
       }
@@ -185,13 +182,11 @@ class FrameRateManager {
 
     const recentFrames = this.frameTimes.slice(-30); // Last 30 frames
     const averageFrameTime =
-      recentFrames.reduce((a, b
-) => a + b, 0) / recentFrames.length;
+      recentFrames.reduce((a, b) => a + b, 0) / recentFrames.length;
 
     this.currentMetrics.fps = Math.round(1000 / averageFrameTime);
     this.currentMetrics.averageFps = Math.round(
-      1000 / (this.frameTimes.reduce((a, b
-) => a + b, 0) / this.frameTimes.length)
+      1000 / (this.frameTimes.reduce((a, b) => a + b, 0) / this.frameTimes.length)
     );
     this.currentMetrics.frameTimeMs = averageFrameTime;
 
@@ -440,16 +435,14 @@ class FrameRateManager {
   /**
    * Add metrics observer
    */
-  addObserver(observer: (metrics: FrameMetrics
-) => void): void {
+  addObserver(observer: (metrics: FrameMetrics) => void): void {
     this.observers.push(observer);
   }
 
   /**
    * Remove metrics observer
    */
-  removeObserver(observer: (metrics: FrameMetrics
-) => void): void {
+  removeObserver(observer: (metrics: FrameMetrics) => void): void {
     const index = this.observers.indexOf(observer);
     if (index >= 0) {
       this.observers.splice(index, 1);
@@ -521,19 +514,15 @@ export const frameRateManager = new FrameRateManager();
  * React hook for frame rate monitoring
  */
 export function useFrameRate() {
-  const [metrics, setMetrics] = React.useState<FrameMetrics>((
-) =>
+  const [metrics, setMetrics] = React.useState<FrameMetrics>(() =>
     frameRateManager.getMetrics()
   );
 
-  React.useEffect((
-) => {
-    const observer = (newMetrics: FrameMetrics
-) => setMetrics(newMetrics);
+  React.useEffect(() => {
+    const observer = (newMetrics: FrameMetrics) => setMetrics(newMetrics);
     frameRateManager.addObserver(observer);
 
-    return (
-) => frameRateManager.removeObserver(observer);
+    return () => frameRateManager.removeObserver(observer);
   }, []);
 
   return metrics;
@@ -545,36 +534,30 @@ export function useFrameRate() {
 export function useOptimizedAnimation(animationId: string, config: AnimationConfig) {
   const [isActive, setIsActive] = React.useState(false);
   const animationQuality = React.useMemo(
-    (
-) => frameRateManager.getOptimalAnimationQuality(),
+    () => frameRateManager.getOptimalAnimationQuality(),
     [frameRateManager.getMetrics().performanceScore]
   );
 
-  React.useEffect((
-) => {
+  React.useEffect(() => {
     frameRateManager.registerAnimation(animationId, config);
   }, [animationId, config]);
 
-  const startAnimation = React.useCallback((
-) => {
+  const startAnimation = React.useCallback(() => {
     const allowed = frameRateManager.startAnimation(animationId);
     setIsActive(allowed);
     return allowed;
   }, [animationId]);
 
-  const stopAnimation = React.useCallback((
-) => {
+  const stopAnimation = React.useCallback(() => {
     frameRateManager.stopAnimation(animationId);
     setIsActive(false);
   }, [animationId]);
 
-  const getOptimizedStyles = React.useCallback((styles: React.CSSProperties
-) => {
+  const getOptimizedStyles = React.useCallback((styles: React.CSSProperties) => {
     return frameRateManager.getOptimizedAnimationStyles(styles);
   }, []);
 
-  const getOptimizedClasses = React.useCallback((classes: string
-) => {
+  const getOptimizedClasses = React.useCallback((classes: string) => {
     return frameRateManager.getOptimizedClassNames(classes);
   }, []);
 
@@ -596,8 +579,7 @@ export function usePerformanceAwareRender() {
   const metrics = useFrameRate();
   const [shouldReduceComplexity, setShouldReduceComplexity] = React.useState(false);
 
-  React.useEffect((
-) => {
+  React.useEffect(() => {
     // Reduce complexity if performance is poor
     const shouldReduce = metrics.performanceScore < 60 || metrics.averageFps < 40;
     setShouldReduceComplexity(shouldReduce);
@@ -632,8 +614,7 @@ export function withFrameRateOptimization<P extends object>(
   Component: React.ComponentType<P>,
   animationConfig?: AnimationConfig
 ) {
-  return React.forwardRef<any, P>((props, ref
-) => {
+  return React.forwardRef<any, P>((props, ref) => {
     const { shouldReduceComplexity } = usePerformanceAwareRender();
 
     // Skip expensive renders if performance is poor
@@ -658,8 +639,7 @@ export const FrameRateMonitor: React.FC<FrameRateMonitorProps> = ({
   className = '',
   showDetails = false,
   warningThreshold = 30,
-}
-) => {
+}) => {
   const metrics = useFrameRate();
   const isWarning = metrics.averageFps < warningThreshold;
 

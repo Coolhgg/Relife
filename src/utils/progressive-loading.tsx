@@ -17,8 +17,7 @@ export interface LoadingPriority {
 export interface ProgressiveLoadConfig {
   priority: LoadingPriority;
   dependencies?: string[];
-  preloadCondition?: (
-) => boolean;
+  preloadCondition?: () => boolean;
   retryAttempts?: number;
   retryDelay?: number;
 }
@@ -39,13 +38,11 @@ class ProgressiveLoadManager {
   private loadQueue: Array<{
     id: string;
     priority: number;
-    loader: (
-) => Promise<any>;
+    loader: () => Promise<any>;
   }> = [];
   private isProcessingQueue = false;
   private observers: Array<
-    (state: { loaded: string[]; loading: string[]; errors: string[] }
-) => void
+    (state: { loaded: string[]; loading: string[]; errors: string[] }) => void
   > = [];
 
   constructor() {
@@ -88,17 +85,13 @@ class ProgressiveLoadManager {
    */
   private async preloadCriticalComponents() {
     const criticalLoaders = [
-      (
-) => import('../components/AlarmList'),
-      (
-) => import('../components/Dashboard'),
-      (
-) => import('../services/alarm'),
+      () => import('../components/AlarmList'),
+      () => import('../components/Dashboard'),
+      () => import('../services/alarm'),
     ];
 
     await Promise.allSettled(
-      criticalLoaders.map((loader, index
-) =>
+      criticalLoaders.map((loader, index) =>
         this.loadComponent(`critical-${index}`, loader, { level: 'critical' })
       )
     );
@@ -132,11 +125,9 @@ class ProgressiveLoadManager {
    */
   private setupIdleTimeLoading() {
     if ('requestIdleCallback' in window) {
-      const loadNonCritical = (
-) => {
+      const loadNonCritical = () => {
         (window as any).requestIdleCallback(
-          (
-) => {
+          () => {
             this.processLoadQueue();
           },
           { timeout: 5000 }
@@ -147,8 +138,7 @@ class ProgressiveLoadManager {
       setTimeout(loadNonCritical, 2000);
     } else {
       // Fallback for browsers without requestIdleCallback
-      setTimeout((
-) => this.processLoadQueue(), 3000);
+      setTimeout(() => this.processLoadQueue(), 3000);
     }
   }
 
@@ -157,8 +147,7 @@ class ProgressiveLoadManager {
    */
   async loadComponent<T>(
     id: string,
-    loader: (
-) => Promise<T>,
+    loader: () => Promise<T>,
     config: ProgressiveLoadConfig
   ): Promise<T> {
     // Check if already loaded
@@ -194,8 +183,7 @@ class ProgressiveLoadManager {
    */
   private async executeLoad<T>(
     id: string,
-    loader: (
-) => Promise<T>,
+    loader: () => Promise<T>,
     config: ProgressiveLoadConfig
   ): Promise<T> {
     const { priority, retryAttempts = 3, retryDelay = 1000 } = config;
@@ -240,8 +228,7 @@ class ProgressiveLoadManager {
         pendingDeps.map(
           dep =>
             new Promise<void>(resolve => {
-              const checkDependency = (
-) => {
+              const checkDependency = () => {
                 if (this.loadedComponents.has(dep)) {
                   resolve();
                 } else {
@@ -261,19 +248,16 @@ class ProgressiveLoadManager {
    */
   queueLoad<T>(
     id: string,
-    loader: (
-) => Promise<T>,
+    loader: () => Promise<T>,
     config: ProgressiveLoadConfig
   ): Promise<T> {
     const priority = this.getPriorityValue(config.priority.level);
 
-    return new Promise((resolve, reject
-) => {
+    return new Promise((resolve, reject) => {
       this.loadQueue.push({
         id,
         priority,
-        loader: async (
-) => {
+        loader: async () => {
           try {
             const result = await this.loadComponent(id, loader, config);
             resolve(result);
@@ -284,8 +268,7 @@ class ProgressiveLoadManager {
       });
 
       // Sort queue by priority
-      this.loadQueue.sort((a, b
-) => b.priority - a.priority);
+      this.loadQueue.sort((a, b) => b.priority - a.priority);
 
       if (!this.isProcessingQueue) {
         this.processLoadQueue();
@@ -325,8 +308,7 @@ class ProgressiveLoadManager {
 
       if (!componentPath || this.loadedComponents.has(id)) return;
 
-      const loader = (
-) => import(componentPath);
+      const loader = () => import(componentPath);
       this.queueLoad(id, loader, { priority: { level: priority || 'normal' } });
     } catch (error) {
       console.warn('Invalid preload configuration:', preloadData);
@@ -355,10 +337,8 @@ class ProgressiveLoadManager {
    * Create timeout promise
    */
   private createTimeoutPromise<T>(timeout: TimeoutHandle): Promise<T> {
-    return new Promise((_, reject
-) => {
-      setTimeout((
-) => {
+    return new Promise((_, reject) => {
+      setTimeout(() => {
         reject(new Error(`Loading timeout after ${timeout}ms`));
       }, timeout);
     });
@@ -375,8 +355,7 @@ class ProgressiveLoadManager {
    * Add state observer
    */
   addObserver(
-    observer: (state: { loaded: string[]; loading: string[]; errors: string[] }
-) => void
+    observer: (state: { loaded: string[]; loading: string[]; errors: string[] }) => void
   ) {
     this.observers.push(observer);
   }
@@ -385,8 +364,7 @@ class ProgressiveLoadManager {
    * Remove state observer
    */
   removeObserver(
-    observer: (state: { loaded: string[]; loading: string[]; errors: string[] }
-) => void
+    observer: (state: { loaded: string[]; loading: string[]; errors: string[] }) => void
   ) {
     const index = this.observers.indexOf(observer);
     if (index >= 0) {
@@ -435,8 +413,7 @@ export const progressiveLoader = new ProgressiveLoadManager();
  */
 export function useProgressiveLoad<T>(
   id: string,
-  loader: (
-) => Promise<T>,
+  loader: () => Promise<T>,
   config: ProgressiveLoadConfig
 ) {
   const [state, setState] = React.useState<LoadingState>({
@@ -447,23 +424,17 @@ export function useProgressiveLoad<T>(
 
   const [data, setData] = React.useState<T | null>(null);
 
-  const load = React.useCallback(async (
-) => {
-    
-      setState((prev: any
-) => ({ ...prev, isLoading: true, isError: false }));
+  const load = React.useCallback(async () => {
+    setState((prev: any) => ({ ...prev, isLoading: true, isError: false }));
 
     try {
       const result = await progressiveLoader.loadComponent(id, loader, config);
       setData(result);
-      
-      setState((prev: any
-) => ({ ...prev, isLoading: false, isLoaded: true }));
+
+      setState((prev: any) => ({ ...prev, isLoading: false, isLoaded: true }));
       return result;
     } catch (error) {
-      
-      setState((prev: any
-) => ({
+      setState((prev: any) => ({
         ...prev,
         isLoading: false,
         isError: true,
@@ -473,15 +444,13 @@ export function useProgressiveLoad<T>(
     }
   }, [id, loader, config]);
 
-  const retry = React.useCallback((
-) => {
+  const retry = React.useCallback(() => {
     progressiveLoader.clearError(id);
     return load();
   }, [id, load]);
 
   // Auto-load based on priority
-  React.useEffect((
-) => {
+  React.useEffect(() => {
     if (config.priority.level === 'critical') {
       load();
     } else {
@@ -502,16 +471,13 @@ export function useProgressiveLoad<T>(
  */
 export interface ProgressiveWrapperProps {
   id: string;
-  loader: (
-) => Promise<{ default: React.ComponentType<any> }>;
+  loader: () => Promise<{ default: React.ComponentType<any> }>;
   config: ProgressiveLoadConfig;
   children?: React.ReactNode;
   fallback?: React.ComponentType;
   skeleton?: React.ComponentType;
-  onLoad?: (
-) => void;
-  onError?: (error: Error
-) => void;
+  onLoad?: () => void;
+  onError?: (error: Error) => void;
 }
 
 export const ProgressiveWrapper: React.FC<ProgressiveWrapperProps> = ({
@@ -523,16 +489,14 @@ export const ProgressiveWrapper: React.FC<ProgressiveWrapperProps> = ({
   skeleton: SkeletonComponent,
   onLoad,
   onError,
-}
-) => {
+}) => {
   const { isLoading, isLoaded, isError, error, data, retry } = useProgressiveLoad(
     id,
     loader,
     config
   );
 
-  React.useEffect((
-) => {
+  React.useEffect(() => {
     if (isLoaded && onLoad) onLoad();
     if (isError && onError && error) onError(error);
   }, [isLoaded, isError, error, onLoad, onError]);
@@ -570,10 +534,8 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   lines = 1,
   className = '',
   animated = true,
-}
-) => {
-  const skeletonLines = Array.from({ length: lines }, (_, i
-) => (
+}) => {
+  const skeletonLines = Array.from({ length: lines }, (_, i) => (
     <div
       key={i}
       className={`skeleton-line ${animated ? 'animate-pulse' : ''} ${className}`}
@@ -611,26 +573,22 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   className = '',
   onLoad,
   ...props
-}
-) => {
+}) => {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
   const imgRef = React.useRef<HTMLImageElement>(null);
 
-  React.useEffect((
-) => {
+  React.useEffect(() => {
     if (!imgRef.current) return;
 
     const img = imgRef.current;
 
-    const handleLoad = (
-) => {
+    const handleLoad = () => {
       setIsLoaded(true);
       onLoad?.({} as any);
     };
 
-    const handleError = (
-) => {
+    const handleError = () => {
       setIsError(true);
     };
 
@@ -657,8 +615,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
     img.addEventListener('load', handleLoad);
     img.addEventListener('error', handleError);
 
-    return (
-) => {
+    return () => {
       img.removeEventListener('load', handleLoad);
       img.removeEventListener('error', handleError);
     };

@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 /**
  * RTL tests for Card components
  */
@@ -21,10 +21,8 @@ import {
   rtlA11yHelpers,
 } from '../../utils/rtl-testing';
 
-describe('Card RTL Support', (
-) => {
-  const createCard = (
-) => (
+describe('Card RTL Support', () => {
+  const createCard = () => (
     <Card>
       <CardHeader>
         <CardTitle>Card Title</CardTitle>
@@ -43,15 +41,13 @@ describe('Card RTL Support', (
     </Card>
   );
 
-  rtlTestScenarios.testBothDirections(createCard, (element, isRTL, language
-) => {
+  rtlTestScenarios.testBothDirections(createCard, (element, isRTL, language) => {
     // Check main card direction
     rtlTestHelpers.expectCorrectDirection(element, isRTL ? 'rtl' : 'ltr');
     rtlTestHelpers.expectRTLDataAttribute(element, isRTL);
   });
 
-  test('CardAction positioning in RTL', (
-) => {
+  test('CardAction positioning in RTL', () => {
     const { container } = renderWithRTL(createCard(), { language: 'ar' });
     const cardAction = container.querySelector(
       '[data-slot="card-action"]'
@@ -61,8 +57,7 @@ describe('Card RTL Support', (
     expect(cardAction).toHaveAttribute('data-rtl', 'true');
   });
 
-  test('CardAction positioning in LTR', (
-) => {
+  test('CardAction positioning in LTR', () => {
     const { container } = renderWithRTL(createCard(), { language: 'en' });
     const cardAction = container.querySelector(
       '[data-slot="card-action"]'
@@ -72,8 +67,7 @@ describe('Card RTL Support', (
     expect(cardAction).toHaveAttribute('data-rtl', 'false');
   });
 
-  test('CardFooter flex direction in RTL', (
-) => {
+  test('CardFooter flex direction in RTL', () => {
     const { container } = renderWithRTL(createCard(), { language: 'ar' });
     const cardFooter = container.querySelector(
       '[data-slot="card-footer"]'
@@ -83,8 +77,7 @@ describe('Card RTL Support', (
     expect(cardFooter).toHaveAttribute('data-rtl', 'true');
   });
 
-  test('CardFooter flex direction in LTR', (
-) => {
+  test('CardFooter flex direction in LTR', () => {
     const { container } = renderWithRTL(createCard(), { language: 'en' });
     const cardFooter = container.querySelector(
       '[data-slot="card-footer"]'
@@ -94,8 +87,7 @@ describe('Card RTL Support', (
     expect(cardFooter).toHaveAttribute('data-rtl', 'false');
   });
 
-  test('custom direction override', (
-) => {
+  test('custom direction override', () => {
     const { container } = renderWithRTL(
       <Card dir="ltr">
         <CardContent>Forced LTR content</CardContent>
@@ -107,8 +99,7 @@ describe('Card RTL Support', (
     expect(card).toHaveAttribute('dir', 'ltr');
   });
 
-  rtlTestScenarios.testAllRTLLanguages(createCard, (element, language
-) => {
+  rtlTestScenarios.testAllRTLLanguages(createCard, (element, language) => {
     rtlTestHelpers.expectCorrectDirection(element, 'rtl');
     rtlTestHelpers.expectRTLDataAttribute(element, true);
 

@@ -75,12 +75,9 @@ import type {
 } from '../types/index';
 interface AdvancedAlarmSchedulingProps {
   alarms: any[];
-  onCreateAlarm: (alarm: any
-) => void;
-  onUpdateAlarm: (id: string, alarm: any
-) => void;
-  onDeleteAlarm: (id: string
-) => void;
+  onCreateAlarm: (alarm: any) => void;
+  onUpdateAlarm: (id: string, alarm: any) => void;
+  onDeleteAlarm: (id: string) => void;
 }
 
 const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
@@ -88,8 +85,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
   onCreateAlarm,
   onUpdateAlarm,
   onDeleteAlarm,
-}
-) => {
+}) => {
   const [activeTab, setActiveTab] = useState<'alarms' | 'create' | 'settings' | 'bulk'>(
     'alarms'
   );
@@ -113,8 +109,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     voiceMood: 'motivational',
   });
 
-  const loadConfig = async (
-) => {
+  const loadConfig = async () => {
     try {
       setConfig(null); // TODO: Load actual config
     } catch (error) {
@@ -122,8 +117,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     }
   };
 
-  const toggleSection = (section: string
-) => {
+  const toggleSection = (section: string) => {
     const newExpanded = new Set(expandedSections);
     if (newExpanded.has(section)) {
       newExpanded.delete(section);
@@ -133,8 +127,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     setExpandedSections(newExpanded);
   };
 
-  const handleCreateAlarm = async (
-) => {
+  const handleCreateAlarm = async () => {
     try {
       // Apply smart optimizations before creating
       const optimizedAlarm = formData; // TODO: Apply smart optimizations
@@ -154,8 +147,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     }
   };
 
-  const resetForm = (
-) => {
+  const resetForm = () => {
     setFormData({
       time: '07:00',
       label: 'New Advanced Alarm',
@@ -171,8 +163,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     setExpandedSections(new Set(['basic']));
   };
 
-  const formatScheduleType = (type: string
-) => {
+  const formatScheduleType = (type: string) => {
     const types = {
       once: 'One Time',
       daily: 'Daily',
@@ -186,8 +177,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     return types[type as keyof typeof types] || type;
   };
 
-  const getNextOccurrence = (alarm: any
-) => {
+  const getNextOccurrence = (alarm: any) => {
     try {
       const occurrences = [new Date()]; // TODO: Implement calculateNextOccurrences(
       //   alarm,
@@ -200,8 +190,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     }
   };
 
-  const renderAlarmsList = (
-) => (
+  const renderAlarmsList = () => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
@@ -210,16 +199,14 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
             {alarms.length} active alarms with advanced scheduling
           </p>
         </div>
-        <Button onClick={(
-) => setShowCreateDialog(true)} className="gap-2">
+        <Button onClick={() => setShowCreateDialog(true)} className="gap-2">
           <Plus size={16} />
           Create Advanced Alarm
         </Button>
       </div>
 
       {}
-      {alarms.map((alarm: any
-) => (
+      {alarms.map((alarm: any) => (
         <Card
           key={alarm.id}
           className={`transition-all ${!alarm.isActive ? 'opacity-60' : ''}`}
@@ -248,8 +235,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                       <Brain size={12} />
                       <span>
                         {
-                          alarm.smartOptimizations.filter((o: any
-) => o.isEnabled)
+                          alarm.smartOptimizations.filter((o: any) => o.isEnabled)
                             .length
                         }{' '}
                         optimizations
@@ -261,8 +247,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     <div className="flex items-center gap-1">
                       <Zap size={12} />
                       <span>
-                        {alarm.conditionalRules.filter((r: any
-) => r.isActive).length}{' '}
+                        {alarm.conditionalRules.filter((r: any) => r.isActive).length}{' '}
                         conditions
                       </span>
                     </div>
@@ -272,8 +257,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     <div className="flex items-center gap-1">
                       <MapPin size={12} />
                       <span>
-                        {alarm.locationTriggers.filter((t: any
-) => t.isActive).length}{' '}
+                        {alarm.locationTriggers.filter((t: any) => t.isActive).length}{' '}
                         locations
                       </span>
                     </div>
@@ -299,24 +283,21 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
               <div className="flex items-center gap-2">
                 <Switch
                   checked={alarm.isActive}
-                  onCheckedChange={(checked: any 
-) =>
+                  onCheckedChange={(checked: any) =>
                     onUpdateAlarm(alarm.id, { isActive: checked })
                   }
                 />
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={(
-) => setSelectedAlarm(alarm)}
+                  onClick={() => setSelectedAlarm(alarm)}
                 >
                   <Edit3 size={14} />
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={(
-) => onDeleteAlarm(alarm.id)}
+                  onClick={() => onDeleteAlarm(alarm.id)}
                 >
                   <Trash2 size={14} />
                 </Button>
@@ -328,8 +309,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     </div>
   );
 
-  const renderCreateForm = (
-) => (
+  const renderCreateForm = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Create Advanced Alarm</h3>
@@ -353,8 +333,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
         {/* Basic Settings */}
         <AccordionItem value="basic" className="border rounded-lg px-4">
           <AccordionTrigger
-            onClick={(
-) => toggleSection('basic')}
+            onClick={() => toggleSection('basic')}
             className="hover:no-underline"
           >
             <div className="flex items-center gap-2">
@@ -394,10 +373,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                 <Label htmlFor="schedule-type">Schedule Type</Label>
                 <Select
                   value={formData.scheduleType}
-                  onValueChange={(value: any 
-) =>
-                    setFormData((prev: any
-) => ({
+                  onValueChange={(value: any) =>
+                    setFormData((prev: any) => ({
                       ...prev,
                       scheduleType: value as any,
                     }))
@@ -422,10 +399,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                 <Label htmlFor="voice-mood">Voice Mood</Label>
                 <Select
                   value={formData.voiceMood}
-                  onValueChange={(value: any 
-) =>
-                    setFormData((prev: any
-) => ({ ...prev, voiceMood: value as any }))
+                  onValueChange={(value: any) =>
+                    setFormData((prev: any) => ({ ...prev, voiceMood: value as any }))
                   }
                 >
                   <SelectTrigger>
@@ -446,10 +421,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
             <div className="flex items-center space-x-2">
               <Switch
                 checked={formData.isActive}
-                onCheckedChange={(checked: any 
-) =>
-                  setFormData((prev: any
-) => ({ ...prev, isActive: checked }))
+                onCheckedChange={(checked: any) =>
+                  setFormData((prev: any) => ({ ...prev, isActive: checked }))
                 }
               />
               <Label>Enable alarm</Label>
@@ -460,8 +433,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
         {/* Recurrence Pattern */}
         <AccordionItem value="recurrence" className="border rounded-lg px-4">
           <AccordionTrigger
-            onClick={(
-) => toggleSection('recurrence')}
+            onClick={() => toggleSection('recurrence')}
             className="hover:no-underline"
           >
             <div className="flex items-center gap-2">
@@ -495,10 +467,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   />
                   <Select
                     value={formData.recurrencePattern?.type || 'daily'}
-                    onValueChange={(value: any 
-) =>
-                      setFormData((prev: any
-) => ({
+                    onValueChange={(value: any) =>
+                      setFormData((prev: any) => ({
                         ...prev,
                         recurrencePattern: {
                           ...prev.recurrencePattern,
@@ -529,12 +499,9 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       checked={!!formData.recurrencePattern?.endDate}
-                      onCheckedChange={(checked: any
-) => {
-                        // auto: implicit any
+                      onCheckedChange={(checked: any) => {
                         if (checked) {
-                          setFormData((prev: any
-) => ({
+                          setFormData((prev: any) => ({
                             ...prev,
                             recurrencePattern: {
                               ...prev.recurrencePattern,
@@ -544,8 +511,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                             } as RecurrencePattern,
                           }));
                         } else {
-                          setFormData((prev: any
-) => ({
+                          setFormData((prev: any) => ({
                             ...prev,
                             recurrencePattern: {
                               ...prev.recurrencePattern,
@@ -587,8 +553,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
         {/* Smart Optimizations */}
         <AccordionItem value="optimizations" className="border rounded-lg px-4">
           <AccordionTrigger
-            onClick={(
-) => toggleSection('optimizations')}
+            onClick={() => toggleSection('optimizations')}
             className="hover:no-underline"
           >
             <div className="flex items-center gap-2">
@@ -635,8 +600,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   label: 'Workout Integration',
                   desc: 'Coordinate with fitness schedule',
                 },
-              ].map(({ type, icon: Icon, label, desc }
-) => (
+              ].map(({ type, icon: Icon, label, desc }) => (
                 <div
                   key={type}
                   className="flex items-start space-x-3 p-3 border rounded-lg"
@@ -651,9 +615,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                             o => o.type === type && o.isEnabled
                           ) || false
                         }
-                        onCheckedChange={(checked: any
-) => {
-                          // auto: implicit any
+                        onCheckedChange={(checked: any) => {
                           const currentOptimizations =
                             formData.smartOptimizations || [];
                           const existingIndex = currentOptimizations.findIndex(
@@ -685,8 +647,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                             newOptimizations = currentOptimizations;
                           }
 
-                          setFormData((prev: any
-) => ({
+                          setFormData((prev: any) => ({
                             ...prev,
                             smartOptimizations: newOptimizations,
                           }));
@@ -704,8 +665,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
         {/* Location Triggers */}
         <AccordionItem value="location" className="border rounded-lg px-4">
           <AccordionTrigger
-            onClick={(
-) => toggleSection('location')}
+            onClick={() => toggleSection('location')}
             className="hover:no-underline"
           >
             <div className="flex items-center gap-2">
@@ -764,8 +724,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
         {/* Conditional Rules */}
         <AccordionItem value="conditions" className="border rounded-lg px-4">
           <AccordionTrigger
-            onClick={(
-) => toggleSection('conditions')}
+            onClick={() => toggleSection('conditions')}
             className="hover:no-underline"
           >
             <div className="flex items-center gap-2">
@@ -840,8 +799,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
         {/* Seasonal Adjustments */}
         <AccordionItem value="seasonal" className="border rounded-lg px-4">
           <AccordionTrigger
-            onClick={(
-) => toggleSection('seasonal')}
+            onClick={() => toggleSection('seasonal')}
             className="hover:no-underline"
           >
             <div className="flex items-center gap-2">
@@ -861,8 +819,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   { season: 'summer', icon: '☀️', adjustment: 15 },
                   { season: 'fall', icon: '🍁', adjustment: 0 },
                   { season: 'winter', icon: '❄️', adjustment: -15 },
-                ].map(({ season, icon, adjustment }
-) => (
+                ].map(({ season, icon, adjustment }) => (
                   <div key={season} className="border rounded-lg p-3 text-center">
                     <div className="text-2xl mb-2">{icon}</div>
                     <div className="font-medium capitalize mb-2">{season}</div>
@@ -870,8 +827,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                       <Input
                         type="number"
                         value={adjustment}
-                        onChange={(
-) => {}}
+                        onChange={() => {}}
                         className="w-16 text-center"
                       />
                       <span className="text-xs">min</span>
@@ -886,8 +842,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     </div>
   );
 
-  const renderSettings = (
-) => (
+  const renderSettings = () => (
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">Advanced Scheduling Settings</h3>
@@ -911,10 +866,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   <Label>Default Wake Window (minutes)</Label>
                   <Slider
                     value={[config.defaultWakeWindow]}
-                    onValueChange={(value: any 
-) =>
-                      setConfig((prev: any 
-) =>
+                    onValueChange={(value: any) =>
+                      setConfig((prev: any) =>
                         prev ? { ...prev, defaultWakeWindow: value[0] } : null
                       )
                     }
@@ -932,10 +885,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   <Label>Max Daily Adjustment (minutes)</Label>
                   <Slider
                     value={[config.maxDailyAdjustment]}
-                    onValueChange={(value: any 
-) =>
-                      setConfig((prev: any 
-) =>
+                    onValueChange={(value: any) =>
+                      setConfig((prev: any) =>
                         prev ? { ...prev, maxDailyAdjustment: value[0] } : null
                       )
                     }
@@ -960,10 +911,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   </div>
                   <Switch
                     checked={config.enableSmartAdjustments}
-                    onCheckedChange={(checked: any 
-) =>
-                      setConfig((prev: any 
-) =>
+                    onCheckedChange={(checked: any) =>
+                      setConfig((prev: any) =>
                         prev ? { ...prev, enableSmartAdjustments: checked } : null
                       )
                     }
@@ -979,10 +928,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   </div>
                   <Switch
                     checked={config.learningMode}
-                    onCheckedChange={(checked: any 
-) =>
-                      setConfig((prev: any 
-) =>
+                    onCheckedChange={(checked: any) =>
+                      setConfig((prev: any) =>
                         prev ? { ...prev, learningMode: checked } : null
                       )
                     }
@@ -998,10 +945,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   </div>
                   <Switch
                     checked={config.backupAlarms}
-                    onCheckedChange={(checked: any 
-) =>
-                      setConfig((prev: any 
-) =>
+                    onCheckedChange={(checked: any) =>
+                      setConfig((prev: any) =>
                         prev ? { ...prev, backupAlarms: checked } : null
                       )
                     }
@@ -1017,10 +962,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                   </div>
                   <Switch
                     checked={config.privacyMode}
-                    onCheckedChange={(checked: any 
-) =>
-                      setConfig((prev: any 
-) =>
+                    onCheckedChange={(checked: any) =>
+                      setConfig((prev: any) =>
                         prev ? { ...prev, privacyMode: checked } : null
                       )
                     }
@@ -1058,8 +1001,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     </div>
   );
 
-  const renderBulkOperations = (
-) => (
+  const renderBulkOperations = () => (
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">Bulk Operations</h3>
@@ -1149,8 +1091,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
 
       <Tabs
         value={activeTab}
-        onValueChange={(value: any
-) => setActiveTab(value as any)}
+        onValueChange={(value: any) => setActiveTab(value as any)}
       >
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="alarms" className="flex items-center gap-2">
@@ -1194,8 +1135,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
       </Dialog>
 
       {/* Edit Alarm Dialog */}
-      <Dialog open={!!selectedAlarm} onOpenChange={(
-) => setSelectedAlarm(null)}>
+      <Dialog open={!!selectedAlarm} onOpenChange={() => setSelectedAlarm(null)}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">

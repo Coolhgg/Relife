@@ -20,24 +20,18 @@ interface AuthState {
 }
 
 interface AuthHook extends AuthState {
-  signIn: (email: string, password: string
-) => Promise<void>;
-  signUp: (email: string, password: string, name: string
-) => Promise<void>;
-  signOut: (
-) => Promise<void>;
-  resetPassword: (email: string
-) => Promise<void>;
-  clearError: (
-) => void;
-  updateUserProfile: (updates: Partial<User>
-) => Promise<void>;
-  refreshSession: (
-) => Promise<void>;
-  isSessionValid: (
-) => boolean;
-  getRateLimitInfo: (action: string
-) => { remaining: number; resetTime: Date | null };
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, name: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
+  clearError: () => void;
+  updateUserProfile: (updates: Partial<User>) => Promise<void>;
+  refreshSession: () => Promise<void>;
+  isSessionValid: () => boolean;
+  getRateLimitInfo: (action: string) => {
+    remaining: number;
+    resetTime: Date | null;
+  };
 }
 
 function useAuth(): AuthHook {
@@ -52,7 +46,7 @@ function useAuth(): AuthHook {
     rateLimitRemaining: 10,
   });
 
-  const sessionTimerRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
+  const sessionTimerRef = useRef<TimeoutHandle | undefined>(undefined);
   const lastActivityRef = useRef<Date>(new Date());
 
   // Security constants
@@ -61,10 +55,8 @@ function useAuth(): AuthHook {
   const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 
   // Initialize auth state on app start
-  useEffect((
-) => {
-    const initializeAuth = async (
-) => {
+  useEffect(() => {
+    const initializeAuth = async () => {
       try {
         const user = await SupabaseService.getCurrentUser();
         const csrfToken = SecurityService.generateCSRFToken();
@@ -110,8 +102,7 @@ function useAuth(): AuthHook {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session
-) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session?.user?.id);
 
       if (event === 'SIGNED_IN' && session?.user) {
@@ -153,20 +144,17 @@ function useAuth(): AuthHook {
       }
     });
 
-    return (
-) => {
+    return () => {
       subscription.unsubscribe();
       stopSessionManagement();
     };
   }, []);
 
   // Session management functions
-  const startSessionManagement = (
-) => {
+  const startSessionManagement = () => {
     stopSessionManagement(); // Clear any existing timer
 
-    sessionTimerRef.current = setInterval((
-) => {
+    sessionTimerRef.current = setInterval(() => {
       const now = new Date();
       const timeSinceActivity = now.getTime() - lastActivityRef.current.getTime();
 
@@ -193,8 +181,7 @@ function useAuth(): AuthHook {
       'scroll',
       'touchstart',
     ];
-    const updateActivity = (
-) => {
+    const updateActivity = () => {
       lastActivityRef.current = new Date();
     };
 
@@ -203,11 +190,10 @@ function useAuth(): AuthHook {
     });
   };
 
-  const stopSessionManagement = (
-) => {
+  const stopSessionManagement = () => {
     if (sessionTimerRef.current) {
       clearInterval(sessionTimerRef.current);
-      sessionTimerRef.current = undefined; // auto: changed from null to undefined
+      sessionTimerRef.current = undefined;
     }
 
     // Remove activity listeners
@@ -218,8 +204,7 @@ function useAuth(): AuthHook {
       'scroll',
       'touchstart',
     ];
-    const updateActivity = (
-) => {
+    const updateActivity = () => {
       lastActivityRef.current = new Date();
     };
 
@@ -267,8 +252,7 @@ function useAuth(): AuthHook {
     return now < authState.sessionExpiry && timeSinceActivity < INACTIVITY_TIMEOUT_MS;
   };
 
-  const getRateLimitInfo = (action: string
-) => {
+  const getRateLimitInfo = (action: string) => {
     // This would typically be implemented with a more sophisticated rate limiting system
     // For now, we'll use the SecurityService rate limiting
     try {
@@ -485,7 +469,9 @@ function useAuth(): AuthHook {
         error: null,
       }));
 
-      analytics.trackFeatureUsage('user_sign_out_success', undefined, { userId });
+      analytics.trackFeatureUsage('user_sign_out_success', undefined, {
+        userId,
+      });
     } catch (error) {
       const analytics = AnalyticsService.getInstance();
       analytics.trackError(
@@ -556,7 +542,9 @@ function useAuth(): AuthHook {
         forgotPasswordSuccess: true,
       }));
 
-      analytics.trackFeatureUsage('password_reset_requested', undefined, { email });
+      analytics.trackFeatureUsage('password_reset_requested', undefined, {
+        email,
+      });
     } catch (error) {
       const analytics = AnalyticsService.getInstance();
       analytics.trackError(
@@ -644,7 +632,10 @@ function useAuth(): AuthHook {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         'Failed to update profile',
-        { context: 'profile_update', metadata: { userId: authState.user.id, updates } }
+        {
+          context: 'profile_update',
+          metadata: { userId: authState.user.id, updates },
+        }
       );
 
       

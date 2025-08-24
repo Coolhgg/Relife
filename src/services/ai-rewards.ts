@@ -166,8 +166,7 @@ export class AIRewardsService {
 
     // Voice mood pattern analysis
     const voiceMoodCounts = alarms.reduce(
-      (acc, alarm
-) => {
+      (acc, alarm) => {
         acc[alarm.voiceMood] = (acc[alarm.voiceMood] || 0) + 1;
         return acc;
       },
@@ -175,8 +174,7 @@ export class AIRewardsService {
     );
 
     const preferredVoiceMood = Object.entries(voiceMoodCounts).sort(
-      ([, a], [, b]
-) => b - a
+      ([, a], [, b]) => b - a
     )[0]?.[0] as VoiceMood;
 
     patterns.push({
@@ -193,8 +191,7 @@ export class AIRewardsService {
     const dismissalMethods = alarmEvents
       .filter(e => e.dismissed)
       .reduce(
-        (acc, event
-) => {
+        (acc, event) => {
           const method = event.dismissMethod || 'button';
           acc[method] = (acc[method] || 0) + 1;
           return acc;
@@ -203,8 +200,7 @@ export class AIRewardsService {
       );
 
     const preferredDismissalMethod =
-      Object.entries(dismissalMethods).sort(([, a], [, b]
-) => b - a)[0]?.[0] ||
+      Object.entries(dismissalMethods).sort(([, a], [, b]) => b - a)[0]?.[0] ||
       'button';
 
     patterns.push({
@@ -418,8 +414,7 @@ export class AIRewardsService {
     });
 
     // Find primary and secondary niches
-    const sortedNiches = Object.entries(nicheScores).sort(([, a], [, b]
-) => b - a) as [
+    const sortedNiches = Object.entries(nicheScores).sort(([, a], [, b]) => b - a) as [
       UserNiche['primary'],
       number,
     ][];
@@ -531,49 +526,39 @@ export class AIRewardsService {
     const baseRewards = Array.from(this.rewardTemplates.entries());
 
     // Generate niche-specific rewards
-    const nicheRewards = baseRewards.filter(([key]
-) => key.includes(niche.primary));
-    nicheRewards.forEach(([key, template]
-) => {
+    const nicheRewards = baseRewards.filter(([key]) => key.includes(niche.primary));
+    nicheRewards.forEach(([key, template]) => {
       rewards.push(this.personalizeReward(template, personality, niche, key));
     });
 
     // Generate personality-specific rewards
     if (personality.challengeSeeking) {
-      const challengeRewards = baseRewards.filter(([key]
-) => key.includes('challenge'));
-      challengeRewards.forEach(([key, template]
-) => {
+      const challengeRewards = baseRewards.filter(([key]) => key.includes('challenge'));
+      challengeRewards.forEach(([key, template]) => {
         rewards.push(this.personalizeReward(template, personality, niche, key));
       });
     }
 
     if (personality.consistencyScore > 0.7) {
-      const consistencyRewards = baseRewards.filter(([key]
-) =>
+      const consistencyRewards = baseRewards.filter(([key]) =>
         key.includes('consistency')
       );
-      consistencyRewards.forEach(([key, template]
-) => {
+      consistencyRewards.forEach(([key, template]) => {
         rewards.push(this.personalizeReward(template, personality, niche, key));
       });
     }
 
     // Generate habit-specific rewards
     habits.forEach(habit => {
-      const habitRewards = baseRewards.filter(([key]
-) => key.includes(habit.pattern));
-      habitRewards.forEach(([key, template]
-) => {
+      const habitRewards = baseRewards.filter(([key]) => key.includes(habit.pattern));
+      habitRewards.forEach(([key, template]) => {
         rewards.push(this.personalizeReward(template, personality, niche, key));
       });
     });
 
     // Add universal rewards
-    const universalRewards = baseRewards.filter(([key]
-) => key.includes('universal'));
-    universalRewards.forEach(([key, template]
-) => {
+    const universalRewards = baseRewards.filter(([key]) => key.includes('universal'));
+    universalRewards.forEach(([key, template]) => {
       rewards.push(this.personalizeReward(template, personality, niche, key));
     });
 
@@ -613,13 +598,11 @@ export class AIRewardsService {
     };
 
     const personalizedMessage =
-      Object.entries(personalizedMessages).find(([type]
-) => key.includes(type))?.[1] ||
+      Object.entries(personalizedMessages).find(([type]) => key.includes(type))?.[1] ||
       template.personalizedMessage;
 
     const aiInsight =
-      Object.entries(aiInsights).find(([type]
-) => key.includes(type))?.[1] ||
+      Object.entries(aiInsights).find(([type]) => key.includes(type))?.[1] ||
       template.aiInsight;
 
     return {
@@ -723,8 +706,7 @@ export class AIRewardsService {
 
     const sortedEvents = alarmEvents
       .filter(e => e.dismissed)
-      .sort((a, b
-) => b.firedAt.getTime() - a.firedAt.getTime());
+      .sort((a, b) => b.firedAt.getTime() - a.firedAt.getTime());
 
     let streak = 0;
     let currentDate = new Date();
@@ -754,8 +736,7 @@ export class AIRewardsService {
 
     const dismissedEvents = alarmEvents
       .filter(e => e.dismissed)
-      .sort((a, b
-) => a.firedAt.getTime() - b.firedAt.getTime());
+      .sort((a, b) => a.firedAt.getTime() - b.firedAt.getTime());
 
     let maxStreak = 0;
     let currentStreak = 0;
@@ -806,8 +787,7 @@ export class AIRewardsService {
   }
 
   private calculateTotalPoints(unlockedRewards: Reward[]): number {
-    return unlockedRewards.reduce((total, reward
-) => total + reward.points, 0);
+    return unlockedRewards.reduce((total, reward) => total + reward.points, 0);
   }
 
   private inferCategoryFromNiche(niche: UserNiche['primary']): RewardCategory {
@@ -955,8 +935,7 @@ export class AIRewardsService {
       },
     ];
 
-    templates.forEach(({ key, template }
-) => {
+    templates.forEach(({ key, template }) => {
       this.rewardTemplates.set(key, template);
     });
   }

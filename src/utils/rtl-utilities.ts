@@ -61,13 +61,11 @@ export const rtlClass = {
    * Direction-aware margin utilities
    */
   margin: {
-    start: (size: string
-) => ({
+    start: (size: string) => ({
       '[dir="ltr"] &': { marginLeft: size },
       '[dir="rtl"] &': { marginRight: size },
     }),
-    end: (size: string
-) => ({
+    end: (size: string) => ({
       '[dir="ltr"] &': { marginRight: size },
       '[dir="rtl"] &': { marginLeft: size },
     }),
@@ -77,13 +75,11 @@ export const rtlClass = {
    * Direction-aware padding utilities
    */
   padding: {
-    start: (size: string
-) => ({
+    start: (size: string) => ({
       '[dir="ltr"] &': { paddingLeft: size },
       '[dir="rtl"] &': { paddingRight: size },
     }),
-    end: (size: string
-) => ({
+    end: (size: string) => ({
       '[dir="ltr"] &': { paddingRight: size },
       '[dir="rtl"] &': { paddingLeft: size },
     }),
@@ -93,13 +89,11 @@ export const rtlClass = {
    * Direction-aware positioning
    */
   position: {
-    start: (offset: string
-) => ({
+    start: (offset: string) => ({
       '[dir="ltr"] &': { left: offset, right: 'auto' },
       '[dir="rtl"] &': { right: offset, left: 'auto' },
     }),
-    end: (offset: string
-) => ({
+    end: (offset: string) => ({
       '[dir="ltr"] &': { right: offset, left: 'auto' },
       '[dir="rtl"] &': { left: offset, right: 'auto' },
     }),
@@ -109,13 +103,11 @@ export const rtlClass = {
    * Direction-aware border utilities
    */
   border: {
-    start: (width: string, color: string
-) => ({
+    start: (width: string, color: string) => ({
       '[dir="ltr"] &': { borderLeft: `${width} solid ${color}` },
       '[dir="rtl"] &': { borderRight: `${width} solid ${color}` },
     }),
-    end: (width: string, color: string
-) => ({
+    end: (width: string, color: string) => ({
       '[dir="ltr"] &': { borderRight: `${width} solid ${color}` },
       '[dir="rtl"] &': { borderLeft: `${width} solid ${color}` },
     }),
@@ -125,8 +117,7 @@ export const rtlClass = {
    * Direction-aware border radius
    */
   borderRadius: {
-    start: (radius: string
-) => ({
+    start: (radius: string) => ({
       '[dir="ltr"] &': {
         borderTopLeftRadius: radius,
         borderBottomLeftRadius: radius,
@@ -136,8 +127,7 @@ export const rtlClass = {
         borderBottomRightRadius: radius,
       },
     }),
-    end: (radius: string
-) => ({
+    end: (radius: string) => ({
       '[dir="ltr"] &': {
         borderTopRightRadius: radius,
         borderBottomRightRadius: radius,
@@ -216,14 +206,12 @@ export const combineRTLClasses = (
 /**
  * Generate responsive RTL utilities
  */
-export const generateRTLUtilities = (theme: any
-) => {
+export const generateRTLUtilities = (theme: any) => {
   const spacing = theme('spacing');
   const utilities: Record<string, any> = {};
 
   // Generate margin utilities
-  Object.entries(spacing).forEach(([key, value]
-) => {
+  Object.entries(spacing).forEach(([key, value]) => {
     utilities[`.ms-${key}`] = {
       '[dir="ltr"] &': { marginLeft: value },
       '[dir="rtl"] &': { marginRight: value },
@@ -235,8 +223,7 @@ export const generateRTLUtilities = (theme: any
   });
 
   // Generate padding utilities
-  Object.entries(spacing).forEach(([key, value]
-) => {
+  Object.entries(spacing).forEach(([key, value]) => {
     utilities[`.ps-${key}`] = {
       '[dir="ltr"] &': { paddingLeft: value },
       '[dir="rtl"] &': { paddingRight: value },

@@ -392,8 +392,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
       }
 
       // Sort by confidence and return top 5
-      return slots.sort((a, b
-) => b.confidence - a.confidence).slice(0, 5);
+      return slots.sort((a, b) => b.confidence - a.confidence).slice(0, 5);
     } catch (error) {
       console.error('Error calculating optimal time slots:', error);
       return [];
@@ -541,8 +540,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
     sleepStages: Array<{ time: number; stage: 'light' | 'deep' | 'rem' }>,
     targetMinutes: number
   ): 'light' | 'deep' | 'rem' {
-    const closestStage = sleepStages.reduce((closest, stage
-) => {
+    const closestStage = sleepStages.reduce((closest, stage) => {
       const closestDistance = Math.abs(closest.time - targetMinutes);
       const stageDistance = Math.abs(stage.time - targetMinutes);
       return stageDistance < closestDistance ? stage : closest;
@@ -567,8 +565,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
   private static calculateCurrentSleepDebt(sleepHistory: any[]): number {
     const last7Days = sleepHistory.slice(0, 7);
     const averageNeeded = 8 * 60; // 8 hours in minutes
-    return last7Days.reduce((debt, session
-) => {
+    return last7Days.reduce((debt, session) => {
       return debt + Math.max(0, averageNeeded - session.sleepDuration);
     }, 0);
   }
@@ -578,8 +575,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
 
     const recent = feedback.slice(-10); // Last 10 feedback entries
     const avgDifficulty =
-      recent.reduce((sum, f
-) => {
+      recent.reduce((sum, f) => {
         const difficultyScore =
           ['very_easy', 'easy', 'normal', 'hard', 'very_hard'].indexOf(f.difficulty) +
           1;
@@ -661,8 +657,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
       f =>
         ['very_easy', 'easy', 'normal', 'hard', 'very_hard'].indexOf(f.difficulty) + 1
     );
-    return difficulties.reduce((sum, d
-) => sum + d, 0) / difficulties.length;
+    return difficulties.reduce((sum, d) => sum + d, 0) / difficulties.length;
   }
 
   private static calculateSleepDebtTrend(feedback: WakeUpFeedback[]): number[] {
@@ -676,8 +671,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
     if (adaptations.length === 0) return 0.5;
 
     const avgEffectiveness =
-      adaptations.reduce((sum, a
-) => sum + (a.effectiveness || 0.5), 0) /
+      adaptations.reduce((sum, a) => sum + (a.effectiveness || 0.5), 0) /
       adaptations.length;
     return avgEffectiveness;
   }
@@ -686,15 +680,13 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
     const feelings = feedback.map(f =>
       ['terrible', 'tired', 'okay', 'good', 'excellent'].indexOf(f.feeling)
     );
-    return feelings.reduce((sum, f
-) => sum + f, 0) / feelings.length / 4; // Normalize to 0-1
+    return feelings.reduce((sum, f) => sum + f, 0) / feelings.length / 4; // Normalize to 0-1
   }
 
   private static getMostEffectiveConditions(alarm: EnhancedSmartAlarm): string[] {
     const conditions = alarm.conditionBasedAdjustments || [];
     return conditions
-      .sort((a, b
-) => b.effectivenessScore - a.effectivenessScore)
+      .sort((a, b) => b.effectivenessScore - a.effectivenessScore)
       .slice(0, 3)
       .map(c => c.type);
   }

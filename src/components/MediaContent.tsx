@@ -50,20 +50,15 @@ interface MediaContentProps {
   currentUser: UserType;
   mediaLibrary: MediaLibrary;
   contentPreferences: ContentPreferences;
-  onUploadSound?: (file: File
-) => void;
-  onCreatePlaylist?: (playlist: Partial<Playlist>
-) => void;
-  onSubmitQuote?: (quote: Partial<MotivationalQuote>
-) => void;
+  onUploadSound?: (file: File) => void;
+  onCreatePlaylist?: (playlist: Partial<Playlist>) => void;
+  onSubmitQuote?: (quote: Partial<MotivationalQuote>) => void;
   onCompletePhotoChallenge?: (
     challengeId: string,
     photo: File,
     caption?: string
-  
-) => void;
-  onUpdatePreferences?: (preferences: Partial<ContentPreferences>
-) => void;
+  ) => void;
+  onUpdatePreferences?: (preferences: Partial<ContentPreferences>) => void;
 }
 
 // Mock data for media content
@@ -228,8 +223,7 @@ const MOCK_PREFERENCES: ContentPreferences = {
   nsfw: false,
 };
 
-const getCategoryIcon = (category: string
-) => {
+const getCategoryIcon = (category: string) => {
   switch (category) {
     case 'nature':
       return <Music className="h-4 w-4 text-green-500" />;
@@ -244,15 +238,13 @@ const getCategoryIcon = (category: string
   }
 };
 
-const formatDuration = (seconds: number
-) => {
+const formatDuration = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
-const formatFileSize = (bytes: number
-) => {
+const formatFileSize = (bytes: number) => {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -303,14 +295,12 @@ export function MediaContent({
   const publicSounds = mediaLibrary.sounds.filter(sound => !sound.isCustom);
 
   // Handlers with announcements
-  const handleTabChange = (tabName: string
-) => {
+  const handleTabChange = (tabName: string) => {
     setSelectedTab(tabName);
     announceTabChange(tabName);
   };
 
-  const handleSearchChange = (query: string
-) => {
+  const handleSearchChange = (query: string) => {
     setSearchQuery(query);
     const filteredCount = mediaLibrary.sounds.filter(
       sound =>
@@ -320,29 +310,25 @@ export function MediaContent({
     announceSearchResults(query, filteredCount);
   };
 
-  const handlePlayPause = (sound: CustomSound
-) => {
+  const handlePlayPause = (sound: CustomSound) => {
     const wasPlaying = currentlyPlaying === sound.id;
     setCurrentlyPlaying(wasPlaying ? null : sound.id);
     announceAudioPlayback(sound, !wasPlaying);
   };
 
-  const handleUploadSound = (file: File
-) => {
+  const handleUploadSound = (file: File) => {
     announceUploadStart(file.name);
     onUploadSound?.(file);
   };
 
-  const handleCreatePlaylist = (playlist: Partial<Playlist>
-) => {
+  const handleCreatePlaylist = (playlist: Partial<Playlist>) => {
     onCreatePlaylist?.(playlist);
     if (playlist.name) {
       announcePlaylistAction('created', playlist as Playlist);
     }
   };
 
-  const handleSubmitQuote = (quote: Partial<MotivationalQuote>
-) => {
+  const handleSubmitQuote = (quote: Partial<MotivationalQuote>) => {
     onSubmitQuote?.(quote);
     if (quote.text) {
       announceQuoteAction('submitted', quote as MotivationalQuote);
@@ -353,8 +339,7 @@ export function MediaContent({
     challengeId: string,
     photo: File,
     caption?: string
-  
-) => {
+  ) => {
     onCompletePhotoChallenge?.(challengeId, photo, caption);
     const challenge = MOCK_PHOTO_CHALLENGES.find(c => c.id === challengeId);
     if (challenge) {
@@ -368,14 +353,12 @@ export function MediaContent({
   const handleShare = (
     contentType: 'sound' | 'playlist' | 'quote',
     contentName: string
-  
-) => {
+  ) => {
     announceShare(contentType, contentName);
   };
 
   // useEffect hooks for announcements
-  useEffect((
-) => {
+  useEffect(() => {
     announceStorageStatus(
       mediaLibrary.storage.used,
       mediaLibrary.storage.total,
@@ -434,8 +417,7 @@ export function MediaContent({
               />
             </div>
             <Button
-              onClick={(
-) => handleUploadSound(new File([], 'dummy'))}
+              onClick={() => handleUploadSound(new File([], 'dummy'))}
               aria-label="Upload custom sound file"
             >
               <Upload className="h-4 w-4 mr-2" />
@@ -470,8 +452,7 @@ export function MediaContent({
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={(
-) => handlePlayPause(sound)}
+                        onClick={() => handlePlayPause(sound)}
                         aria-label={
                           currentlyPlaying === sound.id
                             ? `Pause ${sound.name}`
@@ -487,8 +468,7 @@ export function MediaContent({
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={(
-) => handleShare('sound', sound.name)}
+                        onClick={() => handleShare('sound', sound.name)}
                         aria-label={`Share ${sound.name}`}
                       >
                         <Share className="h-4 w-4" />
@@ -496,8 +476,7 @@ export function MediaContent({
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={(
-) => announceDetailedSoundInfo(sound)}
+                        onClick={() => announceDetailedSoundInfo(sound)}
                         aria-label={`Get detailed information about ${sound.name}`}
                       >
                         Info
@@ -544,8 +523,7 @@ export function MediaContent({
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={(
-) =>
+                      onClick={() =>
                         setCurrentlyPlaying(
                           currentlyPlaying === sound.id ? null : sound.id
                         )
@@ -570,8 +548,7 @@ export function MediaContent({
         <TabsContent value="playlists" className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Your Playlists</h3>
-            <Button onClick={(
-) => onCreatePlaylist?.({ name: 'New Playlist' })}>
+            <Button onClick={() => onCreatePlaylist?.({ name: 'New Playlist' })}>
               <Plus className="h-4 w-4 mr-2" />
               Create Playlist
             </Button>
@@ -643,8 +620,7 @@ export function MediaContent({
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Motivational Quotes</h3>
             <Button
-              onClick={(
-) => onSubmitQuote?.({ text: '', category: 'motivation' })}
+              onClick={() => onSubmitQuote?.({ text: '', category: 'motivation' })}
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Quote
@@ -748,8 +724,7 @@ export function MediaContent({
                     <div className="flex gap-2">
                       <Button
                         size="sm"
-                        onClick={(
-) =>
+                        onClick={() =>
                           onCompletePhotoChallenge?.(
                             challenge.id,
                             new File([], 'dummy')

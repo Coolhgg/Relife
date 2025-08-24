@@ -597,14 +597,12 @@ export class PerformanceMonitoringAPI {
         summary: {
           totalMetrics:
             vitalsResults.results?.reduce(
-              (sum: number, v: any
-) => sum + v.sample_count,
+              (sum: number, v: any) => sum + v.sample_count,
               0
             ) || 0,
           totalErrors:
             errorResults.results?.reduce(
-              (sum: number, e: any
-) => sum + e.total_occurrences,
+              (sum: number, e: any) => sum + e.total_occurrences,
               0
             ) || 0,
           uniqueUsers: await this.getUniqueUsersCount(timeFilter, userId),
@@ -1197,11 +1195,9 @@ export class PerformanceMonitoringAPI {
     }
 
     for (const [metricName, values] of Object.entries(metricGroups)) {
-      const mean = values.reduce((sum, v
-) => sum + v.metric_value, 0) / values.length;
+      const mean = values.reduce((sum, v) => sum + v.metric_value, 0) / values.length;
       const variance =
-        values.reduce((sum, v
-) => sum + Math.pow(v.metric_value - mean, 2), 0) /
+        values.reduce((sum, v) => sum + Math.pow(v.metric_value - mean, 2), 0) /
         values.length;
       const stdDev = Math.sqrt(variance);
 
@@ -1333,7 +1329,9 @@ export class PerformanceMonitoringAPI {
 
   private async cacheWebVitalsAggregation(vitals: WebVitalsData): Promise<void> {
     const key = `vitals:${vitals.session_id}:${Date.now()}`;
-    await this.env.KV.put(key, JSON.stringify(vitals), { expirationTtl: 86400 });
+    await this.env.KV.put(key, JSON.stringify(vitals), {
+      expirationTtl: 86400,
+    });
   }
 
   private async cacheAnalyticsEvent(
@@ -1373,7 +1371,9 @@ export class PerformanceMonitoringAPI {
 
     current.lastUpdated = new Date().toISOString();
 
-    await this.env.KV.put(realtimeKey, JSON.stringify(current), { expirationTtl: 60 });
+    await this.env.KV.put(realtimeKey, JSON.stringify(current), {
+      expirationTtl: 60,
+    });
   }
 
   private async checkPerformanceBudgets(vitals: WebVitalsData): Promise<void> {

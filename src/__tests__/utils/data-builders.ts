@@ -360,14 +360,12 @@ export const _generateRealisticTestData = {
 
     const weights = [0.6, 0.2, 0.1, 0.05, 0.05];
     return faker.helpers.weightedArrayElement(
-      patterns.map((pattern, index
-) => ({ weight: weights[index], value: pattern }))
+      patterns.map((pattern, index) => ({ weight: weights[index], value: pattern }))
     );
   },
 
   // Generate realistic user preferences
-  userPreferences: (isPremium = false
-) => ({
+  userPreferences: (isPremium = false) => ({
     theme: faker.helpers.weightedArrayElement([
       { weight: 0.4, value: 'light' },
       { weight: 0.35, value: 'dark' },
@@ -390,14 +388,12 @@ export const _generateRealisticTestData = {
   }),
 
   // Generate realistic battle scenarios
-  battleChallenges: (difficulty: 'easy' | 'medium' | 'hard' = 'medium'
-) => {
+  battleChallenges: (difficulty: 'easy' | 'medium' | 'hard' = 'medium') => {
     const challengeTypes = ['math', 'pattern', 'memory', 'reaction'] as const;
     const difficultyMultiplier = { easy: 0.5, medium: 1, hard: 1.5 }[difficulty];
 
     return faker.helpers.multiple(
-      (
-) => ({
+      () => ({
         type: faker.helpers.arrayElement(challengeTypes),
         difficulty: Math.floor(
           faker.number.int({ min: 1, max: 10 }) * difficultyMultiplier
@@ -487,8 +483,7 @@ export const _generateTestDataSets = {
   // Generate battle tournament data
   battleTournament: (participantCount: number): TestBattle[] => {
     const battles: TestBattle[] = [];
-    const participants: string[] = Array.from({ length: participantCount }, (
-) =>
+    const participants: string[] = Array.from({ length: participantCount }, () =>
       faker.string.uuid()
     );
 
@@ -528,14 +523,11 @@ export const _generateTestDataSets = {
 };
 
 // Convenience builder functions
-export const _createUser = (overrides?: Partial<TestUser>
-) =>
+export const _createUser = (overrides?: Partial<TestUser>) =>
   new TestUserBuilder(overrides);
-export const _createAlarm = (overrides?: Partial<TestAlarm>
-) =>
+export const _createAlarm = (overrides?: Partial<TestAlarm>) =>
   new TestAlarmBuilder(overrides);
-export const _createBattle = (overrides?: Partial<TestBattle>
-) =>
+export const _createBattle = (overrides?: Partial<TestBattle>) =>
   new TestBattleBuilder(overrides);
 
 // Export builders for easy access
@@ -543,27 +535,21 @@ export { TestUserBuilder, TestAlarmBuilder, TestBattleBuilder };
 
 // Default data generators
 export const _defaultTestData = {
-  guestUser: (
-) => createUser().asGuest().build(),
-  premiumUser: (
-) => createUser().asPremium().build(),
-  adminUser: (
-) => createUser().asAdmin().build(),
+  guestUser: () => createUser().asGuest().build(),
+  premiumUser: () => createUser().asPremium().build(),
+  adminUser: () => createUser().asAdmin().build(),
 
-  morningAlarm: (userId?: string
-) =>
+  morningAlarm: (userId?: string) =>
     createAlarm({ userId }).withTime('07:00').weekdays().build(),
 
-  workoutAlarm: (userId?: string
-) =>
+  workoutAlarm: (userId?: string) =>
     createAlarm({ userId })
       .withTime('06:00')
       .withLabel('Morning Workout')
       .withDifficulty('hard')
       .build(),
 
-  activeBattle: (
-) =>
+  activeBattle: () =>
     createBattle()
       .active()
       .withDifficulty('medium')

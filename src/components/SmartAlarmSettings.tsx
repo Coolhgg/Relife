@@ -22,11 +22,9 @@ import {
 
 interface SmartAlarmSettingsProps {
   isOpen: boolean;
-  onClose: (
-) => void;
+  onClose: () => void;
   alarm?: SmartAlarm;
-  onSave: (alarmData: Partial<SmartAlarm>
-) => void;
+  onSave: (alarmData: Partial<SmartAlarm>) => void;
 }
 
 const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
@@ -34,8 +32,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
   onClose,
   alarm,
   onSave,
-}
-) => {
+}) => {
   const [smartEnabled, setSmartEnabled] = useState(alarm?.smartEnabled ?? true);
   const [wakeWindow, setWakeWindow] = useState(alarm?.wakeWindow ?? 30);
   const [adaptiveEnabled, setAdaptiveEnabled] = useState(
@@ -61,10 +58,8 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'smart' | 'goals' | 'analysis'>('smart');
 
-  useEffect((
-) => {
-    const loadData = async (
-) => {
+  useEffect(() => {
+    const loadData = async () => {
       if (isOpen) {
         setLoading(true);
 
@@ -89,8 +84,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
     loadData();
   }, [isOpen]);
 
-  const handleSave = async (
-) => {
+  const handleSave = async () => {
     // Save sleep goal
     await SmartAlarmScheduler.setSleepGoal(sleepGoal);
 
@@ -180,8 +174,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
             return (
               <button
                 key={tab.id}
-                onClick={(
-) => setActiveTab(tab.id as typeof activeTab)}
+                onClick={() => setActiveTab(tab.id as typeof activeTab)}
                 className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                   activeTab === tab.id
                     ? 'bg-purple-500 text-white'
@@ -308,8 +301,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           <input
                             type="checkbox"
                             checked={seasonalAdjustment}
-                            onChange={(e: any
-) =>
+                            onChange={(e: any) =>
                               setSeasonalAdjustment(e.target.checked)
                             }
                             className="sr-only peer"
@@ -385,10 +377,8 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     max="720"
                     step="15"
                     value={sleepGoal.targetDuration}
-                    onChange={(e: any 
-) =>
-                      setSleepGoal((prev: any
-) => ({
+                    onChange={(e: any) =>
+                      setSleepGoal((prev: any) => ({
                         ...prev,
                         targetDuration: parseInt(e.target.value),
                       }))
@@ -415,10 +405,8 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     <input
                       type="time"
                       value={sleepGoal.targetBedtime}
-                      onChange={(e: any 
-) =>
-                        setSleepGoal((prev: any
-) => ({
+                      onChange={(e: any) =>
+                        setSleepGoal((prev: any) => ({
                           ...prev,
                           targetBedtime: e.target.value,
                         }))
@@ -431,10 +419,8 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     <input
                       type="time"
                       value={sleepGoal.targetWakeTime}
-                      onChange={(e: any 
-) =>
-                        setSleepGoal((prev: any
-) => ({
+                      onChange={(e: any) =>
+                        setSleepGoal((prev: any) => ({
                           ...prev,
                           targetWakeTime: e.target.value,
                         }))
@@ -458,10 +444,8 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       <input
                         type="checkbox"
                         checked={sleepGoal.consistency}
-                        onChange={(e: any 
-) =>
-                          setSleepGoal((prev: any
-) => ({
+                        onChange={(e: any) =>
+                          setSleepGoal((prev: any) => ({
                             ...prev,
                             consistency: e.target.checked,
                           }))
@@ -482,10 +466,8 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       max="180"
                       step="15"
                       value={sleepGoal.weekendVariation}
-                      onChange={(e: any 
-) =>
-                        setSleepGoal((prev: any
-) => ({
+                      onChange={(e: any) =>
+                        setSleepGoal((prev: any) => ({
                           ...prev,
                           weekendVariation: parseInt(e.target.value),
                         }))
@@ -593,8 +575,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       </h3>
 
                       <div className="space-y-3">
-                        {scheduleAnalysis.recommendations.map((rec, index
-) => (
+                        {scheduleAnalysis.recommendations.map((rec, index) => (
                           <div
                             key={index}
                             className="flex items-start gap-3 p-3 bg-white/5 rounded-lg"

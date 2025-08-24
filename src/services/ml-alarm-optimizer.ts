@@ -537,8 +537,7 @@ export class MLAlarmOptimizer {
     if (factors.length === 0) return 0;
 
     const avgConfidence =
-      factors.reduce((sum, f
-) => sum + f.confidence, 0) / factors.length;
+      factors.reduce((sum, f) => sum + f.confidence, 0) / factors.length;
     const factorBonus = Math.min(0.2, factors.length * 0.05); // Bonus for more factors
 
     return Math.min(0.95, avgConfidence + factorBonus);
@@ -547,8 +546,7 @@ export class MLAlarmOptimizer {
   private static generateReasoning(factors: PredictionFactor[]): string[] {
     return factors
       .filter(f => f.confidence > 0.4)
-      .sort((a, b
-) => b.confidence - a.confidence)
+      .sort((a, b) => b.confidence - a.confidence)
       .map(f => f.description);
   }
 
@@ -613,8 +611,7 @@ export class MLAlarmOptimizer {
   private static async startLearningProcess(): Promise<void> {
     // Start background learning process
     setInterval(
-      (
-) => {
+      () => {
         this.processLearningQueue();
       },
       5 * 60 * 1000
@@ -709,10 +706,13 @@ export class MLAlarmOptimizer {
     return this.config.enabled;
   }
 
-  static getMLStats(): { patterns: number; predictions: number; accuracy: number } {
+  static getMLStats(): {
+    patterns: number;
+    predictions: number;
+    accuracy: number;
+  } {
     const totalPatterns = Array.from(this.behaviorData.values()).reduce(
-      (sum, patterns
-) => sum + patterns.length,
+      (sum, patterns) => sum + patterns.length,
       0
     );
     const totalPredictions = this.predictionCache.size;
@@ -720,8 +720,7 @@ export class MLAlarmOptimizer {
       totalPatterns > 0
         ? Array.from(this.behaviorData.values())
             .flat()
-            .reduce((sum, p
-) => sum + p.confidence, 0) / totalPatterns
+            .reduce((sum, p) => sum + p.confidence, 0) / totalPatterns
         : 0;
 
     return {

@@ -7,8 +7,7 @@
  */
 export default function globalSetup() {
   // Enhanced error handling for tests
-  process.on('unhandledRejection', (reason, promise
-) => {
+  process.on('unhandledRejection', (reason, promise) => {
     console.warn('Unhandled Promise Rejection in tests:', reason);
     // Don't fail tests due to unhandled promises in test environment
   });
@@ -33,8 +32,7 @@ export default function globalSetup() {
 
   // Enhanced console configuration for better test output
   const originalConsoleError = console.error;
-  console.error = (...args
-) => {
+  console.error = (...args) => {
     // Suppress known React warnings in tests
     const message = args[0];
     if (typeof message === 'string') {

@@ -207,7 +207,10 @@ class AdvancedAnalyticsService {
       };
 
       // Cache the results
-      this.analyticsCache.set(cacheKey, { data: analytics, timestamp: Date.now() });
+      this.analyticsCache.set(cacheKey, {
+        data: analytics,
+        timestamp: Date.now(),
+      });
 
       const duration = performance.now() - startTime;
       this.performanceMonitor.trackCustomMetric(
@@ -240,8 +243,7 @@ class AdvancedAnalyticsService {
     const average_response_time =
       eventsData
         .filter(event => event.response_time)
-        .reduce((sum, event
-) => sum + event.response_time, 0) /
+        .reduce((sum, event) => sum + event.response_time, 0) /
         eventsData.filter(event => event.response_time).length || 0;
 
     const success_rate =
@@ -437,8 +439,7 @@ class AdvancedAnalyticsService {
       });
     }
 
-    return insights.sort((a, b
-) => {
+    return insights.sort((a, b) => {
       const impactOrder = { critical: 4, high: 3, medium: 2, low: 1 };
       return impactOrder[b.impact] - impactOrder[a.impact];
     });
@@ -525,8 +526,7 @@ class AdvancedAnalyticsService {
       const liveMetrics = {
         todayAlarms: todayEvents?.length || 0,
         successfulWakeups:
-          todayEvents?.filter((e: any
-) => e.dismissed && !e.snoozed).length || 0,
+          todayEvents?.filter((e: any) => e.dismissed && !e.snoozed).length || 0,
         avgResponseTime: this.calculateAverageResponseTime(todayEvents || []),
         streak: await this.calculateCurrentStreak(userId),
       };
@@ -535,8 +535,7 @@ class AdvancedAnalyticsService {
         firstAlarm: todayEvents?.[0]?.fired_at,
         lastAlarm: todayEvents?.[todayEvents.length - 1]?.fired_at,
         mostEffectiveVoice: this.getMostEffectiveVoice(todayEvents || []),
-        totalSnoozed: todayEvents?.filter((e: any
-) => e.snoozed).length || 0,
+        totalSnoozed: todayEvents?.filter((e: any) => e.snoozed).length || 0,
       };
 
       // Get active insights (cached)
@@ -576,11 +575,9 @@ class AdvancedAnalyticsService {
       return time.getHours() * 60 + time.getMinutes();
     });
 
-    const mean = wakeTimes.reduce((sum, time
-) => sum + time, 0) / wakeTimes.length;
+    const mean = wakeTimes.reduce((sum, time) => sum + time, 0) / wakeTimes.length;
     const variance =
-      wakeTimes.reduce((sum, time
-) => sum + Math.pow(time - mean, 2), 0) /
+      wakeTimes.reduce((sum, time) => sum + Math.pow(time - mean, 2), 0) /
       wakeTimes.length;
     const stdDev = Math.sqrt(variance);
 
@@ -598,16 +595,13 @@ class AdvancedAnalyticsService {
     const recentSleep = sleepData.slice(-7); // Last 7 days
 
     const avgDuration =
-      recentSleep.reduce((sum, session
-) => sum + session.total_duration, 0) /
+      recentSleep.reduce((sum, session) => sum + session.total_duration, 0) /
       recentSleep.length;
     const avgEfficiency =
-      recentSleep.reduce((sum, session
-) => sum + (session.sleep_efficiency || 80), 0) /
+      recentSleep.reduce((sum, session) => sum + (session.sleep_efficiency || 80), 0) /
       recentSleep.length;
     const avgQuality =
-      recentSleep.reduce((sum, session
-) => sum + (session.restfulness_score || 70), 0) /
+      recentSleep.reduce((sum, session) => sum + (session.restfulness_score || 70), 0) /
       recentSleep.length;
 
     // Weighted health score
@@ -637,10 +631,8 @@ class AdvancedAnalyticsService {
 
     // Convert to trend data format
     const values = Array.from(weeklyConsistency.entries())
-      .sort(([a], [b]
-) => a.localeCompare(b))
-      .map(([date, value]
-) => ({ date, value }));
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, value]) => ({ date, value }));
 
     const trend_direction = this.calculateTrendDirection(values);
     const trend_strength = this.calculateTrendStrength(values);
@@ -663,17 +655,18 @@ class AdvancedAnalyticsService {
         const date = new Date(event.fired_at);
         const weekKey = this.getWeekKey(date);
 
-        const current = weeklyAvgResponseTime.get(weekKey) || { total: 0, count: 0 };
+        const current = weeklyAvgResponseTime.get(weekKey) || {
+          total: 0,
+          count: 0,
+        };
         current.total += event.response_time;
         current.count += 1;
         weeklyAvgResponseTime.set(weekKey, current);
       });
 
     const values = Array.from(weeklyAvgResponseTime.entries())
-      .sort(([a], [b]
-) => a.localeCompare(b))
-      .map(([date, { total, count }]
-) => ({ date, value: total / count }));
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, { total, count }]) => ({ date, value: total / count }));
 
     return {
       metric_name: 'response_time',
@@ -707,10 +700,8 @@ class AdvancedAnalyticsService {
     });
 
     const values = Array.from(weeklyData.entries())
-      .sort(([a], [b]
-) => a.localeCompare(b))
-      .map(([date, { successful, total }]
-) => ({
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, { successful, total }]) => ({
         date,
         value: total > 0 ? (successful / total) * 100 : 0,
       }));
@@ -731,8 +722,7 @@ class AdvancedAnalyticsService {
         date: session.sleep_start.split('T')[0],
         value: session.restfulness_score || 0,
       }))
-      .sort((a, b
-) => a.date.localeCompare(b.date));
+      .sort((a, b) => a.date.localeCompare(b.date));
 
     return {
       metric_name: 'sleep_quality',
@@ -762,11 +752,9 @@ class AdvancedAnalyticsService {
     const firstHalf = values.slice(0, Math.floor(values.length / 2));
     const secondHalf = values.slice(Math.floor(values.length / 2));
 
-    const firstAvg = firstHalf.reduce((sum, v
-) => sum + v.value, 0) / firstHalf.length;
+    const firstAvg = firstHalf.reduce((sum, v) => sum + v.value, 0) / firstHalf.length;
     const secondAvg =
-      secondHalf.reduce((sum, v
-) => sum + v.value, 0) / secondHalf.length;
+      secondHalf.reduce((sum, v) => sum + v.value, 0) / secondHalf.length;
 
     const change = ((secondAvg - firstAvg) / firstAvg) * 100;
 
@@ -781,13 +769,10 @@ class AdvancedAnalyticsService {
     // Calculate correlation coefficient with time
     const n = values.length;
     const sumX = (n * (n + 1)) / 2; // Sum of 1, 2, 3, ..., n
-    const sumY = values.reduce((sum, v
-) => sum + v.value, 0);
-    const sumXY = values.reduce((sum, v, i
-) => sum + (i + 1) * v.value, 0);
+    const sumY = values.reduce((sum, v) => sum + v.value, 0);
+    const sumXY = values.reduce((sum, v, i) => sum + (i + 1) * v.value, 0);
     const sumXX = (n * (n + 1) * (2 * n + 1)) / 6; // Sum of 1², 2², 3², ..., n²
-    const sumYY = values.reduce((sum, v
-) => sum + v.value * v.value, 0);
+    const sumYY = values.reduce((sum, v) => sum + v.value * v.value, 0);
 
     const correlation =
       (n * sumXY - sumX * sumY) /
@@ -803,8 +788,7 @@ class AdvancedAnalyticsService {
     if (values.length < 3) return 0;
 
     const variance = this.calculateVariance(values.map(v => v.value));
-    const mean = values.reduce((sum, v
-) => sum + v.value, 0) / values.length;
+    const mean = values.reduce((sum, v) => sum + v.value, 0) / values.length;
 
     // Coefficient of variation as a proxy for significance
     const cv = Math.sqrt(variance) / mean;
@@ -814,11 +798,9 @@ class AdvancedAnalyticsService {
   }
 
   private calculateVariance(values: number[]): number {
-    const mean = values.reduce((sum, val
-) => sum + val, 0) / values.length;
+    const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
     return (
-      values.reduce((sum, val
-) => sum + Math.pow(val - mean, 2), 0) / values.length
+      values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length
     );
   }
 
@@ -914,7 +896,10 @@ class AdvancedAnalyticsService {
 
     eventsData.forEach(event => {
       const mood = event.alarms?.voice_mood || 'motivational';
-      const current = moodEffectiveness.get(mood) || { successful: 0, total: 0 };
+      const current = moodEffectiveness.get(mood) || {
+        successful: 0,
+        total: 0,
+      };
       current.total += 1;
       if (event.dismissed && !event.snoozed) {
         current.successful += 1;
@@ -1163,8 +1148,7 @@ class AdvancedAnalyticsService {
 
     if (sleepData.length > 0) {
       const avgDuration =
-        sleepData.reduce((sum, session
-) => sum + session.total_duration, 0) /
+        sleepData.reduce((sum, session) => sum + session.total_duration, 0) /
         sleepData.length;
 
       if (avgDuration < 420) {
@@ -1181,8 +1165,7 @@ class AdvancedAnalyticsService {
       }
 
       const avgEfficiency =
-        sleepData.reduce((sum, session
-) => sum + (session.sleep_efficiency || 80), 0) /
+        sleepData.reduce((sum, session) => sum + (session.sleep_efficiency || 80), 0) /
         sleepData.length;
 
       if (avgEfficiency < 85) {
@@ -1205,8 +1188,7 @@ class AdvancedAnalyticsService {
     const withResponseTime = events.filter(e => e.response_time);
     return withResponseTime.length > 0
       ? Math.round(
-          withResponseTime.reduce((sum, e
-) => sum + e.response_time, 0) /
+          withResponseTime.reduce((sum, e) => sum + e.response_time, 0) /
             withResponseTime.length
         )
       : 0;

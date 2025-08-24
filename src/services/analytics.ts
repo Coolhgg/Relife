@@ -232,10 +232,8 @@ class AnalyticsService {
         domain: config.domain,
         performance_enabled: config.performance.enabled,
         features_enabled: Object.entries(config.features)
-          .filter(([_, enabled]
-) => enabled)
-          .map(([feature]
-) => feature),
+          .filter(([_, enabled]) => enabled)
+          .map(([feature]) => feature),
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
@@ -605,10 +603,8 @@ class AnalyticsService {
 
       // Feature flags
       features_enabled: Object.entries(config.features)
-        .filter(([_, enabled]
-) => enabled)
-        .map(([feature]
-) => feature),
+        .filter(([_, enabled]) => enabled)
+        .map(([feature]) => feature),
     };
   }
 

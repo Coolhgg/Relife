@@ -25,8 +25,7 @@ export function useSettingsAnnouncements() {
 
   // Section expansion/collapse announcements
   const announceSectionToggle = useCallback(
-    (sectionName: string, isExpanded: boolean
-) => {
+    (sectionName: string, isExpanded: boolean) => {
       const message = isExpanded
         ? `${sectionName} section expanded. Use tab to navigate through options.`
         : `${sectionName} section collapsed.`;
@@ -42,8 +41,7 @@ export function useSettingsAnnouncements() {
 
   // Theme change announcements
   const announceThemeChange = useCallback(
-    (theme: 'light' | 'dark' | 'auto'
-) => {
+    (theme: 'light' | 'dark' | 'auto') => {
       const themeDescriptions = {
         light: 'Light theme selected. Interface will use bright colors.',
         dark: 'Dark theme selected. Interface will use dark colors.',
@@ -61,8 +59,7 @@ export function useSettingsAnnouncements() {
 
   // Voice mood change announcements
   const announceVoiceMoodChange = useCallback(
-    (mood: VoiceMood
-) => {
+    (mood: VoiceMood) => {
       const moodConfig = getVoiceMoodConfig(mood);
 
       announce({
@@ -76,8 +73,7 @@ export function useSettingsAnnouncements() {
 
   // Permission status announcements
   const announcePermissionStatus = useCallback(
-    (permissionName: string, granted: boolean, critical: boolean = false
-) => {
+    (permissionName: string, granted: boolean, critical: boolean = false) => {
       const status = granted ? 'granted' : 'denied';
       const impact = granted
         ? critical
@@ -98,8 +94,7 @@ export function useSettingsAnnouncements() {
 
   // Toggle switch announcements
   const announceToggleSwitch = useCallback(
-    (settingName: string, enabled: boolean, description?: string
-) => {
+    (settingName: string, enabled: boolean, description?: string) => {
       const status = enabled ? 'enabled' : 'disabled';
       const additionalInfo = description ? `. ${description}` : '';
 
@@ -114,8 +109,7 @@ export function useSettingsAnnouncements() {
 
   // Slider change announcements (with debouncing)
   const announceSliderChange = useCallback(
-    (sliderName: string, value: number, min: number, max: number, label?: string
-) => {
+    (sliderName: string, value: number, min: number, max: number, label?: string) => {
       // Calculate percentage and description
       const percentage = Math.round(((value - min) / (max - min)) * 100);
       const valueLabel = label || `${value}`;
@@ -138,8 +132,7 @@ export function useSettingsAnnouncements() {
 
   // Dropdown change announcements
   const announceDropdownChange = useCallback(
-    (settingName: string, selectedValue: string, description?: string
-) => {
+    (settingName: string, selectedValue: string, description?: string) => {
       const additionalInfo = description ? `. ${description}` : '';
 
       announce({
@@ -153,8 +146,7 @@ export function useSettingsAnnouncements() {
 
   // Settings validation error announcements
   const announceValidationError = useCallback(
-    (fieldName: string, errorMessage: string
-) => {
+    (fieldName: string, errorMessage: string) => {
       announce({
         type: 'error',
         data: { fieldName, errorMessage },
@@ -166,8 +158,7 @@ export function useSettingsAnnouncements() {
 
   // Settings save confirmation
   const announceSettingsSaved = useCallback(
-    (settingType?: string
-) => {
+    (settingType?: string) => {
       const message = settingType
         ? `${settingType} settings saved successfully.`
         : 'Settings saved successfully.';
@@ -183,8 +174,7 @@ export function useSettingsAnnouncements() {
 
   // Click-to-hear functionality for settings
   const announceSettingDescription = useCallback(
-    (settingName: string, currentValue: string, description: string
-) => {
+    (settingName: string, currentValue: string, description: string) => {
       announce({
         type: 'custom',
         message: `${settingName}. Current value: ${currentValue}. ${description}`,
@@ -196,8 +186,7 @@ export function useSettingsAnnouncements() {
 
   // Loading state announcements for settings
   const announceSettingsLoading = useCallback(
-    (action: string, isLoading: boolean
-) => {
+    (action: string, isLoading: boolean) => {
       if (isLoading) {
         announce({
           type: 'custom',
@@ -217,8 +206,7 @@ export function useSettingsAnnouncements() {
 
   // Link/button click announcements for external actions
   const announceLinkActivation = useCallback(
-    (linkName: string, opensInNewWindow: boolean = false
-) => {
+    (linkName: string, opensInNewWindow: boolean = false) => {
       const windowInfo = opensInNewWindow ? ' Opening in new window.' : '';
       announce({
         type: 'custom',

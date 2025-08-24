@@ -375,8 +375,7 @@ export class OfflineSleepTracker {
     this.currentSession.stages.push(awakeStage);
 
     // Start monitoring timer (simplified simulation)
-    this.trackingTimer = setInterval((
-) => {
+    this.trackingTimer = setInterval(() => {
       this.simulateSleepStageDetection();
     }, 60000); // Check every minute
   }
@@ -412,8 +411,7 @@ export class OfflineSleepTracker {
       sessionMinutes -
         this.currentSession.stages
           .slice(0, -1)
-          .reduce((sum, stage
-) => sum + stage.duration, 0)
+          .reduce((sum, stage) => sum + stage.duration, 0)
     );
 
     // Simple sleep stage progression simulation
@@ -480,8 +478,7 @@ export class OfflineSleepTracker {
     // Deep sleep factor
     const deepSleepMinutes = session.stages
       .filter(stage => stage.type === 'deep')
-      .reduce((sum, stage
-) => sum + stage.duration, 0);
+      .reduce((sum, stage) => sum + stage.duration, 0);
 
     if (session.duration && deepSleepMinutes > session.duration * 0.15) {
       // More than 15% deep sleep
@@ -491,8 +488,7 @@ export class OfflineSleepTracker {
     // REM sleep factor
     const remSleepMinutes = session.stages
       .filter(stage => stage.type === 'rem')
-      .reduce((sum, stage
-) => sum + stage.duration, 0);
+      .reduce((sum, stage) => sum + stage.duration, 0);
 
     if (session.duration && remSleepMinutes > session.duration * 0.2) {
       // More than 20% REM sleep
@@ -557,8 +553,7 @@ export class OfflineSleepTracker {
       return bedtime.getHours() + bedtime.getMinutes() / 60;
     });
 
-    return bedtimes.reduce((sum, time
-) => sum + time, 0) / bedtimes.length;
+    return bedtimes.reduce((sum, time) => sum + time, 0) / bedtimes.length;
   }
 
   private async updateSleepAnalytics(): Promise<void> {
@@ -574,18 +569,15 @@ export class OfflineSleepTracker {
 
       this.sleepAnalytics = {
         weeklyAverage:
-          weeklyDurations.reduce((sum, dur
-) => sum + dur, 0) / weeklyDurations.length,
+          weeklyDurations.reduce((sum, dur) => sum + dur, 0) / weeklyDurations.length,
         weeklyQuality:
-          weeklyQualities.reduce((sum, qual
-) => sum + qual, 0) / weeklyQualities.length,
+          weeklyQualities.reduce((sum, qual) => sum + qual, 0) / weeklyQualities.length,
         bedtimeConsistency: this.calculateBedtimeConsistency(recentSessions),
         wakeTimeConsistency: this.calculateWakeTimeConsistency(recentSessions),
         deepSleepPercentage: this.calculateDeepSleepPercentage(recentSessions),
         remSleepPercentage: this.calculateRemSleepPercentage(recentSessions),
         interruptionRate:
-          recentSessions.reduce((sum, s
-) => sum + s.interruptions.length, 0) /
+          recentSessions.reduce((sum, s) => sum + s.interruptions.length, 0) /
           recentSessions.length,
         improvementTrend: this.calculateImprovementTrend(recentSessions),
         lastCalculated: new Date().toISOString(),
@@ -601,12 +593,10 @@ export class OfflineSleepTracker {
     if (sessions.length < 2) return 0;
 
     const bedtimes = sessions.map(s => new Date(s.startTime).getHours());
-    const avgBedtime = bedtimes.reduce((sum, time
-) => sum + time, 0) / bedtimes.length;
+    const avgBedtime = bedtimes.reduce((sum, time) => sum + time, 0) / bedtimes.length;
     const deviations = bedtimes.map(time => Math.abs(time - avgBedtime));
     const avgDeviation =
-      deviations.reduce((sum, dev
-) => sum + dev, 0) / deviations.length;
+      deviations.reduce((sum, dev) => sum + dev, 0) / deviations.length;
 
     return Math.max(0, 100 - avgDeviation * 10); // Lower deviation = higher consistency
   }
@@ -621,12 +611,10 @@ export class OfflineSleepTracker {
     if (wakeTimes.length < 2) return 0;
 
     const avgWakeTime =
-      wakeTimes.reduce((sum, time
-) => sum + time, 0) / wakeTimes.length;
+      wakeTimes.reduce((sum, time) => sum + time, 0) / wakeTimes.length;
     const deviations = wakeTimes.map(time => Math.abs(time - avgWakeTime));
     const avgDeviation =
-      deviations.reduce((sum, dev
-) => sum + dev, 0) / deviations.length;
+      deviations.reduce((sum, dev) => sum + dev, 0) / deviations.length;
 
     return Math.max(0, 100 - avgDeviation * 10);
   }
@@ -640,8 +628,7 @@ export class OfflineSleepTracker {
         totalSleep += session.duration;
         totalDeep += session.stages
           .filter(stage => stage.type === 'deep')
-          .reduce((sum, stage
-) => sum + stage.duration, 0);
+          .reduce((sum, stage) => sum + stage.duration, 0);
       }
     }
 
@@ -657,8 +644,7 @@ export class OfflineSleepTracker {
         totalSleep += session.duration;
         totalRem += session.stages
           .filter(stage => stage.type === 'rem')
-          .reduce((sum, stage
-) => sum + stage.duration, 0);
+          .reduce((sum, stage) => sum + stage.duration, 0);
       }
     }
 
@@ -675,10 +661,8 @@ export class OfflineSleepTracker {
 
     if (recent.length === 0 || older.length === 0) return 'stable';
 
-    const recentAvg = recent.reduce((sum, q
-) => sum + q, 0) / recent.length;
-    const olderAvg = older.reduce((sum, q
-) => sum + q, 0) / older.length;
+    const recentAvg = recent.reduce((sum, q) => sum + q, 0) / recent.length;
+    const olderAvg = older.reduce((sum, q) => sum + q, 0) / older.length;
 
     const difference = recentAvg - olderAvg;
 
@@ -717,8 +701,7 @@ export class OfflineSleepTracker {
 
       // Sleep duration insight
       const avgDuration =
-        recentSessions.reduce((sum, s
-) => sum + (s.duration || 0), 0) /
+        recentSessions.reduce((sum, s) => sum + (s.duration || 0), 0) /
         recentSessions.length /
         60;
       if (avgDuration < 7) {
@@ -932,8 +915,7 @@ export class OfflineSleepTracker {
         : 0,
       averageQuality:
         this.sleepSessions.length > 0
-          ? this.sleepSessions.reduce((sum, s
-) => sum + s.quality, 0) /
+          ? this.sleepSessions.reduce((sum, s) => sum + s.quality, 0) /
             this.sleepSessions.length
           : 0,
       isOnline: this.isOnline,

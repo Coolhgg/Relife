@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 // Consent Banner Component for GDPR/CCPA Compliance
 // Provides a user-friendly way to collect privacy consent
 
@@ -202,10 +202,7 @@ export default function ConsentBanner({
                         checked={consents[key as keyof ConsentSettings]}
                         disabled={config.required}
                         onChange={(
-                          e: any // auto: implicit any
-                        
-) =>
-                          handleConsentChange(
+                          e: any) => handleConsentChange(
                             key as keyof ConsentSettings,
                             e.target.checked
                           )

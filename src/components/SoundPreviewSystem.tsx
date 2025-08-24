@@ -44,8 +44,7 @@ import type {
 
 interface SoundPreviewSystemProps {
   theme?: CustomSoundTheme;
-  onThemeTest?: (results: ThemeTestResults
-) => void;
+  onThemeTest?: (results: ThemeTestResults) => void;
   className?: string;
 }
 
@@ -259,8 +258,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
   theme,
   onThemeTest,
   className = '',
-}
-) => {
+}) => {
   const [activeTab, setActiveTab] = useState('individual');
   const [playbackStates, setPlaybackStates] = useState<Map<string, PlaybackState>>(
     new Map()
@@ -276,22 +274,16 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
   const intervalRefs = useRef<Map<string, TimeoutHandle>>(new Map());
 
   // Cleanup on unmount
-  useEffect((
-) => {
+  useEffect(() => {
     const currentAudioRefs = audioRefs.current;
     const currentIntervalRefs = intervalRefs.current;
-    return (
-) => {
-      currentAudioRefs.forEach((audio: any
-) => {
-        // auto: implicit any
+    return () => {
+      currentAudioRefs.forEach((audio: any) => {
         if (!audio.paused) {
           audio.pause();
         }
       });
-      currentIntervalRefs.forEach((interval: any
-) => {
-        // auto: implicit any
+      currentIntervalRefs.forEach((interval: any) => {
         clearInterval(interval);
       });
     };
@@ -312,8 +304,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     );
   };
 
-  const updatePlaybackState = (soundId: string, updates: Partial<PlaybackState>
-) => {
+  const updatePlaybackState = (soundId: string, updates: Partial<PlaybackState>) => {
     const currentState = getPlaybackState(soundId);
     const newState = { ...currentState, ...updates };
     setPlaybackStates(new Map(playbackStates.set(soundId, newState)));
@@ -326,18 +317,15 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
       audio = new Audio(soundUrl);
       audioRefs.current.set(soundId, audio);
 
-      audio.addEventListener('loadedmetadata', (
-) => {
+      audio.addEventListener('loadedmetadata', () => {
         updatePlaybackState(soundId, { duration: audio!.duration });
       });
 
-      audio.addEventListener('timeupdate', (
-) => {
+      audio.addEventListener('timeupdate', () => {
         updatePlaybackState(soundId, { currentTime: audio!.currentTime });
       });
 
-      audio.addEventListener('ended', (
-) => {
+      audio.addEventListener('ended', () => {
         updatePlaybackState(soundId, { isPlaying: false, currentTime: 0 });
       });
     }
@@ -347,8 +335,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
   const playSound = async (
     test: SoundTest,
     options: { loop?: boolean; fadeIn?: number } = {}
-  
-) => {
+  ) => {
     try {
       const soundUrl = await getSoundUrl(test);
       if (!soundUrl) return;
@@ -380,8 +367,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
       updatePlaybackState(test.id, { isPlaying: true });
 
       // Set up progress tracking
-      const interval = setInterval((
-) => {
+      const interval = setInterval(() => {
         if (audio.ended || audio.paused) {
           clearInterval(interval);
           intervalRefs.current.delete(test.id);
@@ -393,8 +379,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     }
   };
 
-  const pauseSound = (soundId: string
-) => {
+  const pauseSound = (soundId: string) => {
     const audio = audioRefs.current.get(soundId);
     if (audio && !audio.paused) {
       audio.pause();
@@ -402,8 +387,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     }
   };
 
-  const stopSound = (soundId: string
-) => {
+  const stopSound = (soundId: string) => {
     const audio = audioRefs.current.get(soundId);
     if (audio) {
       audio.pause();
@@ -418,10 +402,8 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     }
   };
 
-  const stopAllSounds = (
-) => {
-    audioRefs.current.forEach((audio, soundId
-) => {
+  const stopAllSounds = () => {
+    audioRefs.current.forEach((audio, soundId) => {
       if (!audio.paused) {
         stopSound(soundId);
       }
@@ -432,15 +414,13 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     audio: HTMLAudioElement,
     targetVolume: number,
     duration: number
-  
-) => {
+  ) => {
     const steps = 20;
     const stepVolume = targetVolume / steps;
     const stepDuration = (duration * 1000) / steps;
 
     let currentStep = 0;
-    const fadeInterval = setInterval((
-) => {
+    const fadeInterval = setInterval(() => {
       currentStep++;
       audio.volume = Math.min(stepVolume * currentStep, targetVolume);
 
@@ -461,8 +441,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
   };
 
   // Demo sequence functions
-  const runDemoSequence = async (demoId: string
-) => {
+  const runDemoSequence = async (demoId: string) => {
     const demo = DEMO_SCENARIOS.find(d => d.id === demoId);
     if (!demo) return;
 
@@ -470,21 +449,18 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     setDemoProgress(0);
 
     const totalDuration = demo.steps.reduce(
-      (sum, step
-) => Math.max(sum, step.delay + step.duration),
+      (sum, step) => Math.max(sum, step.delay + step.duration),
       0
     );
 
     for (const step of demo.steps) {
-      setTimeout(async (
-) => {
+      setTimeout(async () => {
         const test = THEME_TESTS.find(t => t.id === step.sound);
         if (test) {
           await playSound(test, { loop: step.duration > 3000 });
 
           // Stop the sound after its duration
-          setTimeout((
-) => {
+          setTimeout(() => {
             stopSound(test.id);
           }, step.duration);
         }
@@ -492,11 +468,8 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     }
 
     // Track progress
-    const progressInterval = setInterval((
-) => {
-      setDemoProgress((prev: any
-) => {
-        // auto: implicit any
+    const progressInterval = setInterval(() => {
+      setDemoProgress((prev: any) => {
         const newProgress = prev + 100 / (totalDuration / 100);
         if (newProgress >= 100) {
           clearInterval(progressInterval);
@@ -509,16 +482,14 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     }, 100);
   };
 
-  const stopDemo = (
-) => {
+  const stopDemo = () => {
     stopAllSounds();
     setRunningDemo(null);
     setDemoProgress(0);
   };
 
   // Theme testing functions
-  const runThemeTest = async (
-) => {
+  const runThemeTest = async () => {
     setIsRunningTest(true);
 
     const results: ThemeTestResults = {
@@ -564,8 +535,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     // Calculate overall score
     const scores = Object.values(results.categoryScores);
     results.overallScore =
-      scores.reduce((sum, score
-) => sum + score, 0) / scores.length;
+      scores.reduce((sum, score) => sum + score, 0) / scores.length;
 
     // Generate recommendations
     if (results.overallScore < 60) {
@@ -609,8 +579,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
               <Button
                 size="sm"
                 variant="outline"
-                onClick={(
-) => setIsGlobalMuted(!isGlobalMuted)}
+                onClick={() => setIsGlobalMuted(!isGlobalMuted)}
               >
                 {isGlobalMuted ? (
                   <VolumeX className="w-4 h-4" />
@@ -627,8 +596,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
               <Label className="w-20">Volume:</Label>
               <Slider
                 value={[globalVolume]}
-                onValueChange={([value]
-) => setGlobalVolume(value)}
+                onValueChange={([value]) => setGlobalVolume(value)}
                 max={1}
                 step={0.01}
                 className="flex-1"
@@ -674,8 +642,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={(
-) =>
+                                onClick={() =>
                                   state.isPlaying
                                     ? pauseSound(test.id)
                                     : playSound(test)
@@ -717,8 +684,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                                 <div className="w-20">
                                   <Slider
                                     value={[state.volume]}
-                                    onValueChange={([value]
-) => {
+                                    onValueChange={([value]) => {
                                       updatePlaybackState(test.id, { volume: value });
                                       const audio = audioRefs.current.get(test.id);
                                       if (audio) {
@@ -737,8 +703,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={(
-) => {
+                                  onClick={() => {
                                     const newLoop = !state.loop;
                                     updatePlaybackState(test.id, { loop: newLoop });
                                     const audio = audioRefs.current.get(test.id);
@@ -754,8 +719,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={(
-) => stopSound(test.id)}
+                                  onClick={() => stopSound(test.id)}
                                   disabled={!state.isPlaying}
                                 >
                                   <Square className="w-4 h-4" />
@@ -798,8 +762,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                           ) : (
                             <Button
                               size="sm"
-                              onClick={(
-) => runDemoSequence(demo.id)}
+                              onClick={() => runDemoSequence(demo.id)}
                               disabled={runningDemo !== null}
                             >
                               <Play className="w-4 h-4 mr-2" />
@@ -811,8 +774,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
-                        {demo.steps.map((step, index
-) => (
+                        {demo.steps.map((step, index) => (
                           <div key={index} className="flex items-center gap-3 text-sm">
                             <Badge
                               variant="outline"
@@ -883,8 +845,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                       <h4 className="font-medium mb-3">Category Scores</h4>
                       <div className="space-y-2">
                         {Object.entries(testResults.categoryScores).map(
-                          ([category, score]
-) => (
+                          ([category, score]) => (
                             <div key={category} className="flex items-center gap-3">
                               <span className="w-20 text-sm">{category}</span>
                               <Progress value={score} className="flex-1" />
@@ -902,8 +863,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                       <div>
                         <h4 className="font-medium mb-3">Issues Found</h4>
                         <div className="space-y-2">
-                          {testResults.issues.map((issue, index
-) => (
+                          {testResults.issues.map((issue, index) => (
                             <div
                               key={index}
                               className={`p-3 rounded-lg border ${
@@ -941,8 +901,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                       <div>
                         <h4 className="font-medium mb-3">Recommendations</h4>
                         <ul className="space-y-1">
-                          {testResults.recommendations.map((rec, index
-) => (
+                          {testResults.recommendations.map((rec, index) => (
                             <li
                               key={index}
                               className="text-sm text-gray-600 flex items-start gap-2"

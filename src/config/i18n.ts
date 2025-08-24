@@ -311,16 +311,12 @@ export type SupportedLanguage = keyof typeof SUPPORTED_LANGUAGES;
 const DEFAULT_LANGUAGE = 'en';
 
 // Custom language detector that includes Capacitor Device language detection
-const createCustomLanguageDetector = (
-) => {
+const createCustomLanguageDetector = () => {
   return {
     type: 'languageDetector' as const,
     async: true,
-    init: (
-) => {},
-    detect: async (callback: (lng: string
-) => void
-) => {
+    init: () => {},
+    detect: async (callback: (lng: string) => void) => {
       try {
         // Try to get device language from Capacitor first
         if (window.Capacitor) {
@@ -377,8 +373,7 @@ const createCustomLanguageDetector = (
         callback(DEFAULT_LANGUAGE);
       }
     },
-    cacheUserLanguage: (lng: string
-) => {
+    cacheUserLanguage: (lng: string) => {
       try {
         localStorage.setItem('user-language', lng);
       } catch (error) {
@@ -451,8 +446,7 @@ const i18nConfig = {
     ns: string,
     key: string,
     fallbackValue: string
-  
-) => {
+  ) => {
     if (import.meta.env.MODE === 'development') {
       console.warn(
         `Missing translation key: ${ns}:${key} for language: ${lng.join(', ')}`
@@ -474,8 +468,7 @@ const i18nConfig = {
 };
 
 // Initialize i18next
-const initI18n = async (
-) => {
+const initI18n = async () => {
   try {
     // Custom language detector
     const customDetector = createCustomLanguageDetector();
@@ -497,8 +490,7 @@ const initI18n = async (
     }
 
     // Listen for language changes to update document direction
-    i18n.on('languageChanged', (lng: string
-) => {
+    i18n.on('languageChanged', (lng: string) => {
       const langConfig = SUPPORTED_LANGUAGES[lng as SupportedLanguage];
       if (langConfig) {
         document.dir = langConfig.dir;
@@ -519,8 +511,7 @@ export const getCurrentLanguage = (): SupportedLanguage => {
   return (i18n.language as SupportedLanguage) || DEFAULT_LANGUAGE;
 };
 
-export const getLanguageInfo = (lang?: SupportedLanguage
-) => {
+export const getLanguageInfo = (lang?: SupportedLanguage) => {
   const currentLang = lang || getCurrentLanguage();
   return SUPPORTED_LANGUAGES[currentLang];
 };
@@ -715,7 +706,9 @@ export const formatDuration = (seconds: number, lang?: SupportedLanguage): strin
         seconds: remainingSeconds,
       });
     } else {
-      return formatMessage('common:time.seconds', { seconds: remainingSeconds });
+      return formatMessage('common:time.seconds', {
+        seconds: remainingSeconds,
+      });
     }
   } catch (error) {
     console.error('Failed to format duration:', error);

@@ -8,12 +8,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 // ALARM-SPECIFIC LOADING STATES
 // ================================================================
 
-export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }
-) => {
+export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) => {
   return (
     <div className="space-y-4">
-      {Array.from({ length: count }).map((_, i
-) => (
+      {Array.from({ length: count }).map((_, i) => (
         <motion.div
           key={i}
           className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
@@ -69,8 +67,7 @@ export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }
 
           {/* Days skeleton */}
           <div className="flex space-x-2 mt-4">
-            {Array.from({ length: 7 }).map((_, dayIndex
-) => (
+            {Array.from({ length: 7 }).map((_, dayIndex) => (
               <motion.div
                 key={dayIndex}
                 className="w-8 h-8 bg-gray-200 rounded-full"
@@ -89,8 +86,7 @@ export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }
   );
 };
 
-export const AlarmRingingLoader: React.FC = (
-) => {
+export const AlarmRingingLoader: React.FC = () => {
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-blue-900/90 to-purple-900/90 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="text-center">
@@ -173,8 +169,7 @@ export const AlarmRingingLoader: React.FC = (
 export const VoiceListeningIndicator: React.FC<{
   isListening: boolean;
   confidence?: number;
-}> = ({ isListening, confidence = 0 }
-) => {
+}> = ({ isListening, confidence = 0 }) => {
   return (
     <AnimatePresence>
       {isListening && (
@@ -215,8 +210,7 @@ export const VoiceListeningIndicator: React.FC<{
 
               {/* Audio waveform */}
               <div className="flex items-center space-x-1 h-8">
-                {Array.from({ length: 5 }).map((_, i
-) => (
+                {Array.from({ length: 5 }).map((_, i) => (
                   <motion.div
                     key={i}
                     className="w-1 bg-blue-500 rounded-full"
@@ -268,8 +262,7 @@ export const VoiceListeningIndicator: React.FC<{
 
 export const VoiceProcessingLoader: React.FC<{
   message?: string;
-}> = ({ message = 'Processing your command...' }
-) => {
+}> = ({ message = 'Processing your command...' }) => {
   return (
     <motion.div
       className="flex items-center space-x-3 p-4 bg-white/90 backdrop-blur-md rounded-xl shadow-lg"
@@ -322,8 +315,7 @@ export const VoiceProcessingLoader: React.FC<{
 // DASHBOARD LOADING STATES
 // ================================================================
 
-export const DashboardSkeleton: React.FC = (
-) => {
+export const DashboardSkeleton: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6">
       <div className="max-w-6xl mx-auto">
@@ -366,8 +358,7 @@ export const DashboardSkeleton: React.FC = (
 
         {/* Stats grid skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {Array.from({ length: 4 }).map((_, i
-) => (
+          {Array.from({ length: 4 }).map((_, i) => (
             <motion.div
               key={i}
               className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
@@ -380,7 +371,11 @@ export const DashboardSkeleton: React.FC = (
                   <motion.div
                     className="h-4 bg-gray-200 rounded w-20 mb-2"
                     animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      delay: i * 0.1,
+                    }}
                   />
                   <motion.div
                     className="h-8 bg-gray-200 rounded w-16"
@@ -395,7 +390,11 @@ export const DashboardSkeleton: React.FC = (
                 <motion.div
                   className="w-12 h-12 bg-gray-200 rounded-full"
                   animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 + 0.6 }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    delay: i * 0.1 + 0.6,
+                  }}
                 />
               </div>
             </motion.div>
@@ -411,8 +410,7 @@ export const DashboardSkeleton: React.FC = (
 
           {/* Sidebar skeleton */}
           <div className="space-y-6">
-            {Array.from({ length: 2 }).map((_, i
-) => (
+            {Array.from({ length: 2 }).map((_, i) => (
               <motion.div
                 key={i}
                 className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
@@ -423,11 +421,14 @@ export const DashboardSkeleton: React.FC = (
                 <motion.div
                   className="h-6 bg-gray-200 rounded w-32 mb-4"
                   animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                  }}
                 />
                 <div className="space-y-3">
-                  {Array.from({ length: 3 }).map((_, j
-) => (
+                  {Array.from({ length: 3 }).map((_, j) => (
                     <motion.div
                       key={j}
                       className="h-4 bg-gray-200 rounded"
@@ -454,12 +455,10 @@ export const DashboardSkeleton: React.FC = (
 // SETTINGS LOADING STATES
 // ================================================================
 
-export const SettingsFormSkeleton: React.FC = (
-) => {
+export const SettingsFormSkeleton: React.FC = () => {
   return (
     <div className="space-y-8">
-      {Array.from({ length: 4 }).map((_, sectionIndex
-) => (
+      {Array.from({ length: 4 }).map((_, sectionIndex) => (
         <motion.div
           key={sectionIndex}
           className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
@@ -471,13 +470,16 @@ export const SettingsFormSkeleton: React.FC = (
           <motion.div
             className="h-7 bg-gray-200 rounded-lg w-48 mb-6"
             animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 1.5, repeat: Infinity, delay: sectionIndex * 0.2 }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              delay: sectionIndex * 0.2,
+            }}
           />
 
           {/* Form fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {Array.from({ length: 4 }).map((_, fieldIndex
-) => (
+            {Array.from({ length: 4 }).map((_, fieldIndex) => (
               <div key={fieldIndex} className="space-y-2">
                 <motion.div
                   className="h-4 bg-gray-200 rounded w-24"
@@ -512,8 +514,7 @@ export const SettingsFormSkeleton: React.FC = (
 
 export const AnalyticsChartSkeleton: React.FC<{
   height?: string;
-}> = ({ height = 'h-64' }
-) => {
+}> = ({ height = 'h-64' }) => {
   return (
     <motion.div
       className={`bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20 ${height}`}
@@ -530,8 +531,7 @@ export const AnalyticsChartSkeleton: React.FC<{
 
       {/* Chart area */}
       <div className="relative h-full bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-4 flex items-end justify-between space-x-2">
-        {Array.from({ length: 12 }).map((_, i
-) => (
+        {Array.from({ length: 12 }).map((_, i) => (
           <motion.div
             key={i}
             className="bg-blue-200 rounded-t-lg w-6"
@@ -559,8 +559,7 @@ export const AnalyticsChartSkeleton: React.FC<{
 export const PageLoader: React.FC<{
   message?: string;
   subMessage?: string;
-}> = ({ message = 'Loading your alarms...', subMessage = "This won't take long" }
-) => {
+}> = ({ message = 'Loading your alarms...', subMessage = "This won't take long" }) => {
   return (
     <motion.div
       className="fixed inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center z-50"

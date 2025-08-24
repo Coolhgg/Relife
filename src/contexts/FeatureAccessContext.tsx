@@ -352,9 +352,7 @@ export function useFeatureAccess(feature: string) {
     hasAccess: context.hasFeatureAccess(feature),
     usage: context.getFeatureUsage(feature),
     requiredTier: context.getUpgradeRequirement(feature),
-    trackAttempt: (contextData?: Record<string, any>
-) =>
-      context.trackFeatureAttempt(feature, contextData),
+    trackAttempt: (contextData?: Record<string, any>) => context.trackFeatureAttempt(feature, contextData),
   };
 }
 

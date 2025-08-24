@@ -152,8 +152,7 @@ class PrivacyComplianceService {
     source: ConsentEvent['source'] = 'banner',
     userId?: string
   ): void {
-    Object.entries(consents).forEach(([type, granted]
-) => {
+    Object.entries(consents).forEach(([type, granted]) => {
       if (granted !== undefined) {
         this.setConsent(type as keyof ConsentSettings, granted, source, userId);
       }

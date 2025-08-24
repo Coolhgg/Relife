@@ -102,12 +102,9 @@ export interface AudioPlaybackOptions {
   startTime?: number; // seconds
   endTime?: number; // seconds
   playbackRate?: number; // 0.5-2.0
-  onEnded?: (
-) => void;
-  onProgress?: (currentTime: number, duration: number
-) => void;
-  onError?: (error: Error
-) => void;
+  onEnded?: () => void;
+  onProgress?: (currentTime: number, duration: number) => void;
+  onError?: (error: Error) => void;
 }
 
 export interface MediaLibrary {

@@ -50,8 +50,7 @@ export interface AccessibilityState extends AccessibilityPreferences {
 class AccessibilityPreferencesService {
   private static instance: AccessibilityPreferencesService;
   private preferences: AccessibilityPreferences;
-  private listeners: Array<(prefs: AccessibilityPreferences
-) => void> = [];
+  private listeners: Array<(prefs: AccessibilityPreferences) => void> = [];
   private mediaQueries: Map<string, MediaQueryList> = new Map();
   private styleElement?: HTMLStyleElement;
 
@@ -109,26 +108,22 @@ class AccessibilityPreferencesService {
     if (window.matchMedia) {
       const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
       this.mediaQueries.set('dark-mode', darkModeQuery);
-      darkModeQuery.addEventListener('change', (
-) => this.handleSystemChange());
+      darkModeQuery.addEventListener('change', () => this.handleSystemChange());
 
       // Reduced motion detection
       const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
       this.mediaQueries.set('reduced-motion', reducedMotionQuery);
-      reducedMotionQuery.addEventListener('change', (
-) => this.handleSystemChange());
+      reducedMotionQuery.addEventListener('change', () => this.handleSystemChange());
 
       // High contrast detection (Windows)
       const highContrastQuery = window.matchMedia('(prefers-contrast: high)');
       this.mediaQueries.set('high-contrast', highContrastQuery);
-      highContrastQuery.addEventListener('change', (
-) => this.handleSystemChange());
+      highContrastQuery.addEventListener('change', () => this.handleSystemChange());
 
       // Touch device detection
       const hoverQuery = window.matchMedia('(hover: hover)');
       this.mediaQueries.set('hover', hoverQuery);
-      hoverQuery.addEventListener('change', (
-) => this.handleSystemChange());
+      hoverQuery.addEventListener('change', () => this.handleSystemChange());
     }
 
     // Screen reader detection
@@ -508,12 +503,9 @@ class AccessibilityPreferencesService {
   /**
    * Subscribe to preference changes
    */
-  subscribe(listener: (prefs: AccessibilityPreferences
-) => void): (
-) => void {
+  subscribe(listener: (prefs: AccessibilityPreferences) => void): () => void {
     this.listeners.push(listener);
-    return (
-) => {
+    return () => {
       const index = this.listeners.indexOf(listener);
       if (index > -1) {
         this.listeners.splice(index, 1);

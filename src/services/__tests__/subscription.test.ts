@@ -19,8 +19,7 @@ import { createTestPremiumFeature } from '../../__tests__/factories/premium-fact
 import { faker } from '@faker-js/faker';
 
 // Mock dependencies
-jest.mock('../supabase', (
-) => ({
+jest.mock('../supabase', () => ({
   supabase: {
     from: jest.fn(),
     auth: {
@@ -30,8 +29,7 @@ jest.mock('../supabase', (
   createClient: jest.fn(),
 }));
 
-jest.mock('../error-handler', (
-) => ({
+jest.mock('../error-handler', () => ({
   ErrorHandler: {
     handle: jest.fn(),
     logError: jest.fn(),
@@ -126,10 +124,8 @@ const mockUsageData = {
   },
 };
 
-describe('SubscriptionService', (
-) => {
-  beforeEach((
-) => {
+describe('SubscriptionService', () => {
+  beforeEach(() => {
     jest.clearAllMocks();
 
     // Reset service cache
@@ -155,10 +151,8 @@ describe('SubscriptionService', (
     mockSupabaseTable.delete.mockReturnValue(mockSupabaseTable);
   });
 
-  describe('getUserSubscription', (
-) => {
-    it('should retrieve user subscription successfully', async (
-) => {
+  describe('getUserSubscription', () => {
+    it('should retrieve user subscription successfully', async () => {
       const userId = 'user-1';
       const expectedSubscription = mockSubscriptionData[0];
 
@@ -176,8 +170,7 @@ describe('SubscriptionService', (
       expect(result).toEqual(expectedSubscription);
     });
 
-    it('should handle user with no subscription', async (
-) => {
+    it('should handle user with no subscription', async () => {
       const userId = 'user-without-sub';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -190,8 +183,7 @@ describe('SubscriptionService', (
       expect(result).toBeNull();
     });
 
-    it('should return cached subscription on second call', async (
-) => {
+    it('should return cached subscription on second call', async () => {
       const userId = 'user-1';
       const expectedSubscription = mockSubscriptionData[0];
 
@@ -210,8 +202,7 @@ describe('SubscriptionService', (
       expect(mockSupabaseTable.single).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle database errors gracefully', async (
-) => {
+    it('should handle database errors gracefully', async () => {
       const userId = 'user-1';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -225,8 +216,7 @@ describe('SubscriptionService', (
       expect(ErrorHandler.handle).toHaveBeenCalled();
     });
 
-    it('should handle service unavailable scenario', async (
-) => {
+    it('should handle service unavailable scenario', async () => {
       (createClient as jest.Mock).mockReturnValue(null);
 
       const result = await SubscriptionService.getUserSubscription('user-1');
@@ -235,10 +225,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('getUserTier', (
-) => {
-    it('should return correct tier for premium user', async (
-) => {
+  describe('getUserTier', () => {
+    it('should return correct tier for premium user', async () => {
       const userId = 'user-1';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -251,8 +239,7 @@ describe('SubscriptionService', (
       expect(tier).toBe('premium');
     });
 
-    it('should return correct tier for pro user', async (
-) => {
+    it('should return correct tier for pro user', async () => {
       const userId = 'user-2';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -265,8 +252,7 @@ describe('SubscriptionService', (
       expect(tier).toBe('pro');
     });
 
-    it('should return free tier for user without subscription', async (
-) => {
+    it('should return free tier for user without subscription', async () => {
       const userId = 'user-free';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -279,8 +265,7 @@ describe('SubscriptionService', (
       expect(tier).toBe('free');
     });
 
-    it('should use cached subscription data', async (
-) => {
+    it('should use cached subscription data', async () => {
       const userId = 'user-1';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -302,10 +287,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('getFeatureAccess', (
-) => {
-    it('should return correct feature access for premium tier', async (
-) => {
+  describe('getFeatureAccess', () => {
+    it('should return correct feature access for premium tier', async () => {
       const userId = 'user-1';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -321,8 +304,7 @@ describe('SubscriptionService', (
       expect(access.unlimitedAlarms).toBe(true);
     });
 
-    it('should return correct feature access for pro tier', async (
-) => {
+    it('should return correct feature access for pro tier', async () => {
       const userId = 'user-2';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -338,8 +320,7 @@ describe('SubscriptionService', (
       expect(access.betaAccess).toBe(true);
     });
 
-    it('should return limited access for free tier', async (
-) => {
+    it('should return limited access for free tier', async () => {
       const userId = 'user-free';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -356,10 +337,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('getFeatureLimits', (
-) => {
-    it('should return correct limits for free tier', (
-) => {
+  describe('getFeatureLimits', () => {
+    it('should return correct limits for free tier', () => {
       const limits = SubscriptionService.getFeatureLimits('free');
 
       expect(limits).toEqual(SubscriptionLimits.free);
@@ -367,8 +346,7 @@ describe('SubscriptionService', (
       expect(limits.voiceGenerationsPerMonth).toBe(50);
     });
 
-    it('should return correct limits for premium tier', (
-) => {
+    it('should return correct limits for premium tier', () => {
       const limits = SubscriptionService.getFeatureLimits('premium');
 
       expect(limits).toEqual(SubscriptionLimits.premium);
@@ -376,8 +354,7 @@ describe('SubscriptionService', (
       expect(limits.voiceGenerationsPerMonth).toBe(500);
     });
 
-    it('should return correct limits for pro tier', (
-) => {
+    it('should return correct limits for pro tier', () => {
       const limits = SubscriptionService.getFeatureLimits('pro');
 
       expect(limits).toEqual(SubscriptionLimits.pro);
@@ -386,10 +363,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('hasFeatureAccess', (
-) => {
-    it('should grant access to premium feature for premium user', async (
-) => {
+  describe('hasFeatureAccess', () => {
+    it('should grant access to premium feature for premium user', async () => {
       const userId = 'user-1';
       const feature = 'premiumVoices';
 
@@ -403,8 +378,7 @@ describe('SubscriptionService', (
       expect(hasAccess).toBe(true);
     });
 
-    it('should deny access to premium feature for free user', async (
-) => {
+    it('should deny access to premium feature for free user', async () => {
       const userId = 'user-free';
       const feature = 'premiumVoices';
 
@@ -418,8 +392,7 @@ describe('SubscriptionService', (
       expect(hasAccess).toBe(false);
     });
 
-    it('should grant access to basic features for all users', async (
-) => {
+    it('should grant access to basic features for all users', async () => {
       const userId = 'user-free';
       const feature = 'basicAlarms';
 
@@ -434,10 +407,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('checkFeatureUsage', (
-) => {
-    it('should allow usage within limits', async (
-) => {
+  describe('checkFeatureUsage', () => {
+    it('should allow usage within limits', async () => {
       const userId = 'user-1';
       const feature = 'voiceGenerations';
       const requestedAmount = 5;
@@ -464,8 +435,7 @@ describe('SubscriptionService', (
       expect(result.remaining).toBeGreaterThan(0);
     });
 
-    it('should deny usage when over limits', async (
-) => {
+    it('should deny usage when over limits', async () => {
       const userId = 'user-1';
       const feature = 'voiceGenerations';
       const requestedAmount = 1000; // Way over premium limit
@@ -495,8 +465,7 @@ describe('SubscriptionService', (
       expect(result.reason).toContain('limit exceeded');
     });
 
-    it('should allow unlimited usage for pro tier', async (
-) => {
+    it('should allow unlimited usage for pro tier', async () => {
       const userId = 'user-2';
       const feature = 'voiceGenerations';
       const requestedAmount = 10000;
@@ -526,10 +495,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('getCurrentUsage', (
-) => {
-    it('should retrieve current usage successfully', async (
-) => {
+  describe('getCurrentUsage', () => {
+    it('should retrieve current usage successfully', async () => {
       const userId = 'user-1';
       const expectedUsage = mockUsageData[userId];
 
@@ -545,8 +512,7 @@ describe('SubscriptionService', (
       expect(usage).toEqual(expectedUsage);
     });
 
-    it('should handle user with no usage data', async (
-) => {
+    it('should handle user with no usage data', async () => {
       const userId = 'new-user';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -559,8 +525,7 @@ describe('SubscriptionService', (
       expect(usage).toBeNull();
     });
 
-    it('should cache usage data', async (
-) => {
+    it('should cache usage data', async () => {
       const userId = 'user-1';
       const expectedUsage = mockUsageData[userId];
 
@@ -580,10 +545,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('incrementUsage', (
-) => {
-    it('should increment usage successfully', async (
-) => {
+  describe('incrementUsage', () => {
+    it('should increment usage successfully', async () => {
       const userId = 'user-1';
       const feature = 'voiceGenerations';
       const amount = 5;
@@ -604,8 +567,7 @@ describe('SubscriptionService', (
       expect(mockSupabaseTable.upsert).toHaveBeenCalled();
     });
 
-    it('should create new usage record if none exists', async (
-) => {
+    it('should create new usage record if none exists', async () => {
       const userId = 'new-user';
       const feature = 'voiceGenerations';
       const amount = 1;
@@ -632,8 +594,7 @@ describe('SubscriptionService', (
       expect(mockSupabaseTable.upsert).toHaveBeenCalled();
     });
 
-    it('should handle increment errors gracefully', async (
-) => {
+    it('should handle increment errors gracefully', async () => {
       const userId = 'user-1';
       const feature = 'voiceGenerations';
       const amount = 5;
@@ -651,10 +612,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('upsertSubscription', (
-) => {
-    it('should create new subscription successfully', async (
-) => {
+  describe('upsertSubscription', () => {
+    it('should create new subscription successfully', async () => {
       const newSubscription = createTestSubscription({
         userId: 'new-user',
         tier: 'premium',
@@ -678,8 +637,7 @@ describe('SubscriptionService', (
       );
     });
 
-    it('should update existing subscription successfully', async (
-) => {
+    it('should update existing subscription successfully', async () => {
       const updatedSubscription = {
         ...mockSubscriptionData[0],
       };
@@ -694,8 +652,7 @@ describe('SubscriptionService', (
       expect(mockSupabaseTable.upsert).toHaveBeenCalled();
     });
 
-    it('should handle upsert errors', async (
-) => {
+    it('should handle upsert errors', async () => {
       const subscription = mockSubscriptionData[0];
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -708,8 +665,7 @@ describe('SubscriptionService', (
       ).rejects.toThrow('Failed to upsert subscription');
     });
 
-    it('should invalidate cache after upsert', async (
-) => {
+    it('should invalidate cache after upsert', async () => {
       const subscription = mockSubscriptionData[0];
 
       // First, get subscription to populate cache
@@ -732,10 +688,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('cancelSubscription', (
-) => {
-    it('should cancel subscription at period end', async (
-) => {
+  describe('cancelSubscription', () => {
+    it('should cancel subscription at period end', async () => {
       const userId = 'user-1';
       const cancelAtPeriodEnd = true;
 
@@ -760,8 +714,7 @@ describe('SubscriptionService', (
       );
     });
 
-    it('should cancel subscription immediately', async (
-) => {
+    it('should cancel subscription immediately', async () => {
       const userId = 'user-1';
       const cancelAtPeriodEnd = false;
 
@@ -785,8 +738,7 @@ describe('SubscriptionService', (
       );
     });
 
-    it('should handle cancellation errors', async (
-) => {
+    it('should handle cancellation errors', async () => {
       const userId = 'user-1';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -800,10 +752,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('getSubscriptionAnalytics', (
-) => {
-    it('should retrieve subscription analytics successfully', async (
-) => {
+  describe('getSubscriptionAnalytics', () => {
+    it('should retrieve subscription analytics successfully', async () => {
       const mockAnalytics = {
         totalSubscriptions: 150,
         activeSubscriptions: 120,
@@ -833,8 +783,7 @@ describe('SubscriptionService', (
       expect(analytics.activeSubscriptions).toBe(120);
     });
 
-    it('should handle analytics query errors', async (
-) => {
+    it('should handle analytics query errors', async () => {
       mockSupabaseTable.single.mockResolvedValue({
         data: null,
         error: { message: 'Analytics query failed' },
@@ -844,10 +793,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('trial management', (
-) => {
-    it('should identify user in trial correctly', async (
-) => {
+  describe('trial management', () => {
+    it('should identify user in trial correctly', async () => {
       const userId = 'trial-user';
       const trialSubscription = createTestSubscription({
         userId,
@@ -867,8 +814,7 @@ describe('SubscriptionService', (
       expect(isInTrial).toBe(true);
     });
 
-    it('should identify user not in trial correctly', async (
-) => {
+    it('should identify user not in trial correctly', async () => {
       const userId = 'user-1';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -881,8 +827,7 @@ describe('SubscriptionService', (
       expect(isInTrial).toBe(false);
     });
 
-    it('should calculate trial days remaining correctly', async (
-) => {
+    it('should calculate trial days remaining correctly', async () => {
       const userId = 'trial-user';
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + 7); // 7 days from now
@@ -905,8 +850,7 @@ describe('SubscriptionService', (
       expect(daysRemaining).toBe(7);
     });
 
-    it('should return 0 days for expired trial', async (
-) => {
+    it('should return 0 days for expired trial', async () => {
       const userId = 'expired-trial-user';
       const pastDate = new Date();
       pastDate.setDate(pastDate.getDate() - 5); // 5 days ago
@@ -930,10 +874,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('cache management', (
-) => {
-    it('should clear all caches successfully', (
-) => {
+  describe('cache management', () => {
+    it('should clear all caches successfully', () => {
       const userId = 'user-1';
 
       // Populate cache with mock data
@@ -955,8 +897,7 @@ describe('SubscriptionService', (
       expect(cachedUsage).toBeNull();
     });
 
-    it('should respect cache expiry', async (
-) => {
+    it('should respect cache expiry', async () => {
       const userId = 'user-1';
       const subscription = mockSubscriptionData[0];
 
@@ -970,8 +911,7 @@ describe('SubscriptionService', (
       expect(cached).toBeNull();
     });
 
-    it('should use valid cached data within expiry', (
-) => {
+    it('should use valid cached data within expiry', () => {
       const userId = 'user-1';
       const subscription = mockSubscriptionData[0];
 
@@ -986,8 +926,7 @@ describe('SubscriptionService', (
       expect(cached).toEqual(subscription);
     });
 
-    it('should invalidate specific cache entries', (
-) => {
+    it('should invalidate specific cache entries', () => {
       const userId = 'user-1';
       const subscription = mockSubscriptionData[0];
       const usage = mockUsageData[userId];
@@ -1010,10 +949,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('error handling and edge cases', (
-) => {
-    it('should handle service unavailable gracefully', async (
-) => {
+  describe('error handling and edge cases', () => {
+    it('should handle service unavailable gracefully', async () => {
       (createClient as jest.Mock).mockReturnValue(null);
 
       const subscription = await SubscriptionService.getUserSubscription('user-1');
@@ -1025,17 +962,13 @@ describe('SubscriptionService', (
       expect(usage).toBeNull();
     });
 
-    it('should handle network timeouts', async (
-) => {
+    it('should handle network timeouts', async () => {
       const userId = 'user-1';
 
       mockSupabaseTable.single.mockImplementation(
-        (
-) =>
-          new Promise((_, reject
-) =>
-            setTimeout((
-) => reject(new Error('Network timeout')), 100)
+        () =>
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Network timeout')), 100)
           )
       );
 
@@ -1045,8 +978,7 @@ describe('SubscriptionService', (
       expect(ErrorHandler.handle).toHaveBeenCalled();
     });
 
-    it('should handle malformed subscription data', async (
-) => {
+    it('should handle malformed subscription data', async () => {
       const userId = 'user-1';
 
       mockSupabaseTable.single.mockResolvedValue({
@@ -1061,8 +993,7 @@ describe('SubscriptionService', (
       expect(tier).toBe('free');
     });
 
-    it('should handle concurrent subscription updates', async (
-) => {
+    it('should handle concurrent subscription updates', async () => {
       const userId = 'user-1';
       const subscription1 = createTestSubscription({ userId, tier: 'premium' });
       const subscription2 = createTestSubscription({ userId, tier: 'pro' });
@@ -1080,8 +1011,7 @@ describe('SubscriptionService', (
       await expect(Promise.all(promises)).resolves.not.toThrow();
     });
 
-    it('should handle invalid feature names', async (
-) => {
+    it('should handle invalid feature names', async () => {
       const userId = 'user-1';
       const invalidFeature = 'nonexistentFeature';
 
@@ -1098,8 +1028,7 @@ describe('SubscriptionService', (
       expect(hasAccess).toBe(false);
     });
 
-    it('should handle usage increment with invalid feature', async (
-) => {
+    it('should handle usage increment with invalid feature', async () => {
       const userId = 'user-1';
       const invalidFeature = 'invalidFeature';
 
@@ -1108,8 +1037,7 @@ describe('SubscriptionService', (
       ).rejects.toThrow();
     });
 
-    it('should handle subscription status edge cases', async (
-) => {
+    it('should handle subscription status edge cases', async () => {
       const userId = 'user-edge';
       const edgeCaseSubscription = createTestSubscription({
         userId,
@@ -1133,10 +1061,8 @@ describe('SubscriptionService', (
     });
   });
 
-  describe('performance and optimization', (
-) => {
-    it('should batch multiple subscription queries efficiently', async (
-) => {
+  describe('performance and optimization', () => {
+    it('should batch multiple subscription queries efficiently', async () => {
       const userIds = ['user-1', 'user-2', 'user-3'];
 
       mockSupabaseTable.single
@@ -1156,8 +1082,7 @@ describe('SubscriptionService', (
       expect(results[2]).toBeNull();
     });
 
-    it('should handle high-frequency usage updates', async (
-) => {
+    it('should handle high-frequency usage updates', async () => {
       const userId = 'user-1';
       const feature = 'voiceGenerations';
 
@@ -1172,14 +1097,12 @@ describe('SubscriptionService', (
       // Rapid concurrent updates
       const promises = Array(10)
         .fill(null)
-        .map((_, i
-) => SubscriptionService.incrementUsage(userId, feature, 1));
+        .map((_, i) => SubscriptionService.incrementUsage(userId, feature, 1));
 
       await expect(Promise.all(promises)).resolves.not.toThrow();
     });
 
-    it('should efficiently handle repeated feature access checks', async (
-) => {
+    it('should efficiently handle repeated feature access checks', async () => {
       const userId = 'user-1';
       const feature = 'premiumVoices';
 

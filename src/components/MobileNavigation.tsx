@@ -17,8 +17,7 @@ interface NavigationItem {
 interface MobileNavigationProps {
   items: NavigationItem[];
   currentPath: string;
-  onNavigate: (path: string
-) => void;
+  onNavigate: (path: string) => void;
   className?: string;
 }
 
@@ -27,8 +26,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
   currentPath,
   onNavigate,
   className = '',
-}
-) => {
+}) => {
   const [showExtended, setShowExtended] = useState(false);
   const triggerHaptic = useHaptic();
 
@@ -36,20 +34,17 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
   const swipeRef = useSwipeNavigation(
     undefined, // onSwipeLeft
     undefined, // onSwipeRight
-    (
-) => {
+    () => {
       setShowExtended(true);
       triggerHaptic('light');
     }, // onSwipeUp
-    (
-) => {
+    () => {
       setShowExtended(false);
       triggerHaptic('light');
     } // onSwipeDown
   );
 
-  const handleNavigate = (path: string
-) => {
+  const handleNavigate = (path: string) => {
     triggerHaptic('light');
     onNavigate(path);
   };
@@ -70,15 +65,12 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
 
         {/* Navigation Items */}
         <div className="flex justify-around items-center px-4 pb-2">
-          {items.slice(0, 4)
-      .map((item: any
-) => (
+          {items.slice(0, 4).map((item: any) => (
             <NavigationButton
               key={item.id}
               item={item}
               isActive={currentPath === item.path}
-              onPress={(
-) => handleNavigate(item.path)}
+              onPress={() => handleNavigate(item.path)}
             />
           ))}
 
@@ -92,8 +84,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 path: 'more',
               }}
               isActive={showExtended}
-              onPress={(
-) => {
+              onPress={() => {
                 setShowExtended(!showExtended);
                 triggerHaptic('medium');
               }}
@@ -108,8 +99,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
           items={items.slice(4)}
           currentPath={currentPath}
           onNavigate={handleNavigate}
-          onClose={(
-) => setShowExtended(false)}
+          onClose={() => setShowExtended(false)}
         />
       )}
     </>
@@ -119,16 +109,14 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
 interface NavigationButtonProps {
   item: NavigationItem;
   isActive: boolean;
-  onPress: (
-) => void;
+  onPress: () => void;
 }
 
 const NavigationButton: React.FC<NavigationButtonProps> = ({
   item,
   isActive,
   onPress,
-}
-) => {
+}) => {
   const buttonRef = useEnhancedButton('light');
   const { icon: Icon } = item;
 
@@ -167,10 +155,8 @@ const NavigationButton: React.FC<NavigationButtonProps> = ({
 interface ExtendedNavigationPanelProps {
   items: NavigationItem[];
   currentPath: string;
-  onNavigate: (path: string
-) => void;
-  onClose: (
-) => void;
+  onNavigate: (path: string) => void;
+  onClose: () => void;
 }
 
 const ExtendedNavigationPanel: React.FC<ExtendedNavigationPanelProps> = ({
@@ -178,8 +164,7 @@ const ExtendedNavigationPanel: React.FC<ExtendedNavigationPanelProps> = ({
   currentPath,
   onNavigate,
   onClose,
-}
-) => {
+}) => {
   const panelRef = useSwipeNavigation(
     undefined,
     undefined,
@@ -204,14 +189,12 @@ const ExtendedNavigationPanel: React.FC<ExtendedNavigationPanelProps> = ({
         </div>
 
         <div className="grid grid-cols-3 gap-4">
-          {items.map((item: any
-) => { // auto: implicit any
+          {items.map((item: any) => {
             const { icon: Icon } = item;
             return (
               <button
                 key={item.id}
-                onClick={(
-) => {
+                onClick={() => {
                   onNavigate(item.path);
                   onClose();
                 }}

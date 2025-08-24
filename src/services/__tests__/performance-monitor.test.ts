@@ -2,8 +2,7 @@ import { expect, test, jest } from '@jest/globals';
 import PerformanceMonitor from '../performance-monitor';
 
 // Mock Web Vitals
-jest.mock('web-vitals', (
-) => ({
+jest.mock('web-vitals', () => ({
   getCLS: jest.fn(),
   getFID: jest.fn(),
   getFCP: jest.fn(),
@@ -15,8 +14,7 @@ jest.mock('web-vitals', (
 const mockPerformanceObserver = {
   observe: jest.fn(),
   disconnect: jest.fn(),
-  takeRecords: jest.fn((
-) => []),
+  takeRecords: jest.fn(() => []),
 };
 
 const mockPerformanceEntry = {
@@ -28,21 +26,17 @@ const mockPerformanceEntry = {
 };
 
 Object.defineProperty(global, 'PerformanceObserver', {
-  value: jest.fn((
-) => mockPerformanceObserver),
+  value: jest.fn(() => mockPerformanceObserver),
   writable: true,
 });
 
 Object.defineProperty(global, 'performance', {
   value: {
-    now: jest.fn((
-) => Date.now()),
+    now: jest.fn(() => Date.now()),
     mark: jest.fn(),
     measure: jest.fn(),
-    getEntriesByType: jest.fn((
-) => [mockPerformanceEntry]),
-    getEntriesByName: jest.fn((
-) => [mockPerformanceEntry]),
+    getEntriesByType: jest.fn(() => [mockPerformanceEntry]),
+    getEntriesByName: jest.fn(() => [mockPerformanceEntry]),
     clearMarks: jest.fn(),
     clearMeasures: jest.fn(),
     navigation: {
@@ -62,10 +56,8 @@ Object.defineProperty(global, 'performance', {
   writable: true,
 });
 
-describe('PerformanceMonitor', (
-) => {
-  beforeEach((
-) => {
+describe('PerformanceMonitor', () => {
+  beforeEach(() => {
     jest.clearAllMocks();
 
     // Reset singleton instance
@@ -83,26 +75,22 @@ describe('PerformanceMonitor', (
     });
   });
 
-  describe('initialization', (
-) => {
-    test('creates singleton instance', (
-) => {
+  describe('initialization', () => {
+    test('creates singleton instance', () => {
       const instance1 = PerformanceMonitor.getInstance();
       const instance2 = PerformanceMonitor.getInstance();
 
       expect(instance1).toBe(instance2);
     });
 
-    test('initializes performance observers', (
-) => {
+    test('initializes performance observers', () => {
       PerformanceMonitor.getInstance();
 
       expect(global.PerformanceObserver).toHaveBeenCalled();
       expect(mockPerformanceObserver.observe).toHaveBeenCalled();
     });
 
-    test('starts web vitals collection', (
-) => {
+    test('starts web vitals collection', () => {
       const { getCLS, getFID, getFCP, getLCP, getTTFB } = require('web-vitals');
 
       PerformanceMonitor.getInstance();
@@ -115,10 +103,8 @@ describe('PerformanceMonitor', (
     });
   });
 
-  describe('performance tracking', (
-) => {
-    test('starts tracking with performance mark', (
-) => {
+  describe('performance tracking', () => {
+    test('starts tracking with performance mark', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.startTracking('test-operation');
@@ -126,8 +112,7 @@ describe('PerformanceMonitor', (
       expect(performance.mark).toHaveBeenCalledWith('test-operation-start');
     });
 
-    test('ends tracking with performance measure', (
-) => {
+    test('ends tracking with performance measure', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.startTracking('test-operation');
@@ -141,13 +126,11 @@ describe('PerformanceMonitor', (
       );
     });
 
-    test('returns tracking result with duration', (
-) => {
+    test('returns tracking result with duration', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       // Mock performance.getEntriesByName to return a measure
-      performance.getEntriesByName = jest.fn((
-) => [
+      performance.getEntriesByName = jest.fn(() => [
         {
           name: 'test-operation',
           duration: 150,
@@ -166,8 +149,7 @@ describe('PerformanceMonitor', (
       });
     });
 
-    test('handles tracking operation that was not started', (
-) => {
+    test('handles tracking operation that was not started', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       const result = monitor.endTracking('non-existent-operation');
@@ -175,8 +157,7 @@ describe('PerformanceMonitor', (
       expect(result).toBeNull();
     });
 
-    test('prevents duplicate tracking starts', (
-) => {
+    test('prevents duplicate tracking starts', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.startTracking('duplicate-test');
@@ -187,10 +168,8 @@ describe('PerformanceMonitor', (
     });
   });
 
-  describe('user action tracking', (
-) => {
-    test('tracks user actions with context', (
-) => {
+  describe('user action tracking', () => {
+    test('tracks user actions with context', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.trackUserAction('button-click', {
@@ -202,11 +181,9 @@ describe('PerformanceMonitor', (
       expect(localStorage.setItem).toHaveBeenCalled();
     });
 
-    test('includes timestamp in user action', (
-) => {
+    test('includes timestamp in user action', () => {
       const mockNow = 1234567890;
-      performance.now = jest.fn((
-) => mockNow);
+      performance.now = jest.fn(() => mockNow);
 
       const monitor = PerformanceMonitor.getInstance();
 
@@ -218,10 +195,8 @@ describe('PerformanceMonitor', (
     });
   });
 
-  describe('web vitals collection', (
-) => {
-    test('collects and stores CLS metric', (
-) => {
+  describe('web vitals collection', () => {
+    test('collects and stores CLS metric', () => {
       const { getCLS } = require('web-vitals');
       const monitor = PerformanceMonitor.getInstance();
 
@@ -238,8 +213,7 @@ describe('PerformanceMonitor', (
       expect(metrics.cls).toBe(0.1);
     });
 
-    test('collects and stores FID metric', (
-) => {
+    test('collects and stores FID metric', () => {
       const { getFID } = require('web-vitals');
       const monitor = PerformanceMonitor.getInstance();
 
@@ -255,8 +229,7 @@ describe('PerformanceMonitor', (
       expect(metrics.fid).toBe(50);
     });
 
-    test('collects all core web vitals', (
-) => {
+    test('collects all core web vitals', () => {
       const webVitals = require('web-vitals');
       const monitor = PerformanceMonitor.getInstance();
 
@@ -278,15 +251,12 @@ describe('PerformanceMonitor', (
     });
   });
 
-  describe('resource performance', (
-) => {
-    test('tracks resource loading times', (
-) => {
+  describe('resource performance', () => {
+    test('tracks resource loading times', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       // Mock performance entries for resources
-      performance.getEntriesByType = jest.fn((
-) => [
+      performance.getEntriesByType = jest.fn(() => [
         {
           name: 'https://example.com/script.js',
           entryType: 'resource',
@@ -314,12 +284,10 @@ describe('PerformanceMonitor', (
       });
     });
 
-    test('categorizes resource types correctly', (
-) => {
+    test('categorizes resource types correctly', () => {
       const monitor = PerformanceMonitor.getInstance();
 
-      performance.getEntriesByType = jest.fn((
-) => [
+      performance.getEntriesByType = jest.fn(() => [
         {
           name: 'https://example.com/image.png',
           entryType: 'resource',
@@ -335,10 +303,8 @@ describe('PerformanceMonitor', (
     });
   });
 
-  describe('memory monitoring', (
-) => {
-    test('tracks memory usage', (
-) => {
+  describe('memory monitoring', () => {
+    test('tracks memory usage', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       const memoryInfo = monitor.getMemoryUsage();
@@ -351,8 +317,7 @@ describe('PerformanceMonitor', (
       });
     });
 
-    test('handles browsers without memory API', (
-) => {
+    test('handles browsers without memory API', () => {
       const originalMemory = performance.memory;
       delete (performance as any).memory;
 
@@ -367,10 +332,8 @@ describe('PerformanceMonitor', (
     });
   });
 
-  describe('navigation timing', (
-) => {
-    test('calculates page load time', (
-) => {
+  describe('navigation timing', () => {
+    test('calculates page load time', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       const loadTime = monitor.getPageLoadTime();
@@ -379,8 +342,7 @@ describe('PerformanceMonitor', (
       expect(loadTime).toBe(1000);
     });
 
-    test('calculates DOM content loaded time', (
-) => {
+    test('calculates DOM content loaded time', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       const domTime = monitor.getDOMContentLoadedTime();
@@ -390,10 +352,8 @@ describe('PerformanceMonitor', (
     });
   });
 
-  describe('data persistence', (
-) => {
-    test('saves performance data to localStorage', (
-) => {
+  describe('data persistence', () => {
+    test('saves performance data to localStorage', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.trackUserAction('test-action', { data: 'test' });
@@ -404,15 +364,13 @@ describe('PerformanceMonitor', (
       );
     });
 
-    test('loads performance data from localStorage', (
-) => {
+    test('loads performance data from localStorage', () => {
       const testData = {
         userActions: [{ action: 'test', timestamp: 123 }],
         webVitals: { cls: 0.1 },
       };
 
-      localStorage.getItem = jest.fn((
-) => JSON.stringify(testData));
+      localStorage.getItem = jest.fn(() => JSON.stringify(testData));
 
       const monitor = PerformanceMonitor.getInstance();
       const data = monitor.getPerformanceData();
@@ -420,10 +378,8 @@ describe('PerformanceMonitor', (
       expect(data.userActions).toEqual(testData.userActions);
     });
 
-    test('handles corrupted localStorage data gracefully', (
-) => {
-      localStorage.getItem = jest.fn((
-) => 'invalid-json');
+    test('handles corrupted localStorage data gracefully', () => {
+      localStorage.getItem = jest.fn(() => 'invalid-json');
 
       const monitor = PerformanceMonitor.getInstance();
       const data = monitor.getPerformanceData();
@@ -438,10 +394,8 @@ describe('PerformanceMonitor', (
     });
   });
 
-  describe('performance budgets', (
-) => {
-    test('checks if metrics are within budget', (
-) => {
+  describe('performance budgets', () => {
+    test('checks if metrics are within budget', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       // Set performance budget
@@ -460,8 +414,7 @@ describe('PerformanceMonitor', (
       expect(budgetStatus.violations).toHaveLength(0);
     });
 
-    test('identifies budget violations', (
-) => {
+    test('identifies budget violations', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.setPerformanceBudget({
@@ -485,10 +438,8 @@ describe('PerformanceMonitor', (
     });
   });
 
-  describe('cleanup and disposal', (
-) => {
-    test('disconnects performance observers on dispose', (
-) => {
+  describe('cleanup and disposal', () => {
+    test('disconnects performance observers on dispose', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.dispose();
@@ -496,8 +447,7 @@ describe('PerformanceMonitor', (
       expect(mockPerformanceObserver.disconnect).toHaveBeenCalled();
     });
 
-    test('clears performance marks and measures', (
-) => {
+    test('clears performance marks and measures', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.dispose();
@@ -506,8 +456,7 @@ describe('PerformanceMonitor', (
       expect(performance.clearMeasures).toHaveBeenCalled();
     });
 
-    test('saves final data before disposal', (
-) => {
+    test('saves final data before disposal', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.dispose();
@@ -516,15 +465,12 @@ describe('PerformanceMonitor', (
     });
   });
 
-  describe('error handling', (
-) => {
-    test('handles performance API unavailability gracefully', (
-) => {
+  describe('error handling', () => {
+    test('handles performance API unavailability gracefully', () => {
       const originalPerformance = global.performance;
       delete (global as any).performance;
 
-      expect((
-) => {
+      expect(() => {
         PerformanceMonitor.getInstance();
       }).not.toThrow();
 
@@ -532,13 +478,11 @@ describe('PerformanceMonitor', (
       (global as any).performance = originalPerformance;
     });
 
-    test('handles PerformanceObserver unavailability', (
-) => {
+    test('handles PerformanceObserver unavailability', () => {
       const originalPO = global.PerformanceObserver;
       delete (global as any).PerformanceObserver;
 
-      expect((
-) => {
+      expect(() => {
         PerformanceMonitor.getInstance();
       }).not.toThrow();
 
@@ -546,19 +490,16 @@ describe('PerformanceMonitor', (
       (global as any).PerformanceObserver = originalPO;
     });
 
-    test('handles localStorage errors gracefully', (
-) => {
+    test('handles localStorage errors gracefully', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
 
-      localStorage.setItem = jest.fn((
-) => {
+      localStorage.setItem = jest.fn(() => {
         throw new Error('Storage quota exceeded');
       });
 
       const monitor = PerformanceMonitor.getInstance();
 
-      expect((
-) => {
+      expect(() => {
         monitor.trackUserAction('test');
       }).not.toThrow();
 
@@ -566,14 +507,18 @@ describe('PerformanceMonitor', (
     });
   });
 
-  describe('performance reporting', (
-) => {
-    test('generates comprehensive performance report', (
-) => {
+  describe('performance reporting', () => {
+    test('generates comprehensive performance report', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       // Setup test data
-      monitor.webVitals = { cls: 0.1, fid: 50, lcp: 2000, fcp: 1500, ttfb: 200 };
+      monitor.webVitals = {
+        cls: 0.1,
+        fid: 50,
+        lcp: 2000,
+        fcp: 1500,
+        ttfb: 200,
+      };
       monitor.trackUserAction('test-action');
 
       const report = monitor.generatePerformanceReport();
@@ -592,8 +537,7 @@ describe('PerformanceMonitor', (
       });
     });
 
-    test('exports performance data for analysis', (
-) => {
+    test('exports performance data for analysis', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       const exportData = monitor.exportPerformanceData();

@@ -18,8 +18,7 @@ interface PerformanceProfilerWrapperProps {
 
 interface PerformanceDashboardProps {
   isOpen: boolean;
-  onToggle: (
-) => void;
+  onToggle: () => void;
 }
 
 /**
@@ -28,37 +27,30 @@ interface PerformanceDashboardProps {
 const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
   isOpen,
   onToggle,
-}
-) => {
+}) => {
   const [summary, setSummary] = useState(performanceProfiler.getSummary());
   const [autoRefresh, setAutoRefresh] = useState(true);
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (!autoRefresh || !isOpen) return;
 
-    const interval = setInterval((
-) => {
+    const interval = setInterval(() => {
       setSummary(performanceProfiler.getSummary());
     }, 2000);
 
-    return (
-) => clearInterval(interval);
+    return () => clearInterval(interval);
   }, [autoRefresh, isOpen]);
 
-  const refreshSummary = (
-) => {
+  const refreshSummary = () => {
     setSummary(performanceProfiler.getSummary());
   };
 
-  const clearData = (
-) => {
+  const clearData = () => {
     performanceProfiler.clear();
     setSummary(performanceProfiler.getSummary());
   };
 
-  const exportData = (
-) => {
+  const exportData = () => {
     const data = performanceProfiler.exportData();
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: 'application/json',
@@ -71,8 +63,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
     URL.revokeObjectURL(url);
   };
 
-  const logToConsole = (
-) => {
+  const logToConsole = () => {
     performanceProfiler.logSummary();
   };
 
@@ -132,9 +123,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               🐌 Slow Components ({summary.slowComponents.length})
             </div>
             <div className="space-y-1 max-h-20 overflow-y-auto">
-              {summary.slowComponents.slice(0, 3)
-      .map((comp: any
-) => (
+              {summary.slowComponents.slice(0, 3).map((comp: any) => (
                 <div
                   key={comp.id}
                   className="text-xs bg-red-50 dark:bg-red-900/20 p-1 rounded"
@@ -156,9 +145,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               🔄 Frequent Renders
             </div>
             <div className="space-y-1 max-h-20 overflow-y-auto">
-              {summary.frequentComponents.slice(0, 3)
-      .map((comp: any
-) => (
+              {summary.frequentComponents.slice(0, 3).map((comp: any) => (
                 <div
                   key={comp.id}
                   className="text-xs bg-orange-50 dark:bg-orange-900/20 p-1 rounded"
@@ -228,13 +215,11 @@ export const PerformanceProfilerWrapper: React.FC<PerformanceProfilerWrapperProp
   children,
   enabled = process.env.NODE_ENV === 'development' &&
     process.env.REACT_APP_PERFORMANCE_PROFILING === 'true',
-}
-) => {
+}) => {
   const [dashboardOpen, setDashboardOpen] = useState(false);
   const [showDevTools, setShowDevTools] = useState(false);
 
-  useEffect((
-) => {
+  useEffect(() => {
     // Enable dev tools if in development and profiling is enabled
     setShowDevTools(
       enabled &&
@@ -243,34 +228,28 @@ export const PerformanceProfilerWrapper: React.FC<PerformanceProfilerWrapperProp
     );
 
     // Add keyboard shortcut for performance dashboard
-    const handleKeyPress = (event: KeyboardEvent
-) => {
+    const handleKeyPress = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.shiftKey && event.key === 'P') {
-        
-        setDashboardOpen((prev: any
-) => !prev);
+        setDashboardOpen((prev: any) => !prev);
         event.preventDefault();
       }
     };
 
     if (enabled) {
       window.addEventListener('keydown', handleKeyPress);
-      return (
-) => window.removeEventListener('keydown', handleKeyPress);
+      return () => window.removeEventListener('keydown', handleKeyPress);
     }
   }, [enabled]);
 
   // Performance warning effect
-  useEffect((
-) => {
+  useEffect(() => {
     if (!enabled) return;
 
     console.log('🔬 React Performance Profiler active');
     console.log('📊 Press Ctrl+Shift+P to toggle performance dashboard');
 
     // Add performance warning styles to slow components
-    const addPerformanceWarnings = (
-) => {
+    const addPerformanceWarnings = () => {
       const summary = performanceProfiler.getSummary();
       summary.slowComponents.forEach(comp => {
         const elements = document.querySelectorAll(`[data-profiler-id="${comp.id}"]`);
@@ -283,8 +262,7 @@ export const PerformanceProfilerWrapper: React.FC<PerformanceProfilerWrapperProp
     };
 
     const interval = setInterval(addPerformanceWarnings, 5000);
-    return (
-) => clearInterval(interval);
+    return () => clearInterval(interval);
   }, [enabled]);
 
   if (!enabled) {
@@ -300,10 +278,7 @@ export const PerformanceProfilerWrapper: React.FC<PerformanceProfilerWrapperProp
       {showDevTools && (
         <PerformanceDashboard
           isOpen={dashboardOpen}
-          
-          onToggle={(
-) => setDashboardOpen((prev: any
-) => !prev)}
+          onToggle={() => setDashboardOpen((prev: any) => !prev)}
         />
       )}
     </>

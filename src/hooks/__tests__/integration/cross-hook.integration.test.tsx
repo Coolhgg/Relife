@@ -11,12 +11,10 @@ import { StrugglingSamProvider } from '../../../contexts/StrugglingsamContext';
 import SubscriptionService from '../../../services/subscription-service';
 
 // Mock all services
-jest.mock('../../../services/supabase-service', (
-) => ({
+jest.mock('../../../services/supabase-service', () => ({
   __esModule: true,
   default: {
-    getInstance: (
-) => ({
+    getInstance: () => ({
       signIn: jest.fn(),
       signOut: jest.fn(),
       getCurrentUser: jest.fn(),
@@ -26,12 +24,10 @@ jest.mock('../../../services/supabase-service', (
   },
 }));
 
-jest.mock('../../../services/subscription-service', (
-) => ({
+jest.mock('../../../services/subscription-service', () => ({
   __esModule: true,
   default: {
-    getInstance: (
-) => ({
+    getInstance: () => ({
       getSubscription: jest.fn(),
       getFeatureAccess: jest.fn(),
       getUserTier: jest.fn(),
@@ -42,12 +38,10 @@ jest.mock('../../../services/subscription-service', (
   },
 }));
 
-jest.mock('../../../services/stripe-service', (
-) => ({
+jest.mock('../../../services/stripe-service', () => ({
   __esModule: true,
   default: {
-    getInstance: (
-) => ({
+    getInstance: () => ({
       createPaymentIntent: jest.fn(),
       confirmPayment: jest.fn(),
       createSetupIntent: jest.fn(),
@@ -56,12 +50,10 @@ jest.mock('../../../services/stripe-service', (
   },
 }));
 
-jest.mock('../../../services/alarm-service', (
-) => ({
+jest.mock('../../../services/alarm-service', () => ({
   __esModule: true,
   default: {
-    getInstance: (
-) => ({
+    getInstance: () => ({
       getAllAlarms: jest.fn(),
       createAlarm: jest.fn(),
       updateAlarm: jest.fn(),
@@ -70,40 +62,33 @@ jest.mock('../../../services/alarm-service', (
   },
 }));
 
-jest.mock('../../../services/feature-gate-service', (
-) => ({
+jest.mock('../../../services/feature-gate-service', () => ({
   __esModule: true,
   default: {
-    getInstance: (
-) => ({
+    getInstance: () => ({
       trackFeatureAttempt: jest.fn(),
       grantTemporaryAccess: jest.fn(),
     }),
   },
 }));
 
-jest.mock('../../../services/error-handler', (
-) => ({
+jest.mock('../../../services/error-handler', () => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
 }));
 
 // Mock analytics hooks
-jest.mock('../../useAnalytics', (
-) => ({
-  useAnalytics: (
-) => ({
+jest.mock('../../useAnalytics', () => ({
+  useAnalytics: () => ({
     track: jest.fn(),
     trackPageView: jest.fn(),
     trackFeatureUsage: jest.fn(),
   }),
-  useEngagementAnalytics: (
-) => ({
+  useEngagementAnalytics: () => ({
     trackFeatureDiscovery: jest.fn(),
   }),
-  usePerformanceAnalytics: (
-) => ({
+  usePerformanceAnalytics: () => ({
     trackComponentRenderTime: jest.fn(),
   }),
   ANALYTICS_EVENTS: {
@@ -116,12 +101,9 @@ jest.mock('../../useAnalytics', (
 }));
 
 // Mock i18n
-jest.mock('react-i18next', (
-) => ({
-  useTranslation: (
-) => ({
-    t: (key: string
-) => key,
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
     i18n: {
       language: 'en',
       exists: jest.fn().mockReturnValue(true),
@@ -129,29 +111,22 @@ jest.mock('react-i18next', (
   }),
 }));
 
-jest.mock('@capacitor/device', (
-) => ({
+jest.mock('@capacitor/device', () => ({
   Device: {
     getLanguageCode: jest.fn().mockResolvedValue({ value: 'en' }),
   },
 }));
 
-jest.mock('../../../config/i18n', (
-) => ({
+jest.mock('../../../config/i18n', () => ({
   SUPPORTED_LANGUAGES: {
     en: { nativeName: 'English', rtl: false },
     es: { nativeName: 'Español', rtl: false },
   },
-  getCurrentLanguage: (
-) => 'en',
-  getLanguageInfo: (
-) => ({ nativeName: 'English', rtl: false }),
-  isRTL: (
-) => false,
-  formatTime: (time: string
-) => time,
-  formatRelativeTime: (date: Date
-) => date.toLocaleDateString(),
+  getCurrentLanguage: () => 'en',
+  getLanguageInfo: () => ({ nativeName: 'English', rtl: false }),
+  isRTL: () => false,
+  formatTime: (time: string) => time,
+  formatRelativeTime: (date: Date) => date.toLocaleDateString(),
   changeLanguage: jest.fn(),
 }));
 
@@ -168,13 +143,11 @@ const FullTestWrapper: React.FC<FullTestWrapperProps> = ({
   initialUser = null,
   userTier = 'free',
   subscription = null,
-}
-) => {
+}) => {
   const [user, setUser] = React.useState(initialUser);
 
   // Mock all service responses
-  React.useEffect((
-) => {
+  React.useEffect(() => {
     // Mock Supabase Service
     const SupabaseService = require('../../../services/supabase-service').default;
     const mockSupabaseService = SupabaseService.getInstance();
@@ -184,8 +157,7 @@ const FullTestWrapper: React.FC<FullTestWrapperProps> = ({
     );
     mockSupabaseService.onAuthStateChange.mockImplementation(callback => {
       setTimeout(
-        (
-) =>
+        () =>
           callback(
             user ? 'SIGNED_IN' : 'SIGNED_OUT',
             user ? { access_token: 'token', user } : null
@@ -237,18 +209,14 @@ const FullTestWrapper: React.FC<FullTestWrapperProps> = ({
   );
 };
 
-describe('Cross-Hook Integration Tests with Full Provider Stack', (
-) => {
-  beforeEach((
-) => {
+describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
+  beforeEach(() => {
     jest.clearAllMocks();
     localStorage.clear();
   });
 
-  describe('Authentication → Feature Access → Alarms Flow', (
-) => {
-    it('should cascade authentication state through all providers and hooks', async (
-) => {
+  describe('Authentication → Feature Access → Alarms Flow', () => {
+    it('should cascade authentication state through all providers and hooks', async () => {
       const mockUser = {
         id: 'user-123',
         email: 'test@example.com',
@@ -256,8 +224,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
       };
 
       const { result } = renderHook(
-        (
-) => ({
+        () => ({
           auth: useAuth(),
           featureGate: useFeatureGate('advanced_alarms'),
         }),
@@ -269,8 +236,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
       );
 
       // Wait for all hooks to initialize
-      await act(async (
-) => {
+      await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 200));
       });
 
@@ -280,11 +246,9 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
       expect(result.current.alarms.canUseAdvancedFeatures).toBe(true);
     });
 
-    it('should handle authentication changes affecting downstream features', async (
-) => {
+    it('should handle authentication changes affecting downstream features', async () => {
       const { result, rerender } = renderHook(
-        (
-) => ({
+        () => ({
           auth: useAuth(),
           featureGate: useFeatureGate('advanced_alarms'),
         }),
@@ -294,8 +258,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
       );
 
       // Initially unauthenticated/free user
-      await act(async (
-) => {
+      await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
 
@@ -307,8 +270,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
 
       // Use new wrapper with authenticated user
       const { result: newResult } = renderHook(
-        (
-) => ({
+        () => ({
           auth: useAuth(),
           featureGate: useFeatureGate('advanced_alarms'),
         }),
@@ -319,8 +281,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
         }
       );
 
-      await act(async (
-) => {
+      await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
 
@@ -329,10 +290,8 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
     });
   });
 
-  describe('Subscription → Feature Gates → Usage Integration', (
-) => {
-    it('should coordinate subscription status across feature gates and usage tracking', async (
-) => {
+  describe('Subscription → Feature Gates → Usage Integration', () => {
+    it('should coordinate subscription status across feature gates and usage tracking', async () => {
       const mockUser = { id: 'user-123', email: 'test@example.com' };
       const mockSubscription = {
         id: 'sub-123',
@@ -342,8 +301,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
       };
 
       const { result } = renderHook(
-        (
-) => ({
+        () => ({
           auth: useAuth(),
           subscription: useSubscription('user-123'),
           advancedAlarmsGate: useFeatureGate('advanced_alarms'),
@@ -361,8 +319,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
         }
       );
 
-      await act(async (
-) => {
+      await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 200));
       });
 
@@ -373,13 +330,11 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
       expect(result.current.alarms.canUseConditionalRules).toBe(true);
     });
 
-    it('should handle subscription cancellation affecting all gated features', async (
-) => {
+    it('should handle subscription cancellation affecting all gated features', async () => {
       const mockUser = { id: 'user-123', email: 'test@example.com' };
 
       const { result } = renderHook(
-        (
-) => ({
+        () => ({
           subscription: useSubscription('user-123'),
           featureGate: useFeatureGate('premium_themes'),
         }),
@@ -399,8 +354,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
         status: 'canceled',
       });
 
-      await act(async (
-) => {
+      await act(async () => {
         await result.current.subscription.cancelSubscription('sub-123');
         await new Promise(resolve => setTimeout(resolve, 100));
       });
@@ -418,15 +372,12 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
     });
   });
 
-  describe('Language → Analytics → Feature Access Integration', (
-) => {
-    it('should coordinate language settings across all providers and hooks', async (
-) => {
+  describe('Language → Analytics → Feature Access Integration', () => {
+    it('should coordinate language settings across all providers and hooks', async () => {
       const mockUser = { id: 'user-123', email: 'test@example.com' };
 
       const { result } = renderHook(
-        (
-) => ({
+        () => ({
           auth: useAuth(),
           featureGate: useFeatureGate('advanced_alarms'),
         }),
@@ -441,8 +392,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
       const i18nConfig = require('../../../config/i18n');
       i18nConfig.getCurrentLanguage.mockReturnValue('es');
 
-      await act(async (
-) => {
+      await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
 
@@ -452,8 +402,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
       expect(result.current.alarms.isLoading).toBeDefined();
     });
 
-    it('should track multilingual feature usage through analytics', async (
-) => {
+    it('should track multilingual feature usage through analytics', async () => {
       const mockTrack = jest.fn();
       const useAnalytics = require('../../useAnalytics').useAnalytics;
       useAnalytics.mockReturnValue({
@@ -465,8 +414,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
       const mockUser = { id: 'user-123', email: 'test@example.com' };
 
       const { result } = renderHook(
-        (
-) => ({
+        () => ({
           featureGate: useFeatureGate('advanced_alarms'),
         }),
         {
@@ -476,8 +424,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
         }
       );
 
-      await act(async (
-) => {
+      await act(async () => {
         await result.current.featureGate.requestAccess();
         await new Promise(resolve => setTimeout(resolve, 50));
       });
@@ -493,15 +440,12 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
     });
   });
 
-  describe('Achievement → Streak → Analytics Integration', (
-) => {
-    it('should coordinate achievements across alarm usage and streak tracking', async (
-) => {
+  describe('Achievement → Streak → Analytics Integration', () => {
+    it('should coordinate achievements across alarm usage and streak tracking', async () => {
       const mockUser = { id: 'user-123', email: 'test@example.com' };
 
       const { result } = renderHook(
-        (
-) => ({
+        () => ({
           auth: useAuth(),
         }),
         {
@@ -520,8 +464,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
         time: '07:00',
       });
 
-      await act(async (
-) => {
+      await act(async () => {
         await result.current.alarms.createAlarm({
           name: 'Test Alarm',
           time: '07:00',
@@ -535,10 +478,8 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
     });
   });
 
-  describe('Error Propagation Across Provider Chain', (
-) => {
-    it('should handle cascading errors across all providers gracefully', async (
-) => {
+  describe('Error Propagation Across Provider Chain', () => {
+    it('should handle cascading errors across all providers gracefully', async () => {
       const mockHandleError = jest.fn();
       const ErrorHandler = require('../../../services/error-handler').ErrorHandler;
       ErrorHandler.handleError = mockHandleError;
@@ -552,15 +493,13 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
       );
 
       const { result } = renderHook(
-        (
-) => ({
+        () => ({
           featureGate: useFeatureGate('advanced_alarms'),
         }),
         { wrapper: FullTestWrapper }
       );
 
-      await act(async (
-) => {
+      await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
 
@@ -569,8 +508,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
       expect(result.current.alarms.error).toBeNull(); // Should not propagate provider errors
     });
 
-    it('should maintain hook functionality despite provider chain failures', async (
-) => {
+    it('should maintain hook functionality despite provider chain failures', async () => {
       // Mock multiple provider failures
       const SubscriptionService =
         require('../../../services/subscription-service').default;
@@ -578,16 +516,14 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
       mockSubscriptionService.getUserTier.mockRejectedValue(new Error('Network error'));
 
       const { result } = renderHook(
-        (
-) => ({
+        () => ({
           auth: useAuth(),
           featureGate: useFeatureGate('advanced_alarms'),
         }),
         { wrapper: FullTestWrapper }
       );
 
-      await act(async (
-) => {
+      await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
 
@@ -597,16 +533,13 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
     });
   });
 
-  describe('Performance with Full Provider Stack', (
-) => {
-    it('should maintain acceptable performance with all providers and hooks', async (
-) => {
+  describe('Performance with Full Provider Stack', () => {
+    it('should maintain acceptable performance with all providers and hooks', async () => {
       const mockUser = { id: 'user-123', email: 'test@example.com' };
       const startTime = Date.now();
 
       const { result } = renderHook(
-        (
-) => ({
+        () => ({
           auth: useAuth(),
           subscription: useSubscription('user-123'),
           featureGate: useFeatureGate('advanced_alarms'),
@@ -618,8 +551,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
         }
       );
 
-      await act(async (
-) => {
+      await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 200));
       });
 
@@ -637,15 +569,12 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
     });
   });
 
-  describe('State Synchronization Across Hooks', (
-) => {
-    it('should maintain consistent state across all hooks when user data changes', async (
-) => {
+  describe('State Synchronization Across Hooks', () => {
+    it('should maintain consistent state across all hooks when user data changes', async () => {
       const mockUser = { id: 'user-123', email: 'test@example.com' };
 
       const { result } = renderHook(
-        (
-) => ({
+        () => ({
           auth: useAuth(),
           featureGate: useFeatureGate('advanced_alarms'),
           subscription: useSubscription('user-123'),
@@ -657,8 +586,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', (
         }
       );
 
-      await act(async (
-) => {
+      await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 200));
       });
 

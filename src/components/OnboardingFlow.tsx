@@ -16,8 +16,7 @@ import { useFocusRestoration } from '../hooks/useFocusRestoration';
 import { TimeoutHandle } from '../types/timers';
 
 interface OnboardingFlowProps {
-  onComplete: (
-) => void;
+  onComplete: () => void;
   appState: AppState;
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
 }
@@ -33,8 +32,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   onComplete,
   appState,
   setAppState,
-}
-) => {
+}) => {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('welcome');
   const [isLoading, setIsLoading] = useState(false);
   const [stepAnnouncement, setStepAnnouncement] = useState('');
@@ -46,8 +44,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     preventScroll: false,
   });
 
-  const announceStep = (step: OnboardingStep
-) => {
+  const announceStep = (step: OnboardingStep) => {
     const stepLabels = {
       welcome: 'Welcome step',
       notifications: 'Notification permission step',
@@ -56,22 +53,18 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       complete: 'Setup complete step',
     };
     setStepAnnouncement(`Now on ${stepLabels[step]}`);
-    setTimeout((
-) => setStepAnnouncement(''), 100);
+    setTimeout(() => setStepAnnouncement(''), 100);
   };
 
-  const moveToStep = (step: OnboardingStep
-) => {
+  const moveToStep = (step: OnboardingStep) => {
     setCurrentStep(step);
     announceStep(step);
   };
 
   // Effect to manage focus when step changes
-  useEffect((
-) => {
+  useEffect(() => {
     // Small delay to ensure DOM is updated
-    const focusTimeout = setTimeout((
-) => {
+    const focusTimeout = setTimeout(() => {
       if (stepHeaderRef.current) {
         stepHeaderRef.current.focus({ preventScroll: false });
       } else if (primaryActionRef.current) {
@@ -79,12 +72,10 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       }
     }, 100);
 
-    return (
-) => clearTimeout(focusTimeout);
+    return () => clearTimeout(focusTimeout);
   }, [currentStep]);
 
-  const handleNotificationPermission = async (
-) => {
+  const handleNotificationPermission = async () => {
     setIsLoading(true);
     try {
       const granted = await requestNotificationPermissions();
@@ -115,8 +106,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     }
   };
 
-  const handleMicrophonePermission = async (
-) => {
+  const handleMicrophonePermission = async () => {
     setIsLoading(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -160,8 +150,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     }
   };
 
-  const renderWelcomeStep = (
-) => (
+  const renderWelcomeStep = () => (
     <div
       className="text-center space-y-6"
       role="region"
@@ -246,8 +235,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
       <button
         ref={primaryActionRef}
-        onClick={(
-) => moveToStep('notifications')}
+        onClick={() => moveToStep('notifications')}
         className="alarm-button alarm-button-primary px-8 py-3 text-lg"
         aria-describedby="get-started-desc"
       >
@@ -260,8 +248,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     </div>
   );
 
-  const renderNotificationsStep = (
-) => (
+  const renderNotificationsStep = () => (
     <div
       className="text-center space-y-6"
       role="region"
@@ -331,8 +318,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         </button>
 
         <button
-          onClick={(
-) => moveToStep('microphone')}
+          onClick={() => moveToStep('microphone')}
           className="alarm-button alarm-button-secondary w-full py-3"
           aria-label="Skip notification permission and continue to microphone setup"
         >
@@ -342,8 +328,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     </div>
   );
 
-  const renderMicrophoneStep = (
-) => (
+  const renderMicrophoneStep = () => (
     <div
       className="text-center space-y-6"
       role="region"
@@ -410,8 +395,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         </button>
 
         <button
-          onClick={(
-) => moveToStep('quick-setup')}
+          onClick={() => moveToStep('quick-setup')}
           className="alarm-button alarm-button-secondary w-full py-3"
           aria-label="Skip microphone permission and continue to quick setup"
         >
@@ -421,8 +405,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     </div>
   );
 
-  const renderQuickSetupStep = (
-) => (
+  const renderQuickSetupStep = () => (
     <div
       className="text-center space-y-6"
       role="region"
@@ -465,8 +448,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             Perfect for getting started - a simple 7:00 AM alarm with motivational voice
           </p>
           <button
-            onClick={(
-) => {
+            onClick={() => {
               // This would trigger creating a default alarm
               console.log('Creating quick morning alarm at 7:00 AM');
               moveToStep('complete');
@@ -488,8 +470,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             Choose your own time, days, and voice mood for a personalized experience
           </p>
           <button
-            onClick={(
-) => {
+            onClick={() => {
               // This would trigger the alarm creation form
               console.log('Opening custom alarm setup');
               moveToStep('complete');
@@ -504,8 +485,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       </div>
 
       <button
-        onClick={(
-) => moveToStep('complete')}
+        onClick={() => moveToStep('complete')}
         className="text-gray-600 dark:text-gray-400 underline hover:text-gray-900 dark:hover:text-white"
         aria-label="Skip alarm setup for now and complete onboarding"
       >
@@ -514,8 +494,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     </div>
   );
 
-  const renderCompleteStep = (
-) => (
+  const renderCompleteStep = () => (
     <div
       className="text-center space-y-6"
       role="region"
@@ -606,8 +585,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     </div>
   );
 
-  const renderCurrentStep = (
-) => {
+  const renderCurrentStep = () => {
     switch (currentStep) {
       case 'welcome':
         return renderWelcomeStep();
@@ -645,8 +623,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         >
           <ol className="flex items-center gap-2" role="list">
             {['welcome', 'notifications', 'microphone', 'quick-setup', 'complete'].map(
-              (step, index
-) => {
+              (step, index) => {
                 const stepNames = [
                   'Welcome',
                   'Notifications',

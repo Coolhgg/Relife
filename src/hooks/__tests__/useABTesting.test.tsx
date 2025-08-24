@@ -17,13 +17,11 @@ const mockApiService = {
 };
 
 // Mock the service module
-jest.mock('../../services/struggling-sam-api', (
-) => {
+jest.mock('../../services/struggling-sam-api', () => {
   return {
     __esModule: true,
     default: {
-      getInstance: (
-) => mockApiService,
+      getInstance: () => mockApiService,
     },
   };
 });
@@ -40,10 +38,8 @@ Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
 });
 
-describe('useABTesting', (
-) => {
-  beforeEach((
-) => {
+describe('useABTesting', () => {
+  beforeEach(() => {
     jest.clearAllMocks();
     localStorageMock.getItem.mockReturnValue(null);
 
@@ -69,23 +65,18 @@ describe('useABTesting', (
     });
   });
 
-  it('should initialize with loading state', (
-) => {
-    const { result } = renderHook((
-) => useABTesting('test-user-123'));
+  it('should initialize with loading state', () => {
+    const { result } = renderHook(() => useABTesting('test-user-123'));
 
     expect(result.current.isLoading).toBe(true);
     expect(result.current.testGroup).toBeNull();
     expect(result.current.features).toEqual({});
   });
 
-  it('should load user A/B test assignment on mount', async (
-) => {
-    const { result } = renderHook((
-) => useABTesting('test-user-123'));
+  it('should load user A/B test assignment on mount', async () => {
+    const { result } = renderHook(() => useABTesting('test-user-123'));
 
-    await act(async (
-) => {
+    await act(async () => {
       // Wait for the async initialization
       await new Promise(resolve => setTimeout(resolve, 0));
     });
@@ -96,8 +87,7 @@ describe('useABTesting', (
     expect(result.current.features).toEqual(STRUGGLING_SAM_FEATURES.CONTROL);
   });
 
-  it('should handle assignment for GAMIFICATION group', async (
-) => {
+  it('should handle assignment for GAMIFICATION group', async () => {
     mockApiService.getABTestAssignment.mockResolvedValueOnce({
       userId: 'test-user-123',
       testGroup: 'GAMIFICATION' as ABTestGroup,
@@ -105,11 +95,9 @@ describe('useABTesting', (
       features: STRUGGLING_SAM_FEATURES.GAMIFICATION,
     });
 
-    const { result } = renderHook((
-) => useABTesting('test-user-123'));
+    const { result } = renderHook(() => useABTesting('test-user-123'));
 
-    await act(async (
-) => {
+    await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
@@ -120,8 +108,7 @@ describe('useABTesting', (
     expect(result.current.features.social_proof).toBe(false);
   });
 
-  it('should handle assignment for FULL_OPTIMIZATION group', async (
-) => {
+  it('should handle assignment for FULL_OPTIMIZATION group', async () => {
     mockApiService.getABTestAssignment.mockResolvedValueOnce({
       userId: 'test-user-123',
       testGroup: 'FULL_OPTIMIZATION' as ABTestGroup,
@@ -129,11 +116,9 @@ describe('useABTesting', (
       features: STRUGGLING_SAM_FEATURES.FULL_OPTIMIZATION,
     });
 
-    const { result } = renderHook((
-) => useABTesting('test-user-123'));
+    const { result } = renderHook(() => useABTesting('test-user-123'));
 
-    await act(async (
-) => {
+    await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
@@ -144,8 +129,7 @@ describe('useABTesting', (
     expect(result.current.features.upgrade_prompts).toBe(true);
   });
 
-  it('should use cached assignment from localStorage', async (
-) => {
+  it('should use cached assignment from localStorage', async () => {
     const cachedAssignment = {
       userId: 'test-user-123',
       testGroup: 'GAMIFICATION',
@@ -155,11 +139,9 @@ describe('useABTesting', (
 
     localStorageMock.getItem.mockReturnValue(JSON.stringify(cachedAssignment));
 
-    const { result } = renderHook((
-) => useABTesting('test-user-123'));
+    const { result } = renderHook(() => useABTesting('test-user-123'));
 
-    await act(async (
-) => {
+    await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
@@ -168,19 +150,17 @@ describe('useABTesting', (
     expect(result.current.features).toEqual(STRUGGLING_SAM_FEATURES.GAMIFICATION);
   });
 
-  it('should track A/B test events', async (
-) => {
-    const { result } = renderHook((
-) => useABTesting('test-user-123'));
+  it('should track A/B test events', async () => {
+    const { result } = renderHook(() => useABTesting('test-user-123'));
 
-    await act(async (
-) => {
+    await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
-    await act(async (
-) => {
-      await result.current.trackEvent('alarm_created', { alarmType: 'morning' });
+    await act(async () => {
+      await result.current.trackEvent('alarm_created', {
+        alarmType: 'morning',
+      });
     });
 
     expect(mockApiService.trackABTestEvent).toHaveBeenCalledWith(
@@ -191,8 +171,7 @@ describe('useABTesting', (
     );
   });
 
-  it('should handle feature flag checks', async (
-) => {
+  it('should handle feature flag checks', async () => {
     mockApiService.getABTestAssignment.mockResolvedValueOnce({
       userId: 'test-user-123',
       testGroup: 'GAMIFICATION' as ABTestGroup,
@@ -200,11 +179,9 @@ describe('useABTesting', (
       features: STRUGGLING_SAM_FEATURES.GAMIFICATION,
     });
 
-    const { result } = renderHook((
-) => useABTesting('test-user-123'));
+    const { result } = renderHook(() => useABTesting('test-user-123'));
 
-    await act(async (
-) => {
+    await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
@@ -214,16 +191,13 @@ describe('useABTesting', (
     expect(result.current.hasFeature('upgrade_prompts')).toBe(false);
   });
 
-  it('should handle API errors gracefully', async (
-) => {
+  it('should handle API errors gracefully', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
     mockApiService.getABTestAssignment.mockRejectedValue(new Error('API Error'));
 
-    const { result } = renderHook((
-) => useABTesting('test-user-123'));
+    const { result } = renderHook(() => useABTesting('test-user-123'));
 
-    await act(async (
-) => {
+    await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
@@ -234,18 +208,14 @@ describe('useABTesting', (
     consoleSpy.mockRestore();
   });
 
-  it('should load A/B test metrics', async (
-) => {
-    const { result } = renderHook((
-) => useABTesting('test-user-123'));
+  it('should load A/B test metrics', async () => {
+    const { result } = renderHook(() => useABTesting('test-user-123'));
 
-    await act(async (
-) => {
+    await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.loadMetrics();
     });
 
@@ -263,13 +233,10 @@ describe('useABTesting', (
     });
   });
 
-  it('should handle reassignment to different test group', async (
-) => {
-    const { result } = renderHook((
-) => useABTesting('test-user-123'));
+  it('should handle reassignment to different test group', async () => {
+    const { result } = renderHook(() => useABTesting('test-user-123'));
 
-    await act(async (
-) => {
+    await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
@@ -283,8 +250,7 @@ describe('useABTesting', (
       features: STRUGGLING_SAM_FEATURES.FULL_OPTIMIZATION,
     });
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.reassignToGroup('FULL_OPTIMIZATION');
     });
 
@@ -296,13 +262,10 @@ describe('useABTesting', (
     expect(result.current.features).toEqual(STRUGGLING_SAM_FEATURES.FULL_OPTIMIZATION);
   });
 
-  it('should cache assignment in localStorage after successful load', async (
-) => {
-    const { result } = renderHook((
-) => useABTesting('test-user-123'));
+  it('should cache assignment in localStorage after successful load', async () => {
+    const { result } = renderHook(() => useABTesting('test-user-123'));
 
-    await act(async (
-) => {
+    await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
@@ -312,13 +275,10 @@ describe('useABTesting', (
     );
   });
 
-  it('should handle empty userId gracefully', async (
-) => {
-    const { result } = renderHook((
-) => useABTesting(''));
+  it('should handle empty userId gracefully', async () => {
+    const { result } = renderHook(() => useABTesting(''));
 
-    await act(async (
-) => {
+    await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
@@ -327,8 +287,7 @@ describe('useABTesting', (
     expect(result.current.testGroup).toBeNull();
   });
 
-  it('should provide correct feature configuration constants', (
-) => {
+  it('should provide correct feature configuration constants', () => {
     expect(STRUGGLING_SAM_FEATURES.CONTROL.streaks).toBe(false);
     expect(STRUGGLING_SAM_FEATURES.CONTROL.achievements).toBe(false);
 
@@ -341,13 +300,10 @@ describe('useABTesting', (
     expect(STRUGGLING_SAM_FEATURES.FULL_OPTIMIZATION.upgrade_prompts).toBe(true);
   });
 
-  it('should handle concurrent event tracking calls', async (
-) => {
-    const { result } = renderHook((
-) => useABTesting('test-user-123'));
+  it('should handle concurrent event tracking calls', async () => {
+    const { result } = renderHook(() => useABTesting('test-user-123'));
 
-    await act(async (
-) => {
+    await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
@@ -357,8 +313,7 @@ describe('useABTesting', (
       result.current.trackEvent('alarm_dismissed', { duration: 30 }),
     ];
 
-    await act(async (
-) => {
+    await act(async () => {
       await Promise.all(promises);
     });
 

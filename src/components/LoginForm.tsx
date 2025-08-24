@@ -3,12 +3,9 @@ import { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 
 interface LoginFormProps {
-  onLogin: (email: string, password: string
-) => Promise<void>;
-  onSwitchToSignUp: (
-) => void;
-  onForgotPassword: (
-) => void;
+  onLogin: (email: string, password: string) => Promise<void>;
+  onSwitchToSignUp: () => void;
+  onForgotPassword: () => void;
   isLoading: boolean;
   error: string | null;
 }
@@ -47,8 +44,7 @@ export default function LoginForm({
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent
-) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -167,8 +163,7 @@ export default function LoginForm({
             />
             <button
               type="button"
-              onClick={(
-) => setShowPassword(!showPassword)}
+              onClick={() => setShowPassword(!showPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               aria-describedby="password-toggle-desc"

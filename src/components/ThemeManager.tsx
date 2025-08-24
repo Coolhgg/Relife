@@ -42,8 +42,7 @@ interface QuickTheme {
 const ThemeManager: React.FC<ThemeManagerProps> = ({
   className = '',
   compact = false,
-}
-) => {
+}) => {
   const { theme, setTheme, themeConfig, availableThemes } = useTheme();
   const [showStudio, setShowStudio] = useState(false);
   const [customThemes, setCustomThemes] = useState<CustomThemeConfig[]>([]);
@@ -102,8 +101,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
   ];
 
   // Load custom themes and favorites
-  useEffect((
-) => {
+  useEffect(() => {
     const savedFavorites = localStorage.getItem('theme-favorites');
     if (savedFavorites) {
       setFavorites(new Set(JSON.parse(savedFavorites)));
@@ -120,13 +118,11 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
     }
   }, []);
 
-  const applyTheme = (themeId: string
-) => {
+  const applyTheme = (themeId: string) => {
     setTheme(themeId as Theme);
   };
 
-  const toggleFavorite = (themeId: string
-) => {
+  const toggleFavorite = (themeId: string) => {
     const newFavorites = new Set(favorites);
     if (newFavorites.has(themeId)) {
       newFavorites.delete(themeId);
@@ -137,8 +133,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
     localStorage.setItem('theme-favorites', JSON.stringify([...newFavorites]));
   };
 
-  const exportThemes = (
-) => {
+  const exportThemes = () => {
     const themeData = {
       customThemes,
       favorites: [...favorites],
@@ -158,8 +153,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
     linkElement.click();
   };
 
-  const importThemes = (event: React.ChangeEvent<HTMLInputElement>
-) => {
+  const importThemes = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -170,8 +164,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
 
         if (themeData.customThemes && Array.isArray(themeData.customThemes)) {
           const existingThemes = [...customThemes];
-          themeData.customThemes.forEach((importedTheme: CustomThemeConfig
-) => {
+          themeData.customThemes.forEach((importedTheme: CustomThemeConfig) => {
             const exists = existingThemes.find(t => t.id === importedTheme.id);
             if (!exists) {
               existingThemes.push(importedTheme);
@@ -209,8 +202,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
               <h3 className="text-lg font-semibold text-gray-900">Themes</h3>
             </div>
             <button
-              onClick={(
-) => setShowStudio(true)}
+              onClick={() => setShowStudio(true)}
               className="flex items-center gap-2 px-3 py-1 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors text-sm"
             >
               <Settings size={14} />
@@ -223,8 +215,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
             {quickThemes.map(quickTheme => (
               <button
                 key={quickTheme.id}
-                onClick={(
-) => applyTheme(quickTheme.id)}
+                onClick={() => applyTheme(quickTheme.id)}
                 className={`group relative p-3 rounded-lg border-2 transition-all ${
                   theme === quickTheme.id
                     ? 'border-blue-500 bg-blue-50'
@@ -272,8 +263,8 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
 
                 {/* Favorite button */}
                 <button
-                  onClick={(e: any
-) => { // auto: implicit any
+                  onClick={(e: any) => {
+                    // auto: implicit any
                     e.stopPropagation();
                     toggleFavorite(quickTheme.id);
                   }}
@@ -298,17 +289,15 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-gray-700">Custom Themes</span>
                 <span className="text-xs text-gray-500">
-                  {customThemes.length} theme{customThemes.length !== 1 ? 's' : ''}
+                  {customThemes.length} theme
+                  {customThemes.length !== 1 ? 's' : ''}
                 </span>
               </div>
               <div className="flex gap-1 overflow-x-auto pb-2">
-                {customThemes.slice(0, 4)
-      .map((customTheme: any
-) => (
+                {customThemes.slice(0, 4).map((customTheme: any) => (
                   <button
                     key={customTheme.id}
-                    onClick={(
-) => applyTheme(customTheme.name)}
+                    onClick={() => applyTheme(customTheme.name)}
                     className="flex-shrink-0 w-12 h-8 rounded-md border border-gray-200 overflow-hidden hover:ring-2 hover:ring-blue-300 transition-all"
                     title={customTheme.displayName || customTheme.name}
                   >
@@ -339,8 +328,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                 ))}
                 {customThemes.length > 4 && (
                   <button
-                    onClick={(
-) => setShowStudio(true)}
+                    onClick={() => setShowStudio(true)}
                     className="flex-shrink-0 w-12 h-8 bg-gray-100 border border-gray-200 rounded-md flex items-center justify-center hover:bg-gray-200 transition-colors"
                   >
                     <span className="text-xs text-gray-600">
@@ -355,8 +343,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
           {/* Quick actions */}
           <div className="flex gap-2 mt-4 pt-3 border-t border-gray-200">
             <button
-              onClick={(
-) => setShowStudio(true)}
+              onClick={() => setShowStudio(true)}
               className="flex items-center gap-2 px-3 py-2 text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm flex-1 justify-center"
             >
               <Plus size={14} />
@@ -384,8 +371,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
 
         {showStudio && (
           <ThemeStudio
-            onClose={(
-) => setShowStudio(false)}
+            onClose={() => setShowStudio(false)}
             className="fixed inset-0 z-50"
           />
         )}
@@ -408,8 +394,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
             </p>
           </div>
           <button
-            onClick={(
-) => setShowStudio(true)}
+            onClick={() => setShowStudio(true)}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Settings size={18} />
@@ -466,8 +451,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                 </div>
               </div>
               <button
-                onClick={(
-) => toggleFavorite(theme)}
+                onClick={() => toggleFavorite(theme)}
                 className="p-2 rounded-full hover:bg-white hover:bg-opacity-50 transition-colors"
               >
                 <Heart
@@ -490,8 +474,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
             {quickThemes.map(quickTheme => (
               <button
                 key={quickTheme.id}
-                onClick={(
-) => applyTheme(quickTheme.id)}
+                onClick={() => applyTheme(quickTheme.id)}
                 className={`p-3 rounded-lg border-2 transition-all text-left ${
                   theme === quickTheme.id
                     ? 'border-blue-500 bg-blue-50'
@@ -499,8 +482,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                 }`}
               >
                 <div className="flex gap-1 mb-2">
-                  {Object.values(quickTheme.colors).map((color, index
-) => (
+                  {Object.values(quickTheme.colors).map((color, index) => (
                     <div
                       key={index}
                       className="w-4 h-4 rounded-full"
@@ -535,13 +517,10 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
               Custom Themes ({customThemes.length})
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {customThemes.slice(0, 6)
-      .map((customTheme: any
-) => (
+              {customThemes.slice(0, 6).map((customTheme: any) => (
                 <button
                   key={customTheme.id}
-                  onClick={(
-) => applyTheme(customTheme.name)}
+                  onClick={() => applyTheme(customTheme.name)}
                   className="p-3 border border-gray-200 rounded-lg hover:shadow-md transition-all text-left group"
                 >
                   <div className="flex gap-1 mb-2">
@@ -575,8 +554,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
             </div>
             {customThemes.length > 6 && (
               <button
-                onClick={(
-) => setShowStudio(true)}
+                onClick={() => setShowStudio(true)}
                 className="mt-3 w-full py-2 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors"
               >
                 View all {customThemes.length} custom themes
@@ -588,8 +566,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
         {/* Actions */}
         <div className="flex gap-3 pt-4 border-t border-gray-200">
           <button
-            onClick={(
-) => setShowStudio(true)}
+            onClick={() => setShowStudio(true)}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Plus size={18} />
@@ -597,8 +574,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
           </button>
 
           <button
-            onClick={(
-) => setShowStudio(true)}
+            onClick={() => setShowStudio(true)}
             className="flex items-center gap-2 px-4 py-2 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors"
           >
             <Grid size={18} />
@@ -630,8 +606,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
         </div>
       </div>
 
-      {showStudio && <ThemeStudio onClose={(
-) => setShowStudio(false)} />}
+      {showStudio && <ThemeStudio onClose={() => setShowStudio(false)} />}
     </>
   );
 };

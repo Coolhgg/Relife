@@ -30,11 +30,9 @@ import { TimeoutHandle } from '../types/timers';
 
 interface FeedbackModalProps {
   isOpen: boolean;
-  onClose: (
-) => void;
+  onClose: () => void;
   initialType?: 'rating' | 'text' | 'bug' | 'suggestion' | 'complaint';
-  onFeedbackSubmitted?: (feedbackId: string
-) => void;
+  onFeedbackSubmitted?: (feedbackId: string) => void;
 }
 
 export function FeedbackModal({
@@ -63,16 +61,16 @@ export function FeedbackModal({
     { id: 'general', label: 'General', icon: '💬' },
   ] as const;
 
-  const takeScreenshot = async (
-) => {
+  const takeScreenshot = async () => {
     try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+      });
       const video = document.createElement('video');
       video.srcObject = stream;
       video.play();
 
-      video.addEventListener('loadedmetadata', (
-) => {
+      video.addEventListener('loadedmetadata', () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
@@ -91,8 +89,7 @@ export function FeedbackModal({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent
-) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting || !title.trim()) return;
 
@@ -116,8 +113,7 @@ export function FeedbackModal({
       onFeedbackSubmitted?.(feedbackId);
 
       // Reset form after short delay
-      setTimeout((
-) => {
+      setTimeout(() => {
         resetForm();
         onClose();
       }, 2000);
@@ -128,8 +124,7 @@ export function FeedbackModal({
     }
   };
 
-  const resetForm = (
-) => {
+  const resetForm = () => {
     setRating(0);
     setTitle('');
     setDescription('');
@@ -139,8 +134,7 @@ export function FeedbackModal({
     setIsSubmitting(false);
   };
 
-  const handleClose = (
-) => {
+  const handleClose = () => {
     resetForm();
     onClose();
   };
@@ -214,8 +208,7 @@ export function FeedbackModal({
                     <button
                       key={star}
                       type="button"
-                      onClick={(
-) => setRating(star)}
+                      onClick={() => setRating(star)}
                       className={`p-1 rounded ${
                         star <= rating
                           ? 'text-yellow-400'
@@ -304,8 +297,7 @@ export function FeedbackModal({
                     <button
                       key={cat.id}
                       type="button"
-                      onClick={(
-) => setCategory(cat.id)}
+                      onClick={() => setCategory(cat.id)}
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors ${
                         category === cat.id
                           ? 'bg-primary text-primary-foreground border-primary'
@@ -343,8 +335,7 @@ export function FeedbackModal({
                           type="button"
                           variant="ghost"
                           size="sm"
-                          onClick={(
-) => setScreenshot(null)}
+                          onClick={() => setScreenshot(null)}
                         >
                           <X className="w-4 h-4" />
                         </Button>
