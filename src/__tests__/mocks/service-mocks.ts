@@ -1,6 +1,11 @@
 /**
- * Comprehensive Service Mocks following Singleton Patterns
- * Provides realistic mock implementations that match the real service interfaces
+ * Comprehensive Service Mocks - Legacy and Enhanced
+ * Provides both legacy singleton patterns and new enhanced service mocks with dependency injection
+ * 
+ * MIGRATION NOTICE:
+ * - Legacy static service mocks are maintained for backward compatibility
+ * - New tests should use enhanced service mocks from './enhanced-service-mocks'
+ * - Enhanced mocks support dependency injection and BaseService patterns
  */
 
 import type {
@@ -751,3 +756,71 @@ export const resetAllMockServices = (): void => {
 };
 
 export default MockServices;
+
+// ============================================================================
+// Enhanced Service Mocks (New Architecture)
+// ============================================================================
+
+// Import enhanced service mocks for new dependency injection patterns
+export {
+  MockBaseService,
+  MockCacheProvider,
+  MockAlarmService as EnhancedMockAlarmService,
+  MockAnalyticsService as EnhancedMockAnalyticsService,
+  MockSubscriptionService as EnhancedMockSubscriptionService,
+  MockBattleService as EnhancedMockBattleService,
+  MockVoiceService as EnhancedMockVoiceService,
+  createMockServiceContainer,
+  resetAllMockServices as resetEnhancedMockServices,
+  initializeAllMockServices,
+} from './enhanced-service-mocks';
+
+// Enhanced service provider
+export {
+  EnhancedServiceProvider,
+  useServiceContainer,
+  useEnhancedAlarmService,
+  useEnhancedAnalyticsService,
+  useEnhancedSubscriptionService,
+  useEnhancedBattleService,
+  useEnhancedVoiceService,
+  createTestServiceContainer,
+  withEnhancedServices,
+} from '../providers/enhanced-service-providers';
+
+/**
+ * Migration Guide:
+ * 
+ * OLD (Legacy):
+ * ```typescript
+ * import { MockAlarmService } from './service-mocks';
+ * MockAlarmService.reset();
+ * const alarms = await MockAlarmService.loadAlarms();
+ * ```
+ * 
+ * NEW (Enhanced):
+ * ```typescript
+ * import { EnhancedMockAlarmService, createMockServiceContainer } from './service-mocks';
+ * const container = createMockServiceContainer();
+ * const alarmService = container.get('alarmService') as EnhancedMockAlarmService;
+ * await alarmService.initialize();
+ * const alarms = await alarmService.getAlarms();
+ * ```
+ * 
+ * Or use with React Provider:
+ * ```typescript
+ * import { EnhancedServiceProvider, useEnhancedAlarmService } from './service-mocks';
+ * 
+ * function TestComponent() {
+ *   const alarmService = useEnhancedAlarmService();
+ *   // Use alarmService...
+ * }
+ * 
+ * // In test:
+ * render(
+ *   <EnhancedServiceProvider>
+ *     <TestComponent />
+ *   </EnhancedServiceProvider>
+ * );
+ * ```
+ */

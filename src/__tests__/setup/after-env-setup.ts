@@ -549,6 +549,39 @@ console.warn = (...args) => {
   originalWarn.apply(console, args);
 };
 
+// Enhanced Service Architecture Setup
+// Initialize mock services for testing with the new dependency injection patterns
+if (global && typeof global === 'object') {
+  // Import enhanced service mocks
+  let enhancedServiceMocks: any;
+  try {
+    enhancedServiceMocks = require('../mocks/enhanced-service-mocks');
+    
+    // Create a global service container for tests
+    global.__ENHANCED_SERVICE_CONTAINER__ = enhancedServiceMocks.createMockServiceContainer();
+    
+    // Initialize services by default for tests
+    enhancedServiceMocks.initializeAllMockServices(global.__ENHANCED_SERVICE_CONTAINER__)
+      .then(() => {
+        console.log('🔧 Enhanced service architecture initialized');
+      })
+      .catch((error: any) => {
+        console.warn('⚠️ Enhanced service initialization failed:', error);
+      });
+  } catch (error) {
+    // Enhanced services not available in this test run
+    console.log('⚠️ Enhanced services not available, using legacy mocks');
+  }
+
+  // Setup global test utilities for service management
+  global.__RESET_ENHANCED_SERVICES__ = async () => {
+    if (enhancedServiceMocks && global.__ENHANCED_SERVICE_CONTAINER__) {
+      await enhancedServiceMocks.resetAllMockServices(global.__ENHANCED_SERVICE_CONTAINER__);
+      await enhancedServiceMocks.initializeAllMockServices(global.__ENHANCED_SERVICE_CONTAINER__);
+    }
+  };
+}
+
 console.log('🔧 Enhanced after-environment setup complete');
 console.log('📱 Mobile simulation enabled');
 console.log('🌐 PWA APIs mocked');
@@ -556,3 +589,4 @@ console.log('🔊 Audio APIs mocked');
 console.log('💳 Payment APIs mocked');
 console.log('📋 Clipboard API mocked');
 console.log('🔐 Crypto APIs mocked');
+console.log('⚡ Enhanced service architecture ready');
