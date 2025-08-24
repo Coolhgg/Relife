@@ -321,7 +321,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                 type="text"
                 placeholder="Search themes, moods, or categories..."
                 value={searchQuery}
-                onChange={(e: any) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                            focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-lg"
               />
@@ -330,7 +330,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
             {/* Sort */}
             <select
               value={sortMode}
-              onChange={(e: any) => setSortMode(e.target.value as SortMode)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortMode(e.target.value as SortMode)}
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                          focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 min-w-[150px]"
             >

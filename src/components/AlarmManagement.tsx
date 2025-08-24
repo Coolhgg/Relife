@@ -302,7 +302,7 @@ export function AlarmManagement({
                         id="edit-time"
                         type="time"
                         value={formData.time}
-                        onChange={(e: any) =>
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           setFormData((prev: any) => ({
                             ...prev,
                             time: e.target.value,
@@ -318,7 +318,7 @@ export function AlarmManagement({
                       <Input
                         id="edit-label"
                         value={formData.label}
-                        onChange={(e: any) =>
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           setFormData((prev: any) => ({
                             ...prev,
                             label: e.target.value,
@@ -529,7 +529,7 @@ export function AlarmManagement({
                   id="new-time"
                   type="time"
                   value={formData.time}
-                  onChange={(e: any) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setFormData((prev: any) => ({
                       ...prev,
                       time: e.target.value,
@@ -542,7 +542,7 @@ export function AlarmManagement({
                 <Input
                   id="new-label"
                   value={formData.label}
-                  onChange={(e: any) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setFormData((prev: any) => ({
                       ...prev,
                       label: e.target.value,

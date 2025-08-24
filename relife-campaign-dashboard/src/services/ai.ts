@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { UserFeatures, EngagementMetrics } from '../../../src/types/api-responses';
 
 export interface PersonaPrediction {
   persona:
@@ -202,8 +203,8 @@ Provide optimization in this JSON format:
       email: string;
       signupDate: string;
       lastActive: string;
-      features: Record<string, any>;
-      engagement: Record<string, number>;
+      features: UserFeatures;
+      engagement: EngagementMetrics;
     }>
   ): Promise<SegmentationRule[]> {
     this.ensureConfigured();
