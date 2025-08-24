@@ -7,9 +7,7 @@ export interface TimeSeriesDataPoint {
 }
 
 // Generate mock time series data
-export function generateMockTimeSeriesData(
-  timeframe: '7d' | '30d' | '90d' | '1y'
-): TimeSeriesDataPoint[] {
+export function generateMockTimeSeriesData(_timeframe: '7d' | '30d' | '90d' | '1y'): TimeSeriesDataPoint[] {
   const days =
     timeframe === '7d' ? 7 : timeframe === '30d' ? 30 : timeframe === '90d' ? 90 : 365;
   const data: TimeSeriesDataPoint[] = [];

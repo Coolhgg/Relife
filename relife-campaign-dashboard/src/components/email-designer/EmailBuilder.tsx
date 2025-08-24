@@ -156,17 +156,13 @@ const defaultBlocks = {
 
 interface EmailBuilderProps {
   initialTemplate?: EmailTemplate;
-  onSave?: (template: EmailTemplate) => void;
-  onSend?: (template: EmailTemplate) => void;
+  onSave?: (_template: EmailTemplate) => void;
+  onSend?: (_template: EmailTemplate) => void;
   className?: string;
 }
 
-export function EmailBuilder({
-  initialTemplate,
-  onSave,
-  onSend,
-  className,
-}: EmailBuilderProps) {
+export function EmailBuilder(_{
+  initialTemplate, _onSave, _onSend, _className, }: EmailBuilderProps) {
   const [template, setTemplate] = useState<EmailTemplate>(
     initialTemplate || {
       id: 'new-template',
@@ -184,7 +180,7 @@ export function EmailBuilder({
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
 
-  const addBlock = useCallback((type: keyof typeof defaultBlocks) => {
+  const addBlock = useCallback(_(type: keyof typeof defaultBlocks) => {
     const newBlock: EmailBlock = {
       id: `block-${Date.now()}`,
       type,
@@ -198,7 +194,7 @@ export function EmailBuilder({
     }));
   }, []);
 
-  const updateBlock = useCallback((blockId: string, updates: Partial<EmailBlock>) => {
+  const updateBlock = useCallback(_(blockId: string, _updates: Partial<EmailBlock>) => {
     setTemplate(prev => ({
       ...prev,
       blocks: prev.blocks.map(block =>
@@ -207,7 +203,7 @@ export function EmailBuilder({
     }));
   }, []);
 
-  const deleteBlock = useCallback((blockId: string) => {
+  const deleteBlock = useCallback(_(blockId: string) => {
     setTemplate(prev => ({
       ...prev,
       blocks: prev.blocks.filter(block => block.id !== blockId),
@@ -215,8 +211,7 @@ export function EmailBuilder({
     setSelectedBlockId(null);
   }, []);
 
-  const duplicateBlock = useCallback(
-    (blockId: string) => {
+  const duplicateBlock = useCallback(_(blockId: string) => {
       const blockToDuplicate = template.blocks.find(b => b.id === blockId);
       if (blockToDuplicate) {
         const newBlock: EmailBlock = {
@@ -232,7 +227,7 @@ export function EmailBuilder({
     [template.blocks]
   );
 
-  const onDragEnd = (result: DropResult) => {
+  const onDragEnd = (_result: DropResult) => {
     if (!result.destination) return;
 
     const items = Array.from(template.blocks);
@@ -556,8 +551,7 @@ export function EmailBuilder({
       <div className="w-64 border-r bg-gray-50 p-4 overflow-y-auto">
         <h3 className="font-semibold mb-4">Add Blocks</h3>
         <div className="space-y-2">
-          {Object.entries(defaultBlocks).map(([type, config]) => (
-            <Button
+          {Object.entries(defaultBlocks).map(_([type, _config]) => (_<Button
               key={type}
               variant="outline"
               size="sm"
@@ -650,10 +644,8 @@ export function EmailBuilder({
           >
             <DragDropContext onDragEnd={onDragEnd}>
               <Droppable droppableId="email-canvas">
-                {provided => (
-                  <div {...provided.droppableProps} ref={provided.innerRef}>
-                    {template.blocks.map((block, index) => (
-                      <Draggable key={block.id} draggableId={block.id} index={index}>
+                {provided => (_<div {...provided.droppableProps} ref={provided.innerRef}>
+                    {template.blocks.map((block, _index) => (_<Draggable key={block.id} draggableId={block.id} index={index}>
                         {provided => (
                           <div
                             ref={provided.innerRef}

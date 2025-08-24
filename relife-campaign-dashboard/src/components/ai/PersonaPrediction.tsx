@@ -57,7 +57,7 @@ interface PersonaPredictionProps {
   className?: string;
 }
 
-export function PersonaPrediction({ className }: PersonaPredictionProps) {
+export function PersonaPrediction(_{ className }: PersonaPredictionProps) {
   const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
   const [prediction, setPrediction] = useState<PersonaPrediction | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -226,9 +226,8 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
     let reasons: string[] = [];
     let recommendedCampaigns: string[] = [];
 
-    const { subscriptionStatus, featureUsage, engagementMetrics } = userData;
-    const totalFeatureUsage = Object.values(featureUsage).reduce(
-      (sum, usage) => sum + usage,
+    const {_subscriptionStatus, _featureUsage, _engagementMetrics} = userData;
+    const totalFeatureUsage = Object.values(featureUsage).reduce((sum, _usage) => sum + usage,
       0
     );
 
@@ -295,7 +294,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
     };
   };
 
-  const handleAnalyzeUser = async (userData: UserData) => {
+  const handleAnalyzeUser = async (_userData: UserData) => {
     setSelectedUser(userData);
     const result = await predictPersona(userData);
     setPrediction(result);
@@ -352,7 +351,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                 <div className="space-y-4">
                   <h3 className="font-medium">Select User to Analyze</h3>
                   <div className="space-y-2">
-                    {mockUsers.map(user => (
+                    {mockUsers.map(_user => (
                       <Card
                         key={user.id}
                         className={`cursor-pointer transition-colors ${
@@ -456,7 +455,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                             Why this prediction?
                           </h4>
                           <ul className="space-y-2">
-                            {prediction.reasons.map((reason, index) => (
+                            {prediction.reasons.map(_(reason, _index) => (
                               <li
                                 key={index}
                                 className="flex items-start gap-2 text-sm"
@@ -477,7 +476,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                             Recommended Campaigns
                           </h4>
                           <div className="space-y-2">
-                            {prediction.recommendedCampaigns.map((campaign, index) => (
+                            {prediction.recommendedCampaigns.map(_(campaign, _index) => (
                               <div
                                 key={index}
                                 className="flex items-center justify-between p-2 bg-gray-50 rounded"
@@ -513,7 +512,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
               {batchPredictions.length > 0 ? (
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {Object.entries(personaProfiles).map(([key, profile]) => {
+                    {Object.entries(personaProfiles).map(_([key, _profile]) => {
                       const count = batchPredictions.filter(
                         bp => bp.prediction.persona === key
                       ).length;
@@ -536,7 +535,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                   </div>
 
                   <div className="space-y-2">
-                    {batchPredictions.map(({ user, prediction }, _index) => (
+                    {batchPredictions.map(_({ user, _prediction }, _index) => (
                       <Card key={user.id}>
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
