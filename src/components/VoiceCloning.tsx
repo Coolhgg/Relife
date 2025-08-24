@@ -84,7 +84,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
           url,
         };
 
-        setSamples((prev: any) => [...prev, newSample]);
+        setSamples((prev: any) => [ // auto: implicit any...prev, newSample]);
         stream.getTracks().forEach(track => track.stop());
       };
 
@@ -132,7 +132,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
           url,
         };
 
-        setSamples((prev: any) => [...prev, newSample]);
+        setSamples((prev: any) => [ // auto: implicit any...prev, newSample]);
       }
     });
 
@@ -141,7 +141,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
   }, []);
 
   const playAudio = (sampleId: string) => {
-    const sample = samples.find((s: any) => s.id === sampleId);
+    const sample = samples.find((s: any) => s // auto: implicit any.id === sampleId);
     if (!sample) return;
 
     // Stop any currently playing audio
@@ -177,7 +177,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
   };
 
   const removeSample = (sampleId: string) => {
-    setSamples((prev: any) => p // auto: implicit anyrev.filter((s: any) => s.id !== sampleId));
+    setSamples((prev: any) => p // auto: implicit anyrev.filter((s: any) => s // auto: implicit any.id !== sampleId));
 
     // Clean up audio and URL
     const audio = audioRefs.current.get(sampleId);
@@ -186,7 +186,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
       audioRefs.current.delete(sampleId);
     }
 
-    const sample = samples.find((s: any) => s.id === sampleId);
+    const sample = samples.find((s: any) => s // auto: implicit any.id === sampleId);
     if (sample) {
       URL.revokeObjectURL(sample.url);
     }
@@ -414,10 +414,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
                 Voice Samples
               </h3>
               <div className="space-y-3">
-                {samples.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                {samples/* auto: implicit any */
+      &.map((sample: any) => (
                   <div
                     key={sample.id}
                     className="bg-gray-50 rounded-lg p-4 flex items-center gap-3"
@@ -469,7 +467,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
                 </span>
               </div>
               <div
-                className={`flex items-center gap-2 ${samples.some((s: any) => s.duration >= 10) ? 'text-green-600' : 'text-gray-400'}`}
+                className={`flex items-center gap-2 ${samples.some((s: any) => s // auto: implicit any.duration >= 10) ? 'text-green-600' : 'text-gray-400'}`}
               >
                 <CheckCircle className="h-4 w-4" />
                 <span className="text-sm">Samples should be 10+ seconds each</span>

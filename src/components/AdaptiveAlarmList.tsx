@@ -72,7 +72,8 @@ const AlarmItem = memo<AlarmItemProps>(
       const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       if (alarm.days.length === 7) return 'Every day';
       if (alarm.days.length === 0) return 'Never';
-      return alarm.days.map((day: any) => d // auto: implicit anyayNames[day]).join(', ');
+      /* auto: implicit any */
+      return alarm.days.map((day: any) => dayNames[day]).join(', ');
     }, [alarm.days]);
 
     return (
@@ -308,10 +309,8 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
   // Standard list rendering for better devices or short lists
   return (
     <div className={`space-y-3 ${className}`}>
-      {sortedAlarms.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+      {/* auto: implicit any */}
+      {sortedAlarms.map((alarm: any) => (
         <AlarmItem
           key={alarm.id}
           alarm={alarm}

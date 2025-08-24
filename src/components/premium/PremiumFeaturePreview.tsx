@@ -47,7 +47,8 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
   useEffect(() => {
     if (feature === 'nuclearMode' && isPlaying) {
       const interval = setInterval(() => {
-        setNuclearIntensity((prev: any) => ({ // auto: implicit anyprev + 1) % 100);
+        /* auto: implicit any */
+      setNuclearIntensity((prev: any) => ({prev + 1) % 100);
       }, 50);
       return () => clearInterval(interval);
     }

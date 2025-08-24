@@ -126,7 +126,7 @@ export function UsabilityAnalyticsDashboard() {
       totalEvents: events.length,
       averageEventsPerSession:
         sessions.length > 0 ? events.length / sessions.length : 0,
-      uniqueUsers: new Set(sessions.map((s: any) => s.userId)).size,
+      uniqueUsers: new Set(sessions.map((s: any) => s // auto: implicit any.userId)).size,
       bounceRate: 0.15, // Mock value
     };
   };
@@ -135,7 +135,7 @@ export function UsabilityAnalyticsDashboard() {
     const { events } = data;
 
     const clicksByPage = events
-      .filter((e: any) => e.type === 'click')
+      .filter((e: any) => e // auto: implicit any.type === 'click')
       .reduce(
         (acc, event) => {
           const page = event.page || 'Unknown';
@@ -146,7 +146,7 @@ export function UsabilityAnalyticsDashboard() {
       );
 
     const navigationFlow = events
-      .filter((e: any) => e.type === 'navigation')
+      .filter((e: any) => e // auto: implicit any.type === 'navigation')
       .reduce(
         (acc, event) => {
           const key = `${event.metadata.fromPage || 'Unknown'} → ${event.page}`;
@@ -157,7 +157,7 @@ export function UsabilityAnalyticsDashboard() {
       );
 
     const errorsByType = events
-      .filter((e: any) => e.type === 'error')
+      .filter((e: any) => e // auto: implicit any.type === 'error')
       .reduce(
         (acc, event) => {
           const errorType = event.metadata.error || 'Unknown';
@@ -192,7 +192,7 @@ export function UsabilityAnalyticsDashboard() {
     const { feedback } = data;
 
     const ratingDistribution = feedback
-      .filter((f: any) => f.rating)
+      .filter((f: any) => f // auto: implicit any.rating)
       .reduce(
         (acc, f) => {
           acc[f.rating!] = (acc[f.rating!] || 0) + 1;
@@ -271,7 +271,7 @@ export function UsabilityAnalyticsDashboard() {
         <div className="flex items-center gap-3">
           <select
             value={selectedTimeRange}
-            onChange={(e: any) => setSelectedTimeRange(e.target.value)}
+            onChange={(e: any) => s // auto: implicit anyetSelectedTimeRange(e.target.value)}
             className="px-3 py-2 border rounded-lg"
           >
             <option value="1d">Last 24 Hours</option>
@@ -503,10 +503,8 @@ export function UsabilityAnalyticsDashboard() {
             <CardContent>
               {data.feedback.length > 0 ? (
                 <div className="space-y-4">
-                  {data.feedback.slice(0, 5).map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                  {data.feedback.slice(0, 5)/* auto: implicit any */
+      &.map((feedback: any) => (
                     <div key={feedback.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{feedback.title}</h4>
@@ -561,10 +559,8 @@ export function UsabilityAnalyticsDashboard() {
             <CardContent>
               {data.bugs.length > 0 ? (
                 <div className="space-y-4">
-                  {data.bugs.slice(0, 10).map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                  {data.bugs.slice(0, 10)/* auto: implicit any */
+      &.map((bug: any) => (
                     <div key={bug.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{bug.title}</h4>

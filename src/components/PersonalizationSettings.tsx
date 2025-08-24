@@ -209,7 +209,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             <input
               type="checkbox"
               checked={personalization?.colorPreferences?.colorblindFriendly || false}
-              onChange={(e: any) => // auto: implicit any
+              onChange={(e: any) => /* auto: implicit any */
                 updateColorPreference('colorblindFriendly', e.target.checked)
               }
               className="h-4 w-4 text-blue-600 rounded border-gray-300"
@@ -227,7 +227,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             max="1.5"
             step="0.1"
             value={personalization?.colorPreferences?.saturationLevel || 1}
-            onChange={(e: any) => // auto: implicit any
+            onChange={(e: any) => /* auto: implicit any */
               updateColorPreference('saturationLevel', parseFloat(e.target.value))
             }
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
@@ -249,7 +249,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             max="1.3"
             step="0.05"
             value={personalization?.colorPreferences?.brightnessLevel || 1}
-            onChange={(e: any) => // auto: implicit any
+            onChange={(e: any) => /* auto: implicit any */
               updateColorPreference('brightnessLevel', parseFloat(e.target.value))
             }
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
@@ -314,7 +314,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           max="1.4"
           step="0.05"
           value={personalization?.typographyPreferences?.fontSizeScale || 1}
-          onChange={(e: any) => // auto: implicit any
+          onChange={(e: any) => /* auto: implicit any */
             updateTypographyPreference('fontSizeScale', parseFloat(e.target.value))
           }
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
@@ -334,7 +334,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           value={
             personalization?.typographyPreferences?.lineHeightPreference || 'normal'
           }
-          onChange={(e: any) => // auto: implicit any
+          onChange={(e: any) => /* auto: implicit any */
             updateTypographyPreference('lineHeightPreference', e.target.value as any)
           }
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
@@ -359,7 +359,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.typographyPreferences?.dyslexiaFriendly || false}
-            onChange={(e: any) => // auto: implicit any
+            onChange={(e: any) => /* auto: implicit any */
               updateTypographyPreference('dyslexiaFriendly', e.target.checked)
             }
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
@@ -396,7 +396,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         </label>
         <select
           value={personalization?.motionPreferences?.animationSpeed || 'normal'}
-          onChange={(e: any) => // auto: implicit any
+          onChange={(e: any) => /* auto: implicit any */
             updateMotionPreference('animationSpeed', e.target.value as any)
           }
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
@@ -436,7 +436,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.motionPreferences?.enableHoverEffects !== false}
-            onChange={(e: any) => // auto: implicit any
+            onChange={(e: any) => /* auto: implicit any */
               updateMotionPreference('enableHoverEffects', e.target.checked)
             }
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
@@ -454,7 +454,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             checked={
               personalization?.motionPreferences?.enableFocusAnimations !== false
             }
-            onChange={(e: any) => // auto: implicit any
+            onChange={(e: any) => /* auto: implicit any */
               updateMotionPreference('enableFocusAnimations', e.target.checked)
             }
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
@@ -496,7 +496,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           max="1"
           step="0.05"
           value={personalization?.soundPreferences?.soundVolume || 0.7}
-          onChange={(e: any) => // auto: implicit any
+          onChange={(e: any) => /* auto: implicit any */
             updateSoundPreference('soundVolume', parseFloat(e.target.value))
           }
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
@@ -595,7 +595,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           max="24"
           step="2"
           value={personalization?.layoutPreferences?.borderRadius || 8}
-          onChange={(e: any) => // auto: implicit any
+          onChange={(e: any) => /* auto: implicit any */
             updateLayoutPreference('borderRadius', parseInt(e.target.value))
           }
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"

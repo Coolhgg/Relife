@@ -48,7 +48,8 @@ export function useEnhancedCaching(): {
           ? 'medium'
           : 'high';
 
-    setCacheState((prev: any) => ({ // auto: implicit any
+    /* auto: implicit any */
+      setCacheState((prev: any) => ({{
       ...prev,
       stats,
       memoryPressure,
@@ -56,28 +57,33 @@ export function useEnhancedCaching(): {
   }, []);
 
   const optimize = useCallback(async () => {
-    setCacheState((prev: any) => ({ // auto: implicit any ...prev, isOptimizing: true }));
+    /* auto: implicit any */
+      setCacheState((prev: any) => ({{ ...prev, isOptimizing: true }));
 
     try {
       await enhancedCacheManager.optimize();
-      setCacheState((prev: any) => ({ // auto: implicit any
+      /* auto: implicit any */
+      setCacheState((prev: any) => ({{
         ...prev,
         lastOptimization: new Date(),
       }));
     } finally {
-      setCacheState((prev: any) => ({ // auto: implicit any ...prev, isOptimizing: false }));
+      /* auto: implicit any */
+      setCacheState((prev: any) => ({{ ...prev, isOptimizing: false }));
       updateStats();
     }
   }, [updateStats]);
 
   const warmCache = useCallback(
     async (sounds: CustomSound[]) => {
-      setCacheState((prev: any) => ({ // auto: implicit any ...prev, isWarming: true }));
+      /* auto: implicit any */
+      setCacheState((prev: any) => ({{ ...prev, isWarming: true }));
 
       try {
         await enhancedCacheManager.warmCache(sounds);
       } finally {
-        setCacheState((prev: any) => ({ // auto: implicit any ...prev, isWarming: false }));
+        /* auto: implicit any */
+      setCacheState((prev: any) => ({{ ...prev, isWarming: false }));
         updateStats();
       }
     },
@@ -172,7 +178,7 @@ export function useCachePerformance() {
       setPerformance(newPerformance);
 
       // Update history
-      setPerformanceHistory((prev: any) => { // auto
+      setPerformanceHistory((prev: any) => { // auto: implicit any
         const newEntry = {
           timestamp: new Date(),
           hitRate: newPerformance.hitRate,
@@ -240,7 +246,8 @@ export function useCacheWarming() {
       nextTime.setHours(targetHour, 0, 0, 0);
     }
 
-    setWarmingStatus((prev: any) => ({ // auto: implicit any
+    /* auto: implicit any */
+      setWarmingStatus((prev: any) => ({{
       ...prev,
       nextScheduledTime: nextTime,
     }));
@@ -371,7 +378,8 @@ export function useAutoOptimization(enabled: boolean = true) {
 
           const optimizationTime = performance.now() - startTime;
 
-          setOptimizationStatus((prev: any) => ({ // auto: implicit any
+          /* auto: implicit any */
+      setOptimizationStatus((prev: any) => ({{
             ...prev,
             lastOptimization: new Date(),
             optimizationCount: prev.optimizationCount + 1,
@@ -395,7 +403,8 @@ export function useAutoOptimization(enabled: boolean = true) {
   }, [enabled]);
 
   const toggleAutoOptimization = useCallback(() => {
-    setOptimizationStatus((prev: any) => ({ // auto: implicit any
+    /* auto: implicit any */
+      setOptimizationStatus((prev: any) => ({{
       ...prev,
       isEnabled: !prev.isEnabled,
     }));
@@ -424,7 +433,8 @@ export function useCacheDebugging() {
     const updateDebugInfo = () => {
       const stats = enhancedCacheManager.getStats();
 
-      setDebugInfo((prev: any) => ({ // auto: implicit any
+      /* auto: implicit any */
+      setDebugInfo((prev: any) => ({{
         ...prev,
         memoryUsage: stats.memoryUsage,
         diskUsage: stats.totalSize,

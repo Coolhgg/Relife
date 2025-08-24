@@ -146,7 +146,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
     }
 
     // Apply filters
-    filtered = filtered.filter((combo: any) => { // auto
+    filtered = filtered.filter((combo: any) => { // auto: implicit any
       if (selectedCategory !== 'all' && combo.category !== selectedCategory)
         return false;
       if (selectedIntensity !== 'all' && combo.difficulty !== selectedIntensity)
@@ -321,7 +321,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                 type="text"
                 placeholder="Search themes, moods, or categories..."
                 value={searchQuery}
-                onChange={(e: any) => setSearchQuery(e.target.value)}
+                onChange={(e: any) => s // auto: implicit anyetSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                            focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-lg"
               />
@@ -330,7 +330,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
             {/* Sort */}
             <select
               value={sortMode}
-              onChange={(e: any) => setSortMode(e.target.value as SortMode)}
+              onChange={(e: any) => s // auto: implicit anyetSortMode(e.target.value as SortMode)}
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                          focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 min-w-[150px]"
             >
@@ -375,7 +375,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedCategory}
-                    onChange={(e: any) => // auto: implicit any
+                    onChange={(e: any) => /* auto: implicit any */
                       setSelectedCategory(e.target.value as ThemeCategory | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -402,7 +402,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedIntensity}
-                    onChange={(e: any) => // auto: implicit any
+                    onChange={(e: any) => /* auto: implicit any */
                       setSelectedIntensity(e.target.value as AlarmIntensity | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -423,7 +423,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedTimeOfDay}
-                    onChange={(e: any) => // auto: implicit any
+                    onChange={(e: any) => /* auto: implicit any */
                       setSelectedTimeOfDay(e.target.value as TimeOfDay | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -446,7 +446,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                     <input
                       type="checkbox"
                       checked={showPremiumOnly}
-                      onChange={(e: any) => setShowPremiumOnly(e.target.checked)}
+                      onChange={(e: any) => s // auto: implicit anyetShowPremiumOnly(e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -458,7 +458,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                     <input
                       type="checkbox"
                       checked={showFavoritesOnly}
-                      onChange={(e: any) => setShowFavoritesOnly(e.target.checked)}
+                      onChange={(e: any) => s // auto: implicit anyetShowFavoritesOnly(e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -501,10 +501,8 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               <span>Recommended for You</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {contextualRecommendations.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+              {contextualRecommendations/* auto: implicit any */
+      &.map((combo: any) => (
                 <ThemeCard
                   key={combo.id}
                   combination={combo}
@@ -531,10 +529,8 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              {collections.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+              {collections/* auto: implicit any */
+      &.map((collection: any) => (
                 <CollectionView
                   key={collection.id}
                   collection={collection}
@@ -559,10 +555,8 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               exit={{ opacity: 0, y: -20 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             >
-              {filteredCombinations.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+              {filteredCombinations/* auto: implicit any */
+      &.map((combo: any) => (
                 <ThemeCard
                   key={combo.id}
                   combination={combo}
@@ -585,10 +579,8 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               exit={{ opacity: 0, y: -20 }}
               className="space-y-4"
             >
-              {filteredCombinations.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+              {filteredCombinations/* auto: implicit any */
+      &.map((combo: any) => (
                 <ThemeListItem
                   key={combo.id}
                   combination={combo}
@@ -656,7 +648,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
 
       {/* Favorite Button */}
       <button
-        onClick={(e: any) => { // auto
+        onClick={(e: any) => { // auto: implicit any
           e.stopPropagation();
           onToggleFavorite();
         }}
@@ -742,7 +734,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
         </div>
 
         <button
-          onClick={(e: any) => { // auto
+          onClick={(e: any) => { // auto: implicit any
             e.stopPropagation();
             onPreview();
           }}
@@ -803,10 +795,8 @@ const CollectionView: React.FC<CollectionViewProps> = ({
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {combinations.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+      {combinations/* auto: implicit any */
+      &.map((combo: any) => (
         <ThemeCard
           key={combo.id}
           combination={combo}
@@ -906,7 +896,7 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
       {/* Actions */}
       <div className="flex items-center space-x-2 ml-4">
         <button
-          onClick={(e: any) => { // auto
+          onClick={(e: any) => { // auto: implicit any
             e.stopPropagation();
             onToggleFavorite();
           }}
@@ -918,7 +908,7 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
         </button>
 
         <button
-          onClick={(e: any) => { // auto
+          onClick={(e: any) => { // auto: implicit any
             e.stopPropagation();
             onPreview();
           }}

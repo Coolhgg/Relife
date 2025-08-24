@@ -89,7 +89,7 @@ export const CustomThemeCreator: React.FC = () => {
               <textarea
                 placeholder="Describe your ideal wake-up experience..."
                 value={customTheme.description}
-                onChange={(e: any) => // auto: implicit any
+                onChange={(e: any) => /* auto: implicit any */
                   setCustomTheme({ ...customTheme, description: e.target.value })
                 }
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 h-24"
@@ -143,7 +143,7 @@ export const CustomThemeCreator: React.FC = () => {
                         name="sound"
                         value={theme.id}
                         checked={customTheme.sound === theme.id}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           setCustomTheme({
                             ...customTheme,
                             sound: e.target.value as SoundTheme,
@@ -179,7 +179,7 @@ export const CustomThemeCreator: React.FC = () => {
                         name="voice"
                         value={voice}
                         checked={customTheme.voice === voice}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           setCustomTheme({
                             ...customTheme,
                             voice: e.target.value as VoiceMood,
@@ -209,7 +209,7 @@ export const CustomThemeCreator: React.FC = () => {
                 <input
                   type="text"
                   placeholder="morning, energetic, workout, peaceful"
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: any) => /* auto: implicit any */
                     setCustomTheme({
                       ...customTheme,
                       tags: e.target.value
@@ -239,7 +239,7 @@ export const CustomThemeCreator: React.FC = () => {
                       <input
                         type="checkbox"
                         value={time}
-                        onChange={(e: any) => { // auto
+                        onChange={(e: any) => { // auto: implicit any
                           if (e.target.checked) {
                             setCustomTheme({
                               ...customTheme,
@@ -334,7 +334,7 @@ export const SmartThemesDemo: React.FC = () => {
       );
 
       // Update learning data display
-      setLearningData((prev: any) => // auto: implicit any
+      setLearningData((prev: any) => /* auto: implicit any */
         [
           ...prev,
           {
@@ -552,11 +552,13 @@ export const AudioSetupDemo: React.FC = () => {
   const testSingleSound = async (soundId: string) => {
     try {
       const result = await soundEffectsService.testSound(soundId as any);
-      setTestResults((prev: any) => ({ // auto: implicit any ...prev, [soundId]: result }));
+      /* auto: implicit any */
+      setTestResults((prev: any) => ({{ ...prev, [soundId]: result }));
       return result;
     } catch (error) {
       console.error('Sound test failed:', error);
-      setTestResults((prev: any) => ({ // auto: implicit any ...prev, [soundId]: false }));
+      /* auto: implicit any */
+      setTestResults((prev: any) => ({{ ...prev, [soundId]: false }));
       return false;
     }
   };
@@ -680,7 +682,7 @@ export const AudioSetupDemo: React.FC = () => {
               min="0"
               max="100"
               defaultValue="70"
-              onChange={(e: any) => // auto: implicit any
+              onChange={(e: any) => /* auto: implicit any */
                 soundEffectsService.setVolume('master', parseInt(e.target.value) / 100)
               }
               className="w-full"
@@ -693,7 +695,7 @@ export const AudioSetupDemo: React.FC = () => {
               min="0"
               max="100"
               defaultValue="50"
-              onChange={(e: any) => // auto: implicit any
+              onChange={(e: any) => /* auto: implicit any */
                 soundEffectsService.setVolume('ui', parseInt(e.target.value) / 100)
               }
               className="w-full"
@@ -706,7 +708,7 @@ export const AudioSetupDemo: React.FC = () => {
               min="0"
               max="100"
               defaultValue="100"
-              onChange={(e: any) => // auto: implicit any
+              onChange={(e: any) => /* auto: implicit any */
                 soundEffectsService.setVolume('alarm', parseInt(e.target.value) / 100)
               }
               className="w-full"
@@ -719,7 +721,7 @@ export const AudioSetupDemo: React.FC = () => {
               min="0"
               max="100"
               defaultValue="60"
-              onChange={(e: any) => // auto: implicit any
+              onChange={(e: any) => /* auto: implicit any */
                 soundEffectsService.setVolume('ambient', parseInt(e.target.value) / 100)
               }
               className="w-full"
@@ -754,7 +756,8 @@ export const CompleteThemeSystemDemo: React.FC = () => {
   });
 
   const handleAlarmUpdate = (updates: Partial<Alarm>) => {
-    setMockAlarm((prev: any) => ({ // auto: implicit any ...prev, ...updates }));
+    /* auto: implicit any */
+      setMockAlarm((prev: any) => ({{ ...prev, ...updates }));
   };
 
   return (

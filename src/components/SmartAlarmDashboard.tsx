@@ -66,6 +66,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
       // Load optimal times for each alarm
       const timesMap = new Map<string, OptimalTimeSlot[]>();
 
+      /* auto: implicit any */
       for (const alarm of alarms.filter((a: any) => a.smartEnabled)) {
         try {
           const times =
@@ -110,6 +111,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
     return <Alert className="w-4 h-4 text-red-400" />;
   };
 
+  /* auto: implicit any */
   const smartAlarms = alarms.filter((alarm: any) => alarm.smartEnabled);
 
   if (smartAlarms.length === 0) {
@@ -179,7 +181,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
           </button>
         </div>
 
-        {smartAlarms.map((alarm: any) => { // auto
+        {smartAlarms.map((alarm: any) => { // auto: implicit any
           const status = alarmStatuses.get(alarm.id);
           const optimal = optimalTimes.get(alarm.id) || [];
           const isExpanded = selectedAlarm === alarm.id;
@@ -238,7 +240,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={(e: any) => { // auto
+                      onClick={(e: any) => { // auto: implicit any
                         e.stopPropagation();
                         onEditAlarm(alarm);
                       }}
@@ -412,6 +414,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                   {/* Active Conditions */}
                   {alarm.conditionBasedAdjustments &&
+                    /* auto: implicit any */
                     alarm.conditionBasedAdjustments.filter((c: any) => c.isEnabled).length >
                       0 && (
                       <div className="bg-white/5 rounded-lg p-3">
@@ -423,10 +426,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {alarm.conditionBasedAdjustments
                             .filter((c: any) => c.isEnabled)
-                            .map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                            /* auto: implicit any */
+                            .map((condition: any) => ({
                               <div
                                 key={condition.id}
                                 className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"

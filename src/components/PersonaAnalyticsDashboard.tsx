@@ -102,7 +102,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const personaMetrics = useMemo((): PersonaMetrics[] => {
     const metrics = new Map<UserPersona, PersonaMetrics>();
 
-    analyticsData.forEach((data: any) => { // auto
+    analyticsData.forEach((data: any) => { // auto: implicit any
       const existing = metrics.get(data.persona) || {
         persona: data.persona,
         detections: 0,
@@ -135,10 +135,8 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   // Calculate campaign metrics
   const campaignMetrics = useMemo((): CampaignMetrics[] => {
-    return campaignData.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+    return campaignData/* auto: implicit any */
+      &.map((data: any) => ({
       campaign: data.campaignId,
       persona: data.persona,
       impressions: data.metrics.impressions,
@@ -357,7 +355,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: any) => // auto: implicit any
+                tickFormatter={(value: any) => /* auto: implicit any */
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 } // Show only first name
               />
@@ -383,7 +381,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: any) => // auto: implicit any
+                tickFormatter={(value: any) => /* auto: implicit any */
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 }
               />
@@ -408,7 +406,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: any) => // auto: implicit any
+                tickFormatter={(value: any) => /* auto: implicit any */
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 }
               />

@@ -100,7 +100,7 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     setTestResults((prev: any) => { // auto
       const existing = prev.find((r: any) => r.name === name);
       if (existing) {
-        return prev.map((r: any) => // auto: implicit any
+        return prev.map((r: any) => /* auto: implicit any */
           r.name === name ? { ...r, status, message, details } : r
         );
       }

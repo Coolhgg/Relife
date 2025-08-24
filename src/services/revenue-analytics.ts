@@ -147,7 +147,7 @@ export class RevenueAnalyticsService {
     if (error) throw error;
 
     let totalMRR = 0;
-    data?.forEach((subscription: any) => { // auto
+    data?.forEach((subscription: any) => { // auto: implicit any
       const monthlyAmount =
         subscription.billingInterval === 'year'
           ? subscription.amount / 12
@@ -220,7 +220,7 @@ export class RevenueAnalyticsService {
     if (trialError) throw trialError;
 
     // Get conversions from those trial users
-    const trialUserIds = trialUsers?.map((t: any) => t.userId) || [];
+    const trialUserIds = trialUsers?.map((t: any) => t // auto: implicit any.userId) || [];
     if (trialUserIds.length === 0) return 0;
 
     const { data: conversions, error: conversionError } = await supabase
@@ -251,7 +251,7 @@ export class RevenueAnalyticsService {
     if (error) throw error;
 
     const paths: Record<string, number> = {};
-    data?.forEach((change: any) => { // auto
+    data?.forEach((change: any) => { // auto: implicit any
       const path = `${change.previousTier}_to_${change.newTier}`;
       paths[path] = (paths[path] || 0) + 1;
     });
@@ -278,7 +278,7 @@ export class RevenueAnalyticsService {
       enterprise: 0,
     };
 
-    data?.forEach((subscription: any) => { // auto});
+    data?.forEach((subscription: any) => { // auto: implicit any});
 
     return distribution;
   }
@@ -343,10 +343,8 @@ export class RevenueAnalyticsService {
     const journey: UserJourney = {
       userId,
       events:
-        events?.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+        events?/* auto: implicit any */
+      &.map((event: any) => ({
           type: event.type,
           timestamp: new Date(event.timestamp),
           tier: event.tier,

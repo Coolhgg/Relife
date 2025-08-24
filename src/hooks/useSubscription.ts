@@ -154,7 +154,8 @@ function useSubscription(
     const initializeSubscription = async () => {
       if (!userId) return;
 
-      setState((prev: any) => ({ // auto: implicit any ...prev, isLoading: true, error: null }));
+      /* auto: implicit any */
+      setState((prev: any) => ({{ ...prev, isLoading: true, error: null }));
 
       try {
         const dashboardData =
@@ -163,7 +164,8 @@ function useSubscription(
           await subscriptionService.current.getFeatureAccess(userId);
         const userTier = await subscriptionService.current.getUserTier(userId);
 
-        setState((prev: any) => ({ // auto: implicit any
+        /* auto: implicit any */
+      setState((prev: any) => ({{
           ...prev,
           subscription: dashboardData.subscription,
           currentPlan: dashboardData.currentPlan,
@@ -192,7 +194,8 @@ function useSubscription(
           { context: 'useSubscription_init', metadata: { userId } }
         );
 
-        setState((prev: any) => ({ // auto: implicit any
+        /* auto: implicit any */
+      setState((prev: any) => ({{
           ...prev,
           isLoading: false,
           isInitialized: true,
@@ -227,7 +230,8 @@ function useSubscription(
   // Subscription actions
   const createSubscription = useCallback(
     async (request: CreateSubscriptionRequest) => {
-      setState((prev: any) => ({ // auto: implicit any
+      /* auto: implicit any */
+      setState((prev: any) => ({{
         ...prev,
         uiState: {
           ...prev.uiState,
@@ -247,7 +251,8 @@ function useSubscription(
           // Refresh subscription data
           await refreshSubscription();
 
-          setState((prev: any) => ({ // auto: implicit any
+          /* auto: implicit any */
+      setState((prev: any) => ({{
             ...prev,
             uiState: {
               ...prev.uiState,
@@ -279,7 +284,8 @@ function useSubscription(
             requiresAction: !!result.clientSecret,
           };
         } else {
-          setState((prev: any) => ({ // auto: implicit any
+          /* auto: implicit any */
+      setState((prev: any) => ({{
             ...prev,
             uiState: {
               ...prev.uiState,
@@ -298,7 +304,8 @@ function useSubscription(
         const errorMessage =
           error instanceof Error ? error.message : 'An unexpected error occurred';
 
-        setState((prev: any) => ({ // auto: implicit any
+        /* auto: implicit any */
+      setState((prev: any) => ({{
           ...prev,
           uiState: {
             ...prev.uiState,
@@ -320,7 +327,8 @@ function useSubscription(
         return { success: false, error: 'No active subscription found' };
       }
 
-      setState((prev: any) => ({ // auto: implicit any ...prev, isLoading: true, error: null }));
+      /* auto: implicit any */
+      setState((prev: any) => ({{ ...prev, isLoading: true, error: null }));
 
       try {
         const result = await subscriptionService.current.updateSubscription(
@@ -344,12 +352,14 @@ function useSubscription(
           }
         }
 
-        setState((prev: any) => ({ // auto: implicit any ...prev, isLoading: false }));
+        /* auto: implicit any */
+      setState((prev: any) => ({{ ...prev, isLoading: false }));
         return result;
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : 'Failed to update subscription';
-        setState((prev: any) => ({ // auto: implicit any ...prev, isLoading: false, error: errorMessage }));
+        /* auto: implicit any */
+      setState((prev: any) => ({{ ...prev, isLoading: false, error: errorMessage }));
         return { success: false, error: errorMessage };
       }
     },
@@ -362,7 +372,8 @@ function useSubscription(
         return { success: false, error: 'No active subscription found' };
       }
 
-      setState((prev: any) => ({ // auto: implicit any ...prev, isLoading: true, error: null }));
+      /* auto: implicit any */
+      setState((prev: any) => ({{ ...prev, isLoading: true, error: null }));
 
       try {
         const result = await subscriptionService.current.cancelSubscription(
@@ -386,12 +397,14 @@ function useSubscription(
           }
         }
 
-        setState((prev: any) => ({ // auto: implicit any ...prev, isLoading: false }));
+        /* auto: implicit any */
+      setState((prev: any) => ({{ ...prev, isLoading: false }));
         return result;
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : 'Failed to cancel subscription';
-        setState((prev: any) => ({ // auto: implicit any ...prev, isLoading: false, error: errorMessage }));
+        /* auto: implicit any */
+      setState((prev: any) => ({{ ...prev, isLoading: false, error: errorMessage }));
         return { success: false, error: errorMessage };
       }
     },
@@ -428,7 +441,8 @@ function useSubscription(
         if (state.featureAccess) {
           const updatedFeatureAccess =
             await subscriptionService.current.getFeatureAccess(userId);
-          setState((prev: any) => ({ // auto: implicit any ...prev, featureAccess: updatedFeatureAccess }));
+          /* auto: implicit any */
+      setState((prev: any) => ({{ ...prev, featureAccess: updatedFeatureAccess }));
         }
       } catch (error) {
         console.error('Failed to track feature usage:', error);
@@ -541,7 +555,8 @@ function useSubscription(
         subscriptionService.current.getUserTier(userId),
       ]);
 
-      setState((prev: any) => ({ // auto: implicit any
+      /* auto: implicit any */
+      setState((prev: any) => ({{
         ...prev,
         subscription: dashboardData.subscription,
         currentPlan: dashboardData.currentPlan,
@@ -558,11 +573,13 @@ function useSubscription(
   }, [userId]);
 
   const clearError = useCallback(() => {
-    setState((prev: any) => ({ // auto: implicit any ...prev, error: null }));
+    /* auto: implicit any */
+      setState((prev: any) => ({{ ...prev, error: null }));
   }, []);
 
   const resetUIState = useCallback(() => {
-    setState((prev: any) => ({ // auto: implicit any
+    /* auto: implicit any */
+      setState((prev: any) => ({{
       ...prev,
       uiState: {
         selectedPlan: undefined,
@@ -591,8 +608,8 @@ function useSubscription(
       const currentLevel = tierHierarchy.indexOf(currentTier);
       const targetLevel = tierHierarchy.indexOf(targetTier);
 
-      const currentPlan = state.availablePlans.find((p: any) => p.tier === currentTier);
-      const targetPlan = state.availablePlans.find((p: any) => p.tier === targetTier);
+      const currentPlan = state.availablePlans.find((p: any) => p // auto: implicit any.tier === currentTier);
+      const targetPlan = state.availablePlans.find((p: any) => p // auto: implicit any.tier === targetTier);
 
       const currentPrice = currentPlan?.pricing.monthly?.amount || 0;
       const targetPrice = targetPlan?.pricing.monthly?.amount || 0;

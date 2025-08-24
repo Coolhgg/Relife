@@ -104,7 +104,8 @@ export default function LoginForm({
               id="email"
               type="email"
               value={email}
-              onChange={(e: any) => s // auto: implicit anyetEmail(e.target.value)}
+              /* auto: implicit any */
+              onChange={(e: any) => setEmail(e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.email
                   ? 'border-red-500'
@@ -145,7 +146,8 @@ export default function LoginForm({
               id="password"
               type={showPassword ? 'text' : 'password'}
               value={password}
-              onChange={(e: any) => s // auto: implicit anyetPassword(e.target.value)}
+              /* auto: implicit any */
+              onChange={(e: any) => setPassword(e.target.value)}
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.password
                   ? 'border-red-500'

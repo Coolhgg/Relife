@@ -409,7 +409,8 @@ export function MediaContent({
               <Input
                 placeholder="Search sounds..."
                 value={searchQuery}
-                onChange={(e: any) => h // auto: implicit anyandleSearchChange(e.target.value)}
+                /* auto: implicit any */
+                onChange={(e: any) => handleSearchChange(e.target.value)}
                 className="w-full"
                 aria-label="Search through sound library"
                 role="searchbox"

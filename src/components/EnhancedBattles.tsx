@@ -385,10 +385,8 @@ export function EnhancedBattles({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {MOCK_SEASON.rewards.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+              {MOCK_SEASON.rewards/* auto: implicit any */
+      &.map((reward: any) => (
                 <div
                   key={reward.rank}
                   className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"

@@ -97,7 +97,8 @@ export function ActiveAlarm({
     }
 
     const timer = setInterval(() => {
-      setTimeLeft((prev: any) => p // auto: implicit anyrev - 1);
+      /* auto: implicit any */
+      setTimeLeft((prev: any) => prev - 1);
     }, 1000);
 
     return () => clearInterval(timer);
@@ -337,7 +338,8 @@ export function ActiveAlarm({
                       <Input
                         type="number"
                         value={challengeAnswer}
-                        onChange={(e: any) => s // auto: implicit anyetChallengeAnswer(e.target.value)}
+                        /* auto: implicit any */
+                        onChange={(e: any) => setChallengeAnswer(e.target.value)}
                         placeholder="Your answer"
                         className="text-center text-lg"
                         autoFocus

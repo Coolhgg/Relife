@@ -254,7 +254,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
         themeDescription || `Custom theme based on ${baseTheme}`;
 
       setCurrentEditingTheme(customTheme);
-      setSavedThemes((prev: any) => [...prev, customTheme]);
+      setSavedThemes((prev: any) => [ // auto: implicit any...prev, customTheme]);
 
       // Save to localStorage
       const savedCustomThemes = JSON.parse(
@@ -306,7 +306,8 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
   };
 
   const handleColorChange = (colorKey: keyof ColorPaletteState, color: string) => {
-    setColorPalette((prev: any) => ({ // auto: implicit any
+    /* auto: implicit any */
+      setColorPalette((prev: any) => ({{
       ...prev,
       [colorKey]: color,
     }));
@@ -611,7 +612,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                         <input
                           type="text"
                           value={color}
-                          onChange={(e: any) => // auto: implicit any
+                          onChange={(e: any) => /* auto: implicit any */
                             handleColorChange(
                               key as keyof ColorPaletteState,
                               e.target.value
@@ -623,7 +624,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                       {showColorPicker === key && (
                         <ColorPicker
                           color={color}
-                          onChange={(newColor: any) => // auto: implicit any
+                          onChange={(newColor: any) => /* auto: implicit any */
                             handleColorChange(key as keyof ColorPaletteState, newColor)
                           }
                           onClose={() => setShowColorPicker(null)}

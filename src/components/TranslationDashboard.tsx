@@ -349,10 +349,8 @@ export const TranslationDashboard: React.FC = () => {
 
                 {/* Language Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {data.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                  {/* auto: implicit any */}
+                  {data.map((lang: any) => (
                     <div
                       key={lang.language}
                       className="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
@@ -398,10 +396,8 @@ export const TranslationDashboard: React.FC = () => {
             {/* Languages Tab */}
             {activeTab === 'languages' && (
               <div className="space-y-6">
-                {data.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                {/* auto: implicit any */}
+                {data.map((lang: any) => (
                   <div key={lang.language} className="bg-gray-50 p-6 rounded-lg">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-xl font-medium">
@@ -463,16 +459,16 @@ export const TranslationDashboard: React.FC = () => {
                   <h3 className="text-lg font-medium text-red-800 mb-4">
                     🚨 Critical Issues
                   </h3>
+                  {/* auto: implicit any */}
                   {data.filter((d: any) => d.qualityScore.overall < 70).length === 0 ? (
                     <p className="text-green-600">✅ No critical issues detected!</p>
                   ) : (
                     <div className="space-y-2">
                       {data
+                        /* auto: implicit any */
                         .filter((d: any) => d.qualityScore.overall < 70)
-                        .map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                        /* auto: implicit any */
+                        .map((lang: any) => (
                           <div
                             key={lang.language}
                             className="bg-white p-3 rounded border-l-4 border-red-400"
@@ -497,11 +493,10 @@ export const TranslationDashboard: React.FC = () => {
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {data
+                      /* auto: implicit any */
                       .filter((d: any) => d.culturalIssues > 0)
-                      .map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                      /* auto: implicit any */
+                      .map((lang: any) => (
                         <div
                           key={lang.language}
                           className="bg-white p-3 rounded border-l-4 border-orange-400"
@@ -525,11 +520,10 @@ export const TranslationDashboard: React.FC = () => {
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {data
+                      /* auto: implicit any */
                       .filter((d: any) => d.consistencyIssues > 0)
-                      .map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                      /* auto: implicit any */
+                      .map((lang: any) => (
                         <div
                           key={lang.language}
                           className="bg-white p-3 rounded border-l-4 border-blue-400"

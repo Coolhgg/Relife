@@ -49,6 +49,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   userId = 'demo-user',
 }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
+  /* auto: implicit any */
   const enabledAlarms = alarms?.filter((a: any) => a.enabled) || [];
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
@@ -280,12 +281,12 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           {shouldShowAchievements && achievements.length > 0 && (
             <AchievementBadges
               achievements={achievements}
-              onAchievementClick={(achievement: any) => { // auto
+              onAchievementClick={(achievement: any) => { // auto: implicit any
                 trackFeatureUsage('achievements', 'clicked', {
                   type: achievement.achievementType,
                 });
               }}
-              onAchievementShare={(achievement: any) => { // auto
+              onAchievementShare={(achievement: any) => { // auto: implicit any
                 trackFeatureUsage('achievements', 'shared', {
                   type: achievement.achievementType,
                 });
@@ -313,15 +314,15 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       {shouldShowChallenges && activeChallenges.length > 0 && (
         <CommunityChallenge
           challenges={activeChallenges}
-          onJoinChallenge={(challengeId: any) => { // auto
+          onJoinChallenge={(challengeId: any) => { // auto: implicit any
             trackFeatureUsage('challenges', 'joined', { challengeId });
             joinChallenge(challengeId);
           }}
-          onLeaveChallenge={(challengeId: any) => { // auto
+          onLeaveChallenge={(challengeId: any) => { // auto: implicit any
             trackFeatureUsage('challenges', 'left', { challengeId });
             leaveChallenge(challengeId);
           }}
-          onChallengeShare={(challengeId: any) => { // auto
+          onChallengeShare={(challengeId: any) => { // auto: implicit any
             trackFeatureUsage('challenges', 'shared', { challengeId });
           }}
         />
@@ -367,10 +368,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
       {/* Smart Upgrade Prompts for Struggling Sam */}
       {shouldShowUpgradePrompts &&
-        upgradePrompts.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+        upgradePrompts/* auto: implicit any */
+      &.map((prompt: any) => (
           <SmartUpgradePrompt
             key={prompt.id}
             prompt={prompt}
@@ -398,7 +397,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             Recent Alarms
           </h3>
           <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
-            {alarms.slice(0, 3).map((alarm: any) => { // auto
+            {alarms.slice(0, 3).map((alarm: any) => { // auto: implicit any
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
               return (
@@ -512,10 +511,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             ))}
 
             {/* Smart Insights */}
-            {smartInsights.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+            {smartInsights/* auto: implicit any */
+      &.map((insight: any) => (
               <div
                 key={insight.id}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
@@ -681,14 +678,12 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
       {/* Habit Celebrations */}
       {shouldShowCelebrations &&
-        pendingCelebrations.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+        pendingCelebrations/* auto: implicit any */
+      &.map((celebration: any) => (
           <HabitCelebration
             key={celebration.id}
             celebration={celebration}
-            onShare={(platform: any) => { // auto
+            onShare={(platform: any) => { // auto: implicit any
               trackFeatureUsage('celebrations', 'shared', {
                 platform,
                 type: celebration.celebrationType,

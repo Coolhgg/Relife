@@ -289,11 +289,9 @@ export const MobileAlarmList: React.FC = () => {
   ]);
 
   const handleToggle = (id: string, enabled: boolean) => {
-    setAlarms((prev: any) => // auto: implicit any
-      prev.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+    /* auto: implicit any */
+    setAlarms((prev: any) => 
+      prev.map((alarm: any) => (alarm.id === id ? { ...alarm, enabled } : alarm))
     );
   };
 
@@ -302,18 +300,18 @@ export const MobileAlarmList: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    setAlarms((prev: any) => p // auto: implicit anyrev.filter((alarm: any) => alarm.id !== id));
+    setAlarms((prev: any) => p // auto: implicit anyrev.filter((alarm: any) => a // auto: implicit anylarm.id !== id));
   };
 
   const handleDuplicate = (id: string) => {
-    const alarm = alarms.find((a: any) => a.id === id);
+    const alarm = alarms.find((a: any) => a // auto: implicit any.id === id);
     if (alarm) {
       const newAlarm = {
         ...alarm,
         id: Date.now().toString(),
         label: `${alarm.label} (Copy)`,
       };
-      setAlarms((prev: any) => [...prev, newAlarm]);
+      setAlarms((prev: any) => [ // auto: implicit any...prev, newAlarm]);
     }
   };
 
@@ -323,10 +321,8 @@ export const MobileAlarmList: React.FC = () => {
         Your Alarms
       </h2>
 
-      {alarms.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+      {alarms/* auto: implicit any */
+      &.map((alarm: any) => (
         <MobileAlarmCard
           key={alarm.id}
           alarm={alarm}

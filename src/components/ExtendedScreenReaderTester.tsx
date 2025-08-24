@@ -295,7 +295,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           category: activeCategory,
         };
 
-        setTestResults((prev: any) => [...prev.filter((r: any) => r.testId !== test.id), result]);
+        setTestResults((prev: any) => [ // auto: implicit any...prev.filter((r: any) => r // auto: implicit any.testId !== test.id), result]);
         onTestComplete?.(test.id, true);
       } catch (error) {
         console.error('Test playback failed:', error);
@@ -305,7 +305,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           timestamp: new Date(),
           category: activeCategory,
         };
-        setTestResults((prev: any) => [...prev.filter((r: any) => r.testId !== test.id), result]);
+        setTestResults((prev: any) => [ // auto: implicit any...prev.filter((r: any) => r // auto: implicit any.testId !== test.id), result]);
         onTestComplete?.(test.id, false);
       }
     },
@@ -391,14 +391,14 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
   // Get test result status
   const getTestStatus = (testId: string) => {
-    const result = testResults.find((r: any) => r.testId === testId);
+    const result = testResults.find((r: any) => r // auto: implicit any.testId === testId);
     return result?.success ? 'success' : result ? 'error' : 'pending';
   };
 
   // Test results summary
   const testSummary = useMemo(() => {
     const total = testResults.length;
-    const successful = testResults.filter((r: any) => r.success).length;
+    const successful = testResults.filter((r: any) => r // auto: implicit any.success).length;
     const failed = total - successful;
 
     return { total, successful, failed };
@@ -562,8 +562,8 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             <input
               type="checkbox"
               checked={preferences.autoAdvance}
-              onChange={(e: any) => // auto: implicit any
-                setPreferences((prev: any) => ({ // auto: implicit any ...prev, autoAdvance: e.target.checked }))
+              onChange={(e: any) => /* auto: implicit any */
+                setPreferences((prev: any) => ({ /* auto: implicit any */{ ...prev, autoAdvance: e.target.checked }))
               }
               className="mr-2 rounded"
             />
@@ -574,8 +574,8 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             <input
               type="checkbox"
               checked={preferences.simulatePremium}
-              onChange={(e: any) => // auto: implicit any
-                setPreferences((prev: any) => ({ // auto: implicit any ...prev, simulatePremium: e.target.checked }))
+              onChange={(e: any) => /* auto: implicit any */
+                setPreferences((prev: any) => ({ /* auto: implicit any */{ ...prev, simulatePremium: e.target.checked }))
               }
               className="mr-2 rounded"
             />
@@ -584,8 +584,8 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
           <select
             value={preferences.delayBetweenTests}
-            onChange={(e: any) => // auto: implicit any
-              setPreferences((prev: any) => ({ // auto: implicit any
+            onChange={(e: any) => /* auto: implicit any */
+              setPreferences((prev: any) => ({ /* auto: implicit any */{
                 ...prev,
                 delayBetweenTests: Number(e.target.value),
               }))
@@ -617,10 +617,8 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
                 </p>
               )}
               <div className="flex flex-wrap gap-1 mt-2">
-                {currentTest.tags.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                {currentTest.tags/* auto: implicit any */
+      &.map((tag: any) => (
                   <span
                     key={tag}
                     className="px-2 py-1 bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-200 text-xs rounded"

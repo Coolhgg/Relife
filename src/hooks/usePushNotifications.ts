@@ -49,7 +49,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    */
   const updateStatus = useCallback(async () => {
     try {
-      setStatus((prev: any) => ({ // auto: implicit any
+      /* auto: implicit any */
+      setStatus((prev: any) => ({{
         ...prev,
         hasPermission: PushNotificationService.hasPermission(),
         currentToken: PushNotificationService.getCurrentToken(),
@@ -60,7 +61,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       }));
     } catch (error) {
       console.error('Error updating push notification status:', error);
-      setStatus((prev: any) => ({ // auto: implicit any
+      /* auto: implicit any */
+      setStatus((prev: any) => ({{
         ...prev,
         error: error instanceof Error ? error.message : 'Unknown error',
       }));
@@ -71,7 +73,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    * Initialize push notifications
    */
   const initialize = useCallback(async (): Promise<boolean> => {
-    setStatus((prev: any) => ({ // auto: implicit any ...prev, isLoading: true, error: null }));
+    /* auto: implicit any */
+      setStatus((prev: any) => ({{ ...prev, isLoading: true, error: null }));
 
     try {
       track('push_notifications_initialize_attempt');
@@ -80,7 +83,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
 
       await updateStatus();
 
-      setStatus((prev: any) => ({ // auto: implicit any
+      /* auto: implicit any */
+      setStatus((prev: any) => ({{
         ...prev,
         isInitialized: success,
         isLoading: false,
@@ -101,7 +105,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       const errorMessage =
         error instanceof Error ? error.message : 'Initialization failed';
 
-      setStatus((prev: any) => ({ // auto: implicit any
+      /* auto: implicit any */
+      setStatus((prev: any) => ({{
         ...prev,
         error: errorMessage,
         isLoading: false,
@@ -118,7 +123,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    * Request notification permissions
    */
   const requestPermissions = useCallback(async (): Promise<boolean> => {
-    setStatus((prev: any) => ({ // auto: implicit any ...prev, isLoading: true, error: null }));
+    /* auto: implicit any */
+      setStatus((prev: any) => ({{ ...prev, isLoading: true, error: null }));
 
     try {
       track('push_permissions_request_attempt');
@@ -128,7 +134,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
 
       await updateStatus();
 
-      setStatus((prev: any) => ({ // auto: implicit any ...prev, isLoading: false }));
+      /* auto: implicit any */
+      setStatus((prev: any) => ({{ ...prev, isLoading: false }));
 
       if (success) {
         track('push_permissions_granted');
@@ -142,7 +149,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       const errorMessage =
         error instanceof Error ? error.message : 'Permission request failed';
 
-      setStatus((prev: any) => ({ // auto: implicit any
+      /* auto: implicit any */
+      setStatus((prev: any) => ({{
         ...prev,
         error: errorMessage,
         isLoading: false,
@@ -159,7 +167,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    */
   const updateSettings = useCallback(
     async (newSettings: Partial<PushNotificationSettings>): Promise<void> => {
-      setStatus((prev: any) => ({ // auto: implicit any ...prev, isLoading: true, error: null }));
+      /* auto: implicit any */
+      setStatus((prev: any) => ({{ ...prev, isLoading: true, error: null }));
 
       try {
         track('push_settings_update', {
@@ -170,7 +179,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
 
         await updateStatus();
 
-        setStatus((prev: any) => ({ // auto: implicit any ...prev, isLoading: false }));
+        /* auto: implicit any */
+      setStatus((prev: any) => ({{ ...prev, isLoading: false }));
 
         track('push_settings_updated', {
           enabled: status.settings.enabled,
@@ -182,7 +192,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         const errorMessage =
           error instanceof Error ? error.message : 'Settings update failed';
 
-        setStatus((prev: any) => ({ // auto: implicit any
+        /* auto: implicit any */
+      setStatus((prev: any) => ({{
           ...prev,
           error: errorMessage,
           isLoading: false,
@@ -220,7 +231,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         const errorMessage =
           error instanceof Error ? error.message : 'Alarm scheduling failed';
 
-        setStatus((prev: any) => ({ // auto: implicit any ...prev, error: errorMessage }));
+        /* auto: implicit any */
+      setStatus((prev: any) => ({{ ...prev, error: errorMessage }));
 
         track('push_alarm_schedule_error', {
           alarmId: alarm.id,
@@ -247,7 +259,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         const errorMessage =
           error instanceof Error ? error.message : 'Daily motivation failed';
 
-        setStatus((prev: any) => ({ // auto: implicit any ...prev, error: errorMessage }));
+        /* auto: implicit any */
+      setStatus((prev: any) => ({{ ...prev, error: errorMessage }));
 
         track('push_daily_motivation_error', { error: errorMessage });
       }
@@ -274,7 +287,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         const errorMessage =
           error instanceof Error ? error.message : 'Weekly progress failed';
 
-        setStatus((prev: any) => ({ // auto: implicit any ...prev, error: errorMessage }));
+        /* auto: implicit any */
+      setStatus((prev: any) => ({{ ...prev, error: errorMessage }));
 
         track('push_weekly_progress_error', { error: errorMessage });
       }
@@ -286,14 +300,16 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    * Test push notification
    */
   const testNotification = useCallback(async (): Promise<void> => {
-    setStatus((prev: any) => ({ // auto: implicit any ...prev, isLoading: true, error: null }));
+    /* auto: implicit any */
+      setStatus((prev: any) => ({{ ...prev, isLoading: true, error: null }));
 
     try {
       track('push_test_notification_send');
 
       await PushNotificationService.testPushNotification();
 
-      setStatus((prev: any) => ({ // auto: implicit any ...prev, isLoading: false }));
+      /* auto: implicit any */
+      setStatus((prev: any) => ({{ ...prev, isLoading: false }));
 
       track('push_test_notification_sent');
     } catch (error) {
@@ -301,7 +317,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       const errorMessage =
         error instanceof Error ? error.message : 'Test notification failed';
 
-      setStatus((prev: any) => ({ // auto: implicit any
+      /* auto: implicit any */
+      setStatus((prev: any) => ({{
         ...prev,
         error: errorMessage,
         isLoading: false,
@@ -315,7 +332,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    * Unregister from push notifications
    */
   const unregister = useCallback(async (): Promise<void> => {
-    setStatus((prev: any) => ({ // auto: implicit any ...prev, isLoading: true, error: null }));
+    /* auto: implicit any */
+      setStatus((prev: any) => ({{ ...prev, isLoading: true, error: null }));
 
     try {
       track('push_unregister_attempt');
@@ -325,7 +343,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
 
       await updateStatus();
 
-      setStatus((prev: any) => ({ // auto: implicit any
+      /* auto: implicit any */
+      setStatus((prev: any) => ({{
         ...prev,
         isLoading: false,
         isInitialized: false,
@@ -339,7 +358,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       const errorMessage =
         error instanceof Error ? error.message : 'Unregistration failed';
 
-      setStatus((prev: any) => ({ // auto: implicit any
+      /* auto: implicit any */
+      setStatus((prev: any) => ({{
         ...prev,
         error: errorMessage,
         isLoading: false,

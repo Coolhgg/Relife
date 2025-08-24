@@ -71,7 +71,7 @@
     "snoozesLeft": "Còn {{count}} lần báo lại",
     "snoozesLeft_plural": "Còn {{count}} lần báo lại",
     "noSnoozesLeft": "Hết lần báo lại",
-    "voiceChallenge": "Nói "Tôi đã thức" để tắt",
+    "voiceChallenge": "Nói \"Tôi đã thức\" để tắt",
     "shakeToSnooze": "Lắc thiết bị để báo lại",
     "challenges": {
       "math": "Giải bài toán",

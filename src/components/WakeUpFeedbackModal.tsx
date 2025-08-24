@@ -101,7 +101,8 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
   };
 
   const updateFeedback = (updates: Partial<WakeUpFeedback>) => {
-    setFeedback((prev: any) => ({ // auto: implicit any ...prev, ...updates }));
+    /* auto: implicit any */
+      setFeedback((prev: any) => ({{ ...prev, ...updates }));
   };
 
   if (!isOpen) return null;
@@ -232,7 +233,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 min="1"
                 max="10"
                 value={feedback.sleepQuality}
-                onChange={(e: any) => // auto: implicit any
+                onChange={(e: any) => /* auto: implicit any */
                   updateFeedback({ sleepQuality: parseInt(e.target.value) })
                 }
                 className="flex-1 accent-purple-500"
@@ -267,7 +268,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
               max="60"
               step="5"
               value={feedback.timeToFullyAwake}
-              onChange={(e: any) => // auto: implicit any
+              onChange={(e: any) => /* auto: implicit any */
                 updateFeedback({ timeToFullyAwake: parseInt(e.target.value) })
               }
               className="w-full accent-purple-500"
@@ -289,7 +290,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="checkbox"
                   checked={feedback.wouldPreferEarlier}
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: any) => /* auto: implicit any */
                     updateFeedback({
                       wouldPreferEarlier: e.target.checked,
                       wouldPreferLater: e.target.checked
@@ -307,7 +308,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="checkbox"
                   checked={feedback.wouldPreferLater}
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: any) => /* auto: implicit any */
                     updateFeedback({
                       wouldPreferLater: e.target.checked,
                       wouldPreferEarlier: e.target.checked

@@ -69,8 +69,9 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
   const [snoozeEnabled, setSnoozeEnabled] = useState(true);
 
   const toggleDay = (day: DayOfWeek) => {
-    setSelectedDays((prev: any) => // auto: implicit any
-      prev.includes(day) ? prev.filter((d: any) => d // auto: implicit any !== day) : [...prev, day]
+    /* auto: implicit any */
+    setSelectedDays((prev: any) => 
+      prev.includes(day) ? prev.filter((d: any) => d !== day) : [...prev, day]
     );
   };
 

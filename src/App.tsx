@@ -250,7 +250,7 @@ function AppContent() {
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
     activeAlarm: appState.activeAlarm,
-    enabledAlarms: appState.alarms.filter((alarm: any) => alarm.enabled), // auto: implicit any
+    enabledAlarms: appState.alarms.filter((alarm: any) => alarm.enabled), /* auto: implicit any */
     settings: tabProtectionSettings.settings,
   });
 
@@ -270,7 +270,7 @@ function AppContent() {
         const aiRewards = AIRewardsService.getInstance();
         const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
 
-        setAppState((prev: any) => ({ // auto: implicit any
+        setAppState((prev: any) => ({ /* auto: implicit any */
           
           ...prev,
           rewardSystem,
@@ -301,7 +301,7 @@ function AppContent() {
       // Load alarms from offline storage first (faster)
       const offlineAlarms = await OfflineStorage.getAlarms();
       if (offlineAlarms.length > 0) {
-        setAppState((prev: any) => ({ // auto: implicit any
+        setAppState((prev: any) => ({ /* auto: implicit any */
           
           ...prev,
           alarms: offlineAlarms,
@@ -315,7 +315,7 @@ function AppContent() {
           const { alarms: savedAlarms } = await SupabaseService.loadUserAlarms(
             auth.user.id
           );
-          setAppState((prev: any) => ({ // auto: implicit any
+          setAppState((prev: any) => ({ /* auto: implicit any */
           
             ...prev,
             alarms: savedAlarms,
@@ -344,7 +344,7 @@ function AppContent() {
           await refreshRewardsSystem(offlineAlarms);
         }
       } else {
-        setAppState((prev: any) => ({ // auto: implicit any
+        setAppState((prev: any) => ({ /* auto: implicit any */
           
           ...prev,
           alarms: offlineAlarms,
@@ -380,7 +380,7 @@ function AppContent() {
         analytics.trackAlarmAction('snooze', alarmId, { success: true, duration });
         analytics.trackFeatureUsage('alarm_snooze', 'completed', { duration });
 
-        setAppState((prev: any) => ({ // auto: implicit any
+        setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, activeAlarm: null, currentView: 'dashboard' }));
       } catch (error) {
         const duration = performance.now() - startTime;
@@ -405,7 +405,7 @@ function AppContent() {
           }
         );
         // Fallback: still hide the alarm even if snooze fails
-        setAppState((prev: any) => ({ // auto: implicit any
+        setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, activeAlarm: null, currentView: 'dashboard' }));
       }
     },
@@ -491,7 +491,7 @@ function AppContent() {
       console.log('App: Handling service worker alarm trigger:', alarm.id);
 
       // Update app state to show alarm as triggered
-      setAppState((prev: any) => ({ // auto: implicit any
+      setAppState((prev: any) => ({ /* auto: implicit any */
           
         ...prev,
         activeAlarm: alarm,
@@ -708,7 +708,7 @@ function AppContent() {
         const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(
           auth.user.id
         );
-        setAppState((prev: any) => ({ // auto: implicit any
+        setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, alarms: updatedAlarms }));
         await OfflineStorage.saveAlarms(updatedAlarms);
       }
@@ -801,7 +801,7 @@ function AppContent() {
     const appAnalytics = AppAnalyticsService.getInstance();
     const emailService = EmailCampaignService.getInstance();
 
-    setAppState((prev: any) => ({ // auto: implicit any
+    setAppState((prev: any) => ({ /* auto: implicit any */
           
       ...prev,
       user: auth.user,
@@ -1108,6 +1108,7 @@ function AppContent() {
 
       // Check if there are enabled alarms that could ring soon
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
+        /* auto: implicit any */
         const enabledAlarms = appState.alarms.filter((alarm: any) => alarm.enabled);
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold
@@ -1119,7 +1120,7 @@ function AppContent() {
                 1000
           );
 
-          const upcomingAlarms = enabledAlarms.filter((alarm: any) => { // auto
+          const upcomingAlarms = enabledAlarms.filter((alarm: any) => { // auto: implicit any
             const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
             // Check if alarm is set for today
@@ -1286,7 +1287,7 @@ function AppContent() {
       }
 
       const updatedAlarms = [...appState.alarms, newAlarm];
-      setAppState((prev: any) => ({ // auto: implicit any
+      setAppState((prev: any) => ({ /* auto: implicit any */
           
         ...prev,
         alarms: updatedAlarms,
@@ -1384,6 +1385,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('edit', alarmId, { voiceMood: alarmData.voiceMood });
+      /* auto: implicit any */
       const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
@@ -1405,11 +1407,11 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map((alarm: any) => // auto: implicit any
+      const updatedAlarms = appState.alarms.map((alarm: any) => /* auto: implicit any */
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState((prev: any) => ({ // auto: implicit any
+      setAppState((prev: any) => ({ /* auto: implicit any */
           
         ...prev,
         alarms: updatedAlarms,
@@ -1484,9 +1486,11 @@ function AppContent() {
         await OfflineStorage.deleteAlarm(alarmId);
       }
 
+      /* auto: implicit any */
       const alarmToDelete = appState.alarms.find((a: any) => a.id === alarmId);
+      /* auto: implicit any */
       const updatedAlarms = appState.alarms.filter((alarm: any) => alarm.id !== alarmId);
-      setAppState((prev: any) => ({ // auto: implicit any
+      setAppState((prev: any) => ({ /* auto: implicit any */
           
         ...prev,
         alarms: updatedAlarms,
@@ -1547,6 +1551,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('toggle', alarmId, { enabled });
+      /* auto: implicit any */
       const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
@@ -1568,11 +1573,11 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map((alarm: any) => // auto: implicit any
+      const updatedAlarms = appState.alarms.map((alarm: any) => /* auto: implicit any */
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState((prev: any) => ({ // auto: implicit any
+      setAppState((prev: any) => ({ /* auto: implicit any */
           
         ...prev,
         alarms: updatedAlarms,
@@ -1632,7 +1637,7 @@ function AppContent() {
       false // Not skipped
     );
 
-    setAppState((prev: any) => ({ // auto: implicit any
+    setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, isOnboarding: false }));
   };
 
@@ -1662,7 +1667,7 @@ function AppContent() {
           duration,
         });
 
-        setAppState((prev: any) => ({ // auto: implicit any
+        setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, activeAlarm: null, currentView: 'dashboard' }));
       } catch (error) {
         const duration = performance.now() - startTime;
@@ -1686,7 +1691,7 @@ function AppContent() {
           }
         );
         // Fallback: still dismiss the alarm even if logging fails
-        setAppState((prev: any) => ({ // auto: implicit any
+        setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, activeAlarm: null, currentView: 'dashboard' }));
       }
     };
@@ -1784,7 +1789,7 @@ function AppContent() {
                 There was a problem with the alarm. It has been dismissed.
               </p>
               <button
-                onClick={() => setAppState((prev: any) => ({ // auto: implicit any
+                onClick={() => setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, activeAlarm: null }))}
                 className="bg-red-600 text-white px-4 py-2 rounded-lg"
               >
@@ -1811,6 +1816,7 @@ function AppContent() {
       case 'dashboard':
         appAnalytics.trackPageView('dashboard', {
           totalAlarms: appState.alarms.length,
+          /* auto: implicit any */
           activeAlarms: appState.alarms.filter((a: any) => a.enabled).length,
         });
         return (
@@ -1827,7 +1833,7 @@ function AppContent() {
                   'navigation',
                   'advanced_scheduling_from_dashboard'
                 );
-                setAppState((prev: any) => ({ // auto: implicit any
+                setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, currentView: 'advanced-scheduling' }));
               }}
             />
@@ -1842,7 +1848,7 @@ function AppContent() {
             <AlarmList
               alarms={appState.alarms}
               onToggleAlarm={handleToggleAlarm}
-              onEditAlarm={(alarm: any) => { // auto
+              onEditAlarm={(alarm: any) => { // auto: implicit any
                 appAnalytics.trackFeatureUsage('edit_alarm', 'button_clicked', {
                   alarmId: alarm.id,
                   alarmLabel: alarm.label,
@@ -1872,7 +1878,7 @@ function AppContent() {
               rewardSystem={appState.rewardSystem}
               activeBattles={appState.activeBattles || []}
               friends={appState.friends || []}
-              onCreateBattle={(battle: any) => { // auto
+              onCreateBattle={(battle: any) => { // auto: implicit any
                 // Add battle to state with complete Battle object
                 const completeBattle: Battle = {
                   id: battle.id || Math.random().toString(36).substr(2, 9),
@@ -1891,7 +1897,7 @@ function AppContent() {
                   createdAt: battle.createdAt || new Date().toISOString(),
                   ...battle,
                 };
-                setAppState((prev: any) => ({ // auto: implicit any
+                setAppState((prev: any) => ({ /* auto: implicit any */
           
                   ...prev,
                   activeBattles: [...(prev.activeBattles || []), completeBattle],
@@ -1900,7 +1906,7 @@ function AppContent() {
                   battleType: completeBattle.type,
                 });
               }}
-              onJoinBattle={(battleId: any) => { // auto
+              onJoinBattle={(battleId: any) => { // auto: implicit any
                 appAnalytics.trackFeatureUsage('battle_participation', 'joined', {
                   battleId,
                 });
@@ -1965,7 +1971,7 @@ function AppContent() {
           <ErrorBoundary context="PricingPage">
             <PricingPage
               user={auth.user as User}
-              onUpgrade={(plan: any) => { // auto
+              onUpgrade={(plan: any) => { // auto: implicit any
                 appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
                   plan: plan.id,
                   price: plan.price,
@@ -2053,6 +2059,7 @@ function AppContent() {
                     tabProtectionSettings.settings.visualSettings.showVisualWarning && (
                       <TabProtectionWarning
                         activeAlarm={appState.activeAlarm}
+                        /* auto: implicit any */
                         enabledAlarms={appState.alarms.filter((alarm: any) => alarm.enabled)}
                         settings={tabProtectionSettings.settings}
                       />
@@ -2108,7 +2115,7 @@ function AppContent() {
                 onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
-                  setAppState((prev: any) => ({ // auto: implicit any
+                  setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, currentView: 'dashboard' }));
                   AccessibilityUtils.announcePageChange('Dashboard');
                 })}
@@ -2126,14 +2133,14 @@ function AppContent() {
                         borderColor: 'transparent',
                       }
                 }
-                onMouseEnter={(e: any) => { // auto
+                onMouseEnter={(e: any) => { // auto: implicit any
                   if (appState.currentView !== 'dashboard') {
                     e.currentTarget.style.backgroundColor =
                       'var(--theme-surface-hover)';
                     e.currentTarget.style.color = 'var(--theme-text-primary)';
                   }
                 }}
-                onMouseLeave={(e: any) => { // auto
+                onMouseLeave={(e: any) => { // auto: implicit any
                   if (appState.currentView !== 'dashboard') {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = 'var(--theme-text-secondary)';
@@ -2157,7 +2164,7 @@ function AppContent() {
                   appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
                     totalAlarms: appState.alarms.length,
                   });
-                  setAppState((prev: any) => ({ // auto: implicit any
+                  setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, currentView: 'alarms' }));
                   AccessibilityUtils.announcePageChange('Alarms');
                 })}
@@ -2175,14 +2182,14 @@ function AppContent() {
                         borderColor: 'transparent',
                       }
                 }
-                onMouseEnter={(e: any) => { // auto
+                onMouseEnter={(e: any) => { // auto: implicit any
                   if (appState.currentView !== 'alarms') {
                     e.currentTarget.style.backgroundColor =
                       'var(--theme-surface-hover)';
                     e.currentTarget.style.color = 'var(--theme-text-primary)';
                   }
                 }}
-                onMouseLeave={(e: any) => { // auto
+                onMouseLeave={(e: any) => { // auto: implicit any
                   if (appState.currentView !== 'alarms') {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = 'var(--theme-text-secondary)';
@@ -2207,7 +2214,7 @@ function AppContent() {
                     'navigation',
                     'advanced_scheduling_clicked'
                   );
-                  setAppState((prev: any) => ({ // auto: implicit any
+                  setAppState((prev: any) => ({ /* auto: implicit any */
           
                     ...prev,
                     currentView: 'advanced-scheduling',
@@ -2241,7 +2248,7 @@ function AppContent() {
                     hasRewards: !!appState.rewardSystem?.unlockedRewards.length,
                     activeBattles: appState.activeBattles?.length,
                   });
-                  setAppState((prev: any) => ({ // auto: implicit any
+                  setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, currentView: 'gaming' }));
                   AccessibilityUtils.announcePageChange('Gaming Hub');
                 })}
@@ -2266,7 +2273,7 @@ function AppContent() {
                 onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
-                  setAppState((prev: any) => ({ // auto: implicit any
+                  setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, currentView: 'settings' }));
                   AccessibilityUtils.announcePageChange('Settings');
                 })}
@@ -2291,7 +2298,7 @@ function AppContent() {
                 onClick={() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
-                  setAppState((prev: any) => ({ // auto: implicit any
+                  setAppState((prev: any) => ({ /* auto: implicit any */
            ...prev, currentView: 'pricing' }));
                   AccessibilityUtils.announcePageChange('Premium Plans');
                 }}

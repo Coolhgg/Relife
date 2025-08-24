@@ -267,7 +267,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('permissions')}
-            onKeyDown={(e: any) => h // auto: implicit anyandleKeyDown(e, 'permissions')}
+            /* auto: implicit any */
+            onKeyDown={(e: any) => handleKeyDown(e, 'permissions')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'permissions'}
             aria-controls="permissions-content"
@@ -318,7 +319,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('appearance')}
-            onKeyDown={(e: any) => h // auto: implicit anyandleKeyDown(e, 'appearance')}
+            /* auto: implicit any */
+            onKeyDown={(e: any) => handleKeyDown(e, 'appearance')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'appearance'}
             aria-controls="appearance-content"
@@ -653,7 +655,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('themes')}
-            onKeyDown={(e: any) => h // auto: implicit anyandleKeyDown(e, 'themes')}
+            /* auto: implicit any */
+            onKeyDown={(e: any) => handleKeyDown(e, 'themes')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'themes'}
             aria-controls="themes-content"
@@ -689,7 +692,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('personalization')}
-            onKeyDown={(e: any) => h // auto: implicit anyandleKeyDown(e, 'personalization')}
+            /* auto: implicit any */
+            onKeyDown={(e: any) => handleKeyDown(e, 'personalization')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'personalization'}
             aria-controls="personalization-content"
@@ -725,7 +729,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('cloudsync')}
-            onKeyDown={(e: any) => h // auto: implicit anyandleKeyDown(e, 'cloudsync')}
+            /* auto: implicit any */
+            onKeyDown={(e: any) => handleKeyDown(e, 'cloudsync'))
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'cloudsync'}
             aria-controls="cloudsync-content"
@@ -791,7 +796,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('voice')}
-            onKeyDown={(e: any) => h // auto: implicit anyandleKeyDown(e, 'voice')}
+            /* auto: implicit any */
+            onKeyDown={(e: any) => handleKeyDown(e, 'voice'))
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'voice'}
             aria-controls="voice-content"
@@ -865,7 +871,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   min="1"
                   max="10"
                   value={voiceSensitivity}
-                  onChange={(e: any) => h // auto: implicit anyandleVoiceSensitivityChange(parseInt(e.target.value))}
+                  /* auto: implicit any */
+                  onChange={(e: any) => handleVoiceSensitivityChange(parseInt(e.target.value)))
                   className="w-full h-2 bg-gray-200 dark:bg-dark-300 rounded-lg appearance-none cursor-pointer"
                   aria-describedby="sensitivity-help"
                   aria-valuemin={1}
@@ -889,7 +896,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('sounds')}
-            onKeyDown={(e: any) => h // auto: implicit anyandleKeyDown(e, 'sounds')}
+            /* auto: implicit any */
+            onKeyDown={(e: any) => handleKeyDown(e, 'sounds'))
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'sounds'}
             aria-controls="sounds-content"
@@ -925,7 +933,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('notifications')}
-            onKeyDown={(e: any) => h // auto: implicit anyandleKeyDown(e, 'notifications')}
+            /* auto: implicit any */
+            onKeyDown={(e: any) => handleKeyDown(e, 'notifications'))
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'notifications'}
             aria-controls="notifications-content"
@@ -1015,7 +1024,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <select
                     id="snooze-duration"
                     value={snoozeDuration}
-                    onChange={(e: any) => h // auto: implicit anyandleSnoozeDurationChange(e.target.value)}
+                    /* auto: implicit any */
+                    onChange={(e: any) => handleSnoozeDurationChange(e.target.value))
                     className="alarm-input"
                     aria-describedby="snooze-duration-desc"
                   >
@@ -1038,7 +1048,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <select
                     id="max-snoozes"
                     value={maxSnoozes}
-                    onChange={(e: any) => h // auto: implicit anyandleMaxSnoozesChange(e.target.value)}
+                    /* auto: implicit any */
+                    onChange={(e: any) => handleMaxSnoozesChange(e.target.value))
                     className="alarm-input"
                     aria-describedby="max-snoozes-desc"
                   >
@@ -1060,7 +1071,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('security')}
-            onKeyDown={(e: any) => h // auto: implicit anyandleKeyDown(e, 'security')}
+            /* auto: implicit any */
+            onKeyDown={(e: any) => handleKeyDown(e, 'security'))
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'security'}
             aria-controls="security-content"
@@ -1096,7 +1108,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('about')}
-            onKeyDown={(e: any) => h // auto: implicit anyandleKeyDown(e, 'about')}
+            /* auto: implicit any */
+            onKeyDown={(e: any) => handleKeyDown(e, 'about'))
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'about'}
             aria-controls="about-content"
@@ -1176,7 +1189,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           <section className="alarm-card bg-orange-50 dark:bg-orange-900/10 border-orange-200 dark:border-orange-800">
             <button
               onClick={() => toggleSection('development')}
-              onKeyDown={(e: any) => h // auto: implicit anyandleKeyDown(e, 'development')}
+              /* auto: implicit any */
+              onKeyDown={(e: any) => handleKeyDown(e, 'development'))
               className="w-full flex items-center justify-between p-1"
               aria-expanded={activeSection === 'development'}
               aria-controls="development-content"

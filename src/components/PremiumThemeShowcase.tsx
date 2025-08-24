@@ -195,6 +195,7 @@ const PremiumThemeShowcase: React.FC = () => {
               type="text"
               placeholder="Search themes..."
               value={searchTerm}
+              /* auto: implicit any */
               onChange={(e: any) => setSearchTerm(e.target.value)}
               className="search-input"
             />
