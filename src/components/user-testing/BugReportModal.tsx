@@ -444,7 +444,7 @@ export function BugReportModal({
                       onChange={(e: any) => s // auto: implicit anyetNewTag(e.target.value)}
                       placeholder="Add a tag..."
                       className="flex-1"
-                      onKeyDown={(e: any) => // auto: implicit any
+                      onKeyDown={(e: any) => /* auto: implicit any */
                         e.key === 'Enter' && (e.preventDefault(), addTag())
                       }
                     />
@@ -459,7 +459,8 @@ export function BugReportModal({
                   </div>
                   {tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
-                      {tags.map((tag: any) => ({ // auto: implicit any
+                      {tags/* auto: implicit any */
+      &.map((tag: any) => (
                         <Badge
                           key={tag}
                           variant="secondary"

@@ -562,8 +562,8 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             <input
               type="checkbox"
               checked={preferences.autoAdvance}
-              onChange={(e: any) => // auto: implicit any
-                setPreferences((prev: any) => ({ // auto: implicit any{ ...prev, autoAdvance: e.target.checked }))
+              onChange={(e: any) => /* auto: implicit any */
+                setPreferences((prev: any) => ({ /* auto: implicit any */{ ...prev, autoAdvance: e.target.checked }))
               }
               className="mr-2 rounded"
             />
@@ -574,8 +574,8 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             <input
               type="checkbox"
               checked={preferences.simulatePremium}
-              onChange={(e: any) => // auto: implicit any
-                setPreferences((prev: any) => ({ // auto: implicit any{ ...prev, simulatePremium: e.target.checked }))
+              onChange={(e: any) => /* auto: implicit any */
+                setPreferences((prev: any) => ({ /* auto: implicit any */{ ...prev, simulatePremium: e.target.checked }))
               }
               className="mr-2 rounded"
             />
@@ -584,8 +584,8 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
           <select
             value={preferences.delayBetweenTests}
-            onChange={(e: any) => // auto: implicit any
-              setPreferences((prev: any) => ({ // auto: implicit any{
+            onChange={(e: any) => /* auto: implicit any */
+              setPreferences((prev: any) => ({ /* auto: implicit any */{
                 ...prev,
                 delayBetweenTests: Number(e.target.value),
               }))
@@ -617,7 +617,8 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
                 </p>
               )}
               <div className="flex flex-wrap gap-1 mt-2">
-                {currentTest.tags.map((tag: any) => ({ // auto: implicit any
+                {currentTest.tags/* auto: implicit any */
+      &.map((tag: any) => (
                   <span
                     key={tag}
                     className="px-2 py-1 bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-200 text-xs rounded"

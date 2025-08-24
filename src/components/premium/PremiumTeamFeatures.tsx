@@ -149,7 +149,8 @@ function TeamDashboard() {
 
         <div className="space-y-3">
           <h4 className="font-semibold">Team Members</h4>
-          {team.members.map((member: any) => ({ // auto: implicit any
+          {team.members/* auto: implicit any */
+      &.map((member: any) => (
             <div
               key={member.id}
               className="flex items-center justify-between p-3 border rounded-lg"
@@ -301,7 +302,8 @@ function WakeUpChallenges() {
 
         <div className="space-y-3">
           <h4 className="font-semibold">Available Challenges</h4>
-          {availableChallenges.map((challenge: any) => ({ // auto: implicit any
+          {availableChallenges/* auto: implicit any */
+      &.map((challenge: any) => (
             <div
               key={challenge.id}
               className="flex items-center justify-between p-3 border rounded-lg"
@@ -372,7 +374,8 @@ function AccountabilityPartners() {
               </Button>
             </div>
           ) : (
-            partners.map((partner: any) => ({ // auto: implicit any
+            partners/* auto: implicit any */
+      &.map((partner: any) => (
               <div
                 key={partner.id}
                 className="flex items-center justify-between p-3 border rounded-lg"
@@ -401,7 +404,8 @@ function AccountabilityPartners() {
         {partnerRequests.length > 0 && (
           <div className="space-y-3">
             <h4 className="font-semibold">Partner Requests</h4>
-            {partnerRequests.map((request: any) => ({ // auto: implicit any
+            {partnerRequests/* auto: implicit any */
+      &.map((request: any) => (
               <div
                 key={request.id}
                 className="flex items-center justify-between p-3 border rounded-lg bg-blue-50"
@@ -549,8 +553,8 @@ function SocialWakeUpFeatures() {
               </span>
               <Switch
                 checked={enabled}
-                onCheckedChange={(checked: any) => // auto: implicit any
-                  setSocialSettings((prev: any) => ({ // auto: implicit any{ ...prev, [key]: checked }))
+                onCheckedChange={(checked: any) => /* auto: implicit any */
+                  setSocialSettings((prev: any) => ({ /* auto: implicit any */{ ...prev, [key]: checked }))
                 }
               />
             </div>

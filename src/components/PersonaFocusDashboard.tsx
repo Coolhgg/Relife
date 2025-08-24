@@ -254,7 +254,8 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
   };
 
   const ConversionFunnel = () => {
-    const funnelData = metrics.map((persona: any) => ({ // auto: implicit any{
+    const funnelData = metrics/* auto: implicit any */
+      &.map((persona: any) => ({
       name: persona.personaName,
       users: persona.count,
       conversions: Math.round(persona.count * persona.conversionRate),
@@ -289,7 +290,8 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
   };
 
   const RevenueDistribution = () => {
-    const pieData = metrics.map((persona: any) => ({ // auto: implicit any{
+    const pieData = metrics/* auto: implicit any */
+      &.map((persona: any) => ({
       name: persona.personaName,
       value: persona.revenueContribution,
       revenue: persona.ltv * persona.count * persona.conversionRate,
@@ -360,7 +362,8 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
           <div className="flex items-center space-x-4">
             <select
               value={timeRange}
-              onChange={(e: any) => o // auto: implicit anynTimeRangeChange(e.target.value)}
+              /* auto: implicit any */
+              onChange={(e: any) => onTimeRangeChange(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
               <option value="7d">Last 7 days</option>
@@ -432,7 +435,8 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
 
         {/* Persona Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {metrics.map((persona: any) => ({ // auto: implicit any
+          {metrics/* auto: implicit any */
+      &.map((persona: any) => (
             <PersonaCard key={persona.personaId} persona={persona} />
           ))}
         </div>

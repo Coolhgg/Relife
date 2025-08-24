@@ -472,7 +472,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                             <Select
                               value={generatedSoundConfig.type}
                               onValueChange={(value: any) =>
-                                setGeneratedSoundConfig((prev: any) => ({ // auto: implicit any{
+                                setGeneratedSoundConfig((prev: any) => ({ /* auto: implicit any */{
                                   ...prev,
                                   type: value,
                                 }))
@@ -504,8 +504,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               min="100"
                               max="2000"
                               value={generatedSoundConfig.frequency}
-                              onChange={(e: any) => // auto: implicit any
-                                setGeneratedSoundConfig((prev: any) => ({ // auto: implicit any{
+                              onChange={(e: any) => /* auto: implicit any */
+                                setGeneratedSoundConfig((prev: any) => ({ /* auto: implicit any */{
                                   ...prev,
                                   frequency: parseInt(e.target.value),
                                 }))
@@ -524,8 +524,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               max="10"
                               step="0.5"
                               value={generatedSoundConfig.duration}
-                              onChange={(e: any) => // auto: implicit any
-                                setGeneratedSoundConfig((prev: any) => ({ // auto: implicit any{
+                              onChange={(e: any) => /* auto: implicit any */
+                                setGeneratedSoundConfig((prev: any) => ({ /* auto: implicit any */{
                                   ...prev,
                                   duration: parseFloat(e.target.value),
                                 }))

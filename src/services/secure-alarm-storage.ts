@@ -639,7 +639,7 @@ export class SecureAlarmStorageService {
 
       // Remove all backups
       const { keys } = await Preferences.keys();
-      const backupKeys = keys.filter((key: any) => // auto: implicit any
+      const backupKeys = keys.filter((key: any) => /* auto: implicit any */
         key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX)
       );
 
@@ -666,7 +666,7 @@ export class SecureAlarmStorageService {
       const { keys } = await Preferences.keys();
       const alarmDataExists = keys.includes(SecureAlarmStorageService.ALARMS_KEY);
       const eventDataExists = keys.includes(SecureAlarmStorageService.ALARM_EVENTS_KEY);
-      const backupCount = keys.filter((key: any) => // auto: implicit any
+      const backupCount = keys.filter((key: any) => /* auto: implicit any */
         key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX)
       ).length;
 

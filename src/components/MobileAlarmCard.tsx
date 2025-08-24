@@ -289,8 +289,9 @@ export const MobileAlarmList: React.FC = () => {
   ]);
 
   const handleToggle = (id: string, enabled: boolean) => {
-    setAlarms((prev: any) => // auto: implicit any
-      prev.map((alarm: any) => ({ // auto: implicit anyalarm.id === id ? { ...alarm, enabled } : alarm))
+    /* auto: implicit any */
+    setAlarms((prev: any) => 
+      prev.map((alarm: any) => (alarm.id === id ? { ...alarm, enabled } : alarm))
     );
   };
 
@@ -320,7 +321,8 @@ export const MobileAlarmList: React.FC = () => {
         Your Alarms
       </h2>
 
-      {alarms.map((alarm: any) => ({ // auto: implicit any
+      {alarms/* auto: implicit any */
+      &.map((alarm: any) => (
         <MobileAlarmCard
           key={alarm.id}
           alarm={alarm}

@@ -335,8 +335,9 @@ export function BattleSystem({
   };
 
   const toggleFriendSelection = (friendId: string) => {
-    setSelectedFriends((prev: any) => // auto: implicit any
-      prev.includes(friendId) ? prev.filter((id: any) => i // auto: implicit anyd !== friendId) : [...prev, friendId]
+    /* auto: implicit any */
+    setSelectedFriends((prev: any) => 
+      prev.includes(friendId) ? prev.filter((id: any) => id !== friendId) : [...prev, friendId]
     );
   };
 

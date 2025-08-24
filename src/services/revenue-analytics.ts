@@ -343,7 +343,8 @@ export class RevenueAnalyticsService {
     const journey: UserJourney = {
       userId,
       events:
-        events?.map((event: any) => ({ // auto: implicit any{
+        events?/* auto: implicit any */
+      &.map((event: any) => ({
           type: event.type,
           timestamp: new Date(event.timestamp),
           tier: event.tier,

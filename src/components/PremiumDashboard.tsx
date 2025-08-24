@@ -180,7 +180,8 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
   }, [userId]);
 
   const loadDashboardData = async () => {
-    setState((prev: any) => ({ // auto: implicit any{ ...prev, loading: true }));
+    /* auto: implicit any */
+    setState((prev: any) => ({ ...prev, loading: true }));
 
     try {
       const [tier, featureAccess, trialDays, isTrialing, upgradeRec] =
@@ -192,7 +193,8 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
           PremiumVoiceService.getUpgradeRecommendation(userId),
         ]);
 
-      setState((prev: any) => ({ // auto: implicit any{
+      /* auto: implicit any */
+      setState((prev: any) => ({{
         ...prev,
         tier,
         featureAccess,
@@ -203,7 +205,8 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
       }));
     } catch (error) {
       console.error('Error loading dashboard data:', error);
-      setState((prev: any) => ({ // auto: implicit any{ ...prev, loading: false }));
+      /* auto: implicit any */
+      setState((prev: any) => ({ ...prev, loading: false }));
     }
   };
 
@@ -218,7 +221,8 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
   };
 
   const handleUpgrade = () => {
-    setState((prev: any) => ({ // auto: implicit any{ ...prev, showSubscriptionModal: true }));
+    /* auto: implicit any */
+    setState((prev: any) => ({ ...prev, showSubscriptionModal: true }));
   };
 
   const renderHeader = () => {
@@ -425,7 +429,8 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
           <SubscriptionModal
             isOpen={state.showSubscriptionModal}
             onClose={() =>
-              setState((prev: any) => ({ // auto: implicit any{ ...prev, showSubscriptionModal: false }))
+              /* auto: implicit any */
+              setState((prev: any) => ({ ...prev, showSubscriptionModal: false }))
             }
             userId={userId}
           />

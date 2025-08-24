@@ -142,7 +142,8 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
     try {
       const userCustomThemes = soundEffectsService.getCustomThemesByUser(userId);
       // Transform custom themes to match built-in theme format
-      const transformedThemes = userCustomThemes.map((theme: any) => ({ // auto: implicit any{
+      const transformedThemes = userCustomThemes/* auto: implicit any */
+      &.map((theme: any) => ({
         id: theme.id,
         name: theme.displayName || theme.name,
         description: theme.description || 'Custom theme',
@@ -174,18 +175,22 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
 
   // Test individual sound
   const handleTestSound = async (soundId: SoundEffectId) => {
-    setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [soundId]: null }));
+    /* auto: implicit any */
+      setTestResults((prev: any) => ({{ ...prev, [soundId]: null }));
 
     try {
       const result = await testSound(soundId);
-      setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [soundId]: result }));
+      /* auto: implicit any */
+      setTestResults((prev: any) => ({{ ...prev, [soundId]: result }));
 
       // Clear result after 3 seconds
       setTimeout(() => {
-        setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [soundId]: null }));
+        /* auto: implicit any */
+      setTestResults((prev: any) => ({{ ...prev, [soundId]: null }));
       }, 3000);
     } catch (error) {
-      setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [soundId]: false }));
+      /* auto: implicit any */
+      setTestResults((prev: any) => ({{ ...prev, [soundId]: false }));
     }
   };
 
@@ -309,7 +314,8 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
             </Badge>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-            {allThemes.map((theme: any) => ({ // auto: implicit any
+            {allThemes/* auto: implicit any */
+      &.map((theme: any) => (
               <Card
                 key={theme.id}
                 className={`cursor-pointer transition-colors ${
@@ -436,7 +442,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                   </div>
                   <Switch
                     checked={settings.notificationSoundsEnabled}
-                    onCheckedChange={(enabled: any) => // auto: implicit any
+                    onCheckedChange={(enabled: any) => /* auto: implicit any */
                       handleToggleCategory('notification', enabled)
                     }
                   />
@@ -508,7 +514,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                   </div>
                   <Switch
                     checked={settings.ambientSoundsEnabled}
-                    onCheckedChange={(enabled: any) => // auto: implicit any
+                    onCheckedChange={(enabled: any) => /* auto: implicit any */
                       handleToggleCategory('ambient', enabled)
                     }
                   />

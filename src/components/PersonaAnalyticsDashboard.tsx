@@ -135,7 +135,8 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   // Calculate campaign metrics
   const campaignMetrics = useMemo((): CampaignMetrics[] => {
-    return campaignData.map((data: any) => ({ // auto: implicit any{
+    return campaignData/* auto: implicit any */
+      &.map((data: any) => ({
       campaign: data.campaignId,
       persona: data.persona,
       impressions: data.metrics.impressions,
@@ -354,7 +355,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: any) => // auto: implicit any
+                tickFormatter={(value: any) => /* auto: implicit any */
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 } // Show only first name
               />
@@ -380,7 +381,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: any) => // auto: implicit any
+                tickFormatter={(value: any) => /* auto: implicit any */
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 }
               />
@@ -405,7 +406,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: any) => // auto: implicit any
+                tickFormatter={(value: any) => /* auto: implicit any */
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 }
               />

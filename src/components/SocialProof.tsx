@@ -55,7 +55,8 @@ export const SocialProof: React.FC<SocialProofProps> = ({
     if (!autoRotate || socialProofData.length <= 1) return;
 
     const interval = setInterval(() => {
-      setCurrentProofIndex((prev: any) => ({ // auto: implicit anyprev + 1) % socialProofData.length);
+      /* auto: implicit any */
+      setCurrentProofIndex((prev: any) => (prev + 1) % socialProofData.length);
     }, 4000);
 
     return () => clearInterval(interval);
@@ -66,7 +67,8 @@ export const SocialProof: React.FC<SocialProofProps> = ({
     if (!autoRotate || successStories.length <= 1) return;
 
     const interval = setInterval(() => {
-      setCurrentStoryIndex((prev: any) => ({ // auto: implicit anyprev + 1) % successStories.length);
+      /* auto: implicit any */
+      setCurrentStoryIndex((prev: any) => (prev + 1) % successStories.length);
     }, 8000);
 
     return () => clearInterval(interval);
@@ -77,7 +79,8 @@ export const SocialProof: React.FC<SocialProofProps> = ({
     if (!autoRotate || realtimeActivity.length <= 1) return;
 
     const interval = setInterval(() => {
-      setRealtimeIndex((prev: any) => ({ // auto: implicit anyprev + 1) % realtimeActivity.length);
+      /* auto: implicit any */
+      setRealtimeIndex((prev: any) => (prev + 1) % realtimeActivity.length);
     }, 3000);
 
     return () => clearInterval(interval);
@@ -91,7 +94,8 @@ export const SocialProof: React.FC<SocialProofProps> = ({
 
   const getPersonaRelevantStories = () => {
     return successStories
-      .filter((story: any) => s // auto: implicit anytory.persona === userPersona || story.featured)
+      /* auto: implicit any */
+      .filter((story: any) => story.persona === userPersona || story.featured)
       .slice(0, 3);
   };
 

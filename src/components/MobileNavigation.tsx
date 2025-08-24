@@ -65,7 +65,8 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
 
         {/* Navigation Items */}
         <div className="flex justify-around items-center px-4 pb-2">
-          {items.slice(0, 4).map((item: any) => ({ // auto: implicit any
+          {items.slice(0, 4)/* auto: implicit any */
+      &.map((item: any) => (
             <NavigationButton
               key={item.id}
               item={item}

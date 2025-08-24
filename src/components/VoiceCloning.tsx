@@ -414,7 +414,8 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
                 Voice Samples
               </h3>
               <div className="space-y-3">
-                {samples.map((sample: any) => ({ // auto: implicit any
+                {samples/* auto: implicit any */
+      &.map((sample: any) => (
                   <div
                     key={sample.id}
                     className="bg-gray-50 rounded-lg p-4 flex items-center gap-3"

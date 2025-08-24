@@ -188,7 +188,8 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
                 <ul className="space-y-1">
                   {upcomingAlarms
                     .slice(0, settings.visualSettings.maxAlarmsShown)
-                    .map((alarm: any) => ({ // auto: implicit any
+                    /* auto: implicit any */
+      &.map((alarm: any) => (
                       <li
                         key={alarm.id}
                         className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-2"

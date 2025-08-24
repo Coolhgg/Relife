@@ -390,7 +390,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                     <div className="flex items-start gap-3">
                       <Checkbox
                         checked={isSelected}
-                        onCheckedChange={(checked: any) => // auto: implicit any
+                        onCheckedChange={(checked: any) => /* auto: implicit any */
                           handleChallengeToggle(challenge.type, checked as boolean)
                         }
                         className="mt-1"

@@ -122,9 +122,10 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
 
   // Animate confetti
   const animateConfetti = () => {
-    setConfettiPieces((pieces: any) => // auto: implicit any
+    setConfettiPieces((pieces: any) => /* auto: implicit any */
       pieces
-        .map((piece: any) => ({ // auto: implicit any{
+        /* auto: implicit any */
+      &.map((piece: any) => ({
           ...piece,
           x: piece.x + piece.velocityX,
           y: piece.y + piece.velocityY,
@@ -194,7 +195,8 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
         {/* Confetti Layer */}
         {confettiPieces.length > 0 && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {confettiPieces.map((piece: any) => ({ // auto: implicit any
+            {confettiPieces/* auto: implicit any */
+      &.map((piece: any) => (
               <motion.div
                 key={piece.id}
                 className="absolute w-2 h-2 rounded-sm"
@@ -441,7 +443,8 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                     {celebration.socialShare.defaultMessage}
                   </div>
                   <div className="flex gap-1 mt-2">
-                    {celebration.socialShare.hashtags.map((tag: any) => ({ // auto: implicit any
+                    {celebration.socialShare.hashtags/* auto: implicit any */
+      &.map((tag: any) => (
                       <Badge key={tag} variant="secondary" className="text-xs">
                         {tag}
                       </Badge>

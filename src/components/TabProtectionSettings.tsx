@@ -125,7 +125,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={settings.protectionTiming.activeAlarmWarning}
-                      onChange={(e: any) => // auto: implicit any
+                      onChange={(e: any) => /* auto: implicit any */
                         updateProtectionTiming({ activeAlarmWarning: e.target.checked })
                       }
                       className="rounded"
@@ -139,7 +139,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={settings.protectionTiming.upcomingAlarmWarning}
-                      onChange={(e: any) => // auto: implicit any
+                      onChange={(e: any) => /* auto: implicit any */
                         updateProtectionTiming({
                           upcomingAlarmWarning: e.target.checked,
                         })
@@ -163,7 +163,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                         max="1440"
                         step="5"
                         value={settings.protectionTiming.upcomingAlarmThreshold}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           updateProtectionTiming({
                             upcomingAlarmThreshold: parseInt(e.target.value),
                           })
@@ -177,7 +177,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={settings.protectionTiming.enabledAlarmWarning}
-                      onChange={(e: any) => // auto: implicit any
+                      onChange={(e: any) => /* auto: implicit any */
                         updateProtectionTiming({
                           enabledAlarmWarning: e.target.checked,
                         })
@@ -214,7 +214,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                   <input
                     type="checkbox"
                     checked={settings.visualSettings.showVisualWarning}
-                    onChange={(e: any) => // auto: implicit any
+                    onChange={(e: any) => /* auto: implicit any */
                       updateVisualSettings({ showVisualWarning: e.target.checked })
                     }
                     className="rounded"
@@ -230,7 +230,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                       </label>
                       <select
                         value={settings.visualSettings.position}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           updateVisualSettings({ position: e.target.value as any })
                         }
                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
@@ -257,7 +257,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                         max="60"
                         step="5"
                         value={settings.visualSettings.autoHideDelay}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           updateVisualSettings({
                             autoHideDelay: parseInt(e.target.value),
                           })
@@ -276,7 +276,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                         max="10"
                         step="1"
                         value={settings.visualSettings.maxAlarmsShown}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           updateVisualSettings({
                             maxAlarmsShown: parseInt(e.target.value),
                           })
@@ -289,7 +289,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                       <input
                         type="checkbox"
                         checked={settings.visualSettings.showAlarmDetails}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           updateVisualSettings({ showAlarmDetails: e.target.checked })
                         }
                         className="rounded"

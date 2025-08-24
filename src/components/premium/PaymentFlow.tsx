@@ -184,7 +184,8 @@ export function PaymentFlow({
 
     if (field.startsWith('billingAddress.')) {
       const addressField = field.replace('billingAddress.', '');
-      setFormData((prev: any) => ({ // auto: implicit any{
+      /* auto: implicit any */
+      setFormData((prev: any) => ({{
         ...prev,
         billingAddress: {
           ...prev.billingAddress,
@@ -192,7 +193,8 @@ export function PaymentFlow({
         },
       }));
     } else {
-      setFormData((prev: any) => ({ // auto: implicit any{
+      /* auto: implicit any */
+      setFormData((prev: any) => ({{
         ...prev,
         [field]: value,
       }));
@@ -200,7 +202,8 @@ export function PaymentFlow({
 
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
-      setValidationErrors((prev: any) => ({ // auto: implicit any{
+      /* auto: implicit any */
+      setValidationErrors((prev: any) => ({{
         ...prev,
         [field]: '',
       }));
@@ -527,7 +530,7 @@ export function PaymentFlow({
                       <Input
                         id="line1"
                         value={formData.billingAddress.line1}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           handleInputChange('billingAddress.line1', e.target.value)
                         }
                         placeholder="123 Main Street"
@@ -547,7 +550,7 @@ export function PaymentFlow({
                       <Input
                         id="line2"
                         value={formData.billingAddress.line2}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           handleInputChange('billingAddress.line2', e.target.value)
                         }
                         placeholder="Apartment, suite, etc."
@@ -559,7 +562,7 @@ export function PaymentFlow({
                       <Input
                         id="city"
                         value={formData.billingAddress.city}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           handleInputChange('billingAddress.city', e.target.value)
                         }
                         placeholder="New York"
@@ -577,7 +580,7 @@ export function PaymentFlow({
                       <Input
                         id="state"
                         value={formData.billingAddress.state}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           handleInputChange('billingAddress.state', e.target.value)
                         }
                         placeholder="NY"
@@ -589,7 +592,7 @@ export function PaymentFlow({
                       <Input
                         id="postalCode"
                         value={formData.billingAddress.postalCode}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           handleInputChange('billingAddress.postalCode', e.target.value)
                         }
                         placeholder="10001"
@@ -607,7 +610,7 @@ export function PaymentFlow({
                       <Input
                         id="country"
                         value={formData.billingAddress.country}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           handleInputChange('billingAddress.country', e.target.value)
                         }
                         placeholder="US"

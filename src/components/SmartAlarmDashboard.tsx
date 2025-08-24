@@ -66,7 +66,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
       // Load optimal times for each alarm
       const timesMap = new Map<string, OptimalTimeSlot[]>();
 
-      for (const alarm of alarms.filter((a: any) => a // auto: implicit any.smartEnabled)) {
+      /* auto: implicit any */
+      for (const alarm of alarms.filter((a: any) => a.smartEnabled)) {
         try {
           const times =
             await EnhancedSmartAlarmScheduler.calculateOptimalTimeSlots(alarm);
@@ -110,7 +111,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
     return <Alert className="w-4 h-4 text-red-400" />;
   };
 
-  const smartAlarms = alarms.filter((alarm: any) => a // auto: implicit anylarm.smartEnabled);
+  /* auto: implicit any */
+  const smartAlarms = alarms.filter((alarm: any) => alarm.smartEnabled);
 
   if (smartAlarms.length === 0) {
     return (
@@ -412,7 +414,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                   {/* Active Conditions */}
                   {alarm.conditionBasedAdjustments &&
-                    alarm.conditionBasedAdjustments.filter((c: any) => c // auto: implicit any.isEnabled).length >
+                    /* auto: implicit any */
+                    alarm.conditionBasedAdjustments.filter((c: any) => c.isEnabled).length >
                       0 && (
                       <div className="bg-white/5 rounded-lg p-3">
                         <h5 className="text-white font-medium mb-3 flex items-center gap-2">
@@ -422,8 +425,9 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {alarm.conditionBasedAdjustments
-                            .filter((c: any) => c // auto: implicit any.isEnabled)
-                            .map((condition: any) => ({ // auto: implicit any
+                            .filter((c: any) => c.isEnabled)
+                            /* auto: implicit any */
+                            .map((condition: any) => ({
                               <div
                                 key={condition.id}
                                 className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"

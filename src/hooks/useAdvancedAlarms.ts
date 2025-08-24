@@ -59,8 +59,9 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       await AlarmService.updateAlarm(id, alarmData);
-      setAlarms((prev: any) => // auto: implicit any
-        prev.map((alarm: any) => ({ // auto: implicit anyalarm.id === id ? { ...alarm, ...alarmData } : alarm))
+      /* auto: implicit any */
+      setAlarms((prev: any) => 
+        prev.map((alarm: any) => (alarm.id === id ? { ...alarm, ...alarmData } : alarm))
       );
       setError(null);
     } catch (error) {

@@ -141,7 +141,8 @@ const AlarmList: React.FC<AlarmListProps> = ({
   };
 
   const handleToggleAlarm = (alarmId: string, enabled: boolean) => {
-    const alarm = alarms.find((a: any) => a // auto: implicit any.id === alarmId);
+    /* auto: implicit any */
+    const alarm = alarms.find((a: any) => a.id === alarmId);
     onToggleAlarm(alarmId, enabled);
 
     // Announce toggle
@@ -164,7 +165,8 @@ const AlarmList: React.FC<AlarmListProps> = ({
   };
 
   const handleDeleteRequest = (alarmId: string) => {
-    const alarm = alarms.find((a: any) => a // auto: implicit any.id === alarmId);
+    /* auto: implicit any */
+    const alarm = alarms.find((a: any) => a.id === alarmId);
     setDeleteConfirmId(alarmId);
 
     if (alarm) {

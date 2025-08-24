@@ -49,7 +49,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   userId = 'demo-user',
 }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
-  const enabledAlarms = alarms?.filter((a: any) => a // auto: implicit any.enabled) || [];
+  /* auto: implicit any */
+  const enabledAlarms = alarms?.filter((a: any) => a.enabled) || [];
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
@@ -367,7 +368,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
       {/* Smart Upgrade Prompts for Struggling Sam */}
       {shouldShowUpgradePrompts &&
-        upgradePrompts.map((prompt: any) => ({ // auto: implicit any
+        upgradePrompts/* auto: implicit any */
+      &.map((prompt: any) => (
           <SmartUpgradePrompt
             key={prompt.id}
             prompt={prompt}
@@ -509,7 +511,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             ))}
 
             {/* Smart Insights */}
-            {smartInsights.map((insight: any) => ({ // auto: implicit any
+            {smartInsights/* auto: implicit any */
+      &.map((insight: any) => (
               <div
                 key={insight.id}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
@@ -675,7 +678,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
       {/* Habit Celebrations */}
       {shouldShowCelebrations &&
-        pendingCelebrations.map((celebration: any) => ({ // auto: implicit any
+        pendingCelebrations/* auto: implicit any */
+      &.map((celebration: any) => (
           <HabitCelebration
             key={celebration.id}
             celebration={celebration}

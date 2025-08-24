@@ -584,8 +584,8 @@ export class SupabaseService {
           throw new Error(`Failed to load alarms: ${error.message}`);
         }
 
-        const alarms: Alarm[] = (data || []).map((row: any) => ({
-          // auto: implicit any{
+        const alarms: Alarm[] = (data || [])/* auto: implicit any */
+        .map((row: any) => ({
           id: row.id,
           userId: row.user_id,
           time: row.time,
@@ -666,8 +666,8 @@ export class SupabaseService {
         return { events: [], error: error.message };
       }
 
-      const events: AlarmEvent[] = (data || []).map((row: any) => ({
-        // auto: implicit any{
+      const events: AlarmEvent[] = (data || [])/* auto: implicit any */
+        .map((row: any) => ({
         id: row.id,
         alarmId: row.alarm_id,
         firedAt: new Date(row.fired_at),

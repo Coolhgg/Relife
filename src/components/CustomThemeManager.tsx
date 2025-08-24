@@ -177,7 +177,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const handleThemeUpdated = (theme: CustomSoundTheme) => {
-    setThemes((prev: any) => p // auto: implicit anyrev.map((t: any) => ({ // auto: implicit anyt.id === theme.id ? theme : t)));
+    setThemes((prev: any) => p // auto: implicit anyrev/* auto: implicit any */
+      &.map((t: any) => (t.id === theme.id ? theme : t)));
     setEditingTheme(null);
   };
 
@@ -288,7 +289,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
       const exportData = {
         version: '1.0',
         exportedAt: new Date().toISOString(),
-        themes: themesToExport.map((theme: any) => ({ // auto: implicit any{
+        themes: themesToExport/* auto: implicit any */
+      &.map((theme: any) => ({
           ...theme,
           id: undefined,
           createdBy: undefined,
@@ -435,7 +437,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
       const success = await soundEffectsService.shareThemeWithCommunity(updatedTheme);
       if (success) {
-        setThemes((prev: any) => p // auto: implicit anyrev.map((t: any) => ({ // auto: implicit anyt.id === theme.id ? updatedTheme : t)));
+        setThemes((prev: any) => p // auto: implicit anyrev/* auto: implicit any */
+      &.map((t: any) => (t.id === theme.id ? updatedTheme : t)));
         if (onThemeUpdated) {
           onThemeUpdated(updatedTheme);
         }
@@ -453,7 +456,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
       const success = await soundEffectsService.rateTheme(themeId, userId, rating);
       if (success) {
         // Update local theme rating
-        setThemes((prev: any) => // auto: implicit any
+        setThemes((prev: any) => /* auto: implicit any */
           prev.map((theme: any) => { // auto: implicit any
             if (theme.id === themeId) {
               return {
@@ -946,7 +949,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               : 'space-y-4'
           }
         >
-          {filteredThemes.map((theme: any) => // auto: implicit any
+          {filteredThemes.map((theme: any) => /* auto: implicit any */
             viewMode === 'grid' ? renderThemeCard(theme) : renderThemeListItem(theme)
           )}
         </div>

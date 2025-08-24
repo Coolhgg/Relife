@@ -416,7 +416,8 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               {rewardSystem.availableRewards
                 .filter(
                   reward =>
-                    !rewardSystem.unlockedRewards.find((ur: any) => u // auto: implicit anyr.id === reward.id)
+                    /* auto: implicit any */
+                    !rewardSystem.unlockedRewards.find((ur: any) => ur.id === reward.id)
                 )
                 .map((reward: any) => { // auto: implicit any
                   const CategoryIcon = getCategoryIcon(reward.category);
@@ -478,7 +479,8 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               AI-Powered Insights
             </h2>
             <div className="space-y-4">
-              {rewardSystem.aiInsights.map((insight: any) => ({ // auto: implicit any
+              {rewardSystem.aiInsights/* auto: implicit any */
+      &.map((insight: any) => (
                 <div
                   key={insight.id}
                   className={`p-4 rounded-lg border-2 ${getPriorityColor(insight.priority)}`}
@@ -589,7 +591,8 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
 
             {/* Identified Habits */}
             <div className="space-y-3">
-              {rewardSystem.habits.map((habit: any) => ({ // auto: implicit any
+              {rewardSystem.habits/* auto: implicit any */
+      &.map((habit: any) => (
                 <div
                   key={habit.id}
                   className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"

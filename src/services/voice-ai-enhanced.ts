@@ -1028,8 +1028,8 @@ class VoiceAIEnhancedService {
       if (error) throw error;
 
       const learningData =
-        data?.map((row: any) => ({
-          // auto: implicit any{
+        data?/* auto: implicit any */
+        .map((row: any) => ({
           userId: row.user_id,
           voiceMood: row.voice_mood,
           context: row.context,

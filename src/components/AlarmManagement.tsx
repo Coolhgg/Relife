@@ -238,7 +238,7 @@ export function AlarmManagement({
   };
 
   const toggleDay = (dayNumber: number) => {
-    setFormData((prev: any) => ({ // auto: implicit any{
+    setFormData((prev: any) => ({ /* auto: implicit any */{
       ...prev,
       days: prev.days.includes(dayNumber)
         ? prev.days.filter((d: any) => d // auto: implicit any !== dayNumber)
@@ -302,8 +302,8 @@ export function AlarmManagement({
                         id="edit-time"
                         type="time"
                         value={formData.time}
-                        onChange={(e: any) => // auto: implicit any
-                          setFormData((prev: any) => ({ // auto: implicit any{ ...prev, time: e.target.value }))
+                        onChange={(e: any) => /* auto: implicit any */
+                          setFormData((prev: any) => ({ /* auto: implicit any */{ ...prev, time: e.target.value }))
                         }
                         className="text-sm"
                       />
@@ -315,8 +315,8 @@ export function AlarmManagement({
                       <Input
                         id="edit-label"
                         value={formData.label}
-                        onChange={(e: any) => // auto: implicit any
-                          setFormData((prev: any) => ({ // auto: implicit any{ ...prev, label: e.target.value }))
+                        onChange={(e: any) => /* auto: implicit any */
+                          setFormData((prev: any) => ({ /* auto: implicit any */{ ...prev, label: e.target.value }))
                         }
                         className="text-sm"
                       />
@@ -350,8 +350,8 @@ export function AlarmManagement({
                       </Label>
                       <Select
                         value={formData.sound}
-                        onValueChange={(value: any) => // auto: implicit any
-                          setFormData((prev: any) => ({ // auto: implicit any{ ...prev, sound: value }))
+                        onValueChange={(value: any) => /* auto: implicit any */
+                          setFormData((prev: any) => ({ /* auto: implicit any */{ ...prev, sound: value }))
                         }
                       >
                         <SelectTrigger className="text-sm">
@@ -372,8 +372,8 @@ export function AlarmManagement({
                       </Label>
                       <Select
                         value={formData.difficulty}
-                        onValueChange={(value: any) => // auto: implicit any
-                          setFormData((prev: any) => ({ // auto: implicit any{
+                        onValueChange={(value: any) => /* auto: implicit any */
+                          setFormData((prev: any) => ({ /* auto: implicit any */{
                             ...prev,
                             difficulty: value as AlarmDifficulty,
                           }))
@@ -419,7 +419,7 @@ export function AlarmManagement({
                     <div className="flex items-center gap-2">
                       <Switch
                         checked={alarm.isActive}
-                        onCheckedChange={(checked: any) => // auto: implicit any
+                        onCheckedChange={(checked: any) => /* auto: implicit any */
                           onUpdateAlarm(alarm.id, { isActive: checked })
                         }
                       />
@@ -520,8 +520,8 @@ export function AlarmManagement({
                   id="new-time"
                   type="time"
                   value={formData.time}
-                  onChange={(e: any) => // auto: implicit any
-                    setFormData((prev: any) => ({ // auto: implicit any{ ...prev, time: e.target.value }))
+                  onChange={(e: any) => /* auto: implicit any */
+                    setFormData((prev: any) => ({ /* auto: implicit any */{ ...prev, time: e.target.value }))
                   }
                 />
               </div>
@@ -530,8 +530,8 @@ export function AlarmManagement({
                 <Input
                   id="new-label"
                   value={formData.label}
-                  onChange={(e: any) => // auto: implicit any
-                    setFormData((prev: any) => ({ // auto: implicit any{ ...prev, label: e.target.value }))
+                  onChange={(e: any) => /* auto: implicit any */
+                    setFormData((prev: any) => ({ /* auto: implicit any */{ ...prev, label: e.target.value }))
                   }
                 />
               </div>
@@ -559,8 +559,8 @@ export function AlarmManagement({
               <Label htmlFor="new-sound">Sound</Label>
               <Select
                 value={formData.sound}
-                onValueChange={(value: any) => // auto: implicit any
-                  setFormData((prev: any) => ({ // auto: implicit any{ ...prev, sound: value }))
+                onValueChange={(value: any) => /* auto: implicit any */
+                  setFormData((prev: any) => ({ /* auto: implicit any */{ ...prev, sound: value }))
                 }
               >
                 <SelectTrigger>
@@ -580,8 +580,8 @@ export function AlarmManagement({
               <Label htmlFor="new-difficulty">Difficulty</Label>
               <Select
                 value={formData.difficulty}
-                onValueChange={(value: any) => // auto: implicit any
-                  setFormData((prev: any) => ({ // auto: implicit any{
+                onValueChange={(value: any) => /* auto: implicit any */
+                  setFormData((prev: any) => ({ /* auto: implicit any */{
                     ...prev,
                     difficulty: value as AlarmDifficulty,
                   }))
@@ -650,8 +650,8 @@ export function AlarmManagement({
                 <Switch
                   id="new-snooze"
                   checked={formData.snoozeEnabled}
-                  onCheckedChange={(checked: any) => // auto: implicit any
-                    setFormData((prev: any) => ({ // auto: implicit any{ ...prev, snoozeEnabled: checked }))
+                  onCheckedChange={(checked: any) => /* auto: implicit any */
+                    setFormData((prev: any) => ({ /* auto: implicit any */{ ...prev, snoozeEnabled: checked }))
                   }
                 />
               </div>
@@ -661,8 +661,8 @@ export function AlarmManagement({
                   <Label htmlFor="snooze-interval">Snooze Interval (minutes)</Label>
                   <Select
                     value={formData.snoozeInterval.toString()}
-                    onValueChange={(value: any) => // auto: implicit any
-                      setFormData((prev: any) => ({ // auto: implicit any{
+                    onValueChange={(value: any) => /* auto: implicit any */
+                      setFormData((prev: any) => ({ /* auto: implicit any */{
                         ...prev,
                         snoozeInterval: parseInt(value),
                       }))

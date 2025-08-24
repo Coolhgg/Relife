@@ -119,8 +119,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.speed]}
-                onValueChange={(value: any) => // auto: implicit any
-                  setVoiceSettings((prev: any) => ({ // auto: implicit any{ ...prev, speed: value[0] }))
+                onValueChange={(value: any) => /* auto: implicit any */
+                  setVoiceSettings((prev: any) => ({ /* auto: implicit any */{ ...prev, speed: value[0] }))
                 }
                 min={0.5}
                 max={2.0}
@@ -134,8 +134,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.pitch]}
-                onValueChange={(value: any) => // auto: implicit any
-                  setVoiceSettings((prev: any) => ({ // auto: implicit any{ ...prev, pitch: value[0] }))
+                onValueChange={(value: any) => /* auto: implicit any */
+                  setVoiceSettings((prev: any) => ({ /* auto: implicit any */{ ...prev, pitch: value[0] }))
                 }
                 min={0.5}
                 max={2.0}
@@ -151,8 +151,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.volume]}
-                onValueChange={(value: any) => // auto: implicit any
-                  setVoiceSettings((prev: any) => ({ // auto: implicit any{ ...prev, volume: value[0] }))
+                onValueChange={(value: any) => /* auto: implicit any */
+                  setVoiceSettings((prev: any) => ({ /* auto: implicit any */{ ...prev, volume: value[0] }))
                 }
                 min={0.1}
                 max={1.0}
@@ -283,12 +283,12 @@ function VoiceCommandRecognition() {
           <Input
             placeholder="Say this phrase..."
             value={newCommand.phrase}
-            onChange={(e: any) => s // auto: implicit anyetNewCommand((prev: any) => ({ // auto: implicit any{ ...prev, phrase: e.target.value }))}
+            onChange={(e: any) => s // auto: implicit anyetNewCommand((prev: any) => ({ /* auto: implicit any */{ ...prev, phrase: e.target.value }))}
           />
           <Input
             placeholder="To do this action..."
             value={newCommand.action}
-            onChange={(e: any) => s // auto: implicit anyetNewCommand((prev: any) => ({ // auto: implicit any{ ...prev, action: e.target.value }))}
+            onChange={(e: any) => s // auto: implicit anyetNewCommand((prev: any) => ({ /* auto: implicit any */{ ...prev, action: e.target.value }))}
           />
           <Button size="sm" className="w-full">
             Add Command
@@ -346,8 +346,8 @@ function PersonalizedAudioMessages() {
                 </span>
                 <Switch
                   checked={enabled}
-                  onCheckedChange={(checked: any) => // auto: implicit any
-                    setMessageTypes((prev: any) => ({ // auto: implicit any{ ...prev, [key]: checked }))
+                  onCheckedChange={(checked: any) => /* auto: implicit any */
+                    setMessageTypes((prev: any) => ({ /* auto: implicit any */{ ...prev, [key]: checked }))
                   }
                 />
               </div>

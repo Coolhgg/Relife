@@ -118,7 +118,8 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
         const existing = prev.find((a: any) => a // auto: implicit any.id === alert.id);
         if (existing) {
           // Update existing alert
-          return prev.map((a: any) => ({ // auto: implicit anya.id === alert.id ? alert : a));
+          return prev/* auto: implicit any */
+      &.map((a: any) => (a.id === alert.id ? alert : a));
         } else {
           // Add new alert
           return [...prev, alert];

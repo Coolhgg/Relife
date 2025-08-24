@@ -526,7 +526,8 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
     >
       {/* Ripple effects */}
       <AnimatePresence>
-        {ripples.map((ripple: any) => ({ // auto: implicit any
+        {ripples/* auto: implicit any */
+      &.map((ripple: any) => (
           <motion.div
             key={ripple.id}
             className="absolute bg-white/30 rounded-full pointer-events-none"

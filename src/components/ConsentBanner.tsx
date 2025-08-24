@@ -69,8 +69,8 @@ export default function ConsentBanner({
   };
 
   const handleConsentChange = (type: keyof ConsentSettings, value: boolean) => {
-    setConsents((prev: any) => ({
-      // auto: implicit any{
+    /* auto: implicit any */
+      setConsents((prev: any) => ({{
       ...prev,
       [type]: value,
     }));

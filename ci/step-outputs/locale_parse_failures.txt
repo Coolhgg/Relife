@@ -1,0 +1,60 @@
+JSON Locale Files - Parse Errors and Fix Results
+
+SYSTEMATIC ISSUE FOUND: All alarms.json files had unescaped quotes in voiceChallenge field
+
+AUTO-FIX RESULTS:
+✅ Successfully fixed: 24 files
+❌ Manual review needed: 3 files
+
+SUCCESSFULLY REPAIRED FILES (24):
+- public/locales/ar/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/bn/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/de/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/en/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/en-AU/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/en-GB/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/es/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/es-419/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/es-MX/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/fa/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/fr/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/fr-CA/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/he/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/hi/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/id/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/it/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/ko/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/ku/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/pt/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/pt-BR/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/ru/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/th/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/ur/alarms.json - Fixed unescaped quotes in voiceChallenge
+- public/locales/vi/alarms.json - Fixed unescaped quotes in voiceChallenge
+
+/* TODO(manual): invalid JSON - fix translations */
+FILES REQUIRING MANUAL REVIEW (3):
+
+1. public/locales/ja/alarms.json
+   Error: Bad control character in string literal at position 1944
+   Issue: Contains invalid UTF-8 or control characters in JSON string
+   Context: Around confirmDelete field, appears to have byte-order mark or invalid character
+   Recommended fix: Review UTF-8 encoding and remove invalid characters
+
+2. public/locales/zh/alarms.json  
+   Error: Bad control character in string literal at position 1810
+   Issue: Contains invalid control characters in JSON string
+   Context: Likely has newlines, tabs, or other control chars in string values
+   Recommended fix: Remove control characters, ensure proper JSON escaping
+
+3. public/locales/zh-TW/alarms.json
+   Error: Bad control character in string literal at position 1809
+   Issue: Contains invalid control characters in JSON string  
+   Context: Similar to zh locale, has control chars in strings
+   Recommended fix: Remove control characters, ensure proper JSON escaping
+
+OVERALL RESULT:
+- 89% success rate (24/27 files automatically fixed)
+- 11% require manual review (3/27 files with encoding/control character issues)
+- All systematic quote escaping issues have been resolved
+- Remaining issues are character encoding problems requiring manual intervention

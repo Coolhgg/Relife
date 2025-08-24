@@ -503,7 +503,8 @@ export function UsabilityAnalyticsDashboard() {
             <CardContent>
               {data.feedback.length > 0 ? (
                 <div className="space-y-4">
-                  {data.feedback.slice(0, 5).map((feedback: any) => ({ // auto: implicit any
+                  {data.feedback.slice(0, 5)/* auto: implicit any */
+      &.map((feedback: any) => (
                     <div key={feedback.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{feedback.title}</h4>
@@ -558,7 +559,8 @@ export function UsabilityAnalyticsDashboard() {
             <CardContent>
               {data.bugs.length > 0 ? (
                 <div className="space-y-4">
-                  {data.bugs.slice(0, 10).map((bug: any) => ({ // auto: implicit any
+                  {data.bugs.slice(0, 10)/* auto: implicit any */
+      &.map((bug: any) => (
                     <div key={bug.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{bug.title}</h4>

@@ -151,8 +151,10 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
   );
   const [hoveredAchievement, setHoveredAchievement] = useState<string | null>(null);
 
-  const unlockedAchievements = achievements.filter((a: any) => a // auto: implicit any.unlockedAt);
-  const lockedAchievements = achievements.filter((a: any) => ! // auto: implicit anya.unlockedAt);
+  /* auto: implicit any */
+  const unlockedAchievements = achievements.filter((a: any) => a.unlockedAt);
+  /* auto: implicit any */
+  const lockedAchievements = achievements.filter((a: any) => !a.unlockedAt);
 
   const getBadgeVariant = (rarity: string) => {
     const config = RARITY_CONFIGS[rarity as keyof typeof RARITY_CONFIGS];
@@ -302,7 +304,8 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
   if (compact) {
     return (
       <div className={`flex flex-wrap gap-2 ${className}`}>
-        {achievements.slice(0, 8).map((achievement: any) => ({ // auto: implicit any
+        {/* auto: implicit any */}
+        {achievements.slice(0, 8).map((achievement: any) => (
           <AchievementCard key={achievement.id} achievement={achievement} />
         ))}
         {achievements.length > 8 && (
@@ -335,7 +338,8 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                 Unlocked Achievements
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                {unlockedAchievements.map((achievement: any) => ({ // auto: implicit any
+                {/* auto: implicit any */}
+                {unlockedAchievements.map((achievement: any) => (
                   <div key={achievement.id} className="relative">
                     <AchievementCard achievement={achievement} />
                     {onShare && (
@@ -365,7 +369,8 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                 In Progress
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                {lockedAchievements.map((achievement: any) => ({ // auto: implicit any
+                {/* auto: implicit any */}
+                {lockedAchievements.map((achievement: any) => (
                   <AchievementCard key={achievement.id} achievement={achievement} />
                 ))}
               </div>
@@ -402,7 +407,8 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e: any) => e // auto: implicit any.stopPropagation()}
+              /* auto: implicit any */
+              onClick={(e: any) => e.stopPropagation()}
             >
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">

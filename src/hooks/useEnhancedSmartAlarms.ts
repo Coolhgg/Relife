@@ -108,8 +108,9 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         )) as EnhancedSmartAlarm;
 
         if (updatedAlarm) {
-          setAlarms((prev: any) => // auto: implicit any
-            prev.map((alarm: any) => ({ // auto: implicit anyalarm.id === id ? updatedAlarm : alarm))
+          /* auto: implicit any */
+          setAlarms((prev: any) => 
+            prev.map((alarm: any) => (alarm.id === id ? updatedAlarm : alarm))
           );
 
           // Update monitoring status
@@ -163,8 +164,9 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
           alarmId
         )) as EnhancedSmartAlarm;
         if (updatedAlarm) {
-          setAlarms((prev: any) => // auto: implicit any
-            prev.map((alarm: any) => ({ // auto: implicit anyalarm.id === alarmId ? updatedAlarm : alarm))
+          /* auto: implicit any */
+          setAlarms((prev: any) => 
+            prev.map((alarm: any) => (alarm.id === alarmId ? updatedAlarm : alarm))
           );
         }
 

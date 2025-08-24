@@ -173,7 +173,8 @@ function useFeatureGate(
   useEffect(() => {
     const calculateAccess = () => {
       if (!subscription.featureAccess) {
-        setGateResult((prev: any) => ({ // auto: implicit any{
+        /* auto: implicit any */
+      setGateResult((prev: any) => ({{
           ...prev,
           hasAccess: false,
           isGated: true,
@@ -185,7 +186,8 @@ function useFeatureGate(
       const featureDef = featureDefinitions[feature];
       if (!featureDef) {
         // Unknown feature, allow access
-        setGateResult((prev: any) => ({ // auto: implicit any{
+        /* auto: implicit any */
+      setGateResult((prev: any) => ({{
           ...prev,
           hasAccess: true,
           isGated: false,
@@ -257,7 +259,8 @@ function useFeatureGate(
     // Check if access can be granted (e.g., during trial)
     if (gateResult.canBypass) {
       // Temporarily grant access
-      setGateResult((prev: any) => ({ // auto: implicit any{ ...prev, hasAccess: true, isGated: false }));
+      /* auto: implicit any */
+      setGateResult((prev: any) => ({{ ...prev, hasAccess: true, isGated: false }));
 
       analytics.trackFeatureUsage('feature_gate_bypassed', undefined, {
         userId,
@@ -308,7 +311,8 @@ function useFeatureGate(
 
   const bypassGate = useCallback(
     (reason: string) => {
-      setGateResult((prev: any) => ({ // auto: implicit any{
+      /* auto: implicit any */
+      setGateResult((prev: any) => ({{
         ...prev,
         hasAccess: true,
         isGated: false,

@@ -132,8 +132,9 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
   };
 
   const updateCondition = (id: string, updates: Partial<ConditionBasedAdjustment>) => {
-    setConditions((prev: any) => // auto: implicit any
-      prev.map((cond: any) => ({ // auto: implicit anycond.id === id ? { ...cond, ...updates } : cond))
+    /* auto: implicit any */
+    setConditions((prev: any) => 
+      prev.map((cond: any) => (cond.id === id ? { ...cond, ...updates } : cond))
     );
   };
 
@@ -454,7 +455,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         max="1"
                         step="0.1"
                         value={sleepPatternWeight}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) => /* auto: implicit any */
                           setSleepPatternWeight(parseFloat(e.target.value))
                         }
                         className="w-full accent-purple-500"
@@ -523,7 +524,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                             <input
                               type="checkbox"
                               checked={condition.isEnabled}
-                              onChange={(e: any) => // auto: implicit any
+                              onChange={(e: any) => /* auto: implicit any */
                                 updateCondition(condition.id, {
                                   isEnabled: e.target.checked,
                                 })

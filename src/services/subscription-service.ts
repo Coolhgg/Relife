@@ -832,7 +832,8 @@ class SubscriptionService {
       .eq('user_id', userId);
 
     return (
-      data?.map((item: any) => ({ // auto: implicit any{
+      data?/* auto: implicit any */
+      &.map((item: any) => ({
         id: item.id,
         userId: item.user_id,
         discountId: item.discount_id,

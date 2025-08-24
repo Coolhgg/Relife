@@ -115,7 +115,8 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
           </label>
           <Select
             value={selectedDifficulty}
-            onValueChange={(value: any) => s // auto: implicit anyetSelectedDifficulty(value as AlarmDifficulty)}
+            /* auto: implicit any */
+            onValueChange={(value: any) => setSelectedDifficulty(value as AlarmDifficulty)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -565,7 +566,8 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
               type="checkbox"
               id="battle-mode"
               checked={battleMode}
-              onChange={(e: any) => s // auto: implicit anyetBattleMode(e.target.checked)}
+              /* auto: implicit any */
+              onChange={(e: any) => setBattleMode(e.target.checked)}
             />
             <label htmlFor="battle-mode" className="text-sm font-medium">
               Battle Mode

@@ -248,7 +248,8 @@ export function BetaTestingProgram() {
 
   const updateProgramStatus = (programId: string, newStatus: BetaProgram['status']) => {
     setPrograms(
-      programs.map((p: any) => ({ // auto: implicit anyp.id === programId ? { ...p, status: newStatus } : p))
+      programs/* auto: implicit any */
+      &.map((p: any) => (p.id === programId ? { ...p, status: newStatus } : p))
     );
   };
 
@@ -390,7 +391,8 @@ export function BetaTestingProgram() {
 
         <TabsContent value="programs" className="space-y-4">
           <div className="grid gap-4">
-            {programs.map((program: any) => ({ // auto: implicit any
+            {programs/* auto: implicit any */
+      &.map((program: any) => (
               <Card key={program.id}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
@@ -493,7 +495,8 @@ export function BetaTestingProgram() {
 
         <TabsContent value="testers" className="space-y-4">
           <div className="grid gap-4">
-            {testers.map((tester: any) => ({ // auto: implicit any
+            {testers/* auto: implicit any */
+      &.map((tester: any) => (
               <Card key={tester.id}>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
@@ -553,7 +556,8 @@ export function BetaTestingProgram() {
 
         <TabsContent value="feedback" className="space-y-4">
           <div className="grid gap-4">
-            {feedback.map((item: any) => ({ // auto: implicit any
+            {feedback/* auto: implicit any */
+      &.map((item: any) => (
               <Card key={item.id}>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-3">
@@ -614,7 +618,7 @@ export function BetaTestingProgram() {
                   id="participants"
                   type="number"
                   value={newProgram.targetParticipants}
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: any) => /* auto: implicit any */
                     setNewProgram({
                       ...newProgram,
                       targetParticipants: Number(e.target.value),
@@ -630,7 +634,7 @@ export function BetaTestingProgram() {
               <Textarea
                 id="description"
                 value={newProgram.description}
-                onChange={(e: any) => // auto: implicit any
+                onChange={(e: any) => /* auto: implicit any */
                   setNewProgram({ ...newProgram, description: e.target.value })
                 }
                 className="mt-1"
@@ -645,7 +649,7 @@ export function BetaTestingProgram() {
                   id="startDate"
                   type="date"
                   value={newProgram.startDate}
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: any) => /* auto: implicit any */
                     setNewProgram({ ...newProgram, startDate: e.target.value })
                   }
                   className="mt-1"
@@ -657,7 +661,7 @@ export function BetaTestingProgram() {
                   id="endDate"
                   type="date"
                   value={newProgram.endDate}
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: any) => /* auto: implicit any */
                     setNewProgram({ ...newProgram, endDate: e.target.value })
                   }
                   className="mt-1"

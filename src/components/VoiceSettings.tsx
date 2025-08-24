@@ -99,14 +99,14 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
   };
 
   const handleVoiceMoodChange = (mood: VoiceMood, voiceId: string) => {
-    setVoiceMappings((prev: any) => ({ // auto: implicit any{
+    setVoiceMappings((prev: any) => ({ /* auto: implicit any */{
       ...prev,
       [mood]: voiceId,
     }));
   };
 
   const handleApiKeyChange = (provider: string, key: string) => {
-    setApiKeys((prev: any) => ({ // auto: implicit any{
+    setApiKeys((prev: any) => ({ /* auto: implicit any */{
       ...prev,
       [provider]: key,
     }));
@@ -118,13 +118,13 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
     setValidatingKey(true);
     try {
       const isValid = await VoiceProService.setApiKey(provider, key);
-      setKeyValidation((prev: any) => ({ // auto: implicit any{
+      setKeyValidation((prev: any) => ({ /* auto: implicit any */{
         ...prev,
         [provider]: isValid,
       }));
     } catch (error) {
       console.error('Error validating API key:', error);
-      setKeyValidation((prev: any) => ({ // auto: implicit any{
+      setKeyValidation((prev: any) => ({ /* auto: implicit any */{
         ...prev,
         [provider]: false,
       }));
@@ -212,7 +212,8 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Voice Provider</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {providers.map((provider: any) => ({ // auto: implicit any
+              {providers/* auto: implicit any */
+      &.map((provider: any) => (
                 <div
                   key={provider.id}
                   className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
@@ -253,7 +254,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                     <input
                       type="password"
                       value={apiKeys[selectedProvider] || ''}
-                      onChange={(e: any) => // auto: implicit any
+                      onChange={(e: any) => /* auto: implicit any */
                         handleApiKeyChange(selectedProvider, e.target.value)
                       }
                       placeholder="Enter your API key"
@@ -323,7 +324,8 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                       className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
                     >
                       <option value="">Select voice...</option>
-                      {selectedProviderData?.voices.map((voice: any) => ({ // auto: implicit any
+                      {selectedProviderData?.voices/* auto: implicit any */
+      &.map((voice: any) => (
                         <option key={voice.id} value={voice.id} className="bg-gray-800">
                           {voice.name} ({voice.gender}, {voice.quality})
                         </option>
@@ -349,8 +351,8 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   max="2.0"
                   step="0.1"
                   value={globalSettings.speed}
-                  onChange={(e: any) => // auto: implicit any
-                    setGlobalSettings((prev: any) => ({ // auto: implicit any{
+                  onChange={(e: any) => /* auto: implicit any */
+                    setGlobalSettings((prev: any) => ({ /* auto: implicit any */{
                       ...prev,
                       speed: parseFloat(e.target.value),
                     }))
@@ -369,8 +371,8 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   max="2.0"
                   step="0.1"
                   value={globalSettings.pitch}
-                  onChange={(e: any) => // auto: implicit any
-                    setGlobalSettings((prev: any) => ({ // auto: implicit any{
+                  onChange={(e: any) => /* auto: implicit any */
+                    setGlobalSettings((prev: any) => ({ /* auto: implicit any */{
                       ...prev,
                       pitch: parseFloat(e.target.value),
                     }))
@@ -389,8 +391,8 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   max="1.0"
                   step="0.1"
                   value={globalSettings.volume}
-                  onChange={(e: any) => // auto: implicit any
-                    setGlobalSettings((prev: any) => ({ // auto: implicit any{
+                  onChange={(e: any) => /* auto: implicit any */
+                    setGlobalSettings((prev: any) => ({ /* auto: implicit any */{
                       ...prev,
                       volume: parseFloat(e.target.value),
                     }))
@@ -405,8 +407,8 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                 <input
                   type="checkbox"
                   checked={globalSettings.cacheEnabled}
-                  onChange={(e: any) => // auto: implicit any
-                    setGlobalSettings((prev: any) => ({ // auto: implicit any{
+                  onChange={(e: any) => /* auto: implicit any */
+                    setGlobalSettings((prev: any) => ({ /* auto: implicit any */{
                       ...prev,
                       cacheEnabled: e.target.checked,
                     }))
@@ -420,8 +422,8 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                 <input
                   type="checkbox"
                   checked={globalSettings.offlineMode}
-                  onChange={(e: any) => // auto: implicit any
-                    setGlobalSettings((prev: any) => ({ // auto: implicit any{
+                  onChange={(e: any) => /* auto: implicit any */
+                    setGlobalSettings((prev: any) => ({ /* auto: implicit any */{
                       ...prev,
                       offlineMode: e.target.checked,
                     }))
