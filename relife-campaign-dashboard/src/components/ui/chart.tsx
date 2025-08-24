@@ -124,7 +124,7 @@ function ChartTooltipContent({
     nameKey?: string;
     labelKey?: string;
   }) {
-  const { _config } = useChart();
+  const { _config: config } = useChart();
 
   const tooltipLabel = React.useMemo(() => {
     if (hideLabel || !payload?.length) {
@@ -251,7 +251,7 @@ function ChartLegendContent({
     hideIcon?: boolean;
     nameKey?: string;
   }) {
-  const { _config } = useChart();
+  const { _config: config } = useChart();
 
   if (!payload?.length) {
     return null;

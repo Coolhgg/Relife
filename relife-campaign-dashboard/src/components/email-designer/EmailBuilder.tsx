@@ -670,9 +670,9 @@ export function EmailBuilder({
                             {/* Block Controls */}
                             <div
                               className={`absolute top-2 right-2 flex gap-1 transition-opacity ${
-                                selectedBlockId === block.id || 'group-hover:'
+                                selectedBlockId === block.id
                                   ? 'opacity-100'
-                                  : 'opacity-0'
+                                  : 'opacity-0 group-hover:opacity-100'
                               }`}
                             >
                               <Button
