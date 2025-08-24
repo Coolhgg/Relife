@@ -562,7 +562,8 @@ export class AlarmRateLimitingService {
       // Get top violators
       const topViolators = Array.from(this.userLimits.values())
         .filter(user => user.violations > 0)
-        .sort((a, b) => b.violations - a.violations)
+        .sort((a, b
+) => b.violations - a.violations)
         .slice(0, 10)
         .map(user => ({
           userId: user.userId,
@@ -766,7 +767,8 @@ export class AlarmRateLimitingService {
       clearInterval(this.cleanupTimer);
     }
 
-    this.cleanupTimer = setInterval(async () => {
+    this.cleanupTimer = setInterval(async (
+) => {
       await this.cleanupExpiredData();
     }, AlarmRateLimitingService.CLEANUP_INTERVAL);
 
@@ -836,7 +838,8 @@ export class AlarmRateLimitingService {
       if (value) {
         const data = SecurityService.decryptData(value);
         this.rateLimitEntries = new Map(
-          Object.entries(data).map(([userId, entries]: [string, any[]]) => [
+          Object.entries(data).map(([userId, entries]: [string, any[]]
+) => [
             userId,
             entries.map(e => ({ ...e, timestamp: new Date(e.timestamp) })),
           ])
@@ -855,7 +858,8 @@ export class AlarmRateLimitingService {
       if (value) {
         const data = SecurityService.decryptData(value);
         this.userLimits = new Map(
-          data.map((user: any) => [
+          data.map((user: any
+) => [
             user.userId,
             {
               ...user,
@@ -880,7 +884,8 @@ export class AlarmRateLimitingService {
       });
       if (value) {
         const data = SecurityService.decryptData(value);
-        this.adaptiveAdjustments = data.map((adj: any) => ({
+        this.adaptiveAdjustments = data.map((adj: any
+) => ({
           ...adj,
           expiresAt: new Date(adj.expiresAt),
         }));

@@ -62,7 +62,8 @@ interface OfflineIndicatorProps {
 const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
   className = '',
   showDetailed = false,
-}) => {
+}
+) => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [showOfflineMessage, setShowOfflineMessage] = useState(false);
   const [syncStatus, setSyncStatus] = useState<
@@ -76,7 +77,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
   const [lastUpdate, setLastUpdate] = useState(Date.now());
 
   // Fetch detailed service worker and cache statistics
-  const fetchServiceWorkerStats = async () => {
+  const fetchServiceWorkerStats = async (
+) => {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
         // Get service worker status
@@ -109,8 +111,10 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     }
   };
 
-  useEffect(() => {
-    const handleOnline = async () => {
+  useEffect((
+) => {
+    const handleOnline = async (
+) => {
       setIsOnline(true);
       setShowOfflineMessage(false);
       setSyncStatus('pending');
@@ -126,22 +130,26 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
       await fetchServiceWorkerStats();
 
       // Set to synced after a delay
-      setTimeout(() => setSyncStatus('synced'), 2000);
+      setTimeout((
+) => setSyncStatus('synced'), 2000);
     };
 
-    const handleOffline = () => {
+    const handleOffline = (
+) => {
       setIsOnline(false);
       setShowOfflineMessage(true);
       setSyncStatus('offline');
 
       // Hide offline message after 5 seconds
-      setTimeout(() => {
+      setTimeout((
+) => {
         setShowOfflineMessage(false);
       }, 5000);
     };
 
     // Enhanced sync status handler
-    const handleSyncStatus = (event: CustomEvent) => {
+    const handleSyncStatus = (event: CustomEvent
+) => {
       setSyncStatus(event.detail.status);
       if (event.detail.pendingChanges !== undefined) {
         setPendingChanges(event.detail.pendingChanges);
@@ -160,12 +168,14 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     fetchServiceWorkerStats();
 
     // Update stats periodically
-    const statsInterval = setInterval(() => {
+    const statsInterval = setInterval((
+) => {
       fetchServiceWorkerStats();
       setLastUpdate(Date.now());
     }, 30000); // Every 30 seconds
 
-    return () => {
+    return (
+) => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
       window.removeEventListener('sync-status', handleSyncStatus as EventListener);
@@ -173,7 +183,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     };
   }, [fetchServiceWorkerStats]);
 
-  const getStatusIcon = () => {
+  const getStatusIcon = (
+) => {
     if (!isOnline) {
       return <WifiOff className="w-4 h-4 text-red-500" />;
     }
@@ -194,7 +205,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     }
   };
 
-  const getDetailedStatusIcon = () => {
+  const getDetailedStatusIcon = (
+) => {
     if (pendingChanges > 0) return <Database className="w-4 h-4" />;
     if (conflicts > 0) return <AlertCircle className="w-4 h-4" />;
     if (cacheStats && cacheStats.performance.hitRatio > 0.8)
@@ -202,7 +214,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     return <Activity className="w-4 h-4" />;
   };
 
-  const getStatusText = () => {
+  const getStatusText = (
+) => {
     if (!isOnline) {
       return pendingChanges > 0 ? `Offline (${pendingChanges} pending)` : 'Offline';
     }
@@ -221,7 +234,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     }
   };
 
-  const getDetailedStatusText = () => {
+  const getDetailedStatusText = (
+) => {
     const parts = [];
 
     if (swStatus) {
@@ -240,7 +254,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
 
     if (cacheStats && Object.keys(cacheStats.caches).length > 0) {
       const totalEntries = Object.values(cacheStats.caches).reduce(
-        (sum, cache) => sum + cache.entries,
+        (sum, cache
+) => sum + cache.entries,
         0
       );
       parts.push(`${totalEntries} cached items`);
@@ -249,7 +264,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     return parts.length > 0 ? parts.join(' • ') : 'Ready';
   };
 
-  const getStatusColor = () => {
+  const getStatusColor = (
+) => {
     if (!isOnline) {
       return 'text-red-600 dark:text-red-400';
     }
@@ -267,7 +283,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     }
   };
 
-  const formatBytes = (bytes: number) => {
+  const formatBytes = (bytes: number
+) => {
     if (bytes === 0) return '0 B';
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
@@ -275,7 +292,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   };
 
-  const formatTimeAgo = (timestamp: string) => {
+  const formatTimeAgo = (timestamp: string
+) => {
     const now = Date.now();
     const time = new Date(timestamp).getTime();
     const diff = now - time;
@@ -286,7 +304,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     return Math.floor(diff / 86400000) + 'd ago';
   };
 
-  const optimizeCache = async () => {
+  const optimizeCache = async (
+) => {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
         setSyncStatus('pending');
@@ -314,7 +333,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     }
   };
 
-  const clearCache = async () => {
+  const clearCache = async (
+) => {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
         setSyncStatus('pending');
@@ -356,7 +376,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
         </span>
         {showDetailed && (
           <button
-            onClick={() => setShowDetails(!showDetails)}
+            onClick={(
+) => setShowDetails(!showDetails)}
             className="ml-1 p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
             aria-label="Toggle detailed status"
           >
@@ -374,7 +395,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
               Offline Status
             </h3>
             <button
-              onClick={() => setShowDetails(false)}
+              onClick={(
+) => setShowDetails(false)}
               className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
             >
               <X className="w-4 h-4 text-gray-500" />
@@ -446,7 +468,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
                 Cache Usage
               </h4>
               <div className="space-y-1">
-                {Object.entries(cacheStats.caches).map(([name, cache]) => (
+                {Object.entries(cacheStats.caches).map(([name, cache]
+) => (
                   <div key={name} className="flex justify-between items-center text-xs">
                     <span className="text-gray-600 dark:text-gray-400 capitalize">
                       {name.toLowerCase()}

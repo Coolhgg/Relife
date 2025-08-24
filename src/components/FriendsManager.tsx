@@ -38,10 +38,14 @@ import type { User as UserType, UserStats, Friendship } from '../types/index';
 
 interface FriendsManagerProps {
   currentUser: UserType;
-  onChallengeFriend?: (friendId: string) => void;
-  onSendFriendRequest?: (username: string) => void;
-  onAcceptFriendRequest?: (requestId: string) => void;
-  onRejectFriendRequest?: (requestId: string) => void;
+  onChallengeFriend?: (friendId: string
+) => void;
+  onSendFriendRequest?: (username: string
+) => void;
+  onAcceptFriendRequest?: (requestId: string
+) => void;
+  onRejectFriendRequest?: (requestId: string
+) => void;
 }
 
 // Mock data for friends and their stats
@@ -239,13 +243,15 @@ export function FriendsManager({
       friend.user.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const getWinRateColor = (winRate: number) => {
+  const getWinRateColor = (winRate: number
+) => {
     if (winRate >= 0.8) return 'text-green-500';
     if (winRate >= 0.6) return 'text-yellow-500';
     return 'text-red-500';
   };
 
-  const formatLastActive = (lastActive: string) => {
+  const formatLastActive = (lastActive: string
+) => {
     const now = new Date();
     const last = new Date(lastActive);
     const diff = now.getTime() - last.getTime();
@@ -312,7 +318,8 @@ export function FriendsManager({
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => {
+                        onClick={(
+) => {
                           announceFriendEvent('request-sent', user);
                           onSendFriendRequest?.(user.username);
                         }}
@@ -327,7 +334,8 @@ export function FriendsManager({
 
               <Button
                 className="w-full"
-                onClick={() => {
+                onClick={(
+) => {
                   announceGaming({
                     type: 'friend',
                     customMessage: 'Friend request sent!',
@@ -364,8 +372,9 @@ export function FriendsManager({
             <Input
               placeholder="Search friends..."
               value={searchQuery}
-              /* auto: implicit any */
-              onChange={(e: any) => setSearchQuery(e.target.value)}
+              
+              onChange={(e: any
+) => setSearchQuery(e.target.value)}
               className="pl-10"
             />
           </div>
@@ -413,7 +422,8 @@ export function FriendsManager({
                     <div className="flex items-center gap-2">
                       <Button
                         size="sm"
-                        onClick={() => {
+                        onClick={(
+) => {
                           announceFriendEvent('added', friend.user);
                           announceGaming({
                             type: 'battle',
@@ -436,7 +446,8 @@ export function FriendsManager({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <DropdownMenuItem
-                            onClick={() => {
+                            onClick={(
+) => {
                               setSelectedFriend(friend);
                               announceGaming({
                                 type: 'friend',
@@ -453,7 +464,8 @@ export function FriendsManager({
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-destructive"
-                            onClick={() => {
+                            onClick={(
+) => {
                               announceFriendEvent('removed', friend.user);
                             }}
                           >
@@ -492,7 +504,8 @@ export function FriendsManager({
                       <div className="flex gap-2">
                         <Button
                           size="sm"
-                          onClick={() => {
+                          onClick={(
+) => {
                             announceFriendEvent('added', request.user);
                             onAcceptFriendRequest?.(request.id);
                           }}
@@ -503,7 +516,8 @@ export function FriendsManager({
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => {
+                          onClick={(
+) => {
                             announceFriendEvent('removed', request.user);
                             onRejectFriendRequest?.(request.id);
                           }}
@@ -556,8 +570,10 @@ export function FriendsManager({
                 },
               },
             ]
-              .sort((a, b) => b.stats.winRate - a.stats.winRate)
-              .map((friend, index) => (
+              .sort((a, b
+) => b.stats.winRate - a.stats.winRate)
+              .map((friend, index
+) => (
                 <Card
                   key={friend.user.id}
                   className={
@@ -604,7 +620,8 @@ export function FriendsManager({
       </Tabs>
 
       {/* Friend Profile Modal */}
-      <Dialog open={!!selectedFriend} onOpenChange={() => setSelectedFriend(null)}>
+      <Dialog open={!!selectedFriend} onOpenChange={(
+) => setSelectedFriend(null)}>
         <DialogContent className="max-w-md">
           {selectedFriend && (
             <>
@@ -665,7 +682,8 @@ export function FriendsManager({
                 <div className="flex gap-2">
                   <Button
                     className="flex-1 gap-2"
-                    onClick={() => {
+                    onClick={(
+) => {
                       onChallengeFriend?.(selectedFriend.user.id);
                       setSelectedFriend(null);
                     }}

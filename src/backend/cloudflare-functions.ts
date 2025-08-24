@@ -739,9 +739,11 @@ export class SmartRecommendationsProcessor {
 
     const best = voiceEffectiveness.results[0];
     const current = voiceEffectiveness.results.find(
-      (v: any) =>
+      (v: any
+) =>
         v.usage_count ===
-        Math.max(...voiceEffectiveness.results.map((r: any) => r.usage_count))
+        Math.max(...voiceEffectiveness.results.map((r: any
+) => r.usage_count))
     );
 
     if (
@@ -937,11 +939,13 @@ export class AnalyticsAggregator {
 
     // Device preferences
     const totalDeviceUsage = Object.values(analytics.deviceTypeDistribution).reduce(
-      (a, b) => (a as number) + (b as number),
+      (a, b
+) => (a as number) + (b as number),
       0
     );
     const topDevice = Object.entries(analytics.deviceTypeDistribution).sort(
-      ([, a], [, b]) => (b as number) - (a as number)
+      ([, a], [, b]
+) => (b as number) - (a as number)
     )[0];
 
     if (topDevice) {
@@ -983,7 +987,8 @@ export default {
         const response = await processor.processAlarmTrigger(alarmData as any);
 
         // Add CORS headers to response
-        Object.entries(corsHeaders).forEach(([key, value]) => {
+        Object.entries(corsHeaders).forEach(([key, value]
+) => {
           response.headers.set(key, value);
         });
 
@@ -996,7 +1001,8 @@ export default {
         const userId = asString(requestData.userId, '');
         const response = await processor.generateRecommendations(userId);
 
-        Object.entries(corsHeaders).forEach(([key, value]) => {
+        Object.entries(corsHeaders).forEach(([key, value]
+) => {
           response.headers.set(key, value);
         });
 
@@ -1007,7 +1013,8 @@ export default {
         const aggregator = new AnalyticsAggregator(env);
         const response = await aggregator.processRealtimeAnalytics();
 
-        Object.entries(corsHeaders).forEach(([key, value]) => {
+        Object.entries(corsHeaders).forEach(([key, value]
+) => {
           response.headers.set(key, value);
         });
 

@@ -57,7 +57,8 @@ export class AlarmAccessControl {
   private initializeAccessControl(): void {
     // Clean up old sessions every 10 minutes
     setInterval(
-      () => {
+      (
+) => {
         this.cleanupExpiredSessions();
       },
       10 * 60 * 1000
@@ -65,7 +66,8 @@ export class AlarmAccessControl {
 
     // Reset suspicious activity counters every hour
     setInterval(
-      () => {
+      (
+) => {
         this.suspiciousActivity.clear();
       },
       60 * 60 * 1000
@@ -255,7 +257,8 @@ export class AlarmAccessControl {
     this.blockedUsers.add(userId);
 
     if (duration) {
-      setTimeout(() => {
+      setTimeout((
+) => {
         this.blockedUsers.delete(userId);
         this.logAccessEvent('user_unblocked', userId, 'system', 'granted', 'timeout');
       }, duration);
@@ -283,7 +286,8 @@ export class AlarmAccessControl {
 
     return history
       .slice(-limit)
-      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+      .sort((a, b
+) => b.timestamp.getTime() - a.timestamp.getTime());
   }
 
   /**

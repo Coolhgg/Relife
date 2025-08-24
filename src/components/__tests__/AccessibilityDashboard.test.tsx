@@ -32,8 +32,10 @@ const mockAccessibilityPreferences = {
   testColorContrast: jest.fn(),
 };
 
-jest.mock('../hooks/useAccessibilityPreferences', () => ({
-  useAccessibilityPreferences: () => mockAccessibilityPreferences,
+jest.mock('../hooks/useAccessibilityPreferences', (
+) => ({
+  useAccessibilityPreferences: (
+) => mockAccessibilityPreferences,
 }));
 
 const mockDynamicFocus = {
@@ -42,17 +44,23 @@ const mockDynamicFocus = {
   announceError: jest.fn(),
 };
 
-jest.mock('../hooks/useDynamicFocus', () => ({
-  useDynamicFocus: () => mockDynamicFocus,
+jest.mock('../hooks/useDynamicFocus', (
+) => ({
+  useDynamicFocus: (
+) => mockDynamicFocus,
 }));
 
-describe('AccessibilityDashboard', () => {
-  beforeEach(() => {
+describe('AccessibilityDashboard', (
+) => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
   });
 
-  describe('Rendering', () => {
-    it('renders accessibility dashboard with main sections', () => {
+  describe('Rendering', (
+) => {
+    it('renders accessibility dashboard with main sections', (
+) => {
       renderWithProviders(<AccessibilityDashboard />);
 
       expect(screen.getByText('Visual & Display')).toBeInTheDocument();
@@ -63,7 +71,8 @@ describe('AccessibilityDashboard', () => {
       expect(screen.getByText('Advanced Features')).toBeInTheDocument();
     });
 
-    it('defaults to visual section', () => {
+    it('defaults to visual section', (
+) => {
       renderWithProviders(<AccessibilityDashboard />);
 
       const visualTab = screen.getByRole('tab', { name: /visual & display/i });
@@ -72,7 +81,8 @@ describe('AccessibilityDashboard', () => {
       expect(screen.getByText('Visual & Display Settings')).toBeInTheDocument();
     });
 
-    it('renders embedded mode correctly', () => {
+    it('renders embedded mode correctly', (
+) => {
       renderWithProviders(<AccessibilityDashboard embedded={true} />);
 
       // Should not show close button in embedded mode
@@ -80,8 +90,10 @@ describe('AccessibilityDashboard', () => {
     });
   });
 
-  describe('Section Navigation', () => {
-    it('switches between sections correctly', async () => {
+  describe('Section Navigation', (
+) => {
+    it('switches between sections correctly', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<AccessibilityDashboard />);
@@ -97,7 +109,8 @@ describe('AccessibilityDashboard', () => {
       );
     });
 
-    it('supports keyboard navigation between sections', async () => {
+    it('supports keyboard navigation between sections', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<AccessibilityDashboard />);
@@ -114,7 +127,8 @@ describe('AccessibilityDashboard', () => {
       expect(navigationTab).toHaveAttribute('aria-selected', 'true');
     });
 
-    it('manages focus correctly when switching sections', async () => {
+    it('manages focus correctly when switching sections', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<AccessibilityDashboard />);
@@ -123,19 +137,23 @@ describe('AccessibilityDashboard', () => {
       await user.click(touchTab);
 
       // Focus should be managed programmatically
-      await waitFor(() => {
+      await waitFor((
+) => {
         const sectionContent = screen.getByRole('tabpanel');
         expect(sectionContent).toHaveAttribute('tabindex', '-1');
       });
     });
   });
 
-  describe('Visual & Display Settings', () => {
-    beforeEach(() => {
+  describe('Visual & Display Settings', (
+) => {
+    beforeEach((
+) => {
       renderWithProviders(<AccessibilityDashboard />);
     });
 
-    it('toggles high contrast mode', async () => {
+    it('toggles high contrast mode', async (
+) => {
       const user = userEvent.setup();
 
       const highContrastToggle = screen.getByLabelText(/high contrast/i);
@@ -150,7 +168,8 @@ describe('AccessibilityDashboard', () => {
       );
     });
 
-    it('adjusts font size with slider', async () => {
+    it('adjusts font size with slider', async (
+) => {
       const user = userEvent.setup();
 
       const fontSizeSlider = screen.getByLabelText(/font size/i);
@@ -161,7 +180,8 @@ describe('AccessibilityDashboard', () => {
       });
     });
 
-    it('toggles large text mode', async () => {
+    it('toggles large text mode', async (
+) => {
       const user = userEvent.setup();
 
       const largeTextToggle = screen.getByLabelText(/large text/i);
@@ -172,7 +192,8 @@ describe('AccessibilityDashboard', () => {
       });
     });
 
-    it('enables color blind friendly mode', async () => {
+    it('enables color blind friendly mode', async (
+) => {
       const user = userEvent.setup();
 
       const colorBlindToggle = screen.getByLabelText(/color blind friendly/i);
@@ -184,8 +205,10 @@ describe('AccessibilityDashboard', () => {
     });
   });
 
-  describe('Navigation & Focus Settings', () => {
-    beforeEach(async () => {
+  describe('Navigation & Focus Settings', (
+) => {
+    beforeEach(async (
+) => {
       const user = userEvent.setup();
       renderWithProviders(<AccessibilityDashboard />);
 
@@ -193,7 +216,8 @@ describe('AccessibilityDashboard', () => {
       await user.click(navTab);
     });
 
-    it('enables keyboard-only navigation', async () => {
+    it('enables keyboard-only navigation', async (
+) => {
       const user = userEvent.setup();
 
       const keyboardNavToggle = screen.getByLabelText(/keyboard navigation only/i);
@@ -204,7 +228,8 @@ describe('AccessibilityDashboard', () => {
       });
     });
 
-    it('enhances focus indicators', async () => {
+    it('enhances focus indicators', async (
+) => {
       const user = userEvent.setup();
 
       const focusIndicatorToggle = screen.getByLabelText(/enhanced focus indicators/i);
@@ -215,7 +240,8 @@ describe('AccessibilityDashboard', () => {
       });
     });
 
-    it('enables reduced motion', async () => {
+    it('enables reduced motion', async (
+) => {
       const user = userEvent.setup();
 
       const reducedMotionToggle = screen.getByLabelText(/reduced motion/i);
@@ -227,8 +253,10 @@ describe('AccessibilityDashboard', () => {
     });
   });
 
-  describe('Audio & Speech Settings', () => {
-    beforeEach(async () => {
+  describe('Audio & Speech Settings', (
+) => {
+    beforeEach(async (
+) => {
       const user = userEvent.setup();
       renderWithProviders(<AccessibilityDashboard />);
 
@@ -236,7 +264,8 @@ describe('AccessibilityDashboard', () => {
       await user.click(audioTab);
     });
 
-    it('enables screen reader support', async () => {
+    it('enables screen reader support', async (
+) => {
       const user = userEvent.setup();
 
       const screenReaderToggle = screen.getByLabelText(/screen reader enabled/i);
@@ -247,7 +276,8 @@ describe('AccessibilityDashboard', () => {
       });
     });
 
-    it('toggles voice announcements', async () => {
+    it('toggles voice announcements', async (
+) => {
       const user = userEvent.setup();
 
       const voiceToggle = screen.getByLabelText(/voice announcements/i);
@@ -259,8 +289,10 @@ describe('AccessibilityDashboard', () => {
     });
   });
 
-  describe('Touch & Interaction Settings', () => {
-    beforeEach(async () => {
+  describe('Touch & Interaction Settings', (
+) => {
+    beforeEach(async (
+) => {
       const user = userEvent.setup();
       renderWithProviders(<AccessibilityDashboard />);
 
@@ -268,7 +300,8 @@ describe('AccessibilityDashboard', () => {
       await user.click(touchTab);
     });
 
-    it('adjusts touch target size', async () => {
+    it('adjusts touch target size', async (
+) => {
       const user = userEvent.setup();
 
       const touchSizeSelect = screen.getByLabelText(/touch target size/i);
@@ -279,7 +312,8 @@ describe('AccessibilityDashboard', () => {
       });
     });
 
-    it('enables haptic feedback', async () => {
+    it('enables haptic feedback', async (
+) => {
       const user = userEvent.setup();
 
       const hapticToggle = screen.getByLabelText(/haptic feedback/i);
@@ -291,8 +325,10 @@ describe('AccessibilityDashboard', () => {
     });
   });
 
-  describe('Reset Functionality', () => {
-    it('resets all preferences to defaults', async () => {
+  describe('Reset Functionality', (
+) => {
+    it('resets all preferences to defaults', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<AccessibilityDashboard />);
@@ -306,7 +342,8 @@ describe('AccessibilityDashboard', () => {
       );
     });
 
-    it('shows confirmation dialog before reset', async () => {
+    it('shows confirmation dialog before reset', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<AccessibilityDashboard />);
@@ -323,8 +360,10 @@ describe('AccessibilityDashboard', () => {
     });
   });
 
-  describe('Screen Reader Testing', () => {
-    beforeEach(async () => {
+  describe('Screen Reader Testing', (
+) => {
+    beforeEach(async (
+) => {
       const user = userEvent.setup();
       renderWithProviders(<AccessibilityDashboard />);
 
@@ -332,19 +371,23 @@ describe('AccessibilityDashboard', () => {
       await user.click(testingTab);
     });
 
-    it('renders screen reader test interface', () => {
+    it('renders screen reader test interface', (
+) => {
       expect(screen.getByText('Screen Reader Testing')).toBeInTheDocument();
       expect(screen.getByText(/test how content sounds/i)).toBeInTheDocument();
     });
 
-    it('provides sample content for testing', () => {
+    it('provides sample content for testing', (
+) => {
       const testButton = screen.getByRole('button', { name: /test sample content/i });
       expect(testButton).toBeInTheDocument();
     });
   });
 
-  describe('Accessibility Features', () => {
-    it('provides proper ARIA labels and roles', () => {
+  describe('Accessibility Features', (
+) => {
+    it('provides proper ARIA labels and roles', (
+) => {
       renderWithProviders(<AccessibilityDashboard />);
 
       const tabList = screen.getByRole('tablist');
@@ -360,21 +403,24 @@ describe('AccessibilityDashboard', () => {
       expect(tabPanel).toHaveAttribute('aria-labelledby');
     });
 
-    it('manages focus appropriately', () => {
+    it('manages focus appropriately', (
+) => {
       renderWithProviders(<AccessibilityDashboard />);
 
       const tabPanel = screen.getByRole('tabpanel');
       expect(tabPanel).toHaveAttribute('tabindex', '-1');
     });
 
-    it('provides live region for announcements', () => {
+    it('provides live region for announcements', (
+) => {
       renderWithProviders(<AccessibilityDashboard />);
 
       const liveRegion = screen.getByRole('status');
       expect(liveRegion).toHaveAttribute('aria-live', 'polite');
     });
 
-    it('includes skip links for keyboard navigation', () => {
+    it('includes skip links for keyboard navigation', (
+) => {
       renderWithProviders(<AccessibilityDashboard />);
 
       const skipLink = screen.getByRole('link', { name: /skip to main content/i });
@@ -382,8 +428,10 @@ describe('AccessibilityDashboard', () => {
     });
   });
 
-  describe('Error Handling', () => {
-    it('handles preference update failures gracefully', async () => {
+  describe('Error Handling', (
+) => {
+    it('handles preference update failures gracefully', async (
+) => {
       const user = userEvent.setup();
 
       mockAccessibilityPreferences.updatePreferences.mockRejectedValue(
@@ -395,14 +443,16 @@ describe('AccessibilityDashboard', () => {
       const highContrastToggle = screen.getByLabelText(/high contrast/i);
       await user.click(highContrastToggle);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(mockDynamicFocus.announceError).toHaveBeenCalledWith(
           expect.stringContaining('failed')
         );
       });
     });
 
-    it('handles missing preferences gracefully', () => {
+    it('handles missing preferences gracefully', (
+) => {
       mockAccessibilityPreferences.preferences = null as any;
 
       renderWithProviders(<AccessibilityDashboard />);
@@ -412,8 +462,10 @@ describe('AccessibilityDashboard', () => {
     });
   });
 
-  describe('Mobile Responsiveness', () => {
-    beforeEach(() => {
+  describe('Mobile Responsiveness', (
+) => {
+    beforeEach((
+) => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
@@ -421,14 +473,16 @@ describe('AccessibilityDashboard', () => {
       });
     });
 
-    it('adapts layout for mobile screens', () => {
+    it('adapts layout for mobile screens', (
+) => {
       renderWithProviders(<AccessibilityDashboard />);
 
       const dashboard = screen.getByRole('main');
       expect(dashboard).toHaveClass('px-4'); // Mobile padding
     });
 
-    it('stacks sections vertically on mobile', () => {
+    it('stacks sections vertically on mobile', (
+) => {
       renderWithProviders(<AccessibilityDashboard />);
 
       const tabList = screen.getByRole('tablist');
@@ -436,8 +490,10 @@ describe('AccessibilityDashboard', () => {
     });
   });
 
-  describe('Dark Mode Support', () => {
-    it('applies dark mode classes correctly', () => {
+  describe('Dark Mode Support', (
+) => {
+    it('applies dark mode classes correctly', (
+) => {
       renderWithProviders(<AccessibilityDashboard />, { theme: 'dark' });
 
       const headings = screen.getAllByRole('heading');
@@ -447,8 +503,10 @@ describe('AccessibilityDashboard', () => {
     });
   });
 
-  describe('Close Functionality', () => {
-    it('calls onClose when close button is clicked', async () => {
+  describe('Close Functionality', (
+) => {
+    it('calls onClose when close button is clicked', async (
+) => {
       const mockOnClose = jest.fn();
       const user = userEvent.setup();
 
@@ -460,7 +518,8 @@ describe('AccessibilityDashboard', () => {
       expect(mockOnClose).toHaveBeenCalled();
     });
 
-    it('supports escape key to close', async () => {
+    it('supports escape key to close', async (
+) => {
       const mockOnClose = jest.fn();
       const user = userEvent.setup();
 

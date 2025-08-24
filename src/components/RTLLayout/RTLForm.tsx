@@ -9,7 +9,8 @@ import { useRTLForm } from '../../hooks/useRTL';
 interface RTLFormProps {
   children: React.ReactNode;
   className?: string;
-  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit?: (event: React.FormEvent<HTMLFormElement>
+) => void;
   layout?: 'vertical' | 'horizontal' | 'inline';
   gap?: 'sm' | 'md' | 'lg';
   labelPosition?: 'auto' | 'start' | 'end' | 'top';
@@ -38,7 +39,8 @@ export const RTLForm: React.FC<RTLFormProps> = ({
   labelPosition = 'auto',
   dir = 'auto',
   noValidate = false,
-}) => {
+}
+) => {
   const { form, isRTL } = useRTLForm();
 
   const formDir = dir === 'auto' ? (isRTL ? 'rtl' : 'ltr') : dir;
@@ -47,7 +49,8 @@ export const RTLForm: React.FC<RTLFormProps> = ({
 
   // Create context value for form fields
   const formContext = React.useMemo(
-    () => ({
+    (
+) => ({
       isRTL,
       layout,
       labelPosition: labelPosition === 'auto' ? form.labelPosition : labelPosition,
@@ -82,7 +85,8 @@ const RTLFormContext = React.createContext<{
 
 const RTLFormProvider = RTLFormContext.Provider;
 
-export const useRTLFormContext = () => {
+export const useRTLFormContext = (
+) => {
   const context = React.useContext(RTLFormContext);
   if (!context) {
     throw new Error('useRTLFormContext must be used within an RTLForm');
@@ -111,7 +115,8 @@ export const RTLFormField: React.FC<RTLFormFieldProps> = ({
   labelClassName,
   inputClassName,
   errorClassName,
-}) => {
+}
+) => {
   const { isRTL, layout, labelPosition, inputDirection } = useRTLFormContext();
   const { text } = useRTLForm();
 

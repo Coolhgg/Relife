@@ -146,7 +146,8 @@ class VoiceSmartIntegrationService {
   };
 
   private voiceShortcuts = new Map<string, VoiceShortcut>();
-  private deviceCommands = new Map<string, (params: any) => Promise<any>>();
+  private deviceCommands = new Map<string, (params: any
+) => Promise<any>>();
   private contextHistory: VoiceContext[] = [];
   private isListening = false;
 
@@ -227,7 +228,8 @@ class VoiceSmartIntegrationService {
   /**
    * Start comprehensive voice control
    */
-  async startSmartVoiceControl(user: User): Promise<() => void> {
+  async startSmartVoiceControl(user: User): Promise<(
+) => void> {
     try {
       if (this.isListening) {
         throw new Error('Voice control already active');
@@ -239,7 +241,8 @@ class VoiceSmartIntegrationService {
       // Start enhanced voice recognition
       const stopListening = await this.voiceRecognition.startEnhancedListening(
         command => this.handleSmartCommand(command, context),
-        (transcript, confidence, language) =>
+        (transcript, confidence, language
+) =>
           this.handleInterimResult(transcript, confidence, language, context),
         gesture => this.handleGestureCommand(gesture, context),
         error => this.handleVoiceError(error, context),
@@ -251,7 +254,8 @@ class VoiceSmartIntegrationService {
       // Start context monitoring
       const stopContextMonitoring = this.startContextMonitoring(user);
 
-      return () => {
+      return (
+) => {
         this.isListening = false;
         stopListening();
         stopContextMonitoring();
@@ -808,8 +812,10 @@ class VoiceSmartIntegrationService {
   // Additional methods would be implemented here...
   private async initializeSmartHomeConnections(): Promise<void> {}
   private async initializeCalendarIntegration(): Promise<void> {}
-  private startContextMonitoring(user: User): () => void {
-    return () => {};
+  private startContextMonitoring(user: User): (
+) => void {
+    return (
+) => {};
   }
   private handleInterimResult(
     transcript: string,
@@ -874,7 +880,8 @@ class VoiceSmartIntegrationService {
     return [];
   }
   private async getCurrentPosition(): Promise<GeolocationPosition> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject
+) => {
       navigator.geolocation.getCurrentPosition(resolve, reject);
     });
   }

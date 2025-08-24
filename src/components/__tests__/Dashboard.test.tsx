@@ -8,7 +8,8 @@ import { PerformanceMonitor } from '../../services/performance-monitor';
 import { AppAnalyticsService } from '../../services/app-analytics';
 
 // Mock the services and hooks
-jest.mock('../../services/performance-monitor', () => ({
+jest.mock('../../services/performance-monitor', (
+) => ({
   PerformanceMonitor: {
     startTracking: jest.fn(),
     endTracking: jest.fn(),
@@ -16,23 +17,27 @@ jest.mock('../../services/performance-monitor', () => ({
   },
 }));
 
-jest.mock('../../services/app-analytics', () => ({
+jest.mock('../../services/app-analytics', (
+) => ({
   AppAnalyticsService: {
     trackPageView: jest.fn(),
     trackUserInteraction: jest.fn(),
   },
 }));
 
-jest.mock('../../hooks/useAuth', () => ({
+jest.mock('../../hooks/useAuth', (
+) => ({
   __esModule: true,
-  default: () => ({
+  default: (
+) => ({
     user: testUtils.mockUser,
     isAuthenticated: true,
     loading: false,
   }),
 }));
 
-describe('Dashboard', () => {
+describe('Dashboard', (
+) => {
   const mockProps = {
     user: testUtils.mockUser,
     alarms: [testUtils.mockAlarm],
@@ -44,20 +49,24 @@ describe('Dashboard', () => {
     onQuickSetup: jest.fn(),
   };
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     testUtils.clearAllMocks();
     jest.clearAllMocks();
   });
 
-  describe('rendering', () => {
-    test('renders dashboard with user greeting', () => {
+  describe('rendering', (
+) => {
+    test('renders dashboard with user greeting', (
+) => {
       render(<Dashboard {...mockProps} />);
 
       expect(screen.getByText(/good/i)).toBeInTheDocument();
       expect(screen.getByText(testUtils.mockUser.name)).toBeInTheDocument();
     });
 
-    test('renders correct greeting based on time of day', () => {
+    test('renders correct greeting based on time of day', (
+) => {
       // Mock different times
       jest.spyOn(Date.prototype, 'getHours').mockReturnValueOnce(7); // Morning
 
@@ -65,14 +74,16 @@ describe('Dashboard', () => {
       expect(screen.getByText(/good morning/i)).toBeInTheDocument();
     });
 
-    test('renders alarm statistics', () => {
+    test('renders alarm statistics', (
+) => {
       render(<Dashboard {...mockProps} />);
 
       expect(screen.getByText('Active Alarms')).toBeInTheDocument();
       expect(screen.getByText('1')).toBeInTheDocument(); // Count of alarms
     });
 
-    test('renders quick setup buttons', () => {
+    test('renders quick setup buttons', (
+) => {
       render(<Dashboard {...mockProps} />);
 
       expect(screen.getByText('Quick Setup')).toBeInTheDocument();
@@ -83,7 +94,8 @@ describe('Dashboard', () => {
       expect(screen.getByRole('button', { name: /custom/i })).toBeInTheDocument();
     });
 
-    test('renders recent alarms section', () => {
+    test('renders recent alarms section', (
+) => {
       render(<Dashboard {...mockProps} />);
 
       expect(screen.getByText('Recent Alarms')).toBeInTheDocument();
@@ -91,7 +103,8 @@ describe('Dashboard', () => {
       expect(screen.getByText(testUtils.mockAlarm.time)).toBeInTheDocument();
     });
 
-    test('shows empty state when no alarms', () => {
+    test('shows empty state when no alarms', (
+) => {
       render(<Dashboard {...mockProps} alarms={[]} />);
 
       expect(screen.getByText(/no alarms yet/i)).toBeInTheDocument();
@@ -99,8 +112,10 @@ describe('Dashboard', () => {
     });
   });
 
-  describe('interactions', () => {
-    test('calls onAddAlarm when add button is clicked', async () => {
+  describe('interactions', (
+) => {
+    test('calls onAddAlarm when add button is clicked', async (
+) => {
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
 
@@ -110,7 +125,8 @@ describe('Dashboard', () => {
       expect(mockProps.onAddAlarm).toHaveBeenCalled();
     });
 
-    test('calls onQuickSetup with correct preset', async () => {
+    test('calls onQuickSetup with correct preset', async (
+) => {
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
 
@@ -120,7 +136,8 @@ describe('Dashboard', () => {
       expect(mockProps.onQuickSetup).toHaveBeenCalledWith('morning');
     });
 
-    test('calls onEditAlarm when alarm edit is clicked', async () => {
+    test('calls onEditAlarm when alarm edit is clicked', async (
+) => {
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
 
@@ -130,7 +147,8 @@ describe('Dashboard', () => {
       expect(mockProps.onEditAlarm).toHaveBeenCalledWith(testUtils.mockAlarm);
     });
 
-    test('calls onToggleAlarm when alarm switch is clicked', async () => {
+    test('calls onToggleAlarm when alarm switch is clicked', async (
+) => {
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
 
@@ -140,7 +158,8 @@ describe('Dashboard', () => {
       expect(mockProps.onToggleAlarm).toHaveBeenCalledWith(testUtils.mockAlarm.id);
     });
 
-    test('calls onDeleteAlarm when delete is confirmed', async () => {
+    test('calls onDeleteAlarm when delete is confirmed', async (
+) => {
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
 
@@ -155,15 +174,18 @@ describe('Dashboard', () => {
     });
   });
 
-  describe('performance tracking', () => {
-    test('tracks dashboard view on mount', () => {
+  describe('performance tracking', (
+) => {
+    test('tracks dashboard view on mount', (
+) => {
       const { PerformanceMonitor } = require('../../services/performance-monitor');
       render(<Dashboard {...mockProps} />);
 
       expect(PerformanceMonitor.startTracking).toHaveBeenCalledWith('dashboard-view');
     });
 
-    test('tracks user interactions', async () => {
+    test('tracks user interactions', async (
+) => {
       const { PerformanceMonitor } = require('../../services/performance-monitor');
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
@@ -177,15 +199,18 @@ describe('Dashboard', () => {
     });
   });
 
-  describe('analytics tracking', () => {
-    test('tracks page view on mount', () => {
+  describe('analytics tracking', (
+) => {
+    test('tracks page view on mount', (
+) => {
       const { AppAnalyticsService } = require('../../services/app-analytics');
       render(<Dashboard {...mockProps} />);
 
       expect(AppAnalyticsService.trackPageView).toHaveBeenCalledWith('dashboard');
     });
 
-    test('tracks quick setup interactions', async () => {
+    test('tracks quick setup interactions', async (
+) => {
       const { AppAnalyticsService } = require('../../services/app-analytics');
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
@@ -200,8 +225,10 @@ describe('Dashboard', () => {
     });
   });
 
-  describe('responsive behavior', () => {
-    test('adapts layout for mobile screens', () => {
+  describe('responsive behavior', (
+) => {
+    test('adapts layout for mobile screens', (
+) => {
       // Mock mobile viewport
       Object.defineProperty(window, 'innerWidth', { value: 375 });
       Object.defineProperty(window, 'innerHeight', { value: 667 });
@@ -212,7 +239,8 @@ describe('Dashboard', () => {
       expect(container).toHaveClass('mobile-layout');
     });
 
-    test('shows desktop layout for large screens', () => {
+    test('shows desktop layout for large screens', (
+) => {
       Object.defineProperty(window, 'innerWidth', { value: 1024 });
       Object.defineProperty(window, 'innerHeight', { value: 768 });
 
@@ -223,22 +251,27 @@ describe('Dashboard', () => {
     });
   });
 
-  describe('loading states', () => {
-    test('shows loading spinner while data loads', () => {
+  describe('loading states', (
+) => {
+    test('shows loading spinner while data loads', (
+) => {
       render(<Dashboard {...mockProps} alarms={undefined} />);
 
       expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
     });
 
-    test('shows skeleton placeholders during load', () => {
+    test('shows skeleton placeholders during load', (
+) => {
       render(<Dashboard {...mockProps} alarms={undefined} />);
 
       expect(screen.getAllByTestId('alarm-skeleton')).toHaveLength(3);
     });
   });
 
-  describe('accessibility', () => {
-    test('has proper heading structure', () => {
+  describe('accessibility', (
+) => {
+    test('has proper heading structure', (
+) => {
       render(<Dashboard {...mockProps} />);
 
       expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
@@ -250,14 +283,16 @@ describe('Dashboard', () => {
       ).toBeInTheDocument();
     });
 
-    test('has proper ARIA labels', () => {
+    test('has proper ARIA labels', (
+) => {
       render(<Dashboard {...mockProps} />);
 
       expect(screen.getByLabelText('Dashboard main content')).toBeInTheDocument();
       expect(screen.getByLabelText('Alarm statistics')).toBeInTheDocument();
     });
 
-    test('supports keyboard navigation', async () => {
+    test('supports keyboard navigation', async (
+) => {
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
 
@@ -272,7 +307,8 @@ describe('Dashboard', () => {
       expect(quickSetupButton).toHaveFocus();
     });
 
-    test('announces important changes to screen readers', async () => {
+    test('announces important changes to screen readers', async (
+) => {
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
 
@@ -284,14 +320,17 @@ describe('Dashboard', () => {
     });
   });
 
-  describe('error handling', () => {
-    test('handles missing user gracefully', () => {
+  describe('error handling', (
+) => {
+    test('handles missing user gracefully', (
+) => {
       render(<Dashboard {...mockProps} user={null} />);
 
       expect(screen.getByText(/welcome/i)).toBeInTheDocument();
     });
 
-    test('handles API errors gracefully', async () => {
+    test('handles API errors gracefully', async (
+) => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
 
       // Mock a failing onAddAlarm
@@ -303,7 +342,8 @@ describe('Dashboard', () => {
       const addButton = screen.getByRole('button', { name: /add alarm/i });
       await user.click(addButton);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(screen.getByText(/error creating alarm/i)).toBeInTheDocument();
       });
 
@@ -311,8 +351,10 @@ describe('Dashboard', () => {
     });
   });
 
-  describe('real-time updates', () => {
-    test('updates alarm status in real-time', async () => {
+  describe('real-time updates', (
+) => {
+    test('updates alarm status in real-time', async (
+) => {
       const { rerender } = render(<Dashboard {...mockProps} />);
 
       const updatedAlarm = { ...testUtils.mockAlarm, enabled: false };
@@ -322,7 +364,8 @@ describe('Dashboard', () => {
       expect(toggleSwitch).not.toBeChecked();
     });
 
-    test('handles active alarm display', () => {
+    test('handles active alarm display', (
+) => {
       const activeAlarm = { ...testUtils.mockAlarm, isActive: true };
       render(<Dashboard {...mockProps} activeAlarm={activeAlarm} />);
 

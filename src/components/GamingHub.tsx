@@ -11,10 +11,14 @@ interface GamingHubProps {
   rewardSystem?: RewardSystem;
   activeBattles: Battle[];
   friends: User[];
-  onCreateBattle: (battle: Partial<Battle>) => void;
-  onJoinBattle: (battleId: string) => void;
-  onSendTrashTalk: (battleId: string, message: string) => void;
-  onRefreshRewards: () => void;
+  onCreateBattle: (battle: Partial<Battle>
+) => void;
+  onJoinBattle: (battleId: string
+) => void;
+  onSendTrashTalk: (battleId: string, message: string
+) => void;
+  onRefreshRewards: (
+) => void;
 }
 
 const GamingHub: React.FC<GamingHubProps> = ({
@@ -26,7 +30,8 @@ const GamingHub: React.FC<GamingHubProps> = ({
   onJoinBattle,
   onSendTrashTalk,
   onRefreshRewards,
-}) => {
+}
+) => {
   const [activeTab, setActiveTab] = useState('rewards');
 
   return (

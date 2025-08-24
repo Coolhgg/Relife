@@ -263,33 +263,39 @@ export const _testEnv = {
 
 // Console utilities for tests
 export const _testConsole = {
-  log: (message: string, ...args: any[]) => {
+  log: (message: string, ...args: any[]
+) => {
     if (testEnv.isVerbose) {
       console.log(`[TEST] ${message}`, ...args);
     }
   },
 
-  debug: (message: string, ...args: any[]) => {
+  debug: (message: string, ...args: any[]
+) => {
     if (testEnv.isDebug) {
       console.debug(`[DEBUG] ${message}`, ...args);
     }
   },
 
-  warn: (message: string, ...args: any[]) => {
+  warn: (message: string, ...args: any[]
+) => {
     console.warn(`[TEST WARN] ${message}`, ...args);
   },
 
-  error: (message: string, ...args: any[]) => {
+  error: (message: string, ...args: any[]
+) => {
     console.error(`[TEST ERROR] ${message}`, ...args);
   },
 
-  group: (label: string) => {
+  group: (label: string
+) => {
     if (testEnv.isVerbose) {
       console.group(`[TEST] ${label}`);
     }
   },
 
-  groupEnd: () => {
+  groupEnd: (
+) => {
     if (testEnv.isVerbose) {
       console.groupEnd();
     }
@@ -298,8 +304,11 @@ export const _testConsole = {
 
 // Test lifecycle helpers
 export const _testLifecycle = {
-  beforeEach: (cleanup?: () => void | Promise<void>) => {
-    beforeEach(async () => {
+  beforeEach: (cleanup?: (
+) => void | Promise<void>
+) => {
+    beforeEach(async (
+) => {
       testConsole.debug('Test setup starting');
       if (cleanup) {
         await cleanup();
@@ -308,8 +317,11 @@ export const _testLifecycle = {
     });
   },
 
-  afterEach: (cleanup?: () => void | Promise<void>) => {
-    afterEach(async () => {
+  afterEach: (cleanup?: (
+) => void | Promise<void>
+) => {
+    afterEach(async (
+) => {
       testConsole.debug('Test cleanup starting');
       if (cleanup) {
         await cleanup();
@@ -318,9 +330,13 @@ export const _testLifecycle = {
     });
   },
 
-  setupSuite: (name: string, setup?: () => void | Promise<void>) => {
-    describe(name, () => {
-      beforeAll(async () => {
+  setupSuite: (name: string, setup?: (
+) => void | Promise<void>
+) => {
+    describe(name, (
+) => {
+      beforeAll(async (
+) => {
         testConsole.group(`Setting up test suite: ${name}`);
         if (setup) {
           await setup();

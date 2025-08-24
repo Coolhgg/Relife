@@ -143,7 +143,8 @@ export class PredictiveAnalyticsService {
       if (value) {
         const data = JSON.parse(value);
         this.detectedPatterns = new Map(
-          Object.entries(data).map(([k, v]) => [
+          Object.entries(data).map(([k, v]
+) => [
             k,
             {
               ...(v as any),
@@ -163,7 +164,8 @@ export class PredictiveAnalyticsService {
       const { value } = await Preferences.get({ key: INSIGHTS_HISTORY_KEY });
       if (value) {
         const data = JSON.parse(value);
-        this.insightsHistory = data.map((insight: any) => ({
+        this.insightsHistory = data.map((insight: any
+) => ({
           ...insight,
           createdAt: new Date(insight.createdAt),
           expiresAt: insight.expiresAt ? new Date(insight.expiresAt) : undefined,
@@ -237,9 +239,11 @@ export class PredictiveAnalyticsService {
       if (dayBehaviors.length < 3) continue;
 
       const wakeTimes = dayBehaviors.map(b => this.timeToMinutes(b.actualWakeTime));
-      const avgTime = wakeTimes.reduce((sum, time) => sum + time, 0) / wakeTimes.length;
+      const avgTime = wakeTimes.reduce((sum, time
+) => sum + time, 0) / wakeTimes.length;
       const variance =
-        wakeTimes.reduce((sum, time) => sum + Math.pow(time - avgTime, 2), 0) /
+        wakeTimes.reduce((sum, time
+) => sum + Math.pow(time - avgTime, 2), 0) /
         wakeTimes.length;
       const consistency = Math.max(0, 1 - Math.sqrt(variance) / 60); // Normalize by 1 hour
 
@@ -249,7 +253,8 @@ export class PredictiveAnalyticsService {
 
     // Detect overall consistency pattern
     const avgConsistency =
-      Object.values(consistencyScores).reduce((sum, score) => sum + score, 0) /
+      Object.values(consistencyScores).reduce((sum, score
+) => sum + score, 0) /
       Object.values(consistencyScores).length;
 
     if (avgConsistency > 0.7) {
@@ -270,7 +275,8 @@ export class PredictiveAnalyticsService {
         context: {
           timeFrame: `${behaviors.length} days`,
           conditions: Object.entries(avgWakeTimes).map(
-            ([day, time]) =>
+            ([day, time]
+) =>
               `${this.getDayName(parseInt(day))}: ${this.minutesToTime(time)}`
           ),
           correlations: [],
@@ -291,7 +297,8 @@ export class PredictiveAnalyticsService {
     if (snoozeData.length < 5) return patterns;
 
     const avgSnoozeCount =
-      snoozeData.reduce((sum, b) => sum + b.snoozeCount, 0) / snoozeData.length;
+      snoozeData.reduce((sum, b
+) => sum + b.snoozeCount, 0) / snoozeData.length;
     const snoozeFrequency = snoozeData.length / behaviors.length;
 
     // Detect snooze patterns by day of week
@@ -310,10 +317,12 @@ export class PredictiveAnalyticsService {
 
     if (weekdaySnoozes.length > 0 && weekendSnoozes.length > 0) {
       const weekdayAvg =
-        weekdaySnoozes.reduce((sum, b) => sum + b.snoozeCount, 0) /
+        weekdaySnoozes.reduce((sum, b
+) => sum + b.snoozeCount, 0) /
         weekdaySnoozes.length;
       const weekendAvg =
-        weekendSnoozes.reduce((sum, b) => sum + b.snoozeCount, 0) /
+        weekendSnoozes.reduce((sum, b
+) => sum + b.snoozeCount, 0) /
         weekendSnoozes.length;
 
       if (weekdayAvg > weekendAvg * 1.5) {
@@ -370,12 +379,14 @@ export class PredictiveAnalyticsService {
     for (const [month, monthBehaviors] of Object.entries(monthGroups)) {
       const wakeTimes = monthBehaviors.map(b => this.timeToMinutes(b.actualWakeTime));
       monthlyAverages[month] =
-        wakeTimes.reduce((sum, time) => sum + time, 0) / wakeTimes.length;
+        wakeTimes.reduce((sum, time
+) => sum + time, 0) / wakeTimes.length;
     }
 
     // Detect seasonal variation
     const times = Object.values(monthlyAverages);
-    const avgTime = times.reduce((sum, time) => sum + time, 0) / times.length;
+    const avgTime = times.reduce((sum, time
+) => sum + time, 0) / times.length;
     const maxVariation = Math.max(...times.map(time => Math.abs(time - avgTime)));
 
     if (maxVariation > 20) {
@@ -412,7 +423,8 @@ export class PredictiveAnalyticsService {
         context: {
           timeFrame: `${Object.keys(monthGroups).length} months`,
           conditions: Object.entries(monthlyAverages).map(
-            ([month, avg]) =>
+            ([month, avg]
+) =>
               `${this.getMonthName(parseInt(month))}: ${this.minutesToTime(avg)}`
           ),
           correlations: [{ factor: 'daylight_hours', strength: 0.7 }],
@@ -450,12 +462,14 @@ export class PredictiveAnalyticsService {
         if (homeBehaviors.length > 3 && workBehaviors.length > 3) {
           const homeAvgWake =
             homeBehaviors.reduce(
-              (sum, b) => sum + this.timeToMinutes(b.actualWakeTime),
+              (sum, b
+) => sum + this.timeToMinutes(b.actualWakeTime),
               0
             ) / homeBehaviors.length;
           const workAvgWake =
             workBehaviors.reduce(
-              (sum, b) => sum + this.timeToMinutes(b.actualWakeTime),
+              (sum, b
+) => sum + this.timeToMinutes(b.actualWakeTime),
               0
             ) / workBehaviors.length;
 
@@ -508,10 +522,12 @@ export class PredictiveAnalyticsService {
 
     if (rainyDays.length > 3 && sunnyDays.length > 3) {
       const rainyAvgWake =
-        rainyDays.reduce((sum, b) => sum + this.timeToMinutes(b.actualWakeTime), 0) /
+        rainyDays.reduce((sum, b
+) => sum + this.timeToMinutes(b.actualWakeTime), 0) /
         rainyDays.length;
       const sunnyAvgWake =
-        sunnyDays.reduce((sum, b) => sum + this.timeToMinutes(b.actualWakeTime), 0) /
+        sunnyDays.reduce((sum, b
+) => sum + this.timeToMinutes(b.actualWakeTime), 0) /
         sunnyDays.length;
 
       const timeDiff = rainyAvgWake - sunnyAvgWake;
@@ -621,7 +637,8 @@ export class PredictiveAnalyticsService {
       const validInsights = insights
         .filter(insight => insight.confidence > 0.5)
         .sort(
-          (a, b) => this.calculateInsightPriority(b) - this.calculateInsightPriority(a)
+          (a, b
+) => this.calculateInsightPriority(b) - this.calculateInsightPriority(a)
         )
         .slice(0, 10); // Limit to top 10 insights
 
@@ -763,7 +780,8 @@ export class PredictiveAnalyticsService {
     const insights: PredictiveInsight[] = [];
 
     // Analyze alarm frequency and distribution
-    const activeAlarms = alarms.filter((a: any) => a.enabled);
+    const activeAlarms = alarms.filter((a: any
+) => a.enabled);
     if (activeAlarms.length > 5) {
       insights.push({
         id: this.generateInsightId(),
@@ -852,9 +870,11 @@ export class PredictiveAnalyticsService {
     if (values.length < 2) return 'stable';
 
     const recent =
-      values.slice(-3).reduce((sum, v) => sum + v, 0) / Math.min(3, values.length);
+      values.slice(-3).reduce((sum, v
+) => sum + v, 0) / Math.min(3, values.length);
     const older =
-      values.slice(0, -3).reduce((sum, v) => sum + v, 0) /
+      values.slice(0, -3).reduce((sum, v
+) => sum + v, 0) /
       Math.max(1, values.length - 3);
 
     const diff = recent - older;
@@ -871,9 +891,11 @@ export class PredictiveAnalyticsService {
     const older = behaviors.slice(-14, -7);
 
     const recentAvgSnooze =
-      recent.reduce((sum, b) => sum + b.snoozeCount, 0) / recent.length;
+      recent.reduce((sum, b
+) => sum + b.snoozeCount, 0) / recent.length;
     const olderAvgSnooze =
-      older.reduce((sum, b) => sum + b.snoozeCount, 0) / older.length;
+      older.reduce((sum, b
+) => sum + b.snoozeCount, 0) / older.length;
 
     const diff = recentAvgSnooze - olderAvgSnooze;
     if (Math.abs(diff) < 0.5) return 'stable';
@@ -883,7 +905,8 @@ export class PredictiveAnalyticsService {
   private static findConsistencyAnomalies(scores: Record<string, number>): string[] {
     const anomalies: string[] = [];
     const avgScore =
-      Object.values(scores).reduce((sum, score) => sum + score, 0) /
+      Object.values(scores).reduce((sum, score
+) => sum + score, 0) /
       Object.values(scores).length;
 
     for (const [day, score] of Object.entries(scores)) {
@@ -912,10 +935,12 @@ export class PredictiveAnalyticsService {
 
     if (weekdaySnoozes.length > 0 && weekendSnoozes.length > 0) {
       const weekdayAvg =
-        weekdaySnoozes.reduce((sum, b) => sum + b.snoozeCount, 0) /
+        weekdaySnoozes.reduce((sum, b
+) => sum + b.snoozeCount, 0) /
         weekdaySnoozes.length;
       const weekendAvg =
-        weekendSnoozes.reduce((sum, b) => sum + b.snoozeCount, 0) /
+        weekendSnoozes.reduce((sum, b
+) => sum + b.snoozeCount, 0) /
         weekendSnoozes.length;
 
       const correlation =
@@ -937,7 +962,8 @@ export class PredictiveAnalyticsService {
       .map(month => monthlyAverages[month.toString()]);
 
     if (seasonalTimes.length === 0) return null;
-    return seasonalTimes.reduce((sum, time) => sum + time, 0) / seasonalTimes.length;
+    return seasonalTimes.reduce((sum, time
+) => sum + time, 0) / seasonalTimes.length;
   }
 
   private static generatePatternId(type: string): string {
@@ -963,7 +989,8 @@ export class PredictiveAnalyticsService {
 
     const interval = intervals[this.config.analysisFrequency];
 
-    this.analysisSchedule = setInterval(async () => {
+    this.analysisSchedule = setInterval(async (
+) => {
       try {
         await this.runScheduledAnalysis();
       } catch (error) {

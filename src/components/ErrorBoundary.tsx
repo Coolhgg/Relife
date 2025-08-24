@@ -6,8 +6,10 @@ interface Props {
   children: ReactNode;
   fallback?: ReactNode;
   context?: string;
-  onError?: (error: Error, errorInfo: ErrorInfo) => void;
-  onNavigateBack?: () => void;
+  onError?: (error: Error, errorInfo: ErrorInfo
+) => void;
+  onNavigateBack?: (
+) => void;
 }
 
 interface State {
@@ -55,7 +57,8 @@ class ErrorBoundary extends Component<Props, State> {
     this.props.onError?.(error, errorInfo);
   }
 
-  handleRetry = () => {
+  handleRetry = (
+) => {
     this.setState({
       hasError: false,
       error: null,
@@ -64,7 +67,8 @@ class ErrorBoundary extends Component<Props, State> {
     });
   };
 
-  handleGoHome = () => {
+  handleGoHome = (
+) => {
     if (this.props.onNavigateBack) {
       this.props.onNavigateBack();
     } else {

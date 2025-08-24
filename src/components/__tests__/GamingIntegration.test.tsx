@@ -28,7 +28,8 @@ const mockGamingService = {
   leaveBattle: jest.fn(),
 };
 
-jest.mock('../services/gamingService', () => ({
+jest.mock('../services/gamingService', (
+) => ({
   gamingService: mockGamingService,
 }));
 
@@ -40,15 +41,18 @@ const mockWebSocket = {
   close: jest.fn(),
 };
 
-jest.mock('../hooks/useRealTimeUpdates', () => ({
-  useRealTimeUpdates: () => ({
+jest.mock('../hooks/useRealTimeUpdates', (
+) => ({
+  useRealTimeUpdates: (
+) => ({
     connected: true,
     subscribe: jest.fn(),
     unsubscribe: jest.fn(),
   }),
 }));
 
-describe('Gaming Integration Tests', () => {
+describe('Gaming Integration Tests', (
+) => {
   const mockCurrentUser = createTestUser({
     id: 'current-user',
     username: 'gaming-pro',
@@ -133,7 +137,8 @@ describe('Gaming Integration Tests', () => {
     onRefreshRewards: jest.fn(),
   };
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
     mockGamingService.createBattle.mockResolvedValue({
       id: 'new-battle-123',
@@ -143,8 +148,10 @@ describe('Gaming Integration Tests', () => {
     mockGamingService.sendTrashTalk.mockResolvedValue({ success: true });
   });
 
-  describe('Complete Battle Creation Flow', () => {
-    it('creates a speed battle and invites friends', async () => {
+  describe('Complete Battle Creation Flow', (
+) => {
+    it('creates a speed battle and invites friends', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -191,7 +198,8 @@ describe('Gaming Integration Tests', () => {
       const createButton = screen.getByRole('button', { name: /create battle/i });
       await user.click(createButton);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(defaultProps.onCreateBattle).toHaveBeenCalledWith(
           expect.objectContaining({
             name: 'Morning Sprint Challenge',
@@ -206,7 +214,8 @@ describe('Gaming Integration Tests', () => {
       expect(screen.getByText(/battle created successfully/i)).toBeInTheDocument();
     });
 
-    it('validates battle creation form properly', async () => {
+    it('validates battle creation form properly', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -241,14 +250,17 @@ describe('Gaming Integration Tests', () => {
       // Now should succeed
       await user.click(createButton);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(defaultProps.onCreateBattle).toHaveBeenCalled();
       });
     });
   });
 
-  describe('Battle Participation Flow', () => {
-    it('allows joining and participating in battles', async () => {
+  describe('Battle Participation Flow', (
+) => {
+    it('allows joining and participating in battles', async (
+) => {
       const user = userEvent.setup();
 
       const pendingBattle = createTestBattle({
@@ -291,7 +303,8 @@ describe('Gaming Integration Tests', () => {
       expect(screen.getByText(/joined battle successfully/i)).toBeInTheDocument();
     });
 
-    it('prevents joining battles when already at max participants', () => {
+    it('prevents joining battles when already at max participants', (
+) => {
       const fullBattle = createTestBattle({
         id: 'full-battle',
         status: 'pending',
@@ -313,8 +326,10 @@ describe('Gaming Integration Tests', () => {
     });
   });
 
-  describe('Trash Talk Integration', () => {
-    it('enables trash talk during active battles', async () => {
+  describe('Trash Talk Integration', (
+) => {
+    it('enables trash talk during active battles', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -344,12 +359,14 @@ describe('Gaming Integration Tests', () => {
       );
 
       // Message should appear in chat
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(screen.getByText("You're going down, Speed Demon!")).toBeInTheDocument();
       });
     });
 
-    it('prevents sending inappropriate messages', async () => {
+    it('prevents sending inappropriate messages', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -372,14 +389,16 @@ describe('Gaming Integration Tests', () => {
       const sendButton = screen.getByRole('button', { name: /send/i });
       await user.click(sendButton);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(
           screen.getByText(/message contains inappropriate content/i)
         ).toBeInTheDocument();
       });
     });
 
-    it('shows message history chronologically', () => {
+    it('shows message history chronologically', (
+) => {
       const battleWithMessages = {
         ...mockActiveBattles[0],
         trashTalk: [
@@ -422,8 +441,10 @@ describe('Gaming Integration Tests', () => {
     });
   });
 
-  describe('Real-time Battle Updates', () => {
-    it('updates battle scores in real-time', async () => {
+  describe('Real-time Battle Updates', (
+) => {
+    it('updates battle scores in real-time', async (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const battlesTab = screen.getByRole('tab', { name: /battles/i });
@@ -443,7 +464,8 @@ describe('Gaming Integration Tests', () => {
       };
 
       // Mock WebSocket message
-      act(() => {
+      act((
+) => {
         fireEvent(
           window,
           new CustomEvent('battle-score-update', {
@@ -453,13 +475,15 @@ describe('Gaming Integration Tests', () => {
       });
 
       // Scores should update
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(screen.getByText('300')).toBeInTheDocument();
         expect(screen.getByText('280')).toBeInTheDocument();
       });
     });
 
-    it('shows live participant changes', async () => {
+    it('shows live participant changes', async (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const battlesTab = screen.getByRole('tab', { name: /battles/i });
@@ -477,7 +501,8 @@ describe('Gaming Integration Tests', () => {
         ],
       };
 
-      act(() => {
+      act((
+) => {
         fireEvent(
           window,
           new CustomEvent('battle-participant-joined', {
@@ -486,14 +511,17 @@ describe('Gaming Integration Tests', () => {
         );
       });
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(screen.getByText('3/8 participants')).toBeInTheDocument();
       });
     });
   });
 
-  describe('Rewards Integration', () => {
-    it('shows reward updates after battle completion', async () => {
+  describe('Rewards Integration', (
+) => {
+    it('shows reward updates after battle completion', async (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       // Start on rewards tab
@@ -501,7 +529,8 @@ describe('Gaming Integration Tests', () => {
       expect(screen.getByText('Points: 2500')).toBeInTheDocument();
 
       // Simulate battle completion with reward
-      act(() => {
+      act((
+) => {
         fireEvent(
           window,
           new CustomEvent('battle-completed', {
@@ -519,7 +548,8 @@ describe('Gaming Integration Tests', () => {
       });
 
       // Should trigger rewards refresh
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(defaultProps.onRefreshRewards).toHaveBeenCalled();
       });
 
@@ -528,7 +558,8 @@ describe('Gaming Integration Tests', () => {
       expect(screen.getByText(/you earned 200 points/i)).toBeInTheDocument();
     });
 
-    it('unlocks new badges from battle achievements', () => {
+    it('unlocks new badges from battle achievements', (
+) => {
       const updatedRewardSystem = {
         ...mockRewardSystem,
         badges: [
@@ -556,8 +587,10 @@ describe('Gaming Integration Tests', () => {
     });
   });
 
-  describe('Error Handling and Edge Cases', () => {
-    it('handles network errors during battle operations', async () => {
+  describe('Error Handling and Edge Cases', (
+) => {
+    it('handles network errors during battle operations', async (
+) => {
       const user = userEvent.setup();
 
       // Mock network error
@@ -571,7 +604,8 @@ describe('Gaming Integration Tests', () => {
       const joinButton = screen.getByRole('button', { name: /join/i });
       await user.click(joinButton);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(screen.getByText(/network error occurred/i)).toBeInTheDocument();
       });
 
@@ -580,7 +614,8 @@ describe('Gaming Integration Tests', () => {
       expect(retryButton).toBeInTheDocument();
     });
 
-    it('handles empty states gracefully', () => {
+    it('handles empty states gracefully', (
+) => {
       renderWithProviders(
         <GamingHub {...defaultProps} activeBattles={[]} friends={[]} />
       );
@@ -596,7 +631,8 @@ describe('Gaming Integration Tests', () => {
       expect(screen.getByText(/no friends to invite/i)).toBeInTheDocument();
     });
 
-    it('recovers from temporary service outages', async () => {
+    it('recovers from temporary service outages', async (
+) => {
       const user = userEvent.setup();
 
       // Mock service outage
@@ -622,7 +658,8 @@ describe('Gaming Integration Tests', () => {
       const createButton = screen.getByRole('button', { name: /create battle/i });
       await user.click(createButton);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(screen.getByText(/service unavailable/i)).toBeInTheDocument();
       });
 
@@ -630,14 +667,17 @@ describe('Gaming Integration Tests', () => {
       const retryButton = screen.getByRole('button', { name: /retry/i });
       await user.click(retryButton);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(screen.getByText(/battle created successfully/i)).toBeInTheDocument();
       });
     });
   });
 
-  describe('Accessibility Integration', () => {
-    it('maintains focus management across gaming flows', async () => {
+  describe('Accessibility Integration', (
+) => {
+    it('maintains focus management across gaming flows', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -654,7 +694,8 @@ describe('Gaming Integration Tests', () => {
       expect(battleCard).toHaveAttribute('tabindex', '0');
     });
 
-    it('provides proper ARIA announcements for battle state changes', async () => {
+    it('provides proper ARIA announcements for battle state changes', async (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const battlesTab = screen.getByRole('tab', { name: /battles/i });
@@ -665,7 +706,8 @@ describe('Gaming Integration Tests', () => {
       expect(statusRegion).toHaveAttribute('aria-live', 'polite');
 
       // Simulate battle completion
-      act(() => {
+      act((
+) => {
         fireEvent(
           window,
           new CustomEvent('battle-completed', {

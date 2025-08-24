@@ -42,7 +42,8 @@ expect.extend({
       ['easy', 'medium', 'hard', 'nuclear'].includes(received.difficulty);
 
     return {
-      message: () =>
+      message: (
+) =>
         pass
           ? `Expected ${received} not to be a valid alarm`
           : `Expected ${received} to be a valid alarm with required properties`,
@@ -66,7 +67,8 @@ expect.extend({
       received.updatedAt;
 
     return {
-      message: () =>
+      message: (
+) =>
         pass
           ? `Expected ${received} not to be a valid user`
           : `Expected ${received} to be a valid user with required properties`,
@@ -89,7 +91,8 @@ expect.extend({
       typeof received.colors.background === 'string';
 
     return {
-      message: () =>
+      message: (
+) =>
         pass
           ? `Expected ${received} not to be a valid theme`
           : `Expected ${received} to be a valid theme with required properties`,
@@ -116,7 +119,8 @@ expect.extend({
     const pass = hasAriaAttributes || hasRole || isFocusable;
 
     return {
-      message: () =>
+      message: (
+) =>
         pass
           ? `Expected element not to have accessibility attributes`
           : `Expected element to have accessibility attributes (aria-*, role, or be focusable)`,
@@ -141,7 +145,8 @@ expect.extend({
     const pass = hasResponsiveWidth || hasFlexbox || hasResponsiveMargins;
 
     return {
-      message: () =>
+      message: (
+) =>
         pass
           ? `Expected element not to be responsive`
           : `Expected element to have responsive styling (width: 100%, flex/grid, or auto margins)`,
@@ -152,7 +157,8 @@ expect.extend({
 
 // Custom matcher: toHandleErrors
 expect.extend({
-  async toHandleErrors(received: () => Promise<any> | any) {
+  async toHandleErrors(received: (
+) => Promise<any> | any) {
     let errorThrown = false;
     let result;
 
@@ -169,7 +175,8 @@ expect.extend({
     const pass = !errorThrown;
 
     return {
-      message: () =>
+      message: (
+) =>
         pass
           ? `Expected function to throw an error`
           : `Expected function not to throw an error`,
@@ -180,7 +187,8 @@ expect.extend({
 
 // Custom matcher: toLoadWithinTime
 expect.extend({
-  async toLoadWithinTime(received: () => Promise<any>, maxTime: number) {
+  async toLoadWithinTime(received: (
+) => Promise<any>, maxTime: number) {
     const startTime = performance.now();
     let loadedInTime = false;
 
@@ -193,7 +201,8 @@ expect.extend({
     }
 
     return {
-      message: () =>
+      message: (
+) =>
         loadedInTime
           ? `Expected operation to take more than ${maxTime}ms`
           : `Expected operation to complete within ${maxTime}ms`,
@@ -218,21 +227,27 @@ export const _assertValidTheme = (theme: any): theme is TestTheme => {
   return true;
 };
 
-export const _assertAccessible = (element: HTMLElement) => {
+export const _assertAccessible = (element: HTMLElement
+) => {
   expect(element).toHaveAccessibilityAttributes();
 };
 
-export const _assertResponsive = (element: HTMLElement) => {
+export const _assertResponsive = (element: HTMLElement
+) => {
   expect(element).toBeResponsive();
 };
 
-export const _assertNoErrors = async (fn: () => Promise<any> | any) => {
+export const _assertNoErrors = async (fn: (
+) => Promise<any> | any
+) => {
   expect(fn).toHandleErrors();
 };
 
 export const _assertFastLoad = async (
-  fn: () => Promise<any>,
+  fn: (
+) => Promise<any>,
   maxTime: number = 1000
+
 ) => {
   expect(fn).toLoadWithinTime(maxTime);
 };

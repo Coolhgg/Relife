@@ -44,7 +44,8 @@ export const _animationMocks = {
     // Mock getComputedStyle to return animation properties
     const originalGetComputedStyle = window.getComputedStyle;
 
-    window.getComputedStyle = jest.fn((element: Element) => {
+    window.getComputedStyle = jest.fn((element: Element
+) => {
       const originalStyles = originalGetComputedStyle(element);
 
       return {
@@ -57,7 +58,8 @@ export const _animationMocks = {
         animationDirection: 'normal',
         animationFillMode: 'none',
         animationPlayState: 'running',
-        getPropertyValue: jest.fn((property: string) => {
+        getPropertyValue: jest.fn((property: string
+) => {
           switch (property) {
             case 'animation-name':
               return 'mock-animation';
@@ -89,7 +91,8 @@ export const _animationMocks = {
   mockCSSTransitions(): void {
     const originalGetComputedStyle = window.getComputedStyle;
 
-    window.getComputedStyle = jest.fn((element: Element) => {
+    window.getComputedStyle = jest.fn((element: Element
+) => {
       const originalStyles = originalGetComputedStyle(element);
 
       return {
@@ -98,7 +101,8 @@ export const _animationMocks = {
         transitionDuration: '0.2s',
         transitionTimingFunction: 'ease',
         transitionDelay: '0s',
-        getPropertyValue: jest.fn((property: string) => {
+        getPropertyValue: jest.fn((property: string
+) => {
           switch (property) {
             case 'transition-property':
               return 'all';
@@ -122,10 +126,13 @@ export const _animationMocks = {
   mockAnimationFrame(): {
     requestAnimationFrame: jest.Mock;
     cancelAnimationFrame: jest.Mock;
-    advanceTime: (ms: number) => void;
-    runAllFrames: () => void;
+    advanceTime: (ms: number
+) => void;
+    runAllFrames: (
+) => void;
   } {
-    const requestAnimationFrame = jest.fn((callback: FrameRequestCallback) => {
+    const requestAnimationFrame = jest.fn((callback: FrameRequestCallback
+) => {
       const id = ++mockAnimationId;
       pendingAnimationFrames.set(id, {
         id,
@@ -135,25 +142,30 @@ export const _animationMocks = {
       return id;
     });
 
-    const cancelAnimationFrame = jest.fn((id: number) => {
+    const cancelAnimationFrame = jest.fn((id: number
+) => {
       pendingAnimationFrames.delete(id);
     });
 
-    const advanceTime = (ms: number) => {
+    const advanceTime = (ms: number
+) => {
       currentTime += ms;
       const framesToRun = Array.from(pendingAnimationFrames.values())
         .filter(frame => frame.time <= currentTime)
-        .sort((a, b) => a.time - b.time);
+        .sort((a, b
+) => a.time - b.time);
 
       framesToRun.forEach(frame => {
         pendingAnimationFrames.delete(frame.id);
-        act(() => {
+        act((
+) => {
           frame.callback(frame.time);
         });
       });
     };
 
-    const runAllFrames = () => {
+    const runAllFrames = (
+) => {
       while (pendingAnimationFrames.size > 0) {
         const nextFrame = Math.min(
           ...Array.from(pendingAnimationFrames.values()).map(f => f.time)
@@ -201,7 +213,8 @@ export const _animationMocks = {
       dispatchEvent: jest.fn(),
     };
 
-    Element.prototype.animate = jest.fn(() => mockAnimation);
+    Element.prototype.animate = jest.fn((
+) => mockAnimation);
   },
 };
 
@@ -215,12 +228,15 @@ export const _animationUtils = {
     animationName?: string,
     timeout: number = 5000
   ): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(() => {
+    return new Promise((resolve, reject
+) => {
+      const timeoutId = setTimeout((
+) => {
         reject(new Error(`Animation did not complete within ${timeout}ms`));
       }, timeout);
 
-      const handleAnimationEnd = (event: AnimationEvent) => {
+      const handleAnimationEnd = (event: AnimationEvent
+) => {
         if (!animationName || event.animationName === animationName) {
           element.removeEventListener('animationend', handleAnimationEnd);
           clearTimeout(timeoutId);
@@ -248,12 +264,15 @@ export const _animationUtils = {
     property?: string,
     timeout: number = 5000
   ): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(() => {
+    return new Promise((resolve, reject
+) => {
+      const timeoutId = setTimeout((
+) => {
         reject(new Error(`Transition did not complete within ${timeout}ms`));
       }, timeout);
 
-      const handleTransitionEnd = (event: TransitionEvent) => {
+      const handleTransitionEnd = (event: TransitionEvent
+) => {
         if (!property || event.propertyName === property) {
           element.removeEventListener('transitionend', handleTransitionEnd);
           clearTimeout(timeoutId);
@@ -498,15 +517,22 @@ export const _reactAnimationHelpers = {
    * Mock Framer Motion animations
    */
   mockFramerMotion(): void {
-    jest.mock('framer-motion', () => ({
+    jest.mock('framer-motion', (
+) => ({
       motion: {
-        div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-        button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
-        span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
-        img: ({ children, ...props }: any) => <img {...props}>{children}</img>,
+        div: ({ children, ...props }: any
+) => <div {...props}>{children}</div>,
+        button: ({ children, ...props }: any
+) => <button {...props}>{children}</button>,
+        span: ({ children, ...props }: any
+) => <span {...props}>{children}</span>,
+        img: ({ children, ...props }: any
+) => <img {...props}>{children}</img>,
       },
-      AnimatePresence: ({ children }: any) => children,
-      useAnimation: () => ({
+      AnimatePresence: ({ children }: any
+) => children,
+      useAnimation: (
+) => ({
         start: jest.fn(),
         stop: jest.fn(),
         set: jest.fn(),
@@ -518,8 +544,10 @@ export const _reactAnimationHelpers = {
    * Mock React Spring animations
    */
   mockReactSpring(): void {
-    jest.mock('@react-spring/web', () => ({
-      useSpring: () => ({}),
+    jest.mock('@react-spring/web', (
+) => ({
+      useSpring: (
+) => ({}),
       animated: {
         div: 'div',
         button: 'button',
@@ -541,12 +569,16 @@ export const _reactAnimationHelpers = {
    * Mock React Transition Group
    */
   mockTransitionGroup(): void {
-    jest.mock('react-transition-group', () => ({
-      CSSTransition: ({ children, ...props }: any) => {
+    jest.mock('react-transition-group', (
+) => ({
+      CSSTransition: ({ children, ...props }: any
+) => {
         return props.in ? children : null;
       },
-      TransitionGroup: ({ children }: any) => children,
-      Transition: ({ children, ...props }: any) => {
+      TransitionGroup: ({ children }: any
+) => children,
+      Transition: ({ children, ...props }: any
+) => {
         return typeof children === 'function' ? children('entered') : children;
       },
     }));
@@ -566,7 +598,8 @@ export const _animationPerformanceUtils = {
       let frameCount = 0;
       const startTime = performance.now();
 
-      const measureFrame = () => {
+      const measureFrame = (
+) => {
         frameCount++;
 
         if (animationUtils.hasAnimation(element, animationName)) {
@@ -588,15 +621,19 @@ export const _animationPerformanceUtils = {
    * Check for animation jank
    */
   detectAnimationJank(threshold: number = 16.67): {
-    monitor: () => void;
-    getJankFrames: () => number[];
-    cleanup: () => void;
+    monitor: (
+) => void;
+    getJankFrames: (
+) => number[];
+    cleanup: (
+) => void;
   } {
     let lastFrameTime = performance.now();
     let jankFrames: number[] = [];
     let isMonitoring = false;
 
-    const monitorFrame = () => {
+    const monitorFrame = (
+) => {
       if (!isMonitoring) return;
 
       const currentTime = performance.now();
@@ -611,13 +648,16 @@ export const _animationPerformanceUtils = {
     };
 
     return {
-      monitor: () => {
+      monitor: (
+) => {
         isMonitoring = true;
         lastFrameTime = performance.now();
         requestAnimationFrame(monitorFrame);
       },
-      getJankFrames: () => jankFrames,
-      cleanup: () => {
+      getJankFrames: (
+) => jankFrames,
+      cleanup: (
+) => {
         isMonitoring = false;
         jankFrames = [];
       },
@@ -662,7 +702,8 @@ export const _animationCleanup = {
 };
 
 // Complete Animation Test Suite
-export const _createAnimationTestSuite = () => ({
+export const _createAnimationTestSuite = (
+) => ({
   /**
    * Test basic CSS animation
    */

@@ -173,12 +173,14 @@ export const createAriaAnnouncement = (
 
   // Clear and set new message
   liveRegion.textContent = '';
-  setTimeout(() => {
+  setTimeout((
+) => {
     liveRegion!.textContent = message;
   }, 100);
 
   // Clear after announcement
-  setTimeout(() => {
+  setTimeout((
+) => {
     liveRegion!.textContent = '';
   }, 3000);
 };
@@ -221,7 +223,8 @@ export class FocusManager {
   /**
    * Trap focus within a container
    */
-  static trapFocus(container: HTMLElement): () => void {
+  static trapFocus(container: HTMLElement): (
+) => void {
     const focusableElements = container.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as NodeListOf<HTMLElement>;
@@ -229,7 +232,8 @@ export class FocusManager {
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
-    const handleTabKey = (e: KeyboardEvent) => {
+    const handleTabKey = (e: KeyboardEvent
+) => {
       if (e.key !== 'Tab') return;
 
       if (e.shiftKey) {
@@ -253,7 +257,8 @@ export class FocusManager {
     }
 
     // Return cleanup function
-    return () => {
+    return (
+) => {
       container.removeEventListener('keydown', handleTabKey);
     };
   }
@@ -318,12 +323,15 @@ export const addAccessibleTooltip = (
     position?: 'top' | 'bottom' | 'left' | 'right';
     delay?: number;
   } = {}
-): (() => void) => {
+): ((
+) => void
+) => {
   const { position = 'top', delay = 300 } = options;
   let tooltip: HTMLElement | null = null;
   let timeoutId: TimeoutHandle | null = null;
 
-  const showTooltip = () => {
+  const showTooltip = (
+) => {
     tooltip = document.createElement('div');
     tooltip.className = `
       absolute z-50 px-2 py-1 text-xs font-medium text-white bg-gray-900
@@ -368,7 +376,8 @@ export const addAccessibleTooltip = (
     trigger.setAttribute('aria-describedby', tooltipId);
   };
 
-  const hideTooltip = () => {
+  const hideTooltip = (
+) => {
     if (tooltip) {
       document.body.removeChild(tooltip);
       tooltip = null;
@@ -380,19 +389,23 @@ export const addAccessibleTooltip = (
     }
   };
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = (
+) => {
     timeoutId = window.setTimeout(showTooltip, delay);
   };
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = (
+) => {
     hideTooltip();
   };
 
-  const handleFocus = () => {
+  const handleFocus = (
+) => {
     showTooltip();
   };
 
-  const handleBlur = () => {
+  const handleBlur = (
+) => {
     hideTooltip();
   };
 
@@ -402,7 +415,8 @@ export const addAccessibleTooltip = (
   trigger.addEventListener('blur', handleBlur);
 
   // Return cleanup function
-  return () => {
+  return (
+) => {
     hideTooltip();
     trigger.removeEventListener('mouseenter', handleMouseEnter);
     trigger.removeEventListener('mouseleave', handleMouseLeave);

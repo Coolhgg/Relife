@@ -315,7 +315,8 @@ export class BattleService {
       if (!battle) return;
 
       // Sort participants by score
-      battle.participants.sort((a, b) => (b.score || 0) - (a.score || 0));
+      battle.participants.sort((a, b
+) => (b.score || 0) - (a.score || 0));
 
       // Set winner
       if (battle.participants.length > 0) {
@@ -332,7 +333,8 @@ export class BattleService {
         winnerId: battle.winner,
         participantCount: battle.participants.length,
         averageScore:
-          battle.participants.reduce((acc, p) => acc + (p.score || 0), 0) /
+          battle.participants.reduce((acc, p
+) => acc + (p.score || 0), 0) /
           battle.participants.length,
       });
     } catch (error) {
@@ -542,7 +544,8 @@ export class BattleService {
       const totalBattles = userBattles.length;
       const winRate = totalBattles > 0 ? (wins / totalBattles) * 100 : 0;
 
-      const totalScore = userBattles.reduce((acc, battle) => {
+      const totalScore = userBattles.reduce((acc, battle
+) => {
         const participant = battle.participants.find(p => p.userId === userId);
         return acc + (participant?.score || 0);
       }, 0);

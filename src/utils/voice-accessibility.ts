@@ -7,7 +7,8 @@ import { TimeoutHandle } from '../types/timers';
 
 export interface VoiceCommand {
   phrases: string[];
-  action: (params?: any) => void;
+  action: (params?: any
+) => void;
   description: string;
   category: 'navigation' | 'alarm' | 'accessibility' | 'general';
   enabled: boolean;
@@ -103,7 +104,8 @@ export class VoiceAccessibilityService {
           'show dashboard',
           'navigate dashboard',
         ],
-        action: () => this.navigateToSection('dashboard'),
+        action: (
+) => this.navigateToSection('dashboard'),
         description: 'Navigate to Dashboard',
         category: 'navigation',
       },
@@ -115,7 +117,8 @@ export class VoiceAccessibilityService {
           'navigate alarms',
           'alarm list',
         ],
-        action: () => this.navigateToSection('alarms'),
+        action: (
+) => this.navigateToSection('alarms'),
         description: 'Navigate to Alarms',
         category: 'navigation',
       },
@@ -126,7 +129,8 @@ export class VoiceAccessibilityService {
           'show settings',
           'navigate settings',
         ],
-        action: () => this.navigateToSection('settings'),
+        action: (
+) => this.navigateToSection('settings'),
         description: 'Navigate to Settings',
         category: 'navigation',
       },
@@ -136,13 +140,15 @@ export class VoiceAccessibilityService {
           'open performance',
           'show performance analytics',
         ],
-        action: () => this.navigateToSection('performance'),
+        action: (
+) => this.navigateToSection('performance'),
         description: 'Navigate to Performance',
         category: 'navigation',
       },
       {
         phrases: ['go back', 'navigate back', 'previous page', 'back'],
-        action: () => this.goBack(),
+        action: (
+) => this.goBack(),
         description: 'Go to previous page',
         category: 'navigation',
       },
@@ -150,56 +156,65 @@ export class VoiceAccessibilityService {
       // Alarm Management Commands
       {
         phrases: ['create alarm', 'new alarm', 'add alarm', 'make alarm'],
-        action: () => this.createAlarm(),
+        action: (
+) => this.createAlarm(),
         description: 'Create a new alarm',
         category: 'alarm',
       },
       {
         phrases: ['delete alarm', 'remove alarm', 'delete selected alarm'],
-        action: () => this.deleteAlarm(),
+        action: (
+) => this.deleteAlarm(),
         description: 'Delete the selected alarm',
         category: 'alarm',
         confirmation: true,
       },
       {
         phrases: ['toggle alarm', 'switch alarm', 'activate alarm', 'deactivate alarm'],
-        action: () => this.toggleAlarm(),
+        action: (
+) => this.toggleAlarm(),
         description: 'Toggle the selected alarm on/off',
         category: 'alarm',
       },
       {
         phrases: ['edit alarm', 'modify alarm', 'change alarm'],
-        action: () => this.editAlarm(),
+        action: (
+) => this.editAlarm(),
         description: 'Edit the selected alarm',
         category: 'alarm',
       },
       {
         phrases: ['list alarms', 'show all alarms', 'read alarms'],
-        action: () => this.listAlarms(),
+        action: (
+) => this.listAlarms(),
         description: 'List all alarms',
         category: 'alarm',
       },
       {
         phrases: ['select first alarm', 'focus first alarm'],
-        action: () => this.selectAlarm('first'),
+        action: (
+) => this.selectAlarm('first'),
         description: 'Select the first alarm',
         category: 'alarm',
       },
       {
         phrases: ['select last alarm', 'focus last alarm'],
-        action: () => this.selectAlarm('last'),
+        action: (
+) => this.selectAlarm('last'),
         description: 'Select the last alarm',
         category: 'alarm',
       },
       {
         phrases: ['next alarm', 'select next alarm'],
-        action: () => this.selectAlarm('next'),
+        action: (
+) => this.selectAlarm('next'),
         description: 'Select the next alarm',
         category: 'alarm',
       },
       {
         phrases: ['previous alarm', 'select previous alarm'],
-        action: () => this.selectAlarm('previous'),
+        action: (
+) => this.selectAlarm('previous'),
         description: 'Select the previous alarm',
         category: 'alarm',
       },
@@ -207,49 +222,57 @@ export class VoiceAccessibilityService {
       // Accessibility Commands
       {
         phrases: ['increase voice speed', 'speak faster', 'speed up voice'],
-        action: () => this.adjustVoiceSpeed(0.2),
+        action: (
+) => this.adjustVoiceSpeed(0.2),
         description: 'Increase voice playback speed',
         category: 'accessibility',
       },
       {
         phrases: ['decrease voice speed', 'speak slower', 'slow down voice'],
-        action: () => this.adjustVoiceSpeed(-0.2),
+        action: (
+) => this.adjustVoiceSpeed(-0.2),
         description: 'Decrease voice playback speed',
         category: 'accessibility',
       },
       {
         phrases: ['read page', 'read screen', 'read current page'],
-        action: () => this.readCurrentPage(),
+        action: (
+) => this.readCurrentPage(),
         description: 'Read the current page content',
         category: 'accessibility',
       },
       {
         phrases: ['keyboard shortcuts', 'show shortcuts', 'list shortcuts'],
-        action: () => this.readKeyboardShortcuts(),
+        action: (
+) => this.readKeyboardShortcuts(),
         description: 'List available keyboard shortcuts',
         category: 'accessibility',
       },
       {
         phrases: ['voice commands', 'voice help', 'list commands'],
-        action: () => this.readVoiceCommands(),
+        action: (
+) => this.readVoiceCommands(),
         description: 'List available voice commands',
         category: 'accessibility',
       },
       {
         phrases: ['focus first', 'go to first element'],
-        action: () => this.focusElement('first'),
+        action: (
+) => this.focusElement('first'),
         description: 'Focus the first interactive element',
         category: 'accessibility',
       },
       {
         phrases: ['focus last', 'go to last element'],
-        action: () => this.focusElement('last'),
+        action: (
+) => this.focusElement('last'),
         description: 'Focus the last interactive element',
         category: 'accessibility',
       },
       {
         phrases: ['repeat', 'say again', 'repeat last'],
-        action: () => this.repeatLastAnnouncement(),
+        action: (
+) => this.repeatLastAnnouncement(),
         description: 'Repeat the last announcement',
         category: 'accessibility',
       },
@@ -257,49 +280,57 @@ export class VoiceAccessibilityService {
       // General Commands
       {
         phrases: ['help', 'show help', 'what can you do'],
-        action: () => this.showHelp(),
+        action: (
+) => this.showHelp(),
         description: 'Show help information',
         category: 'general',
       },
       {
         phrases: ['stop listening', 'turn off voice', 'disable voice'],
-        action: () => this.stopListening(),
+        action: (
+) => this.stopListening(),
         description: 'Stop voice recognition',
         category: 'general',
       },
       {
         phrases: ['start listening', 'turn on voice', 'enable voice'],
-        action: () => this.startListening(),
+        action: (
+) => this.startListening(),
         description: 'Start voice recognition',
         category: 'general',
       },
       {
         phrases: ['what time is it', 'current time', 'time'],
-        action: () => this.announceTime(),
+        action: (
+) => this.announceTime(),
         description: 'Announce the current time',
         category: 'general',
       },
       {
         phrases: ['cancel', 'nevermind', 'abort'],
-        action: () => this.cancelAction(),
+        action: (
+) => this.cancelAction(),
         description: 'Cancel the current action',
         category: 'general',
       },
       {
         phrases: ['yes', 'confirm', 'okay', 'proceed'],
-        action: () => this.confirmAction(),
+        action: (
+) => this.confirmAction(),
         description: 'Confirm the pending action',
         category: 'general',
       },
       {
         phrases: ['no', 'cancel', 'stop', 'abort'],
-        action: () => this.rejectAction(),
+        action: (
+) => this.rejectAction(),
         description: 'Reject the pending action',
         category: 'general',
       },
     ];
 
-    commands.forEach((command, index) => {
+    commands.forEach((command, index
+) => {
       this.addCommand(`cmd-${index}`, {
         ...command,
         enabled: true,
@@ -321,19 +352,22 @@ export class VoiceAccessibilityService {
     this.recognition.interimResults = false;
     this.recognition.lang = this.state.language;
 
-    this.recognition.onstart = () => {
+    this.recognition.onstart = (
+) => {
       this.currentlyListening = true;
       this.state.isListening = true;
       this.provideFeedback('Voice recognition started. Listening for commands.');
     };
 
-    this.recognition.onend = () => {
+    this.recognition.onend = (
+) => {
       this.currentlyListening = false;
       this.state.isListening = false;
 
       if (this.state.continuous && this.state.isEnabled) {
         // Restart if continuous mode is enabled
-        setTimeout(() => this.startListening(), 1000);
+        setTimeout((
+) => this.startListening(), 1000);
       }
     };
 
@@ -429,7 +463,8 @@ export class VoiceAccessibilityService {
     );
 
     // Auto-cancel confirmation after 10 seconds
-    setTimeout(() => {
+    setTimeout((
+) => {
       if (this.confirmationPending === command) {
         this.confirmationPending = undefined;
         this.provideFeedback('Confirmation timeout. Action cancelled.');
@@ -621,7 +656,8 @@ export class VoiceAccessibilityService {
     }
 
     let alarmsList = `Found ${alarms.length} alarm${alarms.length > 1 ? 's' : ''}: `;
-    alarms.forEach((alarm, index) => {
+    alarms.forEach((alarm, index
+) => {
       const timeElement = alarm.querySelector('[data-alarm-time]');
       const labelElement = alarm.querySelector('[data-alarm-label]');
       const statusElement = alarm.querySelector('[data-alarm-status]');

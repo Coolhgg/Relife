@@ -25,7 +25,8 @@ interface ThemeCategory {
   }>;
 }
 
-const SoundThemeDemo: React.FC = () => {
+const SoundThemeDemo: React.FC = (
+) => {
   const [currentTheme, setCurrentTheme] = useState<SoundTheme>('default');
   const [isPlaying, setIsPlaying] = useState<{ [key: string]: boolean }>({});
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -170,14 +171,17 @@ const SoundThemeDemo: React.FC = () => {
   ];
 
   // Play sound effect
-  const playSound = async (soundId: string, themeId: SoundTheme) => {
+  const playSound = async (soundId: string, themeId: SoundTheme
+) => {
     if (!soundEnabled) return;
 
     const key = `${themeId}-${soundId}`;
-    /* auto: implicit any */
-    setIsPlaying((prev: any) => ({ ...prev, [key]: true }));
-    /* auto: implicit any */
-    setTestResults((prev: any) => ({ ...prev, [key]: 'testing' }));
+    
+    setIsPlaying((prev: any
+) => ({ ...prev, [key]: true }));
+    
+    setTestResults((prev: any
+) => ({ ...prev, [key]: 'testing' }));
 
     try {
       // Temporarily switch to theme for testing
@@ -194,46 +198,56 @@ const SoundThemeDemo: React.FC = () => {
         await soundEffectsService.setSoundTheme(originalTheme);
       }
 
-      /* auto: implicit any */
-      setTestResults((prev: any) => ({ ...prev, [key]: 'success' }));
+      
+      setTestResults((prev: any
+) => ({ ...prev, [key]: 'success' }));
     } catch (error) {
       console.error('Sound test failed:', error);
-      /* auto: implicit any */
-      setTestResults((prev: any) => ({ ...prev, [key]: 'error' }));
+      
+      setTestResults((prev: any
+) => ({ ...prev, [key]: 'error' }));
     } finally {
-      setTimeout(() => {
-        /* auto: implicit any */
-        setIsPlaying((prev: any) => ({ ...prev, [key]: false }));
+      setTimeout((
+) => {
+        
+        setIsPlaying((prev: any
+) => ({ ...prev, [key]: false }));
       }, 500);
     }
   };
 
   // Play alarm sound (simulated)
-  const playAlarmSound = async (alarmType: string, themeId: SoundTheme) => {
+  const playAlarmSound = async (alarmType: string, themeId: SoundTheme
+) => {
     if (!soundEnabled) return;
 
     const key = `${themeId}-alarm-${alarmType}`;
-    /* auto: implicit any */
-    setIsPlaying((prev: any) => ({ ...prev, [key]: true }));
+    
+    setIsPlaying((prev: any
+) => ({ ...prev, [key]: true }));
 
     // Simulate alarm sound by playing success sound with loop simulation
     await playSound('ui.success', themeId);
 
-    setTimeout(() => {
-      /* auto: implicit any */
-      setIsPlaying((prev: any) => ({ ...prev, [key]: false }));
+    setTimeout((
+) => {
+      
+      setIsPlaying((prev: any
+) => ({ ...prev, [key]: false }));
     }, 2000);
   };
 
   // Apply theme to entire demo
-  const applyTheme = async (themeId: SoundTheme) => {
+  const applyTheme = async (themeId: SoundTheme
+) => {
     try {
       await soundEffectsService.setSoundTheme(themeId);
       setCurrentTheme(themeId);
 
       // Play a sample sound to demonstrate
       if (soundEnabled) {
-        setTimeout(() => {
+        setTimeout((
+) => {
           soundEffectsService.playSound('ui.success', { force: true });
         }, 200);
       }
@@ -242,7 +256,8 @@ const SoundThemeDemo: React.FC = () => {
     }
   };
 
-  const getStatusColor = (key: string) => {
+  const getStatusColor = (key: string
+) => {
     const status = testResults[key];
     if (status === 'testing') return 'animate-pulse text-blue-500';
     if (status === 'success') return 'text-green-500';
@@ -271,7 +286,8 @@ const SoundThemeDemo: React.FC = () => {
           <Button
             variant={soundEnabled ? 'default' : 'outline'}
             size="sm"
-            onClick={() => setSoundEnabled(!soundEnabled)}
+            onClick={(
+) => setSoundEnabled(!soundEnabled)}
             className="flex items-center gap-2"
           >
             {soundEnabled ? (
@@ -291,7 +307,8 @@ const SoundThemeDemo: React.FC = () => {
       </div>
 
       {/* Theme Categories */}
-      {themeCategories.map((category, categoryIndex) => (
+      {themeCategories.map((category, categoryIndex
+) => (
         <motion.div
           key={category.name}
           initial={{ opacity: 0, y: 20 }}
@@ -310,7 +327,8 @@ const SoundThemeDemo: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {category.themes.map((theme, themeIndex) => (
+            {category.themes.map((theme, themeIndex
+) => (
               <motion.div
                 key={theme.id}
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -336,7 +354,8 @@ const SoundThemeDemo: React.FC = () => {
                       <Button
                         size="sm"
                         variant={currentTheme === theme.id ? 'default' : 'outline'}
-                        onClick={() => applyTheme(theme.id)}
+                        onClick={(
+) => applyTheme(theme.id)}
                       >
                         {currentTheme === theme.id ? 'Active' : 'Apply'}
                       </Button>
@@ -362,7 +381,8 @@ const SoundThemeDemo: React.FC = () => {
                               variant="ghost"
                               size="sm"
                               className={`h-8 text-xs justify-start ${getStatusColor(key)}`}
-                              onClick={() => playSound(sound.id, theme.id)}
+                              onClick={(
+) => playSound(sound.id, theme.id)}
                               disabled={isPlayingThis}
                             >
                               <Play
@@ -382,7 +402,8 @@ const SoundThemeDemo: React.FC = () => {
                         Alarm Sounds
                       </h4>
                       <div className="space-y-1">
-                        {alarmTypes.map((alarm, index) => {
+                        {alarmTypes.map((alarm, index
+) => {
                           const key = `${theme.id}-alarm-${alarm.name}`;
                           const isPlayingThis = isPlaying[key];
                           return (
@@ -391,7 +412,8 @@ const SoundThemeDemo: React.FC = () => {
                               variant="ghost"
                               size="sm"
                               className="h-8 text-xs justify-start w-full"
-                              onClick={() => playAlarmSound(alarm.name, theme.id)}
+                              onClick={(
+) => playAlarmSound(alarm.name, theme.id)}
                               disabled={isPlayingThis}
                             >
                               <Play

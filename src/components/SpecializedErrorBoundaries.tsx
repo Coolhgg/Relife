@@ -12,8 +12,10 @@ import { ErrorHandler } from '../services/error-handler';
 
 interface SpecializedErrorBoundaryProps {
   children: ReactNode;
-  onError?: (error: Error, errorInfo: ErrorInfo) => void;
-  onRetry?: () => void;
+  onError?: (error: Error, errorInfo: ErrorInfo
+) => void;
+  onRetry?: (
+) => void;
 }
 
 interface SpecializedErrorBoundaryState {
@@ -73,7 +75,8 @@ abstract class BaseSpecializedErrorBoundary extends Component<
     this.props.onError?.(error, errorInfo);
   }
 
-  handleRetry = () => {
+  handleRetry = (
+) => {
     this.setState({
       hasError: false,
       error: null,
@@ -230,7 +233,8 @@ export class FormErrorBoundary extends BaseSpecializedErrorBoundary {
                 </button>
 
                 <button
-                  onClick={() => window.location.reload()}
+                  onClick={(
+) => window.location.reload()}
                   className="inline-flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                 >
                   <RefreshCw className="w-4 h-4" />

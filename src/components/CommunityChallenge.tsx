@@ -32,11 +32,16 @@ import {
 interface CommunityChallengeProps {
   challenges: SocialChallenge[];
   userChallenges: SocialChallenge[];
-  onJoinChallenge?: (challenge: SocialChallenge) => void;
-  onCreateChallenge?: () => void;
-  onLeaveChallenge?: (challenge: SocialChallenge) => void;
-  onViewChallenge?: (challenge: SocialChallenge) => void;
-  onShareProgress?: (challenge: SocialChallenge) => void;
+  onJoinChallenge?: (challenge: SocialChallenge
+) => void;
+  onCreateChallenge?: (
+) => void;
+  onLeaveChallenge?: (challenge: SocialChallenge
+) => void;
+  onViewChallenge?: (challenge: SocialChallenge
+) => void;
+  onShareProgress?: (challenge: SocialChallenge
+) => void;
   className?: string;
   showUserChallenges?: boolean;
 }
@@ -102,7 +107,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
   onShareProgress,
   className = '',
   showUserChallenges = true,
-}) => {
+}
+) => {
   const [activeTab, setActiveTab] = useState<'discover' | 'joined'>('discover');
   const [filteredChallenges, setFilteredChallenges] = useState(challenges);
   const [selectedType, setSelectedType] = useState<SocialChallengeType | 'all'>('all');
@@ -110,21 +116,25 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
     'all' | 'easy' | 'medium' | 'hard'
   >('all');
 
-  useEffect(() => {
+  useEffect((
+) => {
     let filtered = challenges;
 
     if (selectedType !== 'all') {
-      filtered = filtered.filter((c: any) => c // auto: implicit any.challengeType === selectedType);
+      filtered = filtered.filter((c: any
+) => c.challengeType === selectedType);
     }
 
     if (selectedDifficulty !== 'all') {
-      filtered = filtered.filter((c: any) => c // auto: implicit any.difficulty === selectedDifficulty);
+      filtered = filtered.filter((c: any
+) => c.difficulty === selectedDifficulty);
     }
 
     setFilteredChallenges(filtered);
   }, [challenges, selectedType, selectedDifficulty]);
 
-  const formatTimeRemaining = (endDate: Date) => {
+  const formatTimeRemaining = (endDate: Date
+) => {
     const now = new Date();
     const diff = endDate.getTime() - now.getTime();
 
@@ -143,7 +153,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
   }: {
     challenge: SocialChallenge;
     isUserChallenge?: boolean;
-  }) => {
+  }
+) => {
     const config = CHALLENGE_TYPE_CONFIGS[challenge.challengeType];
     const IconComponent = config.icon;
     const isActive = challenge.status === 'active';
@@ -155,7 +166,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
           className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-2 ${
             isActive ? 'border-primary/20' : 'border-muted/20'
           }`}
-          onClick={() => onViewChallenge?.(challenge)}
+          onClick={(
+) => onViewChallenge?.(challenge)}
         >
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
@@ -252,7 +264,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                   <span className="text-sm font-medium">Top Performers</span>
                 </div>
                 <div className="flex -space-x-2">
-                  {challenge.leaderboard.slice(0, 3).map((leader, index) => (
+                  {challenge.leaderboard.slice(0, 3).map((leader, index
+) => (
                     <motion.div
                       key={leader.userId}
                       className="relative"
@@ -289,7 +302,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                     size="sm"
                     variant="outline"
                     className="flex-1"
-                    onClick={(e: React.MouseEvent) => {
+                    onClick={(e: React.MouseEvent
+) => {
                       e.stopPropagation();
                       onShareProgress?.(challenge);
                     }}
@@ -300,7 +314,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={(e: React.MouseEvent) => {
+                    onClick={(e: React.MouseEvent
+) => {
                       e.stopPropagation();
                       onLeaveChallenge?.(challenge);
                     }}
@@ -312,7 +327,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <Button
                   size="sm"
                   className="w-full"
-                  onClick={(e: React.MouseEvent) => {
+                  onClick={(e: React.MouseEvent
+) => {
                     e.stopPropagation();
                     onJoinChallenge?.(challenge);
                   }}
@@ -352,7 +368,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
             <Button
               variant={activeTab === 'discover' ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setActiveTab('discover')}
+              onClick={(
+) => setActiveTab('discover')}
             >
               Discover
               <Badge variant="secondary" className="ml-2">
@@ -363,7 +380,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               <Button
                 variant={activeTab === 'joined' ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => setActiveTab('joined')}
+                onClick={(
+) => setActiveTab('joined')}
               >
                 My Challenges
                 <Badge variant="secondary" className="ml-2">
@@ -387,7 +405,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedType}
-                  onChange={(e: any) => /* auto: implicit any */
+                  onChange={(e: any
+) => 
                     setSelectedType(e.target.value as SocialChallengeType | 'all')
                   }
                 >
@@ -403,7 +422,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedDifficulty}
-                  onChange={(e: any) => /* auto: implicit any */
+                  onChange={(e: any
+) => 
                     setSelectedDifficulty(
                       e.target.value as 'all' | 'easy' | 'medium' | 'hard'
                     )
@@ -419,8 +439,9 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               {/* Challenge Grid */}
               <div className="grid md:grid-cols-2 gap-4">
                 <AnimatePresence>
-                  {filteredChallenges/* auto: implicit any */
-      &.map((challenge: any) => (
+                  {filteredChallenges
+      .map((challenge: any
+) => (
                     <motion.div
                       key={challenge.id}
                       layout
@@ -454,8 +475,9 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
           {activeTab === 'joined' && (
             <>
               <div className="grid md:grid-cols-2 gap-4">
-                {userChallenges/* auto: implicit any */
-      &.map((challenge: any) => (
+                {userChallenges
+      .map((challenge: any
+) => (
                   <ChallengeCard
                     key={challenge.id}
                     challenge={challenge}
@@ -472,7 +494,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                     Join your first challenge to start building habits with the
                     community!
                   </p>
-                  <Button onClick={() => setActiveTab('discover')}>
+                  <Button onClick={(
+) => setActiveTab('discover')}>
                     <Users className="w-4 h-4 mr-2" />
                     Discover Challenges
                   </Button>

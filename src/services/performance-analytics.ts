@@ -138,10 +138,12 @@ class PerformanceAnalyticsService {
   /**
    * Start a performance measurement
    */
-  startMeasurement(name: string): () => number {
+  startMeasurement(name: string): (
+) => number {
     const startTime = performance.now();
 
-    return () => {
+    return (
+) => {
       const duration = performance.now() - startTime;
       this.trackMetric(name, duration, 'ms', 'interaction');
       return duration;
@@ -367,7 +369,8 @@ class PerformanceAnalyticsService {
           domInteractive: navEntry.domInteractive - navEntry.fetchStart,
         };
 
-        Object.entries(timings).forEach(([name, value]) => {
+        Object.entries(timings).forEach(([name, value]
+) => {
           this.trackMetric(`navigation_${name}`, value, 'ms', 'load');
         });
       }
@@ -379,7 +382,8 @@ class PerformanceAnalyticsService {
    */
   private initializeMemoryMonitoring(): void {
     if ('memory' in performance) {
-      setInterval(() => {
+      setInterval((
+) => {
         const memory = (performance as any).memory;
         if (memory) {
           this.trackMetric(
@@ -402,12 +406,14 @@ class PerformanceAnalyticsService {
    */
   private setupPeriodicReporting(): void {
     // Report performance summary every 2 minutes
-    setInterval(() => {
+    setInterval((
+) => {
       this.reportPerformanceSummary();
     }, 120000);
 
     // Report web vitals on page unload
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener('beforeunload', (
+) => {
       this.reportWebVitals();
     });
   }
@@ -417,7 +423,8 @@ class PerformanceAnalyticsService {
    */
   private observePerformanceEntry(
     type: string,
-    callback: (entries: PerformanceEntry[]) => void
+    callback: (entries: PerformanceEntry[]
+) => void
   ): void {
     try {
       if (typeof PerformanceObserver !== 'undefined') {
@@ -472,8 +479,10 @@ class PerformanceAnalyticsService {
     });
 
     // Calculate averages
-    Object.entries(groups).forEach(([name, values]) => {
-      averages[name] = values.reduce((sum, val) => sum + val, 0) / values.length;
+    Object.entries(groups).forEach(([name, values]
+) => {
+      averages[name] = values.reduce((sum, val
+) => sum + val, 0) / values.length;
     });
 
     return averages;
@@ -491,7 +500,8 @@ class PerformanceAnalyticsService {
     const issues = [];
     const averages = this.calculateAverages();
 
-    Object.entries(averages).forEach(([metric, value]) => {
+    Object.entries(averages).forEach(([metric, value]
+) => {
       const thresholdKey = metric as keyof typeof this.thresholds;
       const threshold = this.thresholds[thresholdKey];
 

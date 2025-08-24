@@ -415,8 +415,12 @@ export interface RealtimeActivity {
 export interface ABTestContext {
   currentTests: ABTestGroup[];
   userAssignments: UserABTest[];
-  isFeatureEnabled: (featureId: string) => boolean;
-  getFeatureVariant: (featureId: string) => string | null;
-  trackConversion: (testId: string, userId: string) => void;
-  trackEngagement: (testId: string, userId: string, action: string) => void;
+  isFeatureEnabled: (featureId: string
+) => boolean;
+  getFeatureVariant: (featureId: string
+) => string | null;
+  trackConversion: (testId: string, userId: string
+) => void;
+  trackEngagement: (testId: string, userId: string, action: string
+) => void;
 }

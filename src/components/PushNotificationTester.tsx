@@ -27,7 +27,8 @@ interface TestResult {
   duration?: number;
 }
 
-export const PushNotificationTester: React.FC = () => {
+export const PushNotificationTester: React.FC = (
+) => {
   const { status, testNotification, sendDailyMotivation, sendWeeklyProgress } =
     usePushNotifications();
   const { track } = useAnalytics();
@@ -81,7 +82,8 @@ export const PushNotificationTester: React.FC = () => {
       status: 'success' | 'error',
       error?: string,
       duration?: number
-    ) => {
+    
+) => {
       const result: TestResult = {
         id: Date.now().toString(),
         type,
@@ -92,14 +94,16 @@ export const PushNotificationTester: React.FC = () => {
         duration,
       };
 
-      /* auto: implicit any */
-      setTestResults((prev: any) => [result, ...prev.slice(0, 9)]); // Keep last 10 results
+      
+      setTestResults((prev: any
+) => [result, ...prev.slice(0, 9)]); // Keep last 10 results
     },
     []
   );
 
   const runSingleTest = useCallback(
-    async (testType: string) => {
+    async (testType: string
+) => {
       const startTime = Date.now();
 
       try {
@@ -177,7 +181,8 @@ export const PushNotificationTester: React.FC = () => {
     ]
   );
 
-  const runAllTests = useCallback(async () => {
+  const runAllTests = useCallback(async (
+) => {
     if (!status.hasPermission) {
       return;
     }
@@ -202,12 +207,14 @@ export const PushNotificationTester: React.FC = () => {
     }
   }, [status.hasPermission, testTypes, runSingleTest, track]);
 
-  const clearResults = useCallback(() => {
+  const clearResults = useCallback((
+) => {
     setTestResults([]);
     track('push_notification_test_results_cleared');
   }, [track]);
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: string
+) => {
     switch (status) {
       case 'success':
         return <CheckCircle className="w-4 h-4 text-green-500" />;
@@ -222,7 +229,8 @@ export const PushNotificationTester: React.FC = () => {
     }
   };
 
-  const getColorClasses = (color: string) => {
+  const getColorClasses = (color: string
+) => {
     switch (color) {
       case 'blue':
         return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800';
@@ -320,7 +328,8 @@ export const PushNotificationTester: React.FC = () => {
               return (
                 <button
                   key={testType.id}
-                  onClick={() => setSelectedTestType(testType.id)}
+                  onClick={(
+) => setSelectedTestType(testType.id)}
                   disabled={!status.hasPermission || isRunningTests}
                   className={`p-3 border-2 rounded-lg text-left transition-all ${
                     selectedTestType === testType.id
@@ -344,7 +353,8 @@ export const PushNotificationTester: React.FC = () => {
         {/* Action Buttons */}
         <div className="flex gap-3">
           <button
-            onClick={() => runSingleTest(selectedTestType)}
+            onClick={(
+) => runSingleTest(selectedTestType)}
             disabled={!status.hasPermission || isRunningTests}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-md transition-colors"
           >
@@ -389,15 +399,17 @@ export const PushNotificationTester: React.FC = () => {
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                /* auto: implicit any */
-                {testResults.filter((r: any) => r.status === 'success').length}
+                
+                {testResults.filter((r: any
+) => r.status === 'success').length}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Success</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-red-600 dark:text-red-400">
-                /* auto: implicit any */
-                {testResults.filter((r: any) => r.status === 'error').length}
+                
+                {testResults.filter((r: any
+) => r.status === 'error').length}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Errors</div>
             </div>
@@ -405,7 +417,8 @@ export const PushNotificationTester: React.FC = () => {
               <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">
                 {testResults.length > 0
                   ? Math.round(
-                      testResults.reduce((acc, r) => acc + (r.duration || 0), 0) /
+                      testResults.reduce((acc, r
+) => acc + (r.duration || 0), 0) /
                         testResults.length
                     )
                   : 0}
@@ -419,8 +432,9 @@ export const PushNotificationTester: React.FC = () => {
 
           {/* Results List */}
           <div className="space-y-3">
-            {testResults/* auto: implicit any */
-      &.map((result: any) => (
+            {testResults
+      .map((result: any
+) => (
               <div
                 key={result.id}
                 className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg"

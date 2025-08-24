@@ -177,7 +177,8 @@ export const Loading: Story = {
 
 // Interactive states showcase
 export const InteractiveShowcase: Story = {
-  render: () => (
+  render: (
+) => (
     <div className="flex flex-col gap-4 p-4">
       <h3 className="text-lg font-semibold mb-2">All Button Variants</h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -229,7 +230,8 @@ export const InteractiveShowcase: Story = {
 
 // Accessibility test
 export const AccessibilityTest: Story = {
-  render: () => (
+  render: (
+) => (
     <div className="flex flex-col gap-4 p-4">
       <h3 className="text-lg font-semibold mb-2">Accessibility Features</h3>
       <div className="grid gap-4">

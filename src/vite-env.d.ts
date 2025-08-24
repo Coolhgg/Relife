@@ -26,8 +26,10 @@ declare module 'react' {
     state: S; // auto: added to satisfy ErrorBoundary usage
     props: P; // auto: added to satisfy ErrorBoundary usage
     setState: (
-      partialState: Partial<S> | ((prevState: S, props: P) => Partial<S>)
-    ) => void; // auto: added to satisfy ErrorBoundary usage
+      partialState: Partial<S> | ((prevState: S, props: P
+) => Partial<S>)
+    
+) => void; // auto: added to satisfy ErrorBoundary usage
   }
 }
 

@@ -597,7 +597,8 @@ export class NuclearModeService {
     if (challenges.length === 0) return 10;
 
     const avgDifficulty =
-      challenges.reduce((sum, c) => sum + c.difficulty, 0) / challenges.length;
+      challenges.reduce((sum, c
+) => sum + c.difficulty, 0) / challenges.length;
     const complexityBonus = challenges.length > 3 ? 1 : 0;
 
     return Math.min(10, Math.round(avgDifficulty + complexityBonus));
@@ -646,7 +647,8 @@ export class NuclearModeService {
     if (completionTimes.length === 0) return 0;
 
     const avgTime =
-      completionTimes.reduce((sum, time) => sum + time, 0) / completionTimes.length;
+      completionTimes.reduce((sum, time
+) => sum + time, 0) / completionTimes.length;
     const maxExpectedTime = 120; // 2 minutes per challenge
 
     // Better performance = lower time = higher score
@@ -683,7 +685,8 @@ export class NuclearModeService {
       if (previousScores.length === 0) return 0;
 
       const avgPreviousScore =
-        previousScores.reduce((sum, score) => sum + score, 0) / previousScores.length;
+        previousScores.reduce((sum, score
+) => sum + score, 0) / previousScores.length;
       const improvement = ((currentScore - avgPreviousScore) / avgPreviousScore) * 100;
 
       // Save current score
@@ -721,7 +724,8 @@ export class NuclearModeService {
     // Speed demon
     const avgTime = session.challenges
       .filter(c => c.timeToComplete)
-      .reduce((sum, c, _, arr) => sum + c.timeToComplete! / arr.length, 0);
+      .reduce((sum, c, _, arr
+) => sum + c.timeToComplete! / arr.length, 0);
     if (avgTime < 60) {
       achievements.push('nuclear_speed_demon');
     }
@@ -789,7 +793,8 @@ export class NuclearModeService {
 
       const favoriteChallenge =
         Object.keys(challengeTypes).length > 0
-          ? (Object.keys(challengeTypes).reduce((a, b) =>
+          ? (Object.keys(challengeTypes).reduce((a, b
+) =>
               challengeTypes[a] > challengeTypes[b] ? a : b
             ) as NuclearChallengeType)
           : null;
@@ -811,11 +816,13 @@ export class NuclearModeService {
             : 0,
         averageScore:
           scores.length > 0
-            ? scores.reduce((sum, score) => sum + score, 0) / scores.length
+            ? scores.reduce((sum, score
+) => sum + score, 0) / scores.length
             : 0,
         bestScore: scores.length > 0 ? Math.max(...scores) : 0,
         totalChallengesCompleted: completedSessions.reduce(
-          (sum, session) => sum + session.successfulChallenges,
+          (sum, session
+) => sum + session.successfulChallenges,
           0
         ),
         favoriteChallenge,

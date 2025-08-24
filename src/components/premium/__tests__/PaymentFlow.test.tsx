@@ -25,11 +25,14 @@ const mockStripe = {
   confirmCardPayment: jest.fn(),
 };
 
-jest.mock('../../../lib/stripe', () => ({
-  getStripe: () => Promise.resolve(mockStripe),
+jest.mock('../../../lib/stripe', (
+) => ({
+  getStripe: (
+) => Promise.resolve(mockStripe),
 }));
 
-describe('PaymentFlow', () => {
+describe('PaymentFlow', (
+) => {
   const mockOnPaymentSuccess = jest.fn();
   const mockOnPaymentError = jest.fn();
   const mockOnCancel = jest.fn();
@@ -74,7 +77,8 @@ describe('PaymentFlow', () => {
     onCreateSubscription: mockOnCreateSubscription,
   };
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
     mockOnCreateSubscription.mockResolvedValue({
       clientSecret: 'pi_test_secret',
@@ -88,8 +92,10 @@ describe('PaymentFlow', () => {
     });
   });
 
-  describe('Initial Rendering', () => {
-    it('renders payment flow header and plan summary', () => {
+  describe('Initial Rendering', (
+) => {
+    it('renders payment flow header and plan summary', (
+) => {
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       expect(screen.getByText('Complete Your Subscription')).toBeInTheDocument();
@@ -97,20 +103,23 @@ describe('PaymentFlow', () => {
       expect(screen.getByText('$9.99/month')).toBeInTheDocument();
     });
 
-    it('shows trial information when available', () => {
+    it('shows trial information when available', (
+) => {
       renderWithProviders(<PaymentFlow {...defaultProps} trialDays={14} />);
 
       expect(screen.getByText('14-day free trial')).toBeInTheDocument();
       expect(screen.getByText("You won't be charged until")).toBeInTheDocument();
     });
 
-    it('displays discount when discount code is applied', () => {
+    it('displays discount when discount code is applied', (
+) => {
       renderWithProviders(<PaymentFlow {...defaultProps} discountCode="SAVE20" />);
 
       expect(screen.getByText('Discount (SAVE20)')).toBeInTheDocument();
     });
 
-    it('shows security badges', () => {
+    it('shows security badges', (
+) => {
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       expect(screen.getByTestId('security-badges')).toBeInTheDocument();
@@ -118,8 +127,10 @@ describe('PaymentFlow', () => {
     });
   });
 
-  describe('Payment Method Selection', () => {
-    it('shows existing payment methods when available', () => {
+  describe('Payment Method Selection', (
+) => {
+    it('shows existing payment methods when available', (
+) => {
       renderWithProviders(
         <PaymentFlow {...defaultProps} existingPaymentMethods={testPaymentMethods} />
       );
@@ -129,7 +140,8 @@ describe('PaymentFlow', () => {
       expect(screen.getByText('•••• 5555')).toBeInTheDocument();
     });
 
-    it('allows selection of existing payment method', async () => {
+    it('allows selection of existing payment method', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(
@@ -142,7 +154,8 @@ describe('PaymentFlow', () => {
       expect(visaCard).toHaveClass('ring-2', 'ring-purple-500');
     });
 
-    it('shows new payment method form by default when no existing methods', () => {
+    it('shows new payment method form by default when no existing methods', (
+) => {
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       expect(screen.getByLabelText(/card number/i)).toBeInTheDocument();
@@ -151,7 +164,8 @@ describe('PaymentFlow', () => {
       expect(screen.getByLabelText(/cardholder name/i)).toBeInTheDocument();
     });
 
-    it('allows switching between existing and new payment methods', async () => {
+    it('allows switching between existing and new payment methods', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(
@@ -169,12 +183,15 @@ describe('PaymentFlow', () => {
     });
   });
 
-  describe('Payment Form Validation', () => {
-    beforeEach(() => {
+  describe('Payment Form Validation', (
+) => {
+    beforeEach((
+) => {
       renderWithProviders(<PaymentFlow {...defaultProps} />);
     });
 
-    it('validates required fields', async () => {
+    it('validates required fields', async (
+) => {
       const user = userEvent.setup();
 
       const submitButton = screen.getByRole('button', {
@@ -186,7 +203,8 @@ describe('PaymentFlow', () => {
       expect(screen.getByText('Cardholder name is required')).toBeInTheDocument();
     });
 
-    it('validates card number format', async () => {
+    it('validates card number format', async (
+) => {
       const user = userEvent.setup();
 
       const cardInput = screen.getByLabelText(/card number/i);
@@ -200,7 +218,8 @@ describe('PaymentFlow', () => {
       expect(screen.getByText('Invalid card number')).toBeInTheDocument();
     });
 
-    it('validates expiry date format', async () => {
+    it('validates expiry date format', async (
+) => {
       const user = userEvent.setup();
 
       const expiryInput = screen.getByLabelText(/expiry date/i);
@@ -214,7 +233,8 @@ describe('PaymentFlow', () => {
       expect(screen.getByText('Invalid expiry date')).toBeInTheDocument();
     });
 
-    it('validates CVC format', async () => {
+    it('validates CVC format', async (
+) => {
       const user = userEvent.setup();
 
       const cvcInput = screen.getByLabelText(/cvc/i);
@@ -228,7 +248,8 @@ describe('PaymentFlow', () => {
       expect(screen.getByText('Invalid CVC')).toBeInTheDocument();
     });
 
-    it('validates email format', async () => {
+    it('validates email format', async (
+) => {
       const user = userEvent.setup();
 
       const emailInput = screen.getByLabelText(/email/i);
@@ -243,8 +264,10 @@ describe('PaymentFlow', () => {
     });
   });
 
-  describe('Billing Address', () => {
-    it('shows billing address form', () => {
+  describe('Billing Address', (
+) => {
+    it('shows billing address form', (
+) => {
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       expect(screen.getByLabelText(/address line 1/i)).toBeInTheDocument();
@@ -252,7 +275,8 @@ describe('PaymentFlow', () => {
       expect(screen.getByLabelText(/postal code/i)).toBeInTheDocument();
     });
 
-    it('validates required billing fields', async () => {
+    it('validates required billing fields', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
@@ -266,7 +290,8 @@ describe('PaymentFlow', () => {
       expect(screen.getByText('City is required')).toBeInTheDocument();
     });
 
-    it('auto-fills country based on locale', () => {
+    it('auto-fills country based on locale', (
+) => {
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       const countrySelect = screen.getByLabelText(/country/i);
@@ -274,8 +299,10 @@ describe('PaymentFlow', () => {
     });
   });
 
-  describe('Payment Processing', () => {
-    const fillValidForm = async (user: any) => {
+  describe('Payment Processing', (
+) => {
+    const fillValidForm = async (user: any
+) => {
       await user.type(screen.getByLabelText(/card number/i), '4242424242424242');
       await user.type(screen.getByLabelText(/expiry date/i), '12/25');
       await user.type(screen.getByLabelText(/cvc/i), '123');
@@ -286,7 +313,8 @@ describe('PaymentFlow', () => {
       await user.type(screen.getByLabelText(/postal code/i), '10001');
     };
 
-    it('processes successful payment', async () => {
+    it('processes successful payment', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
@@ -302,12 +330,14 @@ describe('PaymentFlow', () => {
       expect(screen.getByText(/processing/i)).toBeInTheDocument();
       expect(submitButton).toBeDisabled();
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(mockOnPaymentSuccess).toHaveBeenCalledWith('sub_test_123');
       });
     });
 
-    it('handles payment failure', async () => {
+    it('handles payment failure', async (
+) => {
       const user = userEvent.setup();
 
       mockStripe.confirmCardPayment.mockResolvedValue({
@@ -323,12 +353,14 @@ describe('PaymentFlow', () => {
       });
       await user.click(submitButton);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(mockOnPaymentError).toHaveBeenCalledWith('Your card was declined.');
       });
     });
 
-    it('handles subscription creation failure', async () => {
+    it('handles subscription creation failure', async (
+) => {
       const user = userEvent.setup();
 
       mockOnCreateSubscription.mockRejectedValue(
@@ -344,12 +376,14 @@ describe('PaymentFlow', () => {
       });
       await user.click(submitButton);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(mockOnPaymentError).toHaveBeenCalledWith('Subscription creation failed');
       });
     });
 
-    it('sends correct subscription request', async () => {
+    it('sends correct subscription request', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
@@ -361,7 +395,8 @@ describe('PaymentFlow', () => {
       });
       await user.click(submitButton);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(mockOnCreateSubscription).toHaveBeenCalledWith(
           expect.objectContaining({
             planId: testPlan.id,
@@ -373,14 +408,17 @@ describe('PaymentFlow', () => {
     });
   });
 
-  describe('Save Payment Method Option', () => {
-    it('shows save payment method checkbox', () => {
+  describe('Save Payment Method Option', (
+) => {
+    it('shows save payment method checkbox', (
+) => {
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       expect(screen.getByLabelText(/save payment method/i)).toBeInTheDocument();
     });
 
-    it('includes save option in subscription request when checked', async () => {
+    it('includes save option in subscription request when checked', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
@@ -395,7 +433,8 @@ describe('PaymentFlow', () => {
       });
       await user.click(submitButton);
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(mockOnCreateSubscription).toHaveBeenCalledWith(
           expect.objectContaining({
             savePaymentMethod: true,
@@ -405,8 +444,10 @@ describe('PaymentFlow', () => {
     });
   });
 
-  describe('Cancel Flow', () => {
-    it('calls onCancel when cancel button is clicked', async () => {
+  describe('Cancel Flow', (
+) => {
+    it('calls onCancel when cancel button is clicked', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
@@ -417,7 +458,8 @@ describe('PaymentFlow', () => {
       expect(mockOnCancel).toHaveBeenCalled();
     });
 
-    it('shows confirmation modal for cancel during processing', async () => {
+    it('shows confirmation modal for cancel during processing', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
@@ -437,15 +479,18 @@ describe('PaymentFlow', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('provides proper form labels and descriptions', () => {
+  describe('Accessibility', (
+) => {
+    it('provides proper form labels and descriptions', (
+) => {
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       const cardNumberInput = screen.getByLabelText(/card number/i);
       expect(cardNumberInput).toHaveAccessibleDescription();
     });
 
-    it('announces form validation errors to screen readers', async () => {
+    it('announces form validation errors to screen readers', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
@@ -459,7 +504,8 @@ describe('PaymentFlow', () => {
       expect(errorSummary).toBeInTheDocument();
     });
 
-    it('supports keyboard navigation', async () => {
+    it('supports keyboard navigation', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
@@ -475,8 +521,10 @@ describe('PaymentFlow', () => {
     });
   });
 
-  describe('Mobile Responsiveness', () => {
-    it('renders mobile-friendly layout', () => {
+  describe('Mobile Responsiveness', (
+) => {
+    it('renders mobile-friendly layout', (
+) => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
@@ -489,7 +537,8 @@ describe('PaymentFlow', () => {
       expect(container).toHaveClass('p-4'); // Mobile padding
     });
 
-    it('shows mobile-optimized keyboard for number inputs', () => {
+    it('shows mobile-optimized keyboard for number inputs', (
+) => {
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       const cardNumberInput = screen.getByLabelText(/card number/i);
@@ -497,8 +546,10 @@ describe('PaymentFlow', () => {
     });
   });
 
-  describe('Loading and Error States', () => {
-    it('shows loading spinner during payment processing', async () => {
+  describe('Loading and Error States', (
+) => {
+    it('shows loading spinner during payment processing', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
@@ -513,7 +564,8 @@ describe('PaymentFlow', () => {
       expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
     });
 
-    it('displays error messages clearly', async () => {
+    it('displays error messages clearly', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);

@@ -196,25 +196,40 @@ const strugglingSamReducer = (
 // Context interface
 interface StrugglingSamContextType extends StrugglingSamState, ABTestContext {
   // Actions
-  updateStreak: (streakData: { currentStreak: number; longestStreak?: number }) => void;
-  unlockAchievement: (achievement: SamAchievement) => void;
-  shareAchievement: (achievementId: string) => void;
-  joinChallenge: (challengeId: string) => void;
-  leaveChallenge: (challengeId: string) => void;
-  showUpgradePrompt: (prompt: SmartUpgradePrompt) => void;
-  dismissUpgradePrompt: (promptId: string) => void;
-  celebrateMilestone: (celebration: HabitCelebration) => void;
-  dismissCelebration: (celebrationId: string) => void;
-  loadUserData: (userId: string) => Promise<void>;
-  refreshCommunityStats: () => Promise<void>;
+  updateStreak: (streakData: { currentStreak: number; longestStreak?: number }
+) => void;
+  unlockAchievement: (achievement: SamAchievement
+) => void;
+  shareAchievement: (achievementId: string
+) => void;
+  joinChallenge: (challengeId: string
+) => void;
+  leaveChallenge: (challengeId: string
+) => void;
+  showUpgradePrompt: (prompt: SmartUpgradePrompt
+) => void;
+  dismissUpgradePrompt: (promptId: string
+) => void;
+  celebrateMilestone: (celebration: HabitCelebration
+) => void;
+  dismissCelebration: (celebrationId: string
+) => void;
+  loadUserData: (userId: string
+) => Promise<void>;
+  refreshCommunityStats: (
+) => Promise<void>;
 
   // A/B Testing methods
   currentTests: ABTestGroup[];
   userAssignments: UserABTest[];
-  isFeatureEnabled: (featureId: string) => boolean;
-  getFeatureVariant: (featureId: string) => string | null;
-  trackConversion: (testId: string, userId: string) => void;
-  trackEngagement: (testId: string, userId: string, action: string) => void;
+  isFeatureEnabled: (featureId: string
+) => boolean;
+  getFeatureVariant: (featureId: string
+) => string | null;
+  trackConversion: (testId: string, userId: string
+) => void;
+  trackEngagement: (testId: string, userId: string, action: string
+) => void;
 }
 
 // Create contexts
@@ -226,18 +241,21 @@ const StrugglingSamContext = createContext<StrugglingSamContextType | undefined>
 export const StrugglingSamProvider: React.FC<{
   children: React.ReactNode;
   userId?: string;
-}> = ({ children, userId }) => {
+}> = ({ children, userId }
+) => {
   const [state, dispatch] = useReducer(strugglingSamReducer, initialState);
 
   // Initialize user data when userId changes
-  useEffect(() => {
+  useEffect((
+) => {
     if (userId) {
       loadUserData(userId);
     }
   }, [userId]);
 
   // Load user data from API
-  const loadUserData = async (userId: string) => {
+  const loadUserData = async (userId: string
+) => {
     dispatch({ type: 'SET_LOADING', payload: true });
 
     try {
@@ -292,7 +310,8 @@ export const StrugglingSamProvider: React.FC<{
   };
 
   // Refresh community stats
-  const refreshCommunityStats = async () => {
+  const refreshCommunityStats = async (
+) => {
     try {
       // Mock community stats
       const mockCommunityStats: CommunityStats = {
@@ -353,7 +372,8 @@ export const StrugglingSamProvider: React.FC<{
   const updateStreak = (streakData: {
     currentStreak: number;
     longestStreak?: number;
-  }) => {
+  }
+) => {
     dispatch({ type: 'UPDATE_STREAK', payload: streakData });
 
     // Check for milestone celebrations
@@ -401,7 +421,8 @@ export const StrugglingSamProvider: React.FC<{
   };
 
   // Unlock achievement
-  const unlockAchievement = (achievement: SamAchievement) => {
+  const unlockAchievement = (achievement: SamAchievement
+) => {
     dispatch({ type: 'ADD_ACHIEVEMENT', payload: achievement });
 
     // Create celebration for achievement unlock
@@ -444,7 +465,8 @@ export const StrugglingSamProvider: React.FC<{
   };
 
   // Share achievement
-  const shareAchievement = (achievementId: string) => {
+  const shareAchievement = (achievementId: string
+) => {
     dispatch({
       type: 'UPDATE_ACHIEVEMENT',
       payload: { id: achievementId, updates: { shared: true } },
@@ -452,32 +474,38 @@ export const StrugglingSamProvider: React.FC<{
   };
 
   // Join challenge
-  const joinChallenge = (challengeId: string) => {
+  const joinChallenge = (challengeId: string
+) => {
     dispatch({ type: 'JOIN_CHALLENGE', payload: challengeId });
   };
 
   // Leave challenge
-  const leaveChallenge = (challengeId: string) => {
+  const leaveChallenge = (challengeId: string
+) => {
     dispatch({ type: 'LEAVE_CHALLENGE', payload: challengeId });
   };
 
   // Show upgrade prompt
-  const showUpgradePrompt = (prompt: SmartUpgradePrompt) => {
+  const showUpgradePrompt = (prompt: SmartUpgradePrompt
+) => {
     dispatch({ type: 'ADD_UPGRADE_PROMPT', payload: prompt });
   };
 
   // Dismiss upgrade prompt
-  const dismissUpgradePrompt = (promptId: string) => {
+  const dismissUpgradePrompt = (promptId: string
+) => {
     dispatch({ type: 'DISMISS_UPGRADE_PROMPT', payload: promptId });
   };
 
   // Celebrate milestone
-  const celebrateMilestone = (celebration: HabitCelebration) => {
+  const celebrateMilestone = (celebration: HabitCelebration
+) => {
     dispatch({ type: 'ADD_CELEBRATION', payload: celebration });
   };
 
   // Dismiss celebration
-  const dismissCelebration = (celebrationId: string) => {
+  const dismissCelebration = (celebrationId: string
+) => {
     dispatch({ type: 'DISMISS_CELEBRATION', payload: celebrationId });
   };
 
@@ -500,11 +528,13 @@ export const StrugglingSamProvider: React.FC<{
     return feature?.variant || null;
   };
 
-  const trackConversion = (testId: string, userId: string) => {
+  const trackConversion = (testId: string, userId: string
+) => {
     dispatch({ type: 'TRACK_CONVERSION', payload: { testId, userId } });
   };
 
-  const trackEngagement = (testId: string, userId: string, action: string) => {
+  const trackEngagement = (testId: string, userId: string, action: string
+) => {
     dispatch({ type: 'TRACK_ENGAGEMENT', payload: { testId, userId, action } });
   };
 
@@ -540,7 +570,8 @@ export const StrugglingSamProvider: React.FC<{
 };
 
 // Custom hook to use the context
-export const useStrugglingSam = () => {
+export const useStrugglingSam = (
+) => {
   const context = useContext(StrugglingSamContext);
   if (context === undefined) {
     throw new Error('useStrugglingSam must be used within a StrugglingSamProvider');

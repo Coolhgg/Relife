@@ -41,9 +41,12 @@ import type {
 interface CommunityHubProps {
   currentUser: UserType;
   battles: Battle[];
-  onCreateBattle: (battle: Partial<Battle>) => void;
-  onJoinBattle: (battleId: string) => void;
-  onSendTrashTalk: (battleId: string, message: string) => void;
+  onCreateBattle: (battle: Partial<Battle>
+) => void;
+  onJoinBattle: (battleId: string
+) => void;
+  onSendTrashTalk: (battleId: string, message: string
+) => void;
 }
 
 // Mock data for community features
@@ -177,7 +180,8 @@ export function CommunityHub({
   }>({});
 
   // Track leaderboard changes
-  useEffect(() => {
+  useEffect((
+) => {
     const userEntry = MOCK_GLOBAL_RANKINGS.find(
       entry => entry.user.id === currentUser.id
     );
@@ -197,13 +201,15 @@ export function CommunityHub({
     }
   }, [currentUser.id, announceLeaderboardChange]);
 
-  const getChangeIndicator = (change: number) => {
+  const getChangeIndicator = (change: number
+) => {
     if (change > 0) return <span className="text-green-500 text-sm">↗ +{change}</span>;
     if (change < 0) return <span className="text-red-500 text-sm">↘ {change}</span>;
     return <span className="text-muted-foreground text-sm">–</span>;
   };
 
-  const getQuestTypeEmoji = (type: Quest['type']) => {
+  const getQuestTypeEmoji = (type: Quest['type']
+) => {
     switch (type) {
       case 'daily':
         return '📅';
@@ -291,7 +297,8 @@ export function CommunityHub({
                           ? 'bg-primary/10 border border-primary/20'
                           : 'bg-muted/50'
                       }`}
-                      onClick={() => {
+                      onClick={(
+) => {
                         if (entry.user.id === currentUser.id) {
                           announceGaming({
                             type: 'leaderboard',
@@ -365,7 +372,8 @@ export function CommunityHub({
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      {MOCK_GLOBAL_RANKINGS.slice(0, 3).map((entry, index) => (
+                      {MOCK_GLOBAL_RANKINGS.slice(0, 3).map((entry, index
+) => (
                         <div key={entry.user.id} className="flex items-center gap-2">
                           <span className="text-sm font-medium w-4">#{index + 1}</span>
                           <Avatar className="h-6 w-6">
@@ -396,7 +404,8 @@ export function CommunityHub({
                       <Badge
                         variant="outline"
                         className="mt-2 cursor-pointer hover:bg-muted/50 transition-colors"
-                        onClick={() => {
+                        onClick={(
+) => {
                           announceGaming({
                             type: 'leaderboard',
                             customMessage:
@@ -506,7 +515,8 @@ export function CommunityHub({
                     <div
                       key={quest.id}
                       className="space-y-3 p-4 bg-muted/50 rounded-lg cursor-pointer hover:bg-muted/70 transition-colors"
-                      onClick={() => {
+                      onClick={(
+) => {
                         announceQuestEvent('progress', {
                           title: quest.title,
                           description: quest.description,
@@ -577,7 +587,8 @@ export function CommunityHub({
                         <Button
                           size="sm"
                           className="w-full"
-                          onClick={(e: any) => {
+                          onClick={(e: any
+) => {
                             // auto: implicit any
                             e.stopPropagation();
                             announceRewardEvent('claimed', {

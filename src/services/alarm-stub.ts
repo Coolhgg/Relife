@@ -29,5 +29,5 @@ export const AlarmService = {
   async deleteAlarm(id: string): Promise<void> {
     console.warn('AlarmService.deleteAlarm stub called:', id);
     // TODO: Replace with actual implementation when alarm.ts is fixed
-  }
+  },
 };

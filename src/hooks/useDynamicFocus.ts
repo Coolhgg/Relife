@@ -43,7 +43,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
   /**
    * Initialize live region for announcements
    */
-  const initializeLiveRegion = useCallback(() => {
+  const initializeLiveRegion = useCallback((
+) => {
     if (!liveRegionRef.current && announceChanges) {
       const liveRegion = document.createElement('div');
       liveRegion.setAttribute('role', 'status');
@@ -70,7 +71,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
   /**
    * Clean up live region
    */
-  const cleanupLiveRegion = useCallback(() => {
+  const cleanupLiveRegion = useCallback((
+) => {
     if (liveRegionRef.current && liveRegionRef.current.parentNode) {
       liveRegionRef.current.parentNode.removeChild(liveRegionRef.current);
       liveRegionRef.current = null;
@@ -86,7 +88,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
    * Announce message to screen readers
    */
   const announce = useCallback(
-    (message: string, politeness?: 'polite' | 'assertive') => {
+    (message: string, politeness?: 'polite' | 'assertive'
+) => {
       if (!announceChanges || !message.trim()) return;
 
       initializeLiveRegion();
@@ -106,14 +109,16 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
           clearTimeout(announcementTimeoutRef.current);
         }
 
-        announcementTimeoutRef.current = setTimeout(() => {
+        announcementTimeoutRef.current = setTimeout((
+) => {
           if (liveRegionRef.current && pendingAnnouncementsRef.current.length > 0) {
             const announcement = pendingAnnouncementsRef.current.join('. ');
             liveRegionRef.current.textContent = announcement;
 
             if (!persistAnnouncements) {
               // Clear the announcement after it's been read
-              setTimeout(() => {
+              setTimeout((
+) => {
                 if (liveRegionRef.current) {
                   liveRegionRef.current.textContent = '';
                 }
@@ -137,7 +142,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
         liveRegionRef.current.textContent = message;
 
         if (!persistAnnouncements) {
-          setTimeout(() => {
+          setTimeout((
+) => {
             if (liveRegionRef.current) {
               liveRegionRef.current.textContent = '';
             }
@@ -145,7 +151,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
         }
 
         if (politeness && politeness !== liveRegionPoliteness) {
-          setTimeout(() => {
+          setTimeout((
+) => {
             if (liveRegionRef.current) {
               liveRegionRef.current.setAttribute('aria-live', liveRegionPoliteness);
             }
@@ -166,7 +173,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
    * Handle content changes with appropriate focus and announcements
    */
   const handleContentChange = useCallback(
-    (change: ContentChange) => {
+    (change: ContentChange
+) => {
       const { type, element, description, shouldFocus } = change;
 
       if (!element) return;
@@ -196,7 +204,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
         lastFocusedRef.current = document.activeElement as HTMLElement;
 
         // Focus the new/updated element
-        setTimeout(() => {
+        setTimeout((
+) => {
           if (element && document.body.contains(element)) {
             try {
               // Make element focusable if it isn't already
@@ -224,7 +233,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
       isLoading: boolean,
       loadingMessage = 'Loading content',
       completeMessage = 'Content loaded'
-    ) => {
+    
+) => {
       if (isLoading) {
         announce(loadingMessage, 'polite');
       } else {
@@ -238,7 +248,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
    * Announce error states
    */
   const announceError = useCallback(
-    (errorMessage: string) => {
+    (errorMessage: string
+) => {
       announce(`Error: ${errorMessage}`, 'assertive');
     },
     [announce]
@@ -248,7 +259,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
    * Announce success states
    */
   const announceSuccess = useCallback(
-    (successMessage: string) => {
+    (successMessage: string
+) => {
       announce(`Success: ${successMessage}`, 'polite');
     },
     [announce]
@@ -258,7 +270,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
    * Handle form validation announcements
    */
   const announceValidation = useCallback(
-    (field: HTMLElement, isValid: boolean, message?: string) => {
+    (field: HTMLElement, isValid: boolean, message?: string
+) => {
       const fieldLabel =
         field.getAttribute('aria-label') ||
         field.getAttribute('name') ||
@@ -277,7 +290,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
         field.setAttribute('aria-invalid', 'true');
 
         // Focus the field to help user correct the error
-        setTimeout(() => {
+        setTimeout((
+) => {
           field.focus({ preventScroll: false });
         }, 100);
       }
@@ -288,7 +302,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
   /**
    * Create a focus trap for dynamic content
    */
-  const createContentFocusTrap = useCallback((container: HTMLElement) => {
+  const createContentFocusTrap = useCallback((container: HTMLElement
+) => {
     const focusableSelectors = [
       'button:not([disabled])',
       'input:not([disabled])',
@@ -307,7 +322,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = (event: KeyboardEvent
+) => {
       if (event.key !== 'Tab') return;
 
       if (event.shiftKey && document.activeElement === firstElement) {
@@ -321,7 +337,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
 
     container.addEventListener('keydown', handleKeyDown);
 
-    return () => {
+    return (
+) => {
       container.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
@@ -329,7 +346,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
   /**
    * Restore focus to previously focused element
    */
-  const restorePreviousFocus = useCallback(() => {
+  const restorePreviousFocus = useCallback((
+) => {
     if (lastFocusedRef.current && document.body.contains(lastFocusedRef.current)) {
       try {
         lastFocusedRef.current.focus({ preventScroll: false });
@@ -342,7 +360,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
   /**
    * Initialize on mount and cleanup on unmount
    */
-  useEffect(() => {
+  useEffect((
+) => {
     initializeLiveRegion();
     return cleanupLiveRegion;
   }, [initializeLiveRegion, cleanupLiveRegion]);

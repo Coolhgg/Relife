@@ -102,7 +102,8 @@ export class SchedulerCore {
 
   private static startSchedulingEngine(): void {
     // Start periodic optimization and evaluation
-    this.schedulingEngine = setInterval(async () => {
+    this.schedulingEngine = setInterval(async (
+) => {
       try {
         await this.processScheduledOptimizations();
       } catch (error) {
@@ -145,7 +146,8 @@ export class SchedulerCore {
                 position
               );
             },
-            () => {
+            (
+) => {
               // Location not available, continue without location-based features
             },
             { timeout: 5000, maximumAge: 300000 } // 5 min cache

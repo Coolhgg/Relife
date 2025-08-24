@@ -187,7 +187,8 @@ function createErrorResponse(statusCode: number, message: string): WebhookRespon
 
 // Express.js middleware version
 export function createExpressWebhookHandler() {
-  return async (req: any, res: any) => {
+  return async (req: any, res: any
+) => {
     try {
       const webhookRequest: WebhookRequest = {
         body: req.body,
@@ -200,7 +201,8 @@ export function createExpressWebhookHandler() {
       const response = await handleStripeWebhook(webhookRequest);
 
       res.status(response.statusCode);
-      Object.entries(response.headers).forEach(([key, value]) => {
+      Object.entries(response.headers).forEach(([key, value]
+) => {
         res.set(key, value);
       });
       res.send(response.body);
@@ -213,7 +215,8 @@ export function createExpressWebhookHandler() {
 
 // Vercel/Netlify serverless function version
 export function createServerlessWebhookHandler() {
-  return async (req: any, res: any) => {
+  return async (req: any, res: any
+) => {
     // Handle CORS preflight
     if (req.method === 'OPTIONS') {
       res.status(200).end();
@@ -237,7 +240,8 @@ export function createServerlessWebhookHandler() {
       const response = await handleStripeWebhook(webhookRequest);
 
       res.status(response.statusCode);
-      Object.entries(response.headers).forEach(([key, value]) => {
+      Object.entries(response.headers).forEach(([key, value]
+) => {
         res.setHeader(key, value);
       });
       res.end(response.body);
@@ -250,7 +254,8 @@ export function createServerlessWebhookHandler() {
 
 // Next.js API route version
 export function createNextJSWebhookHandler() {
-  return async (req: any, res: any) => {
+  return async (req: any, res: any
+) => {
     if (req.method !== 'POST') {
       res.setHeader('Allow', 'POST');
       res.status(405).end('Method Not Allowed');
@@ -269,7 +274,8 @@ export function createNextJSWebhookHandler() {
       const response = await handleStripeWebhook(webhookRequest);
 
       res.status(response.statusCode);
-      Object.entries(response.headers).forEach(([key, value]) => {
+      Object.entries(response.headers).forEach(([key, value]
+) => {
         res.setHeader(key, value);
       });
       res.end(response.body);

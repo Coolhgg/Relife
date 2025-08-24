@@ -100,7 +100,8 @@ class ErrorHandlerService {
     this.loadErrorMetrics();
 
     // Set up periodic metrics saving
-    setInterval(() => this.saveErrorMetrics(), 30000); // Every 30 seconds
+    setInterval((
+) => this.saveErrorMetrics(), 30000); // Every 30 seconds
 
     this.startBatchProcessing();
     this.setupGlobalErrorHandlers();
@@ -418,7 +419,8 @@ class ErrorHandlerService {
 
       // Keep only last 50 unique errors
       const sortedErrors = existingErrors
-        .sort((a, b) => new Date(b.lastSeen).getTime() - new Date(a.lastSeen).getTime())
+        .sort((a, b
+) => new Date(b.lastSeen).getTime() - new Date(a.lastSeen).getTime())
         .slice(0, 50);
 
       localStorage.setItem('relife_errors_v2', JSON.stringify(sortedErrors));
@@ -446,7 +448,8 @@ class ErrorHandlerService {
   }
 
   private startBatchProcessing(): void {
-    this.batchTimer = window.setInterval(() => {
+    this.batchTimer = window.setInterval((
+) => {
       if (this.errorQueue.length > 0) {
         this.processBatch();
       }
@@ -462,7 +465,8 @@ class ErrorHandlerService {
     this.sendToRemoteService(batch).catch(error => {
       console.warn('Failed to send error batch to remote service:', error);
       // Re-queue errors for retry (with exponential backoff)
-      setTimeout(() => {
+      setTimeout((
+) => {
         this.errorQueue.unshift(...batch);
       }, 5000);
     });
@@ -566,11 +570,13 @@ class ErrorHandlerService {
     });
   }
 
-  wrapFunction<T extends (...args: any[]) => any>(
+  wrapFunction<T extends (...args: any[]
+) => any>(
     fn: T,
     context: ErrorContext = {}
   ): T {
-    return ((...args: any[]) => {
+    return ((...args: any[]
+) => {
       try {
         const result = fn(...args);
         if (result && typeof result.then === 'function') {
@@ -612,10 +618,12 @@ class ErrorHandlerService {
 
   getErrorAnalytics(): ErrorAnalytics {
     const errors = this.getStoredErrors();
-    const totalErrors = errors.reduce((sum, error) => sum + error.count, 0);
+    const totalErrors = errors.reduce((sum, error
+) => sum + error.count, 0);
 
     const errorsByCategory = errors.reduce(
-      (acc, error) => {
+      (acc, error
+) => {
         acc[error.category] = (acc[error.category] || 0) + error.count;
         return acc;
       },
@@ -623,7 +631,8 @@ class ErrorHandlerService {
     );
 
     const errorsBySeverity = errors.reduce(
-      (acc, error) => {
+      (acc, error
+) => {
         acc[error.severity] = (acc[error.severity] || 0) + error.count;
         return acc;
       },
@@ -631,7 +640,8 @@ class ErrorHandlerService {
     );
 
     const topErrors = errors
-      .sort((a, b) => b.count - a.count)
+      .sort((a, b
+) => b.count - a.count)
       .slice(0, 10)
       .map(error => ({ message: error.message, count: error.count }));
 

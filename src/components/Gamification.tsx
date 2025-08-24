@@ -41,7 +41,8 @@ interface GamificationProps {
   weeklyChallenge?: WeeklyChallenge;
   levelRewards: LevelReward[];
   recentXpGains: ExperienceGain[];
-  onClaimReward?: (rewardId: string) => void;
+  onClaimReward?: (rewardId: string
+) => void;
 }
 
 // Mock data for gamification features
@@ -222,7 +223,8 @@ const MOCK_RECENT_XP: ExperienceGain[] = [
   },
 ];
 
-const getRarityColor = (rarity: string) => {
+const getRarityColor = (rarity: string
+) => {
   switch (rarity) {
     case 'common':
       return 'text-gray-500 bg-gray-100';
@@ -239,7 +241,8 @@ const getRarityColor = (rarity: string) => {
   }
 };
 
-const getDifficultyColor = (difficulty: string) => {
+const getDifficultyColor = (difficulty: string
+) => {
   switch (difficulty) {
     case 'easy':
       return 'text-green-600 bg-green-100';
@@ -294,7 +297,8 @@ export function Gamification({
   }>({});
 
   // Track achievement unlocks
-  useEffect(() => {
+  useEffect((
+) => {
     trackAchievements(achievements);
 
     // Track individual achievement progress changes
@@ -313,7 +317,8 @@ export function Gamification({
   }, [achievements, trackAchievements, announceAchievement, unlockedAchievements]);
 
   // Track level changes and XP gains
-  useEffect(() => {
+  useEffect((
+) => {
     const previousLevel = previousValues.current.level;
     const previousExperience = previousValues.current.experience;
 
@@ -338,7 +343,8 @@ export function Gamification({
   }, [playerLevel, announceLevelChange]);
 
   // Track challenge completions
-  useEffect(() => {
+  useEffect((
+) => {
     const previousCompletedCount = previousValues.current.completedChallenges || 0;
     const currentCompletedCount = completedChallenges.length;
 
@@ -358,7 +364,8 @@ export function Gamification({
   }, [completedChallenges, announceQuestEvent]);
 
   // Interactive announcement functions
-  const handleAchievementClick = (achievement: Achievement) => {
+  const handleAchievementClick = (achievement: Achievement
+) => {
     if (achievement.unlockedAt) {
       announceGaming({
         type: 'achievement',
@@ -369,7 +376,8 @@ export function Gamification({
     }
   };
 
-  const handleChallengeClick = (challenge: DailyChallenge) => {
+  const handleChallengeClick = (challenge: DailyChallenge
+) => {
     if (challenge.completed) {
       announceGaming({
         type: 'quest',
@@ -518,7 +526,8 @@ export function Gamification({
                 <Card
                   key={achievement.id}
                   className="border-2 border-primary/20 cursor-pointer hover:bg-muted/50 transition-colors"
-                  onClick={() => handleAchievementClick(achievement)}
+                  onClick={(
+) => handleAchievementClick(achievement)}
                   role="button"
                   tabIndex={0}
                   aria-label={`View achievement: ${achievement.name}. ${achievement.description}. Rarity: ${achievement.rarity}`}
@@ -557,7 +566,8 @@ export function Gamification({
                 <Card
                   key={achievement.id}
                   className="cursor-pointer hover:bg-muted/50 transition-colors"
-                  onClick={() => handleAchievementClick(achievement)}
+                  onClick={(
+) => handleAchievementClick(achievement)}
                   role="button"
                   tabIndex={0}
                   aria-label={`Achievement in progress: ${achievement.name}. ${achievement.description}. Progress: ${achievement.progress?.current || 0} of ${achievement.progress?.target || 1}`}
@@ -622,7 +632,8 @@ export function Gamification({
             <Card>
               <CardContent className="p-3 text-center">
                 <div className="text-lg font-bold text-yellow-500">
-                  {completedChallenges.reduce((sum, c) => {
+                  {completedChallenges.reduce((sum, c
+) => {
                     const reward = c.rewards[0];
                     return (
                       sum +
@@ -645,7 +656,8 @@ export function Gamification({
                 <div
                   key={challenge.id}
                   className="p-4 border rounded-lg cursor-pointer hover:bg-muted/30 transition-colors"
-                  onClick={() => handleChallengeClick(challenge)}
+                  onClick={(
+) => handleChallengeClick(challenge)}
                   role="button"
                   tabIndex={0}
                   aria-label={`Active challenge: ${challenge.name}. ${challenge.description}. Progress: ${challenge.progress} of ${challenge.target}. Difficulty: ${challenge.difficulty}`}
@@ -707,7 +719,8 @@ export function Gamification({
                   <div
                     key={challenge.id}
                     className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg cursor-pointer hover:bg-green-100 transition-colors"
-                    onClick={() => handleChallengeClick(challenge)}
+                    onClick={(
+) => handleChallengeClick(challenge)}
                     role="button"
                     tabIndex={0}
                     aria-label={`Completed challenge: ${challenge.name}. Earned ${challenge.rewards[0]?.value} XP. Completed at ${new Date(challenge.completedAt!).toLocaleTimeString()}`}
@@ -796,7 +809,8 @@ export function Gamification({
                   </div>
 
                   <div className="space-y-2">
-                    {levelReward.rewards.map((reward, index) => (
+                    {levelReward.rewards.map((reward, index
+) => (
                       <div
                         key={index}
                         className="flex items-center gap-2 p-2 bg-muted/30 rounded"

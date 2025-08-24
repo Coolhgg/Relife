@@ -34,7 +34,8 @@ export class SecureAlarmStorageService {
 
   private integrityCheckTimer: TimeoutHandle | null = null;
   private lastIntegrityCheck: Date | null = null;
-  private tamperedDetectionCallbacks: Array<(details: any) => void> = [];
+  private tamperedDetectionCallbacks: Array<(details: any
+) => void> = [];
 
   private constructor() {
     this.startIntegrityMonitoring();
@@ -335,7 +336,10 @@ export class SecureAlarmStorageService {
       // Get all keys to find backup keys
       const { keys } = await Preferences.keys();
       const backupKeys = keys
-        .filter((key: any) => k // auto: implicit anyey.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX))
+        .filter((key: any
+) =>
+          key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX)
+        )
         .sort()
         .reverse(); // Most recent first
 
@@ -402,7 +406,10 @@ export class SecureAlarmStorageService {
     try {
       const { keys } = await Preferences.keys();
       const backupKeys = keys
-        .filter((key: any) => k // auto: implicit anyey.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX))
+        .filter((key: any
+) =>
+          key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX)
+        )
         .sort()
         .reverse(); // Most recent first
 
@@ -430,7 +437,8 @@ export class SecureAlarmStorageService {
       clearInterval(this.integrityCheckTimer);
     }
 
-    this.integrityCheckTimer = setInterval(async () => {
+    this.integrityCheckTimer = setInterval(async (
+) => {
       try {
         await this.performIntegrityCheck();
       } catch (error) {
@@ -521,7 +529,8 @@ export class SecureAlarmStorageService {
   /**
    * Register callback for tamper detection events
    */
-  onTamperDetected(callback: (details: any) => void): void {
+  onTamperDetected(callback: (details: any
+) => void): void {
     this.tamperedDetectionCallbacks.push(callback);
   }
 
@@ -639,7 +648,8 @@ export class SecureAlarmStorageService {
 
       // Remove all backups
       const { keys } = await Preferences.keys();
-      const backupKeys = keys.filter((key: any) => /* auto: implicit any */
+      const backupKeys = keys.filter((key: any 
+) =>
         key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX)
       );
 
@@ -666,7 +676,8 @@ export class SecureAlarmStorageService {
       const { keys } = await Preferences.keys();
       const alarmDataExists = keys.includes(SecureAlarmStorageService.ALARMS_KEY);
       const eventDataExists = keys.includes(SecureAlarmStorageService.ALARM_EVENTS_KEY);
-      const backupCount = keys.filter((key: any) => /* auto: implicit any */
+      const backupCount = keys.filter((key: any 
+) =>
         key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX)
       ).length;
 

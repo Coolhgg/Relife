@@ -15,13 +15,15 @@ export const useTabProtectionAnnouncements = ({
   activeAlarm,
   enabledAlarms,
   settings,
-}: UseTabProtectionAnnouncementsProps) => {
+}: UseTabProtectionAnnouncementsProps
+) => {
   const previousActiveAlarm = useRef<Alarm | null>(null);
   const previousEnabledCount = useRef<TimeoutHandle>(0);
   const lastAnnouncementTime = useRef<TimeoutHandle>(0);
 
   // Announce when protection status changes
-  useEffect(() => {
+  useEffect((
+) => {
     const now = Date.now();
     const timeSinceLastAnnouncement = now - lastAnnouncementTime.current;
 
@@ -106,11 +108,13 @@ export const useTabProtectionAnnouncements = ({
   }, [activeAlarm, enabledAlarms, settings]);
 
   // Announce protection status on initial load
-  useEffect(() => {
+  useEffect((
+) => {
     if (!settings.enabled) return;
 
     // Small delay to ensure the app has loaded
-    const timer = setTimeout(() => {
+    const timer = setTimeout((
+) => {
       if (activeAlarm && settings.protectionTiming.activeAlarmWarning) {
         const message = formatProtectionMessage(
           settings.customMessages.accessibilityMessages.protectionActive,
@@ -134,10 +138,12 @@ export const useTabProtectionAnnouncements = ({
       }
     }, 2000);
 
-    return () => clearTimeout(timer);
+    return (
+) => clearTimeout(timer);
   }, [settings]); // Re-run when settings change
 
-  const announceProtectionWarning = () => {
+  const announceProtectionWarning = (
+) => {
     if (activeAlarm && settings.protectionTiming.activeAlarmWarning) {
       AccessibilityUtils.createAriaAnnouncement(
         settings.customMessages.accessibilityMessages.alarmRingingWarning,

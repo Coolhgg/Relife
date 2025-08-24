@@ -175,7 +175,8 @@ class HealthTrackerIntegration {
     // Analyze recent sleep patterns
     const recentSleep = this.sleepHistory.slice(-14);
     const averageSleepDuration =
-      recentSleep.reduce((sum, s) => sum + s.totalSleepMinutes, 0) / recentSleep.length;
+      recentSleep.reduce((sum, s
+) => sum + s.totalSleepMinutes, 0) / recentSleep.length;
     const averageBedTime = this.calculateAverageTime(recentSleep.map(s => s.bedTime));
 
     // Calculate optimal sleep cycles (90-minute cycles)
@@ -238,7 +239,8 @@ class HealthTrackerIntegration {
     // Consider recent sleep quality
     const recentQuality = recentSleep.slice(-3);
     const avgQuality =
-      recentQuality.reduce((sum, s) => sum + s.sleepScore, 0) / recentQuality.length;
+      recentQuality.reduce((sum, s
+) => sum + s.sleepScore, 0) / recentQuality.length;
 
     if (avgQuality < 60) {
       reasoning.push('Recent sleep quality suggests need for longer recovery');
@@ -280,13 +282,15 @@ class HealthTrackerIntegration {
     const recent7Days = this.sleepHistory.slice(-7);
 
     // Calculate sleep debt
-    const currentDebt = recent7Days.reduce((debt, sleep) => {
+    const currentDebt = recent7Days.reduce((debt, sleep
+) => {
       return debt + Math.max(0, optimalSleep - sleep.totalSleepMinutes);
     }, 0);
 
     // Calculate trend
     const earlier7Days = recent14Days.slice(0, 7);
-    const earlierDebt = earlier7Days.reduce((debt, sleep) => {
+    const earlierDebt = earlier7Days.reduce((debt, sleep
+) => {
       return debt + Math.max(0, optimalSleep - sleep.totalSleepMinutes);
     }, 0);
 
@@ -375,19 +379,22 @@ class HealthTrackerIntegration {
 
     const avgSleepDuration =
       recent7Days.length > 0
-        ? recent7Days.reduce((sum, s) => sum + s.totalSleepMinutes, 0) /
+        ? recent7Days.reduce((sum, s
+) => sum + s.totalSleepMinutes, 0) /
           recent7Days.length
         : 0;
 
     const avgSleepEfficiency =
       recent7Days.length > 0
-        ? recent7Days.reduce((sum, s) => sum + s.sleepEfficiency, 0) /
+        ? recent7Days.reduce((sum, s
+) => sum + s.sleepEfficiency, 0) /
           recent7Days.length
         : 0;
 
     const avgSleepScore =
       recent7Days.length > 0
-        ? recent7Days.reduce((sum, s) => sum + s.sleepScore, 0) / recent7Days.length
+        ? recent7Days.reduce((sum, s
+) => sum + s.sleepScore, 0) / recent7Days.length
         : 0;
 
     return {
@@ -496,7 +503,8 @@ class HealthTrackerIntegration {
 
   private calculateAverageTime(times: Date[]): Date {
     const avgMinutes =
-      times.reduce((sum, time) => sum + time.getHours() * 60 + time.getMinutes(), 0) /
+      times.reduce((sum, time
+) => sum + time.getHours() * 60 + time.getMinutes(), 0) /
       times.length;
 
     const avg = new Date();
@@ -528,9 +536,11 @@ class HealthTrackerIntegration {
     const secondHalf = sleepData.slice(Math.floor(sleepData.length / 2));
 
     const firstAvg =
-      firstHalf.reduce((sum, s) => sum + s.totalSleepMinutes, 0) / firstHalf.length;
+      firstHalf.reduce((sum, s
+) => sum + s.totalSleepMinutes, 0) / firstHalf.length;
     const secondAvg =
-      secondHalf.reduce((sum, s) => sum + s.totalSleepMinutes, 0) / secondHalf.length;
+      secondHalf.reduce((sum, s
+) => sum + s.totalSleepMinutes, 0) / secondHalf.length;
 
     const difference = secondAvg - firstAvg;
     if (difference > 30) return 'improving';
@@ -547,9 +557,11 @@ class HealthTrackerIntegration {
     const secondHalf = sleepData.slice(Math.floor(sleepData.length / 2));
 
     const firstAvg =
-      firstHalf.reduce((sum, s) => sum + s.sleepScore, 0) / firstHalf.length;
+      firstHalf.reduce((sum, s
+) => sum + s.sleepScore, 0) / firstHalf.length;
     const secondAvg =
-      secondHalf.reduce((sum, s) => sum + s.sleepScore, 0) / secondHalf.length;
+      secondHalf.reduce((sum, s
+) => sum + s.sleepScore, 0) / secondHalf.length;
 
     const difference = secondAvg - firstAvg;
     if (difference > 10) return 'improving';
@@ -598,21 +610,24 @@ class HealthTrackerIntegration {
       naturalWakeTime: `${avgWeekendWakeTime.getHours().toString().padStart(2, '0')}:${avgWeekendWakeTime.getMinutes().toString().padStart(2, '0')}`,
       naturalBedTime: `${avgWeekendBedTime.getHours().toString().padStart(2, '0')}:${avgWeekendBedTime.getMinutes().toString().padStart(2, '0')}`,
       optimalSleepDuration:
-        weekdayData.reduce((sum, s) => sum + s.totalSleepMinutes, 0) /
+        weekdayData.reduce((sum, s
+) => sum + s.totalSleepMinutes, 0) /
         weekdayData.length,
       sleepDebtTolerance: 120, // 2 hours
       weekdayPattern: {
         bedTime: `${avgWeekdayBedTime.getHours().toString().padStart(2, '0')}:${avgWeekdayBedTime.getMinutes().toString().padStart(2, '0')}`,
         wakeTime: `${avgWeekdayWakeTime.getHours().toString().padStart(2, '0')}:${avgWeekdayWakeTime.getMinutes().toString().padStart(2, '0')}`,
         sleepDuration:
-          weekdayData.reduce((sum, s) => sum + s.totalSleepMinutes, 0) /
+          weekdayData.reduce((sum, s
+) => sum + s.totalSleepMinutes, 0) /
           weekdayData.length,
       },
       weekendPattern: {
         bedTime: `${avgWeekendBedTime.getHours().toString().padStart(2, '0')}:${avgWeekendBedTime.getMinutes().toString().padStart(2, '0')}`,
         wakeTime: `${avgWeekendWakeTime.getHours().toString().padStart(2, '0')}:${avgWeekendWakeTime.getMinutes().toString().padStart(2, '0')}`,
         sleepDuration:
-          weekendData.reduce((sum, s) => sum + s.totalSleepMinutes, 0) /
+          weekendData.reduce((sum, s
+) => sum + s.totalSleepMinutes, 0) /
           weekendData.length,
       },
     };
@@ -629,7 +644,8 @@ class HealthTrackerIntegration {
 
   private startPeriodicSync(): void {
     setInterval(
-      async () => {
+      async (
+) => {
         if (this.config.enabled) {
           await this.syncHealthData();
         }
@@ -668,7 +684,8 @@ class HealthTrackerIntegration {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(
         'health_tracker_config',
-        JSON.stringify(this.config, (key, value) => {
+        JSON.stringify(this.config, (key, value
+) => {
           if (value instanceof Date) {
             return { __type: 'Date', value: value.toISOString() };
           }
@@ -698,7 +715,8 @@ class HealthTrackerIntegration {
 
       localStorage.setItem(
         'health_tracker_data',
-        JSON.stringify(data, (key, value) => {
+        JSON.stringify(data, (key, value
+) => {
           if (value instanceof Date) {
             return { __type: 'Date', value: value.toISOString() };
           }
@@ -712,7 +730,8 @@ class HealthTrackerIntegration {
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem('health_tracker_data');
       if (saved) {
-        const data = JSON.parse(saved, (key, value) => {
+        const data = JSON.parse(saved, (key, value
+) => {
           if (value && typeof value === 'object' && value.__type === 'Date') {
             return new Date(value.value);
           }

@@ -116,7 +116,8 @@ export const _createTestUserEmotionalProfile = (
     },
     emotionalHistory: Array.from(
       { length: faker.number.int({ min: 10, max: 50 }) },
-      () => createTestEmotionalState()
+      (
+) => createTestEmotionalState()
     ),
     lastAnalyzed: faker.date.recent({ days: 7 }),
   };
@@ -132,7 +133,8 @@ export interface CreateNotificationOptions {
   read?: boolean;
 }
 
-export const _createTestNotification = (options: CreateNotificationOptions = {}) => {
+export const _createTestNotification = (options: CreateNotificationOptions = {}
+) => {
   const {
     type = faker.helpers.arrayElement([
       'alarm',

@@ -3,15 +3,18 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 // Simple test component to verify Jest setup works
-const SimpleComponent = ({ message = 'Hello Testing!' }: { message?: string }) => (
+const SimpleComponent = ({ message = 'Hello Testing!' }: { message?: string }
+) => (
   <div data-testid="simple-component">
     <h1>{message}</h1>
     <p>Jest and React Testing Library are working!</p>
   </div>
 );
 
-describe('Simple Test Suite', () => {
-  test('renders hello message', () => {
+describe('Simple Test Suite', (
+) => {
+  test('renders hello message', (
+) => {
     render(<SimpleComponent />);
 
     // Test that the component renders
@@ -22,14 +25,16 @@ describe('Simple Test Suite', () => {
     ).toBeDefined();
   });
 
-  test('renders custom message', () => {
+  test('renders custom message', (
+) => {
     const customMessage = 'Testing infrastructure is ready!';
     render(<SimpleComponent message={customMessage} />);
 
     expect(screen.getByText(customMessage)).toBeDefined();
   });
 
-  test('has proper accessibility structure', () => {
+  test('has proper accessibility structure', (
+) => {
     render(<SimpleComponent />);
 
     // Test heading structure

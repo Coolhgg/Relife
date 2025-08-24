@@ -35,7 +35,8 @@ interface PersonalizationSettingsProps {
 
 const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
   className = '',
-}) => {
+}
+) => {
   const {
     personalization,
     updatePersonalization,
@@ -86,11 +87,13 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
     { name: 'System Default', value: 'system-ui, sans-serif', category: 'system' },
   ];
 
-  const toggleSection = (section: string) => {
+  const toggleSection = (section: string
+) => {
     setActiveSection(activeSection === section ? null : section);
   };
 
-  const handleColorSelection = (colorValue: string, isFavorite: boolean) => {
+  const handleColorSelection = (colorValue: string, isFavorite: boolean
+) => {
     const currentFavorites = personalization?.colorPreferences?.favoriteColors || [];
 
     if (isFavorite) {
@@ -105,7 +108,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
     }
   };
 
-  const removeColor = (colorValue: string, fromFavorites: boolean) => {
+  const removeColor = (colorValue: string, fromFavorites: boolean
+) => {
     if (fromFavorites) {
       const filtered = (personalization?.colorPreferences?.favoriteColors || []).filter(
         c => c !== colorValue
@@ -119,7 +123,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
     }
   };
 
-  const resetAllPersonalization = () => {
+  const resetAllPersonalization = (
+) => {
     if (
       window.confirm(
         'Are you sure you want to reset all personalization settings to defaults?'
@@ -129,7 +134,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
     }
   };
 
-  const ColorPreferencesSection = () => (
+  const ColorPreferencesSection = (
+) => (
     <div className="space-y-6">
       <div>
         <h4 className="font-medium text-gray-900 dark:text-white mb-3">
@@ -150,7 +156,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             return (
               <button
                 key={color.value}
-                onClick={() => handleColorSelection(color.value, true)}
+                onClick={(
+) => handleColorSelection(color.value, true)}
                 className={`relative h-12 rounded-lg border-2 transition-all ${
                   isFavorite
                     ? 'border-blue-500 scale-105'
@@ -185,7 +192,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
                 {colorOptions.find(c => c.value === color)?.name || 'Custom'}
               </span>
               <button
-                onClick={() => removeColor(color, true)}
+                onClick={(
+) => removeColor(color, true)}
                 className="text-blue-500 hover:text-blue-700 dark:text-blue-400"
               >
                 ×
@@ -209,7 +217,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             <input
               type="checkbox"
               checked={personalization?.colorPreferences?.colorblindFriendly || false}
-              onChange={(e: any) => /* auto: implicit any */
+              onChange={(e: any 
+) =>
                 updateColorPreference('colorblindFriendly', e.target.checked)
               }
               className="h-4 w-4 text-blue-600 rounded border-gray-300"
@@ -227,7 +236,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             max="1.5"
             step="0.1"
             value={personalization?.colorPreferences?.saturationLevel || 1}
-            onChange={(e: any) => /* auto: implicit any */
+            onChange={(e: any 
+) =>
               updateColorPreference('saturationLevel', parseFloat(e.target.value))
             }
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
@@ -249,7 +259,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             max="1.3"
             step="0.05"
             value={personalization?.colorPreferences?.brightnessLevel || 1}
-            onChange={(e: any) => /* auto: implicit any */
+            onChange={(e: any 
+) =>
               updateColorPreference('brightnessLevel', parseFloat(e.target.value))
             }
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
@@ -264,7 +275,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
     </div>
   );
 
-  const TypographyPreferencesSection = () => (
+  const TypographyPreferencesSection = (
+) => (
     <div className="space-y-6">
       <div>
         <label className="block font-medium text-gray-900 dark:text-white mb-3">
@@ -274,7 +286,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           {fontOptions.map(font => (
             <button
               key={font.value}
-              onClick={() =>
+              onClick={(
+) =>
                 updateTypographyPreference('preferredFontFamily', font.value)
               }
               className={`p-3 text-left rounded-lg border transition-all ${
@@ -314,7 +327,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           max="1.4"
           step="0.05"
           value={personalization?.typographyPreferences?.fontSizeScale || 1}
-          onChange={(e: any) => /* auto: implicit any */
+          onChange={(e: any 
+) =>
             updateTypographyPreference('fontSizeScale', parseFloat(e.target.value))
           }
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
@@ -334,7 +348,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           value={
             personalization?.typographyPreferences?.lineHeightPreference || 'normal'
           }
-          onChange={(e: any) => /* auto: implicit any */
+          onChange={(e: any 
+) =>
             updateTypographyPreference('lineHeightPreference', e.target.value as any)
           }
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
@@ -359,7 +374,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.typographyPreferences?.dyslexiaFriendly || false}
-            onChange={(e: any) => /* auto: implicit any */
+            onChange={(e: any 
+) =>
               updateTypographyPreference('dyslexiaFriendly', e.target.checked)
             }
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
@@ -369,7 +385,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
     </div>
   );
 
-  const MotionPreferencesSection = () => (
+  const MotionPreferencesSection = (
+) => (
     <div className="space-y-6">
       <div>
         <label className="flex items-center justify-between">
@@ -384,7 +401,10 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.motionPreferences?.enableAnimations !== false}
-            onChange={(e: any) => u // auto: implicit anypdateMotionPreference('enableAnimations', e.target.checked)}
+            onChange={(e: any
+) =>
+              updateMotionPreference('enableAnimations', e.target.checked)
+            }
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -396,7 +416,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         </label>
         <select
           value={personalization?.motionPreferences?.animationSpeed || 'normal'}
-          onChange={(e: any) => /* auto: implicit any */
+          onChange={(e: any 
+) =>
             updateMotionPreference('animationSpeed', e.target.value as any)
           }
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
@@ -420,7 +441,10 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.motionPreferences?.reduceMotion || false}
-            onChange={(e: any) => u // auto: implicit anypdateMotionPreference('reduceMotion', e.target.checked)}
+            onChange={(e: any
+) =>
+              updateMotionPreference('reduceMotion', e.target.checked)
+            }
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -436,7 +460,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.motionPreferences?.enableHoverEffects !== false}
-            onChange={(e: any) => /* auto: implicit any */
+            onChange={(e: any 
+) =>
               updateMotionPreference('enableHoverEffects', e.target.checked)
             }
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
@@ -454,7 +479,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             checked={
               personalization?.motionPreferences?.enableFocusAnimations !== false
             }
-            onChange={(e: any) => /* auto: implicit any */
+            onChange={(e: any 
+) =>
               updateMotionPreference('enableFocusAnimations', e.target.checked)
             }
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
@@ -464,7 +490,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
     </div>
   );
 
-  const SoundPreferencesSection = () => (
+  const SoundPreferencesSection = (
+) => (
     <div className="space-y-6">
       <div>
         <label className="flex items-center justify-between">
@@ -479,7 +506,10 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.soundPreferences?.enableSounds !== false}
-            onChange={(e: any) => u // auto: implicit anypdateSoundPreference('enableSounds', e.target.checked)}
+            onChange={(e: any
+) =>
+              updateSoundPreference('enableSounds', e.target.checked)
+            }
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -496,7 +526,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           max="1"
           step="0.05"
           value={personalization?.soundPreferences?.soundVolume || 0.7}
-          onChange={(e: any) => /* auto: implicit any */
+          onChange={(e: any 
+) =>
             updateSoundPreference('soundVolume', parseFloat(e.target.value))
           }
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
@@ -509,7 +540,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         </label>
         <select
           value={personalization?.soundPreferences?.soundTheme || 'default'}
-          onChange={(e: any) => u // auto: implicit anypdateSoundPreference('soundTheme', e.target.value)}
+          onChange={(e: any
+) => updateSoundPreference('soundTheme', e.target.value)}
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
         >
           <option value="default">Default</option>
@@ -530,7 +562,10 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.soundPreferences?.hapticFeedback !== false}
-            onChange={(e: any) => u // auto: implicit anypdateSoundPreference('hapticFeedback', e.target.checked)}
+            onChange={(e: any
+) =>
+              updateSoundPreference('hapticFeedback', e.target.checked)
+            }
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -544,7 +579,10 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.soundPreferences?.muteOnFocus || false}
-            onChange={(e: any) => u // auto: implicit anypdateSoundPreference('muteOnFocus', e.target.checked)}
+            onChange={(e: any
+) =>
+              updateSoundPreference('muteOnFocus', e.target.checked)
+            }
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -552,7 +590,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
     </div>
   );
 
-  const LayoutPreferencesSection = () => (
+  const LayoutPreferencesSection = (
+) => (
     <div className="space-y-6">
       <div>
         <label className="block font-medium text-gray-900 dark:text-white mb-2">
@@ -560,7 +599,10 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         </label>
         <select
           value={personalization?.layoutPreferences?.density || 'comfortable'}
-          onChange={(e: any) => u // auto: implicit anypdateLayoutPreference('density', e.target.value as any)}
+          onChange={(e: any
+) =>
+            updateLayoutPreference('density', e.target.value as any)
+          }
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
         >
           <option value="compact">Compact</option>
@@ -575,7 +617,10 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         </label>
         <select
           value={personalization?.layoutPreferences?.cardStyle || 'rounded'}
-          onChange={(e: any) => u // auto: implicit anypdateLayoutPreference('cardStyle', e.target.value as any)}
+          onChange={(e: any
+) =>
+            updateLayoutPreference('cardStyle', e.target.value as any)
+          }
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
         >
           <option value="square">Square</option>
@@ -595,7 +640,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           max="24"
           step="2"
           value={personalization?.layoutPreferences?.borderRadius || 8}
-          onChange={(e: any) => /* auto: implicit any */
+          onChange={(e: any 
+) =>
             updateLayoutPreference('borderRadius', parseInt(e.target.value))
           }
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
@@ -617,7 +663,10 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.layoutPreferences?.showLabels !== false}
-            onChange={(e: any) => u // auto: implicit anypdateLayoutPreference('showLabels', e.target.checked)}
+            onChange={(e: any
+) =>
+              updateLayoutPreference('showLabels', e.target.checked)
+            }
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -631,7 +680,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.layoutPreferences?.showIcons !== false}
-            onChange={(e: any) => u // auto: implicit anypdateLayoutPreference('showIcons', e.target.checked)}
+            onChange={(e: any
+) => updateLayoutPreference('showIcons', e.target.checked)}
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -702,10 +752,12 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
       {/* Sections */}
       <div className="space-y-4">
         {sections.map(
-          ({ id, title, icon: Icon, component: Component, description }) => (
+          ({ id, title, icon: Icon, component: Component, description }
+) => (
             <div key={id} className="alarm-card">
               <button
-                onClick={() => toggleSection(id)}
+                onClick={(
+) => toggleSection(id)}
                 className="w-full flex items-center justify-between p-4 text-left"
                 aria-expanded={activeSection === id}
               >
@@ -744,14 +796,16 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         </h3>
         <div className="flex flex-wrap gap-2">
           <button
-            onClick={() => updateColorPreference('saturationLevel', 1.2)}
+            onClick={(
+) => updateColorPreference('saturationLevel', 1.2)}
             className="px-3 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
           >
             <Sparkles className="w-4 h-4 inline mr-1" />
             Vibrant Colors
           </button>
           <button
-            onClick={() => {
+            onClick={(
+) => {
               updateTypographyPreference('fontSizeScale', 1.2);
               updateLayoutPreference('density', 'spacious');
             }}
@@ -761,7 +815,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             Large & Clear
           </button>
           <button
-            onClick={() => {
+            onClick={(
+) => {
               updateMotionPreference('enableAnimations', false);
               updateMotionPreference('reduceMotion', true);
             }}

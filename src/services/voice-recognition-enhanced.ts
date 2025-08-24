@@ -415,16 +415,22 @@ class VoiceRecognitionEnhancedService {
    * Start enhanced voice listening with multi-language and gesture support
    */
   async startEnhancedListening(
-    onCommand: (command: EnhancedVoiceCommand) => void,
-    onInterim?: (transcript: string, confidence: number, language: string) => void,
-    onGesture?: (gesture: { type: string; confidence: number; intent: string }) => void,
-    onError?: (error: string) => void,
+    onCommand: (command: EnhancedVoiceCommand
+) => void,
+    onInterim?: (transcript: string, confidence: number, language: string
+) => void,
+    onGesture?: (gesture: { type: string; confidence: number; intent: string }
+) => void,
+    onError?: (error: string
+) => void,
     userId?: string
-  ): Promise<() => void> {
+  ): Promise<(
+) => void> {
     try {
       if (this.isListening) {
         onError?.('Voice recognition already active');
-        return () => {};
+        return (
+) => {};
       }
 
       const startTime = performance.now();
@@ -432,7 +438,8 @@ class VoiceRecognitionEnhancedService {
       // Start gesture recognition if enabled
       const stopGesture = this.config.gestures.enabled
         ? await this.startGestureRecognition(onGesture, onError)
-        : () => {};
+        : (
+) => {};
 
       // Start multi-language voice recognition
       const stopVoice = await this.startMultiLanguageRecognition(
@@ -450,7 +457,8 @@ class VoiceRecognitionEnhancedService {
         duration
       );
 
-      return () => {
+      return (
+) => {
         this.isListening = false;
         stopVoice();
         stopGesture();
@@ -461,7 +469,8 @@ class VoiceRecognitionEnhancedService {
         'Failed to start enhanced voice listening'
       );
       onError?.(error instanceof Error ? error.message : 'Unknown error');
-      return () => {};
+      return (
+) => {};
     }
   }
 
@@ -567,9 +576,12 @@ class VoiceRecognitionEnhancedService {
    * Start gesture recognition
    */
   private async startGestureRecognition(
-    onGesture?: (gesture: { type: string; confidence: number; intent: string }) => void,
-    onError?: (error: string) => void
-  ): Promise<() => void> {
+    onGesture?: (gesture: { type: string; confidence: number; intent: string }
+) => void,
+    onError?: (error: string
+) => void
+  ): Promise<(
+) => void> {
     try {
       if (!this.audioContext) {
         throw new Error('Audio context not initialized');
@@ -596,14 +608,16 @@ class VoiceRecognitionEnhancedService {
       // Start gesture detection loop
       const gestureDetection = this.startGestureDetectionLoop(analyser, onGesture);
 
-      return () => {
+      return (
+) => {
         gestureDetection();
         stream.getTracks().forEach(track => track.stop());
       };
     } catch (error) {
       console.error('Gesture recognition failed to start:', error);
       onError?.(error instanceof Error ? error.message : 'Gesture recognition failed');
-      return () => {};
+      return (
+) => {};
     }
   }
 
@@ -612,15 +626,18 @@ class VoiceRecognitionEnhancedService {
    */
   private startGestureDetectionLoop(
     analyser: AnalyserNode,
-    onGesture?: (gesture: { type: string; confidence: number; intent: string }) => void
-  ): () => void {
+    onGesture?: (gesture: { type: string; confidence: number; intent: string }
+) => void
+  ): (
+) => void {
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
     const timeDataArray = new Uint8Array(bufferLength);
 
     let isRunning = true;
 
-    const detectGestures = () => {
+    const detectGestures = (
+) => {
       if (!isRunning) return;
 
       analyser.getByteFrequencyData(dataArray);
@@ -646,7 +663,8 @@ class VoiceRecognitionEnhancedService {
 
     detectGestures();
 
-    return () => {
+    return (
+) => {
       isRunning = false;
     };
   }
@@ -828,14 +846,19 @@ class VoiceRecognitionEnhancedService {
    * Start multi-language recognition
    */
   private async startMultiLanguageRecognition(
-    onCommand: (command: EnhancedVoiceCommand) => void,
-    onInterim?: (transcript: string, confidence: number, language: string) => void,
-    onError?: (error: string) => void,
+    onCommand: (command: EnhancedVoiceCommand
+) => void,
+    onInterim?: (transcript: string, confidence: number, language: string
+) => void,
+    onError?: (error: string
+) => void,
     userId?: string
-  ): Promise<() => void> {
+  ): Promise<(
+) => void> {
     // Use VoiceProService with language detection
     return await VoiceProService.startVoiceRecognition(
-      (result: RecognitionResult) => {
+      (result: RecognitionResult
+) => {
         this.processEnhancedResult(result, onCommand, onInterim, userId);
       },
       onError,
@@ -848,8 +871,10 @@ class VoiceRecognitionEnhancedService {
    */
   private processEnhancedResult(
     result: RecognitionResult,
-    onCommand: (command: EnhancedVoiceCommand) => void,
-    onInterim?: (transcript: string, confidence: number, language: string) => void,
+    onCommand: (command: EnhancedVoiceCommand
+) => void,
+    onInterim?: (transcript: string, confidence: number, language: string
+) => void,
     userId?: string
   ): void {
     const { transcript, confidence, isFinal } = result;
@@ -946,7 +971,8 @@ class VoiceRecognitionEnhancedService {
     for (const [intent, data] of Object.entries(patterns)) {
       const intentData = data as any;
       if (
-        intentData.exact?.some((phrase: string) =>
+        intentData.exact?.some((phrase: string
+) =>
           lowerTranscript.includes(phrase.toLowerCase())
         )
       ) {
@@ -958,7 +984,8 @@ class VoiceRecognitionEnhancedService {
     for (const [intent, data] of Object.entries(patterns)) {
       const intentData = data as any;
       if (
-        intentData.patterns?.some((pattern: RegExp) => pattern.test(lowerTranscript))
+        intentData.patterns?.some((pattern: RegExp
+) => pattern.test(lowerTranscript))
       ) {
         return intent as EnhancedVoiceCommand['intent'];
       }
@@ -1046,7 +1073,8 @@ class VoiceRecognitionEnhancedService {
 
   private calculateEnergyLevel(audioData: Float32Array): number {
     const rms = Math.sqrt(
-      audioData.reduce((sum, sample) => sum + sample * sample, 0) / audioData.length
+      audioData.reduce((sum, sample
+) => sum + sample * sample, 0) / audioData.length
     );
     return Math.min(1.0, rms * 10);
   }

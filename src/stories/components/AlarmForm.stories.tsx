@@ -243,7 +243,8 @@ export const AccessibilityShowcase: Story = {
 
 // Interactive playground for testing different combinations
 export const InteractivePlayground: Story = {
-  render: () => {
+  render: (
+) => {
     return (
       <div className="p-6 space-y-6">
         <h2 className="text-2xl font-bold">Alarm Form Playground</h2>

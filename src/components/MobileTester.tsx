@@ -9,7 +9,8 @@ import { TimeoutHandle } from '../types/timers';
 
 interface MobileTesterProps {
   isVisible: boolean;
-  onClose: () => void;
+  onClose: (
+) => void;
 }
 
 interface TestResult {
@@ -19,7 +20,8 @@ interface TestResult {
   details?: string;
 }
 
-const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
+const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }
+) => {
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isRunningTests, setIsRunningTests] = useState(false);
   const [testProgress, setTestProgress] = useState(0);
@@ -54,38 +56,51 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     useMobileAccessibilityContext();
 
   // Touch gesture testing
-  useEffect(() => {
+  useEffect((
+) => {
     if (!isVisible || !testAreaRef.current) return;
 
     const element = testAreaRef.current;
 
-    const handleSwipe = (direction: string) => {
+    const handleSwipe = (direction: string
+) => {
       console.log(`[MobileTester] Swipe detected: ${direction}`);
       updateTestResult('Touch Gestures', 'pass', `Swipe ${direction} detected`);
     };
 
-    const handleTap = () => {
+    const handleTap = (
+) => {
       console.log('[MobileTester] Tap detected');
       updateTestResult('Touch Gestures', 'pass', 'Tap gesture detected');
     };
 
-    const handleLongPress = () => {
+    const handleLongPress = (
+) => {
       console.log('[MobileTester] Long press detected');
       updateTestResult('Touch Gestures', 'pass', 'Long press detected');
     };
 
-    element.addEventListener('swipeup', () => handleSwipe('up'));
-    element.addEventListener('swipedown', () => handleSwipe('down'));
-    element.addEventListener('swipeleft', () => handleSwipe('left'));
-    element.addEventListener('swiperight', () => handleSwipe('right'));
+    element.addEventListener('swipeup', (
+) => handleSwipe('up'));
+    element.addEventListener('swipedown', (
+) => handleSwipe('down'));
+    element.addEventListener('swipeleft', (
+) => handleSwipe('left'));
+    element.addEventListener('swiperight', (
+) => handleSwipe('right'));
     element.addEventListener('tap', handleTap);
     element.addEventListener('longpress', handleLongPress);
 
-    return () => {
-      element.removeEventListener('swipeup', () => handleSwipe('up'));
-      element.removeEventListener('swipedown', () => handleSwipe('down'));
-      element.removeEventListener('swipeleft', () => handleSwipe('left'));
-      element.removeEventListener('swiperight', () => handleSwipe('right'));
+    return (
+) => {
+      element.removeEventListener('swipeup', (
+) => handleSwipe('up'));
+      element.removeEventListener('swipedown', (
+) => handleSwipe('down'));
+      element.removeEventListener('swipeleft', (
+) => handleSwipe('left'));
+      element.removeEventListener('swiperight', (
+) => handleSwipe('right'));
       element.removeEventListener('tap', handleTap);
       element.removeEventListener('longpress', handleLongPress);
     };
@@ -96,11 +111,16 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     status: TestResult['status'],
     message: string,
     details?: string
-  ) => {
-    setTestResults((prev: any) => { // auto
-      const existing = prev.find((r: any) => r.name === name);
+  
+) => {
+    setTestResults((prev: any
+) => {
+      // auto
+      const existing = prev.find((r: any
+) => r.name === name);
       if (existing) {
-        return prev.map((r: any) => /* auto: implicit any */
+        return prev.map((r: any 
+) =>
           r.name === name ? { ...r, status, message, details } : r
         );
       }
@@ -108,7 +128,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     });
   };
 
-  const runAllTests = async () => {
+  const runAllTests = async (
+) => {
     setIsRunningTests(true);
     setTestProgress(0);
     setTestResults([]);
@@ -142,7 +163,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     announce('Mobile testing completed', 'polite');
   };
 
-  const testDeviceCapabilities = async () => {
+  const testDeviceCapabilities = async (
+) => {
     // Test touch device detection
     const isTouchDevice = 'ontouchstart' in window;
     updateTestResult(
@@ -176,7 +198,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     );
   };
 
-  const testPWAFeatures = async () => {
+  const testPWAFeatures = async (
+) => {
     // Test PWA installation
     updateTestResult(
       'PWA Installation',
@@ -213,7 +236,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     );
   };
 
-  const testCapacitorIntegration = async () => {
+  const testCapacitorIntegration = async (
+) => {
     updateTestResult(
       'Capacitor Platform',
       isCapacitorAvailable ? 'pass' : 'info',
@@ -261,7 +285,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     }
   };
 
-  const testPerformanceOptimizations = async () => {
+  const testPerformanceOptimizations = async (
+) => {
     updateTestResult(
       'Device Performance',
       isLowPerformanceDevice ? 'warning' : 'pass',
@@ -291,7 +316,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     );
   };
 
-  const testAccessibilityFeatures = async () => {
+  const testAccessibilityFeatures = async (
+) => {
     updateTestResult(
       'Accessibility System',
       isAccessibilityEnabled ? 'pass' : 'fail',
@@ -327,7 +353,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     );
   };
 
-  const testTouchInteractions = async () => {
+  const testTouchInteractions = async (
+) => {
     // This will be updated by touch event listeners
     updateTestResult(
       'Touch Gestures',
@@ -345,7 +372,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     }
   };
 
-  const testNetworkCapabilities = async () => {
+  const testNetworkCapabilities = async (
+) => {
     // Test connection type
     if ('connection' in navigator) {
       const connection = (navigator as any).connection;
@@ -371,7 +399,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     );
   };
 
-  const testNotificationSystem = async () => {
+  const testNotificationSystem = async (
+) => {
     if ('Notification' in window) {
       const permission = Notification.permission;
       updateTestResult(
@@ -390,7 +419,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
             body: 'Testing notification system',
             icon: '/icons/icon-72.png',
           });
-          setTimeout(() => notification.close(), 3000);
+          setTimeout((
+) => notification.close(), 3000);
           updateTestResult(
             'Notification Display',
             'pass',
@@ -409,7 +439,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     }
   };
 
-  const testResponsiveDesign = async () => {
+  const testResponsiveDesign = async (
+) => {
     // Test viewport meta tag
     const viewportMeta = document.querySelector('meta[name="viewport"]');
     updateTestResult(
@@ -438,7 +469,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     );
   };
 
-  const testBatteryOptimization = async () => {
+  const testBatteryOptimization = async (
+) => {
     if ('getBattery' in navigator) {
       try {
         const battery = await (navigator as any).getBattery();
@@ -456,7 +488,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     }
   };
 
-  const getStatusColor = (status: TestResult['status']) => {
+  const getStatusColor = (status: TestResult['status']
+) => {
     switch (status) {
       case 'pass':
         return 'text-green-600 bg-green-100';
@@ -471,7 +504,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     }
   };
 
-  const getStatusIcon = (status: TestResult['status']) => {
+  const getStatusIcon = (status: TestResult['status']
+) => {
     switch (status) {
       case 'pass':
         return '✅';
@@ -519,7 +553,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
             </button>
 
             <button
-              onClick={() => setTestResults([])}
+              onClick={(
+) => setTestResults([])}
               className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Clear Results
@@ -553,7 +588,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
                 <button
                   ref={touchTestRef}
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
-                  onClick={() =>
+                  onClick={(
+) =>
                     updateTestResult(
                       'Touch Button',
                       'pass',
@@ -572,7 +608,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Test Results</h3>
               <div className="space-y-3">
-                {testResults.map((result, index) => (
+                {testResults.map((result, index
+) => (
                   <div key={index} className="border rounded-lg p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
@@ -607,25 +644,29 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
                 <div className="grid grid-cols-4 gap-4 text-center text-sm">
                   <div>
                     <div className="text-green-600 font-medium">
-                      {testResults.filter((r: any) => r.status === 'pass').length}
+                      {testResults.filter((r: any
+) => r.status === 'pass').length}
                     </div>
                     <div className="text-gray-600">Passed</div>
                   </div>
                   <div>
                     <div className="text-red-600 font-medium">
-                      {testResults.filter((r: any) => r.status === 'fail').length}
+                      {testResults.filter((r: any
+) => r.status === 'fail').length}
                     </div>
                     <div className="text-gray-600">Failed</div>
                   </div>
                   <div>
                     <div className="text-yellow-600 font-medium">
-                      {testResults.filter((r: any) => r.status === 'warning').length}
+                      {testResults.filter((r: any
+) => r.status === 'warning').length}
                     </div>
                     <div className="text-gray-600">Warnings</div>
                   </div>
                   <div>
                     <div className="text-blue-600 font-medium">
-                      {testResults.filter((r: any) => r.status === 'info').length}
+                      {testResults.filter((r: any
+) => r.status === 'info').length}
                     </div>
                     <div className="text-gray-600">Info</div>
                   </div>

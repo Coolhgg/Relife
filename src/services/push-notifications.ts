@@ -278,7 +278,8 @@ export class PushNotificationService {
    */
   private setupEventListeners(): void {
     // Handle app lifecycle changes
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', (
+) => {
       if (!document.hidden) {
         // App became visible, clear badge
         PushNotificationService.updateBadgeCount(0);
@@ -286,11 +287,13 @@ export class PushNotificationService {
     });
 
     // Handle custom events
-    window.addEventListener('alarm-triggered', (event: CustomEvent) => {
+    window.addEventListener('alarm-triggered', (event: CustomEvent
+) => {
       this.handleAlarmTriggered(event.detail.alarmId);
     });
 
-    window.addEventListener('alarm-dismissed', (event: CustomEvent) => {
+    window.addEventListener('alarm-dismissed', (event: CustomEvent
+) => {
       this.handleAlarmDismissed(event.detail.alarmId);
     });
   }

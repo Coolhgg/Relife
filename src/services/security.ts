@@ -436,7 +436,8 @@ class SecurityService {
     let attempts = this.secureStorageGet(key) || [];
 
     // Remove old attempts outside the window
-    attempts = attempts.filter((timestamp: number) => now - timestamp < windowMs);
+    attempts = attempts.filter((timestamp: number
+) => now - timestamp < windowMs);
 
     if (attempts.length >= maxAttempts) {
       return false; // Rate limit exceeded

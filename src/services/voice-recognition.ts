@@ -133,25 +133,32 @@ export class VoiceRecognitionService {
   }
 
   static async startListening(
-    onCommand: (command: VoiceCommand) => void,
-    onInterim?: (transcript: string, confidence: number) => void,
-    onError?: (error: string) => void
-  ): Promise<() => void> {
+    onCommand: (command: VoiceCommand
+) => void,
+    onInterim?: (transcript: string, confidence: number
+) => void,
+    onError?: (error: string
+) => void
+  ): Promise<(
+) => void> {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       onError?.('Speech recognition not supported in this browser');
-      return () => {};
+      return (
+) => {};
     }
 
     // Initialize voice recognition through VoiceProService
     const stopRecognition = await VoiceProService.startVoiceRecognition(
-      (result: RecognitionResult) => {
+      (result: RecognitionResult
+) => {
         this.processRecognitionResult(result, onCommand, onInterim);
       },
       onError
     );
 
     this.isListening = true;
-    return () => {
+    return (
+) => {
       this.isListening = false;
       stopRecognition();
     };
@@ -159,8 +166,10 @@ export class VoiceRecognitionService {
 
   private static processRecognitionResult(
     result: RecognitionResult,
-    onCommand: (command: VoiceCommand) => void,
-    onInterim?: (transcript: string, confidence: number) => void
+    onCommand: (command: VoiceCommand
+) => void,
+    onInterim?: (transcript: string, confidence: number
+) => void
   ): void {
     const { transcript, confidence, isFinal } = result;
 
@@ -340,7 +349,8 @@ export class VoiceRecognitionService {
     const userCommands = this.userPreferences.preferredCommands;
     let bestMatch: { intent: 'dismiss' | 'snooze'; score: number } | null = null;
 
-    userCommands.forEach((count, command) => {
+    userCommands.forEach((count, command
+) => {
       const similarity = this.calculateSimilarity(transcript, command);
       if (similarity > 0.8) {
         const intent = this.commandHistory.find(h =>
@@ -415,7 +425,8 @@ export class VoiceRecognitionService {
 
     if (similarCommands.length > 0) {
       const avgHistoricalConfidence =
-        similarCommands.reduce((sum, cmd) => sum + cmd.confidence, 0) /
+        similarCommands.reduce((sum, cmd
+) => sum + cmd.confidence, 0) /
         similarCommands.length;
       return Math.max(baseThreshold - 0.1, avgHistoricalConfidence - 0.1);
     }
@@ -514,7 +525,8 @@ export class VoiceRecognitionService {
     const totalCommands = this.commandHistory.length;
     const avgConfidence =
       totalCommands > 0
-        ? this.commandHistory.reduce((sum, cmd) => sum + cmd.confidence, 0) /
+        ? this.commandHistory.reduce((sum, cmd
+) => sum + cmd.confidence, 0) /
           totalCommands
         : 0;
 
@@ -533,13 +545,16 @@ export class VoiceRecognitionService {
     });
 
     const mostUsedCommands = Array.from(commandCounts.entries())
-      .map(([command, count]) => ({
+      .map(([command, count]
+) => ({
         command,
         count,
         avgConfidence:
-          commandConfidence.get(command)!.reduce((a, b) => a + b, 0) / count,
+          commandConfidence.get(command)!.reduce((a, b
+) => a + b, 0) / count,
       }))
-      .sort((a, b) => b.count - a.count)
+      .sort((a, b
+) => b.count - a.count)
       .slice(0, 10);
 
     // Intent distribution

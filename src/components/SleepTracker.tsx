@@ -19,7 +19,8 @@ import {
 
 interface SleepTrackerProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: (
+) => void;
 }
 
 interface SleepEntry {
@@ -29,7 +30,8 @@ interface SleepEntry {
   date: string;
 }
 
-const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
+const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }
+) => {
   const [activeTab, setActiveTab] = useState<'log' | 'history' | 'insights'>('log');
   const [sleepSessions, setSleepSessions] = useState<SleepSession[]>([]);
   const [sleepPattern, setSleepPattern] = useState<SleepPattern | null>(null);
@@ -43,8 +45,10 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
     date: new Date().toISOString().split('T')[0],
   });
 
-  useEffect(() => {
-    const loadData = async () => {
+  useEffect((
+) => {
+    const loadData = async (
+) => {
       if (isOpen) {
         setLoading(true);
         try {
@@ -64,7 +68,8 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
     loadData();
   }, [isOpen]);
 
-  const handleLogSleep = async () => {
+  const handleLogSleep = async (
+) => {
     setLoading(true);
     try {
       const bedtime = new Date(`${sleepEntry.date}T${sleepEntry.bedtime}`);
@@ -183,7 +188,8 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                onClick={(
+) => setActiveTab(tab.id as typeof activeTab)}
                 className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                   activeTab === tab.id
                     ? 'bg-purple-500 text-white'
@@ -215,8 +221,13 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                       id="sleep-date"
                       type="date"
                       value={sleepEntry.date}
-                      onChange={(e: any) => /* auto: implicit any */
-                        setSleepEntry((prev: any) => ({ /* auto: implicit any */{ ...prev, date: e.target.value }))
+                      onChange={(e: any 
+) =>
+                        setSleepEntry((prev: any
+) => ({
+                          ...prev,
+                          date: e.target.value,
+                        }))
                       }
                       className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
                     />
@@ -235,8 +246,13 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                         id="bedtime"
                         type="time"
                         value={sleepEntry.bedtime}
-                        onChange={(e: any) => /* auto: implicit any */
-                          setSleepEntry((prev: any) => ({ /* auto: implicit any */{ ...prev, bedtime: e.target.value }))
+                        onChange={(e: any 
+) =>
+                          setSleepEntry((prev: any
+) => ({
+                            ...prev,
+                            bedtime: e.target.value,
+                          }))
                         }
                         className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
                       />
@@ -254,8 +270,13 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                         id="wake-time"
                         type="time"
                         value={sleepEntry.wakeTime}
-                        onChange={(e: any) => /* auto: implicit any */
-                          setSleepEntry((prev: any) => ({ /* auto: implicit any */{ ...prev, wakeTime: e.target.value }))
+                        onChange={(e: any 
+) =>
+                          setSleepEntry((prev: any
+) => ({
+                            ...prev,
+                            wakeTime: e.target.value,
+                          }))
                         }
                         className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
                       />
@@ -273,8 +294,10 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                       min="1"
                       max="10"
                       value={sleepEntry.quality}
-                      onChange={(e: any) => /* auto: implicit any */
-                        setSleepEntry((prev: any) => ({ /* auto: implicit any */{
+                      onChange={(e: any 
+) =>
+                        setSleepEntry((prev: any
+) => ({
                           ...prev,
                           quality: parseInt(e.target.value),
                         }))
@@ -328,7 +351,8 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                 </div>
               ) : sleepSessions.length > 0 ? (
                 <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {sleepSessions.map((session, index) => (
+                  {sleepSessions.map((session, index
+) => (
                     <div
                       key={session.id}
                       className="bg-white/5 rounded-lg p-4 border border-white/10"
@@ -339,7 +363,8 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                             {session.bedtime.toLocaleDateString()}
                           </span>
                           <div className="flex items-center gap-1">
-                            {Array.from({ length: 5 }, (_, i) => (
+                            {Array.from({ length: 5 }, (_, i
+) => (
                               <Star
                                 key={i}
                                 className={`w-3 h-3 ${

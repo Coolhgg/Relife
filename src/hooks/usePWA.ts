@@ -7,14 +7,19 @@ export function usePWA() {
   const [state, setState] = useState(pwaManager.getState());
   const [isOnline, setIsOnline] = useState(!pwaManager.isOffline());
 
-  useEffect(() => {
+  useEffect((
+) => {
     // Update capabilities and state
-    const updateCapabilities = () => setCapabilities(pwaManager.getCapabilities());
-    const updateState = () => setState(pwaManager.getState());
+    const updateCapabilities = (
+) => setCapabilities(pwaManager.getCapabilities());
+    const updateState = (
+) => setState(pwaManager.getState());
 
     // Online/offline handling
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
+    const handleOnline = (
+) => setIsOnline(true);
+    const handleOffline = (
+) => setIsOnline(false);
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -24,7 +29,8 @@ export function usePWA() {
     pwaManager.on('installed', updateState);
     pwaManager.on('already-installed', updateState);
 
-    return () => {
+    return (
+) => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
       pwaManager.off('installable', updateState);
@@ -33,11 +39,13 @@ export function usePWA() {
     };
   }, []);
 
-  const showInstallPrompt = useCallback(async () => {
+  const showInstallPrompt = useCallback(async (
+) => {
     return await pwaManager.showInstallPrompt();
   }, []);
 
-  const updateServiceWorker = useCallback(async () => {
+  const updateServiceWorker = useCallback(async (
+) => {
     return await pwaManager.updateServiceWorker();
   }, []);
 
@@ -57,25 +65,32 @@ export function useInstallPrompt() {
   const [canInstall, setCanInstall] = useState(pwaManager.shouldShowInstallPrompt());
   const [isInstalling, setIsInstalling] = useState(false);
 
-  useEffect(() => {
-    const handleInstallable = () => setCanInstall(true);
-    const handleInstalled = () => {
+  useEffect((
+) => {
+    const handleInstallable = (
+) => setCanInstall(true);
+    const handleInstalled = (
+) => {
       setCanInstall(false);
       setIsInstalling(false);
     };
 
     pwaManager.on('installable', handleInstallable);
     pwaManager.on('installed', handleInstalled);
-    pwaManager.on('install-accepted', () => setIsInstalling(true));
-    pwaManager.on('install-dismissed', () => setIsInstalling(false));
+    pwaManager.on('install-accepted', (
+) => setIsInstalling(true));
+    pwaManager.on('install-dismissed', (
+) => setIsInstalling(false));
 
-    return () => {
+    return (
+) => {
       pwaManager.off('installable', handleInstallable);
       pwaManager.off('installed', handleInstalled);
     };
   }, []);
 
-  const install = useCallback(async () => {
+  const install = useCallback(async (
+) => {
     if (!canInstall || isInstalling) return false;
 
     setIsInstalling(true);
@@ -103,17 +118,21 @@ export function useServiceWorkerUpdate() {
   const [updateAvailable, setUpdateAvailable] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  useEffect(() => {
-    const handleUpdateAvailable = () => setUpdateAvailable(true);
+  useEffect((
+) => {
+    const handleUpdateAvailable = (
+) => setUpdateAvailable(true);
 
     pwaManager.on('sw-update-available', handleUpdateAvailable);
 
-    return () => {
+    return (
+) => {
       pwaManager.off('sw-update-available', handleUpdateAvailable);
     };
   }, []);
 
-  const applyUpdate = useCallback(async () => {
+  const applyUpdate = useCallback(async (
+) => {
     if (!updateAvailable || isUpdating) return;
 
     setIsUpdating(true);
@@ -140,15 +159,18 @@ export function usePushNotifications() {
   const [subscription, setSubscription] = useState<PushSubscription | null>(null);
   const [isSubscribing, setIsSubscribing] = useState(false);
 
-  useEffect(() => {
+  useEffect((
+) => {
     // Get current subscription
     pwaManager.getPushSubscription().then(setSubscription);
 
-    const handlePermissionChange = (data: { permission: NotificationPermission }) => {
+    const handlePermissionChange = (data: { permission: NotificationPermission }
+) => {
       setPermission(data.permission);
     };
 
-    const handleSubscribed = (data: { subscription: PushSubscription }) => {
+    const handleSubscribed = (data: { subscription: PushSubscription }
+) => {
       setSubscription(data.subscription);
       setIsSubscribing(false);
     };
@@ -156,13 +178,15 @@ export function usePushNotifications() {
     pwaManager.on('notification-permission-changed', handlePermissionChange);
     pwaManager.on('push-subscribed', handleSubscribed);
 
-    return () => {
+    return (
+) => {
       pwaManager.off('notification-permission-changed', handlePermissionChange);
       pwaManager.off('push-subscribed', handleSubscribed);
     };
   }, []);
 
-  const requestPermission = useCallback(async () => {
+  const requestPermission = useCallback(async (
+) => {
     try {
       const newPermission = await pwaManager.requestNotificationPermission();
       setPermission(newPermission);
@@ -173,7 +197,8 @@ export function usePushNotifications() {
     }
   }, []);
 
-  const subscribe = useCallback(async () => {
+  const subscribe = useCallback(async (
+) => {
     if (isSubscribing) return null;
 
     setIsSubscribing(true);
@@ -204,19 +229,25 @@ export function useOffline() {
   const [isOnline, setIsOnline] = useState(!pwaManager.isOffline());
   const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'error'>('idle');
 
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
+  useEffect((
+) => {
+    const handleOnline = (
+) => setIsOnline(true);
+    const handleOffline = (
+) => setIsOnline(false);
 
-    const handleSyncComplete = () => setSyncStatus('idle');
-    const handleSyncError = () => setSyncStatus('error');
+    const handleSyncComplete = (
+) => setSyncStatus('idle');
+    const handleSyncError = (
+) => setSyncStatus('error');
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
     pwaManager.on('sync-complete', handleSyncComplete);
 
-    return () => {
+    return (
+) => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
       pwaManager.off('sync-complete', handleSyncComplete);
@@ -237,18 +268,22 @@ export function usePWAUI() {
     pwaManager.getCapabilities().standalone
   );
 
-  useEffect(() => {
+  useEffect((
+) => {
     // Listen for display mode changes
     const mediaQuery = window.matchMedia('(display-mode: standalone)');
-    const handleChange = (e: MediaQueryListEvent) => setIsStandalone(e.matches);
+    const handleChange = (e: MediaQueryListEvent
+) => setIsStandalone(e.matches);
 
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener('change', handleChange);
-      return () => mediaQuery.removeEventListener('change', handleChange);
+      return (
+) => mediaQuery.removeEventListener('change', handleChange);
     } else {
       // Fallback for older browsers
       mediaQuery.addListener(handleChange);
-      return () => mediaQuery.removeListener(handleChange);
+      return (
+) => mediaQuery.removeListener(handleChange);
     }
   }, []);
 
@@ -264,8 +299,10 @@ export function usePWAUI() {
 export function useBackgroundSync() {
   const [pendingItems, setPendingItems] = useState<string[]>([]);
 
-  const addToQueue = useCallback((item: string) => {
-    setPendingItems((prev: any) => [...prev, item]);
+  const addToQueue = useCallback((item: string
+) => {
+    setPendingItems((prev: any
+) => [...prev, item]);
     // Send to service worker for background sync
     pwaManager.sendMessageToSW({
       type: 'QUEUE_SYNC',
@@ -273,18 +310,22 @@ export function useBackgroundSync() {
     });
   }, []);
 
-  const clearQueue = useCallback(() => {
+  const clearQueue = useCallback((
+) => {
     setPendingItems([]);
   }, []);
 
-  useEffect(() => {
-    const handleSyncComplete = () => {
+  useEffect((
+) => {
+    const handleSyncComplete = (
+) => {
       clearQueue();
     };
 
     pwaManager.on('sync-complete', handleSyncComplete);
 
-    return () => {
+    return (
+) => {
       pwaManager.off('sync-complete', handleSyncComplete);
     };
   }, [clearQueue]);
@@ -302,31 +343,40 @@ export function useBackgroundSync() {
 export function useAlarmPWA() {
   const [alarmEvents, setAlarmEvents] = useState<any[]>([]);
 
-  useEffect(() => {
-    const handleAlarmTriggered = (data: any) => {
-      setAlarmEvents((prev: any) => [...prev, { type: 'triggered', ...data }]);
+  useEffect((
+) => {
+    const handleAlarmTriggered = (data: any
+) => {
+      setAlarmEvents((prev: any
+) => [...prev, { type: 'triggered', ...data }]);
     };
 
-    const handleAlarmDismissed = (data: any) => {
-      setAlarmEvents((prev: any) => [...prev, { type: 'dismissed', ...data }]);
+    const handleAlarmDismissed = (data: any
+) => {
+      setAlarmEvents((prev: any
+) => [...prev, { type: 'dismissed', ...data }]);
     };
 
-    const handleAlarmSnoozed = (data: any) => {
-      setAlarmEvents((prev: any) => [...prev, { type: 'snoozed', ...data }]);
+    const handleAlarmSnoozed = (data: any
+) => {
+      setAlarmEvents((prev: any
+) => [...prev, { type: 'snoozed', ...data }]);
     };
 
     pwaManager.on('alarm-triggered', handleAlarmTriggered);
     pwaManager.on('alarm-dismissed', handleAlarmDismissed);
     pwaManager.on('alarm-snoozed', handleAlarmSnoozed);
 
-    return () => {
+    return (
+) => {
       pwaManager.off('alarm-triggered', handleAlarmTriggered);
       pwaManager.off('alarm-dismissed', handleAlarmDismissed);
       pwaManager.off('alarm-snoozed', handleAlarmSnoozed);
     };
   }, []);
 
-  const clearAlarmEvents = useCallback(() => {
+  const clearAlarmEvents = useCallback((
+) => {
     setAlarmEvents([]);
   }, []);
 

@@ -19,7 +19,8 @@ import GamingHub from '../GamingHub';
 import type { User, Battle, RewardSystem } from '../../types';
 
 // Mock child components
-jest.mock('../RewardsDashboard', () => {
+jest.mock('../RewardsDashboard', (
+) => {
   return function MockRewardsDashboard({ rewardSystem, onRefreshRewards }: any) {
     return (
       <div data-testid="rewards-dashboard">
@@ -33,7 +34,8 @@ jest.mock('../RewardsDashboard', () => {
   };
 });
 
-jest.mock('../CommunityHub', () => {
+jest.mock('../CommunityHub', (
+) => {
   return function MockCommunityHub({
     currentUser,
     battles,
@@ -45,12 +47,14 @@ jest.mock('../CommunityHub', () => {
         <div>Welcome {currentUser.displayName}!</div>
         <div>{battles.length} active battles</div>
         <button
-          onClick={() => onCreateBattle({ type: 'speed' })}
+          onClick={(
+) => onCreateBattle({ type: 'speed' })}
           data-testid="create-battle"
         >
           Create Battle
         </button>
-        <button onClick={() => onJoinBattle('battle-123')} data-testid="join-battle">
+        <button onClick={(
+) => onJoinBattle('battle-123')} data-testid="join-battle">
           Join Battle
         </button>
       </div>
@@ -58,7 +62,8 @@ jest.mock('../CommunityHub', () => {
   };
 });
 
-jest.mock('../BattleSystem', () => {
+jest.mock('../BattleSystem', (
+) => {
   return function MockBattleSystem({
     currentUser,
     friends,
@@ -71,7 +76,8 @@ jest.mock('../BattleSystem', () => {
         <div>{friends.length} friends</div>
         <div>{activeBattles.length} battles</div>
         <button
-          onClick={() => onCreateBattle({ type: 'consistency' })}
+          onClick={(
+) => onCreateBattle({ type: 'consistency' })}
           data-testid="create-battle-system"
         >
           Create Battle
@@ -81,7 +87,8 @@ jest.mock('../BattleSystem', () => {
   };
 });
 
-describe('GamingHub', () => {
+describe('GamingHub', (
+) => {
   const mockCurrentUser = createTestUser({
     id: '1',
     username: 'testuser',
@@ -143,12 +150,15 @@ describe('GamingHub', () => {
     ...mockCallbacks,
   };
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
   });
 
-  describe('Rendering', () => {
-    it('renders gaming hub header correctly', () => {
+  describe('Rendering', (
+) => {
+    it('renders gaming hub header correctly', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       expect(screen.getByRole('heading', { name: 'Gaming Hub' })).toBeInTheDocument();
@@ -157,7 +167,8 @@ describe('GamingHub', () => {
       ).toBeInTheDocument();
     });
 
-    it('renders all navigation tabs', () => {
+    it('renders all navigation tabs', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       expect(screen.getByRole('tab', { name: /rewards/i })).toBeInTheDocument();
@@ -165,7 +176,8 @@ describe('GamingHub', () => {
       expect(screen.getByRole('tab', { name: /battles/i })).toBeInTheDocument();
     });
 
-    it('renders tab icons correctly', () => {
+    it('renders tab icons correctly', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       expect(screen.getByTestId('trophy-icon')).toBeInTheDocument();
@@ -173,7 +185,8 @@ describe('GamingHub', () => {
       expect(screen.getByTestId('sword-icon')).toBeInTheDocument();
     });
 
-    it('hides tab labels on small screens', () => {
+    it('hides tab labels on small screens', (
+) => {
       // Mock small screen
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
@@ -188,8 +201,10 @@ describe('GamingHub', () => {
     });
   });
 
-  describe('Tab Navigation', () => {
-    it('defaults to rewards tab', () => {
+  describe('Tab Navigation', (
+) => {
+    it('defaults to rewards tab', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const rewardsTab = screen.getByRole('tab', { name: /rewards/i });
@@ -197,7 +212,8 @@ describe('GamingHub', () => {
       expect(screen.getByTestId('rewards-dashboard')).toBeInTheDocument();
     });
 
-    it('switches to community tab when clicked', async () => {
+    it('switches to community tab when clicked', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -209,7 +225,8 @@ describe('GamingHub', () => {
       expect(screen.getByTestId('community-hub')).toBeInTheDocument();
     });
 
-    it('switches to battles tab when clicked', async () => {
+    it('switches to battles tab when clicked', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -221,7 +238,8 @@ describe('GamingHub', () => {
       expect(screen.getByTestId('battle-system')).toBeInTheDocument();
     });
 
-    it('supports keyboard navigation between tabs', async () => {
+    it('supports keyboard navigation between tabs', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -239,8 +257,10 @@ describe('GamingHub', () => {
     });
   });
 
-  describe('Rewards Tab', () => {
-    it('renders RewardsDashboard with correct props', () => {
+  describe('Rewards Tab', (
+) => {
+    it('renders RewardsDashboard with correct props', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       expect(screen.getByTestId('rewards-dashboard')).toBeInTheDocument();
@@ -248,14 +268,16 @@ describe('GamingHub', () => {
       expect(screen.getByText('Level: 15')).toBeInTheDocument();
     });
 
-    it('shows loading state when rewardSystem is not provided', () => {
+    it('shows loading state when rewardSystem is not provided', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} rewardSystem={undefined} />);
 
       expect(screen.getByText('Loading your rewards...')).toBeInTheDocument();
       expect(screen.getByTestId('trophy-icon')).toBeInTheDocument();
     });
 
-    it('calls onRefreshRewards when refresh button is clicked', async () => {
+    it('calls onRefreshRewards when refresh button is clicked', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -267,8 +289,10 @@ describe('GamingHub', () => {
     });
   });
 
-  describe('Community Tab', () => {
-    it('renders CommunityHub with correct props', async () => {
+  describe('Community Tab', (
+) => {
+    it('renders CommunityHub with correct props', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -281,7 +305,8 @@ describe('GamingHub', () => {
       expect(screen.getByText('2 active battles')).toBeInTheDocument();
     });
 
-    it('forwards battle creation from community hub', async () => {
+    it('forwards battle creation from community hub', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -295,7 +320,8 @@ describe('GamingHub', () => {
       expect(mockCallbacks.onCreateBattle).toHaveBeenCalledWith({ type: 'speed' });
     });
 
-    it('forwards battle joining from community hub', async () => {
+    it('forwards battle joining from community hub', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -310,8 +336,10 @@ describe('GamingHub', () => {
     });
   });
 
-  describe('Battles Tab', () => {
-    it('renders BattleSystem with correct props', async () => {
+  describe('Battles Tab', (
+) => {
+    it('renders BattleSystem with correct props', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -325,7 +353,8 @@ describe('GamingHub', () => {
       expect(screen.getByText('2 battles')).toBeInTheDocument();
     });
 
-    it('forwards battle creation from battle system', async () => {
+    it('forwards battle creation from battle system', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<GamingHub {...defaultProps} />);
@@ -342,8 +371,10 @@ describe('GamingHub', () => {
     });
   });
 
-  describe('Responsive Design', () => {
-    it('adapts layout for mobile screens', () => {
+  describe('Responsive Design', (
+) => {
+    it('adapts layout for mobile screens', (
+) => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
@@ -356,7 +387,8 @@ describe('GamingHub', () => {
       expect(container).toHaveClass('flex', 'flex-col', 'h-full');
     });
 
-    it('handles tablet layout properly', () => {
+    it('handles tablet layout properly', (
+) => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
@@ -371,8 +403,10 @@ describe('GamingHub', () => {
     });
   });
 
-  describe('Dark Mode Support', () => {
-    it('applies dark mode classes correctly', () => {
+  describe('Dark Mode Support', (
+) => {
+    it('applies dark mode classes correctly', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />, { theme: 'dark' });
 
       const container = document.querySelector('.dark\\:bg-dark-900');
@@ -382,7 +416,8 @@ describe('GamingHub', () => {
       expect(header).toBeInTheDocument();
     });
 
-    it('uses correct text colors in dark mode', () => {
+    it('uses correct text colors in dark mode', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />, { theme: 'dark' });
 
       const title = screen.getByRole('heading', { name: 'Gaming Hub' });
@@ -395,22 +430,26 @@ describe('GamingHub', () => {
     });
   });
 
-  describe('Loading States', () => {
-    it('handles empty battles array gracefully', () => {
+  describe('Loading States', (
+) => {
+    it('handles empty battles array gracefully', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} activeBattles={[]} />);
 
       // Should render without errors
       expect(screen.getByRole('heading', { name: 'Gaming Hub' })).toBeInTheDocument();
     });
 
-    it('handles empty friends array gracefully', () => {
+    it('handles empty friends array gracefully', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} friends={[]} />);
 
       // Should render without errors
       expect(screen.getByRole('heading', { name: 'Gaming Hub' })).toBeInTheDocument();
     });
 
-    it('shows appropriate loading state for rewards', () => {
+    it('shows appropriate loading state for rewards', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} rewardSystem={undefined} />);
 
       expect(screen.getByText('Loading your rewards...')).toBeInTheDocument();
@@ -418,8 +457,10 @@ describe('GamingHub', () => {
     });
   });
 
-  describe('Error Handling', () => {
-    it('handles missing user data gracefully', () => {
+  describe('Error Handling', (
+) => {
+    it('handles missing user data gracefully', (
+) => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
 
       renderWithProviders(<GamingHub {...defaultProps} currentUser={null as any} />);
@@ -430,11 +471,13 @@ describe('GamingHub', () => {
       consoleError.mockRestore();
     });
 
-    it('handles callback errors gracefully', async () => {
+    it('handles callback errors gracefully', async (
+) => {
       const user = userEvent.setup();
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
 
-      const errorCallback = jest.fn().mockImplementation(() => {
+      const errorCallback = jest.fn().mockImplementation((
+) => {
         throw new Error('Callback error');
       });
 
@@ -452,8 +495,10 @@ describe('GamingHub', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('provides proper ARIA labels for tabs', () => {
+  describe('Accessibility', (
+) => {
+    it('provides proper ARIA labels for tabs', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const tabList = screen.getByRole('tablist');
@@ -465,7 +510,8 @@ describe('GamingHub', () => {
       });
     });
 
-    it('maintains proper tab panel relationships', () => {
+    it('maintains proper tab panel relationships', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const rewardsTab = screen.getByRole('tab', { name: /rewards/i });
@@ -475,7 +521,8 @@ describe('GamingHub', () => {
       expect(rewardsPanel).toHaveAttribute('aria-labelledby');
     });
 
-    it('supports screen reader navigation', () => {
+    it('supports screen reader navigation', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />, {
         screenReaderEnabled: true,
       });
@@ -484,7 +531,8 @@ describe('GamingHub', () => {
       expect(heading).toHaveAttribute('aria-level', '1');
     });
 
-    it('provides keyboard shortcuts information', () => {
+    it('provides keyboard shortcuts information', (
+) => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       // Check for keyboard navigation hints

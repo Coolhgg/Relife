@@ -4,8 +4,10 @@ import { X, Crown } from 'lucide-react';
 
 interface SubscriptionModalProps {
   isOpen: boolean;
-  onClose: () => void;
-  onSubscribe?: (planId: string) => void;
+  onClose: (
+) => void;
+  onSubscribe?: (planId: string
+) => void;
   currentTier?: string;
   preSelectedPlan?: string;
 }
@@ -16,7 +18,8 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   onSubscribe,
   currentTier = 'free',
   preSelectedPlan,
-}) => {
+}
+) => {
   const [selectedPlan, setSelectedPlan] = useState(preSelectedPlan || 'premium');
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>(
     'monthly'
@@ -25,7 +28,8 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleSubscribe = async () => {
+  const handleSubscribe = async (
+) => {
     if (!onSubscribe) return;
 
     setLoading(true);
@@ -71,7 +75,8 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           <div className="flex justify-center mb-8">
             <div className="flex rounded-lg bg-gray-100 p-1">
               <button
-                onClick={() => setBillingInterval('monthly')}
+                onClick={(
+) => setBillingInterval('monthly')}
                 className={`px-4 py-2 rounded-md text-sm font-medium ${
                   billingInterval === 'monthly'
                     ? 'bg-white text-gray-900 shadow-sm'
@@ -81,7 +86,8 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 Monthly
               </button>
               <button
-                onClick={() => setBillingInterval('yearly')}
+                onClick={(
+) => setBillingInterval('yearly')}
                 className={`px-4 py-2 rounded-md text-sm font-medium ${
                   billingInterval === 'yearly'
                     ? 'bg-white text-gray-900 shadow-sm'
@@ -103,7 +109,8 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                     ? 'border-blue-500 bg-blue-50'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
-                onClick={() => setSelectedPlan(plan.id)}
+                onClick={(
+) => setSelectedPlan(plan.id)}
               >
                 <h3 className="text-xl font-semibold">{plan.name}</h3>
                 <p className="text-3xl font-bold mt-2">
@@ -113,7 +120,8 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   </span>
                 </p>
                 <ul className="mt-4 space-y-2">
-                  {plan.features.map((feature, index) => (
+                  {plan.features.map((feature, index
+) => (
                     <li key={index} className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full" />
                       {feature}

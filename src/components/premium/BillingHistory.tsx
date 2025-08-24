@@ -29,9 +29,12 @@ interface BillingHistoryProps {
   invoices: Invoice[];
   upcomingInvoice?: Invoice | null;
   isLoading?: boolean;
-  onDownloadInvoice?: (invoiceId: string) => Promise<void>;
-  onViewInvoice?: (invoiceId: string) => void;
-  onPayInvoice?: (invoiceId: string) => Promise<void>;
+  onDownloadInvoice?: (invoiceId: string
+) => Promise<void>;
+  onViewInvoice?: (invoiceId: string
+) => void;
+  onPayInvoice?: (invoiceId: string
+) => Promise<void>;
   className?: string;
 }
 
@@ -46,7 +49,8 @@ export function BillingHistory({
 }: BillingHistoryProps) {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date
+) => {
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
@@ -54,14 +58,16 @@ export function BillingHistory({
     }).format(new Date(date));
   };
 
-  const formatCurrency = (amount: number, currency: string = 'usd') => {
+  const formatCurrency = (amount: number, currency: string = 'usd'
+) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency.toUpperCase(),
     }).format(amount / 100);
   };
 
-  const getStatusBadge = (status: PaymentStatus) => {
+  const getStatusBadge = (status: PaymentStatus
+) => {
     switch (status) {
       case 'succeeded':
         return (
@@ -103,7 +109,8 @@ export function BillingHistory({
     }
   };
 
-  const handleDownloadInvoice = async (invoiceId: string) => {
+  const handleDownloadInvoice = async (invoiceId: string
+) => {
     if (!onDownloadInvoice) return;
     try {
       setActionLoading(`download-${invoiceId}`);
@@ -115,7 +122,8 @@ export function BillingHistory({
     }
   };
 
-  const handlePayInvoice = async (invoiceId: string) => {
+  const handlePayInvoice = async (invoiceId: string
+) => {
     if (!onPayInvoice) return;
     try {
       setActionLoading(`pay-${invoiceId}`);
@@ -127,7 +135,8 @@ export function BillingHistory({
     }
   };
 
-  const isPastDue = (invoice: Invoice) => {
+  const isPastDue = (invoice: Invoice
+) => {
     return (
       invoice.dueDate &&
       new Date(invoice.dueDate) < new Date() &&
@@ -276,7 +285,8 @@ export function BillingHistory({
                             onPayInvoice && (
                               <Button
                                 size="sm"
-                                onClick={() => handlePayInvoice(invoice.id)}
+                                onClick={(
+) => handlePayInvoice(invoice.id)}
                                 disabled={actionLoading === `pay-${invoice.id}`}
                                 className="bg-blue-600 hover:bg-blue-700"
                               >
@@ -293,7 +303,8 @@ export function BillingHistory({
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => onViewInvoice(invoice.id)}
+                              onClick={(
+) => onViewInvoice(invoice.id)}
                             >
                               <Eye className="w-4 h-4" />
                             </Button>
@@ -304,7 +315,8 @@ export function BillingHistory({
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleDownloadInvoice(invoice.id)}
+                              onClick={(
+) => handleDownloadInvoice(invoice.id)}
                               disabled={actionLoading === `download-${invoice.id}`}
                             >
                               {actionLoading === `download-${invoice.id}` ? (

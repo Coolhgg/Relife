@@ -55,9 +55,12 @@ interface BattleSystemProps {
   currentUser: UserType;
   friends: UserType[];
   activeBattles: Battle[];
-  onCreateBattle: (battle: Partial<Battle>) => void;
-  onJoinBattle: (battleId: string) => void;
-  onSendTrashTalk: (battleId: string, message: string) => void;
+  onCreateBattle: (battle: Partial<Battle>
+) => void;
+  onJoinBattle: (battleId: string
+) => void;
+  onSendTrashTalk: (battleId: string, message: string
+) => void;
 }
 
 const BATTLE_TYPES = [
@@ -217,13 +220,15 @@ export function BattleSystem({
     useGamingAnnouncements();
 
   // Track battle count changes
-  useEffect(() => {
+  useEffect((
+) => {
     trackBattleCount(activeBattles);
   }, [activeBattles, trackBattleCount]);
 
   // Track battle status changes
   const previousBattleStatuses = useRef<Record<string, string>>({});
-  useEffect(() => {
+  useEffect((
+) => {
     activeBattles.forEach(battle => {
       const previousStatus = previousBattleStatuses.current[battle.id];
       const currentStatus = battle.status;
@@ -246,22 +251,27 @@ export function BattleSystem({
   }, [activeBattles, announceBattleEvent, currentUser.id]);
 
   // Setup offline gaming functionality
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
+  useEffect((
+) => {
+    const handleOnline = (
+) => setIsOnline(true);
+    const handleOffline = (
+) => setIsOnline(false);
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
     // Listen for gaming sync events
-    const handleGamingSync = (event: CustomEvent) => {
+    const handleGamingSync = (event: CustomEvent
+) => {
       console.log('[BattleSystem] Gaming sync completed:', event.detail);
       // Refresh battle data if needed
     };
 
     window.addEventListener('gaming-sync-complete', handleGamingSync as EventListener);
 
-    return () => {
+    return (
+) => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
       window.removeEventListener(
@@ -271,7 +281,8 @@ export function BattleSystem({
     };
   }, []);
 
-  const handleCreateChallenge = async () => {
+  const handleCreateChallenge = async (
+) => {
     try {
       const battleType = BATTLE_TYPES.find(bt => bt.type === selectedBattleType)!;
 
@@ -334,14 +345,20 @@ export function BattleSystem({
     }
   };
 
-  const toggleFriendSelection = (friendId: string) => {
-    /* auto: implicit any */
-    setSelectedFriends((prev: any) => 
-      prev.includes(friendId) ? prev.filter((id: any) => id !== friendId) : [...prev, friendId]
+  const toggleFriendSelection = (friendId: string
+) => {
+    
+    setSelectedFriends((prev: any
+) =>
+      prev.includes(friendId)
+        ? prev.filter((id: any
+) => id !== friendId)
+        : [...prev, friendId]
     );
   };
 
-  const handleJoinBattle = async (battle: Battle) => {
+  const handleJoinBattle = async (battle: Battle
+) => {
     try {
       let success = false;
 
@@ -380,7 +397,8 @@ export function BattleSystem({
     }
   };
 
-  const handleBattleResult = (battle: Battle, isWin: boolean) => {
+  const handleBattleResult = (battle: Battle, isWin: boolean
+) => {
     // Announce battle result
     announceBattleEvent(isWin ? 'won' : 'lost', {
       type: battle.type,
@@ -388,7 +406,8 @@ export function BattleSystem({
     });
   };
 
-  const formatTimeLeft = (endTime: string) => {
+  const formatTimeLeft = (endTime: string
+) => {
     const now = new Date();
     const end = new Date(endTime);
     const diff = end.getTime() - now.getTime();
@@ -462,7 +481,8 @@ export function BattleSystem({
                             ? 'border-primary bg-primary/5'
                             : 'hover:bg-muted/50'
                         }`}
-                        onClick={() => setSelectedBattleType(battleType.type)}
+                        onClick={(
+) => setSelectedBattleType(battleType.type)}
                       >
                         <CardContent className="p-3">
                           <div className="flex items-start gap-3">
@@ -520,7 +540,8 @@ export function BattleSystem({
                         id={`friend-${friend.id}`}
                         type="checkbox"
                         checked={selectedFriends.includes(friend.id)}
-                        onChange={() => toggleFriendSelection(friend.id)}
+                        onChange={(
+) => toggleFriendSelection(friend.id)}
                         className="rounded"
                         aria-label={`Select ${friend.displayName} for battle invitation`}
                       />
@@ -544,7 +565,8 @@ export function BattleSystem({
                 <Button onClick={handleCreateChallenge} className="flex-1">
                   Create Battle
                 </Button>
-                <Button variant="outline" onClick={() => setShowCreateBattle(false)}>
+                <Button variant="outline" onClick={(
+) => setShowCreateBattle(false)}>
                   Cancel
                 </Button>
               </div>
@@ -637,12 +659,14 @@ export function BattleSystem({
                           <Input
                             placeholder="Send a message..."
                             value={trashTalkMessage}
-                            onChange={(e: any) => s // auto: implicit anyetTrashTalkMessage(e.target.value)}
+                            onChange={(e: any
+) => setTrashTalkMessage(e.target.value)}
                             className="text-sm"
                           />
                           <Button
                             size="sm"
-                            onClick={() => {
+                            onClick={(
+) => {
                               onSendTrashTalk(battle.id, trashTalkMessage);
                               // Announce trash talk sent
                               announceGaming({
@@ -671,7 +695,8 @@ export function BattleSystem({
                 <p className="text-sm text-muted-foreground mb-4">
                   Challenge your friends to a wake-up battle!
                 </p>
-                <Button onClick={() => setShowCreateBattle(true)}>
+                <Button onClick={(
+) => setShowCreateBattle(true)}>
                   Create Your First Battle
                 </Button>
               </CardContent>

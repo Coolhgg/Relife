@@ -8,7 +8,8 @@ import { TEST_CONSTANTS } from './index';
 // Element query helpers with enhanced error messages
 export const _domQuery = {
   // Get element with better error messaging
-  getByTestId: (testId: string, container?: HTMLElement) => {
+  getByTestId: (testId: string, container?: HTMLElement
+) => {
     try {
       return container
         ? within(container).getByTestId(testId)
@@ -21,7 +22,8 @@ export const _domQuery = {
   },
 
   // Get element by role with fallback
-  getByRoleWithFallback: (role: string, name?: string, container?: HTMLElement) => {
+  getByRoleWithFallback: (role: string, name?: string, container?: HTMLElement
+) => {
     try {
       const options = name ? { name } : {};
       return container
@@ -36,7 +38,8 @@ export const _domQuery = {
   },
 
   // Query multiple elements with better error handling
-  getAllByTestId: (testId: string, container?: HTMLElement) => {
+  getAllByTestId: (testId: string, container?: HTMLElement
+) => {
     const elements = container
       ? within(container).queryAllByTestId(testId)
       : screen.queryAllByTestId(testId);
@@ -55,7 +58,8 @@ export const _domQuery = {
     testId: string,
     timeout = 3000,
     container?: HTMLElement
-  ) => {
+  
+) => {
     try {
       return await (container
         ? within(container).findByTestId(testId, { timeout })
@@ -71,7 +75,8 @@ export const _domQuery = {
 // Viewport and responsive testing utilities
 export const _viewport = {
   // Set viewport size and trigger resize
-  setSize: (width: number, height: number) => {
+  setSize: (width: number, height: number
+) => {
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
@@ -85,26 +90,33 @@ export const _viewport = {
     });
 
     // Trigger resize event
-    act(() => {
+    act((
+) => {
       window.dispatchEvent(new Event('resize'));
     });
   },
 
   // Common viewport presets
-  setMobile: () => viewport.setSize(375, 667),
-  setTablet: () => viewport.setSize(768, 1024),
-  setDesktop: () => viewport.setSize(1200, 800),
-  setLargeDesktop: () => viewport.setSize(1920, 1080),
+  setMobile: (
+) => viewport.setSize(375, 667),
+  setTablet: (
+) => viewport.setSize(768, 1024),
+  setDesktop: (
+) => viewport.setSize(1200, 800),
+  setLargeDesktop: (
+) => viewport.setSize(1920, 1080),
 
   // Portrait/landscape orientation
-  setPortrait: () => {
+  setPortrait: (
+) => {
     const { innerWidth, innerHeight } = window;
     if (innerWidth > innerHeight) {
       viewport.setSize(innerHeight, innerWidth);
     }
   },
 
-  setLandscape: () => {
+  setLandscape: (
+) => {
     const { innerWidth, innerHeight } = window;
     if (innerHeight > innerWidth) {
       viewport.setSize(innerHeight, innerWidth);
@@ -112,7 +124,8 @@ export const _viewport = {
   },
 
   // Get current viewport info
-  getCurrent: () => ({
+  getCurrent: (
+) => ({
     width: window.innerWidth,
     height: window.innerHeight,
     aspectRatio: window.innerWidth / window.innerHeight,
@@ -123,8 +136,10 @@ export const _viewport = {
   // Test responsive behavior
   testBreakpoints: async (
     element: HTMLElement,
-    breakpoints: Array<{ width: number; test: () => void }>
-  ) => {
+    breakpoints: Array<{ width: number; test: (
+) => void }>
+  
+) => {
     for (const { width, test } of breakpoints) {
       viewport.setSize(width, 800);
       await new Promise(resolve => setTimeout(resolve, 50)); // Small delay for reflow
@@ -136,7 +151,8 @@ export const _viewport = {
 // CSS and styling utilities
 export const _styling = {
   // Get computed styles with cleanup
-  getComputedStyle: (element: HTMLElement, property?: string) => {
+  getComputedStyle: (element: HTMLElement, property?: string
+) => {
     const computed = window.getComputedStyle(element);
     return property ? computed.getPropertyValue(property) : computed;
   },
@@ -176,7 +192,8 @@ export const _styling = {
     element: HTMLElement,
     properties: Record<string, string>
   ): boolean => {
-    return Object.entries(properties).every(([property, expectedValue]) =>
+    return Object.entries(properties).every(([property, expectedValue]
+) =>
       styling.hasStyleProperty(element, property, expectedValue)
     );
   },
@@ -202,7 +219,8 @@ export const _styling = {
 // Form testing utilities
 export const _forms = {
   // Fill out form with data object
-  fillForm: async (formData: Record<string, any>, container?: HTMLElement) => {
+  fillForm: async (formData: Record<string, any>, container?: HTMLElement
+) => {
     const user = userEvent.setup();
 
     for (const [fieldName, value] of Object.entries(formData)) {
@@ -223,7 +241,8 @@ export const _forms = {
   },
 
   // Submit form and wait for response
-  submitForm: async (formSelector = 'form', container?: HTMLElement) => {
+  submitForm: async (formSelector = 'form', container?: HTMLElement
+) => {
     const user = userEvent.setup();
     const form = container
       ? within(container).getByRole('form') ||
@@ -241,7 +260,8 @@ export const _forms = {
   },
 
   // Validate form errors
-  expectFormErrors: (expectedErrors: string[], container?: HTMLElement) => {
+  expectFormErrors: (expectedErrors: string[], container?: HTMLElement
+) => {
     expectedErrors.forEach(error => {
       const errorElement = container
         ? within(container).getByText(error)
@@ -251,7 +271,8 @@ export const _forms = {
   },
 
   // Check form validation state
-  getFormValidationState: (formElement: HTMLFormElement) => {
+  getFormValidationState: (formElement: HTMLFormElement
+) => {
     const inputs = Array.from(formElement.querySelectorAll('input, select, textarea'));
     return {
       isValid: formElement.checkValidity(),
@@ -273,7 +294,8 @@ export const _events = {
   click: async (
     element: HTMLElement,
     options: { double?: boolean; right?: boolean } = {}
-  ) => {
+  
+) => {
     const user = userEvent.setup();
 
     if (options.double) {
@@ -287,7 +309,8 @@ export const _events = {
 
   // Keyboard interactions
   keyboard: {
-    press: async (element: HTMLElement, key: string) => {
+    press: async (element: HTMLElement, key: string
+) => {
       const user = userEvent.setup();
       element.focus();
       await user.keyboard(key);
@@ -297,12 +320,14 @@ export const _events = {
       element: HTMLElement,
       text: string,
       options: { delay?: number } = {}
-    ) => {
+    
+) => {
       const user = userEvent.setup({ delay: options.delay });
       await user.type(element, text);
     },
 
-    shortcut: async (keys: string) => {
+    shortcut: async (keys: string
+) => {
       const user = userEvent.setup();
       await user.keyboard(keys);
     },
@@ -310,12 +335,14 @@ export const _events = {
 
   // Touch and gesture events for mobile testing
   touch: {
-    tap: (element: HTMLElement) => {
+    tap: (element: HTMLElement
+) => {
       fireEvent.touchStart(element, { touches: [{ clientX: 0, clientY: 0 }] });
       fireEvent.touchEnd(element, { changedTouches: [{ clientX: 0, clientY: 0 }] });
     },
 
-    swipe: (element: HTMLElement, direction: 'left' | 'right' | 'up' | 'down') => {
+    swipe: (element: HTMLElement, direction: 'left' | 'right' | 'up' | 'down'
+) => {
       const startCoords = { clientX: 100, clientY: 100 };
       const endCoords = {
         left: { clientX: 50, clientY: 100 },
@@ -329,9 +356,11 @@ export const _events = {
       fireEvent.touchEnd(element, { changedTouches: [endCoords] });
     },
 
-    longPress: (element: HTMLElement, duration = 1000) => {
+    longPress: (element: HTMLElement, duration = 1000
+) => {
       fireEvent.touchStart(element, { touches: [{ clientX: 0, clientY: 0 }] });
-      setTimeout(() => {
+      setTimeout((
+) => {
         fireEvent.touchEnd(element, { changedTouches: [{ clientX: 0, clientY: 0 }] });
       }, duration);
     },
@@ -339,17 +368,20 @@ export const _events = {
 
   // Mouse events
   mouse: {
-    hover: async (element: HTMLElement) => {
+    hover: async (element: HTMLElement
+) => {
       const user = userEvent.setup();
       await user.hover(element);
     },
 
-    unhover: async (element: HTMLElement) => {
+    unhover: async (element: HTMLElement
+) => {
       const user = userEvent.setup();
       await user.unhover(element);
     },
 
-    dragAndDrop: async (source: HTMLElement, target: HTMLElement) => {
+    dragAndDrop: async (source: HTMLElement, target: HTMLElement
+) => {
       fireEvent.dragStart(source);
       fireEvent.dragEnter(target);
       fireEvent.dragOver(target);
@@ -362,16 +394,19 @@ export const _events = {
 // Scroll and navigation utilities
 export const _scrolling = {
   // Scroll element into view
-  scrollIntoView: (element: HTMLElement) => {
+  scrollIntoView: (element: HTMLElement
+) => {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
   },
 
   // Scroll to top/bottom of container
-  scrollToTop: (container: HTMLElement = document.documentElement) => {
+  scrollToTop: (container: HTMLElement = document.documentElement
+) => {
     container.scrollTop = 0;
   },
 
-  scrollToBottom: (container: HTMLElement = document.documentElement) => {
+  scrollToBottom: (container: HTMLElement = document.documentElement
+) => {
     container.scrollTop = container.scrollHeight;
   },
 
@@ -380,7 +415,8 @@ export const _scrolling = {
     x: number,
     y: number,
     container: HTMLElement = document.documentElement
-  ) => {
+  
+) => {
     container.scrollBy(x, y);
   },
 
@@ -396,11 +432,14 @@ export const _scrolling = {
   },
 
   // Wait for element to be in viewport
-  waitForInViewport: async (element: HTMLElement, timeout = 3000) => {
-    return new Promise<void>((resolve, reject) => {
+  waitForInViewport: async (element: HTMLElement, timeout = 3000
+) => {
+    return new Promise<void>((resolve, reject
+) => {
       const startTime = Date.now();
 
-      const checkViewport = () => {
+      const checkViewport = (
+) => {
         if (scrolling.isInViewport(element)) {
           resolve();
         } else if (Date.now() - startTime > timeout) {

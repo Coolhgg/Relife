@@ -19,13 +19,17 @@ interface PaymentMethodManagerProps {
   paymentMethods: PaymentMethod[];
   defaultPaymentMethodId?: string;
   isLoading?: boolean;
-  onAddPaymentMethod: () => Promise<void>;
-  onRemovePaymentMethod: (paymentMethodId: string) => Promise<void>;
-  onSetDefaultPaymentMethod: (paymentMethodId: string) => Promise<void>;
+  onAddPaymentMethod: (
+) => Promise<void>;
+  onRemovePaymentMethod: (paymentMethodId: string
+) => Promise<void>;
+  onSetDefaultPaymentMethod: (paymentMethodId: string
+) => Promise<void>;
   onUpdateBillingDetails: (
     paymentMethodId: string,
     billingDetails: any
-  ) => Promise<void>;
+  
+) => Promise<void>;
   className?: string;
 }
 
@@ -43,7 +47,8 @@ export function PaymentMethodManager({
   const [showAddMethod, setShowAddMethod] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleAddMethod = async () => {
+  const handleAddMethod = async (
+) => {
     try {
       setActionLoading('add');
       setError(null);
@@ -56,7 +61,8 @@ export function PaymentMethodManager({
     }
   };
 
-  const handleRemoveMethod = async (paymentMethodId: string) => {
+  const handleRemoveMethod = async (paymentMethodId: string
+) => {
     try {
       setActionLoading(paymentMethodId);
       setError(null);
@@ -68,7 +74,8 @@ export function PaymentMethodManager({
     }
   };
 
-  const handleSetDefault = async (paymentMethodId: string) => {
+  const handleSetDefault = async (paymentMethodId: string
+) => {
     try {
       setActionLoading(`default-${paymentMethodId}`);
       setError(null);
@@ -82,7 +89,8 @@ export function PaymentMethodManager({
     }
   };
 
-  const getPaymentMethodIcon = (type: PaymentMethod) => {
+  const getPaymentMethodIcon = (type: PaymentMethod
+) => {
     switch (type) {
       case 'card':
         return <CreditCard className="w-5 h-5" />;
@@ -111,14 +119,17 @@ export function PaymentMethodManager({
     }
   };
 
-  const formatCardNumber = (last4: string) => `•••• •••• •••• ${last4}`;
+  const formatCardNumber = (last4: string
+) => `•••• •••• •••• ${last4}`;
 
-  const getCardBrand = (brand?: string) => {
+  const getCardBrand = (brand?: string
+) => {
     if (!brand) return '';
     return brand.charAt(0).toUpperCase() + brand.slice(1);
   };
 
-  const isDefaultMethod = (paymentMethodId: string) =>
+  const isDefaultMethod = (paymentMethodId: string
+) =>
     paymentMethodId === defaultPaymentMethodId;
 
   if (isLoading && paymentMethods.length === 0) {
@@ -168,7 +179,8 @@ export function PaymentMethodManager({
               <div className="flex justify-end space-x-2">
                 <Button
                   variant="outline"
-                  onClick={() => setShowAddMethod(false)}
+                  onClick={(
+) => setShowAddMethod(false)}
                   disabled={actionLoading === 'add'}
                 >
                   Cancel
@@ -200,7 +212,8 @@ export function PaymentMethodManager({
           <p className="text-gray-600 mb-4">
             Add a payment method to manage your subscription
           </p>
-          <Button onClick={() => setShowAddMethod(true)}>
+          <Button onClick={(
+) => setShowAddMethod(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Add Payment Method
           </Button>
@@ -258,7 +271,8 @@ export function PaymentMethodManager({
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleSetDefault(method.id)}
+                      onClick={(
+) => handleSetDefault(method.id)}
                       disabled={actionLoading === `default-${method.id}`}
                       className="text-blue-600 hover:text-blue-700"
                     >
@@ -276,7 +290,8 @@ export function PaymentMethodManager({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleRemoveMethod(method.id)}
+                    onClick={(
+) => handleRemoveMethod(method.id)}
                     disabled={actionLoading === method.id}
                     className="text-red-600 hover:text-red-700"
                   >

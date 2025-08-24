@@ -20,8 +20,10 @@ import { vi } from 'vitest';
 // Mock context providers for testing
 interface MockThemeContextValue {
   theme: 'light' | 'dark' | 'auto' | 'system' | 'high-contrast';
-  setTheme: (theme: string) => void;
-  toggleTheme: () => void;
+  setTheme: (theme: string
+) => void;
+  toggleTheme: (
+) => void;
   isDarkMode: boolean;
   isSystemTheme: boolean;
 }
@@ -66,7 +68,8 @@ export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
   language = 'en',
   user = null,
   initialEntries = ['/'],
-}) => {
+}
+) => {
   const defaultQueryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -135,7 +138,8 @@ export interface CustomRenderHookOptions<TProps>
 }
 
 export function renderHookWithProviders<TResult, TProps>(
-  render: (initialProps: TProps) => TResult,
+  render: (initialProps: TProps
+) => TResult,
   options: CustomRenderHookOptions<TProps> = {}
 ): RenderHookResult<TResult, TProps> {
   const {
@@ -148,7 +152,8 @@ export function renderHookWithProviders<TResult, TProps>(
     ...renderOptions
   } = options;
 
-  const Wrapper = ({ children }: { children: ReactNode }) => {
+  const Wrapper = ({ children }: { children: ReactNode }
+) => {
     if (CustomWrapper) {
       return (
         <CustomWrapper>
@@ -189,8 +194,11 @@ export function renderHookWithProviders<TResult, TProps>(
 /**
  * Wait for hook to finish async operations
  */
-export const waitForHook = async (callback: () => void, _timeout: number = 1000) => {
-  await act(async () => {
+export const waitForHook = async (callback: (
+) => void, _timeout: number = 1000
+) => {
+  await act(async (
+) => {
     callback();
     // Allow time for async operations
     await new Promise(resolve => setTimeout(resolve, 0));
@@ -200,25 +208,32 @@ export const waitForHook = async (callback: () => void, _timeout: number = 1000)
 /**
  * Mock localStorage for testing
  */
-export const mockLocalStorage = (() => {
+export const mockLocalStorage = ((
+) => {
   let store: Record<string, string> = {};
 
   return {
-    getItem: vi.fn((key: string) => store[key] || null),
-    setItem: vi.fn((key: string, value: string) => {
+    getItem: vi.fn((key: string
+) => store[key] || null),
+    setItem: vi.fn((key: string, value: string
+) => {
       store[key] = value;
     }),
-    removeItem: vi.fn((key: string) => {
+    removeItem: vi.fn((key: string
+) => {
       delete store[key];
     }),
-    clear: vi.fn(() => {
+    clear: vi.fn((
+) => {
       store = {};
     }),
     length: 0,
     key: vi.fn(),
     // Helper to access the store in tests
-    _getStore: () => store,
-    _setStore: (newStore: Record<string, string>) => {
+    _getStore: (
+) => store,
+    _setStore: (newStore: Record<string, string>
+) => {
       store = newStore;
     },
   };
@@ -227,24 +242,31 @@ export const mockLocalStorage = (() => {
 /**
  * Mock sessionStorage for testing
  */
-export const mockSessionStorage = (() => {
+export const mockSessionStorage = ((
+) => {
   let store: Record<string, string> = {};
 
   return {
-    getItem: vi.fn((key: string) => store[key] || null),
-    setItem: vi.fn((key: string, value: string) => {
+    getItem: vi.fn((key: string
+) => store[key] || null),
+    setItem: vi.fn((key: string, value: string
+) => {
       store[key] = value;
     }),
-    removeItem: vi.fn((key: string) => {
+    removeItem: vi.fn((key: string
+) => {
       delete store[key];
     }),
-    clear: vi.fn(() => {
+    clear: vi.fn((
+) => {
       store = {};
     }),
     length: 0,
     key: vi.fn(),
-    _getStore: () => store,
-    _setStore: (newStore: Record<string, string>) => {
+    _getStore: (
+) => store,
+    _setStore: (newStore: Record<string, string>
+) => {
       store = newStore;
     },
   };
@@ -255,7 +277,8 @@ export const mockSessionStorage = (() => {
  */
 export const mockGeolocation = {
   getCurrentPosition: vi.fn(
-    (success: PositionCallback, _error?: PositionErrorCallback) => {
+    (success: PositionCallback, _error?: PositionErrorCallback
+) => {
       success({
         coords: {
           latitude: 40.7128,
@@ -265,14 +288,17 @@ export const mockGeolocation = {
           altitudeAccuracy: null,
           heading: null,
           speed: null,
-          toJSON: () => ({}),
+          toJSON: (
+) => ({}),
         },
         timestamp: Date.now(),
-        toJSON: () => ({}),
+        toJSON: (
+) => ({}),
       });
     }
   ),
-  watchPosition: vi.fn(() => 1),
+  watchPosition: vi.fn((
+) => 1),
   clearWatch: vi.fn(),
 };
 
@@ -281,25 +307,31 @@ export const mockGeolocation = {
  */
 export const mockNotification = {
   permission: 'granted' as NotificationPermission,
-  requestPermission: vi.fn(() => Promise.resolve('granted' as NotificationPermission)),
+  requestPermission: vi.fn((
+) => Promise.resolve('granted' as NotificationPermission)),
 };
 
 /**
  * Mock audio context and audio elements
  */
 export const mockAudio = {
-  AudioContext: vi.fn(() => ({
+  AudioContext: vi.fn((
+) => ({
     createBuffer: vi.fn(),
-    createBufferSource: vi.fn(() => ({
+    createBufferSource: vi.fn((
+) => ({
       connect: vi.fn(),
       start: vi.fn(),
       stop: vi.fn(),
     })),
-    decodeAudioData: vi.fn(() => Promise.resolve({})),
+    decodeAudioData: vi.fn((
+) => Promise.resolve({})),
     destination: {},
   })),
-  HTMLAudioElement: vi.fn(() => ({
-    play: vi.fn(() => Promise.resolve()),
+  HTMLAudioElement: vi.fn((
+) => ({
+    play: vi.fn((
+) => Promise.resolve()),
     pause: vi.fn(),
     load: vi.fn(),
     currentTime: 0,
@@ -316,7 +348,8 @@ export const mockAudio = {
 /**
  * Setup all global mocks for testing environment
  */
-export const setupGlobalMocks = () => {
+export const setupGlobalMocks = (
+) => {
   // Setup storage mocks
   Object.defineProperty(window, 'localStorage', {
     value: mockLocalStorage,
@@ -346,7 +379,8 @@ export const setupGlobalMocks = () => {
 
   // Setup matchMedia mock
   Object.defineProperty(window, 'matchMedia', {
-    value: vi.fn().mockImplementation((query: any) => ({
+    value: vi.fn().mockImplementation((query: any
+) => ({
       // auto: implicit any{
       matches: false,
       media: query,
@@ -361,14 +395,16 @@ export const setupGlobalMocks = () => {
   });
 
   // Setup ResizeObserver mock
-  (global as any).ResizeObserver = vi.fn().mockImplementation(() => ({
+  (global as any).ResizeObserver = vi.fn().mockImplementation((
+) => ({
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
   }));
 
   // Setup IntersectionObserver mock
-  (global as any).IntersectionObserver = vi.fn().mockImplementation(() => ({
+  (global as any).IntersectionObserver = vi.fn().mockImplementation((
+) => ({
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
@@ -376,13 +412,17 @@ export const setupGlobalMocks = () => {
 
   // Mock fetch if not already mocked
   if (!global.fetch) {
-    (global as any).fetch = vi.fn(() =>
+    (global as any).fetch = vi.fn((
+) =>
       Promise.resolve({
         ok: true,
         status: 200,
-        json: () => Promise.resolve({}),
-        text: () => Promise.resolve(''),
-        blob: () => Promise.resolve(new Blob()),
+        json: (
+) => Promise.resolve({}),
+        text: (
+) => Promise.resolve(''),
+        blob: (
+) => Promise.resolve(new Blob()),
       })
     );
   }
@@ -391,7 +431,8 @@ export const setupGlobalMocks = () => {
 /**
  * Clear all mocks between tests
  */
-export const clearAllMocks = () => {
+export const clearAllMocks = (
+) => {
   vi.clearAllMocks();
   mockLocalStorage.clear();
   mockSessionStorage.clear();
@@ -412,7 +453,8 @@ export const clearAllMocks = () => {
 };
 
 // Test data factories
-export const createMockUser = (overrides: Record<string, any> = {}) => ({
+export const createMockUser = (overrides: Record<string, any> = {}
+) => ({
   id: 'test-user-123',
   email: 'test@example.com',
   name: 'Test User',
@@ -423,7 +465,8 @@ export const createMockUser = (overrides: Record<string, any> = {}) => ({
   ...overrides,
 });
 
-export const createMockAlarm = (overrides: Record<string, any> = {}) => ({
+export const createMockAlarm = (overrides: Record<string, any> = {}
+) => ({
   id: 'test-alarm-123',
   userId: 'test-user-123',
   time: '07:00',
@@ -443,7 +486,8 @@ export const createMockAlarm = (overrides: Record<string, any> = {}) => ({
   ...overrides,
 });
 
-export const createMockSubscription = (overrides: Record<string, any> = {}) => ({
+export const createMockSubscription = (overrides: Record<string, any> = {}
+) => ({
   id: 'sub_test123',
   status: 'active',
   current_period_start: Math.floor(Date.now() / 1000),

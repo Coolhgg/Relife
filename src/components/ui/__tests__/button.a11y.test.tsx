@@ -17,14 +17,18 @@ import {
 } from '../../../../tests/utils/a11y-testing-utils.tsx';
 import { Button } from '../button';
 
-describe('Button - Accessibility Tests', () => {
-  describe('Basic Accessibility Compliance', () => {
-    it('should have no axe violations with default props', async () => {
+describe('Button - Accessibility Tests', (
+) => {
+  describe('Basic Accessibility Compliance', (
+) => {
+    it('should have no axe violations with default props', async (
+) => {
       await axeRender(<Button>Click me</Button>);
       // axe test automatically runs in axeRender
     });
 
-    it('should have no axe violations with all variants', async () => {
+    it('should have no axe violations with all variants', async (
+) => {
       const variants = [
         'default',
         'destructive',
@@ -44,7 +48,8 @@ describe('Button - Accessibility Tests', () => {
       }
     });
 
-    it('should have no axe violations with all sizes', async () => {
+    it('should have no axe violations with all sizes', async (
+) => {
       const sizes = ['default', 'sm', 'lg', 'icon'] as const;
 
       for (const size of sizes) {
@@ -57,15 +62,18 @@ describe('Button - Accessibility Tests', () => {
       }
     });
 
-    it('should have no axe violations when disabled', async () => {
+    it('should have no axe violations when disabled', async (
+) => {
       await axeRender(<Button disabled>Disabled Button</Button>, {
         axeOptions: axeRulesets.components,
       });
     });
   });
 
-  describe('Focus Management', () => {
-    it('should be focusable by default', async () => {
+  describe('Focus Management', (
+) => {
+    it('should be focusable by default', async (
+) => {
       const { container } = await axeRender(<Button>Focus Test</Button>);
       const button = container.querySelector('button');
 
@@ -73,7 +81,8 @@ describe('Button - Accessibility Tests', () => {
       await accessibilityPatterns.testFocusable(button!);
     });
 
-    it('should not be focusable when disabled', async () => {
+    it('should not be focusable when disabled', async (
+) => {
       const { container } = await axeRender(
         <Button disabled>Disabled Focus Test</Button>
       );
@@ -86,7 +95,8 @@ describe('Button - Accessibility Tests', () => {
       expect(document.activeElement).not.toBe(button);
     });
 
-    it('should have proper focus indicators', async () => {
+    it('should have proper focus indicators', async (
+) => {
       await axeRender(<Button>Focus Indicator Test</Button>);
       const button = screen.getByRole('button');
 
@@ -95,7 +105,8 @@ describe('Button - Accessibility Tests', () => {
       expect(button).toHaveClass('focus-visible:ring-ring/50');
     });
 
-    it('should maintain focus order in a group', async () => {
+    it('should maintain focus order in a group', async (
+) => {
       const { container } = await axeRender(
         <div>
           <Button data-testid="first">First</Button>
@@ -112,8 +123,10 @@ describe('Button - Accessibility Tests', () => {
     });
   });
 
-  describe('Keyboard Navigation', () => {
-    it('should be activated by Enter key', async () => {
+  describe('Keyboard Navigation', (
+) => {
+    it('should be activated by Enter key', async (
+) => {
       const handleClick = vi.fn();
       await axeRender(<Button onClick={handleClick}>Enter Test</Button>);
 
@@ -126,7 +139,8 @@ describe('Button - Accessibility Tests', () => {
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
 
-    it('should be activated by Space key', async () => {
+    it('should be activated by Space key', async (
+) => {
       const handleClick = vi.fn();
       await axeRender(<Button onClick={handleClick}>Space Test</Button>);
 
@@ -139,7 +153,8 @@ describe('Button - Accessibility Tests', () => {
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
 
-    it('should not be activated when disabled', async () => {
+    it('should not be activated when disabled', async (
+) => {
       const handleClick = vi.fn();
       await axeRender(
         <Button disabled onClick={handleClick}>
@@ -158,8 +173,10 @@ describe('Button - Accessibility Tests', () => {
     });
   });
 
-  describe('ARIA Attributes and Labels', () => {
-    it('should have accessible name from text content', async () => {
+  describe('ARIA Attributes and Labels', (
+) => {
+    it('should have accessible name from text content', async (
+) => {
       await axeRender(<Button>Submit Form</Button>);
       const button = screen.getByRole('button');
 
@@ -168,7 +185,8 @@ describe('Button - Accessibility Tests', () => {
       expect(button).toHaveAccessibleName('Submit Form');
     });
 
-    it('should use aria-label when provided', async () => {
+    it('should use aria-label when provided', async (
+) => {
       await axeRender(<Button aria-label="Close Dialog">×</Button>);
       const button = screen.getByRole('button');
 
@@ -177,7 +195,8 @@ describe('Button - Accessibility Tests', () => {
       expect(button).toHaveAccessibleName('Close Dialog');
     });
 
-    it('should use aria-labelledby when provided', async () => {
+    it('should use aria-labelledby when provided', async (
+) => {
       await axeRender(
         <div>
           <h2 id="submit-heading">Submit Your Application</h2>
@@ -189,7 +208,8 @@ describe('Button - Accessibility Tests', () => {
       expect(button).toHaveAttribute('aria-labelledby', 'submit-heading');
     });
 
-    it('should support aria-describedby for additional context', async () => {
+    it('should support aria-describedby for additional context', async (
+) => {
       await axeRender(
         <div>
           <Button aria-describedby="help-text">Delete</Button>
@@ -201,14 +221,16 @@ describe('Button - Accessibility Tests', () => {
       expect(button).toHaveAttribute('aria-describedby', 'help-text');
     });
 
-    it('should handle aria-expanded for toggle buttons', async () => {
+    it('should handle aria-expanded for toggle buttons', async (
+) => {
       await axeRender(<Button aria-expanded={false}>Toggle Menu</Button>);
       const button = screen.getByRole('button');
 
       expect(button).toHaveAttribute('aria-expanded', 'false');
     });
 
-    it('should handle aria-pressed for toggle buttons', async () => {
+    it('should handle aria-pressed for toggle buttons', async (
+) => {
       await axeRender(<Button aria-pressed={false}>Toggle Option</Button>);
       const button = screen.getByRole('button');
 
@@ -216,8 +238,10 @@ describe('Button - Accessibility Tests', () => {
     });
   });
 
-  describe('Error States and Validation', () => {
-    it('should handle aria-invalid state', async () => {
+  describe('Error States and Validation', (
+) => {
+    it('should handle aria-invalid state', async (
+) => {
       await axeRender(<Button aria-invalid={true}>Invalid Action</Button>);
       const button = screen.getByRole('button');
 
@@ -225,7 +249,8 @@ describe('Button - Accessibility Tests', () => {
       expect(button).toHaveClass('aria-invalid:ring-destructive/20');
     });
 
-    it('should maintain accessibility in error state', async () => {
+    it('should maintain accessibility in error state', async (
+) => {
       await axeRender(
         <Button aria-invalid={true} aria-describedby="error-msg">
           Submit
@@ -238,8 +263,10 @@ describe('Button - Accessibility Tests', () => {
     });
   });
 
-  describe('RTL (Right-to-Left) Support', () => {
-    it('should render correctly in RTL context', async () => {
+  describe('RTL (Right-to-Left) Support', (
+) => {
+    it('should render correctly in RTL context', async (
+) => {
       await axeRender(<Button>RTL Button</Button>);
 
       const button = screen.getByRole('button');
@@ -247,14 +274,16 @@ describe('Button - Accessibility Tests', () => {
       expect(button).toBeInTheDocument();
     });
 
-    it('should handle explicit dir prop', async () => {
+    it('should handle explicit dir prop', async (
+) => {
       await axeRender(<Button dir="rtl">Explicit RTL</Button>);
       const button = screen.getByRole('button');
 
       expect(button).toHaveAttribute('dir', 'rtl');
     });
 
-    it('should handle dir="auto"', async () => {
+    it('should handle dir="auto"', async (
+) => {
       await axeRender(<Button dir="auto">Auto Direction</Button>);
       const button = screen.getByRole('button');
 
@@ -263,8 +292,10 @@ describe('Button - Accessibility Tests', () => {
     });
   });
 
-  describe('Interactive States', () => {
-    it('should handle hover states accessibly', async () => {
+  describe('Interactive States', (
+) => {
+    it('should handle hover states accessibly', async (
+) => {
       await axeRender(<Button>Hover Test</Button>);
       const user = userEvent.setup();
       const button = screen.getByRole('button');
@@ -275,7 +306,8 @@ describe('Button - Accessibility Tests', () => {
       expect(button).toBeInTheDocument();
     });
 
-    it('should handle active states accessibly', async () => {
+    it('should handle active states accessibly', async (
+) => {
       await axeRender(<Button>Active Test</Button>);
       const button = screen.getByRole('button');
       const user = userEvent.setup();
@@ -287,7 +319,8 @@ describe('Button - Accessibility Tests', () => {
       expect(button).toBeInTheDocument();
     });
 
-    it('should handle loading states accessibly', async () => {
+    it('should handle loading states accessibly', async (
+) => {
       await axeRender(
         <Button disabled aria-label="Loading, please wait">
           Loading...
@@ -300,8 +333,10 @@ describe('Button - Accessibility Tests', () => {
     });
   });
 
-  describe('Icon Buttons', () => {
-    it('should require accessible name for icon-only buttons', async () => {
+  describe('Icon Buttons', (
+) => {
+    it('should require accessible name for icon-only buttons', async (
+) => {
       await axeRender(
         <Button size="icon" aria-label="Settings">
           ⚙️
@@ -313,10 +348,12 @@ describe('Button - Accessibility Tests', () => {
       expect(button).toHaveAccessibleName('Settings');
     });
 
-    it('should fail axe test without accessible name for icon buttons', async () => {
+    it('should fail axe test without accessible name for icon buttons', async (
+) => {
       // This should fail axe tests due to missing accessible name
       // Use a truly empty button to trigger the axe rule violation
-      await expect(async () => {
+      await expect(async (
+) => {
         await axeRender(
           <Button size="icon" />, // Empty button with no text content
           { axeOptions: { rules: { 'button-name': { enabled: true } } } } // Specifically test button-name rule
@@ -325,8 +362,10 @@ describe('Button - Accessibility Tests', () => {
     });
   });
 
-  describe('As Child (Polymorphic) Behavior', () => {
-    it('should maintain accessibility when used as child', async () => {
+  describe('As Child (Polymorphic) Behavior', (
+) => {
+    it('should maintain accessibility when used as child', async (
+) => {
       await axeRender(
         <Button asChild>
           <a href="/link" role="button">
@@ -342,11 +381,13 @@ describe('Button - Accessibility Tests', () => {
       expect(element).toHaveAttribute('href', '/link');
     });
 
-    it('should handle custom components with accessibility', async () => {
+    it('should handle custom components with accessibility', async (
+) => {
       const CustomComponent = React.forwardRef<
         HTMLDivElement,
         React.ComponentProps<'div'>
-      >((props, ref) => <div ref={ref} role="button" tabIndex={0} {...props} />);
+      >((props, ref
+) => <div ref={ref} role="button" tabIndex={0} {...props} />);
 
       await axeRender(
         <Button asChild>
@@ -360,8 +401,10 @@ describe('Button - Accessibility Tests', () => {
     });
   });
 
-  describe('Color Contrast', () => {
-    it('should maintain sufficient contrast in all variants', async () => {
+  describe('Color Contrast', (
+) => {
+    it('should maintain sufficient contrast in all variants', async (
+) => {
       const variants = [
         'default',
         'destructive',
@@ -383,8 +426,10 @@ describe('Button - Accessibility Tests', () => {
     });
   });
 
-  describe('Touch Accessibility', () => {
-    it('should have adequate touch target size', async () => {
+  describe('Touch Accessibility', (
+) => {
+    it('should have adequate touch target size', async (
+) => {
       const { container } = await axeRender(<Button size="default">Touch Test</Button>);
       const button = container.querySelector('button');
 
@@ -393,7 +438,8 @@ describe('Button - Accessibility Tests', () => {
       expect(button).toHaveClass('px-4');
     });
 
-    it('should have adequate touch target size for small buttons', async () => {
+    it('should have adequate touch target size for small buttons', async (
+) => {
       const { container } = await axeRender(<Button size="sm">Small Touch</Button>);
       const button = container.querySelector('button');
 

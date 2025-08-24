@@ -22,7 +22,8 @@ import { TimeoutHandle } from '../types/timers';
 
 interface VoicePersonalitySelectorProps {
   selectedMood: VoiceMood;
-  onMoodChange: (mood: VoiceMood) => void;
+  onMoodChange: (mood: VoiceMood
+) => void;
   user: User;
   showPreview?: boolean;
 }
@@ -116,7 +117,8 @@ const PREMIUM_PERSONALITIES: VoiceMoodConfig[] = [
   },
 ];
 
-const getPersonalityIcon = (mood: VoiceMood) => {
+const getPersonalityIcon = (mood: VoiceMood
+) => {
   switch (mood) {
     case 'drill-sergeant':
       return Shield;
@@ -148,16 +150,19 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
   onMoodChange,
   user,
   showPreview = true,
-}) => {
+}
+) => {
   const [hasPreviewAccess, setHasPreviewAccess] = useState(false);
   const [previewingMood, setPreviewingMood] = useState<VoiceMood | null>(null);
   const [hasPremiumPersonalities, setHasPremiumPersonalities] = useState(false);
 
-  useEffect(() => {
+  useEffect((
+) => {
     checkPremiumAccess();
   }, [user.id]);
 
-  const checkPremiumAccess = async () => {
+  const checkPremiumAccess = async (
+) => {
     const access = await SubscriptionService.hasFeatureAccess(
       user.id,
       'premiumPersonalities'
@@ -171,7 +176,8 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
     setHasPreviewAccess(previewAccess);
   };
 
-  const handlePersonalitySelect = (mood: VoiceMood) => {
+  const handlePersonalitySelect = (mood: VoiceMood
+) => {
     // Check if it's a premium personality
     const isPremium = PREMIUM_PERSONALITIES.find(p => p.id === mood);
 
@@ -183,7 +189,8 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
     onMoodChange(mood);
   };
 
-  const playPreview = async (mood: VoiceMood) => {
+  const playPreview = async (mood: VoiceMood
+) => {
     if (previewingMood === mood) {
       setPreviewingMood(null);
       return;
@@ -198,7 +205,8 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
     if (personality && hasPreviewAccess) {
       // Here you would implement actual voice preview
       // For now, just simulate preview duration
-      setTimeout(() => {
+      setTimeout((
+) => {
         setPreviewingMood(null);
       }, 3000);
     }
@@ -207,7 +215,8 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
   const renderPersonalityCard = (
     personality: VoiceMoodConfig,
     isPremium: boolean = false
-  ) => {
+  
+) => {
     const IconComponent = getPersonalityIcon(personality.id as VoiceMood);
     const isSelected = selectedMood === personality.id;
     const isLocked = isPremium && !hasPremiumPersonalities;
@@ -228,7 +237,8 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
           }
           ${isLocked ? 'cursor-not-allowed' : 'hover:scale-105'}
         `}
-        onClick={() =>
+        onClick={(
+) =>
           !isLocked && handlePersonalitySelect(personality.id as VoiceMood)
         }
         whileHover={!isLocked ? { scale: 1.02 } : undefined}
@@ -296,7 +306,8 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
         {showPreview && hasPreviewAccess && !isLocked && (
           <div className="absolute bottom-2 right-2">
             <button
-              onClick={(e: any) => {
+              onClick={(e: any
+) => {
                 // auto: implicit any
                 e.stopPropagation();
                 playPreview(personality.id as VoiceMood);

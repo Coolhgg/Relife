@@ -60,7 +60,8 @@ export default async function globalSetup() {
     }
 
     // Enhanced error handling for tests
-    process.on('unhandledRejection', (reason, promise) => {
+    process.on('unhandledRejection', (reason, promise
+) => {
       console.warn('\n⚠️ Unhandled Promise Rejection in test environment:');
       console.warn('Promise:', promise);
       console.warn('Reason:', reason);
@@ -79,10 +80,12 @@ export default async function globalSetup() {
     const testStartTimes = new Map<string, number>();
 
     (global as any).testPerformance = {
-      startTest: (testName: string) => {
+      startTest: (testName: string
+) => {
         testStartTimes.set(testName, originalPerformanceNow());
       },
-      endTest: (testName: string) => {
+      endTest: (testName: string
+) => {
         const startTime = testStartTimes.get(testName);
         if (startTime) {
           const duration = originalPerformanceNow() - startTime;
@@ -97,7 +100,8 @@ export default async function globalSetup() {
         }
         return 0;
       },
-      getSlowTests: () => {
+      getSlowTests: (
+) => {
         const slowTests: Array<{ name: string; duration: number }> = [];
         // Implementation would track and return slow tests
         return slowTests;
@@ -117,7 +121,9 @@ export default async function globalSetup() {
 
     // Setup test cleanup tracking
     (global as any).testCleanupTasks = [];
-    (global as any).addTestCleanupTask = (task: () => void | Promise<void>) => {
+    (global as any).addTestCleanupTask = (task: (
+) => void | Promise<void>
+) => {
       (global as any).testCleanupTasks.push(task);
     };
 

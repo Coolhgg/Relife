@@ -3,10 +3,12 @@ import { renderHook, act } from '@testing-library/react';
 import { useAuth } from '../../useAuth';
 
 // Mock dependencies
-jest.mock('../../../services/supabase-service', () => ({
+jest.mock('../../../services/supabase-service', (
+) => ({
   __esModule: true,
   default: {
-    getInstance: () => ({
+    getInstance: (
+) => ({
       signIn: jest.fn(),
       signUp: jest.fn(),
       signOut: jest.fn(),
@@ -19,10 +21,12 @@ jest.mock('../../../services/supabase-service', () => ({
   },
 }));
 
-jest.mock('../../../services/security-service', () => ({
+jest.mock('../../../services/security-service', (
+) => ({
   __esModule: true,
   default: {
-    getInstance: () => ({
+    getInstance: (
+) => ({
       generateCSRFToken: jest.fn(),
       validateCSRFToken: jest.fn(),
       isRateLimited: jest.fn(),
@@ -31,14 +35,17 @@ jest.mock('../../../services/security-service', () => ({
   },
 }));
 
-jest.mock('../../../services/error-handler', () => ({
+jest.mock('../../../services/error-handler', (
+) => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
 }));
 
-jest.mock('../../useAnalytics', () => ({
-  useAnalytics: () => ({
+jest.mock('../../useAnalytics', (
+) => ({
+  useAnalytics: (
+) => ({
     track: jest.fn(),
     trackPageView: jest.fn(),
     trackFeatureUsage: jest.fn(),
@@ -50,8 +57,10 @@ jest.mock('../../useAnalytics', () => ({
   },
 }));
 
-describe('useAuth Edge Cases and Stress Tests', () => {
-  beforeEach(() => {
+describe('useAuth Edge Cases and Stress Tests', (
+) => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
     localStorage.clear();
 
@@ -60,20 +69,25 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     jest.useFakeTimers();
   });
 
-  afterEach(() => {
+  afterEach((
+) => {
     jest.runOnlyPendingTimers();
     jest.useRealTimers();
   });
 
-  describe('Corrupted LocalStorage Data', () => {
-    it('should handle corrupted user data in localStorage', async () => {
+  describe('Corrupted LocalStorage Data', (
+) => {
+    it('should handle corrupted user data in localStorage', async (
+) => {
       // Insert corrupted data
       localStorage.setItem('auth_user', 'invalid-json-{{{');
       localStorage.setItem('auth_session', 'corrupted-data');
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
 
@@ -83,29 +97,36 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       expect(result.current.error).toBeNull(); // Should handle gracefully
     });
 
-    it('should handle missing localStorage support', async () => {
+    it('should handle missing localStorage support', async (
+) => {
       // Mock localStorage failure
       const originalLocalStorage = window.localStorage;
       Object.defineProperty(window, 'localStorage', {
         value: {
-          getItem: () => {
+          getItem: (
+) => {
             throw new Error('Storage unavailable');
           },
-          setItem: () => {
+          setItem: (
+) => {
             throw new Error('Storage unavailable');
           },
-          removeItem: () => {
+          removeItem: (
+) => {
             throw new Error('Storage unavailable');
           },
-          clear: () => {
+          clear: (
+) => {
             throw new Error('Storage unavailable');
           },
         },
       });
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.signIn('test@example.com', 'password');
       });
 
@@ -116,7 +137,8 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       Object.defineProperty(window, 'localStorage', { value: originalLocalStorage });
     });
 
-    it('should handle extremely large localStorage data', async () => {
+    it('should handle extremely large localStorage data', async (
+) => {
       // Create large user object
       const largeUser = {
         id: 'user-123',
@@ -129,9 +151,11 @@ describe('useAuth Edge Cases and Stress Tests', () => {
 
       localStorage.setItem('auth_user', JSON.stringify(largeUser));
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
 
@@ -140,17 +164,21 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Race Conditions', () => {
-    it('should handle concurrent sign-in attempts', async () => {
+  describe('Race Conditions', (
+) => {
+    it('should handle concurrent sign-in attempts', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
       let callCount = 0;
-      mockService.signIn.mockImplementation(() => {
+      mockService.signIn.mockImplementation((
+) => {
         callCount++;
         return new Promise(resolve => {
           setTimeout(
-            () =>
+            (
+) =>
               resolve({
                 user: { id: `user-${callCount}`, email: 'test@example.com' },
                 session: { access_token: `token-${callCount}` },
@@ -160,10 +188,12 @@ describe('useAuth Edge Cases and Stress Tests', () => {
         });
       });
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
       // Fire multiple concurrent sign-in attempts
-      await act(async () => {
+      await act(async (
+) => {
         const promises = [
           result.current.signIn('test@example.com', 'password1'),
           result.current.signIn('test@example.com', 'password2'),
@@ -178,15 +208,18 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       expect(callCount).toBeGreaterThan(0);
     });
 
-    it('should handle sign-out during sign-in process', async () => {
+    it('should handle sign-out during sign-in process', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
       mockService.signIn.mockImplementation(
-        () =>
+        (
+) =>
           new Promise(resolve =>
             setTimeout(
-              () =>
+              (
+) =>
                 resolve({
                   user: { id: 'user-123', email: 'test@example.com' },
                   session: { access_token: 'token' },
@@ -198,14 +231,17 @@ describe('useAuth Edge Cases and Stress Tests', () => {
 
       mockService.signOut.mockResolvedValue({ error: null });
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         // Start sign-in
         const signInPromise = result.current.signIn('test@example.com', 'password');
 
         // Immediately try to sign out
-        setTimeout(() => {
+        setTimeout((
+) => {
           result.current.signOut();
         }, 50);
 
@@ -216,22 +252,28 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       expect(result.current.error).not.toContain('conflict');
     });
 
-    it('should handle rapid auth state changes', async () => {
+    it('should handle rapid auth state changes', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
-      const authCallbacks: Array<(event: string, session: any) => void> = [];
+      const authCallbacks: Array<(event: string, session: any
+) => void> = [];
       mockService.onAuthStateChange.mockImplementation(callback => {
         authCallbacks.push(callback);
         return { data: { subscription: { unsubscribe: jest.fn() } } };
       });
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         // Simulate rapid auth state changes
-        authCallbacks.forEach((callback, index) => {
-          setTimeout(() => {
+        authCallbacks.forEach((callback, index
+) => {
+          setTimeout((
+) => {
             callback('SIGNED_IN', {
               user: { id: `user-${index}` },
               access_token: `token-${index}`,
@@ -239,7 +281,8 @@ describe('useAuth Edge Cases and Stress Tests', () => {
           }, index * 10);
 
           setTimeout(
-            () => {
+            (
+) => {
               callback('SIGNED_OUT', null);
             },
             index * 10 + 5
@@ -254,8 +297,10 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Memory Leaks and Resource Management', () => {
-    it('should clean up listeners on unmount', async () => {
+  describe('Memory Leaks and Resource Management', (
+) => {
+    it('should clean up listeners on unmount', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
       const mockUnsubscribe = jest.fn();
@@ -264,27 +309,33 @@ describe('useAuth Edge Cases and Stress Tests', () => {
         data: { subscription: { unsubscribe: mockUnsubscribe } },
       });
 
-      const { unmount } = renderHook(() => useAuth());
+      const { unmount } = renderHook((
+) => useAuth());
 
       unmount();
 
       expect(mockUnsubscribe).toHaveBeenCalled();
     });
 
-    it('should handle multiple mount/unmount cycles', async () => {
+    it('should handle multiple mount/unmount cycles', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
       let subscriptionCount = 0;
 
-      mockService.onAuthStateChange.mockImplementation(() => {
+      mockService.onAuthStateChange.mockImplementation((
+) => {
         subscriptionCount++;
-        return { data: { subscription: { unsubscribe: () => subscriptionCount-- } } };
+        return { data: { subscription: { unsubscribe: (
+) => subscriptionCount-- } } };
       });
 
       // Mount and unmount multiple times
       for (let i = 0; i < 10; i++) {
-        const { unmount } = renderHook(() => useAuth());
-        await act(async () => {
+        const { unmount } = renderHook((
+) => useAuth());
+        await act(async (
+) => {
           await new Promise(resolve => setTimeout(resolve, 10));
         });
         unmount();
@@ -295,8 +346,10 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Error Boundaries and Invalid States', () => {
-    it('should handle invalid user objects from service', async () => {
+  describe('Error Boundaries and Invalid States', (
+) => {
+    it('should handle invalid user objects from service', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
@@ -308,9 +361,11 @@ describe('useAuth Edge Cases and Stress Tests', () => {
         metadata: 'invalid-type',
       });
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
 
@@ -318,7 +373,8 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       expect(result.current.error).not.toContain('TypeError');
     });
 
-    it('should handle session timeout edge cases', async () => {
+    it('should handle session timeout edge cases', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
@@ -331,9 +387,11 @@ describe('useAuth Edge Cases and Stress Tests', () => {
 
       mockService.getSession.mockResolvedValue(expiredSession);
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
 
@@ -341,7 +399,8 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       expect(result.current.sessionTimeoutWarning).toBe(true);
     });
 
-    it('should handle network disconnection during authentication', async () => {
+    it('should handle network disconnection during authentication', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
@@ -353,9 +412,11 @@ describe('useAuth Edge Cases and Stress Tests', () => {
         value: false,
       });
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.signIn('test@example.com', 'password');
       });
 
@@ -364,26 +425,32 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Stress Testing', () => {
-    it('should handle rapid consecutive API calls', async () => {
+  describe('Stress Testing', (
+) => {
+    it('should handle rapid consecutive API calls', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
       let callCount = 0;
-      mockService.updateProfile.mockImplementation(() => {
+      mockService.updateProfile.mockImplementation((
+) => {
         callCount++;
         return Promise.resolve({
           user: { id: 'user-123', name: `Update ${callCount}` },
         });
       });
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         // Fire 50 rapid updates
         const promises = Array(50)
           .fill(null)
-          .map((_, index) => result.current.updateProfile({ name: `Name ${index}` }));
+          .map((_, index
+) => result.current.updateProfile({ name: `Name ${index}` }));
 
         await Promise.allSettled(promises);
       });
@@ -393,15 +460,18 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       expect(callCount).toBe(50);
     });
 
-    it('should handle extremely long running operations', async () => {
+    it('should handle extremely long running operations', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
       mockService.signIn.mockImplementation(
-        () =>
+        (
+) =>
           new Promise(resolve =>
             setTimeout(
-              () =>
+              (
+) =>
                 resolve({
                   user: { id: 'user-123' },
                   session: { access_token: 'token' },
@@ -411,9 +481,11 @@ describe('useAuth Edge Cases and Stress Tests', () => {
           ) // 10 second delay
       );
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         const signInPromise = result.current.signIn('test@example.com', 'password');
 
         // Fast forward time
@@ -425,15 +497,18 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       expect(result.current.user).toBeTruthy();
     });
 
-    it('should handle component re-renders during async operations', async () => {
+    it('should handle component re-renders during async operations', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
       mockService.signIn.mockImplementation(
-        () =>
+        (
+) =>
           new Promise(resolve =>
             setTimeout(
-              () =>
+              (
+) =>
                 resolve({
                   user: { id: 'user-123' },
                   session: { access_token: 'token' },
@@ -443,9 +518,11 @@ describe('useAuth Edge Cases and Stress Tests', () => {
           )
       );
 
-      const { result, rerender } = renderHook(() => useAuth());
+      const { result, rerender } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         // Start async operation
         const signInPromise = result.current.signIn('test@example.com', 'password');
 
@@ -464,17 +541,21 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Security Edge Cases', () => {
-    it('should handle CSRF token corruption', async () => {
+  describe('Security Edge Cases', (
+) => {
+    it('should handle CSRF token corruption', async (
+) => {
       const SecurityService = require('../../../services/security-service').default;
       const mockSecurityService = SecurityService.getInstance();
 
       mockSecurityService.generateCSRFToken.mockReturnValue('valid-token');
       mockSecurityService.validateCSRFToken.mockReturnValue(false); // Always invalid
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.signIn('test@example.com', 'password');
       });
 
@@ -482,16 +563,19 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       expect(result.current.error).toContain('security');
     });
 
-    it('should handle rate limiting edge cases', async () => {
+    it('should handle rate limiting edge cases', async (
+) => {
       const SecurityService = require('../../../services/security-service').default;
       const mockSecurityService = SecurityService.getInstance();
 
       // Simulate immediate rate limiting
       mockSecurityService.isRateLimited.mockReturnValue(true);
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.signIn('test@example.com', 'password');
       });
 
@@ -501,7 +585,8 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       mockSecurityService.isRateLimited.mockReturnValue(false);
       mockSecurityService.resetRateLimit.mockResolvedValue(undefined);
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.resetRateLimit();
       });
 
@@ -509,8 +594,10 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Regression Tests', () => {
-    it('should handle auth state persistence after page reload', async () => {
+  describe('Regression Tests', (
+) => {
+    it('should handle auth state persistence after page reload', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
@@ -523,9 +610,11 @@ describe('useAuth Edge Cases and Stress Tests', () => {
         user: persistedUser,
       });
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
 
@@ -533,26 +622,32 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       expect(result.current.user).toEqual(persistedUser);
     });
 
-    it('should handle sign-out with pending operations', async () => {
+    it('should handle sign-out with pending operations', async (
+) => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
       mockService.updateProfile.mockImplementation(
-        () =>
+        (
+) =>
           new Promise(resolve =>
-            setTimeout(() => resolve({ user: { id: 'user-123' } }), 200)
+            setTimeout((
+) => resolve({ user: { id: 'user-123' } }), 200)
           )
       );
       mockService.signOut.mockResolvedValue({ error: null });
 
-      const { result } = renderHook(() => useAuth());
+      const { result } = renderHook((
+) => useAuth());
 
-      await act(async () => {
+      await act(async (
+) => {
         // Start profile update
         const updatePromise = result.current.updateProfile({ name: 'New Name' });
 
         // Sign out before update completes
-        setTimeout(() => {
+        setTimeout((
+) => {
           result.current.signOut();
         }, 50);
 

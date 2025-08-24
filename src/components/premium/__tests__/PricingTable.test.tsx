@@ -17,7 +17,8 @@ import {
 import { PricingTable } from '../PricingTable';
 import type { SubscriptionPlan, BillingInterval } from '../../../types/premium';
 
-describe('PricingTable', () => {
+describe('PricingTable', (
+) => {
   const mockOnPlanSelect = jest.fn();
   const mockOnBillingIntervalChange = jest.fn();
 
@@ -56,12 +57,15 @@ describe('PricingTable', () => {
     onPlanSelect: mockOnPlanSelect,
   };
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
   });
 
-  describe('Rendering', () => {
-    it('renders all provided plans', () => {
+  describe('Rendering', (
+) => {
+    it('renders all provided plans', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       expect(screen.getByText('Free Plan')).toBeInTheDocument();
@@ -69,7 +73,8 @@ describe('PricingTable', () => {
       expect(screen.getByText('Pro Plan')).toBeInTheDocument();
     });
 
-    it('displays plan features correctly', () => {
+    it('displays plan features correctly', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       expect(screen.getByText('Basic alarms')).toBeInTheDocument();
@@ -77,7 +82,8 @@ describe('PricingTable', () => {
       expect(screen.getByText('Team collaboration')).toBeInTheDocument();
     });
 
-    it('shows correct pricing for monthly billing', () => {
+    it('shows correct pricing for monthly billing', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} billingInterval="month" />);
 
       expect(screen.getByText('$0.00 / month')).toBeInTheDocument();
@@ -85,7 +91,8 @@ describe('PricingTable', () => {
       expect(screen.getByText('$19.99 / month')).toBeInTheDocument();
     });
 
-    it('shows correct pricing for yearly billing with discount', () => {
+    it('shows correct pricing for yearly billing with discount', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} billingInterval="year" />);
 
       expect(screen.getByText('$0.00 / year')).toBeInTheDocument();
@@ -93,7 +100,8 @@ describe('PricingTable', () => {
       expect(screen.getByText('$199.99 / year')).toBeInTheDocument();
     });
 
-    it('highlights current plan', () => {
+    it('highlights current plan', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} currentTier="premium" />);
 
       const premiumCard = screen
@@ -102,7 +110,8 @@ describe('PricingTable', () => {
       expect(premiumCard).toHaveClass('ring-2', 'ring-purple-500');
     });
 
-    it('shows popular badge on recommended plan', () => {
+    it('shows popular badge on recommended plan', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       // Premium plan should have popular badge
@@ -115,22 +124,26 @@ describe('PricingTable', () => {
     });
   });
 
-  describe('Billing Interval Toggle', () => {
-    it('renders billing interval toggle', () => {
+  describe('Billing Interval Toggle', (
+) => {
+    it('renders billing interval toggle', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       expect(screen.getByRole('button', { name: /monthly/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /yearly/i })).toBeInTheDocument();
     });
 
-    it('highlights selected billing interval', () => {
+    it('highlights selected billing interval', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} billingInterval="year" />);
 
       const yearlyButton = screen.getByRole('button', { name: /yearly/i });
       expect(yearlyButton).toHaveClass('bg-purple-600', 'text-white');
     });
 
-    it('updates pricing when billing interval changes', async () => {
+    it('updates pricing when billing interval changes', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PricingTable {...defaultProps} />);
@@ -145,7 +158,8 @@ describe('PricingTable', () => {
       expect(screen.getByText('$99.99 / year')).toBeInTheDocument();
     });
 
-    it('calls onBillingIntervalChange when interval changes', async () => {
+    it('calls onBillingIntervalChange when interval changes', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(
@@ -160,15 +174,18 @@ describe('PricingTable', () => {
       expect(mockOnBillingIntervalChange).toHaveBeenCalledWith('year');
     });
 
-    it('shows savings badge for yearly billing', () => {
+    it('shows savings badge for yearly billing', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} billingInterval="year" />);
 
       expect(screen.getByText(/save/i)).toBeInTheDocument();
     });
   });
 
-  describe('Plan Selection', () => {
-    it('calls onPlanSelect when plan is selected', async () => {
+  describe('Plan Selection', (
+) => {
+    it('calls onPlanSelect when plan is selected', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PricingTable {...defaultProps} />);
@@ -182,7 +199,8 @@ describe('PricingTable', () => {
       );
     });
 
-    it('shows correct button text for each plan type', () => {
+    it('shows correct button text for each plan type', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} currentTier="free" />);
 
       expect(screen.getByRole('button', { name: /current plan/i })).toBeInTheDocument();
@@ -194,7 +212,8 @@ describe('PricingTable', () => {
       ).toBeInTheDocument();
     });
 
-    it('shows downgrade option when on higher tier', () => {
+    it('shows downgrade option when on higher tier', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} currentTier="pro" />);
 
       expect(
@@ -206,7 +225,8 @@ describe('PricingTable', () => {
       expect(screen.getByRole('button', { name: /current plan/i })).toBeInTheDocument();
     });
 
-    it('disables buttons when loading', () => {
+    it('disables buttons when loading', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} loading={true} />);
 
       const buttons = screen.getAllByRole('button');
@@ -223,8 +243,10 @@ describe('PricingTable', () => {
     });
   });
 
-  describe('Features Display', () => {
-    it('shows feature list for each plan', () => {
+  describe('Features Display', (
+) => {
+    it('shows feature list for each plan', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       // Check features are displayed with checkmarks
@@ -232,14 +254,16 @@ describe('PricingTable', () => {
       expect(checkIcons.length).toBeGreaterThan(0);
     });
 
-    it('shows usage limits when available', () => {
+    it('shows usage limits when available', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       expect(screen.getByText(/5 alarms/i)).toBeInTheDocument();
       expect(screen.getByText(/unlimited/i)).toBeInTheDocument();
     });
 
-    it('highlights premium features with badges', () => {
+    it('highlights premium features with badges', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       const premiumBadges = screen.getAllByTestId('premium-feature-badge');
@@ -247,8 +271,10 @@ describe('PricingTable', () => {
     });
   });
 
-  describe('Responsive Design', () => {
-    it('renders mobile-friendly layout on small screens', () => {
+  describe('Responsive Design', (
+) => {
+    it('renders mobile-friendly layout on small screens', (
+) => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
@@ -261,7 +287,8 @@ describe('PricingTable', () => {
       expect(container).toHaveClass('flex-col');
     });
 
-    it('renders grid layout on larger screens', () => {
+    it('renders grid layout on larger screens', (
+) => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
@@ -275,8 +302,10 @@ describe('PricingTable', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('provides proper ARIA labels for plan cards', () => {
+  describe('Accessibility', (
+) => {
+    it('provides proper ARIA labels for plan cards', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       const planCards = screen.getAllByRole('article');
@@ -285,7 +314,8 @@ describe('PricingTable', () => {
       });
     });
 
-    it('supports keyboard navigation', async () => {
+    it('supports keyboard navigation', async (
+) => {
       const user = userEvent.setup();
 
       renderWithProviders(<PricingTable {...defaultProps} />);
@@ -301,7 +331,8 @@ describe('PricingTable', () => {
       expect(focusedElement?.tagName).toBe('BUTTON');
     });
 
-    it('announces pricing changes to screen readers', () => {
+    it('announces pricing changes to screen readers', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       const ariaLive = screen.getByTestId('pricing-announcements');
@@ -309,8 +340,10 @@ describe('PricingTable', () => {
     });
   });
 
-  describe('Error States', () => {
-    it('handles missing pricing gracefully', () => {
+  describe('Error States', (
+) => {
+    it('handles missing pricing gracefully', (
+) => {
       const plansWithMissingPricing = [
         {
           ...testPlans[0],
@@ -326,13 +359,15 @@ describe('PricingTable', () => {
       expect(screen.getByText('Free Plan')).toBeInTheDocument();
     });
 
-    it('handles empty plans array', () => {
+    it('handles empty plans array', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} plans={[]} />);
 
       expect(screen.getByText(/no plans available/i)).toBeInTheDocument();
     });
 
-    it('shows error state for invalid plans', () => {
+    it('shows error state for invalid plans', (
+) => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
 
       renderWithProviders(<PricingTable {...defaultProps} plans={null as any} />);
@@ -343,8 +378,10 @@ describe('PricingTable', () => {
     });
   });
 
-  describe('Currency and Localization', () => {
-    it('displays different currencies correctly', () => {
+  describe('Currency and Localization', (
+) => {
+    it('displays different currencies correctly', (
+) => {
       const euroPlans = testPlans.map(plan => ({
         ...plan,
         pricing: {
@@ -358,7 +395,8 @@ describe('PricingTable', () => {
       expect(screen.getByText('€9.99 / month')).toBeInTheDocument();
     });
 
-    it('formats prices according to locale', () => {
+    it('formats prices according to locale', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       // US format should have $ symbol before amount
@@ -366,8 +404,10 @@ describe('PricingTable', () => {
     });
   });
 
-  describe('Trial and Discounts', () => {
-    it('shows trial information when available', () => {
+  describe('Trial and Discounts', (
+) => {
+    it('shows trial information when available', (
+) => {
       const plansWithTrial = testPlans.map(plan => ({
         ...plan,
         trialDays: plan.tier !== 'free' ? 14 : undefined,
@@ -378,14 +418,16 @@ describe('PricingTable', () => {
       expect(screen.getByText(/14-day free trial/i)).toBeInTheDocument();
     });
 
-    it('displays discount badges', () => {
+    it('displays discount badges', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} billingInterval="year" />);
 
       const discountBadges = screen.getAllByTestId('discount-badge');
       expect(discountBadges.length).toBeGreaterThan(0);
     });
 
-    it('calculates yearly savings correctly', () => {
+    it('calculates yearly savings correctly', (
+) => {
       renderWithProviders(<PricingTable {...defaultProps} billingInterval="year" />);
 
       // Should show percentage saved

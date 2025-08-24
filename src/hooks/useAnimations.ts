@@ -46,11 +46,13 @@ export const useEntranceAnimation = (
   delay: number = 0,
   direction: 'up' | 'down' | 'left' | 'right' | 'scale' | 'fade' = 'up',
   distance: number = 50
+
 ) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
-  const variants = useMemo(() => {
+  const variants = useMemo((
+) => {
     const directionMaps = {
       up: { y: distance, x: 0 },
       down: { y: -distance, x: 0 },
@@ -96,7 +98,8 @@ export const useHoverAnimation = (config: {
   rotate?: number;
   glow?: boolean;
   lift?: boolean;
-}) => {
+}
+) => {
   const { scale = 1.02, y = -2, rotate = 0, glow = false, lift = true } = config;
 
   const hoverVariants = {
@@ -126,7 +129,8 @@ export const useHoverAnimation = (config: {
 // STAGGER ANIMATIONS
 // ================================================================
 
-export const useStaggerChildren = (delayBetweenChildren: number = 0.1) => {
+export const useStaggerChildren = (delayBetweenChildren: number = 0.1
+) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -157,6 +161,7 @@ export const useStaggerChildren = (delayBetweenChildren: number = 0.1) => {
 export const useScrollAnimation = (
   threshold: number = 0.3,
   triggerOnce: boolean = true
+
 ) => {
   const ref = useRef(null);
   const isInView = useInView(ref, {
@@ -167,7 +172,8 @@ export const useScrollAnimation = (
 
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (isInView && !hasAnimated) {
       setHasAnimated(true);
     }
@@ -181,7 +187,8 @@ export const useScrollAnimation = (
   };
 };
 
-export const useParallaxScroll = (offset: number = 50) => {
+export const useParallaxScroll = (offset: number = 50
+) => {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -197,7 +204,8 @@ export const useParallaxScroll = (offset: number = 50) => {
 // MOUSE TRACKING ANIMATIONS
 // ================================================================
 
-export const useMouseTracking = (strength: number = 1, damping: number = 0.1) => {
+export const useMouseTracking = (strength: number = 1, damping: number = 0.1
+) => {
   const ref = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -212,11 +220,13 @@ export const useMouseTracking = (strength: number = 1, damping: number = 0.1) =>
     springConfig
   );
 
-  useEffect(() => {
+  useEffect((
+) => {
     const element = ref.current;
     if (!element) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent
+) => {
       const rect = element.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -225,7 +235,8 @@ export const useMouseTracking = (strength: number = 1, damping: number = 0.1) =>
       mouseY.set(y * strength);
     };
 
-    const handleMouseLeave = () => {
+    const handleMouseLeave = (
+) => {
       mouseX.set(0);
       mouseY.set(0);
     };
@@ -233,7 +244,8 @@ export const useMouseTracking = (strength: number = 1, damping: number = 0.1) =>
     element.addEventListener('mousemove', handleMouseMove);
     element.addEventListener('mouseleave', handleMouseLeave);
 
-    return () => {
+    return (
+) => {
       element.removeEventListener('mousemove', handleMouseMove);
       element.removeEventListener('mouseleave', handleMouseLeave);
     };
@@ -259,34 +271,42 @@ export const useTypingAnimation = (
   text: string,
   speed: number = 50,
   startDelay: number = 0
+
 ) => {
   const [displayedText, setDisplayedText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (startDelay > 0) {
-      const delayTimeout = setTimeout(() => {
+      const delayTimeout = setTimeout((
+) => {
         setCurrentIndex(0);
       }, startDelay);
-      return () => clearTimeout(delayTimeout);
+      return (
+) => clearTimeout(delayTimeout);
     }
   }, [startDelay]);
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (currentIndex < text.length) {
-      const timeout = setTimeout(() => {
+      const timeout = setTimeout((
+) => {
         setDisplayedText(text.slice(0, currentIndex + 1));
         setCurrentIndex(currentIndex + 1);
       }, speed);
 
-      return () => clearTimeout(timeout);
+      return (
+) => clearTimeout(timeout);
     } else if (currentIndex === text.length && !isComplete) {
       setIsComplete(true);
     }
   }, [currentIndex, text, speed, isComplete]);
 
-  const restart = () => {
+  const restart = (
+) => {
     setDisplayedText('');
     setCurrentIndex(0);
     setIsComplete(false);
@@ -308,14 +328,18 @@ export const useCounterAnimation = (
   target: number,
   duration: number = 2000,
   startDelay: number = 0,
-  easing: (t: number) => number = (t: number) => t * t * (3 - 2 * t) // smoothstep
+  easing: (t: number
+) => number = (t: number
+) => t * t * (3 - 2 * t) // smoothstep
+
 ) => {
   const [current, setCurrent] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const startTimeRef = useRef<TimeoutHandle>(0);
   const animationRef = useRef<TimeoutHandle>(0);
 
-  const animate = (timestamp: number) => {
+  const animate = (timestamp: number
+) => {
     if (startTimeRef.current === 0) {
       startTimeRef.current = timestamp;
     }
@@ -333,11 +357,13 @@ export const useCounterAnimation = (
     }
   };
 
-  const start = () => {
+  const start = (
+) => {
     setIsAnimating(true);
     startTimeRef.current = 0;
 
-    const delayedStart = () => {
+    const delayedStart = (
+) => {
       animationRef.current = requestAnimationFrame(animate);
     };
 
@@ -348,7 +374,8 @@ export const useCounterAnimation = (
     }
   };
 
-  const reset = () => {
+  const reset = (
+) => {
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
     }
@@ -357,8 +384,10 @@ export const useCounterAnimation = (
     startTimeRef.current = 0;
   };
 
-  useEffect(() => {
-    return () => {
+  useEffect((
+) => {
+    return (
+) => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
@@ -378,7 +407,8 @@ export const useCounterAnimation = (
 // GESTURE ANIMATIONS
 // ================================================================
 
-export const useGestureAnimation = () => {
+export const useGestureAnimation = (
+) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isPressing, setIsPressing] = useState(false);
 
@@ -403,7 +433,8 @@ export const useGestureAnimation = () => {
     },
   };
 
-  const getVariant = () => {
+  const getVariant = (
+) => {
     if (isDragging) return 'drag';
     if (isPressing) return 'press';
     return 'idle';
@@ -414,10 +445,14 @@ export const useGestureAnimation = () => {
     animate: getVariant(),
     whileHover: 'hover',
     whileTap: 'press',
-    onDragStart: () => setIsDragging(true),
-    onDragEnd: () => setIsDragging(false),
-    onTapStart: () => setIsPressing(true),
-    onTap: () => setIsPressing(false),
+    onDragStart: (
+) => setIsDragging(true),
+    onDragEnd: (
+) => setIsDragging(false),
+    onTapStart: (
+) => setIsPressing(true),
+    onTap: (
+) => setIsPressing(false),
   };
 };
 
@@ -425,7 +460,8 @@ export const useGestureAnimation = () => {
 // NOTIFICATION ANIMATIONS
 // ================================================================
 
-export const useNotificationAnimation = () => {
+export const useNotificationAnimation = (
+) => {
   const slideVariants = {
     hidden: {
       x: '100%',
@@ -470,7 +506,8 @@ export const useNotificationAnimation = () => {
 // LOADING ANIMATIONS
 // ================================================================
 
-export const useLoadingAnimation = (isLoading: boolean) => {
+export const useLoadingAnimation = (isLoading: boolean
+) => {
   const loadingVariants = {
     loading: {
       opacity: 0.7,
@@ -525,12 +562,14 @@ export const useAnimationSequence = (
     delay?: number;
     animation: any;
   }>
+
 ) => {
   const controls = useAnimation();
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const playSequence = async () => {
+  const playSequence = async (
+) => {
     setIsPlaying(true);
 
     for (let i = 0; i < animations.length; i++) {
@@ -548,7 +587,8 @@ export const useAnimationSequence = (
     setCurrentStep(0);
   };
 
-  const stopSequence = () => {
+  const stopSequence = (
+) => {
     controls.stop();
     setIsPlaying(false);
     setCurrentStep(0);

@@ -563,27 +563,32 @@ export const applyTheme = (theme: CulturalTheme): void => {
   const root = document.documentElement;
 
   // Apply color variables
-  Object.entries(theme.colors).forEach(([key, value]) => {
+  Object.entries(theme.colors).forEach(([key, value]
+) => {
     root.style.setProperty(`--color-${key}`, value);
   });
 
   // Apply gradient variables
-  Object.entries(theme.gradients).forEach(([key, value]) => {
+  Object.entries(theme.gradients).forEach(([key, value]
+) => {
     root.style.setProperty(`--gradient-${key}`, value);
   });
 
   // Apply shadow variables
-  Object.entries(theme.shadows).forEach(([key, value]) => {
+  Object.entries(theme.shadows).forEach(([key, value]
+) => {
     root.style.setProperty(`--shadow-${key}`, value);
   });
 
   // Apply font variables
-  Object.entries(theme.fonts).forEach(([key, value]) => {
+  Object.entries(theme.fonts).forEach(([key, value]
+) => {
     root.style.setProperty(`--font-${key}`, value);
   });
 
   // Apply border radius variables
-  Object.entries(theme.borderRadius).forEach(([key, value]) => {
+  Object.entries(theme.borderRadius).forEach(([key, value]
+) => {
     root.style.setProperty(`--radius-${key}`, value);
   });
 };
@@ -592,23 +597,28 @@ export const applyTheme = (theme: CulturalTheme): void => {
 export const getThemeCSS = (theme: CulturalTheme): string => {
   const cssVars: string[] = [];
 
-  Object.entries(theme.colors).forEach(([key, value]) => {
+  Object.entries(theme.colors).forEach(([key, value]
+) => {
     cssVars.push(`--color-${key}: ${value};`);
   });
 
-  Object.entries(theme.gradients).forEach(([key, value]) => {
+  Object.entries(theme.gradients).forEach(([key, value]
+) => {
     cssVars.push(`--gradient-${key}: ${value};`);
   });
 
-  Object.entries(theme.shadows).forEach(([key, value]) => {
+  Object.entries(theme.shadows).forEach(([key, value]
+) => {
     cssVars.push(`--shadow-${key}: ${value};`);
   });
 
-  Object.entries(theme.fonts).forEach(([key, value]) => {
+  Object.entries(theme.fonts).forEach(([key, value]
+) => {
     cssVars.push(`--font-${key}: ${value};`);
   });
 
-  Object.entries(theme.borderRadius).forEach(([key, value]) => {
+  Object.entries(theme.borderRadius).forEach(([key, value]
+) => {
     cssVars.push(`--radius-${key}: ${value};`);
   });
 

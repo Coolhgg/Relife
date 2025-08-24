@@ -70,17 +70,22 @@ export const _storageMocks = {
     const store: Record<string, string> = {};
 
     return {
-      getItem: jest.fn((key: string) => store[key] || null),
-      setItem: jest.fn((key: string, value: string) => {
+      getItem: jest.fn((key: string
+) => store[key] || null),
+      setItem: jest.fn((key: string, value: string
+) => {
         store[key] = value;
       }),
-      removeItem: jest.fn((key: string) => {
+      removeItem: jest.fn((key: string
+) => {
         delete store[key];
       }),
-      clear: jest.fn(() => {
+      clear: jest.fn((
+) => {
         Object.keys(store).forEach(key => delete store[key]);
       }),
-      key: jest.fn((index: number) => Object.keys(store)[index] || null),
+      key: jest.fn((index: number
+) => Object.keys(store)[index] || null),
       get length() {
         return Object.keys(store).length;
       },
@@ -143,10 +148,12 @@ export const _indexedDBMocks = {
       readyState: 'pending',
     };
 
-    const mockOpen = jest.fn((name: string, version?: number) => {
+    const mockOpen = jest.fn((name: string, version?: number
+) => {
       const request = { ...mockIDBRequest };
 
-      setTimeout(() => {
+      setTimeout((
+) => {
         if (!mockDatabases.has(name)) {
           const db: MockIndexedDBDatabase = {
             name,
@@ -154,7 +161,8 @@ export const _indexedDBMocks = {
             objectStoreNames: [],
             transaction: jest.fn(),
             close: jest.fn(),
-            createObjectStore: jest.fn((storeName: string) => {
+            createObjectStore: jest.fn((storeName: string
+) => {
               db.objectStoreNames.push(storeName);
               return {
                 add: jest.fn(),
@@ -182,7 +190,8 @@ export const _indexedDBMocks = {
       value: {
         open: mockOpen,
         deleteDatabase: jest.fn(),
-        databases: jest.fn(() => Promise.resolve([])),
+        databases: jest.fn((
+) => Promise.resolve([])),
       },
       writable: true,
     });
@@ -201,14 +210,17 @@ export const _indexedDBMocks = {
     const alarms = new Map<string, AlarmStorageData>();
 
     return {
-      addAlarm: jest.fn((alarm: AlarmStorageData) => {
+      addAlarm: jest.fn((alarm: AlarmStorageData
+) => {
         alarms.set(alarm.id, alarm);
         return Promise.resolve(alarm.id);
       }),
-      getAlarm: jest.fn((id: string) => {
+      getAlarm: jest.fn((id: string
+) => {
         return Promise.resolve(alarms.get(id) || null);
       }),
-      updateAlarm: jest.fn((id: string, updates: Partial<AlarmStorageData>) => {
+      updateAlarm: jest.fn((id: string, updates: Partial<AlarmStorageData>
+) => {
         const existing = alarms.get(id);
         if (existing) {
           alarms.set(id, { ...existing, ...updates });
@@ -216,11 +228,13 @@ export const _indexedDBMocks = {
         }
         return Promise.resolve(false);
       }),
-      deleteAlarm: jest.fn((id: string) => {
+      deleteAlarm: jest.fn((id: string
+) => {
         const deleted = alarms.delete(id);
         return Promise.resolve(deleted);
       }),
-      getAllAlarms: jest.fn(() => {
+      getAllAlarms: jest.fn((
+) => {
         return Promise.resolve(Array.from(alarms.values()));
       }),
     };
@@ -236,7 +250,8 @@ export const _cacheMocks = {
     const caches = new Map<string, Map<string, Response>>();
 
     const mockCacheStorage: MockCacheStorage = {
-      open: jest.fn((cacheName: string) => {
+      open: jest.fn((cacheName: string
+) => {
         if (!caches.has(cacheName)) {
           caches.set(cacheName, new Map());
         }
@@ -244,39 +259,49 @@ export const _cacheMocks = {
         const cache = caches.get(cacheName)!;
 
         return Promise.resolve({
-          add: jest.fn((request: string) => {
+          add: jest.fn((request: string
+) => {
             cache.set(request, new Response('cached'));
             return Promise.resolve();
           }),
-          addAll: jest.fn((requests: string[]) => {
+          addAll: jest.fn((requests: string[]
+) => {
             requests.forEach(req => cache.set(req, new Response('cached')));
             return Promise.resolve();
           }),
-          put: jest.fn((request: string, response: Response) => {
+          put: jest.fn((request: string, response: Response
+) => {
             cache.set(request, response);
             return Promise.resolve();
           }),
-          match: jest.fn((request: string) => {
+          match: jest.fn((request: string
+) => {
             return Promise.resolve(cache.get(request) || null);
           }),
-          delete: jest.fn((request: string) => {
+          delete: jest.fn((request: string
+) => {
             return Promise.resolve(cache.delete(request));
           }),
-          keys: jest.fn(() => {
+          keys: jest.fn((
+) => {
             return Promise.resolve(Array.from(cache.keys()));
           }),
         });
       }),
-      has: jest.fn((cacheName: string) => {
+      has: jest.fn((cacheName: string
+) => {
         return Promise.resolve(caches.has(cacheName));
       }),
-      delete: jest.fn((cacheName: string) => {
+      delete: jest.fn((cacheName: string
+) => {
         return Promise.resolve(caches.delete(cacheName));
       }),
-      keys: jest.fn(() => {
+      keys: jest.fn((
+) => {
         return Promise.resolve(Array.from(caches.keys()));
       }),
-      match: jest.fn((request: string) => {
+      match: jest.fn((request: string
+) => {
         for (const cache of caches.values()) {
           const response = cache.get(request);
           if (response) return Promise.resolve(response);
@@ -308,7 +333,8 @@ export const _storageUtils = {
     const mockStorage = storageMocks.mockLocalStorage();
 
     if (operations.set) {
-      operations.set.forEach(({ key, value }) => {
+      operations.set.forEach(({ key, value }
+) => {
         localStorage.setItem(key, value);
         expect(mockStorage.setItem).toHaveBeenCalledWith(key, value);
       });
@@ -499,7 +525,8 @@ export const _storageDataFactory = {
    * Create multiple test alarms
    */
   createMultipleAlarms(count: number): AlarmStorageData[] {
-    return Array.from({ length: count }, (_, index) =>
+    return Array.from({ length: count }, (_, index
+) =>
       this.createAlarmData({
         id: `alarm-${index + 1}`,
         time: `0${7 + index}:00`,
@@ -510,7 +537,8 @@ export const _storageDataFactory = {
 };
 
 // Complete Test Suite for Storage
-export const _createStorageTestSuite = () => ({
+export const _createStorageTestSuite = (
+) => ({
   /**
    * Test basic localStorage operations
    */
@@ -576,11 +604,13 @@ export const _createStorageTestSuite = () => ({
     const mockStorage = storageMocks.mockLocalStorage();
 
     // Simulate storage error
-    mockStorage.setItem.mockImplementation(() => {
+    mockStorage.setItem.mockImplementation((
+) => {
       throw new Error('QuotaExceededError');
     });
 
-    expect(() => {
+    expect((
+) => {
       localStorage.setItem('test', 'value');
     }).toThrow('QuotaExceededError');
   },

@@ -18,24 +18,30 @@ const mockPostHog = {
   stopSessionRecording: jest.fn(),
 };
 
-jest.mock('posthog-js', () => mockPostHog);
+jest.mock('posthog-js', (
+) => mockPostHog);
 
-describe('AnalyticsService', () => {
+describe('AnalyticsService', (
+) => {
   let analytics: AnalyticsService;
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
     analytics = AnalyticsService.getInstance();
   });
 
-  afterEach(() => {
+  afterEach((
+) => {
     localStorage.clear();
     // Reset singleton instance for clean tests
     (AnalyticsService as any).instance = undefined;
   });
 
-  describe('Initialization', () => {
-    it('should initialize PostHog with correct configuration', () => {
+  describe('Initialization', (
+) => {
+    it('should initialize PostHog with correct configuration', (
+) => {
       analytics.initialize();
 
       expect(mockPostHog.init).toHaveBeenCalledWith(
@@ -51,14 +57,16 @@ describe('AnalyticsService', () => {
       );
     });
 
-    it('should not initialize twice', () => {
+    it('should not initialize twice', (
+) => {
       analytics.initialize();
       analytics.initialize();
 
       expect(mockPostHog.init).toHaveBeenCalledTimes(1);
     });
 
-    it('should skip initialization in test environment', () => {
+    it('should skip initialization in test environment', (
+) => {
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'test';
 
@@ -68,7 +76,8 @@ describe('AnalyticsService', () => {
       process.env.NODE_ENV = originalEnv;
     });
 
-    it('should track app launch event on initialization', () => {
+    it('should track app launch event on initialization', (
+) => {
       analytics.initialize();
 
       expect(mockPostHog.capture).toHaveBeenCalledWith(
@@ -81,13 +90,16 @@ describe('AnalyticsService', () => {
     });
   });
 
-  describe('User Identification', () => {
-    beforeEach(() => {
+  describe('User Identification', (
+) => {
+    beforeEach((
+) => {
       analytics.initialize();
       jest.clearAllMocks();
     });
 
-    it('should identify user with correct properties', () => {
+    it('should identify user with correct properties', (
+) => {
       const userId = 'user123';
       const properties = {
         id: userId,
@@ -112,20 +124,24 @@ describe('AnalyticsService', () => {
       );
     });
 
-    it('should reset user identity', () => {
+    it('should reset user identity', (
+) => {
       analytics.reset();
 
       expect(mockPostHog.reset).toHaveBeenCalled();
     });
   });
 
-  describe('Event Tracking', () => {
-    beforeEach(() => {
+  describe('Event Tracking', (
+) => {
+    beforeEach((
+) => {
       analytics.initialize();
       jest.clearAllMocks();
     });
 
-    it('should track events with enhanced properties', () => {
+    it('should track events with enhanced properties', (
+) => {
       const eventName = 'test_event';
       const properties = {
         category: 'test',
@@ -145,7 +161,8 @@ describe('AnalyticsService', () => {
       );
     });
 
-    it('should track page views with contextual information', () => {
+    it('should track page views with contextual information', (
+) => {
       const pageName = 'dashboard';
       const properties = { user_role: 'admin' };
 
@@ -162,7 +179,8 @@ describe('AnalyticsService', () => {
       );
     });
 
-    it('should track feature usage', () => {
+    it('should track feature usage', (
+) => {
       const featureName = 'alarm_creation';
       const action = 'button_clicked';
       const properties = { alarm_type: 'voice' };
@@ -180,13 +198,16 @@ describe('AnalyticsService', () => {
     });
   });
 
-  describe('User Properties', () => {
-    beforeEach(() => {
+  describe('User Properties', (
+) => {
+    beforeEach((
+) => {
       analytics.initialize();
       jest.clearAllMocks();
     });
 
-    it('should set user properties', () => {
+    it('should set user properties', (
+) => {
       const properties = {
         plan: 'premium',
         totalAlarms: 10,
@@ -199,7 +220,8 @@ describe('AnalyticsService', () => {
       );
     });
 
-    it('should increment numeric properties', () => {
+    it('should increment numeric properties', (
+) => {
       const property = 'alarms_created';
       const value = 3;
 
@@ -211,19 +233,23 @@ describe('AnalyticsService', () => {
     });
   });
 
-  describe('Performance Tracking', () => {
-    beforeEach(() => {
+  describe('Performance Tracking', (
+) => {
+    beforeEach((
+) => {
       analytics.initialize();
       jest.clearAllMocks();
     });
 
-    it('should track performance markers', () => {
+    it('should track performance markers', (
+) => {
       const markerName = 'component_render';
 
       analytics.startPerformanceMarker(markerName);
 
       // Simulate some work
-      setTimeout(() => {
+      setTimeout((
+) => {
         const duration = analytics.endPerformanceMarker(markerName);
 
         expect(typeof duration).toBe('number');
@@ -238,7 +264,8 @@ describe('AnalyticsService', () => {
       }, 10);
     });
 
-    it('should handle invalid performance markers gracefully', () => {
+    it('should handle invalid performance markers gracefully', (
+) => {
       const duration = analytics.endPerformanceMarker('nonexistent_marker');
 
       expect(duration).toBe(0);
@@ -246,13 +273,16 @@ describe('AnalyticsService', () => {
     });
   });
 
-  describe('Error Handling', () => {
-    beforeEach(() => {
+  describe('Error Handling', (
+) => {
+    beforeEach((
+) => {
       analytics.initialize();
       jest.clearAllMocks();
     });
 
-    it('should track errors with context', () => {
+    it('should track errors with context', (
+) => {
       const error = new Error('Test error');
       const context = 'component_mount';
       const metadata = { userId: 'user123' };
@@ -270,7 +300,8 @@ describe('AnalyticsService', () => {
       );
     });
 
-    it('should handle string errors', () => {
+    it('should handle string errors', (
+) => {
       const errorMessage = 'String error';
       const context = 'api_call';
 
@@ -286,13 +317,16 @@ describe('AnalyticsService', () => {
     });
   });
 
-  describe('Feature Flags', () => {
-    beforeEach(() => {
+  describe('Feature Flags', (
+) => {
+    beforeEach((
+) => {
       analytics.initialize();
       jest.clearAllMocks();
     });
 
-    it('should get feature flag values', () => {
+    it('should get feature flag values', (
+) => {
       const flagName = 'new_feature_enabled';
       const expectedValue = true;
 
@@ -305,27 +339,33 @@ describe('AnalyticsService', () => {
     });
   });
 
-  describe('Session Recording', () => {
-    beforeEach(() => {
+  describe('Session Recording', (
+) => {
+    beforeEach((
+) => {
       analytics.initialize();
       jest.clearAllMocks();
     });
 
-    it('should start session recording', () => {
+    it('should start session recording', (
+) => {
       analytics.enableSessionRecording(true);
 
       expect(mockPostHog.startSessionRecording).toHaveBeenCalled();
     });
 
-    it('should stop session recording', () => {
+    it('should stop session recording', (
+) => {
       analytics.enableSessionRecording(false);
 
       expect(mockPostHog.stopSessionRecording).toHaveBeenCalled();
     });
   });
 
-  describe('Analytics Events Constants', () => {
-    it('should have all required event constants', () => {
+  describe('Analytics Events Constants', (
+) => {
+    it('should have all required event constants', (
+) => {
       expect(ANALYTICS_EVENTS).toHaveProperty('APP_LAUNCHED');
       expect(ANALYTICS_EVENTS).toHaveProperty('USER_SIGNED_IN');
       expect(ANALYTICS_EVENTS).toHaveProperty('USER_SIGNED_OUT');
@@ -338,7 +378,8 @@ describe('AnalyticsService', () => {
       expect(ANALYTICS_EVENTS).toHaveProperty('SESSION_ENDED');
     });
 
-    it('should have consistent event naming convention', () => {
+    it('should have consistent event naming convention', (
+) => {
       Object.values(ANALYTICS_EVENTS).forEach(eventName => {
         expect(eventName).toMatch(/^[a-z_]+$/);
         expect(eventName).not.toContain(' ');
@@ -347,11 +388,14 @@ describe('AnalyticsService', () => {
     });
   });
 
-  describe('Environment Handling', () => {
-    it('should handle missing configuration gracefully', () => {
+  describe('Environment Handling', (
+) => {
+    it('should handle missing configuration gracefully', (
+) => {
       // Mock empty configuration
       const originalConfig = require('../../config/environment').config;
-      jest.doMock('../../config/environment', () => ({
+      jest.doMock('../../config/environment', (
+) => ({
         config: {
           analytics: {
             posthog: {
@@ -368,8 +412,10 @@ describe('AnalyticsService', () => {
     });
   });
 
-  describe('Integration with React Hooks', () => {
-    it('should work correctly with React component lifecycle', () => {
+  describe('Integration with React Hooks', (
+) => {
+    it('should work correctly with React component lifecycle', (
+) => {
       // Simulate React component mount
       analytics.initialize();
       analytics.identify('user123', { email: 'test@example.com' });

@@ -8,14 +8,16 @@
 import { faker } from '@faker-js/faker';
 
 // Seed faker for deterministic tests when needed
-export const _seedFaker = (seed?: number) => {
+export const _seedFaker = (seed?: number
+) => {
   if (seed) {
     faker.seed(seed);
   }
 };
 
 // Generate consistent IDs
-export const _generateId = (prefix = '') => {
+export const _generateId = (prefix = ''
+) => {
   return prefix ? `${prefix}_${faker.string.uuid()}` : faker.string.uuid();
 };
 
@@ -50,7 +52,8 @@ export function _generateTimestamp(options?: {
 }
 
 // Generate realistic time strings (HH:MM format)
-export const _generateTimeString = () => {
+export const _generateTimeString = (
+) => {
   const hour = faker.number.int({ min: 0, max: 23 });
   const minute = faker.number.int({ min: 0, max: 59 });
   return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
@@ -139,7 +142,8 @@ export const _randomSubset = <T>(array: readonly T[], min = 1, max?: number): T[
 
 // Generate weighted random selection
 export const _weightedRandom = <T>(items: Array<{ item: T; weight: number }>): T => {
-  const totalWeight = items.reduce((sum, { weight }) => sum + weight, 0);
+  const totalWeight = items.reduce((sum, { weight }
+) => sum + weight, 0);
   let random = faker.number.float() * totalWeight;
 
   for (const { item, weight } of items) {
@@ -151,47 +155,58 @@ export const _weightedRandom = <T>(items: Array<{ item: T; weight: number }>): T
 };
 
 // Generate realistic phone numbers
-export const _generatePhoneNumber = () => {
+export const _generatePhoneNumber = (
+) => {
   return faker.phone.number({ style: 'national' });
 };
 
 // Generate realistic URLs
-export const _generateUrl = (domain = 'relife.app') => {
+export const _generateUrl = (domain = 'relife.app'
+) => {
   return `https://${faker.internet.domainWord()}.${domain}`;
 };
 
 // Generate hex colors
-export const _generateHexColor = () => {
+export const _generateHexColor = (
+) => {
   return faker.color.rgb();
 };
 
 // Generate currency amounts in cents
-export const _generatePriceCents = (min = 99, max = 9999) => {
+export const _generatePriceCents = (min = 99, max = 9999
+) => {
   return faker.number.int({ min, max });
 };
 
 // Generate realistic usernames
-export const _generateUsername = () => {
+export const _generateUsername = (
+) => {
   const patterns = [
-    () => faker.internet.username().toLowerCase(),
-    () =>
+    (
+) => faker.internet.username().toLowerCase(),
+    (
+) =>
       `${faker.word.adjective()}${faker.word.noun()}${faker.number.int({ min: 1, max: 999 })}`,
-    () => `${faker.person.firstName().toLowerCase()}_${faker.word.noun()}`,
-    () => `${faker.word.noun()}_${faker.number.int({ min: 1000, max: 9999 })}`,
+    (
+) => `${faker.person.firstName().toLowerCase()}_${faker.word.noun()}`,
+    (
+) => `${faker.word.noun()}_${faker.number.int({ min: 1000, max: 9999 })}`,
   ];
 
   return faker.helpers.arrayElement(patterns)();
 };
 
 // Generate experience points with realistic distribution
-export const _generateExperience = () => {
+export const _generateExperience = (
+) => {
   // Most users are low level, few are high level (exponential distribution)
   const level = Math.floor(Math.random() * Math.random() * 100) + 1;
   return level * 100 + faker.number.int({ min: 0, max: 99 });
 };
 
 // Generate realistic ratings (skewed towards higher ratings)
-export const _generateRating = () => {
+export const _generateRating = (
+) => {
   // Beta distribution approximation for ratings (most ratings are 4-5 stars)
   const random1 = Math.random();
   const random2 = Math.random();
@@ -200,7 +215,8 @@ export const _generateRating = () => {
 };
 
 // Generate alarm time with realistic distribution
-export const _generateRealisticAlarmTime = () => {
+export const _generateRealisticAlarmTime = (
+) => {
   // Most alarms are between 6 AM and 9 AM
   const isNormal = Math.random() < 0.7;
 
@@ -215,7 +231,8 @@ export const _generateRealisticAlarmTime = () => {
 };
 
 // Generate days of week for alarms (more realistic patterns)
-export const _generateRealisticAlarmDays = () => {
+export const _generateRealisticAlarmDays = (
+) => {
   const patterns = [
     [1, 2, 3, 4, 5], // Weekdays only (most common)
     [0, 1, 2, 3, 4, 5, 6], // Every day
@@ -229,7 +246,8 @@ export const _generateRealisticAlarmDays = () => {
 };
 
 // Generate realistic battle duration
-export const _generateBattleDuration = () => {
+export const _generateBattleDuration = (
+) => {
   // Most battles are 1-7 days
   const durations = [
     { days: 1, weight: 30 }, // Daily challenges
@@ -243,7 +261,8 @@ export const _generateBattleDuration = () => {
 };
 
 // Reset faker to random seed
-export const _resetFaker = () => {
+export const _resetFaker = (
+) => {
   faker.seed();
 };
 // ===============================
@@ -257,7 +276,8 @@ export const _resetFaker = () => {
  * @example
  * const user = withDefaults(createTestUser, { email: 'test@example.com', level: 5 });
  */
-export function _withDefaults<T>(factory: () => T, overrides: Partial<T>): T {
+export function _withDefaults<T>(factory: (
+) => T, overrides: Partial<T>): T {
   return { ...factory(), ...overrides };
 }
 
@@ -270,7 +290,8 @@ export function _withDefaults<T>(factory: () => T, overrides: Partial<T>): T {
  * const user = createUser({ email: 'test@example.com' }); // Direct override
  */
 export function _createFlexibleFactory<T, O = Record<string, unknown>>(
-  baseFactory: (options?: O) => T
+  baseFactory: (options?: O
+) => T
 ) {
   return (overrides: Partial<T> = {}): T => {
     const base = baseFactory();

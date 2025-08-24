@@ -12,8 +12,10 @@ import { TimeoutHandle } from '../types/timers';
 interface EmotionalNudgeModalProps {
   notification: EmotionalNotificationPayload | null;
   isVisible: boolean;
-  onClose: () => void;
-  onResponse: (response: EmotionalResponse) => void;
+  onClose: (
+) => void;
+  onResponse: (response: EmotionalResponse
+) => void;
   className?: string;
 }
 
@@ -21,7 +23,8 @@ interface EmotionalNudgeModalProps {
 const EmotionalAnimation: React.FC<{ emotion: EmotionType; className?: string }> = ({
   emotion,
   className = 'w-24 h-24',
-}) => {
+}
+) => {
   const animations = {
     happy: '😊',
     excited: '🎉',
@@ -47,22 +50,26 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
   onClose,
   onResponse,
   className = '',
-}) => {
+}
+) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [effectivenessRating, setEffectivenessRating] = useState<number | null>(null);
 
   const { handleResponse } = useEmotionalNotificationResponse(notification, onResponse);
 
   // Close modal after 30 seconds if no interaction
-  useEffect(() => {
+  useEffect((
+) => {
     if (!isVisible || !notification) return;
 
-    const timeout = setTimeout(() => {
+    const timeout = setTimeout((
+) => {
       handleResponse('none');
       onClose();
     }, 30000);
 
-    return () => clearTimeout(timeout);
+    return (
+) => clearTimeout(timeout);
   }, [isVisible, notification, handleResponse, onClose]);
 
   if (!notification || !isVisible) {
@@ -72,7 +79,8 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
   const { emotion, tone, message, escalationLevel } = notification;
 
   // Get theme colors based on emotion
-  const getEmotionTheme = (emotion: EmotionType) => {
+  const getEmotionTheme = (emotion: EmotionType
+) => {
     const themes = {
       happy: {
         bg: 'bg-gradient-to-br from-yellow-400 to-orange-500',
@@ -124,7 +132,8 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
   const theme = getEmotionTheme(emotion);
 
   // Get main CTA text based on emotion and escalation
-  const getMainCTA = () => {
+  const getMainCTA = (
+) => {
     const ctas = {
       sad: escalationLevel === 'gentle' ? '💙 Try again' : '💪 Restart journey',
       worried: escalationLevel === 'gentle' ? '🌱 Small step' : '⚡ Take action',
@@ -139,30 +148,35 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
   };
 
   // Handle main action
-  const handleMainAction = () => {
+  const handleMainAction = (
+) => {
     handleResponse('completed_task', effectivenessRating || undefined);
     onClose();
   };
 
   // Handle snooze
-  const handleSnooze = () => {
+  const handleSnooze = (
+) => {
     handleResponse('snoozed');
     onClose();
   };
 
   // Handle dismiss
-  const handleDismiss = () => {
+  const handleDismiss = (
+) => {
     handleResponse('dismissed', effectivenessRating || undefined);
     onClose();
   };
 
   // Handle feedback toggle
-  const handleFeedbackToggle = () => {
+  const handleFeedbackToggle = (
+) => {
     setShowFeedback(!showFeedback);
   };
 
   // Handle effectiveness rating
-  const handleRating = (rating: number) => {
+  const handleRating = (rating: number
+) => {
     setEffectivenessRating(rating);
   };
 
@@ -174,7 +188,8 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={(e: any) => {
+          onClick={(e: any
+) => {
             // auto: implicit any
             if (e.target === e.currentTarget) {
               handleDismiss();
@@ -273,7 +288,8 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
                       {[1, 2, 3, 4, 5].map(rating => (
                         <button
                           key={rating}
-                          onClick={() => handleRating(rating)}
+                          onClick={(
+) => handleRating(rating)}
                           className={`
                             w-8 h-8 rounded-full flex items-center justify-center
                             transition-all duration-200 transform hover:scale-110
@@ -368,21 +384,27 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
 // Settings component for emotional notification preferences
 export const EmotionalNotificationSettings: React.FC<{
   settings: any;
-  onUpdate: (settings: any) => void;
-}> = ({ settings, onUpdate }) => {
-  const handleToneChange = (tone: string) => {
+  onUpdate: (settings: any
+) => void;
+}> = ({ settings, onUpdate }
+) => {
+  const handleToneChange = (tone: string
+) => {
     onUpdate({ ...settings, preferredTone: tone });
   };
 
-  const handleIntensityChange = (intensity: string) => {
+  const handleIntensityChange = (intensity: string
+) => {
     onUpdate({ ...settings, intensityLevel: intensity });
   };
 
-  const handleFrequencyChange = (frequency: string) => {
+  const handleFrequencyChange = (frequency: string
+) => {
     onUpdate({ ...settings, frequency });
   };
 
-  const handleRoastModeToggle = () => {
+  const handleRoastModeToggle = (
+) => {
     onUpdate({ ...settings, roastModeEnabled: !settings.roastModeEnabled });
   };
 
@@ -415,7 +437,8 @@ export const EmotionalNotificationSettings: React.FC<{
           ].map(tone => (
             <button
               key={tone.value}
-              onClick={() => handleToneChange(tone.value)}
+              onClick={(
+) => handleToneChange(tone.value)}
               disabled={tone.disabled}
               className={`
                 p-4 rounded-lg border-2 transition-all duration-200 text-left
@@ -471,7 +494,8 @@ export const EmotionalNotificationSettings: React.FC<{
           ].map(intensity => (
             <button
               key={intensity.value}
-              onClick={() => handleIntensityChange(intensity.value)}
+              onClick={(
+) => handleIntensityChange(intensity.value)}
               className={`
                 flex-1 py-2 px-4 rounded-lg border-2 transition-all duration-200
                 ${
@@ -500,7 +524,8 @@ export const EmotionalNotificationSettings: React.FC<{
           ].map(freq => (
             <button
               key={freq.value}
-              onClick={() => handleFrequencyChange(freq.value)}
+              onClick={(
+) => handleFrequencyChange(freq.value)}
               className={`
                 flex-1 py-2 px-4 rounded-lg border-2 transition-all duration-200
                 ${

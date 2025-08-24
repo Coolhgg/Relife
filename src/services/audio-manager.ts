@@ -57,7 +57,8 @@ export class AudioManager {
   private repeatInterval: TimeoutHandle | null = null;
 
   // Progressive loading for large files
-  private progressCallbacks: Map<string, (progress: AudioLoadProgress) => void> =
+  private progressCallbacks: Map<string, (progress: AudioLoadProgress
+) => void> =
     new Map();
 
   // Voice mood configurations (from enhanced voice service)
@@ -113,11 +114,14 @@ export class AudioManager {
   }
 
   private async initializeDB(): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject
+) => {
       const request = indexedDB.open('AlarmAudioCache', 1);
 
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => {
+      request.onerror = (
+) => reject(request.error);
+      request.onsuccess = (
+) => {
         this.db = request.result;
         resolve();
       };
@@ -162,7 +166,8 @@ export class AudioManager {
       await new Promise<void>(resolve => {
         speechSynthesis.addEventListener(
           'voiceschanged',
-          () => {
+          (
+) => {
             resolve();
           },
           { once: true }
@@ -178,8 +183,10 @@ export class AudioManager {
     const store = transaction.objectStore('audioCache');
     const request = store.getAll();
 
-    return new Promise((resolve, reject) => {
-      request.onsuccess = () => {
+    return new Promise((resolve, reject
+) => {
+      request.onsuccess = (
+) => {
         const entries = request.result as AudioCacheEntry[];
         entries.forEach(entry => {
           // Check if entry is expired
@@ -192,7 +199,8 @@ export class AudioManager {
         console.log(`Loaded ${this.cache.size} cached audio entries`);
         resolve();
       };
-      request.onerror = () => reject(request.error);
+      request.onerror = (
+) => reject(request.error);
     });
   }
 
@@ -202,7 +210,8 @@ export class AudioManager {
     options: {
       priority?: 'low' | 'medium' | 'high' | 'critical';
       progressive?: boolean;
-      onProgress?: (progress: AudioLoadProgress) => void;
+      onProgress?: (progress: AudioLoadProgress
+) => void;
       cacheKey?: string;
       compression?: 'none' | 'light' | 'medium' | 'heavy';
       optimizeFormat?: boolean;
@@ -287,7 +296,8 @@ export class AudioManager {
           }
 
           // Combine chunks
-          const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+          const totalLength = chunks.reduce((sum, chunk
+) => sum + chunk.length, 0);
           const combined = new Uint8Array(totalLength);
           let offset = 0;
           for (const chunk of chunks) {
@@ -520,17 +530,20 @@ export class AudioManager {
         const voice = this.selectVoiceForMood(voices, mood);
         if (voice) utterance.voice = voice;
 
-        utterance.onstart = () => {
+        utterance.onstart = (
+) => {
           console.log('TTS started:', text.substring(0, 50) + '...');
         };
 
-        utterance.onend = () => {
+        utterance.onend = (
+) => {
           console.log('TTS ended');
           this.currentUtterance = null;
 
           if (repeat) {
             // Set up repeating playback
-            this.repeatInterval = setTimeout(() => {
+            this.repeatInterval = setTimeout((
+) => {
               this.speakText(text, mood, true);
             }, 30000); // Repeat every 30 seconds
           }
@@ -547,7 +560,8 @@ export class AudioManager {
         speechSynthesis.speak(utterance);
 
         // Fallback timeout
-        setTimeout(() => {
+        setTimeout((
+) => {
           if (this.currentUtterance === utterance) {
             speechSynthesis.cancel();
             this.currentUtterance = null;
@@ -569,7 +583,8 @@ export class AudioManager {
       loop?: boolean;
       fadeIn?: number;
       fadeOut?: number;
-      onEnded?: () => void;
+      onEnded?: (
+) => void;
     } = {}
   ): Promise<AudioBufferSourceNode | null> {
     await this.initialize();
@@ -700,7 +715,8 @@ export class AudioManager {
       loop?: boolean;
       fadeIn?: number;
       fadeOut?: number;
-      onEnded?: () => void;
+      onEnded?: (
+) => void;
     } = {}
   ): Promise<AudioBufferSourceNode | null> {
     try {
@@ -970,10 +986,13 @@ export class AudioManager {
     const transaction = this.db.transaction(['audioCache'], 'readwrite');
     const store = transaction.objectStore('audioCache');
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject
+) => {
       const request = store.put(entry);
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
+      request.onsuccess = (
+) => resolve();
+      request.onerror = (
+) => reject(request.error);
     });
   }
 
@@ -983,13 +1002,16 @@ export class AudioManager {
     const transaction = this.db.transaction(['audioCache'], 'readwrite');
     const store = transaction.objectStore('audioCache');
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject
+) => {
       const request = store.delete(id);
-      request.onsuccess = () => {
+      request.onsuccess = (
+) => {
         this.cache.delete(id);
         resolve();
       };
-      request.onerror = () => reject(request.error);
+      request.onerror = (
+) => reject(request.error);
     });
   }
 
@@ -1014,10 +1036,13 @@ export class AudioManager {
     if (this.db) {
       const transaction = this.db.transaction(['audioCache'], 'readwrite');
       const store = transaction.objectStore('audioCache');
-      await new Promise<void>((resolve, reject) => {
+      await new Promise<void>((resolve, reject
+) => {
         const request = store.clear();
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
+        request.onsuccess = (
+) => resolve();
+        request.onerror = (
+) => reject(request.error);
       });
     }
   }
@@ -1177,7 +1202,8 @@ export class AudioManager {
     const view = new DataView(buffer);
 
     // WAV header
-    const writeString = (offset: number, string: string) => {
+    const writeString = (offset: number, string: string
+) => {
       for (let i = 0; i < string.length; i++) {
         view.setUint8(offset + i, string.charCodeAt(i));
       }

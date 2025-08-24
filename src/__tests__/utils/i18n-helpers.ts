@@ -24,8 +24,10 @@ interface TranslationData {
 
 interface I18nContextValue {
   locale: string;
-  t: (key: string, options?: any) => string;
-  changeLanguage: (locale: string) => void;
+  t: (key: string, options?: any
+) => string;
+  changeLanguage: (locale: string
+) => void;
   dir: 'ltr' | 'rtl';
   ready: boolean;
 }
@@ -292,7 +294,8 @@ export const _i18nMocks = {
    * Create mock i18n context
    */
   createMockI18nContext(locale: string = 'en'): I18nContextValue {
-    const t = (key: string, options: any = {}) => {
+    const t = (key: string, options: any = {}
+) => {
       const keys = key.split('.');
       let value: any = mockTranslations[locale];
 
@@ -306,7 +309,8 @@ export const _i18nMocks = {
 
       if (typeof value === 'string') {
         // Handle interpolation
-        return value.replace(/\{\{(\w+)\}\}/g, (match, prop) => {
+        return value.replace(/\{\{(\w+)\}\}/g, (match, prop
+) => {
           return options[prop] || match;
         });
       }
@@ -330,11 +334,13 @@ export const _i18nMocks = {
     const mockI18n = {
       language: defaultLocale,
       languages: Object.keys(mockTranslations),
-      changeLanguage: jest.fn((lng: string) => {
+      changeLanguage: jest.fn((lng: string
+) => {
         mockI18n.language = lng;
         return Promise.resolve();
       }),
-      t: (key: string, options: any = {}) => {
+      t: (key: string, options: any = {}
+) => {
         const keys = key.split('.');
         let value: any =
           mockTranslations[mockI18n.language] || mockTranslations[defaultLocale];
@@ -348,15 +354,18 @@ export const _i18nMocks = {
         }
 
         if (typeof value === 'string') {
-          return value.replace(/\{\{(\w+)\}\}/g, (match, prop) => {
+          return value.replace(/\{\{(\w+)\}\}/g, (match, prop
+) => {
             return options[prop] || match;
           });
         }
 
         return key;
       },
-      dir: () => localeConfigs[mockI18n.language]?.direction || 'ltr',
-      exists: (key: string) => {
+      dir: (
+) => localeConfigs[mockI18n.language]?.direction || 'ltr',
+      exists: (key: string
+) => {
         const keys = key.split('.');
         let value: any = mockTranslations[mockI18n.language];
 
@@ -372,8 +381,10 @@ export const _i18nMocks = {
       },
     };
 
-    jest.mock('react-i18next', () => ({
-      useTranslation: () => ({
+    jest.mock('react-i18next', (
+) => ({
+      useTranslation: (
+) => ({
         t: mockI18n.t,
         i18n: mockI18n,
       }),
@@ -383,14 +394,16 @@ export const _i18nMocks = {
       }: {
         children: React.ReactNode;
         i18nKey: string;
-      }) => {
+      }
+) => {
         return React.createElement(
           'span',
           { 'data-testid': `trans-${i18nKey}` },
           children
         );
       },
-      I18nextProvider: ({ children }: { children: React.ReactNode }) => children,
+      I18nextProvider: ({ children }: { children: React.ReactNode }
+) => children,
     }));
   },
 
@@ -414,8 +427,10 @@ export const _i18nMocks = {
    */
   mockIntlAPIs(locale: string = 'en'): void {
     // Mock Intl.DateTimeFormat
-    global.Intl.DateTimeFormat = jest.fn().mockImplementation(() => ({
-      format: jest.fn((date: Date) => {
+    global.Intl.DateTimeFormat = jest.fn().mockImplementation((
+) => ({
+      format: jest.fn((date: Date
+) => {
         const config = localeConfigs[locale];
         if (config.dateFormat === 'MM/DD/YYYY') {
           return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
@@ -423,12 +438,15 @@ export const _i18nMocks = {
           return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
         }
       }),
-      resolvedOptions: () => ({ locale }),
+      resolvedOptions: (
+) => ({ locale }),
     }));
 
     // Mock Intl.NumberFormat
-    global.Intl.NumberFormat = jest.fn().mockImplementation(() => ({
-      format: jest.fn((number: number) => {
+    global.Intl.NumberFormat = jest.fn().mockImplementation((
+) => ({
+      format: jest.fn((number: number
+) => {
         const config = localeConfigs[locale];
         const parts = number.toString().split('.');
         const integerPart = parts[0].replace(
@@ -438,12 +456,15 @@ export const _i18nMocks = {
         const decimalPart = parts[1] ? config.numberFormat.decimal + parts[1] : '';
         return integerPart + decimalPart;
       }),
-      resolvedOptions: () => ({ locale }),
+      resolvedOptions: (
+) => ({ locale }),
     }));
 
     // Mock Intl.RelativeTimeFormat
-    global.Intl.RelativeTimeFormat = jest.fn().mockImplementation(() => ({
-      format: jest.fn((value: number, unit: string) => {
+    global.Intl.RelativeTimeFormat = jest.fn().mockImplementation((
+) => ({
+      format: jest.fn((value: number, unit: string
+) => {
         if (locale === 'es') {
           return `en ${Math.abs(value)} ${unit}${Math.abs(value) !== 1 ? 's' : ''}`;
         } else if (locale === 'fr') {
@@ -453,7 +474,8 @@ export const _i18nMocks = {
         }
         return `in ${Math.abs(value)} ${unit}${Math.abs(value) !== 1 ? 's' : ''}`;
       }),
-      resolvedOptions: () => ({ locale }),
+      resolvedOptions: (
+) => ({ locale }),
     }));
   },
 };
@@ -498,7 +520,8 @@ export const _i18nUtils = {
     const translated = mockContext.t(key, variables);
 
     // Check that variables are interpolated
-    Object.entries(variables).forEach(([varKey, varValue]) => {
+    Object.entries(variables).forEach(([varKey, varValue]
+) => {
       expect(translated).toContain(varValue);
       expect(translated).not.toContain(`{{${varKey}}}`);
     });
@@ -575,24 +598,30 @@ export const _i18nRenderHelpers = {
     ui: React.ReactElement,
     locale: string = 'en',
     renderOptions: RenderOptions = {}
-  ) => {
+  
+) => {
     const mockI18nContext = i18nMocks.createMockI18nContext(locale);
 
     // Mock the useTranslation hook
-    jest.mock('react-i18next', () => ({
-      useTranslation: () => ({
+    jest.mock('react-i18next', (
+) => ({
+      useTranslation: (
+) => ({
         t: mockI18nContext.t,
         i18n: {
           language: locale,
           changeLanguage: mockI18nContext.changeLanguage,
-          dir: () => mockI18nContext.dir,
+          dir: (
+) => mockI18nContext.dir,
         },
       }),
     }));
 
-    const Wrapper = ({ children }: { children: React.ReactNode }) => {
+    const Wrapper = ({ children }: { children: React.ReactNode }
+) => {
       // Set document direction
-      React.useEffect(() => {
+      React.useEffect((
+) => {
         document.dir = mockI18nContext.dir;
       }, []);
 
@@ -610,12 +639,16 @@ export const _i18nRenderHelpers = {
    */
   testInMultipleLocales: (
     ui: React.ReactElement,
-    testFn: (locale: string) => void,
+    testFn: (locale: string
+) => void,
     locales: string[] = ['en', 'es', 'fr', 'ar']
-  ) => {
+  
+) => {
     locales.forEach(locale => {
-      describe(`in ${locale} locale`, () => {
-        beforeEach(() => {
+      describe(`in ${locale} locale`, (
+) => {
+        beforeEach((
+) => {
           i18nMocks.mockReactI18next(locale);
           i18nMocks.mockIntlAPIs(locale);
         });
@@ -699,7 +732,8 @@ export const _alarmI18nUtils = {
 };
 
 // Complete I18n Test Suite
-export const _createI18nTestSuite = () => ({
+export const _createI18nTestSuite = (
+) => ({
   /**
    * Test basic translation functionality
    */

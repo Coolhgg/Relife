@@ -17,11 +17,13 @@ import { createTestAccessibilityPreferences } from '../../__tests__/factories/co
 // Extend Jest matchers
 expect.extend(toHaveNoViolations);
 
-describe('Accessibility Integration Tests', () => {
+describe('Accessibility Integration Tests', (
+) => {
   const mockOnClose = jest.fn();
   const user = userEvent.setup();
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
     // Mock screen reader announcements
     Object.defineProperty(window, 'speechSynthesis', {
@@ -36,8 +38,10 @@ describe('Accessibility Integration Tests', () => {
     });
   });
 
-  describe('Dashboard and Tester Integration', () => {
-    it('should maintain ARIA compliance when both components are rendered', async () => {
+  describe('Dashboard and Tester Integration', (
+) => {
+    it('should maintain ARIA compliance when both components are rendered', async (
+) => {
       const { container } = renderWithAccessibilityProviders(
         <div>
           <AccessibilityDashboard />
@@ -50,7 +54,8 @@ describe('Accessibility Integration Tests', () => {
       expect(results).toHaveNoViolations();
     });
 
-    it('should properly manage focus when switching between components', async () => {
+    it('should properly manage focus when switching between components', async (
+) => {
       renderWithAccessibilityProviders(
         <div>
           <AccessibilityDashboard />
@@ -74,7 +79,8 @@ describe('Accessibility Integration Tests', () => {
       expect(firstTesterElement).toBeInTheDocument();
     });
 
-    it('should synchronize accessibility preferences between components', async () => {
+    it('should synchronize accessibility preferences between components', async (
+) => {
       const preferences = createTestAccessibilityPreferences({
         highContrast: false,
         fontSize: 'medium',
@@ -103,8 +109,10 @@ describe('Accessibility Integration Tests', () => {
     });
   });
 
-  describe('Screen Reader Integration', () => {
-    it('should coordinate screen reader announcements between components', async () => {
+  describe('Screen Reader Integration', (
+) => {
+    it('should coordinate screen reader announcements between components', async (
+) => {
       const speakSpy = jest.spyOn(window.speechSynthesis, 'speak');
 
       renderWithAccessibilityProviders(
@@ -119,7 +127,8 @@ describe('Accessibility Integration Tests', () => {
       await user.click(fontSizeButton);
 
       // Verify announcement was made
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(speakSpy).toHaveBeenCalled();
       });
 
@@ -131,7 +140,8 @@ describe('Accessibility Integration Tests', () => {
       expect(speakSpy).toHaveBeenCalledTimes(2);
     });
 
-    it('should handle screen reader testing workflow', async () => {
+    it('should handle screen reader testing workflow', async (
+) => {
       renderWithAccessibilityProviders(
         <div>
           <AccessibilityDashboard />
@@ -157,8 +167,10 @@ describe('Accessibility Integration Tests', () => {
     });
   });
 
-  describe('Mobile Accessibility Integration', () => {
-    it('should adapt interface for mobile accessibility', async () => {
+  describe('Mobile Accessibility Integration', (
+) => {
+    it('should adapt interface for mobile accessibility', async (
+) => {
       // Mock mobile viewport
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
@@ -182,7 +194,8 @@ describe('Accessibility Integration Tests', () => {
       });
     });
 
-    it('should provide proper touch accessibility', async () => {
+    it('should provide proper touch accessibility', async (
+) => {
       renderWithAccessibilityProviders(
         <div>
           <AccessibilityDashboard />
@@ -211,8 +224,10 @@ describe('Accessibility Integration Tests', () => {
     });
   });
 
-  describe('Keyboard Navigation Integration', () => {
-    it('should maintain keyboard navigation across components', async () => {
+  describe('Keyboard Navigation Integration', (
+) => {
+    it('should maintain keyboard navigation across components', async (
+) => {
       renderWithAccessibilityProviders(
         <div>
           <AccessibilityDashboard />
@@ -233,7 +248,8 @@ describe('Accessibility Integration Tests', () => {
       }
     });
 
-    it('should trap focus within tester dialog', async () => {
+    it('should trap focus within tester dialog', async (
+) => {
       renderWithAccessibilityProviders(
         <AccessibilityTester isVisible={true} onClose={mockOnClose} />
       );
@@ -258,8 +274,10 @@ describe('Accessibility Integration Tests', () => {
     });
   });
 
-  describe('ARIA Compliance Integration', () => {
-    it('should maintain proper ARIA relationships between components', async () => {
+  describe('ARIA Compliance Integration', (
+) => {
+    it('should maintain proper ARIA relationships between components', async (
+) => {
       const { container } = renderWithAccessibilityProviders(
         <div>
           <AccessibilityDashboard />
@@ -281,7 +299,8 @@ describe('Accessibility Integration Tests', () => {
       expect(liveRegions.length).toBeGreaterThan(0);
     });
 
-    it('should provide proper ARIA descriptions for complex interactions', async () => {
+    it('should provide proper ARIA descriptions for complex interactions', async (
+) => {
       renderWithAccessibilityProviders(
         <div>
           <AccessibilityDashboard />
@@ -298,10 +317,13 @@ describe('Accessibility Integration Tests', () => {
     });
   });
 
-  describe('Error Handling Integration', () => {
-    it('should handle accessibility errors gracefully across components', async () => {
+  describe('Error Handling Integration', (
+) => {
+    it('should handle accessibility errors gracefully across components', async (
+) => {
       // Mock console.error to track error handling
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation((
+) => {});
 
       renderWithAccessibilityProviders(
         <div>
@@ -323,7 +345,8 @@ describe('Accessibility Integration Tests', () => {
       consoleSpy.mockRestore();
     });
 
-    it('should provide accessible error messages', async () => {
+    it('should provide accessible error messages', async (
+) => {
       renderWithAccessibilityProviders(
         <AccessibilityTester isVisible={true} onClose={mockOnClose} />
       );
@@ -340,7 +363,8 @@ describe('Accessibility Integration Tests', () => {
       await user.click(checkButton);
 
       // Error should be announced and accessible
-      await waitFor(() => {
+      await waitFor((
+) => {
         const errorMessage = screen.getByRole('alert');
         expect(errorMessage).toBeInTheDocument();
         expect(errorMessage).toHaveAttribute('aria-live', 'assertive');
@@ -348,8 +372,10 @@ describe('Accessibility Integration Tests', () => {
     });
   });
 
-  describe('Performance Integration', () => {
-    it('should not create accessibility performance bottlenecks', async () => {
+  describe('Performance Integration', (
+) => {
+    it('should not create accessibility performance bottlenecks', async (
+) => {
       const start = performance.now();
 
       renderWithAccessibilityProviders(
@@ -362,7 +388,8 @@ describe('Accessibility Integration Tests', () => {
       // Simulate rapid user interactions
       const toggles = screen.getAllByRole('switch');
       for (const toggle of toggles.slice(0, 5)) {
-        await act(async () => {
+        await act(async (
+) => {
           await user.click(toggle);
         });
       }
@@ -375,8 +402,10 @@ describe('Accessibility Integration Tests', () => {
     });
   });
 
-  describe('Accessibility Workflow Integration', () => {
-    it('should support complete accessibility audit workflow', async () => {
+  describe('Accessibility Workflow Integration', (
+) => {
+    it('should support complete accessibility audit workflow', async (
+) => {
       renderWithAccessibilityProviders(
         <div>
           <AccessibilityDashboard />
@@ -400,7 +429,8 @@ describe('Accessibility Integration Tests', () => {
       await user.click(keyboardTest);
 
       // Step 3: Verify results are properly displayed
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(screen.getByText(/contrast.*ratio/i)).toBeInTheDocument();
       });
 
@@ -409,7 +439,8 @@ describe('Accessibility Integration Tests', () => {
       await user.click(resetButton);
 
       // Verify settings were reset
-      await waitFor(() => {
+      await waitFor((
+) => {
         const resetHighContrastToggle = screen.getByRole('switch', {
           name: /high contrast/i,
         });

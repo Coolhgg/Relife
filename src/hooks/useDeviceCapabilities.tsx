@@ -42,9 +42,12 @@ export interface DeviceCapabilityHookReturn {
   error: Error | null;
 
   // Actions
-  reevaluateCapabilities: () => Promise<void>;
-  resolveAlert: (alertId: string) => void;
-  triggerAutoFix: (alertId: string) => Promise<void>;
+  reevaluateCapabilities: (
+) => Promise<void>;
+  resolveAlert: (alertId: string
+) => void;
+  triggerAutoFix: (alertId: string
+) => Promise<void>;
 }
 
 export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
@@ -60,8 +63,10 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
   const [error, setError] = useState<Error | null>(null);
 
   // Initialize device capabilities
-  useEffect(() => {
-    const initializeCapabilities = async () => {
+  useEffect((
+) => {
+    const initializeCapabilities = async (
+) => {
       try {
         setIsLoading(true);
         setError(null);
@@ -96,7 +101,8 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
   }, []);
 
   // Listen for device capability changes
-  useEffect(() => {
+  useEffect((
+) => {
     const unsubscribeConfig = deviceCapabilities.onConfigChange(newConfig => {
       setConfig(newConfig);
       setTier(deviceCapabilities.getDeviceTier());
@@ -108,18 +114,22 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
   }, []);
 
   // Listen for performance updates
-  useEffect(() => {
+  useEffect((
+) => {
     const unsubscribeSnapshot = performanceBudgetManager.onSnapshot(snapshot => {
       setPerformanceSnapshot(snapshot);
     });
 
     const unsubscribeAlerts = performanceBudgetManager.onAlert(alert => {
-      setActiveAlerts((prev: any) => { // auto: implicit any
-        const existing = prev.find((a: any) => a // auto: implicit any.id === alert.id);
+      setActiveAlerts((prev: any
+) => { // auto: implicit any
+        const existing = prev.find((a: any
+) => a.id === alert.id);
         if (existing) {
           // Update existing alert
-          return prev/* auto: implicit any */
-      &.map((a: any) => (a.id === alert.id ? alert : a));
+          return prev
+      .map((a: any
+) => (a.id === alert.id ? alert : a));
         } else {
           // Add new alert
           return [...prev, alert];
@@ -127,7 +137,8 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
       });
     });
 
-    return () => {
+    return (
+) => {
       unsubscribeSnapshot();
       unsubscribeAlerts();
     };
@@ -145,7 +156,8 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
   const maxCacheSize = deviceCapabilities.getMaxCacheSize();
 
   // Actions
-  const reevaluateCapabilities = useCallback(async () => {
+  const reevaluateCapabilities = useCallback(async (
+) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -166,15 +178,21 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
     }
   }, []);
 
-  const resolveAlert = useCallback((alertId: string) => {
+  const resolveAlert = useCallback((alertId: string
+) => {
     performanceBudgetManager.resolveAlert(alertId);
-    setActiveAlerts((prev: any) => p // auto: implicit anyrev.filter((alert: any) => a // auto: implicit anylert.id !== alertId));
+    setActiveAlerts((prev: any
+) => prev.filter((alert: any
+) => alert.id !== alertId));
   }, []);
 
-  const triggerAutoFix = useCallback(async (alertId: string) => {
+  const triggerAutoFix = useCallback(async (alertId: string
+) => {
     try {
       await performanceBudgetManager.triggerAutoFix(alertId);
-      setActiveAlerts((prev: any) => p // auto: implicit anyrev.filter((alert: any) => a // auto: implicit anylert.id !== alertId));
+      setActiveAlerts((prev: any
+) => prev.filter((alert: any
+) => alert.id !== alertId));
     } catch (err) {
       console.error('Auto-fix failed:', err);
     }

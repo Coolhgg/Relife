@@ -40,7 +40,8 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
   const screenReader = useRef<ScreenReaderService>();
   const previousValues = useRef<Record<string, any>>({});
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (enabled) {
       screenReader.current = ScreenReaderService.getInstance();
       screenReader.current.updateSettings({
@@ -52,7 +53,8 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
   }, [enabled, verbosity, announceStateChanges]);
 
   const announce = useCallback(
-    (announcement: StateChangeAnnouncement) => {
+    (announcement: StateChangeAnnouncement
+) => {
       if (!enabled || !screenReader.current) return;
 
       const { type, message, data, priority = 'polite', delay = 0 } = announcement;
@@ -167,7 +169,8 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
 
   // Track value changes automatically
   const trackChange = useCallback(
-    (key: string, newValue: any, announcement?: Partial<StateChangeAnnouncement>) => {
+    (key: string, newValue: any, announcement?: Partial<StateChangeAnnouncement>
+) => {
       if (!enabled) return;
 
       const previousValue = previousValues.current[key];
@@ -189,7 +192,8 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
 
   // Enhanced announcements for different scenarios
   const announceFormValidation = useCallback(
-    (fieldName: string, isValid: boolean, errorMessage?: string) => {
+    (fieldName: string, isValid: boolean, errorMessage?: string
+) => {
       if (!isValid && errorMessage) {
         announce({
           type: 'error',
@@ -206,7 +210,8 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
       listName: string,
       action: 'added' | 'removed' | 'updated',
       itemDescription: string
-    ) => {
+    
+) => {
       announce({
         type: 'custom',
         message: `${itemDescription} ${action} ${action === 'added' ? 'to' : action === 'removed' ? 'from' : 'in'} ${listName}`,
@@ -217,7 +222,8 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
   );
 
   const announceStatusChange = useCallback(
-    (componentName: string, oldStatus: string, newStatus: string) => {
+    (componentName: string, oldStatus: string, newStatus: string
+) => {
       announce({
         type: 'custom',
         message: `${componentName} status changed from ${oldStatus} to ${newStatus}`,
@@ -228,7 +234,8 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
   );
 
   const announceInteraction = useCallback(
-    (elementType: string, elementName: string, action: string) => {
+    (elementType: string, elementName: string, action: string
+) => {
       announce({
         type: 'custom',
         message: `${action} ${elementType}: ${elementName}`,
@@ -255,7 +262,8 @@ export function useFocusAnnouncements(componentName: string, enabled = true) {
   const { announce } = useScreenReaderAnnouncements({ enabled });
 
   const announceFocus = useCallback(
-    (elementType: string, elementLabel: string, additionalContext?: string) => {
+    (elementType: string, elementLabel: string, additionalContext?: string
+) => {
       if (!enabled) return;
 
       const service = ScreenReaderService.getInstance();
@@ -265,7 +273,8 @@ export function useFocusAnnouncements(componentName: string, enabled = true) {
   );
 
   const announceEnter = useCallback(
-    (description?: string) => {
+    (description?: string
+) => {
       announce({
         type: 'custom',
         message: `Entered ${componentName}${description ? `. ${description}` : ''}`,
@@ -276,7 +285,8 @@ export function useFocusAnnouncements(componentName: string, enabled = true) {
   );
 
   const announceExit = useCallback(
-    (description?: string) => {
+    (description?: string
+) => {
       announce({
         type: 'custom',
         message: `Exited ${componentName}${description ? `. ${description}` : ''}`,
@@ -297,7 +307,8 @@ export function useFocusAnnouncements(componentName: string, enabled = true) {
 export function useStateChangeAnnouncements<T>(
   stateName: string,
   currentValue: T,
-  formatter?: (value: T) => string,
+  formatter?: (value: T
+) => string,
   options: {
     enabled?: boolean;
     compareDeep?: boolean;
@@ -315,7 +326,8 @@ export function useStateChangeAnnouncements<T>(
   const previousValue = useRef<T>();
   const timeoutRef = useRef<TimeoutHandle>();
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (!enabled) return;
 
     const hasChanged = compareDeep
@@ -329,7 +341,8 @@ export function useStateChangeAnnouncements<T>(
       }
 
       // Debounce announcements
-      timeoutRef.current = setTimeout(() => {
+      timeoutRef.current = setTimeout((
+) => {
         const formattedValue = formatter
           ? formatter(currentValue)
           : String(currentValue);
@@ -343,7 +356,8 @@ export function useStateChangeAnnouncements<T>(
 
     previousValue.current = currentValue;
 
-    return () => {
+    return (
+) => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }

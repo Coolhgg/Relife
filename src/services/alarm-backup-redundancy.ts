@@ -244,8 +244,10 @@ export class AlarmBackupRedundancyService {
   async retrieveBackup(backupId: string): Promise<BackupData | null> {
     // Get sorted locations by priority
     const sortedLocations = Array.from(this.backupLocations.entries())
-      .filter(([, location]) => location.available)
-      .sort(([, a], [, b]) => a.priority - b.priority);
+      .filter(([, location]
+) => location.available)
+      .sort(([, a], [, b]
+) => a.priority - b.priority);
 
     for (const [locationId, location] of sortedLocations) {
       try {
@@ -313,7 +315,8 @@ export class AlarmBackupRedundancyService {
       }
 
       // Sort by creation date (most recent first)
-      availableBackups.sort((a, b) => b.created.getTime() - a.created.getTime());
+      availableBackups.sort((a, b
+) => b.created.getTime() - a.created.getTime());
 
       // Try to recover from each backup until successful
       for (const backup of availableBackups) {
@@ -390,7 +393,8 @@ export class AlarmBackupRedundancyService {
       clearInterval(this.backupTimer);
     }
 
-    this.backupTimer = setInterval(async () => {
+    this.backupTimer = setInterval(async (
+) => {
       try {
         await this.createBackup('scheduled');
       } catch (error) {
@@ -409,7 +413,8 @@ export class AlarmBackupRedundancyService {
       clearInterval(this.verificationTimer);
     }
 
-    this.verificationTimer = setInterval(async () => {
+    this.verificationTimer = setInterval(async (
+) => {
       try {
         await this.verifyAllBackups();
       } catch (error) {
@@ -566,7 +571,8 @@ export class AlarmBackupRedundancyService {
       const lastBackup =
         backups.length > 0
           ? backups.reduce(
-              (latest, backup) => (backup.created > latest ? backup.created : latest),
+              (latest, backup
+) => (backup.created > latest ? backup.created : latest),
               backups[0].created
             )
           : null;
@@ -653,7 +659,10 @@ export class AlarmBackupRedundancyService {
     try {
       const { keys } = await Preferences.keys();
       const backupKeys = keys
-        .filter((key: any) => k // auto: implicit anyey.startsWith(AlarmBackupRedundancyService.BACKUP_PREFIX))
+        .filter((key: any
+) =>
+          key.startsWith(AlarmBackupRedundancyService.BACKUP_PREFIX)
+        )
         .sort()
         .reverse();
 

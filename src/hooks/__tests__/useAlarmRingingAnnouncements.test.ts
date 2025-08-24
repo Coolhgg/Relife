@@ -14,19 +14,23 @@ const mockAnnouncementService = {
   announceAssertive: jest.fn(),
   clearQueue: jest.fn(),
   setEnabled: jest.fn(),
-  isEnabled: jest.fn(() => true),
+  isEnabled: jest.fn((
+) => true),
 };
 
 // Mock accessibility service
-jest.mock('../../services/accessibility-announcement', () => ({
+jest.mock('../../services/accessibility-announcement', (
+) => ({
   __esModule: true,
   default: {
-    getInstance: () => mockAnnouncementService,
+    getInstance: (
+) => mockAnnouncementService,
   },
 }));
 
 // Mock i18n hook
-const mockT = jest.fn((key, options) => {
+const mockT = jest.fn((key, options
+) => {
   const translations: Record<string, string> = {
     'alarm.ringing.announcement': 'Alarm is ringing: {{alarmName}}',
     'alarm.snooze.announcement': 'Alarm snoozed for {{minutes}} minutes',
@@ -49,17 +53,23 @@ const mockT = jest.fn((key, options) => {
   return translation;
 });
 
-jest.mock('../useI18n', () => ({
-  useAlarmI18n: () => ({ t: mockT }),
+jest.mock('../useI18n', (
+) => ({
+  useAlarmI18n: (
+) => ({ t: mockT }),
 }));
 
-describe('useAlarmRingingAnnouncements', () => {
-  beforeEach(() => {
+describe('useAlarmRingingAnnouncements', (
+) => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
   });
 
-  it('should initialize with default state', () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should initialize with default state', (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
     expect(result.current.isEnabled).toBe(true);
     expect(typeof result.current.announceAlarmRinging).toBe('function');
@@ -67,10 +77,13 @@ describe('useAlarmRingingAnnouncements', () => {
     expect(typeof result.current.announceAlarmDismissed).toBe('function');
   });
 
-  it('should announce alarm ringing with alarm name', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should announce alarm ringing with alarm name', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceAlarmRinging({
         id: 'alarm-1',
         name: 'Morning Alarm',
@@ -86,10 +99,13 @@ describe('useAlarmRingingAnnouncements', () => {
     );
   });
 
-  it('should announce alarm snoozed with duration', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should announce alarm snoozed with duration', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceAlarmSnoozed({
         alarmId: 'alarm-1',
         snoozeMinutes: 10,
@@ -104,10 +120,13 @@ describe('useAlarmRingingAnnouncements', () => {
     );
   });
 
-  it('should announce alarm dismissed', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should announce alarm dismissed', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceAlarmDismissed({
         alarmId: 'alarm-1',
       });
@@ -119,10 +138,13 @@ describe('useAlarmRingingAnnouncements', () => {
     );
   });
 
-  it('should announce volume changes', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should announce volume changes', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceVolumeChange(75);
     });
 
@@ -134,10 +156,13 @@ describe('useAlarmRingingAnnouncements', () => {
     );
   });
 
-  it('should announce sound changes', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should announce sound changes', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceSoundChange('Gentle Wake');
     });
 
@@ -149,10 +174,13 @@ describe('useAlarmRingingAnnouncements', () => {
     );
   });
 
-  it('should announce next alarm', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should announce next alarm', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceNextAlarm('08:30 AM');
     });
 
@@ -164,15 +192,18 @@ describe('useAlarmRingingAnnouncements', () => {
     );
   });
 
-  it('should handle multiple alarms ringing', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should handle multiple alarms ringing', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
     const alarms = [
       { id: 'alarm-1', name: 'Morning Alarm', time: '07:00' },
       { id: 'alarm-2', name: 'Backup Alarm', time: '07:05' },
     ];
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceMultipleAlarms(alarms);
     });
 
@@ -184,10 +215,13 @@ describe('useAlarmRingingAnnouncements', () => {
     );
   });
 
-  it('should announce smart alarm adjustments', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should announce smart alarm adjustments', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceSmartAdjustment({
         originalTime: '07:00',
         adjustedTime: '06:45',
@@ -203,14 +237,17 @@ describe('useAlarmRingingAnnouncements', () => {
     );
   });
 
-  it('should respect enabled/disabled state', async () => {
+  it('should respect enabled/disabled state', async (
+) => {
     mockAnnouncementService.isEnabled.mockReturnValue(false);
 
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
     expect(result.current.isEnabled).toBe(false);
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceAlarmRinging({
         id: 'alarm-1',
         name: 'Morning Alarm',
@@ -222,41 +259,51 @@ describe('useAlarmRingingAnnouncements', () => {
     expect(mockAnnouncementService.announceAssertive).not.toHaveBeenCalled();
   });
 
-  it('should enable/disable announcements', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should enable/disable announcements', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       result.current.setEnabled(false);
     });
 
     expect(mockAnnouncementService.setEnabled).toHaveBeenCalledWith(false);
 
-    await act(async () => {
+    await act(async (
+) => {
       result.current.setEnabled(true);
     });
 
     expect(mockAnnouncementService.setEnabled).toHaveBeenCalledWith(true);
   });
 
-  it('should clear announcement queue', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should clear announcement queue', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       result.current.clearQueue();
     });
 
     expect(mockAnnouncementService.clearQueue).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle errors gracefully', async () => {
+  it('should handle errors gracefully', async (
+) => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
     mockAnnouncementService.announceAssertive.mockRejectedValue(
       new Error('Announcement failed')
     );
 
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceAlarmRinging({
         id: 'alarm-1',
         name: 'Morning Alarm',
@@ -272,10 +319,13 @@ describe('useAlarmRingingAnnouncements', () => {
     consoleSpy.mockRestore();
   });
 
-  it('should handle missing alarm names gracefully', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should handle missing alarm names gracefully', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceAlarmRinging({
         id: 'alarm-1',
         time: '07:00',
@@ -288,10 +338,13 @@ describe('useAlarmRingingAnnouncements', () => {
     });
   });
 
-  it('should support custom announcement priorities', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should support custom announcement priorities', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceCustom('Custom message', 'assertive');
     });
 
@@ -299,7 +352,8 @@ describe('useAlarmRingingAnnouncements', () => {
       'Custom message'
     );
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.announceCustom('Another message', 'polite');
     });
 
@@ -308,8 +362,10 @@ describe('useAlarmRingingAnnouncements', () => {
     );
   });
 
-  it('should batch multiple announcements properly', async () => {
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+  it('should batch multiple announcements properly', async (
+) => {
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
     const announcements = [
       { type: 'ringing', alarm: { id: 'alarm-1', name: 'Alarm 1', time: '07:00' } },
@@ -317,7 +373,8 @@ describe('useAlarmRingingAnnouncements', () => {
       { type: 'sound', soundName: 'Birds' },
     ];
 
-    await act(async () => {
+    await act(async (
+) => {
       await result.current.batchAnnounce(announcements);
     });
 
@@ -325,13 +382,16 @@ describe('useAlarmRingingAnnouncements', () => {
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalledTimes(2);
   });
 
-  it('should handle internationalization edge cases', () => {
+  it('should handle internationalization edge cases', (
+) => {
     // Test with missing translation
     mockT.mockReturnValueOnce('missing.key');
 
-    const { result } = renderHook(() => useAlarmRingingAnnouncements());
+    const { result } = renderHook((
+) => useAlarmRingingAnnouncements());
 
-    act(() => {
+    act((
+) => {
       result.current.announceAlarmRinging({
         id: 'alarm-1',
         name: 'Test',

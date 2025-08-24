@@ -91,16 +91,20 @@ export function FeedbackWidget({
     },
   ] as const;
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (autoHide && isExpanded) {
-      const timer = setTimeout(() => {
+      const timer = setTimeout((
+) => {
         setIsExpanded(false);
       }, autoHideDelay);
-      return () => clearTimeout(timer);
+      return (
+) => clearTimeout(timer);
     }
   }, [autoHide, autoHideDelay, isExpanded]);
 
-  const handleFeedbackOptionClick = (optionId: string) => {
+  const handleFeedbackOptionClick = (optionId: string
+) => {
     if (optionId === 'bug') {
       setShowBugModal(true);
     } else {
@@ -110,12 +114,14 @@ export function FeedbackWidget({
     setIsExpanded(false);
   };
 
-  const handleFeedbackSubmitted = (feedbackId: string) => {
+  const handleFeedbackSubmitted = (feedbackId: string
+) => {
     console.log('Feedback submitted:', feedbackId);
     setHasNewFeatures(false);
   };
 
-  const handleBugReported = (bugId: string) => {
+  const handleBugReported = (bugId: string
+) => {
     console.log('Bug reported:', bugId);
     setHasNewFeatures(false);
   };
@@ -138,7 +144,8 @@ export function FeedbackWidget({
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setIsExpanded(false)}
+                  onClick={(
+) => setIsExpanded(false)}
                   className="h-8 w-8 p-0"
                 >
                   <X className="w-4 h-4" />
@@ -151,7 +158,8 @@ export function FeedbackWidget({
                   return (
                     <button
                       key={option.id}
-                      onClick={() => handleFeedbackOptionClick(option.id)}
+                      onClick={(
+) => handleFeedbackOptionClick(option.id)}
                       className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors ${option.bgColor} hover:border-gray-300`}
                     >
                       <Icon className={`w-5 h-5 ${option.color}`} />
@@ -176,7 +184,8 @@ export function FeedbackWidget({
         ) : (
           <div className="relative">
             <Button
-              onClick={() => setIsExpanded(true)}
+              onClick={(
+) => setIsExpanded(true)}
               className="rounded-full w-14 h-14 shadow-lg hover:scale-110 transition-transform duration-200"
               size="lg"
             >
@@ -197,14 +206,16 @@ export function FeedbackWidget({
 
       <FeedbackModal
         isOpen={showFeedbackModal}
-        onClose={() => setShowFeedbackModal(false)}
+        onClose={(
+) => setShowFeedbackModal(false)}
         initialType={feedbackType}
         onFeedbackSubmitted={handleFeedbackSubmitted}
       />
 
       <BugReportModal
         isOpen={showBugModal}
-        onClose={() => setShowBugModal(false)}
+        onClose={(
+) => setShowBugModal(false)}
         onBugReported={handleBugReported}
       />
     </>

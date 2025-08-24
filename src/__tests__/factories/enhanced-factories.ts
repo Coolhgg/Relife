@@ -117,7 +117,8 @@ export const _createTestPersonaDetectionResult = (
   } = options;
 
   const factorCount = faker.number.int({ min: 3, max: 8 });
-  const factors: PersonaDetectionFactor[] = Array.from({ length: factorCount }, () => ({
+  const factors: PersonaDetectionFactor[] = Array.from({ length: factorCount }, (
+) => ({
     factor: faker.helpers.arrayElement([
       'usage_pattern',
       'feature_interaction',
@@ -169,7 +170,8 @@ export const _createTestEmailCampaign = (
     status,
     createdAt: new Date(generateTimestamp({ past: 30 })),
     updatedAt: new Date(generateTimestamp({ past: 5 })),
-    sequences: Array.from({ length: sequences }, (_, i) =>
+    sequences: Array.from({ length: sequences }, (_, i
+) =>
       createTestEmailSequence({
         campaignId,
         sequenceOrder: i + 1,

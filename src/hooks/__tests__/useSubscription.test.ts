@@ -24,10 +24,12 @@ import type {
 } from '../../types/premium';
 
 // Mock services
-jest.mock('../../services/subscription-service', () => ({
+jest.mock('../../services/subscription-service', (
+) => ({
   __esModule: true,
   default: {
-    getInstance: jest.fn(() => ({
+    getInstance: jest.fn((
+) => ({
       getSubscriptionDashboard: jest.fn(),
       getFeatureAccess: jest.fn(),
       getUserTier: jest.fn(),
@@ -41,33 +43,39 @@ jest.mock('../../services/subscription-service', () => ({
   },
 }));
 
-jest.mock('../../services/stripe-service', () => ({
+jest.mock('../../services/stripe-service', (
+) => ({
   __esModule: true,
   default: {
-    getInstance: jest.fn(() => ({
+    getInstance: jest.fn((
+) => ({
       addPaymentMethod: jest.fn(),
       removePaymentMethod: jest.fn(),
     })),
   },
 }));
 
-jest.mock('../../services/error-handler', () => ({
+jest.mock('../../services/error-handler', (
+) => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
 }));
 
-jest.mock('../../services/analytics', () => ({
+jest.mock('../../services/analytics', (
+) => ({
   __esModule: true,
   default: {
-    getInstance: jest.fn(() => ({
+    getInstance: jest.fn((
+) => ({
       trackFeatureUsage: jest.fn(),
       trackError: jest.fn(),
     })),
   },
 }));
 
-describe('useSubscription Hook', () => {
+describe('useSubscription Hook', (
+) => {
   const mockUserId = 'test-user-123';
   const mockSubscription = createMockSubscription();
 
@@ -139,7 +147,8 @@ describe('useSubscription Hook', () => {
     upcomingInvoice: null,
   };
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     clearAllMocks();
     jest.clearAllTimers();
     jest.useFakeTimers();
@@ -171,14 +180,18 @@ describe('useSubscription Hook', () => {
     StripeService.getInstance.mockReturnValue(mockStripeService);
   });
 
-  afterEach(() => {
+  afterEach((
+) => {
     jest.clearAllTimers();
     jest.useRealTimers();
   });
 
-  describe('Initialization', () => {
-    it('should initialize with default state', () => {
-      const { result } = renderHookWithProviders(() =>
+  describe('Initialization', (
+) => {
+    it('should initialize with default state', (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
@@ -195,12 +208,15 @@ describe('useSubscription Hook', () => {
       expect(result.current.invoiceHistory).toEqual([]);
     });
 
-    it('should load subscription data on initialization', async () => {
-      const { result } = renderHookWithProviders(() =>
+    it('should load subscription data on initialization', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -211,17 +227,20 @@ describe('useSubscription Hook', () => {
       expect(result.current.usage).toEqual(mockUsage);
     });
 
-    it('should handle initialization errors', async () => {
+    it('should handle initialization errors', async (
+) => {
       const SubscriptionService =
         require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
       mockService.getSubscriptionDashboard.mockRejectedValue(new Error('API Error'));
 
-      const { result } = renderHookWithProviders(() =>
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -231,21 +250,27 @@ describe('useSubscription Hook', () => {
       expect(result.current.subscription).toBeNull();
     });
 
-    it('should not initialize without userId', () => {
-      const { result } = renderHookWithProviders(() => useSubscription({ userId: '' }));
+    it('should not initialize without userId', (
+) => {
+      const { result } = renderHookWithProviders((
+) => useSubscription({ userId: '' }));
 
       expect(result.current.isLoading).toBe(false);
       expect(result.current.isInitialized).toBe(false);
     });
   });
 
-  describe('Subscription Creation', () => {
-    it('should create subscription successfully', async () => {
-      const { result } = renderHookWithProviders(() =>
+  describe('Subscription Creation', (
+) => {
+    it('should create subscription successfully', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -256,7 +281,8 @@ describe('useSubscription Hook', () => {
       };
 
       let createResult;
-      await act(async () => {
+      await act(async (
+) => {
         createResult = await result.current.createSubscription(request);
       });
 
@@ -267,7 +293,8 @@ describe('useSubscription Hook', () => {
       expect(result.current.uiState.currentStep).toBe('complete');
     });
 
-    it('should handle subscription creation with payment action required', async () => {
+    it('should handle subscription creation with payment action required', async (
+) => {
       const SubscriptionService =
         require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
@@ -277,11 +304,13 @@ describe('useSubscription Hook', () => {
         clientSecret: 'pi_123456_secret_xyz',
       });
 
-      const { result } = renderHookWithProviders(() =>
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -292,7 +321,8 @@ describe('useSubscription Hook', () => {
       };
 
       let createResult;
-      await act(async () => {
+      await act(async (
+) => {
         createResult = await result.current.createSubscription(request);
       });
 
@@ -303,7 +333,8 @@ describe('useSubscription Hook', () => {
       expect(result.current.uiState.paymentIntent).toBeDefined();
     });
 
-    it('should handle subscription creation errors', async () => {
+    it('should handle subscription creation errors', async (
+) => {
       const SubscriptionService =
         require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
@@ -312,11 +343,13 @@ describe('useSubscription Hook', () => {
         error: 'Payment failed',
       });
 
-      const { result } = renderHookWithProviders(() =>
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -327,7 +360,8 @@ describe('useSubscription Hook', () => {
       };
 
       let createResult;
-      await act(async () => {
+      await act(async (
+) => {
         createResult = await result.current.createSubscription(request);
       });
 
@@ -339,13 +373,17 @@ describe('useSubscription Hook', () => {
     });
   });
 
-  describe('Subscription Updates', () => {
-    it('should update subscription successfully', async () => {
-      const { result } = renderHookWithProviders(() =>
+  describe('Subscription Updates', (
+) => {
+    it('should update subscription successfully', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -354,14 +392,16 @@ describe('useSubscription Hook', () => {
       };
 
       let updateResult;
-      await act(async () => {
+      await act(async (
+) => {
         updateResult = await result.current.updateSubscription(request);
       });
 
       expect(updateResult).toEqual({ success: true });
     });
 
-    it('should handle update without active subscription', async () => {
+    it('should handle update without active subscription', async (
+) => {
       const SubscriptionService =
         require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
@@ -370,11 +410,13 @@ describe('useSubscription Hook', () => {
         subscription: null,
       });
 
-      const { result } = renderHookWithProviders(() =>
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -383,7 +425,8 @@ describe('useSubscription Hook', () => {
       };
 
       let updateResult;
-      await act(async () => {
+      await act(async (
+) => {
         updateResult = await result.current.updateSubscription(request);
       });
 
@@ -394,13 +437,17 @@ describe('useSubscription Hook', () => {
     });
   });
 
-  describe('Subscription Cancellation', () => {
-    it('should cancel subscription successfully', async () => {
-      const { result } = renderHookWithProviders(() =>
+  describe('Subscription Cancellation', (
+) => {
+    it('should cancel subscription successfully', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -410,14 +457,16 @@ describe('useSubscription Hook', () => {
       };
 
       let cancelResult;
-      await act(async () => {
+      await act(async (
+) => {
         cancelResult = await result.current.cancelSubscription(request);
       });
 
       expect(cancelResult).toEqual({ success: true });
     });
 
-    it('should handle cancellation with retention offer', async () => {
+    it('should handle cancellation with retention offer', async (
+) => {
       const SubscriptionService =
         require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
@@ -430,11 +479,13 @@ describe('useSubscription Hook', () => {
         retentionOffer,
       });
 
-      const { result } = renderHookWithProviders(() =>
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -443,7 +494,8 @@ describe('useSubscription Hook', () => {
       };
 
       let cancelResult;
-      await act(async () => {
+      await act(async (
+) => {
         cancelResult = await result.current.cancelSubscription(request);
       });
 
@@ -454,13 +506,17 @@ describe('useSubscription Hook', () => {
     });
   });
 
-  describe('Feature Access', () => {
-    it('should check feature access correctly', async () => {
-      const { result } = renderHookWithProviders(() =>
+  describe('Feature Access', (
+) => {
+    it('should check feature access correctly', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -474,7 +530,8 @@ describe('useSubscription Hook', () => {
       expect(result.current.hasFeatureAccess('non-existent')).toBe(false);
     });
 
-    it('should respect usage limits', async () => {
+    it('should respect usage limits', async (
+) => {
       const limitedFeatureAccess: FeatureAccess = {
         ...mockFeatureAccess,
         features: {
@@ -492,27 +549,33 @@ describe('useSubscription Hook', () => {
       const mockService = SubscriptionService.getInstance();
       mockService.getFeatureAccess.mockResolvedValue(limitedFeatureAccess);
 
-      const { result } = renderHookWithProviders(() =>
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
       expect(result.current.hasFeatureAccess('limited-feature')).toBe(false);
     });
 
-    it('should track feature usage', async () => {
-      const { result } = renderHookWithProviders(() =>
+    it('should track feature usage', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.trackFeatureUsage('advanced-alarms', 2);
       });
 
@@ -526,12 +589,15 @@ describe('useSubscription Hook', () => {
       );
     });
 
-    it('should get upgrade requirement', async () => {
-      const { result } = renderHookWithProviders(() =>
+    it('should get upgrade requirement', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -540,52 +606,65 @@ describe('useSubscription Hook', () => {
     });
   });
 
-  describe('Payment Methods', () => {
-    it('should add payment method', async () => {
-      const { result } = renderHookWithProviders(() =>
+  describe('Payment Methods', (
+) => {
+    it('should add payment method', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
       let addResult;
-      await act(async () => {
+      await act(async (
+) => {
         addResult = await result.current.addPaymentMethod('pm_123456');
       });
 
       expect(addResult).toEqual({ success: true });
     });
 
-    it('should remove payment method', async () => {
-      const { result } = renderHookWithProviders(() =>
+    it('should remove payment method', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
       let removeResult;
-      await act(async () => {
+      await act(async (
+) => {
         removeResult = await result.current.removePaymentMethod('pm_123456');
       });
 
       expect(removeResult).toEqual({ success: true });
     });
 
-    it('should set default payment method', async () => {
-      const { result } = renderHookWithProviders(() =>
+    it('should set default payment method', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
       let setDefaultResult;
-      await act(async () => {
+      await act(async (
+) => {
         setDefaultResult = await result.current.setDefaultPaymentMethod('pm_123456');
       });
 
@@ -593,42 +672,52 @@ describe('useSubscription Hook', () => {
     });
   });
 
-  describe('Trials and Discounts', () => {
-    it('should start free trial', async () => {
-      const { result } = renderHookWithProviders(() =>
+  describe('Trials and Discounts', (
+) => {
+    it('should start free trial', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
       let trialResult;
-      await act(async () => {
+      await act(async (
+) => {
         trialResult = await result.current.startFreeTrial('plan_premium');
       });
 
       expect(trialResult).toEqual({ success: true });
     });
 
-    it('should validate discount code', async () => {
-      const { result } = renderHookWithProviders(() =>
+    it('should validate discount code', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
       let validationResult;
-      await act(async () => {
+      await act(async (
+) => {
         validationResult = await result.current.validateDiscountCode('SAVE20');
       });
 
       expect(validationResult).toEqual({ valid: true });
     });
 
-    it('should handle invalid discount code', async () => {
+    it('should handle invalid discount code', async (
+) => {
       const SubscriptionService =
         require('../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
@@ -637,16 +726,19 @@ describe('useSubscription Hook', () => {
         error: 'Invalid discount code',
       });
 
-      const { result } = renderHookWithProviders(() =>
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
       let validationResult;
-      await act(async () => {
+      await act(async (
+) => {
         validationResult = await result.current.validateDiscountCode('INVALID');
       });
 
@@ -657,8 +749,10 @@ describe('useSubscription Hook', () => {
     });
   });
 
-  describe('Plan Comparison', () => {
-    it('should compare plans correctly', async () => {
+  describe('Plan Comparison', (
+) => {
+    it('should compare plans correctly', async (
+) => {
       const proPlan: SubscriptionPlan = {
         ...mockPlan,
         id: 'plan_pro',
@@ -677,11 +771,13 @@ describe('useSubscription Hook', () => {
         availablePlans: [mockPlan, proPlan],
       });
 
-      const { result } = renderHookWithProviders(() =>
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -692,12 +788,15 @@ describe('useSubscription Hook', () => {
       expect(comparison.priceDifference).toBe(1000); // 1999 - 999
     });
 
-    it('should handle downgrade comparison', async () => {
-      const { result } = renderHookWithProviders(() =>
+    it('should handle downgrade comparison', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -708,9 +807,12 @@ describe('useSubscription Hook', () => {
     });
   });
 
-  describe('Auto-refresh', () => {
-    it('should auto-refresh subscription data', async () => {
-      const { result } = renderHookWithProviders(() =>
+  describe('Auto-refresh', (
+) => {
+    it('should auto-refresh subscription data', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({
           userId: mockUserId,
           autoRefresh: true,
@@ -718,7 +820,8 @@ describe('useSubscription Hook', () => {
         })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -730,24 +833,29 @@ describe('useSubscription Hook', () => {
       mockService.getSubscriptionDashboard.mockClear();
 
       // Fast-forward time to trigger refresh
-      act(() => {
+      act((
+) => {
         jest.advanceTimersByTime(1000);
       });
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(mockService.getSubscriptionDashboard).toHaveBeenCalled();
       });
     });
 
-    it('should not auto-refresh when disabled', async () => {
-      const { result } = renderHookWithProviders(() =>
+    it('should not auto-refresh when disabled', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({
           userId: mockUserId,
           autoRefresh: false,
         })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -759,7 +867,8 @@ describe('useSubscription Hook', () => {
       mockService.getSubscriptionDashboard.mockClear();
 
       // Fast-forward time
-      act(() => {
+      act((
+) => {
         jest.advanceTimersByTime(300000); // 5 minutes
       });
 
@@ -768,13 +877,17 @@ describe('useSubscription Hook', () => {
     });
   });
 
-  describe('Utility Functions', () => {
-    it('should refresh subscription data manually', async () => {
-      const { result } = renderHookWithProviders(() =>
+  describe('Utility Functions', (
+) => {
+    it('should refresh subscription data manually', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -785,39 +898,48 @@ describe('useSubscription Hook', () => {
       // Clear previous calls
       mockService.getSubscriptionDashboard.mockClear();
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.refreshSubscription();
       });
 
       expect(mockService.getSubscriptionDashboard).toHaveBeenCalledWith(mockUserId);
     });
 
-    it('should clear errors', async () => {
-      const { result } = renderHookWithProviders(() =>
+    it('should clear errors', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
-      act(() => {
+      act((
+) => {
         result.current.clearError();
       });
 
       expect(result.current.error).toBeNull();
     });
 
-    it('should reset UI state', async () => {
-      const { result } = renderHookWithProviders(() =>
+    it('should reset UI state', async (
+) => {
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
-      act(() => {
+      act((
+) => {
         result.current.resetUIState();
       });
 
@@ -828,17 +950,21 @@ describe('useSubscription Hook', () => {
     });
   });
 
-  describe('Analytics Integration', () => {
-    it('should track subscription creation success', async () => {
+  describe('Analytics Integration', (
+) => {
+    it('should track subscription creation success', async (
+) => {
       const AnalyticsService = require('../../services/analytics').default;
       const mockAnalytics = { trackFeatureUsage: jest.fn() };
       AnalyticsService.getInstance.mockReturnValue(mockAnalytics);
 
-      const { result } = renderHookWithProviders(() =>
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId, enableAnalytics: true })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 
@@ -848,7 +974,8 @@ describe('useSubscription Hook', () => {
         paymentMethodId: 'pm_123456',
       };
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.createSubscription(request);
       });
 
@@ -863,16 +990,19 @@ describe('useSubscription Hook', () => {
       );
     });
 
-    it('should not track when analytics disabled', async () => {
+    it('should not track when analytics disabled', async (
+) => {
       const AnalyticsService = require('../../services/analytics').default;
       const mockAnalytics = { trackFeatureUsage: jest.fn() };
       AnalyticsService.getInstance.mockReturnValue(mockAnalytics);
 
-      const { result } = renderHookWithProviders(() =>
+      const { result } = renderHookWithProviders((
+) =>
         useSubscription({ userId: mockUserId, enableAnalytics: false })
       );
 
-      await waitFor(() => {
+      await waitFor((
+) => {
         expect(result.current.isInitialized).toBe(true);
       });
 

@@ -37,9 +37,11 @@ import {
 
 interface EnhancedSmartAlarmSettingsProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: (
+) => void;
   alarm?: EnhancedSmartAlarm;
-  onSave: (alarmData: Partial<EnhancedSmartAlarm>) => void;
+  onSave: (alarmData: Partial<EnhancedSmartAlarm>
+) => void;
 }
 
 const conditionIcons: Record<string, React.ComponentType<any>> = {
@@ -57,7 +59,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
   onClose,
   alarm,
   onSave,
-}) => {
+}
+) => {
   const [activeTab, setActiveTab] = useState<
     'quick' | 'smart' | 'conditions' | 'optimization' | 'feedback' | 'metrics'
   >('quick');
@@ -86,13 +89,15 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
   const [metrics, setMetrics] = useState<SmartAlarmMetrics | null>(null);
   const [recommendations, setRecommendations] = useState<SmartRecommendation[]>([]);
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (isOpen && alarm) {
       loadOptimizationData();
     }
   }, [isOpen, alarm?.id]);
 
-  const loadOptimizationData = async () => {
+  const loadOptimizationData = async (
+) => {
     if (!alarm) return;
 
     setLoading(true);
@@ -117,7 +122,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = async (
+) => {
     const enhancedData: Partial<EnhancedSmartAlarm> = {
       smartEnabled,
       realTimeAdaptation,
@@ -131,10 +137,13 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
     onClose();
   };
 
-  const updateCondition = (id: string, updates: Partial<ConditionBasedAdjustment>) => {
-    /* auto: implicit any */
-    setConditions((prev: any) => 
-      prev.map((cond: any) => (cond.id === id ? { ...cond, ...updates } : cond))
+  const updateCondition = (id: string, updates: Partial<ConditionBasedAdjustment>
+) => {
+    
+    setConditions((prev: any
+) =>
+      prev.map((cond: any
+) => (cond.id === id ? { ...cond, ...updates } : cond))
     );
   };
 
@@ -214,7 +223,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                onClick={(
+) => setActiveTab(tab.id as typeof activeTab)}
                 className={`flex items-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'bg-purple-500 text-white'
@@ -247,7 +257,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
 
                 {/* Configuration Preview */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  {Object.entries(CUSTOM_CONDITION_TEMPLATES).map(([id, condition]) => {
+                  {Object.entries(CUSTOM_CONDITION_TEMPLATES).map(([id, condition]
+) => {
                     const IconComponent = conditionIcons[condition.type] || Settings;
                     return (
                       <div
@@ -274,7 +285,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
 
                 {/* Apply Configuration Button */}
                 <button
-                  onClick={async () => {
+                  onClick={async (
+) => {
                     if (!alarm) return;
                     setLoading(true);
                     try {
@@ -320,7 +332,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                     Conservative settings for first-time smart alarm users
                   </p>
                   <button
-                    onClick={async () => {
+                    onClick={async (
+) => {
                       if (!alarm) return;
                       setLoading(true);
                       try {
@@ -347,7 +360,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                     Clear all conditions and reset to basic settings
                   </p>
                   <button
-                    onClick={async () => {
+                    onClick={async (
+) => {
                       if (!alarm) return;
                       if (
                         !confirm('This will reset all smart alarm settings. Continue?')
@@ -392,7 +406,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={smartEnabled}
-                      onChange={(e: any) => s // auto: implicit anyetSmartEnabled(e.target.checked)}
+                      onChange={(e: any
+) => setSmartEnabled(e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
@@ -415,7 +430,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         <input
                           type="checkbox"
                           checked={realTimeAdaptation}
-                          onChange={(e: any) => s // auto: implicit anyetRealTimeAdaptation(e.target.checked)}
+                          onChange={(e: any
+) => setRealTimeAdaptation(e.target.checked)}
                           className="sr-only peer"
                         />
                         <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -436,7 +452,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         <input
                           type="checkbox"
                           checked={dynamicWakeWindow}
-                          onChange={(e: any) => s // auto: implicit anyetDynamicWakeWindow(e.target.checked)}
+                          onChange={(e: any
+) => setDynamicWakeWindow(e.target.checked)}
                           className="sr-only peer"
                         />
                         <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -455,7 +472,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         max="1"
                         step="0.1"
                         value={sleepPatternWeight}
-                        onChange={(e: any) => /* auto: implicit any */
+                        onChange={(e: any 
+) =>
                           setSleepPatternWeight(parseFloat(e.target.value))
                         }
                         className="w-full accent-purple-500"
@@ -477,7 +495,10 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         max="0.5"
                         step="0.05"
                         value={learningFactor}
-                        onChange={(e: any) => s // auto: implicit anyetLearningFactor(parseFloat(e.target.value))}
+                        onChange={(e: any
+) =>
+                          setLearningFactor(parseFloat(e.target.value))
+                        }
                         className="w-full accent-purple-500"
                       />
                       <div className="flex justify-between text-xs text-white/60 mt-1">
@@ -497,7 +518,9 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                 Condition-Based Adjustments
               </h3>
 
-              {conditions.map((condition: any) => { // auto: implicit any
+              {conditions.map((condition: any
+) => {
+                // auto: implicit any
                 const Icon = conditionIcons[condition.type] || Settings;
                 return (
                   <div
@@ -524,7 +547,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                             <input
                               type="checkbox"
                               checked={condition.isEnabled}
-                              onChange={(e: any) => /* auto: implicit any */
+                              onChange={(e: any 
+) =>
                                 updateCondition(condition.id, {
                                   isEnabled: e.target.checked,
                                 })
@@ -596,7 +620,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                     </h3>
 
                     <div className="space-y-3">
-                      {optimalTimes.slice(0, 5).map((slot, index) => (
+                      {optimalTimes.slice(0, 5).map((slot, index
+) => (
                         <div
                           key={index}
                           className="flex items-center justify-between p-3 bg-white/5 rounded-lg"
@@ -650,7 +675,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       </h3>
 
                       <div className="space-y-3">
-                        {recommendations.map((rec, index) => (
+                        {recommendations.map((rec, index
+) => (
                           <div
                             key={index}
                             className="flex items-start gap-3 p-3 bg-white/5 rounded-lg"
@@ -761,7 +787,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       Sleep Quality Trend (7 days)
                     </h3>
                     <div className="flex items-end gap-2 h-32">
-                      {metrics.sleepDebtTrend.map((quality, index) => (
+                      {metrics.sleepDebtTrend.map((quality, index
+) => (
                         <div
                           key={index}
                           className="flex-1 bg-white/20 rounded-t"
@@ -777,7 +804,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       Most Effective Conditions
                     </h3>
                     <div className="space-y-2">
-                      {metrics.mostEffectiveConditions.map((condition, index) => (
+                      {metrics.mostEffectiveConditions.map((condition, index
+) => (
                         <div
                           key={index}
                           className="flex items-center gap-3 p-2 bg-white/5 rounded"

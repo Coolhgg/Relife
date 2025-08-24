@@ -19,14 +19,17 @@ declare global {
 }
 
 interface PWAInstallPromptProps {
-  onInstall?: () => void;
-  onDismiss?: () => void;
+  onInstall?: (
+) => void;
+  onDismiss?: (
+) => void;
 }
 
 const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
   onInstall,
   onDismiss,
-}) => {
+}
+) => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(
     null
   );
@@ -36,7 +39,8 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
     'other'
   );
 
-  useEffect(() => {
+  useEffect((
+) => {
     // Check if already installed
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
     const isInstalled = window.navigator.standalone === true || isStandalone;
@@ -53,14 +57,16 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
     }
 
     // Listen for beforeinstallprompt event
-    const handleBeforeInstallPrompt = (e: Event) => {
+    const handleBeforeInstallPrompt = (e: Event
+) => {
       e.preventDefault();
       setDeferredPrompt(e);
 
       // Show prompt after a delay if not already dismissed
       const hasBeenDismissed = localStorage.getItem('pwa-install-dismissed');
       if (!hasBeenDismissed && !isInstalled) {
-        setTimeout(() => {
+        setTimeout((
+) => {
           setShowPrompt(true);
         }, 3000); // Show after 3 seconds
       }
@@ -69,19 +75,22 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
     // Listen for successful installation
-    window.addEventListener('appinstalled', () => {
+    window.addEventListener('appinstalled', (
+) => {
       setIsInstalled(true);
       setShowPrompt(false);
       setDeferredPrompt(null);
       console.log('PWA was installed successfully');
     });
 
-    return () => {
+    return (
+) => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
   }, []);
 
-  const handleInstall = async () => {
+  const handleInstall = async (
+) => {
     if (!deferredPrompt) {
       // For iOS, show manual install instructions
       if (platform === 'ios') {
@@ -109,13 +118,15 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
     }
   };
 
-  const handleDismiss = () => {
+  const handleDismiss = (
+) => {
     setShowPrompt(false);
     localStorage.setItem('pwa-install-dismissed', 'true');
     onDismiss?.();
   };
 
-  const getInstallInstructions = () => {
+  const getInstallInstructions = (
+) => {
     switch (platform) {
       case 'ios':
         return {
@@ -182,7 +193,8 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
           Install for the best experience:
         </p>
         <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-          {instructions.steps.map((step, index) => (
+          {instructions.steps.map((step, index
+) => (
             <li key={index} className="flex items-start gap-2">
               <span className="text-primary-600 dark:text-primary-400 font-medium">
                 {index + 1}.

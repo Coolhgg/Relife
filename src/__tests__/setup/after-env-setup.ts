@@ -30,7 +30,8 @@ if (typeof global !== 'undefined') {
 
   // Enhanced URL polyfill
   if (!global.URL.createObjectURL) {
-    global.URL.createObjectURL = jest.fn(() => 'mocked-object-url');
+    global.URL.createObjectURL = jest.fn((
+) => 'mocked-object-url');
     global.URL.revokeObjectURL = jest.fn();
   }
 
@@ -42,7 +43,8 @@ if (typeof global !== 'undefined') {
       public options?: FilePropertyBag
     ) {}
     get size() {
-      return this.chunks.reduce((acc, chunk) => acc + (chunk as any).length, 0);
+      return this.chunks.reduce((acc, chunk
+) => acc + (chunk as any).length, 0);
     }
     get type() {
       return this.options?.type || '';
@@ -56,18 +58,25 @@ if (typeof global !== 'undefined') {
     result: string | ArrayBuffer | null = null;
     error: any = null;
     readyState = 0;
-    onload: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
-    onerror: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
-    onabort: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
-    onloadstart: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null =
+    onload: ((this: FileReader, ev: ProgressEvent<FileReader>
+) => any) | null = null;
+    onerror: ((this: FileReader, ev: ProgressEvent<FileReader>
+) => any) | null = null;
+    onabort: ((this: FileReader, ev: ProgressEvent<FileReader>
+) => any) | null = null;
+    onloadstart: ((this: FileReader, ev: ProgressEvent<FileReader>
+) => any) | null =
       null;
-    onloadend: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
-    onprogress: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null =
+    onloadend: ((this: FileReader, ev: ProgressEvent<FileReader>
+) => any) | null = null;
+    onprogress: ((this: FileReader, ev: ProgressEvent<FileReader>
+) => any) | null =
       null;
 
     readAsText(file: Blob) {
       this.readyState = 1;
-      setTimeout(() => {
+      setTimeout((
+) => {
         this.result = 'mocked file content';
         this.readyState = 2;
         this.onload?.(new ProgressEvent('load'));
@@ -77,7 +86,8 @@ if (typeof global !== 'undefined') {
 
     readAsDataURL(file: Blob) {
       this.readyState = 1;
-      setTimeout(() => {
+      setTimeout((
+) => {
         this.result = 'data:text/plain;base64,bW9ja2VkIGZpbGUgY29udGVudA==';
         this.readyState = 2;
         this.onload?.(new ProgressEvent('load'));
@@ -87,7 +97,8 @@ if (typeof global !== 'undefined') {
 
     readAsArrayBuffer(file: Blob) {
       this.readyState = 1;
-      setTimeout(() => {
+      setTimeout((
+) => {
         this.result = new ArrayBuffer(8);
         this.readyState = 2;
         this.onload?.(new ProgressEvent('load'));
@@ -117,7 +128,8 @@ if (typeof global !== 'undefined') {
       public options: BlobPropertyBag = {}
     ) {}
     get size() {
-      return this.parts.reduce((acc, part) => acc + (part as any).length, 0);
+      return this.parts.reduce((acc, part
+) => acc + (part as any).length, 0);
     }
     get type() {
       return this.options.type || '';
@@ -173,24 +185,28 @@ if (typeof global !== 'undefined') {
     }
 
     entries() {
-      return Array.from(this.data.entries()).map(([key, item]) => [key, item.value]);
+      return Array.from(this.data.entries()).map(([key, item]
+) => [key, item.value]);
     }
 
     forEach(callback: any) {
-      this.data.forEach((item, key) => callback(item.value, key, this));
+      this.data.forEach((item, key
+) => callback(item.value, key, this));
     }
   } as any;
 
   // Enhanced crypto polyfill for secure operations testing
   if (!global.crypto) {
     global.crypto = {
-      getRandomValues: (arr: any) => {
+      getRandomValues: (arr: any
+) => {
         for (let i = 0; i < arr.length; i++) {
           arr[i] = Math.floor(Math.random() * 256);
         }
         return arr;
       },
-      randomUUID: () => {
+      randomUUID: (
+) => {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
           const r = (Math.random() * 16) | 0;
           const v = c === 'x' ? r : (r & 0x3) | 0x8;
@@ -198,18 +214,30 @@ if (typeof global !== 'undefined') {
         });
       },
       subtle: {
-        digest: jest.fn(() => Promise.resolve(new ArrayBuffer(32))),
-        encrypt: jest.fn(() => Promise.resolve(new ArrayBuffer(16))),
-        decrypt: jest.fn(() => Promise.resolve(new ArrayBuffer(16))),
-        sign: jest.fn(() => Promise.resolve(new ArrayBuffer(64))),
-        verify: jest.fn(() => Promise.resolve(true)),
-        generateKey: jest.fn(() => Promise.resolve({})),
-        importKey: jest.fn(() => Promise.resolve({})),
-        exportKey: jest.fn(() => Promise.resolve(new ArrayBuffer(32))),
-        deriveBits: jest.fn(() => Promise.resolve(new ArrayBuffer(32))),
-        deriveKey: jest.fn(() => Promise.resolve({})),
-        wrapKey: jest.fn(() => Promise.resolve(new ArrayBuffer(32))),
-        unwrapKey: jest.fn(() => Promise.resolve({})),
+        digest: jest.fn((
+) => Promise.resolve(new ArrayBuffer(32))),
+        encrypt: jest.fn((
+) => Promise.resolve(new ArrayBuffer(16))),
+        decrypt: jest.fn((
+) => Promise.resolve(new ArrayBuffer(16))),
+        sign: jest.fn((
+) => Promise.resolve(new ArrayBuffer(64))),
+        verify: jest.fn((
+) => Promise.resolve(true)),
+        generateKey: jest.fn((
+) => Promise.resolve({})),
+        importKey: jest.fn((
+) => Promise.resolve({})),
+        exportKey: jest.fn((
+) => Promise.resolve(new ArrayBuffer(32))),
+        deriveBits: jest.fn((
+) => Promise.resolve(new ArrayBuffer(32))),
+        deriveKey: jest.fn((
+) => Promise.resolve({})),
+        wrapKey: jest.fn((
+) => Promise.resolve(new ArrayBuffer(32))),
+        unwrapKey: jest.fn((
+) => Promise.resolve({})),
       },
     } as any;
   }
@@ -217,7 +245,8 @@ if (typeof global !== 'undefined') {
   // Navigator polyfills for PWA testing
   Object.defineProperty(global.navigator, 'serviceWorker', {
     value: {
-      register: jest.fn(() =>
+      register: jest.fn((
+) =>
         Promise.resolve({
           installing: null,
           waiting: null,
@@ -225,8 +254,10 @@ if (typeof global !== 'undefined') {
             postMessage: jest.fn(),
             state: 'activated',
           },
-          update: jest.fn(() => Promise.resolve()),
-          unregister: jest.fn(() => Promise.resolve(true)),
+          update: jest.fn((
+) => Promise.resolve()),
+          unregister: jest.fn((
+) => Promise.resolve(true)),
           addEventListener: jest.fn(),
           removeEventListener: jest.fn(),
         })
@@ -238,14 +269,18 @@ if (typeof global !== 'undefined') {
           postMessage: jest.fn(),
           state: 'activated',
         },
-        update: jest.fn(() => Promise.resolve()),
-        unregister: jest.fn(() => Promise.resolve(true)),
+        update: jest.fn((
+) => Promise.resolve()),
+        unregister: jest.fn((
+) => Promise.resolve(true)),
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
       }),
       controller: null,
-      getRegistration: jest.fn(() => Promise.resolve(undefined)),
-      getRegistrations: jest.fn(() => Promise.resolve([])),
+      getRegistration: jest.fn((
+) => Promise.resolve(undefined)),
+      getRegistrations: jest.fn((
+) => Promise.resolve([])),
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
     },
@@ -256,7 +291,8 @@ if (typeof global !== 'undefined') {
   // Enhanced geolocation mock for location-based features
   Object.defineProperty(global.navigator, 'geolocation', {
     value: {
-      getCurrentPosition: jest.fn((success, error) => {
+      getCurrentPosition: jest.fn((success, error
+) => {
         const position = {
           coords: {
             latitude: 37.7749,
@@ -271,7 +307,8 @@ if (typeof global !== 'undefined') {
         };
         success(position);
       }),
-      watchPosition: jest.fn(() => 1),
+      watchPosition: jest.fn((
+) => 1),
       clearWatch: jest.fn(),
     },
     writable: true,
@@ -301,7 +338,8 @@ if (typeof global !== 'undefined') {
 
   // Share API mock for PWA testing
   Object.defineProperty(global.navigator, 'share', {
-    value: jest.fn(() => Promise.resolve()),
+    value: jest.fn((
+) => Promise.resolve()),
     writable: true,
     configurable: true,
   });
@@ -309,7 +347,8 @@ if (typeof global !== 'undefined') {
   // Permissions API mock
   Object.defineProperty(global.navigator, 'permissions', {
     value: {
-      query: jest.fn(() =>
+      query: jest.fn((
+) =>
         Promise.resolve({
           state: 'granted',
           addEventListener: jest.fn(),
@@ -323,7 +362,8 @@ if (typeof global !== 'undefined') {
 
   // Vibration API mock for haptics testing
   Object.defineProperty(global.navigator, 'vibrate', {
-    value: jest.fn(() => true),
+    value: jest.fn((
+) => true),
     writable: true,
     configurable: true,
   });
@@ -334,7 +374,8 @@ if (typeof window !== 'undefined') {
   // Notification API mock for push notification testing
   (window as any).Notification = class MockNotification {
     static permission = 'granted';
-    static requestPermission = jest.fn(() => Promise.resolve('granted'));
+    static requestPermission = jest.fn((
+) => Promise.resolve('granted'));
 
     title: string;
     options: NotificationOptions;
@@ -346,11 +387,13 @@ if (typeof window !== 'undefined') {
     constructor(title: string, options: NotificationOptions = {}) {
       this.title = title;
       this.options = options;
-      setTimeout(() => this.onshow?.(), 0);
+      setTimeout((
+) => this.onshow?.(), 0);
     }
 
     close() {
-      setTimeout(() => this.onclose?.(), 0);
+      setTimeout((
+) => this.onclose?.(), 0);
     }
 
     addEventListener(type: string, listener: any) {
@@ -365,11 +408,13 @@ if (typeof window !== 'undefined') {
 
   // Screen Wake Lock API mock
   (window.navigator as any).wakeLock = {
-    request: jest.fn(() =>
+    request: jest.fn((
+) =>
       Promise.resolve({
         type: 'screen',
         released: false,
-        release: jest.fn(() => Promise.resolve()),
+        release: jest.fn((
+) => Promise.resolve()),
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
       })
@@ -377,7 +422,8 @@ if (typeof window !== 'undefined') {
   };
 
   // Battery API mock
-  (window.navigator as any).getBattery = jest.fn(() =>
+  (window.navigator as any).getBattery = jest.fn((
+) =>
     Promise.resolve({
       charging: true,
       chargingTime: 0,
@@ -402,8 +448,10 @@ if (typeof window !== 'undefined') {
   });
 
   // Fullscreen API mock
-  document.requestFullscreen = jest.fn(() => Promise.resolve());
-  document.exitFullscreen = jest.fn(() => Promise.resolve());
+  document.requestFullscreen = jest.fn((
+) => Promise.resolve());
+  document.exitFullscreen = jest.fn((
+) => Promise.resolve());
   Object.defineProperty(document, 'fullscreenElement', {
     value: null,
     writable: true,
@@ -413,17 +461,22 @@ if (typeof window !== 'undefined') {
   // Clipboard API mock
   Object.defineProperty(window.navigator, 'clipboard', {
     value: {
-      writeText: jest.fn(() => Promise.resolve()),
-      readText: jest.fn(() => Promise.resolve('mocked clipboard text')),
-      write: jest.fn(() => Promise.resolve()),
-      read: jest.fn(() => Promise.resolve([])),
+      writeText: jest.fn((
+) => Promise.resolve()),
+      readText: jest.fn((
+) => Promise.resolve('mocked clipboard text')),
+      write: jest.fn((
+) => Promise.resolve()),
+      read: jest.fn((
+) => Promise.resolve([])),
     },
     writable: true,
     configurable: true,
   });
 
   // Enhanced media queries mock
-  window.matchMedia = jest.fn().mockImplementation((query: string) => ({
+  window.matchMedia = jest.fn().mockImplementation((query: string
+) => ({
     matches: query.includes('max-width: 768px') ? true : false, // Default to mobile
     media: query,
     onchange: null,
@@ -495,7 +548,8 @@ if (typeof window !== 'undefined') {
         requestId: 'mock-request-id',
         methodName: 'https://example.com/pay',
         details: {},
-        complete: jest.fn(() => Promise.resolve()),
+        complete: jest.fn((
+) => Promise.resolve()),
       });
     }
 
@@ -519,9 +573,12 @@ const mockPerformance = {
   measure: jest.fn(),
   clearMarks: jest.fn(),
   clearMeasures: jest.fn(),
-  getEntriesByName: jest.fn(() => []),
-  getEntriesByType: jest.fn(() => []),
-  now: jest.fn(() => Date.now()),
+  getEntriesByName: jest.fn((
+) => []),
+  getEntriesByType: jest.fn((
+) => []),
+  now: jest.fn((
+) => Date.now()),
   timeOrigin: Date.now(),
 };
 
@@ -533,7 +590,8 @@ Object.defineProperty(global, 'performance', {
 
 // Console customization for cleaner test output
 const originalWarn = console.warn;
-console.warn = (...args) => {
+console.warn = (...args
+) => {
   const message = args[0];
   if (typeof message === 'string') {
     // Suppress known warnings in test environment

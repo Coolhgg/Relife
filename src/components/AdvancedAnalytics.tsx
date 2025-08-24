@@ -46,8 +46,10 @@ interface AdvancedAnalyticsProps {
   wakeUpData: WakeUpBehavior[];
   battlePerformance: BattlePerformanceData[];
   learningData: LearningData;
-  onExportData?: () => void;
-  onUpdatePreferences?: (preferences: any) => void;
+  onExportData?: (
+) => void;
+  onUpdatePreferences?: (preferences: any
+) => void;
 }
 
 // Mock data for development
@@ -286,7 +288,8 @@ const MOCK_BATTLE_PERFORMANCE: BattlePerformanceData[] = [
   },
 ];
 
-const getMoodIcon = (mood: WakeUpMood) => {
+const getMoodIcon = (mood: WakeUpMood
+) => {
   switch (mood) {
     case 'excellent':
       return <Smile className="h-4 w-4 text-green-500" />;
@@ -303,7 +306,8 @@ const getMoodIcon = (mood: WakeUpMood) => {
   }
 };
 
-const getMoodColor = (mood: WakeUpMood) => {
+const getMoodColor = (mood: WakeUpMood
+) => {
   switch (mood) {
     case 'excellent':
       return 'text-green-500';
@@ -320,7 +324,8 @@ const getMoodColor = (mood: WakeUpMood) => {
   }
 };
 
-const getWeatherIcon = (weather: string) => {
+const getWeatherIcon = (weather: string
+) => {
   switch (weather) {
     case 'sunny':
       return <Sun className="h-4 w-4 text-yellow-500" />;
@@ -333,7 +338,8 @@ const getWeatherIcon = (weather: string) => {
   }
 };
 
-const formatTime = (time: string) => {
+const formatTime = (time: string
+) => {
   const [hours, minutes] = time.split(':');
   const hour12 = parseInt(hours) > 12 ? parseInt(hours) - 12 : parseInt(hours);
   const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
@@ -353,17 +359,22 @@ export function AdvancedAnalytics({
 
   // Calculate sleep analytics
   const avgSleepQuality =
-    sleepData.reduce((sum, s) => sum + s.sleepQuality, 0) / sleepData.length;
+    sleepData.reduce((sum, s
+) => sum + s.sleepQuality, 0) / sleepData.length;
   const avgSleepDuration =
-    sleepData.reduce((sum, s) => sum + s.sleepDuration, 0) / sleepData.length;
+    sleepData.reduce((sum, s
+) => sum + s.sleepDuration, 0) / sleepData.length;
   const avgSleepEfficiency =
-    sleepData.reduce((sum, s) => sum + s.sleepEfficiency, 0) / sleepData.length;
+    sleepData.reduce((sum, s
+) => sum + s.sleepEfficiency, 0) / sleepData.length;
 
   // Calculate wake-up analytics
   const avgSnoozeCount =
-    wakeUpData.reduce((sum, w) => sum + w.snoozeCount, 0) / wakeUpData.length;
+    wakeUpData.reduce((sum, w
+) => sum + w.snoozeCount, 0) / wakeUpData.length;
   const avgCompletionTime =
-    wakeUpData.reduce((sum, w) => sum + w.completionTime, 0) / wakeUpData.length;
+    wakeUpData.reduce((sum, w
+) => sum + w.completionTime, 0) / wakeUpData.length;
   const onTimeRate =
     (wakeUpData.filter(w => w.snoozeCount === 0).length / wakeUpData.length) * 100;
 
@@ -373,11 +384,13 @@ export function AdvancedAnalytics({
       battlePerformance.length) *
     100;
   const avgBattleScore =
-    battlePerformance.reduce((sum, b) => sum + b.score, 0) / battlePerformance.length;
+    battlePerformance.reduce((sum, b
+) => sum + b.score, 0) / battlePerformance.length;
 
   // Mood distribution
   const moodCounts = wakeUpData.reduce(
-    (acc, w) => {
+    (acc, w
+) => {
       const mood = w.mood as WakeUpMood;
       acc[mood] = (acc[mood] || 0) + 1;
       return acc;
@@ -400,7 +413,8 @@ export function AdvancedAnalytics({
               key={period}
               size="sm"
               variant={selectedPeriod === period ? 'default' : 'outline'}
-              onClick={() => setSelectedPeriod(period)}
+              onClick={(
+) => setSelectedPeriod(period)}
             >
               {period}
             </Button>
@@ -512,7 +526,8 @@ export function AdvancedAnalytics({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {sleepData.slice(0, 7).map((sleep, index) => (
+                {sleepData.slice(0, 7).map((sleep, index
+) => (
                   <div
                     key={sleep.date}
                     className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
@@ -540,7 +555,8 @@ export function AdvancedAnalytics({
                         </div>
                       </div>
                       <div className="flex items-center gap-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
+                        {Array.from({ length: 5 }).map((_, i
+) => (
                           <Star
                             key={i}
                             className={`h-3 w-3 ${
@@ -702,7 +718,8 @@ export function AdvancedAnalytics({
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {wakeUpData.slice(0, 7).map((wakeup, index) => (
+                {wakeUpData.slice(0, 7).map((wakeup, index
+) => (
                   <div
                     key={wakeup.date}
                     className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
@@ -760,7 +777,8 @@ export function AdvancedAnalytics({
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {battlePerformance.map((battle, index) => (
+                {battlePerformance.map((battle, index
+) => (
                   <div
                     key={battle.battleId}
                     className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
@@ -813,7 +831,8 @@ export function AdvancedAnalytics({
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {Object.entries(moodCounts).map(([mood, count]) => {
+                {Object.entries(moodCounts).map(([mood, count]
+) => {
                   const percentage = (count / wakeUpData.length) * 100;
                   return (
                     <div key={mood} className="flex items-center justify-between">

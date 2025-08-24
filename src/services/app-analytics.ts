@@ -450,7 +450,8 @@ class AppAnalyticsService {
    */
   private startPerformanceMonitoring(): void {
     // Monitor page load performance
-    window.addEventListener('load', () => {
+    window.addEventListener('load', (
+) => {
       const loadTime = performance.now();
       this.trackPerformance('page_load_time', loadTime, {
         type: 'initial_load',
@@ -459,7 +460,8 @@ class AppAnalyticsService {
 
     // Monitor memory usage (if available)
     if ('memory' in performance) {
-      setInterval(() => {
+      setInterval((
+) => {
         const memory = (performance as any).memory;
         if (memory) {
           this.trackPerformance('memory_usage', memory.usedJSHeapSize / 1024 / 1024, {
@@ -472,11 +474,13 @@ class AppAnalyticsService {
     }
 
     // Monitor connectivity changes
-    window.addEventListener('online', () => {
+    window.addEventListener('online', (
+) => {
       this.trackAppEvent('connectivity_changed', { status: 'online' });
     });
 
-    window.addEventListener('offline', () => {
+    window.addEventListener('offline', (
+) => {
       this.trackAppEvent('connectivity_changed', { status: 'offline' });
     });
   }

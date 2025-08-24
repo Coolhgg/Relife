@@ -18,23 +18,27 @@ export { default as PaymentFlow } from './PaymentFlow';
 <EnhancedUpgradePrompt
   feature="nuclearMode"
   variant="modal"
-  onUpgrade={(tier) => handleUpgrade(tier)}
+  onUpgrade={(tier
+) => handleUpgrade(tier)}
   showSocialProof={true}
   showUrgency={true}
-  onDismiss={() => setShowPrompt(false)}
+  onDismiss={(
+) => setShowPrompt(false)}
 />
 
 // 2. Interactive Premium Feature Preview
 <PremiumFeaturePreview
   feature="premiumPersonalities"
-  onUpgrade={() => showUpgradePrompt()}
+  onUpgrade={(
+) => showUpgradePrompt()}
   compact={false}
 />
 
 // 3. Psychology-driven Call-to-Action
 <PsychologyDrivenCTA
   targetTier="pro"
-  onUpgrade={(tier) => initiatePayment(tier)}
+  onUpgrade={(tier
+) => initiatePayment(tier)}
   trigger="urgency" // scarcity, social_proof, loss_aversion, authority, reciprocity
   variant="gradient" // neon, minimal, bold, premium
   size="large"

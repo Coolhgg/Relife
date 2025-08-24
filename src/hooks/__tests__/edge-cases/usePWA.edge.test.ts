@@ -3,10 +3,12 @@ import { renderHook, act } from '@testing-library/react';
 import { usePWA, useInstallPrompt, useServiceWorkerUpdate } from '../../usePWA';
 
 // Mock PWA Manager Service
-jest.mock('../../../services/pwa-manager', () => ({
+jest.mock('../../../services/pwa-manager', (
+) => ({
   __esModule: true,
   default: {
-    getInstance: () => ({
+    getInstance: (
+) => ({
       isPWASupported: jest.fn().mockReturnValue(true),
       isInstalled: jest.fn().mockReturnValue(false),
       install: jest.fn(),
@@ -18,46 +20,58 @@ jest.mock('../../../services/pwa-manager', () => ({
   },
 }));
 
-describe('PWA Hooks Edge Cases and Stress Tests', () => {
-  beforeEach(() => {
+describe('PWA Hooks Edge Cases and Stress Tests', (
+) => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
     jest.useFakeTimers();
   });
 
-  afterEach(() => {
+  afterEach((
+) => {
     jest.useRealTimers();
   });
 
-  describe('Installation Edge Cases', () => {
-    it('should handle installation failures gracefully', async () => {
+  describe('Installation Edge Cases', (
+) => {
+    it('should handle installation failures gracefully', async (
+) => {
       const PWAManager = require('../../../services/pwa-manager').default;
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.install.mockRejectedValue(new Error('Installation failed'));
 
-      const { result } = renderHook(() => usePWA());
+      const { result } = renderHook((
+) => usePWA());
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.install();
       });
 
       expect(result.current.error).toContain('Installation failed');
     });
 
-    it('should handle multiple concurrent install attempts', async () => {
+    it('should handle multiple concurrent install attempts', async (
+) => {
       const PWAManager = require('../../../services/pwa-manager').default;
       const mockPWAManager = PWAManager.getInstance();
 
       let installCount = 0;
-      mockPWAManager.install.mockImplementation(() => {
+      mockPWAManager.install.mockImplementation((
+) => {
         installCount++;
         return new Promise(resolve =>
-          setTimeout(() => resolve(true), 100 + Math.random() * 100)
+          setTimeout((
+) => resolve(true), 100 + Math.random() * 100)
         );
       });
 
-      const { result } = renderHook(() => usePWA());
+      const { result } = renderHook((
+) => usePWA());
 
-      await act(async () => {
+      await act(async (
+) => {
         // Fire multiple concurrent installs
         const promises = [
           result.current.install(),
@@ -74,8 +88,10 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Service Worker Edge Cases', () => {
-    it('should handle service worker registration failures', async () => {
+  describe('Service Worker Edge Cases', (
+) => {
+    it('should handle service worker registration failures', async (
+) => {
       const originalServiceWorker = navigator.serviceWorker;
 
       // Mock service worker registration failure
@@ -85,9 +101,11 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
         },
       });
 
-      const { result } = renderHook(() => useServiceWorkerUpdate());
+      const { result } = renderHook((
+) => useServiceWorkerUpdate());
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.checkForUpdates();
       });
 
@@ -99,23 +117,28 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
       });
     });
 
-    it('should handle rapid service worker update checks', async () => {
+    it('should handle rapid service worker update checks', async (
+) => {
       const PWAManager = require('../../../services/pwa-manager').default;
       const mockPWAManager = PWAManager.getInstance();
 
       let checkCount = 0;
-      mockPWAManager.checkForUpdates.mockImplementation(() => {
+      mockPWAManager.checkForUpdates.mockImplementation((
+) => {
         checkCount++;
         return Promise.resolve({ updateAvailable: checkCount % 2 === 0 });
       });
 
-      const { result } = renderHook(() => useServiceWorkerUpdate());
+      const { result } = renderHook((
+) => useServiceWorkerUpdate());
 
-      await act(async () => {
+      await act(async (
+) => {
         // Fire 50 rapid update checks
         const promises = Array(50)
           .fill(null)
-          .map(() => result.current.checkForUpdates());
+          .map((
+) => result.current.checkForUpdates());
 
         await Promise.allSettled(promises);
       });
@@ -125,11 +148,15 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Offline/Online Edge Cases', () => {
-    it('should handle rapid network state changes', async () => {
-      const { result } = renderHook(() => usePWA());
+  describe('Offline/Online Edge Cases', (
+) => {
+    it('should handle rapid network state changes', async (
+) => {
+      const { result } = renderHook((
+) => usePWA());
 
-      await act(async () => {
+      await act(async (
+) => {
         // Simulate rapid network changes
         for (let i = 0; i < 100; i++) {
           const event = i % 2 === 0 ? new Event('offline') : new Event('online');
@@ -142,7 +169,8 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
       expect(result.current.isOnline).toBeDefined();
     });
 
-    it('should handle corrupted cache data', async () => {
+    it('should handle corrupted cache data', async (
+) => {
       // Mock corrupted cache
       const originalCaches = global.caches;
       Object.defineProperty(global, 'caches', {
@@ -152,9 +180,11 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
         },
       });
 
-      const { result } = renderHook(() => usePWA());
+      const { result } = renderHook((
+) => usePWA());
 
-      await act(async () => {
+      await act(async (
+) => {
         await result.current.clearCache();
       });
 
@@ -166,11 +196,15 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Memory and Performance Stress Tests', () => {
-    it('should handle intensive PWA operations without memory leaks', async () => {
-      const { result, unmount } = renderHook(() => usePWA());
+  describe('Memory and Performance Stress Tests', (
+) => {
+    it('should handle intensive PWA operations without memory leaks', async (
+) => {
+      const { result, unmount } = renderHook((
+) => usePWA());
 
-      await act(async () => {
+      await act(async (
+) => {
         // Perform many operations
         for (let i = 0; i < 1000; i++) {
           result.current.checkSupport();
@@ -183,16 +217,20 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
     });
   });
 
-  describe('Browser Compatibility Edge Cases', () => {
-    it('should handle unsupported browsers gracefully', async () => {
+  describe('Browser Compatibility Edge Cases', (
+) => {
+    it('should handle unsupported browsers gracefully', async (
+) => {
       // Mock unsupported browser
       const PWAManager = require('../../../services/pwa-manager').default;
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.isPWASupported.mockReturnValue(false);
 
-      const { result } = renderHook(() => usePWA());
+      const { result } = renderHook((
+) => usePWA());
 
-      await act(async () => {
+      await act(async (
+) => {
         await new Promise(resolve => setTimeout(resolve, 50));
       });
 

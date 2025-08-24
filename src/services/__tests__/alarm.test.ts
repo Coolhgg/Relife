@@ -22,18 +22,26 @@ import {
 } from '../../__tests__/factories/core-factories';
 
 // Mock dependencies
-vi.mock('../../utils', () => ({
-  generateAlarmId: vi.fn(() => 'alarm_test_12345'),
-  getNextAlarmTime: vi.fn(() => new Date('2024-01-02T07:00:00.000Z')),
-  formatTime: vi.fn((time: string) => time),
+vi.mock('../../utils', (
+) => ({
+  generateAlarmId: vi.fn((
+) => 'alarm_test_12345'),
+  getNextAlarmTime: vi.fn((
+) => new Date('2024-01-02T07:00:00.000Z')),
+  formatTime: vi.fn((time: string
+) => time),
 }));
 
-vi.mock('../capacitor', () => ({
-  scheduleLocalNotification: vi.fn(() => Promise.resolve()),
-  cancelLocalNotification: vi.fn(() => Promise.resolve()),
+vi.mock('../capacitor', (
+) => ({
+  scheduleLocalNotification: vi.fn((
+) => Promise.resolve()),
+  cancelLocalNotification: vi.fn((
+) => Promise.resolve()),
 }));
 
-jest.mock('../alarm-battle-integration', () => ({
+jest.mock('../alarm-battle-integration', (
+) => ({
   alarmBattleIntegration: {
     createBattleAlarm: jest.fn(),
     handleAlarmTrigger: jest.fn(),
@@ -43,32 +51,43 @@ jest.mock('../alarm-battle-integration', () => ({
   },
 }));
 
-jest.mock('../app-analytics', () => ({
+jest.mock('../app-analytics', (
+) => ({
   default: {
-    getInstance: jest.fn(() => ({
+    getInstance: jest.fn((
+) => ({
       track: jest.fn(),
     })),
   },
 }));
 
-jest.mock('../secure-alarm-storage', () => ({
+jest.mock('../secure-alarm-storage', (
+) => ({
   default: {
-    getInstance: jest.fn(() => ({
-      storeAlarms: jest.fn(() => Promise.resolve()),
-      retrieveAlarms: jest.fn(() => Promise.resolve([])),
-      storeAlarmEvents: jest.fn(() => Promise.resolve()),
-      retrieveAlarmEvents: jest.fn(() => Promise.resolve([])),
+    getInstance: jest.fn((
+) => ({
+      storeAlarms: jest.fn((
+) => Promise.resolve()),
+      retrieveAlarms: jest.fn((
+) => Promise.resolve([])),
+      storeAlarmEvents: jest.fn((
+) => Promise.resolve()),
+      retrieveAlarmEvents: jest.fn((
+) => Promise.resolve([])),
     })),
   },
 }));
 
-jest.mock('../security', () => ({
+jest.mock('../security', (
+) => ({
   default: {
-    checkRateLimit: jest.fn(() => true),
+    checkRateLimit: jest.fn((
+) => true),
   },
 }));
 
-jest.mock('../error-handler', () => ({
+jest.mock('../error-handler', (
+) => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
@@ -82,13 +101,15 @@ import SecureAlarmStorageService from '../secure-alarm-storage';
 import SecurityService from '../security';
 import { ErrorHandler } from '../error-handler';
 
-describe('AlarmService', () => {
+describe('AlarmService', (
+) => {
   let mockAlarms: Alarm[];
   let mockUser: User;
   let mockSecureStorage: any;
   let mockAnalytics: any;
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
 
     // Setup test data
@@ -101,10 +122,14 @@ describe('AlarmService', () => {
 
     // Setup mocks
     mockSecureStorage = {
-      storeAlarms: jest.fn(() => Promise.resolve()),
-      retrieveAlarms: jest.fn(() => Promise.resolve(mockAlarms)),
-      storeAlarmEvents: jest.fn(() => Promise.resolve()),
-      retrieveAlarmEvents: jest.fn(() => Promise.resolve([])),
+      storeAlarms: jest.fn((
+) => Promise.resolve()),
+      retrieveAlarms: jest.fn((
+) => Promise.resolve(mockAlarms)),
+      storeAlarmEvents: jest.fn((
+) => Promise.resolve()),
+      retrieveAlarmEvents: jest.fn((
+) => Promise.resolve([])),
     };
 
     mockAnalytics = {
@@ -122,8 +147,10 @@ describe('AlarmService', () => {
     (AlarmService as any).checkInterval = null;
   });
 
-  describe('loadAlarms', () => {
-    it('should load alarms from secure storage successfully', async () => {
+  describe('loadAlarms', (
+) => {
+    it('should load alarms from secure storage successfully', async (
+) => {
       const result = await AlarmService.loadAlarms(mockUser.id);
 
       expect(mockSecureStorage.retrieveAlarms).toHaveBeenCalledWith(mockUser.id);
@@ -141,7 +168,8 @@ describe('AlarmService', () => {
       });
     });
 
-    it('should handle rate limiting for alarm loading', async () => {
+    it('should handle rate limiting for alarm loading', async (
+) => {
       (SecurityService.checkRateLimit as jest.Mock).mockReturnValue(false);
 
       await expect(AlarmService.loadAlarms(mockUser.id)).rejects.toThrow(
@@ -150,7 +178,8 @@ describe('AlarmService', () => {
       expect(mockSecureStorage.retrieveAlarms).not.toHaveBeenCalled();
     });
 
-    it('should filter invalid alarms during loading', async () => {
+    it('should filter invalid alarms during loading', async (
+) => {
       const invalidAlarms = [
         ...mockAlarms,
         { id: '', time: 'invalid', label: '', days: [] }, // Invalid alarm
@@ -172,7 +201,8 @@ describe('AlarmService', () => {
       expect(result.every(alarm => alarm.id && alarm.time && alarm.label)).toBe(true);
     });
 
-    it('should throw error on storage failures', async () => {
+    it('should throw error on storage failures', async (
+) => {
       mockSecureStorage.retrieveAlarms.mockRejectedValue(new Error('Storage error'));
 
       await expect(AlarmService.loadAlarms(mockUser.id)).rejects.toThrow(
@@ -182,7 +212,8 @@ describe('AlarmService', () => {
       expect(ErrorHandler.handleError).toHaveBeenCalled();
     });
 
-    it('should start alarm checker after loading', async () => {
+    it('should start alarm checker after loading', async (
+) => {
       jest.spyOn(global, 'setInterval');
 
       await AlarmService.loadAlarms(mockUser.id);
@@ -191,12 +222,15 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('saveAlarms', () => {
-    beforeEach(async () => {
+  describe('saveAlarms', (
+) => {
+    beforeEach(async (
+) => {
       await AlarmService.loadAlarms(mockUser.id);
     });
 
-    it('should save alarms to secure storage successfully', async () => {
+    it('should save alarms to secure storage successfully', async (
+) => {
       await AlarmService.saveAlarms(mockUser.id);
 
       expect(mockSecureStorage.storeAlarms).toHaveBeenCalledWith(
@@ -210,7 +244,8 @@ describe('AlarmService', () => {
       );
     });
 
-    it('should handle rate limiting for alarm saving', async () => {
+    it('should handle rate limiting for alarm saving', async (
+) => {
       (SecurityService.checkRateLimit as jest.Mock).mockReturnValue(false);
 
       await expect(AlarmService.saveAlarms(mockUser.id)).rejects.toThrow(
@@ -219,7 +254,8 @@ describe('AlarmService', () => {
       expect(mockSecureStorage.storeAlarms).not.toHaveBeenCalled();
     });
 
-    it('should handle storage errors during save', async () => {
+    it('should handle storage errors during save', async (
+) => {
       mockSecureStorage.storeAlarms.mockRejectedValue(new Error('Storage error'));
 
       await expect(AlarmService.saveAlarms(mockUser.id)).rejects.toThrow(
@@ -229,7 +265,8 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('createAlarm', () => {
+  describe('createAlarm', (
+) => {
     const alarmData = {
       time: '07:00',
       label: 'Morning Workout',
@@ -243,7 +280,8 @@ describe('AlarmService', () => {
       maxSnoozes: 3,
     };
 
-    it('should create a new alarm successfully', async () => {
+    it('should create a new alarm successfully', async (
+) => {
       const result = await AlarmService.createAlarm(alarmData);
 
       expect(result).toMatchObject({
@@ -267,7 +305,8 @@ describe('AlarmService', () => {
       expect(scheduleLocalNotification).toHaveBeenCalled();
     });
 
-    it('should handle invalid alarm data', async () => {
+    it('should handle invalid alarm data', async (
+) => {
       const invalidData = {
         ...alarmData,
         time: 'invalid-time',
@@ -279,7 +318,8 @@ describe('AlarmService', () => {
       );
     });
 
-    it('should create alarm with default values', async () => {
+    it('should create alarm with default values', async (
+) => {
       const minimalData = {
         time: '08:00',
         label: 'Test Alarm',
@@ -296,7 +336,8 @@ describe('AlarmService', () => {
       expect(result.snoozeInterval).toBe(5);
     });
 
-    it('should create battle alarm with special configuration', async () => {
+    it('should create battle alarm with special configuration', async (
+) => {
       const battleData = {
         ...alarmData,
         battleId: 'battle123',
@@ -308,15 +349,18 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('updateAlarm', () => {
+  describe('updateAlarm', (
+) => {
     let existingAlarm: Alarm;
 
-    beforeEach(async () => {
+    beforeEach(async (
+) => {
       await AlarmService.loadAlarms(mockUser.id);
       existingAlarm = mockAlarms[0];
     });
 
-    it('should update existing alarm successfully', async () => {
+    it('should update existing alarm successfully', async (
+) => {
       const updateData = {
         time: '08:30',
         label: 'Updated Morning Workout',
@@ -343,7 +387,8 @@ describe('AlarmService', () => {
       expect(scheduleLocalNotification).toHaveBeenCalled();
     });
 
-    it('should handle non-existent alarm', async () => {
+    it('should handle non-existent alarm', async (
+) => {
       const updateData = {
         time: '08:00',
         label: 'Test',
@@ -356,7 +401,8 @@ describe('AlarmService', () => {
       ).rejects.toThrow('Alarm not found');
     });
 
-    it('should validate updated alarm data', async () => {
+    it('should validate updated alarm data', async (
+) => {
       const invalidUpdateData = {
         time: 'invalid-time',
         label: 'Test',
@@ -370,34 +416,40 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('deleteAlarm', () => {
+  describe('deleteAlarm', (
+) => {
     let existingAlarm: Alarm;
 
-    beforeEach(async () => {
+    beforeEach(async (
+) => {
       await AlarmService.loadAlarms(mockUser.id);
       existingAlarm = mockAlarms[0];
     });
 
-    it('should delete alarm successfully', async () => {
+    it('should delete alarm successfully', async (
+) => {
       await AlarmService.deleteAlarm(existingAlarm.id, mockUser.id);
 
       expect(cancelLocalNotification).toHaveBeenCalled();
       expect(mockSecureStorage.storeAlarms).toHaveBeenCalled();
     });
 
-    it('should handle non-existent alarm', async () => {
+    it('should handle non-existent alarm', async (
+) => {
       await expect(
         AlarmService.deleteAlarm('non-existent', mockUser.id)
       ).rejects.toThrow('Alarm not found');
     });
 
-    it('should validate ownership before deletion', async () => {
+    it('should validate ownership before deletion', async (
+) => {
       await expect(
         AlarmService.deleteAlarm(existingAlarm.id, 'other_user')
       ).rejects.toThrow('Access denied');
     });
 
-    it('should allow deletion of alarms without userId (legacy)', async () => {
+    it('should allow deletion of alarms without userId (legacy)', async (
+) => {
       const legacyAlarm = { ...existingAlarm, userId: undefined };
       mockAlarms[0] = legacyAlarm as Alarm;
 
@@ -407,15 +459,18 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('toggleAlarm', () => {
+  describe('toggleAlarm', (
+) => {
     let existingAlarm: Alarm;
 
-    beforeEach(async () => {
+    beforeEach(async (
+) => {
       await AlarmService.loadAlarms(mockUser.id);
       existingAlarm = mockAlarms[0];
     });
 
-    it('should toggle alarm to disabled', async () => {
+    it('should toggle alarm to disabled', async (
+) => {
       const result = await AlarmService.toggleAlarm(existingAlarm.id, false);
 
       expect(result.enabled).toBe(false);
@@ -424,7 +479,8 @@ describe('AlarmService', () => {
       expect(scheduleLocalNotification).not.toHaveBeenCalled();
     });
 
-    it('should toggle alarm to enabled', async () => {
+    it('should toggle alarm to enabled', async (
+) => {
       existingAlarm.enabled = false;
       const result = await AlarmService.toggleAlarm(existingAlarm.id, true);
 
@@ -432,13 +488,15 @@ describe('AlarmService', () => {
       expect(scheduleLocalNotification).toHaveBeenCalled();
     });
 
-    it('should handle non-existent alarm', async () => {
+    it('should handle non-existent alarm', async (
+) => {
       await expect(AlarmService.toggleAlarm('non-existent', true)).rejects.toThrow(
         'Alarm not found'
       );
     });
 
-    it('should validate alarm data after toggle', async () => {
+    it('should validate alarm data after toggle', async (
+) => {
       // Mock validation to fail
       jest.spyOn(AlarmService as any, 'validateAlarmData').mockReturnValue(false);
 
@@ -448,15 +506,18 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('dismissAlarm', () => {
+  describe('dismissAlarm', (
+) => {
     let existingAlarm: Alarm;
 
-    beforeEach(async () => {
+    beforeEach(async (
+) => {
       await AlarmService.loadAlarms(mockUser.id);
       existingAlarm = mockAlarms[0];
     });
 
-    it('should dismiss alarm successfully', async () => {
+    it('should dismiss alarm successfully', async (
+) => {
       await AlarmService.dismissAlarm(existingAlarm.id, 'voice', mockUser);
 
       expect(mockSecureStorage.storeAlarms).toHaveBeenCalled();
@@ -464,7 +525,8 @@ describe('AlarmService', () => {
       expect(scheduleLocalNotification).toHaveBeenCalled(); // Reschedule for next occurrence
     });
 
-    it('should handle alarm with battle integration', async () => {
+    it('should handle alarm with battle integration', async (
+) => {
       existingAlarm.battleId = 'battle123';
 
       await AlarmService.dismissAlarm(existingAlarm.id, 'button', mockUser);
@@ -480,13 +542,15 @@ describe('AlarmService', () => {
       );
     });
 
-    it('should throw error for non-existent alarm', async () => {
+    it('should throw error for non-existent alarm', async (
+) => {
       await expect(
         AlarmService.dismissAlarm('non-existent', 'voice', mockUser)
       ).rejects.toThrow('Alarm with ID non-existent not found');
     });
 
-    it('should reset snooze count on dismissal', async () => {
+    it('should reset snooze count on dismissal', async (
+) => {
       existingAlarm.snoozeCount = 3;
 
       await AlarmService.dismissAlarm(existingAlarm.id, 'voice', mockUser);
@@ -497,10 +561,12 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('snoozeAlarm', () => {
+  describe('snoozeAlarm', (
+) => {
     let existingAlarm: Alarm;
 
-    beforeEach(async () => {
+    beforeEach(async (
+) => {
       await AlarmService.loadAlarms(mockUser.id);
       existingAlarm = mockAlarms[0];
       existingAlarm.snoozeEnabled = true;
@@ -508,7 +574,8 @@ describe('AlarmService', () => {
       existingAlarm.maxSnoozes = 3;
     });
 
-    it('should snooze alarm successfully', async () => {
+    it('should snooze alarm successfully', async (
+) => {
       await AlarmService.snoozeAlarm(existingAlarm.id, 10, mockUser);
 
       const updatedAlarms = AlarmService.getAlarms();
@@ -518,7 +585,8 @@ describe('AlarmService', () => {
       expect(mockSecureStorage.storeAlarmEvents).toHaveBeenCalled();
     });
 
-    it('should use custom snooze minutes', async () => {
+    it('should use custom snooze minutes', async (
+) => {
       await AlarmService.snoozeAlarm(existingAlarm.id, 15, mockUser);
 
       expect(scheduleLocalNotification).toHaveBeenCalledWith(
@@ -528,7 +596,8 @@ describe('AlarmService', () => {
       );
     });
 
-    it('should use default snooze interval if not provided', async () => {
+    it('should use default snooze interval if not provided', async (
+) => {
       existingAlarm.snoozeInterval = 7;
 
       await AlarmService.snoozeAlarm(existingAlarm.id, undefined, mockUser);
@@ -538,7 +607,8 @@ describe('AlarmService', () => {
       expect(updatedAlarm?.snoozeCount).toBe(1);
     });
 
-    it('should respect max snoozes limit', async () => {
+    it('should respect max snoozes limit', async (
+) => {
       existingAlarm.snoozeCount = 3;
       existingAlarm.maxSnoozes = 3;
 
@@ -551,7 +621,8 @@ describe('AlarmService', () => {
       expect(scheduleLocalNotification).not.toHaveBeenCalled();
     });
 
-    it('should handle battle alarms with snooze restrictions', async () => {
+    it('should handle battle alarms with snooze restrictions', async (
+) => {
       existingAlarm.battleId = 'battle123';
       existingAlarm.snoozeEnabled = false;
 
@@ -561,7 +632,8 @@ describe('AlarmService', () => {
       expect(scheduleLocalNotification).not.toHaveBeenCalled();
     });
 
-    it('should handle battle integration for snooze', async () => {
+    it('should handle battle integration for snooze', async (
+) => {
       existingAlarm.battleId = 'battle123';
 
       await AlarmService.snoozeAlarm(existingAlarm.id, 5, mockUser);
@@ -569,19 +641,23 @@ describe('AlarmService', () => {
       expect(alarmBattleIntegration.handleAlarmSnooze).toHaveBeenCalled();
     });
 
-    it('should throw error for non-existent alarm', async () => {
+    it('should throw error for non-existent alarm', async (
+) => {
       await expect(
         AlarmService.snoozeAlarm('non-existent', 5, mockUser)
       ).rejects.toThrow('Alarm with ID non-existent not found');
     });
   });
 
-  describe('getAlarms', () => {
-    beforeEach(async () => {
+  describe('getAlarms', (
+) => {
+    beforeEach(async (
+) => {
       await AlarmService.loadAlarms(mockUser.id);
     });
 
-    it('should return all loaded alarms', () => {
+    it('should return all loaded alarms', (
+) => {
       const result = AlarmService.getAlarms();
 
       expect(result).toHaveLength(mockAlarms.length);
@@ -591,28 +667,33 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('getAlarmById', () => {
+  describe('getAlarmById', (
+) => {
     let existingAlarm: Alarm;
 
-    beforeEach(async () => {
+    beforeEach(async (
+) => {
       await AlarmService.loadAlarms(mockUser.id);
       existingAlarm = mockAlarms[0];
     });
 
-    it('should return alarm by ID', () => {
+    it('should return alarm by ID', (
+) => {
       const result = AlarmService.getAlarmById(existingAlarm.id);
 
       expect(result).toEqual(existingAlarm);
     });
 
-    it('should return undefined for non-existent alarm', () => {
+    it('should return undefined for non-existent alarm', (
+) => {
       const result = AlarmService.getAlarmById('non-existent');
 
       expect(result).toBeUndefined();
     });
   });
 
-  describe('createBattleAlarm', () => {
+  describe('createBattleAlarm', (
+) => {
     const battleAlarmData = {
       time: '06:00',
       label: 'Battle Alarm',
@@ -623,7 +704,8 @@ describe('AlarmService', () => {
       difficulty: 'hard',
     };
 
-    it('should create battle alarm successfully', async () => {
+    it('should create battle alarm successfully', async (
+) => {
       const mockBattleAlarm = createTestAlarm({ battleId: 'battle123' });
       (alarmBattleIntegration.createBattleAlarm as jest.Mock).mockResolvedValue(
         mockBattleAlarm
@@ -637,7 +719,8 @@ describe('AlarmService', () => {
       expect(scheduleLocalNotification).toHaveBeenCalled();
     });
 
-    it('should validate battle alarm data', async () => {
+    it('should validate battle alarm data', async (
+) => {
       const invalidBattleAlarm = { ...createTestAlarm(), time: 'invalid' };
       (alarmBattleIntegration.createBattleAlarm as jest.Mock).mockResolvedValue(
         invalidBattleAlarm
@@ -649,13 +732,16 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('getBattleAlarms', () => {
-    beforeEach(async () => {
+  describe('getBattleAlarms', (
+) => {
+    beforeEach(async (
+) => {
       mockAlarms[0].battleId = 'battle123';
       await AlarmService.loadAlarms(mockUser.id);
     });
 
-    it('should return only battle alarms for user', () => {
+    it('should return only battle alarms for user', (
+) => {
       const result = AlarmService.getBattleAlarms(mockUser.id);
 
       expect(result).toHaveLength(1);
@@ -664,13 +750,16 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('getNonBattleAlarms', () => {
-    beforeEach(async () => {
+  describe('getNonBattleAlarms', (
+) => {
+    beforeEach(async (
+) => {
       mockAlarms[0].battleId = 'battle123';
       await AlarmService.loadAlarms(mockUser.id);
     });
 
-    it('should return only non-battle alarms for user', () => {
+    it('should return only non-battle alarms for user', (
+) => {
       const result = AlarmService.getNonBattleAlarms(mockUser.id);
 
       expect(result).toHaveLength(1);
@@ -679,16 +768,19 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('unlinkAlarmFromBattle', () => {
+  describe('unlinkAlarmFromBattle', (
+) => {
     let battleAlarm: Alarm;
 
-    beforeEach(async () => {
+    beforeEach(async (
+) => {
       mockAlarms[0].battleId = 'battle123';
       await AlarmService.loadAlarms(mockUser.id);
       battleAlarm = mockAlarms[0];
     });
 
-    it('should unlink alarm from battle successfully', async () => {
+    it('should unlink alarm from battle successfully', async (
+) => {
       await AlarmService.unlinkAlarmFromBattle(battleAlarm.id);
 
       const updatedAlarms = AlarmService.getAlarms();
@@ -698,28 +790,33 @@ describe('AlarmService', () => {
       expect(alarmBattleIntegration.unlinkAlarmFromBattle).toHaveBeenCalled();
     });
 
-    it('should handle non-existent alarm gracefully', async () => {
+    it('should handle non-existent alarm gracefully', async (
+) => {
       await expect(
         AlarmService.unlinkAlarmFromBattle('non-existent')
       ).resolves.not.toThrow();
     });
   });
 
-  describe('validateAlarmOwnership', () => {
+  describe('validateAlarmOwnership', (
+) => {
     let existingAlarm: Alarm;
 
-    beforeEach(async () => {
+    beforeEach(async (
+) => {
       await AlarmService.loadAlarms(mockUser.id);
       existingAlarm = mockAlarms[0];
     });
 
-    it('should validate ownership for owned alarm', () => {
+    it('should validate ownership for owned alarm', (
+) => {
       const result = AlarmService.validateAlarmOwnership(existingAlarm.id, mockUser.id);
 
       expect(result).toBe(true);
     });
 
-    it('should reject ownership for non-owned alarm', () => {
+    it('should reject ownership for non-owned alarm', (
+) => {
       const result = AlarmService.validateAlarmOwnership(
         existingAlarm.id,
         'other_user'
@@ -728,26 +825,31 @@ describe('AlarmService', () => {
       expect(result).toBe(false);
     });
 
-    it('should allow access to legacy alarms without userId', () => {
+    it('should allow access to legacy alarms without userId', (
+) => {
       existingAlarm.userId = undefined as any;
       const result = AlarmService.validateAlarmOwnership(existingAlarm.id, 'any_user');
 
       expect(result).toBe(true);
     });
 
-    it('should return false for non-existent alarm', () => {
+    it('should return false for non-existent alarm', (
+) => {
       const result = AlarmService.validateAlarmOwnership('non-existent', mockUser.id);
 
       expect(result).toBe(false);
     });
   });
 
-  describe('getUserAlarms', () => {
-    beforeEach(async () => {
+  describe('getUserAlarms', (
+) => {
+    beforeEach(async (
+) => {
       await AlarmService.loadAlarms(mockUser.id);
     });
 
-    it('should return alarms for specific user', () => {
+    it('should return alarms for specific user', (
+) => {
       const result = AlarmService.getUserAlarms(mockUser.id);
 
       expect(result).toHaveLength(2); // Two alarms for mockUser.id
@@ -756,7 +858,8 @@ describe('AlarmService', () => {
       );
     });
 
-    it('should include legacy alarms without userId', () => {
+    it('should include legacy alarms without userId', (
+) => {
       mockAlarms[0].userId = undefined as any;
       const result = AlarmService.getUserAlarms('any_user');
 
@@ -764,8 +867,10 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('validateAlarmData (private method)', () => {
-    it('should validate correct alarm data', () => {
+  describe('validateAlarmData (private method)', (
+) => {
+    it('should validate correct alarm data', (
+) => {
       const validAlarm = {
         id: 'test123',
         time: '07:30',
@@ -779,7 +884,8 @@ describe('AlarmService', () => {
       expect(result).toBe(true);
     });
 
-    it('should reject alarm with missing required fields', () => {
+    it('should reject alarm with missing required fields', (
+) => {
       const invalidAlarm = {
         time: '07:30',
         label: 'Test Alarm',
@@ -790,7 +896,8 @@ describe('AlarmService', () => {
       expect(result).toBe(false);
     });
 
-    it('should reject alarm with invalid time format', () => {
+    it('should reject alarm with invalid time format', (
+) => {
       const invalidAlarm = {
         id: 'test123',
         time: '25:70', // Invalid time
@@ -803,7 +910,8 @@ describe('AlarmService', () => {
       expect(result).toBe(false);
     });
 
-    it('should reject alarm with empty days array', () => {
+    it('should reject alarm with empty days array', (
+) => {
       const invalidAlarm = {
         id: 'test123',
         time: '07:30',
@@ -816,7 +924,8 @@ describe('AlarmService', () => {
       expect(result).toBe(false);
     });
 
-    it('should reject alarm with invalid day values', () => {
+    it('should reject alarm with invalid day values', (
+) => {
       const invalidAlarm = {
         id: 'test123',
         time: '07:30',
@@ -829,7 +938,8 @@ describe('AlarmService', () => {
       expect(result).toBe(false);
     });
 
-    it('should reject alarm with too long label', () => {
+    it('should reject alarm with too long label', (
+) => {
       const invalidAlarm = {
         id: 'test123',
         time: '07:30',
@@ -842,7 +952,8 @@ describe('AlarmService', () => {
       expect(result).toBe(false);
     });
 
-    it('should reject alarm with invalid snooze interval', () => {
+    it('should reject alarm with invalid snooze interval', (
+) => {
       const invalidAlarm = {
         id: 'test123',
         time: '07:30',
@@ -857,8 +968,10 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('checkForTriggeredAlarms (private method)', () => {
-    beforeEach(async () => {
+  describe('checkForTriggeredAlarms (private method)', (
+) => {
+    beforeEach(async (
+) => {
       await AlarmService.loadAlarms(mockUser.id);
 
       // Mock current time to match alarm time
@@ -867,11 +980,13 @@ describe('AlarmService', () => {
       jest.spyOn(Date.prototype, 'getDay').mockReturnValue(1); // Monday
     });
 
-    afterEach(() => {
+    afterEach((
+) => {
       jest.restoreAllMocks();
     });
 
-    it('should trigger alarm when time matches', () => {
+    it('should trigger alarm when time matches', (
+) => {
       const testAlarm = mockAlarms[0];
       testAlarm.time = '07:00';
       testAlarm.days = [1]; // Monday
@@ -891,7 +1006,8 @@ describe('AlarmService', () => {
       );
     });
 
-    it('should not trigger disabled alarms', () => {
+    it('should not trigger disabled alarms', (
+) => {
       const testAlarm = mockAlarms[0];
       testAlarm.time = '07:00';
       testAlarm.days = [1]; // Monday
@@ -904,7 +1020,8 @@ describe('AlarmService', () => {
       expect(window.dispatchEvent).not.toHaveBeenCalled();
     });
 
-    it('should not trigger alarms on wrong day', () => {
+    it('should not trigger alarms on wrong day', (
+) => {
       const testAlarm = mockAlarms[0];
       testAlarm.time = '07:00';
       testAlarm.days = [2]; // Tuesday, but current day is Monday
@@ -917,7 +1034,8 @@ describe('AlarmService', () => {
       expect(window.dispatchEvent).not.toHaveBeenCalled();
     });
 
-    it('should handle battle alarms', async () => {
+    it('should handle battle alarms', async (
+) => {
       const testAlarm = mockAlarms[0];
       testAlarm.time = '07:00';
       testAlarm.days = [1];
@@ -930,8 +1048,10 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('Error handling', () => {
-    it('should handle errors in alarm creation', async () => {
+  describe('Error handling', (
+) => {
+    it('should handle errors in alarm creation', async (
+) => {
       mockSecureStorage.storeAlarms.mockRejectedValue(new Error('Storage error'));
 
       const alarmData = {
@@ -945,7 +1065,8 @@ describe('AlarmService', () => {
       expect(ErrorHandler.handleError).toHaveBeenCalled();
     });
 
-    it('should handle errors in notification scheduling', async () => {
+    it('should handle errors in notification scheduling', async (
+) => {
       (scheduleLocalNotification as jest.Mock).mockRejectedValue(
         new Error('Notification error')
       );
@@ -962,8 +1083,10 @@ describe('AlarmService', () => {
     });
   });
 
-  describe('Security events', () => {
-    it('should log security events for important operations', async () => {
+  describe('Security events', (
+) => {
+    it('should log security events for important operations', async (
+) => {
       jest.spyOn(window, 'dispatchEvent');
 
       const alarmData = {
@@ -988,12 +1111,14 @@ describe('AlarmService', () => {
   });
 });
 
-describe('enhancedAlarmTracking', () => {
+describe('enhancedAlarmTracking', (
+) => {
   let mockUser: User;
   let mockAlarm: Alarm;
   let mockAnalytics: any;
 
-  beforeEach(() => {
+  beforeEach((
+) => {
     jest.clearAllMocks();
 
     mockUser = createTestUser();
@@ -1006,8 +1131,10 @@ describe('enhancedAlarmTracking', () => {
     jest.spyOn(AlarmService, 'validateAlarmOwnership').mockReturnValue(true);
   });
 
-  describe('trackAlarmPerformance', () => {
-    it('should track alarm performance for valid alarm', async () => {
+  describe('trackAlarmPerformance', (
+) => {
+    it('should track alarm performance for valid alarm', async (
+) => {
       jest.spyOn(AlarmService, 'getAlarmById').mockReturnValue(mockAlarm);
 
       await enhancedAlarmTracking.trackAlarmPerformance(mockAlarm.id, mockUser.id);
@@ -1023,7 +1150,8 @@ describe('enhancedAlarmTracking', () => {
       });
     });
 
-    it('should not track performance for non-existent alarm', async () => {
+    it('should not track performance for non-existent alarm', async (
+) => {
       jest.spyOn(AlarmService, 'getAlarmById').mockReturnValue(undefined);
 
       await enhancedAlarmTracking.trackAlarmPerformance('non-existent', mockUser.id);
@@ -1031,7 +1159,8 @@ describe('enhancedAlarmTracking', () => {
       expect(mockAnalytics.track).not.toHaveBeenCalled();
     });
 
-    it('should not track performance if ownership validation fails', async () => {
+    it('should not track performance if ownership validation fails', async (
+) => {
       jest.spyOn(AlarmService, 'getAlarmById').mockReturnValue(mockAlarm);
       jest.spyOn(AlarmService, 'validateAlarmOwnership').mockReturnValue(false);
 
@@ -1041,8 +1170,10 @@ describe('enhancedAlarmTracking', () => {
     });
   });
 
-  describe('trackBattleAlarmUsage', () => {
-    beforeEach(() => {
+  describe('trackBattleAlarmUsage', (
+) => {
+    beforeEach((
+) => {
       const battleAlarm = createTestAlarm({
         userId: mockUser.id,
         battleId: 'battle123',
@@ -1053,7 +1184,8 @@ describe('enhancedAlarmTracking', () => {
       jest.spyOn(AlarmService, 'getNonBattleAlarms').mockReturnValue([regularAlarm]);
     });
 
-    it('should track battle alarm usage statistics', async () => {
+    it('should track battle alarm usage statistics', async (
+) => {
       await enhancedAlarmTracking.trackBattleAlarmUsage(mockUser.id);
 
       expect(mockAnalytics.track).toHaveBeenCalledWith('alarm_battle_usage', {
@@ -1064,7 +1196,8 @@ describe('enhancedAlarmTracking', () => {
       });
     });
 
-    it('should validate ownership before tracking', async () => {
+    it('should validate ownership before tracking', async (
+) => {
       jest.spyOn(AlarmService, 'validateAlarmOwnership').mockReturnValue(false);
 
       await enhancedAlarmTracking.trackBattleAlarmUsage(mockUser.id);

@@ -249,7 +249,8 @@ export class AdvancedTranslationValidator {
     const issues: CulturalIssue[] = [];
     const langInfo = SUPPORTED_LANGUAGES[language];
 
-    this.traverseTranslations(translations, (key, value) => {
+    this.traverseTranslations(translations, (key, value
+) => {
       if (typeof value !== 'string') return;
 
       // Check religious sensitivity
@@ -329,7 +330,8 @@ export class AdvancedTranslationValidator {
     const termUsage = new Map<string, { key: string; value: string }[]>();
 
     // Build terminology usage map
-    this.traverseTranslations(translations, (key, value) => {
+    this.traverseTranslations(translations, (key, value
+) => {
       if (typeof value !== 'string') return;
 
       TERMINOLOGY_PATTERNS.core_terms.forEach(term => {
@@ -347,7 +349,8 @@ export class AdvancedTranslationValidator {
     });
 
     // Check for terminology variations
-    termUsage.forEach((usages, term) => {
+    termUsage.forEach((usages, term
+) => {
       const variations = new Set(
         usages.map(u => this.extractTermVariation(u.value, term))
       );
@@ -378,11 +381,13 @@ export class AdvancedTranslationValidator {
     language: SupportedLanguage
   ): PerformanceMetrics {
     const allTexts: string[] = [];
-    this.traverseTranslations(translations, (key, value) => {
+    this.traverseTranslations(translations, (key, value
+) => {
       if (typeof value === 'string') allTexts.push(value);
     });
 
-    const totalLength = allTexts.reduce((sum, text) => sum + text.length, 0);
+    const totalLength = allTexts.reduce((sum, text
+) => sum + text.length, 0);
     const averageLength = totalLength / allTexts.length;
 
     const readabilityScore = this.calculateReadabilityScore(allTexts, language);
@@ -522,7 +527,8 @@ export class AdvancedTranslationValidator {
     const score = 100;
     let errors = 0;
 
-    this.traverseTranslations(reference, (key, refValue) => {
+    this.traverseTranslations(reference, (key, refValue
+) => {
       if (typeof refValue !== 'string') return;
 
       const transValue = this.getValue(translations, key);
@@ -542,7 +548,8 @@ export class AdvancedTranslationValidator {
 
   private calculateReadability(translations: any, language: SupportedLanguage): number {
     const texts: string[] = [];
-    this.traverseTranslations(translations, (key, value) => {
+    this.traverseTranslations(translations, (key, value
+) => {
       if (typeof value === 'string') texts.push(value);
     });
 
@@ -581,7 +588,8 @@ export class AdvancedTranslationValidator {
     texts.forEach(text => {
       const words = text.split(/\s+/);
       const avgWordLength =
-        words.reduce((sum, word) => sum + word.length, 0) / words.length;
+        words.reduce((sum, word
+) => sum + word.length, 0) / words.length;
       const sentenceLength = text.split(/[.!?]+/).length;
 
       let complexity = 0;
@@ -601,7 +609,8 @@ export class AdvancedTranslationValidator {
 
   private calculateReadingTime(texts: string[], language: SupportedLanguage): number {
     const totalWords = texts.reduce(
-      (sum, text) => sum + text.split(/\s+/).filter(word => word.length > 0).length,
+      (sum, text
+) => sum + text.split(/\s+/).filter(word => word.length > 0).length,
       0
     );
 
@@ -668,7 +677,8 @@ export class AdvancedTranslationValidator {
 
   private traverseTranslations(
     obj: any,
-    callback: (key: string, value: any, fullKey?: string) => void,
+    callback: (key: string, value: any, fullKey?: string
+) => void,
     prefix = ''
   ): void {
     Object.keys(obj).forEach(key => {
@@ -701,7 +711,8 @@ export class AdvancedTranslationValidator {
   }
 
   private getValue(obj: any, path: string): any {
-    return path.split('.').reduce((current, key) => current && current[key], obj);
+    return path.split('.').reduce((current, key
+) => current && current[key], obj);
   }
 
   /**
@@ -710,7 +721,8 @@ export class AdvancedTranslationValidator {
   public exportResults(): Record<SupportedLanguage, AdvancedValidationResult> {
     const results: Record<string, AdvancedValidationResult> = {};
 
-    this.validationCache.forEach((result, language) => {
+    this.validationCache.forEach((result, language
+) => {
       results[language] = result;
     });
 
@@ -731,13 +743,16 @@ export class AdvancedTranslationValidator {
 
     const totalLanguages = results.length;
     const averageQualityScore =
-      results.reduce((sum, r) => sum + r.qualityScore.overall, 0) / totalLanguages;
+      results.reduce((sum, r
+) => sum + r.qualityScore.overall, 0) / totalLanguages;
     const totalCulturalIssues = results.reduce(
-      (sum, r) => sum + r.culturalIssues.length,
+      (sum, r
+) => sum + r.culturalIssues.length,
       0
     );
     const totalConsistencyIssues = results.reduce(
-      (sum, r) => sum + r.consistencyIssues.length,
+      (sum, r
+) => sum + r.consistencyIssues.length,
       0
     );
     const languagesNeedingAttention = results

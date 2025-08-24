@@ -26,13 +26,15 @@ import { OfflineManager, type SyncStatus } from '../services/offline-manager';
 
 interface PWAStatusDashboardProps {
   className?: string;
-  onClose?: () => void;
+  onClose?: (
+) => void;
 }
 
 const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
   className = '',
   onClose,
-}) => {
+}
+) => {
   const [capabilities, setCapabilities] = useState<PWACapabilities | null>(null);
   const [syncStatus, setSyncStatus] = useState<BackgroundSyncStatus | null>(null);
   const [offlineStatus, setOfflineStatus] = useState<SyncStatus | null>(null);
@@ -45,8 +47,10 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
 
   const pwaService = PWAService.getInstance();
 
-  useEffect(() => {
-    const initializeStatus = async () => {
+  useEffect((
+) => {
+    const initializeStatus = async (
+) => {
       setIsLoading(true);
       try {
         await pwaService.initialize();
@@ -71,24 +75,28 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
     initializeStatus();
 
     // Set up listeners
-    const handleNetworkChange = (online: boolean) => {
+    const handleNetworkChange = (online: boolean
+) => {
       setIsOnline(online);
     };
 
-    const handleSyncStatusChange = (status: BackgroundSyncStatus) => {
+    const handleSyncStatusChange = (status: BackgroundSyncStatus
+) => {
       setSyncStatus(status);
     };
 
     pwaService.addNetworkListener(handleNetworkChange);
     pwaService.addSyncListener(handleSyncStatusChange);
 
-    return () => {
+    return (
+) => {
       pwaService.removeNetworkListener(handleNetworkChange);
       pwaService.removeSyncListener(handleSyncStatusChange);
     };
   }, []);
 
-  const handleInstallApp = async () => {
+  const handleInstallApp = async (
+) => {
     try {
       await pwaService.installApp();
     } catch (error) {
@@ -96,7 +104,8 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
     }
   };
 
-  const handleEnableNotifications = async () => {
+  const handleEnableNotifications = async (
+) => {
     try {
       const subscription = await pwaService.subscribeToPushNotifications();
       setPushInfo(subscription);
@@ -105,7 +114,8 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
     }
   };
 
-  const handleDisableNotifications = async () => {
+  const handleDisableNotifications = async (
+) => {
     try {
       await pwaService.unsubscribeFromPushNotifications();
       const updatedInfo = await pwaService.getPushSubscriptionInfo();
@@ -115,7 +125,8 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
     }
   };
 
-  const handleForceSync = async () => {
+  const handleForceSync = async (
+) => {
     try {
       await pwaService.forceSync();
       // Refresh status after sync
@@ -128,7 +139,8 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
     }
   };
 
-  const handleCheckUpdates = async () => {
+  const handleCheckUpdates = async (
+) => {
     try {
       const hasUpdate = await pwaService.checkForUpdates();
       if (hasUpdate) {
@@ -146,7 +158,8 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
     }
   };
 
-  const getStatusIcon = (enabled: boolean) => {
+  const getStatusIcon = (enabled: boolean
+) => {
     return enabled ? (
       <CheckCircle className="w-5 h-5 text-green-500" />
     ) : (
@@ -154,7 +167,8 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
     );
   };
 
-  const getStatusBadge = (status: 'active' | 'inactive' | 'warning' | 'error') => {
+  const getStatusBadge = (status: 'active' | 'inactive' | 'warning' | 'error'
+) => {
     const badgeClasses = {
       active: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
       inactive: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
@@ -220,10 +234,12 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
           { id: 'sync', label: 'Sync', icon: Sync },
           { id: 'notifications', label: 'Notifications', icon: Bell },
           { id: 'offline', label: 'Offline', icon: Database },
-        ].map(({ id, label, icon: Icon }) => (
+        ].map(({ id, label, icon: Icon }
+) => (
           <button
             key={id}
-            onClick={() => setActiveTab(id as any)}
+            onClick={(
+) => setActiveTab(id as any)}
             className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-medium text-sm transition-colors ${
               activeTab === id
                 ? 'border-primary-600 text-primary-600'

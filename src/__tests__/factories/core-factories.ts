@@ -373,7 +373,8 @@ export const _createTestUserPreferences = (
   };
 };
 
-const createTestUserSettings = () => ({
+const createTestUserSettings = (
+) => ({
   notifications: {
     push: true,
     email: faker.datatype.boolean({ probability: 0.6 }),
@@ -394,7 +395,8 @@ const createTestUserSettings = () => ({
   },
 });
 
-const createTestPremiumUsage = () => ({
+const createTestPremiumUsage = (
+) => ({
   voicePersonalitiesUsed: faker.number.int({ min: 0, max: 10 }),
   customThemesCreated: faker.number.int({ min: 0, max: 5 }),
   advancedReportsGenerated: faker.number.int({ min: 0, max: 20 }),
@@ -653,7 +655,8 @@ const createTestBattleSettings = (options: {
   } as any;
 };
 
-const createTestBattlePrize = (options: { premium: boolean }) => {
+const createTestBattlePrize = (options: { premium: boolean }
+) => {
   const { premium } = options;
 
   return {
@@ -761,7 +764,8 @@ const createTestThemeColors = (): ThemeColors => ({
   },
 });
 
-const createTestColorPalette = (baseColor?: string) => ({
+const createTestColorPalette = (baseColor?: string
+) => ({
   50: baseColor || generateHexColor(),
   100: generateHexColor(),
   200: generateHexColor(),
@@ -774,7 +778,8 @@ const createTestColorPalette = (baseColor?: string) => ({
   900: generateHexColor(),
 });
 
-const createTestThemeTypography = () => ({
+const createTestThemeTypography = (
+) => ({
   fontFamily: {
     primary: faker.helpers.arrayElement(['Inter', 'Boto', 'Open Sans', 'Lato']),
     secondary: faker.helpers.arrayElement(['Poppins', 'Montserrat', 'Source Sans Pro']),
@@ -800,7 +805,8 @@ const createTestThemeTypography = () => ({
   },
 });
 
-const createTestThemeSpacing = () => ({
+const createTestThemeSpacing = (
+) => ({
   scale: faker.helpers.arrayElement([4, 8]),
   sizes: {
     xs: '0.25rem',
@@ -811,7 +817,8 @@ const createTestThemeSpacing = () => ({
   },
 });
 
-const createTestThemeAnimations = () => ({
+const createTestThemeAnimations = (
+) => ({
   duration: {
     fast: '150ms',
     normal: '300ms',
@@ -825,7 +832,8 @@ const createTestThemeAnimations = () => ({
   },
 });
 
-const createTestThemeEffects = () => ({
+const createTestThemeEffects = (
+) => ({
   shadows: {
     sm: '0 1px 2px rgba(0, 0, 0, 0.05)',
     md: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -842,7 +850,8 @@ const createTestThemeEffects = () => ({
   },
 });
 
-const createTestThemeAccessibility = () => ({
+const createTestThemeAccessibility = (
+) => ({
   focusVisible: true,
   reducedTransparency: faker.datatype.boolean({ probability: 0.15 }),
 });
@@ -919,35 +928,41 @@ export const _createFlexibleTheme = (
  * ]);
  */
 export function _createBatch<T>(
-  factory: (overrides?: Partial<T>) => T,
+  factory: (overrides?: Partial<T>
+) => T,
   count: number,
   overridesList: Partial<T>[] = []
 ): T[] {
-  return Array.from({ length: count }, (_, i) => factory(overridesList[i] || {}));
+  return Array.from({ length: count }, (_, i
+) => factory(overridesList[i] || {}));
 }
 
 // Convenience exports for common test scenarios
-export const _createMinimalUser = () =>
+export const _createMinimalUser = (
+) =>
   createFlexibleUser({
     stats: undefined,
     settings: undefined,
     subscription: undefined,
   });
 
-export const _createPremiumUser = () =>
+export const _createPremiumUser = (
+) =>
   createFlexibleUser({
     subscriptionTier: 'premium',
     featureAccess: createTestPremiumFeatureAccess('premium'),
     usage: createTestPremiumUsage(),
   });
 
-export const _createActiveAlarm = () =>
+export const _createActiveAlarm = (
+) =>
   createFlexibleAlarm({
     enabled: true,
     nextScheduled: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
   });
 
-export const _createCompletedBattle = () =>
+export const _createCompletedBattle = (
+) =>
   createFlexibleBattle({
     status: 'completed',
     endTime: new Date(),

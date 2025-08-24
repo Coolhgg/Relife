@@ -12,9 +12,12 @@ import {
   createTestPerformanceMetrics,
 } from './enhanced-factories';
 
-describe('Enhanced Factories', () => {
-  describe('createTestPersonaProfile', () => {
-    it('should create a valid persona profile with default options', () => {
+describe('Enhanced Factories', (
+) => {
+  describe('createTestPersonaProfile', (
+) => {
+    it('should create a valid persona profile with default options', (
+) => {
       const profile = createTestPersonaProfile();
 
       expect(profile).toBeDefined();
@@ -24,7 +27,8 @@ describe('Enhanced Factories', () => {
       expect(profile.primaryColor).toMatch(/^#[0-9A-F]{6}$/i);
     });
 
-    it('should respect persona parameter', () => {
+    it('should respect persona parameter', (
+) => {
       const profile = createTestPersonaProfile({ persona: 'busy_ben' });
 
       expect(profile.id).toBe('busy_ben');
@@ -33,8 +37,10 @@ describe('Enhanced Factories', () => {
     });
   });
 
-  describe('createTestPersonaDetectionResult', () => {
-    it('should create a valid detection result', () => {
+  describe('createTestPersonaDetectionResult', (
+) => {
+    it('should create a valid detection result', (
+) => {
       const result = createTestPersonaDetectionResult();
 
       expect(result).toBeDefined();
@@ -47,8 +53,10 @@ describe('Enhanced Factories', () => {
     });
   });
 
-  describe('createTestEmailCampaign', () => {
-    it('should create a valid email campaign', () => {
+  describe('createTestEmailCampaign', (
+) => {
+    it('should create a valid email campaign', (
+) => {
       const campaign = createTestEmailCampaign();
 
       expect(campaign).toBeDefined();
@@ -60,15 +68,18 @@ describe('Enhanced Factories', () => {
       expect(['draft', 'active', 'paused', 'completed']).toContain(campaign.status);
     });
 
-    it('should create campaign with specified persona', () => {
+    it('should create campaign with specified persona', (
+) => {
       const campaign = createTestEmailCampaign({ persona: 'professional_paula' });
 
       expect(campaign.targetPersona).toBe('professional_paula');
     });
   });
 
-  describe('createTestPerformanceMetrics', () => {
-    it('should create valid performance metrics', () => {
+  describe('createTestPerformanceMetrics', (
+) => {
+    it('should create valid performance metrics', (
+) => {
       const metrics = createTestPerformanceMetrics();
 
       expect(metrics).toBeDefined();

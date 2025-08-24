@@ -101,7 +101,8 @@ function TeamDashboard() {
     createdBy: '1',
   });
 
-  const getTierColor = (tier: string) => {
+  const getTierColor = (tier: string
+) => {
     switch (tier) {
       case 'basic':
         return 'text-blue-600';
@@ -114,7 +115,8 @@ function TeamDashboard() {
     }
   };
 
-  const getRoleIcon = (role: string) => {
+  const getRoleIcon = (role: string
+) => {
     switch (role) {
       case 'captain':
         return <Crown className="w-4 h-4 text-yellow-500" />;
@@ -149,8 +151,9 @@ function TeamDashboard() {
 
         <div className="space-y-3">
           <h4 className="font-semibold">Team Members</h4>
-          {team.members/* auto: implicit any */
-      &.map((member: any) => (
+          {team.members
+      .map((member: any
+) => (
             <div
               key={member.id}
               className="flex items-center justify-between p-3 border rounded-lg"
@@ -235,7 +238,8 @@ function WakeUpChallenges() {
     },
   ]);
 
-  const getDifficultyColor = (difficulty: string) => {
+  const getDifficultyColor = (difficulty: string
+) => {
     switch (difficulty) {
       case 'Easy':
         return 'bg-green-100 text-green-800';
@@ -302,8 +306,9 @@ function WakeUpChallenges() {
 
         <div className="space-y-3">
           <h4 className="font-semibold">Available Challenges</h4>
-          {availableChallenges/* auto: implicit any */
-      &.map((challenge: any) => (
+          {availableChallenges
+      .map((challenge: any
+) => (
             <div
               key={challenge.id}
               className="flex items-center justify-between p-3 border rounded-lg"
@@ -374,8 +379,9 @@ function AccountabilityPartners() {
               </Button>
             </div>
           ) : (
-            partners/* auto: implicit any */
-      &.map((partner: any) => (
+            partners
+      .map((partner: any
+) => (
               <div
                 key={partner.id}
                 className="flex items-center justify-between p-3 border rounded-lg"
@@ -404,8 +410,9 @@ function AccountabilityPartners() {
         {partnerRequests.length > 0 && (
           <div className="space-y-3">
             <h4 className="font-semibold">Partner Requests</h4>
-            {partnerRequests/* auto: implicit any */
-      &.map((request: any) => (
+            {partnerRequests
+      .map((request: any
+) => (
               <div
                 key={request.id}
                 className="flex items-center justify-between p-3 border rounded-lg bg-blue-50"
@@ -463,7 +470,8 @@ function TeamLeaderboard() {
     { rank: 5, team: 'Dawn Patrol', score: 950, members: 3, trend: 'up' },
   ]);
 
-  const getTrendIcon = (trend: string) => {
+  const getTrendIcon = (trend: string
+) => {
     switch (trend) {
       case 'up':
         return <span className="text-green-500">↗</span>;
@@ -484,7 +492,8 @@ function TeamLeaderboard() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {leaderboardData.map((team, index) => (
+        {leaderboardData.map((team, index
+) => (
           <div
             key={team.rank}
             className={`flex items-center justify-between p-3 rounded-lg ${
@@ -546,15 +555,18 @@ function SocialWakeUpFeatures() {
       <CardContent className="space-y-4">
         <div className="space-y-3">
           <h4 className="font-semibold">Privacy Settings</h4>
-          {Object.entries(socialSettings).map(([key, enabled]) => (
+          {Object.entries(socialSettings).map(([key, enabled]
+) => (
             <div key={key} className="flex items-center justify-between">
               <span className="text-sm">
                 {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
               </span>
               <Switch
                 checked={enabled}
-                onCheckedChange={(checked: any) => /* auto: implicit any */
-                  setSocialSettings((prev: any) => ({ /* auto: implicit any */{ ...prev, [key]: checked }))
+                onCheckedChange={(checked: any
+) => 
+                  setSocialSettings((prev: any
+) => ({ ...prev, [key]: checked }))
                 }
               />
             </div>

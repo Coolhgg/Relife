@@ -6,11 +6,13 @@ export function useAdvancedAlarms() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect((
+) => {
     loadAlarms();
   }, []);
 
-  const loadAlarms = async () => {
+  const loadAlarms = async (
+) => {
     try {
       setLoading(true);
       const loadedAlarms = await AlarmService.loadAlarms();
@@ -39,11 +41,13 @@ export function useAdvancedAlarms() {
     }
   };
 
-  const createAlarm = async (alarmData: any) => {
+  const createAlarm = async (alarmData: any
+) => {
     try {
       setLoading(true);
       const newAlarm = await AlarmService.createAlarm(alarmData);
-      setAlarms((prev: any) => [ // auto: implicit any...prev, newAlarm]);
+      setAlarms((prev: any
+) => [...prev, newAlarm]);
       setError(null);
       return newAlarm;
     } catch (error) {
@@ -55,13 +59,16 @@ export function useAdvancedAlarms() {
     }
   };
 
-  const updateAlarm = async (id: string, alarmData: any) => {
+  const updateAlarm = async (id: string, alarmData: any
+) => {
     try {
       setLoading(true);
       await AlarmService.updateAlarm(id, alarmData);
-      /* auto: implicit any */
-      setAlarms((prev: any) => 
-        prev.map((alarm: any) => (alarm.id === id ? { ...alarm, ...alarmData } : alarm))
+      
+      setAlarms((prev: any
+) => 
+        prev.map((alarm: any
+) => (alarm.id === id ? { ...alarm, ...alarmData } : alarm))
       );
       setError(null);
     } catch (error) {
@@ -73,11 +80,14 @@ export function useAdvancedAlarms() {
     }
   };
 
-  const deleteAlarm = async (id: string) => {
+  const deleteAlarm = async (id: string
+) => {
     try {
       setLoading(true);
       await AlarmService.deleteAlarm(id);
-      setAlarms((prev: any) => p // auto: implicit anyrev.filter((alarm: any) => a // auto: implicit anylarm.id !== id));
+      setAlarms((prev: any
+) => prev.filter((alarm: any
+) => alarm.id !== id));
       setError(null);
     } catch (error) {
       console.error('Error deleting alarm:', error);

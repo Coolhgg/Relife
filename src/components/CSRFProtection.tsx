@@ -7,19 +7,23 @@ import useAuth from '../hooks/useAuth';
 import { TimeoutHandle } from '../types/timers';
 
 interface CSRFProtectionProps {
-  children: (csrfToken: string, isValid: boolean) => React.ReactNode;
-  onInvalidToken?: () => void;
+  children: (csrfToken: string, isValid: boolean
+) => React.ReactNode;
+  onInvalidToken?: (
+) => void;
 }
 
 const CSRFProtection: React.FC<CSRFProtectionProps> = ({
   children,
   onInvalidToken,
-}) => {
+}
+) => {
   const { csrfToken: authCsrfToken } = useAuth();
   const [localCsrfToken, setLocalCsrfToken] = useState<string>('');
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
 
-  useEffect(() => {
+  useEffect((
+) => {
     // Use auth-provided CSRF token if available, otherwise generate a new one
     if (authCsrfToken) {
       setLocalCsrfToken(authCsrfToken);
@@ -32,10 +36,12 @@ const CSRFProtection: React.FC<CSRFProtectionProps> = ({
   }, [authCsrfToken]);
 
   // Validate token periodically
-  useEffect(() => {
+  useEffect((
+) => {
     if (!localCsrfToken) return;
 
-    const validateInterval = setInterval(() => {
+    const validateInterval = setInterval((
+) => {
       // In a real app, you might want to validate against a server-side token
       // For now, we'll just ensure the token exists and is not empty
       const isValid = localCsrfToken.length > 0;
@@ -47,7 +53,8 @@ const CSRFProtection: React.FC<CSRFProtectionProps> = ({
       setIsValidToken(isValid);
     }, 30000); // Check every 30 seconds
 
-    return () => clearInterval(validateInterval);
+    return (
+) => clearInterval(validateInterval);
   }, [localCsrfToken, onInvalidToken]);
 
   return <>{children(localCsrfToken, isValidToken)}</>;
@@ -56,10 +63,13 @@ const CSRFProtection: React.FC<CSRFProtectionProps> = ({
 // Higher-order component for CSRF protection
 export const withCSRFProtection = <P extends object>(
   WrappedComponent: React.ComponentType<P & { csrfToken: string }>
+
 ) => {
-  return React.forwardRef<any, P>((props, ref) => (
+  return React.forwardRef<any, P>((props, ref
+) => (
     <CSRFProtection>
-      {(csrfToken, isValid) =>
+      {(csrfToken, isValid
+) =>
         isValid ? (
           <WrappedComponent {...props} csrfToken={csrfToken} ref={ref} />
         ) : (
@@ -75,12 +85,14 @@ export const withCSRFProtection = <P extends object>(
 };
 
 // Hook for using CSRF protection in functional components
-export const useCSRFProtection = () => {
+export const useCSRFProtection = (
+) => {
   const [csrfToken, setCsrfToken] = useState<string>('');
   const [isValid, setIsValid] = useState<boolean>(false);
   const { csrfToken: authCsrfToken } = useAuth();
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (authCsrfToken) {
       setCsrfToken(authCsrfToken);
       setIsValid(true);

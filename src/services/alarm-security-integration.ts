@@ -626,7 +626,8 @@ export class AlarmSecurityIntegrationService {
     const bypassToken = SecurityService.generateCSRFToken();
 
     this.emergencyBypassActive = true;
-    setTimeout(() => {
+    setTimeout((
+) => {
       this.emergencyBypassActive = false;
       console.log('[SecurityIntegration] Emergency bypass expired');
     }, duration);
@@ -765,14 +766,16 @@ export class AlarmSecurityIntegrationService {
 
   private setupSecurityEventListeners(): void {
     // Listen for critical security events
-    window.addEventListener('security-alert-created', async (event: any) => {
+    window.addEventListener('security-alert-created', async (event: any
+) => {
       if (event.detail.severity === 'critical') {
         console.error('[SecurityIntegration] CRITICAL SECURITY ALERT:', event.detail);
         // Could trigger additional automated responses here
       }
     });
 
-    window.addEventListener('alarm-tamper-detected', async (event: any) => {
+    window.addEventListener('alarm-tamper-detected', async (event: any
+) => {
       console.error('[SecurityIntegration] TAMPER DETECTED:', event.detail);
       // Trigger emergency backup
       await AlarmBackupRedundancyService.createEmergencyBackup();
@@ -781,7 +784,8 @@ export class AlarmSecurityIntegrationService {
 
   private startHealthMonitoring(): void {
     setInterval(
-      async () => {
+      async (
+) => {
         try {
           const status = await this.getSecurityStatus();
           this.lastHealthCheck = new Date();

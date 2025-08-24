@@ -23,11 +23,16 @@ export interface CacheState {
  */
 export function useEnhancedCaching(): {
   cacheState: CacheState;
-  optimize: () => Promise<void>;
-  warmCache: (sounds: CustomSound[]) => Promise<void>;
-  clearCache: () => Promise<void>;
-  updatePolicy: (policy: Partial<CachePolicy>) => void;
-  getCacheEntry: (id: string) => Promise<CacheEntry | null>;
+  optimize: (
+) => Promise<void>;
+  warmCache: (sounds: CustomSound[]
+) => Promise<void>;
+  clearCache: (
+) => Promise<void>;
+  updatePolicy: (policy: Partial<CachePolicy>
+) => void;
+  getCacheEntry: (id: string
+) => Promise<CacheEntry | null>;
 } {
   const [cacheState, setCacheState] = useState<CacheState>({
     stats: enhancedCacheManager.getStats(),
@@ -39,7 +44,8 @@ export function useEnhancedCaching(): {
 
   const statsInterval = useRef<TimeoutHandle>();
 
-  const updateStats = useCallback(() => {
+  const updateStats = useCallback((
+) => {
     const stats = enhancedCacheManager.getStats();
     const memoryPressure =
       stats.memoryPressure < 0.5
@@ -48,68 +54,81 @@ export function useEnhancedCaching(): {
           ? 'medium'
           : 'high';
 
-    /* auto: implicit any */
-      setCacheState((prev: any) => ({{
+    
+      setCacheState((prev: any
+) => ({
       ...prev,
       stats,
       memoryPressure,
     }));
   }, []);
 
-  const optimize = useCallback(async () => {
-    /* auto: implicit any */
-      setCacheState((prev: any) => ({{ ...prev, isOptimizing: true }));
+  const optimize = useCallback(async (
+) => {
+    
+      setCacheState((prev: any
+) => ({ ...prev, isOptimizing: true }));
 
     try {
       await enhancedCacheManager.optimize();
-      /* auto: implicit any */
-      setCacheState((prev: any) => ({{
+      
+      setCacheState((prev: any
+) => ({
         ...prev,
         lastOptimization: new Date(),
       }));
     } finally {
-      /* auto: implicit any */
-      setCacheState((prev: any) => ({{ ...prev, isOptimizing: false }));
+      
+      setCacheState((prev: any
+) => ({ ...prev, isOptimizing: false }));
       updateStats();
     }
   }, [updateStats]);
 
   const warmCache = useCallback(
-    async (sounds: CustomSound[]) => {
-      /* auto: implicit any */
-      setCacheState((prev: any) => ({{ ...prev, isWarming: true }));
+    async (sounds: CustomSound[]
+) => {
+      
+      setCacheState((prev: any
+) => ({ ...prev, isWarming: true }));
 
       try {
         await enhancedCacheManager.warmCache(sounds);
       } finally {
-        /* auto: implicit any */
-      setCacheState((prev: any) => ({{ ...prev, isWarming: false }));
+        
+      setCacheState((prev: any
+) => ({ ...prev, isWarming: false }));
         updateStats();
       }
     },
     [updateStats]
   );
 
-  const clearCache = useCallback(async () => {
+  const clearCache = useCallback(async (
+) => {
     await enhancedCacheManager.clear();
     updateStats();
   }, [updateStats]);
 
-  const updatePolicy = useCallback((policy: Partial<CachePolicy>) => {
+  const updatePolicy = useCallback((policy: Partial<CachePolicy>
+) => {
     enhancedCacheManager.updatePolicy(policy);
   }, []);
 
-  const getCacheEntry = useCallback(async (id: string) => {
+  const getCacheEntry = useCallback(async (id: string
+) => {
     return await enhancedCacheManager.get(id);
   }, []);
 
   // Update stats periodically
-  useEffect(() => {
+  useEffect((
+) => {
     updateStats();
 
     statsInterval.current = setInterval(updateStats, 30000); // Every 30 seconds
 
-    return () => {
+    return (
+) => {
       if (statsInterval.current) {
         clearInterval(statsInterval.current);
       }
@@ -146,8 +165,10 @@ export function useCachePerformance() {
     }[]
   >([]);
 
-  useEffect(() => {
-    const updatePerformance = () => {
+  useEffect((
+) => {
+    const updatePerformance = (
+) => {
       const stats = enhancedCacheManager.getStats();
 
       const newPerformance = {
@@ -164,9 +185,11 @@ export function useCachePerformance() {
         const earlier = performanceHistory.slice(-6, -3);
 
         const recentHitRate =
-          recent.reduce((sum, p) => sum + p.hitRate, 0) / recent.length;
+          recent.reduce((sum, p
+) => sum + p.hitRate, 0) / recent.length;
         const earlierHitRate =
-          earlier.reduce((sum, p) => sum + p.hitRate, 0) / earlier.length;
+          earlier.reduce((sum, p
+) => sum + p.hitRate, 0) / earlier.length;
 
         if (recentHitRate > earlierHitRate + 0.05) {
           newPerformance.trend = 'improving';
@@ -178,7 +201,8 @@ export function useCachePerformance() {
       setPerformance(newPerformance);
 
       // Update history
-      setPerformanceHistory((prev: any) => { // auto: implicit any
+      setPerformanceHistory((prev: any
+) => { // auto: implicit any
         const newEntry = {
           timestamp: new Date(),
           hitRate: newPerformance.hitRate,
@@ -193,7 +217,8 @@ export function useCachePerformance() {
     updatePerformance();
     const interval = setInterval(updatePerformance, 60000); // Every minute
 
-    return () => clearInterval(interval);
+    return (
+) => clearInterval(interval);
   }, [performanceHistory]);
 
   return {
@@ -222,7 +247,8 @@ export function useCacheWarming() {
   });
 
   const updateWarmingConfig = useCallback(
-    (updates: Partial<CacheWarmingConfig>) => {
+    (updates: Partial<CacheWarmingConfig>
+) => {
       const newConfig = { ...warmingConfig, ...updates };
       setWarmingConfig(newConfig);
       enhancedCacheManager.updateWarmingConfig(updates);
@@ -230,12 +256,14 @@ export function useCacheWarming() {
     [warmingConfig]
   );
 
-  const scheduleWarming = useCallback(() => {
+  const scheduleWarming = useCallback((
+) => {
     const now = new Date();
     const currentHour = now.getHours();
 
     // Find next scheduled warming time
-    const nextHour = warmingConfig.scheduleHours.find((hour: any) => h // auto: implicit anyour > currentHour);
+    const nextHour = warmingConfig.scheduleHours.find((hour: any
+) => hour > currentHour);
     const targetHour = nextHour ?? warmingConfig.scheduleHours[0];
 
     const nextTime = new Date();
@@ -246,14 +274,16 @@ export function useCacheWarming() {
       nextTime.setHours(targetHour, 0, 0, 0);
     }
 
-    /* auto: implicit any */
-      setWarmingStatus((prev: any) => ({{
+    
+      setWarmingStatus((prev: any
+) => ({
       ...prev,
       nextScheduledTime: nextTime,
     }));
   }, [warmingConfig.scheduleHours]);
 
-  const enableSmartWarming = useCallback(() => {
+  const enableSmartWarming = useCallback((
+) => {
     updateWarmingConfig({
       enabled: true,
       scheduleHours: [6, 7, 8, 18, 19, 20], // Morning and evening
@@ -262,7 +292,8 @@ export function useCacheWarming() {
     });
   }, [updateWarmingConfig]);
 
-  const enableBatteryOptimizedWarming = useCallback(() => {
+  const enableBatteryOptimizedWarming = useCallback((
+) => {
     updateWarmingConfig({
       enabled: true,
       scheduleHours: [2, 3], // During low usage hours
@@ -271,16 +302,19 @@ export function useCacheWarming() {
     });
   }, [updateWarmingConfig]);
 
-  const disableWarming = useCallback(() => {
+  const disableWarming = useCallback((
+) => {
     updateWarmingConfig({ enabled: false });
   }, [updateWarmingConfig]);
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (warmingConfig.enabled) {
       scheduleWarming();
 
       const interval = setInterval(scheduleWarming, 60 * 60 * 1000); // Check every hour
-      return () => clearInterval(interval);
+      return (
+) => clearInterval(interval);
     }
   }, [warmingConfig.enabled, scheduleWarming]);
 
@@ -308,7 +342,8 @@ export function useCachePolicy() {
   });
 
   const updatePolicy = useCallback(
-    (updates: Partial<CachePolicy>) => {
+    (updates: Partial<CachePolicy>
+) => {
       const newPolicy = { ...policy, ...updates };
       setPolicy(newPolicy);
       enhancedCacheManager.updatePolicy(updates);
@@ -316,7 +351,8 @@ export function useCachePolicy() {
     [policy]
   );
 
-  const setConservativePolicy = useCallback(() => {
+  const setConservativePolicy = useCallback((
+) => {
     updatePolicy({
       maxSizeBytes: 50 * 1024 * 1024, // 50MB
       maxEntries: 300,
@@ -326,7 +362,8 @@ export function useCachePolicy() {
     });
   }, [updatePolicy]);
 
-  const setAggressivePolicy = useCallback(() => {
+  const setAggressivePolicy = useCallback((
+) => {
     updatePolicy({
       maxSizeBytes: 300 * 1024 * 1024, // 300MB
       maxEntries: 2000,
@@ -336,7 +373,8 @@ export function useCachePolicy() {
     });
   }, [updatePolicy]);
 
-  const setBalancedPolicy = useCallback(() => {
+  const setBalancedPolicy = useCallback((
+) => {
     updatePolicy({
       maxSizeBytes: 150 * 1024 * 1024, // 150MB
       maxEntries: 1000,
@@ -368,9 +406,11 @@ export function useAutoOptimization(enabled: boolean = true) {
 
   const optimizationInterval = useRef<TimeoutHandle>();
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (enabled) {
-      const runOptimization = async () => {
+      const runOptimization = async (
+) => {
         const startTime = performance.now();
 
         try {
@@ -378,8 +418,9 @@ export function useAutoOptimization(enabled: boolean = true) {
 
           const optimizationTime = performance.now() - startTime;
 
-          /* auto: implicit any */
-      setOptimizationStatus((prev: any) => ({{
+          
+      setOptimizationStatus((prev: any
+) => ({
             ...prev,
             lastOptimization: new Date(),
             optimizationCount: prev.optimizationCount + 1,
@@ -394,7 +435,8 @@ export function useAutoOptimization(enabled: boolean = true) {
       // Run optimization every 30 minutes
       optimizationInterval.current = setInterval(runOptimization, 30 * 60 * 1000);
 
-      return () => {
+      return (
+) => {
         if (optimizationInterval.current) {
           clearInterval(optimizationInterval.current);
         }
@@ -402,9 +444,11 @@ export function useAutoOptimization(enabled: boolean = true) {
     }
   }, [enabled]);
 
-  const toggleAutoOptimization = useCallback(() => {
-    /* auto: implicit any */
-      setOptimizationStatus((prev: any) => ({{
+  const toggleAutoOptimization = useCallback((
+) => {
+    
+      setOptimizationStatus((prev: any
+) => ({
       ...prev,
       isEnabled: !prev.isEnabled,
     }));
@@ -429,12 +473,15 @@ export function useCacheDebugging() {
     recentEvictions: [] as Array<{ id: string; reason: string; timestamp: Date }>,
   });
 
-  useEffect(() => {
-    const updateDebugInfo = () => {
+  useEffect((
+) => {
+    const updateDebugInfo = (
+) => {
       const stats = enhancedCacheManager.getStats();
 
-      /* auto: implicit any */
-      setDebugInfo((prev: any) => ({{
+      
+      setDebugInfo((prev: any
+) => ({
         ...prev,
         memoryUsage: stats.memoryUsage,
         diskUsage: stats.totalSize,
@@ -448,7 +495,8 @@ export function useCacheDebugging() {
     updateDebugInfo();
     const interval = setInterval(updateDebugInfo, 10000); // Every 10 seconds
 
-    return () => clearInterval(interval);
+    return (
+) => clearInterval(interval);
   }, []);
 
   return debugInfo;

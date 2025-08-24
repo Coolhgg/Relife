@@ -589,7 +589,8 @@ export class SecurePushNotificationService {
   private static startSecurityMonitoring(): void {
     // Clean up old message history every 5 minutes
     setInterval(
-      () => {
+      (
+) => {
         this.cleanupMessageHistory();
       },
       5 * 60 * 1000
@@ -597,7 +598,8 @@ export class SecurePushNotificationService {
 
     // Reset rate limits every hour
     setInterval(
-      () => {
+      (
+) => {
         this.rateLimitMap.clear();
       },
       60 * 60 * 1000
@@ -605,7 +607,8 @@ export class SecurePushNotificationService {
 
     // Monitor trust score and adjust security settings
     setInterval(
-      () => {
+      (
+) => {
         this.adjustSecuritySettings();
       },
       10 * 60 * 1000

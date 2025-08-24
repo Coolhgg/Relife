@@ -7,7 +7,8 @@ import { TimeoutHandle } from '../types/timers';
 
 export interface TouchGesture {
   name: string;
-  action: (event: TouchEvent) => void;
+  action: (event: TouchEvent
+) => void;
   description: string;
   fingers: number;
   direction?: 'up' | 'down' | 'left' | 'right' | 'none';
@@ -136,7 +137,8 @@ export class MobileAccessibilityService {
     const gestures: TouchGesture[] = [
       {
         name: 'swipe-left',
-        action: () => this.handleSwipeLeft(),
+        action: (
+) => this.handleSwipeLeft(),
         description: 'Swipe left to go to next alarm',
         fingers: 1,
         direction: 'left',
@@ -144,7 +146,8 @@ export class MobileAccessibilityService {
       },
       {
         name: 'swipe-right',
-        action: () => this.handleSwipeRight(),
+        action: (
+) => this.handleSwipeRight(),
         description: 'Swipe right to go to previous alarm',
         fingers: 1,
         direction: 'right',
@@ -152,7 +155,8 @@ export class MobileAccessibilityService {
       },
       {
         name: 'swipe-up',
-        action: () => this.handleSwipeUp(),
+        action: (
+) => this.handleSwipeUp(),
         description: 'Swipe up to dismiss alarm',
         fingers: 1,
         direction: 'up',
@@ -160,7 +164,8 @@ export class MobileAccessibilityService {
       },
       {
         name: 'swipe-down',
-        action: () => this.handleSwipeDown(),
+        action: (
+) => this.handleSwipeDown(),
         description: 'Swipe down to snooze alarm',
         fingers: 1,
         direction: 'down',
@@ -168,7 +173,8 @@ export class MobileAccessibilityService {
       },
       {
         name: 'two-finger-tap',
-        action: () => this.handleTwoFingerTap(),
+        action: (
+) => this.handleTwoFingerTap(),
         description: 'Two finger tap to toggle screen reader mode',
         fingers: 2,
         direction: 'none',
@@ -176,7 +182,8 @@ export class MobileAccessibilityService {
       },
       {
         name: 'three-finger-swipe-up',
-        action: () => this.handleThreeFingerSwipeUp(),
+        action: (
+) => this.handleThreeFingerSwipeUp(),
         description: 'Three finger swipe up to read page',
         fingers: 3,
         direction: 'up',
@@ -184,7 +191,8 @@ export class MobileAccessibilityService {
       },
       {
         name: 'long-press',
-        action: () => this.handleLongPress(),
+        action: (
+) => this.handleLongPress(),
         description: 'Long press for context menu',
         fingers: 1,
         direction: 'none',
@@ -403,7 +411,8 @@ export class MobileAccessibilityService {
    * Handle orientation change
    */
   private handleOrientationChange(): void {
-    setTimeout(() => {
+    setTimeout((
+) => {
       this.device.orientation =
         window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
       this.screenReader.announce(

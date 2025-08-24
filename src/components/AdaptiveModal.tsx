@@ -18,7 +18,8 @@ import { TimeoutHandle } from '../types/timers';
 
 export interface AdaptiveModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: (
+) => void;
   title?: string;
   children: React.ReactNode;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
@@ -55,7 +56,8 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
     preventScroll = true,
     announceOnOpen,
     announceOnClose,
-  }) => {
+  }
+) => {
     const { isLowEnd, tier } = useDeviceCapabilities();
     const { shouldReduceAnimations } = usePerformanceOptimizations();
     const modalRef = useRef<HTMLDivElement>(null);
@@ -63,7 +65,8 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
 
     // Animation configuration based on device capabilities
     const animationConfig: AnimationConfig = useMemo(
-      () => ({
+      (
+) => ({
         duration: isLowEnd ? 150 : animationIntensity === 'enhanced' ? 300 : 200,
         easing: isLowEnd ? 'ease' : 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         complexity: isLowEnd
@@ -86,7 +89,8 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
     } = useOptimizedAnimation(`modal-${size}`, animationConfig);
 
     // Size configurations
-    const sizeClasses = useMemo(() => {
+    const sizeClasses = useMemo((
+) => {
       const sizes = {
         sm: isLowEnd ? 'w-full max-w-sm' : 'w-full max-w-sm',
         md: isLowEnd ? 'w-full max-w-md' : 'w-full max-w-md',
@@ -99,7 +103,8 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
     }, [size, isLowEnd]);
 
     // Modal styles based on device capabilities
-    const modalStyles = useMemo(() => {
+    const modalStyles = useMemo((
+) => {
       const baseStyles: React.CSSProperties = {
         position: 'relative',
         backgroundColor: '#ffffff',
@@ -139,7 +144,8 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
     ]);
 
     // Overlay styles
-    const overlayStyles = useMemo(() => {
+    const overlayStyles = useMemo((
+) => {
       const baseStyles: React.CSSProperties = {
         position: 'fixed',
         top: 0,
@@ -187,7 +193,8 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
     });
 
     // Handle animation lifecycle
-    useEffect(() => {
+    useEffect((
+) => {
       if (isOpen) {
         // Start animation
         if (canAnimate) {
@@ -202,7 +209,8 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
     }, [isOpen, canAnimate, startAnimation, stopAnimation]);
 
     // Handle focus management and animation lifecycle
-    useEffect(() => {
+    useEffect((
+) => {
       if (isOpen) {
         // Save current focus before opening
         saveFocus();
@@ -218,14 +226,16 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
         }
 
         // Restore focus after closing
-        setTimeout(() => {
+        setTimeout((
+) => {
           restoreFocus();
         }, 100); // Small delay to ensure modal is fully removed
       }
     }, [isOpen, canAnimate, startAnimation, stopAnimation, saveFocus, restoreFocus]);
 
     // Sync containerRef with modalRef
-    useEffect(() => {
+    useEffect((
+) => {
       if (modalRef.current && containerRef) {
         (containerRef as React.MutableRefObject<HTMLDivElement | null>).current =
           modalRef.current;
@@ -233,12 +243,14 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
     }, [containerRef]);
 
     // Prevent body scroll when modal is open
-    useEffect(() => {
+    useEffect((
+) => {
       if (isOpen) {
         const originalStyle = window.getComputedStyle(document.body).overflow;
         document.body.style.overflow = 'hidden';
 
-        return () => {
+        return (
+) => {
           document.body.style.overflow = originalStyle;
         };
       }
@@ -246,7 +258,8 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
 
     // Handle overlay click
     const handleOverlayClick = useCallback(
-      (event: React.MouseEvent) => {
+      (event: React.MouseEvent
+) => {
         if (closeOnOverlay && event.target === overlayRef.current) {
           onClose();
         }
@@ -255,7 +268,8 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
     );
 
     // Handle close button click
-    const handleCloseClick = useCallback(() => {
+    const handleCloseClick = useCallback((
+) => {
       onClose();
     }, [onClose]);
 
@@ -283,8 +297,9 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
           className={`${sizeClasses} ${className}`.trim()}
           style={finalModalStyles}
           tabIndex={-1}
-          /* auto: implicit any */
-          onClick={(e: any) => e.stopPropagation()}
+          
+          onClick={(e: any
+) => e.stopPropagation()}
           role="document"
         >
           {/* Header */}
@@ -338,10 +353,14 @@ AdaptiveModal.displayName = 'AdaptiveModal';
 export function useAdaptiveModal(initialOpen = false) {
   const [isOpen, setIsOpen] = React.useState(initialOpen);
 
-  const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => setIsOpen(false), []);
-  /* auto: implicit any */
-  const toggle = useCallback(() => setIsOpen((prev: any) => !prev), []);
+  const open = useCallback((
+) => setIsOpen(true), []);
+  const close = useCallback((
+) => setIsOpen(false), []);
+  
+  const toggle = useCallback((
+) => setIsOpen((prev: any
+) => !prev), []);
 
   return {
     isOpen,
@@ -358,7 +377,8 @@ export interface ConfirmationModalProps extends Omit<AdaptiveModalProps, 'childr
   message: string;
   confirmText?: string;
   cancelText?: string;
-  onConfirm: () => void;
+  onConfirm: (
+) => void;
   variant?: 'danger' | 'warning' | 'info';
 }
 
@@ -371,15 +391,18 @@ export const AdaptiveConfirmationModal = memo<ConfirmationModalProps>(
     onClose,
     variant = 'info',
     ...modalProps
-  }) => {
+  }
+) => {
     const { isLowEnd } = useDeviceCapabilities();
 
-    const handleConfirm = useCallback(() => {
+    const handleConfirm = useCallback((
+) => {
       onConfirm();
       onClose();
     }, [onConfirm, onClose]);
 
-    const variantStyles = useMemo(() => {
+    const variantStyles = useMemo((
+) => {
       const styles = {
         danger: 'text-red-600 bg-red-50 border-red-200',
         warning: 'text-orange-600 bg-orange-50 border-orange-200',
@@ -388,7 +411,8 @@ export const AdaptiveConfirmationModal = memo<ConfirmationModalProps>(
       return styles[variant];
     }, [variant]);
 
-    const _buttonVariant = useMemo(() => {
+    const _buttonVariant = useMemo((
+) => {
       return variant === 'danger' ? 'primary' : 'secondary';
     }, [variant]);
 

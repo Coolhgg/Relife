@@ -110,7 +110,8 @@ export class RealTimeSmartAdapter {
 
     // Set up adaptation interval
     const interval = setInterval(
-      async () => {
+      async (
+) => {
         await this.checkForAdaptation(alarm.id);
       },
       this.config.adaptationInterval * 60 * 1000
@@ -332,7 +333,8 @@ export class RealTimeSmartAdapter {
       );
 
       const avgDifficulty =
-        difficulties.reduce((sum, d) => sum + d, 0) / difficulties.length;
+        difficulties.reduce((sum, d
+) => sum + d, 0) / difficulties.length;
 
       // If consistently hard to wake up, suggest earlier time
       if (avgDifficulty >= 3.5) {
@@ -417,7 +419,8 @@ export class RealTimeSmartAdapter {
     }
 
     // Sort triggers by priority
-    const sortedTriggers = triggers.sort((a, b) => b.priority - a.priority);
+    const sortedTriggers = triggers.sort((a, b
+) => b.priority - a.priority);
 
     // Calculate weighted adjustment
     let totalWeight = 0;
@@ -488,7 +491,8 @@ export class RealTimeSmartAdapter {
   private static setupPeriodicChecks(): void {
     // Check for new alarms every 5 minutes
     setInterval(
-      async () => {
+      async (
+) => {
         await this.startMonitoring();
       },
       5 * 60 * 1000

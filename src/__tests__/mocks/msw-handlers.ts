@@ -12,7 +12,8 @@ const ANALYTICS_URL = 'https://analytics-test.com';
 
 export const handlers = [
   // Supabase Auth Handlers
-  http.post(`${SUPABASE_URL}/auth/v1/token`, ({ request }) => {
+  http.post(`${SUPABASE_URL}/auth/v1/token`, ({ request }
+) => {
     return HttpResponse.json({
       access_token: 'mock_access_token',
       token_type: 'bearer',
@@ -27,11 +28,13 @@ export const handlers = [
     });
   }),
 
-  http.post(`${SUPABASE_URL}/auth/v1/logout`, () => {
+  http.post(`${SUPABASE_URL}/auth/v1/logout`, (
+) => {
     return HttpResponse.json({}, { status: 200 });
   }),
 
-  http.post(`${SUPABASE_URL}/auth/v1/signup`, () => {
+  http.post(`${SUPABASE_URL}/auth/v1/signup`, (
+) => {
     return HttpResponse.json({
       user: {
         id: 'test-user-123',
@@ -43,14 +46,16 @@ export const handlers = [
     });
   }),
 
-  http.post(`${SUPABASE_URL}/auth/v1/recover`, () => {
+  http.post(`${SUPABASE_URL}/auth/v1/recover`, (
+) => {
     return HttpResponse.json({
       message: 'Password recovery email sent',
     });
   }),
 
   // Supabase Database Handlers
-  http.get(`${SUPABASE_URL}/rest/v1/users`, () => {
+  http.get(`${SUPABASE_URL}/rest/v1/users`, (
+) => {
     return HttpResponse.json([
       {
         id: 'test-user-123',
@@ -63,7 +68,8 @@ export const handlers = [
     ]);
   }),
 
-  http.post(`${SUPABASE_URL}/rest/v1/users`, () => {
+  http.post(`${SUPABASE_URL}/rest/v1/users`, (
+) => {
     return HttpResponse.json(
       {
         id: 'test-user-123',
@@ -75,7 +81,8 @@ export const handlers = [
     );
   }),
 
-  http.patch(`${SUPABASE_URL}/rest/v1/users`, () => {
+  http.patch(`${SUPABASE_URL}/rest/v1/users`, (
+) => {
     return HttpResponse.json({
       id: 'test-user-123',
       name: 'Updated Test User',
@@ -84,7 +91,8 @@ export const handlers = [
   }),
 
   // Alarms CRUD
-  http.get(`${SUPABASE_URL}/rest/v1/alarms`, () => {
+  http.get(`${SUPABASE_URL}/rest/v1/alarms`, (
+) => {
     return HttpResponse.json([
       {
         id: 'test-alarm-123',
@@ -104,7 +112,8 @@ export const handlers = [
     ]);
   }),
 
-  http.post(`${SUPABASE_URL}/rest/v1/alarms`, () => {
+  http.post(`${SUPABASE_URL}/rest/v1/alarms`, (
+) => {
     return HttpResponse.json(
       {
         id: 'test-alarm-456',
@@ -118,7 +127,8 @@ export const handlers = [
     );
   }),
 
-  http.patch(`${SUPABASE_URL}/rest/v1/alarms`, () => {
+  http.patch(`${SUPABASE_URL}/rest/v1/alarms`, (
+) => {
     return HttpResponse.json({
       id: 'test-alarm-123',
       label: 'Updated Alarm',
@@ -126,12 +136,14 @@ export const handlers = [
     });
   }),
 
-  http.delete(`${SUPABASE_URL}/rest/v1/alarms`, () => {
+  http.delete(`${SUPABASE_URL}/rest/v1/alarms`, (
+) => {
     return HttpResponse.json({}, { status: 204 });
   }),
 
   // Stripe Subscription Handlers
-  http.get(`${STRIPE_URL}/v1/subscriptions`, () => {
+  http.get(`${STRIPE_URL}/v1/subscriptions`, (
+) => {
     return HttpResponse.json({
       object: 'list',
       data: [
@@ -153,7 +165,8 @@ export const handlers = [
     });
   }),
 
-  http.post(`${STRIPE_URL}/v1/subscriptions`, () => {
+  http.post(`${STRIPE_URL}/v1/subscriptions`, (
+) => {
     return HttpResponse.json({
       id: 'sub_test456',
       object: 'subscription',
@@ -163,7 +176,8 @@ export const handlers = [
     });
   }),
 
-  http.delete(`${STRIPE_URL}/v1/subscriptions/:id`, () => {
+  http.delete(`${STRIPE_URL}/v1/subscriptions/:id`, (
+) => {
     return HttpResponse.json({
       id: 'sub_test123',
       object: 'subscription',
@@ -173,7 +187,8 @@ export const handlers = [
   }),
 
   // Payment Methods
-  http.get(`${STRIPE_URL}/v1/payment_methods`, () => {
+  http.get(`${STRIPE_URL}/v1/payment_methods`, (
+) => {
     return HttpResponse.json({
       object: 'list',
       data: [
@@ -192,7 +207,8 @@ export const handlers = [
     });
   }),
 
-  http.post(`${STRIPE_URL}/v1/payment_methods`, () => {
+  http.post(`${STRIPE_URL}/v1/payment_methods`, (
+) => {
     return HttpResponse.json({
       id: 'pm_test456',
       object: 'payment_method',
@@ -207,20 +223,24 @@ export const handlers = [
   }),
 
   // Analytics Handlers (PostHog, etc.)
-  http.post(`${ANALYTICS_URL}/capture/`, () => {
+  http.post(`${ANALYTICS_URL}/capture/`, (
+) => {
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post(`${ANALYTICS_URL}/identify/`, () => {
+  http.post(`${ANALYTICS_URL}/identify/`, (
+) => {
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
-  http.post(`${ANALYTICS_URL}/batch/`, () => {
+  http.post(`${ANALYTICS_URL}/batch/`, (
+) => {
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
 
   // Theme/Cloud Sync Handlers
-  http.get(`${SUPABASE_URL}/rest/v1/themes`, () => {
+  http.get(`${SUPABASE_URL}/rest/v1/themes`, (
+) => {
     return HttpResponse.json([
       {
         id: 'theme-123',
@@ -239,7 +259,8 @@ export const handlers = [
     ]);
   }),
 
-  http.post(`${SUPABASE_URL}/rest/v1/themes`, () => {
+  http.post(`${SUPABASE_URL}/rest/v1/themes`, (
+) => {
     return HttpResponse.json({
       id: 'theme-456',
       user_id: 'test-user-123',
@@ -249,7 +270,8 @@ export const handlers = [
   }),
 
   // PWA/Service Worker Handlers
-  http.get('/api/pwa/manifest', () => {
+  http.get('/api/pwa/manifest', (
+) => {
     return HttpResponse.json({
       name: 'Relife Alarm',
       short_name: 'Relife',
@@ -259,7 +281,8 @@ export const handlers = [
     });
   }),
 
-  http.post('/api/pwa/subscribe', () => {
+  http.post('/api/pwa/subscribe', (
+) => {
     return HttpResponse.json({
       success: true,
       subscriptionId: 'sub_pwa_123',
@@ -267,7 +290,8 @@ export const handlers = [
   }),
 
   // Geolocation mock (for location-based alarms)
-  http.get('/api/location/geocode', ({ request }) => {
+  http.get('/api/location/geocode', ({ request }
+) => {
     const url = new URL(request.url);
     const lat = url.searchParams.get('lat');
     const lng = url.searchParams.get('lng');
@@ -280,7 +304,8 @@ export const handlers = [
   }),
 
   // Sound/Audio file handlers
-  http.get('/sounds/*', () => {
+  http.get('/sounds/*', (
+) => {
     // Return a mock audio response
     const audioBuffer = new ArrayBuffer(1024);
     return HttpResponse.arrayBuffer(audioBuffer, {
@@ -292,20 +317,24 @@ export const handlers = [
   }),
 
   // Error scenarios for testing error handling
-  http.get('/api/error/500', () => {
+  http.get('/api/error/500', (
+) => {
     return HttpResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }),
 
-  http.get('/api/error/401', () => {
+  http.get('/api/error/401', (
+) => {
     return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }),
 
-  http.get('/api/error/429', () => {
+  http.get('/api/error/429', (
+) => {
     return HttpResponse.json({ error: 'Rate Limited' }, { status: 429 });
   }),
 
   // Network timeout simulation
-  http.get('/api/slow', async () => {
+  http.get('/api/slow', async (
+) => {
     await new Promise(resolve => setTimeout(resolve, 5000));
     return HttpResponse.json({ message: 'slow response' });
   }),
@@ -314,18 +343,21 @@ export const handlers = [
 // Handlers for specific test scenarios
 export const errorHandlers = [
   // Override successful handlers with error responses for error testing
-  http.post(`${SUPABASE_URL}/auth/v1/token`, () => {
+  http.post(`${SUPABASE_URL}/auth/v1/token`, (
+) => {
     return HttpResponse.json({ error: 'Invalid credentials' }, { status: 401 });
   }),
 
-  http.post(`${STRIPE_URL}/v1/subscriptions`, () => {
+  http.post(`${STRIPE_URL}/v1/subscriptions`, (
+) => {
     return HttpResponse.json({ error: { message: 'Payment failed' } }, { status: 402 });
   }),
 ];
 
 export const slowHandlers = [
   // Override handlers with slow responses for timeout testing
-  http.post(`${SUPABASE_URL}/auth/v1/token`, async () => {
+  http.post(`${SUPABASE_URL}/auth/v1/token`, async (
+) => {
     await new Promise(resolve => setTimeout(resolve, 10000));
     return HttpResponse.json({ access_token: 'slow_token' });
   }),
