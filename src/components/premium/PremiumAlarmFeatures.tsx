@@ -24,8 +24,7 @@ import type { Alarm } from '../../types';
 
 interface PremiumAlarmFeaturesProps {
   alarm?: Alarm;
-  onUpdate: (updates: Partial<Alarm>
-) => void;
+  onUpdate: (updates: Partial<Alarm>) => void;
   className?: string;
 }
 
@@ -35,8 +34,7 @@ function SmartWakeUpFeature({
   onUpdate,
 }: {
   alarm?: Alarm;
-  onUpdate: (updates: Partial<Alarm>
-) => void;
+  onUpdate: (updates: Partial<Alarm>) => void;
 }) {
   const { user } = useAuth();
   const [smartWindow, setSmartWindow] = useState(30); // minutes
@@ -59,8 +57,7 @@ function SmartWakeUpFeature({
             <div className="mt-2">
               <Slider
                 value={[smartWindow]}
-                onValueChange={(value: any
-) => setSmartWindow(value[0])}
+                onValueChange={(value: any) => setSmartWindow(value[0])}
                 max={60}
                 min={5}
                 step={5}
@@ -104,8 +101,7 @@ function SmartWakeUpFeature({
           </div>
 
           <Button
-            onClick={(
-) =>
+            onClick={() =>
               onUpdate({
                 smartWakeup: {
                   enabled: true,
@@ -131,8 +127,7 @@ function AdvancedSchedulingFeature({
   onUpdate,
 }: {
   alarm?: Alarm;
-  onUpdate: (updates: Partial<Alarm>
-) => void;
+  onUpdate: (updates: Partial<Alarm>) => void;
 }) {
   const { user } = useAuth();
   const [scheduleType, setScheduleType] = useState<
@@ -238,8 +233,7 @@ function AdvancedSchedulingFeature({
           )}
 
           <Button
-            onClick={(
-) =>
+            onClick={() =>
               onUpdate({
                 advancedScheduling: {
                   enabled: true,
@@ -264,8 +258,7 @@ function CustomSoundLibraryFeature({
   onUpdate,
 }: {
   alarm?: Alarm;
-  onUpdate: (updates: Partial<Alarm>
-) => void;
+  onUpdate: (updates: Partial<Alarm>) => void;
 }) {
   const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>('nature');
@@ -314,8 +307,7 @@ function CustomSoundLibraryFeature({
                   variant="outline"
                   size="sm"
                   className="h-12 text-left justify-start"
-                  onClick={(
-) => onUpdate({ customSound: sound })}
+                  onClick={() => onUpdate({ customSound: sound })}
                 >
                   <Music className="w-4 h-4 mr-2" />
                   {sound}
@@ -359,8 +351,7 @@ function EnhancedBattleModeFeature({
   onUpdate,
 }: {
   alarm?: Alarm;
-  onUpdate: (updates: Partial<Alarm>
-) => void;
+  onUpdate: (updates: Partial<Alarm>) => void;
 }) {
   const { user } = useAuth();
   const [battleType, setBattleType] = useState<'team' | 'tournament' | 'ai'>('team');
@@ -476,8 +467,7 @@ function EnhancedBattleModeFeature({
           )}
 
           <Button
-            onClick={(
-) =>
+            onClick={() =>
               onUpdate({
                 enhancedBattles: {
                   enabled: true,
@@ -502,8 +492,7 @@ function LocationBasedAlarmsFeature({
   onUpdate,
 }: {
   alarm?: Alarm;
-  onUpdate: (updates: Partial<Alarm>
-) => void;
+  onUpdate: (updates: Partial<Alarm>) => void;
 }) {
   const { user } = useAuth();
   const [locations, setLocations] = useState<
@@ -548,8 +537,7 @@ function LocationBasedAlarmsFeature({
               </div>
             ) : (
               <div className="space-y-2">
-                {locations.map((location, index
-) => (
+                {locations.map((location, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between p-3 border rounded-lg"
@@ -582,8 +570,7 @@ function LocationBasedAlarmsFeature({
           </div>
 
           <Button
-            onClick={(
-) =>
+            onClick={() =>
               onUpdate({
                 locationBased: {
                   enabled: true,

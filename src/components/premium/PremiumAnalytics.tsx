@@ -85,8 +85,7 @@ function SleepQualityAnalysis({ data }: { data: AnalyticsData['sleepQuality'] })
 
         <div className="space-y-3">
           <h4 className="font-semibold">Contributing Factors</h4>
-          {data.factors.map((factor, index
-) => (
+          {data.factors.map((factor, index) => (
             <div key={index} className="flex items-center justify-between">
               <span className="text-sm">{factor.name}</span>
               <div className="flex items-center gap-2">
@@ -209,8 +208,7 @@ function HabitTracking({ data }: { data: AnalyticsData['habits'] }) {
 
         <div className="space-y-3">
           <h4 className="font-semibold">Streak Tracking</h4>
-          {data.streaks.map((streak, index
-) => (
+          {data.streaks.map((streak, index) => (
             <div
               key={index}
               className="flex items-center justify-between p-3 border rounded-lg"
@@ -239,8 +237,7 @@ function HabitTracking({ data }: { data: AnalyticsData['habits'] }) {
 
 // AI Insights Component
 function AIInsights({ data }: { data: AnalyticsData['insights'] }) {
-  const getInsightIcon = (type: string
-) => {
+  const getInsightIcon = (type: string) => {
     switch (type) {
       case 'tip':
         return <Brain className="w-4 h-4 text-blue-600" />;
@@ -253,8 +250,7 @@ function AIInsights({ data }: { data: AnalyticsData['insights'] }) {
     }
   };
 
-  const getInsightColor = (type: string
-) => {
+  const getInsightColor = (type: string) => {
     switch (type) {
       case 'tip':
         return 'border-blue-200 bg-blue-50';
@@ -277,8 +273,7 @@ function AIInsights({ data }: { data: AnalyticsData['insights'] }) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {data.map((insight, index
-) => (
+        {data.map((insight, index) => (
           <div
             key={index}
             className={`p-4 rounded-lg border ${getInsightColor(insight.type)}`}

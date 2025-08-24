@@ -48,8 +48,7 @@ interface SoundSettingsProps {
   userId?: string;
 }
 
-const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
-) => {
+const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
   const {
     settings,
     updateSettings,
@@ -75,8 +74,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
   const [showCustomThemeManager, setShowCustomThemeManager] = useState(false);
 
   // Volume change handlers
-  const handleVolumeChange = async (category: string, value: number[]
-) => {
+  const handleVolumeChange = async (category: string, value: number[]) => {
     const volume = value[0] / 100;
 
     switch (category) {
@@ -99,8 +97,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
   };
 
   // Toggle handlers
-  const handleToggleCategory = async (category: string, enabled: boolean
-) => {
+  const handleToggleCategory = async (category: string, enabled: boolean) => {
     switch (category) {
       case 'ui':
         await updateSettings({ uiSoundsEnabled: enabled });
@@ -118,8 +115,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
   };
 
   // Theme selection handler
-  const handleThemeChange = async (theme: SoundTheme
-) => {
+  const handleThemeChange = async (theme: SoundTheme) => {
     try {
       await setSoundTheme(theme);
     } catch (error) {
@@ -128,8 +124,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
   };
 
   // Preview theme handler
-  const handleThemePreview = async (theme: SoundTheme
-) => {
+  const handleThemePreview = async (theme: SoundTheme) => {
     try {
       await previewTheme(theme);
     } catch (error) {
@@ -138,8 +133,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
   };
 
   // Load custom themes
-  const loadCustomThemes = async (
-) => {
+  const loadCustomThemes = async () => {
     if (!userId) {
       setCustomThemes([]);
       return;
@@ -148,9 +142,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
     try {
       const userCustomThemes = soundEffectsService.getCustomThemesByUser(userId);
       // Transform custom themes to match built-in theme format
-      const transformedThemes = userCustomThemes
-      .map((theme: any
-) => ({
+      const transformedThemes = userCustomThemes.map((theme: any) => ({
         id: theme.id,
         name: theme.displayName || theme.name,
         description: theme.description || 'Custom theme',
@@ -164,55 +156,42 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
     }
   };
 
-  const refreshThemes = (
-) => {
+  const refreshThemes = () => {
     setAvailableThemes(getAvailableThemes());
     loadCustomThemes();
   };
 
   // Load custom themes on component mount
-  useEffect((
-) => {
+  useEffect(() => {
     loadCustomThemes();
   }, [userId]);
 
   // Combine built-in themes with custom themes
-  useEffect((
-) => {
+  useEffect(() => {
     const combined = [...availableThemes, ...customThemes];
     setAllThemes(combined);
   }, [availableThemes, customThemes]);
 
   // Test individual sound
-  const handleTestSound = async (soundId: SoundEffectId
-) => {
-    
-      setTestResults((prev: any
-) => ({ ...prev, [soundId]: null }));
+  const handleTestSound = async (soundId: SoundEffectId) => {
+    setTestResults((prev: any) => ({ ...prev, [soundId]: null }));
 
     try {
       const result = await testSound(soundId);
-      
-      setTestResults((prev: any
-) => ({ ...prev, [soundId]: result }));
+
+      setTestResults((prev: any) => ({ ...prev, [soundId]: result }));
 
       // Clear result after 3 seconds
-      setTimeout((
-) => {
-        
-      setTestResults((prev: any
-) => ({ ...prev, [soundId]: null }));
+      setTimeout(() => {
+        setTestResults((prev: any) => ({ ...prev, [soundId]: null }));
       }, 3000);
     } catch (error) {
-      
-      setTestResults((prev: any
-) => ({ ...prev, [soundId]: false }));
+      setTestResults((prev: any) => ({ ...prev, [soundId]: false }));
     }
   };
 
   // Test all sounds
-  const handleTestAllSounds = async (
-) => {
+  const handleTestAllSounds = async () => {
     setIsTestingAll(true);
     const allSounds: SoundEffectId[] = [
       'ui.click',
@@ -237,8 +216,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
     setIsTestingAll(false);
   };
 
-  const VolumeIcon = ({ volume }: { volume: number }
-) => {
+  const VolumeIcon = ({ volume }: { volume: number }) => {
     if (volume === 0) return <VolumeX className="w-4 h-4" />;
     if (volume < 0.5) return <Volume1 className="w-4 h-4" />;
     return <Volume2 className="w-4 h-4" />;
@@ -250,16 +228,14 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
   }: {
     soundId: SoundEffectId;
     label: string;
-  }
-) => {
+  }) => {
     const result = testResults[soundId];
 
     return (
       <Button
         variant="outline"
         size="sm"
-        onClick={(
-) => handleTestSound(soundId)}
+        onClick={() => handleTestSound(soundId)}
         disabled={isTestingAll}
         className="min-w-[80px]"
       >
@@ -314,8 +290,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
           </div>
           <Slider
             value={[settings.masterVolume * 100]}
-            onValueChange={(value: any
-) => handleVolumeChange('master', value)}
+            onValueChange={(value: any) => handleVolumeChange('master', value)}
             max={100}
             step={5}
             className="w-full"
@@ -330,15 +305,12 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
               <span className="text-sm font-medium">Sound Theme</span>
             </div>
             <Badge variant="outline">
-              {allThemes.find((theme: any
-) => theme.id === settings.soundTheme)?.name ||
+              {allThemes.find((theme: any) => theme.id === settings.soundTheme)?.name ||
                 'Default'}
             </Badge>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-            {allThemes
-      .map((theme: any
-) => (
+            {allThemes.map((theme: any) => (
               <Card
                 key={theme.id}
                 className={`cursor-pointer transition-colors ${
@@ -346,8 +318,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
                     ? 'border-primary bg-primary/10'
                     : 'hover:border-primary/50'
                 }`}
-                onClick={(
-) => handleThemeChange(theme.id)}
+                onClick={() => handleThemeChange(theme.id)}
               >
                 <CardContent className="p-3">
                   <div className="flex items-center justify-between">
@@ -368,8 +339,8 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={(e: any
-) => { // auto: implicit any
+                        onClick={(e: any) => {
+                          // auto: implicit any
                           e.stopPropagation();
                           handleThemePreview(theme.id);
                         }}
@@ -391,8 +362,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
               <Button
                 variant="outline"
                 size="sm"
-                onClick={(
-) => setShowCustomThemeManager(true)}
+                onClick={() => setShowCustomThemeManager(true)}
                 className="text-xs"
               >
                 <Music className="w-3 h-3 mr-1" />
@@ -401,8 +371,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
               <Button
                 variant="outline"
                 size="sm"
-                onClick={(
-) => setShowCustomThemeCreator(true)}
+                onClick={() => setShowCustomThemeCreator(true)}
                 className="text-xs"
               >
                 <Plus className="w-3 h-3 mr-1" />
@@ -434,8 +403,9 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
                   </div>
                   <Switch
                     checked={settings.uiSoundsEnabled}
-                    onCheckedChange={(enabled: any
-) => handleToggleCategory('ui', enabled)}
+                    onCheckedChange={(enabled: any) =>
+                      handleToggleCategory('ui', enabled)
+                    }
                   />
                 </div>
               </CardHeader>
@@ -449,8 +419,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
                   </div>
                   <Slider
                     value={[settings.uiVolume * 100]}
-                    onValueChange={(value: any
-) => handleVolumeChange('ui', value)}
+                    onValueChange={(value: any) => handleVolumeChange('ui', value)}
                     max={100}
                     step={5}
                     disabled={!settings.uiSoundsEnabled}
@@ -471,8 +440,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
                   </div>
                   <Switch
                     checked={settings.notificationSoundsEnabled}
-                    onCheckedChange={(enabled: any
-) => 
+                    onCheckedChange={(enabled: any) =>
                       handleToggleCategory('notification', enabled)
                     }
                   />
@@ -488,8 +456,9 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
                   </div>
                   <Slider
                     value={[settings.notificationVolume * 100]}
-                    onValueChange={(value: any
-) => handleVolumeChange('notification', value)}
+                    onValueChange={(value: any) =>
+                      handleVolumeChange('notification', value)
+                    }
                     max={100}
                     step={5}
                     disabled={!settings.notificationSoundsEnabled}
@@ -510,8 +479,9 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
                   </div>
                   <Switch
                     checked={settings.alarmSoundsEnabled}
-                    onCheckedChange={(enabled: any
-) => handleToggleCategory('alarm', enabled)}
+                    onCheckedChange={(enabled: any) =>
+                      handleToggleCategory('alarm', enabled)
+                    }
                   />
                 </div>
               </CardHeader>
@@ -525,8 +495,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
                   </div>
                   <Slider
                     value={[settings.alarmVolume * 100]}
-                    onValueChange={(value: any
-) => handleVolumeChange('alarm', value)}
+                    onValueChange={(value: any) => handleVolumeChange('alarm', value)}
                     max={100}
                     step={5}
                     disabled={!settings.alarmSoundsEnabled}
@@ -547,8 +516,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
                   </div>
                   <Switch
                     checked={settings.ambientSoundsEnabled}
-                    onCheckedChange={(enabled: any
-) => 
+                    onCheckedChange={(enabled: any) =>
                       handleToggleCategory('ambient', enabled)
                     }
                   />
@@ -564,8 +532,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
                   </div>
                   <Slider
                     value={[settings.ambientVolume * 100]}
-                    onValueChange={(value: any
-) => handleVolumeChange('ambient', value)}
+                    onValueChange={(value: any) => handleVolumeChange('ambient', value)}
                     max={100}
                     step={5}
                     disabled={!settings.ambientSoundsEnabled}
@@ -675,8 +642,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Card
                     className="cursor-pointer hover:border-primary/50 transition-colors"
-                    onClick={(
-) => setShowCustomThemeCreator(true)}
+                    onClick={() => setShowCustomThemeCreator(true)}
                   >
                     <CardContent className="p-4 text-center">
                       <Plus className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
@@ -689,8 +655,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
 
                   <Card
                     className="cursor-pointer hover:border-primary/50 transition-colors"
-                    onClick={(
-) => setShowCustomThemeManager(true)}
+                    onClick={() => setShowCustomThemeManager(true)}
                   >
                     <CardContent className="p-4 text-center">
                       <Music className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
@@ -749,8 +714,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
                   <div className="p-3 bg-muted rounded-lg">
                     <h4 className="text-sm font-medium mb-2">Test Results</h4>
                     <div className="grid grid-cols-2 gap-1 text-xs">
-                      {Object.entries(testResults).map(([soundId, result]
-) => (
+                      {Object.entries(testResults).map(([soundId, result]) => (
                         <div
                           key={soundId}
                           className="flex items-center justify-between"
@@ -787,10 +751,9 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
             <div className="overflow-y-auto">
               <CustomSoundThemeCreator
                 userId={userId}
-                onClose={(
-) => setShowCustomThemeCreator(false)}
-                onThemeCreated={(theme: any
-) => { // auto: implicit any
+                onClose={() => setShowCustomThemeCreator(false)}
+                onThemeCreated={(theme: any) => {
+                  // auto: implicit any
                   // Refresh available themes
                   refreshThemes();
                   setShowCustomThemeCreator(false);
@@ -812,10 +775,9 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }
             <div className="overflow-y-auto">
               <CustomThemeManager
                 userId={userId}
-                onClose={(
-) => setShowCustomThemeManager(false)}
-                onThemeUpdated={(theme: any
-) => { // auto: implicit any
+                onClose={() => setShowCustomThemeManager(false)}
+                onThemeUpdated={(theme: any) => {
+                  // auto: implicit any
                   // Refresh available themes
                   refreshThemes();
                 }}

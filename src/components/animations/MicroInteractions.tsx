@@ -15,12 +15,9 @@ interface AnimatedInputProps {
   type?: 'text' | 'email' | 'password' | 'number' | 'tel';
   placeholder?: string;
   value: string;
-  onChange: (value: string
-) => void;
-  onFocus?: (
-) => void;
-  onBlur?: (
-) => void;
+  onChange: (value: string) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
   error?: string;
   disabled?: boolean;
   icon?: React.ReactNode;
@@ -39,25 +36,21 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
   disabled = false,
   icon,
   className = '',
-}
-) => {
+}) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hasValue, setHasValue] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect((
-) => {
+  useEffect(() => {
     setHasValue(value.length > 0);
   }, [value]);
 
-  const handleFocus = (
-) => {
+  const handleFocus = () => {
     setIsFocused(true);
     onFocus?.();
   };
 
-  const handleBlur = (
-) => {
+  const handleBlur = () => {
     setIsFocused(false);
     onBlur?.();
   };
@@ -139,8 +132,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
           type={type}
           placeholder={isFocused ? placeholder : ''}
           value={value}
-          onChange={(e: any
-) => onChange(e.target.value)}
+          onChange={(e: any) => onChange(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
           disabled={disabled}
@@ -180,7 +172,11 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.1, type: 'spring' as const, stiffness: 300 }}
+              transition={{
+                delay: 0.1,
+                type: 'spring' as const,
+                stiffness: 300,
+              }}
             >
               ⚠️
             </motion.span>
@@ -197,7 +193,11 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: 'spring' as const, stiffness: 300, damping: 20 }}
+            transition={{
+              type: 'spring' as const,
+              stiffness: 300,
+              damping: 20,
+            }}
           >
             ✓
           </motion.div>
@@ -221,8 +221,7 @@ interface AnimatedSelectProps {
   label: string;
   options: SelectOption[];
   value: string;
-  onChange: (value: string
-) => void;
+  onChange: (value: string) => void;
   placeholder?: string;
   error?: string;
   disabled?: boolean;
@@ -238,16 +237,13 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
   error,
   disabled = false,
   className = '',
-}
-) => {
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<SelectOption | null>(
-    options.find((opt: any
-) => opt.value === value) || null
+    options.find((opt: any) => opt.value === value) || null
   );
 
-  const handleSelect = (option: SelectOption
-) => {
+  const handleSelect = (option: SelectOption) => {
     setSelectedOption(option);
     onChange(option.value);
     setIsOpen(false);
@@ -299,8 +295,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
           }
           ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}
         `}
-        onClick={(
-) => !disabled && setIsOpen(!isOpen)}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
         whileHover={
           !disabled
             ? {
@@ -380,14 +375,12 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
               damping: 25,
             }}
           >
-            {options.map((option, index
-) => (
+            {options.map((option, index) => (
               <motion.button
                 key={option.value}
                 type="button"
                 className="w-full px-4 py-3 text-left hover:bg-blue-50 focus:bg-blue-50 focus:outline-none transition-colors flex items-center space-x-3"
-                onClick={(
-) => handleSelect(option)}
+                onClick={() => handleSelect(option)}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05, duration: 0.2 }}
@@ -435,8 +428,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={(
-) => setIsOpen(false)}
+            onClick={() => setIsOpen(false)}
           />
         )}
       </AnimatePresence>
@@ -450,8 +442,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
 
 interface AnimatedButtonProps {
   children: React.ReactNode;
-  onClick?: (
-) => void;
+  onClick?: () => void;
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
@@ -469,8 +460,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   loading = false,
   className = '',
   icon,
-}
-) => {
+}) => {
   const [ripples, setRipples] = useState<Array<{ id: string; x: number; y: number }>>(
     []
   );
@@ -492,8 +482,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
     lg: 'px-8 py-4 text-lg',
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>
-) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (disabled || loading) return;
 
     // Create ripple effect
@@ -503,15 +492,13 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       const y = e.clientY - rect.top;
       const newRipple = { id: Date.now().toString(), x, y };
 
-      setRipples((prev: any
-) => [...prev, newRipple]);
+      setRipples((prev: any) => [...prev, newRipple]);
 
       // Remove ripple after animation
-      setTimeout((
-) => {
-        setRipples((prev: any
-) => prev.filter((ripple: any
-) => ripple.id !== newRipple.id));
+      setTimeout(() => {
+        setRipples((prev: any) =>
+          prev.filter((ripple: any) => ripple.id !== newRipple.id)
+        );
       }, 600);
     }
 
@@ -534,7 +521,11 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
           ? {
               scale: 1.02,
               y: -1,
-              transition: { type: 'spring' as const, stiffness: 300, damping: 20 },
+              transition: {
+                type: 'spring' as const,
+                stiffness: 300,
+                damping: 20,
+              },
             }
           : {}
       }
@@ -549,9 +540,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
     >
       {/* Ripple effects */}
       <AnimatePresence>
-        {ripples
-      .map((ripple: any
-) => (
+        {ripples.map((ripple: any) => (
           <motion.div
             key={ripple.id}
             className="absolute bg-white/30 rounded-full pointer-events-none"
@@ -619,8 +608,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
 
 interface AnimatedCheckboxProps {
   checked: boolean;
-  onChange: (checked: boolean
-) => void;
+  onChange: (checked: boolean) => void;
   label: string;
   description?: string;
   disabled?: boolean;
@@ -636,8 +624,7 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
   disabled = false,
   size = 'md',
   className = '',
-}
-) => {
+}) => {
   const sizes = {
     sm: { checkbox: 'w-4 h-4', text: 'text-sm' },
     md: { checkbox: 'w-5 h-5', text: 'text-base' },
@@ -651,8 +638,7 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
           relative ${sizes[size].checkbox} mt-0.5
           ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
         `}
-        onClick={(
-) => !disabled && onChange(!checked)}
+        onClick={() => !disabled && onChange(!checked)}
         whileHover={!disabled ? { scale: 1.05 } : {}}
         whileTap={!disabled ? { scale: 0.95 } : {}}
       >
@@ -716,8 +702,7 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
       {/* Label and description */}
       <div
         className={`flex-1 ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
-        onClick={(
-) => !disabled && onChange(!checked)}
+        onClick={() => !disabled && onChange(!checked)}
       >
         <motion.label
           className={`font-medium text-gray-900 ${sizes[size].text}`}
@@ -764,8 +749,7 @@ export const AnimatedProgress: React.FC<AnimatedProgressProps> = ({
   size = 'md',
   animated = true,
   className = '',
-}
-) => {
+}) => {
   const percentage = Math.min((value / max) * 100, 100);
 
   const colors = {
@@ -803,7 +787,11 @@ export const AnimatedProgress: React.FC<AnimatedProgressProps> = ({
               key={percentage}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: 'spring' as const, stiffness: 300, damping: 20 }}
+              transition={{
+                type: 'spring' as const,
+                stiffness: 300,
+                damping: 20,
+              }}
             >
               {Math.round(percentage)}%
             </motion.span>

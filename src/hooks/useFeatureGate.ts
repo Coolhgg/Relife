@@ -25,22 +25,17 @@ interface FeatureGateResult {
 }
 
 interface FeatureGateActions {
-  requestAccess: (
-) => Promise<boolean>;
-  trackFeatureAttempt: (
-) => void;
-  showUpgradeModal: (
-) => void;
-  bypassGate: (reason: string
-) => void;
+  requestAccess: () => Promise<boolean>;
+  trackFeatureAttempt: () => void;
+  showUpgradeModal: () => void;
+  bypassGate: (reason: string) => void;
 }
 
 interface UseFeatureGateOptions {
   userId: string;
   feature: string;
   config?: Partial<FeatureGateConfig>;
-  onAccessDenied?: (result: FeatureGateResult
-) => void;
+  onAccessDenied?: (result: FeatureGateResult) => void;
 }
 
 function useFeatureGate(
@@ -175,14 +170,10 @@ function useFeatureGate(
   };
 
   // Calculate feature access
-  useEffect((
-) => {
-    const calculateAccess = (
-) => {
+  useEffect(() => {
+    const calculateAccess = () => {
       if (!subscription.featureAccess) {
-        
-      setGateResult((prev: any
-) => ({
+        setGateResult((prev: any) => ({
           ...prev,
           hasAccess: false,
           isGated: true,
@@ -194,9 +185,8 @@ function useFeatureGate(
       const featureDef = featureDefinitions[feature];
       if (!featureDef) {
         // Unknown feature, allow access
-        
-      setGateResult((prev: any
-) => ({
+
+        setGateResult((prev: any) => ({
           ...prev,
           hasAccess: true,
           isGated: false,
@@ -268,9 +258,12 @@ function useFeatureGate(
     // Check if access can be granted (e.g., during trial)
     if (gateResult.canBypass) {
       // Temporarily grant access
-      
-      setGateResult((prev: any
-) => ({ ...prev, hasAccess: true, isGated: false }));
+
+      setGateResult((prev: any) => ({
+        ...prev,
+        hasAccess: true,
+        isGated: false,
+      }));
 
       analytics.trackFeatureUsage('feature_gate_bypassed', undefined, {
         userId,
@@ -292,8 +285,7 @@ function useFeatureGate(
     return false;
   }, [userId, feature, gateResult, subscription.userTier]);
 
-  const trackFeatureAttempt = useCallback((
-) => {
+  const trackFeatureAttempt = useCallback(() => {
     if (!defaultConfig.trackUsage) return;
 
     analytics.trackFeatureUsage('feature_gate_hit', undefined, {
@@ -306,8 +298,7 @@ function useFeatureGate(
     });
   }, [userId, feature, gateResult, subscription.userTier]);
 
-  const showUpgradeModal = useCallback((
-) => {
+  const showUpgradeModal = useCallback(() => {
     if (defaultConfig.redirectToUpgrade && gateResult.requiredTier) {
       // Implementation would show upgrade modal or navigate to pricing
       analytics.trackFeatureUsage('upgrade_modal_requested', undefined, {
@@ -322,11 +313,8 @@ function useFeatureGate(
   }, [userId, feature, gateResult.requiredTier]);
 
   const bypassGate = useCallback(
-    (reason: string
-) => {
-      
-      setGateResult((prev: any
-) => ({
+    (reason: string) => {
+      setGateResult((prev: any) => ({
         ...prev,
         hasAccess: true,
         isGated: false,

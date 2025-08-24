@@ -59,8 +59,7 @@ class PerformanceProfiler {
     baseDuration: number,
     startTime: number,
     commitTime: number
-  
-) => {
+  ) => {
     if (!this.enabled) return;
 
     const existing = this.data.get(id);
@@ -134,17 +133,14 @@ class PerformanceProfiler {
     const slowComponents = entries.filter(e => e.averageTime > this.slowThreshold);
     const frequentComponents = entries
       .filter(e => e.renderCount > 10)
-      .sort((a, b
-) => b.renderCount - a.renderCount);
+      .sort((a, b) => b.renderCount - a.renderCount);
 
-    const totalRenderTime = entries.reduce((sum, e
-) => sum + e.totalTime, 0);
+    const totalRenderTime = entries.reduce((sum, e) => sum + e.totalTime, 0);
     const averageRenderTime = totalRenderTime / Math.max(entries.length, 1);
 
     return {
       totalComponents: entries.length,
-      slowComponents: slowComponents.sort((a, b
-) => b.averageTime - a.averageTime),
+      slowComponents: slowComponents.sort((a, b) => b.averageTime - a.averageTime),
       frequentComponents,
       averageRenderTime,
       totalRenderTime,
@@ -222,8 +218,7 @@ class PerformanceProfiler {
     if (!this.reportingEnabled) return;
 
     // Report summary every 30 seconds in development
-    setInterval((
-) => {
+    setInterval(() => {
       if (this.logLevel !== 'none') {
         this.logSummary();
       }
@@ -342,8 +337,7 @@ export function usePerformanceMonitor(componentName: string) {
   const startTime = React.useRef<TimeoutHandle | undefined>(undefined);
   const renderCount = React.useRef<TimeoutHandle>(0);
 
-  React.useEffect((
-) => {
+  React.useEffect(() => {
     renderCount.current += 1;
     const endTime = performance.now();
 
@@ -363,8 +357,7 @@ export function usePerformanceMonitor(componentName: string) {
 
   return {
     renderCount: renderCount.current,
-    logRender: (message?: string
-) => {
+    logRender: (message?: string) => {
       if (performanceProfiler['logLevel'] === 'verbose') {
         console.log(`🔬 ${componentName}${message ? `: ${message}` : ''}`);
       }

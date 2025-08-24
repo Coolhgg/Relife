@@ -14,8 +14,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   className = '',
   showLabel = true,
   compact = false,
-}
-) => {
+}) => {
   const {
     currentLanguage,
     changeLanguage,
@@ -26,8 +25,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   const { t } = useI18n('settings');
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleLanguageChange = async (lang: SupportedLanguage
-) => {
+  const handleLanguageChange = async (lang: SupportedLanguage) => {
     try {
       await changeLanguage(lang);
       setIsOpen(false);
@@ -54,8 +52,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           </span>
           <button
             type="button"
-            onClick={(
-) => setAutoDetectEnabled(!autoDetectEnabled)}
+            onClick={() => setAutoDetectEnabled(!autoDetectEnabled)}
             className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 ${
               autoDetectEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'
             }`}
@@ -75,8 +72,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       <div className="relative">
         <button
           type="button"
-          onClick={(
-) => setIsOpen(!isOpen)}
+          onClick={() => setIsOpen(!isOpen)}
           disabled={isLoading}
           className={`${
             compact ? 'p-2' : 'w-full pl-3 pr-10 py-2'
@@ -113,13 +109,11 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         {isOpen && (
           <div className="absolute z-50 mt-1 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
             <div className="py-1" role="listbox">
-              {Object.entries(SUPPORTED_LANGUAGES).map(([code, langInfo]
-) => (
+              {Object.entries(SUPPORTED_LANGUAGES).map(([code, langInfo]) => (
                 <button
                   key={code}
                   type="button"
-                  onClick={(
-) => handleLanguageChange(code as SupportedLanguage)}
+                  onClick={() => handleLanguageChange(code as SupportedLanguage)}
                   className={`w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 transition-colors ${
                     code === currentLanguage
                       ? 'bg-primary-50 dark:bg-primary-900/20'

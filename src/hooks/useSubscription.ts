@@ -53,59 +53,44 @@ interface SubscriptionHookActions {
   // Core subscription actions
   createSubscription: (
     request: CreateSubscriptionRequest
-  
-) => Promise<{ success: boolean; error?: string; requiresAction?: boolean }>;
+  ) => Promise<{ success: boolean; error?: string; requiresAction?: boolean }>;
   updateSubscription: (
     request: UpdateSubscriptionRequest
-  
-) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; error?: string }>;
   cancelSubscription: (
     request: CancelSubscriptionRequest
-  
-) => Promise<{ success: boolean; error?: string; retentionOffer?: any }>;
+  ) => Promise<{ success: boolean; error?: string; retentionOffer?: any }>;
 
   // Feature access
-  hasFeatureAccess: (featureId: string
-) => boolean;
-  trackFeatureUsage: (featureId: string, amount?: number
-) => Promise<void>;
-  getUpgradeRequirement: (featureId: string
-) => SubscriptionTier | null;
+  hasFeatureAccess: (featureId: string) => boolean;
+  trackFeatureUsage: (featureId: string, amount?: number) => Promise<void>;
+  getUpgradeRequirement: (featureId: string) => SubscriptionTier | null;
 
   // Payment methods
   addPaymentMethod: (
     paymentMethodId: string
-  
-) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; error?: string }>;
   removePaymentMethod: (
     paymentMethodId: string
-  
-) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; error?: string }>;
   setDefaultPaymentMethod: (
     paymentMethodId: string
-  
-) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; error?: string }>;
 
   // Trials and discounts
-  startFreeTrial: (planId: string
-) => Promise<{ success: boolean; error?: string }>;
-  validateDiscountCode: (code: string
-) => Promise<{ valid: boolean; error?: string }>;
+  startFreeTrial: (planId: string) => Promise<{ success: boolean; error?: string }>;
+  validateDiscountCode: (code: string) => Promise<{ valid: boolean; error?: string }>;
 
   // Utility functions
-  refreshSubscription: (
-) => Promise<void>;
-  clearError: (
-) => void;
-  resetUIState: (
-) => void;
+  refreshSubscription: () => Promise<void>;
+  clearError: () => void;
+  resetUIState: () => void;
 
   // Plan comparison
   comparePlans: (
     currentPlanId: string,
     targetPlanId: string
-  
-) => {
+  ) => {
     isUpgrade: boolean;
     isDowngrade: boolean;
     priceDifference: number;
@@ -165,15 +150,11 @@ function useSubscription(
   const analytics = useRef(enableAnalytics ? AnalyticsService.getInstance() : null);
 
   // Initialize subscription data
-  useEffect((
-) => {
-    const initializeSubscription = async (
-) => {
+  useEffect(() => {
+    const initializeSubscription = async () => {
       if (!userId) return;
 
-      
-      setState((prev: any
-) => ({ ...prev, isLoading: true, error: null }));
+      setState((prev: any) => ({ ...prev, isLoading: true, error: null }));
 
       try {
         const dashboardData =
@@ -182,9 +163,7 @@ function useSubscription(
           await subscriptionService.current.getFeatureAccess(userId);
         const userTier = await subscriptionService.current.getUserTier(userId);
 
-        
-      setState((prev: any
-) => ({
+        setState((prev: any) => ({
           ...prev,
           subscription: dashboardData.subscription,
           currentPlan: dashboardData.currentPlan,
@@ -213,9 +192,7 @@ function useSubscription(
           { context: 'useSubscription_init', metadata: { userId } }
         );
 
-        
-      setState((prev: any
-) => ({
+        setState((prev: any) => ({
           ...prev,
           isLoading: false,
           isInitialized: true,
@@ -228,14 +205,11 @@ function useSubscription(
   }, [userId]);
 
   // Auto-refresh subscription data
-  useEffect((
-) => {
+  useEffect(() => {
     if (!autoRefresh || !state.isInitialized) return;
 
-    const scheduleRefresh = (
-) => {
-      refreshTimeoutRef.current = setTimeout(async (
-) => {
+    const scheduleRefresh = () => {
+      refreshTimeoutRef.current = setTimeout(async () => {
         await refreshSubscription();
         scheduleRefresh();
       }, refreshInterval);
@@ -243,8 +217,7 @@ function useSubscription(
 
     scheduleRefresh();
 
-    return (
-) => {
+    return () => {
       if (refreshTimeoutRef.current) {
         clearTimeout(refreshTimeoutRef.current);
       }
@@ -253,11 +226,8 @@ function useSubscription(
 
   // Subscription actions
   const createSubscription = useCallback(
-    async (request: CreateSubscriptionRequest
-) => {
-      
-      setState((prev: any
-) => ({
+    async (request: CreateSubscriptionRequest) => {
+      setState((prev: any) => ({
         ...prev,
         uiState: {
           ...prev.uiState,
@@ -277,9 +247,7 @@ function useSubscription(
           // Refresh subscription data
           await refreshSubscription();
 
-          
-      setState((prev: any
-) => ({
+          setState((prev: any) => ({
             ...prev,
             uiState: {
               ...prev.uiState,
@@ -311,15 +279,15 @@ function useSubscription(
             requiresAction: !!result.clientSecret,
           };
         } else {
-          
-      setState((prev: any
-) => ({
+          setState((prev: any) => ({
             ...prev,
             uiState: {
               ...prev.uiState,
               isProcessingPayment: false,
               currentStep: 'plan_selection',
-              errors: { general: result.error || 'Failed to create subscription' },
+              errors: {
+                general: result.error || 'Failed to create subscription',
+              },
             },
           }));
 
@@ -332,9 +300,7 @@ function useSubscription(
         const errorMessage =
           error instanceof Error ? error.message : 'An unexpected error occurred';
 
-        
-      setState((prev: any
-) => ({
+        setState((prev: any) => ({
           ...prev,
           uiState: {
             ...prev.uiState,
@@ -351,15 +317,12 @@ function useSubscription(
   );
 
   const updateSubscription = useCallback(
-    async (request: UpdateSubscriptionRequest
-) => {
+    async (request: UpdateSubscriptionRequest) => {
       if (!state.subscription) {
         return { success: false, error: 'No active subscription found' };
       }
 
-      
-      setState((prev: any
-) => ({ ...prev, isLoading: true, error: null }));
+      setState((prev: any) => ({ ...prev, isLoading: true, error: null }));
 
       try {
         const result = await subscriptionService.current.updateSubscription(
@@ -383,16 +346,17 @@ function useSubscription(
           }
         }
 
-        
-      setState((prev: any
-) => ({ ...prev, isLoading: false }));
+        setState((prev: any) => ({ ...prev, isLoading: false }));
         return result;
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : 'Failed to update subscription';
-        
-      setState((prev: any
-) => ({ ...prev, isLoading: false, error: errorMessage }));
+
+        setState((prev: any) => ({
+          ...prev,
+          isLoading: false,
+          error: errorMessage,
+        }));
         return { success: false, error: errorMessage };
       }
     },
@@ -400,15 +364,12 @@ function useSubscription(
   );
 
   const cancelSubscription = useCallback(
-    async (request: CancelSubscriptionRequest
-) => {
+    async (request: CancelSubscriptionRequest) => {
       if (!state.subscription) {
         return { success: false, error: 'No active subscription found' };
       }
 
-      
-      setState((prev: any
-) => ({ ...prev, isLoading: true, error: null }));
+      setState((prev: any) => ({ ...prev, isLoading: true, error: null }));
 
       try {
         const result = await subscriptionService.current.cancelSubscription(
@@ -432,16 +393,17 @@ function useSubscription(
           }
         }
 
-        
-      setState((prev: any
-) => ({ ...prev, isLoading: false }));
+        setState((prev: any) => ({ ...prev, isLoading: false }));
         return result;
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : 'Failed to cancel subscription';
-        
-      setState((prev: any
-) => ({ ...prev, isLoading: false, error: errorMessage }));
+
+        setState((prev: any) => ({
+          ...prev,
+          isLoading: false,
+          error: errorMessage,
+        }));
         return { success: false, error: errorMessage };
       }
     },
@@ -470,8 +432,7 @@ function useSubscription(
   );
 
   const trackFeatureUsage = useCallback(
-    async (featureId: string, amount: number = 1
-) => {
+    async (featureId: string, amount: number = 1) => {
       try {
         await subscriptionService.current.trackFeatureUsage(userId, featureId, amount);
 
@@ -479,9 +440,11 @@ function useSubscription(
         if (state.featureAccess) {
           const updatedFeatureAccess =
             await subscriptionService.current.getFeatureAccess(userId);
-          
-      setState((prev: any
-) => ({ ...prev, featureAccess: updatedFeatureAccess }));
+
+          setState((prev: any) => ({
+            ...prev,
+            featureAccess: updatedFeatureAccess,
+          }));
         }
       } catch (error) {
         console.error('Failed to track feature usage:', error);
@@ -491,8 +454,7 @@ function useSubscription(
   );
 
   const getUpgradeRequirement = useCallback(
-    (featureId: string
-) => {
+    (featureId: string) => {
       if (!state.featureAccess) return null;
 
       const feature = state.featureAccess.features[featureId];
@@ -503,8 +465,7 @@ function useSubscription(
 
   // Payment method functions
   const addPaymentMethod = useCallback(
-    async (paymentMethodId: string
-) => {
+    async (paymentMethodId: string) => {
       try {
         await stripeService.current.addPaymentMethod(userId, paymentMethodId);
         await refreshSubscription();
@@ -520,8 +481,7 @@ function useSubscription(
     [userId]
   );
 
-  const removePaymentMethod = useCallback(async (paymentMethodId: string
-) => {
+  const removePaymentMethod = useCallback(async (paymentMethodId: string) => {
     try {
       await stripeService.current.removePaymentMethod(paymentMethodId);
       await refreshSubscription();
@@ -535,8 +495,7 @@ function useSubscription(
     }
   }, []);
 
-  const setDefaultPaymentMethod = useCallback(async (paymentMethodId: string
-) => {
+  const setDefaultPaymentMethod = useCallback(async (paymentMethodId: string) => {
     // Implementation would depend on your backend API
     try {
       // Call API to set default payment method
@@ -555,8 +514,7 @@ function useSubscription(
 
   // Trial and discount functions
   const startFreeTrial = useCallback(
-    async (planId: string
-) => {
+    async (planId: string) => {
       try {
         const result = await subscriptionService.current.startFreeTrial(userId, planId);
 
@@ -576,8 +534,7 @@ function useSubscription(
   );
 
   const validateDiscountCode = useCallback(
-    async (code: string
-) => {
+    async (code: string) => {
       try {
         return await subscriptionService.current.validateDiscountCode(userId, code);
       } catch (error) {
@@ -592,8 +549,7 @@ function useSubscription(
   );
 
   // Utility functions
-  const refreshSubscription = useCallback(async (
-) => {
+  const refreshSubscription = useCallback(async () => {
     try {
       const [dashboardData, featureAccess, userTier] = await Promise.all([
         subscriptionService.current.getSubscriptionDashboard(userId),
@@ -601,9 +557,7 @@ function useSubscription(
         subscriptionService.current.getUserTier(userId),
       ]);
 
-      
-      setState((prev: any
-) => ({
+      setState((prev: any) => ({
         ...prev,
         subscription: dashboardData.subscription,
         currentPlan: dashboardData.currentPlan,
@@ -619,18 +573,12 @@ function useSubscription(
     }
   }, [userId]);
 
-  const clearError = useCallback((
-) => {
-    
-      setState((prev: any
-) => ({ ...prev, error: null }));
+  const clearError = useCallback(() => {
+    setState((prev: any) => ({ ...prev, error: null }));
   }, []);
 
-  const resetUIState = useCallback((
-) => {
-    
-      setState((prev: any
-) => ({
+  const resetUIState = useCallback(() => {
+    setState((prev: any) => ({
       ...prev,
       uiState: {
         selectedPlan: undefined,
@@ -648,8 +596,7 @@ function useSubscription(
 
   // Plan comparison function
   const comparePlans = useCallback(
-    (currentTier: SubscriptionTier, targetTier: SubscriptionTier
-) => {
+    (currentTier: SubscriptionTier, targetTier: SubscriptionTier) => {
       const tierHierarchy: SubscriptionTier[] = [
         'free',
         'basic',
@@ -660,10 +607,8 @@ function useSubscription(
       const currentLevel = tierHierarchy.indexOf(currentTier);
       const targetLevel = tierHierarchy.indexOf(targetTier);
 
-      const currentPlan = state.availablePlans.find((p: any
-) => p.tier === currentTier);
-      const targetPlan = state.availablePlans.find((p: any
-) => p.tier === targetTier);
+      const currentPlan = state.availablePlans.find((p: any) => p.tier === currentTier);
+      const targetPlan = state.availablePlans.find((p: any) => p.tier === targetTier);
 
       const currentPrice = currentPlan?.pricing.monthly?.amount || 0;
       const targetPrice = targetPlan?.pricing.monthly?.amount || 0;

@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 ('use client');
 
 import * as React from 'react';
@@ -100,8 +100,8 @@ function SidebarProvider({
   const toggleSidebar = React.useCallback((
 ) => {
     return isMobile ? setOpenMobile((open: any
-) => ! // auto: implicit any open) : setOpen((open: any
-) => ! // auto: implicit any open);
+) => !) : setOpen((open: any
+) => !open);
   }, [isMobile, setOpen, setOpenMobile]);
 
   // Adds a keyboard shortcut to toggle the sidebar.

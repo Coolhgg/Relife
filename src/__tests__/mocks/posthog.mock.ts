@@ -7,32 +7,27 @@
 
 const mockPostHog = {
   // Initialization
-  init: jest.fn((apiKey: string, options?: any
-) => {
+  init: jest.fn((apiKey: string, options?: any) => {
     console.log('📊 Mock PostHog initialized');
     return mockPostHog;
   }),
 
   // User identification
-  identify: jest.fn((userId: string, properties?: any
-) => {
+  identify: jest.fn((userId: string, properties?: any) => {
     console.log(`👤 Mock PostHog identify: ${userId}`, properties);
   }),
 
   // Event tracking
-  capture: jest.fn((event: string, properties?: any
-) => {
+  capture: jest.fn((event: string, properties?: any) => {
     console.log(`📈 Mock PostHog capture: ${event}`, properties);
   }),
 
   // User properties
   people: {
-    set: jest.fn((properties: any
-) => {
+    set: jest.fn((properties: any) => {
       console.log('👥 Mock PostHog people.set', properties);
     }),
-    increment: jest.fn((properties: any
-) => {
+    increment: jest.fn((properties: any) => {
       console.log('📊 Mock PostHog people.increment', properties);
     }),
     delete: jest.fn(),
@@ -40,26 +35,22 @@ const mockPostHog = {
   },
 
   // Group analytics
-  group: jest.fn((groupType: string, groupKey: string, properties?: any
-) => {
+  group: jest.fn((groupType: string, groupKey: string, properties?: any) => {
     console.log(`👥 Mock PostHog group: ${groupType}:${groupKey}`, properties);
   }),
 
   // Alias user
-  alias: jest.fn((alias: string
-) => {
+  alias: jest.fn((alias: string) => {
     console.log(`🔗 Mock PostHog alias: ${alias}`);
   }),
 
   // Reset user
-  reset: jest.fn((
-) => {
+  reset: jest.fn(() => {
     console.log('🔄 Mock PostHog reset');
   }),
 
   // Feature flags
-  getFeatureFlag: jest.fn((flag: string
-) => {
+  getFeatureFlag: jest.fn((flag: string) => {
     console.log(`🚩 Mock PostHog getFeatureFlag: ${flag}`);
     // Return different values for different flags for testing
     if (flag === 'premium-features') return true;
@@ -68,113 +59,92 @@ const mockPostHog = {
     return false;
   }),
 
-  isFeatureEnabled: jest.fn((flag: string
-) => {
+  isFeatureEnabled: jest.fn((flag: string) => {
     console.log(`🚩 Mock PostHog isFeatureEnabled: ${flag}`);
     return mockPostHog.getFeatureFlag(flag);
   }),
 
-  onFeatureFlags: jest.fn((callback: (flags: string[]
-) => void
-) => {
+  onFeatureFlags: jest.fn((callback: (flags: string[]) => void) => {
     console.log('🚩 Mock PostHog onFeatureFlags');
     // Simulate feature flags loading
-    setTimeout((
-) => {
+    setTimeout(() => {
       callback(['premium-features', 'beta-voice']);
     }, 100);
   }),
 
   // Session recording
-  startSessionRecording: jest.fn((
-) => {
+  startSessionRecording: jest.fn(() => {
     console.log('🎥 Mock PostHog startSessionRecording');
   }),
 
-  stopSessionRecording: jest.fn((
-) => {
+  stopSessionRecording: jest.fn(() => {
     console.log('🎥 Mock PostHog stopSessionRecording');
   }),
 
   // Page tracking
-  register: jest.fn((properties: any
-) => {
+  register: jest.fn((properties: any) => {
     console.log('📝 Mock PostHog register', properties);
   }),
 
-  unregister: jest.fn((property: string
-) => {
+  unregister: jest.fn((property: string) => {
     console.log(`📝 Mock PostHog unregister: ${property}`);
   }),
 
   // Opt out
-  opt_out_capturing: jest.fn((
-) => {
+  opt_out_capturing: jest.fn(() => {
     console.log('🚫 Mock PostHog opt_out_capturing');
   }),
 
-  opt_in_capturing: jest.fn((
-) => {
+  opt_in_capturing: jest.fn(() => {
     console.log('✅ Mock PostHog opt_in_capturing');
   }),
 
-  has_opted_out_capturing: jest.fn((
-) => false),
+  has_opted_out_capturing: jest.fn(() => false),
 
   // Advanced features
-  get_property: jest.fn((property: string
-) => {
+  get_property: jest.fn((property: string) => {
     console.log(`🔍 Mock PostHog get_property: ${property}`);
     return null;
   }),
 
-  get_distinct_id: jest.fn((
-) => {
+  get_distinct_id: jest.fn(() => {
     return 'mock-distinct-id-12345';
   }),
 
-  get_session_id: jest.fn((
-) => {
+  get_session_id: jest.fn(() => {
     return 'mock-session-id-67890';
   }),
 
   // Surveys
-  getSurveys: jest.fn((
-) => {
+  getSurveys: jest.fn(() => {
     console.log('📋 Mock PostHog getSurveys');
     return Promise.resolve([]);
   }),
 
   // Experiments
-  getActiveMatchingSurveys: jest.fn((
-) => {
+  getActiveMatchingSurveys: jest.fn(() => {
     console.log('🧪 Mock PostHog getActiveMatchingSurveys');
     return [];
   }),
 
   // Debug and development
-  debug: jest.fn((enable?: boolean
-) => {
+  debug: jest.fn((enable?: boolean) => {
     console.log(`🐛 Mock PostHog debug: ${enable}`);
   }),
 
   // Configuration
-  set_config: jest.fn((config: any
-) => {
+  set_config: jest.fn((config: any) => {
     console.log('⚙️ Mock PostHog set_config', config);
   }),
 
   // Mobile specific
-  ready: jest.fn((callback: (
-) => void
-) => {
+  ready: jest.fn((callback: () => void) => {
     console.log('📱 Mock PostHog ready');
     setTimeout(callback, 10);
   }),
 
   // Cookie management
-  get_cookie: jest.fn((name: string
-) => {
+  get_cookie: jest.fn((name: string) => {
     console.log(`🍪 Mock PostHog get_cookie: ${name}`);
     return null;
   }),
@@ -185,8 +155,7 @@ const mockPostHog = {
   },
 
   // Internal methods for testing
-  _mockReset: jest.fn((
-) => {
+  _mockReset: jest.fn(() => {
     // Reset all mocks for clean testing
     Object.values(mockPostHog).forEach(value => {
       if (typeof value === 'function' && value.mockClear) {
@@ -202,10 +171,8 @@ const mockPostHog = {
     }
   }),
 
-  _mockSetFeatureFlag: jest.fn((flag: string, value: boolean
-) => {
-    mockPostHog.getFeatureFlag.mockImplementation((f: string
-) => {
+  _mockSetFeatureFlag: jest.fn((flag: string, value: boolean) => {
+    mockPostHog.getFeatureFlag.mockImplementation((f: string) => {
       if (f === flag) return value;
       return mockPostHog.getFeatureFlag.getMockImplementation()?.(f) || false;
     });
@@ -213,8 +180,7 @@ const mockPostHog = {
 };
 
 // Create a factory function for creating fresh mocks
-export const _createMockPostHog = (
-) => ({
+export const _createMockPostHog = () => ({
   ...mockPostHog,
   people: { ...mockPostHog.people },
   persistence: { ...mockPostHog.persistence },

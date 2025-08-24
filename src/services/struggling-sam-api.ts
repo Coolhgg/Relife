@@ -409,7 +409,10 @@ export class StrugglingSamApiService {
     return await apiClient.get(`/api/struggling-sam/dashboard/${userId}`);
   }
 
-  static async healthCheck(): Promise<{ status: 'ok' | 'error'; timestamp: string }> {
+  static async healthCheck(): Promise<{
+    status: 'ok' | 'error';
+    timestamp: string;
+  }> {
     return await apiClient.get('/api/struggling-sam/health');
   }
 }

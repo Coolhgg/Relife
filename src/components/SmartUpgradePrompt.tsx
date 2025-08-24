@@ -26,12 +26,9 @@ import {
 
 interface SmartUpgradePromptProps {
   prompt: SmartUpgradePromptType | null;
-  onUpgrade?: (prompt: SmartUpgradePromptType
-) => void;
-  onDismiss?: (prompt: SmartUpgradePromptType
-) => void;
-  onLearnMore?: (prompt: SmartUpgradePromptType
-) => void;
+  onUpgrade?: (prompt: SmartUpgradePromptType) => void;
+  onDismiss?: (prompt: SmartUpgradePromptType) => void;
+  onLearnMore?: (prompt: SmartUpgradePromptType) => void;
 }
 
 const PROMPT_TYPE_CONFIGS = {
@@ -94,16 +91,13 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
   onUpgrade,
   onDismiss,
   onLearnMore,
-}
-) => {
+}) => {
   const [timeRemaining, setTimeRemaining] = useState<string>('');
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (prompt && prompt.urgency.expiresAt) {
-      const updateTimer = (
-) => {
+      const updateTimer = () => {
         const now = new Date().getTime();
         const expiry = new Date(prompt.urgency.expiresAt!).getTime();
         const diff = expiry - now;
@@ -126,36 +120,31 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
       updateTimer();
       const interval = setInterval(updateTimer, 60000); // Update every minute
 
-      return (
-) => clearInterval(interval);
+      return () => clearInterval(interval);
     }
   }, [prompt]);
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (prompt) {
       setIsVisible(true);
     }
   }, [prompt]);
 
-  const handleUpgrade = (
-) => {
+  const handleUpgrade = () => {
     if (prompt) {
       onUpgrade?.(prompt);
       setIsVisible(false);
     }
   };
 
-  const handleDismiss = (
-) => {
+  const handleDismiss = () => {
     if (prompt) {
       onDismiss?.(prompt);
       setIsVisible(false);
     }
   };
 
-  const handleLearnMore = (
-) => {
+  const handleLearnMore = () => {
     if (prompt) {
       onLearnMore?.(prompt);
     }
@@ -272,8 +261,7 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                   Premium Benefits
                 </h3>
                 <div className="space-y-2">
-                  {prompt.benefits.slice(0, 3).map((benefit, index
-) => (
+                  {prompt.benefits.slice(0, 3).map((benefit, index) => (
                     <motion.div
                       key={index}
                       className="flex items-start gap-3 text-sm"

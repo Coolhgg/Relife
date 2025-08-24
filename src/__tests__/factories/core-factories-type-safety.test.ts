@@ -28,12 +28,9 @@ import {
 } from '../../types';
 import { Subscription } from '../../types/premium';
 
-describe('Core Factories Type Safety', (
-) => {
-  describe('createTestUser Type Safety', (
-) => {
-    it('should return properly typed User object without any casts', (
-) => {
+describe('Core Factories Type Safety', () => {
+  describe('createTestUser Type Safety', () => {
+    it('should return properly typed User object without any casts', () => {
       const user = createTestUser({ tier: 'premium', premium: true });
 
       // Verify basic User interface compliance
@@ -94,8 +91,7 @@ describe('Core Factories Type Safety', (
       ).toBe('boolean');
     });
 
-    it('should return proper Theme type for gameTheme', (
-) => {
+    it('should return proper Theme type for gameTheme', () => {
       const user = createTestUser();
 
       // gameTheme should be a proper Theme string, not ThemeConfig object as any
@@ -115,8 +111,7 @@ describe('Core Factories Type Safety', (
       ]).toContain(gameTheme);
     });
 
-    it('should handle free tier users without premium features', (
-) => {
+    it('should handle free tier users without premium features', () => {
       const user = createTestUser({ tier: 'free', premium: false });
 
       expect(user.subscriptionTier).toBe('free');
@@ -126,10 +121,8 @@ describe('Core Factories Type Safety', (
     });
   });
 
-  describe('createTestAlarm Type Safety', (
-) => {
-    it('should return properly typed SmartAlarmSettings', (
-) => {
+  describe('createTestAlarm Type Safety', () => {
+    it('should return properly typed SmartAlarmSettings', () => {
       const alarm = createTestAlarm({ premium: true });
 
       if (alarm.smartFeatures) {
@@ -145,17 +138,14 @@ describe('Core Factories Type Safety', (
       }
     });
 
-    it('should not have smartFeatures for non-premium users', (
-) => {
+    it('should not have smartFeatures for non-premium users', () => {
       const alarm = createTestAlarm({ premium: false });
       expect(alarm.smartFeatures).toBeUndefined();
     });
   });
 
-  describe('createTestBattle Type Safety', (
-) => {
-    it('should return properly typed BattleParticipantStats', (
-) => {
+  describe('createTestBattle Type Safety', () => {
+    it('should return properly typed BattleParticipantStats', () => {
       const battle = createTestBattle({ type: 'consistency' });
 
       // Verify participants have proper stats, not partial object as any
@@ -171,8 +161,7 @@ describe('Core Factories Type Safety', (
       });
     });
 
-    it('should return properly typed BattleSettings', (
-) => {
+    it('should return properly typed BattleSettings', () => {
       const battle = createTestBattle({ type: 'speed' });
 
       // Should be proper BattleSettings object, not extended object as any
@@ -201,8 +190,7 @@ describe('Core Factories Type Safety', (
       }
     });
 
-    it('should return properly typed BattlePrize', (
-) => {
+    it('should return properly typed BattlePrize', () => {
       const battle = createTestBattle({ type: 'consistency' });
 
       // Should be proper BattlePrize object, not custom object as any
@@ -224,10 +212,8 @@ describe('Core Factories Type Safety', (
     });
   });
 
-  describe('Type Safety Regression Tests', (
-) => {
-    it('should not contain any as any type casts in generated objects', (
-) => {
+  describe('Type Safety Regression Tests', () => {
+    it('should not contain any as any type casts in generated objects', () => {
       // This is a meta-test to ensure we haven't regressed
       const user = createTestUser({ tier: 'premium', premium: true });
       const alarm = createTestAlarm({ premium: true });

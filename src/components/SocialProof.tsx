@@ -29,8 +29,7 @@ interface SocialProofProps {
   successStories: SuccessStory[];
   realtimeActivity: RealtimeActivity[];
   userPersona?: string;
-  onStoryClick?: (story: SuccessStory
-) => void;
+  onStoryClick?: (story: SuccessStory) => void;
   className?: string;
   autoRotate?: boolean;
   showTestimonials?: boolean;
@@ -46,58 +45,42 @@ export const SocialProof: React.FC<SocialProofProps> = ({
   className = '',
   autoRotate = true,
   showTestimonials = true,
-}
-) => {
+}) => {
   const [currentProofIndex, setCurrentProofIndex] = useState(0);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [realtimeIndex, setRealtimeIndex] = useState(0);
 
   // Auto-rotate social proof messages
-  useEffect((
-) => {
+  useEffect(() => {
     if (!autoRotate || socialProofData.length <= 1) return;
 
-    const interval = setInterval((
-) => {
-      
-      setCurrentProofIndex((prev: any
-) => (prev + 1) % socialProofData.length);
+    const interval = setInterval(() => {
+      setCurrentProofIndex((prev: any) => (prev + 1) % socialProofData.length);
     }, 4000);
 
-    return (
-) => clearInterval(interval);
+    return () => clearInterval(interval);
   }, [socialProofData.length, autoRotate]);
 
   // Auto-rotate success stories
-  useEffect((
-) => {
+  useEffect(() => {
     if (!autoRotate || successStories.length <= 1) return;
 
-    const interval = setInterval((
-) => {
-      
-      setCurrentStoryIndex((prev: any
-) => (prev + 1) % successStories.length);
+    const interval = setInterval(() => {
+      setCurrentStoryIndex((prev: any) => (prev + 1) % successStories.length);
     }, 8000);
 
-    return (
-) => clearInterval(interval);
+    return () => clearInterval(interval);
   }, [successStories.length, autoRotate]);
 
   // Auto-rotate realtime activity
-  useEffect((
-) => {
+  useEffect(() => {
     if (!autoRotate || realtimeActivity.length <= 1) return;
 
-    const interval = setInterval((
-) => {
-      
-      setRealtimeIndex((prev: any
-) => (prev + 1) % realtimeActivity.length);
+    const interval = setInterval(() => {
+      setRealtimeIndex((prev: any) => (prev + 1) % realtimeActivity.length);
     }, 3000);
 
-    return (
-) => clearInterval(interval);
+    return () => clearInterval(interval);
   }, [realtimeActivity.length, autoRotate]);
 
   const formatNumber = (num: number): string => {
@@ -106,15 +89,11 @@ export const SocialProof: React.FC<SocialProofProps> = ({
     return num.toString();
   };
 
-  const getPersonaRelevantStories = (
-) => {
-    return (
-      successStories
-        
-        .filter((story: any
-) => story.persona === userPersona || story.featured)
-        .slice(0, 3)
-    );
+  const getPersonaRelevantStories = () => {
+    return successStories
+
+      .filter((story: any) => story.persona === userPersona || story.featured)
+      .slice(0, 3);
   };
 
   const personalizedStories = getPersonaRelevantStories();
@@ -284,8 +263,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.4 }}
                   className="cursor-pointer"
-                  onClick={(
-) => onStoryClick?.(currentStory)}
+                  onClick={() => onStoryClick?.(currentStory)}
                 >
                   <Card className="bg-gradient-to-br from-muted/20 to-muted/5 border-muted/40 hover:border-primary/30 transition-colors">
                     <CardContent className="p-4">
@@ -389,8 +367,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
             {/* Story Navigation Dots */}
             {personalizedStories.length > 1 && (
               <div className="flex justify-center gap-2 mt-4">
-                {personalizedStories.map((_, index
-) => (
+                {personalizedStories.map((_, index) => (
                   <motion.button
                     key={index}
                     className={`w-2 h-2 rounded-full transition-colors ${
@@ -398,8 +375,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
                         ? 'bg-primary'
                         : 'bg-muted'
                     }`}
-                    onClick={(
-) => setCurrentStoryIndex(index)}
+                    onClick={() => setCurrentStoryIndex(index)}
                     whileHover={{ scale: 1.2 }}
                     whileTap={{ scale: 0.9 }}
                   />

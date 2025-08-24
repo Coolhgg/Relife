@@ -24,8 +24,7 @@ interface SyncStatusProps {
 const SyncStatus: React.FC<SyncStatusProps> = ({
   className = '',
   showDetails = false,
-}
-) => {
+}) => {
   const [status, setStatus] = useState<SyncStatusType>({
     isOnline: navigator.onLine,
     lastSync: null,
@@ -45,10 +44,8 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
   const [expanded, setExpanded] = useState(false);
   const [syncAnimation, setSyncAnimation] = useState(false);
 
-  useEffect((
-) => {
-    const updateStatus = async (
-) => {
+  useEffect(() => {
+    const updateStatus = async () => {
       const newStatus = await OfflineManager.getStatus();
       const newCapabilities = OfflineManager.getCapabilities();
 
@@ -60,19 +57,13 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
     updateStatus();
 
     // Set up listeners
-    const handleOnline = (
-) => {
-      
-      setStatus((prev: any
-) => ({ ...prev, isOnline: true }));
+    const handleOnline = () => {
+      setStatus((prev: any) => ({ ...prev, isOnline: true }));
       triggerSyncAnimation();
     };
 
-    const handleOffline = (
-) => {
-      
-      setStatus((prev: any
-) => ({ ...prev, isOnline: false }));
+    const handleOffline = () => {
+      setStatus((prev: any) => ({ ...prev, isOnline: false }));
     };
 
     OfflineManager.addOnlineListener(handleOnline);
@@ -81,23 +72,19 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
     // Update status every 30 seconds
     const interval = setInterval(updateStatus, 30000);
 
-    return (
-) => {
+    return () => {
       OfflineManager.removeOnlineListener(handleOnline);
       OfflineManager.removeOfflineListener(handleOffline);
       clearInterval(interval);
     };
   }, []);
 
-  const triggerSyncAnimation = (
-) => {
+  const triggerSyncAnimation = () => {
     setSyncAnimation(true);
-    setTimeout((
-) => setSyncAnimation(false), 2000);
+    setTimeout(() => setSyncAnimation(false), 2000);
   };
 
-  const handleManualSync = async (
-) => {
+  const handleManualSync = async () => {
     triggerSyncAnimation();
     try {
       await OfflineManager.syncPendingOperations();
@@ -108,8 +95,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
     }
   };
 
-  const getStatusIcon = (
-) => {
+  const getStatusIcon = () => {
     if (!status.isOnline) {
       return <WifiOff className="w-4 h-4 text-red-400" />;
     }
@@ -133,8 +119,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
     return <CheckCircle className="w-4 h-4 text-green-400" />;
   };
 
-  const getStatusText = (
-) => {
+  const getStatusText = () => {
     if (!status.isOnline) return 'Offline';
     if (status.syncInProgress || syncAnimation) return 'Syncing...';
     if (status.pendingOperations > 0) return `${status.pendingOperations} pending`;
@@ -142,8 +127,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
     return 'Synced';
   };
 
-  const getStatusColor = (
-) => {
+  const getStatusColor = () => {
     if (!status.isOnline) return 'text-red-400';
     if (status.syncInProgress || syncAnimation) return 'text-blue-400';
     if (status.pendingOperations > 0) return 'text-yellow-400';
@@ -173,8 +157,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
 
   return (
     <div className={`bg-white/5 rounded-lg border border-white/10 ${className}`}>
-      <div className="p-4 cursor-pointer" onClick={(
-) => setExpanded(!expanded)}>
+      <div className="p-4 cursor-pointer" onClick={() => setExpanded(!expanded)}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             {status.isOnline ? (
@@ -193,9 +176,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
           <div className="flex items-center gap-2">
             {status.isOnline && (
               <button
-                
-                onClick={(e: any
-) => {
+                onClick={(e: any) => {
                   e.stopPropagation();
                   handleManualSync();
                 }}

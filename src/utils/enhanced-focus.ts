@@ -283,8 +283,7 @@ export class EnhancedFocusService {
   enhanceFocusRing(element: HTMLElement): void {
     if (!element) return;
 
-    const handleFocus = (
-) => {
+    const handleFocus = () => {
       element.classList.add('enhanced-focus');
       this.updateFocusIndicator(element);
 
@@ -300,8 +299,7 @@ export class EnhancedFocusService {
       }
     };
 
-    const handleBlur = (
-) => {
+    const handleBlur = () => {
       element.classList.remove('enhanced-focus');
       if (this.focusIndicator) {
         this.focusIndicator.style.opacity = '0';
@@ -349,18 +347,15 @@ export class EnhancedFocusService {
     skipLink.textContent = text;
     skipLink.className = 'skip-link';
 
-    const handleFocus = (
-) => {
+    const handleFocus = () => {
       skipLink.classList.add('skip-link-visible');
     };
 
-    const handleBlur = (
-) => {
+    const handleBlur = () => {
       skipLink.classList.remove('skip-link-visible');
     };
 
-    const handleClick = (e: Event
-) => {
+    const handleClick = (e: Event) => {
       e.preventDefault();
       const target = document.querySelector(href) as HTMLElement;
       if (target) {
@@ -423,8 +418,7 @@ export class EnhancedFocusService {
       border-radius: ${options.borderRadius || 4}px;
     `;
 
-    const handleFocus = (
-) => {
+    const handleFocus = () => {
       try {
         const rect = element.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -444,8 +438,7 @@ export class EnhancedFocusService {
       }
     };
 
-    const handleBlur = (
-) => {
+    const handleBlur = () => {
       indicator.style.opacity = '0';
     };
 
@@ -469,8 +462,7 @@ export class EnhancedFocusService {
     }
 
     // Remove custom indicators
-    this.customIndicators.forEach((indicator, element
-) => {
+    this.customIndicators.forEach((indicator, element) => {
       if (indicator.parentNode) {
         indicator.parentNode.removeChild(indicator);
       }

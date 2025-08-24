@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react'; // auto: added missing React import
+import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.tsx';
@@ -8,8 +8,7 @@ import { ServiceWorkerManager } from './services/service-worker-manager';
 import { initializeApp } from './config/initializeApp';
 
 // Show loading screen while app initializes
-const showLoadingScreen = (
-) => {
+const showLoadingScreen = () => {
   const loadingElement = document.createElement('div');
   loadingElement.id = 'app-loading';
   loadingElement.className =
@@ -24,8 +23,7 @@ const showLoadingScreen = (
   document.body.appendChild(loadingElement);
 };
 
-const hideLoadingScreen = (
-) => {
+const hideLoadingScreen = () => {
   const loadingElement = document.getElementById('app-loading');
   if (loadingElement) {
     document.body.removeChild(loadingElement);
@@ -33,8 +31,7 @@ const hideLoadingScreen = (
 };
 
 // Initialize app
-const startApp = async (
-) => {
+const startApp = async () => {
   showLoadingScreen();
 
   try {

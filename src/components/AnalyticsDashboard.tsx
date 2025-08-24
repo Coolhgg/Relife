@@ -31,8 +31,7 @@ interface UsageData {
   errorRate: number;
 }
 
-const AnalyticsDashboard: React.FC = (
-) => {
+const AnalyticsDashboard: React.FC = () => {
   const { track, trackPageView } = useAnalyticsContext();
   const [usageData, setUsageData] = useState<UsageData>({
     totalSessions: 0,
@@ -46,8 +45,7 @@ const AnalyticsDashboard: React.FC = (
   });
   const [timeRange, setTimeRange] = useState<'day' | 'week' | 'month'>('week');
 
-  useEffect((
-) => {
+  useEffect(() => {
     trackPageView('analytics-dashboard', {
       user_role: 'admin', // This would be dynamic based on user permissions
       time_range: timeRange,
@@ -57,8 +55,7 @@ const AnalyticsDashboard: React.FC = (
     loadAnalyticsData();
   }, [trackPageView, timeRange]);
 
-  const loadAnalyticsData = (
-) => {
+  const loadAnalyticsData = () => {
     // Simulate loading analytics data
     // In a real app, this would fetch from PostHog API or your backend
     const simulatedData: UsageData = {
@@ -159,8 +156,7 @@ const AnalyticsDashboard: React.FC = (
     },
   ];
 
-  const handleTimeRangeChange = (range: 'day' | 'week' | 'month'
-) => {
+  const handleTimeRangeChange = (range: 'day' | 'week' | 'month') => {
     setTimeRange(range);
     track('analytics_time_range_changed', {
       previous_range: timeRange,
@@ -170,8 +166,7 @@ const AnalyticsDashboard: React.FC = (
     loadAnalyticsData(); // Reload data for new time range
   };
 
-  const handleExportData = (
-) => {
+  const handleExportData = () => {
     track('analytics_data_exported', {
       time_range: timeRange,
       metrics_count: metrics.length,
@@ -218,8 +213,7 @@ const AnalyticsDashboard: React.FC = (
             {(['day', 'week', 'month'] as const).map(range => (
               <button
                 key={range}
-                onClick={(
-) => handleTimeRangeChange(range)}
+                onClick={() => handleTimeRangeChange(range)}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   timeRange === range
                     ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
@@ -244,8 +238,7 @@ const AnalyticsDashboard: React.FC = (
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {metrics.map((metric, index
-) => (
+        {metrics.map((metric, index) => (
           <div
             key={metric.name}
             className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow"

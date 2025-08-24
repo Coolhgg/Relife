@@ -5,11 +5,10 @@ import ErrorBoundary from '../ErrorBoundary';
 // Test utilities are now handled via vitest directly
 
 // Test component that throws errors
-const ThrowError: React.FC<{ shouldThrow?: boolean; errorMessage?: string }> = ({
-  shouldThrow = false,
-  errorMessage = 'Test error',
-}
-) => {
+const ThrowError: React.FC<{
+  shouldThrow?: boolean;
+  errorMessage?: string;
+}> = ({ shouldThrow = false, errorMessage = 'Test error' }) => {
   if (shouldThrow) {
     throw new Error(errorMessage);
   }
@@ -17,10 +16,8 @@ const ThrowError: React.FC<{ shouldThrow?: boolean; errorMessage?: string }> = (
 };
 
 // Test component that throws during render
-const AsyncError: React.FC<{ shouldThrow?: boolean }> = ({ shouldThrow = false }
-) => {
-  React.useEffect((
-) => {
+const AsyncError: React.FC<{ shouldThrow?: boolean }> = ({ shouldThrow = false }) => {
+  React.useEffect(() => {
     if (shouldThrow) {
       throw new Error('Async error in useEffect');
     }
@@ -29,26 +26,20 @@ const AsyncError: React.FC<{ shouldThrow?: boolean }> = ({ shouldThrow = false }
   return <div>Async component</div>;
 };
 
-describe('ErrorBoundary', (
-) => {
-  beforeEach((
-) => {
+describe('ErrorBoundary', () => {
+  beforeEach(() => {
     vi.clearAllMocks();
 
     // Suppress console.error for these tests since we're intentionally throwing errors
-    vi.spyOn(console, 'error').mockImplementation((
-) => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  afterEach((
-) => {
+  afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  describe('normal operation', (
-) => {
-    test('renders children when no error occurs', (
-) => {
+  describe('normal operation', () => {
+    test('renders children when no error occurs', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={false} />
@@ -58,8 +49,7 @@ describe('ErrorBoundary', (
       expect(screen.getByText('Component rendered successfully')).toBeInTheDocument();
     });
 
-    test('renders children with complex component tree', (
-) => {
+    test('renders children with complex component tree', () => {
       render(
         <ErrorBoundary>
           <div>
@@ -76,10 +66,8 @@ describe('ErrorBoundary', (
     });
   });
 
-  describe('error handling', (
-) => {
-    test('catches errors and shows default fallback UI', (
-) => {
+  describe('error handling', () => {
+    test('catches errors and shows default fallback UI', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
@@ -94,8 +82,7 @@ describe('ErrorBoundary', (
       expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
     });
 
-    test('displays custom context in error message', (
-) => {
+    test('displays custom context in error message', () => {
       render(
         <ErrorBoundary context="AlarmForm">
           <ThrowError shouldThrow={true} />
@@ -105,8 +92,7 @@ describe('ErrorBoundary', (
       expect(screen.getByText(/alarmform/i)).toBeInTheDocument();
     });
 
-    test('shows error ID for debugging', (
-) => {
+    test('shows error ID for debugging', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
@@ -116,8 +102,7 @@ describe('ErrorBoundary', (
       expect(screen.getByText(/error id:/i)).toBeInTheDocument();
     });
 
-    test('displays error details in development mode', (
-) => {
+    test('displays error details in development mode', () => {
       // Mock development environment
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'development';
@@ -134,8 +119,7 @@ describe('ErrorBoundary', (
       process.env.NODE_ENV = originalEnv;
     });
 
-    test('hides error details in production mode', (
-) => {
+    test('hides error details in production mode', () => {
       // Mock production environment
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'production';
@@ -153,10 +137,8 @@ describe('ErrorBoundary', (
     });
   });
 
-  describe('custom fallback UI', (
-) => {
-    test('renders custom fallback when provided', (
-) => {
+  describe('custom fallback UI', () => {
+    test('renders custom fallback when provided', () => {
       const CustomFallback = (
         <div data-testid="custom-fallback">Custom error message</div>
       );
@@ -172,8 +154,7 @@ describe('ErrorBoundary', (
       expect(screen.queryByText('Oops! Something went wrong')).not.toBeInTheDocument();
     });
 
-    test('uses default fallback when custom fallback is not provided', (
-) => {
+    test('uses default fallback when custom fallback is not provided', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
@@ -184,10 +165,8 @@ describe('ErrorBoundary', (
     });
   });
 
-  describe('error recovery', (
-) => {
-    test('retry button attempts to re-render children', (
-) => {
+  describe('error recovery', () => {
+    test('retry button attempts to re-render children', () => {
       const { rerender } = render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
@@ -209,8 +188,7 @@ describe('ErrorBoundary', (
       expect(screen.getByText('Component rendered successfully')).toBeInTheDocument();
     });
 
-    test('retry button resets error state', (
-) => {
+    test('retry button resets error state', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
@@ -224,8 +202,7 @@ describe('ErrorBoundary', (
       expect(retryButton).toBeInTheDocument(); // Button should still be there if error persists
     });
 
-    test('go back button calls onNavigateBack when provided', (
-) => {
+    test('go back button calls onNavigateBack when provided', () => {
       const mockNavigateBack = vi.fn();
 
       render(
@@ -240,8 +217,7 @@ describe('ErrorBoundary', (
       expect(mockNavigateBack).toHaveBeenCalled();
     });
 
-    test('go back button uses default navigation when onNavigateBack not provided', (
-) => {
+    test('go back button uses default navigation when onNavigateBack not provided', () => {
       // Mock window.history.back
       const mockBack = vi.fn();
       Object.defineProperty(window, 'history', {
@@ -262,14 +238,11 @@ describe('ErrorBoundary', (
     });
   });
 
-  describe('error reporting integration', (
-) => {
-    test('reports errors to ErrorHandler', (
-) => {
+  describe('error reporting integration', () => {
+    test('reports errors to ErrorHandler', () => {
       // Mock ErrorHandler
       const mockHandleError = vi.fn();
-      vi.doMock('../../services/error-handler', (
-) => ({
+      vi.doMock('../../services/error-handler', () => ({
         ErrorHandler: {
           handleError: mockHandleError,
         },
@@ -286,8 +259,7 @@ describe('ErrorBoundary', (
       // This is a simplified example
     });
 
-    test('includes component stack in error report', (
-) => {
+    test('includes component stack in error report', () => {
       render(
         <ErrorBoundary context="TestBoundary">
           <div>
@@ -303,10 +275,8 @@ describe('ErrorBoundary', (
     });
   });
 
-  describe('different error types', (
-) => {
-    test('handles JavaScript errors', (
-) => {
+  describe('different error types', () => {
+    test('handles JavaScript errors', () => {
       render(
         <ErrorBoundary>
           <ThrowError
@@ -319,10 +289,8 @@ describe('ErrorBoundary', (
       expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
     });
 
-    test('handles React errors', (
-) => {
-      const ReactError: React.FC = (
-) => {
+    test('handles React errors', () => {
+      const ReactError: React.FC = () => {
         const [, setState] = React.useState();
         // Force a React error
         setState({} as any);
@@ -338,8 +306,7 @@ describe('ErrorBoundary', (
       expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
     });
 
-    test('does not catch async errors in useEffect', (
-) => {
+    test('does not catch async errors in useEffect', () => {
       // Error boundaries do not catch async errors, so this should not trigger the boundary
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation();
 
@@ -356,10 +323,8 @@ describe('ErrorBoundary', (
     });
   });
 
-  describe('multiple error boundaries', (
-) => {
-    test('nested error boundaries catch errors at appropriate level', (
-) => {
+  describe('multiple error boundaries', () => {
+    test('nested error boundaries catch errors at appropriate level', () => {
       render(
         <ErrorBoundary context="Outer">
           <div>
@@ -380,10 +345,8 @@ describe('ErrorBoundary', (
     });
   });
 
-  describe('accessibility', (
-) => {
-    test('error UI is accessible', (
-) => {
+  describe('accessibility', () => {
+    test('error UI is accessible', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
@@ -398,8 +361,7 @@ describe('ErrorBoundary', (
       expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
     });
 
-    test('error message is announced to screen readers', (
-) => {
+    test('error message is announced to screen readers', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
@@ -414,10 +376,8 @@ describe('ErrorBoundary', (
     });
   });
 
-  describe('error boundary lifecycle', (
-) => {
-    test('componentDidCatch is called when error occurs', (
-) => {
+  describe('error boundary lifecycle', () => {
+    test('componentDidCatch is called when error occurs', () => {
       // This would require access to the component instance
       // In practice, you'd test the side effects (like error reporting)
       render(
@@ -429,8 +389,7 @@ describe('ErrorBoundary', (
       expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
     });
 
-    test('getDerivedStateFromError sets error state', (
-) => {
+    test('getDerivedStateFromError sets error state', () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />

@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 // Vitest globals are available globally, no need to import
 /**
  * AccessibilityTester Component Tests
@@ -22,92 +22,70 @@ const mockUseAccessibility = {
   updatePreferences: jest.fn(),
 };
 
-jest.mock('../hooks/useAccessibility', (
-) => ({
-  useAccessibility: (
-) => mockUseAccessibility,
-  useScreenReader: (
-) => ({
+jest.mock('../hooks/useAccessibility', () => ({
+  useAccessibility: () => mockUseAccessibility,
+  useScreenReader: () => ({
     announce: jest.fn(),
     announceError: jest.fn(),
     announceSuccess: jest.fn(),
   }),
-  useFocusManagement: (
-) => ({
-    trapFocus: jest.fn((
-) => (
-) => {}),
+  useFocusManagement: () => ({
+    trapFocus: jest.fn(() => () => {}),
     clearTrap: jest.fn(),
   }),
-  useAccessibleTooltip: (
-) => ({
+  useAccessibleTooltip: () => ({
     addTooltip: jest.fn(),
     removeAllTooltips: jest.fn(),
   }),
-  useMobileAccessibility: (
-) => ({
+  useMobileAccessibility: () => ({
     isMobileScreenReaderActive: false,
-    getMobileAccessibilityProps: jest.fn((
-) => ({})),
+    getMobileAccessibilityProps: jest.fn(() => ({})),
     touchDevice: false,
     hasHover: true,
   }),
-  useHighContrast: (
-) => ({
+  useHighContrast: () => ({
     isHighContrastActive: false,
-    getHighContrastStyles: jest.fn((
-) => ({})),
+    getHighContrastStyles: jest.fn(() => ({})),
   }),
-  useReducedMotion: (
-) => ({
+  useReducedMotion: () => ({
     shouldReduceMotion: false,
-    getAnimationProps: jest.fn((
-) => ({})),
+    getAnimationProps: jest.fn(() => ({})),
   }),
-  useColorBlindFriendly: (
-) => ({
+  useColorBlindFriendly: () => ({
     getColorBlindFriendlyColor: jest.fn(color => color),
   }),
-  useKeyboardNavigation: (
-) => ({
+  useKeyboardNavigation: () => ({
     handleKeyboardNavigation: jest.fn(),
   }),
 }));
 
-describe('AccessibilityTester', (
-) => {
+describe('AccessibilityTester', () => {
   const defaultProps = {
     isVisible: true,
     onClose: jest.fn(),
   };
 
-  beforeEach((
-) => {
+  beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('Rendering', (
-) => {
-    it('renders when visible', (
-) => {
+  describe('Rendering', () => {
+    it('renders when visible', () => {
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
       expect(screen.getByText('Accessibility Tester')).toBeInTheDocument();
       expect(screen.getByText('Test accessibility features')).toBeInTheDocument();
     });
 
-    it('does not render when not visible', (
-) => {
+    it('does not render when not visible', () => {
       renderWithProviders(<AccessibilityTester {...defaultProps} isVisible={false} />);
 
       expect(screen.queryByText('Accessibility Tester')).not.toBeInTheDocument();
     });
   });
 
-  describe('Contrast Testing', (
-) => {
-    it('runs color contrast tests', async (
-) => {
+  describe('Contrast Testing', () => {
+    it('runs color contrast tests', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
@@ -117,14 +95,12 @@ describe('AccessibilityTester', (
       });
       await user.click(contrastTestButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByText(/contrast test results/i)).toBeInTheDocument();
       });
     });
 
-    it('shows contrast ratios for different color combinations', async (
-) => {
+    it('shows contrast ratios for different color combinations', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
@@ -134,18 +110,15 @@ describe('AccessibilityTester', (
       });
       await user.click(contrastTestButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByText(/4.5:1/)).toBeInTheDocument(); // WCAG AA ratio
         expect(screen.getByText(/7:1/)).toBeInTheDocument(); // WCAG AAA ratio
       });
     });
   });
 
-  describe('Screen Reader Testing', (
-) => {
-    it('provides screen reader simulation', (
-) => {
+  describe('Screen Reader Testing', () => {
+    it('provides screen reader simulation', () => {
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
       expect(screen.getByText(/screen reader simulation/i)).toBeInTheDocument();
@@ -154,8 +127,7 @@ describe('AccessibilityTester', (
       ).toBeInTheDocument();
     });
 
-    it('tests reading order', async (
-) => {
+    it('tests reading order', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
@@ -169,10 +141,8 @@ describe('AccessibilityTester', (
     });
   });
 
-  describe('Keyboard Navigation Testing', (
-) => {
-    it('tests tab navigation', async (
-) => {
+  describe('Keyboard Navigation Testing', () => {
+    it('tests tab navigation', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
@@ -185,19 +155,18 @@ describe('AccessibilityTester', (
       expect(screen.getByText(/tab navigation results/i)).toBeInTheDocument();
     });
 
-    it('identifies focus traps', (
-) => {
+    it('identifies focus traps', () => {
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
-      const focusTrapTest = screen.getByRole('button', { name: /test focus traps/i });
+      const focusTrapTest = screen.getByRole('button', {
+        name: /test focus traps/i,
+      });
       expect(focusTrapTest).toBeInTheDocument();
     });
   });
 
-  describe('ARIA Compliance Testing', (
-) => {
-    it('validates ARIA labels and roles', async (
-) => {
+  describe('ARIA Compliance Testing', () => {
+    it('validates ARIA labels and roles', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
@@ -207,32 +176,27 @@ describe('AccessibilityTester', (
       });
       await user.click(ariaTestButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByText(/aria compliance results/i)).toBeInTheDocument();
       });
     });
 
-    it('checks for missing alt text', (
-) => {
+    it('checks for missing alt text', () => {
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
       expect(screen.getByText(/missing alt text check/i)).toBeInTheDocument();
     });
   });
 
-  describe('Accessibility Features', (
-) => {
-    it('traps focus within dialog', (
-) => {
+  describe('Accessibility Features', () => {
+    it('traps focus within dialog', () => {
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
       const dialog = screen.getByRole('dialog');
       expect(dialog).toHaveAttribute('aria-modal', 'true');
     });
 
-    it('closes on escape key', async (
-) => {
+    it('closes on escape key', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<AccessibilityTester {...defaultProps} />);

@@ -70,8 +70,7 @@ export const _performanceCore = {
 
   // Time a function execution
   timeFunction: async <T>(
-    fn: (
-) => T | Promise<T>,
+    fn: () => T | Promise<T>,
     label?: string
   ): Promise<{ result: T; duration: number }> => {
     const startTime = performance.now();
@@ -87,8 +86,7 @@ export const _performanceCore = {
 
   // Benchmark a function multiple times
   benchmark: async <T>(
-    fn: (
-) => T | Promise<T>,
+    fn: () => T | Promise<T>,
     options: {
       iterations?: number;
       warmup?: number;
@@ -120,16 +118,14 @@ export const _performanceCore = {
     }
 
     const validTimes = times.filter(t => t !== Infinity);
-    const totalTime = validTimes.reduce((sum, time
-) => sum + time, 0);
+    const totalTime = validTimes.reduce((sum, time) => sum + time, 0);
     const averageTime = totalTime / validTimes.length;
     const minTime = Math.min(...validTimes);
     const maxTime = Math.max(...validTimes);
 
     // Calculate standard deviation
     const variance =
-      validTimes.reduce((sum, time
-) => sum + Math.pow(time - averageTime, 2), 0) /
+      validTimes.reduce((sum, time) => sum + Math.pow(time - averageTime, 2), 0) /
       validTimes.length;
     const standardDeviation = Math.sqrt(variance);
 
@@ -163,8 +159,7 @@ export const _performanceCore = {
 export const _reactPerformance = {
   // Measure component render performance
   measureRender: async (
-    renderComponent: (
-) => void | Promise<void>,
+    renderComponent: () => void | Promise<void>,
     options: {
       rerenders?: number;
       label?: string;
@@ -178,10 +173,8 @@ export const _reactPerformance = {
     let rerenderCount = 0;
 
     // Measure initial mount
-    const mountResult = await performanceCore.timeFunction(async (
-) => {
-      await act(async (
-) => {
+    const mountResult = await performanceCore.timeFunction(async () => {
+      await act(async () => {
         await renderComponent();
       });
     }, `${label}-mount`);
@@ -190,10 +183,8 @@ export const _reactPerformance = {
     // Measure rerenders if specified
     if (rerenders > 0) {
       for (let i = 0; i < rerenders; i++) {
-        const updateResult = await performanceCore.timeFunction(async (
-) => {
-          await act(async (
-) => {
+        const updateResult = await performanceCore.timeFunction(async () => {
+          await act(async () => {
             await renderComponent();
           });
         }, `${label}-update-${i}`);
@@ -217,8 +208,7 @@ export const _reactPerformance = {
 
   // Test component performance under stress
   stressTest: async (
-    renderComponent: (
-) => void | Promise<void>,
+    renderComponent: () => void | Promise<void>,
     options: {
       iterations?: number;
       concurrency?: number;
@@ -240,9 +230,10 @@ export const _reactPerformance = {
     const violations: Array<{ iteration: number; time: number }> = [];
 
     const results = await performanceCore.benchmark(
-      async (
-) => {
-        const result = await reactPerformance.measureRender(renderComponent, { label });
+      async () => {
+        const result = await reactPerformance.measureRender(renderComponent, {
+          label,
+        });
         return result.renderTime;
       },
       { iterations, name: label }
@@ -250,8 +241,7 @@ export const _reactPerformance = {
 
     // Check for violations
     const entries = performance.getEntriesByType('measure');
-    entries.forEach((entry, index
-) => {
+    entries.forEach((entry, index) => {
       if (entry.duration > maxRenderTime) {
         violations.push({ iteration: index, time: entry.duration });
       }
@@ -285,8 +275,7 @@ export const _memoryTesting = {
   },
 
   // Compare two memory snapshots
-  compare: (before: MemorySnapshot, after: MemorySnapshot
-) => {
+  compare: (before: MemorySnapshot, after: MemorySnapshot) => {
     const usedDiff = after.usedJSHeapSize - before.usedJSHeapSize;
     const totalDiff = after.totalJSHeapSize - before.totalJSHeapSize;
     const timeDiff = after.timestamp - before.timestamp;
@@ -303,8 +292,7 @@ export const _memoryTesting = {
 
   // Test for memory leaks
   testMemoryLeak: async (
-    operation: (
-) => void | Promise<void>,
+    operation: () => void | Promise<void>,
     options: {
       iterations?: number;
       tolerance?: number; // percentage increase allowed
@@ -358,8 +346,7 @@ export const _memoryTesting = {
       const snapshots: MemorySnapshot[] = [];
       const startTime = Date.now();
 
-      const intervalId = setInterval((
-) => {
+      const intervalId = setInterval(() => {
         snapshots.push(memoryTesting.snapshot(`${label}-${snapshots.length}`));
 
         if (Date.now() - startTime >= duration) {
@@ -384,8 +371,7 @@ export const _bundlePerformance = {
     }>
   > => {
     return new Promise(resolve => {
-      window.addEventListener('load', (
-) => {
+      window.addEventListener('load', () => {
         const resources = performance.getEntriesByType(
           'resource'
         ) as PerformanceResourceTiming[];
@@ -424,11 +410,9 @@ export const _bundlePerformance = {
 
     return bundlePerformance.measureResourceLoading().then(resources => {
       const violations: string[] = [];
-      const totalSize = resources.reduce((sum, resource
-) => sum + resource.size, 0);
+      const totalSize = resources.reduce((sum, resource) => sum + resource.size, 0);
       const largestResource = resources.reduce(
-        (largest, resource
-) => (resource.size > largest.size ? resource : largest),
+        (largest, resource) => (resource.size > largest.size ? resource : largest),
         { name: '', size: 0 }
       );
 
@@ -469,8 +453,7 @@ export const _performanceAssertions = {
     actualTime: number,
     maxTime: number,
     componentName?: string
-  
-) => {
+  ) => {
     const message = componentName
       ? `${componentName} render time (${actualTime.toFixed(2)}ms) should be within ${maxTime}ms`
       : `Render time (${actualTime.toFixed(2)}ms) should be within ${maxTime}ms`;
@@ -481,8 +464,7 @@ export const _performanceAssertions = {
   // Assert no memory leaks
   expectNoMemoryLeak: (
     leakTest: Awaited<ReturnType<typeof memoryTesting.testMemoryLeak>>
-  
-) => {
+  ) => {
     expect(leakTest.hasLeak).toBe(false);
     if (leakTest.hasLeak) {
       console.warn(
@@ -499,8 +481,7 @@ export const _performanceAssertions = {
       minSuccessRate?: number;
       maxStandardDeviation?: number;
     }
-  
-) => {
+  ) => {
     const { maxAverageTime, minSuccessRate = 0.95, maxStandardDeviation } = criteria;
 
     if (maxAverageTime) {

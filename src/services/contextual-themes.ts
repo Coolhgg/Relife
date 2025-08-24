@@ -430,8 +430,7 @@ class ContextualThemesService {
       }
     }
 
-    return recommendations.sort((a, b
-) => b.confidence - a.confidence);
+    return recommendations.sort((a, b) => b.confidence - a.confidence);
   }
 
   private contextMatchesCondition(
@@ -681,8 +680,7 @@ class ContextualThemesService {
 
   addCustomRule(rule: SmartThemeRule): void {
     this.smartRules.push(rule);
-    this.smartRules.sort((a, b
-) => b.priority - a.priority);
+    this.smartRules.sort((a, b) => b.priority - a.priority);
   }
 
   removeCustomRule(ruleId: string): void {

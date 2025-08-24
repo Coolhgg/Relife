@@ -3,8 +3,7 @@ import { ErrorHandler } from '../error-handler';
 import { testUtils } from '../../test-setup';
 
 // Mock Sentry
-jest.mock('@sentry/browser', (
-) => ({
+jest.mock('@sentry/browser', () => ({
   captureException: jest.fn(),
   captureMessage: jest.fn(),
   withScope: jest.fn(callback =>
@@ -17,16 +16,13 @@ jest.mock('@sentry/browser', (
 }));
 
 // Mock PostHog
-jest.mock('posthog-js', (
-) => ({
+jest.mock('posthog-js', () => ({
   capture: jest.fn(),
   identify: jest.fn(),
 }));
 
-describe('ErrorHandler', (
-) => {
-  beforeEach((
-) => {
+describe('ErrorHandler', () => {
+  beforeEach(() => {
     testUtils.clearAllMocks();
     jest.clearAllMocks();
 
@@ -38,15 +34,12 @@ describe('ErrorHandler', (
     jest.spyOn(console, 'warn').mockImplementation();
   });
 
-  afterEach((
-) => {
+  afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  describe('error handling', (
-) => {
-    test('handles basic error with context', (
-) => {
+  describe('error handling', () => {
+    test('handles basic error with context', () => {
       const error = new Error('Test error');
       const context = {
         component: 'TestComponent',
@@ -67,8 +60,7 @@ describe('ErrorHandler', (
       );
     });
 
-    test('generates unique error IDs', (
-) => {
+    test('generates unique error IDs', () => {
       const error1 = new Error('Error 1');
       const error2 = new Error('Error 2');
 
@@ -78,8 +70,7 @@ describe('ErrorHandler', (
       expect(id1).not.toBe(id2);
     });
 
-    test('includes stack trace in error details', (
-) => {
+    test('includes stack trace in error details', () => {
       const error = new Error('Test error');
       error.stack = 'Error: Test error\n    at test.js:10:5';
 
@@ -93,8 +84,7 @@ describe('ErrorHandler', (
       );
     });
 
-    test('handles errors without stack traces', (
-) => {
+    test('handles errors without stack traces', () => {
       const error = new Error('Test error');
       delete error.stack;
 
@@ -110,10 +100,8 @@ describe('ErrorHandler', (
     });
   });
 
-  describe('error severity classification', (
-) => {
-    test('classifies critical errors correctly', (
-) => {
+  describe('error severity classification', () => {
+    test('classifies critical errors correctly', () => {
       const criticalError = new Error('Cannot access critical resource');
 
       const errorId = ErrorHandler.handleError(criticalError, {
@@ -129,8 +117,7 @@ describe('ErrorHandler', (
       );
     });
 
-    test('auto-detects severity from error type', (
-) => {
+    test('auto-detects severity from error type', () => {
       const networkError = new Error('Network request failed');
       (networkError as any).name = 'NetworkError';
 
@@ -144,8 +131,7 @@ describe('ErrorHandler', (
       );
     });
 
-    test('defaults to medium severity', (
-) => {
+    test('defaults to medium severity', () => {
       const error = new Error('Unknown error');
 
       ErrorHandler.handleError(error);
@@ -159,10 +145,8 @@ describe('ErrorHandler', (
     });
   });
 
-  describe('error storage and retrieval', (
-) => {
-    test('stores error in localStorage', (
-) => {
+  describe('error storage and retrieval', () => {
+    test('stores error in localStorage', () => {
       const error = new Error('Test error');
 
       const errorId = ErrorHandler.handleError(error, {
@@ -180,8 +164,7 @@ describe('ErrorHandler', (
       );
     });
 
-    test('retrieves stored errors by ID', (
-) => {
+    test('retrieves stored errors by ID', () => {
       const error = new Error('Retrievable error');
       const errorId = ErrorHandler.handleError(error);
 
@@ -195,14 +178,12 @@ describe('ErrorHandler', (
       );
     });
 
-    test('returns null for non-existent error ID', (
-) => {
+    test('returns null for non-existent error ID', () => {
       const retrievedError = ErrorHandler.getError('non-existent-id');
       expect(retrievedError).toBeNull();
     });
 
-    test('retrieves all errors', (
-) => {
+    test('retrieves all errors', () => {
       ErrorHandler.handleError(new Error('Error 1'));
       ErrorHandler.handleError(new Error('Error 2'));
       ErrorHandler.handleError(new Error('Error 3'));
@@ -211,8 +192,7 @@ describe('ErrorHandler', (
       expect(allErrors).toHaveLength(3);
     });
 
-    test('limits stored errors to maximum count', (
-) => {
+    test('limits stored errors to maximum count', () => {
       // Generate more errors than the limit (assuming limit is 100)
       for (let i = 0; i < 105; i++) {
         ErrorHandler.handleError(new Error(`Error ${i}`));
@@ -226,10 +206,8 @@ describe('ErrorHandler', (
     });
   });
 
-  describe('external service integration', (
-) => {
-    test('reports to Sentry with correct data', (
-) => {
+  describe('external service integration', () => {
+    test('reports to Sentry with correct data', () => {
       const { captureException, withScope } = require('@sentry/browser');
 
       const error = new Error('Sentry test error');
@@ -245,8 +223,7 @@ describe('ErrorHandler', (
       expect(captureException).toHaveBeenCalledWith(error);
     });
 
-    test('sets Sentry scope with context data', (
-) => {
+    test('sets Sentry scope with context data', () => {
       const { withScope } = require('@sentry/browser');
 
       const error = new Error('Context test error');
@@ -273,8 +250,7 @@ describe('ErrorHandler', (
       expect(mockScope.setLevel).toHaveBeenCalledWith('error');
     });
 
-    test('reports to PostHog analytics', (
-) => {
+    test('reports to PostHog analytics', () => {
       const posthog = require('posthog-js');
 
       const error = new Error('Analytics test error');
@@ -293,10 +269,8 @@ describe('ErrorHandler', (
     });
   });
 
-  describe('error categorization', (
-) => {
-    test('categorizes network errors', (
-) => {
+  describe('error categorization', () => {
+    test('categorizes network errors', () => {
       const networkError = new Error('Failed to fetch');
       (networkError as any).name = 'NetworkError';
 
@@ -310,8 +284,7 @@ describe('ErrorHandler', (
       );
     });
 
-    test('categorizes validation errors', (
-) => {
+    test('categorizes validation errors', () => {
       const validationError = new Error('Invalid input');
       (validationError as any).name = 'ValidationError';
 
@@ -325,8 +298,7 @@ describe('ErrorHandler', (
       );
     });
 
-    test('categorizes authentication errors', (
-) => {
+    test('categorizes authentication errors', () => {
       const authError = new Error('Unauthorized access');
       (authError as any).name = 'AuthenticationError';
 
@@ -340,8 +312,7 @@ describe('ErrorHandler', (
       );
     });
 
-    test('defaults to general category for unknown errors', (
-) => {
+    test('defaults to general category for unknown errors', () => {
       const unknownError = new Error('Unknown error type');
 
       ErrorHandler.handleError(unknownError);
@@ -355,10 +326,8 @@ describe('ErrorHandler', (
     });
   });
 
-  describe('error context enhancement', (
-) => {
-    test('includes browser information', (
-) => {
+  describe('error context enhancement', () => {
+    test('includes browser information', () => {
       const error = new Error('Browser context test');
 
       ErrorHandler.handleError(error);
@@ -375,8 +344,7 @@ describe('ErrorHandler', (
       );
     });
 
-    test('includes performance context when available', (
-) => {
+    test('includes performance context when available', () => {
       // Mock performance.memory
       (performance as any).memory = {
         usedJSHeapSize: 10000000,
@@ -397,15 +365,13 @@ describe('ErrorHandler', (
       );
     });
 
-    test('handles missing performance API gracefully', (
-) => {
+    test('handles missing performance API gracefully', () => {
       const originalMemory = (performance as any).memory;
       delete (performance as any).memory;
 
       const error = new Error('No performance API test');
 
-      expect((
-) => {
+      expect(() => {
         ErrorHandler.handleError(error);
       }).not.toThrow();
 
@@ -414,10 +380,8 @@ describe('ErrorHandler', (
     });
   });
 
-  describe('error filtering and sampling', (
-) => {
-    test('filters out ignored error types', (
-) => {
+  describe('error filtering and sampling', () => {
+    test('filters out ignored error types', () => {
       const ignoredError = new Error('Script error.');
 
       const errorId = ErrorHandler.handleError(ignoredError);
@@ -426,12 +390,10 @@ describe('ErrorHandler', (
       expect(console.error).not.toHaveBeenCalled();
     });
 
-    test('applies sampling rate to reduce noise', (
-) => {
+    test('applies sampling rate to reduce noise', () => {
       // Mock Math.random to control sampling
       const originalRandom = Math.random;
-      Math.random = jest.fn((
-) => 0.95); // Above default sampling threshold
+      Math.random = jest.fn(() => 0.95); // Above default sampling threshold
 
       const error = new Error('Sampled error');
 
@@ -443,11 +405,9 @@ describe('ErrorHandler', (
       Math.random = originalRandom;
     });
 
-    test('always processes critical errors regardless of sampling', (
-) => {
+    test('always processes critical errors regardless of sampling', () => {
       const originalRandom = Math.random;
-      Math.random = jest.fn((
-) => 0.95);
+      Math.random = jest.fn(() => 0.95);
 
       const criticalError = new Error('Critical error');
 
@@ -461,10 +421,8 @@ describe('ErrorHandler', (
     });
   });
 
-  describe('error recovery suggestions', (
-) => {
-    test('provides recovery suggestions for network errors', (
-) => {
+  describe('error recovery suggestions', () => {
+    test('provides recovery suggestions for network errors', () => {
       const networkError = new Error('Network error');
       (networkError as any).name = 'NetworkError';
 
@@ -481,8 +439,7 @@ describe('ErrorHandler', (
       );
     });
 
-    test('provides suggestions for storage errors', (
-) => {
+    test('provides suggestions for storage errors', () => {
       const storageError = new Error('QuotaExceededError');
       (storageError as any).name = 'QuotaExceededError';
 
@@ -500,10 +457,8 @@ describe('ErrorHandler', (
     });
   });
 
-  describe('error statistics and analytics', (
-) => {
-    test('tracks error frequency by type', (
-) => {
+  describe('error statistics and analytics', () => {
+    test('tracks error frequency by type', () => {
       ErrorHandler.handleError(new Error('Type A error'));
       ErrorHandler.handleError(new Error('Type A error'));
       ErrorHandler.handleError(new Error('Type B error'));
@@ -517,8 +472,7 @@ describe('ErrorHandler', (
       );
     });
 
-    test('tracks error frequency by component', (
-) => {
+    test('tracks error frequency by component', () => {
       ErrorHandler.handleError(new Error('Error 1'), { component: 'ComponentA' });
       ErrorHandler.handleError(new Error('Error 2'), { component: 'ComponentA' });
       ErrorHandler.handleError(new Error('Error 3'), { component: 'ComponentB' });
@@ -531,8 +485,7 @@ describe('ErrorHandler', (
       });
     });
 
-    test('calculates error rate over time', (
-) => {
+    test('calculates error rate over time', () => {
       const now = Date.now();
       const oneHourAgo = now - 60 * 60 * 1000;
 
@@ -553,10 +506,8 @@ describe('ErrorHandler', (
     });
   });
 
-  describe('error cleanup and maintenance', (
-) => {
-    test('clears old errors beyond retention period', (
-) => {
+  describe('error cleanup and maintenance', () => {
+    test('clears old errors beyond retention period', () => {
       const oldDate = Date.now() - 8 * 24 * 60 * 60 * 1000; // 8 days ago
 
       // Mock Date.now for old error
@@ -578,8 +529,7 @@ describe('ErrorHandler', (
       expect(allErrors[0].message).toBe('Recent error');
     });
 
-    test('clears all errors on demand', (
-) => {
+    test('clears all errors on demand', () => {
       ErrorHandler.handleError(new Error('Error 1'));
       ErrorHandler.handleError(new Error('Error 2'));
 
@@ -590,10 +540,8 @@ describe('ErrorHandler', (
     });
   });
 
-  describe('error export and debugging', (
-) => {
-    test('exports error data for debugging', (
-) => {
+  describe('error export and debugging', () => {
+    test('exports error data for debugging', () => {
       ErrorHandler.handleError(new Error('Export test error'), {
         component: 'TestComponent',
         userId: 'test-user',
@@ -616,8 +564,7 @@ describe('ErrorHandler', (
       );
     });
 
-    test('includes error statistics in export', (
-) => {
+    test('includes error statistics in export', () => {
       ErrorHandler.handleError(new Error('Stat error 1'), { component: 'A' });
       ErrorHandler.handleError(new Error('Stat error 2'), { component: 'A' });
 

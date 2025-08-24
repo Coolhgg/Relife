@@ -302,8 +302,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
   const toggleDay = (dayId: number
 ) => {
     setFormData((prev: any
-) => { // auto: implicit any
-      const newDays = prev.days.includes(dayId)
+) => { const newDays = prev.days.includes(dayId)
         ? prev.days.filter((d: any
 ) => d !== dayId)
         : [...prev.days, dayId].sort();
@@ -574,8 +573,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               type="time"
               value={formData.time}
               onChange={(e: any
-) => { // auto: implicit any
-                const newTime = e.target.value;
+) => { const newTime = e.target.value;
                 setFormData((prev: any
 ) => ({ ...prev, time: newTime }));
                 announceFieldChange(
@@ -595,8 +593,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                 }
               }}
               onKeyDown={(e: any
-) => { // auto: implicit any
-                if (e.key === 'F1') {
+) => { if (e.key === 'F1') {
                   e.preventDefault();
                   announceFieldDescription(
                     'Alarm time',
@@ -640,8 +637,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               type="text"
               value={formData.label}
               onChange={(e: any
-) => { // auto: implicit any
-                const newLabel = e.target.value;
+) => { const newLabel = e.target.value;
                 setFormData((prev: any
 ) => ({ ...prev, label: newLabel }));
                 announceFieldChange(
@@ -663,8 +659,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                 }
               }}
               onKeyDown={(e: any
-) => { // auto: implicit any
-                if (e.key === 'F1') {
+) => { if (e.key === 'F1') {
                   e.preventDefault();
                   announceFieldDescription(
                     'Alarm label',
@@ -721,14 +716,12 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   onClick={(
 ) => toggleDay(day.id)}
                   onKeyDown={(e: any
-) => { // auto: implicit any
-                    if (e.key === 'Enter' || e.key === ' ') {
+) => { if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
                       toggleDay(day.id);
                     } else if (e.key === 'F1') {
                       e.preventDefault();
-                      const selectedDays = DAYS_OF_WEEK.filter(d =>
-                        formData.days.includes(d.id)
+                      const selectedDays = DAYS_OF_WEEK.filter(d => formData.days.includes(d.id)
                       )
                         .map(d => d.full)
                         .join(', ');
@@ -810,8 +803,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   onClick={(
 ) => handleVoiceMoodSelect(mood.id)}
                   onKeyDown={(e: any
-) => { // auto: implicit any
-                    if (e.key === 'Enter' || e.key === ' ') {
+) => { if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
                       handleVoiceMoodSelect(mood.id);
                     } else if (e.key === 'F1') {
@@ -1042,8 +1034,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                             formData.nuclearChallenges?.includes(challenge.id) || false
                           }
                           onChange={(e: any
-) => { // auto: implicit any
-                            const challenges = formData.nuclearChallenges || [];
+) => { const challenges = formData.nuclearChallenges || [];
                             if (e.target.checked) {
                               setFormData((prev: any
 ) => ({ 
@@ -1364,9 +1355,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   <select
                     id="snooze-interval"
                     value={formData.snoozeInterval}
-                    onChange={(e: any
-) => 
-                      setFormData((prev: any
+                    onChange={(e: any) => setFormData((prev: any
 ) => ({ 
                         ...prev,
                         snoozeInterval: parseInt(e.target.value),
@@ -1396,9 +1385,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   <select
                     id="max-snoozes"
                     value={formData.maxSnoozes}
-                    onChange={(e: any
-) => 
-                      setFormData((prev: any
+                    onChange={(e: any) => setFormData((prev: any
 ) => ({ 
                         ...prev,
                         maxSnoozes: parseInt(e.target.value),
@@ -1448,8 +1435,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
         <UpgradePrompt
           feature="nuclear_mode"
           onUpgrade={(tier: any
-) => { // auto: implicit any
-            setShowNuclearModeUpgrade(false);
+) => { setShowNuclearModeUpgrade(false);
             // In a real app, redirect to upgrade flow
             console.log(`Upgrading to ${tier} for Nuclear Mode`);
           }}

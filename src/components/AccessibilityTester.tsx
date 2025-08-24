@@ -230,7 +230,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.highContrastMode}
                     onChange={(
-                      e: any // auto: implicit any
+                      e: any
                     
 ) => handlePreferenceChange('highContrastMode', e.target.checked)}
                     {...getMobileAccessibilityProps('input')}
@@ -243,7 +243,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.reducedMotion}
                     onChange={(
-                      e: any // auto: implicit any
+                      e: any
                     
 ) => handlePreferenceChange('reducedMotion', e.target.checked)}
                     {...getMobileAccessibilityProps('input')}
@@ -256,7 +256,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.colorBlindFriendly}
                     onChange={(
-                      e: any // auto: implicit any
+                      e: any
                     
 ) => handlePreferenceChange('colorBlindFriendly', e.target.checked)}
                     {...getMobileAccessibilityProps('input')}
@@ -272,10 +272,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     id="font-size"
                     value={preferences.fontSize}
                     onChange={(
-                      e: any // auto: implicit any
-                    
-) =>
-                      handlePreferenceChange(
+                      e: any) => handlePreferenceChange(
                         'fontSize',
                         e.target.value as typeof preferences.fontSize
                       )
@@ -299,7 +296,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.largerTouchTargets}
                     onChange={(
-                      e: any // auto: implicit any
+                      e: any
                     
 ) => handlePreferenceChange('largerTouchTargets', e.target.checked)}
                     {...getMobileAccessibilityProps('input')}
@@ -312,7 +309,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.hapticFeedback}
                     onChange={(
-                      e: any // auto: implicit any
+                      e: any
                     
 ) => handlePreferenceChange('hapticFeedback', e.target.checked)}
                     {...getMobileAccessibilityProps('input')}
@@ -325,7 +322,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.keyboardNavigation}
                     onChange={(
-                      e: any // auto: implicit any
+                      e: any
                     
 ) => handlePreferenceChange('keyboardNavigation', e.target.checked)}
                     {...getMobileAccessibilityProps('input')}
@@ -338,10 +335,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.screenReaderOptimized}
                     onChange={(
-                      e: any // auto: implicit any
-                    
-) =>
-                      handlePreferenceChange('screenReaderOptimized', e.target.checked)
+                      e: any) => handlePreferenceChange('screenReaderOptimized', e.target.checked)
                     }
                     {...getMobileAccessibilityProps('input')}
                   />

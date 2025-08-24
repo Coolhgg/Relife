@@ -532,7 +532,7 @@ export function BetaTestingProgram() {
                           {tester.name
                             .split(' ')
                             .map((n: any
-) => n // auto: implicit any[0])
+) => n[0])
                             .join('')}
                         </span>
                       </div>
@@ -648,9 +648,7 @@ export function BetaTestingProgram() {
                   id="participants"
                   type="number"
                   value={newProgram.targetParticipants}
-                  onChange={(e: any
-) => 
-                    setNewProgram({
+                  onChange={(e: any) => setNewProgram({
                       ...newProgram,
                       targetParticipants: Number(e.target.value),
                     })
@@ -665,9 +663,7 @@ export function BetaTestingProgram() {
               <Textarea
                 id="description"
                 value={newProgram.description}
-                onChange={(e: any
-) => 
-                  setNewProgram({ ...newProgram, description: e.target.value })
+                onChange={(e: any) => setNewProgram({ ...newProgram, description: e.target.value })
                 }
                 className="mt-1"
                 rows={3}
@@ -681,9 +677,7 @@ export function BetaTestingProgram() {
                   id="startDate"
                   type="date"
                   value={newProgram.startDate}
-                  onChange={(e: any
-) => 
-                    setNewProgram({ ...newProgram, startDate: e.target.value })
+                  onChange={(e: any) => setNewProgram({ ...newProgram, startDate: e.target.value })
                   }
                   className="mt-1"
                 />
@@ -694,9 +688,7 @@ export function BetaTestingProgram() {
                   id="endDate"
                   type="date"
                   value={newProgram.endDate}
-                  onChange={(e: any
-) => 
-                    setNewProgram({ ...newProgram, endDate: e.target.value })
+                  onChange={(e: any) => setNewProgram({ ...newProgram, endDate: e.target.value })
                   }
                   className="mt-1"
                 />

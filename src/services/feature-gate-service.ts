@@ -421,8 +421,7 @@ class FeatureGateService {
 
     // Schedule removal
     setTimeout(
-      (
-) => {
+      () => {
         this.accessCache.delete(cacheKey);
       },
       durationMinutes * 60 * 1000

@@ -204,8 +204,7 @@ class RealtimeService {
       const wsUrl = process.env.REACT_APP_WEBSOCKET_URL || 'ws://localhost:8080';
       this.websocket = new WebSocket(`${wsUrl}?userId=${user.id}`);
 
-      this.websocket.onopen = (
-) => {
+      this.websocket.onopen = () => {
         this.isConnected = true;
         this.reconnectAttempt = 0;
         console.info('WebSocket connected');
@@ -223,8 +222,7 @@ class RealtimeService {
         }
       };
 
-      this.websocket.onclose = (
-) => {
+      this.websocket.onclose = () => {
         this.isConnected = false;
         console.warn('WebSocket disconnected');
         this.stopHeartbeat();
@@ -321,17 +319,14 @@ class RealtimeService {
       // Track presence using Supabase real-time
       const presenceChannel = supabase
         .channel('presence-tracking')
-        .on('presence', { event: 'sync' }, (
-) => {
+        .on('presence', { event: 'sync' }, () => {
           const presenceState = presenceChannel.presenceState();
           this.emit('presence_updated', presenceState);
         })
-        .on('presence', { event: 'join' }, ({ key, newPresences }
-) => {
+        .on('presence', { event: 'join' }, ({ key, newPresences }) => {
           this.emit('user_joined', { key, newPresences });
         })
-        .on('presence', { event: 'leave' }, ({ key, leftPresences }
-) => {
+        .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
           this.emit('user_left', { key, leftPresences });
         })
         .subscribe(async status => {
@@ -343,8 +338,7 @@ class RealtimeService {
       this.subscriptions.set('presence', presenceChannel);
 
       // Update presence periodically
-      setInterval((
-) => {
+      setInterval(() => {
         if (this.presenceData) {
           this.presenceData.lastSeen = new Date();
           presenceChannel.track(this.presenceData);
@@ -352,8 +346,7 @@ class RealtimeService {
       }, 30000); // Every 30 seconds
 
       // Handle page visibility changes
-      document.addEventListener('visibilitychange', (
-) => {
+      document.addEventListener('visibilitychange', () => {
         if (this.presenceData) {
           this.presenceData.status = document.hidden ? 'away' : 'online';
           this.presenceData.lastSeen = new Date();
@@ -445,7 +438,9 @@ class RealtimeService {
       };
 
       this.websocket.send(JSON.stringify(message));
-      this.performanceMonitor.trackCustomMetric('websocket_message_sent', 1, { type });
+      this.performanceMonitor.trackCustomMetric('websocket_message_sent', 1, {
+        type,
+      });
     } catch (error) {
       console.error('Failed to send WebSocket message:', error);
     }
@@ -478,8 +473,7 @@ class RealtimeService {
       });
 
       // Handle notification clicks
-      notificationInstance.onclick = (
-) => {
+      notificationInstance.onclick = () => {
         window.focus();
         notificationInstance.close();
         this.emit('notification_clicked', notification);
@@ -531,8 +525,7 @@ class RealtimeService {
    * Start heartbeat to keep connection alive
    */
   private startHeartbeat(): void {
-    this.heartbeatTimer = setInterval((
-) => {
+    this.heartbeatTimer = setInterval(() => {
       this.sendMessage('heartbeat', { timestamp: Date.now() });
     }, this.config.heartbeatInterval);
   }
@@ -563,8 +556,7 @@ class RealtimeService {
     );
 
     setTimeout(
-      (
-) => {
+      () => {
         if (!this.isConnected) {
           this.initializeWebSocket(user);
         }
@@ -632,8 +624,7 @@ class RealtimeService {
         .select('id')
         .eq('user_id', userId);
 
-      return alarms?.map((a: any
-) => a.id).join(',') || '';
+      return alarms?.map((a: any) => a.id).join(',') || '';
     } catch (error) {
       console.error('Failed to get user alarm IDs:', error);
       return '';

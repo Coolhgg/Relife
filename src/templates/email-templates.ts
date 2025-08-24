@@ -147,7 +147,11 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
       subject: 'Welcome to Relife - Your journey starts here 🌟',
       preheader: 'Get started with free productivity tools that actually work',
       variables: [
-        { key: 'first_name', defaultValue: 'there', description: 'User first name' },
+        {
+          key: 'first_name',
+          defaultValue: 'there',
+          description: 'User first name',
+        },
       ],
       ctaButton: {
         text: 'Get Started Free',
@@ -185,7 +189,11 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
       subject: 'Save 2 hours daily with these Relife shortcuts',
       preheader: 'Efficiency hacks that busy professionals swear by',
       variables: [
-        { key: 'first_name', defaultValue: 'there', description: 'User first name' },
+        {
+          key: 'first_name',
+          defaultValue: 'there',
+          description: 'User first name',
+        },
       ],
       ctaButton: {
         text: 'Try Shortcuts Now →',
@@ -217,7 +225,11 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
       subject: 'Unlock professional-grade productivity insights',
       preheader: 'Advanced analytics and customization for serious professionals',
       variables: [
-        { key: 'first_name', defaultValue: 'there', description: 'User first name' },
+        {
+          key: 'first_name',
+          defaultValue: 'there',
+          description: 'User first name',
+        },
       ],
       ctaButton: {
         text: 'Explore Advanced Features',
@@ -249,7 +261,11 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
       subject: "Transform your team's productivity with Relife Enterprise",
       preheader: 'Scalable solutions for high-performing teams and organizations',
       variables: [
-        { key: 'first_name', defaultValue: 'there', description: 'User first name' },
+        {
+          key: 'first_name',
+          defaultValue: 'there',
+          description: 'User first name',
+        },
       ],
       ctaButton: {
         text: 'Schedule Team Demo',
@@ -281,7 +297,11 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
       subject: '🎓 Your student discount is here + study life hacks',
       preheader: 'Get organized for the semester with 50% off',
       variables: [
-        { key: 'first_name', defaultValue: 'there', description: 'User first name' },
+        {
+          key: 'first_name',
+          defaultValue: 'there',
+          description: 'User first name',
+        },
       ],
       ctaButton: {
         text: 'Claim Student Discount',
@@ -313,7 +333,11 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
       subject: 'Why lifetime value beats monthly subscriptions',
       preheader: 'One payment, lifetime productivity - see the math',
       variables: [
-        { key: 'first_name', defaultValue: 'there', description: 'User first name' },
+        {
+          key: 'first_name',
+          defaultValue: 'there',
+          description: 'User first name',
+        },
       ],
       ctaButton: {
         text: 'See Lifetime Calculator',

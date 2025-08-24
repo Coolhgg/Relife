@@ -24,12 +24,9 @@ import { TimeoutHandle } from '../types/timers';
 
 interface AlarmListProps {
   alarms: Alarm[];
-  onToggleAlarm: (alarmId: string, enabled: boolean
-) => void;
-  onEditAlarm: (alarm: Alarm
-) => void;
-  onDeleteAlarm: (alarmId: string
-) => void;
+  onToggleAlarm: (alarmId: string, enabled: boolean) => void;
+  onEditAlarm: (alarm: Alarm) => void;
+  onDeleteAlarm: (alarmId: string) => void;
 }
 
 const AlarmList: React.FC<AlarmListProps> = ({
@@ -37,8 +34,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
   onToggleAlarm,
   onEditAlarm,
   onDeleteAlarm,
-}
-) => {
+}) => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [alarmOptimizations, setAlarmOptimizations] = useState<Map<string, any>>(
     new Map()
@@ -52,8 +48,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
     useScreenReaderAnnouncements();
   const { announceEnter } = useFocusAnnouncements('Alarm List');
 
-  const loadAlarmOptimizations = useCallback(async (
-) => {
+  const loadAlarmOptimizations = useCallback(async () => {
     if (!MLAlarmOptimizer.isMLEnabled()) return;
 
     const optimizations = new Map();
@@ -79,20 +74,17 @@ const AlarmList: React.FC<AlarmListProps> = ({
   }, [alarms, setAlarmOptimizations]);
 
   // Load advanced features status and optimizations
-  useEffect((
-) => {
+  useEffect(() => {
     loadAdvancedFeatureStatus();
     loadAlarmOptimizations();
   }, [alarms, loadAlarmOptimizations]);
 
   // Announce when entering the alarm list
-  useEffect((
-) => {
+  useEffect(() => {
     announceEnter(`Showing ${alarms.length} alarms`);
   }, [announceEnter, alarms.length]);
 
-  const loadAdvancedFeatureStatus = (
-) => {
+  const loadAdvancedFeatureStatus = () => {
     setAdvancedFeaturesEnabled({
       ml: MLAlarmOptimizer.isMLEnabled(),
       location: EnhancedLocationService.isLocationEnabled(),
@@ -101,8 +93,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
   };
 
   // Announce when alarm count changes
-  useEffect((
-) => {
+  useEffect(() => {
     const alarmCountMessage =
       alarms.length === 0
         ? 'No alarms configured'
@@ -111,8 +102,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
           : `${alarms.length} alarms configured`;
 
     // Only announce if this isn't the initial load
-    const timer = setTimeout((
-) => {
+    const timer = setTimeout(() => {
       announce({
         type: 'custom',
         message: alarmCountMessage,
@@ -120,16 +110,13 @@ const AlarmList: React.FC<AlarmListProps> = ({
       });
     }, 100);
 
-    return (
-) => clearTimeout(timer);
+    return () => clearTimeout(timer);
   }, [alarms.length, announce]);
 
-  const handleDeleteConfirm = (alarmId?: string
-) => {
+  const handleDeleteConfirm = (alarmId?: string) => {
     const idToDelete = alarmId || deleteConfirmId;
     if (idToDelete) {
-      const alarm = alarms.find((a: any
-) => a.id === idToDelete);
+      const alarm = alarms.find((a: any) => a.id === idToDelete);
       onDeleteAlarm(idToDelete);
       setDeleteConfirmId(null);
 
@@ -144,8 +131,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
     }
   };
 
-  const handleDeleteCancel = (
-) => {
+  const handleDeleteCancel = () => {
     setDeleteConfirmId(null);
     announce({
       type: 'custom',
@@ -154,11 +140,8 @@ const AlarmList: React.FC<AlarmListProps> = ({
     });
   };
 
-  const handleToggleAlarm = (alarmId: string, enabled: boolean
-) => {
-    
-    const alarm = alarms.find((a: any
-) => a.id === alarmId);
+  const handleToggleAlarm = (alarmId: string, enabled: boolean) => {
+    const alarm = alarms.find((a: any) => a.id === alarmId);
     onToggleAlarm(alarmId, enabled);
 
     // Announce toggle
@@ -171,8 +154,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
     }
   };
 
-  const handleEditAlarm = (alarm: Alarm
-) => {
+  const handleEditAlarm = (alarm: Alarm) => {
     onEditAlarm(alarm);
     announce({
       type: 'custom',
@@ -181,11 +163,8 @@ const AlarmList: React.FC<AlarmListProps> = ({
     });
   };
 
-  const handleDeleteRequest = (alarmId: string
-) => {
-    
-    const alarm = alarms.find((a: any
-) => a.id === alarmId);
+  const handleDeleteRequest = (alarmId: string) => {
+    const alarm = alarms.find((a: any) => a.id === alarmId);
     setDeleteConfirmId(alarmId);
 
     if (alarm) {
@@ -232,9 +211,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
       </h2>
 
       <ul className="space-y-3" role="list" aria-label="List of alarms">
-        {alarms.map((alarm: any
-) => {
-          // auto: implicit any
+        {alarms.map((alarm: any) => {
           const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
           return (
@@ -249,8 +226,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                   <div className="flex items-center gap-4">
                     {/* Toggle switch */}
                     <button
-                      onClick={(
-) => handleToggleAlarm(alarm.id, !alarm.enabled)}
+                      onClick={() => handleToggleAlarm(alarm.id, !alarm.enabled)}
                       className={`alarm-toggle ${
                         alarm.enabled
                           ? 'alarm-toggle-checked'
@@ -376,7 +352,8 @@ const AlarmList: React.FC<AlarmListProps> = ({
                                   {alarmOptimizations.get(alarm.id)?.adjustment > 0
                                     ? '+'
                                     : ''}
-                                  {alarmOptimizations.get(alarm.id)?.adjustment}min
+                                  {alarmOptimizations.get(alarm.id)?.adjustment}
+                                  min
                                 </span>
                               </div>
                             </div>
@@ -395,8 +372,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                     {/* Quick optimization button */}
                     {alarmOptimizations.has(alarm.id) && (
                       <button
-                        onClick={(
-) => {
+                        onClick={() => {
                           const optimization = alarmOptimizations.get(alarm.id);
                           if (optimization) {
                             // Apply the optimization
@@ -423,8 +399,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                     )}
 
                     <button
-                      onClick={(
-) => handleEditAlarm(alarm)}
+                      onClick={() => handleEditAlarm(alarm)}
                       className="alarm-button alarm-button-secondary p-2"
                       aria-label={`Edit alarm ${formatTime(alarm.time)} ${alarm.label}`}
                     >
@@ -432,8 +407,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                     </button>
 
                     <button
-                      onClick={(
-) => handleDeleteRequest(alarm.id)}
+                      onClick={() => handleDeleteRequest(alarm.id)}
                       className="alarm-button alarm-button-danger p-2"
                       aria-label={`Delete alarm ${formatTime(alarm.time)} ${alarm.label}`}
                     >
@@ -483,8 +457,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
       >
         <div className="text-center">
           <div className="text-sm text-gray-600 dark:text-gray-400">
-            {alarms.filter((a: any
-) => a.enabled).length} of {alarms.length} alarms
+            {alarms.filter((a: any) => a.enabled).length} of {alarms.length} alarms
             active
           </div>
         </div>

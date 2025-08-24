@@ -358,8 +358,7 @@ export class AlarmBattleIntegrationService {
 
       // Calculate rank
       const sortedParticipants = [...battle.participants].sort(
-        (a, b
-) => (b.score || 0) - (a.score || 0)
+        (a, b) => (b.score || 0) - (a.score || 0)
       );
       const rank = sortedParticipants.findIndex(p => p.userId === userId) + 1;
 

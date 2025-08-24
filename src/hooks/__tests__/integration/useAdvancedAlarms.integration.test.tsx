@@ -4,65 +4,52 @@ import React from 'react';
 import { useAdvancedAlarms } from '../../useAdvancedAlarms';
 
 // Mock dependencies
-vi.mock('../../../services/alarm', (
-) => ({
+vi.mock('../../../services/alarm', () => ({
   AlarmService: {
     loadAlarms: vi.fn(),
     createAlarm: vi.fn(),
   },
 }));
 
-vi.mock('../../../services/advanced-alarm-scheduler', (
-) => ({
+vi.mock('../../../services/advanced-alarm-scheduler', () => ({
   default: {
-    getInstance: (
-) => ({
+    getInstance: () => ({
       scheduleAlarm: vi.fn(),
     }),
   },
 }));
 
-vi.mock('../../../services/subscription-service', (
-) => ({
+vi.mock('../../../services/subscription-service', () => ({
   default: {
-    getInstance: (
-) => ({
+    getInstance: () => ({
       getFeatureAccess: vi.fn(),
       getUserTier: vi.fn(),
     }),
   },
 }));
 
-vi.mock('../../useAnalytics', (
-) => ({
-  useAnalytics: (
-) => ({
+vi.mock('../../useAnalytics', () => ({
+  useAnalytics: () => ({
     track: vi.fn(),
     trackPageView: vi.fn(),
   }),
 }));
 
 // Test wrapper component
-const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }
-) => {
+const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <div data-testid="test-wrapper">{children}</div>;
 };
 
-describe('useAdvancedAlarms Integration Tests', (
-) => {
-  describe('Setup and Teardown', (
-) => {
-    beforeEach((
-) => {
+describe('useAdvancedAlarms Integration Tests', () => {
+  describe('Setup and Teardown', () => {
+    beforeEach(() => {
       vi.clearAllMocks();
       localStorage.clear();
     });
   });
 
-  describe('Feature Access Integration', (
-) => {
-    it('should compile placeholder', (
-) => {
+  describe('Feature Access Integration', () => {
+    it('should compile placeholder', () => {
       expect(true).toBe(true);
     });
 
@@ -73,10 +60,8 @@ describe('useAdvancedAlarms Integration Tests', (
     it.todo('should block feature creation when limits exceeded');
   });
 
-  describe('Analytics Integration', (
-) => {
-    it('should compile placeholder', (
-) => {
+  describe('Analytics Integration', () => {
+    it('should compile placeholder', () => {
       expect(true).toBe(true);
     });
 
@@ -85,10 +70,8 @@ describe('useAdvancedAlarms Integration Tests', (
     it.todo('should track performance metrics for alarm operations');
   });
 
-  describe('Language Provider Integration', (
-) => {
-    it('should compile placeholder', (
-) => {
+  describe('Language Provider Integration', () => {
+    it('should compile placeholder', () => {
       expect(true).toBe(true);
     });
 
@@ -97,10 +80,8 @@ describe('useAdvancedAlarms Integration Tests', (
     it.todo('should handle RTL layouts for alarm scheduling interface');
   });
 
-  describe('Struggling Sam Context Integration', (
-) => {
-    it('should compile placeholder', (
-) => {
+  describe('Struggling Sam Context Integration', () => {
+    it('should compile placeholder', () => {
       expect(true).toBe(true);
     });
 
@@ -109,10 +90,8 @@ describe('useAdvancedAlarms Integration Tests', (
     it.todo('should update streak information when alarm is completed');
   });
 
-  describe('Location Triggers Integration', (
-) => {
-    it('should compile placeholder', (
-) => {
+  describe('Location Triggers Integration', () => {
+    it('should compile placeholder', () => {
       expect(true).toBe(true);
     });
 
@@ -121,10 +100,8 @@ describe('useAdvancedAlarms Integration Tests', (
     it.todo('should deny location features for non-pro users');
   });
 
-  describe('Cross-Provider Error Handling', (
-) => {
-    it('should compile placeholder', (
-) => {
+  describe('Cross-Provider Error Handling', () => {
+    it('should compile placeholder', () => {
       expect(true).toBe(true);
     });
 
@@ -132,10 +109,8 @@ describe('useAdvancedAlarms Integration Tests', (
     it.todo('should handle errors gracefully across all providers');
   });
 
-  describe('Performance with Multiple Providers', (
-) => {
-    it('should compile placeholder', (
-) => {
+  describe('Performance with Multiple Providers', () => {
+    it('should compile placeholder', () => {
       expect(true).toBe(true);
     });
 

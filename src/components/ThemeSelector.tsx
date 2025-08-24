@@ -2,8 +2,7 @@ import React from 'react';
 import { useThemeContext } from '../hooks/useCulturalTheme';
 import { useTranslation } from 'react-i18next';
 
-export const ThemeSelector: React.FC = (
-) => {
+export const ThemeSelector: React.FC = () => {
   const { t } = useTranslation(['settings']);
   const {
     theme: currentTheme,
@@ -21,8 +20,7 @@ export const ThemeSelector: React.FC = (
           <div
             key={theme.id}
             className={`theme-card ${currentTheme.id === theme.id ? 'selected' : ''}`}
-            onClick={(
-) => setTheme(theme)}
+            onClick={() => setTheme(theme)}
           >
             <div
               className="theme-preview"

@@ -431,8 +431,7 @@ export function generateDynamicTestData(context: UserContext): TestScenario[] {
 export function getEnabledCustomCategories(): Record<string, TestCategory> {
   const enabledCategories: Record<string, TestCategory> = {};
 
-  Object.entries(customTestCategories).forEach(([key, category]
-) => {
+  Object.entries(customTestCategories).forEach(([key, category]) => {
     const config = customCategoryConfig[key];
     if (config?.enabled) {
       enabledCategories[key] = category;
@@ -467,8 +466,7 @@ export function getAllCustomTests(isPremium: boolean = false): TestScenario[] {
   const enabledCategories = getEnabledCustomCategories();
   let allTests: TestScenario[] = [];
 
-  Object.entries(enabledCategories).forEach(([key, category]
-) => {
+  Object.entries(enabledCategories).forEach(([key, category]) => {
     const config = customCategoryConfig[key];
 
     // Check if user has access to premium categories
@@ -507,8 +505,7 @@ export function getCategoryStats(): Record<
 > {
   const stats: Record<string, { total: number; premium: number; free: number }> = {};
 
-  Object.entries(customTestCategories).forEach(([key, category]
-) => {
+  Object.entries(customTestCategories).forEach(([key, category]) => {
     const premiumTests = category.tests.filter(test =>
       test.userTypes?.includes('premium')
     ).length;

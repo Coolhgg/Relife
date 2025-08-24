@@ -783,7 +783,7 @@ export function SmartFeatures({
                   id="weather-enabled"
                   checked={settings.weatherEnabled}
                   onCheckedChange={(
-                    checked: any // auto: implicit any
+                    checked: any
                   
 ) => handleSettingChange('weatherEnabled', checked)}
                 />
@@ -800,7 +800,7 @@ export function SmartFeatures({
                   id="location-enabled"
                   checked={settings.locationEnabled}
                   onCheckedChange={(
-                    checked: any // auto: implicit any
+                    checked: any
                   
 ) => handleSettingChange('locationEnabled', checked)}
                 />
@@ -817,7 +817,7 @@ export function SmartFeatures({
                   id="fitness-enabled"
                   checked={settings.fitnessEnabled}
                   onCheckedChange={(
-                    checked: any // auto: implicit any
+                    checked: any
                   
 ) => handleSettingChange('fitnessEnabled', checked)}
                 />
@@ -834,7 +834,7 @@ export function SmartFeatures({
                   id="adaptive-difficulty"
                   checked={settings.adaptiveDifficulty}
                   onCheckedChange={(
-                    checked: any // auto: implicit any
+                    checked: any
                   
 ) => handleSettingChange('adaptiveDifficulty', checked)}
                 />
@@ -850,10 +850,7 @@ export function SmartFeatures({
                   type="number"
                   value={settings.smartWakeWindow}
                   onChange={(
-                    e: any // auto: implicit any
-                  
-) =>
-                    handleSettingChange(
+                    e: any) => handleSettingChange(
                       'smartWakeWindow',
                       parseInt(e.target.value) || 30
                     )

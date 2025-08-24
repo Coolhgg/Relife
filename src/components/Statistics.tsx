@@ -123,16 +123,14 @@ export function Statistics({ userId }: StatisticsProps) {
   const { overview, weeklyData, monthlyProgress, achievements, wakeTimeTrends } =
     MOCK_STATS;
 
-  const getStreakColor = (streak: number
-) => {
+  const getStreakColor = (streak: number) => {
     if (streak >= 20) return 'text-purple-500';
     if (streak >= 10) return 'text-orange-500';
     if (streak >= 5) return 'text-blue-500';
     return 'text-green-500';
   };
 
-  const getCompletionColor = (rate: number
-) => {
+  const getCompletionColor = (rate: number) => {
     if (rate >= 0.9) return 'text-green-500';
     if (rate >= 0.7) return 'text-yellow-500';
     return 'text-red-500';

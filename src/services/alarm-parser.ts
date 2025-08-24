@@ -243,8 +243,7 @@ export class AlarmParser {
     const nextTime = new Date(fromDate);
     nextTime.setHours(baseTime.getHours(), baseTime.getMinutes(), 0, 0);
 
-    const sortedDays = [...daysOfMonth].sort((a, b
-) => a - b);
+    const sortedDays = [...daysOfMonth].sort((a, b) => a - b);
 
     for (const day of sortedDays) {
       const testDate = new Date(

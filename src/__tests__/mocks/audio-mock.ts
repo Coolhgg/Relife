@@ -20,28 +20,17 @@ class MockAudio {
   readyState: number = 4; // HAVE_ENOUGH_DATA
 
   // Event handlers
-  onplay: ((this: HTMLAudioElement, ev: Event
-) => any) | null = null;
-  onpause: ((this: HTMLAudioElement, ev: Event
-) => any) | null = null;
-  onended: ((this: HTMLAudioElement, ev: Event
-) => any) | null = null;
-  onloadstart: ((this: HTMLAudioElement, ev: Event
-) => any) | null = null;
-  onloadeddata: ((this: HTMLAudioElement, ev: Event
-) => any) | null = null;
-  onloadedmetadata: ((this: HTMLAudioElement, ev: Event
-) => any) | null = null;
-  oncanplay: ((this: HTMLAudioElement, ev: Event
-) => any) | null = null;
-  oncanplaythrough: ((this: HTMLAudioElement, ev: Event
-) => any) | null = null;
-  onerror: ((this: HTMLAudioElement, ev: ErrorEvent
-) => any) | null = null;
-  ontimeupdate: ((this: HTMLAudioElement, ev: Event
-) => any) | null = null;
-  onvolumechange: ((this: HTMLAudioElement, ev: Event
-) => any) | null = null;
+  onplay: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
+  onpause: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
+  onended: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
+  onloadstart: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
+  onloadeddata: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
+  onloadedmetadata: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
+  oncanplay: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
+  oncanplaythrough: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
+  onerror: ((this: HTMLAudioElement, ev: ErrorEvent) => any) | null = null;
+  ontimeupdate: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
+  onvolumechange: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
 
   constructor(src?: string) {
     if (src) {
@@ -49,8 +38,7 @@ class MockAudio {
     }
 
     // Simulate loading
-    setTimeout((
-) => {
+    setTimeout(() => {
       this.dispatchEvent(new Event('loadstart'));
       this.dispatchEvent(new Event('loadedmetadata'));
       this.dispatchEvent(new Event('loadeddata'));

@@ -299,8 +299,7 @@ export function personalizeMessage(
 ): string {
   let message = template;
 
-  Object.entries(variables).forEach(([key, value]
-) => {
+  Object.entries(variables).forEach(([key, value]) => {
     const placeholder = `{${key}}`;
     message = message.replace(new RegExp(placeholder, 'g'), String(value));
   });

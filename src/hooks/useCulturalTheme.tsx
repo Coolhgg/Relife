@@ -16,10 +16,8 @@ interface UseCulturalThemeOptions {
 interface UseCulturalThemeReturn {
   currentTheme: CulturalTheme;
   availableThemes: CulturalTheme[];
-  setTheme: (theme: CulturalTheme | string
-) => void;
-  resetToLanguageTheme: (
-) => void;
+  setTheme: (theme: CulturalTheme | string) => void;
+  resetToLanguageTheme: () => void;
   isCustomTheme: boolean;
   themeId: string;
 }
@@ -53,8 +51,7 @@ export const useCulturalTheme = (
   const availableThemes = Object.values(REGIONAL_THEMES);
 
   // Load saved theme from storage
-  useEffect((
-) => {
+  useEffect(() => {
     try {
       const savedThemeId = localStorage.getItem(storageKey);
       if (savedThemeId && REGIONAL_THEMES[savedThemeId]) {
@@ -72,8 +69,7 @@ export const useCulturalTheme = (
   }, [storageKey, followLanguage, currentLanguage]);
 
   // Update language when it changes
-  useEffect((
-) => {
+  useEffect(() => {
     const newLanguage = getCurrentLanguage();
     if (newLanguage !== currentLanguage) {
       setCurrentLanguage(newLanguage);
@@ -85,8 +81,7 @@ export const useCulturalTheme = (
   }, [currentLanguage, followLanguage, customTheme]);
 
   // Apply theme to DOM
-  useEffect((
-) => {
+  useEffect(() => {
     if (autoApply) {
       applyTheme(currentTheme);
     }
@@ -94,8 +89,7 @@ export const useCulturalTheme = (
 
   // Set a new theme
   const setTheme = useCallback(
-    (theme: CulturalTheme | string
-) => {
+    (theme: CulturalTheme | string) => {
       const themeObj = typeof theme === 'string' ? REGIONAL_THEMES[theme] : theme;
 
       if (!themeObj) {
@@ -117,8 +111,7 @@ export const useCulturalTheme = (
   );
 
   // Reset to language-based theme
-  const resetToLanguageTheme = useCallback((
-) => {
+  const resetToLanguageTheme = useCallback(() => {
     setCustomTheme(null);
     setThemeId(currentLanguage);
 
@@ -145,12 +138,10 @@ export const useCulturalTheme = (
  */
 export interface CulturalThemeContextValue {
   theme: CulturalTheme;
-  setTheme: (theme: CulturalTheme | string
-) => void;
+  setTheme: (theme: CulturalTheme | string) => void;
   availableThemes: CulturalTheme[];
   isCustomTheme: boolean;
-  resetToLanguageTheme: (
-) => void;
+  resetToLanguageTheme: () => void;
 }
 
 import React, { createContext, useContext, ReactNode } from 'react';
@@ -165,8 +156,7 @@ interface CulturalThemeProviderProps {
 export const CulturalThemeProvider: React.FC<CulturalThemeProviderProps> = ({
   children,
   options = {},
-}
-) => {
+}) => {
   const themeData = useCulturalTheme(options);
 
   const contextValue: CulturalThemeContextValue = {
@@ -200,10 +190,8 @@ export const useThemeContext = (): CulturalThemeContextValue => {
  */
 export const withCulturalTheme = <P extends object>(
   Component: React.ComponentType<P & { theme: CulturalTheme }>
-
 ) => {
-  return React.forwardRef<any, P>((props, ref
-) => {
+  return React.forwardRef<any, P>((props, ref) => {
     const { theme } = useThemeContext();
     return <Component {...props} theme={theme} ref={ref} />;
   });
@@ -212,61 +200,53 @@ export const withCulturalTheme = <P extends object>(
 /**
  * Utility hook for getting theme-specific styles
  */
-export const useThemeStyles = (
-) => {
+export const useThemeStyles = () => {
   const { theme } = useThemeContext();
 
   const getColorStyle = useCallback(
-    (colorKey: keyof CulturalTheme['colors']
-) => {
+    (colorKey: keyof CulturalTheme['colors']) => {
       return { color: theme.colors[colorKey] };
     },
     [theme]
   );
 
   const getBackgroundStyle = useCallback(
-    (colorKey: keyof CulturalTheme['colors']
-) => {
+    (colorKey: keyof CulturalTheme['colors']) => {
       return { backgroundColor: theme.colors[colorKey] };
     },
     [theme]
   );
 
   const getBorderStyle = useCallback(
-    (colorKey: keyof CulturalTheme['colors'], width = '1px'
-) => {
+    (colorKey: keyof CulturalTheme['colors'], width = '1px') => {
       return { border: `${width} solid ${theme.colors[colorKey]}` };
     },
     [theme]
   );
 
   const getGradientStyle = useCallback(
-    (gradientKey: keyof CulturalTheme['gradients']
-) => {
+    (gradientKey: keyof CulturalTheme['gradients']) => {
       return { backgroundImage: theme.gradients[gradientKey] };
     },
     [theme]
   );
 
   const getShadowStyle = useCallback(
-    (shadowKey: keyof CulturalTheme['shadows']
-) => {
+    (shadowKey: keyof CulturalTheme['shadows']) => {
       return { boxShadow: theme.shadows[shadowKey] };
     },
     [theme]
   );
 
   const getFontStyle = useCallback(
-    (fontKey: keyof CulturalTheme['fonts']
-) => {
+    (fontKey: keyof CulturalTheme['fonts']) => {
       return { fontFamily: theme.fonts[fontKey] };
     },
     [theme]
   );
 
   const getBorderRadiusStyle = useCallback(
-    (radiusKey: keyof CulturalTheme['borderRadius']
-) => {
+    (radiusKey: keyof CulturalTheme['borderRadius']) => {
       return { borderRadius: theme.borderRadius[radiusKey] };
     },
     [theme]

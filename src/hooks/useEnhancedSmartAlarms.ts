@@ -9,16 +9,11 @@ export interface UseEnhancedSmartAlarmsResult {
   alarms: EnhancedSmartAlarm[];
   loading: boolean;
   error: string | null;
-  createAlarm: (alarmData: Partial<EnhancedSmartAlarm>
-) => Promise<boolean>;
-  updateAlarm: (id: string, updates: Partial<EnhancedSmartAlarm>
-) => Promise<boolean>;
-  deleteAlarm: (id: string
-) => Promise<boolean>;
-  recordFeedback: (alarmId: string, feedback: any
-) => Promise<boolean>;
-  refreshAlarms: (
-) => Promise<void>;
+  createAlarm: (alarmData: Partial<EnhancedSmartAlarm>) => Promise<boolean>;
+  updateAlarm: (id: string, updates: Partial<EnhancedSmartAlarm>) => Promise<boolean>;
+  deleteAlarm: (id: string) => Promise<boolean>;
+  recordFeedback: (alarmId: string, feedback: any) => Promise<boolean>;
+  refreshAlarms: () => Promise<void>;
 }
 
 export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
@@ -27,10 +22,8 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
   const [error, setError] = useState<string | null>(null);
 
   // Initialize services and load alarms
-  useEffect((
-) => {
-    const initializeServices = async (
-) => {
+  useEffect(() => {
+    const initializeServices = async () => {
       try {
         // Initialize the real-time adapter
         await RealTimeSmartAdapter.initialize();
@@ -46,14 +39,12 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
     initializeServices();
 
     // Cleanup on unmount
-    return (
-) => {
+    return () => {
       RealTimeSmartAdapter.shutdown();
     };
   }, []);
 
-  const loadAlarms = async (
-) => {
+  const loadAlarms = async () => {
     try {
       setLoading(true);
       setError(null);
@@ -85,8 +76,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
           await EnhancedSmartAlarmScheduler.createEnhancedSmartAlarm(alarmData);
 
         if (newAlarm) {
-          setAlarms((prev: any
-) => [...prev, newAlarm]);
+          setAlarms((prev: any) => [...prev, newAlarm]);
 
           // Start monitoring if enabled
           if (newAlarm.enabled && newAlarm.realTimeAdaptation) {
@@ -118,11 +108,8 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         )) as EnhancedSmartAlarm;
 
         if (updatedAlarm) {
-          
-          setAlarms((prev: any
-) => 
-            prev.map((alarm: any
-) => (alarm.id === id ? updatedAlarm : alarm))
+          setAlarms((prev: any) =>
+            prev.map((alarm: any) => (alarm.id === id ? updatedAlarm : alarm))
           );
 
           // Update monitoring status
@@ -154,9 +141,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
       RealTimeSmartAdapter.stopMonitoringAlarm(id);
 
       // Remove from state (actual deletion would happen in the service)
-      setAlarms((prev: any
-) => prev.filter((alarm: any
-) => alarm.id !== id));
+      setAlarms((prev: any) => prev.filter((alarm: any) => alarm.id !== id));
 
       return true;
     } catch (err) {
@@ -178,11 +163,8 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
           alarmId
         )) as EnhancedSmartAlarm;
         if (updatedAlarm) {
-          
-          setAlarms((prev: any
-) => 
-            prev.map((alarm: any
-) => (alarm.id === alarmId ? updatedAlarm : alarm))
+          setAlarms((prev: any) =>
+            prev.map((alarm: any) => (alarm.id === alarmId ? updatedAlarm : alarm))
           );
         }
 

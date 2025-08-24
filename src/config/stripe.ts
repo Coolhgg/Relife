@@ -149,8 +149,7 @@ export function getPlanByTier(tier: string) {
 }
 
 export function getAllPlans() {
-  return Object.entries(subscriptionPlans).map(([tier, plan]
-) => ({
+  return Object.entries(subscriptionPlans).map(([tier, plan]) => ({
     ...plan,
   }));
 }

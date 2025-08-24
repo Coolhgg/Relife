@@ -21,8 +21,7 @@ class FallbackManager {
     errorCount: 0,
   };
 
-  private observers: Array<(state: FallbackState
-) => void> = [];
+  private observers: Array<(state: FallbackState) => void> = [];
   private fallbackComponents = new Map<string, React.ComponentType<any>>();
 
   constructor() {
@@ -91,8 +90,7 @@ class FallbackManager {
    * Register default fallbacks
    */
   private registerDefaultFallbacks() {
-    this.registerFallbackComponent('simple-text', ({ text }: { text: string }
-) => (
+    this.registerFallbackComponent('simple-text', ({ text }: { text: string }) => (
       <div className="p-4 text-center text-gray-600">
         {text || 'Content unavailable'}
       </div>
@@ -100,8 +98,7 @@ class FallbackManager {
 
     this.registerFallbackComponent(
       'simple-button',
-      ({ children, onClick, disabled }: any
-) => (
+      ({ children, onClick, disabled }: any) => (
         <button
           className="px-4 py-2 bg-gray-200 text-gray-800 rounded disabled:opacity-50"
           onClick={onClick}
@@ -114,11 +111,9 @@ class FallbackManager {
 
     this.registerFallbackComponent(
       'emergency-alarm-list',
-      ({ alarms, onToggle }: any
-) => (
+      ({ alarms, onToggle }: any) => (
         <div className="space-y-3">
-          {alarms?.map((alarm: any
-) => (
+          {alarms?.map((alarm: any) => (
             <div
               key={alarm.id}
               className="flex items-center justify-between p-3 border rounded"
@@ -128,8 +123,7 @@ class FallbackManager {
                 <div className="text-sm text-gray-600">{alarm.label}</div>
               </div>
               <button
-                onClick={(
-) => onToggle?.(alarm.id)}
+                onClick={() => onToggle?.(alarm.id)}
                 className={`px-3 py-1 rounded text-sm ${
                   alarm.enabled
                     ? 'bg-green-200 text-green-800'
@@ -161,16 +155,14 @@ class FallbackManager {
   /**
    * Add observer
    */
-  addObserver(observer: (state: FallbackState
-) => void) {
+  addObserver(observer: (state: FallbackState) => void) {
     this.observers.push(observer);
   }
 
   /**
    * Remove observer
    */
-  removeObserver(observer: (state: FallbackState
-) => void) {
+  removeObserver(observer: (state: FallbackState) => void) {
     const index = this.observers.indexOf(observer);
     if (index >= 0) {
       this.observers.splice(index, 1);
@@ -205,18 +197,14 @@ export const fallbackManager = new FallbackManager();
  * React hook for fallback state
  */
 export function useFallbackState() {
-  const [state, setState] = React.useState<FallbackState>((
-) =>
+  const [state, setState] = React.useState<FallbackState>(() =>
     fallbackManager.getState()
   );
 
-  React.useEffect((
-) => {
-    const observer = (newState: FallbackState
-) => setState(newState);
+  React.useEffect(() => {
+    const observer = (newState: FallbackState) => setState(newState);
     fallbackManager.addObserver(observer);
-    return (
-) => fallbackManager.removeObserver(observer);
+    return () => fallbackManager.removeObserver(observer);
   }, []);
 
   return state;
@@ -260,8 +248,7 @@ export class FallbackErrorBoundary extends React.Component<
           </h3>
           <button
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-            onClick={(
-) => this.setState({ hasError: false, error: null })}
+            onClick={() => this.setState({ hasError: false, error: null })}
           >
             Try Again
           </button>

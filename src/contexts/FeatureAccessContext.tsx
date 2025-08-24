@@ -294,7 +294,6 @@ export function withFeatureAccess<P extends object>(
   WrappedComponent: React.ComponentType<P>,
   userId: string,
   options?: {
-<<<<<<< HEAD
     onFeatureBlocked?: (
       featureId: string,
       _requiredTier?: any /* auto: placeholder param - adjust */
@@ -305,12 +304,10 @@ export function withFeatureAccess<P extends object>(
       _requiredTier?: any /* auto: placeholder param - adjust */
     
 ) => void;
-=======
     onFeatureBlocked?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */
 ) => void;
     onUpgradeRequired?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */
 ) => void;
->>>>>>> origin/main
   }
 ) {
   return function FeatureAccessWrappedComponent(props: P) {
@@ -367,9 +364,7 @@ export function useFeatureAccess(feature: string) {
     hasAccess: context.hasFeatureAccess(feature),
     usage: context.getFeatureUsage(feature),
     requiredTier: context.getUpgradeRequirement(feature),
-    trackAttempt: (contextData?: Record<string, any>
-) =>
-      context.trackFeatureAttempt(feature, contextData),
+    trackAttempt: (contextData?: Record<string, any>) => context.trackFeatureAttempt(feature, contextData),
   };
 }
 

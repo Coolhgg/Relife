@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 // import ... from '@storybook/test'; // Package not available in current setup
 import Dashboard from '../../components/Dashboard';
@@ -237,8 +237,7 @@ export const AccessibilityFocused: Story = {
 };
 
 export const UserJourneyScenarios: Story = {
-  render: (
-) => (
+  render: () => (
     <div className="space-y-8">
       <div>
         <h3 className="text-xl font-bold mb-4">New User - First Time Experience</h3>

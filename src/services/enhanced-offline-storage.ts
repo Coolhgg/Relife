@@ -202,8 +202,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       if (retryFailedOnly) {
         // Only retry previously failed syncs
         changesToSync = pendingChanges.filter(
-          (change: any
-) => change.retryCount && change.retryCount > 0
+          (change: any) => change.retryCount && change.retryCount > 0
         );
       }
 
@@ -662,8 +661,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     try {
       const pendingChanges = await this.getPendingChanges();
       const filteredChanges = pendingChanges.filter(
-        (change: any
-) => change.id !== changeId
+        (change: any) => change.id !== changeId
       );
       SecurityService.secureStorageSet('smart-alarm-pending', filteredChanges);
     } catch (error) {
@@ -674,8 +672,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
   private async updatePendingChangeRetryCount(changeId: string): Promise<void> {
     try {
       const pendingChanges = await this.getPendingChanges();
-      const change = pendingChanges.find((c: any
-) => c.id === changeId);
+      const change = pendingChanges.find((c: any) => c.id === changeId);
 
       if (change) {
         change.retryCount = (change.retryCount || 0) + 1;
