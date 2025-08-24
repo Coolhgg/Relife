@@ -199,7 +199,7 @@ export function AlarmManagement({
       setEditingAlarm(null);
     } else if (showCreateForm) {
       onCreateAlarm({
-        userId: '1', // Current user
+        userId: '1', // Current _user
         isActive: true,
         enabled: true,
         voiceMood: 'motivational' as VoiceMood,

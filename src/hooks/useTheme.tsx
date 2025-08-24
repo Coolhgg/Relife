@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /// <reference lib="dom" />
 import React from 'react';
 import {
@@ -37,107 +38,74 @@ export interface ThemeContextValue {
   isSystemTheme: boolean;
 
   // Theme management
-  setTheme: (theme: Theme
-) => void;
-  toggleTheme: (
-) => void;
-  resetTheme: (
-) => void;
+  setTheme: (theme: Theme) => void;
+  toggleTheme: () => void;
+  resetTheme: () => void;
 
   // Personalization
-  updatePersonalization: (updates: Partial<PersonalizationSettings>
-) => void;
-  updateColorPreference: (property: string, value: any
-) => void;
-  updateTypographyPreference: (property: string, value: any
-) => void;
-  updateMotionPreference: (property: string, value: any
-) => void;
-  updateSoundPreference: (property: string, value: any
-) => void;
-  updateLayoutPreference: (property: string, value: any
-) => void;
-  updateAccessibilityPreference: (property: string, value: any
-) => void;
+  updatePersonalization: (updates: Partial<PersonalizationSettings>) => void;
+  updateColorPreference: (property: string, value: any) => void;
+  updateTypographyPreference: (property: string, value: any) => void;
+  updateMotionPreference: (property: string, value: any) => void;
+  updateSoundPreference: (property: string, value: any) => void;
+  updateLayoutPreference: (property: string, value: any) => void;
+  updateAccessibilityPreference: (property: string, value: any) => void;
 
   // Theme presets and customization
   availableThemes: ThemePreset[];
   createCustomTheme: (
     baseTheme: Theme,
     customizations: any
-  
-) => Promise<CustomThemeConfig>;
-  saveThemePreset: (preset: ThemePreset
-) => Promise<void>;
-  loadThemePreset: (presetId: string
-) => Promise<void>;
+  ) => Promise<CustomThemeConfig>;
+  saveThemePreset: (preset: ThemePreset) => Promise<void>;
+  loadThemePreset: (presetId: string) => Promise<void>;
 
   // Analytics and insights
   themeAnalytics: ThemeUsageAnalytics;
-  getThemeRecommendations: (
-) => ThemePreset[];
+  getThemeRecommendations: () => ThemePreset[];
 
   // Persistence
-  exportThemes: (
-) => Promise<string>;
-  importThemes: (data: string
-) => Promise<boolean>;
-  syncThemes: (
-) => Promise<void>;
+  exportThemes: () => Promise<string>;
+  importThemes: (data: string) => Promise<boolean>;
+  syncThemes: () => Promise<void>;
 
   // Cloud Sync
   cloudSyncStatus: CloudSyncStatus;
-  enableCloudSync: (enabled: boolean
-) => void;
-  forceCloudSync: (
-) => Promise<void>;
-  resetCloudData: (
-) => Promise<void>;
-  onCloudSyncStatusChange: (listener: (status: CloudSyncStatus
-) => void
-) => (
-) => void;
+  enableCloudSync: (enabled: boolean) => void;
+  forceCloudSync: () => Promise<void>;
+  resetCloudData: () => Promise<void>;
+  onCloudSyncStatusChange: (listener: (status: CloudSyncStatus) => void) => () => void;
 
   // Utility functions
-  getCSSVariables: (
-) => Record<string, string>;
-  getThemeClasses: (
-) => string[];
-  isAccessibleContrast: (foreground: string, background: string
-) => boolean;
+  getCSSVariables: () => Record<string, string>;
+  getThemeClasses: () => string[];
+  isAccessibleContrast: (foreground: string, background: string) => boolean;
   applyThemeWithPerformance: (options?: {
     animate?: boolean;
     duration?: number;
     immediate?: boolean;
-  }
-) => Promise<void>;
-  preloadTheme: (targetTheme: Theme
-) => void;
+  }) => Promise<void>;
+  preloadTheme: (targetTheme: Theme) => void;
 
   // Accessibility functions
-  testThemeAccessibility: (
-) => {
+  testThemeAccessibility: () => {
     overallScore: number;
     issues: string[];
     recommendations: string[];
   };
-  getAccessibilityStatus: (
-) => {
+  getAccessibilityStatus: () => {
     hasHighContrast: boolean;
     hasReducedMotion: boolean;
     hasScreenReaderOptimizations: boolean;
     hasSkipLinks: boolean;
     focusVisible: boolean;
   };
-  announceThemeChange: (themeName: string, previousTheme?: string
-) => void;
+  announceThemeChange: (themeName: string, previousTheme?: string) => void;
   calculateContrastRatio: (
     foreground: string,
     background: string
-  
-) => { ratio: number; level: string; isAccessible: boolean };
-  simulateColorBlindness: (color: string
-) => {
+  ) => { ratio: number; level: string; isAccessible: boolean };
+  simulateColorBlindness: (color: string) => {
     protanopia: string;
     deuteranopia: string;
     tritanopia: string;
@@ -145,16 +113,12 @@ export interface ThemeContextValue {
   };
 
   // Premium animation functions
-  initializePremiumAnimations: (effects?: PremiumAnimationEffects
-) => void;
+  initializePremiumAnimations: (effects?: PremiumAnimationEffects) => void;
   setAnimationIntensity: (
     intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic'
-  
-) => void;
-  setAnimationsEnabled: (enabled: boolean
-) => void;
-  getDefaultAnimationEffects: (
-) => PremiumAnimationEffects;
+  ) => void;
+  setAnimationsEnabled: (enabled: boolean) => void;
+  getDefaultAnimationEffects: () => PremiumAnimationEffects;
 }
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
@@ -2088,11 +2052,10 @@ export function ThemeProvider({
     lastSyncTime: null,
     hasConflicts: false,
     pendingChanges: 0,
-    error: null,
+    _error: null,
   });
   const cloudSyncServiceRef = useRef<CloudSyncService | null>(null);
-  const syncListenersRef = useRef<((status: CloudSyncStatus
-) => void)[]>([]);
+  const syncListenersRef = useRef<((status: CloudSyncStatus) => void)[]>([]);
   const persistenceServiceRef = useRef<ThemePersistenceService | null>(null);
   const [availableThemes] = useState<ThemePreset[]>([
     {
@@ -2162,10 +2125,8 @@ export function ThemeProvider({
   });
 
   // Initialize theme from enhanced persistence service
-  useEffect((
-) => {
-    const initializeThemeData = async (
-) => {
+  useEffect(() => {
+    const initializeThemeData = async () => {
       try {
         // Initialize persistence service
         if (!persistenceServiceRef.current) {
@@ -2201,8 +2162,8 @@ export function ThemeProvider({
             ...themeData.personalization,
           });
         }
-      } catch (error) {
-        console.error('Failed to initialize theme data:', error);
+      } catch (_error) {
+        console._error('Failed to initialize theme data:', _error);
 
         // Fallback to old localStorage method
         const storedTheme = localStorage.getItem(storageKey);
@@ -2239,8 +2200,7 @@ export function ThemeProvider({
   }, [defaultTheme, enableSystem, storageKey, theme]);
 
   // Apply theme to DOM
-  useEffect((
-) => {
+  useEffect(() => {
     const root = document.documentElement;
 
     // Apply theme class
@@ -2249,8 +2209,7 @@ export function ThemeProvider({
 
     // Apply CSS custom properties
     const cssVars = getCSSVariables();
-    Object.entries(cssVars).forEach(([property, value]
-) => {
+    Object.entries(cssVars).forEach(([property, value]) => {
       root.style.setProperty(property, value);
     });
 
@@ -2280,56 +2239,49 @@ export function ThemeProvider({
   }, [theme, themeConfig, personalization]);
 
   // Listen for system theme changes
-  useEffect((
-) => {
+  useEffect(() => {
     if (!enableSystem || (theme !== 'system' && theme !== 'auto')) return;
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (e: MediaQueryListEvent
-) => {
+    const handleChange = (e: MediaQueryListEvent) => {
       const systemTheme = e.matches ? 'dark' : 'light';
       setThemeConfig(DEFAULT_THEMES[systemTheme]);
     };
 
     mediaQuery.addEventListener('change', handleChange);
-    return (
-) => mediaQuery.removeEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, [theme, enableSystem]);
 
   // Initialize cloud sync service
-  useEffect((
-) => {
+  useEffect(() => {
     cloudSyncServiceRef.current = CloudSyncService.getInstance();
 
     const syncService = cloudSyncServiceRef.current;
 
     // Listen for sync status changes
-    const unsubscribe = syncService.onStatusChange((status: any
-) => { // auto
+    const unsubscribe = syncService.onStatusChange((status: any) => {
+      // auto
       setCloudSyncStatus(status);
       // Notify all registered listeners
-      syncListenersRef.current.forEach((listener: any
-) => listener(status));
+      syncListenersRef.current.forEach((listener: any) => listener(status));
     });
 
     // Initialize with current status
     setCloudSyncStatus(syncService.getStatus());
 
     // Start auto-sync if enabled
-    syncService.initialize().catch((error: any
-) => { // auto
-      console.error('Failed to initialize cloud sync:', error);
+    syncService.initialize().catch((_error: any) => {
+      // auto
+      console._error('Failed to initialize cloud sync:', _error);
     });
 
-    return (
-) => {
+    return () => {
       unsubscribe();
     };
   }, []);
 
   // Sync preferences when they change
-  useEffect((
-) => {
+  useEffect(() => {
     if (!cloudSyncServiceRef.current) return;
 
     const syncService = cloudSyncServiceRef.current;
@@ -2342,23 +2294,20 @@ export function ThemeProvider({
     };
 
     // Debounce sync to avoid too frequent calls
-    const timeoutId = setTimeout((
-) => {
-      syncService.updatePreferences(preferences).catch((error: any
-) => { // auto
-        console.error('Failed to sync preferences:', error);
+    const timeoutId = setTimeout(() => {
+      syncService.updatePreferences(preferences).catch((_error: any) => {
+        // auto
+        console._error('Failed to sync preferences:', _error);
       });
     }, 1000);
 
-    return (
-) => clearTimeout(timeoutId);
+    return () => clearTimeout(timeoutId);
   }, [theme, personalization]);
 
   const setTheme = useCallback(
-    (newTheme: Theme
-) => {
+    (newTheme: Theme) => {
       if (!Object.keys(DEFAULT_THEMES).includes(newTheme)) {
-        console.error(`Unknown theme: ${newTheme}`);
+        console._error(`Unknown theme: ${newTheme}`);
         return;
       }
 
@@ -2381,22 +2330,19 @@ export function ThemeProvider({
     [storageKey, personalization]
   );
 
-  const toggleTheme = useCallback((
-) => {
+  const toggleTheme = useCallback(() => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
   }, [theme, setTheme]);
 
-  const resetTheme = useCallback((
-) => {
+  const resetTheme = useCallback(() => {
     setTheme(defaultTheme);
     setPersonalizationState(DEFAULT_PERSONALIZATION);
     localStorage.removeItem(`${storageKey}-personalization`);
   }, [defaultTheme, setTheme, storageKey]);
 
   const updatePersonalization = useCallback(
-    (updates: Partial<PersonalizationSettings>
-) => {
+    (updates: Partial<PersonalizationSettings>) => {
       const updatedPersonalization = {
         ...personalization,
         ...updates,
@@ -2421,8 +2367,7 @@ export function ThemeProvider({
   );
 
   const updateColorPreference = useCallback(
-    (property: string, value: any
-) => {
+    (property: string, value: any) => {
       updatePersonalization({
         colorPreferences: {
           ...personalization.colorPreferences,
@@ -2434,8 +2379,7 @@ export function ThemeProvider({
   );
 
   const updateTypographyPreference = useCallback(
-    (property: string, value: any
-) => {
+    (property: string, value: any) => {
       updatePersonalization({
         typographyPreferences: {
           ...personalization.typographyPreferences,
@@ -2447,8 +2391,7 @@ export function ThemeProvider({
   );
 
   const updateMotionPreference = useCallback(
-    (property: string, value: any
-) => {
+    (property: string, value: any) => {
       updatePersonalization({
         motionPreferences: {
           ...personalization.motionPreferences,
@@ -2460,8 +2403,7 @@ export function ThemeProvider({
   );
 
   const updateSoundPreference = useCallback(
-    (property: string, value: any
-) => {
+    (property: string, value: any) => {
       updatePersonalization({
         soundPreferences: {
           ...personalization.soundPreferences,
@@ -2473,8 +2415,7 @@ export function ThemeProvider({
   );
 
   const updateLayoutPreference = useCallback(
-    (property: string, value: any
-) => {
+    (property: string, value: any) => {
       updatePersonalization({
         layoutPreferences: {
           ...personalization.layoutPreferences,
@@ -2486,8 +2427,7 @@ export function ThemeProvider({
   );
 
   const updateAccessibilityPreference = useCallback(
-    (property: string, value: any
-) => {
+    (property: string, value: any) => {
       updatePersonalization({
         accessibilityPreferences: {
           ...personalization.accessibilityPreferences,
@@ -2525,8 +2465,7 @@ export function ThemeProvider({
 
   const loadThemePreset = useCallback(
     async (presetId: string): Promise<void> => {
-      const preset = availableThemes.find((t: any
-) => t.id === presetId);
+      const preset = availableThemes.find((t: any) => t.id === presetId);
       if (preset) {
         setTheme(preset.theme);
         if (preset.personalization) {
@@ -2586,8 +2525,8 @@ export function ThemeProvider({
           updatePersonalization(importData.personalization);
         }
         return true;
-      } catch (error) {
-        console.error('Failed to import themes:', error);
+      } catch (_error) {
+        console._error('Failed to import themes:', _error);
         return false;
       }
     },
@@ -2643,14 +2582,13 @@ export function ThemeProvider({
           });
         }
       }
-    } catch (error) {
-      console.error('Failed to sync themes:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to sync themes:', _error);
+      throw _error;
     }
   }, [theme, themeConfig, personalization]);
 
-  const enableCloudSync = useCallback((enabled: boolean
-) => {
+  const enableCloudSync = useCallback((enabled: boolean) => {
     if (!cloudSyncServiceRef.current) return;
 
     const syncService = cloudSyncServiceRef.current;
@@ -2661,9 +2599,9 @@ export function ThemeProvider({
 
     if (enabled) {
       // Perform initial sync when enabling
-      syncService.sync().catch((error: any
-) => { // auto
-        console.error('Failed to perform initial sync:', error);
+      syncService.sync().catch((_error: any) => {
+        // auto
+        console._error('Failed to perform initial sync:', _error);
       });
     }
   }, []);
@@ -2675,9 +2613,9 @@ export function ThemeProvider({
 
     try {
       await cloudSyncServiceRef.current.sync();
-    } catch (error) {
-      console.error('Failed to force cloud sync:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to force cloud sync:', _error);
+      throw _error;
     }
   }, []);
 
@@ -2694,24 +2632,21 @@ export function ThemeProvider({
       setPersonalizationState(DEFAULT_PERSONALIZATION);
       localStorage.removeItem(storageKey);
       localStorage.removeItem(`${storageKey}-personalization`);
-    } catch (error) {
-      console.error('Failed to reset cloud data:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to reset cloud data:', _error);
+      throw _error;
     }
   }, [defaultTheme, storageKey]);
 
   const onCloudSyncStatusChange = useCallback(
-    (listener: (status: CloudSyncStatus
-) => void
-) => {
+    (listener: (status: CloudSyncStatus) => void) => {
       syncListenersRef.current.push(listener);
 
       // Return unsubscribe function
-      return (
-) => {
-        const index = syncListenersRef.current.indexOf(listener);
-        if (index > -1) {
-          syncListenersRef.current.splice(index, 1);
+      return () => {
+        const _index = syncListenersRef.current.indexOf(listener);
+        if (_index > -1) {
+          syncListenersRef.current.splice(_index, 1);
         }
       };
     },
@@ -2751,36 +2686,30 @@ export function ThemeProvider({
       ['neutral', themeConfig.colors.neutral],
     ] as const;
 
-    colorSections.forEach(([section, colors]
-) => {
-      Object.entries(colors).forEach(([key, value]
-) => {
+    colorSections.forEach(([section, colors]) => {
+      Object.entries(colors).forEach(([key, value]) => {
         vars[`--color-${section}-${key}`] = value;
       });
     });
 
     // Background variables
-    Object.entries(themeConfig.colors.background).forEach(([key, value]
-) => {
+    Object.entries(themeConfig.colors.background).forEach(([key, value]) => {
       vars[`--color-background-${key}`] = value;
     });
 
     // Text variables
-    Object.entries(themeConfig.colors.text).forEach(([key, value]
-) => {
+    Object.entries(themeConfig.colors.text).forEach(([key, value]) => {
       vars[`--color-text-${key}`] = value;
     });
 
     // Border variables
-    Object.entries(themeConfig.colors.border).forEach(([key, value]
-) => {
+    Object.entries(themeConfig.colors.border).forEach(([key, value]) => {
       vars[`--color-border-${key}`] = value;
     });
 
     // Typography variables with personalization
     const fontSizeScale = personalization.typographyPreferences.fontSizeScale || 1;
-    Object.entries(themeConfig.typography.fontSize).forEach(([key, value]
-) => {
+    Object.entries(themeConfig.typography.fontSize).forEach(([key, value]) => {
       const scaledValue =
         typeof value === 'string' && value.includes('rem')
           ? `${parseFloat(value) * fontSizeScale}rem`
@@ -2789,21 +2718,18 @@ export function ThemeProvider({
     });
 
     // Spacing variables
-    Object.entries(themeConfig.spacing.sizes).forEach(([key, value]
-) => {
+    Object.entries(themeConfig.spacing.sizes).forEach(([key, value]) => {
       vars[`--spacing-${key}`] = value;
     });
 
     // Border radius variables
-    Object.entries(themeConfig.spacing.borderRadius).forEach(([key, value]
-) => {
+    Object.entries(themeConfig.spacing.borderRadius).forEach(([key, value]) => {
       vars[`--border-radius-${key}`] = value;
     });
 
     // Animation variables with motion preferences
     const animationScale = personalization.motionPreferences.enableAnimations ? 1 : 0;
-    Object.entries(themeConfig.animations.duration).forEach(([key, value]
-) => {
+    Object.entries(themeConfig.animations.duration).forEach(([key, value]) => {
       const scaledValue =
         typeof value === 'string' && value.includes('ms')
           ? `${parseFloat(value) * animationScale}ms`
@@ -2812,8 +2738,7 @@ export function ThemeProvider({
     });
 
     // Shadow variables
-    Object.entries(themeConfig.effects.shadows).forEach(([key, value]
-) => {
+    Object.entries(themeConfig.effects.shadows).forEach(([key, value]) => {
       vars[`--shadow-${key}`] = value;
     });
 
@@ -2886,8 +2811,7 @@ export function ThemeProvider({
 
   // Performance-optimized theme application
   const applyThemeWithPerformance = useCallback(
-    async (options?: { animate?: boolean; duration?: number; immediate?: boolean }
-) => {
+    async (options?: { animate?: boolean; duration?: number; immediate?: boolean }) => {
       const performanceService = ThemePerformanceService.getInstance();
       const variables = getCSSVariables;
       const classes = getThemeClasses;
@@ -2909,8 +2833,7 @@ export function ThemeProvider({
   );
 
   // Preload theme for better performance
-  const preloadTheme = useCallback((targetTheme: Theme
-) => {
+  const preloadTheme = useCallback((targetTheme: Theme) => {
     const performanceService = ThemePerformanceService.getInstance();
     const targetConfig = DEFAULT_THEMES[targetTheme];
 
@@ -2943,22 +2866,19 @@ export function ThemeProvider({
   );
 
   // Accessibility functions
-  const testThemeAccessibility = useCallback((
-) => {
+  const testThemeAccessibility = useCallback(() => {
     const accessibilityService = ThemeAccessibilityService.getInstance();
     const cssVars = getCSSVariables;
     return accessibilityService.testThemeAccessibility(cssVars);
   }, [getCSSVariables]);
 
-  const getAccessibilityStatus = useCallback((
-) => {
+  const getAccessibilityStatus = useCallback(() => {
     const accessibilityService = ThemeAccessibilityService.getInstance();
     return accessibilityService.getAccessibilityStatus();
   }, []);
 
   const announceThemeChange = useCallback(
-    (themeName: string, previousTheme?: string
-) => {
+    (themeName: string, previousTheme?: string) => {
       const accessibilityService = ThemeAccessibilityService.getInstance();
       accessibilityService.announceThemeChange(themeName, {
         includePreviousTheme: !!previousTheme,
@@ -2970,31 +2890,27 @@ export function ThemeProvider({
   );
 
   const calculateContrastRatio = useCallback(
-    (foreground: string, background: string
-) => {
+    (foreground: string, background: string) => {
       const accessibilityService = ThemeAccessibilityService.getInstance();
       return accessibilityService.calculateContrastRatio(foreground, background);
     },
     []
   );
 
-  const simulateColorBlindness = useCallback((color: string
-) => {
+  const simulateColorBlindness = useCallback((color: string) => {
     const accessibilityService = ThemeAccessibilityService.getInstance();
     return accessibilityService.simulateColorBlindness(color);
   }, []);
 
   // Apply accessibility enhancements when personalization changes
-  useEffect((
-) => {
+  useEffect(() => {
     const accessibilityService = ThemeAccessibilityService.getInstance();
     accessibilityService.applyAccessibilityEnhancements(personalization);
   }, [personalization]);
 
   // Premium animation functions
   const initializePremiumAnimations = useCallback(
-    (effects?: PremiumAnimationEffects
-) => {
+    (effects?: PremiumAnimationEffects) => {
       const animationService = PremiumThemeAnimationService.getInstance();
       const effectsToApply =
         effects || PremiumThemeAnimationService.getDefaultEffects(theme);
@@ -3004,16 +2920,14 @@ export function ThemeProvider({
   );
 
   const setAnimationIntensity = useCallback(
-    (intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic'
-) => {
+    (intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic') => {
       const animationService = PremiumThemeAnimationService.getInstance();
       animationService.setAnimationIntensity(intensity);
     },
     []
   );
 
-  const setAnimationsEnabled = useCallback((enabled: boolean
-) => {
+  const setAnimationsEnabled = useCallback((enabled: boolean) => {
     const animationService = PremiumThemeAnimationService.getInstance();
     animationService.setAnimationsEnabled(enabled);
   }, []);
@@ -3023,15 +2937,13 @@ export function ThemeProvider({
   }, [theme]);
 
   // Initialize premium animations when theme changes
-  useEffect((
-) => {
+  useEffect(() => {
     if (themeConfig.isPremium) {
       initializePremiumAnimations();
     }
   }, [theme, themeConfig.isPremium, initializePremiumAnimations]);
 
-  const isDarkMode = useMemo((
-) => {
+  const isDarkMode = useMemo(() => {
     if (theme === 'dark') return true;
     if (theme === 'light') return false;
     if (theme === 'system' || theme === 'auto') {
@@ -3044,8 +2956,7 @@ export function ThemeProvider({
     );
   }, [theme, themeConfig]);
 
-  const isSystemTheme = useMemo((
-) => {
+  const isSystemTheme = useMemo(() => {
     return theme === 'system' || theme === 'auto';
   }, [theme]);
 

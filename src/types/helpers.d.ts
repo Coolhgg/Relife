@@ -13,7 +13,7 @@ export type CallbackFunction<T = any> = (value: T) => void; // auto
 
 export type AsyncCallback<T = any> = (value: T) => Promise<void>; // auto
 
-export type ErrorCallback = (error: Error | any) => void; // auto
+export type ErrorCallback = (_error: Error | any) => void; // auto
 
 export type GenericObject = Record<string, any>; // auto
 

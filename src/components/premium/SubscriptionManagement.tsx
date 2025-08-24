@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Textarea } from '../ui/textarea';
+import { Progress } from '../ui/textarea';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
 import PricingTable from './PricingTable';
@@ -169,8 +169,8 @@ export function SubscriptionManagement({
       }
 
       setShowUpgradeDialog(false);
-    } catch (error) {
-      console.error('Failed to change plan:', error);
+    } catch (_error) {
+      console._error('Failed to change plan:', _error);
     } finally {
       setActionLoading(null);
     }
@@ -200,8 +200,8 @@ export function SubscriptionManagement({
       await onCancelSubscription(request);
       setShowCancelDialog(false);
       setShowRetentionOffer(false);
-    } catch (error) {
-      console.error('Failed to cancel subscription:', error);
+    } catch (_error) {
+      console._error('Failed to cancel subscription:', _error);
     } finally {
       setActionLoading(null);
     }
@@ -211,8 +211,8 @@ export function SubscriptionManagement({
     try {
       setActionLoading('reactivate');
       await onReactivateSubscription();
-    } catch (error) {
-      console.error('Failed to reactivate subscription:', error);
+    } catch (_error) {
+      console._error('Failed to reactivate subscription:', _error);
     } finally {
       setActionLoading(null);
     }

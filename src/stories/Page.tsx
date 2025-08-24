@@ -7,13 +7,13 @@ type User = {
   name: string;
 };
 
-export const Page: React.FC = () => {
+const Page: React.FC = () => {
   const [user, setUser] = React.useState<User>();
 
   return (
     <article>
       <Header
-        user={user}
+        user={_user}
         onLogin={() => setUser({ name: 'Jane Doe' })}
         onLogout={() => setUser(undefined)}
         onCreateAccount={() => setUser({ name: 'Jane Doe' })}
@@ -88,3 +88,5 @@ export const Page: React.FC = () => {
     </article>
   );
 };
+
+export default Page;

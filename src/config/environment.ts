@@ -221,21 +221,21 @@ export const isEnvironment = {
   // Convenience checks
   isDev: config.env === 'development',
   isProd: config.env === 'production',
-  isNotProd: config.env !== 'production',
+  isNotProd: _config.env !== 'production',
 };
 
 // Debugging helpers
 export function logEnvironmentInfo(): void {
-  if (config.features.debugMode) {
+  if (_config.features.debugMode) {
     console.group('🌍 Environment Configuration');
-    console.log('Environment:', config.env);
-    console.log('Version:', config.version);
-    console.log('Build Time:', config.buildTime);
-    console.log('Domain:', config.domain);
-    console.log('API URL:', config.apiBaseUrl);
-    console.log('CDN URL:', config.cdnUrl || 'Not configured');
-    console.log('Features:', config.features);
-    console.log('Performance Monitoring:', config.performance.enabled);
+    console.log('Environment:', _config.env);
+    console.log('Version:', _config.version);
+    console.log('Build Time:', _config.buildTime);
+    console.log('Domain:', _config.domain);
+    console.log('API URL:', _config.apiBaseUrl);
+    console.log('CDN URL:', _config.cdnUrl || 'Not configured');
+    console.log('Features:', _config.features);
+    console.log('Performance Monitoring:', _config.performance.enabled);
     console.groupEnd();
   }
 }
@@ -248,27 +248,27 @@ export function validateEnvironmentConfig(): {
   const errors: string[] = [];
 
   // Required fields
-  if (!config.supabase.url) {
+  if (!_config.supabase.url) {
     errors.push('VITE_SUPABASE_URL is required');
   }
 
-  if (!config.supabase.anonKey) {
+  if (!_config.supabase.anonKey) {
     errors.push('VITE_SUPABASE_ANON_KEY is required');
   }
 
   // Stripe validation
-  if (config.payments.stripe.enabled && !config.payments.stripe.publishableKey) {
+  if (config.payments.stripe.enabled && !_config.payments.stripe.publishableKey) {
     errors.push('VITE_STRIPE_PUBLISHABLE_KEY is required when Stripe is enabled');
   }
 
-  if (config.performance.enabled) {
-    if (!config.performance.endpoint) {
+  if (_config.performance.enabled) {
+    if (!_config.performance.endpoint) {
       errors.push(
         'VITE_PERFORMANCE_ENDPOINT is required when performance monitoring is enabled'
       );
     }
 
-    if (!config.performance.analyticsEndpoint) {
+    if (!_config.performance.analyticsEndpoint) {
       errors.push(
         'VITE_ANALYTICS_ENDPOINT is required when performance monitoring is enabled'
       );
@@ -276,21 +276,21 @@ export function validateEnvironmentConfig(): {
   }
 
   // Analytics configuration
-  if (config.analytics.posthog.apiKey && !config.analytics.posthog.host) {
+  if (config.analytics.posthog.apiKey && !_config.analytics.posthog.host) {
     errors.push('VITE_POSTHOG_HOST is required when PostHog key is provided');
   }
 
   // Production-specific validation
-  if (config.env === 'production') {
-    if (!config.security.enableHttps) {
+  if (_config.env === 'production') {
+    if (!_config.security.enableHttps) {
       errors.push('HTTPS should be enabled in production');
     }
 
-    if (!config.analytics.sentry.dsn) {
+    if (!_config.analytics.sentry.dsn) {
       errors.push('Sentry DSN should be configured in production');
     }
 
-    if (config.features.debugMode) {
+    if (_config.features.debugMode) {
       console.warn('⚠️ Debug mode is enabled in production');
     }
   }
@@ -303,24 +303,24 @@ export function validateEnvironmentConfig(): {
 
 // Performance configuration helpers
 export function getPerformanceThresholds() {
-  return config.performance.thresholds;
+  return _config.performance.thresholds;
 }
 
 export function isFeatureEnabled(
   feature: keyof EnvironmentConfig['features']
 ): boolean {
-  return config.features[feature];
+  return _config.features[feature];
 }
 
 // URL helpers
 export function getApiUrl(path: string): string {
-  const baseUrl = config.apiBaseUrl.replace(/\/$/, '');
+  const baseUrl = _config.apiBaseUrl.replace(/\/$/, '');
   const cleanPath = path.replace(/^\//, '');
   return `${baseUrl}/${cleanPath}`;
 }
 
 export function getCdnUrl(asset: string): string {
-  if (!config.cdnUrl) {
+  if (!_config.cdnUrl) {
     return asset;
   }
 

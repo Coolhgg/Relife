@@ -11,7 +11,7 @@ import type {
   FeatureLimits,
   SubscriptionLimits,
   SUBSCRIPTION_PLANS,
-  SubscriptionTier
+  SubscriptionTier,
 } from '../types';
 
 import { BaseService } from './base/BaseService';
@@ -20,7 +20,7 @@ import {
   SubscriptionServiceInterface,
   ServiceConfig,
   ServiceHealth,
-  CircuitBreakerConfig
+  CircuitBreakerConfig,
 } from '../types/service-architecture';
 
 export interface SubscriptionServiceConfig extends ServiceConfig {
@@ -52,16 +52,25 @@ export interface SubscriptionCheckResult {
   limit?: number;
 }
 
-export class EnhancedSubscriptionService extends BaseService implements SubscriptionServiceInterface {
+export class EnhancedSubscriptionService
+  extends BaseService
+  implements SubscriptionServiceInterface
+{
   private cache: CacheProvider;
   private dependencies: SubscriptionServiceDependencies;
   private rateLimitTracker = new Map<string, { count: number; resetTime: number }>();
-  private circuitBreakers = new Map<string, ReturnType<BaseService['createCircuitBreaker']>>();
+  private circuitBreakers = new Map<
+    string,
+    ReturnType<BaseService['createCircuitBreaker']>
+  >();
 
-  constructor(dependencies: SubscriptionServiceDependencies, config: SubscriptionServiceConfig) {
-    super('SubscriptionService', '2.0.0', config);
+  constructor(
+    dependencies: SubscriptionServiceDependencies,
+    _config: SubscriptionServiceConfig
+  ) {
+    super('SubscriptionService', '2.0.0', _config);
     this.dependencies = dependencies;
-    this.cache = getCacheManager().getProvider(config.caching?.strategy || 'memory');
+    this.cache = getCacheManager().getProvider(_config.caching?.strategy || 'memory');
   }
 
   // ============================================================================
@@ -76,45 +85,44 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
       retryBackoffMs: 1000,
       rateLimit: {
         windowMs: 60000, // 1 minute
-        maxRequests: 100
+        maxRequests: 100,
       },
       circuitBreaker: {
         failureThreshold: 5,
         recoveryTimeout: 30000,
-        monitoringPeriod: 60000
+        monitoringPeriod: 60000,
       },
       enableAnalytics: true,
       enableUsageTracking: true,
-      ...super.getDefaultConfig?.() || {}
+      ...(super.getDefaultConfig?.() || {}),
     };
   }
 
   protected async doInitialize(): Promise<void> {
     const timerId = this.startTimer('initialize');
-    
+
     try {
       // Initialize cache
       await this.setupCache();
-      
+
       // Setup circuit breakers for external services
       this.setupCircuitBreakers();
-      
+
       // Preload subscription plans configuration
       await this.preloadConfiguration();
-      
+
       // Setup periodic cleanup
       this.setupPeriodicCleanup();
-      
+
       this.emit('subscription:initialized', {
-        cacheStrategy: this.config.caching?.strategy,
-        circuitBreakersEnabled: true
+        cacheStrategy: this._config.caching?.strategy,
+        circuitBreakersEnabled: true,
       });
-      
+
       this.recordMetric('initialize_duration', this.endTimer(timerId) || 0);
-      
-    } catch (error) {
-      this.handleError(error, 'Failed to initialize SubscriptionService');
-      throw error;
+    } catch (_error) {
+      this.handleError(_error, 'Failed to initialize SubscriptionService');
+      throw _error;
     }
   }
 
@@ -122,51 +130,53 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     try {
       // Clear all caches
       await this.cache.clear();
-      
+
       // Clear rate limit tracking
       this.rateLimitTracker.clear();
       this.circuitBreakers.clear();
-      
-    } catch (error) {
-      this.handleError(error, 'Failed to cleanup SubscriptionService');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to cleanup SubscriptionService');
     }
   }
 
   public async getHealth(): Promise<ServiceHealth> {
     const baseHealth = await super.getHealth();
-    
+
     // Check external service availability
     const dependencies = await this.checkDependencyHealth();
-    
+
     // Calculate cache performance
     const cacheStats = await this.cache.stats();
-    
+
     return {
       ...baseHealth,
       dependencies,
       metrics: {
-        ...baseHealth.metrics || {},
+        ...(baseHealth.metrics || {}),
         cacheHitRate: cacheStats.hitRate,
         cacheSize: cacheStats.size,
         rateLimitedRequests: this.getRateLimitedRequestsCount(),
-        circuitBreakerStatus: this.getCircuitBreakerStatus()
-      }
+        circuitBreakerStatus: this.getCircuitBreakerStatus(),
+      },
     };
   }
 
   protected async checkDependencyHealth(): Promise<ServiceHealth['dependencies']> {
     const dependencies: ServiceHealth['dependencies'] = [];
-    
+
     // Check Supabase connection
     if (this.dependencies.supabaseService) {
       const supabaseHealth = await this.checkServiceHealth('supabase', async () => {
         // Simple query to test connection
-        const result = await this.dependencies.supabaseService.from('subscriptions').select('id').limit(1);
-        return !result.error;
+        const result = await this.dependencies.supabaseService
+          .from('subscriptions')
+          .select('id')
+          .limit(1);
+        return !result._error;
       });
       dependencies.push(supabaseHealth);
     }
-    
+
     // Check Stripe connection
     if (this.dependencies.stripeService) {
       const stripeHealth = await this.checkServiceHealth('stripe', async () => {
@@ -175,7 +185,7 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
       });
       dependencies.push(stripeHealth);
     }
-    
+
     return dependencies;
   }
 
@@ -185,13 +195,13 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
 
   public async getSubscription(userId: string): Promise<Subscription | null> {
     const timerId = this.startTimer('getSubscription');
-    
+
     try {
       // Check rate limit
       if (!this.checkRateLimit('getSubscription', userId)) {
         throw new Error('Rate limit exceeded for subscription queries');
       }
-      
+
       // Try cache first
       const cacheKey = `subscription:${userId}`;
       const cached = await this.cache.get<Subscription>(cacheKey);
@@ -199,43 +209,47 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
         this.recordMetric('subscription_cache_hit', 1);
         return cached;
       }
-      
+
       this.recordMetric('subscription_cache_miss', 1);
-      
+
       // Get from database with circuit breaker
-      const subscription = await this.executeWithCircuitBreaker('supabase', async () => {
-        return await this.fetchSubscriptionFromDatabase(userId);
-      });
-      
+      const subscription = await this.executeWithCircuitBreaker(
+        'supabase',
+        async () => {
+          return await this.fetchSubscriptionFromDatabase(userId);
+        }
+      );
+
       // Cache the result
       if (subscription) {
-        const config = this.config as SubscriptionServiceConfig;
-        await this.cache.set(cacheKey, subscription, config.cacheDuration);
+        const config = this._config as SubscriptionServiceConfig;
+        await this.cache.set(cacheKey, subscription, _config.cacheDuration);
       }
-      
+
       this.recordMetric('getSubscription_duration', this.endTimer(timerId) || 0);
-      
+
       return subscription;
-      
-    } catch (error) {
+    } catch (_error) {
       this.recordMetric('getSubscription_errors', 1);
-      this.handleError(error, 'Failed to get subscription', { userId });
+      this.handleError(_error, 'Failed to get subscription', { userId });
       return null;
     }
   }
 
-  public async createSubscription(subscriptionData: Partial<Subscription>): Promise<Subscription> {
+  public async createSubscription(
+    subscriptionData: Partial<Subscription>
+  ): Promise<Subscription> {
     const timerId = this.startTimer('createSubscription');
-    
+
     try {
       // Validate input
       this.validateSubscriptionData(subscriptionData);
-      
+
       // Check rate limit
       if (!this.checkRateLimit('createSubscription', subscriptionData.userId || '')) {
         throw new Error('Rate limit exceeded for subscription creation');
       }
-      
+
       const now = new Date();
       const subscription: Subscription = {
         id: subscriptionData.id || this.generateSubscriptionId(),
@@ -243,7 +257,9 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
         tier: subscriptionData.tier || 'free',
         status: subscriptionData.status || 'active',
         currentPeriodStart: subscriptionData.currentPeriodStart || now,
-        currentPeriodEnd: subscriptionData.currentPeriodEnd || new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000),
+        currentPeriodEnd:
+          subscriptionData.currentPeriodEnd ||
+          new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000),
         trialEnd: subscriptionData.trialEnd,
         cancelAtPeriodEnd: subscriptionData.cancelAtPeriodEnd || false,
         canceledAt: subscriptionData.canceledAt,
@@ -251,131 +267,139 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
         updatedAt: now,
         stripeCustomerId: subscriptionData.stripeCustomerId,
         stripeSubscriptionId: subscriptionData.stripeSubscriptionId,
-        stripePriceId: subscriptionData.stripePriceId
+        stripePriceId: subscriptionData.stripePriceId,
       };
-      
+
       // Save to database with circuit breaker
       await this.executeWithCircuitBreaker('supabase', async () => {
         await this.saveSubscriptionToDatabase(subscription);
       });
-      
+
       // Update cache
       const cacheKey = `subscription:${subscription.userId}`;
       const config = this.config as SubscriptionServiceConfig;
-      await this.cache.set(cacheKey, subscription, config.cacheDuration);
-      
+      await this.cache.set(cacheKey, subscription, _config.cacheDuration);
+
       // Track analytics
       await this.trackSubscriptionEvent('subscription_created', subscription);
-      
+
       this.recordMetric('createSubscription_duration', this.endTimer(timerId) || 0);
       this.emit('subscription:created', subscription);
-      
+
       return subscription;
-      
-    } catch (error) {
+    } catch (_error) {
       this.recordMetric('createSubscription_errors', 1);
-      this.handleError(error, 'Failed to create subscription', { subscriptionData });
+      this.handleError(_error, 'Failed to create subscription', { subscriptionData });
       throw error;
     }
   }
 
-  public async updateSubscription(id: string, updates: Partial<Subscription>): Promise<Subscription> {
+  public async updateSubscription(
+    id: string,
+    updates: Partial<Subscription>
+  ): Promise<Subscription> {
     const timerId = this.startTimer('updateSubscription');
-    
+
     try {
       // Get existing subscription
       const existing = await this.getSubscriptionById(id);
       if (!existing) {
         throw new Error(`Subscription with ID ${id} not found`);
       }
-      
+
       // Check rate limit
       if (!this.checkRateLimit('updateSubscription', existing.userId)) {
         throw new Error('Rate limit exceeded for subscription updates');
       }
-      
+
       const updatedSubscription: Subscription = {
         ...existing,
         ...updates,
         id, // Ensure ID cannot be changed
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
-      
+
       // Validate updated data
       this.validateSubscriptionData(updatedSubscription);
-      
+
       // Save to database with circuit breaker
       await this.executeWithCircuitBreaker('supabase', async () => {
         await this.saveSubscriptionToDatabase(updatedSubscription);
       });
-      
+
       // Update cache
       const cacheKey = `subscription:${updatedSubscription.userId}`;
       const config = this.config as SubscriptionServiceConfig;
-      await this.cache.set(cacheKey, updatedSubscription, config.cacheDuration);
-      
+      await this.cache.set(cacheKey, updatedSubscription, _config.cacheDuration);
+
       // Invalidate related caches
       await this.invalidateUserCaches(updatedSubscription.userId);
-      
+
       // Track analytics
-      await this.trackSubscriptionEvent('subscription_updated', updatedSubscription, updates);
-      
+      await this.trackSubscriptionEvent(
+        'subscription_updated',
+        updatedSubscription,
+        updates
+      );
+
       this.recordMetric('updateSubscription_duration', this.endTimer(timerId) || 0);
-      this.emit('subscription:updated', { id, subscription: updatedSubscription, changes: updates });
-      
+      this.emit('subscription:updated', {
+        id,
+        subscription: updatedSubscription,
+        changes: updates,
+      });
+
       return updatedSubscription;
-      
-    } catch (error) {
+    } catch (_error) {
       this.recordMetric('updateSubscription_errors', 1);
-      this.handleError(error, 'Failed to update subscription', { id, updates });
+      this.handleError(_error, 'Failed to update subscription', { id, updates });
       throw error;
     }
   }
 
   public async cancelSubscription(id: string): Promise<void> {
     const timerId = this.startTimer('cancelSubscription');
-    
+
     try {
       const subscription = await this.getSubscriptionById(id);
       if (!subscription) {
         throw new Error(`Subscription with ID ${id} not found`);
       }
-      
+
       // Check rate limit
       if (!this.checkRateLimit('cancelSubscription', subscription.userId)) {
         throw new Error('Rate limit exceeded for subscription cancellation');
       }
-      
+
       const canceledSubscription: Subscription = {
         ...subscription,
         status: 'canceled',
         canceledAt: new Date(),
         cancelAtPeriodEnd: false,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
-      
+
       // Save to database with circuit breaker
       await this.executeWithCircuitBreaker('supabase', async () => {
         await this.saveSubscriptionToDatabase(canceledSubscription);
       });
-      
+
       // Update cache
       const cacheKey = `subscription:${subscription.userId}`;
       const config = this.config as SubscriptionServiceConfig;
-      await this.cache.set(cacheKey, canceledSubscription, config.cacheDuration);
-      
+      await this.cache.set(cacheKey, canceledSubscription, _config.cacheDuration);
+
       // Invalidate related caches
       await this.invalidateUserCaches(subscription.userId);
-      
+
       // Track analytics
       await this.trackSubscriptionEvent('subscription_canceled', canceledSubscription);
-      
+
       this.recordMetric('cancelSubscription_duration', this.endTimer(timerId) || 0);
       this.emit('subscription:canceled', { id, subscription: canceledSubscription });
-      
-    } catch (error) {
+    } catch (_error) {
       this.recordMetric('cancelSubscription_errors', 1);
-      this.handleError(error, 'Failed to cancel subscription', { id });
+      this.handleError(_error, 'Failed to cancel subscription', { id });
       throw error;
     }
   }
@@ -397,19 +421,22 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
       if (cached) {
         return cached;
       }
-      
-      const subscription = await this.executeWithCircuitBreaker('supabase', async () => {
-        return await this.fetchSubscriptionByIdFromDatabase(id);
-      });
-      
+
+      const subscription = await this.executeWithCircuitBreaker(
+        'supabase',
+        async () => {
+          return await this.fetchSubscriptionByIdFromDatabase(id);
+        }
+      );
+
       if (subscription) {
-        const config = this.config as SubscriptionServiceConfig;
-        await this.cache.set(cacheKey, subscription, config.cacheDuration);
+        const config = this._config as SubscriptionServiceConfig;
+        await this.cache.set(cacheKey, subscription, _config.cacheDuration);
       }
-      
+
       return subscription;
-    } catch (error) {
-      this.handleError(error, 'Failed to get subscription by ID', { id });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to get subscription by ID', { id });
       return null;
     }
   }
@@ -418,8 +445,8 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     try {
       const subscription = await this.getSubscription(userId);
       return subscription?.tier || 'free';
-    } catch (error) {
-      this.handleError(error, 'Failed to get user tier', { userId });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to get _user tier', { userId });
       return 'free';
     }
   }
@@ -429,18 +456,21 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
       const tier = await this.getUserTier(userId);
       const plan = SUBSCRIPTION_PLANS.find(p => p.tier === tier);
       return plan?.featureAccess || SUBSCRIPTION_PLANS[0].featureAccess;
-    } catch (error) {
-      this.handleError(error, 'Failed to get feature access', { userId });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to get feature access', { userId });
       return SUBSCRIPTION_PLANS[0].featureAccess; // Default to free tier
     }
   }
 
-  public async hasFeatureAccess(userId: string, feature: keyof PremiumFeatureAccess): Promise<boolean> {
+  public async hasFeatureAccess(
+    userId: string,
+    feature: keyof PremiumFeatureAccess
+  ): Promise<boolean> {
     try {
       const featureAccess = await this.getFeatureAccess(userId);
       return featureAccess[feature];
-    } catch (error) {
-      this.handleError(error, 'Failed to check feature access', { userId, feature });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to check feature access', { userId, feature });
       return false;
     }
   }
@@ -453,10 +483,10 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
       const tier = await this.getUserTier(userId);
       const limits = await this.getFeatureLimits(userId);
       const usage = await this.getCurrentUsage(userId);
-      
+
       let currentUsage: number = 0;
       let limit: number = 0;
-      
+
       switch (feature) {
         case 'elevenlabsApiCalls':
           currentUsage = usage?.elevenlabsApiCalls || 0;
@@ -471,11 +501,11 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
           limit = limits.customVoiceMessagesPerDay;
           break;
       }
-      
+
       if (limit === -1) {
         return { hasAccess: true };
       }
-      
+
       if (currentUsage >= limit) {
         return {
           hasAccess: false,
@@ -485,49 +515,47 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
           limit,
         };
       }
-      
+
       return { hasAccess: true, currentUsage, limit };
-      
-    } catch (error) {
-      this.handleError(error, 'Failed to check feature usage', { userId, feature });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to check feature usage', { userId, feature });
       return { hasAccess: false, reason: 'Error checking usage' };
     }
   }
 
   public async getCurrentUsage(userId: string): Promise<PremiumUsage | null> {
     const timerId = this.startTimer('getCurrentUsage');
-    
+
     try {
       const currentMonth = new Date().toISOString().slice(0, 7);
       const cacheKey = `usage:${userId}:${currentMonth}`;
-      
+
       // Try cache first
       const cached = await this.cache.get<PremiumUsage>(cacheKey);
       if (cached) {
         this.recordMetric('usage_cache_hit', 1);
         return cached;
       }
-      
+
       this.recordMetric('usage_cache_miss', 1);
-      
+
       // Get from database with circuit breaker
       const usage = await this.executeWithCircuitBreaker('supabase', async () => {
         return await this.fetchUsageFromDatabase(userId, currentMonth);
       });
-      
+
       // Cache with shorter duration for usage data
       if (usage) {
-        const config = this.config as SubscriptionServiceConfig;
-        await this.cache.set(cacheKey, usage, config.usageCacheDuration);
+        const config = this._config as SubscriptionServiceConfig;
+        await this.cache.set(cacheKey, usage, _config.usageCacheDuration);
       }
-      
+
       this.recordMetric('getCurrentUsage_duration', this.endTimer(timerId) || 0);
-      
+
       return usage;
-      
-    } catch (error) {
+    } catch (_error) {
       this.recordMetric('getCurrentUsage_errors', 1);
-      this.handleError(error, 'Failed to get current usage', { userId });
+      this.handleError(_error, 'Failed to get current usage', { userId });
       return null;
     }
   }
@@ -538,44 +566,47 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     increment: number = 1
   ): Promise<void> {
     const timerId = this.startTimer('incrementUsage');
-    
+
     try {
-      if (!(this.config as SubscriptionServiceConfig).enableUsageTracking) {
+      if (!(this._config as SubscriptionServiceConfig).enableUsageTracking) {
         return;
       }
-      
+
       // Check rate limit
       if (!this.checkRateLimit('incrementUsage', userId)) {
         throw new Error('Rate limit exceeded for usage increment');
       }
-      
+
       const currentMonth = new Date().toISOString().slice(0, 7);
-      
+
       // Update database with circuit breaker
       await this.executeWithCircuitBreaker('supabase', async () => {
         await this.incrementUsageInDatabase(userId, currentMonth, feature, increment);
       });
-      
+
       // Invalidate cache
       const cacheKey = `usage:${userId}:${currentMonth}`;
       await this.cache.delete(cacheKey);
-      
+
       // Track analytics
-      if ((this.config as SubscriptionServiceConfig).enableAnalytics) {
+      if ((this._config as SubscriptionServiceConfig).enableAnalytics) {
         await this.trackUsageEvent('usage_incremented', {
           userId,
           feature,
           increment,
-          month: currentMonth
+          month: currentMonth,
         });
       }
-      
+
       this.recordMetric('incrementUsage_duration', this.endTimer(timerId) || 0);
       this.emit('usage:incremented', { userId, feature, increment });
-      
-    } catch (error) {
+    } catch (_error) {
       this.recordMetric('incrementUsage_errors', 1);
-      this.handleError(error, 'Failed to increment usage', { userId, feature, increment });
+      this.handleError(_error, 'Failed to increment usage', {
+        userId,
+        feature,
+        increment,
+      });
       throw error;
     }
   }
@@ -584,8 +615,8 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     try {
       const tier = await this.getUserTier(userId);
       return SubscriptionLimits[tier];
-    } catch (error) {
-      this.handleError(error, 'Failed to get feature limits', { userId });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to get feature limits', { userId });
       return SubscriptionLimits.free; // Default to free tier limits
     }
   }
@@ -597,28 +628,40 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
   private async setupCache(): Promise<void> {
     try {
       const cacheStats = await this.cache.stats();
-      console.debug(`[SubscriptionService] Cache initialized with ${cacheStats.size} entries`);
-    } catch (error) {
-      this.handleError(error, 'Failed to setup cache');
+      console.debug(
+        `[SubscriptionService] Cache initialized with ${cacheStats.size} entries`
+      );
+    } catch (_error) {
+      this.handleError(_error, 'Failed to setup cache');
     }
   }
 
   private setupCircuitBreakers(): void {
-    const config = this.config as SubscriptionServiceConfig;
-    
+    const config = this._config as SubscriptionServiceConfig;
+
     // Setup circuit breaker for Supabase calls
-    this.circuitBreakers.set('supabase', this.createCircuitBreaker(
-      async () => { throw new Error('Circuit breaker test'); }, // Placeholder
-      config.circuitBreaker.failureThreshold,
-      config.circuitBreaker.recoveryTimeout
-    ));
-    
+    this.circuitBreakers.set(
+      'supabase',
+      this.createCircuitBreaker(
+        async () => {
+          throw new Error('Circuit breaker test');
+        }, // Placeholder
+        config.circuitBreaker.failureThreshold,
+        config.circuitBreaker.recoveryTimeout
+      )
+    );
+
     // Setup circuit breaker for Stripe calls
-    this.circuitBreakers.set('stripe', this.createCircuitBreaker(
-      async () => { throw new Error('Circuit breaker test'); }, // Placeholder
-      config.circuitBreaker.failureThreshold,
-      config.circuitBreaker.recoveryTimeout
-    ));
+    this.circuitBreakers.set(
+      'stripe',
+      this.createCircuitBreaker(
+        async () => {
+          throw new Error('Circuit breaker test');
+        }, // Placeholder
+        config.circuitBreaker.failureThreshold,
+        config.circuitBreaker.recoveryTimeout
+      )
+    );
   }
 
   private async preloadConfiguration(): Promise<void> {
@@ -626,16 +669,19 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
       // Cache subscription plans configuration
       const cacheKey = 'subscription:plans';
       await this.cache.set(cacheKey, SUBSCRIPTION_PLANS, 24 * 60 * 60 * 1000); // Cache for 24 hours
-    } catch (error) {
-      console.warn('[SubscriptionService] Failed to preload configuration:', error);
+    } catch (_error) {
+      console.warn('[SubscriptionService] Failed to preload configuration:', _error);
     }
   }
 
   private setupPeriodicCleanup(): void {
     // Run cleanup every hour
-    setInterval(() => {
-      this.performPeriodicCleanup();
-    }, 60 * 60 * 1000);
+    setInterval(
+      () => {
+        this.performPeriodicCleanup();
+      },
+      60 * 60 * 1000
+    );
   }
 
   private async performPeriodicCleanup(): Promise<void> {
@@ -647,34 +693,33 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
           this.rateLimitTracker.delete(key);
         }
       }
-      
+
       // Clean up old cache entries would be handled by CacheManager
-      
-    } catch (error) {
-      console.warn('[SubscriptionService] Periodic cleanup error:', error);
+    } catch (_error) {
+      console.warn('[SubscriptionService] Periodic cleanup _error:', _error);
     }
   }
 
   private checkRateLimit(action: string, userId: string): boolean {
-    const config = this.config as SubscriptionServiceConfig;
+    const config = this._config as SubscriptionServiceConfig;
     const key = `${action}:${userId}`;
     const now = Date.now();
-    
+
     const existing = this.rateLimitTracker.get(key);
     if (!existing || now > existing.resetTime) {
       // Reset or create new tracking
       this.rateLimitTracker.set(key, {
         count: 1,
-        resetTime: now + config.rateLimit.windowMs
+        resetTime: now + _config.rateLimit.windowMs,
       });
       return true;
     }
-    
-    if (existing.count >= config.rateLimit.maxRequests) {
+
+    if (existing.count >= _config.rateLimit.maxRequests) {
       this.recordMetric('rate_limit_exceeded', 1, { action, userId });
       return false;
     }
-    
+
     existing.count++;
     return true;
   }
@@ -687,7 +732,7 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     if (circuitBreaker) {
       return await circuitBreaker();
     }
-    
+
     // Fallback to direct execution if no circuit breaker
     return await operation();
   }
@@ -697,23 +742,23 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     healthCheck: () => Promise<boolean>
   ): Promise<ServiceHealth['dependencies'][0]> {
     const startTime = Date.now();
-    
+
     try {
       const isHealthy = await healthCheck();
       const responseTime = Date.now() - startTime;
-      
+
       return {
         name: serviceName,
         status: isHealthy ? 'healthy' : 'unhealthy',
         responseTime,
-        lastCheck: new Date()
+        lastCheck: new Date(),
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         name: serviceName,
         status: 'unhealthy',
         responseTime: Date.now() - startTime,
-        lastCheck: new Date()
+        lastCheck: new Date(),
       };
     }
   }
@@ -722,12 +767,15 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     if (!data.userId) {
       throw new Error('User ID is required');
     }
-    
+
     if (data.tier && !['free', 'basic', 'premium', 'pro'].includes(data.tier)) {
       throw new Error('Invalid subscription tier');
     }
-    
-    if (data.status && !['active', 'canceled', 'past_due', 'unpaid'].includes(data.status)) {
+
+    if (
+      data.status &&
+      !['active', 'canceled', 'past_due', 'unpaid'].includes(data.status)
+    ) {
       throw new Error('Invalid subscription status');
     }
   }
@@ -736,24 +784,26 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     return `sub_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  private async fetchSubscriptionFromDatabase(userId: string): Promise<Subscription | null> {
+  private async fetchSubscriptionFromDatabase(
+    userId: string
+  ): Promise<Subscription | null> {
     if (!this.dependencies.supabaseService) {
       return null;
     }
-    
-    const { data, error } = await this.dependencies.supabaseService
+
+    const { data, _error } = await this.dependencies.supabaseService
       .from('subscriptions')
       .select('*')
       .eq('user_id', userId)
       .eq('status', 'active')
       .single();
-    
-    if (error && error.code !== 'PGRST116') {
-      throw new Error(`Failed to get subscription: ${error.message}`);
+
+    if (error && _error.code !== 'PGRST116') {
+      throw new Error(`Failed to get subscription: ${_error.message}`);
     }
-    
+
     if (!data) return null;
-    
+
     return {
       id: data.id,
       userId: data.user_id,
@@ -772,23 +822,25 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     };
   }
 
-  private async fetchSubscriptionByIdFromDatabase(id: string): Promise<Subscription | null> {
+  private async fetchSubscriptionByIdFromDatabase(
+    id: string
+  ): Promise<Subscription | null> {
     if (!this.dependencies.supabaseService) {
       return null;
     }
-    
-    const { data, error } = await this.dependencies.supabaseService
+
+    const { data, _error } = await this.dependencies.supabaseService
       .from('subscriptions')
       .select('*')
       .eq('id', id)
       .single();
-    
-    if (error && error.code !== 'PGRST116') {
-      throw new Error(`Failed to get subscription by ID: ${error.message}`);
+
+    if (error && _error.code !== 'PGRST116') {
+      throw new Error(`Failed to get subscription by ID: ${_error.message}`);
     }
-    
+
     if (!data) return null;
-    
+
     return {
       id: data.id,
       userId: data.user_id,
@@ -811,49 +863,54 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     if (!this.dependencies.supabaseService) {
       throw new Error('Supabase service not available');
     }
-    
-    const { error } = await this.dependencies.supabaseService
+
+    const { _error } = await this.dependencies.supabaseService
       .from('subscriptions')
-      .upsert([{
-        id: subscription.id,
-        user_id: subscription.userId,
-        tier: subscription.tier,
-        status: subscription.status,
-        current_period_start: subscription.currentPeriodStart.toISOString(),
-        current_period_end: subscription.currentPeriodEnd.toISOString(),
-        trial_end: subscription.trialEnd?.toISOString(),
-        cancel_at_period_end: subscription.cancelAtPeriodEnd,
-        canceled_at: subscription.canceledAt?.toISOString(),
-        created_at: subscription.createdAt.toISOString(),
-        updated_at: subscription.updatedAt.toISOString(),
-        stripe_customer_id: subscription.stripeCustomerId,
-        stripe_subscription_id: subscription.stripeSubscriptionId,
-        stripe_price_id: subscription.stripePriceId,
-      }]);
-    
-    if (error) {
-      throw new Error(`Failed to save subscription: ${error.message}`);
+      .upsert([
+        {
+          id: subscription.id,
+          user_id: subscription.userId,
+          tier: subscription.tier,
+          status: subscription.status,
+          current_period_start: subscription.currentPeriodStart.toISOString(),
+          current_period_end: subscription.currentPeriodEnd.toISOString(),
+          trial_end: subscription.trialEnd?.toISOString(),
+          cancel_at_period_end: subscription.cancelAtPeriodEnd,
+          canceled_at: subscription.canceledAt?.toISOString(),
+          created_at: subscription.createdAt.toISOString(),
+          updated_at: subscription.updatedAt.toISOString(),
+          stripe_customer_id: subscription.stripeCustomerId,
+          stripe_subscription_id: subscription.stripeSubscriptionId,
+          stripe_price_id: subscription.stripePriceId,
+        },
+      ]);
+
+    if (_error) {
+      throw new Error(`Failed to save subscription: ${_error.message}`);
     }
   }
 
-  private async fetchUsageFromDatabase(userId: string, month: string): Promise<PremiumUsage | null> {
+  private async fetchUsageFromDatabase(
+    userId: string,
+    month: string
+  ): Promise<PremiumUsage | null> {
     if (!this.dependencies.supabaseService) {
       return null;
     }
-    
-    const { data, error } = await this.dependencies.supabaseService
+
+    const { data, _error } = await this.dependencies.supabaseService
       .from('premium_usage')
       .select('*')
       .eq('user_id', userId)
       .eq('month', month)
       .single();
-    
-    if (error && error.code !== 'PGRST116') {
-      throw new Error(`Failed to get usage: ${error.message}`);
+
+    if (error && _error.code !== 'PGRST116') {
+      throw new Error(`Failed to get usage: ${_error.message}`);
     }
-    
+
     if (!data) return null;
-    
+
     return {
       userId: data.user_id,
       month: data.month,
@@ -874,16 +931,19 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     if (!this.dependencies.supabaseService) {
       throw new Error('Supabase service not available');
     }
-    
-    const { error } = await this.dependencies.supabaseService.rpc('increment_premium_usage', {
-      p_user_id: userId,
-      p_month: month,
-      p_feature: feature,
-      p_increment: increment,
-    });
-    
-    if (error) {
-      throw new Error(`Failed to increment usage: ${error.message}`);
+
+    const { _error } = await this.dependencies.supabaseService.rpc(
+      'increment_premium_usage',
+      {
+        p_user_id: userId,
+        p_month: month,
+        p_feature: feature,
+        p_increment: increment,
+      }
+    );
+
+    if (_error) {
+      throw new Error(`Failed to increment usage: ${_error.message}`);
     }
   }
 
@@ -891,53 +951,57 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     try {
       // Clear subscription cache
       await this.cache.delete(`subscription:${userId}`);
-      
+
       // Clear usage cache for current month
       const currentMonth = new Date().toISOString().slice(0, 7);
       await this.cache.delete(`usage:${userId}:${currentMonth}`);
-      
+
       // Clear feature access cache
       await this.cache.delete(`feature-access:${userId}`);
-      
-    } catch (error) {
-      console.warn('[SubscriptionService] Failed to invalidate user caches:', error);
+    } catch (_error) {
+      console.warn('[SubscriptionService] Failed to invalidate _user caches:', _error);
     }
   }
 
-  private async trackSubscriptionEvent(event: string, subscription: Subscription, changes?: any): Promise<void> {
-    if (!(this.config as SubscriptionServiceConfig).enableAnalytics) return;
-    
+  private async trackSubscriptionEvent(
+    _event: string,
+    subscription: Subscription,
+    changes?: any
+  ): Promise<void> {
+    if (!(this._config as SubscriptionServiceConfig).enableAnalytics) return;
+
     try {
       if (this.dependencies.analyticsService) {
-        await this.dependencies.analyticsService.track(event, {
+        await this.dependencies.analyticsService.track(_event, {
           subscriptionId: subscription.id,
           userId: subscription.userId,
           tier: subscription.tier,
           status: subscription.status,
-          changes
+          changes,
         });
       }
-    } catch (error) {
-      console.warn('[SubscriptionService] Failed to track analytics event:', error);
+    } catch (_error) {
+      console.warn('[SubscriptionService] Failed to track analytics _event:', _error);
     }
   }
 
-  private async trackUsageEvent(event: string, data: any): Promise<void> {
-    if (!(this.config as SubscriptionServiceConfig).enableAnalytics) return;
-    
+  private async trackUsageEvent(_event: string, data: any): Promise<void> {
+    if (!(this._config as SubscriptionServiceConfig).enableAnalytics) return;
+
     try {
       if (this.dependencies.analyticsService) {
-        await this.dependencies.analyticsService.track(event, data);
+        await this.dependencies.analyticsService.track(_event, data);
       }
-    } catch (error) {
-      console.warn('[SubscriptionService] Failed to track usage event:', error);
+    } catch (_error) {
+      console.warn('[SubscriptionService] Failed to track usage _event:', _error);
     }
   }
 
   private getRateLimitedRequestsCount(): number {
-    return Array.from(this.rateLimitTracker.values())
-      .filter(data => data.count >= (this.config as SubscriptionServiceConfig).rateLimit.maxRequests)
-      .length;
+    return Array.from(this.rateLimitTracker.values()).filter(
+      data =>
+        data.count >= (this._config as SubscriptionServiceConfig).rateLimit.maxRequests
+    ).length;
   }
 
   private getCircuitBreakerStatus(): Record<string, string> {
@@ -945,7 +1009,7 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
     // For now, return a simple status
     return {
       supabase: 'closed',
-      stripe: 'closed'
+      stripe: 'closed',
     };
   }
 
@@ -955,7 +1019,7 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
 
   public async reset(): Promise<void> {
     await super.reset();
-    
+
     this.rateLimitTracker.clear();
     this.circuitBreakers.clear();
     await this.cache.clear();
@@ -966,7 +1030,7 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
       ...super.getTestState(),
       rateLimitTrackerSize: this.rateLimitTracker.size,
       circuitBreakerCount: this.circuitBreakers.size,
-      cacheSize: this.cache.size?.() || 0
+      cacheSize: this.cache.size?.() || 0,
     };
   }
 }
@@ -974,7 +1038,7 @@ export class EnhancedSubscriptionService extends BaseService implements Subscrip
 // Factory function for dependency injection
 export const createSubscriptionService = (
   dependencies: SubscriptionServiceDependencies,
-  config: SubscriptionServiceConfig
+  _config: SubscriptionServiceConfig
 ): EnhancedSubscriptionService => {
-  return new EnhancedSubscriptionService(dependencies, config);
+  return new EnhancedSubscriptionService(dependencies, _config);
 };

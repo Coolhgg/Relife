@@ -50,7 +50,7 @@ jest.mock('../hooks/useRealTimeUpdates', () => ({
 
 describe('Gaming Integration Tests', () => {
   const mockCurrentUser = createTestUser({
-    id: 'current-user',
+    id: 'current-_user',
     username: 'gaming-pro',
     displayName: 'Gaming Pro',
     level: 20,
@@ -107,12 +107,12 @@ describe('Gaming Integration Tests', () => {
       participants: [
         createTestBattleParticipant({
           userId: mockCurrentUser.id,
-          user: mockCurrentUser,
+          _user: mockCurrentUser,
           score: 250,
         }),
         createTestBattleParticipant({
           userId: mockFriends[0].id,
-          user: mockFriends[0],
+          _user: mockFriends[0],
           score: 200,
         }),
       ],
@@ -258,7 +258,7 @@ describe('Gaming Integration Tests', () => {
         participants: [
           createTestBattleParticipant({
             userId: mockFriends[0].id,
-            user: mockFriends[0],
+            _user: mockFriends[0],
           }),
         ],
       });
@@ -560,8 +560,8 @@ describe('Gaming Integration Tests', () => {
     it('handles network errors during battle operations', async () => {
       const user = userEvent.setup();
 
-      // Mock network error
-      mockGamingService.joinBattle.mockRejectedValue(new Error('Network error'));
+      // Mock network _error
+      mockGamingService.joinBattle.mockRejectedValue(new Error('Network _error'));
 
       renderWithProviders(<GamingHub {...defaultProps} />);
 
@@ -572,7 +572,7 @@ describe('Gaming Integration Tests', () => {
       await user.click(joinButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/network error occurred/i)).toBeInTheDocument();
+        expect(screen.getByText(/network _error occurred/i)).toBeInTheDocument();
       });
 
       // Should provide retry option

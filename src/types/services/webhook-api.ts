@@ -25,11 +25,11 @@ export interface WebhookPayload {
 /**
  * Webhook sources
  */
-export type WebhookSource = 
-  | 'stripe' 
-  | 'supabase' 
-  | 'convertkit' 
-  | 'github' 
+export type WebhookSource =
+  | 'stripe'
+  | 'supabase'
+  | 'convertkit'
+  | 'github'
   | 'posthog'
   | 'sentry'
   | 'custom';
@@ -40,7 +40,7 @@ export type WebhookSource =
 export interface WebhookVerificationResult {
   isValid: boolean;
   source: WebhookSource;
-  error?: string;
+  _error?: string;
 }
 
 // =============================================================================
@@ -50,12 +50,12 @@ export interface WebhookVerificationResult {
 /**
  * Stripe webhook event types
  */
-export type StripeWebhookEventType = 
+export type StripeWebhookEventType =
   | 'customer.created'
   | 'customer.updated'
   | 'customer.deleted'
   | 'customer.subscription.created'
-  | 'customer.subscription.updated' 
+  | 'customer.subscription.updated'
   | 'customer.subscription.deleted'
   | 'invoice.created'
   | 'invoice.payment_succeeded'
@@ -124,7 +124,7 @@ export interface SupabaseWebhookPayload extends WebhookPayload {
 /**
  * ConvertKit webhook event types
  */
-export type ConvertKitWebhookEventType = 
+export type ConvertKitWebhookEventType =
   | 'subscriber.subscriber_activate'
   | 'subscriber.subscriber_unsubscribe'
   | 'subscriber.subscriber_bounce'
@@ -171,7 +171,7 @@ export interface ConvertKitWebhookPayload extends WebhookPayload {
 /**
  * GitHub webhook event types
  */
-export type GitHubWebhookEventType = 
+export type GitHubWebhookEventType =
   | 'push'
   | 'pull_request'
   | 'issues'
@@ -215,7 +215,7 @@ export interface GitHubWebhookPayload extends WebhookPayload {
 /**
  * PostHog webhook event types
  */
-export type PostHogWebhookEventType = 
+export type PostHogWebhookEventType =
   | 'action.performed'
   | 'annotation.created'
   | 'feature_flag.updated'
@@ -246,7 +246,7 @@ export interface PostHogWebhookPayload extends WebhookPayload {
 /**
  * Sentry webhook event types
  */
-export type SentryWebhookEventType = 
+export type SentryWebhookEventType =
   | 'error.created'
   | 'issue.created'
   | 'issue.resolved'
@@ -297,7 +297,7 @@ export interface SentryWebhookPayload extends WebhookPayload {
 /**
  * Custom application webhook types
  */
-export type CustomWebhookEventType = 
+export type CustomWebhookEventType =
   | 'user.created'
   | 'user.updated'
   | 'user.deleted'
@@ -381,7 +381,7 @@ export interface WebhookProcessingStatus {
   attempts: number;
   lastAttemptAt: string;
   nextAttemptAt?: string;
-  error?: string;
+  _error?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -408,7 +408,7 @@ export interface WebhookRegistryEntry {
   transforms?: Array<{
     field: string;
     operation: 'map' | 'filter' | 'format' | 'validate';
-    config: Record<string, unknown>;
+    _config: Record<string, unknown>;
   }>;
 }
 
@@ -431,7 +431,7 @@ export interface WebhookRegistry {
 /**
  * All webhook payload types
  */
-export type AllWebhookPayloads = 
+export type AllWebhookPayloads =
   | StripeWebhookPayload
   | SupabaseWebhookPayload
   | ConvertKitWebhookPayload
@@ -443,7 +443,7 @@ export type AllWebhookPayloads =
 /**
  * All webhook event types
  */
-export type AllWebhookEventTypes = 
+export type AllWebhookEventTypes =
   | StripeWebhookEventType
   | SupabaseWebhookEventType
   | ConvertKitWebhookEventType

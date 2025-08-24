@@ -5,7 +5,7 @@ import type { Alarm } from '../types';
 export function useAdvancedAlarms() {
   const [alarms, setAlarms] = useState<Alarm[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [_error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadAlarms();
@@ -32,8 +32,8 @@ export function useAdvancedAlarms() {
 
       setAlarms(advancedAlarms);
       setError(null);
-    } catch (error) {
-      console.error('Error loading alarms:', error);
+    } catch (_error) {
+      console._error('Error loading alarms:', _error);
       setError('Failed to load alarms');
     } finally {
       setLoading(false);
@@ -47,10 +47,10 @@ export function useAdvancedAlarms() {
       setAlarms((prev: Alarm[]) => [...prev, newAlarm]);
       setError(null);
       return newAlarm;
-    } catch (error) {
-      console.error('Error creating alarm:', error);
+    } catch (_error) {
+      console.error('Error creating alarm:', _error);
       setError('Failed to create alarm');
-      throw error;
+      throw _error;
     } finally {
       setLoading(false);
     }
@@ -62,13 +62,15 @@ export function useAdvancedAlarms() {
       await AlarmService.updateAlarm(id, alarmData);
 
       setAlarms((prev: Alarm[]) =>
-        prev.map((alarm: Alarm) => (alarm.id === id ? { ...alarm, ...alarmData } : alarm))
+        prev.map((alarm: Alarm) =>
+          alarm.id === id ? { ...alarm, ...alarmData } : alarm
+        )
       );
       setError(null);
-    } catch (error) {
-      console.error('Error updating alarm:', error);
+    } catch (_error) {
+      console.error('Error updating alarm:', _error);
       setError('Failed to update alarm');
-      throw error;
+      throw _error;
     } finally {
       setLoading(false);
     }
@@ -80,10 +82,10 @@ export function useAdvancedAlarms() {
       await AlarmService.deleteAlarm(id);
       setAlarms((prev: Alarm[]) => prev.filter((alarm: Alarm) => alarm.id !== id));
       setError(null);
-    } catch (error) {
-      console.error('Error deleting alarm:', error);
+    } catch (_error) {
+      console.error('Error deleting alarm:', _error);
       setError('Failed to delete alarm');
-      throw error;
+      throw _error;
     } finally {
       setLoading(false);
     }
@@ -92,7 +94,7 @@ export function useAdvancedAlarms() {
   return {
     alarms,
     loading,
-    error,
+    _error,
     createAlarm,
     updateAlarm,
     deleteAlarm,

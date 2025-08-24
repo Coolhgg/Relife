@@ -107,8 +107,8 @@ export class AudioManager {
 
       this.isInitialized = true;
       console.log('AudioManager initialized successfully');
-    } catch (error) {
-      console.error('Error initializing AudioManager:', error);
+    } catch (_error) {
+      console._error('Error initializing AudioManager:', _error);
     }
   }
 
@@ -116,14 +116,14 @@ export class AudioManager {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open('AlarmAudioCache', 1);
 
-      request.onerror = () => reject(request.error);
+      request.onerror = () => reject(request._error);
       request.onsuccess = () => {
         this.db = request.result;
         resolve();
       };
 
       request.onupgradeneeded = event => {
-        const db = (event.target as IDBOpenDBRequest).result;
+        const db = (_event.target as IDBOpenDBRequest).result;
 
         // Create object store for audio cache
         if (!db.objectStoreNames.contains('audioCache')) {
@@ -146,8 +146,8 @@ export class AudioManager {
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
       }
-    } catch (error) {
-      console.warn('Web Audio API not supported:', error);
+    } catch (_error) {
+      console.warn('Web Audio API not supported:', _error);
     }
   }
 
@@ -192,7 +192,7 @@ export class AudioManager {
         console.log(`Loaded ${this.cache.size} cached audio entries`);
         resolve();
       };
-      request.onerror = () => reject(request.error);
+      request.onerror = () => reject(request._error);
     });
   }
 
@@ -231,9 +231,9 @@ export class AudioManager {
       const result = await loadPromise;
       this.loadingQueue.delete(cacheKey);
       return result;
-    } catch (error) {
+    } catch (_error) {
       this.loadingQueue.delete(cacheKey);
-      throw error;
+      throw _error;
     }
   }
 
@@ -367,9 +367,9 @@ export class AudioManager {
       await this.saveCacheEntry(entry);
       this.cache.set(cacheKey, entry);
       return entry;
-    } catch (error) {
-      console.error('Error loading audio file:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error loading audio file:', _error);
+      throw _error;
     }
   }
 
@@ -434,8 +434,8 @@ export class AudioManager {
       this.cache.set(cacheKey, entry);
 
       console.log(`Preloaded TTS message for alarm ${alarm.id}`);
-    } catch (error) {
-      console.error('Error preloading TTS message:', error);
+    } catch (_error) {
+      console._error('Error preloading TTS message:', _error);
     }
   }
 
@@ -447,8 +447,8 @@ export class AudioManager {
         compression: 'light',
       });
       console.log(`Preloaded custom sound: ${sound.name}`);
-    } catch (error) {
-      console.error('Error preloading custom sound:', error);
+    } catch (_error) {
+      console._error('Error preloading custom sound:', _error);
     }
   }
 
@@ -486,8 +486,8 @@ export class AudioManager {
       }
 
       return await this.speakText(messageText, alarm.voiceMood, repeat);
-    } catch (error) {
-      console.error('Error playing TTS message:', error);
+    } catch (_error) {
+      console._error('Error playing TTS message:', _error);
       return false;
     }
   }
@@ -513,7 +513,7 @@ export class AudioManager {
           this.voiceMoodConfigs[mood] || this.voiceMoodConfigs['motivational'];
         utterance.rate = config.rate;
         utterance.pitch = config.pitch;
-        utterance.volume = config.volume;
+        utterance.volume = _config.volume;
 
         // Try to find appropriate voice
         const voices = speechSynthesis.getVoices();
@@ -539,7 +539,7 @@ export class AudioManager {
         };
 
         utterance.onerror = event => {
-          console.error('TTS error:', event.error);
+          console.error('TTS _error:', _event._error);
           this.currentUtterance = null;
           resolve(false);
         };
@@ -554,8 +554,8 @@ export class AudioManager {
             resolve(false);
           }
         }, 15000);
-      } catch (error) {
-        console.error('Error in TTS:', error);
+      } catch (_error) {
+        console._error('Error in TTS:', _error);
         resolve(false);
       }
     });
@@ -636,8 +636,8 @@ export class AudioManager {
       source.start();
 
       return source;
-    } catch (error) {
-      console.error('Error playing audio file:', error);
+    } catch (_error) {
+      console._error('Error playing audio file:', _error);
       return null;
     }
   }
@@ -686,9 +686,9 @@ export class AudioManager {
         compression: 'light',
       });
       console.log(`Preloaded custom sound: ${sound.name}`);
-    } catch (error) {
-      console.error('Error preloading custom sound:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error preloading custom sound:', _error);
+      throw _error;
     }
   }
 
@@ -705,8 +705,8 @@ export class AudioManager {
   ): Promise<AudioBufferSourceNode | null> {
     try {
       return await this.playAudioFile(sound.fileUrl, options);
-    } catch (error) {
-      console.error('Error playing custom sound:', error);
+    } catch (_error) {
+      console._error('Error playing custom sound:', _error);
       return null;
     }
   }
@@ -852,8 +852,8 @@ export class AudioManager {
       );
 
       return compressedBuffer;
-    } catch (error) {
-      console.error('Audio compression failed, returning original:', error);
+    } catch (_error) {
+      console._error('Audio compression failed, returning original:', _error);
       return audioBuffer;
     }
   }
@@ -973,7 +973,7 @@ export class AudioManager {
     return new Promise((resolve, reject) => {
       const request = store.put(entry);
       request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
+      request.onerror = () => reject(request._error);
     });
   }
 
@@ -989,7 +989,7 @@ export class AudioManager {
         this.cache.delete(id);
         resolve();
       };
-      request.onerror = () => reject(request.error);
+      request.onerror = () => reject(request._error);
     });
   }
 
@@ -1017,7 +1017,7 @@ export class AudioManager {
       await new Promise<void>((resolve, reject) => {
         const request = store.clear();
         request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
+        request.onerror = () => reject(request._error);
       });
     }
   }
@@ -1044,8 +1044,8 @@ export class AudioManager {
     return stats;
   }
 
-  updatePreloadConfig(config: Partial<AudioPreloadConfig>): void {
-    this.preloadConfig = { ...this.preloadConfig, ...config };
+  updatePreloadConfig(_config: Partial<AudioPreloadConfig>): void {
+    this.preloadConfig = { ...this.preloadConfig, ..._config };
   }
 
   // Audio format optimization methods
@@ -1074,8 +1074,8 @@ export class AudioManager {
 
       // Convert format using Web Audio API
       return await this.convertAudioFormat(audioData, originalFormat, optimalFormat);
-    } catch (error) {
-      console.error('Audio format optimization failed:', error);
+    } catch (_error) {
+      console._error('Audio format optimization failed:', _error);
       return audioData; // Return original on failure
     }
   }
@@ -1148,8 +1148,8 @@ export class AudioManager {
       // Re-encode in target format (simplified implementation)
       // In production, this would use format-specific encoders
       return await this.encodeToFormat(audioBuffer, toFormat);
-    } catch (error) {
-      console.error(`Error converting from ${fromFormat} to ${toFormat}:`, error);
+    } catch (_error) {
+      console._error(`Error converting from ${fromFormat} to ${toFormat}:`, _error);
       throw error;
     }
   }
@@ -1262,9 +1262,9 @@ export class AudioManager {
           this.determineOptimalFormat(originalFormat, originalData.byteLength),
         compressionApplied: compressionLevel,
       };
-    } catch (error) {
-      console.error('Audio analysis and optimization failed:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Audio analysis and optimization failed:', _error);
+      throw _error;
     }
   }
 }

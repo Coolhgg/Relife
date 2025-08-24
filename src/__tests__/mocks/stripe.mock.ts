@@ -35,27 +35,27 @@ const mockStripe = {
           }),
 
           // Element events
-          on: jest.fn((event: string, handler: Function) => {
-            console.log(`👂 Mock Stripe element event listener: ${type} - ${event}`);
+          on: jest.fn((_event: string, handler: Function) => {
+            console.log(`👂 Mock Stripe element event listener: ${type} - ${_event}`);
 
             // Simulate events for testing
             setTimeout(() => {
-              if (event === 'ready') {
+              if (_event === 'ready') {
                 handler({ elementType: type });
-              } else if (event === 'change') {
+              } else if (_event === 'change') {
                 handler({
                   elementType: type,
                   empty: false,
                   complete: true,
-                  error: null,
+                  _error: null,
                 });
               }
             }, 100);
           }),
 
-          off: jest.fn((event: string, handler?: Function) => {
+          off: jest.fn((_event: string, handler?: Function) => {
             console.log(
-              `🔇 Mock Stripe element event listener removed: ${type} - ${event}`
+              `🔇 Mock Stripe element event listener removed: ${type} - ${_event}`
             );
           }),
 
@@ -82,7 +82,7 @@ const mockStripe = {
       // Form submission
       submit: jest.fn(() => {
         console.log('📝 Mock Stripe elements submit');
-        return Promise.resolve({ error: null });
+        return Promise.resolve({ _error: null });
       }),
 
       // Elements update
@@ -188,7 +188,7 @@ const mockStripe = {
           funding: 'credit',
         },
       },
-      error: null,
+      _error: null,
     });
   }),
 
@@ -219,7 +219,7 @@ const mockStripe = {
         unit_amount: 999,
         currency: 'usd',
       },
-      error: null,
+      _error: null,
     });
   }),
 
@@ -254,7 +254,7 @@ const mockStripe = {
     console.log('🛒 Mock Stripe redirectToCheckout', sessionId);
     // In real implementation, this would redirect to Stripe Checkout
     window.location.href = `https://checkout.stripe.com/pay/${sessionId}`;
-    return Promise.resolve({ error: null });
+    return Promise.resolve({ _error: null });
   }),
 
   // Radar (fraud detection)
@@ -298,10 +298,10 @@ const mockStripe = {
         return Promise.resolve({ applePay: true, googlePay: false });
       }),
 
-      on: jest.fn((event: string, handler: Function) => {
-        console.log(`👂 Mock Stripe paymentRequest.on: ${event}`);
+      on: jest.fn((_event: string, handler: Function) => {
+        console.log(`👂 Mock Stripe paymentRequest.on: ${_event}`);
 
-        if (event === 'paymentmethod') {
+        if (_event === 'paymentmethod') {
           // Simulate payment method event
           setTimeout(() => {
             handler({
@@ -378,7 +378,7 @@ const mockStripe = {
 
   _mockTriggerError: jest.fn(
     (errorType: 'card_error' | 'invalid_request_error', message: string) => {
-      console.log(`❌ Mock Stripe error trigger: ${errorType} - ${message}`);
+      console.log(`❌ Mock Stripe _error trigger: ${errorType} - ${message}`);
       if (errorType === 'card_error') {
         throw new mockStripe.errors.StripeCardError(message, 'card_declined');
       } else {

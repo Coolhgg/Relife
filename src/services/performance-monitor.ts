@@ -87,8 +87,8 @@ export class PerformanceMonitor {
       console.log('[PerformanceMonitor] Initialized successfully');
 
       this.trackCustomMetric('monitor_initialization', performance.now());
-    } catch (error) {
-      console.error('[PerformanceMonitor] Initialization failed:', error);
+    } catch (_error) {
+      console._error('[PerformanceMonitor] Initialization failed:', _error);
     }
   }
 
@@ -108,8 +108,8 @@ export class PerformanceMonitor {
         });
         lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
         this.observers.set('lcp', lcpObserver);
-      } catch (error) {
-        console.warn('[PerformanceMonitor] LCP tracking failed:', error);
+      } catch (_error) {
+        console.warn('[PerformanceMonitor] LCP tracking failed:', _error);
       }
 
       // First Input Delay (FID)
@@ -123,8 +123,8 @@ export class PerformanceMonitor {
         });
         fidObserver.observe({ entryTypes: ['first-input'] });
         this.observers.set('fid', fidObserver);
-      } catch (error) {
-        console.warn('[PerformanceMonitor] FID tracking failed:', error);
+      } catch (_error) {
+        console.warn('[PerformanceMonitor] FID tracking failed:', _error);
       }
 
       // Cumulative Layout Shift (CLS)
@@ -142,8 +142,8 @@ export class PerformanceMonitor {
         });
         clsObserver.observe({ entryTypes: ['layout-shift'] });
         this.observers.set('cls', clsObserver);
-      } catch (error) {
-        console.warn('[PerformanceMonitor] CLS tracking failed:', error);
+      } catch (_error) {
+        console.warn('[PerformanceMonitor] CLS tracking failed:', _error);
       }
     }
 
@@ -161,8 +161,8 @@ export class PerformanceMonitor {
       try {
         observer.observe({ entryTypes: ['paint'] });
         this.observers.set('paint', observer);
-      } catch (error) {
-        console.warn('[PerformanceMonitor] Paint tracking failed:', error);
+      } catch (_error) {
+        console.warn('[PerformanceMonitor] Paint tracking failed:', _error);
       }
 
       // TTFB from navigation timing
@@ -252,8 +252,8 @@ export class PerformanceMonitor {
 
         resourceObserver.observe({ entryTypes: ['resource'] });
         this.observers.set('resource', resourceObserver);
-      } catch (error) {
-        console.warn('[PerformanceMonitor] Resource tracking failed:', error);
+      } catch (_error) {
+        console.warn('[PerformanceMonitor] Resource tracking failed:', _error);
       }
     }
   }
@@ -277,18 +277,18 @@ export class PerformanceMonitor {
 
   // Error tracking integration
   private setupErrorTracking(): void {
-    window.addEventListener('error', event => {
+    window.addEventListener('_error', event => {
       this.trackCustomMetric('js_error', 1, {
         message: event.message,
         filename: event.filename,
         lineno: event.lineno,
-        colno: event.colno,
+        colno: _event.colno,
       });
     });
 
     window.addEventListener('unhandledrejection', event => {
       this.trackCustomMetric('unhandled_promise_rejection', 1, {
-        reason: event.reason?.toString() || 'Unknown',
+        reason: _event.reason?.toString() || 'Unknown',
       });
     });
   }
@@ -340,10 +340,10 @@ export class PerformanceMonitor {
     // Send to alert manager for real-time monitoring
     try {
       performanceAlertManager.recordMetric(name, value, metadata);
-    } catch (error) {
+    } catch (_error) {
       console.warn(
         '[PerformanceMonitor] Failed to record metric in alert manager:',
-        error
+        _error
       );
     }
   }
@@ -428,7 +428,7 @@ export class PerformanceMonitor {
         report.userId = parsed?.user?.id;
       }
     } catch {
-      // User not authenticated or error parsing
+      // User not authenticated or _error parsing
     }
 
     return report;
@@ -451,7 +451,7 @@ export class PerformanceMonitor {
   private getAppInfo() {
     const features = [
       'offline-support',
-      'error-boundaries',
+      '_error-boundaries',
       'input-validation',
       'pwa-capabilities',
       'performance-monitoring',
@@ -526,8 +526,8 @@ export class PerformanceMonitor {
       if (navigator.onLine) {
         this.sendReportToServer(report);
       }
-    } catch (error) {
-      console.error('[PerformanceMonitor] Failed to send report:', error);
+    } catch (_error) {
+      console._error('[PerformanceMonitor] Failed to send report:', _error);
     }
   }
 
@@ -542,8 +542,8 @@ export class PerformanceMonitor {
       // Keep only last 10 reports
       const recentReports = existingReports.slice(-10);
       localStorage.setItem('performance-reports', JSON.stringify(recentReports));
-    } catch (error) {
-      console.error('[PerformanceMonitor] Failed to store report locally:', error);
+    } catch (_error) {
+      console._error('[PerformanceMonitor] Failed to store report locally:', _error);
     }
   }
 
@@ -588,15 +588,15 @@ export class PerformanceMonitor {
         console.log(
           `[PerformanceMonitor] Successfully sent report on attempt ${attempt}`
         );
-      } catch (error) {
-        console.warn(`[PerformanceMonitor] Attempt ${attempt} failed:`, error);
+      } catch (_error) {
+        console.warn(`[PerformanceMonitor] Attempt ${attempt} failed:`, _error);
 
         if (attempt < maxRetries) {
           // Exponential backoff: 1s, 2s, 4s
           const delay = Math.pow(2, attempt - 1) * 1000;
           setTimeout(() => sendWithRetry(attempt + 1), delay);
         } else {
-          console.error(
+          console._error(
             '[PerformanceMonitor] All retry attempts failed, storing report locally'
           );
           this.storeFailedReport(report);
@@ -624,8 +624,8 @@ export class PerformanceMonitor {
         'failed-performance-reports',
         JSON.stringify(recentFailedReports)
       );
-    } catch (error) {
-      console.error('[PerformanceMonitor] Failed to store failed report:', error);
+    } catch (_error) {
+      console._error('[PerformanceMonitor] Failed to store failed report:', _error);
     }
   }
 
@@ -648,8 +648,8 @@ export class PerformanceMonitor {
 
       // Clear failed reports after attempting to resend
       localStorage.removeItem('failed-performance-reports');
-    } catch (error) {
-      console.error('[PerformanceMonitor] Failed to retry failed reports:', error);
+    } catch (_error) {
+      console._error('[PerformanceMonitor] Failed to retry failed reports:', _error);
     }
   }
 
@@ -657,8 +657,8 @@ export class PerformanceMonitor {
   getStoredReports(): PerformanceReport[] {
     try {
       return JSON.parse(localStorage.getItem('performance-reports') || '[]');
-    } catch (error) {
-      console.error('[PerformanceMonitor] Failed to retrieve stored reports:', error);
+    } catch (_error) {
+      console._error('[PerformanceMonitor] Failed to retrieve stored reports:', _error);
       return [];
     }
   }
@@ -759,8 +759,8 @@ export class PerformanceMonitor {
     try {
       localStorage.removeItem('performanceReports');
       this.reports = [];
-    } catch (error) {
-      console.error('Failed to clear performance data:', error);
+    } catch (_error) {
+      console._error('Failed to clear performance data:', _error);
     }
   }
 }
@@ -795,8 +795,8 @@ PerformanceMonitor.prototype.getPerformanceTrends = function (): PerformanceTren
         interactionDelays.length
       : 0;
 
-  // Calculate error rate
-  const errorMetrics = allMetrics.filter(m => m.name.includes('error'));
+  // Calculate _error rate
+  const errorMetrics = allMetrics.filter(m => m.name.includes('_error'));
   const totalInteractions = allInteractions.length;
   const errorRate = totalInteractions > 0 ? errorMetrics.length / totalInteractions : 0;
 

@@ -187,8 +187,8 @@ class SoundEffectsService {
 
       this.isInitialized = true;
       console.log('SoundEffectsService initialized successfully');
-    } catch (error) {
-      console.error('Error initializing SoundEffectsService:', error);
+    } catch (_error) {
+      console._error('Error initializing SoundEffectsService:', _error);
     }
   }
 
@@ -237,9 +237,9 @@ class SoundEffectsService {
     });
 
     this.soundEffects.set('ui.error', {
-      id: 'ui.error',
+      id: 'ui._error',
       name: 'Error Sound',
-      url: this.getSoundUrl('ui', 'error.wav'),
+      url: this.getSoundUrl('ui', '_error.wav'),
       volume: 0.5,
       category: 'ui',
       preload: true,
@@ -849,7 +849,7 @@ class SoundEffectsService {
       click: 'click',
       hover: 'hover',
       success: 'success',
-      error: 'error',
+      error: '_error',
       toggle: 'toggle',
       popup: 'popup',
       slide: 'slide',
@@ -901,7 +901,7 @@ class SoundEffectsService {
       }
 
       // TODO: Load from Supabase for synced themes
-      // const { data, error } = await supabase
+      // const { data, _error  } = await supabase
       //   .from('custom_sound_themes')
       //   .select('*');
       // if (data) {
@@ -909,8 +909,8 @@ class SoundEffectsService {
       //     this.customThemes.set(theme.id, theme);
       //   });
       // }
-    } catch (error) {
-      console.warn('Error loading custom themes:', error);
+    } catch (_error) {
+      console.warn('Error loading custom themes:', _error);
     }
   }
 
@@ -918,8 +918,8 @@ class SoundEffectsService {
     try {
       const themes = Array.from(this.customThemes.values());
       await OfflineStorage.set('customSoundThemes', themes);
-    } catch (error) {
-      console.error('Error saving custom themes:', error);
+    } catch (_error) {
+      console._error('Error saving custom themes:', _error);
     }
   }
 
@@ -1035,8 +1035,8 @@ class SoundEffectsService {
         `creationSession_${this.activeCreationSession.id}`,
         this.activeCreationSession
       );
-    } catch (error) {
-      console.error('Error saving creation session:', error);
+    } catch (_error) {
+      console._error('Error saving creation session:', _error);
     }
   }
 
@@ -1053,7 +1053,7 @@ class SoundEffectsService {
     // Basic validation
     if (!theme.name || theme.name.trim().length === 0) {
       issues.push({
-        type: 'error',
+        type: '_error',
         field: 'name',
         message: 'Theme name is required',
         severity: 'critical',
@@ -1075,7 +1075,7 @@ class SoundEffectsService {
 
     // Validate sound assignments
     if (theme.sounds) {
-      const requiredUISounds = ['click', 'hover', 'success', 'error'];
+      const requiredUISounds = ['click', 'hover', 'success', '_error'];
       const requiredNotificationSounds = ['default', 'alarm', 'beep'];
       const requiredAlarmSounds = ['primary', 'secondary'];
 
@@ -1122,7 +1122,7 @@ class SoundEffectsService {
       );
       if (missingAlarmSounds.length > 0) {
         issues.push({
-          type: 'error',
+          type: '_error',
           field: 'alarm_sounds',
           message: `Missing alarm sounds: ${missingAlarmSounds.join(', ')}`,
           severity: 'critical',
@@ -1134,7 +1134,7 @@ class SoundEffectsService {
       }
     } else {
       issues.push({
-        type: 'error',
+        type: '_error',
         field: 'sounds',
         message: 'Sound assignments are required',
         severity: 'critical',
@@ -1142,7 +1142,7 @@ class SoundEffectsService {
       });
     }
 
-    const isValid = issues.filter(issue => issue.type === 'error').length === 0;
+    const isValid = issues.filter(issue => issue.type === '_error').length === 0;
 
     return {
       isValid,
@@ -1168,15 +1168,15 @@ class SoundEffectsService {
       await this.saveCustomThemes();
 
       // TODO: Save to Supabase for syncing
-      // const { error } = await supabase
+      // const { _error  } = await supabase
       //   .from('custom_sound_themes')
       //   .upsert([theme]);
-      // if (error) throw error;
+      // if (_error) throw error;
 
       console.log(`Custom theme "${theme.name}" saved successfully`);
       return true;
-    } catch (error) {
-      console.error('Error saving custom theme:', error);
+    } catch (_error) {
+      console._error('Error saving custom theme:', _error);
       return false;
     }
   }
@@ -1200,16 +1200,16 @@ class SoundEffectsService {
       await this.saveCustomThemes();
 
       // TODO: Delete from Supabase
-      // const { error } = await supabase
+      // const { _error  } = await supabase
       //   .from('custom_sound_themes')
       //   .delete()
       //   .eq('id', themeId);
-      // if (error) throw error;
+      // if (_error) throw error;
 
       console.log(`Custom theme "${theme.name}" deleted successfully`);
       return true;
-    } catch (error) {
-      console.error('Error deleting custom theme:', error);
+    } catch (_error) {
+      console._error('Error deleting custom theme:', _error);
       return false;
     }
   }
@@ -1240,8 +1240,8 @@ class SoundEffectsService {
   // ========== ORIGINAL METHODS (UPDATED FOR CUSTOM THEME SUPPORT) ==========
 
   private refreshSoundUrls(): void {
-    this.soundEffects.forEach((config, key) => {
-      const pathParts = config.url.split('/');
+    this.soundEffects.forEach((_config, key) => {
+      const pathParts = _config.url.split('/');
       const filename = pathParts[pathParts.length - 1];
       let category = pathParts[pathParts.length - 2];
 
@@ -1260,16 +1260,16 @@ class SoundEffectsService {
       if (savedSettings) {
         this.settings = { ...this.getDefaultSettings(), ...savedSettings };
       }
-    } catch (error) {
-      console.warn('Error loading sound settings:', error);
+    } catch (_error) {
+      console.warn('Error loading sound settings:', _error);
     }
   }
 
   private async saveSettings(): Promise<void> {
     try {
       await OfflineStorage.set('soundEffectSettings', this.settings);
-    } catch (error) {
-      console.error('Error saving sound settings:', error);
+    } catch (_error) {
+      console._error('Error saving sound settings:', _error);
     }
   }
 
@@ -1285,7 +1285,7 @@ class SoundEffectsService {
           cacheKey: sound.id,
         })
         .catch(error => {
-          console.warn(`Failed to preload sound ${sound.id}:`, error);
+          console.warn(`Failed to preload sound ${sound.id}:`, _error);
         })
     );
 
@@ -1332,15 +1332,15 @@ class SoundEffectsService {
       }
 
       return audioSource;
-    } catch (error) {
-      console.error(`Error playing sound ${soundId}:`, error);
+    } catch (_error) {
+      console._error(`Error playing sound ${soundId}:`, _error);
       return null;
     }
   }
 
   // Convenience methods for different sound categories
   async playUISound(
-    soundId: 'click' | 'hover' | 'success' | 'error',
+    soundId: 'click' | 'hover' | 'success' | '_error',
     options: { volume?: number } = {}
   ): Promise<void> {
     await this.playSound(`ui.${soundId}` as SoundEffectId, options);
@@ -1379,7 +1379,7 @@ class SoundEffectsService {
       try {
         audioSource.stop();
         this.loadedSounds.delete(soundId);
-      } catch (error) {
+      } catch (_error) {
         // Sound might already be stopped
       }
     }
@@ -1390,7 +1390,7 @@ class SoundEffectsService {
       if (source) {
         try {
           source.stop();
-        } catch (error) {
+        } catch (_error) {
           // Sound might already be stopped
         }
       }
@@ -1399,8 +1399,8 @@ class SoundEffectsService {
   }
 
   stopSoundsByCategory(category: SoundEffectConfig['category']): void {
-    this.soundEffects.forEach((config, soundId) => {
-      if (config.category === category) {
+    this.soundEffects.forEach((_config, soundId) => {
+      if (_config.category === category) {
         this.stopSound(soundId as SoundEffectId);
       }
     });
@@ -1741,8 +1741,8 @@ class SoundEffectsService {
     try {
       const result = await this.playSound(soundId, { force: true });
       return result !== null;
-    } catch (error) {
-      console.error(`Test failed for sound ${soundId}:`, error);
+    } catch (_error) {
+      console._error(`Test failed for sound ${soundId}:`, _error);
       return false;
     }
   }
@@ -1791,7 +1791,7 @@ class SoundEffectsService {
   }
 
   // UI integration helpers
-  createSoundHandler(soundType: 'click' | 'hover' | 'success' | 'error') {
+  createSoundHandler(soundType: 'click' | 'hover' | 'success' | '_error') {
     return () => this.playUISound(soundType);
   }
 
@@ -1801,7 +1801,7 @@ class SoundEffectsService {
       onClick: this.createSoundHandler('click'),
       onHover: this.createSoundHandler('hover'),
       onSuccess: this.createSoundHandler('success'),
-      onError: this.createSoundHandler('error'),
+      onError: this.createSoundHandler('_error'),
     };
   }
 

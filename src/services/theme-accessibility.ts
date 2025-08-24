@@ -375,8 +375,8 @@ class ThemeAccessibilityService {
         position: absolute;
         top: 0;
         left: 0;
-        z-index: 9999;
-      }
+        z-_index: 9999;
+       }
       .skip-link {
         position: absolute;
         left: -10000px;
@@ -423,9 +423,9 @@ class ThemeAccessibilityService {
   private addDescriptiveText(): void {
     // Add aria-descriptions for theme controls
     const themeButtons = document.querySelectorAll('[data-theme-toggle]');
-    themeButtons.forEach((button, index) => {
+    themeButtons.forEach((button, _index) => {
       if (!button.getAttribute('aria-describedby')) {
-        const descId = `theme-desc-${index}`;
+        const descId = `theme-desc-${_index}`;
         const desc = document.createElement('span');
         desc.id = descId;
         desc.className = 'sr-only';
@@ -606,13 +606,13 @@ class FocusManager {
     document.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
-  private handleFocusIn(event: FocusEvent): void {
+  private handleFocusIn(_event: FocusEvent): void {
     this.focusedElement = event.target as Element;
   }
 
-  private handleKeyDown(event: KeyboardEvent): void {
+  private handleKeyDown(_event: KeyboardEvent): void {
     // Tab trapping logic would go here
-    if (event.key === 'Tab' && this.focusTrap) {
+    if (_event.key === 'Tab' && this.focusTrap) {
       // Implement focus trap logic
     }
   }
@@ -646,8 +646,8 @@ class KeyboardNavigationManager {
     document.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
-  private handleKeyDown(event: KeyboardEvent): void {
-    const key = this.getShortcutKey(event);
+  private handleKeyDown(_event: KeyboardEvent): void {
+    const key = this.getShortcutKey(_event);
     const handler = this.shortcuts.get(key);
 
     if (handler) {
@@ -656,13 +656,13 @@ class KeyboardNavigationManager {
     }
   }
 
-  private getShortcutKey(event: KeyboardEvent): string {
+  private getShortcutKey(_event: KeyboardEvent): string {
     const parts = [];
-    if (event.ctrlKey) parts.push('ctrl');
-    if (event.altKey) parts.push('alt');
-    if (event.shiftKey) parts.push('shift');
-    if (event.metaKey) parts.push('meta');
-    parts.push(event.key.toLowerCase());
+    if (_event.ctrlKey) parts.push('ctrl');
+    if (_event.altKey) parts.push('alt');
+    if (_event.shiftKey) parts.push('shift');
+    if (_event.metaKey) parts.push('meta');
+    parts.push(_event.key.toLowerCase());
     return parts.join('+');
   }
 

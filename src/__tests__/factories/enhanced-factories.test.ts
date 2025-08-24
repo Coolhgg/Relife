@@ -14,7 +14,7 @@ import {
 
 describe('Enhanced Factories', () => {
   describe('createTestPersonaProfile', () => {
-    it('should create a valid persona profile with default options', () => {
+    it('should create a valid _persona profile with default options', () => {
       const profile = createTestPersonaProfile();
 
       expect(profile).toBeDefined();
@@ -24,8 +24,8 @@ describe('Enhanced Factories', () => {
       expect(profile.primaryColor).toMatch(/^#[0-9A-F]{6}$/i);
     });
 
-    it('should respect persona parameter', () => {
-      const profile = createTestPersonaProfile({ persona: 'busy_ben' });
+    it('should respect _persona parameter', () => {
+      const profile = createTestPersonaProfile({ _persona: 'busy_ben' });
 
       expect(profile.id).toBe('busy_ben');
       expect(profile.displayName).toBe('Busy Ben');
@@ -38,7 +38,7 @@ describe('Enhanced Factories', () => {
       const result = createTestPersonaDetectionResult();
 
       expect(result).toBeDefined();
-      expect(result.persona).toBeTruthy();
+      expect(result._persona).toBeTruthy();
       expect(result.confidence).toBeGreaterThanOrEqual(0);
       expect(result.confidence).toBeLessThanOrEqual(1);
       expect(result.factors).toBeInstanceOf(Array);
@@ -60,9 +60,9 @@ describe('Enhanced Factories', () => {
       expect(['draft', 'active', 'paused', 'completed']).toContain(campaign.status);
     });
 
-    it('should create campaign with specified persona', () => {
+    it('should create campaign with specified _persona', () => {
       const campaign = createTestEmailCampaign({
-        persona: 'professional_paula',
+        _persona: 'professional_paula',
       });
 
       expect(campaign.targetPersona).toBe('professional_paula');

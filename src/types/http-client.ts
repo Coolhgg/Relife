@@ -13,21 +13,41 @@ import { ApiResponse, HttpMethod, HttpRequestConfig, HttpResponse } from './api'
  * HTTP client interface with standardized methods
  */
 export interface HttpClient {
-  get<T = unknown>(url: string, config?: Partial<HttpRequestConfig>): Promise<ApiResponse<T>>;
-  post<T = unknown>(url: string, data?: unknown, config?: Partial<HttpRequestConfig>): Promise<ApiResponse<T>>;
-  put<T = unknown>(url: string, data?: unknown, config?: Partial<HttpRequestConfig>): Promise<ApiResponse<T>>;
-  delete<T = unknown>(url: string, config?: Partial<HttpRequestConfig>): Promise<ApiResponse<T>>;
-  patch<T = unknown>(url: string, data?: unknown, config?: Partial<HttpRequestConfig>): Promise<ApiResponse<T>>;
-  request<T = unknown>(config: HttpRequestConfig): Promise<ApiResponse<T>>;
+  get<T = unknown>(
+    url: string,
+    _config?: Partial<HttpRequestConfig>
+  ): Promise<ApiResponse<T>>;
+  post<T = unknown>(
+    url: string,
+    data?: unknown,
+    _config?: Partial<HttpRequestConfig>
+  ): Promise<ApiResponse<T>>;
+  put<T = unknown>(
+    url: string,
+    data?: unknown,
+    _config?: Partial<HttpRequestConfig>
+  ): Promise<ApiResponse<T>>;
+  delete<T = unknown>(
+    url: string,
+    _config?: Partial<HttpRequestConfig>
+  ): Promise<ApiResponse<T>>;
+  patch<T = unknown>(
+    url: string,
+    data?: unknown,
+    _config?: Partial<HttpRequestConfig>
+  ): Promise<ApiResponse<T>>;
+  request<T = unknown>(_config: HttpRequestConfig): Promise<ApiResponse<T>>;
 }
 
 /**
  * HTTP interceptor for request/response transformation
  */
 export interface HttpInterceptor {
-  request?: (config: HttpRequestConfig) => HttpRequestConfig | Promise<HttpRequestConfig>;
+  request?: (
+    _config: HttpRequestConfig
+  ) => HttpRequestConfig | Promise<HttpRequestConfig>;
   response?: <T>(response: ApiResponse<T>) => ApiResponse<T> | Promise<ApiResponse<T>>;
-  error?: (error: unknown) => unknown | Promise<unknown>;
+  _error?: (_error: unknown) => unknown | Promise<unknown>;
 }
 
 /**
@@ -53,7 +73,7 @@ export interface CacheConfig {
   ttl: number;
   maxSize: number;
   storage: 'memory' | 'localStorage' | 'sessionStorage';
-  keyGenerator?: (config: HttpRequestConfig) => string;
+  keyGenerator?: (_config: HttpRequestConfig) => string;
 }
 
 /**
@@ -124,7 +144,7 @@ export interface RetryConfig {
   baseDelay: number;
   maxDelay: number;
   jitter: boolean;
-  retryCondition: (error: unknown, attempt: number) => boolean;
+  retryCondition: (_error: unknown, attempt: number) => boolean;
 }
 
 /**
@@ -134,7 +154,7 @@ export interface CircuitBreakerConfig {
   failureThreshold: number;
   recoveryTimeout: number;
   monitoringPeriod: number;
-  expectedExceptionPredicate?: (error: unknown) => boolean;
+  expectedExceptionPredicate?: (_error: unknown) => boolean;
 }
 
 /**
@@ -165,7 +185,7 @@ export interface RateLimiterConfig {
   window: number;
   strategy: 'sliding_window' | 'fixed_window' | 'token_bucket';
   burst?: number;
-  keyGenerator?: (config: HttpRequestConfig) => string;
+  keyGenerator?: (_config: HttpRequestConfig) => string;
 }
 
 /**
@@ -299,9 +319,9 @@ export interface ErrorHandlerConfig {
   enableCircuitBreaker: boolean;
   circuitBreakerConfig?: CircuitBreakerConfig;
   enableFallback: boolean;
-  fallbackResponse?: <T>(error: HttpError) => ApiResponse<T>;
+  fallbackResponse?: <T>(_error: HttpError) => ApiResponse<T>;
   enableLogging: boolean;
-  logLevel: 'error' | 'warn' | 'info' | 'debug';
+  logLevel: '_error' | 'warn' | 'info' | 'debug';
 }
 
 // =============================================================================
@@ -328,8 +348,8 @@ export interface HttpMockConfig {
  * HTTP client testing utilities
  */
 export interface HttpClientTestUtils {
-  mock(config: HttpMockConfig): void;
-  mockOnce(config: HttpMockConfig): void;
+  mock(_config: HttpMockConfig): void;
+  mockOnce(_config: HttpMockConfig): void;
   clearMocks(): void;
   getRequestHistory(): HttpRequestConfig[];
   getLastRequest(): HttpRequestConfig | undefined;
@@ -344,11 +364,11 @@ export interface HttpClientTestUtils {
  * HTTP client factory
  */
 export interface HttpClientFactory {
-  create(config?: HttpClientConfig): HttpClient;
-  createSupabaseClient(config: SupabaseClientConfig): HttpClient;
-  createStripeClient(config: StripeClientConfig): HttpClient;
-  createConvertKitClient(config: ConvertKitClientConfig): HttpClient;
-  createGitHubClient(config: GitHubClientConfig): HttpClient;
+  create(_config?: HttpClientConfig): HttpClient;
+  createSupabaseClient(_config: SupabaseClientConfig): HttpClient;
+  createStripeClient(_config: StripeClientConfig): HttpClient;
+  createConvertKitClient(_config: ConvertKitClientConfig): HttpClient;
+  createGitHubClient(_config: GitHubClientConfig): HttpClient;
 }
 
 /**

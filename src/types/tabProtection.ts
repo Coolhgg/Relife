@@ -137,8 +137,8 @@ export const getTabProtectionSettings = (): TabProtectionSettings => {
         },
       };
     }
-  } catch (error) {
-    console.warn('Failed to load tab protection settings:', error);
+  } catch (_error) {
+    console.warn('Failed to load tab protection settings:', _error);
   }
 
   return DEFAULT_TAB_PROTECTION_SETTINGS;
@@ -154,8 +154,8 @@ export const saveTabProtectionSettings = (settings: TabProtectionSettings): void
         detail: settings,
       })
     );
-  } catch (error) {
-    console.error('Failed to save tab protection settings:', error);
+  } catch (_error) {
+    console._error('Failed to save tab protection settings:', _error);
   }
 };
 

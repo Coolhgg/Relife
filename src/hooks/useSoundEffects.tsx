@@ -65,8 +65,8 @@ export function useSoundEffects(): SoundEffectControls & SoundEffectHandlers {
           setSettings(soundEffectsService.getSettings());
           setIsInitialized(true);
         }
-      } catch (error) {
-        console.error('Error initializing sound effects:', error);
+      } catch (_error) {
+        console._error('Error initializing sound effects:', _error);
       }
     };
 
@@ -91,7 +91,7 @@ export function useSoundEffects(): SoundEffectControls & SoundEffectHandlers {
   }, []);
 
   const playError = useCallback(() => {
-    soundEffectsService.playUISound('error');
+    soundEffectsService.playUISound('_error');
   }, []);
 
   const playNotification = useCallback(() => {
@@ -335,7 +335,7 @@ export function useAlarmSounds() {
 // HOC for adding sound effects to components
 export function withSoundEffects<T extends object>(
   Component: React.ComponentType<T>,
-  soundType: 'click' | 'hover' | 'success' | 'error' = 'click'
+  soundType: 'click' | 'hover' | 'success' | '_error' = 'click'
 ) {
   return React.forwardRef<any, T>((props: T, ref) => {
     const {
@@ -351,7 +351,7 @@ export function withSoundEffects<T extends object>(
           return createHoverHandler;
         case 'success':
           return createSuccessHandler;
-        case 'error':
+        case '_error':
           return createErrorHandler;
         default:
           return createClickHandler;

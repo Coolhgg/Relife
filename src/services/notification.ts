@@ -58,8 +58,8 @@ export class NotificationService {
         try {
           this.serviceWorkerRegistration = await navigator.serviceWorker.ready;
           console.log('Service worker ready for notifications');
-        } catch (error) {
-          console.warn('Service worker not available:', error);
+        } catch (_error) {
+          console.warn('Service worker not available:', _error);
         }
       }
 
@@ -73,8 +73,8 @@ export class NotificationService {
       console.log('Notification service initialized, permission:', this.hasPermission);
 
       return this.hasPermission;
-    } catch (error) {
-      console.error('Error initializing notification service:', error);
+    } catch (_error) {
+      console._error('Error initializing notification service:', _error);
       return false;
     }
   }
@@ -94,8 +94,8 @@ export class NotificationService {
       }
 
       return false;
-    } catch (error) {
-      console.error('Error requesting notification permissions:', error);
+    } catch (_error) {
+      console._error('Error requesting notification permissions:', _error);
       return false;
     }
   }
@@ -176,8 +176,8 @@ export class NotificationService {
       }
 
       console.log(`Scheduled notifications for alarm ${alarm.id} at ${nextTime}`);
-    } catch (error) {
-      console.error('Error scheduling alarm notification:', error);
+    } catch (_error) {
+      console._error('Error scheduling alarm notification:', _error);
     }
   }
 
@@ -232,8 +232,8 @@ export class NotificationService {
       console.log(
         `Scheduled snooze notification for alarm ${alarm.id} in ${minutes} minutes`
       );
-    } catch (error) {
-      console.error('Error scheduling snooze notification:', error);
+    } catch (_error) {
+      console._error('Error scheduling snooze notification:', _error);
     }
   }
 
@@ -253,8 +253,8 @@ export class NotificationService {
       }
 
       console.log(`Cancelled all notifications for alarm ${alarmId}`);
-    } catch (error) {
-      console.error('Error cancelling alarm notifications:', error);
+    } catch (_error) {
+      console._error('Error cancelling alarm notifications:', _error);
     }
   }
 
@@ -285,8 +285,8 @@ export class NotificationService {
           this.showNotification(scheduledNotification.notification);
         }, delay);
       }
-    } catch (error) {
-      console.error('Error scheduling notification:', error);
+    } catch (_error) {
+      console._error('Error scheduling notification:', _error);
     }
   }
 
@@ -301,8 +301,8 @@ export class NotificationService {
       } catch (capacitorError) {
         console.warn('Could not cancel Capacitor notification:', capacitorError);
       }
-    } catch (error) {
-      console.error('Error cancelling notification:', error);
+    } catch (_error) {
+      console._error('Error cancelling notification:', _error);
     }
   }
 
@@ -381,8 +381,8 @@ export class NotificationService {
       if (options.vibrate && navigator.vibrate) {
         navigator.vibrate(options.vibrate);
       }
-    } catch (error) {
-      console.error('Error showing notification:', error);
+    } catch (_error) {
+      console._error('Error showing notification:', _error);
     }
   }
 
@@ -402,7 +402,7 @@ export class NotificationService {
     // Handle notification clicks from service worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', event => {
-        const { type, data } = event.data;
+        const { type, data } = _event.data;
 
         switch (type) {
           case 'NOTIFICATION_CLICK':
@@ -455,8 +455,8 @@ export class NotificationService {
         const notifications = await this.serviceWorkerRegistration.getNotifications();
         notifications.forEach(notification => notification.close());
       }
-    } catch (error) {
-      console.error('Error clearing notifications:', error);
+    } catch (_error) {
+      console._error('Error clearing notifications:', _error);
     }
   }
 

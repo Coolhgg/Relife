@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Heart, Zap, Clock, Star, MessageCircle } from 'lucide-react';
+import { X, Heart, Clock, Star, MessageCircle } from 'lucide-react';
 import type {
   EmotionalNotificationPayload,
   EmotionalResponse,
@@ -251,7 +251,7 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
                   transition={{ delay: 0.5 }}
                   className="flex items-center justify-center gap-1 text-sm opacity-75 mb-4"
                 >
-                  {escalationLevel === 'strong_emotional' && <Zap size={16} />}
+                  {escalationLevel === 'strong_emotional' && <Clock size={16} />}
                   {escalationLevel === 'social_pressure' && <Heart size={16} />}
                   {escalationLevel === 'major_reset' && <Star size={16} />}
                   <span className="capitalize">

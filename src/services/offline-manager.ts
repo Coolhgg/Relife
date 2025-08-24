@@ -153,8 +153,8 @@ export class OfflineManager {
       this.isInitialized = true;
       console.log('Offline manager initialized successfully');
       return true;
-    } catch (error) {
-      console.error('Failed to initialize offline manager:', error);
+    } catch (_error) {
+      console._error('Failed to initialize offline manager:', _error);
       return false;
     }
   }
@@ -174,15 +174,15 @@ export class OfflineManager {
 
       // Listen for messages from service worker
       navigator.serviceWorker.addEventListener('message', event => {
-        this.handleServiceWorkerMessage(event.data);
+        this.handleServiceWorkerMessage(_event.data);
       });
 
       // Request background sync permission
       if ('sync' in window.ServiceWorkerRegistration.prototype) {
         await registration.sync.register('background-sync');
       }
-    } catch (error) {
-      console.error('Service Worker registration failed:', error);
+    } catch (_error) {
+      console._error('Service Worker registration failed:', _error);
     }
   }
 
@@ -241,8 +241,8 @@ export class OfflineManager {
       return alarms
         .filter((alarm: any) => a.larm.operation !== 'delete')
         .map(({ syncStatus, lastModified, operation, ...alarm }) => alarm as Alarm);
-    } catch (error) {
-      console.error('Failed to get offline alarms:', error);
+    } catch (_error) {
+      console._error('Failed to get offline alarms:', _error);
       return [];
     }
   }
@@ -257,8 +257,8 @@ export class OfflineManager {
         return alarmData as Alarm;
       }
       return null;
-    } catch (error) {
-      console.error('Failed to get offline alarm:', error);
+    } catch (_error) {
+      console._error('Failed to get offline alarm:', _error);
       return null;
     }
   }
@@ -303,7 +303,7 @@ export class OfflineManager {
     try {
       const tx = this.db.transaction('voiceCache', 'readonly');
       const index = tx.store.index('alarmId');
-      const messages = await index.getAll(alarmId);
+      const messages = await _index.getAll(alarmId);
 
       const validMessage = messages.find(
         msg => msg.voiceMood === voiceMood && msg.expiresAt > Date.now()
@@ -318,8 +318,8 @@ export class OfflineManager {
       }
 
       return null;
-    } catch (error) {
-      console.error('Failed to get cached voice message:', error);
+    } catch (_error) {
+      console._error('Failed to get cached voice message:', _error);
       return null;
     }
   }
@@ -358,8 +358,8 @@ export class OfflineManager {
         try {
           await this.syncItem(item);
           await this.db.delete('syncQueue', item.id);
-        } catch (error) {
-          console.error(`Failed to sync item ${item.id}:`, error);
+        } catch (_error) {
+          console._error(`Failed to sync item ${item.id}:`, _error);
 
           // Update retry count
           item.retryCount++;
@@ -376,8 +376,8 @@ export class OfflineManager {
       }
 
       console.log('Sync completed');
-    } catch (error) {
-      console.error('Sync failed:', error);
+    } catch (_error) {
+      console._error('Sync failed:', _error);
     } finally {
       this.syncInProgress = false;
     }
@@ -479,8 +479,8 @@ export class OfflineManager {
     if (localValue) {
       try {
         return JSON.parse(localValue);
-      } catch (error) {
-        console.error('Failed to parse local setting:', error);
+      } catch (_error) {
+        console._error('Failed to parse local setting:', _error);
       }
     }
 
@@ -489,8 +489,8 @@ export class OfflineManager {
       try {
         const setting = await this.db.get('settings', key);
         return setting?.value;
-      } catch (error) {
-        console.error('Failed to get setting from IndexedDB:', error);
+      } catch (_error) {
+        console._error('Failed to get setting from IndexedDB:', _error);
       }
     }
 
@@ -507,15 +507,15 @@ export class OfflineManager {
       // Clean expired voice cache
       const tx = this.db.transaction('voiceCache', 'readwrite');
       const index = tx.store.index('expiresAt');
-      const expiredVoices = await index.getAll(IDBKeyRange.upperBound(now));
+      const expiredVoices = await _index.getAll(IDBKeyRange.upperBound(now));
 
       for (const expired of expiredVoices) {
         await tx.store.delete(expired.id);
       }
 
       console.log(`Cleaned up ${expiredVoices.length} expired voice messages`);
-    } catch (error) {
-      console.error('Failed to cleanup expired data:', error);
+    } catch (_error) {
+      console._error('Failed to cleanup expired data:', _error);
     }
   }
 
@@ -558,16 +558,16 @@ export class OfflineManager {
   }
 
   static removeOnlineListener(callback: () => void): void {
-    const index = this.onlineListeners.indexOf(callback);
-    if (index > -1) {
-      this.onlineListeners.splice(index, 1);
+    const _index = this.onlineListeners.indexOf(callback);
+    if (_index > -1) {
+      this.onlineListeners.splice(_index, 1);
     }
   }
 
   static removeOfflineListener(callback: () => void): void {
-    const index = this.offlineListeners.indexOf(callback);
-    if (index > -1) {
-      this.offlineListeners.splice(index, 1);
+    const _index = this.offlineListeners.indexOf(callback);
+    if (_index > -1) {
+      this.offlineListeners.splice(_index, 1);
     }
   }
 

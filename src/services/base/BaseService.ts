@@ -3,21 +3,21 @@
  * Provides common functionality and standardized patterns for all services
  */
 
-import { 
-  BaseService as IBaseService, 
-  ServiceConfig, 
-  ServiceHealth, 
+import {
+  BaseService as IBaseService,
+  ServiceConfig,
+  ServiceHealth,
   ServiceLifecycle,
   ServiceError,
   ServiceMetrics,
   ServiceEvent,
-  PerformanceTracker 
+  PerformanceTracker,
 } from '../../types/service-architecture';
 
 export abstract class BaseService implements IBaseService {
   public readonly name: string;
   public readonly version: string;
-  
+
   protected config: ServiceConfig;
   protected lifecycle: ServiceLifecycle;
   protected initialized: boolean = false;
@@ -27,14 +27,14 @@ export abstract class BaseService implements IBaseService {
   protected eventHandlers: Map<string, Array<(...args: any[]) => void>> = new Map();
   protected performanceTracker?: PerformanceTracker;
 
-  constructor(name: string, version: string = '1.0.0', config: ServiceConfig) {
+  constructor(name: string, version: string = '1.0.0', _config: ServiceConfig) {
     this.name = name;
     this.version = version;
-    this.config = { ...this.getDefaultConfig(), ...config };
-    
+    this.config = { ...this.getDefaultConfig(), ..._config };
+
     this.lifecycle = {
       phase: 'initializing',
-      restartCount: 0
+      restartCount: 0,
     };
   }
 
@@ -50,7 +50,7 @@ export abstract class BaseService implements IBaseService {
   // Lifecycle Methods
   // ============================================================================
 
-  public async initialize(config?: ServiceConfig): Promise<void> {
+  public async initialize(_config?: ServiceConfig): Promise<void> {
     if (this.initialized) {
       return;
     }
@@ -59,8 +59,8 @@ export abstract class BaseService implements IBaseService {
       this.lifecycle.phase = 'initializing';
       this.lifecycle.startTime = new Date();
 
-      if (config) {
-        this.config = { ...this.config, ...config };
+      if (_config) {
+        this.config = { ...this.config, ..._config };
       }
 
       this.validateConfig();
@@ -70,17 +70,21 @@ export abstract class BaseService implements IBaseService {
       this.initialized = true;
       this.ready = true;
       this.lifecycle.phase = 'running';
-      this.lifecycle.initializationTime = Date.now() - this.lifecycle.startTime.getTime();
+      this.lifecycle.initializationTime =
+        Date.now() - this.lifecycle.startTime.getTime();
 
-      this.emit('service:initialized', { serviceName: this.name, config: this.config });
-      
-      if (this.config.debug) {
+      this.emit('service:initialized', {
+        serviceName: this.name,
+        _config: this._config,
+      });
+
+      if (this._config.debug) {
         console.log(`[${this.name}] Service initialized successfully`);
       }
-    } catch (error) {
+    } catch (_error) {
       this.lifecycle.phase = 'error';
-      this.handleError(error, 'Failed to initialize service');
-      throw error;
+      this.handleError(_error, 'Failed to initialize service');
+      throw _error;
     }
   }
 
@@ -92,7 +96,7 @@ export abstract class BaseService implements IBaseService {
     this.lifecycle.phase = 'starting';
     this.ready = true;
     this.lifecycle.phase = 'running';
-    
+
     this.emit('service:started', { serviceName: this.name });
   }
 
@@ -103,38 +107,38 @@ export abstract class BaseService implements IBaseService {
 
     this.lifecycle.phase = 'stopping';
     this.ready = false;
-    
+
     this.emit('service:stopping', { serviceName: this.name });
-    
+
     // Give time for ongoing operations to complete
     await new Promise(resolve => setTimeout(resolve, 100));
-    
+
     this.lifecycle.phase = 'stopped';
     this.lifecycle.stopTime = new Date();
-    
+
     this.emit('service:stopped', { serviceName: this.name });
   }
 
   public async cleanup(): Promise<void> {
     try {
       this.lifecycle.phase = 'stopping';
-      
+
       await this.doCleanup();
-      
+
       this.ready = false;
       this.initialized = false;
       this.lifecycle.phase = 'stopped';
       this.lifecycle.stopTime = new Date();
       this.eventHandlers.clear();
-      
+
       this.emit('service:cleanup', { serviceName: this.name });
-      
-      if (this.config.debug) {
+
+      if (this._config.debug) {
         console.log(`[${this.name}] Service cleaned up successfully`);
       }
-    } catch (error) {
-      this.handleError(error, 'Failed to cleanup service');
-      throw error;
+    } catch (_error) {
+      this.handleError(_error, 'Failed to cleanup service');
+      throw _error;
     }
   }
 
@@ -152,18 +156,20 @@ export abstract class BaseService implements IBaseService {
 
   public async getHealth(): Promise<ServiceHealth> {
     const now = new Date();
-    const uptime = this.lifecycle.startTime ? now.getTime() - this.lifecycle.startTime.getTime() : 0;
-    
+    const uptime = this.lifecycle.startTime
+      ? now.getTime() - this.lifecycle.startTime.getTime()
+      : 0;
+
     const status = this.determineHealthStatus();
     const metrics = await this.collectMetrics();
-    
+
     return {
       status,
       lastCheck: now,
       uptime,
       dependencies: await this.checkDependencyHealth(),
       metrics,
-      errors: this.errors.slice(-5) // Last 5 errors
+      errors: this.errors.slice(-5), // Last 5 errors
     };
   }
 
@@ -171,17 +177,17 @@ export abstract class BaseService implements IBaseService {
     if (!this.isReady()) {
       return 'unhealthy';
     }
-    
+
     // Check error rate in the last 5 minutes
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-    const recentErrors = this.errors.filter(error => error.timestamp > fiveMinutesAgo);
-    
+    const recentErrors = this.errors.filter(error => _error.timestamp > fiveMinutesAgo);
+
     if (recentErrors.length > 10) {
       return 'unhealthy';
     } else if (recentErrors.length > 5) {
       return 'degraded';
     }
-    
+
     return 'healthy';
   }
 
@@ -192,16 +198,18 @@ export abstract class BaseService implements IBaseService {
 
   protected async collectMetrics(): Promise<ServiceMetrics> {
     const now = Date.now();
-    const oneHourAgo = now - (60 * 60 * 1000);
-    
-    const recentErrors = this.errors.filter(error => error.timestamp.getTime() > oneHourAgo);
-    
+    const oneHourAgo = now - 60 * 60 * 1000;
+
+    const recentErrors = this.errors.filter(
+      _error => _error.timestamp.getTime() > oneHourAgo
+    );
+
     return {
       requestCount: 0, // Override in subclasses
       errorCount: recentErrors.length,
       averageResponseTime: 0, // Override in subclasses
       memoryUsage: this.getMemoryUsage(),
-      cacheHitRate: 0 // Override in subclasses
+      cacheHitRate: 0, // Override in subclasses
     };
   }
 
@@ -217,83 +225,93 @@ export abstract class BaseService implements IBaseService {
   // ============================================================================
 
   public getConfig(): ServiceConfig {
-    return { ...this.config };
+    return { ...this._config };
   }
 
-  public async updateConfig(config: Partial<ServiceConfig>): Promise<void> {
-    const oldConfig = { ...this.config };
-    this.config = { ...this.config, ...config };
-    
+  public async updateConfig(_config: Partial<ServiceConfig>): Promise<void> {
+    const oldConfig = { ...this._config };
+    this.config = { ...this.config, ..._config };
+
     try {
       this.validateConfig();
-      await this.onConfigUpdate(oldConfig, this.config);
-      this.emit('service:config-updated', { serviceName: this.name, oldConfig, newConfig: this.config });
-    } catch (error) {
-      this.config = oldConfig; // Rollback
-      this.handleError(error, 'Failed to update configuration');
-      throw error;
+      await this.onConfigUpdate(oldConfig, this._config);
+      this.emit('service:_config-updated', {
+        serviceName: this.name,
+        oldConfig,
+        newConfig: this._config,
+      });
+    } catch (_error) {
+      this._config = oldConfig; // Rollback
+      this.handleError(_error, 'Failed to update configuration');
+      throw _error;
     }
   }
 
   protected validateConfig(): void {
-    if (!this.config.environment || !['development', 'staging', 'production'].includes(this.config.environment)) {
-      throw new Error(`Invalid environment: ${this.config.environment}`);
+    if (
+      !this._config.environment ||
+      !['development', 'staging', 'production'].includes(this._config.environment)
+    ) {
+      throw new Error(`Invalid environment: ${this._config.environment}`);
     }
-    
-    if (typeof this.config.enabled !== 'boolean') {
+
+    if (typeof this._config.enabled !== 'boolean') {
       throw new Error('Configuration must specify enabled as boolean');
     }
   }
 
-  protected async onConfigUpdate(oldConfig: ServiceConfig, newConfig: ServiceConfig): Promise<void> {
-    // Override in subclasses to handle config updates
+  protected async onConfigUpdate(
+    oldConfig: ServiceConfig,
+    newConfig: ServiceConfig
+  ): Promise<void> {
+    // Override in subclasses to handle _config updates
   }
 
   // ============================================================================
   // Event Handling
   // ============================================================================
 
-  public on(event: string, handler: (...args: any[]) => void): void {
-    if (!this.eventHandlers.has(event)) {
-      this.eventHandlers.set(event, []);
+  public on(_event: string, handler: (...args: any[]) => void): void {
+    if (!this.eventHandlers.has(_event)) {
+      this.eventHandlers.set(_event, []);
     }
-    this.eventHandlers.get(event)!.push(handler);
+    this.eventHandlers.get(_event)!.push(handler);
   }
 
-  public off(event: string, handler: (...args: any[]) => void): void {
-    const handlers = this.eventHandlers.get(event);
+  public off(_event: string, handler: (...args: any[]) => void): void {
+    const handlers = this.eventHandlers.get(_event);
     if (handlers) {
-      const index = handlers.indexOf(handler);
-      if (index > -1) {
-        handlers.splice(index, 1);
+      const _index = handlers.indexOf(handler);
+      if (_index > -1) {
+        handlers.splice(_index, 1);
       }
     }
   }
 
-  public emit(event: string, ...args: any[]): void {
-    const handlers = this.eventHandlers.get(event);
+  public emit(_event: string, ...args: any[]): void {
+    const handlers = this.eventHandlers.get(_event);
     if (handlers) {
       handlers.forEach(handler => {
         try {
           handler(...args);
-        } catch (error) {
-          this.handleError(error, `Error in event handler for ${event}`);
+        } catch (_error) {
+          this.handleError(_error, `Error in event handler for ${_event}`);
         }
       });
     }
-    
+
     // Also emit to global event bus if available
-    this.emitToGlobalBus(event, args);
+    this.emitToGlobalBus(_event, args);
   }
 
-  protected emitToGlobalBus(event: string, args: any[]): void {
+  protected emitToGlobalBus(_event: string, args: any[]): void {
     const serviceEvent: ServiceEvent = {
       type: event,
       source: this.name,
       timestamp: new Date(),
-      data: args.length === 1 ? args[0] : args
+      data: args.length === 1 ? args[0] : args,
     };
-    
+
     // Emit to global event bus if available
     // This would be injected via DI in a real implementation
     if (typeof (globalThis as any).serviceEventBus?.publish === 'function') {
@@ -305,56 +323,60 @@ export abstract class BaseService implements IBaseService {
   // Error Handling
   // ============================================================================
 
-  protected handleError(error: any, message: string, context?: Record<string, any>): void {
+  protected handleError(
+    _error: any,
+    message: string,
+    context?: Record<string, any>
+  ): void {
     const serviceError: ServiceError = {
-      message: `${message}: ${error.message || error}`,
+      message: `${message}: ${error.message || _error}`,
       code: error.code || 'UNKNOWN_ERROR',
       timestamp: new Date(),
-      severity: this.determineSeverity(error),
+      severity: this.determineSeverity(_error),
       context: {
         service: this.name,
         phase: this.lifecycle.phase,
-        ...context
-      }
+        ...context,
+      },
     };
 
     this.errors.push(serviceError);
-    
+
     // Keep only last 50 errors to prevent memory bloat
     if (this.errors.length > 50) {
       this.errors = this.errors.slice(-50);
     }
 
     // Emit error event
-    this.emit('service:error', serviceError);
+    this.emit('service:_error', serviceError);
 
     // Report to external error tracking if configured
-    if (this.config.errorHandling?.reportingEnabled) {
+    if (this._config.errorHandling?.reportingEnabled) {
       this.reportError(serviceError);
     }
 
-    if (this.config.debug) {
-      console.error(`[${this.name}] ${serviceError.message}`, error);
+    if (this._config.debug) {
+      console._error(`[${this.name}] ${serviceError.message}`, _error);
     }
   }
 
-  protected determineSeverity(error: any): ServiceError['severity'] {
-    if (error.name === 'NetworkError' || error.code === 'NETWORK_ERROR') {
+  protected determineSeverity(_error: any): ServiceError['severity'] {
+    if (_error.name === 'NetworkError' || _error.code === 'NETWORK_ERROR') {
       return 'medium';
     }
-    if (error.name === 'SecurityError' || error.code === 'SECURITY_ERROR') {
+    if (error.name === 'SecurityError' || _error.code === 'SECURITY_ERROR') {
       return 'high';
     }
-    if (error.name === 'DataCorruptionError' || error.code === 'DATA_CORRUPTION') {
+    if (error.name === 'DataCorruptionError' || _error.code === 'DATA_CORRUPTION') {
       return 'critical';
     }
     return 'low';
   }
 
-  protected reportError(error: ServiceError): void {
-    // Override in subclasses or inject error reporting service
+  protected reportError(_error: ServiceError): void {
+    // Override in subclasses or inject _error reporting service
     if (typeof (globalThis as any).errorReporter?.report === 'function') {
-      (globalThis as any).errorReporter.report(error);
+      (globalThis as any).errorReporter.report(_error);
     }
   }
 
@@ -363,7 +385,7 @@ export abstract class BaseService implements IBaseService {
   // ============================================================================
 
   protected async setupPerformanceTracking(): Promise<void> {
-    if (this.config.monitoring?.performanceTracking) {
+    if (this._config.monitoring?.performanceTracking) {
       // Performance tracker would be injected via DI
       this.performanceTracker = (globalThis as any).performanceTracker;
     }
@@ -377,11 +399,15 @@ export abstract class BaseService implements IBaseService {
     return timerId ? this.performanceTracker?.endTimer(timerId) || null : null;
   }
 
-  protected recordMetric(name: string, value: number, tags?: Record<string, string>): void {
+  protected recordMetric(
+    name: string,
+    value: number,
+    tags?: Record<string, string>
+  ): void {
     this.performanceTracker?.recordMetric(`${this.name}:${name}`, value, {
       service: this.name,
       version: this.version,
-      ...tags
+      ...tags,
     });
   }
 
@@ -394,23 +420,23 @@ export abstract class BaseService implements IBaseService {
   }
 
   protected async retry<T>(
-    fn: () => Promise<T>, 
+    fn: () => Promise<T>,
     attempts: number = this.config.retryAttempts || 3,
     delay: number = this.config.retryDelay || 1000
   ): Promise<T> {
     let lastError: any;
-    
+
     for (let i = 0; i < attempts; i++) {
       try {
         return await fn();
-      } catch (error) {
-        lastError = error;
+      } catch (_error) {
+        lastError = _error;
         if (i < attempts - 1) {
           await this.delay(delay * Math.pow(2, i)); // Exponential backoff
         }
       }
     }
-    
+
     throw lastError;
   }
 
@@ -425,16 +451,16 @@ export abstract class BaseService implements IBaseService {
 
     return async (): Promise<T> => {
       const now = Date.now();
-      
+
       // Check if we should try to recover
       if (state === 'open' && now - lastFailureTime > recoveryTimeout) {
         state = 'half-open';
       }
-      
+
       if (state === 'open') {
         throw new Error('Circuit breaker is open');
       }
-      
+
       try {
         const result = await fn();
         if (state === 'half-open') {
@@ -442,14 +468,14 @@ export abstract class BaseService implements IBaseService {
           failures = 0;
         }
         return result;
-      } catch (error) {
+      } catch (_error) {
         failures++;
         lastFailureTime = now;
-        
+
         if (failures >= failureThreshold) {
           state = 'open';
         }
-        
+
         throw error;
       }
     };
@@ -464,7 +490,7 @@ export abstract class BaseService implements IBaseService {
     this.errors = [];
     this.lifecycle = {
       phase: 'initializing',
-      restartCount: this.lifecycle.restartCount + 1
+      restartCount: this.lifecycle.restartCount + 1,
     };
     this.initialized = false;
     this.ready = false;
@@ -474,12 +500,15 @@ export abstract class BaseService implements IBaseService {
     return {
       name: this.name,
       version: this.version,
-      config: this.config,
+      config: this._config,
       lifecycle: this.lifecycle,
       initialized: this.initialized,
       ready: this.ready,
       errorCount: this.errors.length,
-      eventHandlerCount: Array.from(this.eventHandlers.values()).reduce((sum, handlers) => sum + handlers.length, 0)
+      eventHandlerCount: Array.from(this.eventHandlers.values()).reduce(
+        (sum, handlers) => sum + handlers.length,
+        0
+      ),
     };
   }
 }
@@ -496,7 +525,7 @@ class ServiceBuilderImpl<T extends BaseService> {
   private descriptor: Partial<any> = {
     singleton: true,
     dependencies: [],
-    tags: []
+    tags: [],
   };
 
   withName(name: string): this {
@@ -509,8 +538,8 @@ class ServiceBuilderImpl<T extends BaseService> {
     return this;
   }
 
-  withConfig(config: ServiceConfig): this {
-    this.descriptor.config = config;
+  withConfig(_config: ServiceConfig): this {
+    this.descriptor.config = _config;
     return this;
   }
 

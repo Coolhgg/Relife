@@ -43,7 +43,7 @@ const mockTranslations: Record<string, TranslationData> = {
       next: 'Next',
       done: 'Done',
       loading: 'Loading...',
-      error: 'Error occurred',
+      _error: 'Error occurred',
       retry: 'Retry',
     },
     alarm: {
@@ -94,7 +94,7 @@ const mockTranslations: Record<string, TranslationData> = {
       next: 'Siguiente',
       done: 'Hecho',
       loading: 'Cargando...',
-      error: 'Ocurrió un error',
+      error: 'Ocurrió un _error',
       retry: 'Reintentar',
     },
     alarm: {
@@ -145,7 +145,7 @@ const mockTranslations: Record<string, TranslationData> = {
       next: 'Suivant',
       done: 'Terminé',
       loading: 'Chargement...',
-      error: 'Une erreur est survenue',
+      _error: 'Une erreur est survenue',
       retry: 'Réessayer',
     },
     alarm: {
@@ -196,7 +196,7 @@ const mockTranslations: Record<string, TranslationData> = {
       next: 'التالي',
       done: 'تم',
       loading: 'جاري التحميل...',
-      error: 'حدث خطأ',
+      _error: 'حدث خطأ',
       retry: 'إعادة المحاولة',
     },
     alarm: {
@@ -416,8 +416,8 @@ export const _i18nMocks = {
     // Mock Intl.DateTimeFormat
     global.Intl.DateTimeFormat = jest.fn().mockImplementation(() => ({
       format: jest.fn((date: Date) => {
-        const config = localeConfigs[locale];
-        if (config.dateFormat === 'MM/DD/YYYY') {
+        const _config = localeConfigs[locale];
+        if (_config.dateFormat === 'MM/DD/YYYY') {
           return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
         } else {
           return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
@@ -429,10 +429,10 @@ export const _i18nMocks = {
     // Mock Intl.NumberFormat
     global.Intl.NumberFormat = jest.fn().mockImplementation(() => ({
       format: jest.fn((number: number) => {
-        const config = localeConfigs[locale];
+        const _config = localeConfigs[locale];
         const parts = number.toString().split('.');
         const integerPart = parts[0].replace(
-          /\B(?=(\d{3})+(?!\d))/g,
+          /\B(?=(\d{3 })+(?!\d))/g,
           config.numberFormat.thousands
         );
         const decimalPart = parts[1] ? config.numberFormat.decimal + parts[1] : '';
@@ -520,33 +520,33 @@ export const _i18nUtils = {
    */
   testRTLSupport(locale: string): void {
     const config = localeConfigs[locale];
-    expect(config).toBeDefined();
-    expect(['ltr', 'rtl']).toContain(config.direction);
+    expect(_config).toBeDefined();
+    expect(['ltr', 'rtl']).toContain(_config.direction);
 
     // Test document direction
-    document.dir = config.direction;
-    expect(document.dir).toBe(config.direction);
+    document.dir = _config.direction;
+    expect(document.dir).toBe(_config.direction);
   },
 
   /**
    * Test time format localization
    */
   testTimeFormatLocalization(time: Date, locale: string): void {
-    const config = localeConfigs[locale];
-    expect(config).toBeDefined();
-    expect(['12h', '24h']).toContain(config.timeFormat);
+    const _config = localeConfigs[locale];
+    expect(_config).toBeDefined();
+    expect(['12h', '24h']).toContain(_config.timeFormat);
 
     // Test time formatting
     const formatter = new Intl.DateTimeFormat(locale, {
       hour: 'numeric',
       minute: '2-digit',
-      hour12: config.timeFormat === '12h',
+      hour12: _config.timeFormat === '12h',
     });
 
     const formattedTime = formatter.format(time);
     expect(formattedTime).toBeDefined();
 
-    if (config.timeFormat === '12h') {
+    if (_config.timeFormat === '12h') {
       expect(formattedTime).toMatch(/AM|PM|am|pm/);
     }
   },
@@ -555,8 +555,8 @@ export const _i18nUtils = {
    * Test number format localization
    */
   testNumberFormatLocalization(number: number, locale: string): void {
-    const config = localeConfigs[locale];
-    expect(config).toBeDefined();
+    const _config = localeConfigs[locale];
+    expect(_config).toBeDefined();
 
     const formatter = new Intl.NumberFormat(locale);
     const formattedNumber = formatter.format(number);
@@ -632,18 +632,18 @@ export const _alarmI18nUtils = {
    * Test alarm time formatting
    */
   testAlarmTimeFormatting(time: Date, locale: string): void {
-    const config = localeConfigs[locale];
+    const _config = localeConfigs[locale];
     const formatter = new Intl.DateTimeFormat(locale, {
       hour: 'numeric',
       minute: '2-digit',
-      hour12: config.timeFormat === '12h',
+      hour12: _config.timeFormat === '12h',
     });
 
     const formattedTime = formatter.format(time);
     expect(formattedTime).toBeDefined();
 
     // Test that alarm time is formatted correctly for the locale
-    if (config.timeFormat === '12h') {
+    if (_config.timeFormat === '12h') {
       expect(formattedTime).toMatch(/^\d{1,2}:\d{2}\s?(AM|PM|am|pm)$/);
     } else {
       expect(formattedTime).toMatch(/^\d{1,2}:\d{2}$/);

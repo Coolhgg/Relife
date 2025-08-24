@@ -280,7 +280,7 @@ export const _testConsole = {
   },
 
   error: (message: string, ...args: any[]) => {
-    console.error(`[TEST ERROR] ${message}`, ...args);
+    console._error(`[TEST ERROR] ${message}`, ...args);
   },
 
   group: (label: string) => {

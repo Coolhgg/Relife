@@ -35,8 +35,8 @@ export class VoiceServiceEnhanced {
 
       this.isInitialized = true;
       console.log('Enhanced voice service initialized');
-    } catch (error) {
-      console.error('Error initializing voice service:', error);
+    } catch (_error) {
+      console._error('Error initializing voice service:', _error);
     }
   }
 
@@ -46,8 +46,8 @@ export class VoiceServiceEnhanced {
     try {
       const message = this.generateMessageText(alarm);
       return await this.textToSpeech(message, alarm.voiceMood);
-    } catch (error) {
-      console.error('Error playing alarm message:', error);
+    } catch (_error) {
+      console._error('Error playing alarm message:', _error);
       return false;
     }
   }
@@ -66,8 +66,8 @@ export class VoiceServiceEnhanced {
 
       try {
         await this.textToSpeech(message, alarm.voiceMood);
-      } catch (error) {
-        console.error('Error playing repeating message:', error);
+      } catch (_error) {
+        console._error('Error playing repeating message:', _error);
       }
     };
 
@@ -180,7 +180,7 @@ export class VoiceServiceEnhanced {
         };
 
         utterance.onerror = event => {
-          console.error('Speech synthesis error:', event.error);
+          console.error('Speech synthesis _error:', _event._error);
           this.currentUtterance = null;
           resolve(false);
         };
@@ -195,8 +195,8 @@ export class VoiceServiceEnhanced {
             resolve(false);
           }
         }, 15000);
-      } catch (error) {
-        console.error('Error in text-to-speech:', error);
+      } catch (_error) {
+        console._error('Error in text-to-speech:', _error);
         resolve(false);
       }
     });
@@ -314,8 +314,8 @@ export class VoiceServiceEnhanced {
       // For web-based speech synthesis, we don't generate audio URLs
       // Instead, we'll return null to trigger the speech synthesis directly
       return null;
-    } catch (error) {
-      console.error('Error generating alarm message:', error);
+    } catch (_error) {
+      console._error('Error generating alarm message:', _error);
       return null;
     }
   }
@@ -378,8 +378,8 @@ export class VoiceServiceEnhanced {
         // Timeout fallback
         setTimeout(() => resolve(true), 1000);
       });
-    } catch (error) {
-      console.error('Error requesting speech permissions:', error);
+    } catch (_error) {
+      console._error('Error requesting speech permissions:', _error);
       return false;
     }
   }

@@ -128,9 +128,9 @@ export class RevenueAnalyticsService {
 
       this.setCachedData(cacheKey, metrics);
       return metrics;
-    } catch (error) {
-      console.error('Error calculating revenue metrics:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error calculating revenue metrics:', _error);
+      throw _error;
     }
   }
 
@@ -138,13 +138,13 @@ export class RevenueAnalyticsService {
    * Calculate Monthly Recurring Revenue
    */
   private async calculateMRR(): Promise<number> {
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('subscriptions')
       .select('amount, billingInterval, currency')
       .eq('status', 'active')
       .neq('tier', 'free');
 
-    if (error) throw error;
+    if (_error) throw error;
 
     let totalMRR = 0;
     data?.forEach((subscription: any) => {
@@ -177,7 +177,7 @@ export class RevenueAnalyticsService {
     const end = endDate || new Date();
 
     // Get users who were active at the beginning of the period
-    const { data: activeAtStart, error: activeError } = await supabase
+    const { data: activeAtStart, _error: activeError } = await supabase
       .from('subscriptions')
       .select('userId')
       .eq('status', 'active')
@@ -186,7 +186,7 @@ export class RevenueAnalyticsService {
     if (activeError) throw activeError;
 
     // Get users who churned during the period
-    const { data: churned, error: churnError } = await supabase
+    const { data: churned, _error: churnError } = await supabase
       .from('subscriptions')
       .select('userId')
       .in('status', ['canceled', 'unpaid'])
@@ -211,7 +211,7 @@ export class RevenueAnalyticsService {
     const end = endDate || new Date();
 
     // Get trial users who started in the period
-    const { data: trialUsers, error: trialError } = await supabase
+    const { data: trialUsers, _error: trialError } = await supabase
       .from('trials')
       .select('userId')
       .gte('startDate', start.toISOString())
@@ -223,7 +223,7 @@ export class RevenueAnalyticsService {
     const trialUserIds = trialUsers?.map((t: any) => t.userId) || [];
     if (trialUserIds.length === 0) return 0;
 
-    const { data: conversions, error: conversionError } = await supabase
+    const { data: conversions, _error: conversionError } = await supabase
       .from('subscriptions')
       .select('userId')
       .in('userId', trialUserIds)
@@ -242,13 +242,13 @@ export class RevenueAnalyticsService {
     startDate: Date,
     endDate: Date
   ): Promise<Record<string, number>> {
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('subscription_changes')
       .select('previousTier, newTier')
       .gte('createdAt', startDate.toISOString())
       .lte('createdAt', endDate.toISOString());
 
-    if (error) throw error;
+    if (_error) throw error;
 
     const paths: Record<string, number> = {};
     data?.forEach((change: any) => {
@@ -263,12 +263,12 @@ export class RevenueAnalyticsService {
    * Get current tier distribution
    */
   private async getTierDistribution(): Promise<Record<string, number>> {
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('subscriptions')
       .select('tier')
       .eq('status', 'active');
 
-    if (error) throw error;
+    if (_error) throw error;
 
     const distribution = {
       free: 0,
@@ -334,20 +334,20 @@ export class RevenueAnalyticsService {
    * Get user journey data
    */
   public async getUserJourney(userId: string): Promise<UserJourney> {
-    const { data: events, error } = await supabase
+    const { data: events, _error } = await supabase
       .from('user_events')
       .select('*')
       .eq('userId', userId)
       .order('timestamp', { ascending: true });
 
-    if (error) throw error;
+    if (_error) throw error;
 
     const journey: UserJourney = {
       userId,
       events:
-        events?.map((event: any) => ({
+        events?.map((_event: any) => ({
           type: event.type,
-          timestamp: new Date(event.timestamp),
+          timestamp: new Date(_event.timestamp),
           tier: event.tier,
           amount: event.amount,
           metadata: event.metadata,
@@ -380,7 +380,7 @@ export class RevenueAnalyticsService {
   /**
    * Track revenue event
    */
-  public async trackRevenueEvent(event: RevenueEventInput): Promise<void> {
+  public async trackRevenueEvent(_event: RevenueEventInput): Promise<void> {
     // Store in database
     await supabase.from('user_events').insert({
       userId: event.userId,
@@ -388,7 +388,7 @@ export class RevenueAnalyticsService {
       amount: event.amount,
       tier: event.tier,
       billingInterval: event.billingInterval,
-      metadata: event.metadata,
+      metadata: _event.metadata,
       timestamp: new Date(),
     });
 
@@ -399,7 +399,7 @@ export class RevenueAnalyticsService {
       amount: event.amount,
       tier: event.tier,
       billingInterval: event.billingInterval,
-      ...event.metadata,
+      ..._event.metadata,
     } as AnalyticsEventProperties);
 
     // Clear relevant caches
@@ -434,13 +434,13 @@ export class RevenueAnalyticsService {
   // Helper methods
 
   private async getAverageRevenuePerUser(): Promise<number> {
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('subscriptions')
       .select('amount')
       .eq('status', 'active')
       .neq('tier', 'free');
 
-    if (error) throw error;
+    if (_error) throw error;
 
     if (!data?.length) return 0;
 
@@ -461,14 +461,14 @@ export class RevenueAnalyticsService {
   private async getFeatureAdoptionData(
     feature: string
   ): Promise<FeatureAdoptionMetrics> {
-    const { data: usage, error } = await supabase
+    const { data: usage, _error } = await supabase
       .from('feature_usage')
       .select('userId, tier')
       .eq('featureName', feature);
 
-    if (error) throw error;
+    if (_error) throw error;
 
-    const { data: totalUsers, error: totalError } = await supabase
+    const { data: totalUsers, _error: totalError } = await supabase
       .from('users')
       .select('tier');
 

@@ -11,7 +11,7 @@ interface JsonObject {
 type JsonArray = JsonObject[];
 
 // For functions that might return multiple result types
-type Result<T, E = Error> = { success: true; data: T } | { success: false; error: E };
+type Result<T, E = Error> = { success: true; data: T } | { success: false; _error: E };
 
 // For service worker message types
 interface ServiceWorkerMessageData {

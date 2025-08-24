@@ -648,9 +648,9 @@ export function AIAutomation({
                         Personalization Factors:
                       </h4>
                       <div className="space-y-1">
-                        {challenge.personalizedFactors.map((factor, index) => (
+                        {challenge.personalizedFactors.map((factor, _index) => (
                           <div
-                            key={index}
+                            key={_index}
                             className="flex items-center justify-between text-sm"
                           >
                             <span className="capitalize">
@@ -713,8 +713,8 @@ export function AIAutomation({
                     <div>
                       <span className="text-muted-foreground">Triggers:</span>
                       <div className="mt-1">
-                        {automation.triggers.map((trigger, index) => (
-                          <Badge key={index} variant="outline" className="mr-1 mb-1">
+                        {automation.triggers.map((trigger, _index) => (
+                          <Badge key={_index} variant="outline" className="mr-1 mb-1">
                             {trigger.type}
                           </Badge>
                         ))}
@@ -723,8 +723,8 @@ export function AIAutomation({
                     <div>
                       <span className="text-muted-foreground">Actions:</span>
                       <div className="mt-1">
-                        {automation.actions.map((action, index) => (
-                          <Badge key={index} variant="outline" className="mr-1 mb-1">
+                        {automation.actions.map((action, _index) => (
+                          <Badge key={_index} variant="outline" className="mr-1 mb-1">
                             {action.type}
                           </Badge>
                         ))}

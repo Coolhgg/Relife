@@ -430,7 +430,7 @@ describe('useMobileTouch', () => {
     });
   });
 
-  it('should clean up event listeners on unmount', () => {
+  it('should clean up _event listeners on unmount', () => {
     const { unmount } = renderHook(() => useMobileTouch(mockElement));
 
     unmount();

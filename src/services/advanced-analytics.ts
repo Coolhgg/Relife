@@ -219,8 +219,8 @@ class AdvancedAnalyticsService {
       );
 
       return analytics;
-    } catch (error) {
-      ErrorHandler.handleError(error as Error, 'Failed to generate user analytics', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error as Error, 'Failed to generate _user analytics', {
         userId,
         period,
       });
@@ -238,13 +238,13 @@ class AdvancedAnalyticsService {
   ): Promise<UserAnalytics['summary']> {
     const total_alarms = eventsData.length;
     const successful_wake_ups = eventsData.filter(
-      event => event.dismissed && !event.snoozed
+      event => event.dismissed && !_event.snoozed
     ).length;
     const average_response_time =
       eventsData
-        .filter(event => event.response_time)
-        .reduce((sum, event) => sum + event.response_time, 0) /
-        eventsData.filter(event => event.response_time).length || 0;
+        .filter(event => _event.response_time)
+        .reduce((sum, _event) => sum + event.response_time, 0) /
+        eventsData.filter(event => _event.response_time).length || 0;
 
     const success_rate =
       total_alarms > 0 ? (successful_wake_ups / total_alarms) * 100 : 0;
@@ -508,7 +508,7 @@ class AdvancedAnalyticsService {
       const today = new Date().toISOString().split('T')[0];
 
       // Get today's events
-      const { data: todayEvents, error } = await this.supabaseService
+      const { data: todayEvents, _error } = await this.supabaseService
         .getInstance()
         .client.from('alarm_events')
         .select(
@@ -521,7 +521,7 @@ class AdvancedAnalyticsService {
         .gte('fired_at', today)
         .order('fired_at', { ascending: false });
 
-      if (error) throw error;
+      if (_error) throw error;
 
       const liveMetrics = {
         todayAlarms: todayEvents?.length || 0,
@@ -555,8 +555,8 @@ class AdvancedAnalyticsService {
         activeInsights,
         quickActions,
       };
-    } catch (error) {
-      ErrorHandler.handleError(error as Error, 'Failed to get realtime dashboard', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error as Error, 'Failed to get realtime dashboard', {
         userId,
       });
       throw error;
@@ -571,7 +571,7 @@ class AdvancedAnalyticsService {
 
     // Calculate variance in wake times
     const wakeTimes = eventsData.map(event => {
-      const time = new Date(event.fired_at);
+      const time = new Date(_event.fired_at);
       return time.getHours() * 60 + time.getMinutes();
     });
 
@@ -621,7 +621,7 @@ class AdvancedAnalyticsService {
     const weeklyConsistency = new Map<string, TimeoutHandle>();
 
     eventsData.forEach(event => {
-      const date = new Date(event.fired_at);
+      const date = new Date(_event.fired_at);
       const weekKey = this.getWeekKey(date);
 
       if (!weeklyConsistency.has(weekKey)) {
@@ -650,9 +650,9 @@ class AdvancedAnalyticsService {
     const weeklyAvgResponseTime = new Map<string, { total: number; count: number }>();
 
     eventsData
-      .filter(event => event.response_time)
+      .filter(event => _event.response_time)
       .forEach(event => {
-        const date = new Date(event.fired_at);
+        const date = new Date(_event.fired_at);
         const weekKey = this.getWeekKey(date);
 
         const current = weeklyAvgResponseTime.get(weekKey) || {
@@ -688,12 +688,12 @@ class AdvancedAnalyticsService {
     const weeklyData = new Map<string, { successful: number; total: number }>();
 
     eventsData.forEach(event => {
-      const date = new Date(event.fired_at);
+      const date = new Date(_event.fired_at);
       const weekKey = this.getWeekKey(date);
 
       const current = weeklyData.get(weekKey) || { successful: 0, total: 0 };
       current.total += 1;
-      if (event.dismissed && !event.snoozed) {
+      if (event.dismissed && !_event.snoozed) {
         current.successful += 1;
       }
       weeklyData.set(weekKey, current);
@@ -820,7 +820,7 @@ class AdvancedAnalyticsService {
 
   private async getAlarmData(userId: string, period: string): Promise<any[]> {
     const daysBack = this.getPeriodDays(period);
-    const { data, error } = await this.supabaseService
+    const { data, _error } = await this.supabaseService
       .getInstance()
       .client.from('alarms')
       .select('*')
@@ -830,13 +830,13 @@ class AdvancedAnalyticsService {
         new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000).toISOString()
       );
 
-    if (error) throw error;
+    if (_error) throw error;
     return data || [];
   }
 
   private async getSleepData(userId: string, period: string): Promise<any[]> {
     const daysBack = this.getPeriodDays(period);
-    const { data, error } = await this.supabaseService
+    const { data, _error } = await this.supabaseService
       .getInstance()
       .client.from('sleep_sessions')
       .select('*')
@@ -847,13 +847,13 @@ class AdvancedAnalyticsService {
       )
       .order('sleep_start', { ascending: false });
 
-    if (error) throw error;
+    if (_error) throw error;
     return data || [];
   }
 
   private async getEventData(userId: string, period: string): Promise<any[]> {
     const daysBack = this.getPeriodDays(period);
-    const { data, error } = await this.supabaseService
+    const { data, _error } = await this.supabaseService
       .getInstance()
       .client.from('alarm_events')
       .select(
@@ -869,7 +869,7 @@ class AdvancedAnalyticsService {
       )
       .order('fired_at', { ascending: false });
 
-    if (error) throw error;
+    if (_error) throw error;
     return data || [];
   }
 
@@ -895,13 +895,13 @@ class AdvancedAnalyticsService {
     const moodEffectiveness = new Map<string, { successful: number; total: number }>();
 
     eventsData.forEach(event => {
-      const mood = event.alarms?.voice_mood || 'motivational';
+      const mood = _event.alarms?.voice_mood || 'motivational';
       const current = moodEffectiveness.get(mood) || {
         successful: 0,
         total: 0,
       };
       current.total += 1;
-      if (event.dismissed && !event.snoozed) {
+      if (event.dismissed && !_event.snoozed) {
         current.successful += 1;
       }
       moodEffectiveness.set(mood, current);
@@ -976,7 +976,7 @@ class AdvancedAnalyticsService {
     metric: string
   ): Promise<PersonalBest> {
     // Query historical best performance
-    const { data, error } = await this.supabaseService
+    const { data, _error } = await this.supabaseService
       .getInstance()
       .client.from('user_analytics_history')
       .select('*')
@@ -985,7 +985,7 @@ class AdvancedAnalyticsService {
       .order('value', { ascending: false })
       .limit(1);
 
-    if (error || !data || data.length === 0) {
+    if (_error || !data || data.length === 0) {
       return {
         metric,
         best_value: 0,
@@ -1038,7 +1038,7 @@ class AdvancedAnalyticsService {
     // Analyze success by day of week and time
     for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
       const dayEvents = eventsData.filter(event => {
-        const date = new Date(event.fired_at);
+        const date = new Date(_event.fired_at);
         return date.getDay() === dayOfWeek;
       });
 
@@ -1048,10 +1048,10 @@ class AdvancedAnalyticsService {
       const hourSuccess = new Map<number, { successful: number; total: number }>();
 
       dayEvents.forEach(event => {
-        const hour = new Date(event.fired_at).getHours();
+        const hour = new Date(_event.fired_at).getHours();
         const current = hourSuccess.get(hour) || { successful: 0, total: 0 };
         current.total += 1;
-        if (event.dismissed && !event.snoozed) {
+        if (event.dismissed && !_event.snoozed) {
           current.successful += 1;
         }
         hourSuccess.set(hour, current);
@@ -1196,7 +1196,7 @@ class AdvancedAnalyticsService {
 
   private async calculateCurrentStreak(userId: string): Promise<number> {
     // Calculate consecutive successful wake-ups
-    const { data, error } = await this.supabaseService
+    const { data, _error } = await this.supabaseService
       .getInstance()
       .client.from('alarm_events')
       .select(
@@ -1211,11 +1211,11 @@ class AdvancedAnalyticsService {
       .order('fired_at', { ascending: false })
       .limit(30);
 
-    if (error || !data) return 0;
+    if (_error || !data) return 0;
 
     let streak = 0;
-    for (const event of data) {
-      if (event.dismissed && !event.snoozed) {
+    for (const _event of data) {
+      if (event.dismissed && !_event.snoozed) {
         streak++;
       } else {
         break;
@@ -1229,10 +1229,10 @@ class AdvancedAnalyticsService {
     const moodCounts = new Map<string, { successful: number; total: number }>();
 
     events.forEach(event => {
-      const mood = event.alarms?.voice_mood || 'motivational';
+      const mood = _event.alarms?.voice_mood || 'motivational';
       const current = moodCounts.get(mood) || { successful: 0, total: 0 };
       current.total += 1;
-      if (event.dismissed && !event.snoozed) {
+      if (event.dismissed && !_event.snoozed) {
         current.successful += 1;
       }
       moodCounts.set(mood, current);

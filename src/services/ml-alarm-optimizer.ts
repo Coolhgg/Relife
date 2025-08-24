@@ -56,7 +56,7 @@ interface PredictionFactor {
 }
 
 export class MLAlarmOptimizer {
-  private static config: MLConfig = {
+  private static _config: MLConfig = {
     enabled: true,
     learningRate: 0.1,
     minDataPoints: 5,
@@ -82,8 +82,8 @@ export class MLAlarmOptimizer {
       await this.loadConfig();
       await this.loadBehaviorData();
       await this.startLearningProcess();
-    } catch (error) {
-      console.error('Failed to initialize ML Optimizer:', error);
+    } catch (_error) {
+      console._error('Failed to initialize ML Optimizer:', _error);
     }
   }
 
@@ -91,10 +91,10 @@ export class MLAlarmOptimizer {
     try {
       const { value } = await Preferences.get({ key: ML_CONFIG_KEY });
       if (value) {
-        this.config = { ...this.config, ...JSON.parse(value) };
+        this.config = { ...this._config, ...JSON.parse(value) };
       }
-    } catch (error) {
-      console.error('Error loading ML config:', error);
+    } catch (_error) {
+      console._error('Error loading ML _config:', _error);
     }
   }
 
@@ -105,8 +105,8 @@ export class MLAlarmOptimizer {
         const data = JSON.parse(value);
         this.behaviorData = new Map(Object.entries(data));
       }
-    } catch (error) {
-      console.error('Error loading behavior data:', error);
+    } catch (_error) {
+      console._error('Error loading behavior data:', _error);
     }
   }
 
@@ -154,7 +154,7 @@ export class MLAlarmOptimizer {
       // Update confidence based on data points
       pattern.confidence = Math.min(
         0.95,
-        pattern.occurrences / (this.config.minDataPoints * 2)
+        pattern.occurrences / (this._config.minDataPoints * 2)
       );
 
       this.behaviorData.set(userId, patterns);
@@ -162,8 +162,8 @@ export class MLAlarmOptimizer {
 
       // Clear prediction cache for this user
       this.clearUserPredictionCache(userId);
-    } catch (error) {
-      console.error('Error recording user behavior:', error);
+    } catch (_error) {
+      console._error('Error recording _user behavior:', _error);
     }
   }
 
@@ -202,8 +202,8 @@ export class MLAlarmOptimizer {
       this.predictionCache.set(cacheKey, result);
 
       return result;
-    } catch (error) {
-      console.error('Error predicting optimal wake time:', error);
+    } catch (_error) {
+      console._error('Error predicting optimal wake time:', _error);
       return {
         optimalWakeTime: alarm.time,
         confidence: 0,
@@ -355,7 +355,7 @@ export class MLAlarmOptimizer {
         confidence,
         description,
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         type: 'weather',
         impact: 0,
@@ -406,7 +406,7 @@ export class MLAlarmOptimizer {
         confidence,
         description,
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         type: 'calendar',
         impact: 0,
@@ -463,7 +463,7 @@ export class MLAlarmOptimizer {
         confidence,
         description,
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         type: 'location',
         impact: 0,
@@ -603,8 +603,8 @@ export class MLAlarmOptimizer {
         key: USER_BEHAVIOR_DATA_KEY,
         value: JSON.stringify(dataObject),
       });
-    } catch (error) {
-      console.error('Error saving behavior data:', error);
+    } catch (_error) {
+      console._error('Error saving behavior data:', _error);
     }
   }
 
@@ -695,15 +695,15 @@ export class MLAlarmOptimizer {
   }
 
   static async enableMLOptimization(enabled: boolean): Promise<void> {
-    this.config.enabled = enabled;
+    this._config.enabled = enabled;
     await Preferences.set({
       key: ML_CONFIG_KEY,
-      value: JSON.stringify(this.config),
+      value: JSON.stringify(this._config),
     });
   }
 
   static isMLEnabled(): boolean {
-    return this.config.enabled;
+    return this._config.enabled;
   }
 
   static getMLStats(): {

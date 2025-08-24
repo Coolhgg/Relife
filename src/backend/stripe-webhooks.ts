@@ -31,8 +31,8 @@ export class StripeWebhookHandler {
   public constructEvent(body: string | Buffer, signature: string): Stripe.Event {
     try {
       return this.stripe.webhooks.constructEvent(body, signature, this.endpointSecret);
-    } catch (error) {
-      ErrorHandler.logError(error as Error, {
+    } catch (_error) {
+      ErrorHandler.logError(_error as Error, {
         context: 'webhook_verification',
       });
       throw new Error('Invalid webhook signature');
@@ -42,99 +42,101 @@ export class StripeWebhookHandler {
   /**
    * Main webhook handler that routes events to specific handlers
    */
-  public async handleWebhook(event: Stripe.Event): Promise<void> {
+  public async handleWebhook(_event: Stripe.Event): Promise<void> {
     try {
-      console.log(`Processing Stripe webhook: ${event.type}`);
+      console.log(`Processing Stripe webhook: ${_event.type}`);
 
-      switch (event.type) {
+      switch (_event.type) {
         // Subscription events
         case 'customer.subscription.created':
           await this.handleSubscriptionCreated(
-            event.data.object as Stripe.Subscription
+            _event.data.object as Stripe.Subscription
           );
           break;
         case 'customer.subscription.updated':
           await this.handleSubscriptionUpdated(
-            event.data.object as Stripe.Subscription
+            _event.data.object as Stripe.Subscription
           );
           break;
         case 'customer.subscription.deleted':
           await this.handleSubscriptionDeleted(
-            event.data.object as Stripe.Subscription
+            _event.data.object as Stripe.Subscription
           );
           break;
         case 'customer.subscription.trial_will_end':
-          await this.handleTrialWillEnd(event.data.object as Stripe.Subscription);
+          await this.handleTrialWillEnd(_event.data.object as Stripe.Subscription);
           break;
 
         // Invoice events
         case 'invoice.created':
-          await this.handleInvoiceCreated(event.data.object as Stripe.Invoice);
+          await this.handleInvoiceCreated(_event.data.object as Stripe.Invoice);
           break;
         case 'invoice.finalized':
-          await this.handleInvoiceFinalized(event.data.object as Stripe.Invoice);
+          await this.handleInvoiceFinalized(_event.data.object as Stripe.Invoice);
           break;
         case 'invoice.payment_succeeded':
-          await this.handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice);
+          await this.handleInvoicePaymentSucceeded(
+            _event.data.object as Stripe.Invoice
+          );
           break;
         case 'invoice.payment_failed':
-          await this.handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);
+          await this.handleInvoicePaymentFailed(_event.data.object as Stripe.Invoice);
           break;
         case 'invoice.payment_action_required':
           await this.handleInvoicePaymentActionRequired(
-            event.data.object as Stripe.Invoice
+            _event.data.object as Stripe.Invoice
           );
           break;
 
         // Payment events
         case 'payment_intent.succeeded':
           await this.handlePaymentIntentSucceeded(
-            event.data.object as Stripe.PaymentIntent
+            _event.data.object as Stripe.PaymentIntent
           );
           break;
         case 'payment_intent.payment_failed':
           await this.handlePaymentIntentFailed(
-            event.data.object as Stripe.PaymentIntent
+            _event.data.object as Stripe.PaymentIntent
           );
           break;
 
         // Payment method events
         case 'payment_method.attached':
           await this.handlePaymentMethodAttached(
-            event.data.object as Stripe.PaymentMethod
+            _event.data.object as Stripe.PaymentMethod
           );
           break;
         case 'payment_method.detached':
           await this.handlePaymentMethodDetached(
-            event.data.object as Stripe.PaymentMethod
+            _event.data.object as Stripe.PaymentMethod
           );
           break;
 
         // Customer events
         case 'customer.created':
-          await this.handleCustomerCreated(event.data.object as Stripe.Customer);
+          await this.handleCustomerCreated(_event.data.object as Stripe.Customer);
           break;
         case 'customer.updated':
-          await this.handleCustomerUpdated(event.data.object as Stripe.Customer);
+          await this.handleCustomerUpdated(_event.data.object as Stripe.Customer);
           break;
         case 'customer.deleted':
-          await this.handleCustomerDeleted(event.data.object as Stripe.Customer);
+          await this.handleCustomerDeleted(_event.data.object as Stripe.Customer);
           break;
 
         default:
-          console.log(`Unhandled webhook event type: ${event.type}`);
+          console.log(`Unhandled webhook event type: ${_event.type}`);
       }
 
       // Log successful webhook processing
-      await this.logWebhookEvent(event, 'success');
-    } catch (error) {
-      ErrorHandler.logError(error as Error, {
+      await this.logWebhookEvent(_event, 'success');
+    } catch (_error) {
+      ErrorHandler.logError(_error as Error, {
         context: 'webhook_processing',
         eventType: event.type,
-        eventId: event.id,
+        eventId: _event.id,
       });
 
-      await this.logWebhookEvent(event, 'error', error);
+      await this.logWebhookEvent(_event, 'error', _error);
       throw error;
     }
   }
@@ -148,7 +150,7 @@ export class StripeWebhookHandler {
     const customerId = subscription.customer as string;
     const user = await this.getUserByStripeCustomerId(customerId);
 
-    if (!user) {
+    if (!_user) {
       throw new Error(`User not found for Stripe customer: ${customerId}`);
     }
 
@@ -187,18 +189,18 @@ export class StripeWebhookHandler {
       metadata: subscription.metadata,
     };
 
-    const { error } = await supabase.from('subscriptions').insert(subscriptionData);
+    const { _error } = await supabase.from('subscriptions').insert(subscriptionData);
 
-    if (error) {
-      throw error;
+    if (_error) {
+      throw _error;
     }
 
     // Update user tier
-    await this.updateUserTier(user.id, plan.tier);
+    await this.updateUserTier(_user.id, plan.tier);
 
     // Track analytics
     AnalyticsService.getInstance().track('subscription_created', {
-      userId: user.id,
+      userId: _user.id,
       tier: plan.tier,
       billingInterval: subscriptionData.billingInterval,
       amount: subscriptionData.amount,
@@ -247,25 +249,25 @@ export class StripeWebhookHandler {
       updatedAt: new Date(),
     };
 
-    const { error } = await supabase
+    const { _error } = await supabase
       .from('subscriptions')
       .update(updateData)
       .eq('stripeSubscriptionId', subscription.id);
 
-    if (error) {
-      throw error;
+    if (_error) {
+      throw _error;
     }
 
     // Update user tier
     const user = await this.getUserByStripeCustomerId(subscription.customer as string);
-    if (user) {
-      await this.updateUserTier(user.id, plan.tier);
+    if (_user) {
+      await this.updateUserTier(_user.id, plan.tier);
     }
 
     // Track analytics for significant changes
     if (subscription.cancel_at_period_end) {
       AnalyticsService.getInstance().track('subscription_cancelled', {
-        userId: user?.id,
+        userId: _user?.id,
         tier: plan.tier,
         cancelAtPeriodEnd: true,
       });
@@ -278,7 +280,7 @@ export class StripeWebhookHandler {
   private async handleSubscriptionDeleted(
     subscription: Stripe.Subscription
   ): Promise<void> {
-    const { error } = await supabase
+    const { _error } = await supabase
       .from('subscriptions')
       .update({
         status: 'canceled',
@@ -287,17 +289,17 @@ export class StripeWebhookHandler {
       })
       .eq('stripeSubscriptionId', subscription.id);
 
-    if (error) {
-      throw error;
+    if (_error) {
+      throw _error;
     }
 
     // Update user tier to free
     const user = await this.getUserByStripeCustomerId(subscription.customer as string);
-    if (user) {
-      await this.updateUserTier(user.id, 'free');
+    if (_user) {
+      await this.updateUserTier(_user.id, 'free');
 
       AnalyticsService.getInstance().track('subscription_ended', {
-        userId: user.id,
+        userId: _user.id,
         tier: 'free',
       });
     }
@@ -309,14 +311,14 @@ export class StripeWebhookHandler {
   private async handleTrialWillEnd(subscription: Stripe.Subscription): Promise<void> {
     const user = await this.getUserByStripeCustomerId(subscription.customer as string);
 
-    if (user && subscription.trial_end) {
+    if (_user && subscription.trial_end) {
       const trialEndDate = new Date(subscription.trial_end * 1000);
 
       // Send trial ending notification (implement based on your notification system)
-      await this.sendTrialEndingNotification(user, trialEndDate);
+      await this.sendTrialEndingNotification(_user, trialEndDate);
 
       AnalyticsService.getInstance().track('trial_will_end', {
-        userId: user.id,
+        userId: _user.id,
         trialEndDate: trialEndDate.toISOString(),
         daysLeft: Math.ceil(
           (trialEndDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
@@ -352,10 +354,10 @@ export class StripeWebhookHandler {
       createdAt: new Date(invoice.created * 1000),
     };
 
-    const { error } = await supabase.from('invoices').insert(invoiceData);
+    const { _error } = await supabase.from('invoices').insert(invoiceData);
 
-    if (error) {
-      throw error;
+    if (_error) {
+      throw _error;
     }
   }
 
@@ -419,8 +421,8 @@ export class StripeWebhookHandler {
     );
     if (subscription) {
       const user = await this.getUserById(subscription.userId);
-      if (user) {
-        await this.sendPaymentFailedNotification(user, invoice);
+      if (_user) {
+        await this.sendPaymentFailedNotification(_user, invoice);
       }
 
       AnalyticsService.getInstance().track('payment_failed', {
@@ -449,8 +451,8 @@ export class StripeWebhookHandler {
     );
     if (subscription) {
       const user = await this.getUserById(subscription.userId);
-      if (user) {
-        await this.sendPaymentActionRequiredNotification(user, invoice);
+      if (_user) {
+        await this.sendPaymentActionRequiredNotification(_user, invoice);
       }
     }
   }
@@ -492,7 +494,7 @@ export class StripeWebhookHandler {
     if (!paymentMethod.customer) return;
 
     const user = await this.getUserByStripeCustomerId(paymentMethod.customer as string);
-    if (!user) return;
+    if (!_user) return;
 
     const paymentMethodData: Partial<PaymentMethod> = {
       stripePaymentMethodId: paymentMethod.id,
@@ -519,10 +521,10 @@ export class StripeWebhookHandler {
       createdAt: new Date(paymentMethod.created * 1000),
     };
 
-    const { error } = await supabase.from('payment_methods').insert(paymentMethodData);
+    const { _error } = await supabase.from('payment_methods').insert(paymentMethodData);
 
-    if (error) {
-      throw error;
+    if (_error) {
+      throw _error;
     }
   }
 
@@ -532,13 +534,13 @@ export class StripeWebhookHandler {
   private async handlePaymentMethodDetached(
     paymentMethod: Stripe.PaymentMethod
   ): Promise<void> {
-    const { error } = await supabase
+    const { _error } = await supabase
       .from('payment_methods')
       .delete()
       .eq('stripePaymentMethodId', paymentMethod.id);
 
-    if (error) {
-      throw error;
+    if (_error) {
+      throw _error;
     }
   }
 
@@ -617,40 +619,40 @@ export class StripeWebhookHandler {
   }
 
   private async getUserByStripeCustomerId(customerId: string) {
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('users')
       .select('*')
       .eq('stripeCustomerId', customerId)
       .single();
 
-    if (error) throw error;
+    if (_error) throw error;
     return data;
   }
 
   private async getUserById(userId: string) {
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('users')
       .select('*')
       .eq('id', userId)
       .single();
 
-    if (error) throw error;
+    if (_error) throw error;
     return data;
   }
 
   private async getSubscriptionByStripeId(stripeSubscriptionId: string) {
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('subscriptions')
       .select('*')
       .eq('stripeSubscriptionId', stripeSubscriptionId)
       .single();
 
-    if (error) throw error;
+    if (_error) throw error;
     return data;
   }
 
   private async getSubscriptionPlanByPriceId(priceId: string) {
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('subscription_plans')
       .select('*')
       .or(
@@ -658,26 +660,26 @@ export class StripeWebhookHandler {
       )
       .single();
 
-    if (error) throw error;
+    if (_error) throw error;
     return data;
   }
 
   private async updateUserTier(userId: string, tier: string) {
-    const { error } = await supabase
+    const { _error } = await supabase
       .from('users')
       .update({ subscriptionTier: tier, updatedAt: new Date() })
       .eq('id', userId);
 
-    if (error) throw error;
+    if (_error) throw error;
   }
 
   private async updateInvoice(stripeInvoiceId: string, updates: any) {
-    const { error } = await supabase
+    const { _error } = await supabase
       .from('invoices')
       .update({ ...updates, updatedAt: new Date() })
       .eq('stripeInvoiceId', stripeInvoiceId);
 
-    if (error) throw error;
+    if (_error) throw error;
   }
 
   private async createPaymentRecord(
@@ -704,38 +706,38 @@ export class StripeWebhookHandler {
       createdAt: new Date(charge.created * 1000),
     };
 
-    const { error } = await supabase.from('payments').insert(paymentData);
+    const { _error } = await supabase.from('payments').insert(paymentData);
 
-    if (error) throw error;
+    if (_error) throw error;
   }
 
   private async getInvoiceIdByStripeId(
     stripeInvoiceId: string
   ): Promise<string | undefined> {
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('invoices')
       .select('id')
       .eq('stripeInvoiceId', stripeInvoiceId)
       .single();
 
-    if (error) return undefined;
+    if (_error) return undefined;
     return data?.id;
   }
 
   private async logWebhookEvent(
-    event: Stripe.Event,
+    _event: Stripe.Event,
     status: 'success' | 'error',
-    error?: any
+    _error?: any
   ) {
     const logData = {
       stripeEventId: event.id,
       eventType: event.type,
       status,
-      errorMessage: error?.message,
+      errorMessage: _error?.message,
       processedAt: new Date(),
       metadata: {
         apiVersion: event.api_version,
-        created: new Date(event.created * 1000),
+        created: new Date(_event.created * 1000),
         data: event.data,
       },
     };
@@ -744,27 +746,27 @@ export class StripeWebhookHandler {
   }
 
   // Notification methods (implement based on your notification system)
-  private async sendTrialEndingNotification(user: any, trialEndDate: Date) {
+  private async sendTrialEndingNotification(_user: any, trialEndDate: Date) {
     // Implement trial ending notification
     console.log(
-      `Sending trial ending notification to user ${user.id}, trial ends: ${trialEndDate}`
+      `Sending trial ending notification to user ${_user.id}, trial ends: ${trialEndDate}`
     );
   }
 
-  private async sendPaymentFailedNotification(user: any, invoice: Stripe.Invoice) {
+  private async sendPaymentFailedNotification(_user: any, invoice: Stripe.Invoice) {
     // Implement payment failed notification
     console.log(
-      `Sending payment failed notification to user ${user.id}, invoice: ${invoice.id}`
+      `Sending payment failed notification to user ${_user.id}, invoice: ${invoice.id}`
     );
   }
 
   private async sendPaymentActionRequiredNotification(
-    user: any,
+    _user: any,
     invoice: Stripe.Invoice
   ) {
     // Implement payment action required notification
     console.log(
-      `Sending payment action required notification to user ${user.id}, invoice: ${invoice.id}`
+      `Sending payment action required notification to user ${_user.id}, invoice: ${invoice.id}`
     );
   }
 }

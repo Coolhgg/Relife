@@ -137,8 +137,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
 
       await audio.play();
       setPlayingSound(soundId);
-    } catch (error) {
-      console.error('Error playing sound:', error);
+    } catch (_error) {
+      console._error('Error playing sound:', _error);
     }
   };
 
@@ -297,7 +297,9 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                       <Input
                         placeholder="Search sounds..."
                         value={searchQuery}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setSearchQuery(e.target.value)
+                        }
                         className="pl-10"
                       />
                     </div>
@@ -563,7 +565,9 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                           <Input
                             placeholder="https://example.com/sound.mp3"
                             value={urlInput}
-                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setUrlInput(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                              setUrlInput(e.target.value)
+                            }
                           />
                         </div>
 

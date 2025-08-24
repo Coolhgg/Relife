@@ -25,7 +25,7 @@ export interface CloudSyncStatus {
   lastSyncTime?: Date | null;
   hasConflicts: boolean;
   pendingChanges: number;
-  error?: string | null;
+  _error?: string | null;
 }
 
 class CloudSyncService {
@@ -54,7 +54,7 @@ class CloudSyncService {
       lastSyncTime: null,
       hasConflicts: false,
       pendingChanges: 0,
-      error: null,
+      _error: null,
     };
 
     this.initializeListeners();
@@ -173,7 +173,7 @@ class CloudSyncService {
       return;
     }
 
-    this.updateStatus({ isSyncing: true, error: null });
+    this.updateStatus({ isSyncing: true, _error: null });
 
     try {
       // Get local preferences
@@ -203,13 +203,13 @@ class CloudSyncService {
         lastSyncTime: new Date(),
         hasConflicts: false,
         pendingChanges: 0,
-        error: null,
+        _error: null,
       });
-    } catch (error) {
-      console.error('Cloud sync error:', error);
+    } catch (_error) {
+      console.error('Cloud sync error:', _error);
       this.updateStatus({
         isSyncing: false,
-        error: error instanceof Error ? error.message : 'Sync failed',
+        error: _error instanceof Error ? _error.message : 'Sync failed',
       });
 
       // Save to cache for retry
@@ -221,8 +221,8 @@ class CloudSyncService {
     try {
       const stored = localStorage.getItem('cloud-sync-preferences');
       return stored ? JSON.parse(stored) : null;
-    } catch (error) {
-      console.error('Error reading local preferences:', error);
+    } catch (_error) {
+      console._error('Error reading local preferences:', _error);
       return null;
     }
   }
@@ -230,8 +230,8 @@ class CloudSyncService {
   private saveLocalPreferences(preferences: CloudSyncPreferences): void {
     try {
       localStorage.setItem('cloud-sync-preferences', JSON.stringify(preferences));
-    } catch (error) {
-      console.error('Error saving local preferences:', error);
+    } catch (_error) {
+      console._error('Error saving local preferences:', _error);
     }
   }
 
@@ -243,7 +243,7 @@ class CloudSyncService {
         return null; // No user logged in
       }
 
-      const response = await fetch(`${this.apiEndpoint}/user/preferences`, {
+      const response = await fetch(`${this.apiEndpoint}/_user/preferences`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
@@ -259,9 +259,9 @@ class CloudSyncService {
       }
 
       return await response.json();
-    } catch (error) {
-      console.error('Error fetching remote preferences:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error fetching remote preferences:', _error);
+      throw _error;
     }
   }
 
@@ -274,7 +274,7 @@ class CloudSyncService {
     }
 
     try {
-      const response = await fetch(`${this.apiEndpoint}/user/preferences`, {
+      const response = await fetch(`${this.apiEndpoint}/_user/preferences`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${authToken}`,
@@ -286,9 +286,9 @@ class CloudSyncService {
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-    } catch (error) {
-      console.error('Error saving remote preferences:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error saving remote preferences:', _error);
+      throw _error;
     }
   }
 
@@ -452,8 +452,8 @@ class CloudSyncService {
         timestamp: Date.now(),
       };
       localStorage.setItem('cloud-sync-cache', JSON.stringify(cache));
-    } catch (error) {
-      console.error('Error saving to cache:', error);
+    } catch (_error) {
+      console._error('Error saving to cache:', _error);
     }
   }
 
@@ -473,8 +473,8 @@ class CloudSyncService {
         this.preferences = cache.preferences;
         this.updateStatus({ pendingChanges: cache.pendingChanges || 0 });
       }
-    } catch (error) {
-      console.error('Error loading from cache:', error);
+    } catch (_error) {
+      console._error('Error loading from cache:', _error);
     }
   }
 
@@ -539,7 +539,7 @@ class CloudSyncService {
     }
 
     try {
-      const response = await fetch(`${this.apiEndpoint}/user/preferences`, {
+      const response = await fetch(`${this.apiEndpoint}/_user/preferences`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${authToken}`,
@@ -557,9 +557,9 @@ class CloudSyncService {
 
       this.preferences = null;
       this.updateStatus({ pendingChanges: 0, hasConflicts: false });
-    } catch (error) {
-      console.error('Error clearing remote data:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error clearing remote data:', _error);
+      throw _error;
     }
   }
 

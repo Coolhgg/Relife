@@ -16,7 +16,7 @@ interface EnhancedStorageMetadata {
   syncRetryCount: number;
   lastErrorReport?: {
     timestamp: string;
-    error: string;
+    _error: string;
     context: string;
   };
 }
@@ -126,13 +126,13 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       console.log('[EnhancedStorage] Data integrity check completed:', result);
       return result;
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Data integrity validation failed', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Data integrity validation failed', {
         context: 'EnhancedOfflineStorage.validateDataIntegrity',
       });
       return {
         isValid: false,
-        errors: [error.message || 'Unknown validation error'],
+        errors: [error.message || 'Unknown validation _error'],
         warnings: [],
         fixedIssues: [],
       };
@@ -153,8 +153,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         alarmsCount: alarms.length,
         pendingCount: pendingChanges.length,
       });
-    } catch (error) {
-      console.error('[EnhancedStorage] Failed to update integrity hash:', error);
+    } catch (_error) {
+      console._error('[EnhancedStorage] Failed to update integrity hash:', _error);
     }
   }
 
@@ -236,14 +236,14 @@ export class EnhancedOfflineStorage extends OfflineStorage {
             await this.removePendingChange(change.id);
           } else {
             result.failed++;
-            result.errors.push(`Failed to sync ${change.id}: ${syncSuccess.error}`);
+            result.errors.push(`Failed to sync ${change.id}: ${syncSuccess._error}`);
 
             // Update retry count
             await this.updatePendingChangeRetryCount(change.id);
           }
-        } catch (error) {
+        } catch (_error) {
           result.failed++;
-          result.errors.push(`Sync error for ${change.id}: ${error.message}`);
+          result.errors.push(`Sync _error for ${change.id}: ${_error.message}`);
           await this.updatePendingChangeRetryCount(change.id);
         }
       }
@@ -261,8 +261,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       console.log('[EnhancedStorage] Advanced sync completed:', result);
       return result;
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Advanced sync failed', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Advanced sync failed', {
         context: 'EnhancedOfflineStorage.performAdvancedSync',
       });
       return {
@@ -270,7 +270,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         synced: 0,
         failed: 0,
         conflicts: 0,
-        errors: [error.message || 'Unknown sync error'],
+        errors: [error.message || 'Unknown sync _error'],
       };
     }
   }
@@ -282,7 +282,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     success: boolean;
     hasConflict: boolean;
     serverData?: any;
-    error?: string;
+    _error?: string;
   }> {
     try {
       // Simulate API call to sync data
@@ -322,14 +322,14 @@ export class EnhancedOfflineStorage extends OfflineStorage {
           success: false,
           hasConflict: true,
           serverData,
-          error: 'Manual conflict resolution required',
+          _error: 'Manual conflict resolution required',
         };
       }
 
       // No conflict - sync normally
       return { success: true, hasConflict: false };
-    } catch (error) {
-      return { success: false, hasConflict: false, error: error.message };
+    } catch (_error) {
+      return { success: false, hasConflict: false, error: _error.message };
     }
   }
 
@@ -367,8 +367,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       console.log('[EnhancedStorage] Data merged successfully:', merged);
       return merged;
-    } catch (error) {
-      console.error('[EnhancedStorage] Data merge failed:', error);
+    } catch (_error) {
+      console._error('[EnhancedStorage] Data merge failed:', _error);
       // Fallback to local data if merge fails
       return localData;
     }
@@ -386,8 +386,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         '[EnhancedStorage] Conflict stored for manual resolution:',
         conflict.id
       );
-    } catch (error) {
-      console.error('[EnhancedStorage] Failed to store conflict:', error);
+    } catch (_error) {
+      console._error('[EnhancedStorage] Failed to store conflict:', _error);
     }
   }
 
@@ -395,8 +395,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     try {
       const conflicts = SecurityService.secureStorageGet(this.CONFLICTS_KEY);
       return Array.isArray(conflicts) ? conflicts : [];
-    } catch (error) {
-      console.error('[EnhancedStorage] Failed to get conflicts:', error);
+    } catch (_error) {
+      console._error('[EnhancedStorage] Failed to get conflicts:', _error);
       return [];
     }
   }
@@ -439,8 +439,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       console.log('[EnhancedStorage] Conflict resolved:', conflictId, resolution);
       return true;
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to resolve conflict', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to resolve conflict', {
         context: 'EnhancedOfflineStorage.resolveConflict',
         conflictId,
         resolution,
@@ -451,12 +451,9 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
   // ==================== ENHANCED BACKUP AND RECOVERY ====================
 
-  async createBackup(includeConflicts: boolean = false): Promise<{
-    success: boolean;
-    backupId: string;
-    size: number;
-    error?: string;
-  }> {
+  async createBackup(
+    includeConflicts: boolean = false
+  ): Promise<{ success: boolean; backupId: string; size: number; _error?: string }> {
     try {
       console.log('[EnhancedStorage] Creating enhanced backup...');
 
@@ -508,16 +505,11 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         backupId,
         size: backupData.size,
       };
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to create backup', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to create backup', {
         context: 'EnhancedOfflineStorage.createBackup',
       });
-      return {
-        success: false,
-        backupId: '',
-        size: 0,
-        error: error.message,
-      };
+      return { success: false, backupId: '', size: 0, error: _error.message };
     }
   }
 
@@ -615,8 +607,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       console.log('[EnhancedStorage] Restore completed successfully:', result);
       return result;
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to restore from backup', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to restore from backup', {
         context: 'EnhancedOfflineStorage.restoreFromBackup',
         backupId,
       });
@@ -633,8 +625,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       const history =
         SecurityService.secureStorageGet(`${this.BACKUP_KEY}-history`) || [];
       return Array.isArray(history) ? history : [];
-    } catch (error) {
-      console.error('[EnhancedStorage] Failed to get backup history:', error);
+    } catch (_error) {
+      console._error('[EnhancedStorage] Failed to get backup history:', _error);
       return [];
     }
   }
@@ -650,8 +642,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       // Keep only last 10 backups in history
       const trimmedHistory = history.slice(0, 10);
       SecurityService.secureStorageSet(`${this.BACKUP_KEY}-history`, trimmedHistory);
-    } catch (error) {
-      console.error('[EnhancedStorage] Failed to update backup history:', error);
+    } catch (_error) {
+      console._error('[EnhancedStorage] Failed to update backup history:', _error);
     }
   }
 
@@ -664,8 +656,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         (change: any) => change.id !== changeId
       );
       SecurityService.secureStorageSet('smart-alarm-pending', filteredChanges);
-    } catch (error) {
-      console.error('[EnhancedStorage] Failed to remove pending change:', error);
+    } catch (_error) {
+      console._error('[EnhancedStorage] Failed to remove pending change:', _error);
     }
   }
 
@@ -679,8 +671,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         change.lastRetry = new Date().toISOString();
         SecurityService.secureStorageSet('smart-alarm-pending', pendingChanges);
       }
-    } catch (error) {
-      console.error('[EnhancedStorage] Failed to update retry count:', error);
+    } catch (_error) {
+      console._error('[EnhancedStorage] Failed to update retry count:', _error);
     }
   }
 
@@ -689,8 +681,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       const existing = SecurityService.secureStorageGet('smart-alarm-metadata') || {};
       const updated = { ...existing, ...update };
       SecurityService.secureStorageSet('smart-alarm-metadata', updated);
-    } catch (error) {
-      console.error('[EnhancedStorage] Failed to update sync metadata:', error);
+    } catch (_error) {
+      console._error('[EnhancedStorage] Failed to update sync metadata:', _error);
     }
   }
 
@@ -701,7 +693,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     conflicts: number;
     backups: number;
     integrityStatus: 'valid' | 'invalid' | 'unknown';
-    syncHealth: 'good' | 'warning' | 'error';
+    syncHealth: 'good' | 'warning' | '_error';
     lastBackup: string | null;
     dataVersion: string;
   }> {
@@ -715,12 +707,12 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       const integrityStatus = integrityCheck.isValid ? 'valid' : 'invalid';
 
       // Determine sync health
-      let syncHealth: 'good' | 'warning' | 'error' = 'good';
+      let syncHealth: 'good' | 'warning' | '_error' = 'good';
       if (basic.pendingChangesCount > 10) {
         syncHealth = 'warning';
       }
       if (conflicts.length > 5 || basic.pendingChangesCount > 25) {
-        syncHealth = 'error';
+        syncHealth = '_error';
       }
 
       return {
@@ -732,15 +724,15 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         lastBackup: backupHistory.length > 0 ? backupHistory[0].timestamp : null,
         dataVersion: this.ENHANCED_VERSION,
       };
-    } catch (error) {
-      console.error('[EnhancedStorage] Failed to get enhanced stats:', error);
+    } catch (_error) {
+      console.error('[EnhancedStorage] Failed to get enhanced stats:', _error);
       const basic = await this.getStorageStats();
       return {
         basic,
         conflicts: 0,
         backups: 0,
         integrityStatus: 'unknown' as const,
-        syncHealth: 'error' as const,
+        syncHealth: '_error' as const,
         lastBackup: null,
         dataVersion: this.ENHANCED_VERSION,
       };

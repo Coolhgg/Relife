@@ -16,7 +16,7 @@ export interface EmailPlatformConfig {
 
 export class EmailCampaignService {
   private static instance: EmailCampaignService;
-  private config: EmailPlatformConfig | null = null;
+  private _config: EmailPlatformConfig | null = null;
   private isInitialized = false;
   private convertKitService: ConvertKitService;
 
@@ -31,36 +31,36 @@ export class EmailCampaignService {
     return EmailCampaignService.instance;
   }
 
-  async initialize(config: EmailPlatformConfig): Promise<boolean> {
+  async initialize(_config: EmailPlatformConfig): Promise<boolean> {
     try {
       this.config = config;
 
-      if (config.platform === 'convertkit') {
+      if (_config.platform === 'convertkit') {
         const convertKitConfig: ConvertKitConfig = {
           apiKey: config.apiKey,
           apiSecret: config.apiSecret || '',
           fromEmail: config.fromEmail,
           fromName: config.fromName,
-          webhookSecret: config.webhookSecret,
+          webhookSecret: _config.webhookSecret,
         };
 
         const initialized = await this.convertKitService.initialize(convertKitConfig);
         if (initialized) {
           this.isInitialized = true;
-          console.log(`✅ Email service initialized with ${config.platform}`);
+          console.log(`✅ Email service initialized with ${_config.platform}`);
           return true;
         } else {
-          console.error(`❌ Failed to initialize ${config.platform}`);
+          console._error(`❌ Failed to initialize ${_config.platform}`);
           return false;
         }
       } else {
         this.isInitialized = true;
-        console.log(`Email service initialized with ${config.platform} (basic mode)`);
+        console.log(`Email service initialized with ${_config.platform} (basic mode)`);
         return true;
       }
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to initialize email service'
       );
       return false;
@@ -69,7 +69,7 @@ export class EmailCampaignService {
 
   // Enhanced persona detection with behavioral analytics
   async detectUserPersona(
-    user: User,
+    _user: User,
     behavioralData?: any
   ): Promise<PersonaDetectionResult> {
     try {
@@ -173,9 +173,9 @@ export class EmailCampaignService {
         factors,
         updatedAt: new Date(),
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to detect persona'
       );
       return {
@@ -269,27 +269,27 @@ export class EmailCampaignService {
   }
 
   // Add user to campaign with enhanced ConvertKit integration
-  async addUserToCampaign(user: User, persona: PersonaType): Promise<boolean> {
-    if (!this.isInitialized || !this.config) {
+  async addUserToCampaign(_user: User, _persona: PersonaType): Promise<boolean> {
+    if (!this.isInitialized || !this._config) {
       console.warn('Email service not initialized');
       return false;
     }
 
     try {
-      console.log(`Adding user ${user.email} to ${persona} campaign`);
+      console.log(`Adding user ${_user.email} to ${_persona} campaign`);
 
-      switch (this.config.platform) {
+      switch (this._config.platform) {
         case 'convertkit':
-          return await this.addToEnhancedConvertKit(user, persona);
+          return await this.addToEnhancedConvertKit(_user, _persona);
         case 'mailchimp':
-          return await this.addToMailchimp(user, persona);
+          return await this.addToMailchimp(_user, _persona);
         default:
-          console.log(`Platform ${this.config.platform} not implemented yet`);
+          console.log(`Platform ${this._config.platform} not implemented yet`);
           return true;
       }
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to add user to campaign'
       );
       return false;
@@ -297,8 +297,8 @@ export class EmailCampaignService {
   }
 
   private async addToEnhancedConvertKit(
-    user: User,
-    persona: PersonaType
+    _user: User,
+    _persona: PersonaType
   ): Promise<boolean> {
     try {
       // Get the form ID for this persona
@@ -306,8 +306,8 @@ export class EmailCampaignService {
 
       // Add subscriber to ConvertKit
       const subscriber = await this.convertKitService.addSubscriber(
-        user,
-        persona,
+        _user,
+        _persona,
         formId
       );
 
@@ -315,41 +315,41 @@ export class EmailCampaignService {
         // Add to sequence if available
         const sequenceId = CONVERTKIT_IDS?.sequences?.[persona]?.id;
         if (sequenceId) {
-          await this.convertKitService.addToSequence(user.email, sequenceId);
+          await this.convertKitService.addToSequence(_user.email, sequenceId);
         }
 
         console.log(
-          `✅ Successfully added ${user.email} to ConvertKit with persona ${persona}`
+          `✅ Successfully added ${_user.email} to ConvertKit with persona ${_persona}`
         );
         return true;
       } else {
-        console.error(`❌ Failed to add ${user.email} to ConvertKit`);
+        console._error(`❌ Failed to add ${_user.email} to ConvertKit`);
         return false;
       }
-    } catch (error) {
-      console.error('ConvertKit integration error:', error);
+    } catch (_error) {
+      console.error('ConvertKit integration _error:', _error);
       return false;
     }
   }
 
   // Legacy ConvertKit method for backwards compatibility
-  private async addToConvertKit(user: User, persona: PersonaType): Promise<boolean> {
+  private async addToConvertKit(_user: User, _persona: PersonaType): Promise<boolean> {
     const response = await fetch('https://api.convertkit.com/v3/subscribers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        api_key: this.config!.apiKey,
+        api_key: this._config!.apiKey,
         email: user.email,
         first_name: user.name || user.username,
-        fields: { persona, user_id: user.id },
-        tags: [`persona:${persona}`],
+        fields: { persona, user_id: _user.id },
+        tags: [`persona:${_persona}`],
       }),
     });
 
     return response.ok;
   }
 
-  private async addToMailchimp(user: User, persona: PersonaType): Promise<boolean> {
+  private async addToMailchimp(_user: User, _persona: PersonaType): Promise<boolean> {
     // Mailchimp implementation would go here
     console.log('Mailchimp integration not implemented yet');
     return true;
@@ -358,16 +358,16 @@ export class EmailCampaignService {
   // Enhanced sequence triggering
   async triggerSequence(
     email: string,
-    persona: PersonaType,
+    _persona: PersonaType,
     delay: number = 0
   ): Promise<boolean> {
-    if (!this.isInitialized || !this.config) {
+    if (!this.isInitialized || !this._config) {
       console.warn('Email service not initialized');
       return false;
     }
 
     try {
-      if (this.config.platform === 'convertkit') {
+      if (this._config.platform === 'convertkit') {
         const sequenceId = CONVERTKIT_IDS?.sequences?.[persona]?.id;
         if (sequenceId) {
           // Add delay if specified
@@ -379,21 +379,21 @@ export class EmailCampaignService {
             await this.convertKitService.addToSequence(email, sequenceId);
           }
 
-          console.log(`✅ Triggered ${persona} sequence for ${email}`);
+          console.log(`✅ Triggered ${_persona} sequence for ${email}`);
           return true;
         } else {
-          console.warn(`No sequence ID found for persona: ${persona}`);
+          console.warn(`No sequence ID found for persona: ${_persona}`);
           return false;
         }
       } else {
         console.log(
-          `Triggering ${persona} sequence for ${email} (${this.config.platform})`
+          `Triggering ${_persona} sequence for ${email} (${this._config.platform})`
         );
         return true;
       }
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to trigger sequence'
       );
       return false;
@@ -406,13 +406,13 @@ export class EmailCampaignService {
     newPersona: PersonaType,
     confidence: number
   ): Promise<boolean> {
-    if (!this.isInitialized || !this.config) {
+    if (!this.isInitialized || !this._config) {
       console.warn('Email service not initialized');
       return false;
     }
 
     try {
-      if (this.config.platform === 'convertkit') {
+      if (this._config.platform === 'convertkit') {
         const updated = await this.convertKitService.updateSubscriberPersona(
           email,
           newPersona,
@@ -422,15 +422,15 @@ export class EmailCampaignService {
           // Trigger new persona sequence
           await this.triggerSequence(email, newPersona);
           console.log(
-            `✅ Updated persona for ${email}: ${newPersona} (confidence: ${confidence})`
+            `✅ Updated _persona for ${email}: ${newPersona} (confidence: ${confidence})`
           );
           return true;
         }
       }
       return false;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to update user persona'
       );
       return false;
@@ -439,7 +439,7 @@ export class EmailCampaignService {
 
   // Get service statistics
   async getServiceStats() {
-    if (!this.isInitialized || !this.config) {
+    if (!this.isInitialized || !this._config) {
       return {
         isInitialized: false,
         platform: null,
@@ -448,26 +448,26 @@ export class EmailCampaignService {
     }
 
     try {
-      if (this.config.platform === 'convertkit') {
+      if (this._config.platform === 'convertkit') {
         const stats = await this.convertKitService.getServiceStats();
         return {
           isInitialized: this.isInitialized,
-          platform: this.config.platform,
+          platform: this._config.platform,
           stats,
         };
       } else {
         return {
           isInitialized: this.isInitialized,
-          platform: this.config.platform,
+          platform: this._config.platform,
           stats: { message: 'Stats not available for this platform' },
         };
       }
-    } catch (error) {
-      console.error('Failed to get service stats:', error);
+    } catch (_error) {
+      console.error('Failed to get service stats:', _error);
       return {
         isInitialized: this.isInitialized,
-        platform: this.config.platform,
-        stats: { error: 'Failed to retrieve stats' },
+        platform: this._config.platform,
+        stats: { _error: 'Failed to retrieve stats' },
       };
     }
   }

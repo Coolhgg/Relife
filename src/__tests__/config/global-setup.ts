@@ -52,9 +52,9 @@ export default async function globalSetup() {
       try {
         await fs.mkdir(testUploadsDir, { recursive: true });
         console.log('📁 Test uploads directory created');
-      } catch (error) {
-        if ((error as any).code !== 'EEXIST') {
-          console.warn('⚠️ Could not create test uploads directory:', error);
+      } catch (_error) {
+        if ((_error as any).code !== 'EEXIST') {
+          console.warn('⚠️ Could not create test uploads directory:', _error);
         }
       }
     }
@@ -68,9 +68,9 @@ export default async function globalSetup() {
     });
 
     process.on('uncaughtException', error => {
-      console.error('\n❌ Uncaught Exception in test environment:');
-      console.error(error);
-      console.error('This will cause the test suite to terminate.\n');
+      console._error('\n❌ Uncaught Exception in test environment:');
+      console.error(_error);
+      console._error('This will cause the test suite to terminate.\n');
       process.exit(1);
     });
 
@@ -146,10 +146,10 @@ export default async function globalSetup() {
     }
 
     console.log('\n' + '='.repeat(80) + '\n');
-  } catch (error) {
+  } catch (_error) {
     console.error('\n❌ Global test setup failed:');
-    console.error(error);
+    console.error(_error);
     console.error('\nThis will prevent tests from running properly.\n');
-    throw error;
+    throw _error;
   }
 }

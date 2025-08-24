@@ -90,8 +90,8 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
       await OfflineManager.syncPendingOperations();
       const newStatus = await OfflineManager.getStatus();
       setStatus(newStatus);
-    } catch (error) {
-      console.error('Manual sync failed:', error);
+    } catch (_error) {
+      console._error('Manual sync failed:', _error);
     }
   };
 

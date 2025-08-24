@@ -22,7 +22,7 @@ export interface RecognitionConfig {
 export class VoiceRecognitionService {
   private static recognition: SpeechRecognition | null = null;
   private static isListening = false;
-  private static config: RecognitionConfig = {
+  private static _config: RecognitionConfig = {
     language: 'en-US',
     continuous: true,
     interimResults: true,
@@ -117,18 +117,18 @@ export class VoiceRecognitionService {
     timeOfDayPatterns: new Map<string, string[]>(),
   };
 
-  static async initialize(config?: Partial<RecognitionConfig>): Promise<boolean> {
+  static async initialize(_config?: Partial<RecognitionConfig>): Promise<boolean> {
     try {
-      if (config) {
-        this.config = { ...this.config, ...config };
+      if (_config) {
+        this.config = { ...this.config, ..._config };
       }
 
       // Load user preferences
       await this.loadUserPreferences();
 
       return true;
-    } catch (error) {
-      console.error('Error initializing voice recognition:', error);
+    } catch (_error) {
+      console._error('Error initializing voice recognition:', _error);
       return false;
     }
   }
@@ -136,7 +136,7 @@ export class VoiceRecognitionService {
   static async startListening(
     onCommand: (command: VoiceCommand) => void,
     onInterim?: (transcript: string, confidence: number) => void,
-    onError?: (error: string) => void
+    onError?: (_error: string) => void
   ): Promise<() => void> {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       onError?.('Speech recognition not supported in this browser');
@@ -401,9 +401,9 @@ export class VoiceRecognitionService {
   }
 
   private static getAdaptiveConfidence(transcript: string): number {
-    const baseThreshold = this.config.confidenceThreshold;
+    const baseThreshold = this._config.confidenceThreshold;
 
-    if (!this.config.adaptiveThreshold) {
+    if (!this._config.adaptiveThreshold) {
       return baseThreshold;
     }
 
@@ -488,8 +488,8 @@ export class VoiceRecognitionService {
         this.userPreferences.avgConfidence = new Map(data.avgConfidence || []);
         this.userPreferences.timeOfDayPatterns = new Map(data.timeOfDayPatterns || []);
       }
-    } catch (error) {
-      console.error('Error loading user preferences:', error);
+    } catch (_error) {
+      console._error('Error loading _user preferences:', _error);
     }
   }
 
@@ -501,8 +501,8 @@ export class VoiceRecognitionService {
         timeOfDayPatterns: Array.from(this.userPreferences.timeOfDayPatterns.entries()),
       };
       localStorage.setItem('voice_recognition_preferences', JSON.stringify(data));
-    } catch (error) {
-      console.error('Error saving user preferences:', error);
+    } catch (_error) {
+      console._error('Error saving _user preferences:', _error);
     }
   }
 
@@ -566,11 +566,11 @@ export class VoiceRecognitionService {
   }
 
   static updateConfig(newConfig: Partial<RecognitionConfig>): void {
-    this.config = { ...this.config, ...newConfig };
+    this.config = { ...this._config, ...newConfig };
   }
 
   static getConfig(): RecognitionConfig {
-    return { ...this.config };
+    return { ...this._config };
   }
 
   static isCurrentlyListening(): boolean {

@@ -85,9 +85,9 @@ export function useInstallPrompt() {
         setIsInstalling(false);
       }
       return result;
-    } catch (error) {
+    } catch (_error) {
       setIsInstalling(false);
-      throw error;
+      throw _error;
     }
   }, [canInstall, isInstalling]);
 
@@ -119,9 +119,9 @@ export function useServiceWorkerUpdate() {
     setIsUpdating(true);
     try {
       await pwaManager.updateServiceWorker();
-    } catch (error) {
+    } catch (_error) {
       setIsUpdating(false);
-      throw error;
+      throw _error;
     }
   }, [updateAvailable, isUpdating]);
 
@@ -167,9 +167,9 @@ export function usePushNotifications() {
       const newPermission = await pwaManager.requestNotificationPermission();
       setPermission(newPermission);
       return newPermission;
-    } catch (error) {
-      console.error('Failed to request notification permission:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to request notification permission:', _error);
+      throw _error;
     }
   }, []);
 
@@ -183,9 +183,9 @@ export function usePushNotifications() {
         setIsSubscribing(false);
       }
       return newSubscription;
-    } catch (error) {
+    } catch (_error) {
       setIsSubscribing(false);
-      throw error;
+      throw _error;
     }
   }, [isSubscribing]);
 
@@ -202,14 +202,14 @@ export function usePushNotifications() {
 // Hook for offline functionality
 export function useOffline() {
   const [isOnline, setIsOnline] = useState(!pwaManager.isOffline());
-  const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'error'>('idle');
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | '_error'>('idle');
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
     const handleSyncComplete = () => setSyncStatus('idle');
-    const handleSyncError = () => setSyncStatus('error');
+    const handleSyncError = () => setSyncStatus('_error');
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);

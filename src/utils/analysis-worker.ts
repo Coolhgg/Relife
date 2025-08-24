@@ -5,7 +5,7 @@ class SleepAnalysisWorker {
     string,
     {
       resolve: (result: any) => void;
-      reject: (error: Error) => void;
+      reject: (_error: Error) => void;
     }
   > = new Map();
 
@@ -165,12 +165,11 @@ class SleepAnalysisWorker {
             success: true,
             result
           });
-        } catch (error) {
-          self.postMessage({
+        } catch (_error) { self.postMessage({
             jobId,
             success: false,
-            error: error.message
-          });
+            _error: _error.message
+           });
         }
       };
     `;
@@ -179,7 +178,7 @@ class SleepAnalysisWorker {
     this.worker = new Worker(URL.createObjectURL(blob));
 
     this.worker.onmessage = e => {
-      const { jobId, success, result, error } = e.data;
+      const { jobId, success, result, _error } = e.data;
       const job = this.jobQueue.get(jobId);
 
       if (job) {
@@ -187,16 +186,16 @@ class SleepAnalysisWorker {
         if (success) {
           job.resolve(result);
         } else {
-          job.reject(new Error(error));
+          job.reject(new Error(_error));
         }
       }
     };
 
     this.worker.onerror = error => {
-      console.error('Worker error:', error);
+      console.error('Worker _error:', _error);
       // Reject all pending jobs
       this.jobQueue.forEach(job => {
-        job.reject(new Error('Worker error occurred'));
+        job.reject(new Error('Worker _error occurred'));
       });
       this.jobQueue.clear();
     };

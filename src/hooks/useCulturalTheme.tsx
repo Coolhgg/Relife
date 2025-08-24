@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useState, useEffect, useCallback } from 'react';
 import { getCurrentLanguage, SupportedLanguage } from '../config/i18n';
 import {
@@ -62,8 +63,8 @@ export const useCulturalTheme = (
       } else {
         setThemeId(currentLanguage);
       }
-    } catch (error) {
-      console.warn('Failed to load theme from storage:', error);
+    } catch (_error) {
+      console.warn('Failed to load theme from storage:', _error);
       setThemeId(currentLanguage);
     }
   }, [storageKey, followLanguage, currentLanguage]);
@@ -93,7 +94,7 @@ export const useCulturalTheme = (
       const themeObj = typeof theme === 'string' ? REGIONAL_THEMES[theme] : theme;
 
       if (!themeObj) {
-        console.error('Invalid theme:', theme);
+        console._error('Invalid theme:', theme);
         return;
       }
 
@@ -103,8 +104,8 @@ export const useCulturalTheme = (
       // Save to storage
       try {
         localStorage.setItem(storageKey, themeObj.id);
-      } catch (error) {
-        console.warn('Failed to save theme to storage:', error);
+      } catch (_error) {
+        console.warn('Failed to save theme to storage:', _error);
       }
     },
     [storageKey]
@@ -118,8 +119,8 @@ export const useCulturalTheme = (
     // Remove from storage
     try {
       localStorage.removeItem(storageKey);
-    } catch (error) {
-      console.warn('Failed to remove theme from storage:', error);
+    } catch (_error) {
+      console.warn('Failed to remove theme from storage:', _error);
     }
   }, [currentLanguage, storageKey]);
 

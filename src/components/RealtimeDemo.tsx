@@ -4,25 +4,25 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { 
-  Activity, 
-  Wifi, 
-  WifiOff, 
-  Bell, 
-  Clock, 
-  Brain, 
-  Users, 
+import {
+  Activity,
+  Wifi,
+  WifiOff,
+  Bell,
+  Clock,
+  Brain,
+  Users,
   AlertTriangle,
   CheckCircle,
   XCircle,
-  Settings
+  Settings,
 } from 'lucide-react';
 
-import { 
-  useRealtime, 
-  useRealtimeMessage, 
-  useConnectionQuality, 
-  useRealtimeMetrics 
+import {
+  useRealtime,
+  useRealtimeMessage,
+  useConnectionQuality,
+  useRealtimeMetrics,
 } from '../hooks/useRealtime';
 
 import type {
@@ -32,7 +32,7 @@ import type {
   RecommendationGeneratedPayload,
   SystemNotificationPayload,
   ConnectionStatus,
-  RealtimeServiceMetrics
+  RealtimeServiceMetrics,
 } from '../types/realtime';
 
 const RealtimeDemo: React.FC = () => {
@@ -41,7 +41,7 @@ const RealtimeDemo: React.FC = () => {
     isConnecting,
     connectionStatus,
     service,
-    error,
+    _error,
     clearError,
     connect,
     disconnect,
@@ -50,19 +50,29 @@ const RealtimeDemo: React.FC = () => {
     user,
     ai,
     push,
-    performHealthCheck
+    performHealthCheck,
   } = useRealtime();
 
-  const { quality: connectionQuality, isGood: hasGoodConnection, shouldWarn } = useConnectionQuality();
+  const {
+    quality: connectionQuality,
+    isGood: hasGoodConnection,
+    shouldWarn,
+  } = useConnectionQuality();
   const metrics = useRealtimeMetrics(10000); // Update every 10 seconds
 
   // Local state for demo data
   const [recentAlarms, setRecentAlarms] = useState<AlarmTriggeredPayload[]>([]);
   const [dismissedAlarms, setDismissedAlarms] = useState<AlarmDismissedPayload[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<UserPresenceUpdatePayload[]>([]);
-  const [recommendations, setRecommendations] = useState<RecommendationGeneratedPayload[]>([]);
-  const [systemNotifications, setSystemNotifications] = useState<SystemNotificationPayload[]>([]);
-  const [healthStatus, setHealthStatus] = useState<'unknown' | 'healthy' | 'unhealthy'>('unknown');
+  const [recommendations, setRecommendations] = useState<
+    RecommendationGeneratedPayload[]
+  >([]);
+  const [systemNotifications, setSystemNotifications] = useState<
+    SystemNotificationPayload[]
+  >([]);
+  const [healthStatus, setHealthStatus] = useState<'unknown' | 'healthy' | 'unhealthy'>(
+    'unknown'
+  );
 
   // Real-time event subscriptions using the hook
   useEffect(() => {
@@ -70,20 +80,20 @@ const RealtimeDemo: React.FC = () => {
 
     // Subscribe to alarm events
     unsubscribers.push(
-      alarm.onAlarmTriggered((data) => {
+      alarm.onAlarmTriggered(data => {
         setRecentAlarms(prev => [data, ...prev.slice(0, 4)]);
       })
     );
 
     unsubscribers.push(
-      alarm.onAlarmDismissed((data) => {
+      alarm.onAlarmDismissed(data => {
         setDismissedAlarms(prev => [data, ...prev.slice(0, 4)]);
       })
     );
 
     // Subscribe to user presence updates
     unsubscribers.push(
-      user.onPresenceUpdate((data) => {
+      _user.onPresenceUpdate(data => {
         setOnlineUsers(prev => {
           const filtered = prev.filter(u => u.userId !== data.userId);
           return [data, ...filtered].slice(0, 10);
@@ -93,7 +103,7 @@ const RealtimeDemo: React.FC = () => {
 
     // Subscribe to AI recommendations
     unsubscribers.push(
-      ai.onRecommendation((data) => {
+      ai.onRecommendation(data => {
         setRecommendations(prev => [data, ...prev.slice(0, 3)]);
       })
     );
@@ -106,7 +116,7 @@ const RealtimeDemo: React.FC = () => {
   // Listen to system notifications using the message hook
   useRealtimeMessage<SystemNotificationPayload>(
     'system_notification',
-    (data) => {
+    data => {
       setSystemNotifications(prev => [data, ...prev.slice(0, 5)]);
     },
     []
@@ -121,7 +131,7 @@ const RealtimeDemo: React.FC = () => {
   // Demo actions
   const simulateAlarmTrigger = async () => {
     if (!service) return;
-    
+
     // This would normally be triggered by the alarm service
     const mockAlarm: AlarmTriggeredPayload = {
       alarm: {
@@ -132,19 +142,19 @@ const RealtimeDemo: React.FC = () => {
         days: [1, 2, 3, 4, 5],
         userId: 'current-user',
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       } as any,
       triggeredAt: new Date(),
       deviceInfo: {
         batteryLevel: 85,
         networkType: 'wifi',
-        isCharging: false
+        isCharging: false,
       },
       contextualData: {
         weatherCondition: 'sunny',
         ambientLightLevel: 750,
-        noiseLevel: 35
-      }
+        noiseLevel: 35,
+      },
     };
 
     setRecentAlarms(prev => [mockAlarm, ...prev.slice(0, 4)]);
@@ -158,8 +168,8 @@ const RealtimeDemo: React.FC = () => {
     const analysisId = await ai.requestAnalysis('sleep_pattern', {
       recentSleepData: [
         { date: '2024-08-24', sleepDuration: 7.5, quality: 85 },
-        { date: '2024-08-23', sleepDuration: 6.8, quality: 72 }
-      ]
+        { date: '2024-08-23', sleepDuration: 6.8, quality: 72 },
+      ],
     });
     console.log('Analysis requested:', analysisId);
   };
@@ -177,7 +187,7 @@ const RealtimeDemo: React.FC = () => {
   };
 
   const getConnectionColor = () => {
-    if (error) return 'text-red-500';
+    if (_error) return 'text-red-500';
     if (isConnecting) return 'text-yellow-500';
     if (isConnected && hasGoodConnection) return 'text-green-500';
     if (isConnected) return 'text-yellow-500';
@@ -186,11 +196,16 @@ const RealtimeDemo: React.FC = () => {
 
   const getQualityColor = (quality: string) => {
     switch (quality) {
-      case 'excellent': return 'text-green-500';
-      case 'good': return 'text-blue-500';
-      case 'fair': return 'text-yellow-500';
-      case 'poor': return 'text-red-500';
-      default: return 'text-gray-500';
+      case 'excellent':
+        return 'text-green-500';
+      case 'good':
+        return 'text-blue-500';
+      case 'fair':
+        return 'text-yellow-500';
+      case 'poor':
+        return 'text-red-500';
+      default:
+        return 'text-gray-500';
     }
   };
 
@@ -210,11 +225,15 @@ const RealtimeDemo: React.FC = () => {
               <div className={`flex items-center gap-2 ${getConnectionColor()}`}>
                 {getConnectionIcon()}
                 <span className="text-sm font-medium">
-                  {isConnecting ? 'Connecting...' : isConnected ? 'Connected' : 'Disconnected'}
+                  {isConnecting
+                    ? 'Connecting...'
+                    : isConnected
+                      ? 'Connected'
+                      : 'Disconnected'}
                 </span>
               </div>
             </div>
-            
+
             {connectionStatus && (
               <div className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                 <div className="flex justify-between">
@@ -225,19 +244,37 @@ const RealtimeDemo: React.FC = () => {
                 </div>
                 <div className="flex justify-between">
                   <span>WebSocket:</span>
-                  <span className={connectionStatus.websocket.status === 'connected' ? 'text-green-500' : 'text-red-500'}>
+                  <span
+                    className={
+                      connectionStatus.websocket.status === 'connected'
+                        ? 'text-green-500'
+                        : 'text-red-500'
+                    }
+                  >
                     {connectionStatus.websocket.status}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Supabase:</span>
-                  <span className={connectionStatus.supabase.status === 'connected' ? 'text-green-500' : 'text-red-500'}>
+                  <span
+                    className={
+                      connectionStatus.supabase.status === 'connected'
+                        ? 'text-green-500'
+                        : 'text-red-500'
+                    }
+                  >
                     {connectionStatus.supabase.status}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Push:</span>
-                  <span className={connectionStatus.pushNotifications.status === 'subscribed' ? 'text-green-500' : 'text-yellow-500'}>
+                  <span
+                    className={
+                      connectionStatus.pushNotifications.status === 'subscribed'
+                        ? 'text-green-500'
+                        : 'text-yellow-500'
+                    }
+                  >
                     {connectionStatus.pushNotifications.status}
                   </span>
                 </div>
@@ -263,7 +300,13 @@ const RealtimeDemo: React.FC = () => {
                 </div>
                 <div className="flex justify-between">
                   <span>Health:</span>
-                  <span className={metrics.health.healthScore > 80 ? 'text-green-500' : 'text-yellow-500'}>
+                  <span
+                    className={
+                      metrics.health.healthScore > 80
+                        ? 'text-green-500'
+                        : 'text-yellow-500'
+                    }
+                  >
                     {metrics.health.healthScore}/100
                   </span>
                 </div>
@@ -276,9 +319,15 @@ const RealtimeDemo: React.FC = () => {
           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
             <h3 className="font-semibold mb-2">Health Status</h3>
             <div className="flex items-center gap-2 mb-3">
-              {healthStatus === 'healthy' && <CheckCircle className="text-green-500" size={20} />}
-              {healthStatus === 'unhealthy' && <XCircle className="text-red-500" size={20} />}
-              {healthStatus === 'unknown' && <AlertTriangle className="text-gray-500" size={20} />}
+              {healthStatus === 'healthy' && (
+                <CheckCircle className="text-green-500" size={20} />
+              )}
+              {healthStatus === 'unhealthy' && (
+                <XCircle className="text-red-500" size={20} />
+              )}
+              {healthStatus === 'unknown' && (
+                <AlertTriangle className="text-gray-500" size={20} />
+              )}
               <span className="text-sm font-medium capitalize">{healthStatus}</span>
             </div>
             <button
@@ -295,10 +344,14 @@ const RealtimeDemo: React.FC = () => {
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
             <div className="flex items-start justify-between">
               <div>
-                <h4 className="font-semibold text-red-800 dark:text-red-200">Real-time Error</h4>
-                <p className="text-sm text-red-600 dark:text-red-300 mt-1">{error.message}</p>
+                <h4 className="font-semibold text-red-800 dark:text-red-200">
+                  Real-time Error
+                </h4>
+                <p className="text-sm text-red-600 dark:text-red-300 mt-1">
+                  {_error.message}
+                </p>
                 <p className="text-xs text-red-500 dark:text-red-400 mt-1">
-                  Type: {error.type} | Severity: {error.severity}
+                  Type: {_error.type} | Severity: {_error.severity}
                 </p>
               </div>
               <button
@@ -377,15 +430,18 @@ const RealtimeDemo: React.FC = () => {
             </h3>
             <div className="space-y-2">
               {recentAlarms.length > 0 ? (
-                recentAlarms.map((alarm, index) => (
-                  <div key={index} className="bg-white dark:bg-gray-600 rounded p-2 text-sm">
+                recentAlarms.map((alarm, _index) => (
+                  <div
+                    key={_index}
+                    className="bg-white dark:bg-gray-600 rounded p-2 text-sm"
+                  >
                     <div className="font-medium">{alarm.alarm.label}</div>
                     <div className="text-gray-500 dark:text-gray-300">
                       {alarm.triggeredAt.toLocaleTimeString()}
                     </div>
                     <div className="text-xs text-gray-400">
-                      Battery: {alarm.deviceInfo.batteryLevel}% | 
-                      Network: {alarm.deviceInfo.networkType}
+                      Battery: {alarm.deviceInfo.batteryLevel}% | Network:{' '}
+                      {alarm.deviceInfo.networkType}
                     </div>
                   </div>
                 ))
@@ -403,15 +459,22 @@ const RealtimeDemo: React.FC = () => {
             </h3>
             <div className="space-y-2">
               {onlineUsers.length > 0 ? (
-                onlineUsers.map((user, index) => (
-                  <div key={index} className="bg-white dark:bg-gray-600 rounded p-2 text-sm">
+                onlineUsers.map((_user, _index) => (
+                  <div
+                    key={_index}
+                    className="bg-white dark:bg-gray-600 rounded p-2 text-sm"
+                  >
                     <div className="flex items-center justify-between">
-                      <span className="font-medium">User {user.userId.slice(-6)}</span>
-                      <span className={`px-2 py-1 rounded text-xs ${
-                        user.status === 'online' ? 'bg-green-100 text-green-800' :
-                        user.status === 'away' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
+                      <span className="font-medium">User {_user.userId.slice(-6)}</span>
+                      <span
+                        className={`px-2 py-1 rounded text-xs ${
+                          user.status === 'online'
+                            ? 'bg-green-100 text-green-800'
+                            : user.status === 'away'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-gray-100 text-gray-800'
+                        }`}
+                      >
                         {user.status}
                       </span>
                     </div>
@@ -434,15 +497,18 @@ const RealtimeDemo: React.FC = () => {
             </h3>
             <div className="space-y-2">
               {recommendations.length > 0 ? (
-                recommendations.map((rec, index) => (
-                  <div key={index} className="bg-white dark:bg-gray-600 rounded p-2 text-sm">
+                recommendations.map((rec, _index) => (
+                  <div
+                    key={_index}
+                    className="bg-white dark:bg-gray-600 rounded p-2 text-sm"
+                  >
                     <div className="font-medium">{rec.recommendation.title}</div>
                     <div className="text-gray-500 dark:text-gray-300">
                       {rec.recommendation.description}
                     </div>
                     <div className="text-xs text-gray-400">
-                      Impact: {rec.recommendation.estimatedImpact}/10 | 
-                      Confidence: {Math.round(rec.data.confidence * 100)}%
+                      Impact: {rec.recommendation.estimatedImpact}/10 | Confidence:{' '}
+                      {Math.round(rec.data.confidence * 100)}%
                     </div>
                   </div>
                 ))
@@ -461,8 +527,8 @@ const RealtimeDemo: React.FC = () => {
               System Notifications
             </h3>
             <div className="space-y-2">
-              {systemNotifications.map((notification, index) => (
-                <div key={index} className="bg-white dark:bg-gray-600 rounded p-3">
+              {systemNotifications.map((notification, _index) => (
+                <div key={_index} className="bg-white dark:bg-gray-600 rounded p-3">
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="font-medium">{notification.title}</div>
@@ -470,12 +536,17 @@ const RealtimeDemo: React.FC = () => {
                         {notification.message}
                       </div>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs ${
-                      notification.severity === 'critical' ? 'bg-red-100 text-red-800' :
-                      notification.severity === 'high' ? 'bg-orange-100 text-orange-800' :
-                      notification.severity === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-blue-100 text-blue-800'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded text-xs ${
+                        notification.severity === 'critical'
+                          ? 'bg-red-100 text-red-800'
+                          : notification.severity === 'high'
+                            ? 'bg-orange-100 text-orange-800'
+                            : notification.severity === 'medium'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-blue-100 text-blue-800'
+                      }`}
+                    >
                       {notification.severity}
                     </span>
                   </div>

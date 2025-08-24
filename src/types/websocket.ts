@@ -6,8 +6,8 @@
 // Base WebSocket connection states
 export type WebSocketState = 'CONNECTING' | 'OPEN' | 'CLOSING' | 'CLOSED' | 'ERROR';
 
-export type WebSocketErrorType = 
-  | 'CONNECTION_FAILED' 
+export type WebSocketErrorType =
+  | 'CONNECTION_FAILED'
   | 'AUTHENTICATION_FAILED'
   | 'NETWORK_ERROR'
   | 'PROTOCOL_ERROR'
@@ -28,7 +28,7 @@ export interface WebSocketMessage<T = any> {
 }
 
 // WebSocket message types
-export type WebSocketMessageType = 
+export type WebSocketMessageType =
   // Connection management
   | 'connection_established'
   | 'heartbeat_ping'
@@ -37,7 +37,7 @@ export type WebSocketMessageType =
   | 'authentication_response'
   | 'reconnection_required'
   | 'connection_closing'
-  
+
   // Alarm-related real-time events
   | 'alarm_triggered'
   | 'alarm_dismissed'
@@ -46,30 +46,30 @@ export type WebSocketMessageType =
   | 'alarm_updated'
   | 'alarm_deleted'
   | 'alarm_sync_status'
-  
+
   // User activity and presence
   | 'user_presence_update'
   | 'user_activity'
   | 'device_status_change'
-  
+
   // Real-time recommendations and AI
   | 'recommendation_generated'
   | 'ai_analysis_complete'
   | 'voice_mood_detected'
   | 'sleep_pattern_updated'
-  
+
   // System notifications
   | 'system_notification'
   | 'emergency_alert'
   | 'maintenance_notice'
   | 'feature_announcement'
-  
+
   // Data synchronization
   | 'sync_requested'
   | 'sync_status_update'
   | 'sync_conflict_detected'
   | 'data_updated'
-  
+
   // Error handling
   | 'error_occurred'
   | 'warning_issued';
@@ -144,11 +144,11 @@ export interface WebSocketError {
 export interface WebSocketEventHandlers {
   onOpen?: (connectionInfo: WebSocketConnectionInfo) => void;
   onClose?: (code: number, reason: string) => void;
-  onError?: (error: WebSocketError) => void;
+  onError?: (_error: WebSocketError) => void;
   onMessage?: <T>(message: WebSocketMessage<T>) => void;
   onReconnecting?: (attempt: number, delay: number) => void;
   onReconnected?: (connectionInfo: WebSocketConnectionInfo) => void;
-  onReconnectFailed?: (error: WebSocketError) => void;
+  onReconnectFailed?: (_error: WebSocketError) => void;
 }
 
 // WebSocket metrics for monitoring
@@ -172,7 +172,10 @@ export interface WebSocketMetrics {
 
 // WebSocket manager interface
 export interface WebSocketManager {
-  connect(config: WebSocketConfig, handlers: WebSocketEventHandlers): Promise<WebSocketConnectionInfo>;
+  connect(
+    _config: WebSocketConfig,
+    handlers: WebSocketEventHandlers
+  ): Promise<WebSocketConnectionInfo>;
   disconnect(reason?: string): Promise<void>;
   send<T>(message: WebSocketMessage<T>): Promise<boolean>;
   isConnected(): boolean;
@@ -208,7 +211,12 @@ export interface WebSocketAuthResponse {
 // WebSocket subscription management
 export interface WebSocketSubscription {
   id: string;
-  type: 'user_activity' | 'alarm_updates' | 'system_notifications' | 'presence' | 'data_sync';
+  type:
+    | 'user_activity'
+    | 'alarm_updates'
+    | 'system_notifications'
+    | 'presence'
+    | 'data_sync';
   filters?: Record<string, any>;
   userId?: string;
   priority: 'low' | 'normal' | 'high' | 'critical';
@@ -220,7 +228,10 @@ export interface WebSocketSubscriptionManager {
   subscribe(subscription: Omit<WebSocketSubscription, 'id' | 'createdAt'>): string;
   unsubscribe(subscriptionId: string): boolean;
   listSubscriptions(): WebSocketSubscription[];
-  updateSubscription(subscriptionId: string, updates: Partial<WebSocketSubscription>): boolean;
+  updateSubscription(
+    subscriptionId: string,
+    updates: Partial<WebSocketSubscription>
+  ): boolean;
 }
 
 // WebSocket rate limiting

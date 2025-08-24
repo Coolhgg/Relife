@@ -22,7 +22,7 @@ interface EnhancedSettingsProps {
   onUpdateProfile: (profile: Partial<User>) => Promise<void>;
   onSignOut: () => void;
   isLoading: boolean;
-  error: string | null;
+  _error: string | null;
 }
 
 const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
@@ -31,7 +31,7 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
   onUpdateProfile,
   onSignOut,
   isLoading,
-  error,
+  _error,
 }) => {
   const [activeTab, setActiveTab] = useState('settings');
 
@@ -89,7 +89,7 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
                 onUpdateProfile={onUpdateProfile}
                 onSignOut={onSignOut}
                 isLoading={isLoading}
-                error={error}
+                error={_error}
               />
             </TabsContent>
 
@@ -102,7 +102,7 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
             </TabsContent>
 
             <TabsContent value="premium-test" className="h-full mt-0 p-4">
-              {appState.user && <PremiumFeatureTest user={appState.user} />}
+              {appState.user && <PremiumFeatureTest user={appState._user} />}
             </TabsContent>
 
             <TabsContent value="themes" className="h-full mt-0 p-4">

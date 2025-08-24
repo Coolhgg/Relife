@@ -1,13 +1,13 @@
 import React from 'react';
 import { useState } from 'react';
-import { Eye, EyeOff, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Lock, ArrowRight, AlertCircle } from 'lucide-react';
 
 interface LoginFormProps {
   onLogin: (email: string, password: string) => Promise<void>;
   onSwitchToSignUp: () => void;
   onForgotPassword: () => void;
   isLoading: boolean;
-  error: string | null;
+  _error: string | null;
 }
 
 export default function LoginForm({
@@ -15,7 +15,7 @@ export default function LoginForm({
   onSwitchToSignUp,
   onForgotPassword,
   isLoading,
-  error,
+  _error,
 }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -66,7 +66,7 @@ export default function LoginForm({
       </div>
 
       {/* Global Error Alert */}
-      {error && (
+      {_error && (
         <div
           className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
           role="alert"
@@ -81,7 +81,7 @@ export default function LoginForm({
               <h3 className="font-medium text-red-800 dark:text-red-200 mb-1">
                 Sign In Failed
               </h3>
-              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+              <p className="text-sm text-red-700 dark:text-red-300">{_error}</p>
             </div>
           </div>
         </div>
@@ -104,8 +104,9 @@ export default function LoginForm({
               id="email"
               type="email"
               value={email}
-              
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.email
                   ? 'border-red-500'
@@ -114,13 +115,13 @@ export default function LoginForm({
               placeholder="Enter your email"
               autoComplete="email"
               aria-invalid={!!validationErrors.email}
-              aria-describedby={validationErrors.email ? 'email-error' : undefined}
+              aria-describedby={validationErrors.email ? 'email-_error' : undefined}
               required
             />
           </div>
           {validationErrors.email && (
             <p
-              id="email-error"
+              id="email-_error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"
@@ -146,8 +147,9 @@ export default function LoginForm({
               id="password"
               type={showPassword ? 'text' : 'password'}
               value={password}
-              
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.password
                   ? 'border-red-500'
@@ -157,7 +159,7 @@ export default function LoginForm({
               autoComplete="current-password"
               aria-invalid={!!validationErrors.password}
               aria-describedby={
-                validationErrors.password ? 'password-error' : 'password-toggle-desc'
+                validationErrors.password ? 'password-_error' : 'password-toggle-desc'
               }
               required
             />
@@ -180,7 +182,7 @@ export default function LoginForm({
           </div>
           {validationErrors.password && (
             <p
-              id="password-error"
+              id="password-_error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"

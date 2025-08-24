@@ -9,25 +9,27 @@ import '@testing-library/jest-dom';
 // Extend Jest matchers
 expect.extend({
   toHaveBeenCalledWithObjectContaining(received: jest.Mock, expected: object) {
-    const pass = received.mock.calls.some(
-      (
-        call: any) => call.some(
-          arg => typeof arg === 'object' &&
-            arg !== null &&
-            Object.keys(expected).every(
-              key => arg.hasOwnProperty(key) && arg[key] === expected[key]
-            )
-        )
+    const pass = received.mock.calls.some((call: any) =>
+      call.some(
+        arg =>
+          typeof arg === 'object' &&
+          arg !== null &&
+          Object.keys(expected).every(
+            key => arg.hasOwnProperty(key) && arg[key] === expected[key]
+          )
+      )
     );
 
     if (pass) {
       return {
-        message: () => `expected mock not to have been called with object containing ${JSON.stringify(expected)}`,
+        message: () =>
+          `expected mock not to have been called with object containing ${JSON.stringify(expected)}`,
         pass: true,
       };
     } else {
       return {
-        message: () => `expected mock to have been called with object containing ${JSON.stringify(expected)}`,
+        message: () =>
+          `expected mock to have been called with object containing ${JSON.stringify(expected)}`,
         pass: false,
       };
     }
@@ -37,8 +39,7 @@ expect.extend({
 // Mock browser APIs consistently across all tests
 Object.defineProperty(global, 'localStorage', {
   value: {
-    getItem: jest.fn((key: string
-) => {
+    getItem: jest.fn((key: string) => {
       // Default return values for common test scenarios
       if (key === 'relife_consent') {
         return JSON.stringify({
@@ -77,14 +78,11 @@ Object.defineProperty(global, 'sessionStorage', {
 Object.defineProperty(global, 'performance', {
   writable: true,
   value: {
-    now: jest.fn((
-) => 1000),
+    now: jest.fn(() => 1000),
     mark: jest.fn(),
     measure: jest.fn(),
-    getEntriesByType: jest.fn((
-) => []),
-    getEntriesByName: jest.fn((
-) => []),
+    getEntriesByType: jest.fn(() => []),
+    getEntriesByName: jest.fn(() => []),
     memory: {
       usedJSHeapSize: 50 * 1024 * 1024, // 50MB
       totalJSHeapSize: 100 * 1024 * 1024, // 100MB
@@ -107,17 +105,14 @@ Object.defineProperty(global, 'performance', {
 });
 
 // Mock PerformanceObserver
-global.PerformanceObserver = jest.fn().mockImplementation((callback: any
-) => ({
+global.PerformanceObserver = jest.fn().mockImplementation((callback: any) => ({
   observe: jest.fn(),
   disconnect: jest.fn(),
-  takeRecords: jest.fn((
-) => []),
+  takeRecords: jest.fn(() => []),
 })) as any;
 
 // Mock IntersectionObserver
-global.IntersectionObserver = jest.fn().mockImplementation((callback: any
-) => ({
+global.IntersectionObserver = jest.fn().mockImplementation((callback: any) => ({
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),
@@ -217,8 +212,7 @@ Object.defineProperty(global, 'window', {
 const mockDate = new Date('2023-01-01T00:00:00.000Z');
 const OriginalDate = Date;
 
-global.Date = jest.fn((dateString?: string | number | Date
-) => {
+global.Date = jest.fn((dateString?: string | number | Date) => {
   if (dateString) {
     return new OriginalDate(dateString);
   }
@@ -227,18 +221,15 @@ global.Date = jest.fn((dateString?: string | number | Date
 
 // Preserve static methods
 Object.setPrototypeOf(global.Date, OriginalDate);
-global.Date.now = jest.fn((
-) => mockDate.getTime());
+global.Date.now = jest.fn(() => mockDate.getTime());
 global.Date.UTC = OriginalDate.UTC;
 global.Date.parse = OriginalDate.parse;
 
 // Mock crypto for generating UUIDs
 Object.defineProperty(global, 'crypto', {
   value: {
-    randomUUID: jest.fn((
-) => 'mock-uuid-123-456-789'),
-    getRandomValues: jest.fn((array: Uint8Array
-) => {
+    randomUUID: jest.fn(() => 'mock-uuid-123-456-789'),
+    getRandomValues: jest.fn((array: Uint8Array) => {
       for (let i = 0; i < array.length; i++) {
         array[i] = Math.floor(Math.random() * 256);
       }
@@ -255,7 +246,7 @@ const originalConsoleLog = console.log;
 
 // Store original methods for tests that need them
 (global as any).originalConsole = {
-  error: originalConsoleError,
+  _error: originalConsoleError,
   warn: originalConsoleWarn,
   info: originalConsoleInfo,
   log: originalConsoleLog,
@@ -268,23 +259,21 @@ console.info = jest.fn();
 console.log = jest.fn();
 
 // Utility function to restore console methods
-(global as any).restoreConsole = (
-) => {
-  console.error = originalConsoleError;
+(global as any).restoreConsole = () => {
+  console._error = originalConsoleError;
   console.warn = originalConsoleWarn;
   console.info = originalConsoleInfo;
   console.log = originalConsoleLog;
 };
 
 // Mock fetch for API calls
-global.fetch = jest.fn(() => Promise.resolve({
+global.fetch = jest.fn(() =>
+  Promise.resolve({
     ok: true,
     status: 200,
     statusText: 'OK',
-    json: (
-) => Promise.resolve({}),
-    text: (
-) => Promise.resolve(''),
+    json: () => Promise.resolve({}),
+    text: () => Promise.resolve(''),
     headers: new Map(),
   })
 ) as any;
@@ -292,8 +281,7 @@ global.fetch = jest.fn(() => Promise.resolve({
 // Common test utilities
 (global as any).testUtils = {
   // Reset all singleton instances
-  resetSingletons: (
-) => {
+  resetSingletons: () => {
     const services = [
       'AnalyticsConfigService',
       'PrivacyComplianceService',
@@ -314,9 +302,8 @@ global.fetch = jest.fn(() => Promise.resolve({
   },
 
   // Create mock user data
-  createMockUser: (overrides = {}
-) => ({
-    id: 'test-user-123',
+  createMockUser: (overrides = {}) => ({
+    id: 'test-_user-123',
     email: 'test@example.com',
     name: 'Test User',
     username: 'testuser123',
@@ -344,8 +331,7 @@ global.fetch = jest.fn(() => Promise.resolve({
   }),
 
   // Create mock alarm data
-  createMockAlarm: (overrides = {}
-) => ({
+  createMockAlarm: (overrides = {}) => ({
     id: 'alarm-123',
     time: '07:00',
     type: 'wake_up',
@@ -355,8 +341,7 @@ global.fetch = jest.fn(() => Promise.resolve({
   }),
 
   // Create mock performance entry
-  createMockPerformanceEntry: (overrides = {}
-) => ({
+  createMockPerformanceEntry: (overrides = {}) => ({
     name: 'test-metric',
     entryType: 'measure',
     startTime: 1000,
@@ -365,12 +350,10 @@ global.fetch = jest.fn(() => Promise.resolve({
   }),
 
   // Wait for async operations
-  waitForAsync: (
-) => new Promise(resolve => setTimeout(resolve, 0)),
+  waitForAsync: () => new Promise(resolve => setTimeout(resolve, 0)),
 
   // Advance timers and wait
-  advanceTimersAndWait: async (ms: number
-) => {
+  advanceTimersAndWait: async (ms: number) => {
     jest.advanceTimersByTime(ms);
     await (global as any).testUtils.waitForAsync();
   },
@@ -384,8 +367,7 @@ process.env.REACT_APP_POSTHOG_API_KEY = 'test-posthog-key';
 process.env.REACT_APP_POSTHOG_HOST = 'https://test.posthog.com';
 
 // Global test cleanup
-afterEach((
-) => {
+afterEach(() => {
   // Clear all mocks
   jest.clearAllMocks();
 
@@ -399,7 +381,7 @@ afterEach((
   (global.localStorage.setItem as jest.Mock).mockClear();
 
   // Reset console mocks
-  (console.error as jest.Mock).mockClear();
+  (console._error as jest.Mock).mockClear();
   (console.warn as jest.Mock).mockClear();
   (console.info as jest.Mock).mockClear();
   (console.log as jest.Mock).mockClear();
@@ -412,8 +394,7 @@ afterEach((
 });
 
 // Global test teardown
-afterAll((
-) => {
+afterAll(() => {
   // Restore original console methods
   (global as any).restoreConsole();
 });

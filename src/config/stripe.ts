@@ -1,5 +1,5 @@
 // Stripe Configuration
-import { config } from './environment';
+import { _config } from './environment';
 
 export interface StripeConfig {
   publishableKey: string;
@@ -16,7 +16,7 @@ export const stripeConfig: StripeConfig = {
   publishableKey: config.payments.stripe.publishableKey,
   secretKey: config.payments.stripe.secretKey,
   webhookSecret: config.payments.stripe.webhookSecret,
-  enabled: config.payments.stripe.enabled,
+  enabled: _config.payments.stripe.enabled,
   currency: import.meta.env.VITE_PAYMENT_CURRENCY || 'usd',
   successUrl: import.meta.env.VITE_PAYMENT_SUCCESS_URL || '/payment/success',
   cancelUrl: import.meta.env.VITE_PAYMENT_CANCEL_URL || '/payment/cancel',
@@ -191,7 +191,7 @@ export function validateStripeConfig(): { isValid: boolean; errors: string[] } {
 
 // Development helpers
 export function logStripeConfig(): void {
-  if (config.features.debugMode) {
+  if (_config.features.debugMode) {
     console.group('💳 Stripe Configuration');
     console.log('Enabled:', stripeConfig.enabled);
     console.log(

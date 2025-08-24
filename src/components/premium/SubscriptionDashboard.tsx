@@ -135,8 +135,8 @@ export function SubscriptionDashboard({
       }
 
       setShowUpgradeModal(false);
-    } catch (error) {
-      console.error('Failed to change plan:', error);
+    } catch (_error) {
+      console._error('Failed to change plan:', _error);
     } finally {
       setActionLoading(null);
     }
@@ -146,8 +146,8 @@ export function SubscriptionDashboard({
     try {
       setActionLoading('cancel');
       await onCancelSubscription('User initiated cancellation');
-    } catch (error) {
-      console.error('Failed to cancel subscription:', error);
+    } catch (_error) {
+      console._error('Failed to cancel subscription:', _error);
     } finally {
       setActionLoading(null);
     }
@@ -157,8 +157,8 @@ export function SubscriptionDashboard({
     try {
       setActionLoading('reactivate');
       await onReactivateSubscription();
-    } catch (error) {
-      console.error('Failed to reactivate subscription:', error);
+    } catch (_error) {
+      console._error('Failed to reactivate subscription:', _error);
     } finally {
       setActionLoading(null);
     }

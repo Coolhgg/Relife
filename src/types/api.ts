@@ -13,7 +13,7 @@
 export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
-  error?: ApiError;
+  _error?: ApiError;
   message?: string;
   timestamp: string;
   requestId?: string;
@@ -91,18 +91,36 @@ export interface HttpResponse<T = unknown> {
   status: number;
   statusText: string;
   headers: Record<string, string>;
-  config: HttpRequestConfig;
+  _config: HttpRequestConfig;
 }
 
 /**
  * HTTP client interface
  */
 export interface HttpClient {
-  get<T = unknown>(url: string, config?: Partial<HttpRequestConfig>): Promise<HttpResponse<T>>;
-  post<T = unknown>(url: string, data?: unknown, config?: Partial<HttpRequestConfig>): Promise<HttpResponse<T>>;
-  put<T = unknown>(url: string, data?: unknown, config?: Partial<HttpRequestConfig>): Promise<HttpResponse<T>>;
-  delete<T = unknown>(url: string, config?: Partial<HttpRequestConfig>): Promise<HttpResponse<T>>;
-  patch<T = unknown>(url: string, data?: unknown, config?: Partial<HttpRequestConfig>): Promise<HttpResponse<T>>;
+  get<T = unknown>(
+    url: string,
+    _config?: Partial<HttpRequestConfig>
+  ): Promise<HttpResponse<T>>;
+  post<T = unknown>(
+    url: string,
+    data?: unknown,
+    _config?: Partial<HttpRequestConfig>
+  ): Promise<HttpResponse<T>>;
+  put<T = unknown>(
+    url: string,
+    data?: unknown,
+    _config?: Partial<HttpRequestConfig>
+  ): Promise<HttpResponse<T>>;
+  delete<T = unknown>(
+    url: string,
+    _config?: Partial<HttpRequestConfig>
+  ): Promise<HttpResponse<T>>;
+  patch<T = unknown>(
+    url: string,
+    data?: unknown,
+    _config?: Partial<HttpRequestConfig>
+  ): Promise<HttpResponse<T>>;
 }
 
 // =============================================================================
@@ -352,7 +370,14 @@ export interface SupabaseAuthResponse {
 export interface StripeSubscriptionResponse {
   id: string;
   customer: string;
-  status: 'active' | 'past_due' | 'unpaid' | 'canceled' | 'incomplete' | 'incomplete_expired' | 'trialing';
+  status:
+    | 'active'
+    | 'past_due'
+    | 'unpaid'
+    | 'canceled'
+    | 'incomplete'
+    | 'incomplete_expired'
+    | 'trialing';
   currentPeriodStart: number;
   currentPeriodEnd: number;
   items: Array<{
@@ -378,7 +403,13 @@ export interface StripeSubscriptionResponse {
 export interface StripePaymentIntentResponse {
   id: string;
   clientSecret: string;
-  status: 'requires_payment_method' | 'requires_confirmation' | 'requires_action' | 'processing' | 'succeeded' | 'canceled';
+  status:
+    | 'requires_payment_method'
+    | 'requires_confirmation'
+    | 'requires_action'
+    | 'processing'
+    | 'succeeded'
+    | 'canceled';
   amount: number;
   currency: string;
   customer?: string;
@@ -475,8 +506,13 @@ export interface WebhookPayload {
  */
 export interface StripeWebhookPayload extends WebhookPayload {
   source: 'stripe';
-  type: 'customer.subscription.created' | 'customer.subscription.updated' | 'customer.subscription.deleted' | 
-        'invoice.payment_succeeded' | 'invoice.payment_failed' | 'payment_intent.succeeded';
+  type:
+    | 'customer.subscription.created'
+    | 'customer.subscription.updated'
+    | 'customer.subscription.deleted'
+    | 'invoice.payment_succeeded'
+    | 'invoice.payment_failed'
+    | 'payment_intent.succeeded';
   data: {
     object: StripeSubscriptionResponse | object;
   };
@@ -507,7 +543,10 @@ export interface SupabaseWebhookPayload extends WebhookPayload {
  */
 export interface ConvertKitWebhookPayload extends WebhookPayload {
   source: 'convertkit';
-  type: 'subscriber.subscriber_activate' | 'subscriber.subscriber_unsubscribe' | 'subscriber.subscriber_bounce';
+  type:
+    | 'subscriber.subscriber_activate'
+    | 'subscriber.subscriber_unsubscribe'
+    | 'subscriber.subscriber_bounce';
   data: {
     subscriber: ConvertKitSubscriberResponse;
   };
@@ -545,7 +584,12 @@ export interface AlarmNotificationMessage extends WebSocketMessage {
  * Battle update message
  */
 export interface BattleUpdateMessage extends WebSocketMessage {
-  type: 'battle.joined' | 'battle.left' | 'battle.started' | 'battle.ended' | 'battle.wake';
+  type:
+    | 'battle.joined'
+    | 'battle.left'
+    | 'battle.started'
+    | 'battle.ended'
+    | 'battle.wake';
   data: {
     battleId: string;
     userId?: string;
@@ -564,7 +608,7 @@ export interface SystemNotificationMessage extends WebSocketMessage {
   data: {
     title: string;
     message: string;
-    severity: 'info' | 'warning' | 'error';
+    severity: 'info' | 'warning' | '_error';
     action?: {
       label: string;
       url: string;
@@ -579,7 +623,7 @@ export interface SystemNotificationMessage extends WebSocketMessage {
 /**
  * All API request types
  */
-export type ApiRequest = 
+export type ApiRequest =
   | CreateUserRequest
   | UpdateUserRequest
   | CreateAlarmRequest
@@ -594,7 +638,7 @@ export type ApiRequest =
 /**
  * All API response types
  */
-export type ApiResponseData = 
+export type ApiResponseData =
   | HealthCheckResponse
   | UserStatsResponse
   | StripeSubscriptionResponse
@@ -608,7 +652,7 @@ export type ApiResponseData =
 /**
  * All webhook payload types
  */
-export type WebhookPayloadTypes = 
+export type WebhookPayloadTypes =
   | StripeWebhookPayload
   | SupabaseWebhookPayload
   | ConvertKitWebhookPayload;
@@ -616,7 +660,7 @@ export type WebhookPayloadTypes =
 /**
  * All WebSocket message types
  */
-export type WebSocketMessageTypes = 
+export type WebSocketMessageTypes =
   | AlarmNotificationMessage
   | BattleUpdateMessage
   | SystemNotificationMessage;
@@ -647,30 +691,30 @@ export interface ApiEndpoints {
   // Health & System
   health: ApiEndpoint;
   echo: ApiEndpoint;
-  
+
   // User Management
   getUsers: ApiEndpoint;
   getUser: ApiEndpoint;
   createUser: ApiEndpoint;
   updateUser: ApiEndpoint;
   getUserStats: ApiEndpoint;
-  
+
   // Alarm Operations
   getAlarms: ApiEndpoint;
   createAlarm: ApiEndpoint;
   updateAlarm: ApiEndpoint;
   deleteAlarm: ApiEndpoint;
-  
+
   // Battle System
   getBattles: ApiEndpoint;
   createBattle: ApiEndpoint;
   getBattle: ApiEndpoint;
   joinBattle: ApiEndpoint;
   wakeBattle: ApiEndpoint;
-  
+
   // Tournament System
   getTournaments: ApiEndpoint;
-  
+
   // Performance Monitoring
   performanceMetrics: ApiEndpoint;
   webVitals: ApiEndpoint;

@@ -161,7 +161,7 @@ describe('PWA Hooks', () => {
       expect(mockPWAManager.updateServiceWorker).toHaveBeenCalled();
     });
 
-    it('should set up event listeners on mount', () => {
+    it('should set up _event listeners on mount', () => {
       renderHookWithProviders(() => usePWA());
 
       expect(window.addEventListener).toHaveBeenCalledWith(
@@ -183,7 +183,7 @@ describe('PWA Hooks', () => {
       );
     });
 
-    it('should clean up event listeners on unmount', () => {
+    it('should clean up _event listeners on unmount', () => {
       const { unmount } = renderHookWithProviders(() => usePWA());
 
       unmount();
@@ -273,7 +273,7 @@ describe('PWA Hooks', () => {
       expect(result.current.isInstalling).toBe(false);
     });
 
-    it('should set up PWA event listeners', () => {
+    it('should set up PWA _event listeners', () => {
       renderHookWithProviders(() => useInstallPrompt());
 
       expect(mockPWAManager.on).toHaveBeenCalledWith(
@@ -307,7 +307,7 @@ describe('PWA Hooks', () => {
       act(() => {
         // Trigger the event handler that would be called by PWA manager
         const eventHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === 'sw-update-available'
+          ([_event]) => event === 'sw-update-available'
         )?.[1];
         eventHandler?.();
       });
@@ -339,7 +339,7 @@ describe('PWA Hooks', () => {
       // Set update available
       act(() => {
         const eventHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === 'sw-update-available'
+          ([_event]) => event === 'sw-update-available'
         )?.[1];
         eventHandler?.();
       });
@@ -476,7 +476,7 @@ describe('PWA Hooks', () => {
       expect(result.current.isOffline).toBe(true);
     });
 
-    it('should set up online/offline event listeners', () => {
+    it('should set up online/offline _event listeners', () => {
       renderHookWithProviders(() => useOffline());
 
       expect(window.addEventListener).toHaveBeenCalledWith(
@@ -633,7 +633,7 @@ describe('PWA Hooks', () => {
       // Simulate sync complete event
       act(() => {
         const eventHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === 'sync-complete'
+          ([_event]) => event === 'sync-complete'
         )?.[1];
         eventHandler?.();
       });
@@ -655,7 +655,7 @@ describe('PWA Hooks', () => {
       // Simulate alarm triggered event
       act(() => {
         const triggerHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === 'alarm-triggered'
+          ([_event]) => event === 'alarm-triggered'
         )?.[1];
         triggerHandler?.({ alarmId: 'alarm-1', timestamp: Date.now() });
       });
@@ -667,7 +667,7 @@ describe('PWA Hooks', () => {
       // Simulate alarm dismissed event
       act(() => {
         const dismissHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === 'alarm-dismissed'
+          ([_event]) => event === 'alarm-dismissed'
         )?.[1];
         dismissHandler?.({ alarmId: 'alarm-1', timestamp: Date.now() });
       });
@@ -678,7 +678,7 @@ describe('PWA Hooks', () => {
       // Simulate alarm snoozed event
       act(() => {
         const snoozeHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === 'alarm-snoozed'
+          ([_event]) => event === 'alarm-snoozed'
         )?.[1];
         snoozeHandler?.({
           alarmId: 'alarm-1',
@@ -698,7 +698,7 @@ describe('PWA Hooks', () => {
       // Add some events first
       act(() => {
         const triggerHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === 'alarm-triggered'
+          ([_event]) => event === 'alarm-triggered'
         )?.[1];
         triggerHandler?.({ alarmId: 'alarm-1' });
         triggerHandler?.({ alarmId: 'alarm-2' });
@@ -713,7 +713,7 @@ describe('PWA Hooks', () => {
       expect(result.current.alarmEvents).toEqual([]);
     });
 
-    it('should set up alarm event listeners', () => {
+    it('should set up alarm _event listeners', () => {
       renderHookWithProviders(() => useAlarmPWA());
 
       expect(mockPWAManager.on).toHaveBeenCalledWith(
@@ -730,7 +730,7 @@ describe('PWA Hooks', () => {
       );
     });
 
-    it('should clean up alarm event listeners on unmount', () => {
+    it('should clean up alarm _event listeners on unmount', () => {
       const { unmount } = renderHookWithProviders(() => useAlarmPWA());
 
       unmount();

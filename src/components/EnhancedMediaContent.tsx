@@ -162,7 +162,7 @@ interface AudioPlayerState {
   currentTime: number;
   duration: number;
   loading: boolean;
-  error: string | null;
+  _error: string | null;
 }
 
 export function EnhancedMediaContent({
@@ -188,7 +188,7 @@ export function EnhancedMediaContent({
     currentTime: 0,
     duration: 0,
     loading: false,
-    error: null,
+    _error: null,
   });
 
   // Audio context and source
@@ -268,7 +268,7 @@ export function EnhancedMediaContent({
 
   const playSound = useCallback(
     async (sound: CustomSound) => {
-      setPlayerState((prev: any) => ({ ...prev, loading: true, error: null }));
+      setPlayerState((prev: any) => ({ ...prev, loading: true, _error: null }));
 
       try {
         // Stop current audio if playing
@@ -322,20 +322,20 @@ export function EnhancedMediaContent({
         } else {
           throw new Error('Failed to create audio source');
         }
-      } catch (error) {
-        console.error('Error playing sound:', error);
+      } catch (_error) {
+        console.error('Error playing sound:', _error);
 
         setPlayerState((prev: any) => ({
           ...prev,
           loading: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: error instanceof Error ? _error.message : 'Unknown _error',
         }));
 
         // Fallback to beep if audio fails
         try {
           await audioManager.playFallbackBeep('single');
         } catch (fallbackError) {
-          console.error('Fallback beep also failed:', fallbackError);
+          console._error('Fallback beep also failed:', fallbackError);
         }
       }
     },
@@ -382,7 +382,7 @@ export function EnhancedMediaContent({
     [playSound]
   );
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (_event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -423,8 +423,8 @@ export function EnhancedMediaContent({
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       alert('File uploaded successfully!');
-    } catch (error) {
-      console.error('Upload failed:', error);
+    } catch (_error) {
+      console._error('Upload failed:', _error);
       alert('Upload failed. Please try again.');
     } finally {
       setIsUploading(false);
@@ -562,10 +562,10 @@ export function EnhancedMediaContent({
         </div>
 
         {/* Error display */}
-        {playerState.error && (
+        {playerState._error && (
           <div className="mt-3 p-2 bg-destructive/10 border border-destructive/20 rounded text-sm text-destructive flex items-center gap-2">
             <AlertCircle className="h-4 w-4" />
-            {playerState.error}
+            {playerState._error}
           </div>
         )}
       </CardContent>
@@ -618,8 +618,9 @@ export function EnhancedMediaContent({
                 <Input
                   placeholder="Search sounds..."
                   value={searchQuery}
-                  
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setSearchQuery(e.target.value)
+                  }
                 />
               </div>
               <label htmlFor="category-filter" className="sr-only">
@@ -628,8 +629,9 @@ export function EnhancedMediaContent({
               <select
                 id="category-filter"
                 value={selectedCategory}
-                
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSelectedCategory(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSelectedCategory(e.target.value)
+                }
                 className="px-3 py-2 border rounded-md bg-background"
                 aria-label="Filter media by category"
               >

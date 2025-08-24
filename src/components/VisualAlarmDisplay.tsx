@@ -16,10 +16,8 @@ interface VisualAlarmDisplayProps {
   alarm: Alarm;
   themeId?: VisualAlarmThemeId;
   isActive: boolean;
-  onDismiss: (
-) => void;
-  onSnooze: (
-) => void;
+  onDismiss: () => void;
+  onSnooze: () => void;
   className?: string;
 }
 
@@ -42,8 +40,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   onDismiss,
   onSnooze,
   className = '',
-}
-) => {
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<TimeoutHandle>();
@@ -52,8 +49,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   const [showControls, setShowControls] = useState(false);
 
   // Load theme
-  useEffect((
-) => {
+  useEffect(() => {
     const loadedTheme = visualAlarmThemes.getTheme(themeId);
     if (loadedTheme) {
       setTheme(loadedTheme);
@@ -61,23 +57,20 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   }, [themeId]);
 
   // Apply theme to container
-  useEffect((
-) => {
+  useEffect(() => {
     if (theme && containerRef.current && isActive) {
       visualAlarmThemes.applyTheme(themeId, containerRef.current);
     }
   }, [theme, themeId, isActive]);
 
   // Initialize particle effects
-  useEffect((
-) => {
+  useEffect(() => {
     if (theme?.effects.particles && isActive) {
       initializeParticles();
       startParticleAnimation();
     }
 
-    return (
-) => {
+    return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
@@ -85,8 +78,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
     };
   }, [theme, isActive, initializeParticles, startParticleAnimation]);
 
-  const initializeParticles = useCallback((
-) => {
+  const initializeParticles = useCallback(() => {
     if (!theme) return;
 
     const particleCount =
@@ -139,44 +131,40 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
     };
   };
 
-  const updateParticles = useCallback((
-) => {
-    setParticles(
-      (
-        prevParticles: any) => prevParticles.map((particle: any
-) => {
-          const newParticle = { ...particle };
+  const updateParticles = useCallback(() => {
+    setParticles((prevParticles: any) =>
+      prevParticles.map((particle: any) => {
+        const newParticle = { ...particle };
 
-          // Update position
-          newParticle.x += newParticle.vx;
-          newParticle.y += newParticle.vy;
+        // Update position
+        newParticle.x += newParticle.vx;
+        newParticle.y += newParticle.vy;
 
-          // Update life
-          newParticle.life += 1;
+        // Update life
+        newParticle.life += 1;
 
-          // Bounce off edges
-          const canvas = canvasRef.current;
-          if (canvas) {
-            if (newParticle.x < 0 || newParticle.x > canvas.width) {
-              newParticle.vx *= -1;
-            }
-            if (newParticle.y < 0 || newParticle.y > canvas.height) {
-              newParticle.vy *= -1;
-            }
+        // Bounce off edges
+        const canvas = canvasRef.current;
+        if (canvas) {
+          if (newParticle.x < 0 || newParticle.x > canvas.width) {
+            newParticle.vx *= -1;
           }
-
-          // Reset particle if life exceeded
-          if (newParticle.life > newParticle.maxLife) {
-            return createParticle(newParticle.id);
+          if (newParticle.y < 0 || newParticle.y > canvas.height) {
+            newParticle.vy *= -1;
           }
+        }
 
-          return newParticle;
-        })
+        // Reset particle if life exceeded
+        if (newParticle.life > newParticle.maxLife) {
+          return createParticle(newParticle.id);
+        }
+
+        return newParticle;
+      })
     );
   }, [theme, createParticle]);
 
-  const drawParticles = useCallback((
-) => {
+  const drawParticles = useCallback(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
 
@@ -186,8 +174,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw particles
-    particles.forEach((particle: any
-) => {
+    particles.forEach((particle: any) => {
       const alpha = 1 - particle.life / particle.maxLife;
       ctx.fillStyle = `${particle.color}${Math.floor(alpha * 255)
         .toString(16)
@@ -198,10 +185,8 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
     });
   }, [particles, theme]);
 
-  const startParticleAnimation = useCallback((
-) => {
-    const animate = (
-) => {
+  const startParticleAnimation = useCallback(() => {
+    const animate = () => {
       updateParticles();
       drawParticles();
       animationFrameRef.current = requestAnimationFrame(animate);
@@ -210,8 +195,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   }, [updateParticles, drawParticles]);
 
   // Format alarm time
-  const formatTime = (time: string
-) => {
+  const formatTime = (time: string) => {
     const [hours, minutes] = time.split(':');
     const hour24 = parseInt(hours);
     const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
@@ -220,19 +204,16 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   };
 
   // Handle screen interactions
-  const handleScreenTap = (
-) => {
+  const handleScreenTap = () => {
     setShowControls(!showControls);
   };
 
-  const handleDismiss = (
-) => {
+  const handleDismiss = () => {
     onDismiss();
     visualAlarmThemes.stopAllEffects();
   };
 
-  const handleSnooze = (
-) => {
+  const handleSnooze = () => {
     onSnooze();
     visualAlarmThemes.stopAllEffects();
   };

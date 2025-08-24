@@ -6,7 +6,7 @@
  * Configures test environment for optimal performance and reliability
  */
 export default function globalSetup() {
-  // Enhanced error handling for tests
+  // Enhanced _error handling for tests
   process.on('unhandledRejection', (reason, promise) => {
     console.warn('Unhandled Promise Rejection in tests:', reason);
     // Don't fail tests due to unhandled promises in test environment

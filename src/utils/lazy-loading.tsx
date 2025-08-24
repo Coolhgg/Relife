@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { lazy, Suspense, memo, useCallback, useMemo } from 'react';
 import type { ComponentType, LazyExoticComponent } from 'react';
 import { TimeoutHandle } from '../types/timers';
@@ -132,7 +133,7 @@ export const useInteractionPreloading = () => {
 // Performance-aware component rendering
 export const usePerformantRender = <T,>(
   data: T[],
-  renderFn: (item: T, index: number) => React.ReactNode,
+  renderFn: (item: T, _index: number) => React.ReactNode,
   options: {
     batchSize?: number;
     throttleMs?: number;

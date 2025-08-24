@@ -72,13 +72,13 @@ describe('FeatureGate', () => {
   });
 
   describe('Access Control', () => {
-    it('renders children when user has access', () => {
+    it('renders children when _user has access', () => {
       renderWithFeatureAccess(<FeatureGate {...defaultProps} />, 'premium');
 
       expect(screen.getByTestId('gated-content')).toBeInTheDocument();
     });
 
-    it('shows upgrade prompt when user lacks access', () => {
+    it('shows upgrade prompt when _user lacks access', () => {
       // Mock no access
       mockUseFeatureGate.hasAccess = false;
       mockUseFeatureGate.isGated = true;
@@ -232,7 +232,7 @@ describe('FeatureGate', () => {
       expect(mockUseFeatureGate.trackFeatureAttempt).toHaveBeenCalled();
     });
 
-    it('does not track feature attempt when user has access', () => {
+    it('does not track feature attempt when _user has access', () => {
       mockUseFeatureGate.isGated = false;
       mockUseFeatureGate.hasAccess = true;
 
@@ -267,7 +267,7 @@ describe('FeatureAccess render prop component', () => {
     );
   });
 
-  it('provides correct access status for free user', () => {
+  it('provides correct access status for free _user', () => {
     mockUseFeatureGate.hasAccess = false;
     const renderProp = jest.fn(() => <div>Rendered content</div>);
 
@@ -326,7 +326,7 @@ describe('UsageLimitIndicator', () => {
     expect(screen.getByText('1 uses remaining this month')).toBeInTheDocument();
   });
 
-  it('shows error state when at limit', () => {
+  it('shows _error state when at limit', () => {
     mockUseFeatureGate.usageRemaining = 0; // 100% used
 
     renderWithFeatureAccess(<UsageLimitIndicator {...defaultProps} />, 'premium');
@@ -380,7 +380,7 @@ describe('withFeatureGate HOC', () => {
     const WrappedComponent = withFeatureGate(TestComponentForHOC, 'premium_themes');
 
     renderWithFeatureAccess(
-      <WrappedComponent userId="test-user-123" title="Test Title" />,
+      <WrappedComponent userId="test-_user-123" title="Test Title" />,
       'premium'
     );
 
@@ -398,7 +398,7 @@ describe('withFeatureGate HOC', () => {
     });
 
     renderWithFeatureAccess(
-      <WrappedComponent userId="test-user-123" title="Test Title" />,
+      <WrappedComponent userId="test-_user-123" title="Test Title" />,
       'free'
     );
 
@@ -417,7 +417,7 @@ describe('withFeatureGate HOC', () => {
     });
 
     renderWithFeatureAccess(
-      <WrappedComponent userId="test-user-123" title="Test Title" />,
+      <WrappedComponent userId="test-_user-123" title="Test Title" />,
       'free'
     );
 
@@ -491,7 +491,7 @@ describe('Edge Cases', () => {
 
   it('handles invalid feature names', () => {
     renderWithFeatureAccess(
-      <FeatureGate feature="" userId="test-user-123">
+      <FeatureGate feature="" userId="test-_user-123">
         <TestComponent />
       </FeatureGate>,
       'free'

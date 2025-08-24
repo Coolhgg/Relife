@@ -16,10 +16,10 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
+import { Progress } from './ui/textarea';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
-import { AlertTriangle, AlertDescription } from './ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 import {
   Select,
   SelectContent,
@@ -68,7 +68,7 @@ const SOUND_CATEGORIES: Array<{
   {
     value: 'ui',
     label: 'UI Sounds',
-    description: 'Click, hover, success, error sounds',
+    description: 'Click, hover, success, _error sounds',
   },
   {
     value: 'notification',
@@ -136,8 +136,8 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
     try {
       const sounds = await customSoundManager.getUserCustomSounds(userId);
       setUploadedSounds(sounds);
-    } catch (error) {
-      console.error('Error loading existing sounds:', error);
+    } catch (_error) {
+      console._error('Error loading existing sounds:', _error);
     } finally {
       setIsLoading(false);
     }
@@ -244,13 +244,13 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
       } else {
         updateUploadItem(item.id, {
           status: 'error',
-          error: result.error || 'Upload failed',
+          _error: result._error || 'Upload failed',
         });
       }
-    } catch (error) {
+    } catch (_error) {
       updateUploadItem(item.id, {
         status: 'error',
-        error: error instanceof Error ? error.message : 'Upload failed',
+        error: _error instanceof Error ? _error.message : 'Upload failed',
       });
     }
   };
@@ -282,8 +282,8 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
         setUploadedSounds((prev: any) => prev.filter((s: any) => s.id !== sound.id));
         onSoundDeleted?.(sound.id);
       }
-    } catch (error) {
-      console.error('Error deleting sound:', error);
+    } catch (_error) {
+      console._error('Error deleting sound:', _error);
     }
   };
 
@@ -322,8 +322,8 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
     try {
       const audio = await customSoundManager.previewCustomSound(sound);
       audio.play();
-    } catch (error) {
-      console.error('Error playing sound preview:', error);
+    } catch (_error) {
+      console._error('Error playing sound preview:', _error);
     }
   };
 
@@ -342,7 +342,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
         return <Loader2 className="w-4 h-4 animate-spin text-blue-500" />;
       case 'ready':
         return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'error':
+      case '_error':
         return <AlertCircle className="w-4 h-4 text-red-500" />;
       default:
         return <FileAudio className="w-4 h-4 text-gray-500" />;
@@ -356,7 +356,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
         return 'bg-blue-500';
       case 'ready':
         return 'bg-green-500';
-      case 'error':
+      case '_error':
         return 'bg-red-500';
       default:
         return 'bg-gray-500';
@@ -427,15 +427,15 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                         </Badge>
                       </div>
 
-                      {item.status !== 'error' && (
+                      {item.status !== '_error' && (
                         <Progress value={item.uploadProgress} className="h-1" />
                       )}
 
-                      {item.error && (
-                        <AlertTriangle className="mt-2">
+                      {item._error && (
+                        <Alert className="mt-2">
                           <AlertCircle className="w-4 h-4" />
                           <AlertDescription className="text-sm">
-                            {item.error}
+                            {item._error}
                           </AlertDescription>
                         </Alert>
                       )}
@@ -447,7 +447,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                           size="sm"
                           variant="outline"
                           onClick={() => togglePreview(item)}
-                          disabled={item.status === 'error'}
+                          disabled={item.status === '_error'}
                         >
                           {item.isPlaying ? (
                             <Pause className="w-4 h-4" />
@@ -627,8 +627,8 @@ const SoundEditForm: React.FC<{
         };
         onSave(updatedSound);
       }
-    } catch (error) {
-      console.error('Error updating sound:', error);
+    } catch (_error) {
+      console._error('Error updating sound:', _error);
     } finally {
       setIsSaving(false);
     }
@@ -641,7 +641,9 @@ const SoundEditForm: React.FC<{
         <Input
           id="sound-name"
           value={name}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setName(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+            setName(e.target.value)
+          }
           placeholder="Sound name"
         />
       </div>
@@ -651,7 +653,9 @@ const SoundEditForm: React.FC<{
         <Textarea
           id="sound-description"
           value={description}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+            setDescription(e.target.value)
+          }
           placeholder="Describe this sound..."
           rows={3}
         />
@@ -681,7 +685,9 @@ const SoundEditForm: React.FC<{
         <Input
           id="sound-tags"
           value={tags}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTags(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+            setTags(e.target.value)
+          }
           placeholder="tag1, tag2, tag3"
         />
         <p className="text-sm text-gray-500 mt-1">Separate tags with commas</p>

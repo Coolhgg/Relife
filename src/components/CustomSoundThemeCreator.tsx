@@ -22,10 +22,10 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
+import { Progress } from './ui/textarea';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
-import { AlertTriangle, AlertDescription } from './ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 import {
   Select,
   SelectContent,
@@ -168,7 +168,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
   // Initialize session on mount
   useEffect(() => {
     initializeSession();
-  }, []);
+  }, [initializeSession]);
 
   const initializeSession = async () => {
     setIsLoading(true);
@@ -180,8 +180,8 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
         const newSession = await soundEffectsService.startCustomThemeCreation(userId);
         setSession(newSession);
       }
-    } catch (error) {
-      console.error('Error initializing session:', error);
+    } catch (_error) {
+      console._error('Error initializing session:', _error);
     } finally {
       setIsLoading(false);
     }
@@ -376,8 +376,8 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
       } else {
         throw new Error('Failed to save theme');
       }
-    } catch (error) {
-      console.error('Error saving theme:', error);
+    } catch (_error) {
+      console._error('Error saving theme:', _error);
     } finally {
       setIsSaving(false);
     }
@@ -492,10 +492,10 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
 
           {/* Step Indicators */}
           <div className="flex items-center justify-between">
-            {CREATION_STEPS.map((step, index) => {
+            {CREATION_STEPS.map((step, _index) => {
               const Icon = step.icon;
               const isCompleted = session.completedSteps.includes(step.id);
-              const isCurrent = index === currentStepIndex;
+              const isCurrent = _index === currentStepIndex;
 
               return (
                 <div key={step.id} className="flex flex-col items-center">
@@ -583,8 +583,8 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
           </DialogHeader>
           {validationResult && (
             <div className="space-y-4">
-              {validationResult.issues.map((issue, index) => (
-                <AlertTriangle key={index}>
+              {validationResult.issues.map((issue, _index) => (
+                <Alert key={_index}>
                   <AlertCircle className="w-4 h-4" />
                   <AlertDescription>{issue.message}</AlertDescription>
                 </Alert>
@@ -629,8 +629,9 @@ const InfoStep: React.FC<{
       <Input
         id="theme-name"
         value={theme.name || ''}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => onUpdate('name', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onUpdate('name', e.target.value)
+        }
         placeholder="My Awesome Theme"
       />
     </div>
@@ -640,8 +641,9 @@ const InfoStep: React.FC<{
       <Input
         id="theme-display-name"
         value={theme.displayName || ''}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => onUpdate('displayName', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onUpdate('displayName', e.target.value)
+        }
         placeholder="My Awesome Theme (optional)"
       />
     </div>
@@ -657,7 +659,9 @@ const InfoStep: React.FC<{
         </SelectTrigger>
         <SelectContent>
           {THEME_CATEGORIES.map(category => (
-            <SelectItem key={category.value} value={category.value}>{category.label} - {category.description}</SelectItem>
+            <SelectItem key={category.value} value={category.value}>
+              {category.label} - {category.description}
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>
@@ -668,8 +672,9 @@ const InfoStep: React.FC<{
       <Textarea
         id="theme-description"
         value={theme.description || ''}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => onUpdate('description', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onUpdate('description', e.target.value)
+        }
         placeholder="Describe your theme..."
         rows={4}
       />
@@ -785,8 +790,7 @@ const MetadataStep: React.FC<{
       <Input
         id="theme-tags"
         value={theme.tags?.join(', ') || ''}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => 
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           onUpdate(
             'tags',
             e.target.value
@@ -866,8 +870,8 @@ const PublishStep: React.FC<{
             <div className="mt-4">
               <h4 className="font-medium mb-2">Suggestions for improvement:</h4>
               <ul className="text-sm text-gray-600 space-y-1">
-                {validationResult.suggestions.map((suggestion, index) => (
-                  <li key={index}>• {suggestion.message}</li>
+                {validationResult.suggestions.map((suggestion, _index) => (
+                  <li key={_index}>• {suggestion.message}</li>
                 ))}
               </ul>
             </div>

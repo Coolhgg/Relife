@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bug, Zap, Alert, Database, Wifi, Brain, Volume2 } from 'lucide-react';
+import { Bug, Alert, Database, Wifi, Brain, Volume2 } from 'lucide-react';
 import { TimeoutHandle } from '../types/timers';
 
 interface ErrorBoundaryTestProps {
@@ -26,14 +26,14 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
       case 'render':
         // This will cause a render error
         throw new Error(
-          'Test render error - This is intentional for testing error boundaries'
+          'Test render error - This is intentional for testing _error boundaries'
         );
 
       case 'async':
         // Simulate async error
         setTimeout(() => {
           throw new Error(
-            'Test async error - This is intentional for testing error boundaries'
+            'Test async _error - This is intentional for testing _error boundaries'
           );
         }, 100);
         break;
@@ -53,36 +53,36 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
       case 'network-simulation':
         // Simulate network error
         throw new Error(
-          'Network request failed - This is intentional for testing error boundaries'
+          'Network request failed - This is intentional for testing _error boundaries'
         );
 
       case 'media-error':
         // Simulate media/audio error
         throw new Error(
-          'Audio playback failed - This is intentional for testing error boundaries'
+          'Audio playback failed - This is intentional for testing _error boundaries'
         );
 
       case 'ai-error':
         // Simulate AI service error
         throw new Error(
-          'AI service unavailable - This is intentional for testing error boundaries'
+          'AI service unavailable - This is intentional for testing _error boundaries'
         );
 
       case 'data-error':
         // Simulate data/storage error
         throw new Error(
-          'Failed to save data - This is intentional for testing error boundaries'
+          'Failed to save data - This is intentional for testing _error boundaries'
         );
 
       default:
-        throw new Error(`Unknown test error type: ${type}`);
+        throw new Error(`Unknown test _error type: ${type}`);
     }
   };
 
   const CrashComponent = () => {
     if (errorType === 'render') {
       throw new Error(
-        'Test render error - This is intentional for testing error boundaries'
+        'Test render _error - This is intentional for testing _error boundaries'
       );
     }
     return <div>This component would crash with render error</div>;
@@ -164,7 +164,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
           </button>
 
           <button
-            onClick={() => triggerError('media-error')}
+            onClick={() => triggerError('media-_error')}
             className="w-full flex items-center gap-3 p-3 bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/20 dark:hover:bg-purple-900/30 border border-purple-200 dark:border-purple-800 rounded-lg text-purple-800 dark:text-purple-200 transition-colors"
           >
             <Volume2 className="w-4 h-4" />
@@ -175,7 +175,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
           </button>
 
           <button
-            onClick={() => triggerError('ai-error')}
+            onClick={() => triggerError('ai-_error')}
             className="w-full flex items-center gap-3 p-3 bg-green-50 hover:bg-green-100 dark:bg-green-900/20 dark:hover:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg text-green-800 dark:text-green-200 transition-colors"
           >
             <Brain className="w-4 h-4" />
@@ -186,7 +186,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
           </button>
 
           <button
-            onClick={() => triggerError('data-error')}
+            onClick={() => triggerError('data-_error')}
             className="w-full flex items-center gap-3 p-3 bg-orange-50 hover:bg-orange-100 dark:bg-orange-900/20 dark:hover:bg-orange-900/30 border border-orange-200 dark:border-orange-800 rounded-lg text-orange-800 dark:text-orange-200 transition-colors"
           >
             <Database className="w-4 h-4" />

@@ -499,13 +499,13 @@ export const useKeyboardNavigation = () => {
 
   const handleKeyboardNavigation = useCallback(
     (
-      event: React.KeyboardEvent,
+      _event: React.KeyboardEvent,
       items: HTMLElement[],
-      onSelect?: (index: number) => void
+      onSelect?: (_index: number) => void
     ) => {
       if (!preferences.keyboardNavigation) return;
 
-      switch (event.key) {
+      switch (_event.key) {
         case 'ArrowDown':
         case 'ArrowRight':
           event.preventDefault();

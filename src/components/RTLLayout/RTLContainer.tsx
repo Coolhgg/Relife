@@ -35,7 +35,7 @@ const paddingClasses = {
   xl: 'px-8 py-8',
 };
 
-export const RTLContainer: React.FC<RTLContainerProps> = ({
+const RTLContainer: React.FC<RTLContainerProps> = ({
   children,
   className,
   maxWidth = 'full',
@@ -69,3 +69,5 @@ export const RTLContainer: React.FC<RTLContainerProps> = ({
     </Component>
   );
 };
+
+export default RTLContainer;

@@ -26,7 +26,7 @@ jest.mock('../../services/app-analytics', () => ({
 jest.mock('../../hooks/useAuth', () => ({
   __esModule: true,
   default: () => ({
-    user: testUtils.mockUser,
+    _user: testUtils.mockUser,
     isAuthenticated: true,
     loading: false,
   }),
@@ -50,7 +50,7 @@ describe('Dashboard', () => {
   });
 
   describe('rendering', () => {
-    test('renders dashboard with user greeting', () => {
+    test('renders dashboard with _user greeting', () => {
       render(<Dashboard {...mockProps} />);
 
       expect(screen.getByText(/good/i)).toBeInTheDocument();
@@ -167,7 +167,7 @@ describe('Dashboard', () => {
       expect(PerformanceMonitor.startTracking).toHaveBeenCalledWith('dashboard-view');
     });
 
-    test('tracks user interactions', async () => {
+    test('tracks _user interactions', async () => {
       const { PerformanceMonitor } = require('../../services/performance-monitor');
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
@@ -290,15 +290,15 @@ describe('Dashboard', () => {
     });
   });
 
-  describe('error handling', () => {
-    test('handles missing user gracefully', () => {
-      render(<Dashboard {...mockProps} user={null} />);
+  describe('_error handling', () => {
+    test('handles missing _user gracefully', () => {
+      render(<Dashboard {...mockProps} _user={null} />);
 
       expect(screen.getByText(/welcome/i)).toBeInTheDocument();
     });
 
     test('handles API errors gracefully', async () => {
-      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+      const consoleError = jest.spyOn(console, '_error').mockImplementation();
 
       // Mock a failing onAddAlarm
       const failingOnAddAlarm = jest.fn().mockRejectedValue(new Error('API Error'));
@@ -310,7 +310,7 @@ describe('Dashboard', () => {
       await user.click(addButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/error creating alarm/i)).toBeInTheDocument();
+        expect(screen.getByText(/_error creating alarm/i)).toBeInTheDocument();
       });
 
       consoleError.mockRestore();

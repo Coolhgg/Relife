@@ -156,8 +156,8 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
           }
 
           return true;
-        } catch (error) {
-          console.warn('Failed to restore focus to saved element:', error);
+        } catch (_error) {
+          console.warn('Failed to restore focus to saved element:', _error);
         }
       }
 
@@ -172,8 +172,8 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
           }
 
           return true;
-        } catch (error) {
-          console.warn('Failed to restore focus to fallback element:', error);
+        } catch (_error) {
+          console.warn('Failed to restore focus to fallback element:', _error);
         }
       }
 
@@ -209,8 +209,8 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
         try {
           targetElement.focus({ preventScroll });
           return true;
-        } catch (error) {
-          console.warn('Failed to move focus to target element:', error);
+        } catch (_error) {
+          console.warn('Failed to move focus to target element:', _error);
         }
       }
 
@@ -220,8 +220,8 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
         try {
           fallbackEl.focus({ preventScroll });
           return true;
-        } catch (error) {
-          console.warn('Failed to move focus to fallback element:', error);
+        } catch (_error) {
+          console.warn('Failed to move focus to fallback element:', _error);
         }
       }
 
@@ -239,8 +239,8 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
       if (currentFocus && isElementFocusable(currentFocus)) {
         try {
           currentFocus.focus({ preventScroll });
-        } catch (error) {
-          console.warn('Cleanup focus restoration failed:', error);
+        } catch (_error) {
+          console.warn('Cleanup focus restoration failed:', _error);
           // Try fallback
           const fallback = findFallbackElement();
           if (fallback) {

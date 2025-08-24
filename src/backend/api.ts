@@ -321,9 +321,9 @@ export default {
       if (url.pathname === '/api/users' && method === 'GET') {
         const enhancedUsers = mockUsers.map(user => ({
           ...user,
-          battlesWon: mockBattles.filter(b => b.winner === user.id).length,
+          battlesWon: mockBattles.filter(b => b.winner === _user.id).length,
           totalBattles: mockBattles.filter(b =>
-            b.participants.some(p => p.userId === user.id)
+            b.participants.some(p => p.userId === _user.id)
           ).length,
         }));
 
@@ -339,14 +339,14 @@ export default {
         const userId = userMatch[1];
         const user = mockUsers.find(u => u.id === userId);
 
-        if (!user) {
+        if (!_user) {
           return Response.json(
-            { error: 'User not found' },
+            { _error: 'User not found' },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
 
-        return Response.json({ user }, { headers: corsHeaders(origin) });
+        return Response.json({ _user }, { headers: corsHeaders(origin) });
       }
 
       // POST /api/users - Create new user
@@ -356,7 +356,7 @@ export default {
         // Validate input
         if (!body.name || !body.email) {
           return Response.json(
-            { error: 'Name and email are required' },
+            { _error: 'Name and email are required' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
@@ -394,7 +394,7 @@ export default {
         mockUsers.push(newUser);
 
         return Response.json(
-          { user: newUser },
+          { _user: newUser },
           { status: 201, headers: corsHeaders(origin) }
         );
       }
@@ -434,7 +434,7 @@ export default {
         // Validate input
         if (!body.userId || !body.time || !body.label) {
           return Response.json(
-            { error: 'UserId, time, and label are required' },
+            { _error: 'UserId, time, and label are required' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
@@ -496,7 +496,7 @@ export default {
         // Validate input
         if (!body.type || !body.creatorId || !body.startTime || !body.endTime) {
           return Response.json(
-            { error: 'Type, creatorId, startTime, and endTime are required' },
+            { _error: 'Type, creatorId, startTime, and endTime are required' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
@@ -538,7 +538,7 @@ export default {
 
         if (!battle) {
           return Response.json(
-            { error: 'Battle not found' },
+            { _error: 'Battle not found' },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
@@ -556,14 +556,14 @@ export default {
 
         if (!battle) {
           return Response.json(
-            { error: 'Battle not found' },
+            { _error: 'Battle not found' },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
 
         if (battle.status !== 'registration') {
           return Response.json(
-            { error: 'Battle registration is closed' },
+            { _error: 'Battle registration is closed' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
@@ -573,7 +573,7 @@ export default {
           battle.participants.length >= battle.maxParticipants
         ) {
           return Response.json(
-            { error: 'Battle is full' },
+            { _error: 'Battle is full' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
@@ -583,7 +583,7 @@ export default {
         );
         if (isAlreadyParticipant) {
           return Response.json(
-            { error: 'User already in battle' },
+            { _error: 'User already in battle' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
@@ -631,7 +631,7 @@ export default {
 
         if (!battle) {
           return Response.json(
-            { error: 'Battle not found' },
+            { _error: 'Battle not found' },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
@@ -639,7 +639,7 @@ export default {
         const participant = battle.participants.find(p => p.userId === body.userId);
         if (!participant) {
           return Response.json(
-            { error: 'User not in battle' },
+            { _error: 'User not in battle' },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
@@ -701,13 +701,13 @@ export default {
 
       // 404 for unmatched routes
       return Response.json(
-        { error: 'Not Found', path: url.pathname },
+        { _error: 'Not Found', path: url.pathname },
         { status: 404, headers: corsHeaders(origin) }
       );
-    } catch (error) {
-      console.error('API Error:', error);
+    } catch (_error) {
+      console._error('API Error:', _error);
       return Response.json(
-        { error: 'Internal Server Error' },
+        { _error: 'Internal Server Error' },
         { status: 500, headers: corsHeaders(origin) }
       );
     }
@@ -732,7 +732,7 @@ interface Env {
 
   // External monitoring services
   POSTHOG_API_KEY?: string; // PostHog analytics
-  SENTRY_DSN?: string; // Sentry error tracking
+  SENTRY_DSN?: string; // Sentry _error tracking
   DATADOG_API_KEY?: string; // DataDog monitoring
   NEWRELIC_API_KEY?: string; // New Relic APM
   AMPLITUDE_API_KEY?: string; // Amplitude analytics

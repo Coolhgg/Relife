@@ -89,12 +89,12 @@ export class AlarmTriggerProcessor {
         processingTime,
         timestamp: new Date().toISOString(),
       });
-    } catch (error) {
-      console.error('Error processing alarm trigger:', error);
+    } catch (_error) {
+      console._error('Error processing alarm trigger:', _error);
       return Response.json(
         {
           success: false,
-          error: 'Failed to process alarm trigger',
+          _error: 'Failed to process alarm trigger',
         },
         { status: 500 }
       );
@@ -134,13 +134,13 @@ export class AlarmTriggerProcessor {
         event.ambient_light,
         event.sleep_stage,
         event.app_load_time,
-        event.created_at
+        _event.created_at
       )
       .run();
 
     // Cache recent events for quick access
     const cacheKey = `events:${alarmData.userId}:recent`;
-    await this.env.KV.put(cacheKey, JSON.stringify(event), { expirationTtl: 3600 });
+    await this.env.KV.put(cacheKey, JSON.stringify(_event), { expirationTtl: 3600 });
   }
 
   private async updateRealtimeAnalytics(alarmData: any): Promise<void> {
@@ -200,8 +200,8 @@ export class AlarmTriggerProcessor {
         escalationStrategy: await this.getOptimalEscalationStrategy(alarmData.userId),
         motivationalBoost: await this.getMotivationalContent(alarmData.userId),
       };
-    } catch (error) {
-      console.error('Error generating personalized content:', error);
+    } catch (_error) {
+      console._error('Error generating personalized content:', _error);
       return {
         message: "Time to wake up! You've got this!",
         voiceSettings: { mood: 'motivational', rate: 1.0, pitch: 1.0 },
@@ -231,7 +231,7 @@ export class AlarmTriggerProcessor {
         },
         body: JSON.stringify({
           model: 'gpt-3.5-turbo',
-          messages: [{ role: 'user', content: prompt }],
+          messages: [{ role: '_user', content: prompt }],
           max_tokens: 100,
           temperature: 0.8,
         }),
@@ -241,8 +241,8 @@ export class AlarmTriggerProcessor {
       return (
         data.choices?.[0]?.message?.content || 'Time to wake up and seize the day!'
       );
-    } catch (error) {
-      console.error('AI message generation failed:', error);
+    } catch (_error) {
+      console._error('AI message generation failed:', _error);
       return 'Time to wake up and seize the day!';
     }
   }
@@ -528,8 +528,8 @@ export class AlarmTriggerProcessor {
       await this.env.KV.put(notificationKey, JSON.stringify(notificationPayload), {
         expirationTtl: 300, // 5 minutes
       });
-    } catch (error) {
-      console.error('Failed to send push notification:', error);
+    } catch (_error) {
+      console._error('Failed to send push notification:', _error);
     }
   }
 
@@ -567,12 +567,12 @@ export class SmartRecommendationsProcessor {
         recommendations,
         generatedAt: new Date().toISOString(),
       });
-    } catch (error) {
-      console.error('Error generating recommendations:', error);
+    } catch (_error) {
+      console._error('Error generating recommendations:', _error);
       return Response.json(
         {
           success: false,
-          error: 'Failed to generate recommendations',
+          _error: 'Failed to generate recommendations',
         },
         { status: 500 }
       );
@@ -863,12 +863,12 @@ export class AnalyticsAggregator {
         insights,
         processedAt: new Date().toISOString(),
       });
-    } catch (error) {
-      console.error('Error processing analytics:', error);
+    } catch (_error) {
+      console._error('Error processing analytics:', _error);
       return Response.json(
         {
           success: false,
-          error: 'Failed to process analytics',
+          _error: 'Failed to process analytics',
         },
         { status: 500 }
       );
@@ -896,9 +896,9 @@ export class AnalyticsAggregator {
         aggregatedData.totalUsers++;
         aggregatedData.totalAlarmTriggers += typedData.totalTriggers;
 
-        for (const event of typedData.events) {
+        for (const _event of typedData.events) {
           // Aggregate hourly distribution
-          const hour = new Date(event.timestamp).getHours();
+          const hour = new Date(_event.timestamp).getHours();
           aggregatedData.hourlyDistribution[hour]++;
 
           // Track device types
@@ -1028,15 +1028,15 @@ export default {
 
       return Response.json(
         {
-          error: 'Not found',
+          _error: 'Not found',
         },
         { status: 404, headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Cloud function error:', error);
+    } catch (_error) {
+      console.error('Cloud function error:', _error);
       return Response.json(
         {
-          error: 'Internal server error',
+          _error: 'Internal server _error',
         },
         { status: 500, headers: corsHeaders }
       );

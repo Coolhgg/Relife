@@ -77,9 +77,10 @@ export type ServiceMethod<TArgs extends unknown[] = unknown[], TResult = unknown
   ...args: TArgs
 ) => Promise<ApiResponse<TResult>>;
 
-export type AsyncServiceMethod<TArgs extends unknown[] = unknown[], TResult = unknown> = (
-  ...args: TArgs
-) => Promise<TResult>;
+export type AsyncServiceMethod<
+  TArgs extends unknown[] = unknown[],
+  TResult = unknown,
+> = (...args: TArgs) => Promise<TResult>;
 
 // Common type guards for runtime type checking
 export const isApiResponse = <T>(value: unknown): value is ApiResponse<T> => {
@@ -100,7 +101,9 @@ export const isApiError = (value: unknown): value is ApiError => {
   );
 };
 
-export const isPaginatedResponse = <T>(value: unknown): value is PaginatedResponse<T> => {
+export const isPaginatedResponse = <T>(
+  value: unknown
+): value is PaginatedResponse<T> => {
   return (
     typeof value === 'object' &&
     value !== null &&
@@ -170,9 +173,9 @@ export interface ServiceFactory {
 
 // Global error handling types
 export interface GlobalErrorHandler {
-  handleApiError(error: ApiError): void;
-  handleHttpError(error: HttpError): void;
-  handleWebhookError(error: unknown, payload: WebhookPayload): void;
+  handleApiError(_error: ApiError): void;
+  handleHttpError(_error: HttpError): void;
+  handleWebhookError(_error: unknown, payload: WebhookPayload): void;
 }
 
 // Telemetry and monitoring types
@@ -180,14 +183,14 @@ export interface TelemetryData {
   operation: string;
   duration: number;
   success: boolean;
-  error?: string;
+  _error?: string;
   metadata?: Record<string, unknown>;
   timestamp: string;
 }
 
 export interface MonitoringService {
   recordApiCall(data: TelemetryData): void;
-  recordError(error: Error, context?: Record<string, unknown>): void;
+  recordError(_error: Error, context?: Record<string, unknown>): void;
   recordPerformance(metric: string, value: number, tags?: Record<string, string>): void;
 }
 
@@ -197,7 +200,7 @@ export interface ServiceHealthCheck {
   status: 'healthy' | 'degraded' | 'unhealthy';
   lastCheck: string;
   latency?: number;
-  error?: string;
+  _error?: string;
 }
 
 export interface HealthCheckResponse {

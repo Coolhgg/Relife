@@ -123,13 +123,13 @@ export const ServiceWorkerStatus: React.FC = () => {
         )}
 
         {/* Error Display */}
-        {state.error && (
+        {state._error && (
           <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-md">
             <div className="flex items-center gap-2">
               <AlertCircle size={16} className="text-destructive" />
               <span className="text-sm text-destructive font-medium">Error</span>
             </div>
-            <p className="text-xs text-destructive/80 mt-1">{state.error}</p>
+            <p className="text-xs text-destructive/80 mt-1">{state._error}</p>
           </div>
         )}
 

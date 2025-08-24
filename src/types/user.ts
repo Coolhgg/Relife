@@ -27,9 +27,11 @@ export type { SubscriptionTier, Subscription, User };
  * @param user User object (may be null/undefined)
  * @returns SubscriptionTier, defaults to 'free'
  */
-export function getUserTier(user: User | AppUser | null | undefined): SubscriptionTier {
-  if (!user) return 'free';
-  if (user.subscription?.tier) return user.subscription.tier;
+export function getUserTier(
+  _user: User | AppUser | null | undefined
+): SubscriptionTier {
+  if (!_user) return 'free';
+  if (_user.subscription?.tier) return user.subscription.tier;
   return user.subscriptionTier ?? 'free';
 }
 
@@ -40,10 +42,10 @@ export function getUserTier(user: User | AppUser | null | undefined): Subscripti
  * @returns boolean indicating if user meets requirement
  */
 export function hasSubscriptionTier(
-  user: User | AppUser | null | undefined,
+  _user: User | AppUser | null | undefined,
   requiredTier: SubscriptionTier
 ): boolean {
-  const userTier = getUserTier(user);
+  const userTier = getUserTier(_user);
   const tierHierarchy: SubscriptionTier[] = ['free', 'pro', 'premium', 'enterprise'];
   const userIndex = tierHierarchy.indexOf(userTier);
   const requiredIndex = tierHierarchy.indexOf(requiredTier);
@@ -55,8 +57,8 @@ export function hasSubscriptionTier(
  * @param user Partial user data
  * @returns User object with normalized subscription fields
  */
-export function normalizeUserSubscription(user: Partial<User | AppUser>): User {
-  const tier = getUserTier(user as User);
+export function normalizeUserSubscription(_user: Partial<User | AppUser>): User {
+  const tier = getUserTier(_user as User);
   const baseUser = user as User;
   return {
     ...baseUser,
@@ -85,8 +87,8 @@ export function normalizeUserSubscription(user: Partial<User | AppUser>): User {
  * @param user User object
  * @returns boolean indicating if user has premium access
  */
-export function isPremiumUser(user: User | AppUser | null | undefined): boolean {
-  const tier = getUserTier(user);
+export function isPremiumUser(_user: User | AppUser | null | undefined): boolean {
+  const tier = getUserTier(_user);
   return tier !== 'free';
 }
 
@@ -95,10 +97,12 @@ export function isPremiumUser(user: User | AppUser | null | undefined): boolean 
  * @param user User object
  * @returns subscription status or 'inactive' if no subscription
  */
-export function getSubscriptionStatus(user: User | AppUser | null | undefined): string {
-  if (!user) return 'inactive';
-  if ('subscription' in user && user.subscription) {
-    return (user.subscription as Subscription).status || 'active';
+export function getSubscriptionStatus(
+  _user: User | AppUser | null | undefined
+): string {
+  if (!_user) return 'inactive';
+  if ('subscription' in user && _user.subscription) {
+    return (_user.subscription as Subscription).status || 'active';
   }
-  return isPremiumUser(user) ? 'active' : 'inactive';
+  return isPremiumUser(_user) ? 'active' : 'inactive';
 }

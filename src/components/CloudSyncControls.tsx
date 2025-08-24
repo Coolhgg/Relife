@@ -41,8 +41,8 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
     try {
       setIsSyncing(true);
       await forceCloudSync();
-    } catch (error) {
-      console.error('Failed to force sync:', error);
+    } catch (_error) {
+      console._error('Failed to force sync:', _error);
     } finally {
       setIsSyncing(false);
     }
@@ -59,8 +59,8 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
       await resetCloudData();
       setIsEnabled(false);
       setShowResetConfirm(false);
-    } catch (error) {
-      console.error('Failed to reset cloud data:', error);
+    } catch (_error) {
+      console._error('Failed to reset cloud data:', _error);
     } finally {
       setIsSyncing(false);
     }
@@ -82,7 +82,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
   };
 
   const getStatusColor = () => {
-    if (cloudSyncStatus.error) return 'text-red-500';
+    if (cloudSyncStatus._error) return 'text-red-500';
     if (cloudSyncStatus.hasConflicts) return 'text-yellow-500';
     if (!cloudSyncStatus.isOnline) return 'text-gray-500';
     if (isEnabled && cloudSyncStatus.isOnline) return 'text-green-500';
@@ -90,7 +90,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
   };
 
   const getStatusText = () => {
-    if (cloudSyncStatus.error) return 'Sync Error';
+    if (cloudSyncStatus._error) return 'Sync Error';
     if (cloudSyncStatus.hasConflicts) return 'Conflicts Need Resolution';
     if (!cloudSyncStatus.isOnline) return 'Offline';
     if (isSyncing) return 'Syncing...';
@@ -183,10 +183,10 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
               )}
             </div>
 
-            {cloudSyncStatus.error && (
+            {cloudSyncStatus._error && (
               <div className="mt-2 rounded-md bg-red-50 p-2 dark:bg-red-900/20">
                 <p className="text-xs text-red-600 dark:text-red-400">
-                  {cloudSyncStatus.error}
+                  {cloudSyncStatus._error}
                 </p>
               </div>
             )}

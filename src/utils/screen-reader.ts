@@ -155,8 +155,8 @@ export class ScreenReaderService {
         const preferences = JSON.parse(saved);
         this.state = { ...this.state, ...preferences };
       }
-    } catch (error) {
-      console.warn('Failed to load screen reader preferences:', error);
+    } catch (_error) {
+      console.warn('Failed to load screen reader preferences:', _error);
     }
   }
 
@@ -166,8 +166,8 @@ export class ScreenReaderService {
   private saveUserPreferences(): void {
     try {
       localStorage.setItem('screen-reader-preferences', JSON.stringify(this.state));
-    } catch (error) {
-      console.warn('Failed to save screen reader preferences:', error);
+    } catch (_error) {
+      console.warn('Failed to save screen reader preferences:', _error);
     }
   }
 
@@ -581,12 +581,12 @@ export class ARIAPatterns {
     const headers = container.querySelectorAll('[role="button"]');
     const panels = container.querySelectorAll('[role="region"]');
 
-    headers.forEach((header, index) => {
+    headers.forEach((header, _index) => {
       const panel = panels[index] as HTMLElement;
       if (!panel) return;
 
-      const headerId = `accordion-header-${index}`;
-      const panelId = `accordion-panel-${index}`;
+      const headerId = `accordion-header-${_index}`;
+      const panelId = `accordion-panel-${_index}`;
 
       header.id = headerId;
       panel.id = panelId;
@@ -635,10 +635,10 @@ export class ARIAPatterns {
 
     let activeIndex = 0;
 
-    const setActiveTab = (index: number) => {
+    const setActiveTab = (_index: number) => {
       tabs.forEach((tab, i) => {
         const panel = panels[i] as HTMLElement;
-        if (i === index) {
+        if (i === _index) {
           tab.setAttribute('aria-selected', 'true');
           tab.setAttribute('tabindex', '0');
           panel.setAttribute('aria-hidden', 'false');
@@ -652,7 +652,7 @@ export class ARIAPatterns {
 
       activeIndex = index;
       ScreenReaderService.getInstance().announce(
-        `Selected tab: ${tabs[index].textContent}`,
+        `Selected tab: ${tabs[_index].textContent}`,
         'polite'
       );
     };
@@ -683,8 +683,8 @@ export class ARIAPatterns {
       setActiveTab(newIndex);
     };
 
-    tabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => setActiveTab(index));
+    tabs.forEach((tab, _index) => {
+      tab.addEventListener('click', () => setActiveTab(_index));
     });
 
     tabList.addEventListener('keydown', handleKeydown);
@@ -716,9 +716,9 @@ export class ARIAPatterns {
     input.setAttribute('aria-owns', listboxId);
     listbox.id = listboxId;
 
-    const setActiveOption = (index: number) => {
+    const setActiveOption = (_index: number) => {
       options.forEach((option, i) => {
-        if (i === index) {
+        if (i === _index) {
           option.setAttribute('aria-selected', 'true');
           input.setAttribute('aria-activedescendant', option.id || `option-${i}`);
         } else {

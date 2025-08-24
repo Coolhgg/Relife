@@ -126,8 +126,8 @@ export class PremiumVoiceService {
         enhancedMessage,
         'enhanced-web-speech'
       );
-    } catch (error) {
-      console.error('Premium voice generation failed:', error);
+    } catch (_error) {
+      console._error('Premium voice generation failed:', _error);
       // Fallback to regular voice service
       return await VoiceService.generateAlarmSpeech(alarm, customMessage);
     }
@@ -178,9 +178,9 @@ export class PremiumVoiceService {
         'enhanced-web-speech',
         settings
       );
-    } catch (error) {
-      console.error('Custom voice generation failed:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Custom voice generation failed:', _error);
+      throw _error;
     }
   }
 
@@ -450,8 +450,8 @@ export class PremiumVoiceService {
         provider,
         nuclearSettings
       );
-    } catch (error) {
-      console.error('Nuclear mode voice generation failed:', error);
+    } catch (_error) {
+      console._error('Nuclear mode voice generation failed:', _error);
       // Fallback to regular demon-lord voice without effects
       return await VoiceService.generateCustomMessage(
         nuclearMessage,

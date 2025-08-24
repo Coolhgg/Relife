@@ -205,14 +205,31 @@ export interface SupabaseUpdateUserRequest {
 /**
  * Supabase filter operators
  */
-export type SupabaseFilterOperator = 
-  | 'eq' | 'neq' | 'gt' | 'gte' | 'lt' | 'lte'
-  | 'like' | 'ilike' | 'is' | 'in' | 'contains'
-  | 'containedBy' | 'rangeGt' | 'rangeGte'
-  | 'rangeLt' | 'rangeLte' | 'rangeAdjacent'
-  | 'overlaps' | 'strictlyLeft' | 'strictlyRight'
-  | 'notStrictlyRight' | 'notStrictlyLeft'
-  | 'textSearch' | 'match';
+export type SupabaseFilterOperator =
+  | 'eq'
+  | 'neq'
+  | 'gt'
+  | 'gte'
+  | 'lt'
+  | 'lte'
+  | 'like'
+  | 'ilike'
+  | 'is'
+  | 'in'
+  | 'contains'
+  | 'containedBy'
+  | 'rangeGt'
+  | 'rangeGte'
+  | 'rangeLt'
+  | 'rangeLte'
+  | 'rangeAdjacent'
+  | 'overlaps'
+  | 'strictlyLeft'
+  | 'strictlyRight'
+  | 'notStrictlyRight'
+  | 'notStrictlyLeft'
+  | 'textSearch'
+  | 'match';
 
 /**
  * Supabase query filter
@@ -260,7 +277,7 @@ export interface SupabaseBulkRequest<T> {
  */
 export interface SupabaseBulkResponse<T> {
   data: T[];
-  error: {
+  _error: {
     message: string;
     details: string;
     hint: string;
@@ -268,11 +285,7 @@ export interface SupabaseBulkResponse<T> {
   } | null;
   count: number;
   success: boolean;
-  failed: Array<{
-    index: number;
-    error: string;
-    data: T;
-  }>;
+  failed: Array<{ _index: number; _error: string; data: T }>;
 }
 
 // =============================================================================
@@ -422,10 +435,12 @@ export interface UserServiceResponse {
 export interface BattleServiceResponse {
   battles: ApiResponse<DatabaseBattle[]>;
   battle: ApiResponse<DatabaseBattle & { participants: DatabaseBattleParticipant[] }>;
-  leaderboard: ApiResponse<Array<{
-    user: DatabaseUser;
-    participant: DatabaseBattleParticipant;
-  }>>;
+  leaderboard: ApiResponse<
+    Array<{
+      user: DatabaseUser;
+      participant: DatabaseBattleParticipant;
+    }>
+  >;
 }
 
 // =============================================================================
@@ -491,7 +506,7 @@ export interface SupabasePerformanceMetrics {
   rowsAffected: number;
   timestamp: string;
   success: boolean;
-  error?: string;
+  _error?: string;
   queryPlan?: {
     cost: number;
     rows: number;

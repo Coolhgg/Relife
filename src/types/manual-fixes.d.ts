@@ -1,20 +1,20 @@
 /**
  * Manual Fixes - Placeholder Types
- * 
+ *
  * This file contains safe placeholder types for custom domain types that
  * may be referenced but not yet fully defined. These are temporary stubs
  * to prevent TypeScript compilation errors.
  */
 
 // Subscription tier placeholder
-export type SubscriptionTier = "free" | "premium" | "pro" | string;
+export type SubscriptionTier = 'free' | 'premium' | 'pro' | string;
 
 // Generic alarm interface placeholder
 export interface Alarm {
   [key: string]: any;
 }
 
-// Generic theme interface placeholder  
+// Generic theme interface placeholder
 export interface Theme {
   [key: string]: any;
 }

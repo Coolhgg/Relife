@@ -105,8 +105,8 @@ class PerformanceAnalyticsService {
 
       this.isInitialized = true;
       console.info('Performance analytics initialized successfully');
-    } catch (error) {
-      console.error('Failed to initialize performance analytics:', error);
+    } catch (_error) {
+      console._error('Failed to initialize performance analytics:', _error);
     }
   }
 
@@ -189,7 +189,7 @@ class PerformanceAnalyticsService {
    * Track API request performance
    */
   trackApiRequest(url: string, method: string, duration: number, status: number): void {
-    const category = status >= 400 ? 'error' : 'api';
+    const category = status >= 400 ? '_error' : 'api';
 
     this.trackMetric(
       'api_request',
@@ -441,8 +441,8 @@ class PerformanceAnalyticsService {
         });
         observer.observe({ entryTypes: [type] });
       }
-    } catch (error) {
-      console.warn(`Failed to observe ${type} performance entries:`, error);
+    } catch (_error) {
+      console.warn(`Failed to observe ${type} performance entries:`, _error);
     }
   }
 

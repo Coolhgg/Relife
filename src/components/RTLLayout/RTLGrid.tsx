@@ -139,7 +139,7 @@ const placeItemsClasses = {
   stretch: 'place-items-stretch',
 };
 
-export const RTLGrid: React.FC<RTLGridProps> = ({
+const RTLGrid: React.FC<RTLGridProps> = ({
   children,
   className,
   cols = 1,
@@ -233,3 +233,5 @@ export const RTLGrid: React.FC<RTLGridProps> = ({
     </Component>
   );
 };
+
+export default RTLGrid;

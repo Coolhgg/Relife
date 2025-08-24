@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /// <reference lib="dom" />
 /**
  * Advanced Network Optimization Utilities
@@ -226,8 +227,8 @@ class NetworkOptimizer {
           try {
             const result = await this.request(request);
             if (request.resolve) request.resolve(result);
-          } catch (error) {
-            if (request.reject) request.reject(error);
+          } catch (_error) {
+            if (request.reject) request.reject(_error);
           }
         })
       );
@@ -253,13 +254,13 @@ class NetworkOptimizer {
         this.recordResponseTime(responseTime);
 
         return response;
-      } catch (error) {
+      } catch (_error) {
         lastError = error as Error;
         this.stats.errorCount++;
 
         // Don't retry on 4xx errors (client errors)
-        if (error instanceof Error && error.message.includes('4')) {
-          throw error;
+        if (error instanceof Error && _error.message.includes('4')) {
+          throw _error;
         }
 
         // Wait before retry (exponential backoff)
@@ -506,7 +507,7 @@ export const networkOptimizer = new NetworkOptimizer();
  */
 export function useOptimizedRequest<T = any>() {
   const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<Error | null>(null);
+  const [_error, setError] = React.useState<Error | null>(null);
   const [data, setData] = React.useState<T | null>(null);
 
   const execute = React.useCallback(async (request: NetworkRequest) => {
@@ -519,8 +520,8 @@ export function useOptimizedRequest<T = any>() {
       return result;
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Request failed');
-      setError(error);
-      throw error;
+      setError(_error);
+      throw _error;
     } finally {
       setIsLoading(false);
     }
@@ -537,8 +538,8 @@ export function useOptimizedRequest<T = any>() {
         return result;
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Batch request failed');
-        setError(error);
-        throw error;
+        setError(_error);
+        throw _error;
       } finally {
         setIsLoading(false);
       }
@@ -552,14 +553,7 @@ export function useOptimizedRequest<T = any>() {
     setData(null);
   }, []);
 
-  return {
-    execute,
-    executeBatch,
-    reset,
-    isLoading,
-    error,
-    data,
-  };
+  return { execute, executeBatch, reset, isLoading, _error, data };
 }
 
 /**

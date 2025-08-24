@@ -156,11 +156,11 @@ export function useFocusTrap({
    * Handle keydown events for focus trapping
    */
   const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
+    (_event: KeyboardEvent) => {
       if (!isEnabled || !containerRef.current) return;
 
       // Handle Escape key
-      if (event.key === 'Escape' && onEscape) {
+      if (_event.key === 'Escape' && onEscape) {
         event.preventDefault();
         event.stopPropagation();
         onEscape();
@@ -168,7 +168,7 @@ export function useFocusTrap({
       }
 
       // Only trap Tab key
-      if (event.key !== 'Tab') return;
+      if (_event.key !== 'Tab') return;
 
       const focusableElements = getFocusableElements(containerRef.current);
 
@@ -190,14 +190,14 @@ export function useFocusTrap({
       }
 
       // Tab backwards from first element - go to last
-      if (event.shiftKey && currentFocused === firstElement) {
+      if (_event.shiftKey && currentFocused === firstElement) {
         event.preventDefault();
         lastElement.focus({ preventScroll });
         return;
       }
 
       // Tab forwards from last element - go to first
-      if (!event.shiftKey && currentFocused === lastElement) {
+      if (!_event.shiftKey && currentFocused === lastElement) {
         event.preventDefault();
         firstElement.focus({ preventScroll });
         return;
@@ -210,7 +210,7 @@ export function useFocusTrap({
    * Handle click events outside the focus trap
    */
   const handleOutsideClick = useCallback(
-    (event: MouseEvent) => {
+    (_event: MouseEvent) => {
       if (!isEnabled || !containerRef.current || allowOutsideClick) return;
 
       const target = event.target as HTMLElement;

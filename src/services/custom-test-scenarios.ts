@@ -82,7 +82,7 @@ export const voiceFeaturesTests: TestScenario[] = [
     priority: 'high',
     context: 'voice',
     tags: ['voice', 'error', 'fallback', 'retry'],
-    expectedBehavior: 'Should announce error with helpful recovery message',
+    expectedBehavior: 'Should announce _error with helpful recovery message',
     userTypes: ['premium'],
   },
   {
@@ -432,8 +432,8 @@ export function getEnabledCustomCategories(): Record<string, TestCategory> {
   const enabledCategories: Record<string, TestCategory> = {};
 
   Object.entries(customTestCategories).forEach(([key, category]) => {
-    const config = customCategoryConfig[key];
-    if (config?.enabled) {
+    const _config = customCategoryConfig[key];
+    if (_config?.enabled) {
       enabledCategories[key] = category;
     }
   });
@@ -449,7 +449,7 @@ export function filterTestsByFeatureAccess(
   isPremium: boolean
 ): TestScenario[] {
   return tests.filter(test => {
-    // If test specifies user types, check if current user type is included
+    // If test specifies user types, check if current _user type is included
     if (test.userTypes && test.userTypes.length > 0) {
       const userType = isPremium ? 'premium' : 'standard';
       return test.userTypes.includes(userType);
@@ -467,10 +467,10 @@ export function getAllCustomTests(isPremium: boolean = false): TestScenario[] {
   let allTests: TestScenario[] = [];
 
   Object.entries(enabledCategories).forEach(([key, category]) => {
-    const config = customCategoryConfig[key];
+    const _config = customCategoryConfig[key];
 
     // Check if user has access to premium categories
-    if (config?.requiresPremium && !isPremium) {
+    if (_config?.requiresPremium && !isPremium) {
       return; // Skip premium categories for non-premium users
     }
 

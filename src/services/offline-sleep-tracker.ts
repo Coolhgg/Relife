@@ -165,8 +165,8 @@ export class OfflineSleepTracker {
         this.sleepSessions.length,
         'sleep sessions'
       );
-    } catch (error) {
-      console.error('[OfflineSleepTracker] Failed to load from storage:', error);
+    } catch (_error) {
+      console._error('[OfflineSleepTracker] Failed to load from storage:', _error);
     }
   }
 
@@ -177,8 +177,8 @@ export class OfflineSleepTracker {
     // Listen for service worker messages
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', event => {
-        if (event.data.type === 'SLEEP_SYNC_COMPLETE') {
-          this.handleSyncComplete(event.data);
+        if (_event.data.type === 'SLEEP_SYNC_COMPLETE') {
+          this.handleSyncComplete(_event.data);
         }
       });
     }
@@ -259,8 +259,8 @@ export class OfflineSleepTracker {
 
       console.log('[OfflineSleepTracker] Started sleep tracking:', session.id);
       return session.id;
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to start sleep tracking', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to start sleep tracking', {
         context: 'OfflineSleepTracker.startSleepTracking',
       });
       throw error;
@@ -328,8 +328,8 @@ export class OfflineSleepTracker {
         'minutes'
       );
       return completedSession;
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to end sleep tracking', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to end sleep tracking', {
         context: 'OfflineSleepTracker.endSleepTracking',
       });
       return null;
@@ -542,8 +542,8 @@ export class OfflineSleepTracker {
       }
 
       await this.saveToStorage();
-    } catch (error) {
-      console.error('[OfflineSleepTracker] Failed to update goals progress:', error);
+    } catch (_error) {
+      console._error('[OfflineSleepTracker] Failed to update goals progress:', _error);
     }
   }
 
@@ -584,8 +584,8 @@ export class OfflineSleepTracker {
       };
 
       await this.saveToStorage();
-    } catch (error) {
-      console.error('[OfflineSleepTracker] Failed to update sleep analytics:', error);
+    } catch (_error) {
+      console._error('[OfflineSleepTracker] Failed to update sleep analytics:', _error);
     }
   }
 
@@ -760,8 +760,8 @@ export class OfflineSleepTracker {
           'new insights'
         );
       }
-    } catch (error) {
-      console.error('[OfflineSleepTracker] Failed to generate insights:', error);
+    } catch (_error) {
+      console._error('[OfflineSleepTracker] Failed to generate insights:', _error);
     }
   }
 
@@ -796,11 +796,11 @@ export class OfflineSleepTracker {
         try {
           await this.syncSleepSession(session);
           session.synced = true;
-        } catch (error) {
-          console.error(
+        } catch (_error) {
+          console._error(
             '[OfflineSleepTracker] Failed to sync session:',
             session.id,
-            error
+            _error
           );
         }
       }
@@ -813,8 +813,8 @@ export class OfflineSleepTracker {
           'sleep sessions'
         );
       }
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Sleep tracking sync failed', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Sleep tracking sync failed', {
         context: 'OfflineSleepTracker.syncWithServer',
       });
     }
@@ -880,8 +880,8 @@ export class OfflineSleepTracker {
           this.sleepAnalytics
         );
       }
-    } catch (error) {
-      console.error('[OfflineSleepTracker] Failed to save to storage:', error);
+    } catch (_error) {
+      console._error('[OfflineSleepTracker] Failed to save to storage:', _error);
     }
   }
 
@@ -895,8 +895,8 @@ export class OfflineSleepTracker {
       } else {
         SecurityService.secureStorageRemove(this.STORAGE_KEYS.CURRENT_SESSION);
       }
-    } catch (error) {
-      console.error('[OfflineSleepTracker] Failed to save current session:', error);
+    } catch (_error) {
+      console._error('[OfflineSleepTracker] Failed to save current session:', _error);
     }
   }
 
@@ -939,8 +939,8 @@ export class OfflineSleepTracker {
       this.initializeDefaultGoals();
 
       console.log('[OfflineSleepTracker] Cleared all offline sleep data');
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to clear offline sleep data', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to clear offline sleep data', {
         context: 'OfflineSleepTracker.clearOfflineData',
       });
     }

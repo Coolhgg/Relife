@@ -18,7 +18,7 @@ interface AnimatedInputProps {
   onChange: (value: string) => void;
   onFocus?: () => void;
   onBlur?: () => void;
-  error?: string;
+  _error?: string;
   disabled?: boolean;
   icon?: React.ReactNode;
   className?: string;
@@ -32,7 +32,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
   onChange,
   onFocus,
   onBlur,
-  error,
+  _error,
   disabled = false,
   icon,
   className = '',
@@ -64,7 +64,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
           ${
             isFocused
               ? 'border-blue-500 shadow-lg shadow-blue-500/10'
-              : error
+              : _error
                 ? 'border-red-300 shadow-lg shadow-red-500/10'
                 : 'border-gray-200 hover:border-gray-300'
           }
@@ -107,12 +107,12 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
         <motion.label
           className={`
             absolute left-${icon ? '12' : '4'} pointer-events-none select-none font-medium
-            ${isFocused ? 'text-blue-500' : error ? 'text-red-500' : 'text-gray-500'}
+            ${isFocused ? 'text-blue-500' : _error ? 'text-red-500' : 'text-gray-500'}
           `}
           animate={{
             y: isFocused || hasValue ? -28 : 0,
             scale: isFocused || hasValue ? 0.85 : 1,
-            color: isFocused ? '#3B82F6' : error ? '#EF4444' : '#6B7280',
+            color: isFocused ? '#3B82F6' : _error ? '#EF4444' : '#6B7280',
           }}
           transition={{
             type: 'spring' as const,
@@ -132,7 +132,9 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
           type={type}
           placeholder={isFocused ? placeholder : ''}
           value={value}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange(e.target.value)
+          }
           onFocus={handleFocus}
           onBlur={handleBlur}
           disabled={disabled}
@@ -161,7 +163,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
 
       {/* Error message */}
       <AnimatePresence>
-        {error && (
+        {_error && (
           <motion.div
             className="mt-2 text-sm text-red-500 flex items-center space-x-2"
             initial={{ opacity: 0, y: -10, height: 0 }}
@@ -180,14 +182,14 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
             >
               ⚠️
             </motion.span>
-            <span>{error}</span>
+            <span>{_error}</span>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Success indicator */}
       <AnimatePresence>
-        {!error && hasValue && !isFocused && (
+        {!_error && hasValue && !isFocused && (
           <motion.div
             className="absolute right-4 top-1/2 transform -translate-y-1/2 text-green-500"
             initial={{ scale: 0, opacity: 0 }}
@@ -223,7 +225,7 @@ interface AnimatedSelectProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  error?: string;
+  _error?: string;
   disabled?: boolean;
   className?: string;
 }
@@ -234,7 +236,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
   value,
   onChange,
   placeholder = 'Select an option...',
-  error,
+  _error,
   disabled = false,
   className = '',
 }) => {
@@ -258,7 +260,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
           ${
             isOpen || selectedOption
               ? 'text-blue-500'
-              : error
+              : _error
                 ? 'text-red-500'
                 : 'text-gray-500'
           }
@@ -266,7 +268,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
         animate={{
           y: isOpen || selectedOption ? -28 : 16,
           scale: isOpen || selectedOption ? 0.85 : 1,
-          color: isOpen ? '#3B82F6' : error ? '#EF4444' : '#6B7280',
+          color: isOpen ? '#3B82F6' : _error ? '#EF4444' : '#6B7280',
         }}
         transition={{
           type: 'spring' as const,
@@ -289,7 +291,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
           ${
             isOpen
               ? 'border-blue-500 shadow-lg shadow-blue-500/10'
-              : error
+              : _error
                 ? 'border-red-300 shadow-lg shadow-red-500/10'
                 : 'border-gray-200 hover:border-gray-300'
           }
@@ -375,7 +377,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
               damping: 25,
             }}
           >
-            {options.map((option, index) => (
+            {options.map((option, _index) => (
               <motion.button
                 key={option.value}
                 type="button"
@@ -383,7 +385,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
                 onClick={() => handleSelect(option)}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05, duration: 0.2 }}
+                transition={{ delay: _index * 0.05, duration: 0.2 }}
                 whileHover={{ x: 4 }}
               >
                 {option.icon && <div className="text-gray-500">{option.icon}</div>}
@@ -406,7 +408,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
 
       {/* Error message */}
       <AnimatePresence>
-        {error && (
+        {_error && (
           <motion.div
             className="mt-2 text-sm text-red-500 flex items-center space-x-2"
             initial={{ opacity: 0, y: -10 }}
@@ -415,7 +417,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
             transition={{ duration: 0.2 }}
           >
             <span>⚠️</span>
-            <span>{error}</span>
+            <span>{_error}</span>
           </motion.div>
         )}
       </AnimatePresence>

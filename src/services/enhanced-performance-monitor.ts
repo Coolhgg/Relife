@@ -9,7 +9,7 @@ import {
   PerformanceMonitorInterface,
   ServiceConfig,
   ServiceHealth,
-  AnalyticsServiceInterface
+  AnalyticsServiceInterface,
 } from '../types/service-architecture';
 
 // ============================================================================
@@ -21,12 +21,12 @@ export interface PerformanceMonitorConfig extends ServiceConfig {
   metricsCollectionInterval: number; // milliseconds
   alertingInterval: number; // milliseconds
   reportingInterval: number; // milliseconds
-  
+
   // Storage and retention
   maxMetricsInMemory: number;
   metricsRetentionDays: number;
   enablePersistentStorage: boolean;
-  
+
   // Web Vitals thresholds
   webVitalsThresholds: {
     LCP: { good: number; poor: number };
@@ -35,18 +35,18 @@ export interface PerformanceMonitorConfig extends ServiceConfig {
     FCP: { good: number; poor: number };
     TTFB: { good: number; poor: number };
   };
-  
+
   // Custom metric thresholds
   customThresholds: Record<string, ThresholdConfig>;
-  
+
   // Alerting configuration
   alertingEnabled: boolean;
   alertChannels: AlertChannel[];
   severityLevels: SeverityLevel[];
-  
+
   // Performance budgets
   performanceBudgets: PerformanceBudget[];
-  
+
   // Feature flags
   enableWebVitalsTracking: boolean;
   enableResourceTracking: boolean;
@@ -191,7 +191,10 @@ export interface AppInfo {
 // Enhanced Performance Monitor Implementation
 // ============================================================================
 
-export class EnhancedPerformanceMonitor extends BaseService implements PerformanceMonitorInterface {
+export class EnhancedPerformanceMonitor
+  extends BaseService
+  implements PerformanceMonitorInterface
+{
   private sessionId: string;
   private webVitals: Partial<WebVitalsMetrics> = {};
   private interactions: UserInteraction[] = [];
@@ -202,18 +205,21 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
   private alerts: PerformanceAlert[] = [];
   private observers = new Map<string, PerformanceObserver>();
   private timers = new Map<string, { start: number; tags?: Record<string, string> }>();
-  
+
   private metricsInterval: NodeJS.Timeout | null = null;
   private alertingInterval: NodeJS.Timeout | null = null;
   private reportingInterval: NodeJS.Timeout | null = null;
-  
+
   private cache: CacheProvider;
   private dependencies: PerformanceMonitorDependencies;
 
-  constructor(dependencies: PerformanceMonitorDependencies, config: PerformanceMonitorConfig) {
-    super('PerformanceMonitor', '2.0.0', config);
+  constructor(
+    dependencies: PerformanceMonitorDependencies,
+    _config: PerformanceMonitorConfig
+  ) {
+    super('PerformanceMonitor', '2.0.0', _config);
     this.dependencies = dependencies;
-    this.cache = getCacheManager().getProvider(config.caching?.strategy || 'memory');
+    this.cache = getCacheManager().getProvider(_config.caching?.strategy || 'memory');
     this.sessionId = this.generateSessionId();
   }
 
@@ -229,73 +235,85 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       maxMetricsInMemory: 1000,
       metricsRetentionDays: 7,
       enablePersistentStorage: true,
-      
+
       webVitalsThresholds: {
         LCP: { good: 2500, poor: 4000 },
         FID: { good: 100, poor: 300 },
         CLS: { good: 0.1, poor: 0.25 },
         FCP: { good: 1800, poor: 3000 },
-        TTFB: { good: 800, poor: 1800 }
+        TTFB: { good: 800, poor: 1800 },
       },
-      
+
       customThresholds: {
-        'page_load_time': {
+        page_load_time: {
           good: 3000,
           poor: 5000,
           metric: 'page_load_time',
           unit: 'ms',
           alertOnExceeded: true,
-          consecutiveFailures: 3
+          consecutiveFailures: 3,
         },
-        'api_response_time': {
+        api_response_time: {
           good: 500,
           poor: 2000,
           metric: 'api_response_time',
           unit: 'ms',
           alertOnExceeded: true,
-          consecutiveFailures: 2
-        }
+          consecutiveFailures: 2,
+        },
       },
-      
+
       alertingEnabled: true,
       alertChannels: [
         {
           type: 'console',
           enabled: true,
-          severityFilter: ['medium', 'high', 'critical']
+          severityFilter: ['medium', 'high', 'critical'],
         },
         {
           type: 'analytics',
           enabled: true,
-          severityFilter: ['high', 'critical']
-        }
+          severityFilter: ['high', 'critical'],
+        },
       ],
-      
+
       severityLevels: [
         { name: 'low', threshold: 0.7, description: 'Minor performance degradation' },
-        { name: 'medium', threshold: 0.85, description: 'Noticeable performance impact' },
-        { name: 'high', threshold: 0.95, description: 'Significant performance issues' },
-        { name: 'critical', threshold: 1.0, description: 'Critical performance failure' }
+        {
+          name: 'medium',
+          threshold: 0.85,
+          description: 'Noticeable performance impact',
+        },
+        {
+          name: 'high',
+          threshold: 0.95,
+          description: 'Significant performance issues',
+        },
+        {
+          name: 'critical',
+          threshold: 1.0,
+          description: 'Critical performance failure',
+        },
       ],
-      
+
       performanceBudgets: [
         {
           name: 'Page Load Budget',
           metrics: ['LCP', 'FCP', 'page_load_time'],
           limit: 5000,
           timeWindow: 60000,
-          alertOnExceeded: true
-        }
+          alertOnExceeded: true,
+        },
       ],
-      
+
       enableWebVitalsTracking: true,
       enableResourceTracking: true,
       enableMemoryTracking: true,
       enableErrorTracking: true,
       enableUserInteractionTracking: true,
       enableNetworkTracking: true,
-      
-      ...super.getDefaultConfig?.() || {}
+
+      ...(super.getDefaultConfig?.() || {}),
     };
   }
 
@@ -304,23 +322,23 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
 
     try {
       // Set up performance tracking
-      if ((this.config as PerformanceMonitorConfig).enableWebVitalsTracking) {
+      if ((this._config as PerformanceMonitorConfig).enableWebVitalsTracking) {
         this.setupWebVitalsTracking();
       }
-      
-      if ((this.config as PerformanceMonitorConfig).enableResourceTracking) {
+
+      if ((this._config as PerformanceMonitorConfig).enableResourceTracking) {
         this.setupResourceTracking();
       }
-      
-      if ((this.config as PerformanceMonitorConfig).enableMemoryTracking) {
+
+      if ((this._config as PerformanceMonitorConfig).enableMemoryTracking) {
         this.setupMemoryTracking();
       }
-      
-      if ((this.config as PerformanceMonitorConfig).enableUserInteractionTracking) {
+
+      if ((this._config as PerformanceMonitorConfig).enableUserInteractionTracking) {
         this.setupUserInteractionTracking();
       }
-      
-      if ((this.config as PerformanceMonitorConfig).enableNetworkTracking) {
+
+      if ((this._config as PerformanceMonitorConfig).enableNetworkTracking) {
         this.setupNetworkTracking();
       }
 
@@ -332,14 +350,13 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
 
       this.emit('performance:initialized', {
         sessionId: this.sessionId,
-        trackingEnabled: this.getEnabledFeatures()
+        trackingEnabled: this.getEnabledFeatures(),
       });
 
       this.recordMetric('initialize_duration', this.endTimer(timerId) || 0);
-
-    } catch (error) {
-      this.handleError(error, 'Failed to initialize PerformanceMonitor');
-      throw error;
+    } catch (_error) {
+      this.handleError(_error, 'Failed to initialize PerformanceMonitor');
+      throw _error;
     }
   }
 
@@ -350,12 +367,12 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
         clearInterval(this.metricsInterval);
         this.metricsInterval = null;
       }
-      
+
       if (this.alertingInterval) {
         clearInterval(this.alertingInterval);
         this.alertingInterval = null;
       }
-      
+
       if (this.reportingInterval) {
         clearInterval(this.reportingInterval);
         this.reportingInterval = null;
@@ -379,25 +396,24 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       this.resourceMetrics = [];
       this.memoryMetrics = [];
       this.alerts = [];
-
-    } catch (error) {
-      this.handleError(error, 'Failed to cleanup PerformanceMonitor');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to cleanup PerformanceMonitor');
     }
   }
 
   public async getHealth(): Promise<ServiceHealth> {
     const baseHealth = await super.getHealth();
-    
-    const config = this.config as PerformanceMonitorConfig;
+
+    const config = this._config as PerformanceMonitorConfig;
     const metricsCount = this.customMetrics.length;
     const alertsCount = this.alerts.filter(a => !a.resolved).length;
-    
+
     // Determine health based on metrics count and active alerts
     let status = baseHealth.status;
-    if (metricsCount > config.maxMetricsInMemory * 0.8) {
+    if (metricsCount > _config.maxMetricsInMemory * 0.8) {
       status = 'degraded';
     }
-    if (alertsCount > 10 || metricsCount >= config.maxMetricsInMemory) {
+    if (alertsCount > 10 || metricsCount >= _config.maxMetricsInMemory) {
       status = 'unhealthy';
     }
 
@@ -405,13 +421,13 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       ...baseHealth,
       status,
       metrics: {
-        ...baseHealth.metrics || {},
+        ...(baseHealth.metrics || {}),
         sessionId: this.sessionId,
         metricsCount,
         activeAlerts: alertsCount,
         webVitalsTracked: Object.keys(this.webVitals).length,
-        observersActive: this.observers.size
-      }
+        observersActive: this.observers.size,
+      },
     };
   }
 
@@ -419,26 +435,32 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
   // PerformanceMonitorInterface Implementation
   // ============================================================================
 
-  public recordMetric(name: string, value: number, tags?: Record<string, string>): void {
+  public recordMetric(
+    name: string,
+    value: number,
+    tags?: Record<string, string>
+  ): void {
     const metric: PerformanceMetric = {
       name,
       value,
       timestamp: new Date(),
       tags,
-      severity: this.determineSeverity(name, value)
+      severity: this.determineSeverity(name, value),
     };
 
     // Add threshold info if available
     const config = this.config as PerformanceMonitorConfig;
-    if (config.customThresholds[name]) {
-      metric.threshold = config.customThresholds[name];
+    if (_config.customThresholds[name]) {
+      metric.threshold = _config.customThresholds[name];
     }
 
     this.customMetrics.push(metric);
 
     // Check memory limit
-    if (this.customMetrics.length > config.maxMetricsInMemory) {
-      this.customMetrics = this.customMetrics.slice(-Math.floor(config.maxMetricsInMemory * 0.8));
+    if (this.customMetrics.length > _config.maxMetricsInMemory) {
+      this.customMetrics = this.customMetrics.slice(
+        -Math.floor(_config.maxMetricsInMemory * 0.8)
+      );
     }
 
     // Check for threshold violations
@@ -454,7 +476,7 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
 
     this.recordMetric(`web_vital_${name.toLowerCase()}`, value, {
       category: 'web_vitals',
-      vital: name
+      vital: name,
     });
 
     // Check Web Vitals threshold
@@ -463,18 +485,18 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
 
   public setThreshold(metric: string, threshold: number): void {
     const config = this.config as PerformanceMonitorConfig;
-    
-    if (!config.customThresholds[metric]) {
-      config.customThresholds[metric] = {
+
+    if (!_config.customThresholds[metric]) {
+      _config.customThresholds[metric] = {
         good: threshold * 0.7,
         poor: threshold,
         metric,
         unit: 'ms',
         alertOnExceeded: true,
-        consecutiveFailures: 3
+        consecutiveFailures: 3,
       };
     } else {
-      config.customThresholds[metric].poor = threshold;
+      _config.customThresholds[metric].poor = threshold;
     }
 
     this.emit('performance:threshold_updated', { metric, threshold });
@@ -484,8 +506,9 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
     let metrics = [...this.customMetrics];
 
     if (timeRange) {
-      metrics = metrics.filter(metric => 
-        metric.timestamp >= timeRange.start && metric.timestamp <= timeRange.end
+      metrics = metrics.filter(
+        metric =>
+          metric.timestamp >= timeRange.start && metric.timestamp <= timeRange.end
       );
     }
 
@@ -496,13 +519,15 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       resourceMetrics: this.resourceMetrics,
       memoryMetrics: this.memoryMetrics,
       networkMetrics: this.networkMetrics,
-      alerts: this.alerts.filter(alert => 
-        !timeRange || (alert.timestamp >= timeRange.start && alert.timestamp <= timeRange.end)
-      )
+      alerts: this.alerts.filter(
+        alert =>
+          !timeRange ||
+          (alert.timestamp >= timeRange.start && alert.timestamp <= timeRange.end)
+      ),
     };
   }
 
-  public async createAlert(config: any): Promise<string> {
+  public async createAlert(_config: any): Promise<string> {
     const alert: PerformanceAlert = {
       id: this.generateAlertId(),
       metric: config.metric,
@@ -511,8 +536,8 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       severity: config.severity || 'medium',
       timestamp: new Date(),
       resolved: false,
-      description: config.description || `${config.metric} exceeded threshold`,
-      tags: config.tags
+      description: config.description || `${_config.metric} exceeded threshold`,
+      tags: config.tags,
     };
 
     this.alerts.push(alert);
@@ -531,10 +556,10 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
 
   public startTimer(operation: string, tags?: Record<string, string>): string {
     const timerId = `${operation}_${Date.now()}_${Math.random().toString(36).substring(2)}`;
-    
+
     this.timers.set(timerId, {
       start: performance.now(),
-      tags
+      tags,
     });
 
     return timerId;
@@ -551,18 +576,22 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
     const operation = timerId.split('_')[0];
     this.recordMetric(`${operation}_duration`, duration, {
       ...timer.tags,
-      category: 'timing'
+      category: 'timing',
     });
 
     return duration;
   }
 
-  public trackUserInteraction(type: UserInteraction['type'], target: string, metadata?: any): void {
+  public trackUserInteraction(
+    type: UserInteraction['type'],
+    target: string,
+    metadata?: any
+  ): void {
     const interaction: UserInteraction = {
       type,
       target,
       timestamp: new Date(),
-      metadata
+      metadata,
     };
 
     this.interactions.push(interaction);
@@ -575,7 +604,7 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
     this.recordMetric('user_interaction', 1, {
       interaction_type: type,
       target,
-      category: 'user_behavior'
+      category: 'user_behavior',
     });
   }
 
@@ -591,7 +620,7 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       networkMetrics: [...this.networkMetrics],
       alerts: [...this.alerts],
       deviceInfo: this.getDeviceInfo(),
-      appInfo: this.getAppInfo()
+      appInfo: this.getAppInfo(),
     };
 
     // Save report to cache
@@ -603,7 +632,7 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
         sessionId: this.sessionId,
         metricsCount: report.customMetrics.length,
         alertsCount: report.alerts.length,
-        webVitalsCount: Object.keys(report.webVitals).length
+        webVitalsCount: Object.keys(report.webVitals).length,
       });
     }
 
@@ -678,15 +707,16 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       this.observers.set('paint', paintObserver);
 
       // Time to First Byte (TTFB)
-      const navigationEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+      const navigationEntries = performance.getEntriesByType(
+        'navigation'
+      ) as PerformanceNavigationTiming[];
       if (navigationEntries.length > 0) {
         const navEntry = navigationEntries[0];
         const ttfb = navEntry.responseStart - navEntry.requestStart;
         this.recordWebVital('TTFB', ttfb);
       }
-
-    } catch (error) {
-      this.handleError(error, 'Failed to setup web vitals tracking');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to setup web vitals tracking');
     }
   }
 
@@ -702,7 +732,7 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
             size: entry.transferSize || 0,
             loadTime: entry.responseEnd - entry.startTime,
             timestamp: new Date(),
-            cached: entry.transferSize === 0 && entry.decodedBodySize > 0
+            cached: entry.transferSize === 0 && entry.decodedBodySize > 0,
           };
 
           this.resourceMetrics.push(resourceMetric);
@@ -715,16 +745,15 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
           this.recordMetric('resource_load_time', resourceMetric.loadTime, {
             resource_type: resourceMetric.type,
             cached: resourceMetric.cached.toString(),
-            category: 'resources'
+            category: 'resources',
           });
         });
       });
 
       resourceObserver.observe({ entryTypes: ['resource'] });
       this.observers.set('resource', resourceObserver);
-
-    } catch (error) {
-      this.handleError(error, 'Failed to setup resource tracking');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to setup resource tracking');
     }
   }
 
@@ -737,7 +766,7 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
         usedJSHeapSize: memory.usedJSHeapSize,
         totalJSHeapSize: memory.totalJSHeapSize,
         jsHeapSizeLimit: memory.jsHeapSizeLimit,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.memoryMetrics.push(memoryMetric);
@@ -748,10 +777,11 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       }
 
       this.recordMetric('memory_usage', memoryMetric.usedJSHeapSize, {
-        category: 'memory'
+        category: 'memory',
       });
 
-      this.recordMetric('memory_usage_percent', 
+      this.recordMetric(
+        'memory_usage_percent',
         (memoryMetric.usedJSHeapSize / memoryMetric.jsHeapSizeLimit) * 100,
         { category: 'memory' }
       );
@@ -759,20 +789,20 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
 
     // Track memory immediately and then periodically
     trackMemory();
-    
+
     const memoryInterval = setInterval(trackMemory, 30000); // Every 30 seconds
-    
+
     // Store interval for cleanup
     (this as any).memoryInterval = memoryInterval;
   }
 
   private setupUserInteractionTracking(): void {
     // Track clicks
-    document.addEventListener('click', (event) => {
-      const target = this.getElementIdentifier(event.target as Element);
+    document.addEventListener('click', _event => {
+      const target = this.getElementIdentifier(_event.target as Element);
       this.trackUserInteraction('click', target, {
         x: event.clientX,
-        y: event.clientY
+        y: _event.clientY,
       });
     });
 
@@ -783,14 +813,14 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       scrollTimeout = setTimeout(() => {
         this.trackUserInteraction('scroll', 'document', {
           scrollY: window.scrollY,
-          scrollX: window.scrollX
+          scrollX: window.scrollX,
         });
       }, 100);
     });
 
     // Track input events
-    document.addEventListener('input', (event) => {
-      const target = this.getElementIdentifier(event.target as Element);
+    document.addEventListener('input', _event => {
+      const target = this.getElementIdentifier(_event.target as Element);
       this.trackUserInteraction('input', target);
     });
   }
@@ -799,14 +829,14 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
     if (!('connection' in navigator)) return;
 
     const connection = (navigator as any).connection;
-    
+
     const trackNetwork = () => {
       const networkMetric: NetworkMetric = {
         type: connection.type || 'unknown',
         effectiveType: connection.effectiveType || 'unknown',
         downlink: connection.downlink || 0,
         rtt: connection.rtt || 0,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.networkMetrics.push(networkMetric);
@@ -818,7 +848,7 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       this.recordMetric('network_downlink', networkMetric.downlink, {
         network_type: networkMetric.type,
         effective_type: networkMetric.effectiveType,
-        category: 'network'
+        category: 'network',
       });
     };
 
@@ -827,28 +857,28 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
   }
 
   private startPeriodicTasks(): void {
-    const config = this.config as PerformanceMonitorConfig;
+    const config = this._config as PerformanceMonitorConfig;
 
     // Metrics collection
     this.metricsInterval = setInterval(() => {
-      this.collectPeriodicMetrics().catch(error =>
-        this.handleError(error, 'Failed in periodic metrics collection')
+      this.collectPeriodicMetrics().catch(_error =>
+        this.handleError(_error, 'Failed in periodic metrics collection')
       );
     }, config.metricsCollectionInterval);
 
     // Alerting
-    if (config.alertingEnabled) {
+    if (_config.alertingEnabled) {
       this.alertingInterval = setInterval(() => {
-        this.checkPerformanceBudgets().catch(error =>
-          this.handleError(error, 'Failed in alerting check')
+        this.checkPerformanceBudgets().catch(_error =>
+          this.handleError(_error, 'Failed in alerting check')
         );
       }, config.alertingInterval);
     }
 
     // Reporting
     this.reportingInterval = setInterval(() => {
-      this.generatePerformanceReport().catch(error =>
-        this.handleError(error, 'Failed to generate performance report')
+      this.generatePerformanceReport().catch(_error =>
+        this.handleError(_error, 'Failed to generate performance report')
       );
     }, config.reportingInterval);
   }
@@ -856,33 +886,37 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
   private async collectPeriodicMetrics(): Promise<void> {
     // Collect current performance metrics
     this.recordMetric('session_duration', Date.now() - performance.timeOrigin, {
-      category: 'session'
+      category: 'session',
     });
 
     // Check memory if available
     if ('memory' in performance) {
       const memory = (performance as any).memory;
-      this.recordMetric('heap_usage_percent', 
+      this.recordMetric(
+        'heap_usage_percent',
         (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100
       );
     }
 
     // Record active observers
     this.recordMetric('active_observers', this.observers.size, {
-      category: 'monitoring'
+      category: 'monitoring',
     });
   }
 
   private async checkPerformanceBudgets(): Promise<void> {
-    const config = this.config as PerformanceMonitorConfig;
-    
-    for (const budget of config.performanceBudgets) {
-      const recentMetrics = this.customMetrics.filter(metric =>
-        budget.metrics.includes(metric.name) &&
-        Date.now() - metric.timestamp.getTime() <= budget.timeWindow
+    const config = this._config as PerformanceMonitorConfig;
+
+    for (const budget of _config.performanceBudgets) {
+      const recentMetrics = this.customMetrics.filter(
+        metric =>
+          budget.metrics.includes(metric.name) &&
+          Date.now() - metric.timestamp.getTime() <= budget.timeWindow
       );
 
-      const averageValue = recentMetrics.reduce((sum, metric) => sum + metric.value, 0) / recentMetrics.length;
+      const averageValue =
+        recentMetrics.reduce((sum, metric) => sum + metric.value, 0) /
+        recentMetrics.length;
 
       if (averageValue > budget.limit && budget.alertOnExceeded) {
         await this.createAlert({
@@ -891,7 +925,7 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
           threshold: budget.limit,
           severity: 'high',
           description: `Performance budget exceeded: ${budget.name}`,
-          tags: { budget: budget.name, type: 'budget_violation' }
+          tags: { budget: budget.name, type: 'budget_violation' },
         });
       }
     }
@@ -899,18 +933,20 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
 
   private determineSeverity(metricName: string, value: number): SeverityLevel['name'] {
     const config = this.config as PerformanceMonitorConfig;
-    const threshold = config.customThresholds[metricName];
-    
+    const threshold = _config.customThresholds[metricName];
+
     if (!threshold) return 'low';
 
     const ratio = value / threshold.poor;
-    
-    for (const level of config.severityLevels.sort((a, b) => b.threshold - a.threshold)) {
+
+    for (const level of _config.severityLevels.sort(
+      (a, b) => b.threshold - a.threshold
+    )) {
       if (ratio >= level.threshold) {
         return level.name;
       }
     }
-    
+
     return 'low';
   }
 
@@ -924,15 +960,18 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
         threshold: metric.threshold.poor,
         severity: this.determineSeverity(metric.name, metric.value),
         description: `Threshold exceeded for ${metric.name}`,
-        tags: { ...metric.tags, type: 'threshold_violation' }
+        tags: { ...metric.tags, type: 'threshold_violation' },
       });
     }
   }
 
-  private checkWebVitalThreshold(vitalName: keyof WebVitalsMetrics, value: number): void {
+  private checkWebVitalThreshold(
+    vitalName: keyof WebVitalsMetrics,
+    value: number
+  ): void {
     const config = this.config as PerformanceMonitorConfig;
-    const threshold = config.webVitalsThresholds[vitalName];
-    
+    const threshold = _config.webVitalsThresholds[vitalName];
+
     if (!threshold) return;
 
     if (value > threshold.poor) {
@@ -942,15 +981,15 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
         threshold: threshold.poor,
         severity: 'high',
         description: `Poor Web Vital: ${vitalName}`,
-        tags: { vital: vitalName, category: 'web_vitals' }
+        tags: { vital: vitalName, category: 'web_vitals' },
       });
     }
   }
 
   private async processAlert(alert: PerformanceAlert): Promise<void> {
-    const config = this.config as PerformanceMonitorConfig;
+    const config = this._config as PerformanceMonitorConfig;
 
-    for (const channel of config.alertChannels) {
+    for (const channel of _config.alertChannels) {
       if (!channel.enabled || !channel.severityFilter.includes(alert.severity)) {
         continue;
       }
@@ -960,37 +999,43 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
           case 'console':
             console.warn(`[Performance Alert] ${alert.description}`, alert);
             break;
-            
+
           case 'analytics':
             if (this.dependencies.analyticsService) {
-              await this.dependencies.analyticsService.track('performance_alert_triggered', {
-                alertId: alert.id,
-                metric: alert.metric,
-                value: alert.value,
-                threshold: alert.threshold,
-                severity: alert.severity
-              });
+              await this.dependencies.analyticsService.track(
+                'performance_alert_triggered',
+                {
+                  alertId: alert.id,
+                  metric: alert.metric,
+                  value: alert.value,
+                  threshold: alert.threshold,
+                  severity: alert.severity,
+                }
+              );
             }
             break;
-            
+
           case 'notification':
             if (this.dependencies.notificationService) {
               await this.dependencies.notificationService.send({
                 title: 'Performance Alert',
                 message: alert.description,
-                severity: alert.severity
+                severity: alert.severity,
               });
             }
             break;
-            
+
           case 'webhook':
             if (channel.endpoint && this.dependencies.webhookService) {
               await this.dependencies.webhookService.send(channel.endpoint, alert);
             }
             break;
         }
-      } catch (error) {
-        this.handleError(error, 'Failed to process alert', { alertId: alert.id, channel: channel.type });
+      } catch (_error) {
+        this.handleError(_error, 'Failed to process alert', {
+          alertId: alert.id,
+          channel: channel.type,
+        });
       }
     }
   }
@@ -1000,12 +1045,12 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       userAgent: navigator.userAgent,
       viewport: {
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
       },
       connection: (navigator as any).connection?.effectiveType,
       memory: (performance as any).memory?.jsHeapSizeLimit,
       hardwareConcurrency: navigator.hardwareConcurrency,
-      devicePixelRatio: window.devicePixelRatio
+      devicePixelRatio: window.devicePixelRatio,
     };
   }
 
@@ -1014,27 +1059,27 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       version: '2.0.0',
       buildTime: new Date().toISOString(),
       features: this.getEnabledFeatures(),
-      environment: this.config.environment || 'development'
+      environment: this._config.environment || 'development',
     };
   }
 
   private getEnabledFeatures(): string[] {
-    const config = this.config as PerformanceMonitorConfig;
+    const config = this._config as PerformanceMonitorConfig;
     const features: string[] = [];
-    
-    if (config.enableWebVitalsTracking) features.push('web_vitals');
-    if (config.enableResourceTracking) features.push('resources');
-    if (config.enableMemoryTracking) features.push('memory');
-    if (config.enableUserInteractionTracking) features.push('interactions');
-    if (config.enableNetworkTracking) features.push('network');
-    if (config.alertingEnabled) features.push('alerting');
-    
+
+    if (_config.enableWebVitalsTracking) features.push('web_vitals');
+    if (_config.enableResourceTracking) features.push('resources');
+    if (_config.enableMemoryTracking) features.push('memory');
+    if (_config.enableUserInteractionTracking) features.push('interactions');
+    if (_config.enableNetworkTracking) features.push('network');
+    if (_config.alertingEnabled) features.push('alerting');
+
     return features;
   }
 
   private getElementIdentifier(element: Element): string {
     if (!element) return 'unknown';
-    
+
     if (element.id) return `#${element.id}`;
     if (element.className) return `.${element.className.split(' ')[0]}`;
     return element.tagName.toLowerCase();
@@ -1050,17 +1095,19 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
 
   private async loadMetricsFromCache(): Promise<void> {
     try {
-      const cachedMetrics = await this.cache.get<PerformanceMetric[]>('performance_metrics');
+      const cachedMetrics =
+        await this.cache.get<PerformanceMetric[]>('performance_metrics');
       if (cachedMetrics) {
         this.customMetrics = cachedMetrics;
       }
 
-      const cachedAlerts = await this.cache.get<PerformanceAlert[]>('performance_alerts');
+      const cachedAlerts =
+        await this.cache.get<PerformanceAlert[]>('performance_alerts');
       if (cachedAlerts) {
         this.alerts = cachedAlerts;
       }
-    } catch (error) {
-      this.handleError(error, 'Failed to load metrics from cache');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to load metrics from cache');
     }
   }
 
@@ -1068,8 +1115,8 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
     try {
       await this.cache.set('performance_metrics', this.customMetrics, 86400000); // 24 hours
       await this.cache.set('performance_alerts', this.alerts, 86400000);
-    } catch (error) {
-      this.handleError(error, 'Failed to save metrics to cache');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to save metrics to cache');
     }
   }
 
@@ -1078,7 +1125,7 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
   // ============================================================================
 
   public async reset(): Promise<void> {
-    if (this.config.environment !== 'test') {
+    if (this._config.environment !== 'test') {
       throw new Error('Reset only allowed in test environment');
     }
 
@@ -1088,7 +1135,7 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
   }
 
   public getTestState(): any {
-    if (this.config.environment !== 'test') {
+    if (this._config.environment !== 'test') {
       throw new Error('Test state only available in test environment');
     }
 
@@ -1098,7 +1145,7 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
       alertsCount: this.alerts.length,
       webVitals: this.webVitals,
       observersCount: this.observers.size,
-      timersCount: this.timers.size
+      timersCount: this.timers.size,
     };
   }
 }
@@ -1109,7 +1156,7 @@ export class EnhancedPerformanceMonitor extends BaseService implements Performan
 
 export const createPerformanceMonitor = (
   dependencies: PerformanceMonitorDependencies = {},
-  config: Partial<PerformanceMonitorConfig> = {}
+  _config: Partial<PerformanceMonitorConfig> = {}
 ): EnhancedPerformanceMonitor => {
   const fullConfig: PerformanceMonitorConfig = {
     enabled: true,
@@ -1120,12 +1167,12 @@ export const createPerformanceMonitor = (
     maxMetricsInMemory: config.maxMetricsInMemory || 1000,
     metricsRetentionDays: config.metricsRetentionDays || 7,
     enablePersistentStorage: config.enablePersistentStorage ?? true,
-    webVitalsThresholds: config.webVitalsThresholds || {
+    webVitalsThresholds: _config.webVitalsThresholds || {
       LCP: { good: 2500, poor: 4000 },
       FID: { good: 100, poor: 300 },
       CLS: { good: 0.1, poor: 0.25 },
       FCP: { good: 1800, poor: 3000 },
-      TTFB: { good: 800, poor: 1800 }
+      TTFB: { good: 800, poor: 1800 },
     },
     customThresholds: config.customThresholds || {},
     alertingEnabled: config.alertingEnabled ?? true,
@@ -1138,7 +1185,7 @@ export const createPerformanceMonitor = (
     enableErrorTracking: config.enableErrorTracking ?? true,
     enableUserInteractionTracking: config.enableUserInteractionTracking ?? true,
     enableNetworkTracking: config.enableNetworkTracking ?? true,
-    ...config
+    ...config,
   };
 
   return new EnhancedPerformanceMonitor(dependencies, fullConfig);

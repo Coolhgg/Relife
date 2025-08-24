@@ -211,8 +211,8 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
       }
 
       return alarm;
-    } catch (error) {
-      console.error('Error updating smart schedule:', error);
+    } catch (_error) {
+      console._error('Error updating smart schedule:', _error);
       return alarm;
     }
   }
@@ -244,8 +244,8 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
       conditions.is_weekend = now.getDay() === 0 || now.getDay() === 6;
 
       return conditions;
-    } catch (error) {
-      console.error('Error getting current conditions:', error);
+    } catch (_error) {
+      console._error('Error getting current conditions:', _error);
       return {};
     }
   }
@@ -393,8 +393,8 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
 
       // Sort by confidence and return top 5
       return slots.sort((a, b) => b.confidence - a.confidence).slice(0, 5);
-    } catch (error) {
-      console.error('Error calculating optimal time slots:', error);
+    } catch (_error) {
+      console._error('Error calculating optimal time slots:', _error);
       return [];
     }
   }

@@ -23,7 +23,7 @@ interface TestResult {
   title: string;
   status: 'pending' | 'success' | 'error';
   timestamp: Date;
-  error?: string;
+  _error?: string;
   duration?: number;
 }
 
@@ -79,7 +79,7 @@ export const PushNotificationTester: React.FC = () => {
       type: string,
       title: string,
       status: 'success' | 'error',
-      error?: string,
+      _error?: string,
       duration?: number
     ) => {
       const result: TestResult = {
@@ -88,7 +88,7 @@ export const PushNotificationTester: React.FC = () => {
         title,
         status,
         timestamp: new Date(),
-        error,
+        _error,
         duration,
       };
 
@@ -146,22 +146,22 @@ export const PushNotificationTester: React.FC = () => {
           testType,
           duration,
         });
-      } catch (error) {
+      } catch (_error) {
         const duration = Date.now() - startTime;
         const testTypeData = testTypes.find(t => t.id === testType);
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        const errorMessage = error instanceof Error ? error.message : 'Unknown _error';
 
         addTestResult(
           testType,
           testTypeData?.title || 'Unknown Test',
-          'error',
+          '_error',
           errorMessage,
           duration
         );
 
         track('push_notification_test_error', {
           testType,
-          error: errorMessage,
+          _error: errorMessage,
           duration,
         });
       }
@@ -192,9 +192,9 @@ export const PushNotificationTester: React.FC = () => {
       }
 
       track('push_notification_test_suite_complete');
-    } catch (error) {
+    } catch (_error) {
       track('push_notification_test_suite_error', {
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? _error.message : 'Unknown _error',
       });
     } finally {
       setIsRunningTests(false);
@@ -210,7 +210,7 @@ export const PushNotificationTester: React.FC = () => {
     switch (status) {
       case 'success':
         return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'error':
+      case '_error':
         return <XCircle className="w-4 h-4 text-red-500" />;
       case 'pending':
         return (
@@ -394,7 +394,7 @@ export const PushNotificationTester: React.FC = () => {
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-red-600 dark:text-red-400">
-                {testResults.filter((r: any) => r.status === 'error').length}
+                {testResults.filter((r: any) => r.status === '_error').length}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Errors</div>
             </div>
@@ -433,9 +433,9 @@ export const PushNotificationTester: React.FC = () => {
                         <span className="ml-2">({result.duration}ms)</span>
                       )}
                     </div>
-                    {result.error && (
+                    {result._error && (
                       <div className="text-sm text-red-600 dark:text-red-400 mt-1">
-                        {result.error}
+                        {result._error}
                       </div>
                     )}
                   </div>
@@ -446,7 +446,7 @@ export const PushNotificationTester: React.FC = () => {
                     className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                       result.status === 'success'
                         ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
-                        : result.status === 'error'
+                        : result.status === '_error'
                           ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300'
                           : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
                     }`}

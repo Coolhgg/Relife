@@ -14,7 +14,7 @@ export interface SettingsAnnouncement {
     | 'slider-change'
     | 'dropdown-change'
     | 'setting-update'
-    | 'validation-error';
+    | 'validation-_error';
   data?: any;
   priority?: 'polite' | 'assertive';
 }
@@ -148,7 +148,7 @@ export function useSettingsAnnouncements() {
   const announceValidationError = useCallback(
     (fieldName: string, errorMessage: string) => {
       announce({
-        type: 'error',
+        type: '_error',
         data: { fieldName, errorMessage },
         priority: 'assertive',
       });

@@ -184,7 +184,7 @@ export interface CreateFormRequest {
  */
 export interface ConvertKitResponse<T> {
   data?: T;
-  error?: string;
+  _error?: string;
   message?: string;
 }
 
@@ -255,7 +255,11 @@ export interface SubscriberStatsResponse {
  */
 export interface ConvertKitWebhookSubscriberEvent {
   id: string;
-  event: 'subscriber.subscriber_activate' | 'subscriber.subscriber_unsubscribe' | 'subscriber.subscriber_bounce' | 'subscriber.subscriber_complain';
+  event:
+    | 'subscriber.subscriber_activate'
+    | 'subscriber.subscriber_unsubscribe'
+    | 'subscriber.subscriber_bounce'
+    | 'subscriber.subscriber_complain';
   created_at: string;
   subscriber: {
     id: number;
@@ -297,9 +301,9 @@ export interface ConvertKitWebhookSequenceEvent {
 /**
  * User persona types for targeted campaigns
  */
-export type UserPersona = 
+export type UserPersona =
   | 'struggling_sam'
-  | 'ambitious_alex' 
+  | 'ambitious_alex'
   | 'mindful_maya'
   | 'social_sophie'
   | 'tech_tyler'

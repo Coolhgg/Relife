@@ -128,7 +128,7 @@ class EnhancedCalendarService {
   private lastSyncTime: Date | null = null;
 
   private constructor() {
-    this.config = this.getDefaultConfig();
+    this._config = this.getDefaultConfig();
   }
 
   public static getInstance(): EnhancedCalendarService {
@@ -149,16 +149,16 @@ class EnhancedCalendarService {
       await this.loadConfiguration();
 
       // Initialize calendar APIs
-      if (this.config.enabled) {
+      if (this._config.enabled) {
         await this.initializeCalendarAPIs();
         await this.syncCalendarEvents();
         await this.analyzeEventPatterns();
       }
 
       this.isInitialized = true;
-    } catch (error) {
-      console.error('Failed to initialize EnhancedCalendarService:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to initialize EnhancedCalendarService:', _error);
+      throw _error;
     }
   }
 
@@ -166,16 +166,16 @@ class EnhancedCalendarService {
    * Sync events from all connected calendars
    */
   public async syncCalendarEvents(): Promise<void> {
-    if (!this.config.enabled) return;
+    if (!this._config.enabled) return;
 
     try {
       const now = new Date();
       const endDate = new Date(
         now.getTime() +
-          this.config.conflictDetection.lookAheadDays * 24 * 60 * 60 * 1000
+          this._config.conflictDetection.lookAheadDays * 24 * 60 * 60 * 1000
       );
 
-      for (const calendar of this.config.connectedCalendars) {
+      for (const calendar of this._config.connectedCalendars) {
         if (calendar.syncEnabled) {
           const events = await this.fetchCalendarEvents(calendar, now, endDate);
           this.cachedEvents.set(calendar.id, events);
@@ -184,8 +184,8 @@ class EnhancedCalendarService {
 
       this.lastSyncTime = new Date();
       await this.saveCachedEvents();
-    } catch (error) {
-      console.error('Failed to sync calendar events:', error);
+    } catch (_error) {
+      console._error('Failed to sync calendar events:', _error);
     }
   }
 
@@ -193,7 +193,7 @@ class EnhancedCalendarService {
    * Get smart alarm suggestions based on calendar events
    */
   public async getSmartAlarmSuggestions(alarm: Alarm): Promise<CalendarSuggestion[]> {
-    if (!this.config.enabled || !this.config.smartSuggestions.enabled) {
+    if (!this._config.enabled || !this._config.smartSuggestions.enabled) {
       return [];
     }
 
@@ -207,7 +207,7 @@ class EnhancedCalendarService {
     suggestions.push(...conflicts);
 
     // Suggest optimal wake time based on first meeting
-    if (this.config.smartSuggestions.suggestOptimalWakeTime) {
+    if (this._config.smartSuggestions.suggestOptimalWakeTime) {
       const optimalSuggestion = await this.suggestOptimalWakeTime(alarm, alarmDate);
       if (optimalSuggestion) {
         suggestions.push(optimalSuggestion);
@@ -215,7 +215,7 @@ class EnhancedCalendarService {
     }
 
     // Consider commute and preparation time
-    if (this.config.smartSuggestions.factorInCommute) {
+    if (this._config.smartSuggestions.factorInCommute) {
       const commuteSuggestion = await this.suggestCommuteAdjustment(alarm, alarmDate);
       if (commuteSuggestion) {
         suggestions.push(commuteSuggestion);
@@ -223,7 +223,7 @@ class EnhancedCalendarService {
     }
 
     // Include preparation time for important meetings
-    if (this.config.smartSuggestions.includePreparationTime) {
+    if (this._config.smartSuggestions.includePreparationTime) {
       const prepSuggestion = await this.suggestPreparationTime(alarm, alarmDate);
       if (prepSuggestion) {
         suggestions.push(prepSuggestion);
@@ -248,10 +248,10 @@ class EnhancedCalendarService {
 
     // Check for early morning meetings
     const earlyThreshold = this.parseTimeString(
-      this.config.autoAdjustments.earlyMeetingThreshold
+      this._config.autoAdjustments.earlyMeetingThreshold
     );
     const earlyMeetings = allEvents.filter(event => {
-      const eventStart = new Date(event.start);
+      const eventStart = new Date(_event.start);
       return (
         eventStart.getHours() < earlyThreshold.hours ||
         (eventStart.getHours() === earlyThreshold.hours &&
@@ -263,7 +263,7 @@ class EnhancedCalendarService {
       const meetingStart = new Date(meeting.start);
       const requiredWakeTime = new Date(
         meetingStart.getTime() -
-          this.config.autoAdjustments.preparationTimeMinutes * 60 * 1000
+          this._config.autoAdjustments.preparationTimeMinutes * 60 * 1000
       );
 
       if (meeting.travelTime) {
@@ -272,7 +272,7 @@ class EnhancedCalendarService {
             meeting.travelTime.durationMinutes *
               60 *
               1000 *
-              (1 + this.config.autoAdjustments.travelTimeBuffer / 100)
+              (1 + this._config.autoAdjustments.travelTimeBuffer / 100)
         );
       }
 
@@ -292,7 +292,7 @@ class EnhancedCalendarService {
           confidence: 0.9,
           reasoning: [
             `Meeting "${meeting.title}" starts at ${meetingStart.toLocaleTimeString()}`,
-            `Requires ${this.config.autoAdjustments.preparationTimeMinutes} minutes preparation time`,
+            `Requires ${this._config.autoAdjustments.preparationTimeMinutes} minutes preparation time`,
             meeting.travelTime
               ? `Travel time: ${meeting.travelTime.durationMinutes} minutes`
               : '',
@@ -315,7 +315,7 @@ class EnhancedCalendarService {
   ): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();
     const todayEvents = allEvents.filter(event => {
-      const eventDate = new Date(event.start);
+      const eventDate = new Date(_event.start);
       return eventDate.toDateString() === alarmDate.toDateString();
     });
 
@@ -325,7 +325,7 @@ class EnhancedCalendarService {
 
     // Find the first important meeting
     const firstImportantMeeting = todayEvents
-      .filter(event => event.importance !== 'low')
+      .filter(event => _event.importance !== 'low')
       .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())[0];
 
     if (!firstImportantMeeting) {
@@ -384,7 +384,7 @@ class EnhancedCalendarService {
         event.category === 'work' &&
         event.location &&
         event.location !== 'Home' &&
-        new Date(event.start).toDateString() === alarmDate.toDateString()
+        new Date(_event.start).toDateString() === alarmDate.toDateString()
     );
 
     if (workEvents.length === 0) {
@@ -402,7 +402,7 @@ class EnhancedCalendarService {
       );
       const wakeUpTime = new Date(
         departureTime.getTime() -
-          this.config.autoAdjustments.preparationTimeMinutes * 60 * 1000
+          this._config.autoAdjustments.preparationTimeMinutes * 60 * 1000
       );
 
       const currentWakeTime = this.parseTimeString(alarm.time);
@@ -446,7 +446,7 @@ class EnhancedCalendarService {
   ): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();
     const importantEvents = allEvents.filter(
-      event => event.importance === 'urgent' || event.importance === 'high'
+      event => event.importance === 'urgent' || _event.importance === 'high'
     );
 
     if (importantEvents.length === 0) {
@@ -539,25 +539,25 @@ class EnhancedCalendarService {
     const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
     const upcomingEvents = allEvents.filter(
-      event => new Date(event.start) >= now && new Date(event.start) <= nextWeek
+      event => new Date(_event.start) >= now && new Date(_event.start) <= nextWeek
     );
 
     const eventsByCategory = upcomingEvents.reduce(
-      (acc, event) => {
-        acc[event.category] = (acc[event.category] || 0) + 1;
+      (acc, _event) => {
+        acc[event.category] = (acc[_event.category] || 0) + 1;
         return acc;
       },
       {} as Record<string, number>
     );
 
     const earlyMeetings = upcomingEvents.filter(event => {
-      const eventStart = new Date(event.start);
+      const eventStart = new Date(_event.start);
       return eventStart.getHours() < 9; // Before 9 AM
     });
 
     return {
       connectedCalendars: this.config.connectedCalendars.length,
-      syncEnabled: this.config.enabled,
+      syncEnabled: this._config.enabled,
       lastSyncTime: this.lastSyncTime,
       totalEvents: allEvents.length,
       upcomingEvents: upcomingEvents.length,
@@ -572,14 +572,14 @@ class EnhancedCalendarService {
   /**
    * Update calendar configuration
    */
-  public async updateConfig(config: Partial<CalendarConfig>): Promise<void> {
-    this.config = { ...this.config, ...config };
+  public async updateConfig(_config: Partial<CalendarConfig>): Promise<void> {
+    this.config = { ...this.config, ..._config };
     await this.saveConfiguration();
 
-    if (config.enabled !== undefined) {
-      if (config.enabled && !this.isInitialized) {
+    if (_config.enabled !== undefined) {
+      if (_config.enabled && !this.isInitialized) {
         await this.initialize();
-      } else if (!config.enabled) {
+      } else if (!_config.enabled) {
         this.clearCachedData();
       }
     }
@@ -609,7 +609,7 @@ class EnhancedCalendarService {
     await this.saveConfiguration();
 
     // Trigger initial sync
-    if (this.config.enabled) {
+    if (this._config.enabled) {
       await this.syncCalendarEvents();
     }
 
@@ -620,7 +620,7 @@ class EnhancedCalendarService {
    * Disconnect a calendar
    */
   public async disconnectCalendar(calendarId: string): Promise<void> {
-    this.config.connectedCalendars = this.config.connectedCalendars.filter(
+    this.config.connectedCalendars = this._config.connectedCalendars.filter(
       cal => cal.id !== calendarId
     );
     this.cachedEvents.delete(calendarId);
@@ -705,7 +705,7 @@ class EnhancedCalendarService {
     insight?: CalendarInsight;
   } {
     const weeklyMeetings = events.filter(event => {
-      const eventDate = new Date(event.start);
+      const eventDate = new Date(_event.start);
       const now = new Date();
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       return eventDate >= weekAgo && eventDate <= now;
@@ -737,7 +737,7 @@ class EnhancedCalendarService {
 
   private analyzeEarlyMeetings(events: CalendarEvent[]): { insight?: CalendarInsight } {
     const earlyMeetings = events.filter(event => {
-      const eventStart = new Date(event.start);
+      const eventStart = new Date(_event.start);
       return eventStart.getHours() < 8;
     });
 
@@ -768,11 +768,11 @@ class EnhancedCalendarService {
   private analyzeWorkloadDistribution(events: CalendarEvent[]): {
     insight?: CalendarInsight;
   } {
-    const workEvents = events.filter(event => event.category === 'work');
+    const workEvents = events.filter(event => _event.category === 'work');
     const eventsByDay: Record<number, number> = {};
 
     workEvents.forEach(event => {
-      const day = new Date(event.start).getDay();
+      const day = new Date(_event.start).getDay();
       eventsByDay[day] = (eventsByDay[day] || 0) + 1;
     });
 
@@ -821,9 +821,9 @@ class EnhancedCalendarService {
   private analyzeTravelPatterns(events: CalendarEvent[]): {
     insight?: CalendarInsight;
   } {
-    const eventsWithTravel = events.filter(event => event.travelTime);
+    const eventsWithTravel = events.filter(event => _event.travelTime);
     const totalTravelTime = eventsWithTravel.reduce(
-      (sum, event) => sum + (event.travelTime?.durationMinutes || 0),
+      (sum, _event) => sum + (_event.travelTime?.durationMinutes || 0),
       0
     );
 
@@ -916,7 +916,7 @@ class EnhancedCalendarService {
   // Persistence methods
   private async saveConfiguration(): Promise<void> {
     if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('enhanced_calendar_config', JSON.stringify(this.config));
+      localStorage.setItem('enhanced_calendar_config', JSON.stringify(this._config));
     }
   }
 
@@ -924,7 +924,7 @@ class EnhancedCalendarService {
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem('enhanced_calendar_config');
       if (saved) {
-        this.config = { ...this.config, ...JSON.parse(saved) };
+        this.config = { ...this._config, ...JSON.parse(saved) };
       }
     }
   }

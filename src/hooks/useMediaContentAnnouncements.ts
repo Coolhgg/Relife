@@ -80,8 +80,8 @@ export function useMediaContentAnnouncements() {
   );
 
   const announceUploadError = useCallback(
-    (error: string) => {
-      announce(`Upload failed: ${error}. Please try again.`, 'assertive');
+    (_error: string) => {
+      announce(`Upload failed: ${_error}. Please try again.`, 'assertive');
     },
     [announce]
   );

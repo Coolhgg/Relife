@@ -18,8 +18,8 @@ const mockPostHog = {
   }),
 
   // Event tracking
-  capture: jest.fn((event: string, properties?: any) => {
-    console.log(`📈 Mock PostHog capture: ${event}`, properties);
+  capture: jest.fn((_event: string, properties?: any) => {
+    console.log(`📈 Mock PostHog capture: ${_event}`, properties);
   }),
 
   // User properties
@@ -133,8 +133,8 @@ const mockPostHog = {
   }),
 
   // Configuration
-  set_config: jest.fn((config: any) => {
-    console.log('⚙️ Mock PostHog set_config', config);
+  set_config: jest.fn((_config: any) => {
+    console.log('⚙️ Mock PostHog set_config', _config);
   }),
 
   // Mobile specific

@@ -152,7 +152,7 @@ export class AlarmSecurityIntegrationService {
 
       // 7. Log security event
       await SecurityMonitoringForensicsService.logSecurityEvent(
-        'alarm_access_denied', // Using existing event type
+        'alarm_access_denied', // Using existing _event type
         'low',
         'alarm_security_integration',
         {
@@ -173,12 +173,12 @@ export class AlarmSecurityIntegrationService {
         ['secure_creation'],
         auditTrail
       );
-    } catch (error) {
-      await this.handleSecurityError(error, operation, auditTrail);
+    } catch (_error) {
+      await this.handleSecurityError(_error, operation, auditTrail);
       return this.createSecurityResult(
         false,
         null,
-        ['Internal security error'],
+        ['Internal security _error'],
         [],
         ['system_error'],
         auditTrail
@@ -257,8 +257,8 @@ export class AlarmSecurityIntegrationService {
         ['secure_retrieval'],
         auditTrail
       );
-    } catch (error) {
-      await this.handleSecurityError(error, operation, auditTrail);
+    } catch (_error) {
+      await this.handleSecurityError(_error, operation, auditTrail);
       return this.createSecurityResult(
         false,
         null,
@@ -395,8 +395,8 @@ export class AlarmSecurityIntegrationService {
         ['secure_update'],
         auditTrail
       );
-    } catch (error) {
-      await this.handleSecurityError(error, operation, auditTrail);
+    } catch (_error) {
+      await this.handleSecurityError(_error, operation, auditTrail);
       return this.createSecurityResult(
         false,
         null,
@@ -513,8 +513,8 @@ export class AlarmSecurityIntegrationService {
         ['secure_deletion'],
         auditTrail
       );
-    } catch (error) {
-      await this.handleSecurityError(error, operation, auditTrail);
+    } catch (_error) {
+      await this.handleSecurityError(_error, operation, auditTrail);
       return this.createSecurityResult(
         false,
         null,
@@ -589,8 +589,8 @@ export class AlarmSecurityIntegrationService {
         },
         recommendations,
       };
-    } catch (error) {
-      console.error('[SecurityIntegration] Failed to get security status:', error);
+    } catch (_error) {
+      console._error('[SecurityIntegration] Failed to get security status:', _error);
       return {
         overall: 'critical',
         components: {
@@ -720,7 +720,7 @@ export class AlarmSecurityIntegrationService {
       const summary = `Security diagnostics completed: ${tests.length} tests run, ${tests.filter(t => t.status === 'pass').length} passed, ${warningTests} warnings, ${failedTests} failed`;
 
       return { overall, tests, summary };
-    } catch (error) {
+    } catch (_error) {
       return {
         overall: 'fail',
         tests: [
@@ -755,25 +755,25 @@ export class AlarmSecurityIntegrationService {
       this.setupSecurityEventListeners();
 
       console.log('[SecurityIntegration] Security system initialized successfully');
-    } catch (error) {
-      console.error(
+    } catch (_error) {
+      console._error(
         '[SecurityIntegration] Failed to initialize security system:',
-        error
+        _error
       );
     }
   }
 
   private setupSecurityEventListeners(): void {
     // Listen for critical security events
-    window.addEventListener('security-alert-created', async (event: any) => {
-      if (event.detail.severity === 'critical') {
-        console.error('[SecurityIntegration] CRITICAL SECURITY ALERT:', event.detail);
+    window.addEventListener('security-alert-created', async (_event: any) => {
+      if (_event.detail.severity === 'critical') {
+        console._error('[SecurityIntegration] CRITICAL SECURITY ALERT:', _event.detail);
         // Could trigger additional automated responses here
       }
     });
 
-    window.addEventListener('alarm-tamper-detected', async (event: any) => {
-      console.error('[SecurityIntegration] TAMPER DETECTED:', event.detail);
+    window.addEventListener('alarm-tamper-detected', async (_event: any) => {
+      console._error('[SecurityIntegration] TAMPER DETECTED:', _event.detail);
       // Trigger emergency backup
       await AlarmBackupRedundancyService.createEmergencyBackup();
     });
@@ -787,11 +787,11 @@ export class AlarmSecurityIntegrationService {
           this.lastHealthCheck = new Date();
 
           if (status.overall === 'critical' || status.overall === 'compromised') {
-            console.error('[SecurityIntegration] CRITICAL SECURITY STATUS:', status);
+            console._error('[SecurityIntegration] CRITICAL SECURITY STATUS:', status);
             // Could trigger automated incident response here
           }
-        } catch (error) {
-          console.error('[SecurityIntegration] Health check failed:', error);
+        } catch (_error) {
+          console._error('[SecurityIntegration] Health check failed:', _error);
         }
       },
       5 * 60 * 1000
@@ -816,11 +816,11 @@ export class AlarmSecurityIntegrationService {
       const validation = await AlarmAPISecurityService.validateRequest(mockRequest);
       return {
         valid: validation.proceed,
-        errors: validation.response ? [validation.response.body.error] : [],
+        errors: validation.response ? [validation.response.body._error] : [],
         warnings: [],
         data: validation.proceed ? data : null,
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         valid: false,
         errors: ['Validation failed'],
@@ -853,12 +853,12 @@ export class AlarmSecurityIntegrationService {
   }
 
   private async handleSecurityError(
-    error: any,
+    _error: any,
     operation: SecurityOperation,
     auditTrail: string
   ): Promise<void> {
     ErrorHandler.handleError(
-      error instanceof Error ? error : new Error(String(error)),
+      error instanceof Error ? _error : new Error(String(_error)),
       'Security operation failed',
       {
         context: 'alarm_security_integration',
@@ -876,7 +876,7 @@ export class AlarmSecurityIntegrationService {
       'high',
       'alarm_security_integration',
       {
-        error: error.message,
+        _error: _error.message,
         operation: operation.type,
         userId: operation.userId,
         auditTrail,
@@ -889,7 +889,7 @@ export class AlarmSecurityIntegrationService {
   private async checkStorageHealth(): Promise<'active' | 'degraded' | 'failed'> {
     try {
       const status = await SecureAlarmStorageService.getStorageStatus();
-      if (status.error) return 'failed';
+      if (status._error) return 'failed';
       if (!status.integrityMonitoringActive) return 'degraded';
       return 'active';
     } catch {
@@ -998,10 +998,10 @@ export class AlarmSecurityIntegrationService {
           recommendations: ['Check encryption and storage mechanisms'],
         };
       }
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        message: 'Secure storage test failed: ' + error.message,
+        message: 'Secure storage test failed: ' + _error.message,
         recommendations: ['Check storage service availability and encryption keys'],
       };
     }
@@ -1026,10 +1026,10 @@ export class AlarmSecurityIntegrationService {
           recommendations: ['Check backup service and storage availability'],
         };
       }
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        message: 'Backup system test failed: ' + error.message,
+        message: 'Backup system test failed: ' + _error.message,
         recommendations: ['Check backup service configuration and storage'],
       };
     }
@@ -1054,10 +1054,10 @@ export class AlarmSecurityIntegrationService {
           recommendations: ['Check rate limiting service configuration'],
         };
       }
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        message: 'Rate limiting test failed: ' + error.message,
+        message: 'Rate limiting test failed: ' + _error.message,
         recommendations: ['Check rate limiting service availability'],
       };
     }
@@ -1079,10 +1079,10 @@ export class AlarmSecurityIntegrationService {
           recommendations: ['Check API security service configuration'],
         };
       }
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        message: 'API security test failed: ' + error.message,
+        message: 'API security test failed: ' + _error.message,
         recommendations: ['Check API security service availability'],
       };
     }

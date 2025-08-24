@@ -40,7 +40,7 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
         await result.current.install();
       });
 
-      expect(result.current.error).toContain('Installation failed');
+      expect(result.current._error).toContain('Installation failed');
     });
 
     it('should handle multiple concurrent install attempts', async () => {
@@ -91,7 +91,7 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
         await result.current.checkForUpdates();
       });
 
-      expect(result.current.error).toContain('failed');
+      expect(result.current._error).toContain('failed');
 
       // Restore
       Object.defineProperty(navigator, 'serviceWorker', {
@@ -133,7 +133,7 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
         // Simulate rapid network changes
         for (let i = 0; i < 100; i++) {
           const event = i % 2 === 0 ? new Event('offline') : new Event('online');
-          window.dispatchEvent(event);
+          window.dispatchEvent(_event);
           await new Promise(resolve => setTimeout(resolve, 1));
         }
       });
@@ -159,7 +159,7 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
       });
 
       // Should handle gracefully
-      expect(result.current.error).not.toContain('TypeError');
+      expect(result.current._error).not.toContain('TypeError');
 
       // Restore
       Object.defineProperty(global, 'caches', { value: originalCaches });

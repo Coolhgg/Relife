@@ -56,8 +56,8 @@ export async function handleStripeWebhook(
     let event;
     try {
       event = webhookHandler.constructEvent(request.body, signature);
-    } catch (error) {
-      ErrorHandler.logError(error as Error, {
+    } catch (_error) {
+      ErrorHandler.logError(_error as Error, {
         context: 'webhook_signature_verification',
         signature: signature.substring(0, 20) + '...', // Log partial signature for debugging
       });
@@ -65,35 +65,35 @@ export async function handleStripeWebhook(
     }
 
     // Check if we've already processed this event (idempotency)
-    const isProcessed = await checkIfEventProcessed(event.id);
+    const isProcessed = await checkIfEventProcessed(_event.id);
     if (isProcessed) {
-      console.log(`Event ${event.id} already processed, skipping`);
+      console.log(`Event ${_event.id} already processed, skipping`);
       return createSuccessResponse('Event already processed');
     }
 
     // Process the webhook event
-    await webhookHandler.handleWebhook(event);
+    await webhookHandler.handleWebhook(_event);
 
     // Mark event as processed
-    await markEventAsProcessed(event.id, event.type);
+    await markEventAsProcessed(event.id, _event.type);
 
     // Track processing time
     const processingTime = Date.now() - startTime;
     AnalyticsService.getInstance().track('webhook_processed', {
       eventType: event.type,
-      eventId: event.id,
+      eventId: _event.id,
       processingTime,
       success: true,
     });
 
     console.log(
-      `Successfully processed webhook ${event.type} (${event.id}) in ${processingTime}ms`
+      `Successfully processed webhook ${event.type} (${_event.id}) in ${processingTime}ms`
     );
     return createSuccessResponse('Webhook processed successfully');
-  } catch (error) {
+  } catch (_error) {
     const processingTime = Date.now() - startTime;
 
-    ErrorHandler.logError(error as Error, {
+    ErrorHandler.logError(_error as Error, {
       context: 'webhook_processing_error',
       processingTime,
       body:
@@ -102,7 +102,7 @@ export async function handleStripeWebhook(
 
     AnalyticsService.getInstance().track('webhook_failed', {
       processingTime,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? _error.message : 'Unknown _error',
     });
 
     // Return 500 to trigger Stripe's retry mechanism
@@ -116,21 +116,21 @@ export async function handleStripeWebhook(
 async function checkIfEventProcessed(eventId: string): Promise<boolean> {
   try {
     const { supabase } = await import('../services/supabase');
-    const { data, error } = await supabase
+    const { data, _error } = await supabase
       .from('webhook_logs')
       .select('id')
       .eq('stripeEventId', eventId)
       .eq('status', 'success')
       .single();
 
-    if (error && error.code !== 'PGRST116') {
+    if (error && _error.code !== 'PGRST116') {
       // PGRST116 = no rows found
-      throw error;
+      throw _error;
     }
 
     return !!data;
-  } catch (error) {
-    console.error('Error checking event processing status:', error);
+  } catch (_error) {
+    console._error('Error checking _event processing status:', _error);
     return false; // Assume not processed if we can't check
   }
 }
@@ -147,8 +147,8 @@ async function markEventAsProcessed(eventId: string, eventType: string): Promise
       status: 'success',
       processedAt: new Date(),
     });
-  } catch (error) {
-    console.error('Error marking event as processed:', error);
+  } catch (_error) {
+    console._error('Error marking _event as processed:', _error);
     // Don't throw here as the main processing was successful
   }
 }
@@ -179,7 +179,7 @@ function createErrorResponse(statusCode: number, message: string): WebhookRespon
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      error: true,
+      _error: true,
       message,
     }),
   };
@@ -204,9 +204,9 @@ export function createExpressWebhookHandler() {
         res.set(key, value);
       });
       res.send(response.body);
-    } catch (error) {
-      console.error('Express webhook handler error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    } catch (_error) {
+      console.error('Express webhook handler error:', _error);
+      res.status(500).json({ _error: 'Internal server _error' });
     }
   };
 }
@@ -221,7 +221,7 @@ export function createServerlessWebhookHandler() {
     }
 
     if (req.method !== 'POST') {
-      res.status(405).json({ error: 'Method not allowed' });
+      res.status(405).json({ _error: 'Method not allowed' });
       return;
     }
 
@@ -241,9 +241,9 @@ export function createServerlessWebhookHandler() {
         res.setHeader(key, value);
       });
       res.end(response.body);
-    } catch (error) {
-      console.error('Serverless webhook handler error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    } catch (_error) {
+      console.error('Serverless webhook handler error:', _error);
+      res.status(500).json({ _error: 'Internal server _error' });
     }
   };
 }
@@ -273,9 +273,9 @@ export function createNextJSWebhookHandler() {
         res.setHeader(key, value);
       });
       res.end(response.body);
-    } catch (error) {
-      console.error('Next.js webhook handler error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    } catch (_error) {
+      console.error('Next.js webhook handler error:', _error);
+      res.status(500).json({ _error: 'Internal server _error' });
     }
   };
 }

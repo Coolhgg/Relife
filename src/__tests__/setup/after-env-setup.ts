@@ -54,7 +54,7 @@ if (typeof global !== 'undefined') {
 
   global.FileReader = class MockFileReader {
     result: string | ArrayBuffer | null = null;
-    error: any = null;
+    _error: any = null;
     readyState = 0;
     onload: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
     onerror: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
@@ -256,7 +256,7 @@ if (typeof global !== 'undefined') {
   // Enhanced geolocation mock for location-based features
   Object.defineProperty(global.navigator, 'geolocation', {
     value: {
-      getCurrentPosition: jest.fn((success, error) => {
+      getCurrentPosition: jest.fn((success, _error) => {
         const position = {
           coords: {
             latitude: 37.7749,
@@ -556,19 +556,21 @@ if (global && typeof global === 'object') {
   let enhancedServiceMocks: any;
   try {
     enhancedServiceMocks = require('../mocks/enhanced-service-mocks');
-    
+
     // Create a global service container for tests
-    global.__ENHANCED_SERVICE_CONTAINER__ = enhancedServiceMocks.createMockServiceContainer();
-    
+    global.__ENHANCED_SERVICE_CONTAINER__ =
+      enhancedServiceMocks.createMockServiceContainer();
+
     // Initialize services by default for tests
-    enhancedServiceMocks.initializeAllMockServices(global.__ENHANCED_SERVICE_CONTAINER__)
+    enhancedServiceMocks
+      .initializeAllMockServices(global.__ENHANCED_SERVICE_CONTAINER__)
       .then(() => {
         console.log('🔧 Enhanced service architecture initialized');
       })
-      .catch((error: any) => {
-        console.warn('⚠️ Enhanced service initialization failed:', error);
+      .catch((_error: any) => {
+        console.warn('⚠️ Enhanced service initialization failed:', _error);
       });
-  } catch (error) {
+  } catch (_error) {
     // Enhanced services not available in this test run
     console.log('⚠️ Enhanced services not available, using legacy mocks');
   }
@@ -576,8 +578,12 @@ if (global && typeof global === 'object') {
   // Setup global test utilities for service management
   global.__RESET_ENHANCED_SERVICES__ = async () => {
     if (enhancedServiceMocks && global.__ENHANCED_SERVICE_CONTAINER__) {
-      await enhancedServiceMocks.resetAllMockServices(global.__ENHANCED_SERVICE_CONTAINER__);
-      await enhancedServiceMocks.initializeAllMockServices(global.__ENHANCED_SERVICE_CONTAINER__);
+      await enhancedServiceMocks.resetAllMockServices(
+        global.__ENHANCED_SERVICE_CONTAINER__
+      );
+      await enhancedServiceMocks.initializeAllMockServices(
+        global.__ENHANCED_SERVICE_CONTAINER__
+      );
     }
   };
 }

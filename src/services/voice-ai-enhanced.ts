@@ -542,8 +542,7 @@ class VoiceAIEnhancedService {
       ],
     ];
 
-    personalities.forEach(([mood, personality]
-) => {
+    personalities.forEach(([mood, personality]) => {
       this.personalities.set(mood, personality);
     });
   }
@@ -553,7 +552,7 @@ class VoiceAIEnhancedService {
    */
   async generateContextualMessage(
     alarm: Alarm,
-    user: User,
+    _user: User,
     context: {
       sleepQuality?: number;
       timeOfDay: number;
@@ -566,7 +565,7 @@ class VoiceAIEnhancedService {
       const startTime = performance.now();
 
       // Get user's learning data
-      const learningData = await this.getUserLearningData(user.id);
+      const learningData = await this.getUserLearningData(_user.id);
       const personality =
         this.personalities.get(alarm.voiceMood) ||
         this.personalities.get('motivational')!;
@@ -574,7 +573,7 @@ class VoiceAIEnhancedService {
       // Generate base message using personality
       let baseMessage = await this.generatePersonalizedMessage(
         alarm,
-        user,
+        _user,
         personality,
         context,
         learningData
@@ -584,7 +583,7 @@ class VoiceAIEnhancedService {
       if (this.openaiApiKey && learningData.length > 5) {
         baseMessage = await this.enhanceWithAI(
           baseMessage,
-          user,
+          _user,
           context,
           learningData
         );
@@ -592,7 +591,7 @@ class VoiceAIEnhancedService {
 
       // Add contextual personalizations
       const personalizations = this.generatePersonalizations(
-        user,
+        _user,
         context,
         learningData
       );
@@ -606,8 +605,8 @@ class VoiceAIEnhancedService {
 
       // Generate audio if premium service available
       let audioUrl: string | undefined;
-      if (this.elevenlabsApiKey && user.preferences?.subscription_tier !== 'free') {
-        audioUrl = await this.generatePremiumAudio(baseMessage, personality, user.id);
+      if (this.elevenlabsApiKey && _user.preferences?.subscription_tier !== 'free') {
+        audioUrl = await this.generatePremiumAudio(baseMessage, personality, _user.id);
       }
 
       const duration = performance.now() - startTime;
@@ -623,11 +622,11 @@ class VoiceAIEnhancedService {
         personalizations,
         effectiveness_prediction: effectivenessPrediction,
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error as Error,
+        _error as Error,
         'Failed to generate contextual message',
-        { userId: user.id, alarmId: alarm.id }
+        { userId: _user.id, alarmId: alarm.id }
       );
 
       // Fallback to simple message
@@ -645,7 +644,7 @@ class VoiceAIEnhancedService {
    */
   private async generatePersonalizedMessage(
     alarm: Alarm,
-    user: User,
+    _user: User,
     personality: VoicePersonality,
     context: any,
     learningData: VoiceLearningData[]
@@ -667,8 +666,7 @@ class VoiceAIEnhancedService {
     let encouragement = '';
     if (learningData.length > 0) {
       const avgResponseTime =
-        learningData.reduce((sum, data
-) => sum + data.userResponse.responseTime, 0) /
+        learningData.reduce((sum, data) => sum + data.userResponse.responseTime, 0) /
         learningData.length;
 
       if (avgResponseTime > 60) {
@@ -721,7 +719,7 @@ class VoiceAIEnhancedService {
    */
   private async enhanceWithAI(
     baseMessage: string,
-    user: User,
+    _user: User,
     context: any,
     learningData: VoiceLearningData[]
   ): Promise<string> {
@@ -765,7 +763,7 @@ class VoiceAIEnhancedService {
         },
         body: JSON.stringify({
           model: 'gpt-3.5-turbo',
-          messages: [{ role: 'user', content: prompt }],
+          messages: [{ role: '_user', content: prompt }],
           max_tokens: 150,
           temperature: 0.8,
         }),
@@ -779,8 +777,8 @@ class VoiceAIEnhancedService {
       const enhancedMessage = data.choices?.[0]?.message?.content?.trim();
 
       return enhancedMessage || baseMessage;
-    } catch (error) {
-      console.error('AI enhancement failed:', error);
+    } catch (_error) {
+      console._error('AI enhancement failed:', _error);
       return baseMessage;
     }
   }
@@ -837,8 +835,8 @@ class VoiceAIEnhancedService {
       this.performanceMonitor.trackCustomMetric('premium_audio_generated', 1);
 
       return audioUrl;
-    } catch (error) {
-      console.error('Premium audio generation failed:', error);
+    } catch (_error) {
+      console._error('Premium audio generation failed:', _error);
       return undefined;
     }
   }
@@ -866,8 +864,8 @@ class VoiceAIEnhancedService {
       await this.updateVoicePreferencesIfNeeded(learningData.userId);
 
       this.performanceMonitor.trackCustomMetric('voice_learning_data_stored', 1);
-    } catch (error) {
-      console.error('Failed to learn from interaction:', error);
+    } catch (_error) {
+      console._error('Failed to learn from interaction:', _error);
     }
   }
 
@@ -902,8 +900,7 @@ class VoiceAIEnhancedService {
     }
 
     const avgEffectiveness =
-      moodMatches.reduce((sum, data
-) => {
+      moodMatches.reduce((sum, data) => {
         const effectiveness = data.outcomeSuccess
           ? Math.max(70, 100 - (data.userResponse.responseTime / 60) * 10)
           : 20;
@@ -1021,18 +1018,17 @@ class VoiceAIEnhancedService {
 
     // Load from database
     try {
-      const { data, error } = await SupabaseService.getInstance()
+      const { data, _error } = await SupabaseService.getInstance()
         .client.from('voice_learning_data')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(50);
 
-      if (error) throw error;
+      if (_error) throw error;
 
       const learningData =
-        data?.map((row: any
-) => ({
+        data?.map((row: any) => ({
           userId: row.user_id,
           voiceMood: row.voice_mood,
           context: row.context,
@@ -1042,8 +1038,8 @@ class VoiceAIEnhancedService {
 
       this.userLearningData.set(userId, learningData);
       return learningData;
-    } catch (error) {
-      console.error('Failed to load learning data:', error);
+    } catch (_error) {
+      console._error('Failed to load learning data:', _error);
       return [];
     }
   }
@@ -1052,7 +1048,7 @@ class VoiceAIEnhancedService {
     learningData: VoiceLearningData
   ): Promise<void> {
     try {
-      const { error } = await SupabaseService.getInstance()
+      const { _error } = await SupabaseService.getInstance()
         .client.from('voice_learning_data')
         .insert({
           user_id: learningData.userId,
@@ -1063,9 +1059,9 @@ class VoiceAIEnhancedService {
           created_at: new Date().toISOString(),
         });
 
-      if (error) throw error;
-    } catch (error) {
-      console.error('Failed to store learning data:', error);
+      if (_error) throw error;
+    } catch (_error) {
+      console._error('Failed to store learning data:', _error);
     }
   }
 
@@ -1104,7 +1100,7 @@ class VoiceAIEnhancedService {
     // Update user preferences if there's a clear winner
     if (bestMood && bestRate > 0.8) {
       try {
-        const { error } = await SupabaseService.getInstance()
+        const { _error } = await SupabaseService.getInstance()
           .client.from('users')
           .update({
             preferences: {
@@ -1113,19 +1109,18 @@ class VoiceAIEnhancedService {
           })
           .eq('id', userId);
 
-        if (!error) {
-          console.info(`Updated user ${userId} preferred voice mood to ${bestMood}`);
+        if (!_error) {
+          console.info(`Updated _user ${userId} preferred voice mood to ${bestMood}`);
         }
-      } catch (error) {
-        console.error('Failed to update voice preferences:', error);
+      } catch (_error) {
+        console._error('Failed to update voice preferences:', _error);
       }
     }
   }
 
   private analyzeUserPatterns(learningData: VoiceLearningData[]): any {
     const avgResponseTime =
-      learningData.reduce((sum, data
-) => sum + data.userResponse.responseTime, 0) /
+      learningData.reduce((sum, data) => sum + data.userResponse.responseTime, 0) /
       learningData.length;
 
     // Find best performing times
@@ -1139,13 +1134,10 @@ class VoiceAIEnhancedService {
     });
 
     const bestTimes = Array.from(timePerformance.entries())
-      .filter(([, stats]
-) => stats.total >= 2)
-      .sort(([, a], [, b]
-) => b.success / b.total - a.success / a.total)
+      .filter(([, stats]) => stats.total >= 2)
+      .sort(([, a], [, b]) => b.success / b.total - a.success / a.total)
       .slice(0, 3)
-      .map(([hour]
-) => `${hour}:00`);
+      .map(([hour]) => `${hour}:00`);
 
     const successRate =
       (learningData.filter(data => data.outcomeSuccess).length / learningData.length) *
@@ -1168,8 +1160,7 @@ class VoiceAIEnhancedService {
       });
 
     const mostSuccessful = Array.from(moodCounts.entries()).sort(
-      ([, a], [, b]
-) => b - a
+      ([, a], [, b]) => b - a
     )[0];
 
     return mostSuccessful ? mostSuccessful[0] : 'motivational';
@@ -1194,15 +1185,15 @@ class VoiceAIEnhancedService {
   }
 
   private generatePersonalizations(
-    user: User,
+    _user: User,
     context: any,
     learningData: VoiceLearningData[]
   ): string[] {
     const personalizations = [];
 
     // Add user name if available
-    if (user.name) {
-      personalizations.push(`Addressed as ${user.name}`);
+    if (_user.name) {
+      personalizations.push(`Addressed as ${_user.name}`);
     }
 
     // Add context-based personalizations
@@ -1212,8 +1203,7 @@ class VoiceAIEnhancedService {
 
     if (learningData.length > 0) {
       const avgResponse =
-        learningData.reduce((sum, data
-) => sum + data.userResponse.responseTime, 0) /
+        learningData.reduce((sum, data) => sum + data.userResponse.responseTime, 0) /
         learningData.length;
       if (avgResponse < 30) {
         personalizations.push('Quick responder style');

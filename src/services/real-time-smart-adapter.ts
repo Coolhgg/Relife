@@ -41,7 +41,7 @@ export interface SmartAlarmStatus {
 
 export class RealTimeSmartAdapter {
   private static instance: RealTimeSmartAdapter;
-  private static config: RealTimeAdaptationConfig = {
+  private static _config: RealTimeAdaptationConfig = {
     enabled: true,
     adaptationInterval: 15, // Check every 15 minutes
     maxDailyAdaptations: 5,
@@ -93,7 +93,7 @@ export class RealTimeSmartAdapter {
   // ===== MONITORING CONTROL =====
 
   static async startMonitoringAlarm(alarm: EnhancedSmartAlarm): Promise<void> {
-    if (!alarm.realTimeAdaptation || !this.config.enabled) return;
+    if (!alarm.realTimeAdaptation || !this._config.enabled) return;
 
     console.log(`Starting real-time monitoring for alarm ${alarm.id}`);
 
@@ -142,8 +142,8 @@ export class RealTimeSmartAdapter {
           await this.startMonitoringAlarm(alarm);
         }
       }
-    } catch (error) {
-      console.error('Error starting alarm monitoring:', error);
+    } catch (_error) {
+      console._error('Error starting alarm monitoring:', _error);
     }
   }
 
@@ -177,8 +177,8 @@ export class RealTimeSmartAdapter {
       if (adaptationDecision.shouldAdapt) {
         await this.performAdaptation(alarm, adaptationDecision);
       }
-    } catch (error) {
-      console.error(`Error checking adaptation for alarm ${alarmId}:`, error);
+    } catch (_error) {
+      console._error(`Error checking adaptation for alarm ${alarmId}:`, _error);
     }
   }
 
@@ -187,14 +187,14 @@ export class RealTimeSmartAdapter {
     status: SmartAlarmStatus
   ): boolean {
     // Check if we've hit daily adaptation limit
-    if (status.adaptationCount >= this.config.maxDailyAdaptations) {
+    if (status.adaptationCount >= this._config.maxDailyAdaptations) {
       return false;
     }
 
     // Check if enough time has passed since last adaptation
     if (status.lastAdaptation) {
       const timeSinceLastAdaptation = Date.now() - status.lastAdaptation.getTime();
-      const minInterval = this.config.adaptationInterval * 60 * 1000; // Convert to ms
+      const minInterval = this._config.adaptationInterval * 60 * 1000; // Convert to ms
       if (timeSinceLastAdaptation < minInterval) {
         return false;
       }
@@ -227,12 +227,12 @@ export class RealTimeSmartAdapter {
       if (behaviorTrigger) triggers.push(behaviorTrigger);
 
       // 4. Emergency conditions
-      if (this.config.emergencyOverrideEnabled) {
+      if (this._config.emergencyOverrideEnabled) {
         const emergencyTrigger = await this.checkEmergencyTrigger(alarm);
         if (emergencyTrigger) triggers.push(emergencyTrigger);
       }
-    } catch (error) {
-      console.error('Error collecting adaptation triggers:', error);
+    } catch (_error) {
+      console._error('Error collecting adaptation triggers:', _error);
     }
 
     return triggers;
@@ -268,8 +268,8 @@ export class RealTimeSmartAdapter {
       }
 
       return null;
-    } catch (error) {
-      console.error('Error checking sleep pattern trigger:', error);
+    } catch (_error) {
+      console._error('Error checking sleep pattern trigger:', _error);
       return null;
     }
   }
@@ -310,8 +310,8 @@ export class RealTimeSmartAdapter {
           });
         }
       }
-    } catch (error) {
-      console.error('Error checking condition triggers:', error);
+    } catch (_error) {
+      console._error('Error checking condition triggers:', _error);
     }
 
     return triggers;
@@ -359,8 +359,8 @@ export class RealTimeSmartAdapter {
       }
 
       return null;
-    } catch (error) {
-      console.error('Error checking user behavior trigger:', error);
+    } catch (_error) {
+      console._error('Error checking _user behavior trigger:', _error);
       return null;
     }
   }
@@ -397,8 +397,8 @@ export class RealTimeSmartAdapter {
       }
 
       return null;
-    } catch (error) {
-      console.error('Error checking emergency trigger:', error);
+    } catch (_error) {
+      console._error('Error checking emergency trigger:', _error);
       return null;
     }
   }
@@ -478,8 +478,8 @@ export class RealTimeSmartAdapter {
         // Notify user of adaptation (optional)
         await this.notifyUserOfAdaptation(alarm, decision);
       }
-    } catch (error) {
-      console.error(`Error performing adaptation for alarm ${alarm.id}:`, error);
+    } catch (_error) {
+      console._error(`Error performing adaptation for alarm ${alarm.id}:`, _error);
     }
   }
 
@@ -570,7 +570,7 @@ export class RealTimeSmartAdapter {
   static async updateConfig(
     newConfig: Partial<RealTimeAdaptationConfig>
   ): Promise<void> {
-    this.config = { ...this.config, ...newConfig };
+    this.config = { ...this._config, ...newConfig };
 
     if (!newConfig.enabled) {
       // Stop all monitoring if disabled

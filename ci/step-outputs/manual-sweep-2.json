@@ -42,16 +42,12 @@
     },
     {
       "file": "src/__tests__/factories/enhanced-factories.ts",
-      "fixes": [
-        "Line 174: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 174: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/__tests__/factories/factory-utils.ts",
-      "fixes": [
-        "Line 188: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 188: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -109,23 +105,17 @@
     },
     {
       "file": "src/__tests__/providers/integration-provider.tsx",
-      "fixes": [
-        "Line 164: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 164: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/__tests__/rtl/Button.rtl.test.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/__tests__/rtl/Card.rtl.test.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
@@ -148,16 +138,12 @@
     },
     {
       "file": "src/__tests__/theme-integration.test.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/__tests__/utils/animation-helpers.tsx",
-      "fixes": [
-        "Line 2: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 2: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
@@ -197,9 +183,7 @@
     },
     {
       "file": "src/__tests__/utils/dom-helpers.ts",
-      "fixes": [
-        "Line 196: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 196: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -212,37 +196,27 @@
     },
     {
       "file": "src/__tests__/utils/render-helpers.ts",
-      "fixes": [
-        "Line 824: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 824: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/__tests__/utils/storage-helpers.ts",
-      "fixes": [
-        "Line 529: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 529: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/analytics/PersonaAnalytics.tsx",
-      "fixes": [
-        "Line 81: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 81: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/backend/api.ts",
-      "fixes": [
-        "Line 325: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 325: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/backend/cloudflare-functions.ts",
-      "fixes": [
-        "Line 743: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 743: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -294,9 +268,7 @@
     },
     {
       "file": "src/components/AdaptiveImage.tsx",
-      "fixes": [
-        "Line 255: Removed standalone auto comment"
-      ],
+      "fixes": ["Line 255: Removed standalone auto comment"],
       "total_fixes": 1
     },
     {
@@ -339,9 +311,7 @@
     },
     {
       "file": "src/components/AlarmList.tsx",
-      "fixes": [
-        "Line 237: Removed standalone auto comment"
-      ],
+      "fixes": ["Line 237: Removed standalone auto comment"],
       "total_fixes": 1
     },
     {
@@ -374,9 +344,7 @@
     },
     {
       "file": "src/components/AlarmTester.tsx",
-      "fixes": [
-        "Line 127: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 127: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -400,23 +368,17 @@
     },
     {
       "file": "src/components/AuthenticationFlow.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/BattleSystem.tsx",
-      "fixes": [
-        "Line 352: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 352: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/components/CSRFProtection.tsx",
-      "fixes": [
-        "Line 72: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 72: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -429,9 +391,7 @@
     },
     {
       "file": "src/components/CommunityHub.tsx",
-      "fixes": [
-        "Line 592: Removed standalone auto comment"
-      ],
+      "fixes": ["Line 592: Removed standalone auto comment"],
       "total_fixes": 1
     },
     {
@@ -478,9 +438,7 @@
     },
     {
       "file": "src/components/EmotionalNudgeModal.tsx",
-      "fixes": [
-        "Line 193: Removed standalone auto comment"
-      ],
+      "fixes": ["Line 193: Removed standalone auto comment"],
       "total_fixes": 1
     },
     {
@@ -506,23 +464,17 @@
     },
     {
       "file": "src/components/FeatureLockOverlay.tsx",
-      "fixes": [
-        "Line 288: Removed standalone auto comment"
-      ],
+      "fixes": ["Line 288: Removed standalone auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/FriendsManager.tsx",
-      "fixes": [
-        "Line 241: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 241: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/components/HabitCelebration.tsx",
-      "fixes": [
-        "Line 132: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 132: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -537,9 +489,7 @@
     },
     {
       "file": "src/components/MobileAlarmCard.tsx",
-      "fixes": [
-        "Line 321: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 321: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -552,16 +502,12 @@
     },
     {
       "file": "src/components/NuclearModeBattle.tsx",
-      "fixes": [
-        "Line 110: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 110: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/NuclearModeChallenge.tsx",
-      "fixes": [
-        "Line 629: Removed standalone auto comment"
-      ],
+      "fixes": ["Line 629: Removed standalone auto comment"],
       "total_fixes": 1
     },
     {
@@ -574,9 +520,7 @@
     },
     {
       "file": "src/components/PerformanceDashboard.tsx",
-      "fixes": [
-        "Line 259: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 259: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -592,9 +536,7 @@
     },
     {
       "file": "src/components/PersonaFocusDashboard.tsx",
-      "fixes": [
-        "Line 164: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 164: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -625,9 +567,7 @@
     },
     {
       "file": "src/components/PremiumDashboard.tsx",
-      "fixes": [
-        "Line 449: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 449: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -640,23 +580,17 @@
     },
     {
       "file": "src/components/PremiumFeatureTest.tsx",
-      "fixes": [
-        "Line 128: Removed standalone auto comment"
-      ],
+      "fixes": ["Line 128: Removed standalone auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/PremiumThemeSettings.tsx",
-      "fixes": [
-        "Line 365: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 365: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/components/PremiumThemeShowcase.tsx",
-      "fixes": [
-        "Line 328: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 328: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -686,51 +620,37 @@
     },
     {
       "file": "src/components/QuickAlarmSetup.tsx",
-      "fixes": [
-        "Line 78: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 78: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/components/RTLContainer.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/RTLFlex.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/RTLForm.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/RTLGrid.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/RTLText.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/RewardsDashboard.tsx",
-      "fixes": [
-        "Line 432: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 432: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -757,9 +677,7 @@
     },
     {
       "file": "src/components/SmartFeatures.tsx",
-      "fixes": [
-        "Line 855: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 855: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -842,16 +760,12 @@
     },
     {
       "file": "src/components/ThemeDemo.tsx",
-      "fixes": [
-        "Line 145: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 145: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ThemeGallery.tsx",
-      "fixes": [
-        "Line 277: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 277: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -864,9 +778,7 @@
     },
     {
       "file": "src/components/UserProfile.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
@@ -880,9 +792,7 @@
     },
     {
       "file": "src/components/VoiceCloning.tsx",
-      "fixes": [
-        "Line 450: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 450: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -921,44 +831,32 @@
     },
     {
       "file": "src/components/__tests__/AccessibilityDashboard.test.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/__tests__/AccessibilityIntegration.test.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/__tests__/AccessibilityTester.test.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/__tests__/AlarmForm.a11y.test.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/__tests__/AlarmForm.test.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/__tests__/GamingIntegration.test.tsx",
-      "fixes": [
-        "Line 294: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 294: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -986,9 +884,7 @@
     },
     {
       "file": "src/components/premium/PaymentMethodManager.tsx",
-      "fixes": [
-        "Line 132: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 132: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1003,9 +899,7 @@
     },
     {
       "file": "src/components/premium/PremiumTeamFeatures.tsx",
-      "fixes": [
-        "Line 567: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 567: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1031,86 +925,62 @@
     },
     {
       "file": "src/components/premium/SubscriptionPage.tsx",
-      "fixes": [
-        "Line 324: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 324: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/components/premium/__tests__/PricingTable.test.tsx",
-      "fixes": [
-        "Line 234: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 234: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/accordion.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/alert-dialog.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/alert.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/avatar.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/badge.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/breadcrumb.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/button.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/calendar.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/card.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/carousel.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
@@ -1123,163 +993,117 @@
     },
     {
       "file": "src/components/ui/checkbox.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/command.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/context-menu.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/dialog.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/drawer.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/dropdown-menu.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/form.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/hover-card.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/input-otp.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/input.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/label.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/menubar.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/navigation-menu.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/pagination.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/popover.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/progress.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/radio-group.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/resizable.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/scroll-area.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/select.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/separator.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/sheet.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/sidebar.tsx",
-      "fixes": [
-        "Line 2: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 2: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
@@ -1292,51 +1116,37 @@
     },
     {
       "file": "src/components/ui/switch.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/table.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/tabs.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/textarea.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/toggle-group.tsx",
-      "fixes": [
-        "Line 3: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 3: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/toggle.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/components/ui/tooltip.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
@@ -1351,9 +1161,7 @@
     },
     {
       "file": "src/components/user-testing/BugReportModal.tsx",
-      "fixes": [
-        "Line 475: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 475: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1372,16 +1180,12 @@
     },
     {
       "file": "src/contexts/FeatureAccessContext.tsx",
-      "fixes": [
-        "Line 371: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 371: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/contexts/StrugglingsamContext.tsx",
-      "fixes": [
-        "Line 122: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 122: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1404,9 +1208,7 @@
     },
     {
       "file": "src/hooks/__tests__/edge-cases/usePWA.edge.test.ts",
-      "fixes": [
-        "Line 64: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 64: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1422,9 +1224,7 @@
     },
     {
       "file": "src/hooks/__tests__/integration/cross-hook.integration.test.tsx",
-      "fixes": [
-        "Line 188: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 188: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1438,9 +1238,7 @@
     },
     {
       "file": "src/hooks/__tests__/useAdvancedAlarms.test.ts",
-      "fixes": [
-        "Line 67: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 67: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1471,9 +1269,7 @@
     },
     {
       "file": "src/hooks/__tests__/useFormAnnouncements.test.ts",
-      "fixes": [
-        "Line 435: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 435: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1536,9 +1332,7 @@
     },
     {
       "file": "src/hooks/useABTesting.tsx",
-      "fixes": [
-        "Line 303: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 303: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1551,9 +1345,7 @@
     },
     {
       "file": "src/hooks/useAdvancedAlarms.ts",
-      "fixes": [
-        "Line 69: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 69: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1582,16 +1374,12 @@
     },
     {
       "file": "src/hooks/useFocusTrap.ts",
-      "fixes": [
-        "Line 447: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 447: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/hooks/useFormAnnouncements.ts",
-      "fixes": [
-        "Line 19: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 19: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
@@ -1605,37 +1393,27 @@
     },
     {
       "file": "src/hooks/useMobilePerformance.ts",
-      "fixes": [
-        "Line 238: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 238: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/hooks/useSmartFeaturesAnnouncements.ts",
-      "fixes": [
-        "Line 261: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 261: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/hooks/useTabProtectionSettings.ts",
-      "fixes": [
-        "Line 36: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 36: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/main.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/services/__tests__/error-handler.test.ts",
-      "fixes": [
-        "Line 10: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 10: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1687,44 +1465,32 @@
     },
     {
       "file": "src/services/alarm-api-security.ts",
-      "fixes": [
-        "Line 619: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 619: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/alarm-backup-redundancy.ts",
-      "fixes": [
-        "Line 663: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 663: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/alarm-executor.ts",
-      "fixes": [
-        "Line 102: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 102: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/alarm-integrity-monitor.ts",
-      "fixes": [
-        "Line 98: Removed standalone auto comment"
-      ],
+      "fixes": ["Line 98: Removed standalone auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/services/alarm-parser.ts",
-      "fixes": [
-        "Line 221: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 221: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/alarm-security-integration.ts",
-      "fixes": [
-        "Line 367: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 367: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1749,9 +1515,7 @@
     },
     {
       "file": "src/services/battle.ts",
-      "fixes": [
-        "Line 196: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 196: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1764,44 +1528,32 @@
     },
     {
       "file": "src/services/critical-preloader.ts",
-      "fixes": [
-        "Line 187: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 187: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/custom-test-scenarios.ts",
-      "fixes": [
-        "Line 512: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 512: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/email-campaigns.ts",
-      "fixes": [
-        "Line 278: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 278: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/enhanced-cache-manager.ts",
-      "fixes": [
-        "Line 351: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 351: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/enhanced-calendar-service.ts",
-      "fixes": [
-        "Line 385: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 385: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/enhanced-location-service.ts",
-      "fixes": [
-        "Line 577: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 577: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1814,16 +1566,12 @@
     },
     {
       "file": "src/services/lazy-audio-loader.ts",
-      "fixes": [
-        "Line 148: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 148: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/notification.ts",
-      "fixes": [
-        "Line 246: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 246: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1845,23 +1593,17 @@
     },
     {
       "file": "src/services/premium.ts",
-      "fixes": [
-        "Line 259: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 259: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/privacy-compliance.ts",
-      "fixes": [
-        "Line 492: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 492: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/real-time-smart-adapter.ts",
-      "fixes": [
-        "Line 331: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 331: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1895,9 +1637,7 @@
     },
     {
       "file": "src/services/smart-alarm-scheduler.ts",
-      "fixes": [
-        "Line 17: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 17: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
@@ -1942,16 +1682,12 @@
     },
     {
       "file": "src/services/theme-persistence.ts",
-      "fixes": [
-        "Line 441: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 441: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/services/voice-biometrics.ts",
-      "fixes": [
-        "Line 294: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 294: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1965,9 +1701,7 @@
     },
     {
       "file": "src/services/voice-recognition-enhanced.ts",
-      "fixes": [
-        "Line 975: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 975: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -1989,44 +1723,32 @@
     },
     {
       "file": "src/services/voice.ts",
-      "fixes": [
-        "Line 179: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 179: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/stories/components/AlarmForm.stories.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/stories/components/Dashboard.stories.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/stories/ui/Button.stories.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/stories/ui/Card.stories.tsx",
-      "fixes": [
-        "Line 1: Removed mid-expression auto comment"
-      ],
+      "fixes": ["Line 1: Removed mid-expression auto comment"],
       "total_fixes": 1
     },
     {
       "file": "src/test-setup.ts",
-      "fixes": [
-        "Line 47: Removed standalone auto comment"
-      ],
+      "fixes": ["Line 47: Removed standalone auto comment"],
       "total_fixes": 1
     },
     {
@@ -2062,23 +1784,17 @@
     },
     {
       "file": "src/utils/advancedTranslationValidator.ts",
-      "fixes": [
-        "Line 760: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 760: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/utils/fallback-strategies.tsx",
-      "fixes": [
-        "Line 209: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 209: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
       "file": "src/utils/frame-rate-manager.tsx",
-      "fixes": [
-        "Line 525: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 525: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {
@@ -2091,9 +1807,7 @@
     },
     {
       "file": "src/utils/network-optimization.tsx",
-      "fixes": [
-        "Line 589: Added function body to incomplete arrow function"
-      ],
+      "fixes": ["Line 589: Added function body to incomplete arrow function"],
       "total_fixes": 1
     },
     {

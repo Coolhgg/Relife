@@ -332,9 +332,9 @@ class FeatureGateService {
       });
 
       return result;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to check feature access',
         { context: 'feature_gate_service', metadata: { userId, featureId } }
       );
@@ -380,9 +380,9 @@ class FeatureGateService {
           requiredTier: accessResult.requiredTier,
         });
       }
-    } catch (error) {
+    } catch (_error) {
       // Don't throw on analytics errors
-      console.error('Failed to track feature attempt:', error);
+      console._error('Failed to track feature attempt:', _error);
     }
   }
 

@@ -76,13 +76,13 @@ const VoiceAnalyticsDashboard: React.FC = () => {
   const voiceAI = VoiceAIEnhancedService.getInstance();
 
   useEffect(() => {
-    if (user) {
+    if (_user) {
       loadVoiceAnalytics();
     }
   }, [user, timeRange]);
 
   const loadVoiceAnalytics = async () => {
-    if (!user) return;
+    if (!_user) return;
 
     setLoading(true);
     try {
@@ -101,8 +101,8 @@ const VoiceAnalyticsDashboard: React.FC = () => {
         personalization: personalizationData,
         insights: insightsData,
       });
-    } catch (error) {
-      console.error('Failed to load voice analytics:', error);
+    } catch (_error) {
+      console._error('Failed to load voice analytics:', _error);
     } finally {
       setLoading(false);
     }
@@ -127,7 +127,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
   };
 
   const loadAccuracyAnalytics = async (): Promise<VoiceAnalytics['accuracy']> => {
-    const trainingProgress = await voiceBiometrics.getTrainingProgress(user!.id);
+    const trainingProgress = await voiceBiometrics.getTrainingProgress(_user!.id);
 
     return {
       overallAccuracy: 87.3,
@@ -266,7 +266,9 @@ const VoiceAnalyticsDashboard: React.FC = () => {
             <div className="flex items-center space-x-4">
               <select
                 value={timeRange}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTimeRange(e.target.value as any)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setTimeRange(e.target.value as any)
+                }
                 className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="7d">Last 7 days</option>
@@ -409,7 +411,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                     Daily Voice Usage
                   </h3>
                   <div className="h-64 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 flex items-end justify-between space-x-2">
-                    {analytics.usage.dailyUsage.slice(-14).map((day, index) => (
+                    {analytics.usage.dailyUsage.slice(-14).map((day, _index) => (
                       <div
                         key={day.date}
                         className="flex flex-col items-center space-y-2"
@@ -432,14 +434,14 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                     Most Used Commands
                   </h3>
                   <div className="space-y-4">
-                    {analytics.usage.topCommands.map((command, index) => (
+                    {analytics.usage.topCommands.map((command, _index) => (
                       <div
                         key={command.command}
                         className="flex items-center justify-between p-4 bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl"
                       >
                         <div className="flex items-center space-x-4">
                           <div className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center font-semibold">
-                            {index + 1}
+                            {_index + 1}
                           </div>
                           <div>
                             <p className="font-medium text-slate-800">
@@ -517,16 +519,18 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                     Accuracy Trend
                   </h3>
                   <div className="h-64 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4 flex items-end justify-between space-x-1">
-                    {analytics.accuracy.accuracyTrend.slice(-30).map((point, index) => (
-                      <div
-                        key={point.date}
-                        className="bg-gradient-to-t from-green-500 to-green-400 rounded-t-lg w-2 hover:from-green-600 hover:to-green-500 transition-colors"
-                        style={{
-                          height: `${(point.accuracy / 100) * 200}px`,
-                        }}
-                        title={`${point.date}: ${point.accuracy.toFixed(1)}%`}
-                      />
-                    ))}
+                    {analytics.accuracy.accuracyTrend
+                      .slice(-30)
+                      .map((point, _index) => (
+                        <div
+                          key={point.date}
+                          className="bg-gradient-to-t from-green-500 to-green-400 rounded-t-lg w-2 hover:from-green-600 hover:to-green-500 transition-colors"
+                          style={{
+                            height: `${(point.accuracy / 100) * 200}px`,
+                          }}
+                          title={`${point.date}: ${point.accuracy.toFixed(1)}%`}
+                        />
+                      ))}
                   </div>
                 </div>
               </div>
@@ -629,9 +633,9 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                     Voice Achievements
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {analytics.insights.achievements.map((achievement, index) => (
+                    {analytics.insights.achievements.map((achievement, _index) => (
                       <div
-                        key={index}
+                        key={_index}
                         className="flex items-center space-x-3 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl"
                       >
                         <div className="bg-yellow-100 p-2 rounded-full">
@@ -653,9 +657,9 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                       Recommendations
                     </h4>
                     <div className="space-y-3">
-                      {analytics.insights.recommendations.map((rec, index) => (
+                      {analytics.insights.recommendations.map((rec, _index) => (
                         <div
-                          key={index}
+                          key={_index}
                           className="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg"
                         >
                           <div className="bg-blue-100 p-1 rounded-full mt-1">
@@ -673,9 +677,9 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                       Usage Patterns
                     </h4>
                     <div className="space-y-3">
-                      {analytics.insights.patterns.map((pattern, index) => (
+                      {analytics.insights.patterns.map((pattern, _index) => (
                         <div
-                          key={index}
+                          key={_index}
                           className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg"
                         >
                           <div className="bg-green-100 p-1 rounded-full mt-1">
@@ -694,13 +698,13 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                     Next Steps
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {analytics.insights.nextSteps.map((step, index) => (
+                    {analytics.insights.nextSteps.map((step, _index) => (
                       <div
-                        key={index}
+                        key={_index}
                         className="flex items-center space-x-3 p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl"
                       >
                         <div className="bg-indigo-100 text-indigo-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold">
-                          {index + 1}
+                          {_index + 1}
                         </div>
                         <span className="text-slate-700">{step}</span>
                       </div>

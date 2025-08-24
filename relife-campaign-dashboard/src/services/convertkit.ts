@@ -283,7 +283,9 @@ export class ConvertKitService {
     }
   }
 
-  async getBroadcastStats(broadcastId: number): Promise<ConvertKit.BroadcastStatsResponse> {
+  async getBroadcastStats(
+    broadcastId: number
+  ): Promise<ConvertKit.BroadcastStatsResponse> {
     this.ensureConfigured();
 
     try {
@@ -311,7 +313,9 @@ export class ConvertKitService {
   }
 
   // Analytics and reporting methods
-  async getGrowthStats(timeframe: '1d' | '7d' | '30d' = '30d'): Promise<ConvertKit.GrowthStatsResponse> {
+  async getGrowthStats(
+    timeframe: '1d' | '7d' | '30d' = '30d'
+  ): Promise<ConvertKit.GrowthStatsResponse> {
     this.ensureConfigured();
 
     try {

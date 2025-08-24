@@ -130,9 +130,9 @@ class AppAnalyticsService {
       this.startPerformanceMonitoring();
 
       console.info('App analytics services initialized successfully');
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         {
           context: 'analytics_initialization',
           component: 'AppAnalyticsService',
@@ -163,9 +163,9 @@ class AppAnalyticsService {
         userId,
         method: (userProperties.signInMethod as string) || 'unknown',
       });
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         {
           context: 'user_context_setup',
           component: 'AppAnalyticsService',
@@ -184,9 +184,9 @@ class AppAnalyticsService {
       this.trackAppEvent('userSignedOut', {
         sessionDuration: Date.now() - this.sessionStartTime,
       });
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         {
           context: 'user_context_clear',
           component: 'AppAnalyticsService',
@@ -223,7 +223,7 @@ class AppAnalyticsService {
     // Add breadcrumb for debugging
     this.sentry.addBreadcrumb(
       `Alarm created: ${alarm.label} at ${alarm.time}`,
-      'user',
+      '_user',
       { alarmId: alarm.id, isQuickSetup: context.isQuickSetup }
     );
   }
@@ -267,7 +267,7 @@ class AppAnalyticsService {
     });
 
     // Add breadcrumb for debugging
-    this.sentry.addBreadcrumb(`Alarm action: ${action} on ${alarmId}`, 'user', {
+    this.sentry.addBreadcrumb(`Alarm action: ${action} on ${alarmId}`, '_user', {
       alarmId,
       action,
       ...metadata,
@@ -287,7 +287,7 @@ class AppAnalyticsService {
 
     // Add context for error debugging if failed
     if (!success) {
-      this.sentry.addBreadcrumb(`Voice command failed: ${command}`, 'user', {
+      this.sentry.addBreadcrumb(`Voice command failed: ${command}`, '_user', {
         confidence,
         language: navigator.language,
       });
@@ -376,8 +376,8 @@ class AppAnalyticsService {
   /**
    * Track errors with enhanced context
    */
-  trackError(error: Error, context: Record<string, unknown> = {}): void {
-    this.analytics.trackError(error, {
+  trackError(_error: Error, context: Record<string, unknown> = {}): void {
+    this.analytics.trackError(_error, {
       source: 'app-analytics-service',
       timestamp: new Date().toISOString(),
       sessionDuration: Date.now() - this.sessionStartTime,

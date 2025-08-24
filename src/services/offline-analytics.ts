@@ -20,7 +20,7 @@ interface AnalyticsEvent {
     | 'achievement_unlocked'
     | 'user_action'
     | 'page_view'
-    | 'error'
+    | '_error'
     | 'performance';
   category: 'alarm' | 'gaming' | 'rewards' | 'user' | 'system' | 'performance';
   action: string;
@@ -79,7 +79,7 @@ export class OfflineAnalyticsService {
     EVENTS_QUEUE: 'relife-analytics-events',
     SESSION_DATA: 'relife-analytics-session',
     PERFORMANCE_METRICS: 'relife-analytics-performance',
-    CONFIG: 'relife-analytics-config',
+    CONFIG: 'relife-analytics-_config',
   };
 
   private config: AnalyticsConfig = {
@@ -156,11 +156,11 @@ export class OfflineAnalyticsService {
 
       // Load configuration
       const config = SecurityService.secureStorageGet(this.STORAGE_KEYS.CONFIG);
-      if (config) {
-        this.config = { ...this.config, ...config };
+      if (_config) {
+        this.config = { ...this.config, ..._config };
       }
-    } catch (error) {
-      console.error('[OfflineAnalytics] Failed to load from storage:', error);
+    } catch (_error) {
+      console._error('[OfflineAnalytics] Failed to load from storage:', _error);
     }
   }
 
@@ -184,8 +184,8 @@ export class OfflineAnalyticsService {
     // Service worker messages
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', event => {
-        if (event.data.type === 'ANALYTICS_SYNC_COMPLETE') {
-          this.handleSyncComplete(event.data);
+        if (_event.data.type === 'ANALYTICS_SYNC_COMPLETE') {
+          this.handleSyncComplete(_event.data);
         }
       });
     }
@@ -240,14 +240,14 @@ export class OfflineAnalyticsService {
       };
 
       // Add to queue
-      this.eventQueue.push(event);
-      this.currentSession.events.push(event.id);
+      this.eventQueue.push(_event);
+      this.currentSession.events.push(_event.id);
 
       // Enforce queue size limit
-      if (this.eventQueue.length > this.config.maxQueueSize) {
+      if (this.eventQueue.length > this._config.maxQueueSize) {
         const removed = this.eventQueue.shift();
         console.warn(
-          '[OfflineAnalytics] Queue full, removed oldest event:',
+          '[OfflineAnalytics] Queue full, removed oldest _event:',
           removed?.id
         );
       }
@@ -256,8 +256,8 @@ export class OfflineAnalyticsService {
       await this.saveToStorage();
 
       // Log if debugging enabled
-      if (this.config.enableDebugLogging) {
-        console.log('[OfflineAnalytics] Tracked event:', type, action, properties);
+      if (this._config.enableDebugLogging) {
+        console.log('[OfflineAnalytics] Tracked _event:', type, action, properties);
       }
 
       // Immediate flush if requested and online
@@ -269,11 +269,11 @@ export class OfflineAnalyticsService {
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
           type: 'QUEUE_ANALYTICS',
-          data: { event },
+          data: { _event },
         });
       }
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to track analytics event', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to track analytics _event', {
         context: 'OfflineAnalyticsService.trackEvent',
         eventType: type,
         action,
@@ -288,7 +288,7 @@ export class OfflineAnalyticsService {
     name: string,
     metadata?: Record<string, any>
   ): string {
-    if (!this.config.enablePerformanceTracking) {
+    if (!this._config.enablePerformanceTracking) {
       return '';
     }
 
@@ -309,7 +309,7 @@ export class OfflineAnalyticsService {
   }
 
   endPerformanceTimer(id: string): void {
-    if (!this.config.enablePerformanceTracking || !id) {
+    if (!this._config.enablePerformanceTracking || !id) {
       return;
     }
 
@@ -325,7 +325,7 @@ export class OfflineAnalyticsService {
         ...metric.metadata,
       });
 
-      if (this.config.enableDebugLogging) {
+      if (this._config.enableDebugLogging) {
         console.log(
           '[OfflineAnalytics] Performance metric:',
           metric.name,
@@ -381,14 +381,14 @@ export class OfflineAnalyticsService {
     action: string,
     properties: Record<string, any> = {}
   ): Promise<void> {
-    await this.trackEvent('user_action', 'user', action, properties);
+    await this.trackEvent('user_action', '_user', action, properties);
   }
 
   async trackPageView(
     page: string,
     properties: Record<string, any> = {}
   ): Promise<void> {
-    await this.trackEvent('page_view', 'user', 'page_view', {
+    await this.trackEvent('page_view', '_user', 'page_view', {
       page,
       url: window.location.href,
       referrer: document.referrer,
@@ -396,15 +396,15 @@ export class OfflineAnalyticsService {
     });
   }
 
-  async trackError(error: Error, context?: Record<string, any>): Promise<void> {
+  async trackError(_error: Error, context?: Record<string, any>): Promise<void> {
     await this.trackEvent(
       'error',
       'system',
       'error',
       {
         message: error.message,
-        stack: error.stack,
-        name: error.name,
+        stack: _error.stack,
+        name: _error.name,
         ...context,
       },
       { immediate: true }
@@ -441,9 +441,9 @@ export class OfflineAnalyticsService {
 
   private async handleVisibilityChange(): Promise<void> {
     if (document.hidden) {
-      await this.trackEvent('user_action', 'user', 'page_hidden');
+      await this.trackEvent('user_action', '_user', 'page_hidden');
     } else {
-      await this.trackEvent('user_action', 'user', 'page_visible');
+      await this.trackEvent('user_action', '_user', 'page_visible');
     }
   }
 
@@ -453,7 +453,7 @@ export class OfflineAnalyticsService {
 
     await this.trackEvent(
       'user_action',
-      'user',
+      '_user',
       'session_end',
       {
         duration: Date.now() - new Date(this.currentSession.startTime).getTime(),
@@ -479,7 +479,7 @@ export class OfflineAnalyticsService {
 
     try {
       const unsyncedEvents = this.eventQueue.filter(
-        e => !e.synced && e.retryCount < this.config.maxRetries
+        e => !e.synced && e.retryCount < this._config.maxRetries
       );
 
       if (unsyncedEvents.length === 0) {
@@ -490,30 +490,30 @@ export class OfflineAnalyticsService {
       console.log('[OfflineAnalytics] Flushing', unsyncedEvents.length, 'events...');
 
       // Process in batches
-      for (let i = 0; i < unsyncedEvents.length; i += this.config.batchSize) {
-        const batch = unsyncedEvents.slice(i, i + this.config.batchSize);
+      for (let i = 0; i < unsyncedEvents.length; i += this._config.batchSize) {
+        const batch = unsyncedEvents.slice(i, i + this._config.batchSize);
 
         try {
           await this.sendEventBatch(batch);
 
           // Mark as synced
           batch.forEach(event => {
-            event.synced = true;
+            _event.synced = true;
           });
-        } catch (error) {
+        } catch (_error) {
           // Increment retry count for failed events
           batch.forEach(event => {
-            event.retryCount++;
+            _event.retryCount++;
           });
 
-          console.error('[OfflineAnalytics] Failed to sync batch:', error);
+          console.error('[OfflineAnalytics] Failed to sync batch:', _error);
         }
       }
 
       // Remove events that exceeded max retries
       const initialLength = this.eventQueue.length;
       this.eventQueue = this.eventQueue.filter(
-        e => e.retryCount < this.config.maxRetries
+        e => e.retryCount < this._config.maxRetries
       );
 
       if (this.eventQueue.length < initialLength) {
@@ -525,8 +525,8 @@ export class OfflineAnalyticsService {
       }
 
       await this.saveToStorage();
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to flush analytics events', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to flush analytics events', {
         context: 'OfflineAnalyticsService.flushEvents',
       });
     } finally {
@@ -577,17 +577,17 @@ export class OfflineAnalyticsService {
         this.STORAGE_KEYS.PERFORMANCE_METRICS,
         this.performanceMetrics
       );
-      SecurityService.secureStorageSet(this.STORAGE_KEYS.CONFIG, this.config);
-    } catch (error) {
-      console.error('[OfflineAnalytics] Failed to save to storage:', error);
+      SecurityService.secureStorageSet(this.STORAGE_KEYS.CONFIG, this._config);
+    } catch (_error) {
+      console._error('[OfflineAnalytics] Failed to save to storage:', _error);
     }
   }
 
   // ==================== CONFIGURATION ====================
 
   updateConfig(newConfig: Partial<AnalyticsConfig>): void {
-    this.config = { ...this.config, ...newConfig };
-    SecurityService.secureStorageSet(this.STORAGE_KEYS.CONFIG, this.config);
+    this.config = { ...this._config, ...newConfig };
+    SecurityService.secureStorageSet(this.STORAGE_KEYS.CONFIG, this._config);
 
     // Restart timer if interval changed
     if (newConfig.flushInterval) {
@@ -597,7 +597,7 @@ export class OfflineAnalyticsService {
 
   setUserId(userId: string): void {
     this.currentSession.userId = userId;
-    this.trackEvent('user_action', 'user', 'login', { userId });
+    this.trackEvent('user_action', '_user', 'login', { userId });
   }
 
   // ==================== UTILITY METHODS ====================
@@ -632,8 +632,8 @@ export class OfflineAnalyticsService {
       await this.saveToStorage();
 
       console.log('[OfflineAnalytics] Cleared all offline analytics data');
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to clear offline analytics data', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to clear offline analytics data', {
         context: 'OfflineAnalyticsService.clearOfflineData',
       });
     }

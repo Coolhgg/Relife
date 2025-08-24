@@ -46,7 +46,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   onAddAlarm,
   onQuickSetup,
   onNavigateToAdvanced,
-  userId = 'demo-user',
+  userId = 'demo-_user',
 }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
   const enabledAlarms = alarms?.filter((a: any) => a.enabled) || [];
@@ -111,8 +111,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
         const suggestions = await MLAlarmOptimizer.getOptimizationSuggestions(userId);
         setOptimizationSuggestions(suggestions.slice(0, 2));
       }
-    } catch (error) {
-      console.error('Error loading smart insights:', error);
+    } catch (_error) {
+      console._error('Error loading smart insights:', _error);
     }
   };
 
@@ -482,9 +482,9 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
           <div className="space-y-3">
             {/* Optimization Suggestions */}
-            {optimizationSuggestions.map((suggestion, index) => (
+            {optimizationSuggestions.map((suggestion, _index) => (
               <div
-                key={index}
+                key={_index}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
               >
                 <div className="flex items-start gap-3">

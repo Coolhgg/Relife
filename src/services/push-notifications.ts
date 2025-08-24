@@ -133,13 +133,13 @@ export class PushNotificationService {
       );
 
       return this.hasPermission;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to initialize push notification service',
         { context: 'push_initialization' }
       );
-      console.error('Error initializing push notification service:', error);
+      console.error('Error initializing push notification service:', _error);
       return false;
     }
   }
@@ -162,8 +162,8 @@ export class PushNotificationService {
       }
 
       return false;
-    } catch (error) {
-      console.error('Error requesting push permissions:', error);
+    } catch (_error) {
+      console._error('Error requesting push permissions:', _error);
       return false;
     }
   }
@@ -179,9 +179,9 @@ export class PushNotificationService {
         // Web push registration would happen here
         await this.registerWebPush();
       }
-    } catch (error) {
-      console.error('Error registering for push notifications:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error registering for push notifications:', _error);
+      throw _error;
     }
   }
 
@@ -210,8 +210,8 @@ export class PushNotificationService {
           await this.saveSubscription(subscription);
         }
       }
-    } catch (error) {
-      console.error('Error registering web push:', error);
+    } catch (_error) {
+      console._error('Error registering web push:', _error);
     }
   }
 
@@ -234,9 +234,9 @@ export class PushNotificationService {
 
     // Registration error with security implications
     PushNotifications.addListener('registrationError', error => {
-      console.error('Push registration error:', error);
+      console.error('Push registration error:', _error);
       this.logSecurityEvent('push_registration_error', {
-        error: error.error,
+        error: _error._error,
         timestamp: new Date().toISOString(),
       });
     });
@@ -286,12 +286,12 @@ export class PushNotificationService {
     });
 
     // Handle custom events
-    window.addEventListener('alarm-triggered', (event: CustomEvent) => {
-      this.handleAlarmTriggered(event.detail.alarmId);
+    window.addEventListener('alarm-triggered', (_event: CustomEvent) => {
+      this.handleAlarmTriggered(_event.detail.alarmId);
     });
 
-    window.addEventListener('alarm-dismissed', (event: CustomEvent) => {
-      this.handleAlarmDismissed(event.detail.alarmId);
+    window.addEventListener('alarm-dismissed', (_event: CustomEvent) => {
+      this.handleAlarmDismissed(_event.detail.alarmId);
     });
   }
 
@@ -341,13 +341,13 @@ export class PushNotificationService {
         userId,
         hasSignature: !!payload.data?.signature,
       });
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to schedule alarm push notification',
         { context: 'push_scheduling', metadata: { alarmId: alarm.id, userId } }
       );
-      console.error('Error scheduling alarm push:', error);
+      console.error('Error scheduling alarm push:', _error);
     }
   }
 
@@ -376,8 +376,8 @@ export class PushNotificationService {
       };
 
       await this.sendPushToServer(payload);
-    } catch (error) {
-      console.error('Error sending daily motivation:', error);
+    } catch (_error) {
+      console._error('Error sending daily motivation:', _error);
     }
   }
 
@@ -407,8 +407,8 @@ export class PushNotificationService {
       };
 
       await this.sendPushToServer(payload);
-    } catch (error) {
-      console.error('Error sending weekly progress:', error);
+    } catch (_error) {
+      console._error('Error sending weekly progress:', _error);
     }
   }
 
@@ -433,8 +433,8 @@ export class PushNotificationService {
       };
 
       await this.sendPushToServer(payload);
-    } catch (error) {
-      console.error('Error sending system update:', error);
+    } catch (_error) {
+      console._error('Error sending system update:', _error);
     }
   }
 
@@ -486,13 +486,13 @@ export class PushNotificationService {
         userId,
         hasSignature: !!payload.data?.signature,
       });
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to send emergency alert',
         { context: 'emergency_push', metadata: { title, userId } }
       );
-      console.error('Error sending emergency alert:', error);
+      console.error('Error sending emergency alert:', _error);
     }
   }
 
@@ -515,8 +515,8 @@ export class PushNotificationService {
       }
 
       console.log('Push notification settings updated:', this.settings);
-    } catch (error) {
-      console.error('Error updating push settings:', error);
+    } catch (_error) {
+      console._error('Error updating push settings:', _error);
     }
   }
 
@@ -666,8 +666,8 @@ export class PushNotificationService {
         key: 'push_subscription',
         value: JSON.stringify(subscription),
       });
-    } catch (error) {
-      console.error('Error saving push subscription:', error);
+    } catch (_error) {
+      console._error('Error saving push subscription:', _error);
     }
   }
 
@@ -677,8 +677,8 @@ export class PushNotificationService {
         key: 'push_token',
         value: token,
       });
-    } catch (error) {
-      console.error('Error saving push token:', error);
+    } catch (_error) {
+      console._error('Error saving push token:', _error);
     }
   }
 
@@ -689,8 +689,8 @@ export class PushNotificationService {
         const savedSettings = JSON.parse(value);
         this.settings = { ...this.settings, ...savedSettings };
       }
-    } catch (error) {
-      console.error('Error loading push settings:', error);
+    } catch (_error) {
+      console._error('Error loading push settings:', _error);
     }
   }
 
@@ -700,8 +700,8 @@ export class PushNotificationService {
         key: 'push_settings',
         value: JSON.stringify(this.settings),
       });
-    } catch (error) {
-      console.error('Error saving push settings:', error);
+    } catch (_error) {
+      console._error('Error saving push settings:', _error);
     }
   }
 
@@ -720,8 +720,8 @@ export class PushNotificationService {
       //     deviceId: await this.getDeviceId()
       //   })
       // });
-    } catch (error) {
-      console.error('Error sending token to server:', error);
+    } catch (_error) {
+      console._error('Error sending token to server:', _error);
     }
   }
 
@@ -743,8 +743,8 @@ export class PushNotificationService {
       //     token: this.currentToken
       //   })
       // });
-    } catch (error) {
-      console.error('Error sending push to server:', error);
+    } catch (_error) {
+      console._error('Error sending push to server:', _error);
     }
   }
 
@@ -756,8 +756,8 @@ export class PushNotificationService {
         // Mobile badge update would be implemented here
         console.log('Updating badge count to:', count);
       }
-    } catch (error) {
-      console.error('Error updating badge count:', error);
+    } catch (_error) {
+      console._error('Error updating badge count:', _error);
     }
   }
 
@@ -777,17 +777,17 @@ export class PushNotificationService {
 
       this.currentToken = null;
       this.hasPermission = false;
-    } catch (error) {
-      console.error('Error unregistering from push notifications:', error);
+    } catch (_error) {
+      console._error('Error unregistering from push notifications:', _error);
     }
   }
 
-  private static trackSecureNotificationEvent(event: string, data: any): void {
+  private static trackSecureNotificationEvent(_event: string, data: any): void {
     // Track notification events for analytics with security context
     window.dispatchEvent(
       new CustomEvent('secure-notification-analytics', {
         detail: {
-          event,
+          _event,
           data,
           timestamp: new Date(),
           hasSignature: !!data.data?.signature,
@@ -797,9 +797,9 @@ export class PushNotificationService {
     );
   }
 
-  private static trackNotificationEvent(event: string, data: any): void {
+  private static trackNotificationEvent(_event: string, data: any): void {
     // Legacy tracking for backwards compatibility
-    this.trackSecureNotificationEvent(event, data);
+    this.trackSecureNotificationEvent(_event, data);
   }
 
   private static handleAlarmPushReceived(notification: any): void {
@@ -929,8 +929,8 @@ export class PushNotificationService {
       }
 
       return true;
-    } catch (error) {
-      console.error('Notification security validation failed:', error);
+    } catch (_error) {
+      console._error('Notification security validation failed:', _error);
       return false;
     }
   }
@@ -956,7 +956,7 @@ export class PushNotificationService {
   /**
    * Log security events
    */
-  private static logSecurityEvent(event: string, details: any): void {
+  private static logSecurityEvent(_event: string, details: any): void {
     const logEntry = {
       event,
       details,
@@ -968,7 +968,7 @@ export class PushNotificationService {
 
     // Emit custom event for security monitoring
     window.dispatchEvent(
-      new CustomEvent('push-security-event', {
+      new CustomEvent('push-security-_event', {
         detail: logEntry,
       })
     );
@@ -1017,8 +1017,8 @@ export class PushNotificationService {
         userId,
         hasSignature: !!payload.data?.signature,
       });
-    } catch (error) {
-      console.error('Error sending test notification:', error);
+    } catch (_error) {
+      console._error('Error sending test notification:', _error);
     }
   }
 }

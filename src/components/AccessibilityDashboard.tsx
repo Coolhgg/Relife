@@ -28,16 +28,14 @@ import ExtendedScreenReaderTester from './ExtendedScreenReaderTester';
 import { TimeoutHandle } from '../types/timers';
 
 interface AccessibilityDashboardProps {
-  onClose?: (
-) => void;
+  onClose?: () => void;
   embedded?: boolean;
 }
 
 const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   onClose,
   embedded = false,
-}
-) => {
+}) => {
   const { preferences, updatePreferences, resetToDefaults, testColorContrast } =
     useAccessibilityPreferences();
   const [activeSection, setActiveSection] = useState<string>('visual');
@@ -63,14 +61,12 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   ];
 
   // Handle section navigation
-  const navigateToSection = (sectionId: string
-) => {
+  const navigateToSection = (sectionId: string) => {
     setActiveSection(sectionId);
     announce(`Switched to ${sections.find(s => s.id === sectionId)?.label} settings`);
 
     // Focus the section
-    setTimeout((
-) => {
+    setTimeout(() => {
       const sectionElement = sectionRefs.current[sectionId];
       if (sectionElement) {
         sectionElement.focus();
@@ -79,25 +75,21 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   };
 
   // Handle preference updates with announcements
-  const handlePreferenceUpdate = (key: string, value: any, description: string
-) => {
+  const handlePreferenceUpdate = (key: string, value: any, description: string) => {
     updatePreferences({ [key]: value });
     announce(`${description} ${value ? 'enabled' : 'disabled'}`);
   };
 
   // Reset all preferences
-  const handleReset = (
-) => {
+  const handleReset = () => {
     resetToDefaults();
     announceSuccess('Accessibility preferences reset to defaults');
   };
 
   // Visual & Display Section
-  const renderVisualSection = (
-) => (
+  const renderVisualSection = () => (
     <div
-      ref={(el: any
-) => {
+      ref={(el: any) => {
         sectionRefs.current['visual'] = el;
       }}
       className="space-y-6"
@@ -125,8 +117,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="high-contrast"
           type="checkbox"
           checked={preferences.highContrastMode}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'highContrastMode',
               e.target.checked,
               'High contrast mode'
@@ -152,8 +144,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         <select
           id="font-size"
           value={preferences.fontSize}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>
-) => {
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
             updatePreferences({ fontSize: e.target.value as any });
             announce(`Font size changed to ${e.target.value}`);
           }}
@@ -183,8 +174,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="color-blind-friendly"
           type="checkbox"
           checked={preferences.colorBlindFriendly}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'colorBlindFriendly',
               e.target.checked,
               'Color blind friendly mode'
@@ -207,8 +198,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="reduced-motion"
           type="checkbox"
           checked={preferences.reducedMotion}
-          onChange={(
-            e: any) => handlePreferenceUpdate('reducedMotion', e.target.checked, 'Reduced motion')
+          onChange={(e: any) =>
+            handlePreferenceUpdate('reducedMotion', e.target.checked, 'Reduced motion')
           }
           className="setting-toggle"
         />
@@ -217,11 +208,9 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   );
 
   // Navigation & Focus Section
-  const renderNavigationSection = (
-) => (
+  const renderNavigationSection = () => (
     <div
-      ref={(el: any
-) => {
+      ref={(el: any) => {
         sectionRefs.current['navigation'] = el;
       }}
       className="space-y-6"
@@ -249,8 +238,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="enhanced-focus"
           type="checkbox"
           checked={preferences.enhancedFocusRings}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'enhancedFocusRings',
               e.target.checked,
               'Enhanced focus rings'
@@ -270,8 +259,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         <select
           id="focus-ring-color"
           value={preferences.focusRingColor}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>
-) => {
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
             updatePreferences({ focusRingColor: e.target.value });
             announce(`Focus ring color changed to ${e.target.value}`);
           }}
@@ -299,8 +287,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="skip-links"
           type="checkbox"
           checked={preferences.skipLinksVisible}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'skipLinksVisible',
               e.target.checked,
               'Skip links visibility'
@@ -323,8 +311,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="keyboard-nav"
           type="checkbox"
           checked={preferences.keyboardNavigation}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'keyboardNavigation',
               e.target.checked,
               'Keyboard navigation'
@@ -342,11 +330,9 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   );
 
   // Audio & Speech Section
-  const renderAudioSection = (
-) => (
+  const renderAudioSection = () => (
     <div
-      ref={(el: any
-) => {
+      ref={(el: any) => {
         sectionRefs.current['audio'] = el;
       }}
       className="space-y-6"
@@ -374,8 +360,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="screen-reader"
           type="checkbox"
           checked={preferences.screenReaderOptimized}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'screenReaderOptimized',
               e.target.checked,
               'Screen reader optimization'
@@ -398,8 +384,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="announce-transitions"
           type="checkbox"
           checked={preferences.announceTransitions}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'announceTransitions',
               e.target.checked,
               'Transition announcements'
@@ -422,8 +408,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="announce-errors"
           type="checkbox"
           checked={preferences.announceErrors}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'announceErrors',
               e.target.checked,
               'Error announcements'
@@ -446,8 +432,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="announce-success"
           type="checkbox"
           checked={preferences.announceSuccess}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'announceSuccess',
               e.target.checked,
               'Success announcements'
@@ -473,8 +459,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           max="2.0"
           step="0.1"
           value={preferences.speechRate}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>
-) => {
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
             const rate = parseFloat(e.target.value);
             updatePreferences({ speechRate: rate });
             announce(`Speech rate set to ${rate}x speed`);
@@ -493,11 +478,9 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   );
 
   // Touch & Interaction Section
-  const renderTouchSection = (
-) => (
+  const renderTouchSection = () => (
     <div
-      ref={(el: any
-) => {
+      ref={(el: any) => {
         sectionRefs.current['touch'] = el;
       }}
       className="space-y-6"
@@ -525,8 +508,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="large-touch"
           type="checkbox"
           checked={preferences.largerTouchTargets}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'largerTouchTargets',
               e.target.checked,
               'Larger touch targets'
@@ -549,8 +532,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="haptic-feedback"
           type="checkbox"
           checked={preferences.hapticFeedback}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'hapticFeedback',
               e.target.checked,
               'Haptic feedback'
@@ -572,8 +555,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         <select
           id="long-press-delay"
           value={preferences.longPressDelay}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>
-) => {
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
             const delay = parseInt(e.target.value);
             updatePreferences({ longPressDelay: delay });
             announce(`Long press delay set to ${delay} milliseconds`);
@@ -590,11 +572,9 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   );
 
   // Advanced Features Section
-  const renderAdvancedSection = (
-) => (
+  const renderAdvancedSection = () => (
     <div
-      ref={(el: any
-) => {
+      ref={(el: any) => {
         sectionRefs.current['advanced'] = el;
       }}
       className="space-y-6"
@@ -622,8 +602,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="voice-commands"
           type="checkbox"
           checked={preferences.voiceCommands}
-          onChange={(
-            e: any) => handlePreferenceUpdate('voiceCommands', e.target.checked, 'Voice commands')
+          onChange={(e: any) =>
+            handlePreferenceUpdate('voiceCommands', e.target.checked, 'Voice commands')
           }
           className="setting-toggle"
         />
@@ -642,8 +622,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="gesture-nav"
           type="checkbox"
           checked={preferences.gestureNavigation}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'gestureNavigation',
               e.target.checked,
               'Gesture navigation'
@@ -666,10 +646,9 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="autoplay"
           type="checkbox"
           checked={preferences.autoplay}
-          onChange={(
-            e: any
-          
-) => handlePreferenceUpdate('autoplay', e.target.checked, 'Autoplay media')}
+          onChange={(e: any) =>
+            handlePreferenceUpdate('autoplay', e.target.checked, 'Autoplay media')
+          }
           className="setting-toggle"
         />
       </div>
@@ -687,8 +666,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           id="blinking-elements"
           type="checkbox"
           checked={preferences.blinkingElements}
-          onChange={(
-            e: any) => handlePreferenceUpdate(
+          onChange={(e: any) =>
+            handlePreferenceUpdate(
               'blinkingElements',
               e.target.checked,
               'Blinking elements'
@@ -711,8 +690,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
             </p>
           </div>
           <button
-            onClick={(
-) => {
+            onClick={() => {
               const result = testColorContrast('#000000', '#ffffff');
               announce(
                 `Contrast ratio test: ${result.ratio}:1, WCAG AA ${result.wcagAA ? 'pass' : 'fail'}`
@@ -729,11 +707,9 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   );
 
   // Screen Reader Testing Section
-  const renderTestingSection = (
-) => (
+  const renderTestingSection = () => (
     <div
-      ref={(el: any
-) => {
+      ref={(el: any) => {
         sectionRefs.current['testing'] = el;
       }}
       className="space-y-6"
@@ -774,8 +750,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           embedded={true}
           userName="Test User"
           isPremium={false}
-          onTestComplete={(testId, success
-) => {
+          onTestComplete={(testId, success) => {
             announce(
               success
                 ? `Test ${testId} completed successfully`
@@ -823,8 +798,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
                 aria-selected={activeSection === section.id}
                 aria-controls={`${section.id}-panel`}
                 className={`nav-item ${activeSection === section.id ? 'active' : ''}`}
-                onClick={(
-) => navigateToSection(section.id)}
+                onClick={() => navigateToSection(section.id)}
               >
                 <Icon className="w-4 h-4" aria-hidden="true" />
                 {section.label}

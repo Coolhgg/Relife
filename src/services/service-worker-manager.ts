@@ -40,8 +40,8 @@ class ServiceWorkerManager {
         this.setupEventListeners();
         this.setupPeriodicSync();
         console.log('✅ Service Worker Manager initialized');
-      } catch (error) {
-        console.error('❌ Service Worker Manager initialization failed:', error);
+      } catch (_error) {
+        console._error('❌ Service Worker Manager initialization failed:', _error);
       }
     } else {
       console.warn('⚠️ Service Workers not supported');
@@ -75,9 +75,9 @@ class ServiceWorkerManager {
         console.log('🔄 Service Worker update found');
         this.handleUpdateFound();
       });
-    } catch (error) {
-      console.error('❌ Service Worker registration failed:', error);
-      throw error;
+    } catch (_error) {
+      console.error('❌ Service Worker registration failed:', _error);
+      throw _error;
     }
   }
 
@@ -148,8 +148,8 @@ class ServiceWorkerManager {
       window.location.reload();
 
       return true;
-    } catch (error) {
-      console.error('❌ Failed to apply service worker update:', error);
+    } catch (_error) {
+      console._error('❌ Failed to apply service worker update:', _error);
       return false;
     }
   }
@@ -163,7 +163,7 @@ class ServiceWorkerManager {
 
     // Listen for messages from service worker
     navigator.serviceWorker.addEventListener('message', event => {
-      this.handleServiceWorkerMessage(event);
+      this.handleServiceWorkerMessage(_event);
     });
 
     // Send initial handshake
@@ -175,7 +175,7 @@ class ServiceWorkerManager {
   }
 
   // Handle messages from service worker
-  handleServiceWorkerMessage(event: MessageEvent<ServiceWorkerMessage>): void {
+  handleServiceWorkerMessage(_event: MessageEvent<ServiceWorkerMessage>): void {
     const { type, data } = event.data;
 
     console.log('💬 Message from SW:', type, data);
@@ -224,11 +224,11 @@ class ServiceWorkerManager {
       // Send immediately if online
       this.sendMessage({
         type: 'TRACK_EMOTIONAL_EVENT',
-        data: event,
+        data: _event,
       });
     } else {
       // Queue for later if offline
-      this.emotionalEventsQueue.push(event);
+      this.emotionalEventsQueue.push(_event);
       console.log('📱 Event queued for offline sync:', eventType);
     }
   }
@@ -265,23 +265,23 @@ class ServiceWorkerManager {
   async flushEventQueue() {
     if (this.emotionalEventsQueue.length === 0) return;
 
-    console.log('🚀 Flushing event queue:', this.emotionalEventsQueue.length);
+    console.log('🚀 Flushing _event queue:', this.emotionalEventsQueue.length);
 
     const events = [...this.emotionalEventsQueue];
     this.emotionalEventsQueue = [];
 
     try {
       // Send all queued events to service worker
-      for (const event of events) {
+      for (const _event of events) {
         this.sendMessage({
           type: 'TRACK_EMOTIONAL_EVENT',
-          data: event,
+          data: _event,
         });
       }
 
       console.log('✅ Event queue flushed successfully');
-    } catch (error) {
-      console.error('❌ Failed to flush event queue:', error);
+    } catch (_error) {
+      console._error('❌ Failed to flush _event queue:', _error);
       // Re-queue events on failure
       this.emotionalEventsQueue.unshift(...events);
     }

@@ -164,7 +164,7 @@ export interface BattleSettings {
 /**
  * Battle challenge types
  */
-export type BattleChallengeType = 
+export type BattleChallengeType =
   | 'photo_proof'
   | 'location_check'
   | 'math_problem'
@@ -189,7 +189,7 @@ export interface AlarmEvent {
 /**
  * Alarm event types
  */
-export type AlarmEventType = 
+export type AlarmEventType =
   | 'triggered'
   | 'snoozed'
   | 'dismissed'
@@ -252,7 +252,7 @@ export interface Battle {
 /**
  * Battle types
  */
-export type BattleType = 
+export type BattleType =
   | 'quick_challenge'
   | 'daily_duel'
   | 'weekly_warrior'
@@ -263,7 +263,7 @@ export type BattleType =
 /**
  * Battle status
  */
-export type BattleStatus = 
+export type BattleStatus =
   | 'waiting'
   | 'starting'
   | 'active'
@@ -290,7 +290,7 @@ export interface BattleParticipant {
 /**
  * Participant status
  */
-export type ParticipantStatus = 
+export type ParticipantStatus =
   | 'joined'
   | 'ready'
   | 'active'
@@ -395,7 +395,7 @@ export interface Tournament {
 /**
  * Tournament formats
  */
-export type TournamentFormat = 
+export type TournamentFormat =
   | 'single_elimination'
   | 'double_elimination'
   | 'round_robin'
@@ -406,7 +406,7 @@ export type TournamentFormat =
 /**
  * Tournament status
  */
-export type TournamentStatus = 
+export type TournamentStatus =
   | 'registration_open'
   | 'registration_closed'
   | 'starting'

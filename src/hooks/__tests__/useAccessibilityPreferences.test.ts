@@ -153,7 +153,7 @@ describe('useAccessibilityPreferences', () => {
   });
 
   it('should handle errors in updatePreferences gracefully', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
     mockService.updatePreferences.mockRejectedValue(new Error('Update failed'));
 
     const { result } = renderHook(() => useAccessibilityPreferences());
@@ -177,7 +177,7 @@ describe('useAccessibilityPreferences', () => {
   });
 
   it('should handle errors in resetToDefaults gracefully', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
     mockService.resetToDefaults.mockRejectedValue(new Error('Reset failed'));
 
     const { result } = renderHook(() => useAccessibilityPreferences());

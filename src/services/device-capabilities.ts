@@ -64,9 +64,9 @@ export class DeviceCapabilityDetector {
   private capabilities: DeviceCapabilities | null = null;
   private metrics: DevicePerformanceMetrics | null = null;
   private tier: DeviceTier | null = null;
-  private config: AdaptiveConfig | null = null;
+  private _config: AdaptiveConfig | null = null;
   private isDetecting = false;
-  private listeners: Array<(config: AdaptiveConfig) => void> = [];
+  private listeners: Array<(_config: AdaptiveConfig) => void> = [];
 
   private constructor() {}
 
@@ -78,13 +78,13 @@ export class DeviceCapabilityDetector {
   }
 
   async initialize(): Promise<AdaptiveConfig> {
-    if (this.config) return this.config;
+    if (this._config) return this._config;
     if (this.isDetecting) {
       // Wait for ongoing detection to complete
       return new Promise(resolve => {
         const checkComplete = () => {
-          if (this.config) {
-            resolve(this.config);
+          if (this._config) {
+            resolve(this._config);
           } else {
             setTimeout(checkComplete, 100);
           }
@@ -106,7 +106,7 @@ export class DeviceCapabilityDetector {
       this.tier = this.calculateDeviceTier();
 
       // Generate adaptive configuration
-      this.config = this.generateAdaptiveConfig();
+      this._config = this.generateAdaptiveConfig();
 
       console.log('Device capabilities detected:', {
         tier: this.tier,
@@ -530,7 +530,7 @@ export class DeviceCapabilityDetector {
   }
 
   getAdaptiveConfig(): AdaptiveConfig | null {
-    return this.config;
+    return this._config;
   }
 
   // Utility methods
@@ -555,37 +555,37 @@ export class DeviceCapabilityDetector {
   }
 
   shouldUseVirtualScrolling(): boolean {
-    return this.config?.features.virtualScrollingEnabled || false;
+    return this._config?.features.virtualScrollingEnabled || false;
   }
 
   getOptimalAudioQuality(): 'low' | 'medium' | 'high' {
-    return this.config?.limits.maxAudioQuality || 'low';
+    return this._config?.limits.maxAudioQuality || 'low';
   }
 
   getMaxCacheSize(): number {
-    return (this.config?.limits.maxCacheSize || 20) * 1024 * 1024; // Convert to bytes
+    return (this._config?.limits.maxCacheSize || 20) * 1024 * 1024; // Convert to bytes
   }
 
   // Event listeners
-  onConfigChange(callback: (config: AdaptiveConfig) => void): () => void {
+  onConfigChange(callback: (_config: AdaptiveConfig) => void): () => void {
     this.listeners.push(callback);
 
     // Return unsubscribe function
     return () => {
-      const index = this.listeners.indexOf(callback);
-      if (index > -1) {
-        this.listeners.splice(index, 1);
+      const _index = this.listeners.indexOf(callback);
+      if (_index > -1) {
+        this.listeners.splice(_index, 1);
       }
     };
   }
 
   private notifyListeners(): void {
-    if (this.config) {
+    if (this._config) {
       this.listeners.forEach(callback => {
         try {
-          callback(this.config!);
-        } catch (error) {
-          console.error('Error in device capability listener:', error);
+          callback(this._config!);
+        } catch (_error) {
+          console._error('Error in device capability listener:', _error);
         }
       });
     }
@@ -596,7 +596,7 @@ export class DeviceCapabilityDetector {
     this.capabilities = null;
     this.metrics = null;
     this.tier = null;
-    this.config = null;
+    this._config = null;
 
     return this.initialize();
   }

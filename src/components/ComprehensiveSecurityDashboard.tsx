@@ -56,8 +56,7 @@ interface SecurityAlert {
   resolved: boolean;
 }
 
-const ComprehensiveSecurityDashboard: React.FC = (
-) => {
+const ComprehensiveSecurityDashboard: React.FC = () => {
   const [securityStatus, setSecurityStatus] = useState<SecurityStatus | null>(null);
   const [activeAlerts, setActiveAlerts] = useState<SecurityAlert[]>([]);
   const [diagnosticsResults, setDiagnosticsResults] = useState<any>(null);
@@ -67,44 +66,37 @@ const ComprehensiveSecurityDashboard: React.FC = (
   >('overview');
   const [autoRefresh, setAutoRefresh] = useState(true);
 
-  useEffect((
-) => {
+  useEffect(() => {
     loadSecurityData();
 
     if (autoRefresh) {
       const interval = setInterval(loadSecurityData, 30000); // Refresh every 30 seconds
-      return (
-) => clearInterval(interval);
+      return () => clearInterval(interval);
     }
   }, [autoRefresh]);
 
-  useEffect((
-) => {
+  useEffect(() => {
     // Listen for real-time security events
-    const handleSecurityAlert = (event: any
-) => {
-      console.log('New security alert:', event.detail);
+    const handleSecurityAlert = (_event: any) => {
+      console.log('New security alert:', _event.detail);
       loadSecurityData(); // Refresh data when new alerts come in
     };
 
-    const handleTamperDetection = (event: any
-) => {
-      console.error('Tamper detection:', event.detail);
+    const handleTamperDetection = (_event: any) => {
+      console._error('Tamper detection:', _event.detail);
       loadSecurityData();
     };
 
     window.addEventListener('security-alert-created', handleSecurityAlert);
     window.addEventListener('alarm-tamper-detected', handleTamperDetection);
 
-    return (
-) => {
+    return () => {
       window.removeEventListener('security-alert-created', handleSecurityAlert);
       window.removeEventListener('alarm-tamper-detected', handleTamperDetection);
     };
   }, []);
 
-  const loadSecurityData = async (
-) => {
+  const loadSecurityData = async () => {
     try {
       setLoading(true);
 
@@ -115,48 +107,44 @@ const ComprehensiveSecurityDashboard: React.FC = (
       // Load active alerts
       const alerts = await SecurityMonitoringForensicsService.getActiveAlerts();
       setActiveAlerts(alerts);
-    } catch (error) {
-      console.error('Failed to load security data:', error);
+    } catch (_error) {
+      console._error('Failed to load security data:', _error);
     } finally {
       setLoading(false);
     }
   };
 
-  const runDiagnostics = async (
-) => {
+  const runDiagnostics = async () => {
     try {
       setLoading(true);
       const results = await AlarmSecurityIntegrationService.runSecurityDiagnostics();
       setDiagnosticsResults(results);
-    } catch (error) {
-      console.error('Failed to run diagnostics:', error);
+    } catch (_error) {
+      console._error('Failed to run diagnostics:', _error);
     } finally {
       setLoading(false);
     }
   };
 
-  const acknowledgeAlert = async (alertId: string
-) => {
+  const acknowledgeAlert = async (alertId: string) => {
     try {
       await SecurityMonitoringForensicsService.acknowledgeAlert(alertId);
       await loadSecurityData();
-    } catch (error) {
-      console.error('Failed to acknowledge alert:', error);
+    } catch (_error) {
+      console._error('Failed to acknowledge alert:', _error);
     }
   };
 
-  const resolveAlert = async (alertId: string
-) => {
+  const resolveAlert = async (alertId: string) => {
     try {
       await SecurityMonitoringForensicsService.resolveAlert(alertId);
       await loadSecurityData();
-    } catch (error) {
-      console.error('Failed to resolve alert:', error);
+    } catch (_error) {
+      console._error('Failed to resolve alert:', _error);
     }
   };
 
-  const getStatusColor = (status: string
-) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'secure':
       case 'active':
@@ -177,8 +165,7 @@ const ComprehensiveSecurityDashboard: React.FC = (
     }
   };
 
-  const getStatusIcon = (status: string
-) => {
+  const getStatusIcon = (status: string) => {
     switch (status) {
       case 'secure':
       case 'active':
@@ -220,8 +207,7 @@ const ComprehensiveSecurityDashboard: React.FC = (
     }
   };
 
-  const getSeverityColor = (severity: string
-) => {
+  const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'low':
         return 'text-primary-700 dark:text-primary-300 bg-primary-100/80 dark:bg-primary-900/40 border border-primary-200/50 dark:border-primary-700/30';
@@ -285,9 +271,9 @@ const ComprehensiveSecurityDashboard: React.FC = (
                 <input
                   type="checkbox"
                   checked={autoRefresh}
-                  
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => setAutoRefresh(e.target.checked)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setAutoRefresh(e.target.checked)
+                  }
                   className="alarm-toggle rounded border-white/30 text-primary-500 focus:ring-primary-300 bg-white/10"
                   aria-describedby="auto-refresh-desc"
                 />
@@ -402,10 +388,9 @@ const ComprehensiveSecurityDashboard: React.FC = (
                   Security Recommendations
                 </h3>
                 <ul className="space-y-2" role="list">
-                  {securityStatus.recommendations.map((rec, index
-) => (
+                  {securityStatus.recommendations.map((rec, _index) => (
                     <li
-                      key={index}
+                      key={_index}
                       className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2"
                       role="listitem"
                     >
@@ -451,12 +436,10 @@ const ComprehensiveSecurityDashboard: React.FC = (
                 icon: Archive,
                 desc: 'Monitor backup systems',
               },
-            ].map(({ key, label, icon: Icon, desc }
-) => (
+            ].map(({ key, label, icon: Icon, desc }) => (
               <button
                 key={key}
-                onClick={(
-) => setSelectedTab(key as any)}
+                onClick={() => setSelectedTab(key as any)}
                 role="tab"
                 aria-selected={selectedTab === key}
                 aria-controls={`${key}-panel`}
@@ -489,8 +472,7 @@ const ComprehensiveSecurityDashboard: React.FC = (
               Security Components Status
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {Object.entries(securityStatus.components).map(([component, status]
-) => {
+              {Object.entries(securityStatus.components).map(([component, status]) => {
                 const componentName = component.replace(/([A-Z])/g, ' $1').trim();
                 const isHealthy = ['active', 'healthy', 'monitoring'].includes(status);
                 const isWarning = ['degraded'].includes(status);
@@ -608,9 +590,7 @@ const ComprehensiveSecurityDashboard: React.FC = (
               </div>
             ) : (
               <div className="space-y-4">
-                {activeAlerts
-      .map((alert: any
-) => (
+                {activeAlerts.map((alert: any) => (
                   <div
                     key={alert.id}
                     className="alarm-card glass-card backdrop-blur-lg border hover:transform hover:scale-[1.02] transition-all"
@@ -647,8 +627,7 @@ const ComprehensiveSecurityDashboard: React.FC = (
                       <div className="flex flex-col space-y-2 ml-4">
                         {!alert.acknowledged && (
                           <button
-                            onClick={(
-) => acknowledgeAlert(alert.id)}
+                            onClick={() => acknowledgeAlert(alert.id)}
                             className="alarm-button px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm rounded-lg transition-all backdrop-blur-sm ripple"
                             aria-label={`Acknowledge alert: ${alert.title}`}
                           >
@@ -657,8 +636,7 @@ const ComprehensiveSecurityDashboard: React.FC = (
                         )}
                         {!alert.resolved && (
                           <button
-                            onClick={(
-) => resolveAlert(alert.id)}
+                            onClick={() => resolveAlert(alert.id)}
                             className="alarm-button px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-all backdrop-blur-sm ripple"
                             aria-label={`Resolve alert: ${alert.title}`}
                           >
@@ -728,8 +706,7 @@ const ComprehensiveSecurityDashboard: React.FC = (
                   <h5 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                     Diagnostic Tests
                   </h5>
-                  {diagnosticsResults.tests.map((test: any, index: number
-) => {
+                  {diagnosticsResults.tests.map((test: any, _index: number) => {
                     const isHealthy = ['passed', 'healthy', 'active'].includes(
                       test.status
                     );
@@ -737,7 +714,7 @@ const ComprehensiveSecurityDashboard: React.FC = (
 
                     return (
                       <div
-                        key={index}
+                        key={_index}
                         className={`glass-card flex items-start space-x-4 p-4 backdrop-blur-sm border ${
                           isHealthy
                             ? 'border-green-200/50 bg-green-50/50 dark:bg-green-900/10 dark:border-green-700/30'
@@ -773,8 +750,7 @@ const ComprehensiveSecurityDashboard: React.FC = (
                               </h6>
                               <ul className="space-y-1" role="list">
                                 {test.recommendations.map(
-                                  (rec: string, recIndex: number
-) => (
+                                  (rec: string, recIndex: number) => (
                                     <li
                                       key={recIndex}
                                       className="text-xs text-gray-600 dark:text-gray-400 flex items-start gap-2"

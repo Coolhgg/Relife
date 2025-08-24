@@ -39,8 +39,8 @@ export const initializeCapacitor = async (): Promise<CapacitorInitResult> => {
       notificationPermission,
       pushPermission,
     };
-  } catch (error) {
-    console.error('Error initializing Capacitor:', error);
+  } catch (_error) {
+    console._error('Error initializing Capacitor:', _error);
     return {
       platform,
       isNative,
@@ -54,8 +54,8 @@ export const requestNotificationPermissions = async (): Promise<boolean> => {
   try {
     const permissions = await LocalNotifications.requestPermissions();
     return permissions.display === 'granted';
-  } catch (error) {
-    console.error('Error requesting notification permissions:', error);
+  } catch (_error) {
+    console._error('Error requesting notification permissions:', _error);
     return false;
   }
 };
@@ -64,8 +64,8 @@ export const requestPushPermissions = async (): Promise<boolean> => {
   try {
     const { receive } = await PushNotifications.requestPermissions();
     return receive === 'granted';
-  } catch (error) {
-    console.error('Error requesting push permissions:', error);
+  } catch (_error) {
+    console._error('Error requesting push permissions:', _error);
     return false;
   }
 };
@@ -102,9 +102,9 @@ export const scheduleLocalNotification = async ({
     });
 
     console.log(`Scheduled notification for ${schedule}`);
-  } catch (error) {
-    console.error('Error scheduling notification:', error);
-    throw error;
+  } catch (_error) {
+    console.error('Error scheduling notification:', _error);
+    throw _error;
   }
 };
 
@@ -115,9 +115,9 @@ export const cancelLocalNotification = async (id: number): Promise<void> => {
     });
 
     console.log(`Cancelled notification ${id}`);
-  } catch (error) {
-    console.error('Error cancelling notification:', error);
-    throw error;
+  } catch (_error) {
+    console.error('Error cancelling notification:', _error);
+    throw _error;
   }
 };
 
@@ -151,7 +151,7 @@ export const setupNotificationListeners = (): void => {
   });
 
   PushNotifications.addListener('registrationError', error => {
-    console.error('Push registration error:', error);
+    console.error('Push registration _error:', _error);
   });
 
   PushNotifications.addListener('pushNotificationReceived', notification => {
@@ -167,8 +167,8 @@ export const vibrate = async (duration: number = 500): Promise<void> => {
   try {
     const { Haptics, ImpactStyle } = await import('@capacitor/haptics');
     await Haptics.impact({ style: ImpactStyle.Heavy });
-  } catch (error) {
-    console.warn('Haptics not available:', error);
+  } catch (_error) {
+    console.warn('Haptics not available:', _error);
 
     // Fallback for web
     if ('vibrate' in navigator) {

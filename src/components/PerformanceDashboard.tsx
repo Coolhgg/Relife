@@ -122,8 +122,8 @@ const PerformanceDashboard: React.FC = () => {
         analyticsData: analyticsSummary,
         isLoading: false,
       }));
-    } catch (error) {
-      console.error('Failed to refresh dashboard data:', error);
+    } catch (_error) {
+      console._error('Failed to refresh dashboard data:', _error);
 
       setState((prev: any) => ({ ...prev, isLoading: false }));
     }
@@ -367,9 +367,9 @@ const PerformanceDashboard: React.FC = () => {
               </h2>
               <div className="bg-white rounded-lg shadow-sm border p-4">
                 <div className="space-y-2">
-                  {state.performanceData.customMetrics.map((metric, index) => (
+                  {state.performanceData.customMetrics.map((metric, _index) => (
                     <div
-                      key={index}
+                      key={_index}
                       className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
                     >
                       <span className="font-medium text-gray-900">{metric.name}</span>
@@ -534,14 +534,14 @@ const PerformanceDashboard: React.FC = () => {
                     <div className="space-y-3">
                       {state.analyticsData.behavior.mostUsedFeatures
                         .slice(0, 10)
-                        .map((feature, index) => (
+                        .map((feature, _index) => (
                           <div
                             key={feature.feature}
                             className="flex justify-between items-center py-2"
                           >
                             <div className="flex items-center">
                               <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full text-sm font-bold flex items-center justify-center mr-3">
-                                {index + 1}
+                                {_index + 1}
                               </span>
                               <span className="font-medium">{feature.feature}</span>
                             </div>
@@ -601,14 +601,14 @@ const PerformanceDashboard: React.FC = () => {
                     .length > 0 ? (
                     <div className="space-y-3">
                       {state.analyticsData.behavior.navigationPatterns.mostVisitedPages.map(
-                        (page, index) => (
+                        (page, _index) => (
                           <div
                             key={page.page}
                             className="flex justify-between items-center py-2"
                           >
                             <div className="flex items-center">
                               <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full text-sm font-bold flex items-center justify-center mr-3">
-                                {index + 1}
+                                {_index + 1}
                               </span>
                               <span className="font-medium">{page.page}</span>
                             </div>

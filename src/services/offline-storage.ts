@@ -53,8 +53,8 @@ export class OfflineStorage {
         '[OfflineStorage] Saved encrypted alarms to local storage:',
         alarms.length
       );
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to save alarms locally', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to save alarms locally', {
         context: 'OfflineStorage.saveAlarms',
         alarmsCount: alarms.length,
       });
@@ -98,8 +98,8 @@ export class OfflineStorage {
 
       console.log('[OfflineStorage] No alarms found in local storage');
       return [];
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to retrieve alarms from local storage', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to retrieve alarms from local storage', {
         context: 'OfflineStorage.getAlarms',
       });
       return [];
@@ -131,8 +131,8 @@ export class OfflineStorage {
 
       await this.saveAlarms(alarms);
       console.log('[OfflineStorage] Saved individual alarm:', alarm.id);
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to save alarm', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to save alarm', {
         context: 'OfflineStorage.saveAlarm',
         alarmId: alarm.id,
       });
@@ -153,8 +153,8 @@ export class OfflineStorage {
       });
 
       console.log('[OfflineStorage] Deleted alarm:', alarmId);
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to delete alarm', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to delete alarm', {
         context: 'OfflineStorage.deleteAlarm',
         alarmId,
       });
@@ -182,8 +182,8 @@ export class OfflineStorage {
         change.type,
         change.id
       );
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to add pending change', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to add pending change', {
         context: 'OfflineStorage.addPendingChange',
         changeType: change.type,
         changeId: change.id,
@@ -210,8 +210,8 @@ export class OfflineStorage {
       }
 
       return [];
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to get pending changes', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to get pending changes', {
         context: 'OfflineStorage.getPendingChanges',
       });
       return [];
@@ -223,8 +223,8 @@ export class OfflineStorage {
       SecurityService.secureStorageRemove(this.PENDING_CHANGES_KEY);
       localStorage.removeItem(this.PENDING_CHANGES_KEY); // Remove any old unencrypted version
       console.log('[OfflineStorage] Cleared encrypted pending changes');
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to clear pending changes', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to clear pending changes', {
         context: 'OfflineStorage.clearPendingChanges',
       });
     }
@@ -242,8 +242,8 @@ export class OfflineStorage {
 
       // Encrypt metadata
       SecurityService.secureStorageSet(this.METADATA_KEY, metadata);
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to update metadata', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to update metadata', {
         context: 'OfflineStorage.updateMetadata',
       });
     }
@@ -276,8 +276,8 @@ export class OfflineStorage {
       // Store default metadata encrypted
       SecurityService.secureStorageSet(this.METADATA_KEY, defaultMetadata);
       return defaultMetadata;
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to get metadata', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to get metadata', {
         context: 'OfflineStorage.getMetadata',
       });
       return {
@@ -322,7 +322,7 @@ export class OfflineStorage {
           return registration.sync.register('alarm-sync');
         })
         .catch(error => {
-          console.log('[OfflineStorage] Background sync registration failed:', error);
+          console.log('[OfflineStorage] Background sync registration failed:', _error);
         });
     }
   }
@@ -342,8 +342,8 @@ export class OfflineStorage {
       };
 
       return JSON.stringify(exportData, null, 2);
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to export data', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to export data', {
         context: 'OfflineStorage.exportData',
       });
       throw error;
@@ -367,8 +367,8 @@ export class OfflineStorage {
           'encrypted pending changes'
         );
       }
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to import data', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to import data', {
         context: 'OfflineStorage.importData',
       });
       throw error;
@@ -397,8 +397,8 @@ export class OfflineStorage {
         lastSync: metadata.lastSync,
         storageUsed,
       };
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to get storage stats', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to get storage stats', {
         context: 'OfflineStorage.getStorageStats',
       });
       return {
@@ -424,8 +424,8 @@ export class OfflineStorage {
       localStorage.removeItem(this.PENDING_CHANGES_KEY);
 
       console.log('[OfflineStorage] Cleared all encrypted data');
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to clear all data', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to clear all data', {
         context: 'OfflineStorage.clearAllData',
       });
       throw error;

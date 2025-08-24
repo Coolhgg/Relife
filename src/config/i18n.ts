@@ -368,16 +368,16 @@ const createCustomLanguageDetector = () => {
         // Final fallback to default language
         console.log('🌍 Using default language:', DEFAULT_LANGUAGE);
         callback(DEFAULT_LANGUAGE);
-      } catch (error) {
-        console.error('Language detection failed:', error);
+      } catch (_error) {
+        console._error('Language detection failed:', _error);
         callback(DEFAULT_LANGUAGE);
       }
     },
     cacheUserLanguage: (lng: string) => {
       try {
-        localStorage.setItem('user-language', lng);
-      } catch (error) {
-        console.warn('Failed to cache user language:', error);
+        localStorage.setItem('_user-language', lng);
+      } catch (_error) {
+        console.warn('Failed to cache _user language:', _error);
       }
     },
   };
@@ -500,9 +500,9 @@ const initI18n = async () => {
     });
 
     return i18n;
-  } catch (error) {
-    console.error('Failed to initialize i18n:', error);
-    throw error;
+  } catch (_error) {
+    console.error('Failed to initialize i18n:', _error);
+    throw _error;
   }
 };
 
@@ -533,12 +533,12 @@ export const changeLanguage = async (lang: SupportedLanguage): Promise<void> => 
     }
 
     // Save to localStorage
-    localStorage.setItem('user-language', lang);
+    localStorage.setItem('_user-language', lang);
 
     console.log('🌍 Language changed successfully to:', lang);
-  } catch (error) {
-    console.error('Failed to change language:', error);
-    throw error;
+  } catch (_error) {
+    console.error('Failed to change language:', _error);
+    throw _error;
   }
 };
 
@@ -573,8 +573,8 @@ export const formatRelativeTime = (date: Date, lang?: SupportedLanguage): string
     } else {
       return rtf.format(Math.round(diffInSeconds / 31536000), 'year');
     }
-  } catch (error) {
-    console.error('Failed to format relative time:', error);
+  } catch (_error) {
+    console._error('Failed to format relative time:', _error);
     return date.toLocaleDateString(currentLang);
   }
 };
@@ -593,8 +593,8 @@ export const formatTime = (time: string, lang?: SupportedLanguage): string => {
       minute: '2-digit',
       hour12: langInfo?.timeFormat === '12h',
     }).format(date);
-  } catch (error) {
-    console.error('Failed to format time:', error);
+  } catch (_error) {
+    console._error('Failed to format time:', _error);
     return time;
   }
 };
@@ -607,8 +607,8 @@ export const formatDate = (date: Date, lang?: SupportedLanguage): string => {
       month: 'long',
       day: 'numeric',
     }).format(date);
-  } catch (error) {
-    console.error('Failed to format date:', error);
+  } catch (_error) {
+    console._error('Failed to format date:', _error);
     return date.toLocaleDateString();
   }
 };
@@ -621,8 +621,8 @@ export const formatShortDate = (date: Date, lang?: SupportedLanguage): string =>
       month: 'short',
       day: 'numeric',
     }).format(date);
-  } catch (error) {
-    console.error('Failed to format short date:', error);
+  } catch (_error) {
+    console._error('Failed to format short date:', _error);
     return date.toLocaleDateString();
   }
 };
@@ -636,8 +636,8 @@ export const formatCurrency = (amount: number, lang?: SupportedLanguage): string
       style: 'currency',
       currency: langInfo?.currency || 'USD',
     }).format(amount);
-  } catch (error) {
-    console.error('Failed to format currency:', error);
+  } catch (_error) {
+    console._error('Failed to format currency:', _error);
     return `${amount} ${langInfo?.currency || 'USD'}`;
   }
 };
@@ -646,8 +646,8 @@ export const formatNumber = (num: number, lang?: SupportedLanguage): string => {
   const currentLang = lang || getCurrentLanguage();
   try {
     return new Intl.NumberFormat(currentLang).format(num);
-  } catch (error) {
-    console.error('Failed to format number:', error);
+  } catch (_error) {
+    console._error('Failed to format number:', _error);
     return num.toString();
   }
 };
@@ -660,8 +660,8 @@ export const formatPercentage = (value: number, lang?: SupportedLanguage): strin
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     }).format(value / 100);
-  } catch (error) {
-    console.error('Failed to format percentage:', error);
+  } catch (_error) {
+    console._error('Failed to format percentage:', _error);
     return `${value}%`;
   }
 };
@@ -681,8 +681,8 @@ export const formatList = (items: string[], lang?: SupportedLanguage): string =>
       if (items.length === 2) return `${items[0]} and ${items[1]}`;
       return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
     }
-  } catch (error) {
-    console.error('Failed to format list:', error);
+  } catch (_error) {
+    console._error('Failed to format list:', _error);
     return items.join(', ');
   }
 };
@@ -710,8 +710,8 @@ export const formatDuration = (seconds: number, lang?: SupportedLanguage): strin
         seconds: remainingSeconds,
       });
     }
-  } catch (error) {
-    console.error('Failed to format duration:', error);
+  } catch (_error) {
+    console._error('Failed to format duration:', _error);
     return `${seconds}s`;
   }
 };
@@ -743,8 +743,8 @@ export const getPluralizationRules = (lang?: SupportedLanguage): Intl.PluralRule
   const currentLang = lang || getCurrentLanguage();
   try {
     return new Intl.PluralRules(currentLang);
-  } catch (error) {
-    console.error('Failed to get pluralization rules:', error);
+  } catch (_error) {
+    console._error('Failed to get pluralization rules:', _error);
     return new Intl.PluralRules('en'); // Fallback to English
   }
 };
@@ -759,8 +759,8 @@ export const smartPlural = (
   try {
     const pluralRule = getPluralizationRules(currentLang).select(count);
     return options[pluralRule] || options.other || options.one || '';
-  } catch (error) {
-    console.error('Failed to get plural form:', error);
+  } catch (_error) {
+    console._error('Failed to get plural form:', _error);
     return options.other || options.one || '';
   }
 };

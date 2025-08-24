@@ -90,7 +90,7 @@ export const useEntranceAnimation = (
 // HOVER ANIMATIONS
 // ================================================================
 
-export const useHoverAnimation = (config: {
+export const useHoverAnimation = (_config: {
   scale?: number;
   y?: number;
   rotate?: number;

@@ -10,7 +10,8 @@ This guide will help you get up and running with the Relife testing framework qu
 
 ## Installation & Setup
 
-The testing framework is already included with the Relife project. No additional installation needed.
+The testing framework is already included with the Relife project. No additional installation
+needed.
 
 ### Verify Setup
 
@@ -54,7 +55,7 @@ describe('AlarmCard Component', () => {
 
   it('displays alarm information correctly', () => {
     render(<AlarmCard alarm={mockAlarm} />);
-    
+
     expect(screen.getByText('Morning Workout')).toBeInTheDocument();
     expect(screen.getByText('06:30')).toBeInTheDocument();
     expect(screen.getByText(/motivational/i)).toBeInTheDocument();
@@ -62,10 +63,10 @@ describe('AlarmCard Component', () => {
 
   it('handles enable/disable toggle', async () => {
     render(<AlarmCard alarm={mockAlarm} />);
-    
+
     const toggleButton = screen.getByRole('switch');
     expect(toggleButton).toBeChecked();
-    
+
     await testHelpers.user.click(toggleButton);
     expect(toggleButton).not.toBeChecked();
   });
@@ -85,16 +86,13 @@ import { testHelpers } from '../helpers/comprehensive-test-helpers';
 await testHelpers.typeWithDelay(inputElement, 'test@example.com', 100);
 
 // Click and wait for response
-await testHelpers.clickAndWaitForResponse(
-  button,
-  () => screen.queryByText(/success/i) !== null
-);
+await testHelpers.clickAndWaitForResponse(button, () => screen.queryByText(/success/i) !== null);
 
 // Fill forms with validation
 await testHelpers.fillFormWithValidation({
   email: 'test@example.com',
   password: 'SecurePassword123!',
-  name: 'Test User'
+  name: 'Test User',
 });
 ```
 
@@ -119,14 +117,10 @@ await testHelpers.closeModal('escape');
 await testHelpers.waitForDataLoad('[data-testid="loading"]');
 
 // Wait for custom conditions
-await testHelpers.waitForCondition(
-  () => document.querySelectorAll('.alarm-card').length > 0
-);
+await testHelpers.waitForCondition(() => document.querySelectorAll('.alarm-card').length > 0);
 
 // Wait for elements to appear/disappear
-await testHelpers.waitForElement(() => 
-  screen.queryByText('Alarm created successfully')
-);
+await testHelpers.waitForElement(() => screen.queryByText('Alarm created successfully'));
 ```
 
 ## Using Relife-Specific Utilities
@@ -144,7 +138,7 @@ await relifeTestUtils.createTestAlarm({
   time: '07:00',
   days: [1, 2, 3, 4, 5],
   voiceMood: 'gentle',
-  difficulty: 'medium'
+  difficulty: 'medium',
 });
 ```
 
@@ -184,7 +178,7 @@ import { MockAlarmService } from '../mocks/service-mocks';
 beforeEach(() => {
   // Reset mock state
   MockAlarmService.reset();
-  
+
   // Set scenario (success, error, slow)
   MockAlarmService.setScenario('success');
 });
@@ -219,19 +213,19 @@ import { MockDataFactory } from '../api/enhanced-msw-handlers';
 // Create test users
 const user = MockDataFactory.createUser({
   email: 'custom@example.com',
-  subscription: { tier: 'premium' }
+  subscription: { tier: 'premium' },
 });
 
 // Create test alarms
 const alarm = MockDataFactory.createAlarm({
   label: 'Custom Alarm',
-  difficulty: 'hard'
+  difficulty: 'hard',
 });
 
 // Create test battles
 const battle = MockDataFactory.createBattle({
   participants: ['user1', 'user2'],
-  difficulty: 'medium'
+  difficulty: 'medium',
 });
 ```
 
@@ -267,10 +261,10 @@ import { performanceTestSuite } from '../performance/performance-testing-utiliti
 
 describe('Alarm Performance', () => {
   it('should create alarms quickly', async () => {
-    const { result, renderTime } = await testHelpers.measureRenderTime(
-      () => relifeTestUtils.createTestAlarm()
+    const { result, renderTime } = await testHelpers.measureRenderTime(() =>
+      relifeTestUtils.createTestAlarm()
     );
-    
+
     expect(renderTime).toBeLessThan(500); // 500ms
   });
 });
@@ -291,7 +285,7 @@ import { mobilePerformanceTester } from '../performance/performance-testing-util
 const results = await mobilePerformanceTester.testWithDeviceProfile({
   device: 'low-end',
   platform: 'android',
-  networkCondition: '3g'
+  networkCondition: '3g',
 });
 ```
 
@@ -316,17 +310,18 @@ await testHelpers.triggerError(errorTriggerComponent);
 ## Best Practices
 
 ### 1. Test Structure
+
 ```typescript
 describe('Feature: User Management', () => {
   describe('When user registers', () => {
     beforeEach(() => {
       // Setup for this scenario
     });
-    
+
     it('should create user account', async () => {
       // Test implementation
     });
-    
+
     it('should send welcome email', async () => {
       // Test implementation
     });
@@ -335,6 +330,7 @@ describe('Feature: User Management', () => {
 ```
 
 ### 2. Async Testing
+
 ```typescript
 // Always await async operations
 await relifeTestUtils.createTestAlarm();
@@ -351,6 +347,7 @@ await testHelpers.waitForCondition(() => something === true);
 ```
 
 ### 3. Clean Test Data
+
 ```typescript
 beforeEach(() => {
   // Reset all mocks and state
@@ -361,6 +358,7 @@ beforeEach(() => {
 ```
 
 ### 4. Descriptive Tests
+
 ```typescript
 // ❌ Bad
 it('should work', () => {});
@@ -372,36 +370,38 @@ it('should display error message when alarm creation fails', async () => {});
 ## Common Patterns
 
 ### Testing Forms
+
 ```typescript
 it('should validate form inputs', async () => {
   render(<AlarmForm />);
-  
+
   // Test validation
   await testHelpers.validateFormField('label', '', 'invalid');
   await testHelpers.validateFormField('label', 'Valid Label', 'valid');
-  
+
   // Submit form
   await testHelpers.fillFormWithValidation({
     label: 'Morning Alarm',
     time: '07:00'
   });
-  
+
   const form = screen.getByRole('form');
   await testHelpers.submitForm(form, 'success');
 });
 ```
 
 ### Testing Loading States
+
 ```typescript
 it('should show loading state while creating alarm', async () => {
   render(<AlarmCreator />);
-  
+
   const createButton = screen.getByRole('button', { name: /create/i });
   await testHelpers.user.click(createButton);
-  
+
   // Verify loading state
   expect(screen.getByText(/creating/i)).toBeInTheDocument();
-  
+
   // Wait for completion
   await testHelpers.waitForDataLoad();
   expect(screen.getByText(/created successfully/i)).toBeInTheDocument();
@@ -426,4 +426,6 @@ If you encounter issues:
 
 ---
 
-You're now ready to start writing comprehensive tests for the Relife application! Remember to leverage the framework's utilities and follow the established patterns for the best testing experience.
+You're now ready to start writing comprehensive tests for the Relife application! Remember to
+leverage the framework's utilities and follow the established patterns for the best testing
+experience.

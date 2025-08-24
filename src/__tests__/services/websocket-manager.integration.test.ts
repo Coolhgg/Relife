@@ -5,7 +5,11 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { MockWebSocket, RealTimeTestUtils, setupRealTimeTesting } from '../realtime/realtime-testing-utilities';
+import {
+  MockWebSocket,
+  RealTimeTestUtils,
+  setupRealTimeTesting,
+} from '../realtime/realtime-testing-utilities';
 import type {
   WebSocketManager,
   WebSocketConfig,
@@ -14,13 +18,13 @@ import type {
   WebSocketMetrics,
   WebSocketSubscription,
   WebSocketError,
-  WebSocketRateLimitStatus
+  WebSocketRateLimitStatus,
 } from '../../types/websocket';
 
 import type {
   AlarmTriggeredPayload,
   UserPresenceUpdatePayload,
-  SystemNotificationPayload
+  SystemNotificationPayload,
 } from '../../types/realtime-messages';
 
 // Setup WebSocket testing environment
@@ -56,29 +60,32 @@ class MockWebSocketManager implements WebSocketManager {
         TIMEOUT: 0,
         RATE_LIMITED: 0,
         INVALID_MESSAGE: 0,
-        RECONNECTION_FAILED: 0
+        RECONNECTION_FAILED: 0,
       },
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
     };
   }
 
-  async connect(config: WebSocketConfig, handlers: WebSocketEventHandlers): Promise<WebSocketConnectionInfo> {
-    this.connection = new MockWebSocket(config.url);
-    
+  async connect(
+    _config: WebSocketConfig,
+    handlers: WebSocketEventHandlers
+  ): Promise<WebSocketConnectionInfo> {
+    this.connection = new MockWebSocket(_config.url);
+
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
         reject(new Error('Connection timeout'));
       }, config.timeout);
 
-      this.connection!.addEventListener('open', (event) => {
+      this.connection!.addEventListener('open', _event => {
         clearTimeout(timeoutId);
-        
+
         this.connectionInfo = {
           id: this.connection!.id,
           state: 'OPEN',
-          url: config.url,
+          url: _config.url,
           connectedAt: new Date(),
-          reconnectCount: 0
+          reconnectCount: 0,
         };
 
         this.metrics.connectionId = this.connectionInfo.id;
@@ -92,50 +99,50 @@ class MockWebSocketManager implements WebSocketManager {
         resolve(this.connectionInfo);
       });
 
-      this.connection!.addEventListener('close', (event: any) => {
+      this.connection!.addEventListener('close', (_event: any) => {
         this.stopHeartbeat();
         this.metrics.connectionsDropped++;
-        
+
         if (this.connectionInfo) {
           this.connectionInfo.state = 'CLOSED';
         }
 
         if (handlers.onClose) {
-          handlers.onClose(event.code, event.reason);
+          handlers.onClose(event.code, _event.reason);
         }
       });
 
-      this.connection!.addEventListener('error', (event: any) => {
+      this.connection!.addEventListener('_error', (_event: any) => {
         const error: WebSocketError = {
           type: 'CONNECTION_FAILED',
-          message: 'Connection error',
+          message: 'Connection _error',
           timestamp: new Date(),
-          recoverable: true
+          recoverable: true,
         };
 
         this.metrics.errorCounts.CONNECTION_FAILED++;
 
         if (handlers.onError) {
-          handlers.onError(error);
+          handlers.onError(_error);
         }
 
-        reject(error);
+        reject(_error);
       });
 
-      this.connection!.addEventListener('message', (event: any) => {
+      this.connection!.addEventListener('message', (_event: any) => {
         this.metrics.messagesReceived++;
         this.metrics.dataTransferred.received += event.data.length || 0;
 
         try {
-          const message = JSON.parse(event.data);
-          
+          const message = JSON.parse(_event.data);
+
           // Apply filters
           const passesFilters = this.messageFilters.every(filter => filter(message));
-          
+
           if (passesFilters && handlers.onMessage) {
             handlers.onMessage(message);
           }
-        } catch (error) {
+        } catch (_error) {
           this.metrics.errorCounts.INVALID_MESSAGE++;
         }
 
@@ -161,13 +168,13 @@ class MockWebSocketManager implements WebSocketManager {
     try {
       const messageStr = JSON.stringify(message);
       this.connection.send(messageStr);
-      
+
       this.metrics.messagesSent++;
       this.metrics.dataTransferred.sent += messageStr.length;
       this.updateMetrics();
-      
+
       return true;
-    } catch (error) {
+    } catch (_error) {
       this.metrics.errorCounts.PROTOCOL_ERROR++;
       return false;
     }
@@ -199,9 +206,9 @@ class MockWebSocketManager implements WebSocketManager {
   }
 
   removeMessageFilter(filter: (message: any) => boolean): void {
-    const index = this.messageFilters.indexOf(filter);
-    if (index > -1) {
-      this.messageFilters.splice(index, 1);
+    const _index = this.messageFilters.indexOf(filter);
+    if (_index > -1) {
+      this.messageFilters.splice(_index, 1);
     }
   }
 
@@ -211,9 +218,9 @@ class MockWebSocketManager implements WebSocketManager {
     const fullSubscription: WebSocketSubscription = {
       ...subscription,
       id,
-      createdAt: new Date()
+      createdAt: new Date(),
     };
-    
+
     this.subscriptions.set(id, fullSubscription);
     return id;
   }
@@ -231,7 +238,7 @@ class MockWebSocketManager implements WebSocketManager {
       if (this.isConnected()) {
         this.send({
           type: 'heartbeat_ping',
-          timestamp: Date.now()
+          timestamp: Date.now(),
         });
       }
     }, this.heartbeatInterval);
@@ -259,8 +266,8 @@ describe('WebSocket Manager Service Integration Tests', () => {
   beforeEach(() => {
     RealTimeTestUtils.reset();
     wsManager = new MockWebSocketManager();
-    
-    config = {
+
+    _config = {
       url: 'wss://test.relife.app/ws',
       timeout: 5000,
       heartbeatInterval: 10000,
@@ -271,7 +278,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
       enableCompression: false,
       bufferMaxItems: 100,
       bufferMaxTime: 5000,
-      enableLogging: false
+      enableLogging: false,
     };
   });
 
@@ -281,30 +288,30 @@ describe('WebSocket Manager Service Integration Tests', () => {
   });
 
   describe('Connection Management', () => {
-    it('should establish connection with event handlers', async () => {
+    it('should establish connection with _event handlers', async () => {
       const events: string[] = [];
       let connectionInfo: WebSocketConnectionInfo | null = null;
 
       const handlers: WebSocketEventHandlers = {
-        onOpen: (info) => {
+        onOpen: info => {
           events.push('open');
           connectionInfo = info;
         },
         onClose: (code, reason) => {
           events.push(`close:${code}:${reason}`);
         },
-        onError: (error) => {
-          events.push(`error:${error.type}`);
+        onError: _error => {
+          events.push(`_error:${_error.type}`);
         },
-        onMessage: (message) => {
+        onMessage: message => {
           events.push(`message:${message.type}`);
-        }
+        },
       };
 
-      const result = await wsManager.connect(config, handlers);
+      const result = await wsManager.connect(_config, handlers);
 
       expect(result.state).toBe('OPEN');
-      expect(result.url).toBe(config.url);
+      expect(result.url).toBe(_config.url);
       expect(result.connectedAt).toBeInstanceOf(Date);
       expect(events).toContain('open');
       expect(connectionInfo).toBeTruthy();
@@ -316,17 +323,18 @@ describe('WebSocket Manager Service Integration Tests', () => {
     });
 
     it('should handle connection timeout', async () => {
-      const shortTimeoutConfig = { ...config, timeout: 100 };
-      
+      const shortTimeoutConfig = { ..._config, timeout: 100 };
+
       const handlers: WebSocketEventHandlers = {};
 
-      await expect(wsManager.connect(shortTimeoutConfig, handlers))
-        .rejects.toThrow('Connection timeout');
+      await expect(wsManager.connect(shortTimeoutConfig, handlers)).rejects.toThrow(
+        'Connection timeout'
+      );
     });
 
     it('should track connection metrics', async () => {
       const handlers: WebSocketEventHandlers = {};
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
 
       const initialMetrics = wsManager.getMetrics();
       expect(initialMetrics.connectionsEstablished).toBe(1);
@@ -343,7 +351,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
   describe('Message Handling', () => {
     beforeEach(async () => {
       const handlers: WebSocketEventHandlers = {};
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
     });
 
     it('should send messages successfully', async () => {
@@ -351,7 +359,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
         id: 'test-123',
         type: 'test_message',
         payload: { data: 'test' },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       const result = await wsManager.send(testMessage);
@@ -367,7 +375,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
 
       const testMessage = {
         type: 'test_message',
-        payload: { data: 'test' }
+        payload: { data: 'test' },
       };
 
       const result = await wsManager.send(testMessage);
@@ -378,17 +386,17 @@ describe('WebSocket Manager Service Integration Tests', () => {
       const receivedMessages: any[] = [];
 
       const handlers: WebSocketEventHandlers = {
-        onMessage: (message) => {
+        onMessage: message => {
           receivedMessages.push(message);
-        }
+        },
       };
 
       await wsManager.disconnect();
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
 
       // Get the underlying connection to simulate incoming messages
       const connectionInfo = wsManager.getConnectionInfo();
-      const mockConnection = MockWebSocket.findByUrl(config.url);
+      const mockConnection = MockWebSocket.findByUrl(_config.url);
 
       const testMessage = {
         id: 'incoming-123',
@@ -397,10 +405,10 @@ describe('WebSocket Manager Service Integration Tests', () => {
           alarm: { id: 'alarm-1', label: 'Test Alarm' },
           triggeredAt: new Date(),
           deviceInfo: { batteryLevel: 80, networkType: 'wifi' },
-          contextualData: { weatherCondition: 'sunny' }
+          contextualData: { weatherCondition: 'sunny' },
         },
         timestamp: new Date().toISOString(),
-        userId: 'test-user'
+        userId: 'test-user',
       };
 
       mockConnection?.simulateMessage(testMessage);
@@ -419,38 +427,38 @@ describe('WebSocket Manager Service Integration Tests', () => {
   describe('Message Filtering', () => {
     beforeEach(async () => {
       const handlers: WebSocketEventHandlers = {};
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
     });
 
     it('should filter messages based on custom filters', async () => {
       const receivedMessages: any[] = [];
 
       const handlers: WebSocketEventHandlers = {
-        onMessage: (message) => {
+        onMessage: message => {
           receivedMessages.push(message);
-        }
+        },
       };
 
       await wsManager.disconnect();
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
 
       // Add filter to only allow alarm messages
-      wsManager.addMessageFilter((message) => {
+      wsManager.addMessageFilter(message => {
         return message.type?.startsWith('alarm_');
       });
 
-      const mockConnection = MockWebSocket.findByUrl(config.url);
+      const mockConnection = MockWebSocket.findByUrl(_config.url);
 
       // Send alarm message (should pass filter)
       mockConnection?.simulateMessage({
         type: 'alarm_triggered',
-        payload: { alarm: { id: 'test' } }
+        payload: { alarm: { id: 'test' } },
       });
 
       // Send user message (should be filtered out)
       mockConnection?.simulateMessage({
         type: 'user_presence_update',
-        payload: { userId: 'test' }
+        payload: { userId: 'test' },
       });
 
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -463,30 +471,30 @@ describe('WebSocket Manager Service Integration Tests', () => {
       const receivedMessages: any[] = [];
 
       const handlers: WebSocketEventHandlers = {
-        onMessage: (message) => {
+        onMessage: message => {
           receivedMessages.push(message);
-        }
+        },
       };
 
       await wsManager.disconnect();
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
 
       // Add multiple filters
-      wsManager.addMessageFilter((message) => message.type?.startsWith('alarm_'));
-      wsManager.addMessageFilter((message) => message.payload?.priority !== 'low');
+      wsManager.addMessageFilter(message => message.type?.startsWith('alarm_'));
+      wsManager.addMessageFilter(message => message.payload?.priority !== 'low');
 
-      const mockConnection = MockWebSocket.findByUrl(config.url);
+      const mockConnection = MockWebSocket.findByUrl(_config.url);
 
       // This should pass both filters
       mockConnection?.simulateMessage({
         type: 'alarm_triggered',
-        payload: { alarm: { id: 'test' }, priority: 'high' }
+        payload: { alarm: { id: 'test' }, priority: 'high' },
       });
 
       // This should fail the second filter
       mockConnection?.simulateMessage({
         type: 'alarm_dismissed',
-        payload: { alarmId: 'test', priority: 'low' }
+        payload: { alarmId: 'test', priority: 'low' },
       });
 
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -499,24 +507,24 @@ describe('WebSocket Manager Service Integration Tests', () => {
       const receivedMessages: any[] = [];
 
       const handlers: WebSocketEventHandlers = {
-        onMessage: (message) => {
+        onMessage: message => {
           receivedMessages.push(message);
-        }
+        },
       };
 
       await wsManager.disconnect();
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
 
       const alarmFilter = (message: any) => message.type?.startsWith('alarm_');
-      
+
       wsManager.addMessageFilter(alarmFilter);
 
-      const mockConnection = MockWebSocket.findByUrl(config.url);
+      const mockConnection = MockWebSocket.findByUrl(_config.url);
 
       // Send message that passes filter
       mockConnection?.simulateMessage({
         type: 'alarm_triggered',
-        payload: { alarm: { id: 'test1' } }
+        payload: { alarm: { id: 'test1' } },
       });
 
       // Remove filter
@@ -525,7 +533,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
       // Send message that would have been filtered
       mockConnection?.simulateMessage({
         type: 'user_presence_update',
-        payload: { userId: 'test' }
+        payload: { userId: 'test' },
       });
 
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -539,20 +547,20 @@ describe('WebSocket Manager Service Integration Tests', () => {
   describe('Subscription Management', () => {
     beforeEach(async () => {
       const handlers: WebSocketEventHandlers = {};
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
     });
 
     it('should manage subscriptions', async () => {
       const subscription1Id = wsManager.subscribe({
         type: 'alarm_updates',
-        filters: { userId: 'user-123' },
-        priority: 'high'
+        filters: { userId: '_user-123' },
+        priority: 'high',
       });
 
       const subscription2Id = wsManager.subscribe({
         type: 'user_activity',
         filters: { includePresence: true },
-        priority: 'normal'
+        priority: 'normal',
       });
 
       expect(subscription1Id).toBeTruthy();
@@ -561,7 +569,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
 
       const subscriptions = wsManager.getSubscriptions();
       expect(subscriptions).toHaveLength(2);
-      
+
       const sub1 = subscriptions.find(s => s.id === subscription1Id);
       const sub2 = subscriptions.find(s => s.id === subscription2Id);
 
@@ -574,7 +582,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
     it('should unsubscribe successfully', async () => {
       const subscriptionId = wsManager.subscribe({
         type: 'system_notifications',
-        priority: 'critical'
+        priority: 'critical',
       });
 
       expect(wsManager.getSubscriptions()).toHaveLength(1);
@@ -595,11 +603,11 @@ describe('WebSocket Manager Service Integration Tests', () => {
       let originalSend: any;
 
       const handlers: WebSocketEventHandlers = {};
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
 
       // Mock the send method to capture heartbeat messages
       originalSend = wsManager.send;
-      wsManager.send = vi.fn().mockImplementation(async (message) => {
+      wsManager.send = vi.fn().mockImplementation(async message => {
         sentMessages.push(message);
         return originalSend.call(wsManager, message);
       });
@@ -610,9 +618,11 @@ describe('WebSocket Manager Service Integration Tests', () => {
       // Wait for multiple heartbeat cycles
       await new Promise(resolve => setTimeout(resolve, 1200));
 
-      const heartbeatMessages = sentMessages.filter(msg => msg.type === 'heartbeat_ping');
+      const heartbeatMessages = sentMessages.filter(
+        msg => msg.type === 'heartbeat_ping'
+      );
       expect(heartbeatMessages.length).toBeGreaterThanOrEqual(2);
-      
+
       heartbeatMessages.forEach(msg => {
         expect(msg.timestamp).toBeTypeOf('number');
         expect(Date.now() - msg.timestamp).toBeLessThan(2000);
@@ -627,10 +637,10 @@ describe('WebSocket Manager Service Integration Tests', () => {
       let originalSend: any;
 
       const handlers: WebSocketEventHandlers = {};
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
 
       originalSend = wsManager.send;
-      wsManager.send = vi.fn().mockImplementation(async (message) => {
+      wsManager.send = vi.fn().mockImplementation(async message => {
         sentMessages.push(message);
         return originalSend.call(wsManager, message);
       });
@@ -639,14 +649,18 @@ describe('WebSocket Manager Service Integration Tests', () => {
 
       // Wait for some heartbeats
       await new Promise(resolve => setTimeout(resolve, 500));
-      const heartbeatCountBeforeDisconnect = sentMessages.filter(msg => msg.type === 'heartbeat_ping').length;
+      const heartbeatCountBeforeDisconnect = sentMessages.filter(
+        msg => msg.type === 'heartbeat_ping'
+      ).length;
 
       // Disconnect
       await wsManager.disconnect();
 
       // Wait and check no more heartbeats are sent
       await new Promise(resolve => setTimeout(resolve, 500));
-      const heartbeatCountAfterDisconnect = sentMessages.filter(msg => msg.type === 'heartbeat_ping').length;
+      const heartbeatCountAfterDisconnect = sentMessages.filter(
+        msg => msg.type === 'heartbeat_ping'
+      ).length;
 
       expect(heartbeatCountBeforeDisconnect).toBeGreaterThan(0);
       expect(heartbeatCountAfterDisconnect).toBe(heartbeatCountBeforeDisconnect);
@@ -657,19 +671,19 @@ describe('WebSocket Manager Service Integration Tests', () => {
   });
 
   describe('Error Handling and Recovery', () => {
-    it('should track error counts in metrics', async () => {
+    it('should track _error counts in metrics', async () => {
       const errors: WebSocketError[] = [];
 
       const handlers: WebSocketEventHandlers = {
-        onError: (error) => {
-          errors.push(error);
-        }
+        onError: _error => {
+          errors.push(_error);
+        },
       };
 
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
 
       // Simulate various error types by sending invalid messages
-      const mockConnection = MockWebSocket.findByUrl(config.url);
+      const mockConnection = MockWebSocket.findByUrl(_config.url);
 
       // Send invalid JSON to trigger INVALID_MESSAGE error
       if (mockConnection) {
@@ -687,16 +701,15 @@ describe('WebSocket Manager Service Integration Tests', () => {
       const errors: WebSocketError[] = [];
 
       const handlers: WebSocketEventHandlers = {
-        onError: (error) => {
-          errors.push(error);
-        }
+        onError: _error => {
+          errors.push(_error);
+        },
       };
 
       // Try to connect to an invalid URL that will cause an error
-      const invalidConfig = { ...config, url: 'wss://invalid-url' };
+      const invalidConfig = { ..._config, url: 'wss://invalid-url' };
 
-      await expect(wsManager.connect(invalidConfig, handlers))
-        .rejects.toThrow();
+      await expect(wsManager.connect(invalidConfig, handlers)).rejects.toThrow();
 
       // Should have recorded the error in metrics
       const metrics = wsManager.getMetrics();
@@ -707,7 +720,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
   describe('Performance Monitoring', () => {
     beforeEach(async () => {
       const handlers: WebSocketEventHandlers = {};
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
     });
 
     it('should track comprehensive metrics', async () => {
@@ -716,9 +729,12 @@ describe('WebSocket Manager Service Integration Tests', () => {
       await wsManager.send({ type: 'test2', data: 'larger message with more content' });
 
       // Simulate receiving messages
-      const mockConnection = MockWebSocket.findByUrl(config.url);
+      const mockConnection = MockWebSocket.findByUrl(_config.url);
       mockConnection?.simulateMessage({ type: 'response1', data: 'response' });
-      mockConnection?.simulateMessage({ type: 'response2', data: 'longer response message' });
+      mockConnection?.simulateMessage({
+        type: 'response2',
+        data: 'longer response message',
+      });
 
       await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -750,12 +766,12 @@ describe('WebSocket Manager Service Integration Tests', () => {
   describe('Resource Management', () => {
     it('should clean up resources on disconnect', async () => {
       const handlers: WebSocketEventHandlers = {};
-      await wsManager.connect(config, handlers);
+      await wsManager.connect(_config, handlers);
 
       // Add subscriptions and filters
       const subId1 = wsManager.subscribe({ type: 'alarm_updates', priority: 'high' });
       const subId2 = wsManager.subscribe({ type: 'user_activity', priority: 'normal' });
-      
+
       wsManager.addMessageFilter(() => true);
       wsManager.setHeartbeatInterval(1000);
 
@@ -775,7 +791,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
       const handlers: WebSocketEventHandlers = {};
 
       for (let i = 0; i < 5; i++) {
-        await wsManager.connect(config, handlers);
+        await wsManager.connect(_config, handlers);
         expect(wsManager.isConnected()).toBe(true);
 
         await wsManager.disconnect();

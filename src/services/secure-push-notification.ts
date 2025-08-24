@@ -175,8 +175,8 @@ export class SecurePushNotificationService {
       );
 
       return this.hasPermission;
-    } catch (error) {
-      console.error('Error initializing secure push notification service:', error);
+    } catch (_error) {
+      console._error('Error initializing secure push notification service:', _error);
       return false;
     }
   }
@@ -193,9 +193,9 @@ export class SecurePushNotificationService {
         await this.storeEncryptionKey(key);
       }
       this.encryptionKey = key;
-    } catch (error) {
-      console.error('Failed to initialize push notification encryption:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to initialize push notification encryption:', _error);
+      throw _error;
     }
   }
 
@@ -216,8 +216,8 @@ export class SecurePushNotificationService {
 
     // Registration error
     PushNotifications.addListener('registrationError', error => {
-      console.error('Secure push registration error:', error);
-      this.logSecurityEvent('registration_error', { error: error.error });
+      console.error('Secure push registration error:', _error);
+      this.logSecurityEvent('registration_error', { error: _error._error });
     });
 
     // Push notification received (foreground) - with security validation
@@ -379,8 +379,8 @@ export class SecurePushNotificationService {
       }
 
       return { isValid, reasons, trustLevel };
-    } catch (error) {
-      console.error('Push notification security validation failed:', error);
+    } catch (_error) {
+      console._error('Push notification security validation failed:', _error);
       this.securityMetrics.rejectedMessages++;
       return {
         isValid: false,
@@ -499,9 +499,9 @@ export class SecurePushNotificationService {
       }
 
       return securePayload;
-    } catch (error) {
-      console.error('Failed to create secure payload:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to create secure payload:', _error);
+      throw _error;
     }
   }
 
@@ -539,8 +539,8 @@ export class SecurePushNotificationService {
         userId,
         hasSignature: !!securePayload.signature,
       });
-    } catch (error) {
-      console.error('Error scheduling secure alarm push:', error);
+    } catch (_error) {
+      console._error('Error scheduling secure alarm push:', _error);
     }
   }
 
@@ -578,8 +578,8 @@ export class SecurePushNotificationService {
         userId,
         hasSignature: !!securePayload.signature,
       });
-    } catch (error) {
-      console.error('Error sending secure emergency alert:', error);
+    } catch (_error) {
+      console._error('Error sending secure emergency alert:', _error);
     }
   }
 
@@ -688,8 +688,8 @@ export class SecurePushNotificationService {
   private static async storeEncryptionKey(key: string): Promise<void> {
     try {
       await Preferences.set({ key: 'push_encryption_key', value: key });
-    } catch (error) {
-      console.error('Failed to store push encryption key:', error);
+    } catch (_error) {
+      console._error('Failed to store push encryption key:', _error);
     }
   }
 
@@ -712,8 +712,8 @@ export class SecurePushNotificationService {
         const metrics = JSON.parse(metricsData);
         this.securityMetrics = { ...this.securityMetrics, ...metrics };
       }
-    } catch (error) {
-      console.error('Failed to load push security data:', error);
+    } catch (_error) {
+      console._error('Failed to load push security data:', _error);
     }
   }
 
@@ -728,8 +728,8 @@ export class SecurePushNotificationService {
         key: 'push_security_metrics',
         value: JSON.stringify(this.securityMetrics),
       });
-    } catch (error) {
-      console.error('Failed to save push security data:', error);
+    } catch (_error) {
+      console._error('Failed to save push security data:', _error);
     }
   }
 
@@ -815,7 +815,7 @@ export class SecurePushNotificationService {
   }
 
   // Helper methods (continuing from original service)
-  private static logSecurityEvent(event: string, details: any): void {
+  private static logSecurityEvent(_event: string, details: any): void {
     const logEntry = {
       event,
       details,
@@ -832,10 +832,10 @@ export class SecurePushNotificationService {
     );
   }
 
-  private static trackNotificationEvent(event: string, data: any): void {
+  private static trackNotificationEvent(_event: string, data: any): void {
     window.dispatchEvent(
       new CustomEvent('secure-notification-analytics', {
-        detail: { event, data, timestamp: new Date() },
+        detail: { _event, data, timestamp: new Date() },
       })
     );
   }

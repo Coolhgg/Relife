@@ -61,8 +61,8 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
         setSyncStatus(syncStat);
         setOfflineStatus(offlineStat);
         setPushInfo(pushInf);
-      } catch (error) {
-        console.error('PWA Status: Failed to initialize:', error);
+      } catch (_error) {
+        console._error('PWA Status: Failed to initialize:', _error);
       } finally {
         setIsLoading(false);
       }
@@ -91,8 +91,8 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
   const handleInstallApp = async () => {
     try {
       await pwaService.installApp();
-    } catch (error) {
-      console.error('PWA Status: Install failed:', error);
+    } catch (_error) {
+      console._error('PWA Status: Install failed:', _error);
     }
   };
 
@@ -100,8 +100,8 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
     try {
       const subscription = await pwaService.subscribeToPushNotifications();
       setPushInfo(subscription);
-    } catch (error) {
-      console.error('PWA Status: Notification subscription failed:', error);
+    } catch (_error) {
+      console._error('PWA Status: Notification subscription failed:', _error);
     }
   };
 
@@ -110,8 +110,8 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
       await pwaService.unsubscribeFromPushNotifications();
       const updatedInfo = await pwaService.getPushSubscriptionInfo();
       setPushInfo(updatedInfo);
-    } catch (error) {
-      console.error('PWA Status: Notification unsubscribe failed:', error);
+    } catch (_error) {
+      console._error('PWA Status: Notification unsubscribe failed:', _error);
     }
   };
 
@@ -123,8 +123,8 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
       const offlineStat = await OfflineManager.getStatus();
       setSyncStatus(syncStat);
       setOfflineStatus(offlineStat);
-    } catch (error) {
-      console.error('PWA Status: Force sync failed:', error);
+    } catch (_error) {
+      console._error('PWA Status: Force sync failed:', _error);
     }
   };
 
@@ -141,8 +141,8 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
       } else {
         alert('No updates available. You have the latest version!');
       }
-    } catch (error) {
-      console.error('PWA Status: Update check failed:', error);
+    } catch (_error) {
+      console._error('PWA Status: Update check failed:', _error);
     }
   };
 
@@ -154,12 +154,12 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
     );
   };
 
-  const getStatusBadge = (status: 'active' | 'inactive' | 'warning' | 'error') => {
+  const getStatusBadge = (status: 'active' | 'inactive' | 'warning' | '_error') => {
     const badgeClasses = {
       active: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
       inactive: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
       warning: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-      error: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+      _error: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
     };
 
     return `px-2 py-1 rounded-full text-xs font-medium ${badgeClasses[status]}`;
@@ -197,7 +197,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
         </div>
         <div className="flex items-center space-x-3">
           <div
-            className={`flex items-center space-x-2 ${getStatusBadge(isOnline ? 'active' : 'error')}`}
+            className={`flex items-center space-x-2 ${getStatusBadge(isOnline ? 'active' : '_error')}`}
           >
             {isOnline ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
             <span>{isOnline ? 'Online' : 'Offline'}</span>

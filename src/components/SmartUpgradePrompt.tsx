@@ -173,8 +173,8 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
           className="relative max-w-md w-full"
         >
           <Card
-            className={`relative overflow-hidden bg-gradient-to-br ${config.bgGradient} border-2`}
-            style={{ borderColor: `${config.color}40` }}
+            className={`relative overflow-hidden bg-gradient-to-br ${_config.bgGradient} border-2`}
+            style={{ borderColor: `${_config.color}40` }}
           >
             {/* Close Button */}
             <Button
@@ -205,7 +205,7 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                 {/* Main Icon */}
                 <motion.div
                   className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center relative"
-                  style={{ backgroundColor: `${config.color}20` }}
+                  style={{ backgroundColor: `${_config.color}20` }}
                   animate={{
                     scale: [1, 1.05, 1],
                     rotate: [0, 5, -5, 0],
@@ -215,12 +215,12 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                     repeat: Infinity,
                   }}
                 >
-                  <IconComponent className="w-8 h-8" style={{ color: config.color }} />
+                  <IconComponent className="w-8 h-8" style={{ color: _config.color }} />
 
                   {urgencyLevel === 'high' && (
                     <motion.div
                       className="absolute inset-0 rounded-full"
-                      style={{ backgroundColor: config.color }}
+                      style={{ backgroundColor: _config.color }}
                       animate={{
                         scale: [1, 1.2, 1],
                         opacity: [0.2, 0.1, 0.2],
@@ -234,7 +234,7 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                 </motion.div>
 
                 {/* Title */}
-                <h2 className="text-xl font-bold mb-2" style={{ color: config.color }}>
+                <h2 className="text-xl font-bold mb-2" style={{ color: _config.color }}>
                   {prompt.title}
                 </h2>
 
@@ -261,13 +261,13 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                   Premium Benefits
                 </h3>
                 <div className="space-y-2">
-                  {prompt.benefits.slice(0, 3).map((benefit, index) => (
+                  {prompt.benefits.slice(0, 3).map((benefit, _index) => (
                     <motion.div
-                      key={index}
+                      key={_index}
                       className="flex items-start gap-3 text-sm"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 + index * 0.1 }}
+                      transition={{ delay: 0.3 + _index * 0.1 }}
                     >
                       <div className="w-2 h-2 rounded-full bg-green-500 mt-2 flex-shrink-0" />
                       <span>{benefit}</span>
@@ -373,10 +373,10 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                 <Button
                   className="flex-2"
                   onClick={handleUpgrade}
-                  style={{ backgroundColor: config.color }}
+                  style={{ backgroundColor: _config.color }}
                 >
                   <Crown className="w-4 h-4 mr-2" />
-                  {config.ctaText}
+                  {_config.ctaText}
                 </Button>
               </div>
 
@@ -403,7 +403,7 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
             <div
               className="absolute inset-0 opacity-5 pointer-events-none"
               style={{
-                backgroundImage: `radial-gradient(circle at 30% 70%, ${config.color} 1px, transparent 1px)`,
+                backgroundImage: `radial-gradient(circle at 30% 70%, ${_config.color} 1px, transparent 1px)`,
                 backgroundSize: '25px 25px',
               }}
             />

@@ -11,7 +11,11 @@ export class MockSupabaseClient {
   private static users: Map<string, User> = new Map();
   private static sessions: Map<string, any> = new Map();
   private static realTimeChannels: Map<string, any> = new Map();
-  private static callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
+  private static callHistory: Array<{
+    method: string;
+    args: any[];
+    timestamp: number;
+  }> = [];
 
   static getInstance(): MockSupabaseClient {
     if (!this.instance) {
@@ -34,7 +38,9 @@ export class MockSupabaseClient {
   private static logCall(method: string, args: any[]): void {
     this.callHistory.push({
       method,
-      args: args.map(arg => typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg),
+      args: args.map(arg =>
+        typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg
+      ),
       timestamp: Date.now(),
     });
   }
@@ -43,7 +49,7 @@ export class MockSupabaseClient {
   auth = {
     signUp: async (credentials: { email: string; password: string }) => {
       MockSupabaseClient.logCall('auth.signUp', [credentials]);
-      
+
       if (credentials.email === 'existing@example.com') {
         return {
           data: { user: null, session: null },
@@ -72,7 +78,7 @@ export class MockSupabaseClient {
         user,
       };
 
-      MockSupabaseClient.users.set(user.id, user);
+      MockSupabaseClient.users.set(user.id, _user);
       MockSupabaseClient.sessions.set(session.access_token, session);
 
       return {
@@ -83,7 +89,7 @@ export class MockSupabaseClient {
 
     signInWithPassword: async (credentials: { email: string; password: string }) => {
       MockSupabaseClient.logCall('auth.signInWithPassword', [credentials]);
-      
+
       if (credentials.password === 'wrong') {
         return {
           data: { user: null, session: null },
@@ -91,8 +97,9 @@ export class MockSupabaseClient {
         };
       }
 
-      const existingUser = Array.from(MockSupabaseClient.users.values())
-        .find(u => u.email === credentials.email);
+      const existingUser = Array.from(MockSupabaseClient.users.values()).find(
+        u => u.email === credentials.email
+      );
 
       if (!existingUser) {
         return {
@@ -119,15 +126,15 @@ export class MockSupabaseClient {
 
     signOut: async () => {
       MockSupabaseClient.logCall('auth.signOut', []);
-      
+
       return {
-        error: null,
+        _error: null,
       };
     },
 
     getSession: async () => {
       MockSupabaseClient.logCall('auth.getSession', []);
-      
+
       const sessions = Array.from(MockSupabaseClient.sessions.values());
       const latestSession = sessions[sessions.length - 1] || null;
 
@@ -139,7 +146,7 @@ export class MockSupabaseClient {
 
     getUser: async (token?: string) => {
       MockSupabaseClient.logCall('auth.getUser', [token]);
-      
+
       const session = token ? MockSupabaseClient.sessions.get(token) : null;
       const user = session?.user || null;
 
@@ -149,9 +156,9 @@ export class MockSupabaseClient {
       };
     },
 
-    onAuthStateChange: (callback: (event: string, session: any) => void) => {
+    onAuthStateChange: (callback: (_event: string, session: any) => void) => {
       MockSupabaseClient.logCall('auth.onAuthStateChange', []);
-      
+
       // Mock auth state changes
       setTimeout(() => {
         const sessions = Array.from(MockSupabaseClient.sessions.values());
@@ -166,7 +173,7 @@ export class MockSupabaseClient {
 
     resetPasswordForEmail: async (email: string) => {
       MockSupabaseClient.logCall('auth.resetPasswordForEmail', [email]);
-      
+
       return {
         data: {},
         error: null,
@@ -182,7 +189,7 @@ export class MockSupabaseClient {
   // Real-time methods
   channel(name: string) {
     MockSupabaseClient.logCall('channel', [name]);
-    
+
     const channel = new MockSupabaseRealtimeChannel(name);
     MockSupabaseClient.realTimeChannels.set(name, channel);
     return channel;
@@ -190,7 +197,7 @@ export class MockSupabaseClient {
 
   removeChannel(channel: any) {
     MockSupabaseClient.logCall('removeChannel', [channel]);
-    
+
     if (channel.name) {
       MockSupabaseClient.realTimeChannels.delete(channel.name);
     }
@@ -210,7 +217,7 @@ class MockSupabaseQueryBuilder {
 
   constructor(table: string) {
     this.table = table;
-    
+
     // Initialize mock data for common tables
     if (!MockSupabaseQueryBuilder.mockData.has(table)) {
       this.initializeMockData(table);
@@ -219,11 +226,11 @@ class MockSupabaseQueryBuilder {
 
   private initializeMockData(table: string): void {
     const mockData: any[] = [];
-    
+
     switch (table) {
       case 'users':
         mockData.push({
-          id: 'user-123',
+          id: '_user-123',
           email: 'test@example.com',
           name: 'Test User',
           avatar_url: null,
@@ -231,11 +238,11 @@ class MockSupabaseQueryBuilder {
           updated_at: new Date().toISOString(),
         });
         break;
-        
+
       case 'alarms':
         mockData.push({
           id: 'alarm-123',
-          user_id: 'user-123',
+          user_id: '_user-123',
           time: '07:00:00',
           label: 'Morning Alarm',
           is_active: true,
@@ -244,24 +251,26 @@ class MockSupabaseQueryBuilder {
           updated_at: new Date().toISOString(),
         });
         break;
-        
+
       case 'subscriptions':
         mockData.push({
           id: 'sub-123',
-          user_id: 'user-premium-123',
+          user_id: '_user-premium-123',
           tier: 'premium',
           status: 'active',
           current_period_start: new Date().toISOString(),
-          current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          current_period_end: new Date(
+            Date.now() + 30 * 24 * 60 * 60 * 1000
+          ).toISOString(),
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         });
         break;
-        
+
       case 'battles':
         mockData.push({
           id: 'battle-123',
-          creator_id: 'user-123',
+          creator_id: '_user-123',
           title: 'Morning Champions',
           type: 'weekly_challenge',
           status: 'active',
@@ -272,7 +281,7 @@ class MockSupabaseQueryBuilder {
         });
         break;
     }
-    
+
     MockSupabaseQueryBuilder.mockData.set(table, mockData);
   }
 
@@ -370,64 +379,70 @@ class MockSupabaseQueryBuilder {
   }
 
   // Execute the query
-  async then(resolve?: (result: any) => void, reject?: (error: any) => void): Promise<any> {
+  async then(
+    resolve?: (result: any) => void,
+    reject?: (_error: any) => void
+  ): Promise<any> {
     try {
       const result = await this.execute();
       if (resolve) resolve(result);
       return result;
-    } catch (error) {
-      if (reject) reject(error);
-      throw error;
+    } catch (_error) {
+      if (reject) reject(_error);
+      throw _error;
     }
   }
 
   private async execute(): Promise<any> {
     MockSupabaseClient.logCall(`${this.table}.query`, [this.queryParams]);
-    
+
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 50));
 
-    let data = MockSupabaseQueryBuilder.mockData.get(this.table) || [];
+    const data = MockSupabaseQueryBuilder.mockData.get(this.table) || [];
 
     // Handle INSERT
     if (this.queryParams.insert) {
       const newRecords = this.queryParams.insert.map((record: any) => ({
         ...record,
-        id: record.id || `${this.table}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id:
+          record.id ||
+          `${this.table}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         created_at: record.created_at || new Date().toISOString(),
         updated_at: new Date().toISOString(),
       }));
-      
+
       data.push(...newRecords);
       MockSupabaseQueryBuilder.mockData.set(this.table, data);
-      
-      return {
-        data: newRecords,
-        error: null,
-      };
+
+      return { data: newRecords, _error: null };
     }
 
     // Handle UPDATE
     if (this.queryParams.update) {
       let updatedData = [...data];
-      
+
       if (this.queryParams.eq) {
         Object.entries(this.queryParams.eq).forEach(([column, value]) => {
-          updatedData = updatedData.map(record => 
-            record[column] === value 
-              ? { ...record, ...this.queryParams.update, updated_at: new Date().toISOString() }
+          updatedData = updatedData.map(record =>
+            record[column] === value
+              ? {
+                  ...record,
+                  ...this.queryParams.update,
+                  updated_at: new Date().toISOString(),
+                }
               : record
           );
         });
       }
-      
+
       MockSupabaseQueryBuilder.mockData.set(this.table, updatedData);
-      
+
       return {
         data: updatedData.filter(record => {
           if (this.queryParams.eq) {
-            return Object.entries(this.queryParams.eq).every(([column, value]) => 
-              record[column] === value
+            return Object.entries(this.queryParams.eq).every(
+              ([column, value]) => record[column] === value
             );
           }
           return true;
@@ -439,19 +454,16 @@ class MockSupabaseQueryBuilder {
     // Handle DELETE
     if (this.queryParams.delete) {
       let filteredData = [...data];
-      
+
       if (this.queryParams.eq) {
         Object.entries(this.queryParams.eq).forEach(([column, value]) => {
           filteredData = filteredData.filter(record => record[column] !== value);
         });
       }
-      
+
       MockSupabaseQueryBuilder.mockData.set(this.table, filteredData);
-      
-      return {
-        data: null,
-        error: null,
-      };
+
+      return { data: null, _error: null };
     }
 
     // Handle SELECT (default)
@@ -471,9 +483,11 @@ class MockSupabaseQueryBuilder {
     }
 
     if (this.queryParams.in) {
-      Object.entries(this.queryParams.in).forEach(([column, values]: [string, any[]]) => {
-        filteredData = filteredData.filter(record => values.includes(record[column]));
-      });
+      Object.entries(this.queryParams.in).forEach(
+        ([column, values]: [string, any[]]) => {
+          filteredData = filteredData.filter(record => values.includes(record[column]));
+        }
+      );
     }
 
     // Apply ordering
@@ -500,27 +514,21 @@ class MockSupabaseQueryBuilder {
       if (filteredData.length === 0) {
         return {
           data: null,
-          error: { code: 'PGRST116', message: 'No rows returned' },
+          _error: { code: 'PGRST116', message: 'No rows returned' },
         };
       }
-      
+
       if (filteredData.length > 1) {
         return {
           data: null,
-          error: { code: 'PGRST116', message: 'Multiple rows returned' },
+          _error: { code: 'PGRST116', message: 'Multiple rows returned' },
         };
       }
-      
-      return {
-        data: filteredData[0],
-        error: null,
-      };
+
+      return { data: filteredData[0], _error: null };
     }
 
-    return {
-      data: filteredData,
-      error: null,
-    };
+    return { data: filteredData, _error: null };
   }
 
   // Static methods for managing mock data
@@ -545,7 +553,11 @@ class MockSupabaseQueryBuilder {
 class MockSupabaseRealtimeChannel {
   public name: string;
   private subscriptions: Array<{ event: string; callback: Function }> = [];
-  private static callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
+  private static callHistory: Array<{
+    method: string;
+    args: any[];
+    timestamp: number;
+  }> = [];
 
   constructor(name: string) {
     this.name = name;
@@ -558,48 +570,48 @@ class MockSupabaseRealtimeChannel {
   private static logCall(method: string, args: any[]): void {
     this.callHistory.push({
       method,
-      args: args.map(arg => typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg),
+      args: args.map(arg =>
+        typeof arg === 'object' ? JSON.parse(JSON.stringify(arg)) : arg
+      ),
       timestamp: Date.now(),
     });
   }
 
-  on(event: string, callback: Function) {
-    MockSupabaseRealtimeChannel.logCall('channel.on', [this.name, event]);
-    
-    this.subscriptions.push({ event, callback });
-    
+  on(_event: string, callback: Function) {
+    MockSupabaseRealtimeChannel.logCall('channel.on', [this.name, _event]);
+
+    this.subscriptions.push({ _event, callback });
+
     // Simulate initial data
     setTimeout(() => {
-      if (event === 'postgres_changes') {
+      if (_event === 'postgres_changes') {
         callback({
           eventType: 'INSERT',
           schema: 'public',
           table: 'alarms',
           new: {
             id: 'new_alarm_123',
-            user_id: 'user-123',
+            user_id: '_user-123',
             label: 'New Alarm',
             time: '08:00:00',
             is_active: true,
           },
           old: {},
         });
-      } else if (event === 'presence') {
+      } else if (_event === 'presence') {
         callback({
-          event: 'sync',
+          _event: 'sync',
           payload: {
             user_123: { online_at: new Date().toISOString() },
           },
         });
-      } else if (event === 'broadcast') {
+      } else if (_event === 'broadcast') {
         callback({
-          event: 'battle_update',
+          _event: 'battle_update',
           payload: {
             battle_id: 'battle_123',
             participant_count: 5,
-            leaderboard: [
-              { user_id: 'user_123', score: 100, rank: 1 },
-            ],
+            leaderboard: [{ user_id: 'user_123', score: 100, rank: 1 }],
           },
         });
       }
@@ -610,7 +622,7 @@ class MockSupabaseRealtimeChannel {
 
   subscribe(callback?: (status: string) => void) {
     MockSupabaseRealtimeChannel.logCall('channel.subscribe', [this.name]);
-    
+
     setTimeout(() => {
       if (callback) callback('SUBSCRIBED');
     }, 50);
@@ -620,20 +632,20 @@ class MockSupabaseRealtimeChannel {
 
   unsubscribe() {
     MockSupabaseRealtimeChannel.logCall('channel.unsubscribe', [this.name]);
-    
+
     this.subscriptions = [];
     return Promise.resolve();
   }
 
   send(type: string, payload: any) {
     MockSupabaseRealtimeChannel.logCall('channel.send', [this.name, type, payload]);
-    
+
     // Echo the message back to simulate real-time communication
     setTimeout(() => {
       this.subscriptions.forEach(sub => {
-        if (sub.event === 'broadcast') {
+        if (sub._event === 'broadcast') {
           sub.callback({
-            event: type,
+            _event: type,
             payload,
             timestamp: Date.now(),
           });
@@ -645,9 +657,9 @@ class MockSupabaseRealtimeChannel {
   }
 
   // Utility method to trigger events for testing
-  trigger(event: string, payload: any) {
+  trigger(_event: string, payload: any) {
     this.subscriptions.forEach(sub => {
-      if (sub.event === event) {
+      if (sub.event === _event) {
         sub.callback(payload);
       }
     });

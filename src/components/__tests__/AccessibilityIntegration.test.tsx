@@ -308,8 +308,8 @@ describe('Accessibility Integration Tests', () => {
 
   describe('Error Handling Integration', () => {
     it('should handle accessibility errors gracefully across components', async () => {
-      // Mock console.error to track error handling
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      // Mock console.error to track _error handling
+      const consoleSpy = jest.spyOn(console, '_error').mockImplementation(() => {});
 
       renderWithAccessibilityProviders(
         <div>
@@ -331,7 +331,7 @@ describe('Accessibility Integration Tests', () => {
       consoleSpy.mockRestore();
     });
 
-    it('should provide accessible error messages', async () => {
+    it('should provide accessible _error messages', async () => {
       renderWithAccessibilityProviders(
         <AccessibilityTester isVisible={true} onClose={mockOnClose} />
       );

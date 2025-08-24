@@ -14,7 +14,7 @@ import type { AppState, User } from '../types';
 // Mock services
 vi.mock('../services/CloudSyncService');
 vi.mock('../services/theme-persistence');
-vi.mock('../services/error-handler');
+vi.mock('../services/_error-handler');
 
 // Mock UI components that might not be available
 vi.mock('../components/ui/tabs', () => ({
@@ -272,8 +272,8 @@ describe('Theme System Integration', () => {
       expect(screen.getByTestId('tabs')).toBeInTheDocument();
     });
 
-    it('should handle theme component errors with error boundaries', () => {
-      // This would test error boundary behavior
+    it('should handle theme component errors with _error boundaries', () => {
+      // This would test _error boundary behavior
       render(<TestApp />);
 
       expect(screen.getByTestId('tabs')).toBeInTheDocument();
@@ -369,7 +369,7 @@ describe('Theme System Integration', () => {
 
   describe('Theme System Initialization', () => {
     it('should initialize theme system without errors', () => {
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation();
+      const consoleSpy = vi.spyOn(console, '_error').mockImplementation();
 
       render(<TestApp />);
 

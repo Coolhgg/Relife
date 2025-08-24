@@ -512,7 +512,7 @@ export function AdvancedAnalytics({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {sleepData.slice(0, 7).map((sleep, index) => (
+                {sleepData.slice(0, 7).map((sleep, _index) => (
                   <div
                     key={sleep.date}
                     className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
@@ -702,7 +702,7 @@ export function AdvancedAnalytics({
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {wakeUpData.slice(0, 7).map((wakeup, index) => (
+                {wakeUpData.slice(0, 7).map((wakeup, _index) => (
                   <div
                     key={wakeup.date}
                     className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
@@ -760,7 +760,7 @@ export function AdvancedAnalytics({
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {battlePerformance.map((battle, index) => (
+                {battlePerformance.map((battle, _index) => (
                   <div
                     key={battle.battleId}
                     className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"

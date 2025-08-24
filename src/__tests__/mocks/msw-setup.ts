@@ -37,7 +37,7 @@ export const mockApiError = (
 ) => {
   server.use(
     http.all(endpoint, () => {
-      return HttpResponse.json({ error: message }, { status });
+      return HttpResponse.json({ _error: message }, { status });
     })
   );
 };

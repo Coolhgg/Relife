@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * A/B Testing Hook for Struggling Sam Optimization
  * Handles feature flags, variant assignments, and tracking
@@ -53,7 +54,7 @@ interface ABTestingState {
   features: Record<FeatureKey, boolean>;
   variant: string;
   loading: boolean;
-  error: string | null;
+  _error: string | null;
 }
 
 export const useABTesting = (userId?: string) => {
@@ -63,7 +64,7 @@ export const useABTesting = (userId?: string) => {
     features: STRUGGLING_SAM_FEATURES.CONTROL,
     variant: 'control',
     loading: false,
-    error: null,
+    _error: null,
   });
 
   // Initialize A/B test assignment
@@ -74,7 +75,7 @@ export const useABTesting = (userId?: string) => {
   }, [userId]);
 
   const initializeABTesting = async (userId: string) => {
-    setState((prev: ABTestingState) => ({ ...prev, loading: true, error: null }));
+    setState((prev: ABTestingState) => ({ ...prev, loading: true, _error: null }));
 
     try {
       // Check if user already has an A/B test assignment
@@ -109,7 +110,7 @@ export const useABTesting = (userId?: string) => {
           features,
           variant,
           loading: false,
-          error: null,
+          _error: null,
         });
 
         // Track user assignment
@@ -122,16 +123,16 @@ export const useABTesting = (userId?: string) => {
         setState((prev: ABTestingState) => ({
           ...prev,
           loading: false,
-          error: 'Failed to initialize A/B testing',
+          _error: 'Failed to initialize A/B testing',
         }));
       }
-    } catch (error) {
-      console.error('A/B Testing initialization error:', error);
+    } catch (_error) {
+      console.error('A/B Testing initialization _error:', _error);
 
       setState((prev: ABTestingState) => ({
         ...prev,
         loading: false,
-        error: 'Failed to initialize A/B testing',
+        _error: 'Failed to initialize A/B testing',
       }));
     }
   };
@@ -165,8 +166,8 @@ export const useABTesting = (userId?: string) => {
           `feature_${featureKey}_${action}`,
           { feature: featureKey, action, ...metadata }
         );
-      } catch (error) {
-        console.error('Failed to track feature usage:', error);
+      } catch (_error) {
+        console._error('Failed to track feature usage:', _error);
       }
     },
     [state.testGroup, state.userAssignment, userId]
@@ -189,8 +190,8 @@ export const useABTesting = (userId?: string) => {
           'conversion',
           { type: conversionType }
         );
-      } catch (error) {
-        console.error('Failed to track conversion:', error);
+      } catch (_error) {
+        console._error('Failed to track conversion:', _error);
       }
     },
     [state.testGroup, state.userAssignment, userId]
@@ -208,8 +209,8 @@ export const useABTesting = (userId?: string) => {
           action,
           metadata
         );
-      } catch (error) {
-        console.error('Failed to track engagement:', error);
+      } catch (_error) {
+        console._error('Failed to track engagement:', _error);
       }
     },
     [state.testGroup, state.userAssignment, userId]
@@ -229,7 +230,7 @@ export const useABTesting = (userId?: string) => {
     userAssignment: state.userAssignment,
     variant: state.variant,
     loading: state.loading,
-    error: state.error,
+    error: state._error,
 
     // Feature flags
     features: state.features,

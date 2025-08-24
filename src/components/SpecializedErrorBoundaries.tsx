@@ -12,13 +12,13 @@ import { ErrorHandler } from '../services/error-handler';
 
 interface SpecializedErrorBoundaryProps {
   children: ReactNode;
-  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  onError?: (_error: Error, errorInfo: ErrorInfo) => void;
   onRetry?: () => void;
 }
 
 interface SpecializedErrorBoundaryState {
   hasError: boolean;
-  error: Error | null;
+  _error: Error | null;
   errorInfo: ErrorInfo | null;
   errorId: string | null;
 }
@@ -37,25 +37,25 @@ abstract class BaseSpecializedErrorBoundary extends Component<
     super(props);
     this.state = {
       hasError: false,
-      error: null,
+      _error: null,
       errorInfo: null,
       errorId: null,
     };
   }
 
-  static getDerivedStateFromError(error: Error): SpecializedErrorBoundaryState {
+  static getDerivedStateFromError(_error: Error): SpecializedErrorBoundaryState {
     return {
       hasError: true,
-      error,
+      _error,
       errorInfo: null,
       errorId: null,
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(_error: Error, errorInfo: ErrorInfo) {
     const errorId = ErrorHandler.handleError(
-      error,
-      'Specialized component error occurred',
+      _error,
+      'Specialized component _error occurred',
       {
         context: this.errorContext,
         componentStack: errorInfo.componentStack,
@@ -65,18 +65,18 @@ abstract class BaseSpecializedErrorBoundary extends Component<
     );
 
     this.setState({
-      error,
+      _error,
       errorInfo,
       errorId,
     });
 
-    this.props.onError?.(error, errorInfo);
+    this.props.onError?.(_error, errorInfo);
   }
 
   handleRetry = () => {
     this.setState({
       hasError: false,
-      error: null,
+      _error: null,
       errorInfo: null,
       errorId: null,
     });
@@ -117,13 +117,13 @@ abstract class BaseSpecializedErrorBoundary extends Component<
                 Try Again
               </button>
 
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {process.env.NODE_ENV === 'development' && this.state._error && (
                 <details className="mt-4">
                   <summary className="cursor-pointer text-sm text-red-500 hover:text-red-700">
                     Developer Details
                   </summary>
                   <div className="mt-2 p-3 bg-red-100 dark:bg-red-900/20 rounded border text-xs">
-                    <strong>Error:</strong> {this.state.error.toString()}
+                    <strong>Error:</strong> {this.state._error.toString()}
                     {this.state.errorInfo && (
                       <>
                         <br />
@@ -238,13 +238,13 @@ export class FormErrorBoundary extends BaseSpecializedErrorBoundary {
                 </button>
               </div>
 
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {process.env.NODE_ENV === 'development' && this.state._error && (
                 <details className="mt-4">
                   <summary className="cursor-pointer text-sm text-yellow-500 hover:text-yellow-700">
                     Developer Details
                   </summary>
                   <div className="mt-2 p-3 bg-yellow-100 dark:bg-yellow-900/20 rounded border text-xs">
-                    <strong>Error:</strong> {this.state.error.toString()}
+                    <strong>Error:</strong> {this.state._error.toString()}
                     {this.state.errorInfo && (
                       <>
                         <br />

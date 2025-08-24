@@ -31,7 +31,7 @@ jest.mock('../../../services/security-service', () => ({
   },
 }));
 
-jest.mock('../../../services/error-handler', () => ({
+jest.mock('../../../services/_error-handler', () => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
@@ -66,7 +66,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
   });
 
   describe('Corrupted LocalStorage Data', () => {
-    it('should handle corrupted user data in localStorage', async () => {
+    it('should handle corrupted _user data in localStorage', async () => {
       // Insert corrupted data
       localStorage.setItem('auth_user', 'invalid-json-{{{');
       localStorage.setItem('auth_session', 'corrupted-data');
@@ -78,9 +78,9 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       });
 
       // Should not crash and provide fallback behavior
-      expect(result.current.user).toBeNull();
+      expect(result.current._user).toBeNull();
       expect(result.current.session).toBeNull();
-      expect(result.current.error).toBeNull(); // Should handle gracefully
+      expect(result.current._error).toBeNull(); // Should handle gracefully
     });
 
     it('should handle missing localStorage support', async () => {
@@ -110,7 +110,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       });
 
       // Should continue to function without localStorage
-      expect(result.current.error).not.toContain('Storage unavailable');
+      expect(result.current._error).not.toContain('Storage unavailable');
 
       // Restore localStorage
       Object.defineProperty(window, 'localStorage', { value: originalLocalStorage });
@@ -152,7 +152,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
           setTimeout(
             () =>
               resolve({
-                user: { id: `user-${callCount}`, email: 'test@example.com' },
+                user: { id: `_user-${callCount}`, email: 'test@example.com' },
                 session: { access_token: `token-${callCount}` },
               }),
             100 + Math.random() * 100
@@ -174,7 +174,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       });
 
       // Should handle gracefully without conflicting state
-      expect(result.current.user).toBeDefined();
+      expect(result.current._user).toBeDefined();
       expect(callCount).toBeGreaterThan(0);
     });
 
@@ -188,7 +188,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
             setTimeout(
               () =>
                 resolve({
-                  user: { id: 'user-123', email: 'test@example.com' },
+                  user: { id: '_user-123', email: 'test@example.com' },
                   session: { access_token: 'token' },
                 }),
               200
@@ -196,7 +196,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
           )
       );
 
-      mockService.signOut.mockResolvedValue({ error: null });
+      mockService.signOut.mockResolvedValue({ _error: null });
 
       const { result } = renderHook(() => useAuth());
 
@@ -213,14 +213,14 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       });
 
       // Should handle conflicting operations gracefully
-      expect(result.current.error).not.toContain('conflict');
+      expect(result.current._error).not.toContain('conflict');
     });
 
     it('should handle rapid auth state changes', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
-      const authCallbacks: Array<(event: string, session: any) => void> = [];
+      const authCallbacks: Array<(_event: string, session: any) => void> = [];
       mockService.onAuthStateChange.mockImplementation(callback => {
         authCallbacks.push(callback);
         return { data: { subscription: { unsubscribe: jest.fn() } } };
@@ -230,11 +230,11 @@ describe('useAuth Edge Cases and Stress Tests', () => {
 
       await act(async () => {
         // Simulate rapid auth state changes
-        authCallbacks.forEach((callback, index) => {
+        authCallbacks.forEach((callback, _index) => {
           setTimeout(() => {
             callback('SIGNED_IN', {
-              user: { id: `user-${index}` },
-              access_token: `token-${index}`,
+              user: { id: `_user-${_index}` },
+              access_token: `token-${_index}`,
             });
           }, index * 10);
 
@@ -296,7 +296,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
   });
 
   describe('Error Boundaries and Invalid States', () => {
-    it('should handle invalid user objects from service', async () => {
+    it('should handle invalid _user objects from service', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
 
@@ -315,7 +315,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       });
 
       // Should handle invalid data gracefully
-      expect(result.current.error).not.toContain('TypeError');
+      expect(result.current._error).not.toContain('TypeError');
     });
 
     it('should handle session timeout edge cases', async () => {
@@ -360,7 +360,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       });
 
       // Should provide offline-specific error handling
-      expect(result.current.error).toContain('offline');
+      expect(result.current._error).toContain('offline');
     });
   });
 
@@ -373,7 +373,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       mockService.updateProfile.mockImplementation(() => {
         callCount++;
         return Promise.resolve({
-          user: { id: 'user-123', name: `Update ${callCount}` },
+          user: { id: '_user-123', name: `Update ${callCount}` },
         });
       });
 
@@ -383,7 +383,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
         // Fire 50 rapid updates
         const promises = Array(50)
           .fill(null)
-          .map((_, index) => result.current.updateProfile({ name: `Name ${index}` }));
+          .map((_, _index) => result.current.updateProfile({ name: `Name ${_index}` }));
 
         await Promise.allSettled(promises);
       });
@@ -403,7 +403,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
             setTimeout(
               () =>
                 resolve({
-                  user: { id: 'user-123' },
+                  user: { id: '_user-123' },
                   session: { access_token: 'token' },
                 }),
               10000
@@ -422,7 +422,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
         await signInPromise;
       });
 
-      expect(result.current.user).toBeTruthy();
+      expect(result.current._user).toBeTruthy();
     });
 
     it('should handle component re-renders during async operations', async () => {
@@ -435,7 +435,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
             setTimeout(
               () =>
                 resolve({
-                  user: { id: 'user-123' },
+                  user: { id: '_user-123' },
                   session: { access_token: 'token' },
                 }),
               100
@@ -459,8 +459,8 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       });
 
       // Should complete successfully despite re-renders
-      expect(result.current.user).toBeTruthy();
-      expect(result.current.error).toBeNull();
+      expect(result.current._user).toBeTruthy();
+      expect(result.current._error).toBeNull();
     });
   });
 
@@ -479,7 +479,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       });
 
       // Should handle CSRF validation failure
-      expect(result.current.error).toContain('security');
+      expect(result.current._error).toContain('security');
     });
 
     it('should handle rate limiting edge cases', async () => {
@@ -520,7 +520,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       mockService.getCurrentUser.mockResolvedValue(persistedUser);
       mockService.getSession.mockResolvedValue({
         access_token: 'token',
-        user: persistedUser,
+        _user: persistedUser,
       });
 
       const { result } = renderHook(() => useAuth());
@@ -530,7 +530,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       });
 
       // Should restore persisted state
-      expect(result.current.user).toEqual(persistedUser);
+      expect(result.current._user).toEqual(persistedUser);
     });
 
     it('should handle sign-out with pending operations', async () => {
@@ -540,10 +540,10 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       mockService.updateProfile.mockImplementation(
         () =>
           new Promise(resolve =>
-            setTimeout(() => resolve({ user: { id: 'user-123' } }), 200)
+            setTimeout(() => resolve({ user: { id: '_user-123' } }), 200)
           )
       );
-      mockService.signOut.mockResolvedValue({ error: null });
+      mockService.signOut.mockResolvedValue({ _error: null });
 
       const { result } = renderHook(() => useAuth());
 
@@ -560,7 +560,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       });
 
       // Should handle gracefully without state corruption
-      expect(result.current.user).toBeNull();
+      expect(result.current._user).toBeNull();
     });
   });
 });

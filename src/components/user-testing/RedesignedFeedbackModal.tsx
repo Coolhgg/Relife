@@ -9,7 +9,7 @@ import {
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
+import { Progress } from '../ui/textarea';
 import { Label } from '../ui/label';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
@@ -213,8 +213,8 @@ export function RedesignedFeedbackModal({
 
         stream.getTracks().forEach(track => track.stop());
       });
-    } catch (error) {
-      console.error('Failed to take screenshot:', error);
+    } catch (_error) {
+      console._error('Failed to take screenshot:', _error);
     }
   };
 
@@ -269,8 +269,8 @@ export function RedesignedFeedbackModal({
         },
         enableGamification ? 3000 : 2000
       );
-    } catch (error) {
-      console.error('Failed to submit feedback:', error);
+    } catch (_error) {
+      console._error('Failed to submit feedback:', _error);
     } finally {
       setIsSubmitting(false);
     }
@@ -465,7 +465,7 @@ export function RedesignedFeedbackModal({
         <div>
           <h3 className="text-lg font-semibold mb-4 text-center">Express your mood</h3>
           <div className="flex items-center space-x-4">
-            {MOOD_REACTIONS.map((mood, index) => {
+            {MOOD_REACTIONS.map((mood, _index) => {
               const Icon = mood.icon;
               const isSelected = feedbackData.moodRating === mood.value;
 

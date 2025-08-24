@@ -166,8 +166,9 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
             <input
               type="checkbox"
               checked={autoRefresh}
-              
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAutoRefresh(e.target.checked)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setAutoRefresh(e.target.checked)
+              }
               className="mr-1"
             />
             Auto-refresh
@@ -228,8 +229,8 @@ export const PerformanceProfilerWrapper: React.FC<PerformanceProfilerWrapperProp
     );
 
     // Add keyboard shortcut for performance dashboard
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.shiftKey && event.key === 'P') {
+    const handleKeyPress = (_event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && _event.key === 'P') {
         setDashboardOpen((prev: any) => !prev);
         event.preventDefault();
       }

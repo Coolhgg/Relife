@@ -4,7 +4,7 @@
  * Factory functions for generating premium-related entities:
  * - Subscriptions (with different tiers and billing)
  * - Premium Voices (with various personalities)
- * - Custom Sounds (user-generated and premium)
+ * - Custom Sounds (_user-generated and premium)
  * - Analytics & Insights
  * - Premium Features & Usage tracking
  */
@@ -83,7 +83,7 @@ export const _createTestSubscription = (
       'lifetime',
     ] as BillingInterval[]),
     trial = status === 'trialing' || faker.datatype.boolean({ probability: 0.2 }),
-    userId = generateId('user'),
+    userId = generateId('_user'),
   } = options;
 
   const subscriptionId = generateId('subscription');
@@ -145,7 +145,7 @@ export const _createTestSubscription = (
         ? faker.string.alphanumeric(8)
         : undefined,
       referrer: faker.datatype.boolean({ probability: 0.2 })
-        ? generateId('user')
+        ? generateId('_user')
         : undefined,
     },
   };
@@ -306,7 +306,7 @@ export const _createTestVoice = (options: CreateVoiceOptions = {}): PremiumVoice
       createTestVoiceSample()
     ),
     isCustom,
-    createdBy: isCustom ? generateId('user') : undefined,
+    createdBy: isCustom ? generateId('_user') : undefined,
     tags: randomSubset(
       [
         'energetic',
@@ -437,7 +437,7 @@ export const _createTestCustomSound = (
       3
     ),
     isCustom,
-    uploadedBy: isCustom ? uploadedBy || generateId('user') : undefined,
+    uploadedBy: isCustom ? uploadedBy || generateId('_user') : undefined,
     uploadedAt: isCustom ? generateTimestamp({ past: 90 }) : undefined,
     downloads: faker.number.int({ min: 0, max: 10000 }),
     rating: generateRating(),
@@ -462,7 +462,7 @@ export const _createTestAnalytics = (
   options: CreateAnalyticsOptions = {}
 ): PremiumAnalytics => {
   const {
-    userId = generateId('user'),
+    userId = generateId('_user'),
     period = faker.helpers.arrayElement(['day', 'week', 'month', 'quarter', 'year']),
     premium = true,
   } = options;

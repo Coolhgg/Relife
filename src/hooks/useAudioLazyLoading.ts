@@ -4,12 +4,15 @@ import { lazyAudioLoader } from '../services/lazy-audio-loader';
 import type { AudioLoadProgress, AudioCacheEntry } from '../services/audio-manager';
 import type { CustomSound, Playlist, LoadingState } from '../services/types/media';
 import { TimeoutHandle } from '../types/timers';
-import type { PreloadingStatus, PerformanceHistoryEntry } from '../types/state-updaters';
+import type {
+  PreloadingStatus,
+  PerformanceHistoryEntry,
+} from '../types/state-updaters';
 
 export interface AudioLoadingState {
   state: LoadingState;
   progress: number;
-  error: string | null;
+  _error: string | null;
   entry: AudioCacheEntry | null;
   speed?: number;
   estimatedTimeRemaining?: number;
@@ -25,14 +28,18 @@ export function useAudioLazyLoading(
   const [state, setState] = useState<AudioLoadingState>({
     state: 'idle',
     progress: 0,
-    error: null,
+    _error: null,
     entry: null,
   });
 
   const loadSound = useCallback(async () => {
     if (!sound) return;
 
-    setState((prev: AudioLoadingState) => ({ ...prev, state: 'loading', error: null }));
+    setState((prev: AudioLoadingState) => ({
+      ...prev,
+      state: 'loading',
+      _error: null,
+    }));
 
     try {
       const entry = await lazyAudioLoader.queueSound(sound, priority, {
@@ -52,11 +59,11 @@ export function useAudioLazyLoading(
             entry,
           }));
         },
-        onError: (error: Error) => {
+        onError: (_error: Error) => {
           setState((prev: AudioLoadingState) => ({
             ...prev,
             state: 'error',
-            error: error.message,
+            _error: _error.message,
           }));
         },
       });
@@ -69,11 +76,11 @@ export function useAudioLazyLoading(
         progress: 100,
         entry,
       }));
-    } catch (error) {
+    } catch (_error) {
       setState((prev: AudioLoadingState) => ({
         ...prev,
         state: 'error',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? _error.message : 'Unknown _error',
       }));
     }
   }, [sound, priority]);
@@ -85,7 +92,7 @@ export function useAudioLazyLoading(
       setState({
         state: 'idle',
         progress: 0,
-        error: null,
+        _error: null,
         entry: null,
       });
     }
@@ -105,7 +112,7 @@ export function usePlaylistLazyLoading(
   overallProgress: number;
   soundStates: Map<string, AudioLoadingState>;
   loadedSounds: AudioCacheEntry[];
-  errors: Array<{ soundId: string; error: string }>;
+  errors: Array<{ soundId: string; _error: string }>;
 } {
   const [overallState, setOverallState] = useState<LoadingState>('idle');
   const [overallProgress, setOverallProgress] = useState(0);
@@ -113,7 +120,7 @@ export function usePlaylistLazyLoading(
     new Map()
   );
   const [loadedSounds, setLoadedSounds] = useState<AudioCacheEntry[]>([]);
-  const [errors, setErrors] = useState<Array<{ soundId: string; error: string }>>([]);
+  const [errors, setErrors] = useState<Array<{ soundId: string; _error: string }>>([]);
 
   const loadPlaylist = useCallback(async () => {
     if (!playlist || playlist.sounds.length === 0) return;
@@ -126,7 +133,7 @@ export function usePlaylistLazyLoading(
       newSoundStates.set(playlistSound.soundId, {
         state: 'idle',
         progress: 0,
-        error: null,
+        _error: null,
         entry: null,
       });
     });
@@ -137,13 +144,13 @@ export function usePlaylistLazyLoading(
       setLoadedSounds(entries);
       setOverallState('loaded');
       setOverallProgress(100);
-    } catch (error) {
-      setOverallState('error');
-      setErrors((prev: Array<{ soundId: string; error: string }>) => [
+    } catch (_error) {
+      setOverallState('_error');
+      setErrors((prev: Array<{ soundId: string; _error: string }>) => [
         ...prev,
         {
           soundId: 'playlist',
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: error instanceof Error ? error.message : 'Unknown _error',
         },
       ]);
     }
@@ -218,13 +225,13 @@ export function useAlarmSoundPreloading(alarms: any[]) {
         isPreloading: false,
         preloadedCount: alarmsWithSounds.length,
       }));
-    } catch (error) {
+    } catch (_error) {
       setPreloadingStatus((prev: PreloadingStatus) => ({
         ...prev,
         isPreloading: false,
         errors: [
           ...prev.errors,
-          error instanceof Error ? error.message : 'Unknown error',
+          error instanceof Error ? _error.message : 'Unknown _error',
         ],
       }));
     }
@@ -328,8 +335,8 @@ export function useSmartPreloading(
 
         // This would be updated by actual preload progress in a real implementation
         setPreloadedCount(5); // Mock number
-      } catch (error) {
-        console.error('Smart preloading failed:', error);
+      } catch (_error) {
+        console._error('Smart preloading failed:', _error);
       } finally {
         setIsPreloading(false);
       }

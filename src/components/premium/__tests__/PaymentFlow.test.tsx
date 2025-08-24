@@ -275,7 +275,7 @@ describe('PaymentFlow', () => {
   });
 
   describe('Payment Processing', () => {
-    const fillValidForm = async (user: any) => {
+    const fillValidForm = async (_user: any) => {
       await user.type(screen.getByLabelText(/card number/i), '4242424242424242');
       await user.type(screen.getByLabelText(/expiry date/i), '12/25');
       await user.type(screen.getByLabelText(/cvc/i), '123');
@@ -291,7 +291,7 @@ describe('PaymentFlow', () => {
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
-      await fillValidForm(user);
+      await fillValidForm(_user);
 
       const submitButton = screen.getByRole('button', {
         name: /complete subscription/i,
@@ -311,12 +311,12 @@ describe('PaymentFlow', () => {
       const user = userEvent.setup();
 
       mockStripe.confirmCardPayment.mockResolvedValue({
-        error: { message: 'Your card was declined.' },
+        _error: { message: 'Your card was declined.' },
       });
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
-      await fillValidForm(user);
+      await fillValidForm(_user);
 
       const submitButton = screen.getByRole('button', {
         name: /complete subscription/i,
@@ -337,7 +337,7 @@ describe('PaymentFlow', () => {
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
-      await fillValidForm(user);
+      await fillValidForm(_user);
 
       const submitButton = screen.getByRole('button', {
         name: /complete subscription/i,
@@ -354,7 +354,7 @@ describe('PaymentFlow', () => {
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
-      await fillValidForm(user);
+      await fillValidForm(_user);
 
       const submitButton = screen.getByRole('button', {
         name: /complete subscription/i,
@@ -385,7 +385,7 @@ describe('PaymentFlow', () => {
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
-      await fillValidForm(user);
+      await fillValidForm(_user);
 
       const saveCheckbox = screen.getByLabelText(/save payment method/i);
       await user.click(saveCheckbox);
@@ -422,7 +422,7 @@ describe('PaymentFlow', () => {
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
-      await fillValidForm(user);
+      await fillValidForm(_user);
 
       const submitButton = screen.getByRole('button', {
         name: /complete subscription/i,
@@ -503,7 +503,7 @@ describe('PaymentFlow', () => {
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
-      await fillValidForm(user);
+      await fillValidForm(_user);
 
       const submitButton = screen.getByRole('button', {
         name: /complete subscription/i,
@@ -513,7 +513,7 @@ describe('PaymentFlow', () => {
       expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
     });
 
-    it('displays error messages clearly', async () => {
+    it('displays _error messages clearly', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);

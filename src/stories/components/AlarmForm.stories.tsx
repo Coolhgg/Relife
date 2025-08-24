@@ -60,55 +60,63 @@ const meta: Meta<typeof AlarmForm> = {
   argTypes: {
     alarm: {
       control: { type: 'object' },
-      description: 'Existing alarm data for editing. Pass null for new alarm creation mode.',
+      description:
+        'Existing alarm data for editing. Pass null for new alarm creation mode.',
       table: {
         type: {
           summary: 'Alarm | null',
-          detail: 'Complete alarm object with id, time, label, days, voiceMood, etc. or null for new alarm'
+          detail:
+            'Complete alarm object with id, time, label, days, voiceMood, etc. or null for new alarm',
         },
         defaultValue: { summary: 'null' },
-        category: 'Data'
-      }
+        category: 'Data',
+      },
     },
     userId: {
       control: { type: 'text' },
-      description: 'User identifier required for custom sound management and personalization features.',
+      description:
+        'User identifier required for custom sound management and personalization features.',
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'Required prop' },
-        category: 'Required'
-      }
+        category: 'Required',
+      },
     },
     user: {
       control: { type: 'object' },
-      description: 'Complete user object containing subscription information for premium feature access checks.',
+      description:
+        'Complete user object containing subscription information for premium feature access checks.',
       table: {
         type: {
           summary: 'User',
-          detail: 'User object with id, email, subscriptionTier, and other profile data'
+          detail:
+            'User object with id, email, subscriptionTier, and other profile data',
         },
         defaultValue: { summary: 'Required prop' },
-        category: 'Required'
-      }
+        category: 'Required',
+      },
     },
     onSave: {
       action: 'saved',
-      description: 'Callback function invoked when form is successfully submitted with alarm data.',
+      description:
+        'Callback function invoked when form is successfully submitted with alarm data.',
       table: {
         type: {
           summary: '(data: AlarmFormSaveData) => void',
-          detail: 'Receives object with time, label, days, voiceMood, difficulty, and other alarm properties'
+          detail:
+            'Receives object with time, label, days, voiceMood, difficulty, and other alarm properties',
         },
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     onCancel: {
-      action: 'cancelled', 
-      description: 'Callback function invoked when user cancels the form or presses escape key.',
+      action: 'cancelled',
+      description:
+        'Callback function invoked when user cancels the form or presses escape key.',
       table: {
         type: { summary: '() => void' },
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
   },
   args: {
@@ -280,7 +288,7 @@ export const InteractivePlayground: Story = {
   render: () => {
     const handleSave = (data: any) => console.log('Save called with:', data);
     const handleCancel = () => console.log('Cancel called');
-    
+
     return (
       <div className="p-6 space-y-6">
         <h2 className="text-2xl font-bold">Alarm Form Playground</h2>
@@ -306,7 +314,7 @@ export const InteractivePlayground: Story = {
                   difficulty: 'nuclear' as const,
                   nuclearChallenges: ['math_quiz'],
                 }}
-                user={mockPremiumUser}
+                _user={mockPremiumUser}
                 userId="test-premium-123"
                 onSave={handleSave}
                 onCancel={handleCancel}

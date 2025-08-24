@@ -98,7 +98,15 @@ export interface StripeSubscription {
   };
   schedule?: string;
   start_date: number;
-  status: 'active' | 'past_due' | 'unpaid' | 'canceled' | 'incomplete' | 'incomplete_expired' | 'trialing' | 'paused';
+  status:
+    | 'active'
+    | 'past_due'
+    | 'unpaid'
+    | 'canceled'
+    | 'incomplete'
+    | 'incomplete_expired'
+    | 'trialing'
+    | 'paused';
   test_clock?: string;
   transfer_data?: {
     amount_percent?: number;
@@ -230,7 +238,14 @@ export interface StripeInvoice {
     enabled: boolean;
     status?: 'requires_location_inputs' | 'complete' | 'failed';
   };
-  billing_reason?: 'manual' | 'subscription_cycle' | 'subscription_create' | 'subscription_update' | 'subscription' | 'upcoming' | 'subscription_threshold';
+  billing_reason?:
+    | 'manual'
+    | 'subscription_cycle'
+    | 'subscription_create'
+    | 'subscription_update'
+    | 'subscription'
+    | 'upcoming'
+    | 'subscription_threshold';
   charge?: string;
   collection_method: 'charge_automatically' | 'send_invoice';
   created: number;

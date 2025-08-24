@@ -89,7 +89,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
   const [activeTab, setActiveTab] = useState<'alarms' | 'create' | 'settings' | 'bulk'>(
     'alarms'
   );
-  const [config, setConfig] = useState<SchedulingConfig | null>(null);
+  const [_config, setConfig] = useState<SchedulingConfig | null>(null);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
     new Set(['basic'])
   );
@@ -111,9 +111,9 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
 
   const loadConfig = async () => {
     try {
-      setConfig(null); // TODO: Load actual config
-    } catch (error) {
-      console.error('Error loading config:', error);
+      setConfig(null); // TODO: Load actual _config
+    } catch (_error) {
+      console._error('Error loading _config:', _error);
     }
   };
 
@@ -134,7 +134,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
 
       onCreateAlarm({
         ...optimizedAlarm,
-        userId: '1', // Current user
+        userId: '1', // Current _user
         enabled: formData.isActive || true,
         dayNames: [], // Will be populated from days array
         snoozeCount: 0,
@@ -142,8 +142,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
 
       setShowCreateDialog(false);
       resetForm();
-    } catch (error) {
-      console.error('Error creating alarm:', error);
+    } catch (_error) {
+      console._error('Error creating alarm:', _error);
     }
   };
 
@@ -185,8 +185,8 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
       //   1
       // );
       return occurrences[0] ? occurrences[0].toLocaleString() : 'Not scheduled';
-    } catch (error) {
-      return 'Calculation error';
+    } catch (_error) {
+      return 'Calculation _error';
     }
   };
 
@@ -843,7 +843,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
         </p>
       </div>
 
-      {config && (
+      {_config && (
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -857,7 +857,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                 <div>
                   <Label>Default Wake Window (minutes)</Label>
                   <Slider
-                    value={[config.defaultWakeWindow]}
+                    value={[_config.defaultWakeWindow]}
                     onValueChange={(value: any) =>
                       setConfig((prev: any) =>
                         prev ? { ...prev, defaultWakeWindow: value[0] } : null
@@ -869,14 +869,14 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     className="mt-2"
                   />
                   <div className="text-sm text-muted-foreground mt-1">
-                    {config.defaultWakeWindow} minutes before alarm
+                    {_config.defaultWakeWindow} minutes before alarm
                   </div>
                 </div>
 
                 <div>
                   <Label>Max Daily Adjustment (minutes)</Label>
                   <Slider
-                    value={[config.maxDailyAdjustment]}
+                    value={[_config.maxDailyAdjustment]}
                     onValueChange={(value: any) =>
                       setConfig((prev: any) =>
                         prev ? { ...prev, maxDailyAdjustment: value[0] } : null
@@ -888,7 +888,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     className="mt-2"
                   />
                   <div className="text-sm text-muted-foreground mt-1">
-                    {config.maxDailyAdjustment} minutes maximum
+                    {_config.maxDailyAdjustment} minutes maximum
                   </div>
                 </div>
               </div>
@@ -902,7 +902,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     </p>
                   </div>
                   <Switch
-                    checked={config.enableSmartAdjustments}
+                    checked={_config.enableSmartAdjustments}
                     onCheckedChange={(checked: any) =>
                       setConfig((prev: any) =>
                         prev ? { ...prev, enableSmartAdjustments: checked } : null
@@ -919,7 +919,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     </p>
                   </div>
                   <Switch
-                    checked={config.learningMode}
+                    checked={_config.learningMode}
                     onCheckedChange={(checked: any) =>
                       setConfig((prev: any) =>
                         prev ? { ...prev, learningMode: checked } : null
@@ -936,7 +936,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     </p>
                   </div>
                   <Switch
-                    checked={config.backupAlarms}
+                    checked={_config.backupAlarms}
                     onCheckedChange={(checked: any) =>
                       setConfig((prev: any) =>
                         prev ? { ...prev, backupAlarms: checked } : null
@@ -953,7 +953,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     </p>
                   </div>
                   <Switch
-                    checked={config.privacyMode}
+                    checked={_config.privacyMode}
                     onCheckedChange={(checked: any) =>
                       setConfig((prev: any) =>
                         prev ? { ...prev, privacyMode: checked } : null
