@@ -23,8 +23,7 @@ export interface PerformanceOptimizations {
 /**
  * Hook for monitoring and optimizing mobile performance
  */
-export const useMobilePerformance = (
-) => {
+export const useMobilePerformance = () => {
   const [metrics, setMetrics] = useState<PerformanceMetrics>({});
   const [optimizations, setOptimizations] = useState<PerformanceOptimizations>({
     reducedAnimations: false,
@@ -35,12 +34,10 @@ export const useMobilePerformance = (
 
   const [isLowPerformanceDevice, setIsLowPerformanceDevice] = useState(false);
 
-  useEffect((
-) => {
+  useEffect(() => {
     mobilePerformance.initialize();
 
-    const updateMetrics = (
-) => {
+    const updateMetrics = () => {
       const newMetrics: PerformanceMetrics = {};
 
       // Memory monitoring
@@ -52,11 +49,8 @@ export const useMobilePerformance = (
 
       // Battery monitoring
       if ('getBattery' in navigator) {
-        (navigator as any).getBattery().then((battery: any
-) => {
-          
-      setMetrics((prev: any
-) => ({
+        (navigator as any).getBattery().then((battery: any) => {
+          setMetrics((prev: any) => ({
             ...prev,
             batteryLevel: battery.level,
             batteryCharging: battery.charging,
@@ -64,9 +58,7 @@ export const useMobilePerformance = (
 
           // Enable low battery mode
           if (battery.level < 0.2 && !battery.charging) {
-            
-      setOptimizations((prev: any
-) => ({
+            setOptimizations((prev: any) => ({
               ...prev,
               lowBatteryMode: true,
               reducedAnimations: true,
@@ -102,28 +94,22 @@ export const useMobilePerformance = (
         newMetrics.devicePerformance = 'high';
       }
 
-      
-      setMetrics((prev: any
-) => ({ ...prev, ...newMetrics }));
+      setMetrics((prev: any) => ({ ...prev, ...newMetrics }));
     };
 
     updateMetrics();
     const interval = setInterval(updateMetrics, 30000); // Update every 30 seconds
 
-    return (
-) => clearInterval(interval);
+    return () => clearInterval(interval);
   }, []);
 
   // Automatically optimize based on device capabilities
-  useEffect((
-) => {
+  useEffect(() => {
     if (
       isLowPerformanceDevice ||
       (metrics.batteryLevel && metrics.batteryLevel < 0.3)
     ) {
-      
-      setOptimizations((prev: any
-) => ({
+      setOptimizations((prev: any) => ({
         ...prev,
         reducedAnimations: true,
         backgroundSyncEnabled: false,
@@ -131,17 +117,14 @@ export const useMobilePerformance = (
     }
 
     if (metrics.networkSpeed === 'slow') {
-      
-      setOptimizations((prev: any
-) => ({
+      setOptimizations((prev: any) => ({
         ...prev,
         lazyLoadingEnabled: true,
       }));
     }
   }, [isLowPerformanceDevice, metrics.batteryLevel, metrics.networkSpeed]);
 
-  const enableLowPowerMode = useCallback((
-) => {
+  const enableLowPowerMode = useCallback(() => {
     setOptimizations({
       reducedAnimations: true,
       lazyLoadingEnabled: true,
@@ -153,8 +136,7 @@ export const useMobilePerformance = (
     document.body.classList.add('reduce-motion');
   }, []);
 
-  const disableLowPowerMode = useCallback((
-) => {
+  const disableLowPowerMode = useCallback(() => {
     setOptimizations({
       reducedAnimations: false,
       lazyLoadingEnabled: true,
@@ -178,15 +160,13 @@ export const useMobilePerformance = (
 /**
  * Hook for lazy loading images with intersection observer
  */
-export const useLazyLoading = (
-) => {
+export const useLazyLoading = () => {
   const [isSupported] = useState(
     'IntersectionObserver' in window && 'IntersectionObserverEntry' in window
   );
 
   const lazyLoadImage = useCallback(
-    (element: HTMLImageElement, src: string
-) => {
+    (element: HTMLImageElement, src: string) => {
       if (!isSupported) {
         element.src = src;
         return;
@@ -198,8 +178,7 @@ export const useLazyLoading = (
     [isSupported]
   );
 
-  const lazyLoadRef = useCallback((node: HTMLImageElement | null
-) => {
+  const lazyLoadRef = useCallback((node: HTMLImageElement | null) => {
     if (node && node.dataset.src) {
       const observer = new IntersectionObserver(
         entries => {
@@ -230,19 +209,16 @@ export const useLazyLoading = (
 /**
  * Hook for monitoring memory usage and preventing leaks
  */
-export const useMemoryMonitoring = (
-) => {
+export const useMemoryMonitoring = () => {
   const [memoryPressure, setMemoryPressure] = useState<'low' | 'medium' | 'high'>(
     'low'
   );
-  const intervalRef = useRef<TimeoutHandle | undefined>(); // auto: changed from number to TimeoutHandle
+  const intervalRef = useRef<TimeoutHandle | undefined>();
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (!('memory' in performance)) return;
 
-    const checkMemory = (
-) => {
+    const checkMemory = () => {
       const memory = (performance as any).memory;
       const usagePercent = memory.usedJSHeapSize / memory.jsHeapSizeLimit;
 
@@ -258,16 +234,14 @@ export const useMemoryMonitoring = (
     checkMemory();
     intervalRef.current = setInterval(checkMemory, 10000);
 
-    return (
-) => {
+    return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
   }, []);
 
-  const forceGarbageCollection = useCallback((
-) => {
+  const forceGarbageCollection = useCallback(() => {
     // Trigger garbage collection if available (Chrome DevTools)
     if ('gc' in window && typeof (window as any).gc === 'function') {
       (window as any).gc();
@@ -283,8 +257,7 @@ export const useMemoryMonitoring = (
 /**
  * Hook for battery-aware optimizations
  */
-export const useBatteryOptimization = (
-) => {
+export const useBatteryOptimization = () => {
   const [batteryInfo, setBatteryInfo] = useState<{
     level: number;
     charging: boolean;
@@ -294,14 +267,11 @@ export const useBatteryOptimization = (
 
   const [batteryOptimizationsEnabled, setBatteryOptimizationsEnabled] = useState(false);
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (!('getBattery' in navigator)) return;
 
-    (navigator as any).getBattery().then((battery: any
-) => {
-      const updateBatteryInfo = (
-) => {
+    (navigator as any).getBattery().then((battery: any) => {
+      const updateBatteryInfo = () => {
         setBatteryInfo({
           level: battery.level,
           charging: battery.charging,
@@ -335,8 +305,7 @@ export const useBatteryOptimization = (
 /**
  * Hook for network-aware loading
  */
-export const useNetworkAwareLoading = (
-) => {
+export const useNetworkAwareLoading = () => {
   const [networkInfo, setNetworkInfo] = useState<{
     effectiveType?: string;
     downlink?: number;
@@ -346,14 +315,12 @@ export const useNetworkAwareLoading = (
   const [shouldOptimizeForSlowNetwork, setShouldOptimizeForSlowNetwork] =
     useState(false);
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (!('connection' in navigator)) return;
 
     const connection = (navigator as any).connection;
 
-    const updateNetworkInfo = (
-) => {
+    const updateNetworkInfo = () => {
       setNetworkInfo({
         effectiveType: connection.effectiveType,
         downlink: connection.downlink,
@@ -373,8 +340,7 @@ export const useNetworkAwareLoading = (
     updateNetworkInfo();
     connection.addEventListener('change', updateNetworkInfo);
 
-    return (
-) => {
+    return () => {
       connection.removeEventListener('change', updateNetworkInfo);
     };
   }, []);
@@ -388,13 +354,11 @@ export const useNetworkAwareLoading = (
 /**
  * Hook for performance-aware animations
  */
-export const usePerformanceAwareAnimations = (
-) => {
+export const usePerformanceAwareAnimations = () => {
   const { optimizations } = useMobilePerformance();
   const [animationsEnabled, setAnimationsEnabled] = useState(true);
 
-  useEffect((
-) => {
+  useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;

@@ -89,13 +89,11 @@ export const _ariaUtils = {
 
   // Test screen reader announcements
   expectScreenReaderAnnouncement: async (
-    trigger: (
-) => void,
+    trigger: () => void,
     expectedText?: string,
     timeout = 1000
   ): Promise<void> => {
-    return new Promise((resolve, reject
-) => {
+    return new Promise((resolve, reject) => {
       const announcements: string[] = [];
 
       const observer = new MutationObserver(mutations => {
@@ -112,8 +110,7 @@ export const _ariaUtils = {
 
       trigger();
 
-      setTimeout((
-) => {
+      setTimeout(() => {
         observer.disconnect();
         if (expectedText && !announcements.some(a => a.includes(expectedText))) {
           reject(new Error(`Expected announcement "${expectedText}" not found`));
@@ -244,8 +241,7 @@ export const _keyboardNavigation = {
 // Screen reader utilities
 export const _screenReader = {
   // Check image alt text
-  checkImageAltText: (container: HTMLElement = document.body
-) => {
+  checkImageAltText: (container: HTMLElement = document.body) => {
     const images = Array.from(container.querySelectorAll('img')) as HTMLImageElement[];
 
     return images.map(img => {
@@ -263,8 +259,7 @@ export const _screenReader = {
   },
 
   // Get page structure for screen readers
-  getPageStructure: (container: HTMLElement = document.body
-) => ({
+  getPageStructure: (container: HTMLElement = document.body) => ({
     headings: Array.from(
       container.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"]')
     ),
@@ -315,8 +310,7 @@ export const _accessibilityTestSuite = {
   },
 
   // Test keyboard accessibility
-  testKeyboardAccessibility: async (container?: HTMLElement
-) => {
+  testKeyboardAccessibility: async (container?: HTMLElement) => {
     const tabTest = await keyboardNavigation.testTabOrder(container);
     const focusTrapTest = container
       ? await keyboardNavigation.testFocusTrap(container)

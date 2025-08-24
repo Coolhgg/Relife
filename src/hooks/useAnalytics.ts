@@ -6,24 +6,17 @@ import AnalyticsService, {
 } from '../services/analytics';
 
 interface UseAnalyticsReturn {
-  track: (eventName: string, properties?: EventProperties
-) => void;
-  trackPageView: (pageName?: string, properties?: EventProperties
-) => void;
+  track: (eventName: string, properties?: EventProperties) => void;
+  trackPageView: (pageName?: string, properties?: EventProperties) => void;
   trackFeatureUsage: (
     featureName: string,
     action: string,
     properties?: EventProperties
-  
-) => void;
-  identify: (userId: string, properties?: UserProperties
-) => void;
-  setUserProperties: (properties: Partial<UserProperties>
-) => void;
-  incrementProperty: (property: string, value?: number
-) => void;
-  reset: (
-) => void;
+  ) => void;
+  identify: (userId: string, properties?: UserProperties) => void;
+  setUserProperties: (properties: Partial<UserProperties>) => void;
+  incrementProperty: (property: string, value?: number) => void;
+  reset: () => void;
   isInitialized: boolean;
 }
 
@@ -32,52 +25,44 @@ export const useAnalytics = (): UseAnalyticsReturn => {
   const isInitialized = useRef(false);
 
   // Initialize analytics on first use
-  useEffect((
-) => {
+  useEffect(() => {
     if (!isInitialized.current) {
       analytics.current.initialize();
       isInitialized.current = true;
     }
   }, []);
 
-  const track = useCallback((eventName: string, properties?: EventProperties
-) => {
+  const track = useCallback((eventName: string, properties?: EventProperties) => {
     analytics.current.track(eventName, properties);
   }, []);
 
   const trackPageView = useCallback(
-    (pageName?: string, properties?: EventProperties
-) => {
+    (pageName?: string, properties?: EventProperties) => {
       analytics.current.trackPageView(pageName, properties);
     },
     []
   );
 
   const trackFeatureUsage = useCallback(
-    (featureName: string, action: string, properties?: EventProperties
-) => {
+    (featureName: string, action: string, properties?: EventProperties) => {
       analytics.current.trackFeatureUsage(featureName, action, properties);
     },
     []
   );
 
-  const identify = useCallback((userId: string, properties?: UserProperties
-) => {
+  const identify = useCallback((userId: string, properties?: UserProperties) => {
     analytics.current.identify(userId, properties);
   }, []);
 
-  const setUserProperties = useCallback((properties: Partial<UserProperties>
-) => {
+  const setUserProperties = useCallback((properties: Partial<UserProperties>) => {
     analytics.current.setUserProperties(properties);
   }, []);
 
-  const incrementProperty = useCallback((property: string, value?: number
-) => {
+  const incrementProperty = useCallback((property: string, value?: number) => {
     analytics.current.incrementProperty(property, value);
   }, []);
 
-  const reset = useCallback((
-) => {
+  const reset = useCallback(() => {
     analytics.current.reset();
   }, []);
 
@@ -94,13 +79,11 @@ export const useAnalytics = (): UseAnalyticsReturn => {
 };
 
 // Hook for tracking alarm-specific events
-export const useAlarmAnalytics = (
-) => {
+export const useAlarmAnalytics = () => {
   const { track } = useAnalytics();
 
   const trackAlarmCreated = useCallback(
-    (alarmType: string, properties?: EventProperties
-) => {
+    (alarmType: string, properties?: EventProperties) => {
       track(ANALYTICS_EVENTS.ALARM_CREATED, {
         alarm_type: alarmType,
         ...properties,
@@ -110,8 +93,7 @@ export const useAlarmAnalytics = (
   );
 
   const trackAlarmTriggered = useCallback(
-    (alarmId: string, dismissalMethod?: string, properties?: EventProperties
-) => {
+    (alarmId: string, dismissalMethod?: string, properties?: EventProperties) => {
       track(ANALYTICS_EVENTS.ALARM_TRIGGERED, {
         alarm_id: alarmId,
         dismissal_method: dismissalMethod,
@@ -127,8 +109,7 @@ export const useAlarmAnalytics = (
       method: string,
       timeToDismiss: number,
       properties?: EventProperties
-    
-) => {
+    ) => {
       track(ANALYTICS_EVENTS.ALARM_DISMISSED, {
         alarm_id: alarmId,
         dismissal_method: method,
@@ -140,8 +121,7 @@ export const useAlarmAnalytics = (
   );
 
   const trackAlarmSnoozed = useCallback(
-    (alarmId: string, snoozeCount: number, properties?: EventProperties
-) => {
+    (alarmId: string, snoozeCount: number, properties?: EventProperties) => {
       track(ANALYTICS_EVENTS.ALARM_SNOOZED, {
         alarm_id: alarmId,
         snooze_count: snoozeCount,
@@ -152,8 +132,7 @@ export const useAlarmAnalytics = (
   );
 
   const trackAlarmMissed = useCallback(
-    (alarmId: string, reason: string, properties?: EventProperties
-) => {
+    (alarmId: string, reason: string, properties?: EventProperties) => {
       track(ANALYTICS_EVENTS.ALARM_MISSED, {
         alarm_id: alarmId,
         miss_reason: reason,
@@ -173,12 +152,10 @@ export const useAlarmAnalytics = (
 };
 
 // Hook for tracking user engagement
-export const useEngagementAnalytics = (
-) => {
+export const useEngagementAnalytics = () => {
   const { track, incrementProperty } = useAnalytics();
 
-  const trackSessionActivity = useCallback((
-) => {
+  const trackSessionActivity = useCallback(() => {
     track(ANALYTICS_EVENTS.SESSION_STARTED, {
       session_start_time: new Date().toISOString(),
       user_agent: navigator.userAgent,
@@ -189,8 +166,7 @@ export const useEngagementAnalytics = (
   }, [track]);
 
   const trackFeatureDiscovery = useCallback(
-    (featureName: string, discoveryMethod: string
-) => {
+    (featureName: string, discoveryMethod: string) => {
       track(ANALYTICS_EVENTS.FEATURE_DISCOVERY, {
         feature_name: featureName,
         discovery_method: discoveryMethod,
@@ -200,8 +176,7 @@ export const useEngagementAnalytics = (
     [track]
   );
 
-  const trackDailyActive = useCallback((
-) => {
+  const trackDailyActive = useCallback(() => {
     track(ANALYTICS_EVENTS.DAILY_ACTIVE, {
       date: new Date().toDateString(),
       timestamp: new Date().toISOString(),
@@ -210,8 +185,7 @@ export const useEngagementAnalytics = (
   }, [track, incrementProperty]);
 
   const trackHelpAccessed = useCallback(
-    (helpTopic: string, helpMethod: string
-) => {
+    (helpTopic: string, helpMethod: string) => {
       track(ANALYTICS_EVENTS.HELP_ACCESSED, {
         help_topic: helpTopic,
         access_method: helpMethod,
@@ -230,13 +204,11 @@ export const useEngagementAnalytics = (
 };
 
 // Hook for tracking performance metrics
-export const usePerformanceAnalytics = (
-) => {
+export const usePerformanceAnalytics = () => {
   const { track } = useAnalytics();
 
   const trackPageLoadTime = useCallback(
-    (pageName: string, loadTime: number
-) => {
+    (pageName: string, loadTime: number) => {
       track(ANALYTICS_EVENTS.PAGE_LOAD_TIME, {
         page_name: pageName,
         load_time: loadTime,
@@ -247,8 +219,7 @@ export const usePerformanceAnalytics = (
   );
 
   const trackComponentRenderTime = useCallback(
-    (componentName: string, renderTime: number
-) => {
+    (componentName: string, renderTime: number) => {
       track(ANALYTICS_EVENTS.COMPONENT_RENDER_TIME, {
         component_name: componentName,
         render_time: renderTime,
@@ -259,8 +230,7 @@ export const usePerformanceAnalytics = (
   );
 
   const trackApiResponseTime = useCallback(
-    (endpoint: string, responseTime: number, success: boolean
-) => {
+    (endpoint: string, responseTime: number, success: boolean) => {
       track(ANALYTICS_EVENTS.API_RESPONSE_TIME, {
         endpoint,
         response_time: responseTime,
@@ -279,12 +249,10 @@ export const usePerformanceAnalytics = (
 };
 
 // Hook for automatic page view tracking
-export const usePageTracking = (pageName: string
-) => {
+export const usePageTracking = (pageName: string) => {
   const { trackPageView } = useAnalytics();
 
-  useEffect((
-) => {
+  useEffect(() => {
     const startTime = performance.now();
 
     trackPageView(pageName, {
@@ -292,8 +260,7 @@ export const usePageTracking = (pageName: string
       referrer: document.referrer,
     });
 
-    return (
-) => {
+    return () => {
       const timeOnPage = performance.now() - startTime;
       analytics.current.track('page_exit', {
         page_name: pageName,

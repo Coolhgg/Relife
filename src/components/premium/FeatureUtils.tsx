@@ -7,7 +7,7 @@ import { useFeatureAccessContext } from '../../contexts/FeatureAccessContext';
 
 // Feature Badge Component
 interface FeatureBadgeProps {
-  tier?: string; // auto: added for prop compatibility
+  tier?: string;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'subtle' | 'prominent';
   className?: string;
@@ -19,8 +19,7 @@ export function FeatureBadge({
   variant = 'subtle',
   className = '',
 }: FeatureBadgeProps) {
-  const getConfig = (
-) => {
+  const getConfig = () => {
     switch (tier) {
       case 'basic':
         return {
@@ -90,8 +89,8 @@ export function FeatureBadge({
 interface TierComparisonProps {
   features?: string[];
   className?: string;
-  currentTier?: string; // auto: added for prop compatibility
-  targetTier?: string; // auto: added for prop compatibility
+  currentTier?: string;
+  targetTier?: string;
 }
 
 export function TierComparison({
@@ -104,8 +103,7 @@ export function TierComparison({
   const isUpgrade =
     tierHierarchy.indexOf(targetTier) > tierHierarchy.indexOf(currentTier);
 
-  const getNewFeatures = (
-) => {
+  const getNewFeatures = () => {
     // This would ideally come from a feature service
     const featuresByTier = {
       basic: ['Unlimited Alarms', 'Custom Sounds', 'Premium Themes', 'Alarm Battles'],
@@ -144,8 +142,7 @@ export function TierComparison({
             {isUpgrade ? "New features you'll get:" : "Features you'll lose:"}
           </h4>
           <ul className="space-y-1">
-            {newFeatures.map((feature, index
-) => (
+            {newFeatures.map((feature, index) => (
               <li key={index} className="flex items-center gap-2 text-sm text-gray-600">
                 <div
                   className={`w-1.5 h-1.5 rounded-full ${isUpgrade ? 'bg-green-500' : 'bg-red-500'}`}
@@ -224,8 +221,7 @@ interface FeatureHighlightProps {
   description: string;
   icon?: React.ComponentType<{ className?: string }>;
   comingSoon?: boolean;
-  onLearnMore?: (
-) => void;
+  onLearnMore?: () => void;
   className?: string;
 }
 
@@ -242,8 +238,7 @@ export function FeatureHighlight({
   const { hasFeatureAccess, trackFeatureAttempt } = useFeatureAccessContext();
   const hasAccess = hasFeatureAccess(feature);
 
-  const handleClick = (
-) => {
+  const handleClick = () => {
     trackFeatureAttempt(feature, { source: 'feature_highlight' });
     if (onLearnMore) {
       onLearnMore();
@@ -315,10 +310,8 @@ interface SubscriptionPromptProps {
   title?: string;
   description?: string;
   ctaText?: string;
-  onUpgrade?: (
-) => void;
-  onDismiss?: (
-) => void;
+  onUpgrade?: () => void;
+  onDismiss?: () => void;
   className?: string;
 }
 
@@ -334,8 +327,7 @@ export function SubscriptionPrompt({
   const { getUpgradeRequirement, trackFeatureAttempt } = useFeatureAccessContext();
   const requiredTier = getUpgradeRequirement(feature);
 
-  const handleUpgradeClick = (
-) => {
+  const handleUpgradeClick = () => {
     trackFeatureAttempt(feature, { source: 'subscription_prompt' });
     if (onUpgrade) {
       onUpgrade();

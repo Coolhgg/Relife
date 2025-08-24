@@ -20,10 +20,8 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
 
-  useEffect((
-) => {
-    const unsubscribe = onCloudSyncStatusChange((status: CloudSyncStatus
-) => {
+  useEffect(() => {
+    const unsubscribe = onCloudSyncStatusChange((status: CloudSyncStatus) => {
       setIsSyncing(status.isSyncing);
       setLastSyncTime(status.lastSyncTime);
     });
@@ -31,15 +29,13 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
     return unsubscribe;
   }, [onCloudSyncStatusChange]);
 
-  const handleToggleCloudSync = async (
-) => {
+  const handleToggleCloudSync = async () => {
     const newEnabled = !isEnabled;
     setIsEnabled(newEnabled);
     enableCloudSync(newEnabled);
   };
 
-  const handleForceSync = async (
-) => {
+  const handleForceSync = async () => {
     if (isSyncing) return;
 
     try {
@@ -52,8 +48,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
     }
   };
 
-  const handleResetCloudData = async (
-) => {
+  const handleResetCloudData = async () => {
     if (!showResetConfirm) {
       setShowResetConfirm(true);
       return;
@@ -71,8 +66,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
     }
   };
 
-  const formatLastSyncTime = (time: Date | null
-) => {
+  const formatLastSyncTime = (time: Date | null) => {
     if (!time) return 'Never';
 
     const now = new Date();
@@ -87,8 +81,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
     return `${days} day${days === 1 ? '' : 's'} ago`;
   };
 
-  const getStatusColor = (
-) => {
+  const getStatusColor = () => {
     if (cloudSyncStatus.error) return 'text-red-500';
     if (cloudSyncStatus.hasConflicts) return 'text-yellow-500';
     if (!cloudSyncStatus.isOnline) return 'text-gray-500';
@@ -96,8 +89,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
     return 'text-gray-500';
   };
 
-  const getStatusText = (
-) => {
+  const getStatusText = () => {
     if (cloudSyncStatus.error) return 'Sync Error';
     if (cloudSyncStatus.hasConflicts) return 'Conflicts Need Resolution';
     if (!cloudSyncStatus.isOnline) return 'Offline';
@@ -267,8 +259,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
               </button>
               {showResetConfirm && (
                 <button
-                  onClick={(
-) => setShowResetConfirm(false)}
+                  onClick={() => setShowResetConfirm(false)}
                   className="ml-2 mt-2 rounded-md bg-gray-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-gray-700"
                 >
                   Cancel

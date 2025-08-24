@@ -102,7 +102,9 @@ class AnimationManagerService {
         this.updatePerformanceMetrics(entries);
       });
 
-      this.performanceObserver.observe({ entryTypes: ['measure', 'navigation'] });
+      this.performanceObserver.observe({
+        entryTypes: ['measure', 'navigation'],
+      });
     }
 
     // Monitor frame rate
@@ -116,8 +118,7 @@ class AnimationManagerService {
     let lastTime = performance.now();
     let frameCount = 0;
 
-    const measureFrameRate = (currentTime: number
-) => {
+    const measureFrameRate = (currentTime: number) => {
       frameCount++;
 
       if (currentTime - lastTime >= 1000) {
@@ -131,8 +132,7 @@ class AnimationManagerService {
 
         // Calculate average FPS
         this.metrics.averageFrameRate =
-          this.frameRateHistory.reduce((sum, fps
-) => sum + fps, 0) /
+          this.frameRateHistory.reduce((sum, fps) => sum + fps, 0) /
           this.frameRateHistory.length;
 
         // Check for performance issues
@@ -289,8 +289,7 @@ class AnimationManagerService {
       if (this.metrics.animationCount > 5) {
         this.pauseAllAnimations();
 
-        setTimeout((
-) => {
+        setTimeout(() => {
           this.resumeAllAnimations();
         }, 1000);
       }

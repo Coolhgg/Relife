@@ -17,28 +17,25 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
   enabledAlarms,
   settings,
   className = '',
-}
-) => {
+}) => {
   const [showWarning, setShowWarning] = useState(false);
   const [upcomingAlarms, setUpcomingAlarms] = useState<Alarm[]>([]);
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (!settings.enabled || !settings.visualSettings.showVisualWarning) {
       setShowWarning(false);
       return;
     }
 
     // Check for upcoming alarms within the configured threshold
-    const checkUpcomingAlarms = (
-) => {
+    const checkUpcomingAlarms = () => {
       const now = new Date();
       const thresholdFromNow = new Date(
         now.getTime() + settings.protectionTiming.upcomingAlarmThreshold * 60 * 1000
       );
 
-      const upcoming = enabledAlarms.filter((alarm: any
-) => { // auto: implicit any
+      const upcoming = enabledAlarms.filter((alarm: any) => {
+        // auto: implicit any
         const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
         // Check if alarm is set for today
@@ -75,32 +72,27 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
     // Update every minute to keep upcoming alarms current
     const interval = setInterval(checkUpcomingAlarms, 60000);
 
-    return (
-) => clearInterval(interval);
+    return () => clearInterval(interval);
   }, [activeAlarm, enabledAlarms, settings]);
 
   // Auto-hide functionality
-  useEffect((
-) => {
+  useEffect(() => {
     if (!showWarning || settings.visualSettings.autoHideDelay === 0) {
       return;
     }
 
-    const timer = setTimeout((
-) => {
+    const timer = setTimeout(() => {
       setShowWarning(false);
     }, settings.visualSettings.autoHideDelay * 1000);
 
-    return (
-) => clearTimeout(timer);
+    return () => clearTimeout(timer);
   }, [showWarning, settings.visualSettings.autoHideDelay]);
 
   if (!showWarning) {
     return null;
   }
 
-  const getWarningMessage = (
-) => {
+  const getWarningMessage = () => {
     if (activeAlarm && settings.protectionTiming.activeAlarmWarning) {
       return {
         icon: (
@@ -197,9 +189,8 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
                 <ul className="space-y-1">
                   {upcomingAlarms
                     .slice(0, settings.visualSettings.maxAlarmsShown)
-                    
-      .map((alarm: any
-) => (
+
+                    .map((alarm: any) => (
                       <li
                         key={alarm.id}
                         className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-2"
@@ -229,8 +220,7 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
           </div>
 
           <button
-            onClick={(
-) => setShowWarning(false)}
+            onClick={() => setShowWarning(false)}
             className="flex-shrink-0 ml-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             aria-label="Dismiss protection warning"
           >

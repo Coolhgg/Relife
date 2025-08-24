@@ -23,38 +23,30 @@ interface KeyboardNavigationHookReturn {
     focusRingColor: string;
     screenReaderOptimized: boolean;
   };
-  addShortcut: (id: string, shortcut: KeyboardShortcut
-) => void;
-  removeShortcut: (key: string, modifiers: string[]
-) => void;
-  refreshIntegration: (
-) => void;
+  addShortcut: (id: string, shortcut: KeyboardShortcut) => void;
+  removeShortcut: (key: string, modifiers: string[]) => void;
+  refreshIntegration: () => void;
 }
 
 /**
  * Hook for managing keyboard navigation with accessibility integration
  */
 export function useKeyboardNavigation(): KeyboardNavigationHookReturn {
-  const [navigationService] = useState((
-) => KeyboardNavigationService.getInstance());
-  const [navigationState, setNavigationState] = useState<NavigationState>((
-) =>
+  const [navigationService] = useState(() => KeyboardNavigationService.getInstance());
+  const [navigationState, setNavigationState] = useState<NavigationState>(() =>
     navigationService.getState()
   );
-  const [shortcuts, setShortcuts] = useState<KeyboardShortcut[]>((
-) =>
+  const [shortcuts, setShortcuts] = useState<KeyboardShortcut[]>(() =>
     navigationService.getShortcuts()
   );
-  const [accessibilityStatus, setAccessibilityStatus] = useState((
-) =>
+  const [accessibilityStatus, setAccessibilityStatus] = useState(() =>
     navigationService.getAccessibilityStatus()
   );
 
   const { preferences } = useAccessibilityPreferences();
 
   // Update state when accessibility preferences change
-  useEffect((
-) => {
+  useEffect(() => {
     navigationService.refreshAccessibilityIntegration();
     setAccessibilityStatus(navigationService.getAccessibilityStatus());
     setShortcuts(navigationService.getShortcuts());
@@ -68,10 +60,8 @@ export function useKeyboardNavigation(): KeyboardNavigationHookReturn {
   ]);
 
   // Listen for navigation state changes
-  useEffect((
-) => {
-    const handleNavigationUpdate = (
-) => {
+  useEffect(() => {
+    const handleNavigationUpdate = () => {
       setNavigationState(navigationService.getState());
       setShortcuts(navigationService.getShortcuts());
       setAccessibilityStatus(navigationService.getAccessibilityStatus());
@@ -82,8 +72,7 @@ export function useKeyboardNavigation(): KeyboardNavigationHookReturn {
     document.addEventListener('alarm-action', handleNavigationUpdate);
     document.addEventListener('show-shortcuts', handleNavigationUpdate);
 
-    return (
-) => {
+    return () => {
       document.removeEventListener('keyboard-navigate', handleNavigationUpdate);
       document.removeEventListener('alarm-action', handleNavigationUpdate);
       document.removeEventListener('show-shortcuts', handleNavigationUpdate);
@@ -91,8 +80,7 @@ export function useKeyboardNavigation(): KeyboardNavigationHookReturn {
   }, [navigationService]);
 
   const addShortcut = useCallback(
-    (id: string, shortcut: KeyboardShortcut
-) => {
+    (id: string, shortcut: KeyboardShortcut) => {
       navigationService.addShortcut(id, shortcut);
       setShortcuts(navigationService.getShortcuts());
     },
@@ -100,16 +88,14 @@ export function useKeyboardNavigation(): KeyboardNavigationHookReturn {
   );
 
   const removeShortcut = useCallback(
-    (key: string, modifiers: string[]
-) => {
+    (key: string, modifiers: string[]) => {
       navigationService.removeShortcut(key, modifiers);
       setShortcuts(navigationService.getShortcuts());
     },
     [navigationService]
   );
 
-  const refreshIntegration = useCallback((
-) => {
+  const refreshIntegration = useCallback(() => {
     navigationService.refreshAccessibilityIntegration();
     setAccessibilityStatus(navigationService.getAccessibilityStatus());
     setShortcuts(navigationService.getShortcuts());
@@ -131,32 +117,27 @@ export function useKeyboardNavigation(): KeyboardNavigationHookReturn {
 export function useKeyboardNavigationEvents() {
   const { preferences } = useAccessibilityPreferences();
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (!preferences.keyboardNavigation) {
       return;
     }
 
-    const handleKeyboardNavigate = (event: CustomEvent
-) => {
+    const handleKeyboardNavigate = (event: CustomEvent) => {
       const { section } = event.detail;
       console.log(`Navigating to section: ${section} via keyboard`);
     };
 
-    const handleAlarmAction = (event: CustomEvent
-) => {
+    const handleAlarmAction = (event: CustomEvent) => {
       const { action, target } = event.detail;
       console.log(`Alarm action: ${action}`, target);
     };
 
-    const handleShowShortcuts = (event: CustomEvent
-) => {
+    const handleShowShortcuts = (event: CustomEvent) => {
       const { shortcuts } = event.detail;
       console.log('Keyboard shortcuts requested', shortcuts);
     };
 
-    const handleShowHelp = (
-) => {
+    const handleShowHelp = () => {
       console.log('Help requested via keyboard');
     };
 
@@ -168,8 +149,7 @@ export function useKeyboardNavigationEvents() {
     document.addEventListener('show-shortcuts', handleShowShortcuts as EventListener);
     document.addEventListener('show-help', handleShowHelp);
 
-    return (
-) => {
+    return () => {
       document.removeEventListener(
         'keyboard-navigate',
         handleKeyboardNavigate as EventListener
@@ -193,8 +173,7 @@ export function useKeyboardFocusTrap(
 ) {
   const { preferences } = useAccessibilityPreferences();
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (!active || !preferences.keyboardNavigation || !containerRef.current) {
       return;
     }
@@ -211,16 +190,14 @@ export function useKeyboardFocusTrap(
       [role="tab"]:not([disabled])
     `;
 
-    const getFocusableElements = (
-) => {
+    const getFocusableElements = () => {
       return Array.from(container.querySelectorAll(focusableSelector)).filter(el => {
         const rect = el.getBoundingClientRect();
         return rect.width > 0 && rect.height > 0;
       }) as HTMLElement[];
     };
 
-    const handleKeyDown = (event: KeyboardEvent
-) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Tab') return;
 
       const focusableElements = getFocusableElements();
@@ -258,8 +235,7 @@ export function useKeyboardFocusTrap(
 
     container.addEventListener('keydown', handleKeyDown);
 
-    return (
-) => {
+    return () => {
       container.removeEventListener('keydown', handleKeyDown);
     };
   }, [active, preferences.keyboardNavigation, containerRef]);
@@ -274,8 +250,7 @@ export function useRovingFocus(
 ) {
   const { preferences } = useAccessibilityPreferences();
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (!preferences.keyboardNavigation || !containerRef.current) {
       return;
     }
@@ -285,8 +260,7 @@ export function useRovingFocus(
     // Add roving focus attribute
     container.setAttribute('data-roving-focus', 'true');
 
-    const handleKeyDown = (event: KeyboardEvent
-) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement;
       if (!container.contains(target)) return;
 
@@ -351,8 +325,7 @@ export function useRovingFocus(
 
     container.addEventListener('keydown', handleKeyDown);
 
-    return (
-) => {
+    return () => {
       container.removeEventListener('keydown', handleKeyDown);
       container.removeAttribute('data-roving-focus');
     };

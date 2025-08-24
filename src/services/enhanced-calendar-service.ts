@@ -230,8 +230,7 @@ class EnhancedCalendarService {
       }
     }
 
-    return suggestions.sort((a, b
-) => {
+    return suggestions.sort((a, b) => {
       const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
       return priorityOrder[b.priority] - priorityOrder[a.priority];
     });
@@ -327,8 +326,7 @@ class EnhancedCalendarService {
     // Find the first important meeting
     const firstImportantMeeting = todayEvents
       .filter(event => event.importance !== 'low')
-      .sort((a, b
-) => new Date(a.start).getTime() - new Date(b.start).getTime())[0];
+      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())[0];
 
     if (!firstImportantMeeting) {
       return null;
@@ -394,8 +392,7 @@ class EnhancedCalendarService {
     }
 
     const firstWorkEvent = workEvents.sort(
-      (a, b
-) => new Date(a.start).getTime() - new Date(b.start).getTime()
+      (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()
     )[0];
 
     if (firstWorkEvent.travelTime) {
@@ -457,8 +454,7 @@ class EnhancedCalendarService {
     }
 
     const firstImportantEvent = importantEvents.sort(
-      (a, b
-) => new Date(a.start).getTime() - new Date(b.start).getTime()
+      (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()
     )[0];
     const eventStart = new Date(firstImportantEvent.start);
 
@@ -547,8 +543,7 @@ class EnhancedCalendarService {
     );
 
     const eventsByCategory = upcomingEvents.reduce(
-      (acc, event
-) => {
+      (acc, event) => {
         acc[event.category] = (acc[event.category] || 0) + 1;
         return acc;
       },
@@ -783,8 +778,7 @@ class EnhancedCalendarService {
 
     const maxDay = Math.max(...Object.values(eventsByDay));
     const avgDay =
-      Object.values(eventsByDay).reduce((a, b
-) => a + b, 0) /
+      Object.values(eventsByDay).reduce((a, b) => a + b, 0) /
       Object.values(eventsByDay).length;
 
     if (maxDay > avgDay * 2) {
@@ -829,8 +823,7 @@ class EnhancedCalendarService {
   } {
     const eventsWithTravel = events.filter(event => event.travelTime);
     const totalTravelTime = eventsWithTravel.reduce(
-      (sum, event
-) => sum + (event.travelTime?.durationMinutes || 0),
+      (sum, event) => sum + (event.travelTime?.durationMinutes || 0),
       0
     );
 
@@ -941,8 +934,7 @@ class EnhancedCalendarService {
       const events = Object.fromEntries(this.cachedEvents);
       localStorage.setItem(
         'cached_calendar_events',
-        JSON.stringify(events, (key, value
-) => {
+        JSON.stringify(events, (key, value) => {
           if (value instanceof Date) {
             return { __type: 'Date', value: value.toISOString() };
           }
@@ -956,8 +948,7 @@ class EnhancedCalendarService {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(
         'calendar_insights',
-        JSON.stringify(this.insights, (key, value
-) => {
+        JSON.stringify(this.insights, (key, value) => {
           if (value instanceof Date) {
             return { __type: 'Date', value: value.toISOString() };
           }

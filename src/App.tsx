@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import {
   Plus,
@@ -183,8 +183,7 @@ function AppContent() {
   } = useEnhancedServiceWorker();
 
   // Apply theme with performance optimizations
-  useEffect((
-) => {
+  useEffect(() => {
     // Use performance-optimized theme application
     applyThemeWithPerformance({
       animate: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -194,8 +193,7 @@ function AppContent() {
   }, [applyThemeWithPerformance]);
 
   // Preload common themes for better performance
-  useEffect((
-) => {
+  useEffect(() => {
     // Preload opposite theme for quick switching
     const currentTheme = document.documentElement.classList.contains('theme-dark')
       ? 'dark'
@@ -226,16 +224,14 @@ function AppContent() {
     'synced' | 'syncing' | 'error' | 'pending' | 'offline'
   >('synced');
   const [_showPWAInstall, setShowPWAInstall] = useState(false);
-  const [_tabProtectionEnabled, setTabProtectionEnabled] = useState((
-) => {
+  const [_tabProtectionEnabled, setTabProtectionEnabled] = useState(() => {
     // Get from localStorage or default to true
     const stored = localStorage.getItem('tabProtectionEnabled');
     return stored !== null ? JSON.parse(stored) : true;
   });
 
   // Sync alarms with enhanced service worker when they change
-  useEffect((
-) => {
+  useEffect(() => {
     if (serviceWorkerState.isInitialized && appState.alarms) {
       console.log(
         `App: Syncing ${appState.alarms.length} alarms with enhanced service worker`
@@ -254,36 +250,27 @@ function AppContent() {
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
     activeAlarm: appState.activeAlarm,
-    enabledAlarms: appState.alarms.filter(
-      (alarm: any
-) => alarm.enabled
-    ) ,
+    enabledAlarms: appState.alarms.filter((alarm: any) => alarm.enabled),
     settings: tabProtectionSettings.settings,
   });
 
   // PWA Installation handlers
-  const handlePWAInstall = (
-) => {
+  const handlePWAInstall = () => {
     setShowPWAInstall(false);
     // PWA install logic would be handled by the PWAInstallPrompt component
   };
 
-  const handlePWADismiss = (
-) => {
+  const handlePWADismiss = () => {
     setShowPWAInstall(false);
   };
 
   const refreshRewardsSystem = useCallback(
-    async (alarms: Alarm[] = appState.alarms
-) => {
+    async (alarms: Alarm[] = appState.alarms) => {
       try {
         const aiRewards = AIRewardsService.getInstance();
         const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
 
-        setAppState((prev: any
-) => ({
-          
-
+        setAppState((prev: any) => ({
           ...prev,
           rewardSystem,
         }));
@@ -306,18 +293,14 @@ function AppContent() {
     [appState.alarms, setAppState]
   );
 
-  const loadUserAlarms = useCallback(async (
-) => {
+  const loadUserAlarms = useCallback(async () => {
     if (!auth.user) return;
 
     try {
       // Load alarms from offline storage first (faster)
       const offlineAlarms = await OfflineStorage.getAlarms();
       if (offlineAlarms.length > 0) {
-        setAppState((prev: any
-) => ({
-          
-
+        setAppState((prev: any) => ({
           ...prev,
           alarms: offlineAlarms,
           isOnboarding: offlineAlarms.length === 0,
@@ -330,10 +313,7 @@ function AppContent() {
           const { alarms: savedAlarms } = await SupabaseService.loadUserAlarms(
             auth.user.id
           );
-          setAppState((prev: any
-) => ({
-            
-
+          setAppState((prev: any) => ({
             ...prev,
             alarms: savedAlarms,
             isOnboarding: savedAlarms.length === 0,
@@ -361,10 +341,7 @@ function AppContent() {
           await refreshRewardsSystem(offlineAlarms);
         }
       } else {
-        setAppState((prev: any
-) => ({
-          
-
+        setAppState((prev: any) => ({
           ...prev,
           alarms: offlineAlarms,
           isOnboarding: offlineAlarms.length === 0,
@@ -384,8 +361,7 @@ function AppContent() {
 
   // Handle alarm snooze functionality
   const handleAlarmSnooze = useCallback(
-    async (alarmId: string
-) => {
+    async (alarmId: string) => {
       const analytics = AppAnalyticsService.getInstance();
       const startTime = performance.now();
 
@@ -400,9 +376,8 @@ function AppContent() {
         analytics.trackAlarmAction('snooze', alarmId, { success: true, duration });
         analytics.trackFeatureUsage('alarm_snooze', 'completed', { duration });
 
-        setAppState((prev: any
-) => ({
-           ...prev,
+        setAppState((prev: any) => ({
+          ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
@@ -429,9 +404,8 @@ function AppContent() {
           }
         );
         // Fallback: still hide the alarm even if snooze fails
-        setAppState((prev: any
-) => ({
-           ...prev,
+        setAppState((prev: any) => ({
+          ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
@@ -442,15 +416,13 @@ function AppContent() {
 
   // Handle service worker messages
   const handleServiceWorkerMessage = useCallback(
-    (event: MessageEvent
-) => {
+    (event: MessageEvent) => {
       const { type, data } = event.data;
 
       switch (type) {
         case 'ALARM_TRIGGERED':
           if (data.alarm) {
-            setAppState((prev: any
-) => ({ ...prev, activeAlarm: data.alarm })); // auto: implicit any
+            setAppState((prev: any) => ({ ...prev, activeAlarm: data.alarm }));
           }
           break;
         case 'SYNC_START':
@@ -488,8 +460,7 @@ function AppContent() {
 
             // Handle specific actions
             if (data.action === 'dismiss' && appState.activeAlarm) {
-              setAppState((prev: any
-) => ({ ...prev, activeAlarm: null })); // auto: implicit any
+              setAppState((prev: any) => ({ ...prev, activeAlarm: null }));
             } else if (data.action === 'snooze' && appState.activeAlarm) {
               // Trigger snooze functionality
               handleAlarmSnooze(appState.activeAlarm.id);
@@ -518,15 +489,11 @@ function AppContent() {
 
   // Handle alarm triggers from service worker
   const handleServiceWorkerAlarmTrigger = useCallback(
-    (alarm: Alarm
-) => {
+    (alarm: Alarm) => {
       console.log('App: Handling service worker alarm trigger:', alarm.id);
 
       // Update app state to show alarm as triggered
-      setAppState((prev: any
-) => ({
-        
-
+      setAppState((prev: any) => ({
         ...prev,
         activeAlarm: alarm,
         alarmTriggeredAt: new Date(),
@@ -538,19 +505,16 @@ function AppContent() {
     [setAppState]
   );
 
-  const registerEnhancedServiceWorker = useCallback(async (
-) => {
+  const registerEnhancedServiceWorker = useCallback(async () => {
     if ('serviceWorker' in navigator) {
       try {
         console.log('App: Registering enhanced service worker...');
         const registration = await navigator.serviceWorker.register('/sw-enhanced.js');
 
-        registration.addEventListener('updatefound', (
-) => {
+        registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           if (newWorker) {
-            newWorker.addEventListener('statechange', (
-) => {
+            newWorker.addEventListener('statechange', () => {
               if (
                 newWorker.state === 'installed' &&
                 navigator.serviceWorker.controller
@@ -600,8 +564,7 @@ function AppContent() {
           // Use MessageChannel for reliable communication
           const messageChannel = new MessageChannel();
 
-          messageChannel.port1.onmessage = (event: MessageEvent
-) => {
+          messageChannel.port1.onmessage = (event: MessageEvent) => {
             const { success, message, error } = event.data;
             if (success) {
               console.log('App: Service worker response:', message);
@@ -654,8 +617,7 @@ function AppContent() {
         });
 
         // Set up visibility change handling for alarm reliability
-        document.addEventListener('visibilitychange', (
-) => {
+        document.addEventListener('visibilitychange', () => {
           if (document.visibilityState === 'hidden') {
             // Ensure alarms are properly scheduled in service worker when tab becomes hidden
             console.log('App: Tab hidden, ensuring background alarm scheduling...');
@@ -698,8 +660,7 @@ function AppContent() {
     }
   }, [appState.alarms, handleServiceWorkerAlarmTrigger]);
 
-  const syncOfflineChanges = useCallback(async (
-) => {
+  const syncOfflineChanges = useCallback(async () => {
     if (!auth.user) return;
 
     try {
@@ -748,9 +709,8 @@ function AppContent() {
         const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(
           auth.user.id
         );
-        setAppState((prev: any
-) => ({
-           ...prev,
+        setAppState((prev: any) => ({
+          ...prev,
           alarms: updatedAlarms,
         }));
         await OfflineStorage.saveAlarms(updatedAlarms);
@@ -766,8 +726,7 @@ function AppContent() {
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
-  const handleQuickSetup = async (presetType: 'morning' | 'work' | 'custom'
-) => {
+  const handleQuickSetup = async (presetType: 'morning' | 'work' | 'custom') => {
     const presets = {
       morning: {
         time: '07:00',
@@ -802,8 +761,7 @@ function AppContent() {
   };
 
   // Initialize all accessibility services
-  const initializeAccessibilityServices = async (
-) => {
+  const initializeAccessibilityServices = async () => {
     try {
       const screenReaderService = ScreenReaderService.getInstance();
       const _keyboardService = KeyboardNavigationService.getInstance();
@@ -842,15 +800,11 @@ function AppContent() {
   };
 
   // Update app state when auth state changes
-  useEffect((
-) => {
+  useEffect(() => {
     const appAnalytics = AppAnalyticsService.getInstance();
     const emailService = EmailCampaignService.getInstance();
 
-    setAppState((prev: any
-) => ({
-      
-
+    setAppState((prev: any) => ({
       ...prev,
       user: auth.user,
     }));
@@ -886,8 +840,7 @@ function AppContent() {
       trackDailyActive();
 
       // Email Campaign Integration: Detect persona and add to campaign
-      (async (
-) => {
+      (async () => {
         try {
           await emailService.initialize();
           const personaResult = await emailService.detectPersona(auth.user);
@@ -922,18 +875,15 @@ function AppContent() {
   }, [auth.user, identify, track, reset, trackDailyActive]);
 
   // Network status monitoring
-  useEffect((
-) => {
-    const handleOnline = (
-) => {
+  useEffect(() => {
+    const handleOnline = () => {
       setIsOnline(true);
       setSyncStatus('pending');
       // Trigger sync when coming back online
       syncOfflineChanges();
     };
 
-    const handleOffline = (
-) => {
+    const handleOffline = () => {
       setIsOnline(false);
       setSyncStatus('offline');
     };
@@ -941,21 +891,18 @@ function AppContent() {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    return (
-) => {
+    return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
   }, [syncOfflineChanges]);
 
   // Service worker message handling
-  useEffect((
-) => {
+  useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
 
-      return (
-) => {
+      return () => {
         navigator.serviceWorker.removeEventListener(
           'message',
           handleServiceWorkerMessage
@@ -965,10 +912,8 @@ function AppContent() {
   }, [handleServiceWorkerMessage]);
 
   // Handle emotional notification events from service worker
-  useEffect((
-) => {
-    const handleEmotionalAction = (event: CustomEvent
-) => {
+  useEffect(() => {
+    const handleEmotionalAction = (event: CustomEvent) => {
       const { action, emotion_type, notification_id, data: actionData } = event.detail;
 
       // Track the action in analytics
@@ -985,14 +930,12 @@ function AppContent() {
       console.log('🧠 Emotional notification action received:', action, emotion_type);
     };
 
-    const handleServiceWorkerUpdate = (_event: CustomEvent
-) => {
+    const handleServiceWorkerUpdate = (_event: CustomEvent) => {
       console.log('🔄 Service Worker update available');
       // Could show a toast notification or update indicator
     };
 
-    const handleServiceWorkerInstall = (
-) => {
+    const handleServiceWorkerInstall = () => {
       console.log('✅ Service Worker installed successfully');
     };
 
@@ -1007,8 +950,7 @@ function AppContent() {
     );
     window.addEventListener('sw-install-complete', handleServiceWorkerInstall);
 
-    return (
-) => {
+    return () => {
       window.removeEventListener(
         'emotional-notification-action',
         handleEmotionalAction as EventListener
@@ -1021,10 +963,8 @@ function AppContent() {
     };
   }, [emotionalActions]);
 
-  useEffect((
-) => {
-    const initialize = async (
-) => {
+  useEffect(() => {
+    const initialize = async () => {
       try {
         // Initialize performance monitoring and analytics
         const performanceMonitor = PerformanceMonitor.getInstance();
@@ -1107,18 +1047,15 @@ function AppContent() {
   ]);
 
   // Network status monitoring
-  useEffect((
-) => {
-    const handleOnline = (
-) => {
+  useEffect(() => {
+    const handleOnline = () => {
       setIsOnline(true);
       setSyncStatus('pending');
       // Trigger sync when coming back online
       syncOfflineChanges();
     };
 
-    const handleOffline = (
-) => {
+    const handleOffline = () => {
       setIsOnline(false);
       setSyncStatus('offline');
     };
@@ -1126,21 +1063,18 @@ function AppContent() {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    return (
-) => {
+    return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
   }, [syncOfflineChanges]);
 
   // Service worker message handling
-  useEffect((
-) => {
+  useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
 
-      return (
-) => {
+      return () => {
         navigator.serviceWorker.removeEventListener(
           'message',
           handleServiceWorkerMessage
@@ -1150,10 +1084,8 @@ function AppContent() {
   }, [handleServiceWorkerMessage]);
 
   // Prevent accidental tab closure when alarms are active
-  useEffect((
-) => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent
-) => {
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       // Only show protection if user has enabled it
       if (!tabProtectionSettings.settings.enabled) {
         return;
@@ -1178,9 +1110,7 @@ function AppContent() {
 
       // Check if there are enabled alarms that could ring soon
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
-        
-        const enabledAlarms = appState.alarms.filter((alarm: any
-) => alarm.enabled);
+        const enabledAlarms = appState.alarms.filter((alarm: any) => alarm.enabled);
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold
           const now = new Date();
@@ -1191,9 +1121,7 @@ function AppContent() {
                 1000
           );
 
-          const upcomingAlarms = enabledAlarms.filter((alarm: any
-) => {
-            // auto: implicit any
+          const upcomingAlarms = enabledAlarms.filter((alarm: any) => {
             const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
             // Check if alarm is set for today
@@ -1237,8 +1165,7 @@ function AppContent() {
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     // Cleanup function to remove the event listener
-    return (
-) => {
+    return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [
@@ -1249,18 +1176,15 @@ function AppContent() {
   ]); // Re-run when activeAlarm, alarms, announcement function, or protection settings change
 
   // Listen for changes to tab protection setting from localStorage
-  useEffect((
-) => {
-    const handleStorageChange = (
-) => {
+  useEffect(() => {
+    const handleStorageChange = () => {
       const stored = localStorage.getItem('tabProtectionEnabled');
       const enabled = stored !== null ? JSON.parse(stored) : true;
       setTabProtectionEnabled(enabled);
     };
 
     window.addEventListener('storage', handleStorageChange);
-    return (
-) => window.removeEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const handleAddAlarm = async (alarmData: {
@@ -1271,8 +1195,7 @@ function AppContent() {
     snoozeEnabled?: boolean;
     snoozeInterval?: number;
     maxSnoozes?: number;
-  }
-) => {
+  }) => {
     if (!auth.user) {
       ErrorHandler.handleError(
         new Error('User not authenticated'),
@@ -1365,10 +1288,7 @@ function AppContent() {
       }
 
       const updatedAlarms = [...appState.alarms, newAlarm];
-      setAppState((prev: any
-) => ({
-        
-
+      setAppState((prev: any) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1451,8 +1371,7 @@ function AppContent() {
       snoozeInterval?: number;
       maxSnoozes?: number;
     }
-  
-) => {
+  ) => {
     if (!auth.user) {
       ErrorHandler.handleError(
         new Error('User not authenticated'),
@@ -1466,9 +1385,8 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('edit', alarmId, { voiceMood: alarmData.voiceMood });
-      
-      const existingAlarm = appState.alarms.find((a: any
-) => a.id === alarmId);
+
+      const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1489,16 +1407,11 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map(
-        (alarm: any 
-) =>
-          alarm.id === alarmId ? updatedAlarm : alarm
+      const updatedAlarms = appState.alarms.map((alarm: any) =>
+        alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState((prev: any
-) => ({
-        
-
+      setAppState((prev: any) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1546,8 +1459,7 @@ function AppContent() {
     }
   };
 
-  const handleDeleteAlarm = async (alarmId: string
-) => {
+  const handleDeleteAlarm = async (alarmId: string) => {
     if (!auth.user) {
       ErrorHandler.handleError(
         new Error('User not authenticated'),
@@ -1573,18 +1485,12 @@ function AppContent() {
         await OfflineStorage.deleteAlarm(alarmId);
       }
 
-      
-      const alarmToDelete = appState.alarms.find((a: any
-) => a.id === alarmId);
-      
-      const updatedAlarms = appState.alarms.filter(
-        (alarm: any
-) => alarm.id !== alarmId
-      );
-      setAppState((prev: any
-) => ({
-        
+      const alarmToDelete = appState.alarms.find((a: any) => a.id === alarmId);
 
+      const updatedAlarms = appState.alarms.filter(
+        (alarm: any) => alarm.id !== alarmId
+      );
+      setAppState((prev: any) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1630,8 +1536,7 @@ function AppContent() {
     }
   };
 
-  const handleToggleAlarm = async (alarmId: string, enabled: boolean
-) => {
+  const handleToggleAlarm = async (alarmId: string, enabled: boolean) => {
     if (!auth.user) {
       ErrorHandler.handleError(
         new Error('User not authenticated'),
@@ -1645,9 +1550,8 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('toggle', alarmId, { enabled });
-      
-      const existingAlarm = appState.alarms.find((a: any
-) => a.id === alarmId);
+
+      const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1668,16 +1572,11 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map(
-        (alarm: any 
-) =>
-          alarm.id === alarmId ? updatedAlarm : alarm
+      const updatedAlarms = appState.alarms.map((alarm: any) =>
+        alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState((prev: any
-) => ({
-        
-
+      setAppState((prev: any) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1726,8 +1625,7 @@ function AppContent() {
     }
   };
 
-  const handleOnboardingComplete = (
-) => {
+  const handleOnboardingComplete = () => {
     const appAnalytics = AppAnalyticsService.getInstance();
 
     // Track onboarding completion
@@ -1737,9 +1635,8 @@ function AppContent() {
       false // Not skipped
     );
 
-    setAppState((prev: any
-) => ({
-       ...prev,
+    setAppState((prev: any) => ({
+      ...prev,
       isOnboarding: false,
     }));
   };
@@ -1747,13 +1644,11 @@ function AppContent() {
   const handleAlarmDismiss = (
     alarmId: string,
     method: 'voice' | 'button' | 'shake' | 'challenge'
-  
-) => {
+  ) => {
     const analytics = AppAnalyticsService.getInstance();
     const startTime = performance.now();
 
-    const performDismiss = async (
-) => {
+    const performDismiss = async () => {
       try {
         analytics.trackAlarmAction('dismiss', alarmId, { method });
 
@@ -1772,9 +1667,8 @@ function AppContent() {
           duration,
         });
 
-        setAppState((prev: any
-) => ({
-           ...prev,
+        setAppState((prev: any) => ({
+          ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
@@ -1800,9 +1694,8 @@ function AppContent() {
           }
         );
         // Fallback: still dismiss the alarm even if logging fails
-        setAppState((prev: any
-) => ({
-           ...prev,
+        setAppState((prev: any) => ({
+          ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
@@ -1853,8 +1746,7 @@ function AppContent() {
                 page or try again later.
               </p>
               <button
-                onClick={(
-) => window.location.reload()}
+                onClick={() => window.location.reload()}
                 className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
               >
                 Refresh Page
@@ -1864,8 +1756,7 @@ function AppContent() {
         }
       >
         <AuthenticationFlow
-          onAuthSuccess={(
-) => {
+          onAuthSuccess={() => {
             // Auth success is handled by the useAuth hook
           }}
           onSignUp={auth.signUp}
@@ -1904,11 +1795,9 @@ function AppContent() {
                 There was a problem with the alarm. It has been dismissed.
               </p>
               <button
-                onClick={(
-) =>
-                  setAppState((prev: any
-) => ({
-                     ...prev,
+                onClick={() =>
+                  setAppState((prev: any) => ({
+                    ...prev,
                     activeAlarm: null,
                   }))
                 }
@@ -1930,37 +1819,32 @@ function AppContent() {
     );
   }
 
-  const renderContent = (
-) => {
+  const renderContent = () => {
     const appAnalytics = AppAnalyticsService.getInstance();
 
     switch (appState.currentView) {
       case 'dashboard':
         appAnalytics.trackPageView('dashboard', {
           totalAlarms: appState.alarms.length,
-          
-          activeAlarms: appState.alarms.filter((a: any
-) => a.enabled).length,
+
+          activeAlarms: appState.alarms.filter((a: any) => a.enabled).length,
         });
         return (
           <ErrorBoundary context="Dashboard">
             <Dashboard
               alarms={appState.alarms}
-              onAddAlarm={(
-) => {
+              onAddAlarm={() => {
                 appAnalytics.trackFeatureUsage('add_alarm', 'button_clicked');
                 setShowAlarmForm(true);
               }}
               onQuickSetup={handleQuickSetup}
-              onNavigateToAdvanced={(
-) => {
+              onNavigateToAdvanced={() => {
                 appAnalytics.trackFeatureUsage(
                   'navigation',
                   'advanced_scheduling_from_dashboard'
                 );
-                setAppState((prev: any
-) => ({
-                   ...prev,
+                setAppState((prev: any) => ({
+                  ...prev,
                   currentView: 'advanced-scheduling',
                 }));
               }}
@@ -1976,9 +1860,7 @@ function AppContent() {
             <AlarmList
               alarms={appState.alarms}
               onToggleAlarm={handleToggleAlarm}
-              onEditAlarm={(alarm: any
-) => {
-                // auto: implicit any
+              onEditAlarm={(alarm: any) => {
                 appAnalytics.trackFeatureUsage('edit_alarm', 'button_clicked', {
                   alarmId: alarm.id,
                   alarmLabel: alarm.label,
@@ -2008,9 +1890,7 @@ function AppContent() {
               rewardSystem={appState.rewardSystem}
               activeBattles={appState.activeBattles || []}
               friends={appState.friends || []}
-              onCreateBattle={(battle: any
-) => {
-                // auto: implicit any
+              onCreateBattle={(battle: any) => {
                 // Add battle to state with complete Battle object
                 const completeBattle: Battle = {
                   id: battle.id || Math.random().toString(36).substr(2, 9),
@@ -2029,10 +1909,7 @@ function AppContent() {
                   createdAt: battle.createdAt || new Date().toISOString(),
                   ...battle,
                 };
-                setAppState((prev: any
-) => ({
-                  
-
+                setAppState((prev: any) => ({
                   ...prev,
                   activeBattles: [...(prev.activeBattles || []), completeBattle],
                 }));
@@ -2040,22 +1917,18 @@ function AppContent() {
                   battleType: completeBattle.type,
                 });
               }}
-              onJoinBattle={(battleId: any
-) => {
-                // auto: implicit any
+              onJoinBattle={(battleId: any) => {
                 appAnalytics.trackFeatureUsage('battle_participation', 'joined', {
                   battleId,
                 });
               }}
-              onSendTrashTalk={(battleId, message
-) => {
+              onSendTrashTalk={(battleId, message) => {
                 appAnalytics.trackFeatureUsage('trash_talk', 'sent', {
                   battleId,
                   messageLength: message.length,
                 });
               }}
-              onRefreshRewards={(
-) => refreshRewardsSystem()}
+              onRefreshRewards={() => refreshRewardsSystem()}
             />
           </ErrorBoundary>
         );
@@ -2109,17 +1982,14 @@ function AppContent() {
           <ErrorBoundary context="PricingPage">
             <PricingPage
               user={auth.user as User}
-              onUpgrade={(plan: any
-) => {
-                // auto: implicit any
+              onUpgrade={(plan: any) => {
                 appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
                   plan: plan.id,
                   price: plan.price,
                 });
                 // Show success message or redirect
               }}
-              onManageSubscription={(
-) => {
+              onManageSubscription={() => {
                 appAnalytics.trackFeatureUsage('subscription', 'manage_clicked');
                 // Handle subscription management
               }}
@@ -2200,17 +2070,14 @@ function AppContent() {
                     tabProtectionSettings.settings.visualSettings.showVisualWarning && (
                       <TabProtectionWarning
                         activeAlarm={appState.activeAlarm}
-                        
                         enabledAlarms={appState.alarms.filter(
-                          (alarm: any
-) => alarm.enabled
+                          (alarm: any) => alarm.enabled
                         )}
                         settings={tabProtectionSettings.settings}
                       />
                     )}
                   <button
-                    onClick={createClickHandler((
-) => setShowAlarmForm(true))}
+                    onClick={createClickHandler(() => setShowAlarmForm(true))}
                     className="alarm-button alarm-button-primary p-2 rounded-full"
                     aria-label="Add new alarm"
                     aria-describedby="add-alarm-desc"
@@ -2257,13 +2124,11 @@ function AppContent() {
               aria-label="App sections"
             >
               <button
-                onClick={createClickHandler((
-) => {
+                onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
-                  setAppState((prev: any
-) => ({
-                     ...prev,
+                  setAppState((prev: any) => ({
+                    ...prev,
                     currentView: 'dashboard',
                   }));
                   AccessibilityUtils.announcePageChange('Dashboard');
@@ -2282,18 +2147,14 @@ function AppContent() {
                         borderColor: 'transparent',
                       }
                 }
-                onMouseEnter={(e: any
-) => {
-                  // auto: implicit any
+                onMouseEnter={(e: any) => {
                   if (appState.currentView !== 'dashboard') {
                     e.currentTarget.style.backgroundColor =
                       'var(--theme-surface-hover)';
                     e.currentTarget.style.color = 'var(--theme-text-primary)';
                   }
                 }}
-                onMouseLeave={(e: any
-) => {
-                  // auto: implicit any
+                onMouseLeave={(e: any) => {
                   if (appState.currentView !== 'dashboard') {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = 'var(--theme-text-secondary)';
@@ -2312,15 +2173,13 @@ function AppContent() {
               </button>
 
               <button
-                onClick={createClickHandler((
-) => {
+                onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
                     totalAlarms: appState.alarms.length,
                   });
-                  setAppState((prev: any
-) => ({
-                     ...prev,
+                  setAppState((prev: any) => ({
+                    ...prev,
                     currentView: 'alarms',
                   }));
                   AccessibilityUtils.announcePageChange('Alarms');
@@ -2339,18 +2198,14 @@ function AppContent() {
                         borderColor: 'transparent',
                       }
                 }
-                onMouseEnter={(e: any
-) => {
-                  // auto: implicit any
+                onMouseEnter={(e: any) => {
                   if (appState.currentView !== 'alarms') {
                     e.currentTarget.style.backgroundColor =
                       'var(--theme-surface-hover)';
                     e.currentTarget.style.color = 'var(--theme-text-primary)';
                   }
                 }}
-                onMouseLeave={(e: any
-) => {
-                  // auto: implicit any
+                onMouseLeave={(e: any) => {
                   if (appState.currentView !== 'alarms') {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = 'var(--theme-text-secondary)';
@@ -2369,17 +2224,13 @@ function AppContent() {
               </button>
 
               <button
-                onClick={createClickHandler((
-) => {
+                onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage(
                     'navigation',
                     'advanced_scheduling_clicked'
                   );
-                  setAppState((prev: any
-) => ({
-                    
-
+                  setAppState((prev: any) => ({
                     ...prev,
                     currentView: 'advanced-scheduling',
                   }));
@@ -2405,17 +2256,15 @@ function AppContent() {
               </button>
 
               <button
-                onClick={createClickHandler((
-) => {
+                onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'gaming_clicked', {
                     currentLevel: appState.rewardSystem?.level,
                     hasRewards: !!appState.rewardSystem?.unlockedRewards.length,
                     activeBattles: appState.activeBattles?.length,
                   });
-                  setAppState((prev: any
-) => ({
-                     ...prev,
+                  setAppState((prev: any) => ({
+                    ...prev,
                     currentView: 'gaming',
                   }));
                   AccessibilityUtils.announcePageChange('Gaming Hub');
@@ -2438,13 +2287,11 @@ function AppContent() {
               </button>
 
               <button
-                onClick={createClickHandler((
-) => {
+                onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
-                  setAppState((prev: any
-) => ({
-                     ...prev,
+                  setAppState((prev: any) => ({
+                    ...prev,
                     currentView: 'settings',
                   }));
                   AccessibilityUtils.announcePageChange('Settings');
@@ -2467,13 +2314,11 @@ function AppContent() {
               </button>
 
               <button
-                onClick={(
-) => {
+                onClick={() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
-                  setAppState((prev: any
-) => ({
-                     ...prev,
+                  setAppState((prev: any) => ({
+                    ...prev,
                     currentView: 'pricing',
                   }));
                   AccessibilityUtils.announcePageChange('Premium Plans');
@@ -2507,8 +2352,7 @@ function AppContent() {
                     ? data => handleEditAlarm(editingAlarm.id, data)
                     : handleAddAlarm
                 }
-                onCancel={(
-) => {
+                onCancel={() => {
                   setShowAlarmForm(false);
                   setEditingAlarm(null);
                 }}

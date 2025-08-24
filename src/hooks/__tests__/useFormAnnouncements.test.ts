@@ -14,22 +14,18 @@ const mockAnnouncementService = {
   announceAssertive: jest.fn(),
   clearQueue: jest.fn(),
   setEnabled: jest.fn(),
-  isEnabled: jest.fn((
-) => true),
+  isEnabled: jest.fn(() => true),
 };
 
-jest.mock('../../services/accessibility-announcement', (
-) => ({
+jest.mock('../../services/accessibility-announcement', () => ({
   __esModule: true,
   default: {
-    getInstance: (
-) => mockAnnouncementService,
+    getInstance: () => mockAnnouncementService,
   },
 }));
 
 // Mock i18n hook for form translations
-const mockT = jest.fn((key, options
-) => {
+const mockT = jest.fn((key, options) => {
   const translations: Record<string, string> = {
     'form.validation.required': 'Field {{field}} is required',
     'form.validation.email': 'Please enter a valid email address',
@@ -54,23 +50,17 @@ const mockT = jest.fn((key, options
   return translation;
 });
 
-jest.mock('../useI18n', (
-) => ({
-  useFormI18n: (
-) => ({ t: mockT }),
+jest.mock('../useI18n', () => ({
+  useFormI18n: () => ({ t: mockT }),
 }));
 
-describe('useFormAnnouncements', (
-) => {
-  beforeEach((
-) => {
+describe('useFormAnnouncements', () => {
+  beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should initialize with default state', (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should initialize with default state', () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
     expect(result.current.isEnabled).toBe(true);
     expect(typeof result.current.announceValidationError).toBe('function');
@@ -78,13 +68,10 @@ describe('useFormAnnouncements', (
     expect(typeof result.current.announceFieldChange).toBe('function');
   });
 
-  it('should announce single validation error', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should announce single validation error', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceValidationError('email', 'required');
     });
 
@@ -96,13 +83,10 @@ describe('useFormAnnouncements', (
     );
   });
 
-  it('should announce email validation error', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should announce email validation error', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceValidationError('email', 'email');
     });
 
@@ -112,13 +96,10 @@ describe('useFormAnnouncements', (
     );
   });
 
-  it('should announce password validation error with parameters', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should announce password validation error with parameters', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceValidationError('password', 'password', {
         minLength: 8,
       });
@@ -132,10 +113,8 @@ describe('useFormAnnouncements', (
     );
   });
 
-  it('should announce multiple validation errors with summary', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should announce multiple validation errors with summary', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
     const errors = [
       { field: 'email', type: 'required' },
@@ -143,8 +122,7 @@ describe('useFormAnnouncements', (
       { field: 'confirmPassword', type: 'match' },
     ];
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceValidationErrors(errors);
     });
 
@@ -161,13 +139,10 @@ describe('useFormAnnouncements', (
     expect(mockT).toHaveBeenCalledWith('form.validation.match');
   });
 
-  it('should announce successful form submission', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should announce successful form submission', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceFormSuccess('registration');
     });
 
@@ -177,13 +152,10 @@ describe('useFormAnnouncements', (
     );
   });
 
-  it('should announce form submission error', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should announce form submission error', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceFormError('Network connection failed');
     });
 
@@ -195,13 +167,10 @@ describe('useFormAnnouncements', (
     );
   });
 
-  it('should announce field changes', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should announce field changes', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceFieldChange('username', 'john_doe');
     });
 
@@ -213,13 +182,10 @@ describe('useFormAnnouncements', (
     );
   });
 
-  it('should announce form progress steps', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should announce form progress steps', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceFormProgress(2, 4, 'Account Details');
     });
 
@@ -233,13 +199,10 @@ describe('useFormAnnouncements', (
     );
   });
 
-  it('should announce autosave events', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should announce autosave events', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceAutosave();
     });
 
@@ -249,14 +212,11 @@ describe('useFormAnnouncements', (
     );
   });
 
-  it('should handle real-time validation announcements', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should handle real-time validation announcements', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
     // Test debounced announcements
-    await act(async (
-) => {
+    await act(async () => {
       result.current.announceRealTimeValidation('email', 'valid');
       result.current.announceRealTimeValidation('email', 'invalid');
       result.current.announceRealTimeValidation('email', 'valid');
@@ -266,37 +226,30 @@ describe('useFormAnnouncements', (
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalledTimes(1);
   });
 
-  it('should manage announcement priorities correctly', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should manage announcement priorities correctly', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
     // Critical errors should use assertive
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceValidationError('required_field', 'required');
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalled();
 
     // Success messages should use polite
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceFormSuccess();
     });
     expect(mockAnnouncementService.announcePolite).toHaveBeenCalled();
   });
 
-  it('should respect enabled/disabled state', async (
-) => {
+  it('should respect enabled/disabled state', async () => {
     mockAnnouncementService.isEnabled.mockReturnValue(false);
 
-    const { result } = renderHook((
-) => useFormAnnouncements());
+    const { result } = renderHook(() => useFormAnnouncements());
 
     expect(result.current.isEnabled).toBe(false);
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceValidationError('email', 'required');
     });
 
@@ -304,10 +257,8 @@ describe('useFormAnnouncements', (
     expect(mockAnnouncementService.announceAssertive).not.toHaveBeenCalled();
   });
 
-  it('should handle complex form validation scenarios', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should handle complex form validation scenarios', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
     const complexValidation = {
       field: 'creditCard',
@@ -316,8 +267,7 @@ describe('useFormAnnouncements', (
       suggestions: ['Check for typos', 'Ensure all digits are entered'],
     };
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceComplexValidation(complexValidation);
     });
 
@@ -326,13 +276,10 @@ describe('useFormAnnouncements', (
     );
   });
 
-  it('should handle form field focus announcements', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should handle form field focus announcements', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceFieldFocus('password', {
         label: 'Password',
         requirements: 'Must be at least 8 characters',
@@ -345,31 +292,25 @@ describe('useFormAnnouncements', (
     );
   });
 
-  it('should clear form announcements queue', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should clear form announcements queue', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
-    await act(async (
-) => {
+    await act(async () => {
       result.current.clearQueue();
     });
 
     expect(mockAnnouncementService.clearQueue).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle errors gracefully', async (
-) => {
+  it('should handle errors gracefully', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
     mockAnnouncementService.announceAssertive.mockRejectedValue(
       new Error('Announcement failed')
     );
 
-    const { result } = renderHook((
-) => useFormAnnouncements());
+    const { result } = renderHook(() => useFormAnnouncements());
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceValidationError('email', 'required');
     });
 
@@ -381,10 +322,8 @@ describe('useFormAnnouncements', (
     consoleSpy.mockRestore();
   });
 
-  it('should batch form announcements efficiently', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should batch form announcements efficiently', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
     const formState = {
       errors: [
@@ -397,8 +336,7 @@ describe('useFormAnnouncements', (
       totalSteps: 3,
     };
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceFormState(formState);
     });
 
@@ -407,10 +345,8 @@ describe('useFormAnnouncements', (
     expect(mockT).toHaveBeenCalledWith('form.error.summary', { count: 2 });
   });
 
-  it('should handle dynamic form validation messages', async (
-) => {
-    const { result } = renderHook((
-) => useFormAnnouncements());
+  it('should handle dynamic form validation messages', async () => {
+    const { result } = renderHook(() => useFormAnnouncements());
 
     const dynamicValidation = {
       field: 'username',
@@ -419,8 +355,7 @@ describe('useFormAnnouncements', (
       suggestions: ['Try "johndoe2" or "john_doe"'],
     };
 
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceDynamicValidation(dynamicValidation);
     });
 
@@ -429,10 +364,8 @@ describe('useFormAnnouncements', (
     );
   });
 
-  it('should support conditional announcement based on user preferences', async (
-) => {
-    const { result } = renderHook((
-) =>
+  it('should support conditional announcement based on user preferences', async () => {
+    const { result } = renderHook(() =>
       useFormAnnouncements({
         verbosity: 'minimal', // Only critical announcements
         realTimeValidation: false,
@@ -440,16 +373,14 @@ describe('useFormAnnouncements', (
     );
 
     // Should not announce field changes in minimal mode
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceFieldChange('username', 'test');
     });
 
     expect(mockAnnouncementService.announcePolite).not.toHaveBeenCalled();
 
     // But should announce validation errors
-    await act(async (
-) => {
+    await act(async () => {
       await result.current.announceValidationError('email', 'required');
     });
 

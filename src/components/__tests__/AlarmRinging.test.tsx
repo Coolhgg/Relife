@@ -9,33 +9,26 @@ import { vibrate } from '../../services/capacitor';
 import { VoiceService } from '../../services/voice-pro';
 
 // Mock services
-jest.mock('../../services/voice-pro', (
-) => ({
+jest.mock('../../services/voice-pro', () => ({
   VoiceService: {
-    speak: jest.fn((
-) => Promise.resolve()),
+    speak: jest.fn(() => Promise.resolve()),
     stop: jest.fn(),
-    isSupported: jest.fn((
-) => true),
+    isSupported: jest.fn(() => true),
   },
 }));
 
-jest.mock('../../services/voice-recognition', (
-) => ({
+jest.mock('../../services/voice-recognition', () => ({
   VoiceRecognitionService: {
     startListening: jest.fn(),
     stopListening: jest.fn(),
     isListening: false,
     onCommand: jest.fn(),
-    isSupported: jest.fn((
-) => true),
+    isSupported: jest.fn(() => true),
   },
 }));
 
-jest.mock('../../services/capacitor', (
-) => ({
-  vibrate: jest.fn((
-) => Promise.resolve()),
+jest.mock('../../services/capacitor', () => ({
+  vibrate: jest.fn(() => Promise.resolve()),
 }));
 
 // Mock Web Speech API
@@ -50,27 +43,23 @@ const mockSpeechRecognition = {
 };
 
 Object.defineProperty(window, 'SpeechRecognition', {
-  value: jest.fn((
-) => mockSpeechRecognition),
+  value: jest.fn(() => mockSpeechRecognition),
   writable: true,
 });
 
 Object.defineProperty(window, 'webkitSpeechRecognition', {
-  value: jest.fn((
-) => mockSpeechRecognition),
+  value: jest.fn(() => mockSpeechRecognition),
   writable: true,
 });
 
-describe('AlarmRinging', (
-) => {
+describe('AlarmRinging', () => {
   const mockProps = {
     alarm: testUtils.mockAlarm,
     onDismiss: jest.fn(),
     onSnooze: jest.fn(),
   };
 
-  beforeEach((
-) => {
+  beforeEach(() => {
     testUtils.clearAllMocks();
     jest.clearAllMocks();
 
@@ -79,10 +68,8 @@ describe('AlarmRinging', (
     mockSpeechRecognition.stop.mockClear();
   });
 
-  describe('rendering', (
-) => {
-    test('renders alarm information', (
-) => {
+  describe('rendering', () => {
+    test('renders alarm information', () => {
       render(<AlarmRinging {...mockProps} />);
 
       expect(screen.getByText(testUtils.mockAlarm.label)).toBeInTheDocument();
@@ -90,16 +77,14 @@ describe('AlarmRinging', (
       expect(screen.getByText(/wake up/i)).toBeInTheDocument();
     });
 
-    test('renders dismiss and snooze buttons', (
-) => {
+    test('renders dismiss and snooze buttons', () => {
       render(<AlarmRinging {...mockProps} />);
 
       expect(screen.getByRole('button', { name: /dismiss/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /snooze/i })).toBeInTheDocument();
     });
 
-    test('renders voice recognition controls', (
-) => {
+    test('renders voice recognition controls', () => {
       render(<AlarmRinging {...mockProps} />);
 
       expect(
@@ -108,11 +93,9 @@ describe('AlarmRinging', (
       expect(screen.getByText(/say "stop" to dismiss/i)).toBeInTheDocument();
     });
 
-    test('shows current time', (
-) => {
+    test('shows current time', () => {
       const mockDate = new Date('2023-12-25T07:30:00');
-      jest.spyOn(global, 'Date').mockImplementation((
-) => mockDate);
+      jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
 
       render(<AlarmRinging {...mockProps} />);
 
@@ -121,8 +104,7 @@ describe('AlarmRinging', (
       jest.restoreAllMocks();
     });
 
-    test('displays motivational message based on voice mood', (
-) => {
+    test('displays motivational message based on voice mood', () => {
       const motivationalAlarm = {
         ...testUtils.mockAlarm,
         voiceMood: 'motivational' as const,
@@ -133,10 +115,8 @@ describe('AlarmRinging', (
     });
   });
 
-  describe('voice recognition', (
-) => {
-    test('starts voice recognition when button is clicked', async (
-) => {
+  describe('voice recognition', () => {
+    test('starts voice recognition when button is clicked', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -148,8 +128,7 @@ describe('AlarmRinging', (
       expect(mockSpeechRecognition.start).toHaveBeenCalled();
     });
 
-    test('stops voice recognition when listening', async (
-) => {
+    test('stops voice recognition when listening', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -168,8 +147,7 @@ describe('AlarmRinging', (
       expect(mockSpeechRecognition.stop).toHaveBeenCalled();
     });
 
-    test('shows listening indicator when voice recognition is active', async (
-) => {
+    test('shows listening indicator when voice recognition is active', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -182,8 +160,7 @@ describe('AlarmRinging', (
       expect(screen.getByTestId('voice-indicator')).toHaveClass('animate-pulse');
     });
 
-    test('handles voice commands correctly', async (
-) => {
+    test('handles voice commands correctly', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -211,15 +188,13 @@ describe('AlarmRinging', (
       if (resultHandler) {
         resultHandler(mockEvent);
 
-        await waitFor((
-) => {
+        await waitFor(() => {
           expect(mockProps.onDismiss).toHaveBeenCalled();
         });
       }
     });
 
-    test('handles snooze voice command', async (
-) => {
+    test('handles snooze voice command', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -245,15 +220,13 @@ describe('AlarmRinging', (
       if (resultHandler) {
         resultHandler(mockEvent);
 
-        await waitFor((
-) => {
+        await waitFor(() => {
           expect(mockProps.onSnooze).toHaveBeenCalled();
         });
       }
     });
 
-    test('shows voice command feedback', async (
-) => {
+    test('shows voice command feedback', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -284,10 +257,8 @@ describe('AlarmRinging', (
     });
   });
 
-  describe('interactions', (
-) => {
-    test('calls onDismiss when dismiss button is clicked', async (
-) => {
+  describe('interactions', () => {
+    test('calls onDismiss when dismiss button is clicked', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -297,8 +268,7 @@ describe('AlarmRinging', (
       expect(mockProps.onDismiss).toHaveBeenCalled();
     });
 
-    test('calls onSnooze when snooze button is clicked', async (
-) => {
+    test('calls onSnooze when snooze button is clicked', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -308,8 +278,7 @@ describe('AlarmRinging', (
       expect(mockProps.onSnooze).toHaveBeenCalled();
     });
 
-    test('handles double-tap dismiss', async (
-) => {
+    test('handles double-tap dismiss', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -324,8 +293,7 @@ describe('AlarmRinging', (
       expect(mockProps.onDismiss).toHaveBeenCalled();
     });
 
-    test('resets double-tap after timeout', async (
-) => {
+    test('resets double-tap after timeout', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -337,8 +305,7 @@ describe('AlarmRinging', (
 
       // Wait for timeout
       await waitFor(
-        (
-) => {
+        () => {
           expect(screen.queryByText(/tap again to dismiss/i)).not.toBeInTheDocument();
         },
         { timeout: 4000 }
@@ -346,34 +313,28 @@ describe('AlarmRinging', (
     });
   });
 
-  describe('audio and vibration', (
-) => {
-    test('triggers device vibration on mount', async (
-) => {
+  describe('audio and vibration', () => {
+    test('triggers device vibration on mount', async () => {
       const { vibrate } = require('../../services/capacitor');
       render(<AlarmRinging {...mockProps} />);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(vibrate).toHaveBeenCalled();
       });
     });
 
-    test('speaks alarm message using voice service', async (
-) => {
+    test('speaks alarm message using voice service', async () => {
       const { VoiceService } = require('../../services/voice-pro');
       render(<AlarmRinging {...mockProps} />);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(VoiceService.speak).toHaveBeenCalledWith(
           expect.stringContaining(testUtils.mockAlarm.label)
         );
       });
     });
 
-    test('stops speech when component unmounts', (
-) => {
+    test('stops speech when component unmounts', () => {
       const { VoiceService } = require('../../services/voice-pro');
       const { unmount } = render(<AlarmRinging {...mockProps} />);
 
@@ -383,18 +344,15 @@ describe('AlarmRinging', (
     });
   });
 
-  describe('accessibility', (
-) => {
-    test('has proper heading structure', (
-) => {
+  describe('accessibility', () => {
+    test('has proper heading structure', () => {
       render(<AlarmRinging {...mockProps} />);
 
       expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
       expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument();
     });
 
-    test('has proper ARIA labels', (
-) => {
+    test('has proper ARIA labels', () => {
       render(<AlarmRinging {...mockProps} />);
 
       expect(screen.getByLabelText('Alarm notification')).toBeInTheDocument();
@@ -402,8 +360,7 @@ describe('AlarmRinging', (
       expect(screen.getByLabelText(/snooze alarm/i)).toBeInTheDocument();
     });
 
-    test('supports keyboard navigation', async (
-) => {
+    test('supports keyboard navigation', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -418,8 +375,7 @@ describe('AlarmRinging', (
       expect(snoozeButton).toHaveFocus();
     });
 
-    test('handles Enter key for dismiss', async (
-) => {
+    test('handles Enter key for dismiss', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -431,8 +387,7 @@ describe('AlarmRinging', (
       expect(screen.getByText(/tap again to dismiss/i)).toBeInTheDocument();
     });
 
-    test('handles Space key for snooze', async (
-) => {
+    test('handles Space key for snooze', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -444,8 +399,7 @@ describe('AlarmRinging', (
       expect(mockProps.onSnooze).toHaveBeenCalled();
     });
 
-    test('announces voice recognition status', async (
-) => {
+    test('announces voice recognition status', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -458,10 +412,8 @@ describe('AlarmRinging', (
     });
   });
 
-  describe('error handling', (
-) => {
-    test('handles voice recognition errors gracefully', async (
-) => {
+  describe('error handling', () => {
+    test('handles voice recognition errors gracefully', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 
@@ -482,8 +434,7 @@ describe('AlarmRinging', (
       }
     });
 
-    test('handles missing Web Speech API', (
-) => {
+    test('handles missing Web Speech API', () => {
       // Mock unsupported browser
       delete (window as any).SpeechRecognition;
       delete (window as any).webkitSpeechRecognition;
@@ -496,8 +447,7 @@ describe('AlarmRinging', (
       expect(screen.getByText(/voice commands not supported/i)).toBeInTheDocument();
     });
 
-    test('handles voice service errors', async (
-) => {
+    test('handles voice service errors', async () => {
       const { VoiceService } = require('../../services/voice-pro');
       VoiceService.speak.mockRejectedValueOnce(new Error('Speech synthesis failed'));
 
@@ -505,8 +455,7 @@ describe('AlarmRinging', (
 
       render(<AlarmRinging {...mockProps} />);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(consoleError).toHaveBeenCalledWith(
           expect.stringContaining('Speech synthesis failed')
         );
@@ -516,18 +465,15 @@ describe('AlarmRinging', (
     });
   });
 
-  describe('snooze functionality', (
-) => {
-    test('shows snooze count when alarm has been snoozed', (
-) => {
+  describe('snooze functionality', () => {
+    test('shows snooze count when alarm has been snoozed', () => {
       const snoozedAlarm = { ...testUtils.mockAlarm, snoozeCount: 2 };
       render(<AlarmRinging {...mockProps} alarm={snoozedAlarm} />);
 
       expect(screen.getByText(/snoozed 2 times/i)).toBeInTheDocument();
     });
 
-    test('disables snooze when max snoozes reached', (
-) => {
+    test('disables snooze when max snoozes reached', () => {
       const maxSnoozedAlarm = {
         ...testUtils.mockAlarm,
         snoozeCount: 3,
@@ -540,8 +486,7 @@ describe('AlarmRinging', (
       expect(screen.getByText(/max snoozes reached/i)).toBeInTheDocument();
     });
 
-    test('shows snooze interval information', (
-) => {
+    test('shows snooze interval information', () => {
       const customSnoozeAlarm = { ...testUtils.mockAlarm, snoozeInterval: 10 };
       render(<AlarmRinging {...mockProps} alarm={customSnoozeAlarm} />);
 
@@ -549,10 +494,8 @@ describe('AlarmRinging', (
     });
   });
 
-  describe('performance', (
-) => {
-    test('cleans up resources on unmount', (
-) => {
+  describe('performance', () => {
+    test('cleans up resources on unmount', () => {
       const { VoiceService } = require('../../services/voice-pro');
       const { unmount } = render(<AlarmRinging {...mockProps} />);
 
@@ -562,8 +505,7 @@ describe('AlarmRinging', (
       expect(mockSpeechRecognition.stop).toHaveBeenCalled();
     });
 
-    test('handles rapid button clicks gracefully', async (
-) => {
+    test('handles rapid button clicks gracefully', async () => {
       const user = userEvent.setup();
       render(<AlarmRinging {...mockProps} />);
 

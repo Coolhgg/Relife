@@ -281,8 +281,7 @@ export class NotificationService {
       // Fallback to setTimeout for web
       const delay = scheduledNotification.scheduledTime.getTime() - Date.now();
       if (delay > 0) {
-        setTimeout((
-) => {
+        setTimeout(() => {
           this.showNotification(scheduledNotification.notification);
         }, delay);
       }
@@ -359,8 +358,7 @@ export class NotificationService {
       }
 
       // Handle click
-      notification.onclick = (
-) => {
+      notification.onclick = () => {
         window.focus();
         notification.close();
 
@@ -374,8 +372,7 @@ export class NotificationService {
 
       // Auto-close after 30 seconds if not requiring interaction
       if (!options.requireInteraction) {
-        setTimeout((
-) => {
+        setTimeout(() => {
           notification.close();
         }, 30000);
       }
@@ -419,8 +416,7 @@ export class NotificationService {
     }
 
     // Handle visibility change
-    document.addEventListener('visibilitychange', (
-) => {
+    document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
         // Clear any notifications when app becomes visible
         this.clearVisibleNotifications();

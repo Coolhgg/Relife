@@ -38,14 +38,10 @@ export class PWAService {
   private static instance: PWAService;
   private serviceWorkerRegistration: ServiceWorkerRegistration | null = null;
   private deferredInstallPrompt: Event | null = null;
-  private installPromptListeners: ((canInstall: boolean
-) => void)[] = [];
-  private updateListeners: ((hasUpdate: boolean
-) => void)[] = [];
-  private syncListeners: ((status: BackgroundSyncStatus
-) => void)[] = [];
-  private networkListeners: ((isOnline: boolean
-) => void)[] = [];
+  private installPromptListeners: ((canInstall: boolean) => void)[] = [];
+  private updateListeners: ((hasUpdate: boolean) => void)[] = [];
+  private syncListeners: ((status: BackgroundSyncStatus) => void)[] = [];
+  private networkListeners: ((isOnline: boolean) => void)[] = [];
 
   private isInitialized = false;
   private lastSyncTime: Date | null = null;
@@ -119,13 +115,11 @@ export class PWAService {
       console.log('PWA Service: Enhanced service worker registered');
 
       // Set up update detection
-      registration.addEventListener('updatefound', (
-) => {
+      registration.addEventListener('updatefound', () => {
         const newWorker = registration.installing;
         if (newWorker) {
           this.newServiceWorker = newWorker;
-          newWorker.addEventListener('statechange', (
-) => {
+          newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               this.updateAvailable = true;
               this.notifyUpdateListeners(true);
@@ -156,8 +150,7 @@ export class PWAService {
     });
 
     // Listen for app installed event
-    window.addEventListener('appinstalled', (
-) => {
+    window.addEventListener('appinstalled', () => {
       console.log('PWA Service: App installed');
       this.deferredInstallPrompt = null;
       this.notifyInstallPromptListeners(false);
@@ -195,8 +188,7 @@ export class PWAService {
   }
 
   private setupNetworkListeners(): void {
-    const updateNetworkStatus = (isOnline: boolean
-) => {
+    const updateNetworkStatus = (isOnline: boolean) => {
       console.log(
         'PWA Service: Network status changed:',
         isOnline ? 'online' : 'offline'
@@ -209,10 +201,8 @@ export class PWAService {
       }
     };
 
-    window.addEventListener('online', (
-) => updateNetworkStatus(true));
-    window.addEventListener('offline', (
-) => updateNetworkStatus(false));
+    window.addEventListener('online', () => updateNetworkStatus(true));
+    window.addEventListener('offline', () => updateNetworkStatus(false));
 
     // Initial status
     updateNetworkStatus(navigator.onLine);
@@ -221,8 +211,7 @@ export class PWAService {
   private setupPeriodicSync(): void {
     // Periodic sync every 15 minutes when app is active
     setInterval(
-      (
-) => {
+      () => {
         if (navigator.onLine && !document.hidden) {
           this.triggerBackgroundSync();
         }
@@ -231,8 +220,7 @@ export class PWAService {
     );
 
     // Sync when page becomes visible
-    document.addEventListener('visibilitychange', (
-) => {
+    document.addEventListener('visibilitychange', () => {
       if (!document.hidden && navigator.onLine) {
         this.triggerBackgroundSync();
       }
@@ -335,8 +323,7 @@ export class PWAService {
       }
 
       // Wait for new service worker to take control
-      navigator.serviceWorker.addEventListener('controllerchange', (
-) => {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
         window.location.reload();
       });
 
@@ -541,52 +528,44 @@ export class PWAService {
   }
 
   // Event listeners
-  addInstallPromptListener(listener: (canInstall: boolean
-) => void): void {
+  addInstallPromptListener(listener: (canInstall: boolean) => void): void {
     this.installPromptListeners.push(listener);
   }
 
-  removeInstallPromptListener(listener: (canInstall: boolean
-) => void): void {
+  removeInstallPromptListener(listener: (canInstall: boolean) => void): void {
     const index = this.installPromptListeners.indexOf(listener);
     if (index > -1) {
       this.installPromptListeners.splice(index, 1);
     }
   }
 
-  addUpdateListener(listener: (hasUpdate: boolean
-) => void): void {
+  addUpdateListener(listener: (hasUpdate: boolean) => void): void {
     this.updateListeners.push(listener);
   }
 
-  removeUpdateListener(listener: (hasUpdate: boolean
-) => void): void {
+  removeUpdateListener(listener: (hasUpdate: boolean) => void): void {
     const index = this.updateListeners.indexOf(listener);
     if (index > -1) {
       this.updateListeners.splice(index, 1);
     }
   }
 
-  addSyncListener(listener: (status: BackgroundSyncStatus
-) => void): void {
+  addSyncListener(listener: (status: BackgroundSyncStatus) => void): void {
     this.syncListeners.push(listener);
   }
 
-  removeSyncListener(listener: (status: BackgroundSyncStatus
-) => void): void {
+  removeSyncListener(listener: (status: BackgroundSyncStatus) => void): void {
     const index = this.syncListeners.indexOf(listener);
     if (index > -1) {
       this.syncListeners.splice(index, 1);
     }
   }
 
-  addNetworkListener(listener: (isOnline: boolean
-) => void): void {
+  addNetworkListener(listener: (isOnline: boolean) => void): void {
     this.networkListeners.push(listener);
   }
 
-  removeNetworkListener(listener: (isOnline: boolean
-) => void): void {
+  removeNetworkListener(listener: (isOnline: boolean) => void): void {
     const index = this.networkListeners.indexOf(listener);
     if (index > -1) {
       this.networkListeners.splice(index, 1);

@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 // import ... from '@storybook/test'; // Package not available in current setup
 import AlarmForm from '../../components/AlarmForm';
@@ -243,8 +243,7 @@ export const AccessibilityShowcase: Story = {
 
 // Interactive playground for testing different combinations
 export const InteractivePlayground: Story = {
-  render: (
-) => {
+  render: () => {
     return (
       <div className="p-6 space-y-6">
         <h2 className="text-2xl font-bold">Alarm Form Playground</h2>

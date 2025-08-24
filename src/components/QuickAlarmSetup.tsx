@@ -30,8 +30,7 @@ interface QuickAlarmSetupProps {
     days: DayOfWeek[];
     difficulty: string;
     snoozeEnabled: boolean;
-  }
-) => void;
+  }) => void;
   userId: string;
 }
 
@@ -49,10 +48,8 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
   const [hasNuclearMode, setHasNuclearMode] = useState(false);
 
   // Check premium access on component mount
-  useEffect((
-) => {
-    const checkAccess = async (
-) => {
+  useEffect(() => {
+    const checkAccess = async () => {
       const access = await SubscriptionService.hasFeatureAccess(userId, 'nuclearMode');
       setHasNuclearMode(access);
     };
@@ -71,18 +68,13 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
   const [difficulty, setDifficulty] = useState('medium');
   const [snoozeEnabled, setSnoozeEnabled] = useState(true);
 
-  const toggleDay = (day: DayOfWeek
-) => {
-    
-    setSelectedDays((prev: any
-) =>
-      prev.includes(day) ? prev.filter((d: any
-) => d !== day) : [...prev, day]
+  const toggleDay = (day: DayOfWeek) => {
+    setSelectedDays((prev: any) =>
+      prev.includes(day) ? prev.filter((d: any) => d !== day) : [...prev, day]
     );
   };
 
-  const handleSubmit = (e: React.FormEvent
-) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedDays.length === 0) return;
 
@@ -120,8 +112,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
               id="time"
               type="time"
               value={time}
-              onChange={(e: any
-) => setTime(e.target.value)}
+              onChange={(e: any) => setTime(e.target.value)}
               className="mt-1"
             />
           </div>
@@ -131,8 +122,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
             <Input
               id="label"
               value={label}
-              onChange={(e: any
-) => setLabel(e.target.value)}
+              onChange={(e: any) => setLabel(e.target.value)}
               placeholder="Wake up!"
               className="mt-1"
             />
@@ -146,8 +136,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
                   key={day.value}
                   variant={selectedDays.includes(day.value) ? 'default' : 'secondary'}
                   className="cursor-pointer hover:scale-105 transition-transform"
-                  onClick={(
-) => toggleDay(day.value)}
+                  onClick={() => toggleDay(day.value)}
                 >
                   {day.short}
                 </Badge>

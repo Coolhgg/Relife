@@ -18,18 +18,14 @@ interface ABTestWrapperProps {
 
 interface ABTestContextType {
   variant: string | null;
-  trackConversion: (metric: string, value?: number
-) => void;
-  trackEvent: (event: string, metadata?: Record<string, any>
-) => void;
+  trackConversion: (metric: string, value?: number) => void;
+  trackEvent: (event: string, metadata?: Record<string, any>) => void;
 }
 
 export const ABTestContext = React.createContext<ABTestContextType>({
   variant: null,
-  trackConversion: (
-) => {},
-  trackEvent: (
-) => {},
+  trackConversion: () => {},
+  trackEvent: () => {},
 });
 
 export function ABTestWrapper({
@@ -44,8 +40,7 @@ export function ABTestWrapper({
   const [isLoading, setIsLoading] = useState(true);
   const userTestingService = UserTestingService.getInstance();
 
-  useEffect((
-) => {
+  useEffect(() => {
     // Get variant assignment
     const assignedVariant = userTestingService.getVariant(testId);
 
@@ -75,15 +70,13 @@ export function ABTestWrapper({
     }
   }, [testId, variants, defaultVariant, trackingEvents.onView]);
 
-  const trackConversion = (metric: string, value: number = 1
-) => {
+  const trackConversion = (metric: string, value: number = 1) => {
     if (variant) {
       userTestingService.trackABTestConversion(testId, metric, value);
     }
   };
 
-  const trackEvent = (event: string, metadata: Record<string, any> = {}
-) => {
+  const trackEvent = (event: string, metadata: Record<string, any> = {}) => {
     if (variant) {
       userTestingService.trackEvent({
         type: 'custom',
@@ -98,8 +91,7 @@ export function ABTestWrapper({
     }
   };
 
-  const handleClick = (
-) => {
+  const handleClick = () => {
     if (trackingEvents.onClick) {
       trackEvent(trackingEvents.onClick);
     }
@@ -161,8 +153,7 @@ interface ABTestPropsProps<T> {
     [variantId: string]: T;
   };
   defaultVariant?: string;
-  children: (props: T
-) => ReactNode;
+  children: (props: T) => ReactNode;
 }
 
 export function ABTestProps<T>({

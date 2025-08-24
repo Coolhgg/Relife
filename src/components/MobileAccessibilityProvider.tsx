@@ -21,25 +21,18 @@ interface MobileAccessibilityContextValue {
   optimizations: any;
 
   // Methods
-  announce: (message: string, priority?: 'polite' | 'assertive'
-) => void;
-  announceError: (message: string
-) => void;
-  announceSuccess: (message: string
-) => void;
-  updatePreferences: (updates: any
-) => void;
-  enableLowPowerMode: (
-) => void;
-  disableLowPowerMode: (
-) => void;
+  announce: (message: string, priority?: 'polite' | 'assertive') => void;
+  announceError: (message: string) => void;
+  announceSuccess: (message: string) => void;
+  updatePreferences: (updates: any) => void;
+  enableLowPowerMode: () => void;
+  disableLowPowerMode: () => void;
 }
 
 const MobileAccessibilityContext =
   createContext<MobileAccessibilityContextValue | null>(null);
 
-export const useMobileAccessibilityContext = (
-) => {
+export const useMobileAccessibilityContext = () => {
   const context = useContext(MobileAccessibilityContext);
   if (!context) {
     throw new Error(
@@ -55,8 +48,7 @@ interface MobileAccessibilityProviderProps {
 
 export const MobileAccessibilityProvider: React.FC<
   MobileAccessibilityProviderProps
-> = ({ children }
-) => {
+> = ({ children }) => {
   const { preferences, updatePreferences, isInitialized } = useAccessibility();
   const { isMobileScreenReaderActive, optimizeForMobileScreenReader } =
     useMobileAccessibility();
@@ -71,8 +63,7 @@ export const MobileAccessibilityProvider: React.FC<
   const [isAccessibilityEnabled, setIsAccessibilityEnabled] = useState(false);
 
   // Initialize mobile accessibility and performance services
-  useEffect((
-) => {
+  useEffect(() => {
     if (!isInitialized) return;
 
     try {
@@ -94,8 +85,7 @@ export const MobileAccessibilityProvider: React.FC<
 
       // Announce initialization
       if (preferences.announceTransitions) {
-        setTimeout((
-) => {
+        setTimeout(() => {
           announce('Mobile accessibility features initialized', 'polite');
         }, 1000);
       }
@@ -106,8 +96,7 @@ export const MobileAccessibilityProvider: React.FC<
   }, [isInitialized, preferences.announceTransitions, announce, announceError]);
 
   // Apply mobile-specific accessibility optimizations
-  useEffect((
-) => {
+  useEffect(() => {
     if (!isAccessibilityEnabled) return;
 
     // Mobile screen reader optimizations
@@ -154,8 +143,7 @@ export const MobileAccessibilityProvider: React.FC<
   ]);
 
   // Monitor performance and adjust accessibility features accordingly
-  useEffect((
-) => {
+  useEffect(() => {
     if (!isAccessibilityEnabled) return;
 
     // Enable accessibility optimizations for low-performance devices
@@ -188,10 +176,8 @@ export const MobileAccessibilityProvider: React.FC<
   ]);
 
   // Add mobile accessibility CSS classes
-  useEffect((
-) => {
-    const addMobileAccessibilityStyles = (
-) => {
+  useEffect(() => {
+    const addMobileAccessibilityStyles = () => {
       const style = document.createElement('style');
       style.id = 'mobile-accessibility-styles';
       style.textContent = `
@@ -318,8 +304,7 @@ export const MobileAccessibilityProvider: React.FC<
       addMobileAccessibilityStyles();
     }
 
-    return (
-) => {
+    return () => {
       const existingStyle = document.getElementById('mobile-accessibility-styles');
       if (existingStyle) {
         existingStyle.remove();

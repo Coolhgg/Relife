@@ -25,11 +25,9 @@ interface SubscriptionStatusProps {
   /** Show manage subscription button */
   showManage?: boolean;
   /** Callback when upgrade is clicked */
-  onUpgrade?: (tier: string
-) => void;
+  onUpgrade?: (tier: string) => void;
   /** Callback when manage is clicked */
-  onManage?: (
-) => void;
+  onManage?: () => void;
 }
 
 const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
@@ -39,19 +37,16 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
   showManage = true,
   onUpgrade,
   onManage,
-}
-) => {
+}) => {
   const [subscriptionStatus, setSubscriptionStatus] =
     useState<SubscriptionStatusType | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect((
-) => {
+  useEffect(() => {
     loadSubscriptionStatus();
   }, [user.id]);
 
-  const loadSubscriptionStatus = async (
-) => {
+  const loadSubscriptionStatus = async () => {
     try {
       setLoading(true);
       const status = await PremiumService.getInstance().getSubscriptionStatus(user.id);
@@ -63,8 +58,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
     }
   };
 
-  const getTierInfo = (
-) => {
+  const getTierInfo = () => {
     switch (user.subscriptionTier) {
       case 'ultimate':
         return {
@@ -100,8 +94,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
     }
   };
 
-  const getStatusInfo = (
-) => {
+  const getStatusInfo = () => {
     if (!subscriptionStatus) return null;
 
     const now = new Date();
@@ -216,8 +209,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
 
           {user.subscriptionTier === 'free' && showUpgrade && (
             <button
-              onClick={(
-) => onUpgrade?.('premium')}
+              onClick={() => onUpgrade?.('premium')}
               className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-200 flex items-center gap-2"
             >
               <Crown className="h-4 w-4" />
@@ -280,8 +272,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
         <div className="flex gap-2">
           {user.subscriptionTier === 'free' && showUpgrade && (
             <button
-              onClick={(
-) => onUpgrade?.('premium')}
+              onClick={() => onUpgrade?.('premium')}
               className="flex-1 bg-white text-gray-900 py-2 px-4 rounded-lg font-medium hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
             >
               <Zap className="h-4 w-4" />
@@ -301,8 +292,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
 
           {user.subscriptionTier === 'premium' && showUpgrade && (
             <button
-              onClick={(
-) => onUpgrade?.('ultimate')}
+              onClick={() => onUpgrade?.('ultimate')}
               className="bg-white bg-opacity-20 text-white py-2 px-3 rounded-lg font-medium hover:bg-opacity-30 transition-colors flex items-center justify-center gap-2"
             >
               <Star className="h-4 w-4" />
@@ -440,8 +430,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
       <div className="flex gap-3">
         {user.subscriptionTier === 'free' && showUpgrade && (
           <button
-            onClick={(
-) => onUpgrade?.('premium')}
+            onClick={() => onUpgrade?.('premium')}
             className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 px-4 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
           >
             <Crown className="h-4 w-4" />
@@ -451,8 +440,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
 
         {user.subscriptionTier === 'premium' && showUpgrade && (
           <button
-            onClick={(
-) => onUpgrade?.('ultimate')}
+            onClick={() => onUpgrade?.('ultimate')}
             className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-4 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
           >
             <Star className="h-4 w-4" />

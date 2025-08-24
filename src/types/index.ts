@@ -213,7 +213,7 @@ export interface User {
   subscriptionStatus?: SubscriptionStatus; // Detailed subscription info
   createdAt: Date | string;
   // Premium subscription fields
-  subscriptionTier?: import('./premium').SubscriptionTier; // auto: legacy compatibility
+  subscriptionTier?: import('./premium').SubscriptionTier;
   subscription?: import('./premium').Subscription;
   stripeCustomerId?: string;
   trialEndsAt?: Date;
@@ -238,7 +238,7 @@ export interface UserStats {
 // Enhanced User Preferences combining both apps
 export interface UserPreferences {
   // Enhanced Theme & Personalization
-  personalization?: PersonalizationSettings; // auto: made optional to satisfy usage
+  personalization?: PersonalizationSettings;
 
   // Smart Alarm App preferences
   notificationsEnabled: boolean;
@@ -2486,12 +2486,11 @@ export interface SeasonalAdjustment {
   isActive: boolean;
 }
 
-// auto: changed Season from string union to interface to satisfy usage
 export interface Season {
-  id: string; // auto: added to satisfy usage
-  name?: string; // auto: added to satisfy usage
-  description?: string; // auto: added to satisfy usage
-  rewards?: unknown[]; // auto: added to satisfy usage
+  id: string;
+  name?: string;
+  description?: string;
+  rewards?: unknown[];
 }
 
 // Legacy season type for backwards compatibility

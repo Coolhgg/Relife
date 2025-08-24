@@ -146,8 +146,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        theme =>
-          theme.name.toLowerCase().includes(query) ||
+        theme => theme.name.toLowerCase().includes(query) ||
           theme.description.toLowerCase().includes(query) ||
           theme.tags.some((tag: any
 ) => tag.toLowerCase().includes(query))
@@ -185,7 +184,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   const handleThemeCreated = (theme: CustomSoundTheme
 ) => {
     setThemes((prev: any
-) => [ // auto: implicit any theme, ...prev]);
+) => [ theme, ...prev]);
     setShowCreator(false);
   };
 
@@ -434,8 +433,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   const toggleThemeSelection = (themeId: string
 ) => {
     setSelectedThemes((prev: any
-) => { // auto: implicit any
-      const newSelection = new Set(prev);
+) => { const newSelection = new Set(prev);
       if (newSelection.has(themeId)) {
         newSelection.delete(themeId);
       } else {
@@ -496,11 +494,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
       const success = await soundEffectsService.rateTheme(themeId, userId, rating);
       if (success) {
         // Update local theme rating
-        setThemes((prev: any
-) => 
-          prev.map((theme: any
-) => { // auto: implicit any
-            if (theme.id === themeId) {
+        setThemes((prev: any) => prev.map((theme: any
+) => { if (theme.id === themeId) {
               return {
                 ...theme,
                 rating: rating, // In real implementation, this would be the updated average
@@ -703,9 +698,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               <Button
                 size="sm"
                 className="flex-1"
-                onClick={(
-) =>
-                  userId
+                onClick={() => userId
                     ? handleSetActiveTheme(theme)
                     : handleInstallCommunityTheme(theme)
                 }
@@ -1022,9 +1015,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               : 'space-y-4'
           }
         >
-          {filteredThemes.map((theme: any
-) => 
-            viewMode === 'grid' ? renderThemeCard(theme) : renderThemeListItem(theme)
+          {filteredThemes.map((theme: any) => viewMode === 'grid' ? renderThemeCard(theme) : renderThemeListItem(theme)
           )}
         </div>
       )}

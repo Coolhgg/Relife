@@ -129,10 +129,8 @@ interface Navigator {
 interface WakeLockSentinel {
   readonly type: 'screen';
   release(): Promise<void>;
-  addEventListener(type: 'release', listener: (
-) => void): void;
-  removeEventListener(type: 'release', listener: (
-) => void): void;
+  addEventListener(type: 'release', listener: () => void): void;
+  removeEventListener(type: 'release', listener: () => void): void;
 }
 
 interface WakeLock {
@@ -147,8 +145,7 @@ interface Navigator {
 interface PermissionStatus extends EventTarget {
   readonly name: PermissionName;
   readonly state: 'granted' | 'denied' | 'prompt';
-  onchange: ((this: PermissionStatus, ev: Event
-) => any) | null;
+  onchange: ((this: PermissionStatus, ev: Event) => any) | null;
 }
 
 interface Permissions {
@@ -182,10 +179,8 @@ interface Navigator {
 declare class BroadcastChannel extends EventTarget {
   constructor(name: string);
   readonly name: string;
-  onmessage: ((this: BroadcastChannel, ev: MessageEvent
-) => any) | null;
-  onmessageerror: ((this: BroadcastChannel, ev: MessageEvent
-) => any) | null;
+  onmessage: ((this: BroadcastChannel, ev: MessageEvent) => any) | null;
+  onmessageerror: ((this: BroadcastChannel, ev: MessageEvent) => any) | null;
   close(): void;
   postMessage(message: any): void;
 }
@@ -198,8 +193,7 @@ interface IDBDatabase {
   close(): void;
   addEventListener<K extends keyof IDBDatabaseEventMap>(
     type: K,
-    listener: (this: IDBDatabase, ev: IDBDatabaseEventMap[K]
-) => any,
+    listener: (this: IDBDatabase, ev: IDBDatabaseEventMap[K]) => any,
     options?: boolean | AddEventListenerOptions
   ): void;
 }
@@ -225,10 +219,8 @@ interface Connection {
   readonly downlinkMax: number;
   readonly rtt: number;
   readonly saveData: boolean;
-  addEventListener(type: 'change', listener: (
-) => void): void;
-  removeEventListener(type: 'change', listener: (
-) => void): void;
+  addEventListener(type: 'change', listener: () => void): void;
+  removeEventListener(type: 'change', listener: () => void): void;
 }
 
 interface Navigator {
@@ -253,12 +245,9 @@ declare global {
   interface Navigator {
     storage?: StorageManager;
     serviceWorker: ServiceWorkerContainer;
-    share?: (data: ShareData
-) => Promise<void>;
-    canShare?: (data: ShareData
-) => boolean;
-    vibrate?: (pattern: number | number[]
-) => boolean;
+    share?: (data: ShareData) => Promise<void>;
+    canShare?: (data: ShareData) => boolean;
+    vibrate?: (pattern: number | number[]) => boolean;
     wakeLock?: WakeLock;
     permissions?: Permissions;
     connection?: Connection;
@@ -279,8 +268,7 @@ declare global {
       listener: (
         this: ServiceWorkerContainer,
         ev: ServiceWorkerContainerEventMap[K]
-      
-) => any,
+      ) => any,
       options?: boolean | AddEventListenerOptions
     ): void;
   }

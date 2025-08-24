@@ -45,8 +45,7 @@ import type {
 
 interface ThemeCreatorProps {
   className?: string;
-  onClose?: (
-) => void;
+  onClose?: () => void;
 }
 
 interface ColorPaletteState {
@@ -65,8 +64,7 @@ interface PreviewComponent {
   component: React.ReactNode;
 }
 
-const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
-) => {
+const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) => {
   const {
     theme,
     themeConfig,
@@ -98,8 +96,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
   const [isGeneratingTheme, setIsGeneratingTheme] = useState(false);
 
   // Initialize from base theme
-  useEffect((
-) => {
+  useEffect(() => {
     if (themeConfig) {
       setColorPalette({
         primary: themeConfig.colors.primary[500] || '#0ea5e9',
@@ -114,11 +111,9 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
   }, [themeConfig, baseTheme]);
 
   // Color generation utilities
-  const generateColorShades = useCallback((baseColor: string
-) => {
+  const generateColorShades = useCallback((baseColor: string) => {
     // Convert hex to RGB
-    const hexToRgb = (hex: string
-) => {
+    const hexToRgb = (hex: string) => {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
       return result
         ? {
@@ -130,8 +125,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
     };
 
     // Convert RGB to HSL
-    const rgbToHsl = (r: number, g: number, b: number
-) => {
+    const rgbToHsl = (r: number, g: number, b: number) => {
       r /= 255;
       g /= 255;
       b /= 255;
@@ -162,14 +156,12 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
     };
 
     // Convert HSL to RGB
-    const hslToRgb = (h: number, s: number, l: number
-) => {
+    const hslToRgb = (h: number, s: number, l: number) => {
       h /= 360;
       s /= 100;
       l /= 100;
       const a = s * Math.min(l, 1 - l);
-      const f = (n: number
-) => {
+      const f = (n: number) => {
         const k = (n + h * 12) % 12;
         return l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
       };
@@ -177,8 +169,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
     };
 
     // RGB to Hex
-    const rgbToHex = (r: number, g: number, b: number
-) => {
+    const rgbToHex = (r: number, g: number, b: number) => {
       return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     };
 
@@ -202,8 +193,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
     };
 
     const result: Record<string, string> = {};
-    Object.entries(shades).forEach(([shade, [r, g, b]]
-) => {
+    Object.entries(shades).forEach(([shade, [r, g, b]]) => {
       result[shade] = rgbToHex(r, g, b);
     });
 
@@ -211,8 +201,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
   }, []);
 
   // Generate theme from current palette
-  const generateCustomTheme = useCallback(async (
-) => {
+  const generateCustomTheme = useCallback(async () => {
     if (!themeName.trim()) {
       alert('Please enter a theme name');
       return;
@@ -265,8 +254,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
         themeDescription || `Custom theme based on ${baseTheme}`;
 
       setCurrentEditingTheme(customTheme);
-      setSavedThemes((prev: any
-) => [...prev, customTheme]);
+      setSavedThemes((prev: any) => [...prev, customTheme]);
 
       // Save to localStorage
       const savedCustomThemes = JSON.parse(
@@ -290,8 +278,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
   ]);
 
   // Utility functions
-  const adjustColor = (color: string, amount: number
-) => {
+  const adjustColor = (color: string, amount: number) => {
     const num = parseInt(color.replace('#', ''), 16);
     const amt = Math.round(2.55 * amount);
     const R = (num >> 16) + amt;
@@ -310,8 +297,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
     );
   };
 
-  const getContrastColor = (hexcolor: string
-) => {
+  const getContrastColor = (hexcolor: string) => {
     const r = parseInt(hexcolor.substr(1, 2), 16);
     const g = parseInt(hexcolor.substr(3, 2), 16);
     const b = parseInt(hexcolor.substr(5, 2), 16);
@@ -319,18 +305,14 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
     return yiq >= 128 ? '#000000' : '#ffffff';
   };
 
-  const handleColorChange = (colorKey: keyof ColorPaletteState, color: string
-) => {
-    
-      setColorPalette((prev: any
-) => ({
+  const handleColorChange = (colorKey: keyof ColorPaletteState, color: string) => {
+    setColorPalette((prev: any) => ({
       ...prev,
       [colorKey]: color,
     }));
   };
 
-  const generateRandomPalette = (
-) => {
+  const generateRandomPalette = () => {
     const hues = [Math.random() * 360, Math.random() * 360, Math.random() * 360];
     setColorPalette({
       primary: `hsl(${hues[0]}, 70%, 50%)`,
@@ -346,12 +328,9 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
   // Color picker component
   const ColorPicker: React.FC<{
     color: string;
-    onChange: (color: string
-) => void;
-    onClose: (
-) => void;
-  }> = ({ color, onChange, onClose }
-) => (
+    onChange: (color: string) => void;
+    onClose: () => void;
+  }> = ({ color, onChange, onClose }) => (
     <div className="absolute top-full left-0 mt-2 z-50 bg-white rounded-lg shadow-2xl border border-gray-200 p-4">
       <div className="flex items-center justify-between mb-3">
         <span className="text-sm font-medium text-gray-700">Choose Color</span>
@@ -362,8 +341,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
       <input
         type="color"
         value={color}
-        onChange={(e: any
-) => onChange(e.target.value)}
+        onChange={(e: any) => onChange(e.target.value)}
         className="w-full h-32 rounded-md border border-gray-200 cursor-pointer"
       />
       <div className="mt-3 flex gap-2">
@@ -380,8 +358,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
         ].map(presetColor => (
           <button
             key={presetColor}
-            onClick={(
-) => onChange(presetColor)}
+            onClick={() => onChange(presetColor)}
             className="w-6 h-6 rounded-full border-2 border-gray-200 hover:border-gray-300 transition-colors"
             style={{ backgroundColor: presetColor }}
           />
@@ -391,8 +368,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
         <input
           type="text"
           value={color}
-          onChange={(e: any
-) => onChange(e.target.value)}
+          onChange={(e: any) => onChange(e.target.value)}
           className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="#000000"
         />
@@ -510,8 +486,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
                 <span>Based on</span>
                 <select
                   value={baseTheme}
-                  onChange={(e: any
-) => setBaseTheme(e.target.value as Theme)}
+                  onChange={(e: any) => setBaseTheme(e.target.value as Theme)}
                   className="px-3 py-1 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="light">Light Theme</option>
@@ -572,8 +547,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
                     <input
                       type="text"
                       value={themeName}
-                      onChange={(e: any
-) => setThemeName(e.target.value)}
+                      onChange={(e: any) => setThemeName(e.target.value)}
                       placeholder="My Awesome Theme"
                       className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -584,8 +558,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
                     </label>
                     <textarea
                       value={themeDescription}
-                      onChange={(e: any
-) => setThemeDescription(e.target.value)}
+                      onChange={(e: any) => setThemeDescription(e.target.value)}
                       placeholder="Describe your theme..."
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
@@ -603,8 +576,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
                     return (
                       <button
                         key={section.id}
-                        onClick={(
-) => setActiveSection(section.id)}
+                        onClick={() => setActiveSection(section.id)}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
                           activeSection === section.id
                             ? 'bg-blue-100 text-blue-700 border border-blue-200'
@@ -623,16 +595,14 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
               {activeSection === 'colors' && (
                 <div className="space-y-4">
                   <h4 className="font-medium text-gray-900">Color Palette</h4>
-                  {Object.entries(colorPalette).map(([key, color]
-) => (
+                  {Object.entries(colorPalette).map(([key, color]) => (
                     <div key={key} className="relative">
                       <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
                         {key}
                       </label>
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={(
-) =>
+                          onClick={() =>
                             setShowColorPicker(showColorPicker === key ? null : key)
                           }
                           className="w-10 h-10 rounded-lg border-2 border-gray-200 shadow-sm hover:border-gray-300 transition-colors"
@@ -641,8 +611,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
                         <input
                           type="text"
                           value={color}
-                          onChange={(e: any
-) => 
+                          onChange={(e: any) =>
                             handleColorChange(
                               key as keyof ColorPaletteState,
                               e.target.value
@@ -654,12 +623,10 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
                       {showColorPicker === key && (
                         <ColorPicker
                           color={color}
-                          onChange={(newColor: any
-) => 
+                          onChange={(newColor: any) =>
                             handleColorChange(key as keyof ColorPaletteState, newColor)
                           }
-                          onClose={(
-) => setShowColorPicker(null)}
+                          onClose={() => setShowColorPicker(null)}
                         />
                       )}
                     </div>
@@ -672,8 +639,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
                 <h4 className="font-medium text-gray-900 mb-3">Quick Actions</h4>
                 <div className="grid grid-cols-2 gap-2">
                   <button
-                    onClick={(
-) => {
+                    onClick={() => {
                       const exported = JSON.stringify(
                         { colorPalette, themeName, themeDescription },
                         null,
@@ -688,8 +654,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
                     <span>Copy</span>
                   </button>
                   <button
-                    onClick={(
-) => {
+                    onClick={() => {
                       const element = document.createElement('a');
                       const file = new Blob(
                         [
@@ -729,8 +694,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
                 </div>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={(
-) => setPreviewMode(!previewMode)}
+                    onClick={() => setPreviewMode(!previewMode)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
                       previewMode
                         ? 'bg-blue-100 text-blue-700 border-blue-200'
@@ -781,8 +745,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }
 
                   {/* Component Previews */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {previewComponents.map(({ id, name, component }
-) => (
+                    {previewComponents.map(({ id, name, component }) => (
                       <div key={id} className="space-y-3">
                         <h4
                           className="font-medium"

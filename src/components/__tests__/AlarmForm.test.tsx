@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 // Vitest globals are available globally, no need to import
 import * as React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
@@ -7,8 +7,7 @@ import AlarmForm from '../AlarmForm';
 import { testUtils } from '../../test-setup';
 import type { Alarm, VoiceMood } from '../../types';
 
-describe('AlarmForm', (
-) => {
+describe('AlarmForm', () => {
   const mockOnSave = jest.fn();
   const mockOnCancel = jest.fn();
 
@@ -18,17 +17,14 @@ describe('AlarmForm', (
     userId: 'test-user-id',
   };
 
-  beforeEach((
-) => {
+  beforeEach(() => {
     testUtils.clearAllMocks();
     mockOnSave.mockClear();
     mockOnCancel.mockClear();
   });
 
-  describe('rendering', (
-) => {
-    test('renders new alarm form by default', (
-) => {
+  describe('rendering', () => {
+    test('renders new alarm form by default', () => {
       render(<AlarmForm {...defaultProps} />);
 
       expect(screen.getByText('New Alarm')).toBeInTheDocument();
@@ -40,8 +36,7 @@ describe('AlarmForm', (
       expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument();
     });
 
-    test('renders edit alarm form when alarm prop is provided', (
-) => {
+    test('renders edit alarm form when alarm prop is provided', () => {
       const alarm: Alarm = {
         ...testUtils.mockAlarm,
         time: '08:30',
@@ -58,8 +53,7 @@ describe('AlarmForm', (
       expect(screen.getByRole('button', { name: /update alarm/i })).toBeInTheDocument();
     });
 
-    test('renders all voice mood options', (
-) => {
+    test('renders all voice mood options', () => {
       render(<AlarmForm {...defaultProps} />);
 
       // Check for voice mood buttons
@@ -71,8 +65,7 @@ describe('AlarmForm', (
       expect(screen.getByText('Gentle')).toBeInTheDocument();
     });
 
-    test('renders all weekday buttons', (
-) => {
+    test('renders all weekday buttons', () => {
       render(<AlarmForm {...defaultProps} />);
 
       // Check for day buttons
@@ -86,10 +79,8 @@ describe('AlarmForm', (
     });
   });
 
-  describe('form interactions', (
-) => {
-    test('updates time input', async (
-) => {
+  describe('form interactions', () => {
+    test('updates time input', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
@@ -100,8 +91,7 @@ describe('AlarmForm', (
       expect(timeInput).toHaveValue('09:15');
     });
 
-    test('updates label input', async (
-) => {
+    test('updates label input', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
@@ -112,8 +102,7 @@ describe('AlarmForm', (
       expect(labelInput).toHaveValue('Custom Alarm');
     });
 
-    test('toggles day selection', async (
-) => {
+    test('toggles day selection', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
@@ -131,8 +120,7 @@ describe('AlarmForm', (
       expect(mondayButton.closest('button')).toHaveClass('bg-primary-600');
     });
 
-    test('changes voice mood selection', async (
-) => {
+    test('changes voice mood selection', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
@@ -147,8 +135,7 @@ describe('AlarmForm', (
       expect(drillSergeantButton).toHaveClass('border-primary-500');
     });
 
-    test('shows voice mood preview', async (
-) => {
+    test('shows voice mood preview', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
@@ -163,42 +150,41 @@ describe('AlarmForm', (
     });
   });
 
-  describe('form validation', (
-) => {
-    test('shows validation errors for invalid time', async (
-) => {
+  describe('form validation', () => {
+    test('shows validation errors for invalid time', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText(/time/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       await user.clear(timeInput);
       await user.type(timeInput, '25:00');
       await user.click(submitButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByText(/hours must be between 0 and 23/i)).toBeInTheDocument();
       });
 
       expect(mockOnSave).not.toHaveBeenCalled();
     });
 
-    test('shows validation errors for invalid label', async (
-) => {
+    test('shows validation errors for invalid label', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
       const labelInput = screen.getByLabelText(/label/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       await user.clear(labelInput);
       await user.type(labelInput, 'A');
       await user.click(submitButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(
           screen.getByText(/label must be at least 2 characters/i)
         ).toBeInTheDocument();
@@ -207,8 +193,7 @@ describe('AlarmForm', (
       expect(mockOnSave).not.toHaveBeenCalled();
     });
 
-    test('shows validation errors for no days selected', async (
-) => {
+    test('shows validation errors for no days selected', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
@@ -221,11 +206,12 @@ describe('AlarmForm', (
         await user.click(button);
       }
 
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
       await user.click(submitButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(
           screen.getByText(/at least one day must be selected/i)
         ).toBeInTheDocument();
@@ -234,32 +220,33 @@ describe('AlarmForm', (
       expect(mockOnSave).not.toHaveBeenCalled();
     });
 
-    test('shows field-specific error styling', async (
-) => {
+    test('shows field-specific error styling', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText(/time/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       await user.clear(timeInput);
       await user.type(timeInput, '25:00');
       await user.click(submitButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(timeInput).toHaveClass('border-red-500');
       });
     });
 
-    test('shows general error summary', async (
-) => {
+    test('shows general error summary', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText(/time/i);
       const labelInput = screen.getByLabelText(/label/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       await user.clear(timeInput);
       await user.type(timeInput, '25:00');
@@ -267,8 +254,7 @@ describe('AlarmForm', (
       await user.type(labelInput, 'A');
       await user.click(submitButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(
           screen.getByText(/please fix the following issues/i)
         ).toBeInTheDocument();
@@ -277,21 +263,21 @@ describe('AlarmForm', (
       });
     });
 
-    test('clears errors when input becomes valid', async (
-) => {
+    test('clears errors when input becomes valid', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText(/time/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       // Enter invalid time
       await user.clear(timeInput);
       await user.type(timeInput, '25:00');
       await user.click(submitButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByText(/hours must be between 0 and 23/i)).toBeInTheDocument();
       });
 
@@ -300,8 +286,7 @@ describe('AlarmForm', (
       await user.type(timeInput, '09:00');
       await user.click(submitButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(
           screen.queryByText(/hours must be between 0 and 23/i)
         ).not.toBeInTheDocument();
@@ -309,16 +294,16 @@ describe('AlarmForm', (
     });
   });
 
-  describe('form submission', (
-) => {
-    test('calls onSave with correct data for new alarm', async (
-) => {
+  describe('form submission', () => {
+    test('calls onSave with correct data for new alarm', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText(/time/i);
       const labelInput = screen.getByLabelText(/label/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       await user.clear(timeInput);
       await user.type(timeInput, '08:30');
@@ -330,8 +315,7 @@ describe('AlarmForm', (
 
       await user.click(submitButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(mockOnSave).toHaveBeenCalledWith({
           time: '08:30',
           label: 'Work Alarm',
@@ -341,8 +325,7 @@ describe('AlarmForm', (
       });
     });
 
-    test('calls onSave with updated data for existing alarm', async (
-) => {
+    test('calls onSave with updated data for existing alarm', async () => {
       const user = userEvent.setup();
       const alarm: Alarm = {
         ...testUtils.mockAlarm,
@@ -355,15 +338,16 @@ describe('AlarmForm', (
       render(<AlarmForm {...defaultProps} alarm={alarm} />);
 
       const labelInput = screen.getByLabelText(/label/i);
-      const submitButton = screen.getByRole('button', { name: /update alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /update alarm/i,
+      });
 
       await user.clear(labelInput);
       await user.type(labelInput, 'Updated Label');
 
       await user.click(submitButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(mockOnSave).toHaveBeenCalledWith({
           time: '07:00',
           label: 'Updated Label',
@@ -373,8 +357,7 @@ describe('AlarmForm', (
       });
     });
 
-    test('includes custom day selection', async (
-) => {
+    test('includes custom day selection', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
@@ -390,11 +373,12 @@ describe('AlarmForm', (
       await user.click(screen.getByText('Sat').closest('button')!);
       await user.click(screen.getByText('Sun').closest('button')!);
 
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
       await user.click(submitButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(mockOnSave).toHaveBeenCalledWith(
           expect.objectContaining({
             days: [0, 6], // Sunday and Saturday
@@ -404,10 +388,8 @@ describe('AlarmForm', (
     });
   });
 
-  describe('form cancellation', (
-) => {
-    test('calls onCancel when cancel button is clicked', async (
-) => {
+  describe('form cancellation', () => {
+    test('calls onCancel when cancel button is clicked', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
@@ -417,8 +399,7 @@ describe('AlarmForm', (
       expect(mockOnCancel).toHaveBeenCalled();
     });
 
-    test('calls onCancel when X button is clicked', async (
-) => {
+    test('calls onCancel when X button is clicked', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
@@ -432,26 +413,22 @@ describe('AlarmForm', (
     });
   });
 
-  describe('accessibility', (
-) => {
-    test('has proper form labels', (
-) => {
+  describe('accessibility', () => {
+    test('has proper form labels', () => {
       render(<AlarmForm {...defaultProps} />);
 
       expect(screen.getByLabelText(/time/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/label/i)).toBeInTheDocument();
     });
 
-    test('has proper button roles', (
-) => {
+    test('has proper button roles', () => {
       render(<AlarmForm {...defaultProps} />);
 
       expect(screen.getByRole('button', { name: /create alarm/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument();
     });
 
-    test('supports keyboard navigation', async (
-) => {
+    test('supports keyboard navigation', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
@@ -466,20 +443,20 @@ describe('AlarmForm', (
       expect(labelInput).toHaveFocus();
     });
 
-    test('announces validation errors to screen readers', async (
-) => {
+    test('announces validation errors to screen readers', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText(/time/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       await user.clear(timeInput);
       await user.type(timeInput, '25:00');
       await user.click(submitButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         const errorMessage = screen.getByText(/hours must be between 0 and 23/i);
         expect(errorMessage).toBeInTheDocument();
         // Error message should be associated with the input
@@ -488,14 +465,14 @@ describe('AlarmForm', (
     });
   });
 
-  describe('edge cases', (
-) => {
-    test('handles rapid form submission', async (
-) => {
+  describe('edge cases', () => {
+    test('handles rapid form submission', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       // Rapidly click submit multiple times
       await user.click(submitButton);
@@ -503,14 +480,12 @@ describe('AlarmForm', (
       await user.click(submitButton);
 
       // Should only be called once due to form validation or state management
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(mockOnSave).toHaveBeenCalledTimes(1);
       });
     });
 
-    test('handles very long labels gracefully', async (
-) => {
+    test('handles very long labels gracefully', async () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
@@ -524,8 +499,7 @@ describe('AlarmForm', (
       expect(labelInput).toHaveAttribute('maxLength', '100');
     });
 
-    test('preserves form state during re-renders', async (
-) => {
+    test('preserves form state during re-renders', async () => {
       const user = userEvent.setup();
       const { rerender } = render(<AlarmForm {...defaultProps} />);
 

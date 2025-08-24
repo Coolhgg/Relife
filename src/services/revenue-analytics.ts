@@ -148,8 +148,7 @@ export class RevenueAnalyticsService {
 
     let totalMRR = 0;
     data?.forEach((subscription: any
-) => { // auto: implicit any
-      const monthlyAmount =
+) => { const monthlyAmount =
         subscription.billingInterval === 'year'
           ? subscription.amount / 12
           : subscription.amount;
@@ -254,8 +253,7 @@ export class RevenueAnalyticsService {
 
     const paths: Record<string, number> = {};
     data?.forEach((change: any
-) => { // auto: implicit any
-      const path = `${change.previousTier}_to_${change.newTier}`;
+) => { const path = `${change.previousTier}_to_${change.newTier}`;
       paths[path] = (paths[path] || 0) + 1;
     });
 
@@ -347,8 +345,7 @@ export class RevenueAnalyticsService {
     const journey: UserJourney = {
       userId,
       events:
-        events?
-      .map((event: any
+        events?.map((event: any
 ) => ({
           type: event.type,
           timestamp: new Date(event.timestamp),

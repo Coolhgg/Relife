@@ -16,12 +16,11 @@ export interface FormFieldChange {
 export function useFormAnnouncements() {
   const { announce, announceFormValidation } = useScreenReaderAnnouncements();
   const fieldValues = useRef<Record<string, any>>({});
-  const announcementTimer = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
+  const announcementTimer = useRef<TimeoutHandle | undefined>(undefined);
 
   // Announce form field changes with debouncing
   const announceFieldChange = useCallback(
-    (change: FormFieldChange, debounceMs: number = 300
-) => {
+    (change: FormFieldChange, debounceMs: number = 300) => {
       const { fieldName, newValue, fieldType = 'text' } = change;
 
       // Clear existing timer
@@ -38,8 +37,7 @@ export function useFormAnnouncements() {
 
       // Debounce announcements for text inputs
       if (fieldType === 'text' && debounceMs > 0) {
-        announcementTimer.current = setTimeout((
-) => {
+        announcementTimer.current = setTimeout(() => {
           announceFieldValue(fieldName, newValue, fieldType);
         }, debounceMs);
       } else {
@@ -51,8 +49,7 @@ export function useFormAnnouncements() {
   );
 
   const announceFieldValue = useCallback(
-    (fieldName: string, value: any, fieldType: string
-) => {
+    (fieldName: string, value: any, fieldType: string) => {
       let message = '';
 
       switch (fieldType) {
@@ -102,8 +99,7 @@ export function useFormAnnouncements() {
 
   // Announce day selection changes
   const announceDayToggle = useCallback(
-    (dayName: string, isSelected: boolean, totalSelected: number
-) => {
+    (dayName: string, isSelected: boolean, totalSelected: number) => {
       const selectionStatus = isSelected ? 'selected' : 'deselected';
       const totalMessage =
         totalSelected === 0
@@ -123,8 +119,7 @@ export function useFormAnnouncements() {
 
   // Announce voice mood selection
   const announceVoiceMoodSelection = useCallback(
-    (mood: VoiceMood
-) => {
+    (mood: VoiceMood) => {
       const moodConfig = getVoiceMoodConfig(mood);
 
       announce({
@@ -138,8 +133,7 @@ export function useFormAnnouncements() {
 
   // Announce form validation errors with context
   const announceValidationErrors = useCallback(
-    (errors: Record<string, string>
-) => {
+    (errors: Record<string, string>) => {
       const errorKeys = Object.keys(errors);
       const errorCount = errorKeys.length;
 
@@ -165,8 +159,7 @@ export function useFormAnnouncements() {
 
   // Announce successful form submission
   const announceFormSuccess = useCallback(
-    (action: 'create' | 'update', itemType: string = 'item'
-) => {
+    (action: 'create' | 'update', itemType: string = 'item') => {
       const actionText = action === 'create' ? 'created' : 'updated';
       announce({
         type: 'success',
@@ -179,8 +172,7 @@ export function useFormAnnouncements() {
 
   // Announce form cancellation
   const announceFormCancel = useCallback(
-    (itemType: string = 'form'
-) => {
+    (itemType: string = 'form') => {
       announce({
         type: 'custom',
         message: `${itemType} cancelled. No changes were saved.`,
@@ -192,8 +184,7 @@ export function useFormAnnouncements() {
 
   // Announce focus management
   const announceFocusMove = useCallback(
-    (fromField: string, toField: string, reason?: string
-) => {
+    (fromField: string, toField: string, reason?: string) => {
       const reasonText = reason ? ` ${reason}` : '';
       announce({
         type: 'custom',
@@ -206,8 +197,7 @@ export function useFormAnnouncements() {
 
   // Announce when form is ready for input
   const announceFormReady = useCallback(
-    (formTitle: string, isEditing: boolean = false
-) => {
+    (formTitle: string, isEditing: boolean = false) => {
       const action = isEditing ? 'editing' : 'creating';
       announce({
         type: 'custom',
@@ -220,8 +210,7 @@ export function useFormAnnouncements() {
 
   // Real-time field validation announcements
   const announceFieldValidation = useCallback(
-    (fieldName: string, isValid: boolean, errorMessage?: string
-) => {
+    (fieldName: string, isValid: boolean, errorMessage?: string) => {
       if (!isValid && errorMessage) {
         announceFormValidation(fieldName, isValid, errorMessage);
       } else if (isValid) {
@@ -245,8 +234,7 @@ export function useFormAnnouncements() {
 
   // Click-to-hear functionality for form fields
   const announceFieldDescription = useCallback(
-    (fieldName: string, value: any, description: string, options?: string
-) => {
+    (fieldName: string, value: any, description: string, options?: string) => {
       const currentValueText = value ? ` Current value: ${value}.` : ' No value set.';
       const optionsText = options ? ` Available options: ${options}` : '';
 
@@ -260,10 +248,8 @@ export function useFormAnnouncements() {
   );
 
   // Cleanup on unmount
-  useEffect((
-) => {
-    return (
-) => {
+  useEffect(() => {
+    return () => {
       if (announcementTimer.current) {
         clearTimeout(announcementTimer.current);
       }

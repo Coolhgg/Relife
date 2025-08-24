@@ -25,10 +25,8 @@ const mockUseGamingAnnouncements = {
   clearAnnouncements: jest.fn(),
 };
 
-jest.mock('../hooks/useGamingAnnouncements', (
-) => ({
-  useGamingAnnouncements: (
-) => mockUseGamingAnnouncements,
+jest.mock('../hooks/useGamingAnnouncements', () => ({
+  useGamingAnnouncements: () => mockUseGamingAnnouncements,
 }));
 
 // Mock services
@@ -39,11 +37,9 @@ const mockOfflineGamingService = {
   getBattleUpdates: jest.fn(),
 };
 
-jest.mock('../services/offline-gaming', (
-) => mockOfflineGamingService);
+jest.mock('../services/offline-gaming', () => mockOfflineGamingService);
 
-describe('BattleSystem', (
-) => {
+describe('BattleSystem', () => {
   const mockCurrentUser = createTestUser({
     id: '1',
     username: 'testuser',
@@ -123,16 +119,15 @@ describe('BattleSystem', (
     ...mockCallbacks,
   };
 
-  beforeEach((
-) => {
+  beforeEach(() => {
     jest.clearAllMocks();
-    mockOfflineGamingService.createBattle.mockResolvedValue({ id: 'new-battle-123' });
+    mockOfflineGamingService.createBattle.mockResolvedValue({
+      id: 'new-battle-123',
+    });
   });
 
-  describe('Rendering', (
-) => {
-    it('renders battle system tabs correctly', (
-) => {
+  describe('Rendering', () => {
+    it('renders battle system tabs correctly', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       expect(screen.getByRole('tab', { name: /active battles/i })).toBeInTheDocument();
@@ -140,24 +135,21 @@ describe('BattleSystem', (
       expect(screen.getByRole('tab', { name: /battle history/i })).toBeInTheDocument();
     });
 
-    it('displays active battles list', (
-) => {
+    it('displays active battles list', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       expect(screen.getByText('Speed Battle')).toBeInTheDocument();
       expect(screen.getByText('Consistency Challenge')).toBeInTheDocument();
     });
 
-    it('shows battle status badges correctly', (
-) => {
+    it('shows battle status badges correctly', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       expect(screen.getByText('Active')).toBeInTheDocument();
       expect(screen.getByText('Pending')).toBeInTheDocument();
     });
 
-    it('displays participant count and limits', (
-) => {
+    it('displays participant count and limits', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       expect(screen.getByText('2/8 participants')).toBeInTheDocument(); // Speed battle
@@ -165,10 +157,8 @@ describe('BattleSystem', (
     });
   });
 
-  describe('Battle Types Display', (
-) => {
-    it('shows correct battle type information', (
-) => {
+  describe('Battle Types Display', () => {
+    it('shows correct battle type information', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       // Switch to create battle tab
@@ -191,8 +181,7 @@ describe('BattleSystem', (
       expect(screen.getByText('1 day')).toBeInTheDocument();
     });
 
-    it('displays max participants for each battle type', (
-) => {
+    it('displays max participants for each battle type', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const createTab = screen.getByRole('tab', { name: /create battle/i });
@@ -204,18 +193,15 @@ describe('BattleSystem', (
     });
   });
 
-  describe('Battle Creation', (
-) => {
-    beforeEach((
-) => {
+  describe('Battle Creation', () => {
+    beforeEach(() => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const createTab = screen.getByRole('tab', { name: /create battle/i });
       fireEvent.click(createTab);
     });
 
-    it('allows selecting battle type', async (
-) => {
+    it('allows selecting battle type', async () => {
       const user = userEvent.setup();
 
       const speedBattleCard = screen.getByText('Speed Battle').closest('button');
@@ -224,8 +210,7 @@ describe('BattleSystem', (
       expect(speedBattleCard).toHaveClass('ring-2', 'ring-blue-500');
     });
 
-    it('shows battle creation form when type is selected', async (
-) => {
+    it('shows battle creation form when type is selected', async () => {
       const user = userEvent.setup();
 
       const speedBattleCard = screen.getByText('Speed Battle').closest('button');
@@ -236,8 +221,7 @@ describe('BattleSystem', (
       expect(screen.getByLabelText(/start time/i)).toBeInTheDocument();
     });
 
-    it('allows inviting friends to battle', async (
-) => {
+    it('allows inviting friends to battle', async () => {
       const user = userEvent.setup();
 
       const speedBattleCard = screen.getByText('Speed Battle').closest('button');
@@ -253,21 +237,21 @@ describe('BattleSystem', (
       expect(friendCheckbox).toBeChecked();
     });
 
-    it('validates required fields before creation', async (
-) => {
+    it('validates required fields before creation', async () => {
       const user = userEvent.setup();
 
       const speedBattleCard = screen.getByText('Speed Battle').closest('button');
       await user.click(speedBattleCard!);
 
-      const createButton = screen.getByRole('button', { name: /create battle/i });
+      const createButton = screen.getByRole('button', {
+        name: /create battle/i,
+      });
       await user.click(createButton);
 
       expect(screen.getByText(/battle name is required/i)).toBeInTheDocument();
     });
 
-    it('creates battle with valid input', async (
-) => {
+    it('creates battle with valid input', async () => {
       const user = userEvent.setup();
 
       const speedBattleCard = screen.getByText('Speed Battle').closest('button');
@@ -283,11 +267,12 @@ describe('BattleSystem', (
       const friendCheckbox = screen.getByLabelText('Friend One');
       await user.click(friendCheckbox);
 
-      const createButton = screen.getByRole('button', { name: /create battle/i });
+      const createButton = screen.getByRole('button', {
+        name: /create battle/i,
+      });
       await user.click(createButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(mockCallbacks.onCreateBattle).toHaveBeenCalledWith(
           expect.objectContaining({
             name: 'My Epic Battle',
@@ -300,10 +285,8 @@ describe('BattleSystem', (
     });
   });
 
-  describe('Battle Management', (
-) => {
-    it('allows joining pending battles', async (
-) => {
+  describe('Battle Management', () => {
+    it('allows joining pending battles', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
@@ -314,46 +297,42 @@ describe('BattleSystem', (
       expect(mockCallbacks.onJoinBattle).toHaveBeenCalledWith('battle-2');
     });
 
-    it('shows leave option for active battles user created', (
-) => {
+    it('shows leave option for active battles user created', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const leaveBattleButton = screen.getByText(/leave battle/i);
       expect(leaveBattleButton).toBeInTheDocument();
     });
 
-    it('displays battle progress and scores', (
-) => {
+    it('displays battle progress and scores', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       expect(screen.getByText('150')).toBeInTheDocument(); // User's score
       expect(screen.getByText('120')).toBeInTheDocument(); // Friend's score
     });
 
-    it('shows time remaining for active battles', (
-) => {
+    it('shows time remaining for active battles', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       expect(screen.getByText(/time remaining/i)).toBeInTheDocument();
     });
   });
 
-  describe('Trash Talk Feature', (
-) => {
-    it('displays existing trash talk messages', (
-) => {
+  describe('Trash Talk Feature', () => {
+    it('displays existing trash talk messages', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       expect(screen.getByText("I'm gonna crush you all!")).toBeInTheDocument();
     });
 
-    it('allows sending new trash talk messages', async (
-) => {
+    it('allows sending new trash talk messages', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       await user.click(trashTalkButton);
 
       const messageInput = screen.getByPlaceholderText(/send a message/i);
@@ -368,13 +347,14 @@ describe('BattleSystem', (
       );
     });
 
-    it('limits trash talk message length', async (
-) => {
+    it('limits trash talk message length', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       await user.click(trashTalkButton);
 
       const messageInput = screen.getByPlaceholderText(/send a message/i);
@@ -388,13 +368,14 @@ describe('BattleSystem', (
       expect(screen.getByText(/message too long/i)).toBeInTheDocument();
     });
 
-    it('prevents sending empty trash talk messages', async (
-) => {
+    it('prevents sending empty trash talk messages', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       await user.click(trashTalkButton);
 
       const sendButton = screen.getByRole('button', { name: /send/i });
@@ -402,10 +383,8 @@ describe('BattleSystem', (
     });
   });
 
-  describe('Friend Selection', (
-) => {
-    it('shows friends list with online status', (
-) => {
+  describe('Friend Selection', () => {
+    it('shows friends list with online status', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const createTab = screen.getByRole('tab', { name: /create battle/i });
@@ -418,8 +397,7 @@ describe('BattleSystem', (
       expect(screen.getByTestId('online-indicator')).toBeInTheDocument(); // Recently active friend
     });
 
-    it('filters friends by search query', async (
-) => {
+    it('filters friends by search query', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
@@ -437,8 +415,7 @@ describe('BattleSystem', (
       expect(screen.queryByText('Friend Two')).not.toBeInTheDocument();
     });
 
-    it('shows friend levels and experience', (
-) => {
+    it('shows friend levels and experience', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const createTab = screen.getByRole('tab', { name: /create battle/i });
@@ -452,10 +429,8 @@ describe('BattleSystem', (
     });
   });
 
-  describe('Offline Support', (
-) => {
-    it('shows offline indicators', (
-) => {
+  describe('Offline Support', () => {
+    it('shows offline indicators', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       // Mock offline state
@@ -468,8 +443,7 @@ describe('BattleSystem', (
       expect(offlineIndicator).toBeInTheDocument();
     });
 
-    it('queues actions when offline', async (
-) => {
+    it('queues actions when offline', async () => {
       const user = userEvent.setup();
 
       Object.defineProperty(navigator, 'onLine', {
@@ -479,7 +453,9 @@ describe('BattleSystem', (
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       await user.click(trashTalkButton);
 
       const messageInput = screen.getByPlaceholderText(/send a message/i);
@@ -494,10 +470,8 @@ describe('BattleSystem', (
     });
   });
 
-  describe('Real-time Updates', (
-) => {
-    it('updates battle scores in real-time', async (
-) => {
+  describe('Real-time Updates', () => {
+    it('updates battle scores in real-time', async () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       // Mock real-time score update
@@ -517,15 +491,13 @@ describe('BattleSystem', (
         })
       );
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByText('200')).toBeInTheDocument();
         expect(screen.getByText('180')).toBeInTheDocument();
       });
     });
 
-    it('shows live participant count changes', (
-) => {
+    it('shows live participant count changes', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       // Initial count
@@ -551,10 +523,8 @@ describe('BattleSystem', (
     });
   });
 
-  describe('Accessibility', (
-) => {
-    it('provides proper ARIA labels for battle cards', (
-) => {
+  describe('Accessibility', () => {
+    it('provides proper ARIA labels for battle cards', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const battleCards = screen.getAllByRole('article');
@@ -563,8 +533,7 @@ describe('BattleSystem', (
       });
     });
 
-    it('supports keyboard navigation for battle types', async (
-) => {
+    it('supports keyboard navigation for battle types', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
@@ -581,21 +550,21 @@ describe('BattleSystem', (
       expect(speedBattleCard).toHaveClass('ring-2', 'ring-blue-500');
     });
 
-    it('announces battle status changes', (
-) => {
+    it('announces battle status changes', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const statusUpdates = screen.getByRole('status');
       expect(statusUpdates).toHaveAttribute('aria-live', 'polite');
     });
 
-    it('provides screen reader friendly trash talk interface', async (
-) => {
+    it('provides screen reader friendly trash talk interface', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       expect(trashTalkButton).toHaveAccessibleDescription();
 
       await user.click(trashTalkButton);
@@ -605,10 +574,8 @@ describe('BattleSystem', (
     });
   });
 
-  describe('Error Handling', (
-) => {
-    it('handles battle creation failures', async (
-) => {
+  describe('Error Handling', () => {
+    it('handles battle creation failures', async () => {
       const user = userEvent.setup();
 
       mockOfflineGamingService.createBattle.mockRejectedValue(
@@ -625,31 +592,32 @@ describe('BattleSystem', (
 
       await user.type(screen.getByLabelText(/battle name/i), 'Test Battle');
 
-      const createButton = screen.getByRole('button', { name: /create battle/i });
+      const createButton = screen.getByRole('button', {
+        name: /create battle/i,
+      });
       await user.click(createButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByText(/failed to create battle/i)).toBeInTheDocument();
       });
     });
 
-    it('handles empty battles list gracefully', (
-) => {
+    it('handles empty battles list gracefully', () => {
       renderWithProviders(<BattleSystem {...defaultProps} activeBattles={[]} />);
 
       expect(screen.getByText(/no active battles/i)).toBeInTheDocument();
     });
 
-    it('handles network errors gracefully', async (
-) => {
+    it('handles network errors gracefully', async () => {
       const user = userEvent.setup();
 
       mockCallbacks.onSendTrashTalk.mockRejectedValue(new Error('Network error'));
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       await user.click(trashTalkButton);
 
       const messageInput = screen.getByPlaceholderText(/send a message/i);
@@ -658,17 +626,14 @@ describe('BattleSystem', (
       const sendButton = screen.getByRole('button', { name: /send/i });
       await user.click(sendButton);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByText(/failed to send message/i)).toBeInTheDocument();
       });
     });
   });
 
-  describe('Mobile Responsiveness', (
-) => {
-    beforeEach((
-) => {
+  describe('Mobile Responsiveness', () => {
+    beforeEach(() => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
@@ -676,29 +641,28 @@ describe('BattleSystem', (
       });
     });
 
-    it('adapts layout for mobile screens', (
-) => {
+    it('adapts layout for mobile screens', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const container = screen.getByTestId('battle-system-container');
       expect(container).toHaveClass('px-4'); // Mobile padding
     });
 
-    it('stacks battle cards vertically on mobile', (
-) => {
+    it('stacks battle cards vertically on mobile', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const battleGrid = screen.getByTestId('battles-grid');
       expect(battleGrid).toHaveClass('flex-col');
     });
 
-    it('uses mobile-optimized trash talk interface', async (
-) => {
+    it('uses mobile-optimized trash talk interface', async () => {
       const user = userEvent.setup();
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       await user.click(trashTalkButton);
 
       // Should use mobile dialog

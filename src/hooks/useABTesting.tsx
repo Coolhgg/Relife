@@ -56,8 +56,7 @@ interface ABTestingState {
   error: string | null;
 }
 
-export const useABTesting = (userId?: string
-) => {
+export const useABTesting = (userId?: string) => {
   const [state, setState] = useState<ABTestingState>({
     testGroup: null,
     userAssignment: null,
@@ -68,18 +67,14 @@ export const useABTesting = (userId?: string
   });
 
   // Initialize A/B test assignment
-  useEffect((
-) => {
+  useEffect(() => {
     if (userId) {
       initializeABTesting(userId);
     }
   }, [userId]);
 
-  const initializeABTesting = async (userId: string
-) => {
-    
-      setState((prev: any
-) => ({ ...prev, loading: true, error: null }));
+  const initializeABTesting = async (userId: string) => {
+    setState((prev: any) => ({ ...prev, loading: true, error: null }));
 
     try {
       // Check if user already has an A/B test assignment
@@ -124,9 +119,7 @@ export const useABTesting = (userId?: string
           'session_start'
         );
       } else {
-        
-      setState((prev: any
-) => ({
+        setState((prev: any) => ({
           ...prev,
           loading: false,
           error: 'Failed to initialize A/B testing',
@@ -134,9 +127,8 @@ export const useABTesting = (userId?: string
       }
     } catch (error) {
       console.error('A/B Testing initialization error:', error);
-      
-      setState((prev: any
-) => ({
+
+      setState((prev: any) => ({
         ...prev,
         loading: false,
         error: 'Failed to initialize A/B testing',
@@ -163,8 +155,7 @@ export const useABTesting = (userId?: string
 
   // Track feature usage
   const trackFeatureUsage = useCallback(
-    async (featureKey: FeatureKey, action: string, metadata?: Record<string, any>
-) => {
+    async (featureKey: FeatureKey, action: string, metadata?: Record<string, any>) => {
       if (!state.testGroup || !state.userAssignment || !userId) return;
 
       try {
@@ -185,8 +176,7 @@ export const useABTesting = (userId?: string
   const trackConversion = useCallback(
     async (
       conversionType: 'upgrade' | 'subscription' | 'premium_trial' = 'upgrade'
-    
-) => {
+    ) => {
       if (!state.testGroup || !state.userAssignment || !userId) return;
 
       try {
@@ -208,8 +198,7 @@ export const useABTesting = (userId?: string
 
   // Track engagement event
   const trackEngagement = useCallback(
-    async (action: string, metadata?: Record<string, any>
-) => {
+    async (action: string, metadata?: Record<string, any>) => {
       if (!state.testGroup || !state.userAssignment || !userId) return;
 
       try {
@@ -271,10 +260,8 @@ export const useABTesting = (userId?: string
 export const withABTest = <T extends object>(
   Component: React.ComponentType<T>,
   featureKey: FeatureKey
-
 ) => {
-  return (props: T & { userId?: string }
-) => {
+  return (props: T & { userId?: string }) => {
     const { isFeatureEnabled } = useABTesting(props.userId);
 
     if (!isFeatureEnabled(featureKey)) {
@@ -286,12 +273,10 @@ export const withABTest = <T extends object>(
 };
 
 // Hook for A/B test aware component mounting
-export const useABTestComponent = (featureKey: FeatureKey, userId?: string
-) => {
+export const useABTestComponent = (featureKey: FeatureKey, userId?: string) => {
   const { isFeatureEnabled, trackFeatureUsage } = useABTesting(userId);
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (isFeatureEnabled(featureKey)) {
       trackFeatureUsage(featureKey, 'component_mounted');
     }
@@ -299,8 +284,7 @@ export const useABTestComponent = (featureKey: FeatureKey, userId?: string
 
   return {
     shouldRender: isFeatureEnabled(featureKey),
-    trackUsage: (action: string, metadata?: Record<string, any>
-) =>
+    trackUsage: (action: string, metadata?: Record<string, any>) =>
       trackFeatureUsage(featureKey, action, metadata),
   };
 };

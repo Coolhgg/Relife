@@ -120,8 +120,7 @@ export class TranslationValidator {
     referenceTranslations: TranslationStructure,
     issues: ValidationIssue[]
   ) {
-    const checkInterpolation = (key: string, value: string, referenceValue: string
-) => {
+    const checkInterpolation = (key: string, value: string, referenceValue: string) => {
       INTERPOLATION_PATTERNS.forEach(pattern => {
         const translationMatches = value.match(pattern) || [];
         const referenceMatches = referenceValue.match(pattern) || [];
@@ -172,8 +171,7 @@ export class TranslationValidator {
     referenceTranslations: TranslationStructure,
     issues: ValidationIssue[]
   ) {
-    const checkSuspicious = (key: string, value: string, referenceValue: string
-) => {
+    const checkSuspicious = (key: string, value: string, referenceValue: string) => {
       // Check if translation is the same as the key
       if (value === key) {
         issues.push({
@@ -208,8 +206,7 @@ export class TranslationValidator {
   private traverseTranslations(
     translations: TranslationStructure,
     referenceTranslations: TranslationStructure,
-    callback: (key: string, value: string, referenceValue: string
-) => void,
+    callback: (key: string, value: string, referenceValue: string) => void,
     prefix: string = ''
   ) {
     Object.keys(referenceTranslations).forEach(key => {
@@ -293,10 +290,8 @@ export class TranslationValidator {
     // Summary
     const totalLanguages = results.length;
     const averageCompleteness =
-      results.reduce((sum, r
-) => sum + r.completeness, 0) / totalLanguages;
-    const totalIssues = results.reduce((sum, r
-) => sum + r.issues.length, 0);
+      results.reduce((sum, r) => sum + r.completeness, 0) / totalLanguages;
+    const totalIssues = results.reduce((sum, r) => sum + r.issues.length, 0);
 
     report += `## Summary\n`;
     report += `- Languages: ${totalLanguages}\n`;
@@ -329,8 +324,7 @@ export class TranslationValidator {
 }
 
 // Export convenience functions
-export const createValidator = (referenceLanguage: SupportedLanguage = 'en'
-) => {
+export const createValidator = (referenceLanguage: SupportedLanguage = 'en') => {
   return new TranslationValidator(referenceLanguage);
 };
 

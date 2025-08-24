@@ -160,8 +160,7 @@ export class CriticalAssetPreloader {
     }
 
     // Sort by priority and trigger time
-    criticalAssets.sort((a, b
-) => {
+    criticalAssets.sort((a, b) => {
       if (a.priority !== b.priority) {
         return b.priority - a.priority; // Higher priority first
       }
@@ -244,8 +243,7 @@ export class CriticalAssetPreloader {
 
       // Retry with exponential backoff
       setTimeout(
-        (
-) => {
+        () => {
           if (!asset.isLoaded && asset.priority >= 8) {
             this.retryPreload(asset);
           }
@@ -291,8 +289,7 @@ export class CriticalAssetPreloader {
       await this.preloadAsset(asset);
     } catch (error) {
       setTimeout(
-        (
-) => {
+        () => {
           this.retryPreload(asset, attempt + 1);
         },
         Math.min(2000 * Math.pow(2, attempt), 30000)
@@ -357,8 +354,7 @@ export class CriticalAssetPreloader {
     const now = new Date();
     const expired: string[] = [];
 
-    this.criticalAssets.forEach((asset, id
-) => {
+    this.criticalAssets.forEach((asset, id) => {
       // Remove assets whose alarms have passed
       if (asset.triggerTime < now) {
         expired.push(id);
@@ -420,8 +416,7 @@ export class CriticalAssetPreloader {
 
   private startMonitoring(): void {
     // Check every minute for due preloads
-    this.preloadTimer = setInterval(async (
-) => {
+    this.preloadTimer = setInterval(async () => {
       try {
         await this.preloadDueAssets();
         this.cleanupExpiredAssets();

@@ -22,8 +22,7 @@ import PremiumGate from './PremiumGate';
 import { SubscriptionService } from '../services/subscription';
 
 interface AlarmTesterProps {
-  onClose?: (
-) => void;
+  onClose?: () => void;
   userId?: string;
 }
 
@@ -33,10 +32,8 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
   const [hasNuclearMode, setHasNuclearMode] = useState(false);
 
   // Check premium access on component mount
-  useEffect((
-) => {
-    const checkAccess = async (
-) => {
+  useEffect(() => {
+    const checkAccess = async () => {
       const access = await SubscriptionService.hasFeatureAccess(userId, 'nuclearMode');
       setHasNuclearMode(access);
     };
@@ -72,13 +69,11 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
     snoozeCount: 0,
   };
 
-  const handleTestAlarm = (
-) => {
+  const handleTestAlarm = () => {
     setShowActiveAlarm(true);
   };
 
-  const handleAlarmResult = (_type: string
-) => {
+  const handleAlarmResult = (_type: string) => {
     setShowActiveAlarm(false);
     // Could show a result toast or modal here
   };
@@ -93,13 +88,11 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
           console.log('Snoozed', count);
           handleAlarmResult('snooze');
         }}
-        onDismiss={(time, snoozeCount
-) => {
+        onDismiss={(time, snoozeCount) => {
           console.log('Dismissed at', time, 'after', snoozeCount, 'snoozes');
           handleAlarmResult('dismiss');
         }}
-        onMiss={(
-) => {
+        onMiss={() => {
           console.log('Alarm missed');
           handleAlarmResult('miss');
         }}
@@ -122,9 +115,7 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
           </label>
           <Select
             value={selectedDifficulty}
-            
-            onValueChange={(value: any
-) =>
+            onValueChange={(value: any) =>
               setSelectedDifficulty(value as AlarmDifficulty)
             }
           >
@@ -576,9 +567,7 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
               type="checkbox"
               id="battle-mode"
               checked={battleMode}
-              
-              onChange={(e: any
-) => setBattleMode(e.target.checked)}
+              onChange={(e: any) => setBattleMode(e.target.checked)}
             />
             <label htmlFor="battle-mode" className="text-sm font-medium">
               Battle Mode

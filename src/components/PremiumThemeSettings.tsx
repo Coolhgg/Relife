@@ -19,8 +19,7 @@ import type { ThemeConfig } from '../types';
 interface PremiumThemeSettingsProps {
   userId: string;
   currentTheme: ThemeConfig;
-  onThemeChange: (theme: ThemeConfig
-) => void;
+  onThemeChange: (theme: ThemeConfig) => void;
   className?: string;
 }
 
@@ -203,8 +202,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
   currentTheme,
   onThemeChange,
   className = '',
-}
-) => {
+}) => {
   const [state, setState] = useState<ThemeState>({
     availableThemes: FREE_THEMES,
     premiumThemes: PREMIUM_THEMES,
@@ -213,25 +211,20 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
     loading: true,
   });
 
-  useEffect((
-) => {
+  useEffect(() => {
     checkPremiumAccess();
   }, [userId]);
 
-  const checkPremiumAccess = async (
-) => {
-    
-    setState((prev: any
-) => ({ ...prev, loading: true }));
+  const checkPremiumAccess = async () => {
+    setState((prev: any) => ({ ...prev, loading: true }));
 
     try {
       const hasAccess = await SubscriptionService.hasFeatureAccess(
         userId,
         'premiumThemes'
       );
-      
-      setState((prev: any
-) => ({
+
+      setState((prev: any) => ({
         ...prev,
         hasAccess,
         availableThemes: hasAccess ? [...FREE_THEMES, ...PREMIUM_THEMES] : FREE_THEMES,
@@ -239,26 +232,21 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
       }));
     } catch (error) {
       console.error('Error checking premium theme access:', error);
-      
-      setState((prev: any
-) => ({ ...prev, loading: false }));
+
+      setState((prev: any) => ({ ...prev, loading: false }));
     }
   };
 
-  const handleThemeSelect = (theme: ThemeConfig
-) => {
+  const handleThemeSelect = (theme: ThemeConfig) => {
     if (theme.isPremium && !state.hasAccess) {
       return; // Premium gate will handle this
     }
 
-    
-    setState((prev: any
-) => ({ ...prev, selectedTheme: theme }));
+    setState((prev: any) => ({ ...prev, selectedTheme: theme }));
     onThemeChange(theme);
   };
 
-  const renderThemeCard = (theme: ThemeConfig, index: number
-) => {
+  const renderThemeCard = (theme: ThemeConfig, index: number) => {
     const isSelected = state.selectedTheme.id === theme.id;
     const isPremium = theme.isPremium;
     const hasAccessToTheme = !isPremium || state.hasAccess;
@@ -272,8 +260,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
         className={`relative group cursor-pointer transition-all duration-300 ${
           isSelected ? 'ring-2 ring-blue-500 scale-105' : 'hover:scale-102'
         }`}
-        onClick={(
-) => handleThemeSelect(theme)}
+        onClick={() => handleThemeSelect(theme)}
       >
         <div
           className={`rounded-xl overflow-hidden border-2 ${
@@ -345,8 +332,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
     );
   };
 
-  const renderPremiumSection = (
-) => {
+  const renderPremiumSection = () => {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
@@ -361,8 +347,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
 
         {state.hasAccess ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {state.premiumThemes.map((theme, index
-) =>
+            {state.premiumThemes.map((theme, index) =>
               renderThemeCard(theme, index + state.availableThemes.length)
             )}
           </div>
@@ -378,8 +363,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 opacity-50 pointer-events-none">
               {state.premiumThemes
                 .slice(0, 6)
-                .map((theme, index
-) => renderThemeCard(theme, index))}
+                .map((theme, index) => renderThemeCard(theme, index))}
             </div>
           </PremiumGate>
         )}
@@ -421,8 +405,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {FREE_THEMES.map((theme, index
-) => renderThemeCard(theme, index))}
+          {FREE_THEMES.map((theme, index) => renderThemeCard(theme, index))}
         </div>
       </div>
 

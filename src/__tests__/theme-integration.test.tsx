@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 // Vitest globals are available globally, no need to import
 /**
  * Integration tests for the complete theme system
@@ -17,28 +17,23 @@ vi.mock('../services/theme-persistence');
 vi.mock('../services/error-handler');
 
 // Mock UI components that might not be available
-vi.mock('../components/ui/tabs', (
-) => ({
-  Tabs: ({ children, ...props }: any
-) => (
+vi.mock('../components/ui/tabs', () => ({
+  Tabs: ({ children, ...props }: any) => (
     <div data-testid="tabs" {...props}>
       {children}
     </div>
   ),
-  TabsList: ({ children, ...props }: any
-) => (
+  TabsList: ({ children, ...props }: any) => (
     <div data-testid="tabs-list" {...props}>
       {children}
     </div>
   ),
-  TabsTrigger: ({ children, value, ...props }: any
-) => (
+  TabsTrigger: ({ children, value, ...props }: any) => (
     <button data-testid={`tab-trigger-${value}`} {...props}>
       {children}
     </button>
   ),
-  TabsContent: ({ children, value, ...props }: any
-) => (
+  TabsContent: ({ children, value, ...props }: any) => (
     <div data-testid={`tab-content-${value}`} {...props}>
       {children}
     </div>
@@ -46,43 +41,37 @@ vi.mock('../components/ui/tabs', (
 }));
 
 // Mock other components
-vi.mock('../components/SettingsPage', (
-) => {
+vi.mock('../components/SettingsPage', () => {
   return function MockSettingsPage() {
     return <div data-testid="settings-page">Settings Page</div>;
   };
 });
 
-vi.mock('../components/PerformanceDashboard', (
-) => {
+vi.mock('../components/PerformanceDashboard', () => {
   return function MockPerformanceDashboard() {
     return <div data-testid="performance-dashboard">Performance Dashboard</div>;
   };
 });
 
-vi.mock('../components/AccessibilityDashboard', (
-) => {
+vi.mock('../components/AccessibilityDashboard', () => {
   return function MockAccessibilityDashboard() {
     return <div data-testid="accessibility-dashboard">Accessibility Dashboard</div>;
   };
 });
 
-vi.mock('../components/PremiumFeatureTest', (
-) => {
+vi.mock('../components/PremiumFeatureTest', () => {
   return function MockPremiumFeatureTest() {
     return <div data-testid="premium-feature-test">Premium Feature Test</div>;
   };
 });
 
-vi.mock('../components/SoundThemeDemo', (
-) => {
+vi.mock('../components/SoundThemeDemo', () => {
   return function MockSoundThemeDemo() {
     return <div data-testid="sound-theme-demo">Sound Theme Demo</div>;
   };
 });
 
-vi.mock('../components/ThemeManager', (
-) => {
+vi.mock('../components/ThemeManager', () => {
   return function MockThemeManager() {
     return (
       <div data-testid="theme-manager">
@@ -97,23 +86,18 @@ vi.mock('../components/ThemeManager', (
 });
 
 // Mock localStorage
-const mockLocalStorage = ((
-) => {
+const mockLocalStorage = (() => {
   let store: Record<string, string> = {};
 
   return {
-    getItem: (key: string
-) => store[key] || null,
-    setItem: (key: string, value: string
-) => {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => {
       store[key] = value;
     },
-    removeItem: (key: string
-) => {
+    removeItem: (key: string) => {
       delete store[key];
     },
-    clear: (
-) => {
+    clear: () => {
       store = {};
     },
   };
@@ -150,8 +134,7 @@ const mockAppState: AppState = {
   theme: 'light',
 };
 
-const TestApp = (
-) => {
+const TestApp = () => {
   return (
     <ThemeProvider defaultTheme="light" storageKey="test-integration">
       <EnhancedSettings
@@ -166,39 +149,32 @@ const TestApp = (
   );
 };
 
-describe('Theme System Integration', (
-) => {
-  beforeEach((
-) => {
+describe('Theme System Integration', () => {
+  beforeEach(() => {
     mockLocalStorage.clear();
     vi.clearAllMocks();
   });
 
-  describe('Theme Management UI Integration', (
-) => {
-    it('should render theme management tab in settings', (
-) => {
+  describe('Theme Management UI Integration', () => {
+    it('should render theme management tab in settings', () => {
       render(<TestApp />);
 
       expect(screen.getByTestId('tab-trigger-themes')).toBeInTheDocument();
       expect(screen.getByText('Themes')).toBeInTheDocument();
     });
 
-    it('should show theme manager when themes tab is active', async (
-) => {
+    it('should show theme manager when themes tab is active', async () => {
       render(<TestApp />);
 
       const themesTab = screen.getByTestId('tab-trigger-themes');
       fireEvent.click(themesTab);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByTestId('theme-manager')).toBeInTheDocument();
       });
     });
 
-    it('should display all settings tabs including themes', (
-) => {
+    it('should display all settings tabs including themes', () => {
       render(<TestApp />);
 
       expect(screen.getByTestId('tab-trigger-settings')).toBeInTheDocument();
@@ -210,18 +186,15 @@ describe('Theme System Integration', (
     });
   });
 
-  describe('Theme Switching Integration', (
-) => {
-    it('should allow switching between light and dark themes', async (
-) => {
+  describe('Theme Switching Integration', () => {
+    it('should allow switching between light and dark themes', async () => {
       render(<TestApp />);
 
       // Navigate to themes tab
       const themesTab = screen.getByTestId('tab-trigger-themes');
       fireEvent.click(themesTab);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByTestId('theme-manager')).toBeInTheDocument();
       });
 
@@ -231,18 +204,15 @@ describe('Theme System Integration', (
     });
   });
 
-  describe('Import/Export Integration', (
-) => {
-    it('should provide import and export functionality', async (
-) => {
+  describe('Import/Export Integration', () => {
+    it('should provide import and export functionality', async () => {
       render(<TestApp />);
 
       // Navigate to themes tab
       const themesTab = screen.getByTestId('tab-trigger-themes');
       fireEvent.click(themesTab);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByTestId('theme-manager')).toBeInTheDocument();
       });
 
@@ -252,10 +222,8 @@ describe('Theme System Integration', (
     });
   });
 
-  describe('Theme Persistence Integration', (
-) => {
-    it('should persist theme selection across app reloads', (
-) => {
+  describe('Theme Persistence Integration', () => {
+    it('should persist theme selection across app reloads', () => {
       // Set a theme in localStorage to simulate previous selection
       mockLocalStorage.setItem('test-integration', 'dark');
 
@@ -267,10 +235,8 @@ describe('Theme System Integration', (
     });
   });
 
-  describe('Accessibility Integration', (
-) => {
-    it('should have proper ARIA labels for theme controls', async (
-) => {
+  describe('Accessibility Integration', () => {
+    it('should have proper ARIA labels for theme controls', async () => {
       render(<TestApp />);
 
       const themesTab = screen.getByTestId('tab-trigger-themes');
@@ -280,8 +246,7 @@ describe('Theme System Integration', (
       expect(themesTab.tagName.toLowerCase()).toBe('button');
     });
 
-    it('should support keyboard navigation', async (
-) => {
+    it('should support keyboard navigation', async () => {
       const user = userEvent.setup();
       render(<TestApp />);
 
@@ -296,10 +261,8 @@ describe('Theme System Integration', (
     });
   });
 
-  describe('Error Handling Integration', (
-) => {
-    it('should handle theme loading errors gracefully', (
-) => {
+  describe('Error Handling Integration', () => {
+    it('should handle theme loading errors gracefully', () => {
       // Corrupt localStorage data
       mockLocalStorage.setItem('test-integration', 'invalid-theme-data');
 
@@ -309,8 +272,7 @@ describe('Theme System Integration', (
       expect(screen.getByTestId('tabs')).toBeInTheDocument();
     });
 
-    it('should handle theme component errors with error boundaries', (
-) => {
+    it('should handle theme component errors with error boundaries', () => {
       // This would test error boundary behavior
       render(<TestApp />);
 
@@ -318,14 +280,11 @@ describe('Theme System Integration', (
     });
   });
 
-  describe('Performance Integration', (
-) => {
-    it('should not cause unnecessary re-renders when theme changes', async (
-) => {
+  describe('Performance Integration', () => {
+    it('should not cause unnecessary re-renders when theme changes', async () => {
       const renderSpy = vi.fn();
 
-      const TestComponent = (
-) => {
+      const TestComponent = () => {
         renderSpy();
         return <TestApp />;
       };
@@ -344,10 +303,8 @@ describe('Theme System Integration', (
     });
   });
 
-  describe('Theme System State Management', (
-) => {
-    it('should maintain theme state across component unmounts', (
-) => {
+  describe('Theme System State Management', () => {
+    it('should maintain theme state across component unmounts', () => {
       const { unmount } = render(<TestApp />);
 
       unmount();
@@ -359,10 +316,8 @@ describe('Theme System Integration', (
     });
   });
 
-  describe('Responsive Design Integration', (
-) => {
-    it('should adapt theme management UI for different screen sizes', (
-) => {
+  describe('Responsive Design Integration', () => {
+    it('should adapt theme management UI for different screen sizes', () => {
       // Mock mobile viewport
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
@@ -377,40 +332,34 @@ describe('Theme System Integration', (
     });
   });
 
-  describe('Settings Integration', (
-) => {
-    it('should integrate seamlessly with other settings tabs', async (
-) => {
+  describe('Settings Integration', () => {
+    it('should integrate seamlessly with other settings tabs', async () => {
       render(<TestApp />);
 
       // Test navigation between different settings tabs
       const settingsTab = screen.getByTestId('tab-trigger-settings');
       fireEvent.click(settingsTab);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByTestId('settings-page')).toBeInTheDocument();
       });
 
       const analyticsTab = screen.getByTestId('tab-trigger-analytics');
       fireEvent.click(analyticsTab);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByTestId('performance-dashboard')).toBeInTheDocument();
       });
 
       const themesTab = screen.getByTestId('tab-trigger-themes');
       fireEvent.click(themesTab);
 
-      await waitFor((
-) => {
+      await waitFor(() => {
         expect(screen.getByTestId('theme-manager')).toBeInTheDocument();
       });
     });
 
-    it('should maintain settings grid layout with themes tab', (
-) => {
+    it('should maintain settings grid layout with themes tab', () => {
       render(<TestApp />);
 
       const tabsList = screen.getByTestId('tabs-list');
@@ -418,10 +367,8 @@ describe('Theme System Integration', (
     });
   });
 
-  describe('Theme System Initialization', (
-) => {
-    it('should initialize theme system without errors', (
-) => {
+  describe('Theme System Initialization', () => {
+    it('should initialize theme system without errors', () => {
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation();
 
       render(<TestApp />);
@@ -432,8 +379,7 @@ describe('Theme System Integration', (
       consoleSpy.mockRestore();
     });
 
-    it('should load default theme configuration', (
-) => {
+    it('should load default theme configuration', () => {
       render(<TestApp />);
 
       // Theme provider should initialize with default theme

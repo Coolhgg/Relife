@@ -24,11 +24,9 @@ interface FeatureLockOverlayProps {
   /** Overlay variant */
   variant?: 'overlay' | 'card' | 'banner' | 'minimal';
   /** Callback when upgrade is clicked */
-  onUpgrade?: (tier: string
-) => void;
+  onUpgrade?: (tier: string) => void;
   /** Callback when preview is clicked */
-  onPreview?: (
-) => void;
+  onPreview?: () => void;
 }
 
 const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
@@ -44,13 +42,11 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
   variant = 'overlay',
   onUpgrade,
   onPreview,
-}
-) => {
+}) => {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
 
-  const getTierInfo = (
-) => {
+  const getTierInfo = () => {
     switch (requiredTier) {
       case 'ultimate':
         return {
@@ -85,8 +81,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
   const tierInfo = getTierInfo();
   const TierIcon = tierInfo.icon;
 
-  const handleUpgrade = (tier?: string
-) => {
+  const handleUpgrade = (tier?: string) => {
     if (onUpgrade) {
       onUpgrade(tier || requiredTier);
     } else {
@@ -94,8 +89,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
     }
   };
 
-  const handlePreview = (
-) => {
+  const handlePreview = () => {
     if (onPreview) {
       onPreview();
     } else {
@@ -132,8 +126,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
               </span>
             </div>
             <button
-              onClick={(
-) => handleUpgrade()}
+              onClick={() => handleUpgrade()}
               className="bg-white bg-opacity-20 text-white px-3 py-1 rounded text-sm font-medium hover:bg-opacity-30 transition-colors"
             >
               Upgrade
@@ -159,8 +152,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
 
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button
-            onClick={(
-) => handleUpgrade()}
+            onClick={() => handleUpgrade()}
             className={`bg-gradient-to-r ${tierInfo.color} text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center gap-2`}
           >
             <Lock className="h-4 w-4" />
@@ -205,8 +197,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
             )}
 
             <button
-              onClick={(
-) => handleUpgrade()}
+              onClick={() => handleUpgrade()}
               className={`w-full bg-gradient-to-r ${tierInfo.color} text-white py-3 px-4 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2`}
             >
               <TierIcon className="h-4 w-4" />
@@ -260,8 +251,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
               )}
 
               <button
-                onClick={(
-) => handleUpgrade()}
+                onClick={() => handleUpgrade()}
                 className={`w-full bg-gradient-to-r ${tierInfo.color} text-white py-2 px-4 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm`}
               >
                 <TierIcon className="h-4 w-4" />
@@ -283,14 +273,11 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
       {showUpgradeModal && featureId && (
         <UpgradePrompt
           feature={featureId}
-          onUpgrade={(tier: any
-) => {
-            // auto: implicit any
+          onUpgrade={(tier: any) => {
             setShowUpgradeModal(false);
             onUpgrade?.(tier);
           }}
-          onDismiss={(
-) => setShowUpgradeModal(false)}
+          onDismiss={() => setShowUpgradeModal(false)}
         />
       )}
 
@@ -303,8 +290,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
                   {featureName} Preview
                 </h3>
                 <button
-                  onClick={(
-) => setShowPreviewModal(false)}
+                  onClick={() => setShowPreviewModal(false)}
                   className="text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   <X className="h-6 w-6" />
@@ -327,15 +313,13 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
 
               <div className="flex gap-3">
                 <button
-                  onClick={(
-) => setShowPreviewModal(false)}
+                  onClick={() => setShowPreviewModal(false)}
                   className="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors"
                 >
                   Close Preview
                 </button>
                 <button
-                  onClick={(
-) => {
+                  onClick={() => {
                     setShowPreviewModal(false);
                     handleUpgrade();
                   }}

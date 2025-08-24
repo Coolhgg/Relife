@@ -139,7 +139,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
 
   const stopVoiceRef = useRef<(() => void) | null>(null);
   const stopRecognitionRef = useRef<(() => void) | null>(null);
-  const vibrateIntervalRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
+  const vibrateIntervalRef = useRef<TimeoutHandle | undefined>(undefined);
   const fallbackAudioRef = useRef<{ stop: () => void } | null>(null);
 
   const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
@@ -182,7 +182,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
   const stopVibrationPattern = () => {
     if (vibrateIntervalRef.current) {
       clearInterval(vibrateIntervalRef.current);
-      vibrateIntervalRef.current = undefined; // auto: changed from null to undefined
+      vibrateIntervalRef.current = undefined;
     }
   };
 
@@ -359,7 +359,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
 
   const playFallbackSound = () => {
     try {
-      let intervalRef: TimeoutHandle | undefined = undefined; // auto: changed from number | null to TimeoutHandle
+      let intervalRef: TimeoutHandle | undefined = undefined;
       let isActive = true;
 
       const createBeep = () => {
@@ -396,7 +396,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
           isActive = false;
           if (intervalRef) {
             clearInterval(intervalRef);
-            intervalRef = undefined; // auto: changed from null to undefined
+            intervalRef = undefined;
           }
         },
       };
@@ -727,7 +727,8 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
             <div className="text-sm space-y-1">
               {alarm.snoozeCount > 0 && (
                 <div className="font-medium">
-                  Snoozed {alarm.snoozeCount} time{alarm.snoozeCount !== 1 ? 's' : ''}
+                  Snoozed {alarm.snoozeCount} time
+                  {alarm.snoozeCount !== 1 ? 's' : ''}
                 </div>
               )}
 

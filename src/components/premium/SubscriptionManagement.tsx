@@ -46,16 +46,11 @@ interface SubscriptionManagementProps {
   currentPlan: SubscriptionPlan;
   availablePlans: SubscriptionPlan[];
   isLoading?: boolean;
-  onUpgrade: (planId: string, billingInterval: BillingInterval
-) => Promise<void>;
-  onDowngrade: (planId: string, billingInterval: BillingInterval
-) => Promise<void>;
-  onCancelSubscription: (request: CancelSubscriptionRequest
-) => Promise<void>;
-  onReactivateSubscription: (
-) => Promise<void>;
-  onPauseSubscription?: (pauseDuration: number
-) => Promise<void>;
+  onUpgrade: (planId: string, billingInterval: BillingInterval) => Promise<void>;
+  onDowngrade: (planId: string, billingInterval: BillingInterval) => Promise<void>;
+  onCancelSubscription: (request: CancelSubscriptionRequest) => Promise<void>;
+  onReactivateSubscription: () => Promise<void>;
+  onPauseSubscription?: (pauseDuration: number) => Promise<void>;
   className?: string;
 }
 
@@ -88,8 +83,7 @@ export function SubscriptionManagement({
     effectiveDate: 'period_end',
   });
 
-  const formatDate = (date: Date
-) => {
+  const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
       month: 'long',
       day: 'numeric',
@@ -97,38 +91,32 @@ export function SubscriptionManagement({
     }).format(new Date(date));
   };
 
-  const formatCurrency = (amount: number, currency: string = 'usd'
-) => {
+  const formatCurrency = (amount: number, currency: string = 'usd') => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency.toUpperCase(),
     }).format(amount / 100);
   };
 
-  const getTierHierarchy = (
-) => {
+  const getTierHierarchy = () => {
     return ['free', 'basic', 'premium', 'pro', 'enterprise'];
   };
 
-  const isUpgrade = (tier: SubscriptionTier
-) => {
+  const isUpgrade = (tier: SubscriptionTier) => {
     const hierarchy = getTierHierarchy();
     return hierarchy.indexOf(tier) > hierarchy.indexOf(subscription.tier);
   };
 
-  const isDowngrade = (tier: SubscriptionTier
-) => {
+  const isDowngrade = (tier: SubscriptionTier) => {
     const hierarchy = getTierHierarchy();
     return hierarchy.indexOf(tier) < hierarchy.indexOf(subscription.tier);
   };
 
-  const getUpgradeOptions = (
-) => {
+  const getUpgradeOptions = () => {
     return availablePlans.filter(plan => isUpgrade(plan.tier));
   };
 
-  const getDowngradeOptions = (
-) => {
+  const getDowngradeOptions = () => {
     return availablePlans.filter(plan => isDowngrade(plan.tier));
   };
 
@@ -170,8 +158,7 @@ export function SubscriptionManagement({
   const handlePlanChange = async (
     plan: SubscriptionPlan,
     billingInterval: BillingInterval
-  
-) => {
+  ) => {
     try {
       setActionLoading('plan-change');
 
@@ -189,20 +176,17 @@ export function SubscriptionManagement({
     }
   };
 
-  const handleCancelClick = (
-) => {
+  const handleCancelClick = () => {
     setShowCancelDialog(true);
     // Simulate showing retention offer based on cancellation reason
-    setTimeout((
-) => {
+    setTimeout(() => {
       if (cancellationData.reason && !showRetentionOffer) {
         setShowRetentionOffer(true);
       }
     }, 500);
   };
 
-  const handleCancelConfirm = async (
-) => {
+  const handleCancelConfirm = async () => {
     try {
       setActionLoading('cancel');
 
@@ -223,8 +207,7 @@ export function SubscriptionManagement({
     }
   };
 
-  const handleReactivate = async (
-) => {
+  const handleReactivate = async () => {
     try {
       setActionLoading('reactivate');
       await onReactivateSubscription();
@@ -235,10 +218,8 @@ export function SubscriptionManagement({
     }
   };
 
-  const handleAcceptRetentionOffer = (offerId: string
-) => {
-    setCancellationData((prev: any
-) => ({
+  const handleAcceptRetentionOffer = (offerId: string) => {
+    setCancellationData((prev: any) => ({
       ...prev,
       retentionOfferAccepted: true,
     }));
@@ -373,10 +354,8 @@ export function SubscriptionManagement({
                         <Label htmlFor="reason">Reason for canceling</Label>
                         <Select
                           value={cancellationData.reason}
-                          onValueChange={(value: any 
-) =>
-                            setCancellationData((prev: any
-) => ({
+                          onValueChange={(value: any) =>
+                            setCancellationData((prev: any) => ({
                               ...prev,
                               reason: value,
                             }))
@@ -400,10 +379,8 @@ export function SubscriptionManagement({
                         <Textarea
                           id="feedback"
                           value={cancellationData.feedback}
-                          onChange={(e: any 
-) =>
-                            setCancellationData((prev: any
-) => ({
+                          onChange={(e: any) =>
+                            setCancellationData((prev: any) => ({
                               ...prev,
                               feedback: e.target.value,
                             }))
@@ -422,10 +399,8 @@ export function SubscriptionManagement({
                               id="period_end"
                               name="effectiveDate"
                               checked={cancellationData.effectiveDate === 'period_end'}
-                              onChange={(
-) =>
-                                setCancellationData((prev: any
-) => ({
+                              onChange={() =>
+                                setCancellationData((prev: any) => ({
                                   ...prev,
                                   effectiveDate: 'period_end',
                                 }))
@@ -442,10 +417,8 @@ export function SubscriptionManagement({
                               id="immediate"
                               name="effectiveDate"
                               checked={cancellationData.effectiveDate === 'immediate'}
-                              onChange={(
-) =>
-                                setCancellationData((prev: any
-) => ({
+                              onChange={() =>
+                                setCancellationData((prev: any) => ({
                                   ...prev,
                                   effectiveDate: 'immediate',
                                 }))
@@ -475,8 +448,7 @@ export function SubscriptionManagement({
                           <Card
                             key={offer.id}
                             className="border-blue-200 bg-blue-50 cursor-pointer hover:bg-blue-100 transition-colors"
-                            onClick={(
-) => handleAcceptRetentionOffer(offer.id)}
+                            onClick={() => handleAcceptRetentionOffer(offer.id)}
                           >
                             <CardContent className="p-4">
                               <div className="flex justify-between items-start">
@@ -506,8 +478,7 @@ export function SubscriptionManagement({
                       <div className="text-center">
                         <Button
                           variant="outline"
-                          onClick={(
-) => setShowRetentionOffer(false)}
+                          onClick={() => setShowRetentionOffer(false)}
                           className="text-gray-600"
                         >
                           No thanks, continue with cancellation
@@ -520,8 +491,7 @@ export function SubscriptionManagement({
                     <DialogFooter>
                       <Button
                         variant="outline"
-                        onClick={(
-) => setShowCancelDialog(false)}
+                        onClick={() => setShowCancelDialog(false)}
                       >
                         Keep Subscription
                       </Button>
@@ -546,8 +516,7 @@ export function SubscriptionManagement({
             {onPauseSubscription && !subscription.cancelAtPeriodEnd && (
               <Button
                 variant="outline"
-                onClick={(
-) => onPauseSubscription(90)} // 90 days pause
+                onClick={() => onPauseSubscription(90)} // 90 days pause
                 disabled={actionLoading === 'pause'}
                 className="flex items-center gap-2"
               >
@@ -595,8 +564,7 @@ export function SubscriptionManagement({
                         </span>
                         <Button
                           size="sm"
-                          onClick={(
-) => handlePlanChange(plan, 'month')}
+                          onClick={() => handlePlanChange(plan, 'month')}
                           disabled={actionLoading === 'plan-change'}
                           className="bg-green-600 hover:bg-green-700"
                         >
@@ -633,8 +601,7 @@ export function SubscriptionManagement({
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={(
-) => handlePlanChange(plan, 'month')}
+                          onClick={() => handlePlanChange(plan, 'month')}
                           disabled={actionLoading === 'plan-change'}
                           className="border-blue-300 text-blue-700 hover:bg-blue-100"
                         >

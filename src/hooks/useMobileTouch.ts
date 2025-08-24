@@ -6,8 +6,7 @@ import { mobileTouchService, TouchGestureOptions } from '../services/mobile-touc
 export function useTouchGestures(options: Omit<TouchGestureOptions, 'element'>) {
   const ref = useRef<HTMLElement>(null);
 
-  useEffect((
-) => {
+  useEffect(() => {
     const element = ref.current;
     if (!element) return;
 
@@ -26,8 +25,7 @@ export function useTouchGestures(options: Omit<TouchGestureOptions, 'element'>) 
 export function useEnhancedButton(hapticType: 'light' | 'medium' | 'heavy' = 'light') {
   const ref = useRef<HTMLElement>(null);
 
-  useEffect((
-) => {
+  useEffect(() => {
     const element = ref.current;
     if (!element) return;
 
@@ -43,8 +41,7 @@ export function useHaptic() {
   return useCallback(
     (
       type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
-    
-) => {
+    ) => {
       mobileTouchService.triggerHaptic(type);
     },
     []
@@ -52,12 +49,10 @@ export function useHaptic() {
 }
 
 // Hook for pull-to-refresh
-export function usePullToRefresh(onRefresh: (
-) => Promise<void>, enabled = true) {
+export function usePullToRefresh(onRefresh: () => Promise<void>, enabled = true) {
   const ref = useRef<HTMLElement>(null);
 
-  useEffect((
-) => {
+  useEffect(() => {
     const element = ref.current;
     if (!element || !enabled) return;
 
@@ -70,19 +65,14 @@ export function usePullToRefresh(onRefresh: (
 
 // Hook for swipe navigation
 export function useSwipeNavigation(
-  onSwipeLeft?: (
-) => void,
-  onSwipeRight?: (
-) => void,
-  onSwipeUp?: (
-) => void,
-  onSwipeDown?: (
-) => void
+  onSwipeLeft?: () => void,
+  onSwipeRight?: () => void,
+  onSwipeUp?: () => void,
+  onSwipeDown?: () => void
 ) {
   const ref = useRef<HTMLElement>(null);
 
-  useEffect((
-) => {
+  useEffect(() => {
     const element = ref.current;
     if (!element) return;
 
@@ -105,15 +95,13 @@ export function useSwipeNavigation(
 export function useMobileBehavior() {
   const isTouchDevice = useRef<boolean>();
 
-  useEffect((
-) => {
+  useEffect(() => {
     // Detect if device supports touch
     isTouchDevice.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     // Prevent zoom on double-tap (iOS Safari)
     let lastTouchEnd = 0;
-    const preventZoom = (event: TouchEvent
-) => {
+    const preventZoom = (event: TouchEvent) => {
       const now = new Date().getTime();
       if (now - lastTouchEnd <= 300) {
         event.preventDefault();
@@ -122,8 +110,7 @@ export function useMobileBehavior() {
     };
 
     // Prevent pull-to-refresh on body (except for designated areas)
-    const preventPullToRefresh = (event: TouchEvent
-) => {
+    const preventPullToRefresh = (event: TouchEvent) => {
       if ((event.target as HTMLElement).closest('[data-pull-to-refresh]')) {
         return; // Allow pull-to-refresh in designated areas
       }
@@ -141,11 +128,12 @@ export function useMobileBehavior() {
 
     if (isTouchDevice.current) {
       document.addEventListener('touchend', preventZoom, { passive: false });
-      document.addEventListener('touchmove', preventPullToRefresh, { passive: false });
+      document.addEventListener('touchmove', preventPullToRefresh, {
+        passive: false,
+      });
     }
 
-    return (
-) => {
+    return () => {
       if (isTouchDevice.current) {
         document.removeEventListener('touchend', preventZoom);
         document.removeEventListener('touchmove', preventPullToRefresh);
@@ -160,25 +148,21 @@ export function useMobileBehavior() {
 }
 
 // Hook for modal/sheet swipe-to-dismiss
-export function useSwipeToDismiss(onDismiss: (
-) => void, threshold = 100) {
+export function useSwipeToDismiss(onDismiss: () => void, threshold = 100) {
   const ref = useRef<HTMLElement>(null);
 
-  useEffect((
-) => {
+  useEffect(() => {
     const element = ref.current;
     if (!element) return;
 
     let startY = 0;
     let currentY = 0;
 
-    const handleTouchStart = (e: TouchEvent
-) => {
+    const handleTouchStart = (e: TouchEvent) => {
       startY = e.touches[0].clientY;
     };
 
-    const handleTouchMove = (e: TouchEvent
-) => {
+    const handleTouchMove = (e: TouchEvent) => {
       currentY = e.touches[0].clientY;
       const deltaY = currentY - startY;
 
@@ -190,8 +174,7 @@ export function useSwipeToDismiss(onDismiss: (
       }
     };
 
-    const handleTouchEnd = (
-) => {
+    const handleTouchEnd = () => {
       const deltaY = currentY - startY;
 
       if (deltaY > threshold) {
@@ -209,8 +192,7 @@ export function useSwipeToDismiss(onDismiss: (
     element.addEventListener('touchmove', handleTouchMove, { passive: true });
     element.addEventListener('touchend', handleTouchEnd, { passive: true });
 
-    return (
-) => {
+    return () => {
       element.removeEventListener('touchstart', handleTouchStart);
       element.removeEventListener('touchmove', handleTouchMove);
       element.removeEventListener('touchend', handleTouchEnd);
@@ -221,12 +203,10 @@ export function useSwipeToDismiss(onDismiss: (
 }
 
 // Hook for long press interactions
-export function useLongPress(onLongPress: (
-) => void, delay = 500) {
+export function useLongPress(onLongPress: () => void, delay = 500) {
   const ref = useRef<HTMLElement>(null);
 
-  useEffect((
-) => {
+  useEffect(() => {
     const element = ref.current;
     if (!element) return;
 

@@ -11,8 +11,7 @@ import AccessibilityPreferencesService, {
 export interface KeyboardShortcut {
   key: string;
   modifiers: ('ctrl' | 'alt' | 'shift' | 'meta')[];
-  action: (
-) => void;
+  action: () => void;
   description: string;
   category: 'navigation' | 'alarm' | 'accessibility' | 'general';
   enabled: boolean;
@@ -38,8 +37,7 @@ export class KeyboardNavigationService {
   private focusTrapStack: HTMLElement[] = [];
   private skipLinks: HTMLElement[] = [];
   private accessibilityService: AccessibilityPreferencesService;
-  private preferencesUnsubscribe?: (
-) => void;
+  private preferencesUnsubscribe?: () => void;
 
   private constructor() {
     this.state = {
@@ -90,32 +88,28 @@ export class KeyboardNavigationService {
       {
         key: 'd',
         modifiers: ['alt'],
-        action: (
-) => this.navigateToSection('dashboard'),
+        action: () => this.navigateToSection('dashboard'),
         description: 'Go to Dashboard',
         category: 'navigation',
       },
       {
         key: 'a',
         modifiers: ['alt'],
-        action: (
-) => this.navigateToSection('alarms'),
+        action: () => this.navigateToSection('alarms'),
         description: 'Go to Alarms',
         category: 'navigation',
       },
       {
         key: 's',
         modifiers: ['alt'],
-        action: (
-) => this.navigateToSection('settings'),
+        action: () => this.navigateToSection('settings'),
         description: 'Go to Settings',
         category: 'navigation',
       },
       {
         key: 'p',
         modifiers: ['alt'],
-        action: (
-) => this.navigateToSection('performance'),
+        action: () => this.navigateToSection('performance'),
         description: 'Go to Performance',
         category: 'navigation',
       },
@@ -124,32 +118,28 @@ export class KeyboardNavigationService {
       {
         key: 'n',
         modifiers: ['ctrl'],
-        action: (
-) => this.createNewAlarm(),
+        action: () => this.createNewAlarm(),
         description: 'Create New Alarm',
         category: 'alarm',
       },
       {
         key: ' ',
         modifiers: [],
-        action: (
-) => this.toggleSelectedAlarm(),
+        action: () => this.toggleSelectedAlarm(),
         description: 'Toggle Selected Alarm',
         category: 'alarm',
       },
       {
         key: 'Delete',
         modifiers: [],
-        action: (
-) => this.deleteSelectedAlarm(),
+        action: () => this.deleteSelectedAlarm(),
         description: 'Delete Selected Alarm',
         category: 'alarm',
       },
       {
         key: 'Enter',
         modifiers: [],
-        action: (
-) => this.editSelectedAlarm(),
+        action: () => this.editSelectedAlarm(),
         description: 'Edit Selected Alarm',
         category: 'alarm',
       },
@@ -158,32 +148,28 @@ export class KeyboardNavigationService {
       {
         key: 'h',
         modifiers: ['alt'],
-        action: (
-) => this.showKeyboardShortcuts(),
+        action: () => this.showKeyboardShortcuts(),
         description: 'Show Keyboard Shortcuts',
         category: 'accessibility',
       },
       {
         key: 'r',
         modifiers: ['alt'],
-        action: (
-) => this.toggleScreenReaderMode(),
+        action: () => this.toggleScreenReaderMode(),
         description: 'Toggle Screen Reader Enhanced Mode',
         category: 'accessibility',
       },
       {
         key: 'f',
         modifiers: ['alt'],
-        action: (
-) => this.focusFirstElement(),
+        action: () => this.focusFirstElement(),
         description: 'Focus First Interactive Element',
         category: 'accessibility',
       },
       {
         key: 'l',
         modifiers: ['alt'],
-        action: (
-) => this.focusLastElement(),
+        action: () => this.focusLastElement(),
         description: 'Focus Last Interactive Element',
         category: 'accessibility',
       },
@@ -192,23 +178,20 @@ export class KeyboardNavigationService {
       {
         key: 'Escape',
         modifiers: [],
-        action: (
-) => this.handleEscape(),
+        action: () => this.handleEscape(),
         description: 'Close Dialog/Go Back',
         category: 'general',
       },
       {
         key: 'F1',
         modifiers: [],
-        action: (
-) => this.showHelp(),
+        action: () => this.showHelp(),
         description: 'Show Help',
         category: 'general',
       },
     ];
 
-    shortcuts.forEach((shortcut, index
-) => {
+    shortcuts.forEach((shortcut, index) => {
       this.addShortcut(`shortcut-${index}`, {
         ...shortcut,
         enabled: true,
@@ -667,8 +650,7 @@ export class KeyboardNavigationService {
       { text: 'Skip to settings', target: '#settings-panel' },
     ];
 
-    skipLinks.forEach(({ text, target }
-) => {
+    skipLinks.forEach(({ text, target }) => {
       const link = document.createElement('a');
       link.href = target;
       link.textContent = text;
@@ -800,8 +782,7 @@ export class KeyboardNavigationService {
     const preferences = this.accessibilityService.getPreferences();
     const shortcuts = Array.from(this.shortcuts.values())
       .filter(s => s.enabled)
-      .sort((a, b
-) => a.category.localeCompare(b.category));
+      .sort((a, b) => a.category.localeCompare(b.category));
 
     // Announce shortcuts if screen reader is enabled
     if (preferences.screenReaderOptimized) {

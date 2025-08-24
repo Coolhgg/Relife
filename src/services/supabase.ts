@@ -75,8 +75,7 @@ export class SupabaseService {
 
   // Enhanced retry logic with exponential backoff
   private static async withRetry<T>(
-    operation: (
-) => Promise<T>,
+    operation: () => Promise<T>,
     context: string,
     attempts: number = this.connectionPool.retryAttempts
   ): Promise<T> {
@@ -87,11 +86,9 @@ export class SupabaseService {
         this.activeConnections++;
         const result = await Promise.race([
           operation(),
-          new Promise<never>((_, reject
-) =>
+          new Promise<never>((_, reject) =>
             setTimeout(
-              (
-) => reject(new Error('Operation timeout')),
+              () => reject(new Error('Operation timeout')),
               this.connectionPool.connectionTimeout
             )
           ),
@@ -202,8 +199,7 @@ export class SupabaseService {
       return { user: null, error: 'Supabase not configured' };
     }
 
-    return await this.withRetry(async (
-) => {
+    return await this.withRetry(async () => {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -241,8 +237,7 @@ export class SupabaseService {
       return { user: null, error: 'Supabase not configured' };
     }
 
-    return await this.withRetry(async (
-) => {
+    return await this.withRetry(async () => {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -408,8 +403,7 @@ export class SupabaseService {
     };
 
     // Insert user profile with retry logic
-    await this.withRetry(async (
-) => {
+    await this.withRetry(async () => {
       const { error } = await supabase.from('users').insert([
         {
           id: userProfile.id,
@@ -449,8 +443,7 @@ export class SupabaseService {
     }
 
     try {
-      return await this.withRetry(async (
-) => {
+      return await this.withRetry(async () => {
         const { data, error } = await supabase
           .from('users')
           .select('*')
@@ -526,8 +519,7 @@ export class SupabaseService {
     }
 
     try {
-      return await this.withRetry(async (
-) => {
+      return await this.withRetry(async () => {
         const { error } = await supabase.from('alarms').upsert(
           [
             {
@@ -581,8 +573,7 @@ export class SupabaseService {
     }
 
     try {
-      return await this.withRetry(async (
-) => {
+      return await this.withRetry(async () => {
         const { data, error } = await supabase
           .from('alarms')
           .select('*')
@@ -593,23 +584,19 @@ export class SupabaseService {
           throw new Error(`Failed to load alarms: ${error.message}`);
         }
 
-        const alarms: Alarm[] = (data || []) 
-          .map((row: any
-) => ({
-            id: row.id,
-            userId: row.user_id,
-            time: row.time,
-            label: row.label,
-            enabled: row.enabled,
-            days: row.days,
-            voiceMood: row.voice_mood,
-            snoozeCount: row.snooze_count || 0,
-            lastTriggered: row.last_triggered
-              ? new Date(row.last_triggered)
-              : undefined,
-            createdAt: new Date(row.created_at),
-            updatedAt: new Date(row.updated_at),
-          }));
+        const alarms: Alarm[] = (data || []).map((row: any) => ({
+          id: row.id,
+          userId: row.user_id,
+          time: row.time,
+          label: row.label,
+          enabled: row.enabled,
+          days: row.days,
+          voiceMood: row.voice_mood,
+          snoozeCount: row.snooze_count || 0,
+          lastTriggered: row.last_triggered ? new Date(row.last_triggered) : undefined,
+          createdAt: new Date(row.created_at),
+          updatedAt: new Date(row.updated_at),
+        }));
 
         // Cache the result
         this.setCachedData(cacheKey, alarms);
@@ -678,17 +665,15 @@ export class SupabaseService {
         return { events: [], error: error.message };
       }
 
-      const events: AlarmEvent[] = (data || []) 
-        .map((row: any
-) => ({
-          id: row.id,
-          alarmId: row.alarm_id,
-          firedAt: new Date(row.fired_at),
-          dismissed: row.dismissed,
-          snoozed: row.snoozed,
-          userAction: row.user_action,
-          dismissMethod: row.dismiss_method,
-        }));
+      const events: AlarmEvent[] = (data || []).map((row: any) => ({
+        id: row.id,
+        alarmId: row.alarm_id,
+        firedAt: new Date(row.fired_at),
+        dismissed: row.dismissed,
+        snoozed: row.snoozed,
+        userAction: row.user_action,
+        dismissMethod: row.dismiss_method,
+      }));
 
       return { events, error: null };
     } catch (error) {
@@ -698,13 +683,10 @@ export class SupabaseService {
 
   static subscribeToUserAlarms(
     userId: string,
-    callback: (alarms: Alarm[]
-) => void
-  ): (
-) => void {
+    callback: (alarms: Alarm[]) => void
+  ): () => void {
     if (!this.isAvailable) {
-      return (
-) => {};
+      return () => {};
     }
 
     const channelName = `user-alarms-${userId}`;
@@ -748,9 +730,7 @@ export class SupabaseService {
           }
         }
       )
-      .subscribe((status: any
-) => {
-        // auto: implicit any
+      .subscribe((status: any) => {
         if (status === 'SUBSCRIBED') {
           this.performanceMonitor.trackCustomMetric(
             'realtime_subscription_success',
@@ -766,8 +746,7 @@ export class SupabaseService {
 
     this.subscriptions.set(channelName, subscription);
 
-    return (
-) => {
+    return () => {
       subscription.unsubscribe();
       this.subscriptions.delete(channelName);
     };
@@ -815,8 +794,7 @@ export class SupabaseService {
       const batch = alarms.slice(i, i + batchSize);
 
       try {
-        await this.withRetry(async (
-) => {
+        await this.withRetry(async () => {
           const { error } = await supabase.from('alarms').upsert(
             batch.map(alarm => ({
               id: alarm.id,

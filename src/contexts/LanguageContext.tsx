@@ -33,37 +33,26 @@ interface LanguageContextType {
   supportedLanguages: typeof SUPPORTED_LANGUAGES;
 
   // Language switching
-  changeLanguage: (lang: SupportedLanguage
-) => Promise<void>;
-  detectDeviceLanguage: (
-) => Promise<SupportedLanguage>;
+  changeLanguage: (lang: SupportedLanguage) => Promise<void>;
+  detectDeviceLanguage: () => Promise<SupportedLanguage>;
 
   // Translation helpers
-  t: (key: string, options?: Record<string, unknown>
-) => string;
-  tExists: (key: string
-) => boolean;
+  t: (key: string, options?: Record<string, unknown>) => string;
+  tExists: (key: string) => boolean;
 
   // Formatting helpers
-  formatTime: (time: string
-) => string;
-  formatRelativeTime: (date: Date
-) => string;
-  formatNumber: (num: number
-) => string;
-  formatDate: (date: Date
-) => string;
+  formatTime: (time: string) => string;
+  formatRelativeTime: (date: Date) => string;
+  formatNumber: (num: number) => string;
+  formatDate: (date: Date) => string;
 
   // Direction helpers
-  getTextDirection: (
-) => 'ltr' | 'rtl';
-  getFlexDirection: (
-) => 'row' | 'row-reverse';
+  getTextDirection: () => 'ltr' | 'rtl';
+  getFlexDirection: () => 'row' | 'row-reverse';
 
   // Language preferences
   autoDetectEnabled: boolean;
-  setAutoDetectEnabled: (enabled: boolean
-) => void;
+  setAutoDetectEnabled: (enabled: boolean) => void;
 }
 
 // Create context
@@ -90,29 +79,24 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
   defaultLanguage = 'en',
   enableAutoDetect = true,
-}
-) => {
+}) => {
   const { t, i18n } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [autoDetectEnabled, setAutoDetectEnabled] = useState((
-) => {
+  const [autoDetectEnabled, setAutoDetectEnabled] = useState(() => {
     const stored = localStorage.getItem('language-auto-detect');
     return stored !== null ? JSON.parse(stored) : enableAutoDetect;
   });
 
   // Current language state
-  const currentLanguage = useMemo((
-) => getCurrentLanguage(), [i18n.language]);
+  const currentLanguage = useMemo(() => getCurrentLanguage(), [i18n.language]);
 
   const languageInfo = useMemo(
-    (
-) => getLanguageInfo(currentLanguage),
+    () => getLanguageInfo(currentLanguage),
     [currentLanguage]
   );
 
-  const currentIsRTL = useMemo((
-) => isRTL(currentLanguage), [currentLanguage]);
+  const currentIsRTL = useMemo(() => isRTL(currentLanguage), [currentLanguage]);
 
   // Detect device language
   const detectDeviceLanguage = useCallback(async (): Promise<SupportedLanguage> => {
@@ -155,8 +139,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
 
   // Change language function
   const handleChangeLanguage = useCallback(
-    async (lang: SupportedLanguage
-) => {
+    async (lang: SupportedLanguage) => {
       if (lang === currentLanguage) {
         return; // No change needed
       }
@@ -174,8 +157,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
         const langInfo = SUPPORTED_LANGUAGES[lang];
         if (langInfo) {
           // Use a small delay to ensure screen readers pick up the announcement
-          setTimeout((
-) => {
+          setTimeout(() => {
             const announcement = document.createElement('div');
             announcement.setAttribute('aria-live', 'polite');
             announcement.setAttribute('aria-atomic', 'true');
@@ -184,8 +166,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
             document.body.appendChild(announcement);
 
             // Remove after announcement
-            setTimeout((
-) => {
+            setTimeout(() => {
               document.body.removeChild(announcement);
             }, 1000);
           }, 100);
@@ -205,10 +186,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   );
 
   // Auto-detect device language on mount
-  useEffect((
-) => {
-    const initializeLanguage = async (
-) => {
+  useEffect(() => {
+    const initializeLanguage = async () => {
       if (!autoDetectEnabled) return;
 
       const storedLanguage = localStorage.getItem('user-language');
@@ -232,8 +211,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   }, [autoDetectEnabled, currentLanguage, detectDeviceLanguage, handleChangeLanguage]);
 
   // Handle auto-detect setting changes
-  useEffect((
-) => {
+  useEffect(() => {
     localStorage.setItem('language-auto-detect', JSON.stringify(autoDetectEnabled));
   }, [autoDetectEnabled]);
 
@@ -299,8 +277,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
 
   // Context value
   const contextValue = useMemo<LanguageContextType>(
-    (
-) => ({
+    () => ({
       // Current language state
       currentLanguage,
       languageInfo,
@@ -360,8 +337,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
 };
 
 // Additional hook for getting specific translation namespaces
-export const useTranslationNamespace = (namespace: string
-) => {
+export const useTranslationNamespace = (namespace: string) => {
   const { t } = useTranslation(namespace);
   const language = useLanguage();
 
@@ -372,17 +348,14 @@ export const useTranslationNamespace = (namespace: string
 };
 
 // Hook for language-aware routing/navigation
-export const useLanguageAwareNavigation = (
-) => {
+export const useLanguageAwareNavigation = () => {
   const { currentLanguage, isRTL } = useLanguage();
 
-  const getNavigationDirection = useCallback((
-) => {
+  const getNavigationDirection = useCallback(() => {
     return isRTL ? 'rtl' : 'ltr';
   }, [isRTL]);
 
-  const getSlideDirection = useCallback((
-) => {
+  const getSlideDirection = useCallback(() => {
     return isRTL ? 'right' : 'left';
   }, [isRTL]);
 

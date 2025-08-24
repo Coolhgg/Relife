@@ -30,8 +30,7 @@ interface UsageData {
 export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
   userId,
   className = '',
-}
-) => {
+}) => {
   const [usageData, setUsageData] = useState<UsageData>({
     tier: 'free',
     elevenlabsUsage: { current: 0, limit: 0, percentage: 0 },
@@ -42,16 +41,16 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
 
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
-  useEffect((
-) => {
+  useEffect(() => {
     loadUsageData();
   }, [userId]);
 
-  const loadUsageData = async (
-) => {
-    
-    setUsageData((prev: any
-) => ({ ...prev, isLoading: true, error: undefined }));
+  const loadUsageData = async () => {
+    setUsageData((prev: any) => ({
+      ...prev,
+      isLoading: true,
+      error: undefined,
+    }));
 
     try {
       const summary = await PremiumVoiceService.getUsageSummary(userId);
@@ -61,9 +60,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
       });
       setLastRefresh(new Date());
     } catch (error) {
-      
-      setUsageData((prev: any
-) => ({
+      setUsageData((prev: any) => ({
         ...prev,
         isLoading: false,
         error: error instanceof Error ? error.message : 'Failed to load usage data',
@@ -71,8 +68,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
     }
   };
 
-  const getTierColor = (tier: string
-) => {
+  const getTierColor = (tier: string) => {
     switch (tier) {
       case 'premium':
         return 'from-amber-500 to-orange-500';
@@ -85,8 +81,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
     }
   };
 
-  const getTierIcon = (tier: string
-) => {
+  const getTierIcon = (tier: string) => {
     switch (tier) {
       case 'premium':
         return Crown;
@@ -111,8 +106,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
     title: string,
     usage: { current: number; limit: number; percentage: number },
     unlimited: boolean = false
-  
-) => {
+  ) => {
     const Icon = icon;
 
     return (

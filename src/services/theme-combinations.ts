@@ -611,16 +611,14 @@ class ThemeCombinationsService {
 
   getPopularCombinations(limit: number = 10): ThemeCombination[] {
     return this.getAllCombinations()
-      .sort((a, b
-) => b.popularity - a.popularity)
+      .sort((a, b) => b.popularity - a.popularity)
       .slice(0, limit);
   }
 
   getRecentCombinations(limit: number = 5): ThemeCombination[] {
     return this.getAllCombinations()
       .filter(combo => combo.lastUsed)
-      .sort((a, b
-) => (b.lastUsed?.getTime() || 0) - (a.lastUsed?.getTime() || 0))
+      .sort((a, b) => (b.lastUsed?.getTime() || 0) - (a.lastUsed?.getTime() || 0))
       .slice(0, limit);
   }
 
@@ -839,8 +837,7 @@ class ThemeCombinationsService {
 
     // Sort by popularity and return top results
     return Array.from(similarCombinations)
-      .sort((a, b
-) => b.popularity - a.popularity)
+      .sort((a, b) => b.popularity - a.popularity)
       .slice(0, limit);
   }
 

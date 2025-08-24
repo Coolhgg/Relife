@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 import * as React from 'react';
 /**
  * RTL testing utilities for validating direction-aware components
@@ -13,21 +13,16 @@ import i18n from '../config/i18n';
 import { type SupportedLanguage } from '../config/i18n';
 
 // Mock i18n instance for testing
-export const createMockI18n = (language: SupportedLanguage = 'en'
-) => {
+export const createMockI18n = (language: SupportedLanguage = 'en') => {
   const mockI18n = {
     language,
     languages: [language],
-    t: (key: string
-) => key,
+    t: (key: string) => key,
     changeLanguage: vi.fn(),
-    dir: (
-) => (['ar', 'he', 'ur', 'fa', 'ku'].includes(language) ? 'rtl' : 'ltr'),
-    exists: vi.fn((
-) => true),
+    dir: () => (['ar', 'he', 'ur', 'fa', 'ku'].includes(language) ? 'rtl' : 'ltr'),
+    exists: vi.fn(() => true),
     getFixedT: vi.fn(),
-    hasResourceBundle: vi.fn((
-) => true),
+    hasResourceBundle: vi.fn(() => true),
     loadNamespaces: vi.fn(),
     loadLanguages: vi.fn(),
     on: vi.fn(),
@@ -44,13 +39,11 @@ interface RTLRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   i18nOptions?: any;
 }
 
-export const renderWithRTL = (ui: ReactElement, options: RTLRenderOptions = {}
-) => {
+export const renderWithRTL = (ui: ReactElement, options: RTLRenderOptions = {}) => {
   const { language = 'en', ...renderOptions } = options;
 
   // Create wrapper with i18n provider
-  const Wrapper = ({ children }: { children: React.ReactNode }
-) => {
+  const Wrapper = ({ children }: { children: React.ReactNode }) => {
     const mockI18n = createMockI18n(language);
 
     return (
@@ -96,16 +89,14 @@ export const rtlTestHelpers = {
   /**
    * Check if element has correct direction attribute
    */
-  expectCorrectDirection: (element: HTMLElement, expectedDirection: 'ltr' | 'rtl'
-) => {
+  expectCorrectDirection: (element: HTMLElement, expectedDirection: 'ltr' | 'rtl') => {
     expect(element).toHaveAttribute('dir', expectedDirection);
   },
 
   /**
    * Check if element has RTL data attribute
    */
-  expectRTLDataAttribute: (element: HTMLElement, isRTL: boolean
-) => {
+  expectRTLDataAttribute: (element: HTMLElement, isRTL: boolean) => {
     expect(element).toHaveAttribute('data-rtl', isRTL.toString());
   },
 
@@ -116,8 +107,7 @@ export const rtlTestHelpers = {
     element: HTMLElement,
     isRTL: boolean,
     alignment: 'start' | 'end' | 'center' = 'start'
-  
-) => {
+  ) => {
     if (alignment === 'center') {
       expect(element).toHaveClass('text-center');
       return;
@@ -138,8 +128,7 @@ export const rtlTestHelpers = {
   /**
    * Check RTL-aware flex direction
    */
-  expectRTLFlexDirection: (element: HTMLElement, isRTL: boolean, reverse?: boolean
-) => {
+  expectRTLFlexDirection: (element: HTMLElement, isRTL: boolean, reverse?: boolean) => {
     if (reverse) {
       expect(element).toHaveClass(isRTL ? 'flex-row' : 'flex-row-reverse');
     } else {
@@ -155,8 +144,7 @@ export const rtlTestHelpers = {
     isRTL: boolean,
     side: 'start' | 'end',
     position: string
-  
-) => {
+  ) => {
     const expectedProperty =
       side === 'start' ? (isRTL ? 'right' : 'left') : isRTL ? 'left' : 'right';
 
@@ -173,8 +161,7 @@ export const rtlTestHelpers = {
     type: 'margin' | 'padding',
     side: 'start' | 'end',
     expectedValue: string
-  
-) => {
+  ) => {
     const property =
       side === 'start'
         ? `${type}-${isRTL ? 'right' : 'left'}`
@@ -191,24 +178,22 @@ export const rtlTestScenarios = {
    * Test component in both LTR and RTL modes
    */
   testBothDirections: (
-    componentFactory: (
-) => ReactElement,
-    testFn: (element: HTMLElement, isRTL: boolean, language: SupportedLanguage
-) => void
-  
-) => {
-    describe('RTL Support', (
-) => {
-      test('renders correctly in LTR mode', (
-) => {
-        const { container } = renderWithRTL(componentFactory(), { language: 'en' });
+    componentFactory: () => ReactElement,
+    testFn: (element: HTMLElement, isRTL: boolean, language: SupportedLanguage) => void
+  ) => {
+    describe('RTL Support', () => {
+      test('renders correctly in LTR mode', () => {
+        const { container } = renderWithRTL(componentFactory(), {
+          language: 'en',
+        });
         const element = container.firstChild as HTMLElement;
         testFn(element, false, 'en');
       });
 
-      test('renders correctly in RTL mode', (
-) => {
-        const { container } = renderWithRTL(componentFactory(), { language: 'ar' });
+      test('renders correctly in RTL mode', () => {
+        const { container } = renderWithRTL(componentFactory(), {
+          language: 'ar',
+        });
         const element = container.firstChild as HTMLElement;
         testFn(element, true, 'ar');
       });
@@ -219,17 +204,12 @@ export const rtlTestScenarios = {
    * Test component with all RTL languages
    */
   testAllRTLLanguages: (
-    componentFactory: (
-) => ReactElement,
-    testFn: (element: HTMLElement, language: SupportedLanguage
-) => void
-  
-) => {
-    describe('All RTL Languages', (
-) => {
+    componentFactory: () => ReactElement,
+    testFn: (element: HTMLElement, language: SupportedLanguage) => void
+  ) => {
+    describe('All RTL Languages', () => {
       rtlTestHelpers.getRTLLanguages().forEach(language => {
-        test(`renders correctly in ${language}`, (
-) => {
+        test(`renders correctly in ${language}`, () => {
           const { container } = renderWithRTL(componentFactory(), { language });
           const element = container.firstChild as HTMLElement;
           testFn(element, language);
@@ -242,24 +222,17 @@ export const rtlTestScenarios = {
    * Test responsive RTL behavior
    */
   testResponsiveRTL: (
-    componentFactory: (
-) => ReactElement,
+    componentFactory: () => ReactElement,
     breakpoints: string[],
-    testFn: (element: HTMLElement, isRTL: boolean, breakpoint: string
-) => void
-  
-) => {
-    describe('Responsive RTL', (
-) => {
+    testFn: (element: HTMLElement, isRTL: boolean, breakpoint: string) => void
+  ) => {
+    describe('Responsive RTL', () => {
       breakpoints.forEach(breakpoint => {
-        test(`adapts to ${breakpoint} screen in RTL`, (
-) => {
+        test(`adapts to ${breakpoint} screen in RTL`, () => {
           // Mock window.matchMedia for breakpoint testing
           Object.defineProperty(window, 'matchMedia', {
             writable: true,
-            value: vi.fn().mockImplementation((query: any
-) => ({
-              // auto: implicit any{
+            value: vi.fn().mockImplementation((query: any) => ({
               matches: query.includes(breakpoint),
               media: query,
               onchange: null,
@@ -271,7 +244,9 @@ export const rtlTestScenarios = {
             })),
           });
 
-          const { container } = renderWithRTL(componentFactory(), { language: 'ar' });
+          const { container } = renderWithRTL(componentFactory(), {
+            language: 'ar',
+          });
           const element = container.firstChild as HTMLElement;
           testFn(element, true, breakpoint);
         });
@@ -285,8 +260,7 @@ export const rtlA11yHelpers = {
   /**
    * Check if text direction is properly announced to screen readers
    */
-  expectScreenReaderDirection: (element: HTMLElement, isRTL: boolean
-) => {
+  expectScreenReaderDirection: (element: HTMLElement, isRTL: boolean) => {
     expect(element).toHaveAttribute('dir', isRTL ? 'rtl' : 'ltr');
     // Check lang attribute is set for proper screen reader pronunciation
     expect(element.closest('[lang]')).toBeTruthy();
@@ -295,10 +269,8 @@ export const rtlA11yHelpers = {
   /**
    * Check if interactive elements maintain proper tab order in RTL
    */
-  expectRTLTabOrder: (elements: HTMLElement[], isRTL: boolean
-) => {
-    elements.forEach((element, index
-) => {
+  expectRTLTabOrder: (elements: HTMLElement[], isRTL: boolean) => {
+    elements.forEach((element, index) => {
       const tabIndex = element.getAttribute('tabindex');
       if (tabIndex !== null) {
         expect(parseInt(tabIndex, 10)).toBe(
@@ -311,8 +283,7 @@ export const rtlA11yHelpers = {
   /**
    * Check if ARIA labels are properly positioned for RTL
    */
-  expectRTLAriaLabels: (element: HTMLElement, isRTL: boolean
-) => {
+  expectRTLAriaLabels: (element: HTMLElement, isRTL: boolean) => {
     const ariaLabel = element.getAttribute('aria-label');
     const ariaLabelledBy = element.getAttribute('aria-labelledby');
 
@@ -330,11 +301,9 @@ export const rtlPerformanceHelpers = {
    * Measure rendering performance between LTR and RTL modes
    */
   measureRTLPerformance: async (
-    componentFactory: (
-) => ReactElement,
+    componentFactory: () => ReactElement,
     iterations: number = 100
-  
-) => {
+  ) => {
     const ltrTimes: number[] = [];
     const rtlTimes: number[] = [];
 
@@ -356,10 +325,8 @@ export const rtlPerformanceHelpers = {
       unmount();
     }
 
-    const ltrAverage = ltrTimes.reduce((a, b
-) => a + b) / ltrTimes.length;
-    const rtlAverage = rtlTimes.reduce((a, b
-) => a + b) / rtlTimes.length;
+    const ltrAverage = ltrTimes.reduce((a, b) => a + b) / ltrTimes.length;
+    const rtlAverage = rtlTimes.reduce((a, b) => a + b) / rtlTimes.length;
 
     return {
       ltr: { average: ltrAverage, times: ltrTimes },

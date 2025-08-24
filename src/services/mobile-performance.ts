@@ -24,8 +24,7 @@ export class MobilePerformanceService {
   private static instance: MobilePerformanceService;
   private observers: Map<string, IntersectionObserver> = new Map();
   private performanceMetrics: PerformanceMetrics;
-  private listeners: Array<(metrics: PerformanceMetrics
-) => void> = [];
+  private listeners: Array<(metrics: PerformanceMetrics) => void> = [];
   private config: PerformanceConfig;
   private monitoringInterval?: number;
   private isLowPowerMode = false;
@@ -107,8 +106,7 @@ export class MobilePerformanceService {
             // Add load event listener for fade-in effect
             img.addEventListener(
               'load',
-              (
-) => {
+              () => {
                 img.style.opacity = '1';
               },
               { once: true }
@@ -142,8 +140,7 @@ export class MobilePerformanceService {
       return;
     }
 
-    const checkMemory = (
-) => {
+    const checkMemory = () => {
       const memory = (performance as any).memory;
       const usagePercent = memory.usedJSHeapSize / memory.jsHeapSizeLimit;
 
@@ -207,10 +204,8 @@ export class MobilePerformanceService {
 
     (navigator as any)
       .getBattery()
-      .then((battery: any
-) => {
-        const updateBatteryStatus = (
-) => {
+      .then((battery: any) => {
+        const updateBatteryStatus = () => {
           this.performanceMetrics.batteryLevel = battery.level;
           this.performanceMetrics.batteryCharging = battery.charging;
           this.performanceMetrics.lastUpdated = Date.now();
@@ -236,8 +231,7 @@ export class MobilePerformanceService {
         battery.addEventListener('chargingtimechange', updateBatteryStatus);
         battery.addEventListener('dischargingtimechange', updateBatteryStatus);
       })
-      .catch((error: any
-) => {
+      .catch((error: any) => {
         console.warn('[Performance] Battery API error:', error);
       });
   }
@@ -256,8 +250,7 @@ export class MobilePerformanceService {
     // Reduce monitoring frequency
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
-      this.monitoringInterval = setInterval((
-) => {
+      this.monitoringInterval = setInterval(() => {
         this.updatePerformanceMetrics();
       }, 30000); // Reduce to 30 seconds
     }
@@ -277,8 +270,7 @@ export class MobilePerformanceService {
     // Restore normal monitoring frequency
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
-      this.monitoringInterval = setInterval((
-) => {
+      this.monitoringInterval = setInterval(() => {
         this.updatePerformanceMetrics();
       }, 15000); // Back to 15 seconds
     }
@@ -293,8 +285,7 @@ export class MobilePerformanceService {
 
     const connection = (navigator as any).connection;
 
-    const updateNetworkStatus = (
-) => {
+    const updateNetworkStatus = () => {
       const effectiveType = connection.effectiveType || '4g';
       const saveData = connection.saveData || false;
 
@@ -431,12 +422,9 @@ export class MobilePerformanceService {
   }
 
   // Subscribe to performance updates
-  subscribe(listener: (metrics: PerformanceMetrics
-) => void): (
-) => void {
+  subscribe(listener: (metrics: PerformanceMetrics) => void): () => void {
     this.listeners.push(listener);
-    return (
-) => {
+    return () => {
       const index = this.listeners.indexOf(listener);
       if (index > -1) {
         this.listeners.splice(index, 1);

@@ -43,39 +43,33 @@ export function SubscriptionPage({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  useEffect((
-) => {
+  useEffect(() => {
     if (subscription.error) {
       setError(subscription.error);
     }
   }, [subscription.error]);
 
   // Clear messages after a delay
-  useEffect((
-) => {
+  useEffect(() => {
     if (error || success) {
-      const timer = setTimeout((
-) => {
+      const timer = setTimeout(() => {
         setError(null);
         setSuccess(null);
       }, 5000);
-      return (
-) => clearTimeout(timer);
+      return () => clearTimeout(timer);
     }
   }, [error, success]);
 
   const handlePlanSelect = async (
     plan: SubscriptionPlan,
     billingInterval: BillingInterval
-  
-) => {
+  ) => {
     setSelectedPlan(plan);
     setSelectedInterval(billingInterval);
     setShowPaymentFlow(true);
   };
 
-  const handleUpgrade = async (planId: string, billingInterval: BillingInterval
-) => {
+  const handleUpgrade = async (planId: string, billingInterval: BillingInterval) => {
     try {
       await subscription.updateSubscription({
         planId,
@@ -89,8 +83,7 @@ export function SubscriptionPage({
     }
   };
 
-  const handleDowngrade = async (planId: string, billingInterval: BillingInterval
-) => {
+  const handleDowngrade = async (planId: string, billingInterval: BillingInterval) => {
     try {
       await subscription.updateSubscription({
         planId,
@@ -104,8 +97,7 @@ export function SubscriptionPage({
     }
   };
 
-  const handlePaymentSuccess = (subscriptionId: string
-) => {
+  const handlePaymentSuccess = (subscriptionId: string) => {
     setShowPaymentFlow(false);
     setSelectedPlan(null);
     setSuccess('Payment successful! Welcome to your new plan!');
@@ -113,14 +105,12 @@ export function SubscriptionPage({
     setActiveTab('overview');
   };
 
-  const handlePaymentError = (error: string
-) => {
+  const handlePaymentError = (error: string) => {
     setError(error);
     setShowPaymentFlow(false);
   };
 
-  const handleStartTrial = async (planId: string
-) => {
+  const handleStartTrial = async (planId: string) => {
     try {
       await subscription.startFreeTrial(planId);
       setSuccess('Free trial started! Enjoy all premium features.');
@@ -180,8 +170,7 @@ export function SubscriptionPage({
           trialDays={selectedPlan.trialDays}
           onPaymentSuccess={handlePaymentSuccess}
           onPaymentError={handlePaymentError}
-          onCancel={(
-) => {
+          onCancel={() => {
             setShowPaymentFlow(false);
             setSelectedPlan(null);
           }}
@@ -320,8 +309,7 @@ export function SubscriptionPage({
                     Try premium features risk-free for 14 days
                   </p>
                   <Button
-                    onClick={(
-) =>
+                    onClick={() =>
                       handleStartTrial(
                         subscription.availablePlans.find(p => p.tier === 'premium')
                           ?.id || ''

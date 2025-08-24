@@ -22,10 +22,8 @@ import { SamAchievement, SamAchievementType } from '../types/struggling-sam';
 
 interface AchievementBadgesProps {
   achievements: SamAchievement[];
-  onShare?: (achievement: SamAchievement
-) => void;
-  onViewDetails?: (achievement: SamAchievement
-) => void;
+  onShare?: (achievement: SamAchievement) => void;
+  onViewDetails?: (achievement: SamAchievement) => void;
   className?: string;
   showProgress?: boolean;
   compact?: boolean;
@@ -147,28 +145,22 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
   className = '',
   showProgress = true,
   compact = false,
-}
-) => {
+}) => {
   const [selectedAchievement, setSelectedAchievement] = useState<SamAchievement | null>(
     null
   );
   const [hoveredAchievement, setHoveredAchievement] = useState<string | null>(null);
 
-  
-  const unlockedAchievements = achievements.filter((a: any
-) => a.unlockedAt);
-  
-  const lockedAchievements = achievements.filter((a: any
-) => !a.unlockedAt);
+  const unlockedAchievements = achievements.filter((a: any) => a.unlockedAt);
 
-  const getBadgeVariant = (rarity: string
-) => {
+  const lockedAchievements = achievements.filter((a: any) => !a.unlockedAt);
+
+  const getBadgeVariant = (rarity: string) => {
     const config = RARITY_CONFIGS[rarity as keyof typeof RARITY_CONFIGS];
     return config ? 'secondary' : 'default';
   };
 
-  const AchievementCard = ({ achievement }: { achievement: SamAchievement }
-) => {
+  const AchievementCard = ({ achievement }: { achievement: SamAchievement }) => {
     const config = ACHIEVEMENT_CONFIGS[achievement.achievementType];
     const rarityConfig = RARITY_CONFIGS[achievement.rarity];
     const IconComponent = config.icon;
@@ -181,12 +173,9 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
         className={`relative ${compact ? 'w-16 h-16' : 'w-32 h-40'}`}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onHoverStart={(
-) => setHoveredAchievement(achievement.id)}
-        onHoverEnd={(
-) => setHoveredAchievement(null)}
-        onClick={(
-) => onViewDetails?.(achievement)}
+        onHoverStart={() => setHoveredAchievement(achievement.id)}
+        onHoverEnd={() => setHoveredAchievement(null)}
+        onClick={() => onViewDetails?.(achievement)}
       >
         <Card
           className={`
@@ -315,8 +304,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
     return (
       <div className={`flex flex-wrap gap-2 ${className}`}>
         {}
-        {achievements.slice(0, 8).map((achievement: any
-) => (
+        {achievements.slice(0, 8).map((achievement: any) => (
           <AchievementCard key={achievement.id} achievement={achievement} />
         ))}
         {achievements.length > 8 && (
@@ -350,8 +338,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                 {}
-                {unlockedAchievements.map((achievement: any
-) => (
+                {unlockedAchievements.map((achievement: any) => (
                   <div key={achievement.id} className="relative">
                     <AchievementCard achievement={achievement} />
                     {onShare && (
@@ -359,8 +346,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                         size="sm"
                         variant="outline"
                         className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 opacity-0 hover:opacity-100 transition-opacity"
-                        onClick={(e: React.MouseEvent
-) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           onShare(achievement);
                         }}
@@ -383,8 +369,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                 {}
-                {lockedAchievements.map((achievement: any
-) => (
+                {lockedAchievements.map((achievement: any) => (
                   <AchievementCard key={achievement.id} achievement={achievement} />
                 ))}
               </div>
@@ -414,17 +399,14 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={(
-) => setSelectedAchievement(null)}
+            onClick={() => setSelectedAchievement(null)}
           >
             <motion.div
               className="bg-card p-6 rounded-lg shadow-lg max-w-md w-full"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              
-              onClick={(e: any
-) => e.stopPropagation()}
+              onClick={(e: any) => e.stopPropagation()}
             >
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
@@ -441,13 +423,11 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                   </p>
                 )}
                 <div className="flex gap-2 justify-center">
-                  <Button onClick={(
-) => setSelectedAchievement(null)}>Close</Button>
+                  <Button onClick={() => setSelectedAchievement(null)}>Close</Button>
                   {onShare && selectedAchievement.unlockedAt && (
                     <Button
                       variant="outline"
-                      onClick={(
-) => onShare(selectedAchievement)}
+                      onClick={() => onShare(selectedAchievement)}
                     >
                       <Share2 className="w-4 h-4 mr-2" />
                       Share

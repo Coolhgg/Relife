@@ -3,10 +3,8 @@ import { useState } from 'react';
 import { Mail, ArrowLeft, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface ForgotPasswordFormProps {
-  onResetPassword: (email: string
-) => Promise<void>;
-  onBackToLogin: (
-) => void;
+  onResetPassword: (email: string) => Promise<void>;
+  onBackToLogin: () => void;
   isLoading: boolean;
   error: string | null;
   success: boolean;
@@ -35,8 +33,7 @@ export default function ForgotPasswordForm({
     return true;
   };
 
-  const handleSubmit = async (e: React.FormEvent
-) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateEmail()) {
@@ -46,8 +43,7 @@ export default function ForgotPasswordForm({
     await onResetPassword(email);
   };
 
-  const handleEmailChange = (value: string
-) => {
+  const handleEmailChange = (value: string) => {
     setEmail(value);
     if (validationError) {
       setValidationError('');
@@ -86,8 +82,7 @@ export default function ForgotPasswordForm({
 
         <div className="space-y-3">
           <button
-            onClick={(
-) => onResetPassword(email)}
+            onClick={() => onResetPassword(email)}
             disabled={isLoading}
             className="w-full alarm-button alarm-button-secondary py-3"
           >
@@ -156,9 +151,7 @@ export default function ForgotPasswordForm({
               id="reset-email"
               type="email"
               value={email}
-              
-              onChange={(e: any
-) => handleEmailChange(e.target.value)}
+              onChange={(e: any) => handleEmailChange(e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationError
                   ? 'border-red-500'

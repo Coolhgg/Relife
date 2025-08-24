@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 // Vitest globals are available globally, no need to import
 /**
  * AlarmForm Component - Accessibility Tests
@@ -16,8 +16,7 @@ import {
 } from '../../tests/utils/a11y-testing-utils';
 
 // Mock the AlarmForm import - will be updated when component is available
-const MockAlarmForm = ({ onSave, onCancel, initialData }: any
-) => (
+const MockAlarmForm = ({ onSave, onCancel, initialData }: any) => (
   <form>
     <div>
       <label htmlFor="alarm-time">Alarm Time</label>
@@ -95,25 +94,21 @@ const MockAlarmForm = ({ onSave, onCancel, initialData }: any
   </form>
 );
 
-describe('AlarmForm - Accessibility Tests', (
-) => {
+describe('AlarmForm - Accessibility Tests', () => {
   const defaultProps = {
     onSave: jest.fn(),
     onCancel: jest.fn(),
     initialData: null,
   };
 
-  describe('Basic Accessibility Compliance', (
-) => {
-    it('should have no axe violations with empty form', async (
-) => {
+  describe('Basic Accessibility Compliance', () => {
+    it('should have no axe violations with empty form', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />, {
         axeOptions: axeRulesets.forms,
       });
     });
 
-    it('should have no axe violations with prefilled data', async (
-) => {
+    it('should have no axe violations with prefilled data', async () => {
       const initialData = {
         time: '08:30',
         label: 'Morning Workout',
@@ -128,10 +123,8 @@ describe('AlarmForm - Accessibility Tests', (
     });
   });
 
-  describe('Form Structure and Labels', (
-) => {
-    it('should have proper form structure with labels', async (
-) => {
+  describe('Form Structure and Labels', () => {
+    it('should have proper form structure with labels', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       // Check all form controls have accessible names
@@ -141,8 +134,7 @@ describe('AlarmForm - Accessibility Tests', (
       expect(screen.getByLabelText('Enable Snooze')).toBeInTheDocument();
     });
 
-    it('should use fieldset for grouped checkboxes', async (
-) => {
+    it('should use fieldset for grouped checkboxes', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       const fieldset = screen.getByRole('group', { name: 'Repeat Days' });
@@ -162,8 +154,7 @@ describe('AlarmForm - Accessibility Tests', (
       });
     });
 
-    it('should have proper heading structure', async (
-) => {
+    it('should have proper heading structure', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       // Form actions should have accessible grouping
@@ -172,10 +163,8 @@ describe('AlarmForm - Accessibility Tests', (
     });
   });
 
-  describe('Required Fields', (
-) => {
-    it('should mark required fields appropriately', async (
-) => {
+  describe('Required Fields', () => {
+    it('should mark required fields appropriately', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText('Alarm Time');
@@ -185,8 +174,7 @@ describe('AlarmForm - Accessibility Tests', (
       expect(soundSelect).toBeRequired();
     });
 
-    it('should handle form validation errors accessibly', async (
-) => {
+    it('should handle form validation errors accessibly', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       const errorRegion = screen.getByRole('alert');
@@ -195,10 +183,8 @@ describe('AlarmForm - Accessibility Tests', (
     });
   });
 
-  describe('Focus Management', (
-) => {
-    it('should have logical tab order', async (
-) => {
+  describe('Focus Management', () => {
+    it('should have logical tab order', async () => {
       const { container } = await axeRender(<MockAlarmForm {...defaultProps} />);
 
       const expectedFocusOrder = [
@@ -219,8 +205,7 @@ describe('AlarmForm - Accessibility Tests', (
       expect(focusableElements.length).toBeGreaterThan(0);
     });
 
-    it('should focus first input on mount', async (
-) => {
+    it('should focus first input on mount', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       // First interactive element should be focusable
@@ -230,10 +215,8 @@ describe('AlarmForm - Accessibility Tests', (
     });
   });
 
-  describe('Keyboard Navigation', (
-) => {
-    it('should submit form with Enter key', async (
-) => {
+  describe('Keyboard Navigation', () => {
+    it('should submit form with Enter key', async () => {
       const handleSave = jest.fn();
       await axeRender(<MockAlarmForm {...defaultProps} onSave={handleSave} />);
 
@@ -246,8 +229,7 @@ describe('AlarmForm - Accessibility Tests', (
       expect(handleSave).toHaveBeenCalled();
     });
 
-    it('should cancel with Escape key (when implemented)', async (
-) => {
+    it('should cancel with Escape key (when implemented)', async () => {
       const handleCancel = jest.fn();
       await axeRender(<MockAlarmForm {...defaultProps} onCancel={handleCancel} />);
 
@@ -257,8 +239,7 @@ describe('AlarmForm - Accessibility Tests', (
       expect(cancelButton).toBeInTheDocument();
     });
 
-    it('should handle checkbox navigation with keyboard', async (
-) => {
+    it('should handle checkbox navigation with keyboard', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       const user = userEvent.setup();
@@ -274,10 +255,8 @@ describe('AlarmForm - Accessibility Tests', (
     });
   });
 
-  describe('Screen Reader Support', (
-) => {
-    it('should provide help text for form fields', async (
-) => {
+  describe('Screen Reader Support', () => {
+    it('should provide help text for form fields', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       const labelInput = screen.getByLabelText('Alarm Label');
@@ -287,8 +266,7 @@ describe('AlarmForm - Accessibility Tests', (
       expect(helpText).toHaveAttribute('id', 'label-help');
     });
 
-    it('should announce form errors to screen readers', async (
-) => {
+    it('should announce form errors to screen readers', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       const errorRegion = screen.getByRole('alert');
@@ -296,8 +274,7 @@ describe('AlarmForm - Accessibility Tests', (
       expect(errorRegion).toHaveAttribute('aria-live', 'polite');
     });
 
-    it('should group related form controls', async (
-) => {
+    it('should group related form controls', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       // Days should be grouped with fieldset/legend
@@ -306,10 +283,8 @@ describe('AlarmForm - Accessibility Tests', (
     });
   });
 
-  describe('Time Input Accessibility', (
-) => {
-    it('should handle time input with proper format', async (
-) => {
+  describe('Time Input Accessibility', () => {
+    it('should handle time input with proper format', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText('Alarm Time');
@@ -321,8 +296,7 @@ describe('AlarmForm - Accessibility Tests', (
       expect(timeInput).toHaveValue('09:30');
     });
 
-    it('should validate time input format', async (
-) => {
+    it('should validate time input format', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText('Alarm Time');
@@ -331,10 +305,8 @@ describe('AlarmForm - Accessibility Tests', (
     });
   });
 
-  describe('Sound Selection Accessibility', (
-) => {
-    it('should provide accessible sound selection', async (
-) => {
+  describe('Sound Selection Accessibility', () => {
+    it('should provide accessible sound selection', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       const soundSelect = screen.getByLabelText('Alarm Sound');
@@ -346,8 +318,7 @@ describe('AlarmForm - Accessibility Tests', (
       expect(screen.getByText('Classical Music')).toBeInTheDocument();
     });
 
-    it('should handle sound selection via keyboard', async (
-) => {
+    it('should handle sound selection via keyboard', async () => {
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
       const user = userEvent.setup();
@@ -358,10 +329,8 @@ describe('AlarmForm - Accessibility Tests', (
     });
   });
 
-  describe('Error Handling', (
-) => {
-    it('should associate errors with form fields', async (
-) => {
+  describe('Error Handling', () => {
+    it('should associate errors with form fields', async () => {
       // This test would require actual error state implementation
       await axeRender(<MockAlarmForm {...defaultProps} />);
 
@@ -373,10 +342,8 @@ describe('AlarmForm - Accessibility Tests', (
     });
   });
 
-  describe('Mobile Accessibility', (
-) => {
-    it('should have adequate touch targets', async (
-) => {
+  describe('Mobile Accessibility', () => {
+    it('should have adequate touch targets', async () => {
       const { container } = await axeRender(<MockAlarmForm {...defaultProps} />);
 
       // Check that interactive elements are large enough for touch
@@ -389,10 +356,8 @@ describe('AlarmForm - Accessibility Tests', (
     });
   });
 
-  describe('Data Persistence', (
-) => {
-    it('should maintain form state during validation', async (
-) => {
+  describe('Data Persistence', () => {
+    it('should maintain form state during validation', async () => {
       const initialData = {
         time: '07:30',
         label: 'Work Meeting',

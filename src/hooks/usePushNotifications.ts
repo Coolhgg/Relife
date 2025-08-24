@@ -20,24 +20,15 @@ export interface PushNotificationStatus {
 
 export interface UsePushNotificationsReturn {
   status: PushNotificationStatus;
-  initialize: (
-) => Promise<boolean>;
-  requestPermissions: (
-) => Promise<boolean>;
-  updateSettings: (settings: Partial<PushNotificationSettings>
-) => Promise<void>;
-  scheduleAlarmPush: (alarm: Alarm
-) => Promise<void>;
-  sendDailyMotivation: (message: string
-) => Promise<void>;
-  sendWeeklyProgress: (stats: any
-) => Promise<void>;
-  testNotification: (
-) => Promise<void>;
-  unregister: (
-) => Promise<void>;
-  refreshStatus: (
-) => Promise<void>;
+  initialize: () => Promise<boolean>;
+  requestPermissions: () => Promise<boolean>;
+  updateSettings: (settings: Partial<PushNotificationSettings>) => Promise<void>;
+  scheduleAlarmPush: (alarm: Alarm) => Promise<void>;
+  sendDailyMotivation: (message: string) => Promise<void>;
+  sendWeeklyProgress: (stats: any) => Promise<void>;
+  testNotification: () => Promise<void>;
+  unregister: () => Promise<void>;
+  refreshStatus: () => Promise<void>;
 }
 
 export const usePushNotifications = (): UsePushNotificationsReturn => {
@@ -56,12 +47,9 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
   /**
    * Update status from service
    */
-  const updateStatus = useCallback(async (
-) => {
+  const updateStatus = useCallback(async () => {
     try {
-      
-      setStatus((prev: any
-) => ({
+      setStatus((prev: any) => ({
         ...prev,
         hasPermission: PushNotificationService.hasPermission(),
         currentToken: PushNotificationService.getCurrentToken(),
@@ -72,9 +60,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       }));
     } catch (error) {
       console.error('Error updating push notification status:', error);
-      
-      setStatus((prev: any
-) => ({
+
+      setStatus((prev: any) => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Unknown error',
       }));
@@ -85,9 +72,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    * Initialize push notifications
    */
   const initialize = useCallback(async (): Promise<boolean> => {
-    
-      setStatus((prev: any
-) => ({ ...prev, isLoading: true, error: null }));
+    setStatus((prev: any) => ({ ...prev, isLoading: true, error: null }));
 
     try {
       track('push_notifications_initialize_attempt');
@@ -96,9 +81,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
 
       await updateStatus();
 
-      
-      setStatus((prev: any
-) => ({
+      setStatus((prev: any) => ({
         ...prev,
         isInitialized: success,
         isLoading: false,
@@ -119,9 +102,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       const errorMessage =
         error instanceof Error ? error.message : 'Initialization failed';
 
-      
-      setStatus((prev: any
-) => ({
+      setStatus((prev: any) => ({
         ...prev,
         error: errorMessage,
         isLoading: false,
@@ -138,9 +119,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    * Request notification permissions
    */
   const requestPermissions = useCallback(async (): Promise<boolean> => {
-    
-      setStatus((prev: any
-) => ({ ...prev, isLoading: true, error: null }));
+    setStatus((prev: any) => ({ ...prev, isLoading: true, error: null }));
 
     try {
       track('push_permissions_request_attempt');
@@ -150,9 +129,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
 
       await updateStatus();
 
-      
-      setStatus((prev: any
-) => ({ ...prev, isLoading: false }));
+      setStatus((prev: any) => ({ ...prev, isLoading: false }));
 
       if (success) {
         track('push_permissions_granted');
@@ -166,9 +143,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       const errorMessage =
         error instanceof Error ? error.message : 'Permission request failed';
 
-      
-      setStatus((prev: any
-) => ({
+      setStatus((prev: any) => ({
         ...prev,
         error: errorMessage,
         isLoading: false,
@@ -185,9 +160,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    */
   const updateSettings = useCallback(
     async (newSettings: Partial<PushNotificationSettings>): Promise<void> => {
-      
-      setStatus((prev: any
-) => ({ ...prev, isLoading: true, error: null }));
+      setStatus((prev: any) => ({ ...prev, isLoading: true, error: null }));
 
       try {
         track('push_settings_update', {
@@ -198,9 +171,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
 
         await updateStatus();
 
-        
-      setStatus((prev: any
-) => ({ ...prev, isLoading: false }));
+        setStatus((prev: any) => ({ ...prev, isLoading: false }));
 
         track('push_settings_updated', {
           enabled: status.settings.enabled,
@@ -212,9 +183,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         const errorMessage =
           error instanceof Error ? error.message : 'Settings update failed';
 
-        
-      setStatus((prev: any
-) => ({
+        setStatus((prev: any) => ({
           ...prev,
           error: errorMessage,
           isLoading: false,
@@ -252,9 +221,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         const errorMessage =
           error instanceof Error ? error.message : 'Alarm scheduling failed';
 
-        
-      setStatus((prev: any
-) => ({ ...prev, error: errorMessage }));
+        setStatus((prev: any) => ({ ...prev, error: errorMessage }));
 
         track('push_alarm_schedule_error', {
           alarmId: alarm.id,
@@ -281,9 +248,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         const errorMessage =
           error instanceof Error ? error.message : 'Daily motivation failed';
 
-        
-      setStatus((prev: any
-) => ({ ...prev, error: errorMessage }));
+        setStatus((prev: any) => ({ ...prev, error: errorMessage }));
 
         track('push_daily_motivation_error', { error: errorMessage });
       }
@@ -310,9 +275,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         const errorMessage =
           error instanceof Error ? error.message : 'Weekly progress failed';
 
-        
-      setStatus((prev: any
-) => ({ ...prev, error: errorMessage }));
+        setStatus((prev: any) => ({ ...prev, error: errorMessage }));
 
         track('push_weekly_progress_error', { error: errorMessage });
       }
@@ -324,18 +287,14 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    * Test push notification
    */
   const testNotification = useCallback(async (): Promise<void> => {
-    
-      setStatus((prev: any
-) => ({ ...prev, isLoading: true, error: null }));
+    setStatus((prev: any) => ({ ...prev, isLoading: true, error: null }));
 
     try {
       track('push_test_notification_send');
 
       await PushNotificationService.testPushNotification();
 
-      
-      setStatus((prev: any
-) => ({ ...prev, isLoading: false }));
+      setStatus((prev: any) => ({ ...prev, isLoading: false }));
 
       track('push_test_notification_sent');
     } catch (error) {
@@ -343,9 +302,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       const errorMessage =
         error instanceof Error ? error.message : 'Test notification failed';
 
-      
-      setStatus((prev: any
-) => ({
+      setStatus((prev: any) => ({
         ...prev,
         error: errorMessage,
         isLoading: false,
@@ -359,9 +316,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    * Unregister from push notifications
    */
   const unregister = useCallback(async (): Promise<void> => {
-    
-      setStatus((prev: any
-) => ({ ...prev, isLoading: true, error: null }));
+    setStatus((prev: any) => ({ ...prev, isLoading: true, error: null }));
 
     try {
       track('push_unregister_attempt');
@@ -371,9 +326,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
 
       await updateStatus();
 
-      
-      setStatus((prev: any
-) => ({
+      setStatus((prev: any) => ({
         ...prev,
         isLoading: false,
         isInitialized: false,
@@ -387,9 +340,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       const errorMessage =
         error instanceof Error ? error.message : 'Unregistration failed';
 
-      
-      setStatus((prev: any
-) => ({
+      setStatus((prev: any) => ({
         ...prev,
         error: errorMessage,
         isLoading: false,
@@ -407,12 +358,10 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
   }, [updateStatus]);
 
   // Initialize on mount if not already initialized
-  useEffect((
-) => {
+  useEffect(() => {
     let mounted = true;
 
-    const initializeIfNeeded = async (
-) => {
+    const initializeIfNeeded = async () => {
       // Update initial status
       await updateStatus();
 
@@ -426,17 +375,14 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
 
     initializeIfNeeded();
 
-    return (
-) => {
+    return () => {
       mounted = false;
     };
   }, []);
 
   // Set up event listeners for push notification events
-  useEffect((
-) => {
-    const handleNotificationAnalytics = (event: CustomEvent
-) => {
+  useEffect(() => {
+    const handleNotificationAnalytics = (event: CustomEvent) => {
       const { event: eventType, data } = event.detail;
       track(`push_notification_${eventType}`, data);
     };
@@ -446,8 +392,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       handleNotificationAnalytics as EventListener
     );
 
-    return (
-) => {
+    return () => {
       window.removeEventListener(
         'notification-analytics',
         handleNotificationAnalytics as EventListener
@@ -456,11 +401,9 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
   }, [track]);
 
   // Monitor permission changes
-  useEffect((
-) => {
+  useEffect(() => {
     if ('Notification' in window) {
-      const checkPermission = (
-) => {
+      const checkPermission = () => {
         const hasPermission = Notification.permission === 'granted';
         if (hasPermission !== status.hasPermission) {
           updateStatus();
@@ -470,8 +413,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       // Check permission periodically
       const interval = setInterval(checkPermission, 5000);
 
-      return (
-) => clearInterval(interval);
+      return () => clearInterval(interval);
     }
   }, [status.hasPermission, updateStatus]);
 

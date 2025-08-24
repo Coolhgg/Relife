@@ -20,15 +20,13 @@ import type { RewardSystem, Reward, AIInsight, UserHabit } from '../types';
 
 interface RewardsDashboardProps {
   rewardSystem: RewardSystem;
-  onRefreshRewards: (
-) => Promise<void>;
+  onRefreshRewards: () => Promise<void>;
 }
 
 const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
   rewardSystem,
   onRefreshRewards,
-}
-) => {
+}) => {
   const [selectedTab, setSelectedTab] = useState<
     'overview' | 'achievements' | 'insights' | 'habits'
   >('overview');
@@ -46,8 +44,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
     currentStreak?: number;
   }>({});
 
-  const handleRefresh = async (
-) => {
+  const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
       await onRefreshRewards();
@@ -62,8 +59,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
   };
 
   // Track reward system changes
-  useEffect((
-) => {
+  useEffect(() => {
     const previousLevel = previousValues.current.level;
     const previousPoints = previousValues.current.totalPoints;
     const previousUnlocked = previousValues.current.unlockedCount;
@@ -122,8 +118,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
     previousValues.current.currentStreak = rewardSystem.currentStreak;
   }, [rewardSystem, announceRewardEvent, announceGaming]);
 
-  const getRarityColor = (rarity: Reward['rarity']
-) => {
+  const getRarityColor = (rarity: Reward['rarity']) => {
     switch (rarity) {
       case 'legendary':
         return 'text-yellow-600 bg-yellow-100 border-yellow-300';
@@ -136,8 +131,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
     }
   };
 
-  const getCategoryIcon = (category: Reward['category']
-) => {
+  const getCategoryIcon = (category: Reward['category']) => {
     switch (category) {
       case 'consistency':
         return Target;
@@ -160,8 +154,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
     }
   };
 
-  const getPriorityColor = (priority: AIInsight['priority']
-) => {
+  const getPriorityColor = (priority: AIInsight['priority']) => {
     switch (priority) {
       case 'high':
         return 'border-red-300 bg-red-50';
@@ -222,12 +215,10 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
             { id: 'achievements', label: 'Achievements', icon: Award },
             { id: 'insights', label: 'AI Insights', icon: Brain },
             { id: 'habits', label: 'Habits', icon: Target },
-          ].map(({ id, label, icon: Icon }
-) => (
+          ].map(({ id, label, icon: Icon }) => (
             <button
               key={id}
-              onClick={(
-) => setSelectedTab(id as any)}
+              onClick={() => setSelectedTab(id as any)}
               className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium transition-colors ${
                 selectedTab === id
                   ? 'bg-blue-600 text-white shadow-sm'
@@ -251,15 +242,14 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               Recent Achievements
             </h2>
             <div className="grid gap-3">
-              {rewardSystem.unlockedRewards.slice(0, 3).map((reward: any
-) => { // auto: implicit any
+              {rewardSystem.unlockedRewards.slice(0, 3).map((reward: any) => {
+                // auto: implicit any
                 const CategoryIcon = getCategoryIcon(reward.category);
                 return (
                   <div
                     key={reward.id}
                     className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer hover:bg-white/50 transition-colors ${getRarityColor(reward.rarity)}`}
-                    onClick={(
-) => {
+                    onClick={() => {
                       setSelectedReward(reward);
                       announceGaming({
                         type: 'reward',
@@ -324,8 +314,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                           </p>
                           <ul className="text-sm text-gray-600 space-y-1">
                             {rewardSystem.aiInsights[0].suggestedActions.map(
-                              (action, index
-) => (
+                              (action, index) => (
                                 <li key={index} className="flex items-center gap-2">
                                   <CheckCircle2 className="w-3 h-3 text-green-500" />
                                   {action}
@@ -380,15 +369,14 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               Unlocked Achievements ({rewardSystem.unlockedRewards.length})
             </h2>
             <div className="grid gap-3 md:grid-cols-2">
-              {rewardSystem.unlockedRewards.map((reward: any
-) => { // auto: implicit any
+              {rewardSystem.unlockedRewards.map((reward: any) => {
+                // auto: implicit any
                 const CategoryIcon = getCategoryIcon(reward.category);
                 return (
                   <div
                     key={reward.id}
                     className={`p-4 rounded-lg border-2 cursor-pointer hover:shadow-md transition-shadow ${getRarityColor(reward.rarity)}`}
-                    onClick={(
-) => setSelectedReward(reward)}
+                    onClick={() => setSelectedReward(reward)}
                   >
                     <div className="flex items-start gap-3">
                       <div className="text-3xl">{reward.icon}</div>
@@ -430,12 +418,10 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               {rewardSystem.availableRewards
                 .filter(
                   reward =>
-                    
-                    !rewardSystem.unlockedRewards.find((ur: any
-) => ur.id === reward.id)
+                    !rewardSystem.unlockedRewards.find((ur: any) => ur.id === reward.id)
                 )
-                .map((reward: any
-) => { // auto: implicit any
+                .map((reward: any) => {
+                  // auto: implicit any
                   const CategoryIcon = getCategoryIcon(reward.category);
                   return (
                     <div
@@ -495,9 +481,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               AI-Powered Insights
             </h2>
             <div className="space-y-4">
-              {rewardSystem.aiInsights
-      .map((insight: any
-) => (
+              {rewardSystem.aiInsights.map((insight: any) => (
                 <div
                   key={insight.id}
                   className={`p-4 rounded-lg border-2 ${getPriorityColor(insight.priority)}`}
@@ -534,8 +518,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                         💡 Suggested actions:
                       </p>
                       <ul className="text-sm text-gray-600 space-y-1">
-                        {insight.suggestedActions.map((action, index
-) => (
+                        {insight.suggestedActions.map((action, index) => (
                           <li key={index} className="flex items-start gap-2">
                             <ChevronRight className="w-3 h-3 mt-0.5 text-blue-500 flex-shrink-0" />
                             {action}
@@ -595,8 +578,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                   Key Traits
                 </p>
                 <div className="flex flex-wrap gap-1">
-                  {rewardSystem.niche.traits.map((trait, index
-) => (
+                  {rewardSystem.niche.traits.map((trait, index) => (
                     <span
                       key={index}
                       className="inline-block px-2 py-1 bg-white/50 text-xs font-medium text-gray-700 rounded-full"
@@ -610,9 +592,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
 
             {/* Identified Habits */}
             <div className="space-y-3">
-              {rewardSystem.habits
-      .map((habit: any
-) => (
+              {rewardSystem.habits.map((habit: any) => (
                 <div
                   key={habit.id}
                   className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
@@ -751,8 +731,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
             </div>
 
             <button
-              onClick={(
-) => {
+              onClick={() => {
                 setSelectedReward(null);
                 announceGaming({
                   type: 'reward',

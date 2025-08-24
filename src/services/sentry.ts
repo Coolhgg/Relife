@@ -9,8 +9,7 @@ export interface SentryConfig {
   debug?: boolean;
   enableTracing?: boolean;
   tracesSampleRate?: number;
-  beforeSend?: (event: Sentry.Event
-) => Sentry.Event | null;
+  beforeSend?: (event: Sentry.Event) => Sentry.Event | null;
 }
 
 export interface UserContext {
@@ -158,9 +157,7 @@ class SentryService {
       return 'sentry-not-initialized';
     }
 
-    return Sentry.withScope((scope: any
-) => {
-      // auto: implicit any
+    return Sentry.withScope((scope: any) => {
       // Set error level
       if (context.level) {
         scope.setLevel(context.level);
@@ -168,8 +165,7 @@ class SentryService {
 
       // Add tags for filtering and grouping
       if (context.tags) {
-        Object.entries(context.tags).forEach(([key, value]
-) => {
+        Object.entries(context.tags).forEach(([key, value]) => {
           scope.setTag(key, value);
         });
       }
@@ -215,14 +211,11 @@ class SentryService {
       return 'sentry-not-initialized';
     }
 
-    return Sentry.withScope((scope: any
-) => {
-      // auto: implicit any
+    return Sentry.withScope((scope: any) => {
       scope.setLevel(level);
 
       if (context.tags) {
-        Object.entries(context.tags).forEach(([key, value]
-) => {
+        Object.entries(context.tags).forEach(([key, value]) => {
           scope.setTag(key, value);
         });
       }
@@ -271,8 +264,7 @@ class SentryService {
           component: 'smart-alarm-app',
         },
       },
-      (
-) => {}
+      () => {}
     );
   }
 
@@ -368,15 +360,13 @@ class SentryService {
   /**
    * Create a wrapped version of a function that captures errors
    */
-  wrap<T extends (...args: unknown[]
-) => unknown>(
+  wrap<T extends (...args: unknown[]) => unknown>(
     fn: T,
     context: ErrorContext = {}
   ): T {
     if (!this.isInitialized) return fn;
 
-    return ((...args: Parameters<T>
-) => {
+    return ((...args: Parameters<T>) => {
       try {
         return (fn as any)(...args);
       } catch (error) {

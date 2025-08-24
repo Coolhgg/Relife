@@ -5,8 +5,7 @@ import type { Alarm } from '../types';
 
 interface AdvancedSchedulingDashboardProps {
   userId?: string;
-  onScheduleAlarm?: (alarmData: any
-) => void;
+  onScheduleAlarm?: (alarmData: any) => void;
   className?: string;
   alarms?: Alarm[];
 }
@@ -16,8 +15,7 @@ const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = 
   onScheduleAlarm,
   className = '',
   alarms, // auto: added for prop compatibility
-}
-) => {
+}) => {
   const [activeTab, setActiveTab] = useState('overview');
 
   const tabs = [
@@ -27,8 +25,7 @@ const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = 
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
-  const renderTabContent = (
-) => {
+  const renderTabContent = () => {
     switch (activeTab) {
       case 'overview':
         return (
@@ -77,8 +74,7 @@ const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = 
               AI-powered alarms that adapt to your sleep patterns and schedule.
             </p>
             <button
-              onClick={(
-) => onScheduleAlarm?.({ type: 'smart', enabled: true })}
+              onClick={() => onScheduleAlarm?.({ type: 'smart', enabled: true })}
               className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
             >
               Create Smart Alarm
@@ -142,8 +138,7 @@ const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = 
                 return (
                   <button
                     key={tab.id}
-                    onClick={(
-) => setActiveTab(tab.id)}
+                    onClick={() => setActiveTab(tab.id)}
                     className={`flex items-center gap-2 px-3 py-4 border-b-2 font-medium text-sm ${
                       activeTab === tab.id
                         ? 'border-blue-500 text-blue-600'
