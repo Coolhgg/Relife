@@ -6,12 +6,18 @@ interface PricingPageProps {
   onBack?: () => void;
   onSelectPlan?: (planId: string) => void;
   currentTier?: string;
+  user?: unknown; // auto: widened to satisfy usage
+  onUpgrade?: ((...args: any[]) => void) | undefined; // auto: widened function prop
+  onManageSubscription?: ((...args: any[]) => void) | undefined; // auto: widened function prop
 }
 
 const PricingPage: React.FC<PricingPageProps> = ({
   onBack,
   onSelectPlan,
-  currentTier = 'free'
+  currentTier = 'free',
+  user, // auto: added for prop compatibility
+  onUpgrade, // auto: added for prop compatibility
+  onManageSubscription // auto: added for prop compatibility
 }) => {
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
 

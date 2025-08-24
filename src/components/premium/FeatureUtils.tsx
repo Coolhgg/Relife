@@ -7,13 +7,14 @@ import { useFeatureAccessContext } from '../../contexts/FeatureAccessContext';
 
 // Feature Badge Component
 interface FeatureBadgeProps {
+  tier?: string; // auto: added for prop compatibility
   size?: 'sm' | 'md' | 'lg';
   variant?: 'subtle' | 'prominent';
   className?: string;
 }
 
 export function FeatureBadge({
-  tier,
+  tier, // auto: added destructuring for existing usage
   size = 'md',
   variant = 'subtle',
   className = '',
@@ -88,6 +89,8 @@ export function FeatureBadge({
 interface TierComparisonProps {
   features?: string[];
   className?: string;
+  currentTier?: string; // auto: added for prop compatibility
+  targetTier?: string; // auto: added for prop compatibility
 }
 
 export function TierComparison({

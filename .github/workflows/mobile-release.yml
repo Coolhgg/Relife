@@ -128,7 +128,7 @@ jobs:
           VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
       - name: Upload web build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: web-build
           path: dist/
@@ -227,13 +227,13 @@ jobs:
           fi
 
       - name: Upload Android APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: android-apk-release
           path: android/app/build/outputs/apk/release/app-release.apk
 
       - name: Upload Android AAB
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: android-aab-release
           path: android/app/build/outputs/bundle/release/app-release.aab
@@ -285,7 +285,7 @@ jobs:
           EOF
 
       - name: Upload Android release notes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: android-release-notes
           path: android-release-notes.md
@@ -398,7 +398,7 @@ jobs:
           echo "✅ iOS export completed"
 
       - name: Upload IPA
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ios-ipa-release
           path: ios/export/*.ipa
@@ -454,7 +454,7 @@ jobs:
           EOF
 
       - name: Upload iOS release notes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ios-release-notes
           path: ios-release-notes.md
@@ -522,22 +522,20 @@ jobs:
           EOF
 
       - name: Upload release summary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release-summary
           path: release-summary.md
 
       - name: Create GitHub release
         if: ${{ startsWith(github.ref, 'refs/tags/mobile-v') }}
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Mobile Release ${{ needs.prepare.outputs.version }}
-          body_path: release-summary.md
-          draft: false
-          prerelease: ${{ github.event.inputs.release_type != 'production' }}
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --title "Mobile Release ${{ needs.prepare.outputs.version }}" \
+            --notes-file release-summary.md \
+            ${{ github.event.inputs.release_type != 'production' && '--prerelease' || '' }}
 
       - name: Notify Slack
         uses: 8398a7/action-slack@v3

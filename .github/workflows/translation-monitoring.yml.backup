@@ -409,10 +409,10 @@ jobs:
 # 🌐 Translation Quality Monitoring Alert
           
 ## 📊 Current Status
-**Quality Status**: $QUALITY_STATUS  
-**Average Quality**: $AVERAGE_QUALITY%  
-**Trend**: $TREND  
-**Monitoring Type**: ${{ env.MONITORING_TYPE }}
+Quality Status: $QUALITY_STATUS  
+Average Quality: $AVERAGE_QUALITY%  
+Trend: $TREND  
+Monitoring Type: ${{ env.MONITORING_TYPE }}
           
 ## 📈 Summary
 The automated translation quality monitoring has detected the following:

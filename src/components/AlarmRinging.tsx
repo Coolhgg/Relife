@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
+import { TimeoutHandle } from '../types/timers';
 import {
   AlertCircle,
   Volume2,
@@ -138,7 +139,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
 
   const stopVoiceRef = useRef<(() => void) | null>(null);
   const stopRecognitionRef = useRef<(() => void) | null>(null);
-  const vibrateIntervalRef = useRef<number | null>(null);
+  const vibrateIntervalRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
   const fallbackAudioRef = useRef<{ stop: () => void } | null>(null);
 
   const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
@@ -181,7 +182,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
   const stopVibrationPattern = () => {
     if (vibrateIntervalRef.current) {
       clearInterval(vibrateIntervalRef.current);
-      vibrateIntervalRef.current = null;
+      vibrateIntervalRef.current = undefined; // auto: changed from null to undefined
     }
   };
 
@@ -358,7 +359,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
 
   const playFallbackSound = () => {
     try {
-      let intervalRef: number | null = null;
+      let intervalRef: TimeoutHandle | undefined = undefined; // auto: changed from number | null to TimeoutHandle
       let isActive = true;
 
       const createBeep = () => {
@@ -395,7 +396,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
           isActive = false;
           if (intervalRef) {
             clearInterval(intervalRef);
-            intervalRef = null;
+            intervalRef = undefined; // auto: changed from null to undefined
           }
         },
       };

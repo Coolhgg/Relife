@@ -2,6 +2,7 @@
 /// <reference lib="dom" />
 import React, { useEffect, useCallback, useRef } from 'react';
 import { PersonaType, PersonaDetectionFactor } from '../types/index';
+import { TimeoutHandle } from '../types/timers';
 
 // Define missing types based on what the component needs
 type UserPersona = {
@@ -14,6 +15,14 @@ type PersonaDetectionData = {
   factors: PersonaDetectionFactor[];
   confidence: number;
   primaryPersona: PersonaType;
+  // auto: from usage
+  subscriptionTier?: string;
+  ageRange?: string;
+  usagePatterns?: Record<string, unknown>;
+  priceInteraction?: Record<string, unknown>;
+  featurePreferences?: Record<string, unknown>;
+  deviceType?: string;
+  timeOfDay?: string;
 };
 
 // Analytics Events for Persona Tracking
@@ -68,7 +77,7 @@ class PersonaAnalyticsTracker {
     event: PersonaAnalyticsEvent;
     data: PersonaAnalyticsData | CampaignPerformanceData;
   }> = [];
-  private flushInterval: number | null = null;
+  private flushInterval: TimeoutHandle | undefined = undefined; // auto: changed from number | null to TimeoutHandle
 
   private constructor() {
     this.sessionId = this.generateSessionId();
