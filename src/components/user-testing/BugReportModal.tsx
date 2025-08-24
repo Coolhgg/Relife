@@ -444,7 +444,7 @@ export function BugReportModal({
                       onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewTag(e.target.value)}
                       placeholder="Add a tag..."
                       className="flex-1"
-                      onKeyDown={(e: any) =>
+                      onKeyDown={(e: React.KeyboardEvent) =>
                         e.key === 'Enter' && (e.preventDefault(), addTag())
                       }
                     />

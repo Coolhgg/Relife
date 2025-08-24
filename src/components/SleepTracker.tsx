@@ -215,7 +215,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                       id="sleep-date"
                       type="date"
                       value={sleepEntry.date}
-                      onChange={(e: any) =>
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setSleepEntry((prev: any) => ({
                           ...prev,
                           date: e.target.value,
@@ -238,7 +238,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                         id="bedtime"
                         type="time"
                         value={sleepEntry.bedtime}
-                        onChange={(e: any) =>
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           setSleepEntry((prev: any) => ({
                             ...prev,
                             bedtime: e.target.value,
@@ -260,7 +260,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                         id="wake-time"
                         type="time"
                         value={sleepEntry.wakeTime}
-                        onChange={(e: any) =>
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           setSleepEntry((prev: any) => ({
                             ...prev,
                             wakeTime: e.target.value,
@@ -282,7 +282,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                       min="1"
                       max="10"
                       value={sleepEntry.quality}
-                      onChange={(e: any) =>
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setSleepEntry((prev: any) => ({
                           ...prev,
                           quality: parseInt(e.target.value),

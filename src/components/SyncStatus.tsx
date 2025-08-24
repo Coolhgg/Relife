@@ -176,7 +176,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
           <div className="flex items-center gap-2">
             {status.isOnline && (
               <button
-                onClick={(e: any) => {
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                   e.stopPropagation();
                   handleManualSync();
                 }}

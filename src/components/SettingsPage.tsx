@@ -267,7 +267,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('permissions')}
-            onKeyDown={(e: any) => handleKeyDown(e, 'permissions')}
+            onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, 'permissions')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'permissions'}
             aria-controls="permissions-content"
@@ -318,7 +318,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('appearance')}
-            onKeyDown={(e: any) => handleKeyDown(e, 'appearance')}
+            onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, 'appearance')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'appearance'}
             aria-controls="appearance-content"
@@ -653,7 +653,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('themes')}
-            onKeyDown={(e: any) => handleKeyDown(e, 'themes')}
+            onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, 'themes')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'themes'}
             aria-controls="themes-content"
@@ -689,7 +689,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('personalization')}
-            onKeyDown={(e: any) => handleKeyDown(e, 'personalization')}
+            onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, 'personalization')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'personalization'}
             aria-controls="personalization-content"
@@ -725,7 +725,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('cloudsync')}
-            onKeyDown={(e: any) => handleKeyDown(e, 'cloudsync')}
+            onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, 'cloudsync')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'cloudsync'}
             aria-controls="cloudsync-content"
@@ -791,7 +791,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('voice')}
-            onKeyDown={(e: any) => handleKeyDown(e, 'voice')}
+            onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, 'voice')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'voice'}
             aria-controls="voice-content"
@@ -890,7 +890,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('sounds')}
-            onKeyDown={(e: any) => handleKeyDown(e, 'sounds')}
+            onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, 'sounds')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'sounds'}
             aria-controls="sounds-content"
@@ -926,7 +926,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('notifications')}
-            onKeyDown={(e: any) => handleKeyDown(e, 'notifications')}
+            onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, 'notifications')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'notifications'}
             aria-controls="notifications-content"
@@ -985,7 +985,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     aria-checked={hapticFeedback}
                     aria-label={`Haptic feedback ${hapticFeedback ? 'enabled' : 'disabled'}`}
                     aria-describedby="haptic-desc"
-                    onKeyDown={(e: any) => {
+                    onKeyDown={(e: React.KeyboardEvent) => {
                       // auto
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -1064,7 +1064,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('security')}
-            onKeyDown={(e: any) => handleKeyDown(e, 'security')}
+            onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, 'security')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'security'}
             aria-controls="security-content"
@@ -1100,7 +1100,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <section className="alarm-card">
           <button
             onClick={() => toggleSection('about')}
-            onKeyDown={(e: any) => handleKeyDown(e, 'about')}
+            onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, 'about')}
             className="w-full flex items-center justify-between p-1"
             aria-expanded={activeSection === 'about'}
             aria-controls="about-content"
@@ -1180,7 +1180,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           <section className="alarm-card bg-orange-50 dark:bg-orange-900/10 border-orange-200 dark:border-orange-800">
             <button
               onClick={() => toggleSection('development')}
-              onKeyDown={(e: any) => handleKeyDown(e, 'development')}
+              onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, 'development')}
               className="w-full flex items-center justify-between p-1"
               aria-expanded={activeSection === 'development'}
               aria-controls="development-content"

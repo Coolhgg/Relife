@@ -454,7 +454,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         max="1"
                         step="0.1"
                         value={sleepPatternWeight}
-                        onChange={(e: any) =>
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           setSleepPatternWeight(parseFloat(e.target.value))
                         }
                         className="w-full accent-purple-500"
@@ -476,7 +476,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         max="0.5"
                         step="0.05"
                         value={learningFactor}
-                        onChange={(e: any) =>
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           setLearningFactor(parseFloat(e.target.value))
                         }
                         className="w-full accent-purple-500"
@@ -525,7 +525,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                             <input
                               type="checkbox"
                               checked={condition.isEnabled}
-                              onChange={(e: any) =>
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                 updateCondition(condition.id, {
                                   isEnabled: e.target.checked,
                                 })

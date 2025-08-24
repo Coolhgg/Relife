@@ -185,7 +185,7 @@ const MathChallenge: React.FC<{
             placeholder="Enter your answer"
             className="text-center text-2xl h-16"
             autoFocus
-            onKeyPress={(e: any) => e.key === 'Enter' && handleSubmit()}
+            onKeyPress={(e: React.SyntheticEvent) => e.key === 'Enter' && handleSubmit()}
           />
 
           <Button

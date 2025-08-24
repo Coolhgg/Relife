@@ -323,7 +323,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
 
                   {/* Favorite Button */}
                   <button
-                    onClick={(e: any) => {
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.stopPropagation();
                       toggleFavorite(combination.id);
                     }}
@@ -375,7 +375,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
 
                   {/* Preview Button */}
                   <button
-                    onClick={(e: any) => {
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.stopPropagation();
                       handlePreviewTheme(combination.visual);
                     }}
@@ -425,7 +425,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                   </span>
 
                   <button
-                    onClick={(e: any) => {
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.stopPropagation();
                       handlePreviewTheme(theme.id as VisualAlarmThemeId);
                     }}

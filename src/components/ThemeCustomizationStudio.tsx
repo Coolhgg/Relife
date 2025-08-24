@@ -265,7 +265,7 @@ const ThemeCustomizationStudio: React.FC = () => {
         <div className="studio-controls">
           <select
             value={previewMode}
-            onChange={(e: any) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setPreviewMode(e.target.value as 'desktop' | 'tablet' | 'mobile')
             }
             className="preview-mode-select"
@@ -278,7 +278,7 @@ const ThemeCustomizationStudio: React.FC = () => {
           <div className="export-controls">
             <select
               value={exportFormat}
-              onChange={(e: any) =>
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setExportFormat(e.target.value as 'json' | 'css' | 'scss')
               }
               className="export-format-select"
@@ -363,7 +363,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                           <input
                             type="text"
                             value={font}
-                            onChange={(e: any) =>
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                               handleTypographyChange(
                                 `fontFamily.${type}`,
                                 e.target.value
@@ -386,7 +386,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                           <input
                             type="text"
                             value={value}
-                            onChange={(e: any) =>
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                               handleTypographyChange(`fontSize.${size}`, e.target.value)
                             }
                             placeholder="e.g., 1rem"
@@ -405,7 +405,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                 <div className="animation-intensity">
                   <h4>Animation Intensity</h4>
                   <select
-                    onChange={(e: any) =>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       animationService.setAnimationIntensity(e.target.value as any)
                     }
                     className="intensity-select"
@@ -503,7 +503,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                           <input
                             type="text"
                             value={shadow}
-                            onChange={(e: any) =>
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                               setCustomTheme((prev: any) => ({
                                 ...prev,
                                 effects: {
@@ -535,7 +535,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                             max="1"
                             step="0.1"
                             value={value}
-                            onChange={(e: any) =>
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                               setCustomTheme((prev: any) => ({
                                 ...prev,
                                 effects: {

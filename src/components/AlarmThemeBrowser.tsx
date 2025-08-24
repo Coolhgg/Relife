@@ -375,7 +375,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedCategory}
-                    onChange={(e: any) =>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setSelectedCategory(e.target.value as ThemeCategory | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -402,7 +402,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedIntensity}
-                    onChange={(e: any) =>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setSelectedIntensity(e.target.value as AlarmIntensity | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -423,7 +423,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedTimeOfDay}
-                    onChange={(e: any) =>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setSelectedTimeOfDay(e.target.value as TimeOfDay | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -446,7 +446,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                     <input
                       type="checkbox"
                       checked={showPremiumOnly}
-                      onChange={(e: any) => setShowPremiumOnly(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShowPremiumOnly(e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -458,7 +458,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                     <input
                       type="checkbox"
                       checked={showFavoritesOnly}
-                      onChange={(e: any) => setShowFavoritesOnly(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShowFavoritesOnly(e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -644,7 +644,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
 
       {/* Favorite Button */}
       <button
-        onClick={(e: any) => {
+        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
           e.stopPropagation();
           onToggleFavorite();
         }}
@@ -730,7 +730,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
         </div>
 
         <button
-          onClick={(e: any) => {
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             // auto: implicit any
             e.stopPropagation();
             onPreview();
@@ -892,7 +892,7 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
       {/* Actions */}
       <div className="flex items-center space-x-2 ml-4">
         <button
-          onClick={(e: any) => {
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             // auto: implicit any
             e.stopPropagation();
             onToggleFavorite();
@@ -905,7 +905,7 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
         </button>
 
         <button
-          onClick={(e: any) => {
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             // auto: implicit any
             e.stopPropagation();
             onPreview();

@@ -1295,12 +1295,12 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   <select
                     id="snooze-interval"
                     value={formData.snoozeInterval}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                       setFormData((prev: any) => ({
                         ...prev,
                         snoozeInterval: parseInt(e.target.value),
                       }));
-                    }
+                    }}
                     className="alarm-input text-sm"
                   >
                     <option value={1}>1 minute</option>
@@ -1325,12 +1325,12 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   <select
                     id="max-snoozes"
                     value={formData.maxSnoozes}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                       setFormData((prev: any) => ({
                         ...prev,
                         maxSnoozes: parseInt(e.target.value),
                       }));
-                    }
+                    }}
                     className="alarm-input text-sm"
                   >
                     <option value={1}>1 time</option>

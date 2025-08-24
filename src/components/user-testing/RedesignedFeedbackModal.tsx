@@ -509,7 +509,7 @@ export function RedesignedFeedbackModal({
           <Input
             id="title"
             value={feedbackData.title}
-            onChange={(e: any) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFeedbackData((prev: any) => ({ ...prev, title: e.target.value }))
             }
             placeholder="Brief summary of your feedback..."
@@ -525,7 +525,7 @@ export function RedesignedFeedbackModal({
           <Textarea
             id="description"
             value={feedbackData.description}
-            onChange={(e: any) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFeedbackData((prev: any) => ({ ...prev, description: e.target.value }))
             }
             placeholder="Tell us more about your experience, what you liked, what could be improved..."
