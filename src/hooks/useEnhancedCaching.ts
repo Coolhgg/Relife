@@ -9,6 +9,7 @@ import type {
 } from '../services/enhanced-cache-manager';
 import type { CustomSound } from '../services/types/media';
 import { TimeoutHandle } from '../types/timers';
+import type { PerformanceHistoryEntry } from '../types/state-updaters';
 
 export interface CacheState {
   stats: CacheStats;
@@ -48,7 +49,7 @@ export function useEnhancedCaching(): {
           ? 'medium'
           : 'high';
 
-    setCacheState((prev: any) => ({
+    setCacheState((prev: CacheState) => ({
       ...prev,
       stats,
       memoryPressure,
@@ -56,29 +57,29 @@ export function useEnhancedCaching(): {
   }, []);
 
   const optimize = useCallback(async () => {
-    setCacheState((prev: any) => ({ ...prev, isOptimizing: true }));
+    setCacheState((prev: CacheState) => ({ ...prev, isOptimizing: true }));
 
     try {
       await enhancedCacheManager.optimize();
 
-      setCacheState((prev: any) => ({
+      setCacheState((prev: CacheState) => ({
         ...prev,
         lastOptimization: new Date(),
       }));
     } finally {
-      setCacheState((prev: any) => ({ ...prev, isOptimizing: false }));
+      setCacheState((prev: CacheState) => ({ ...prev, isOptimizing: false }));
       updateStats();
     }
   }, [updateStats]);
 
   const warmCache = useCallback(
     async (sounds: CustomSound[]) => {
-      setCacheState((prev: any) => ({ ...prev, isWarming: true }));
+      setCacheState((prev: CacheState) => ({ ...prev, isWarming: true }));
 
       try {
         await enhancedCacheManager.warmCache(sounds);
       } finally {
-        setCacheState((prev: any) => ({ ...prev, isWarming: false }));
+        setCacheState((prev: CacheState) => ({ ...prev, isWarming: false }));
         updateStats();
       }
     },
@@ -173,7 +174,7 @@ export function useCachePerformance() {
       setPerformance(newPerformance);
 
       // Update history
-      setPerformanceHistory((prev: any) => {
+      setPerformanceHistory((prev: { timestamp: Date; hitRate: number; accessTime: number; }[]) => {
         const newEntry = {
           timestamp: new Date(),
           hitRate: newPerformance.hitRate,
@@ -243,7 +244,7 @@ export function useCacheWarming() {
       nextTime.setHours(targetHour, 0, 0, 0);
     }
 
-    setWarmingStatus((prev: any) => ({
+    setWarmingStatus((prev: { isActive: boolean; nextScheduledTime: Date | null; lastWarmingTime: Date | null; warmedEntriesCount: number; }) => ({
       ...prev,
       nextScheduledTime: nextTime,
     }));
@@ -374,7 +375,7 @@ export function useAutoOptimization(enabled: boolean = true) {
 
           const optimizationTime = performance.now() - startTime;
 
-          setOptimizationStatus((prev: any) => ({
+          setOptimizationStatus((prev: { isEnabled: boolean; lastOptimization: Date | null; optimizationCount: number; averageOptimizationTime: number; }) => ({
             ...prev,
             lastOptimization: new Date(),
             optimizationCount: prev.optimizationCount + 1,
@@ -398,7 +399,7 @@ export function useAutoOptimization(enabled: boolean = true) {
   }, [enabled]);
 
   const toggleAutoOptimization = useCallback(() => {
-    setOptimizationStatus((prev: any) => ({
+    setOptimizationStatus((prev: { isEnabled: boolean; lastOptimization: Date | null; optimizationCount: number; averageOptimizationTime: number; }) => ({
       ...prev,
       isEnabled: !prev.isEnabled,
     }));
@@ -435,7 +436,27 @@ export function useCacheDebugging() {
     const updateDebugInfo = () => {
       const stats = enhancedCacheManager.getStats();
 
-      setDebugInfo((prev: any) => ({
+      setDebugInfo((prev: {
+        memoryUsage: number;
+        diskUsage: number;
+        hitRate: number;
+        compressionSavings: number;
+        topAccessedEntries: Array<{
+          id: string;
+          accessCount: number;
+          size: number;
+        }>;
+        recentEvictions: Array<{
+          id: string;
+          evictedAt: Date;
+          reason: string;
+        }>;
+        cacheErrors: Array<{
+          timestamp: Date;
+          error: string;
+          category: string;
+        }>;
+      }) => ({
         ...prev,
         memoryUsage: stats.memoryUsage,
         diskUsage: stats.totalSize,
