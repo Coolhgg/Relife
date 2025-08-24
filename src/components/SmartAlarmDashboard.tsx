@@ -113,7 +113,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 ) => {
     if (confidence >= 0.8) return <CheckCircle className="w-4 h-4 text-green-400" />;
     if (confidence >= 0.6) return <Eye className="w-4 h-4 text-yellow-400" />;
-    return <Alert className="w-4 h-4 text-red-400" />;
+    return <AlertTriangle className="w-4 h-4 text-red-400" />;
   };
 
   const smartAlarms = alarms.filter((alarm: any) => a.larm.smartEnabled);

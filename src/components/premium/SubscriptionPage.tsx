@@ -13,7 +13,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Alert, AlertDescription } from '../ui/alert';
+import { AlertTriangle, AlertDescription } from '../ui/alert';
 import { Skeleton } from '../ui/skeleton';
 import useSubscription from '../../hooks/useSubscription';
 import useAuth from '../../hooks/useAuth';
@@ -219,14 +219,14 @@ export function SubscriptionPage({
 
       {/* Alerts */}
       {error && (
-        <Alert className="border-red-200 bg-red-50">
+        <AlertTriangle className="border-red-200 bg-red-50">
           <AlertCircle className="h-4 w-4 text-red-600" />
           <AlertDescription className="text-red-600">{error}</AlertDescription>
         </Alert>
       )}
 
       {success && (
-        <Alert className="border-green-200 bg-green-50">
+        <AlertTriangle className="border-green-200 bg-green-50">
           <CheckCircle className="h-4 w-4 text-green-600" />
           <AlertDescription className="text-green-600">{success}</AlertDescription>
         </Alert>

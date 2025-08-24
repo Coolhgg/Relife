@@ -424,7 +424,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
           {/* Warning Footer */}
           <div className="p-4 bg-red-900/50 border-t border-red-500/50">
             <div className="flex items-center justify-center space-x-2">
-              <Alert className="h-5 w-5 text-yellow-400" />
+              <AlertTriangle className="h-5 w-5 text-yellow-400" />
               <span className="text-sm font-medium">
                 FAILURE TO COMPLETE PROTOCOLS WILL RESULT IN NUCLEAR MELTDOWN
               </span>

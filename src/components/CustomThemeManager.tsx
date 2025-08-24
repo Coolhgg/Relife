@@ -48,7 +48,7 @@ import {
 } from './ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ScrollArea } from './ui/scroll-area';
-import { Alert, AlertDescription } from './ui/alert';
+import { AlertTriangle, AlertDescription } from './ui/alert';
 import { CustomSoundThemeCreator } from './CustomSoundThemeCreator';
 import { SoundPreviewSystem } from './SoundPreviewSystem';
 import { soundEffectsService } from '../services/sound-effects';

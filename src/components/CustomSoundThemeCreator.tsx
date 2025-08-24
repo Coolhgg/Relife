@@ -25,7 +25,7 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
-import { Alert, AlertDescription } from './ui/alert';
+import { AlertTriangle, AlertDescription } from './ui/alert';
 import {
   Select,
   SelectContent,
@@ -584,7 +584,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
           {validationResult && (
             <div className="space-y-4">
               {validationResult.issues.map((issue, index) => (
-                <Alert key={index}>
+                <AlertTriangle key={index}>
                   <AlertCircle className="w-4 h-4" />
                   <AlertDescription>{issue.message}</AlertDescription>
                 </Alert>

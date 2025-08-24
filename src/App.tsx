@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import {
   Plus,
@@ -22,16 +22,17 @@ import { useTheme } from './hooks/useTheme';
 import AlarmList from './components/AlarmList';
 import AlarmForm from './components/AlarmForm';
 import AlarmRinging from './components/AlarmRinging';
-import Dashboard from './components/Dashboard';
-import OnboardingFlow from './components/OnboardingFlow';
-import AuthenticationFlow from './components/AuthenticationFlow';
+// Core components - some lazy loaded
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const OnboardingFlow = lazy(() => import('./components/OnboardingFlow'));
+const AuthenticationFlow = lazy(() => import('./components/AuthenticationFlow'));
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineIndicator from './components/OfflineIndicator';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
-// Enhanced consolidated components
-import GamingHub from './components/GamingHub';
-import EnhancedSettings from './components/EnhancedSettings';
-import PricingPage from './components/PricingPage';
+// Enhanced consolidated components - lazy loaded
+const GamingHub = lazy(() => import('./components/GamingHub'));
+const EnhancedSettings = lazy(() => import('./components/EnhancedSettings'));
+const PricingPage = lazy(() => import('./components/PricingPage'));
 import { ScreenReaderProvider } from './components/ScreenReaderProvider';
 import TabProtectionWarning from './components/TabProtectionWarning';
 import { ThemeProvider } from './hooks/useTheme';
@@ -1797,11 +1798,13 @@ function AppContent() {
   // Show onboarding flow for new users (after authentication)
   if (appState.isOnboarding) {
     return (
-      <OnboardingFlow
-        onComplete={handleOnboardingComplete}
-        appState={appState}
-        setAppState={setAppState}
-      />
+      <Suspense fallback={<div className="flex items-center justify-center h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>}>
+        <OnboardingFlow
+          onComplete={handleOnboardingComplete}
+          appState={appState}
+          setAppState={setAppState}
+        />
+      </Suspense>
     );
   }
 
@@ -1855,24 +1858,26 @@ function AppContent() {
         });
         return (
           <ErrorBoundary context="Dashboard">
-            <Dashboard
-              alarms={appState.alarms}
-              onAddAlarm={() => {
-                appAnalytics.trackFeatureUsage('add_alarm', 'button_clicked');
-                setShowAlarmForm(true);
-              }}
-              onQuickSetup={handleQuickSetup}
-              onNavigateToAdvanced={() => {
-                appAnalytics.trackFeatureUsage(
-                  'navigation',
-                  'advanced_scheduling_from_dashboard'
-                );
-                setAppState((prev: AppState) => ({ // type-safe replacement
-                   ...prev,
-                  currentView: 'advanced-scheduling',
-                }));
-              }}
-            />
+            <Suspense fallback={<div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>}>
+              <Dashboard
+                alarms={appState.alarms}
+                onAddAlarm={() => {
+                  appAnalytics.trackFeatureUsage('add_alarm', 'button_clicked');
+                  setShowAlarmForm(true);
+                }}
+                onQuickSetup={handleQuickSetup}
+                onNavigateToAdvanced={() => {
+                  appAnalytics.trackFeatureUsage(
+                    'navigation',
+                    'advanced_scheduling_from_dashboard'
+                  );
+                  setAppState((prev: AppState) => ({ // type-safe replacement
+                     ...prev,
+                    currentView: 'advanced-scheduling',
+                  }));
+                }}
+              />
+            </Suspense>
           </ErrorBoundary>
         );
       case 'alarms':
@@ -1909,7 +1914,8 @@ function AppContent() {
         appAnalytics.trackFeatureUsage('gaming_hub', 'accessed');
         return (
           <ErrorBoundary context="GamingHub">
-            <GamingHub
+            <Suspense fallback={<div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>}>
+              <GamingHub
               currentUser={auth.user as User}
               rewardSystem={appState.rewardSystem}
               activeBattles={appState.activeBattles || []}
@@ -1955,7 +1961,8 @@ function AppContent() {
                 });
               }}
               onRefreshRewards={() => refreshRewardsSystem()}
-            />
+              />
+            </Suspense>
           </ErrorBoundary>
         );
       case 'settings':

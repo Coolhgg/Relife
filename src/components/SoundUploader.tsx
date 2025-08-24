@@ -19,7 +19,7 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
-import { Alert, AlertDescription } from './ui/alert';
+import { AlertTriangle, AlertDescription } from './ui/alert';
 import {
   Select,
   SelectContent,
@@ -432,7 +432,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                       )}
 
                       {item.error && (
-                        <Alert className="mt-2">
+                        <AlertTriangle className="mt-2">
                           <AlertCircle className="w-4 h-4" />
                           <AlertDescription className="text-sm">
                             {item.error}
