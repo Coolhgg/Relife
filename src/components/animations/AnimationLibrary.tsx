@@ -609,7 +609,7 @@ export const AnimatedNotification: React.FC<NotificationProps> = ({
   useEffect(() => {
     const timer = setTimeout(onClose, duration);
     const interval = setInterval(() => {
-      setProgress((prev: any) => M // auto: implicit anyath.max(0, prev - 100 / (duration / 100)));
+      setProgress((prev: any) => Math.max(0, prev - 100 / (duration / 100)));
     }, 100);
 
     return () => {

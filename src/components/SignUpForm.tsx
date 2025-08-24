@@ -371,7 +371,7 @@ export default function SignUpForm({
               id="confirmPassword"
               type={showConfirmPassword ? 'text' : 'password'}
               value={formData.confirmPassword}
-              onChange={(e: any) => h // auto: implicit anyandleInputChange('confirmPassword', e.target.value)}
+              onChange={(e: any) => handleInputChange('confirmPassword', e.target.value)}
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.confirmPassword
                   ? 'border-red-500'

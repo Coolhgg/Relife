@@ -205,9 +205,9 @@ export function BetaTestingProgram() {
       status: 'draft',
       targetParticipants: newProgram.targetParticipants,
       currentParticipants: 0,
-      features: newProgram.features.filter((f: any) => f // auto: implicit any.trim()),
-      requirements: newProgram.requirements.filter((r: any) => r // auto: implicit any.trim()),
-      rewards: newProgram.rewards.filter((r: any) => r // auto: implicit any.trim()),
+      features: newProgram.features.filter((f: any) => f.trim()),
+      requirements: newProgram.requirements.filter((r: any) => r.trim()),
+      rewards: newProgram.rewards.filter((r: any) => r.trim()),
     };
 
     setPrograms([...programs, program]);
@@ -220,8 +220,8 @@ export function BetaTestingProgram() {
 
     const emails = inviteEmails
       .split('\n')
-      .map((email: any) => e // auto: implicit anymail.trim())
-      .filter((email: any) => e // auto: implicit anymail);
+      .map((email: any) => email.trim())
+      .filter((email: any) => email);
 
     // Mock sending invites
     console.log(
@@ -583,7 +583,7 @@ export function BetaTestingProgram() {
 
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>
-                      Program: {programs.find((p: any) => p // auto: implicit any.id === item.programId)?.name}
+                      Program: {programs.find((p: any) => p.id === item.programId)?.name}
                     </span>
                     <span>{item.timestamp.toLocaleString()}</span>
                   </div>
@@ -608,7 +608,7 @@ export function BetaTestingProgram() {
                 <Input
                   id="name"
                   value={newProgram.name}
-                  onChange={(e: any) => s // auto: implicit anyetNewProgram({ ...newProgram, name: e.target.value })}
+                  onChange={(e: any) => setNewProgram({ ...newProgram, name: e.target.value })}
                   className="mt-1"
                 />
               </div>
@@ -687,7 +687,7 @@ export function BetaTestingProgram() {
                     <div key={index} className="flex items-center gap-2">
                       <Input
                         value={item}
-                        onChange={(e: any) => u // auto: implicit anypdateArrayField(field, index, e.target.value)}
+                        onChange={(e: any) => updateArrayField(field, index, e.target.value)}
                         placeholder={`Add ${field.slice(0, -1)}...`}
                         className="flex-1"
                       />
@@ -732,7 +732,7 @@ export function BetaTestingProgram() {
               <Textarea
                 id="emails"
                 value={inviteEmails}
-                onChange={(e: any) => s // auto: implicit anyetInviteEmails(e.target.value)}
+                onChange={(e: any) => setInviteEmails(e.target.value)}
                 placeholder="Enter email addresses, one per line..."
                 className="mt-1"
                 rows={6}

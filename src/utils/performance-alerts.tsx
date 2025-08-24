@@ -905,7 +905,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
   const { alerts, suggestions, resolveAlert } = usePerformanceAlerts();
 
   const displayAlerts = alerts.slice(0, maxAlerts);
-  const criticalAlerts = alerts.filter((alert: any) => a // auto: implicit anylert.severity >= 4);
+  const criticalAlerts = alerts.filter((alert: any) => alert.severity >= 4);
 
   if (displayAlerts.length === 0 && (!showSuggestions || suggestions.length === 0)) {
     return null;

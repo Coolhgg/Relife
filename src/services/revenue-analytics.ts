@@ -220,7 +220,7 @@ export class RevenueAnalyticsService {
     if (trialError) throw trialError;
 
     // Get conversions from those trial users
-    const trialUserIds = trialUsers?.map((t: any) => t // auto: implicit any.userId) || [];
+    const trialUserIds = trialUsers?.map((t: any) => t.userId) || [];
     if (trialUserIds.length === 0) return 0;
 
     const { data: conversions, error: conversionError } = await supabase

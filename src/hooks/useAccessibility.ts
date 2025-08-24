@@ -230,7 +230,7 @@ export const useAccessibleTooltip = () => {
   }, []);
 
   const removeAllTooltips = useCallback(() => {
-    tooltipCleanupRef.current.forEach((cleanup: any) => c // auto: implicit anyleanup());
+    tooltipCleanupRef.current.forEach((cleanup: any) => cleanup());
     tooltipCleanupRef.current.clear();
   }, []);
 

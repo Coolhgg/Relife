@@ -361,7 +361,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               />
               <YAxis />
               <Tooltip
-                labelFormatter={(value: any) => P // auto: implicit anyERSONA_NAMES[value as UserPersona]}
+                labelFormatter={(value: any) => PERSONA_NAMES[value as UserPersona]}
                 formatter={(value: any) => [`${value.toFixed(1)}%`, 'Conversion Rate']}
               />
               <Bar dataKey="conversionRate" fill="#3B82F6" />
@@ -387,7 +387,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               />
               <YAxis />
               <Tooltip
-                labelFormatter={(value: any) => P // auto: implicit anyERSONA_NAMES[value as UserPersona]}
+                labelFormatter={(value: any) => PERSONA_NAMES[value as UserPersona]}
                 formatter={(value: any) => [`$${value.toLocaleString()}`, 'Revenue']}
               />
               <Bar dataKey="revenue" fill="#10B981" />
@@ -412,7 +412,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               />
               <YAxis domain={[0, 100]} />
               <Tooltip
-                labelFormatter={(value: any) => P // auto: implicit anyERSONA_NAMES[value as UserPersona]}
+                labelFormatter={(value: any) => PERSONA_NAMES[value as UserPersona]}
                 formatter={(value: any) => [`${value.toFixed(1)}%`, 'Avg Confidence']}
               />
               <Bar dataKey="avgConfidence" fill="#8B5CF6" />

@@ -119,7 +119,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
     if (checked) {
       onChallengesChange([...selectedChallenges, challengeType]);
     } else {
-      onChallengesChange(selectedChallenges.filter((c: any) => c // auto: implicit any !== challengeType));
+      onChallengesChange(selectedChallenges.filter((c: any) => c !== challengeType));
     }
   };
 
@@ -349,7 +349,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
             </div>
             <Slider
               value={[customDifficulty]}
-              onValueChange={(value: any) => o // auto: implicit anynDifficultyChange(value[0])}
+              onValueChange={(value: any) => onDifficultyChange(value[0])}
               min={1}
               max={10}
               step={1}

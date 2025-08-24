@@ -264,14 +264,14 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
 
   const removeUploadItem = (id: string) => {
     setUploadItems((prev: any) => { // auto: implicit any
-      const item = prev.find((i: any) => i // auto: implicit any.id === id);
+      const item = prev.find((i: any) => i.id === id);
       if (item?.previewUrl) {
         URL.revokeObjectURL(item.previewUrl);
       }
       if (item?.audio) {
         item.audio.pause();
       }
-      return prev.filter((i: any) => i // auto: implicit any.id !== id);
+      return prev.filter((i: any) => i.id !== id);
     });
   };
 
@@ -279,7 +279,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
     try {
       const success = await customSoundManager.deleteCustomSound(sound.id, userId);
       if (success) {
-        setUploadedSounds((prev: any) => p // auto: implicit anyrev.filter((s: any) => s // auto: implicit any.id !== sound.id));
+        setUploadedSounds((prev: any) => prev.filter((s: any) => s.id !== sound.id));
         onSoundDeleted?.(sound.id);
       }
     } catch (error) {
@@ -610,7 +610,7 @@ const SoundEditForm: React.FC<{
           category,
           tags: tags
             .split(',')
-            .map((tag: any) => t // auto: implicit anyag.trim())
+            .map((tag: any) => tag.trim())
             .filter(Boolean),
         }
       );
@@ -623,7 +623,7 @@ const SoundEditForm: React.FC<{
           category,
           tags: tags
             .split(',')
-            .map((tag: any) => t // auto: implicit anyag.trim())
+            .map((tag: any) => tag.trim())
             .filter(Boolean),
         };
         onSave(updatedSound);
@@ -642,7 +642,7 @@ const SoundEditForm: React.FC<{
         <Input
           id="sound-name"
           value={name}
-          onChange={(e: any) => s // auto: implicit anyetName(e.target.value)}
+          onChange={(e: any) => setName(e.target.value)}
           placeholder="Sound name"
         />
       </div>
@@ -652,7 +652,7 @@ const SoundEditForm: React.FC<{
         <Textarea
           id="sound-description"
           value={description}
-          onChange={(e: any) => s // auto: implicit anyetDescription(e.target.value)}
+          onChange={(e: any) => setDescription(e.target.value)}
           placeholder="Describe this sound..."
           rows={3}
         />
@@ -682,7 +682,7 @@ const SoundEditForm: React.FC<{
         <Input
           id="sound-tags"
           value={tags}
-          onChange={(e: any) => s // auto: implicit anyetTags(e.target.value)}
+          onChange={(e: any) => setTags(e.target.value)}
           placeholder="tag1, tag2, tag3"
         />
         <p className="text-sm text-gray-500 mt-1">Separate tags with commas</p>

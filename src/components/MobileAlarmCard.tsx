@@ -300,11 +300,11 @@ export const MobileAlarmList: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    setAlarms((prev: any) => p // auto: implicit anyrev.filter((alarm: any) => a // auto: implicit anylarm.id !== id));
+    setAlarms((prev: any) => prev.filter((alarm: any) => alarm.id !== id));
   };
 
   const handleDuplicate = (id: string) => {
-    const alarm = alarms.find((a: any) => a // auto: implicit any.id === id);
+    const alarm = alarms.find((a: any) => a.id === id);
     if (alarm) {
       const newAlarm = {
         ...alarm,

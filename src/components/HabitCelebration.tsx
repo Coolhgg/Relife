@@ -132,7 +132,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
           rotation: piece.rotation + 5,
           velocityY: piece.velocityY + 0.1,
         }))
-        .filter((piece: any) => p // auto: implicit anyiece.y < window.innerHeight + 50)
+        .filter((piece: any) => piece.y < window.innerHeight + 50)
     );
 
     animationRef.current = requestAnimationFrame(animateConfetti);

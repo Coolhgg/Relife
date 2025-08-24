@@ -295,7 +295,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           category: activeCategory,
         };
 
-        setTestResults((prev: any) => [ // auto: implicit any...prev.filter((r: any) => r // auto: implicit any.testId !== test.id), result]);
+        setTestResults((prev: any) => [ // auto: implicit any...prev.filter((r: any) => r.testId !== test.id), result]);
         onTestComplete?.(test.id, true);
       } catch (error) {
         console.error('Test playback failed:', error);
@@ -305,7 +305,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           timestamp: new Date(),
           category: activeCategory,
         };
-        setTestResults((prev: any) => [ // auto: implicit any...prev.filter((r: any) => r // auto: implicit any.testId !== test.id), result]);
+        setTestResults((prev: any) => [ // auto: implicit any...prev.filter((r: any) => r.testId !== test.id), result]);
         onTestComplete?.(test.id, false);
       }
     },
@@ -318,7 +318,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
     const timer = setTimeout(() => {
       if (currentTestIndex < currentTests.length - 1) {
-        setCurrentTestIndex((prev: any) => p // auto: implicit anyrev + 1);
+        setCurrentTestIndex((prev: any) => prev + 1);
       } else {
         setIsPlaying(false);
         setCurrentTestIndex(0);
@@ -354,7 +354,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
   const handleNext = () => {
     if (currentTestIndex < currentTests.length - 1) {
-      setCurrentTestIndex((prev: any) => p // auto: implicit anyrev + 1);
+      setCurrentTestIndex((prev: any) => prev + 1);
     }
   };
 
@@ -391,14 +391,14 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
   // Get test result status
   const getTestStatus = (testId: string) => {
-    const result = testResults.find((r: any) => r // auto: implicit any.testId === testId);
+    const result = testResults.find((r: any) => r.testId === testId);
     return result?.success ? 'success' : result ? 'error' : 'pending';
   };
 
   // Test results summary
   const testSummary = useMemo(() => {
     const total = testResults.length;
-    const successful = testResults.filter((r: any) => r // auto: implicit any.success).length;
+    const successful = testResults.filter((r: any) => r.success).length;
     const failed = total - successful;
 
     return { total, successful, failed };
@@ -563,7 +563,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
               type="checkbox"
               checked={preferences.autoAdvance}
               onChange={(e: any) => /* auto: implicit any */
-                setPreferences((prev: any) => ({ /* auto: implicit any */{ ...prev, autoAdvance: e.target.checked }))
+                setPreferences((prev: any) => ({ ...prev, autoAdvance: e.target.checked }))
               }
               className="mr-2 rounded"
             />
@@ -575,7 +575,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
               type="checkbox"
               checked={preferences.simulatePremium}
               onChange={(e: any) => /* auto: implicit any */
-                setPreferences((prev: any) => ({ /* auto: implicit any */{ ...prev, simulatePremium: e.target.checked }))
+                setPreferences((prev: any) => ({ ...prev, simulatePremium: e.target.checked }))
               }
               className="mr-2 rounded"
             />
@@ -585,7 +585,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           <select
             value={preferences.delayBetweenTests}
             onChange={(e: any) => /* auto: implicit any */
-              setPreferences((prev: any) => ({ /* auto: implicit any */{
+              setPreferences((prev: any) => ({ 
                 ...prev,
                 delayBetweenTests: Number(e.target.value),
               }))

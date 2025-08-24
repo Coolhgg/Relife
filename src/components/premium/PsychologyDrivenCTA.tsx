@@ -82,7 +82,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
     if (trigger !== 'social_proof') return;
 
     const interval = setInterval(() => {
-      setUserCount((prev: any) => p // auto: implicit anyrev + Math.floor(Math.random() * 3));
+      setUserCount((prev: any) => prev + Math.floor(Math.random() * 3));
     }, 5000);
 
     return () => clearInterval(interval);

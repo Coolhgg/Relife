@@ -45,12 +45,12 @@ export function VirtualScroll<T>({
   const visibleRange = useMemo(() => {
     const startIndex = Math.max(
       0,
-      cumulativeHeights.findIndex((height: any) => h // auto: implicit anyeight >= scrollTop) - 1
+      cumulativeHeights.findIndex((height: any) => height >= scrollTop) - 1
     );
 
     const endIndex = Math.min(
       items.length - 1,
-      cumulativeHeights.findIndex((height: any) => h // auto: implicit anyeight >= scrollTop + containerHeight)
+      cumulativeHeights.findIndex((height: any) => height >= scrollTop + containerHeight)
     );
 
     return {

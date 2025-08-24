@@ -113,7 +113,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
               id="time"
               type="time"
               value={time}
-              onChange={(e: any) => s // auto: implicit anyetTime(e.target.value)}
+              onChange={(e: any) => setTime(e.target.value)}
               className="mt-1"
             />
           </div>
@@ -123,7 +123,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
             <Input
               id="label"
               value={label}
-              onChange={(e: any) => s // auto: implicit anyetLabel(e.target.value)}
+              onChange={(e: any) => setLabel(e.target.value)}
               placeholder="Wake up!"
               className="mt-1"
             />

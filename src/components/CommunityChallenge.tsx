@@ -114,11 +114,11 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
     let filtered = challenges;
 
     if (selectedType !== 'all') {
-      filtered = filtered.filter((c: any) => c // auto: implicit any.challengeType === selectedType);
+      filtered = filtered.filter((c: any) => c.challengeType === selectedType);
     }
 
     if (selectedDifficulty !== 'all') {
-      filtered = filtered.filter((c: any) => c // auto: implicit any.difficulty === selectedDifficulty);
+      filtered = filtered.filter((c: any) => c.difficulty === selectedDifficulty);
     }
 
     setFilteredChallenges(filtered);

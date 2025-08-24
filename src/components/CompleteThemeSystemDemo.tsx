@@ -83,7 +83,7 @@ export const CustomThemeCreator: React.FC = () => {
                 type="text"
                 placeholder="Theme name (e.g., 'My Perfect Morning')"
                 value={customTheme.name}
-                onChange={(e: any) => s // auto: implicit anyetCustomTheme({ ...customTheme, name: e.target.value })}
+                onChange={(e: any) => setCustomTheme({ ...customTheme, name: e.target.value })}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
               <textarea
@@ -214,7 +214,7 @@ export const CustomThemeCreator: React.FC = () => {
                       ...customTheme,
                       tags: e.target.value
                         .split(',')
-                        .map((tag: any) => t // auto: implicit anyag.trim())
+                        .map((tag: any) => tag.trim())
                         .filter(Boolean),
                     })
                   }
@@ -248,7 +248,7 @@ export const CustomThemeCreator: React.FC = () => {
                           } else {
                             setCustomTheme({
                               ...customTheme,
-                              timeOfDay: customTheme.timeOfDay.filter((t: any) => t // auto: implicit any !== time),
+                              timeOfDay: customTheme.timeOfDay.filter((t: any) => t !== time),
                             });
                           }
                         }}
@@ -363,7 +363,7 @@ export const SmartThemesDemo: React.FC = () => {
                 <input
                   type="time"
                   value={testTime}
-                  onChange={(e: any) => s // auto: implicit anyetTestTime(e.target.value)}
+                  onChange={(e: any) => setTestTime(e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -372,7 +372,7 @@ export const SmartThemesDemo: React.FC = () => {
                 <input
                   type="date"
                   value={testDate.toISOString().split('T')[0]}
-                  onChange={(e: any) => s // auto: implicit anyetTestDate(new Date(e.target.value))}
+                  onChange={(e: any) => setTestDate(new Date(e.target.value))}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>

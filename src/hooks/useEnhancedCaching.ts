@@ -235,7 +235,7 @@ export function useCacheWarming() {
     const currentHour = now.getHours();
 
     // Find next scheduled warming time
-    const nextHour = warmingConfig.scheduleHours.find((hour: any) => h // auto: implicit anyour > currentHour);
+    const nextHour = warmingConfig.scheduleHours.find((hour: any) => hour > currentHour);
     const targetHour = nextHour ?? warmingConfig.scheduleHours[0];
 
     const nextTime = new Date();

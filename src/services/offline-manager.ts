@@ -513,7 +513,7 @@ export class OfflineManager {
   static async getStatus(): Promise<SyncStatus> {
     const pendingOperations = this.db ? await this.db.count('syncQueue') : 0;
     const failedOperations = this.db
-      ? (await this.db.getAll('syncQueue')).filter((item: any) => i // auto: implicit anytem.retryCount > 0).length
+      ? (await this.db.getAll('syncQueue')).filter((item: any) => item.retryCount > 0).length
       : 0;
 
     return {

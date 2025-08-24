@@ -101,10 +101,10 @@ if (!global.IntersectionObserver) {
 
 // Mock animation frame functions only if they don't exist
 if (!global.requestAnimationFrame) {
-  global.requestAnimationFrame = vi.fn((cb: any) => s // auto: implicit anyetTimeout(cb, 0));
+  global.requestAnimationFrame = vi.fn((cb: any) => setTimeout(cb, 0));
 }
 if (!global.cancelAnimationFrame) {
-  global.cancelAnimationFrame = vi.fn((id: any) => c // auto: implicit anylearTimeout(id));
+  global.cancelAnimationFrame = vi.fn((id: any) => clearTimeout(id));
 }
 
 // Mock window timer functions only if they don't exist or need enhancement

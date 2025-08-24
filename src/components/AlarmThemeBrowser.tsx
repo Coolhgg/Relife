@@ -321,7 +321,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                 type="text"
                 placeholder="Search themes, moods, or categories..."
                 value={searchQuery}
-                onChange={(e: any) => s // auto: implicit anyetSearchQuery(e.target.value)}
+                onChange={(e: any) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                            focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-lg"
               />
@@ -330,7 +330,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
             {/* Sort */}
             <select
               value={sortMode}
-              onChange={(e: any) => s // auto: implicit anyetSortMode(e.target.value as SortMode)}
+              onChange={(e: any) => setSortMode(e.target.value as SortMode)}
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                          focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 min-w-[150px]"
             >
@@ -446,7 +446,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                     <input
                       type="checkbox"
                       checked={showPremiumOnly}
-                      onChange={(e: any) => s // auto: implicit anyetShowPremiumOnly(e.target.checked)}
+                      onChange={(e: any) => setShowPremiumOnly(e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -458,7 +458,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                     <input
                       type="checkbox"
                       checked={showFavoritesOnly}
-                      onChange={(e: any) => s // auto: implicit anyetShowFavoritesOnly(e.target.checked)}
+                      onChange={(e: any) => setShowFavoritesOnly(e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">

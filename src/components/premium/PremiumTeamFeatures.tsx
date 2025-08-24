@@ -554,7 +554,7 @@ function SocialWakeUpFeatures() {
               <Switch
                 checked={enabled}
                 onCheckedChange={(checked: any) => /* auto: implicit any */
-                  setSocialSettings((prev: any) => ({ /* auto: implicit any */{ ...prev, [key]: checked }))
+                  setSocialSettings((prev: any) => ({ ...prev, [key]: checked }))
                 }
               />
             </div>

@@ -335,7 +335,7 @@ export class SecureAlarmStorageService {
       // Get all keys to find backup keys
       const { keys } = await Preferences.keys();
       const backupKeys = keys
-        .filter((key: any) => k // auto: implicit anyey.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX))
+        .filter((key: any) => key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX))
         .sort()
         .reverse(); // Most recent first
 
@@ -402,7 +402,7 @@ export class SecureAlarmStorageService {
     try {
       const { keys } = await Preferences.keys();
       const backupKeys = keys
-        .filter((key: any) => k // auto: implicit anyey.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX))
+        .filter((key: any) => key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX))
         .sort()
         .reverse(); // Most recent first
 

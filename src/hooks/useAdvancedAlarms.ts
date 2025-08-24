@@ -77,7 +77,7 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       await AlarmService.deleteAlarm(id);
-      setAlarms((prev: any) => p // auto: implicit anyrev.filter((alarm: any) => a // auto: implicit anylarm.id !== id));
+      setAlarms((prev: any) => prev.filter((alarm: any) => alarm.id !== id));
       setError(null);
     } catch (error) {
       console.error('Error deleting alarm:', error);

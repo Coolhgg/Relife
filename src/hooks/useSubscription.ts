@@ -608,8 +608,8 @@ function useSubscription(
       const currentLevel = tierHierarchy.indexOf(currentTier);
       const targetLevel = tierHierarchy.indexOf(targetTier);
 
-      const currentPlan = state.availablePlans.find((p: any) => p // auto: implicit any.tier === currentTier);
-      const targetPlan = state.availablePlans.find((p: any) => p // auto: implicit any.tier === targetTier);
+      const currentPlan = state.availablePlans.find((p: any) => p.tier === currentTier);
+      const targetPlan = state.availablePlans.find((p: any) => p.tier === targetTier);
 
       const currentPrice = currentPlan?.pricing.monthly?.amount || 0;
       const targetPrice = targetPlan?.pricing.monthly?.amount || 0;

@@ -2199,7 +2199,7 @@ export function ThemeProvider({
     const unsubscribe = syncService.onStatusChange((status: any) => { // auto
       setCloudSyncStatus(status);
       // Notify all registered listeners
-      syncListenersRef.current.forEach((listener: any) => l // auto: implicit anyistener(status));
+      syncListenersRef.current.forEach((listener: any) => listener(status));
     });
 
     // Initialize with current status

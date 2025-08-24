@@ -336,8 +336,10 @@ export function BattleSystem({
 
   const toggleFriendSelection = (friendId: string) => {
     /* auto: implicit any */
-    setSelectedFriends((prev: any) => 
-      prev.includes(friendId) ? prev.filter((id: any) => id !== friendId) : [...prev, friendId]
+    setSelectedFriends((prev: any) =>
+      prev.includes(friendId)
+        ? prev.filter((id: any) => id !== friendId)
+        : [...prev, friendId]
     );
   };
 
@@ -637,7 +639,7 @@ export function BattleSystem({
                           <Input
                             placeholder="Send a message..."
                             value={trashTalkMessage}
-                            onChange={(e: any) => s // auto: implicit anyetTrashTalkMessage(e.target.value)}
+                            onChange={(e: any) => setTrashTalkMessage(e.target.value)}
                             className="text-sm"
                           />
                           <Button

@@ -854,8 +854,8 @@ class SubscriptionService {
       .eq('referrer_id', userId);
 
     const referrals = data?.length || 0;
-    const rewards = data?.filter((r: any) => r // auto: implicit any.status === 'rewarded').length || 0;
-    const pendingRewards = data?.filter((r: any) => r // auto: implicit any.status === 'converted').length || 0;
+    const rewards = data?.filter((r: any) => r.status === 'rewarded').length || 0;
+    const pendingRewards = data?.filter((r: any) => r.status === 'converted').length || 0;
 
     return {
       code: `REF-${userId.slice(-8).toUpperCase()}`, // Generate referral code

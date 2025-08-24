@@ -132,7 +132,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
           type={type}
           placeholder={isFocused ? placeholder : ''}
           value={value}
-          onChange={(e: any) => o // auto: implicit anynChange(e.target.value)}
+          onChange={(e: any) => onChange(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
           disabled={disabled}
@@ -232,7 +232,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<SelectOption | null>(
-    options.find((opt: any) => o // auto: implicit anypt.value === value) || null
+    options.find((opt: any) => opt.value === value) || null
   );
 
   const handleSelect = (option: SelectOption) => {
@@ -488,7 +488,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
 
       // Remove ripple after animation
       setTimeout(() => {
-        setRipples((prev: any) => p // auto: implicit anyrev.filter((ripple: any) => r // auto: implicit anyipple.id !== newRipple.id));
+        setRipples((prev: any) => prev.filter((ripple: any) => ripple.id !== newRipple.id));
       }, 600);
     }
 

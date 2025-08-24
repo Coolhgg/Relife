@@ -141,13 +141,13 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
         theme =>
           theme.name.toLowerCase().includes(query) ||
           theme.description.toLowerCase().includes(query) ||
-          theme.tags.some((tag: any) => t // auto: implicit anyag.toLowerCase().includes(query))
+          theme.tags.some((tag: any) => tag.toLowerCase().includes(query))
       );
     }
 
     // Apply category filter
     if (filterCategory !== 'all') {
-      filtered = filtered.filter((theme: any) => t // auto: implicit anyheme.category === filterCategory);
+      filtered = filtered.filter((theme: any) => theme.category === filterCategory);
     }
 
     // Apply sorting
@@ -177,7 +177,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const handleThemeUpdated = (theme: CustomSoundTheme) => {
-    setThemes((prev: any) => p // auto: implicit anyrev/* auto: implicit any */
+    setThemes((prev: any) => prev/* auto: implicit any */
       &.map((t: any) => (t.id === theme.id ? theme : t)));
     setEditingTheme(null);
   };
@@ -186,7 +186,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     try {
       const success = await soundEffectsService.deleteCustomTheme(themeId, userId);
       if (success) {
-        setThemes((prev: any) => p // auto: implicit anyrev.filter((t: any) => t // auto: implicit any.id !== themeId));
+        setThemes((prev: any) => prev.filter((t: any) => t.id !== themeId));
       }
     } catch (error) {
       console.error('Error deleting theme:', error);
@@ -285,7 +285,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
   const handleExportMultipleThemes = async (themeIds: string[]) => {
     try {
-      const themesToExport = themes.filter((theme: any) => t // auto: implicit anyhemeIds.includes(theme.id));
+      const themesToExport = themes.filter((theme: any) => themeIds.includes(theme.id));
       const exportData = {
         version: '1.0',
         exportedAt: new Date().toISOString(),
@@ -350,7 +350,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
           }
 
           // Check if theme with same name exists
-          const existingTheme = themes.find((t: any) => t // auto: implicit any.name === themeData.name);
+          const existingTheme = themes.find((t: any) => t.name === themeData.name);
           let finalName = themeData.name;
           if (existingTheme) {
             finalName = `${themeData.name} (Imported)`;
@@ -413,7 +413,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const selectAllThemes = () => {
-    setSelectedThemes(new Set(filteredThemes.map((t: any) => t // auto: implicit any.id)));
+    setSelectedThemes(new Set(filteredThemes.map((t: any) => t.id)));
   };
 
   const clearSelection = () => {
@@ -437,7 +437,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
       const success = await soundEffectsService.shareThemeWithCommunity(updatedTheme);
       if (success) {
-        setThemes((prev: any) => p // auto: implicit anyrev/* auto: implicit any */
+        setThemes((prev: any) => prev/* auto: implicit any */
       &.map((t: any) => (t.id === theme.id ? updatedTheme : t)));
         if (onThemeUpdated) {
           onThemeUpdated(updatedTheme);
@@ -803,7 +803,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               <Input
                 placeholder="Search themes..."
                 value={searchQuery}
-                onChange={(e: any) => s // auto: implicit anyetSearchQuery(e.target.value)}
+                onChange={(e: any) => setSearchQuery(e.target.value)}
                 className="pl-10"
               />
             </div>

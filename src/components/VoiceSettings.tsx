@@ -99,14 +99,14 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
   };
 
   const handleVoiceMoodChange = (mood: VoiceMood, voiceId: string) => {
-    setVoiceMappings((prev: any) => ({ /* auto: implicit any */{
+    setVoiceMappings((prev: any) => ({ 
       ...prev,
       [mood]: voiceId,
     }));
   };
 
   const handleApiKeyChange = (provider: string, key: string) => {
-    setApiKeys((prev: any) => ({ /* auto: implicit any */{
+    setApiKeys((prev: any) => ({ 
       ...prev,
       [provider]: key,
     }));
@@ -118,13 +118,13 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
     setValidatingKey(true);
     try {
       const isValid = await VoiceProService.setApiKey(provider, key);
-      setKeyValidation((prev: any) => ({ /* auto: implicit any */{
+      setKeyValidation((prev: any) => ({ 
         ...prev,
         [provider]: isValid,
       }));
     } catch (error) {
       console.error('Error validating API key:', error);
-      setKeyValidation((prev: any) => ({ /* auto: implicit any */{
+      setKeyValidation((prev: any) => ({ 
         ...prev,
         [provider]: false,
       }));
@@ -172,7 +172,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
 
   if (!isOpen) return null;
 
-  const selectedProviderData = providers.find((p: any) => p // auto: implicit any.id === selectedProvider);
+  const selectedProviderData = providers.find((p: any) => p.id === selectedProvider);
   const moods: VoiceMood[] = [
     'drill-sergeant',
     'sweet-angel',
@@ -320,7 +320,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
 
                     <select
                       value={currentVoice}
-                      onChange={(e: any) => h // auto: implicit anyandleVoiceMoodChange(mood, e.target.value)}
+                      onChange={(e: any) => handleVoiceMoodChange(mood, e.target.value)}
                       className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
                     >
                       <option value="">Select voice...</option>
@@ -352,7 +352,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   step="0.1"
                   value={globalSettings.speed}
                   onChange={(e: any) => /* auto: implicit any */
-                    setGlobalSettings((prev: any) => ({ /* auto: implicit any */{
+                    setGlobalSettings((prev: any) => ({ 
                       ...prev,
                       speed: parseFloat(e.target.value),
                     }))
@@ -372,7 +372,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   step="0.1"
                   value={globalSettings.pitch}
                   onChange={(e: any) => /* auto: implicit any */
-                    setGlobalSettings((prev: any) => ({ /* auto: implicit any */{
+                    setGlobalSettings((prev: any) => ({ 
                       ...prev,
                       pitch: parseFloat(e.target.value),
                     }))
@@ -392,7 +392,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   step="0.1"
                   value={globalSettings.volume}
                   onChange={(e: any) => /* auto: implicit any */
-                    setGlobalSettings((prev: any) => ({ /* auto: implicit any */{
+                    setGlobalSettings((prev: any) => ({ 
                       ...prev,
                       volume: parseFloat(e.target.value),
                     }))
@@ -408,7 +408,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   type="checkbox"
                   checked={globalSettings.cacheEnabled}
                   onChange={(e: any) => /* auto: implicit any */
-                    setGlobalSettings((prev: any) => ({ /* auto: implicit any */{
+                    setGlobalSettings((prev: any) => ({ 
                       ...prev,
                       cacheEnabled: e.target.checked,
                     }))
@@ -423,7 +423,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   type="checkbox"
                   checked={globalSettings.offlineMode}
                   onChange={(e: any) => /* auto: implicit any */
-                    setGlobalSettings((prev: any) => ({ /* auto: implicit any */{
+                    setGlobalSettings((prev: any) => ({ 
                       ...prev,
                       offlineMode: e.target.checked,
                     }))
