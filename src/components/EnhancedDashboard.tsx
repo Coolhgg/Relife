@@ -284,13 +284,11 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             <AchievementBadges
               achievements={achievements}
               onAchievementClick={(achievement: any) => {
-                // auto: implicit any
                 trackFeatureUsage('achievements', 'clicked', {
                   type: achievement.achievementType,
                 });
               }}
               onAchievementShare={(achievement: any) => {
-                // auto: implicit any
                 trackFeatureUsage('achievements', 'shared', {
                   type: achievement.achievementType,
                 });
@@ -319,17 +317,14 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
         <CommunityChallenge
           challenges={activeChallenges}
           onJoinChallenge={(challengeId: any) => {
-            // auto: implicit any
             trackFeatureUsage('challenges', 'joined', { challengeId });
             joinChallenge(challengeId);
           }}
           onLeaveChallenge={(challengeId: any) => {
-            // auto: implicit any
             trackFeatureUsage('challenges', 'left', { challengeId });
             leaveChallenge(challengeId);
           }}
           onChallengeShare={(challengeId: any) => {
-            // auto: implicit any
             trackFeatureUsage('challenges', 'shared', { challengeId });
           }}
         />
@@ -404,7 +399,6 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           </h3>
           <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
             {alarms.slice(0, 3).map((alarm: any) => {
-              // auto: implicit any
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
               return (
@@ -689,7 +683,6 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             key={celebration.id}
             celebration={celebration}
             onShare={(platform: any) => {
-              // auto: implicit any
               trackFeatureUsage('celebrations', 'shared', {
                 platform,
                 type: celebration.celebrationType,

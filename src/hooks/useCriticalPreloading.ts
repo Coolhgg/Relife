@@ -321,7 +321,6 @@ export function usePreloadPerformance() {
 
       // Update history
       setPerformanceHistory((prev: any) => {
-        // auto: implicit any
         const newEntry = {
           timestamp: new Date(),
           successRate: stats.successRate,

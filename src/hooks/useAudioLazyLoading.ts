@@ -139,7 +139,6 @@ export function usePlaylistLazyLoading(
     } catch (error) {
       setOverallState('error');
       setErrors((prev: any) => [
-        // auto: implicit any
         ...prev,
         {
           soundId: 'playlist',
