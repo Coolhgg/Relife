@@ -205,9 +205,9 @@ export function BetaTestingProgram() {
       status: 'draft',
       targetParticipants: newProgram.targetParticipants,
       currentParticipants: 0,
-      features: newProgram.features.filter((f: any) => // auto: implicit any f.trim()),
-      requirements: newProgram.requirements.filter((r: any) => // auto: implicit any r.trim()),
-      rewards: newProgram.rewards.filter((r: any) => // auto: implicit any r.trim()),
+      features: newProgram.features.filter((f: any) => f // auto: implicit any.trim()),
+      requirements: newProgram.requirements.filter((r: any) => r // auto: implicit any.trim()),
+      rewards: newProgram.rewards.filter((r: any) => r // auto: implicit any.trim()),
     };
 
     setPrograms([...programs, program]);
@@ -220,8 +220,8 @@ export function BetaTestingProgram() {
 
     const emails = inviteEmails
       .split('\n')
-      .map((email: any) => // auto: implicit any email.trim())
-      .filter((email: any) => // auto: implicit any email);
+      .map((email: any) => e // auto: implicit anymail.trim())
+      .filter((email: any) => e // auto: implicit anymail);
 
     // Mock sending invites
     console.log(
@@ -248,7 +248,7 @@ export function BetaTestingProgram() {
 
   const updateProgramStatus = (programId: string, newStatus: BetaProgram['status']) => {
     setPrograms(
-      programs.map((p: any) => // auto: implicit any (p.id === programId ? { ...p, status: newStatus } : p))
+      programs.map((p: any) => ({ // auto: implicit anyp.id === programId ? { ...p, status: newStatus } : p))
     );
   };
 
@@ -390,7 +390,7 @@ export function BetaTestingProgram() {
 
         <TabsContent value="programs" className="space-y-4">
           <div className="grid gap-4">
-            {programs.map((program: any) => // auto: implicit any (
+            {programs.map((program: any) => ({ // auto: implicit any
               <Card key={program.id}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
@@ -493,7 +493,7 @@ export function BetaTestingProgram() {
 
         <TabsContent value="testers" className="space-y-4">
           <div className="grid gap-4">
-            {testers.map((tester: any) => // auto: implicit any (
+            {testers.map((tester: any) => ({ // auto: implicit any
               <Card key={tester.id}>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
@@ -502,7 +502,7 @@ export function BetaTestingProgram() {
                         <span className="font-medium text-gray-600">
                           {tester.name
                             .split(' ')
-                            .map((n: any) => // auto: implicit any n[0])
+                            .map((n: any) => n // auto: implicit any[0])
                             .join('')}
                         </span>
                       </div>
@@ -553,7 +553,7 @@ export function BetaTestingProgram() {
 
         <TabsContent value="feedback" className="space-y-4">
           <div className="grid gap-4">
-            {feedback.map((item: any) => // auto: implicit any (
+            {feedback.map((item: any) => ({ // auto: implicit any
               <Card key={item.id}>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-3">
@@ -579,7 +579,7 @@ export function BetaTestingProgram() {
 
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>
-                      Program: {programs.find((p: any) => // auto: implicit any p.id === item.programId)?.name}
+                      Program: {programs.find((p: any) => p // auto: implicit any.id === item.programId)?.name}
                     </span>
                     <span>{item.timestamp.toLocaleString()}</span>
                   </div>
@@ -604,7 +604,7 @@ export function BetaTestingProgram() {
                 <Input
                   id="name"
                   value={newProgram.name}
-                  onChange={(e: any) => // auto: implicit any setNewProgram({ ...newProgram, name: e.target.value })}
+                  onChange={(e: any) => s // auto: implicit anyetNewProgram({ ...newProgram, name: e.target.value })}
                   className="mt-1"
                 />
               </div>
@@ -683,7 +683,7 @@ export function BetaTestingProgram() {
                     <div key={index} className="flex items-center gap-2">
                       <Input
                         value={item}
-                        onChange={(e: any) => // auto: implicit any updateArrayField(field, index, e.target.value)}
+                        onChange={(e: any) => u // auto: implicit anypdateArrayField(field, index, e.target.value)}
                         placeholder={`Add ${field.slice(0, -1)}...`}
                         className="flex-1"
                       />
@@ -728,7 +728,7 @@ export function BetaTestingProgram() {
               <Textarea
                 id="emails"
                 value={inviteEmails}
-                onChange={(e: any) => // auto: implicit any setInviteEmails(e.target.value)}
+                onChange={(e: any) => s // auto: implicit anyetInviteEmails(e.target.value)}
                 placeholder="Enter email addresses, one per line..."
                 className="mt-1"
                 rows={6}

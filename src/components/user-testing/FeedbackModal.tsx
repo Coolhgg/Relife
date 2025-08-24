@@ -269,7 +269,7 @@ export function FeedbackModal({
                 <Input
                   id="title"
                   value={title}
-                  onChange={(e: any) => // auto: implicit any setTitle(e.target.value)}
+                  onChange={(e: any) => s // auto: implicit anyetTitle(e.target.value)}
                   placeholder="Brief summary of your feedback"
                   className="mt-1"
                   required
@@ -281,7 +281,7 @@ export function FeedbackModal({
                 <Textarea
                   id="description"
                   value={description}
-                  onChange={(e: any) => // auto: implicit any setDescription(e.target.value)}
+                  onChange={(e: any) => s // auto: implicit anyetDescription(e.target.value)}
                   placeholder="Provide more details about your feedback..."
                   className="mt-1 min-h-[100px]"
                   rows={4}

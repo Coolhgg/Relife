@@ -96,7 +96,7 @@ export default defineConfig({
         // File naming patterns
         chunkFileNames: 'js/[name]-[hash].js',
         entryFileNames: 'js/[name]-[hash].js',
-        assetFileNames: assetInfo => {
+        assetFileNames: (assetInfo: any) => { // auto
           const info = assetInfo.name?.split('.') || [];
           let extType = info[info.length - 1] || '';
 

@@ -283,7 +283,7 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
           className={`${sizeClasses} ${className}`.trim()}
           style={finalModalStyles}
           tabIndex={-1}
-          onClick={(e: any) => // auto: implicit any e.stopPropagation()}
+          onClick={(e: any) => e // auto: implicit any.stopPropagation()}
           role="document"
         >
           {/* Header */}
@@ -339,7 +339,7 @@ export function useAdaptiveModal(initialOpen = false) {
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
-  const toggle = useCallback(() => setIsOpen((prev: any) => // auto: implicit any !prev), []);
+  const toggle = useCallback(() => setIsOpen((prev: any) => ! // auto: implicit anyprev), []);
 
   return {
     isOpen,

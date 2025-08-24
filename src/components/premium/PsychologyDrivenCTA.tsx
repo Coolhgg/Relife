@@ -62,7 +62,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
     if (trigger !== 'urgency') return;
 
     const interval = setInterval(() => {
-      setTimeLeft((prev: any) => // auto: implicit any {
+      setTimeLeft((prev: any) => { // auto: implicit any
         if (prev.seconds > 0) {
           return { ...prev, seconds: prev.seconds - 1 };
         } else if (prev.minutes > 0) {
@@ -82,7 +82,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
     if (trigger !== 'social_proof') return;
 
     const interval = setInterval(() => {
-      setUserCount((prev: any) => // auto: implicit any prev + Math.floor(Math.random() * 3));
+      setUserCount((prev: any) => p // auto: implicit anyrev + Math.floor(Math.random() * 3));
     }, 5000);
 
     return () => clearInterval(interval);

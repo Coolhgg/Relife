@@ -89,7 +89,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Visual & Display Section
   const renderVisualSection = () => (
     <div
-      ref={(el: any) => // auto: implicit any {
+      ref={(el: any) => { // auto: implicit any
         sectionRefs.current['visual'] = el;
       }}
       className="space-y-6"
@@ -144,7 +144,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         <select
           id="font-size"
           value={preferences.fontSize}
-          onChange={(e: any) => // auto: implicit any {
+          onChange={(e: any) => { // auto: implicit any
             updatePreferences({ fontSize: e.target.value as any });
             announce(`Font size changed to ${e.target.value}`);
           }}
@@ -210,7 +210,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Navigation & Focus Section
   const renderNavigationSection = () => (
     <div
-      ref={(el: any) => // auto: implicit any {
+      ref={(el: any) => { // auto: implicit any
         sectionRefs.current['navigation'] = el;
       }}
       className="space-y-6"
@@ -259,7 +259,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         <select
           id="focus-ring-color"
           value={preferences.focusRingColor}
-          onChange={(e: any) => // auto: implicit any {
+          onChange={(e: any) => { // auto: implicit any
             updatePreferences({ focusRingColor: e.target.value });
             announce(`Focus ring color changed to ${e.target.value}`);
           }}
@@ -332,7 +332,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Audio & Speech Section
   const renderAudioSection = () => (
     <div
-      ref={(el: any) => // auto: implicit any {
+      ref={(el: any) => { // auto: implicit any
         sectionRefs.current['audio'] = el;
       }}
       className="space-y-6"
@@ -459,7 +459,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           max="2.0"
           step="0.1"
           value={preferences.speechRate}
-          onChange={(e: any) => // auto: implicit any {
+          onChange={(e: any) => { // auto: implicit any
             const rate = parseFloat(e.target.value);
             updatePreferences({ speechRate: rate });
             announce(`Speech rate set to ${rate}x speed`);
@@ -480,7 +480,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Touch & Interaction Section
   const renderTouchSection = () => (
     <div
-      ref={(el: any) => // auto: implicit any {
+      ref={(el: any) => { // auto: implicit any
         sectionRefs.current['touch'] = el;
       }}
       className="space-y-6"
@@ -555,7 +555,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         <select
           id="long-press-delay"
           value={preferences.longPressDelay}
-          onChange={(e: any) => // auto: implicit any {
+          onChange={(e: any) => { // auto: implicit any
             const delay = parseInt(e.target.value);
             updatePreferences({ longPressDelay: delay });
             announce(`Long press delay set to ${delay} milliseconds`);
@@ -574,7 +574,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Advanced Features Section
   const renderAdvancedSection = () => (
     <div
-      ref={(el: any) => // auto: implicit any {
+      ref={(el: any) => { // auto: implicit any
         sectionRefs.current['advanced'] = el;
       }}
       className="space-y-6"
@@ -709,7 +709,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Screen Reader Testing Section
   const renderTestingSection = () => (
     <div
-      ref={(el: any) => // auto: implicit any {
+      ref={(el: any) => { // auto: implicit any
         sectionRefs.current['testing'] = el;
       }}
       className="space-y-6"

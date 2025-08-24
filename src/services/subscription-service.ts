@@ -511,7 +511,7 @@ class SubscriptionService {
       const limits = plan?.limits || this.getFreeTierLimits();
 
       // Map feature usage to billing format
-      usageData?.forEach((item: any) => // auto: implicit any {
+      usageData?.forEach((item: any) => { // auto: implicit any
         const limit = (limits as any)[item.feature] || item.limit_count;
         usage[item.feature] = {
           used: item.usage_count,
@@ -778,7 +778,7 @@ class SubscriptionService {
     }
 
     this.planCache.clear();
-    plans?.forEach((plan: any) => // auto: implicit any {
+    plans?.forEach((plan: any) => { // auto: implicit any
       this.planCache.set(plan.id, this.mapDatabasePlan(plan));
     });
   }
@@ -832,7 +832,7 @@ class SubscriptionService {
       .eq('user_id', userId);
 
     return (
-      data?.map((item: any) => // auto: implicit any ({
+      data?.map((item: any) => ({ // auto: implicit any{
         id: item.id,
         userId: item.user_id,
         discountId: item.discount_id,
@@ -853,8 +853,8 @@ class SubscriptionService {
       .eq('referrer_id', userId);
 
     const referrals = data?.length || 0;
-    const rewards = data?.filter((r: any) => // auto: implicit any r.status === 'rewarded').length || 0;
-    const pendingRewards = data?.filter((r: any) => // auto: implicit any r.status === 'converted').length || 0;
+    const rewards = data?.filter((r: any) => r // auto: implicit any.status === 'rewarded').length || 0;
+    const pendingRewards = data?.filter((r: any) => r // auto: implicit any.status === 'converted').length || 0;
 
     return {
       code: `REF-${userId.slice(-8).toUpperCase()}`, // Generate referral code

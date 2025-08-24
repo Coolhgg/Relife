@@ -207,7 +207,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={smartEnabled}
-                      onChange={(e: any) => // auto: implicit any setSmartEnabled(e.target.checked)}
+                      onChange={(e: any) => s // auto: implicit anyetSmartEnabled(e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
@@ -229,7 +229,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           max="60"
                           step="5"
                           value={wakeWindow}
-                          onChange={(e: any) => // auto: implicit any setWakeWindow(parseInt(e.target.value))}
+                          onChange={(e: any) => s // auto: implicit anyetWakeWindow(parseInt(e.target.value))}
                           className="flex-1 accent-purple-500"
                         />
                         <div className="text-white/60 text-sm min-w-[100px]">
@@ -261,7 +261,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           <input
                             type="checkbox"
                             checked={adaptiveEnabled}
-                            onChange={(e: any) => // auto: implicit any setAdaptiveEnabled(e.target.checked)}
+                            onChange={(e: any) => s // auto: implicit anyetAdaptiveEnabled(e.target.checked)}
                             className="sr-only peer"
                           />
                           <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -281,7 +281,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           <input
                             type="checkbox"
                             checked={consistency}
-                            onChange={(e: any) => // auto: implicit any setConsistency(e.target.checked)}
+                            onChange={(e: any) => s // auto: implicit anyetConsistency(e.target.checked)}
                             className="sr-only peer"
                           />
                           <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -301,7 +301,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           <input
                             type="checkbox"
                             checked={seasonalAdjustment}
-                            onChange={(e: any) => // auto: implicit any setSeasonalAdjustment(e.target.checked)}
+                            onChange={(e: any) => s // auto: implicit anyetSeasonalAdjustment(e.target.checked)}
                             className="sr-only peer"
                           />
                           <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -376,7 +376,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     step="15"
                     value={sleepGoal.targetDuration}
                     onChange={(e: any) => // auto: implicit any
-                      setSleepGoal((prev: any) => // auto: implicit any ({
+                      setSleepGoal((prev: any) => ({ // auto: implicit any{
                         ...prev,
                         targetDuration: parseInt(e.target.value),
                       }))
@@ -404,7 +404,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       type="time"
                       value={sleepGoal.targetBedtime}
                       onChange={(e: any) => // auto: implicit any
-                        setSleepGoal((prev: any) => // auto: implicit any ({
+                        setSleepGoal((prev: any) => ({ // auto: implicit any{
                           ...prev,
                           targetBedtime: e.target.value,
                         }))
@@ -418,7 +418,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       type="time"
                       value={sleepGoal.targetWakeTime}
                       onChange={(e: any) => // auto: implicit any
-                        setSleepGoal((prev: any) => // auto: implicit any ({
+                        setSleepGoal((prev: any) => ({ // auto: implicit any{
                           ...prev,
                           targetWakeTime: e.target.value,
                         }))
@@ -443,7 +443,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                         type="checkbox"
                         checked={sleepGoal.consistency}
                         onChange={(e: any) => // auto: implicit any
-                          setSleepGoal((prev: any) => // auto: implicit any ({
+                          setSleepGoal((prev: any) => ({ // auto: implicit any{
                             ...prev,
                             consistency: e.target.checked,
                           }))
@@ -465,7 +465,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       step="15"
                       value={sleepGoal.weekendVariation}
                       onChange={(e: any) => // auto: implicit any
-                        setSleepGoal((prev: any) => // auto: implicit any ({
+                        setSleepGoal((prev: any) => ({ // auto: implicit any{
                           ...prev,
                           weekendVariation: parseInt(e.target.value),
                         }))

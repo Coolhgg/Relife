@@ -346,7 +346,7 @@ export const setupGlobalMocks = () => {
 
   // Setup matchMedia mock
   Object.defineProperty(window, 'matchMedia', {
-    value: vi.fn().mockImplementation((query: any) => // auto: implicit any ({
+    value: vi.fn().mockImplementation((query: any) => ({ // auto: implicit any{
       matches: false,
       media: query,
       onchange: null,

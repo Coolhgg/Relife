@@ -101,7 +101,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
   };
 
   const updateFeedback = (updates: Partial<WakeUpFeedback>) => {
-    setFeedback((prev: any) => // auto: implicit any ({ ...prev, ...updates }));
+    setFeedback((prev: any) => ({ // auto: implicit any{ ...prev, ...updates }));
   };
 
   if (!isOpen) return null;
@@ -164,7 +164,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="time"
                   value={feedback.actualWakeTime}
-                  onChange={(e: any) => // auto: implicit any updateFeedback({ actualWakeTime: e.target.value })}
+                  onChange={(e: any) => u // auto: implicit anypdateFeedback({ actualWakeTime: e.target.value })}
                   className="w-full bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-mono text-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
                 />
               </div>
@@ -328,7 +328,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
             <h3 className="text-white font-medium mb-3">Additional Notes (optional)</h3>
             <textarea
               value={feedback.notes}
-              onChange={(e: any) => // auto: implicit any updateFeedback({ notes: e.target.value })}
+              onChange={(e: any) => u // auto: implicit anypdateFeedback({ notes: e.target.value })}
               placeholder="Any additional thoughts about your wake-up experience..."
               className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
               rows={3}

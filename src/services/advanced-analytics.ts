@@ -523,7 +523,7 @@ class AdvancedAnalyticsService {
       const liveMetrics = {
         todayAlarms: todayEvents?.length || 0,
         successfulWakeups:
-          todayEvents?.filter((e: any) => // auto: implicit any e.dismissed && !e.snoozed).length || 0,
+          todayEvents?.filter((e: any) => e // auto: implicit any.dismissed && !e.snoozed).length || 0,
         avgResponseTime: this.calculateAverageResponseTime(todayEvents || []),
         streak: await this.calculateCurrentStreak(userId),
       };
@@ -532,7 +532,7 @@ class AdvancedAnalyticsService {
         firstAlarm: todayEvents?.[0]?.fired_at,
         lastAlarm: todayEvents?.[todayEvents.length - 1]?.fired_at,
         mostEffectiveVoice: this.getMostEffectiveVoice(todayEvents || []),
-        totalSnoozed: todayEvents?.filter((e: any) => // auto: implicit any e.snoozed).length || 0,
+        totalSnoozed: todayEvents?.filter((e: any) => e // auto: implicit any.snoozed).length || 0,
       };
 
       // Get active insights (cached)

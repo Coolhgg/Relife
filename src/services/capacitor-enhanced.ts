@@ -306,7 +306,7 @@ export class CapacitorEnhancedService {
 
     try {
       const pending = await LocalNotifications.getPending();
-      return pending.notifications.filter((n: any) => // auto: implicit any n.extra?.type === 'alarm');
+      return pending.notifications.filter((n: any) => n // auto: implicit any.extra?.type === 'alarm');
     } catch (error) {
       console.error('[Capacitor] Failed to get pending alarms:', error);
       return [];

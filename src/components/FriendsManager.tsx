@@ -364,7 +364,7 @@ export function FriendsManager({
             <Input
               placeholder="Search friends..."
               value={searchQuery}
-              onChange={(e: any) => // auto: implicit any setSearchQuery(e.target.value)}
+              onChange={(e: any) => s // auto: implicit anyetSearchQuery(e.target.value)}
               className="pl-10"
             />
           </div>

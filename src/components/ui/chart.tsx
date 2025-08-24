@@ -265,7 +265,7 @@ function ChartLegendContent({
         className
       )}
     >
-      {payload.map((item: any) => // auto: implicit any {
+      {payload.map((item: any) => { // auto: implicit any
         const key = `${nameKey || item.dataKey || 'value'}`;
         const itemConfig = getPayloadConfigFromPayload(config, item, key);
 

@@ -384,7 +384,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.motionPreferences?.enableAnimations !== false}
-            onChange={(e: any) => // auto: implicit any updateMotionPreference('enableAnimations', e.target.checked)}
+            onChange={(e: any) => u // auto: implicit anypdateMotionPreference('enableAnimations', e.target.checked)}
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -420,7 +420,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.motionPreferences?.reduceMotion || false}
-            onChange={(e: any) => // auto: implicit any updateMotionPreference('reduceMotion', e.target.checked)}
+            onChange={(e: any) => u // auto: implicit anypdateMotionPreference('reduceMotion', e.target.checked)}
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -479,7 +479,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.soundPreferences?.enableSounds !== false}
-            onChange={(e: any) => // auto: implicit any updateSoundPreference('enableSounds', e.target.checked)}
+            onChange={(e: any) => u // auto: implicit anypdateSoundPreference('enableSounds', e.target.checked)}
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -509,7 +509,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         </label>
         <select
           value={personalization?.soundPreferences?.soundTheme || 'default'}
-          onChange={(e: any) => // auto: implicit any updateSoundPreference('soundTheme', e.target.value)}
+          onChange={(e: any) => u // auto: implicit anypdateSoundPreference('soundTheme', e.target.value)}
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
         >
           <option value="default">Default</option>
@@ -530,7 +530,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.soundPreferences?.hapticFeedback !== false}
-            onChange={(e: any) => // auto: implicit any updateSoundPreference('hapticFeedback', e.target.checked)}
+            onChange={(e: any) => u // auto: implicit anypdateSoundPreference('hapticFeedback', e.target.checked)}
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -544,7 +544,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.soundPreferences?.muteOnFocus || false}
-            onChange={(e: any) => // auto: implicit any updateSoundPreference('muteOnFocus', e.target.checked)}
+            onChange={(e: any) => u // auto: implicit anypdateSoundPreference('muteOnFocus', e.target.checked)}
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -560,7 +560,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         </label>
         <select
           value={personalization?.layoutPreferences?.density || 'comfortable'}
-          onChange={(e: any) => // auto: implicit any updateLayoutPreference('density', e.target.value as any)}
+          onChange={(e: any) => u // auto: implicit anypdateLayoutPreference('density', e.target.value as any)}
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
         >
           <option value="compact">Compact</option>
@@ -575,7 +575,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         </label>
         <select
           value={personalization?.layoutPreferences?.cardStyle || 'rounded'}
-          onChange={(e: any) => // auto: implicit any updateLayoutPreference('cardStyle', e.target.value as any)}
+          onChange={(e: any) => u // auto: implicit anypdateLayoutPreference('cardStyle', e.target.value as any)}
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
         >
           <option value="square">Square</option>
@@ -617,7 +617,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.layoutPreferences?.showLabels !== false}
-            onChange={(e: any) => // auto: implicit any updateLayoutPreference('showLabels', e.target.checked)}
+            onChange={(e: any) => u // auto: implicit anypdateLayoutPreference('showLabels', e.target.checked)}
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>
@@ -631,7 +631,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
           <input
             type="checkbox"
             checked={personalization?.layoutPreferences?.showIcons !== false}
-            onChange={(e: any) => // auto: implicit any updateLayoutPreference('showIcons', e.target.checked)}
+            onChange={(e: any) => u // auto: implicit anypdateLayoutPreference('showIcons', e.target.checked)}
             className="h-4 w-4 text-blue-600 rounded border-gray-300"
           />
         </label>

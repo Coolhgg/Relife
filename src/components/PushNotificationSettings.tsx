@@ -181,7 +181,7 @@ export const PushNotificationSettingsComponent: React.FC<
               <input
                 type="checkbox"
                 checked={status.settings.enabled}
-                onChange={(e: any) => // auto: implicit any handleToggleEnabled(e.target.checked)}
+                onChange={(e: any) => h // auto: implicit anyandleToggleEnabled(e.target.checked)}
                 className="sr-only peer"
                 disabled={status.isLoading}
               />
@@ -509,7 +509,7 @@ export const PushNotificationSettingsComponent: React.FC<
                         <input
                           type="time"
                           value={status.settings.quietHours.end}
-                          onChange={(e: any) => // auto: implicit any handleQuietHoursChange('end', e.target.value)}
+                          onChange={(e: any) => h // auto: implicit anyandleQuietHoursChange('end', e.target.value)}
                           className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                         />
                       </div>
