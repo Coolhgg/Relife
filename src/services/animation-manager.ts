@@ -3,6 +3,7 @@
 // Central animation orchestration and performance optimization
 
 import { AnimationControls, MotionValue } from 'framer-motion';
+import { TimeoutHandle } from '../types/timers';
 
 export interface AnimationPreferences {
   reducedMotion: boolean;
@@ -43,7 +44,7 @@ class AnimationManagerService {
   private activeAnimations = new Map<string, AnimationControls>();
   private frameRateHistory: number[] = [];
   private performanceObserver: PerformanceObserver | null = null;
-  private animationFrameId: number | null = null;
+  private animationFrameId: TimeoutHandle | null = null;
 
   private constructor() {
     this.initializePreferences();

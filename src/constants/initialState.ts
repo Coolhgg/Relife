@@ -109,7 +109,7 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
   },
   typography: {
     fontFamily: {
-      primary: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      primary: '-apple-system, BlinkMacSystemFont, "Segoe UI", Boto, sans-serif',
       secondary: 'Inter, system-ui, sans-serif',
       monospace: '"Fira Code", "JetBrains Mono", monospace',
     },

@@ -3,6 +3,7 @@
 
 import ScreenReaderService from './screen-reader';
 import KeyboardNavigationService from './keyboard-navigation';
+import { TimeoutHandle } from '../types/timers';
 
 export interface VoiceCommand {
   phrases: string[];

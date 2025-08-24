@@ -9,6 +9,7 @@ import { AudioManager } from './audio-manager';
 import OfflineStorage from './offline-storage';
 import { CustomSoundManager } from './custom-sound-manager';
 import { supabase } from './supabase';
+import { TimeoutHandle } from '../types/timers';
 import type {
   CustomSoundTheme,
   CustomSoundThemeCreationSession,

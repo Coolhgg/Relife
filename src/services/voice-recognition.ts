@@ -111,8 +111,8 @@ export class VoiceRecognitionService {
   // Adaptive learning data
   private static commandHistory: VoiceCommand[] = [];
   private static userPreferences = {
-    preferredCommands: new Map<string, number>(),
-    avgConfidence: new Map<string, number>(),
+    preferredCommands: new Map<string, TimeoutHandle>(),
+    avgConfidence: new Map<string, TimeoutHandle>(),
     timeOfDayPatterns: new Map<string, string[]>(),
   };
 
@@ -519,7 +519,7 @@ export class VoiceRecognitionService {
         : 0;
 
     // Most used commands
-    const commandCounts = new Map<string, number>();
+    const commandCounts = new Map<string, TimeoutHandle>();
     const commandConfidence = new Map<string, number[]>();
 
     this.commandHistory.forEach(cmd => {

@@ -388,7 +388,7 @@ export class PremiumVoiceService {
         benefits.push('20 custom voice messages per day');
         benefits.push('Voice cloning feature');
         benefits.push(
-          'Premium personalities: Demon Lord, AI Robot, Comedian, Philosopher'
+          'Premium personalities: Demon Lord, AI Bot, Comedian, Philosopher'
         );
         benefits.push('Nuclear Mode: Ultimate wake-up challenge');
         benefits.push('Unlimited customization');

@@ -1,4 +1,5 @@
 import type { PerformanceConfig } from './types/performance';
+import { TimeoutHandle } from '../types/timers';
 
 export interface DeviceCapabilities {
   memory: number; // GB

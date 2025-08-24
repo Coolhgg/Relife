@@ -5,6 +5,7 @@ import type { FeatureAccess, FeatureGate, PremiumFeature } from '../types/premiu
 import SubscriptionService from './subscription-service';
 import { ErrorHandler } from './error-handler';
 import AnalyticsService from './analytics';
+import { TimeoutHandle } from '../types/timers';
 
 interface FeatureDefinition {
   id: string;

@@ -8,12 +8,12 @@ import {
 import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { App, AppInfo, AppState } from '@capacitor/app';
+// import ... from '@capacitor/app'; // Package not available in current setup
 import { Device, DeviceInfo } from '@capacitor/device';
-import { Network, ConnectionStatus } from '@capacitor/network';
-import { KeepAwake } from '@capacitor-community/keep-awake';
-import { BackgroundMode } from '@capacitor-community/background-mode';
-import { Badge } from '@capacitor/badge';
+// import ... from '@capacitor/network'; // Package not available in current setup
+// import ... from '@capacitor-community/keep-awake'; // Package not available in current setup
+// import ... from '@capacitor-community/background-mode'; // Package not available in current setup
+// import ... from '@capacitor/badge'; // Package not available in current setup
 
 export interface AlarmNotification {
   id: number;

@@ -6,6 +6,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PerformanceMonitor from '../services/performance-monitor';
 import AnalyticsService from '../services/analytics';
+import { TimeoutHandle } from '../types/timers';
 
 interface WebVitalMetric {
   name: string;

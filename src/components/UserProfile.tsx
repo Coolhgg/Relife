@@ -1,4 +1,4 @@
-import React, { useState  } from 'react'; // auto: added missing React import
+import React, { useState } from 'react'; // auto: added missing React import
 import {
   User,
   Mail,
@@ -15,6 +15,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import type { User as AppUser, VoiceMood } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 interface UserProfileProps {
   user: AppUser;

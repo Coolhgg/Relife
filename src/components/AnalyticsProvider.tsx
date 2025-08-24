@@ -36,8 +36,8 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
   const { trackFeatureDiscovery } = useEngagementAnalytics();
   const { trackComponentRenderTime } = usePerformanceAnalytics();
 
-  const sessionStartTime = useRef<number>(Date.now());
-  const interactionCount = useRef<number>(0);
+  const sessionStartTime = useRef<TimeoutHandle>(Date.now());
+  const interactionCount = useRef<TimeoutHandle>(0);
   const pageViews = useRef<Set<string>>(new Set());
   const featuresUsed = useRef<Set<string>>(new Set());
 
@@ -223,7 +223,7 @@ export const withAnalytics = <P extends object>(
 ) => {
   const WithAnalyticsComponent: React.FC<P> = props => {
     const { trackPerformance } = useAnalyticsContext();
-    const renderStartTime = useRef<number>();
+    const renderStartTime = useRef<TimeoutHandle>();
 
     useEffect(() => {
       renderStartTime.current = performance.now();
@@ -250,8 +250,8 @@ export const withAnalytics = <P extends object>(
 // Hook for component-specific analytics
 export const useComponentAnalytics = (componentName: string) => {
   const analytics = useAnalyticsContext();
-  const mountTime = useRef<number>(Date.now());
-  const interactionCount = useRef<number>(0);
+  const mountTime = useRef<TimeoutHandle>(Date.now());
+  const interactionCount = useRef<TimeoutHandle>(0);
 
   useEffect(() => {
     // Track component mount

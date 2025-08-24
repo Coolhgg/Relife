@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Shield,
-  AlertTriangle,
+  Alert,
   Settings,
   Clock,
   Eye,

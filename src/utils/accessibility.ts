@@ -321,7 +321,7 @@ export const addAccessibleTooltip = (
 ): (() => void) => {
   const { position = 'top', delay = 300 } = options;
   let tooltip: HTMLElement | null = null;
-  let timeoutId: number | null = null;
+  let timeoutId: TimeoutHandle | null = null;
 
   const showTooltip = () => {
     tooltip = document.createElement('div');

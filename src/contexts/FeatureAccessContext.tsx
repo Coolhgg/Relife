@@ -12,6 +12,7 @@ import React, {
 import FeatureGateService from '../services/feature-gate-service';
 import SubscriptionService from '../services/subscription-service';
 import { ErrorHandler } from '../services/error-handler';
+import { TimeoutHandle } from '../types/timers';
 
 interface FeatureAccessContextValue {
   // State

@@ -26,6 +26,7 @@ import {
   X,
 } from 'lucide-react';
 import UserTestingService, { UserFeedback } from '../../services/user-testing';
+import { TimeoutHandle } from '../types/timers';
 
 interface FeedbackModalProps {
   isOpen: boolean;

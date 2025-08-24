@@ -8,6 +8,7 @@ import {
 import { useMobilePerformance } from '../hooks/useMobilePerformance';
 import { mobilePerformance } from '../services/mobile-performance';
 import AccessibilityPreferencesService from '../services/accessibility-preferences';
+import { TimeoutHandle } from '../types/timers';
 
 interface MobileAccessibilityContextValue {
   // Accessibility state

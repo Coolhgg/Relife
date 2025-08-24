@@ -7,22 +7,24 @@ const fs = require('fs');
 
 function main() {
   const [dataFile, notificationType, criticalIssues] = process.argv.slice(2);
-  
+
   if (!dataFile || !notificationType) {
-    console.error('Usage: node generate-notification-templates.js <notification-data-file> <notification-type> <critical-issues>');
+    console.error(
+      'Usage: node generate-notification-templates.js <notification-data-file> <notification-type> <critical-issues>'
+    );
     process.exit(1);
   }
 
   try {
     const data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
     const critical = parseInt(criticalIssues || '0');
-    
+
     console.log('Generating notification for type:', notificationType);
-    
+
     let title = '';
     let content = '';
     let urgency = 'normal';
-    
+
     switch (notificationType) {
       case 'daily-check':
         if (critical > 0) {
@@ -81,7 +83,7 @@ ${data.alerts.map(alert => `- **${alert.language.toUpperCase()}**: ${alert.quali
 [View Detailed Analysis](https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
         }
         break;
-        
+
       case 'weekly-summary':
         title = '📊 Weekly Translation Summary';
         content = `# 📊 Weekly Translation Summary
@@ -106,7 +108,13 @@ ${data.criticalLanguages.map(lang => `- ${lang.language.toUpperCase()}: ${lang.q
           content += `
 ## 🔧 Maintenance Needed
 The following languages haven't been updated recently:
-${data.staleLanguages.slice(0, 5).map(lang => `- ${lang.language.toUpperCase()}: Last updated ${lang.lastUpdate ? new Date(lang.lastUpdate).toLocaleDateString() : 'Unknown'}`).join('\n')}
+${data.staleLanguages
+  .slice(0, 5)
+  .map(
+    lang =>
+      `- ${lang.language.toUpperCase()}: Last updated ${lang.lastUpdate ? new Date(lang.lastUpdate).toLocaleDateString() : 'Unknown'}`
+  )
+  .join('\n')}
 ${data.staleLanguages.length > 5 ? `\n*... and ${data.staleLanguages.length - 5} more*` : ''}
 `;
         }
@@ -122,7 +130,7 @@ ${data.summary.critical > 0 ? '1. **Priority**: Address critical quality issues\
 
 *Automated weekly summary from translation monitoring system*`;
         break;
-        
+
       case 'monthly-maintenance':
         title = '🔧 Monthly Translation Maintenance';
         content = `# 🔧 Monthly Translation Maintenance Reminder
@@ -167,12 +175,12 @@ ${data.summary.belowThreshold > 0 ? `- Improve quality in ${data.summary.belowTh
 *Monthly maintenance reminder from translation monitoring system*`;
         break;
     }
-    
+
     if (!title || !content) {
       console.log('No notification content generated for type:', notificationType);
       return;
     }
-    
+
     // Save notification content
     const notification = {
       title,
@@ -180,15 +188,20 @@ ${data.summary.belowThreshold > 0 ? `- Improve quality in ${data.summary.belowTh
       type: notificationType,
       urgency,
       timestamp: data.timestamp,
-      data: data
+      data: data,
     };
-    
-    fs.writeFileSync(process.env.NOTIFICATIONS_DIR + '/notification.json', JSON.stringify(notification, null, 2));
-    fs.writeFileSync(process.env.NOTIFICATIONS_DIR + '/notification-content.md', content);
-    
+
+    fs.writeFileSync(
+      process.env.NOTIFICATIONS_DIR + '/notification.json',
+      JSON.stringify(notification, null, 2)
+    );
+    fs.writeFileSync(
+      process.env.NOTIFICATIONS_DIR + '/notification-content.md',
+      content
+    );
+
     console.log('✅ Generated notification:', title);
     console.log('Urgency level:', urgency);
-    
   } catch (error) {
     console.error('Error generating notification templates:', error.message);
     process.exit(1);

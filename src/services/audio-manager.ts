@@ -3,6 +3,7 @@
 import type { Alarm, VoiceMood } from '../types';
 import type { CustomSound, Playlist, PlaylistSound } from './types/media';
 import { formatTime } from '../utils';
+import { TimeoutHandle } from '../types/timers';
 
 export interface AudioCacheEntry {
   id: string;
@@ -53,7 +54,7 @@ export class AudioManager {
   private loadingQueue: Map<string, Promise<AudioCacheEntry>> = new Map();
   private preloadConfig: AudioPreloadConfig;
   private currentUtterance: SpeechSynthesisUtterance | null = null;
-  private repeatInterval: number | null = null;
+  private repeatInterval: TimeoutHandle | null = null;
 
   // Progressive loading for large files
   private progressCallbacks: Map<string, (progress: AudioLoadProgress) => void> =

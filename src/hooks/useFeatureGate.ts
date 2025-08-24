@@ -208,8 +208,8 @@ function useFeatureGate(
 
       // Check usage limits
       let usageExceeded = false;
-      let usageRemaining: number | undefined;
-      let usageLimit: number | undefined;
+      let usageRemaining: TimeoutHandle | undefined;
+      let usageLimit: TimeoutHandle | undefined;
 
       if (featureAccess?.usageLimit && featureAccess?.usageCount !== undefined) {
         usageLimit = featureAccess.usageLimit;

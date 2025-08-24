@@ -1,6 +1,7 @@
 import { audioManager, AudioManager } from './audio-manager';
 import type { AudioLoadProgress, AudioCacheEntry } from './audio-manager';
 import type { CustomSound, Playlist, AudioLoadOptions } from './types/media';
+import { TimeoutHandle } from '../types/timers';
 
 export interface LazyLoadQueueItem {
   id: string;

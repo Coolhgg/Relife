@@ -3,6 +3,7 @@ import type { CustomSound, SoundCategory } from '../types';
 import { AudioManager } from './audio-manager';
 import { supabase } from './supabase';
 import { ErrorHandler } from './error-handler';
+import { TimeoutHandle } from '../types/timers';
 
 export interface SoundUploadResult {
   success: boolean;

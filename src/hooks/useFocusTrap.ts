@@ -6,6 +6,7 @@ import * as React from 'react';
  */
 
 import { useEffect, useRef, useCallback } from 'react';
+import { TimeoutHandle } from '../types/timers';
 
 interface FocusTrapOptions {
   isEnabled: boolean;

@@ -15,6 +15,7 @@ import {
 import FeedbackModal from './FeedbackModal';
 import BugReportModal from './BugReportModal';
 import UserTestingService from '../../services/user-testing';
+import { TimeoutHandle } from '../types/timers';
 
 interface FeedbackWidgetProps {
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';

@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { TimeoutHandle } from '../types/timers';
 
 export interface LoadingPriority {
   level: 'critical' | 'high' | 'normal' | 'low';
@@ -335,7 +336,7 @@ class ProgressiveLoadManager {
   /**
    * Create timeout promise
    */
-  private createTimeoutPromise<T>(timeout: number): Promise<T> {
+  private createTimeoutPromise<T>(timeout: TimeoutHandle): Promise<T> {
     return new Promise((_, reject) => {
       setTimeout(() => {
         reject(new Error(`Loading timeout after ${timeout}ms`));

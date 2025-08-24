@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 import { v4 as uuidv4 } from 'uuid';
 import { Device } from '@capacitor/device';
-import { Network } from '@capacitor/network';
+// import ... from '@capacitor/network'; // Package not available in current setup
 import { ErrorHandler } from './error-handler';
 
 // Types

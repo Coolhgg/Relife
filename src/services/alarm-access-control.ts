@@ -4,6 +4,7 @@
 import SecurityService from './security';
 import { ErrorHandler } from './error-handler';
 import type { Alarm, User } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 interface AccessControlContext {
   userId: string;
@@ -40,7 +41,7 @@ export class AlarmAccessControl {
   private accessHistory: AccessAttempt[] = [];
   private sessionCache: Map<string, AccessControlContext> = new Map();
   private blockedUsers: Set<string> = new Set();
-  private suspiciousActivity: Map<string, number> = new Map();
+  private suspiciousActivity: Map<string, TimeoutHandle> = new Map();
 
   private constructor() {
     this.initializeAccessControl();

@@ -378,7 +378,8 @@ export function AdvancedAnalytics({
   // Mood distribution
   const moodCounts = wakeUpData.reduce(
     (acc, w) => {
-      acc[w.mood] = (acc[w.mood] || 0) + 1;
+      const mood = w.mood as WakeUpMood;
+      acc[mood] = (acc[mood] || 0) + 1;
       return acc;
     },
     {} as Record<WakeUpMood, number>

@@ -10,6 +10,7 @@ import type {
 } from '../types/index';
 import { Preferences } from '@capacitor/preferences';
 import { Geolocation } from '@capacitor/geolocation';
+import { TimeoutHandle } from '../types/timers';
 
 const ML_CONFIG_KEY = 'ml_optimization_config';
 const USER_BEHAVIOR_DATA_KEY = 'user_behavior_data';

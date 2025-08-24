@@ -118,7 +118,7 @@ class AnalyticsService {
   private isInitialized = false;
   private config: AnalyticsConfig | null = null;
   private sessionId: string | null = null;
-  private sessionStartTime: number | null = null;
+  private sessionStartTime: TimeoutHandle | null = null;
 
   private constructor() {}
 

@@ -3,6 +3,7 @@ import type { User } from '@supabase/supabase-js';
 import type { Alarm, AlarmEvent, User as AppUser } from '../types';
 import { ErrorHandler } from './error-handler';
 import PerformanceMonitor from './performance-monitor';
+import { TimeoutHandle } from '../types/timers';
 
 interface ConnectionPoolConfig {
   maxConnections: number;

@@ -6,33 +6,33 @@ name: 📊 Translation Quality Monitoring
 on:
   schedule:
     # Run daily at 1 AM UTC (distributed load, before main CI conflicts)
-    - cron: '0 1 * * *'
+    - cron: "0 1 * * *"
     # Run weekly comprehensive analysis on Saturdays at 11 PM UTC
-    - cron: '0 23 * * 6'
+    - cron: "0 23 * * 6"
   workflow_dispatch:
     inputs:
       monitoring_type:
-        description: 'Type of monitoring to run'
+        description: "Type of monitoring to run"
         required: false
-        default: 'daily'
+        default: "daily"
         type: choice
         options:
-          - 'daily'
-          - 'weekly'
-          - 'comprehensive'
+          - "daily"
+          - "weekly"
+          - "comprehensive"
       notify_team:
-        description: 'Send notifications to team'
+        description: "Send notifications to team"
         required: false
         default: true
         type: boolean
       quality_threshold:
-        description: 'Quality threshold for alerts (0-100)'
+        description: "Quality threshold for alerts (0-100)"
         required: false
-        default: '75'
+        default: "75"
         type: string
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: "20"
   QUALITY_THRESHOLD: ${{ github.event.inputs.quality_threshold || '75' }}
 
 jobs:
@@ -40,13 +40,13 @@ jobs:
   monitor-quality:
     name: 📊 Monitor Translation Quality
     runs-on: ubuntu-latest
-    
+
     outputs:
       quality-status: ${{ steps.analysis.outputs.status }}
       average-quality: ${{ steps.analysis.outputs.average-quality }}
       languages-below-threshold: ${{ steps.analysis.outputs.languages-below-threshold }}
       trend-direction: ${{ steps.analysis.outputs.trend-direction }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -58,7 +58,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: |
@@ -85,16 +85,16 @@ jobs:
         id: analysis
         run: |
           echo "🔍 Running ${{ steps.type.outputs.monitoring-type }} translation quality monitoring..."
-          
+
           TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
           REPORT_FILE=".github/translation-reports/monitoring-$TIMESTAMP.json"
-          
+
           # Run comprehensive analysis
           node scripts/advanced-translation-manager.mjs analyze \
             --format=json \
             --output="$REPORT_FILE" \
             --monitoring-mode
-          
+
           # Analyze results and set outputs
           node scripts/analyze-quality-results.js "$REPORT_FILE" "${{ env.QUALITY_THRESHOLD }}" "${{ steps.type.outputs.monitoring-type }}"
 
@@ -102,9 +102,9 @@ jobs:
         if: steps.type.outputs.monitoring-type == 'weekly' || steps.type.outputs.monitoring-type == 'comprehensive'
         run: |
           echo "📈 Generating trend analysis..."
-          
+
           node scripts/generate-trends.js ".github/translation-reports/history/quality-history.json"
-          
+
           echo "✅ Trend analysis completed"
 
       - name: Upload monitoring reports
@@ -122,10 +122,10 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
+
           # Add quality history files
           git add .github/translation-reports/history/ .github/translation-reports/trends/ || true
-          
+
           # Commit if there are changes
           if ! git diff --cached --quiet; then
             git commit -m "📊 Update translation quality monitoring data [skip ci]"
@@ -142,12 +142,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: monitor-quality
     if: needs.monitor-quality.outputs.quality-status != 'excellent'
-    
+
     strategy:
       matrix:
         # Focus on languages that need attention
-        language: ['es', 'fr', 'de', 'zh', 'ja', 'pt', 'it', 'ru', 'ar', 'hi']
-        
+        language: ["es", "fr", "de", "zh", "ja", "pt", "it", "ru", "ar", "hi"]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -156,7 +156,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci --production=false
@@ -164,13 +164,13 @@ jobs:
       - name: Analyze specific language
         run: |
           echo "🔍 Analyzing ${{ matrix.language }} translation quality..."
-          
+
           # Run focused analysis on specific language
           node scripts/advanced-translation-manager.mjs analyze \
             --language="${{ matrix.language }}" \
             --format=json \
             --output="language-${{ matrix.language }}-analysis.json"
-          
+
           # Check if this language has issues
           node scripts/analyze-language-quality.js "language-${{ matrix.language }}-analysis.json" "${{ matrix.language }}"
 
@@ -188,7 +188,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [monitor-quality, monitor-languages]
     if: always() && (needs.monitor-quality.outputs.quality-status == 'needs-attention' || github.event.inputs.notify_team == 'true')
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -200,9 +200,9 @@ jobs:
           AVERAGE_QUALITY="${{ needs.monitor-quality.outputs.average-quality }}"
           TREND="${{ needs.monitor-quality.outputs.trend-direction }}"
           LANGUAGES_BELOW='${{ needs.monitor-quality.outputs.languages-below-threshold }}'
-          
+
           echo "Generating notification for status: $QUALITY_STATUS"
-          
+
           # Create notification content using script
           node scripts/generate-notification-content.js \
             "$QUALITY_STATUS" \
@@ -218,7 +218,7 @@ jobs:
           script: |
             const fs = require('fs');
             const content = fs.readFileSync('notification-content.md', 'utf8');
-            
+
             // Check if there's already an open issue for translation quality
             const { data: issues } = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
@@ -226,11 +226,11 @@ jobs:
               state: 'open',
               labels: 'translation-quality,monitoring'
             });
-            
+
             const existingIssue = issues.find(issue => 
               issue.title.includes('Translation Quality Alert')
             );
-            
+
             if (existingIssue) {
               // Update existing issue
               await github.rest.issues.createComment({
@@ -265,7 +265,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: monitor-quality
     if: steps.type.outputs.monitoring-type == 'weekly'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -273,22 +273,22 @@ jobs:
       - name: Clean up old monitoring reports
         run: |
           echo "🧹 Cleaning up old monitoring data..."
-          
+
           # Remove monitoring reports older than 30 days
           find .github/translation-reports/ -name "monitoring-*.json" -type f -mtime +30 -delete || true
-          
+
           # Keep only last 100 quality history entries
           node scripts/cleanup-quality-history.js
-          
+
           echo "✅ Cleanup completed"
 
       - name: Commit cleanup changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
+
           git add .github/translation-reports/ || true
-          
+
           if ! git diff --cached --quiet; then
             git commit -m "🧹 Clean up old translation monitoring data [skip ci]"
             git push

@@ -23,6 +23,7 @@ import {
 import RedesignedFeedbackModal from './RedesignedFeedbackModal';
 import UserTestingService from '../../services/user-testing';
 import { useTheme } from '../../hooks/useTheme';
+import { TimeoutHandle } from '../types/timers';
 
 interface RedesignedFeedbackWidgetProps {
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';

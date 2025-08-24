@@ -7,6 +7,7 @@ import { supabase } from './supabase';
 import { ErrorHandler } from './error-handler';
 import PerformanceMonitor from './performance-monitor';
 import type { Alarm, User } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 export interface RealtimeConfig {
   enableWebSocket: boolean;

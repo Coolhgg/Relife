@@ -32,6 +32,7 @@ import {
   Clock,
 } from 'lucide-react';
 import UserTestingService, { BugReport } from '../../services/user-testing';
+import { TimeoutHandle } from '../types/timers';
 
 interface BugReportModalProps {
   isOpen: boolean;

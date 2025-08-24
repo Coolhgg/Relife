@@ -23,8 +23,9 @@ import { useDynamicFocus } from '../hooks/useDynamicFocus';
 import { useFormAnnouncements } from '../hooks/useFormAnnouncements';
 import { useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
 import { PremiumService } from '../services/premium';
-import _NuclearModeSelector from './_NuclearModeSelector';
+import _NuclearModeSelector from './NuclearModeSelector';
 import UpgradePrompt from './UpgradePrompt';
+import { TimeoutHandle } from '../types/timers';
 
 interface AlarmFormProps {
   alarm?: Alarm | null;

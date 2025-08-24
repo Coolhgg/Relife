@@ -1,5 +1,6 @@
 /// <reference lib="dom" />
 import React, { useState, useEffect } from 'react';
+import { TimeoutHandle } from '../types/timers';
 import {
   Wifi,
   WifiOff,

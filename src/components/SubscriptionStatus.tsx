@@ -6,7 +6,7 @@ import {
   Calendar,
   CreditCard,
   Settings,
-  AlertTriangle,
+  Alert,
   CheckCircle,
   Clock,
   Zap,
@@ -110,7 +110,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
         message: `Canceled - Access until ${endsAt.toLocaleDateString()}`,
         urgency: daysUntilEnd <= 7 ? 'high' : 'medium',
         daysLeft: daysUntilEnd,
-        icon: AlertTriangle,
+        icon: Alert,
       };
     }
 
@@ -119,7 +119,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
         status: 'past_due',
         message: 'Payment failed - Update payment method',
         urgency: 'high',
-        icon: AlertTriangle,
+        icon: Alert,
       };
     }
 

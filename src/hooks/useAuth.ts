@@ -7,7 +7,6 @@ import { ErrorHandler } from '../services/error-handler';
 import AnalyticsService from '../services/analytics';
 import SecurityService from '../services/security';
 import { TimeoutHandle } from '../types/timers';
-import { TimeoutHandle } from '../types/timers';
 
 interface AuthState {
   user: User | null;

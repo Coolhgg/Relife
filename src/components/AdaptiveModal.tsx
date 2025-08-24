@@ -14,6 +14,7 @@ import { useOptimizedAnimation } from '../utils/frame-rate-manager';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useFocusRestoration } from '../hooks/useFocusRestoration';
 import type { AnimationConfig } from '../utils/frame-rate-manager';
+import { TimeoutHandle } from '../types/timers';
 
 export interface AdaptiveModalProps {
   isOpen: boolean;

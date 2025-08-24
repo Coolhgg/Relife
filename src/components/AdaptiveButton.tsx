@@ -10,6 +10,7 @@ import {
 } from '../hooks/useDeviceCapabilities';
 import { useOptimizedAnimation } from '../utils/frame-rate-manager';
 import type { AnimationConfig } from '../utils/frame-rate-manager';
+import { TimeoutHandle } from '../types/timers';
 
 export interface AdaptiveButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {

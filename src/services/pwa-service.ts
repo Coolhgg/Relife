@@ -1,6 +1,7 @@
 /// <reference lib="dom" />
 import { OfflineManager } from './offline-manager';
 import { NotificationService } from './notification';
+import { TimeoutHandle } from '../types/timers';
 
 export interface PWACapabilities {
   serviceWorker: boolean;

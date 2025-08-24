@@ -17,6 +17,7 @@ import { Label } from '../ui/label';
 import { Separator } from '../ui/separator';
 import { Alert, AlertDescription } from '../ui/alert';
 import { Badge } from '../ui/badge';
+import { TimeoutHandle } from '../types/timers';
 import type {
   SubscriptionPlan,
   BillingInterval,

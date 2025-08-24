@@ -1,7 +1,8 @@
 /// <reference lib="dom" />
-import { openDB, DBSchema, IDBPDatabase } from 'idb';
+// import ... from 'idb'; // Package not available in current setup
 import { supabase } from './supabase';
 import type { Alarm } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 interface OfflineDB extends DBSchema {
   alarms: {

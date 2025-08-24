@@ -2,6 +2,7 @@ import { Alarm } from '../types';
 import { Geolocation, GeolocationPosition } from '@capacitor/geolocation';
 import { Preferences } from '@capacitor/preferences';
 import { scheduleLocalNotification } from './capacitor';
+import { TimeoutHandle } from '../types/timers';
 
 const LOCATION_CONFIG_KEY = 'enhanced_location_config';
 const GEOFENCES_KEY = 'active_geofences';
@@ -68,7 +69,7 @@ export class EnhancedLocationService {
   private static geofences: Map<string, Geofence> = new Map();
   private static locationHistory: LocationHistoryPoint[] = [];
   private static locationPatterns: Map<string, LocationPattern> = new Map();
-  private static trackingInterval: number | null = null;
+  private static trackingInterval: TimeoutHandle | null = null;
   private static lastKnownPosition: GeolocationPosition | null = null;
 
   // ===== INITIALIZATION =====

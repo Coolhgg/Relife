@@ -6,47 +6,47 @@ name: 📑 Translation Reports
 on:
   schedule:
     # Generate reports every Tuesday at 11 AM UTC (distributed load, avoids Monday conflicts)
-    - cron: '0 11 * * 2'
+    - cron: "0 11 * * 2"
     # Generate monthly comprehensive reports on the 1st at 2 PM UTC
-    - cron: '0 14 1 * *'
+    - cron: "0 14 1 * *"
   workflow_dispatch:
     inputs:
       report_type:
-        description: 'Type of report to generate'
+        description: "Type of report to generate"
         required: false
-        default: 'weekly'
+        default: "weekly"
         type: choice
         options:
-          - 'weekly'
-          - 'monthly'
-          - 'comprehensive'
-          - 'status-page'
+          - "weekly"
+          - "monthly"
+          - "comprehensive"
+          - "status-page"
       include_detailed_analysis:
-        description: 'Include detailed language analysis'
+        description: "Include detailed language analysis"
         required: false
         default: true
         type: boolean
       update_documentation:
-        description: 'Update translation documentation'
+        description: "Update translation documentation"
         required: false
         default: true
         type: boolean
       generate_public_reports:
-        description: 'Generate public-facing reports'
+        description: "Generate public-facing reports"
         required: false
         default: false
         type: boolean
 
 env:
-  NODE_VERSION: '20'
-  REPORTS_DIR: 'docs/translation-reports'
+  NODE_VERSION: "20"
+  REPORTS_DIR: "docs/translation-reports"
 
 jobs:
   # Generate comprehensive translation data
   generate-data:
     name: 📊 Generate Translation Data
     runs-on: ubuntu-latest
-    
+
     outputs:
       report-timestamp: ${{ steps.data.outputs.timestamp }}
       total-languages: ${{ steps.data.outputs.total-languages }}
@@ -54,7 +54,7 @@ jobs:
       total-keys: ${{ steps.data.outputs.total-keys }}
       completion-percentage: ${{ steps.data.outputs.completion-percentage }}
       report-type: ${{ steps.determine-type.outputs.report-type }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -66,7 +66,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: |
@@ -96,9 +96,9 @@ jobs:
         run: |
           TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
           echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
-          
+
           echo "📊 Generating comprehensive translation data..."
-          
+
           # Generate detailed analysis with all metrics
           node scripts/advanced-translation-manager.mjs analyze \
             --format=json \
@@ -106,7 +106,7 @@ jobs:
             --include-performance \
             --include-cultural \
             --include-consistency
-          
+
           # Generate summary statistics
           node scripts/generate-report-statistics.js \
             "${{ env.REPORTS_DIR }}/data/full-analysis-$TIMESTAMP.json" \
@@ -116,7 +116,7 @@ jobs:
         if: github.event.inputs.generate_public_reports == 'true' || steps.determine-type.outputs.report-type == 'monthly'
         run: |
           echo "🌐 Generating public status page..."
-          
+
           TIMESTAMP="${{ steps.data.outputs.timestamp }}"
           node scripts/generate-status-page.js \
             "${{ env.REPORTS_DIR }}/data/summary-$TIMESTAMP.json" \
@@ -134,7 +134,7 @@ jobs:
     name: 📄 Generate HTML Reports
     runs-on: ubuntu-latest
     needs: generate-data
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -143,7 +143,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: |
@@ -159,9 +159,9 @@ jobs:
       - name: Generate comprehensive HTML report
         run: |
           echo "📄 Generating HTML reports..."
-          
+
           TIMESTAMP="${{ needs.generate-data.outputs.report-timestamp }}"
-          
+
           # Generate interactive HTML report
           node scripts/advanced-translation-manager.mjs report-only \
             --html \
@@ -183,7 +183,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [generate-data, generate-html-reports]
     if: github.event.inputs.update_documentation != 'false'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -194,7 +194,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci --production=false
@@ -214,12 +214,12 @@ jobs:
       - name: Update translation status in README
         run: |
           echo "📚 Updating README with latest translation status..."
-          
+
           TOTAL_LANGUAGES="${{ needs.generate-data.outputs.total-languages }}"
           AVERAGE_QUALITY="${{ needs.generate-data.outputs.average-quality }}"
           COMPLETION="${{ needs.generate-data.outputs.completion-percentage }}"
           TIMESTAMP="${{ needs.generate-data.outputs.report-timestamp }}"
-          
+
           # Update README using script
           node scripts/update-readme-status.js \
             "$TOTAL_LANGUAGES" \
@@ -229,9 +229,9 @@ jobs:
       - name: Generate translation coverage report
         run: |
           echo "📊 Generating translation coverage report..."
-          
+
           TIMESTAMP="${{ needs.generate-data.outputs.report-timestamp }}"
-          
+
           # Generate coverage report markdown
           node scripts/generate-coverage-report.js \
             "${{ env.REPORTS_DIR }}/data/summary-$TIMESTAMP.json" \
@@ -240,10 +240,10 @@ jobs:
       - name: Archive old reports
         run: |
           echo "🗃️ Archiving old reports..."
-          
+
           # Move reports older than 30 days to archive
           ARCHIVE_DATE=$(date -d '30 days ago' +%Y-%m-%d)
-          
+
           find ${{ env.REPORTS_DIR }} -name "*.html" -type f -not -name "status.html" -exec bash -c '
             file="$1"
             filename=$(basename "$file")
@@ -253,19 +253,19 @@ jobs:
               echo "Archived: $filename"
             fi
           ' _ {} \; || true
-          
+
           # Keep only last 5 data files
           ls -t ${{ env.REPORTS_DIR }}/data/*.json | tail -n +6 | xargs rm -f || true
-          
+
           echo "✅ Archiving completed"
 
       - name: Commit documentation updates
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
+
           git add README.md ${{ env.REPORTS_DIR }}/ docs/assets/translation-charts/ || true
-          
+
           if ! git diff --cached --quiet; then
             git commit -m "📊 Update translation reports and documentation - Type: ${{ needs.generate-data.outputs.report-type }}, Languages: ${{ needs.generate-data.outputs.total-languages }}, Quality: ${{ needs.generate-data.outputs.average-quality }}%, Coverage: ${{ needs.generate-data.outputs.completion-percentage }}% [skip ci]"
             git push
@@ -280,7 +280,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [generate-data, generate-html-reports]
     if: needs.generate-data.outputs.report-type == 'monthly' || needs.generate-data.outputs.report-type == 'comprehensive'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -289,7 +289,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: |
@@ -302,9 +302,9 @@ jobs:
       - name: Generate CSV reports
         run: |
           echo "📊 Generating CSV reports..."
-          
+
           TIMESTAMP="${{ needs.generate-data.outputs.report-timestamp }}"
-          
+
           node scripts/generate-csv-reports.js \
             "translation-data-$TIMESTAMP/${{ env.REPORTS_DIR }}/data/summary-$TIMESTAMP.json" \
             "$TIMESTAMP"
@@ -312,9 +312,9 @@ jobs:
       - name: Generate PDF reports
         run: |
           echo "📄 Generating PDF reports..."
-          
+
           TIMESTAMP="${{ needs.generate-data.outputs.report-timestamp }}"
-          
+
           # Convert HTML report to PDF using Puppeteer
           node scripts/generate-pdf-reports.js \
             "html-reports-$TIMESTAMP/${{ env.REPORTS_DIR }}/translation-report-$TIMESTAMP.html" \
@@ -324,15 +324,15 @@ jobs:
         run: |
           TIMESTAMP="${{ needs.generate-data.outputs.report-timestamp }}"
           PACKAGE_NAME="translation-reports-$TIMESTAMP"
-          
+
           mkdir -p "$PACKAGE_NAME"
-          
+
           # Copy all generated reports
           cp -r html-reports-$TIMESTAMP/${{ env.REPORTS_DIR }}/*.html "$PACKAGE_NAME/" || true
           cp *.csv "$PACKAGE_NAME/" 2>/dev/null || true
           cp *.pdf "$PACKAGE_NAME/" 2>/dev/null || true
           cp -r translation-data-$TIMESTAMP/${{ env.REPORTS_DIR }}/data/ "$PACKAGE_NAME/data/" || true
-          
+
           # Create package info
           {
             echo "# Translation Reports Package"
@@ -358,10 +358,10 @@ jobs:
             echo "---"
             echo "Generated by Relife Translation Monitoring System"
           } > "$PACKAGE_NAME/README.md"
-          
+
           # Create archive
           tar -czf "$PACKAGE_NAME.tar.gz" "$PACKAGE_NAME"
-          
+
           echo "✅ Created downloadable package: $PACKAGE_NAME.tar.gz"
 
       - name: Upload downloadable reports
@@ -378,9 +378,10 @@ jobs:
   reports-summary:
     name: 📋 Reports Summary
     runs-on: ubuntu-latest
-    needs: [generate-data, generate-html-reports, update-documentation, generate-downloads]
+    needs:
+      [generate-data, generate-html-reports, update-documentation, generate-downloads]
     if: always()
-    
+
     steps:
       - name: Generate final summary
         run: |
@@ -401,7 +402,7 @@ jobs:
           echo "- Documentation: ${{ needs.update-documentation.result }}"
           echo "- Downloads: ${{ needs.generate-downloads.result }}"
           echo ""
-          
+
           # Overall success check
           if [[ "${{ needs.generate-data.result }}" == "success" && "${{ needs.generate-html-reports.result }}" == "success" ]]; then
             echo "🎉 Translation reports generated successfully!"

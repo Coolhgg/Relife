@@ -9,6 +9,7 @@
 import React, { useState, useEffect } from 'react';
 import { Profiler } from 'react';
 import { performanceProfiler } from '../utils/performance-profiler';
+import { TimeoutHandle } from '../types/timers';
 
 interface PerformanceProfilerWrapperProps {
   children: React.ReactNode;

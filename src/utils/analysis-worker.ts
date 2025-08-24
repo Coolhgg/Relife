@@ -346,6 +346,7 @@ export const terminateAnalysisWorker = (): void => {
 
 // React hook for using the analysis worker
 import { useEffect, useRef } from 'react';
+import { TimeoutHandle } from '../types/timers';
 
 export const useAnalysisWorker = () => {
   const workerRef = useRef<SleepAnalysisWorker>();

@@ -335,7 +335,7 @@ const defaultThemeValue: MockThemeContextValue = {
   },
   fonts: {
     primary: 'Inter',
-    secondary: 'Roboto Mono',
+    secondary: 'Boto Mono',
     heading: 'Poppins',
   },
   animations: true,

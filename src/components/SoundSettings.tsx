@@ -41,6 +41,7 @@ import useSoundEffects, {
 import type { SoundEffectId, SoundTheme } from '../services/sound-effects';
 import CustomSoundThemeCreator from './CustomSoundThemeCreator';
 import CustomThemeManager from './CustomThemeManager';
+import { TimeoutHandle } from '../types/timers';
 
 interface SoundSettingsProps {
   className?: string;

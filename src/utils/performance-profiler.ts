@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import { Profiler, ProfilerOnRenderCallback } from 'react';
+import { TimeoutHandle } from '../types/timers';
 
 // Performance data storage
 interface PerformanceEntry {
@@ -333,8 +334,8 @@ export function withPerformanceProfiler<T extends {}>(
  * Hook for component-level performance monitoring
  */
 export function usePerformanceMonitor(componentName: string) {
-  const startTime = React.useRef<number | undefined>(undefined);
-  const renderCount = React.useRef<number>(0);
+  const startTime = React.useRef<TimeoutHandle | undefined>(undefined);
+  const renderCount = React.useRef<TimeoutHandle>(0);
 
   React.useEffect(() => {
     renderCount.current += 1;

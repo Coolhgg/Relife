@@ -7,7 +7,7 @@ import {
   Flame,
   Brain,
   Laugh,
-  Robot,
+  Bot,
   Zap,
   Star,
   Crown,
@@ -20,6 +20,7 @@ import {
   BarChart3,
 } from 'lucide-react';
 import type { VoiceMood, AlarmDifficulty } from '../../types';
+import { TimeoutHandle } from '../types/timers';
 
 interface PremiumFeaturePreviewProps {
   /** Feature to preview */
@@ -63,8 +64,8 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
     },
     {
       id: 'ai-robot' as VoiceMood,
-      name: 'AI Robot',
-      icon: <Robot className="w-6 h-6" />,
+      name: 'AI Bot',
+      icon: <Bot className="w-6 h-6" />,
       color: 'from-blue-600 to-cyan-600',
       message: 'SYSTEM ALERT: Wake protocol activated. Compliance required.',
       description: 'Systematic, precise wake-up procedures',

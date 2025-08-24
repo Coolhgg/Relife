@@ -8,6 +8,7 @@ import type {
   DeviceAdaptation,
 } from './types/performance';
 import { deviceCapabilities, DeviceTier } from './device-capabilities';
+import { TimeoutHandle } from '../types/timers';
 
 export class PerformanceBudgetManager {
   private static instance: PerformanceBudgetManager | null = null;
@@ -15,7 +16,7 @@ export class PerformanceBudgetManager {
   private thresholds: Map<DeviceTier, PerformanceThresholds> = new Map();
   private currentSnapshot: PerformanceSnapshot | null = null;
   private activeAlerts: Map<string, PerformanceAlert> = new Map();
-  private monitoringInterval: number | null = null;
+  private monitoringInterval: TimeoutHandle | null = null;
   private adaptations: DeviceAdaptation | null = null;
   private listeners: Array<(snapshot: PerformanceSnapshot) => void> = [];
   private alertListeners: Array<(alert: PerformanceAlert) => void> = [];
@@ -891,7 +892,7 @@ export class PerformanceBudgetManager {
 class FrameRateTracker {
   private frames: number[] = [];
   private isTracking = false;
-  private animationId: number | null = null;
+  private animationId: TimeoutHandle | null = null;
 
   constructor() {
     this.start();

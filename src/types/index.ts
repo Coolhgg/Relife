@@ -4,6 +4,9 @@ export * from './premium';
 // Import browser API types
 export * from './browser-apis';
 
+// Import wake-up mood enum - needed early for type definitions
+export { WakeUpMood, type Mood } from './wake-up-mood';
+
 // Email Campaign Types
 export type PersonaType =
   | 'struggling_sam' // Free-focused users
@@ -2341,7 +2344,7 @@ export type ScheduleType =
 // Advanced Recurrence Patterns
 export interface RecurrencePattern {
   type: RecurrenceType;
-  interval: number; // every N days/weeks/months
+  interval: TimeoutHandle; // every N days/weeks/months
   daysOfWeek?: number[]; // 0-6 for weekly patterns
   daysOfMonth?: number[]; // 1-31 for monthly patterns
   weeksOfMonth?: number[]; // 1-5 for monthly patterns (first week, second week, etc.)
@@ -2673,7 +2676,7 @@ export interface ConditionalRule {
 }
 
 // WakeUpMood is now centralized in wake-up-mood.ts
-export { WakeUpMood } from './wake-up-mood';
+// (exported at top of file)
 
 export interface LocationProgress {
   currentLocation?: Location;

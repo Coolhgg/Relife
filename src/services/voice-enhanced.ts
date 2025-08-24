@@ -2,12 +2,13 @@
 /// <reference lib="dom" />
 import type { Alarm, VoiceMood } from '../types';
 import { formatTime } from '../utils';
+import { TimeoutHandle } from '../types/timers';
 
 export class VoiceServiceEnhanced {
   private static audioCache = new Map<string, string>();
   private static isInitialized = false;
   private static currentUtterance: SpeechSynthesisUtterance | null = null;
-  private static repeatInterval: number | null = null;
+  private static repeatInterval: TimeoutHandle | null = null;
 
   static async initialize(): Promise<void> {
     if (this.isInitialized) return;

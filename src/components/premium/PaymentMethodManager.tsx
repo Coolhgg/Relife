@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from '../ui/dialog';
 import { Alert, AlertDescription } from '../ui/alert';
-import type { PaymentMethod, PaymentMethodType } from '../../types/premium';
+import type { PaymentMethod, PaymentMethod } from '../../types/premium';
 
 interface PaymentMethodManagerProps {
   paymentMethods: PaymentMethod[];
@@ -82,7 +82,7 @@ export function PaymentMethodManager({
     }
   };
 
-  const getPaymentMethodIcon = (type: PaymentMethodType) => {
+  const getPaymentMethodIcon = (type: PaymentMethod) => {
     switch (type) {
       case 'card':
         return <CreditCard className="w-5 h-5" />;

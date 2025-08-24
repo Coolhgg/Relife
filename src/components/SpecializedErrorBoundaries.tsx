@@ -1,6 +1,6 @@
 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
 import {
-  AlertTriangle,
+  Alert,
   RefreshCw,
   BarChart3,
   Music,
@@ -195,9 +195,7 @@ export class DataErrorBoundary extends BaseSpecializedErrorBoundary {
 // Form Error Boundary with enhanced recovery
 export class FormErrorBoundary extends BaseSpecializedErrorBoundary {
   protected errorContext = 'Form';
-  protected icon = (
-    <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
-  );
+  protected icon = (<Alert className="w-5 h-5 text-red-600 dark:text-red-400" />);
   protected title = 'Form Error';
   protected description =
     'There was a problem with the form. Please try refreshing or filling it out again.';

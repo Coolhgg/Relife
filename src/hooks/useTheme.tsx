@@ -23,6 +23,7 @@ import ThemePersistenceService from '../services/theme-persistence';
 import ThemePerformanceService from '../services/theme-performance';
 import ThemeAccessibilityService from '../services/theme-accessibility';
 import { PREMIUM_THEMES, PREMIUM_THEME_PRESETS } from '../themes/premium-themes';
+import { TimeoutHandle } from '../types/timers';
 import PremiumThemeAnimationService, {
   PremiumAnimationEffects,
 } from '../services/premium-theme-animations';

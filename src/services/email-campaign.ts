@@ -3,6 +3,7 @@ import { PersonaType, PersonaDetectionResult, User } from '../types';
 import { ErrorHandler } from './error-handler';
 import ConvertKitService, { ConvertKitConfig } from './convertkit-service';
 import { CONVERTKIT_IDS } from '../config/convertkit-generated';
+import { TimeoutHandle } from '../types/timers';
 
 export interface EmailPlatformConfig {
   platform: 'convertkit' | 'mailchimp' | 'sendgrid';

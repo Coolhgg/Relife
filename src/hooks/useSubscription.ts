@@ -22,6 +22,7 @@ import SubscriptionService from '../services/subscription-service';
 import StripeService from '../services/stripe-service';
 import { ErrorHandler } from '../services/error-handler';
 import AnalyticsService from '../services/analytics';
+import { TimeoutHandle } from '../types/timers';
 
 interface SubscriptionHookState {
   // Core subscription data
@@ -145,7 +146,7 @@ function useSubscription(
 
   const subscriptionService = useRef(SubscriptionService.getInstance());
   const stripeService = useRef(StripeService.getInstance());
-  const refreshTimeoutRef = useRef<number | null>(null);
+  const refreshTimeoutRef = useRef<TimeoutHandle | null>(null);
   const analytics = useRef(enableAnalytics ? AnalyticsService.getInstance() : null);
 
   // Initialize subscription data

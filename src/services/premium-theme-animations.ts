@@ -43,7 +43,7 @@ class PremiumThemeAnimationService {
   private animationElements: Map<string, HTMLElement> = new Map();
   private activeAnimations: Map<string, Animation> = new Map();
   private observers: Map<string, IntersectionObserver> = new Map();
-  private animationFrame: number | null = null;
+  private animationFrame: TimeoutHandle | null = null;
 
   static getInstance(): PremiumThemeAnimationService {
     if (!PremiumThemeAnimationService.instance) {

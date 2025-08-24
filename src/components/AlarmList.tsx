@@ -20,6 +20,7 @@ import {
 import MLAlarmOptimizer from '../services/ml-alarm-optimizer';
 import PredictiveAnalyticsService from '../services/predictive-analytics-service';
 import EnhancedLocationService from '../services/enhanced-location-service';
+import { TimeoutHandle } from '../types/timers';
 
 interface AlarmListProps {
   alarms: Alarm[];

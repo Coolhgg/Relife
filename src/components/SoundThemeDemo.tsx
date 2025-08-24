@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Play, Volume2, VolumeX, Palette, Music, Zap } from 'lucide-react';
 import { soundEffectsService, SoundTheme } from '../services/sound-effects';
 import { motion } from 'framer-motion';
+import { TimeoutHandle } from '../types/timers';
 
 interface ThemeCategory {
   name: string;

@@ -8,6 +8,7 @@ import type {
   CacheEntry,
 } from '../services/enhanced-cache-manager';
 import type { CustomSound } from '../services/types/media';
+import { TimeoutHandle } from '../types/timers';
 
 export interface CacheState {
   stats: CacheStats;
@@ -36,7 +37,7 @@ export function useEnhancedCaching(): {
     lastOptimization: null,
   });
 
-  const statsInterval = useRef<number>();
+  const statsInterval = useRef<TimeoutHandle>();
 
   const updateStats = useCallback(() => {
     const stats = enhancedCacheManager.getStats();
@@ -358,7 +359,7 @@ export function useAutoOptimization(enabled: boolean = true) {
     averageOptimizationTime: 0,
   });
 
-  const optimizationInterval = useRef<number>();
+  const optimizationInterval = useRef<TimeoutHandle>();
 
   useEffect(() => {
     if (enabled) {

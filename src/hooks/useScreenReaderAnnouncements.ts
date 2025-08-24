@@ -3,6 +3,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import ScreenReaderService, { type AlarmAnnouncement } from '../utils/screen-reader';
 import type { Alarm } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 interface UseScreenReaderOptions {
   enabled?: boolean;
@@ -312,7 +313,7 @@ export function useStateChangeAnnouncements<T>(
   } = options;
   const { announce } = useScreenReaderAnnouncements({ enabled });
   const previousValue = useRef<T>();
-  const timeoutRef = useRef<number>();
+  const timeoutRef = useRef<TimeoutHandle>();
 
   useEffect(() => {
     if (!enabled) return;

@@ -5,6 +5,7 @@ import type { User } from '../types';
 import { ErrorHandler } from './error-handler';
 import PerformanceMonitor from './performance-monitor';
 import { SupabaseService } from './supabase';
+import { TimeoutHandle } from '../types/timers';
 
 export interface VoicePrint {
   userId: string;

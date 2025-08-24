@@ -1,6 +1,7 @@
 import type { Alarm, VoiceMood } from '../types';
 import { formatTime } from '../utils';
 import { PremiumVoiceService } from './premium-voice';
+import { TimeoutHandle } from '../types/timers';
 
 export class VoiceService {
   private static audioCache = new Map<string, string>();

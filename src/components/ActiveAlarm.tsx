@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { NuclearModeBattle } from './NuclearModeBattle';
 import type { Alarm, AlarmDifficulty, AlarmInstance } from '../types/index';
+import { TimeoutHandle } from '../types/timers';
 
 interface ActiveAlarmProps {
   alarm: Alarm;

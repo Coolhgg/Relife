@@ -4,6 +4,7 @@
 // Now integrated with real-time alerts and performance optimization
 
 import { performanceAlertManager } from '../utils/performance-alerts';
+import { TimeoutHandle } from '../types/timers';
 
 interface PerformanceMetric {
   name: string;
@@ -55,7 +56,7 @@ export class PerformanceMonitor {
   private interactions: UserInteraction[] = [];
   private customMetrics: PerformanceMetric[] = [];
   private observers: Map<string, PerformanceObserver> = new Map();
-  private reportingInterval: number | null = null;
+  private reportingInterval: TimeoutHandle | null = null;
   private isInitialized = false;
 
   private constructor() {

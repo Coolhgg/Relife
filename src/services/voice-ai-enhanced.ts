@@ -1152,7 +1152,7 @@ class VoiceAIEnhancedService {
   }
 
   private determinePreferredStyle(learningData: VoiceLearningData[]): string {
-    const moodCounts = new Map<VoiceMood, number>();
+    const moodCounts = new Map<VoiceMood, TimeoutHandle>();
     learningData
       .filter(data => data.outcomeSuccess)
       .forEach(data => {

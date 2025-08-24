@@ -4,6 +4,7 @@ import React from 'react';
 // Ensures screen reader service is properly initialized and manages state changes
 import { useEffect, useRef } from 'react';
 import ScreenReaderService from '../utils/screen-reader';
+import { TimeoutHandle } from '../types/timers';
 
 interface ScreenReaderProviderProps {
   children: React.ReactNode;

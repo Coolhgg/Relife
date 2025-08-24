@@ -1,6 +1,7 @@
 // Enhanced Service Worker Manager for Alarm Reliability
 import type { Alarm } from '../types';
 import { ErrorHandler } from '../services/error-handler';
+import { TimeoutHandle } from '../types/timers';
 
 export class ServiceWorkerManager {
   private static instance: ServiceWorkerManager | null = null;

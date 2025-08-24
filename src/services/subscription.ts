@@ -5,7 +5,7 @@ import type {
   PremiumFeatureAccess,
   PremiumUsage,
   FeatureLimits,
-  SUBSCRIPTION_LIMITS,
+  SubscriptionLimits,
   SUBSCRIPTION_PLANS,
 } from '../types';
 import { ErrorHandler } from './error-handler';
@@ -20,7 +20,7 @@ interface SubscriptionCheckResult {
 
 export class SubscriptionService {
   private static cache = new Map<string, any>();
-  private static cacheExpiry = new Map<string, number>();
+  private static cacheExpiry = new Map<string, TimeoutHandle>();
   private static readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
   private static isAvailable = createClient() !== null;
@@ -108,7 +108,7 @@ export class SubscriptionService {
    */
   static async getFeatureLimits(userId: string): Promise<SubscriptionLimits> {
     const tier = await this.getUserTier(userId);
-    return SUBSCRIPTION_LIMITS[tier];
+    return SubscriptionLimits[tier];
   }
 
   /**

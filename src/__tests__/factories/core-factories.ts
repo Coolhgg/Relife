@@ -776,7 +776,7 @@ const createTestColorPalette = (baseColor?: string) => ({
 
 const createTestThemeTypography = () => ({
   fontFamily: {
-    primary: faker.helpers.arrayElement(['Inter', 'Roboto', 'Open Sans', 'Lato']),
+    primary: faker.helpers.arrayElement(['Inter', 'Boto', 'Open Sans', 'Lato']),
     secondary: faker.helpers.arrayElement(['Poppins', 'Montserrat', 'Source Sans Pro']),
     mono: faker.helpers.arrayElement(['Monaco', 'Consolas', 'Source Code Pro']),
   },

@@ -13,7 +13,7 @@ console.log('🔧 Starting automated fixes for unused variables and imports...\n
 
 // Get all TypeScript and JavaScript files
 const getAllFiles = (dir, extensions = ['.ts', '.tsx', '.js', '.jsx']) => {
-  let files = [];
+  const files = [];
   const items = fs.readdirSync(dir);
 
   for (const item of items) {

@@ -6,6 +6,7 @@ import {
 } from '../services/push-notifications';
 import { useAnalytics } from './useAnalytics';
 import type { Alarm } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 export interface PushNotificationStatus {
   isSupported: boolean;

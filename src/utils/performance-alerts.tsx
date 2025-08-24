@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { TimeoutHandle } from '../types/timers';
 
 export interface PerformanceAlert {
   id: string;
@@ -61,7 +62,7 @@ export interface OptimizationSuggestion {
 class PerformanceAlertManager {
   private alerts: Map<string, PerformanceAlert> = new Map();
   private alertRules: Map<string, AlertRule> = new Map();
-  private alertCooldowns: Map<string, number> = new Map();
+  private alertCooldowns: Map<string, TimeoutHandle> = new Map();
   private metricHistory: Map<string, Array<{ value: number; timestamp: number }>> =
     new Map();
   private observers: Array<(alert: PerformanceAlert) => void> = [];

@@ -34,6 +34,7 @@ import { Switch } from './ui/switch';
 import { Label } from './ui/label';
 import { Separator } from './ui/separator';
 import { soundEffectsService, SoundEffectId } from '../services/sound-effects';
+import { TimeoutHandle } from '../types/timers';
 import type {
   CustomSoundTheme,
   CustomSoundAssignment,
@@ -270,7 +271,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
   const [isRunningTest, setIsRunningTest] = useState(false);
 
   const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
-  const intervalRefs = useRef<Map<string, number>>(new Map());
+  const intervalRefs = useRef<Map<string, TimeoutHandle>>(new Map());
 
   // Cleanup on unmount
   useEffect(() => {

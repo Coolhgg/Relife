@@ -13,6 +13,7 @@ import { AlarmService } from './alarm';
 import { AlarmParser } from './alarm-parser';
 import { AlarmExecutor } from './alarm-executor';
 import { Preferences } from '@capacitor/preferences';
+import { TimeoutHandle } from '../types/timers';
 
 const ADVANCED_CONFIG_KEY = 'advanced_scheduling_config';
 const SCHEDULING_STATS_KEY = 'scheduling_statistics';
