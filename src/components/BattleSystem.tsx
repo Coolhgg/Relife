@@ -638,7 +638,8 @@ export function BattleSystem({
                           <Input
                             placeholder="Send a message..."
                             value={trashTalkMessage}
-                            onChange={(e: any) => setTrashTalkMessage(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>
+) => setTrashTalkMessage(e.target.value)}
                             className="text-sm"
                           />
                           <Button

@@ -1,3 +1,4 @@
+/* global JSX */
 /**
  * RTL-aware Text component that handles direction-based text alignment and typography
  */

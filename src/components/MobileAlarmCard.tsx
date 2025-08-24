@@ -299,7 +299,7 @@ export const MobileAlarmList: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    setAlarms((prev: any) => prev.filter((alarm: any) => alarm.id !== id));
+    setAlarms((prev: any) => prev.filter((alarm: any) => a.larm.id !== id));
   };
 
   const handleDuplicate = (id: string) => {

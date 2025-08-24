@@ -618,7 +618,8 @@ export function EnhancedMediaContent({
                 <Input
                   placeholder="Search sounds..."
                   value={searchQuery}
-                  onChange={(e: any) => setSearchQuery(e.target.value)}
+                  
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 />
               </div>
               <label htmlFor="category-filter" className="sr-only">
@@ -627,7 +628,8 @@ export function EnhancedMediaContent({
               <select
                 id="category-filter"
                 value={selectedCategory}
-                onChange={(e: any) => setSelectedCategory(e.target.value)}
+                
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSelectedCategory(e.target.value)}
                 className="px-3 py-2 border rounded-md bg-background"
                 aria-label="Filter media by category"
               >

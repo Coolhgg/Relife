@@ -7,7 +7,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { _execSync } = require('child_process');
+const { execSync } = require('child_process');
 
 console.log('🔧 Starting automated fixes for unused variables and imports...\n');
 
@@ -127,7 +127,7 @@ try {
         fixedCount++;
       }
     } catch (_error) {
-      console.log(`❌ Error processing ${file}: ${error.message}`);
+      console.log(`❌ Error processing ${file}: ${_error.message}`);
     }
   }
 
@@ -139,9 +139,9 @@ try {
     execSync('bunx prettier --write .', { stdio: 'inherit' });
     console.log('✅ Prettier formatting completed');
   } catch (_error) {
-    console.log('⚠️ Prettier formatting had issues:', error.message);
+    console.log('⚠️ Prettier formatting had issues:', _error.message);
   }
 } catch (_error) {
-  console.error('❌ Script failed:', error.message);
+  console.error('❌ Script failed:', _error.message);
   process.exit(1);
 }

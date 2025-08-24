@@ -1,3 +1,4 @@
+/* global TimeoutHandle */
 /// <reference types="node" />
 /**
  * CSS Optimization Utilities

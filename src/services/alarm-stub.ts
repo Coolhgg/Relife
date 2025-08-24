@@ -23,14 +23,8 @@
 //     // TODO: Replace with actual implementation when alarm.ts is fixed
 //   },
 
-//   async createAlarm(alarm: any): Promise<any> {
-//     console.warn('AlarmService.createAlarm stub called:', alarm);
-//     return { id: 'stub-' + Date.now(), ...alarm };
-//     // TODO: Replace with actual implementation when alarm.ts is fixed
-//   },
-
-//   async deleteAlarm(id: string): Promise<void> {
-//     console.warn('AlarmService.deleteAlarm stub called:', id);
-//     // TODO: Replace with actual implementation when alarm.ts is fixed
-//   },
-// };
+  async deleteAlarm(id: string): Promise<void> {
+    console.warn('AlarmService.deleteAlarm stub called:', id);
+    // TODO: Replace with actual implementation when alarm.ts is fixed
+  },
+};

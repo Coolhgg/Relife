@@ -177,7 +177,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const handleThemeUpdated = (theme: CustomSoundTheme) => {
-    setThemes((prev: any) => prev.map((t: any) => (t.id === theme.id ? theme : t)));
+    setThemes((prev: any) => prev.map((t: any) => ({
     setEditingTheme(null);
   };
 
@@ -185,7 +185,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     try {
       const success = await soundEffectsService.deleteCustomTheme(themeId, userId);
       if (success) {
-        setThemes((prev: any) => prev.filter((t: any) => t.id !== themeId));
+        setThemes((prev: any) => prev.filter((t: any) => t
       }
     } catch (error) {
       console.error('Error deleting theme:', error);
@@ -206,7 +206,9 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
     const success = await soundEffectsService.saveCustomTheme(duplicatedTheme);
     if (success) {
-      setThemes((prev: any) => [duplicatedTheme, ...prev]);
+      setThemes((prev: any
+) => [ // auto: implicit any
+duplicatedTheme, ...prev]);
     }
   };
 
@@ -400,7 +402,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     handleExportMultipleThemes(Array.from(selectedThemes));
   };
 
-  const toggleThemeSelection = (themeId: string) => {
+  const toggleThemeSelection = (themeId: string
+) => {
     setSelectedThemes((prev: any) => {
       const newSelection = new Set(prev);
       if (newSelection.has(themeId)) {
@@ -437,7 +440,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
       const success = await soundEffectsService.shareThemeWithCommunity(updatedTheme);
       if (success) {
-        setThemes((prev: any) => prev.map((t: any) => (t.id === theme.id ? updatedTheme : t)));
+        setThemes((prev: any) => prev.map((t: any) => ({
         if (onThemeUpdated) {
           onThemeUpdated(updatedTheme);
         }
@@ -649,10 +652,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
                 onClick={() => userId
                     ? handleSetActiveTheme(theme)
                     : handleInstallCommunityTheme(theme)
-                }
-              >
-                {userId ? 'Use Theme' : 'Install'}
-              </Button>
+                }>userId ? 'Use Theme' : 'Install'</Button>
             </div>
           </div>
         </CardContent>
@@ -800,7 +800,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               <Input
                 placeholder="Search themes..."
                 value={searchQuery}
-                onChange={(e: any) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 className="pl-10"
               />
             </div>

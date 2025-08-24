@@ -1,3 +1,4 @@
+/* global JSX */
 /**
  * RTL-aware Grid component that automatically handles direction-based grid layouts
  */

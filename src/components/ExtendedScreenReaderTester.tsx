@@ -568,11 +568,9 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             <input
               type="checkbox"
               checked={preferences.autoAdvance}
-              onChange={(e: any) =>
-                setPreferences((prev: any) => ({
-                  ...prev,
-                  autoAdvance: e.target.checked,
-                }))
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+                setPreferences((prev: any
+) => ({ ...prev, autoAdvance: e.target.checked }))
               }
               className="mr-2 rounded"
             />
@@ -583,11 +581,9 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             <input
               type="checkbox"
               checked={preferences.simulatePremium}
-              onChange={(e: any) =>
-                setPreferences((prev: any) => ({
-                  ...prev,
-                  simulatePremium: e.target.checked,
-                }))
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+                setPreferences((prev: any
+) => ({ ...prev, simulatePremium: e.target.checked }))
               }
               className="mr-2 rounded"
             />
@@ -596,8 +592,9 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
           <select
             value={preferences.delayBetweenTests}
-            onChange={(e: any) =>
-              setPreferences((prev: any) => ({
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+              setPreferences((prev: any
+) => ({ 
                 ...prev,
                 delayBetweenTests: Number(e.target.value),
               }))

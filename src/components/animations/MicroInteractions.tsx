@@ -132,7 +132,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
           type={type}
           placeholder={isFocused ? placeholder : ''}
           value={value}
-          onChange={(e: any) => onChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
           disabled={disabled}
@@ -496,9 +496,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
 
       // Remove ripple after animation
       setTimeout(() => {
-        setRipples((prev: any) =>
-          prev.filter((ripple: any) => ripple.id !== newRipple.id)
-        );
+        setRipples((prev: any) => prev.filter((ripple: any) => r
       }, 600);
     }
 

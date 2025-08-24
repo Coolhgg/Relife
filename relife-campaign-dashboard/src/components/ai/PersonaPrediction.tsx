@@ -226,7 +226,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
     let reasons: string[] = [];
     let recommendedCampaigns: string[] = [];
 
-    const { _subscriptionStatus, _featureUsage, _engagementMetrics } = userData;
+    const { subscriptionStatus, featureUsage, engagementMetrics } = userData;
     const totalFeatureUsage = Object.values(featureUsage).reduce(
       (sum, usage) => sum + usage,
       0

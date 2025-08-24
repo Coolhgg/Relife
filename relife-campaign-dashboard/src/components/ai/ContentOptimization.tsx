@@ -407,17 +407,15 @@ Ready to transform your mornings?`);
                             <div className="text-sm font-medium text-gray-700">
                               Key Improvements:
                             </div>
-                            {optimizedContent.improvements.map(
-                              (improvement, index) => (
-                                <div
-                                  key={index}
-                                  className="flex items-start gap-2 text-sm"
-                                >
-                                  <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                                  <span>{improvement}</span>
-                                </div>
-                              )
-                            )}
+                            {optimizedContent.improvements.map((improvement, index) => (
+                              <div
+                                key={index}
+                                className="flex items-start gap-2 text-sm"
+                              >
+                                <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                                <span>{improvement}</span>
+                              </div>
+                            ))}
                           </div>
                         </CardContent>
                       </Card>

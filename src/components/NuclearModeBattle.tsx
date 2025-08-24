@@ -185,7 +185,6 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
 
       if (success) {
         setTotalScore((prev: any) => prev + score);
-
         setChallengesCompleted((prev: any) => prev + 1);
 
         // Check if all challenges completed
@@ -217,7 +216,6 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
 
     // Award bonus points for nuclear completion
     const bonusScore = totalScore * 0.5;
-
     setTotalScore((prev: any) => prev + bonusScore);
 
     // Dismiss alarm with nuclear success

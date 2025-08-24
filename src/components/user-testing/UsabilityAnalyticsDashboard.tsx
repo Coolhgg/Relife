@@ -271,7 +271,7 @@ export function UsabilityAnalyticsDashboard() {
         <div className="flex items-center gap-3">
           <select
             value={selectedTimeRange}
-            onChange={(e: any) => setSelectedTimeRange(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSelectedTimeRange(e.target.value)}
             className="px-3 py-2 border rounded-lg"
           >
             <option value="1d">Last 24 Hours</option>
