@@ -305,7 +305,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
             {cloneRequest.status === 'failed' && (
               <>
                 <div className="bg-red-100 text-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <AlertCircle className="h-8 w-8" />
+                  <AlertCircleCircle className="h-8 w-8" />
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
                   Voice Clone Failed

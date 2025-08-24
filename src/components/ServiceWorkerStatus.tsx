@@ -29,7 +29,7 @@ export const ServiceWorkerStatus: React.FC = () => {
       case 'denied':
         return (
           <Badge variant="destructive" className="flex items-center gap-1">
-            <AlertCircle size={12} />
+            <AlertCircleCircle size={12} />
             Denied
           </Badge>
         );
@@ -78,7 +78,7 @@ export const ServiceWorkerStatus: React.FC = () => {
             </Badge>
           ) : (
             <Badge variant="destructive" className="flex items-center gap-1">
-              <AlertCircle size={12} />
+              <AlertCircleCircle size={12} />
               Inactive
             </Badge>
           )}
@@ -126,7 +126,7 @@ export const ServiceWorkerStatus: React.FC = () => {
         {state.error && (
           <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-md">
             <div className="flex items-center gap-2">
-              <AlertCircle size={16} className="text-destructive" />
+              <AlertCircleCircle size={16} className="text-destructive" />
               <span className="text-sm text-destructive font-medium">Error</span>
             </div>
             <p className="text-xs text-destructive/80 mt-1">{state.error}</p>
@@ -166,7 +166,7 @@ export const ServiceWorkerStatus: React.FC = () => {
             </div>
           ) : (
             <div className="flex items-center gap-1 text-amber-600">
-              <AlertCircle size={12} />
+              <AlertCircleCircle size={12} />
               Enable notifications for best alarm reliability across tabs and when the
               app is closed.
             </div>

@@ -190,14 +190,14 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           </div>
         </CardHeader>
         <CardContent>
-          <Alert className="border-orange-200 bg-orange-50">
-            <AlertIcon className="w-4 h-4 text-orange-600" />
-            <AlertDescription className="text-orange-800">
+          <AlertCircle className="border-orange-200 bg-orange-50">
+            <AlertCircleIcon className="w-4 h-4 text-orange-600" />
+            <AlertCircleDescription className="text-orange-800">
               Nuclear Mode requires a Premium subscription. This feature includes
               extreme difficulty challenges with math problems, memory tests, physical
               movements, and more.
-            </AlertDescription>
-          </Alert>
+            </AlertCircleDescription>
+          </AlertCircle>
 
           <div className="mt-4 grid grid-cols-2 gap-2">
             {challengeTypes.slice(0, 4).map(challenge => {
@@ -330,14 +330,14 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
 
       {isEnabled && (
         <CardContent>
-          <Alert className="border-red-200 bg-red-50 mb-6">
-            <Alert className="w-4 h-4 text-red-600" />
-            <AlertDescription className="text-red-800">
+          <AlertCircle className="border-red-200 bg-red-50 mb-6">
+            <AlertCircle className="w-4 h-4 text-red-600" />
+            <AlertCircleDescription className="text-red-800">
               <strong>Warning:</strong> Nuclear Mode disables snoozing and requires
               completing all selected challenges to dismiss the alarm. Choose your
               challenges carefully!
-            </AlertDescription>
-          </Alert>
+            </AlertCircleDescription>
+          </AlertCircle>
 
           {/* Difficulty Selector */}
           <div className="space-y-4 mb-6">
@@ -431,12 +431,12 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
             </div>
 
             {selectedChallenges.length === 0 && (
-              <Alert className="border-yellow-200 bg-yellow-50">
-                <Alert className="w-4 h-4 text-yellow-600" />
-                <AlertDescription className="text-yellow-800">
+              <AlertCircle className="border-yellow-200 bg-yellow-50">
+                <AlertCircle className="w-4 h-4 text-yellow-600" />
+                <AlertCircleDescription className="text-yellow-800">
                   Select at least one challenge to enable Nuclear Mode
-                </AlertDescription>
-              </Alert>
+                </AlertCircleDescription>
+              </AlertCircle>
             )}
           </div>
 

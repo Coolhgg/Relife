@@ -556,7 +556,7 @@ export function EnhancedMediaContent({
         {/* Error display */}
         {playerState.error && (
           <div className="mt-3 p-2 bg-destructive/10 border border-destructive/20 rounded text-sm text-destructive flex items-center gap-2">
-            <AlertCircle className="h-4 w-4" />
+            <AlertCircleCircle className="h-4 w-4" />
             {playerState.error}
           </div>
         )}

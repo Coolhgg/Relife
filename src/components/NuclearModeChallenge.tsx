@@ -191,13 +191,13 @@ const MathChallenge: React.FC<{
       )}
 
       {errors > 0 && (
-        <Alert className="border-red-200 bg-red-50">
-          <Alert className="w-4 h-4 text-red-600" />
-          <AlertDescription className="text-red-800">
+        <AlertCircle className="border-red-200 bg-red-50">
+          <AlertCircle className="w-4 h-4 text-red-600" />
+          <AlertCircleDescription className="text-red-800">
             {errors} error{errors !== 1 ? 's' : ''} made.
             {errors >= 1 && ' One more error will reset the sequence!'}
-          </AlertDescription>
-        </Alert>
+          </AlertCircleDescription>
+        </AlertCircle>
       )}
     </div>
   );
@@ -730,13 +730,13 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
             </div>
 
             {showHint && hintsUsed > 0 && (
-              <Alert className="border-blue-200 bg-blue-50">
+              <AlertCircle className="border-blue-200 bg-blue-50">
                 <Lightbulb className="w-4 h-4 text-blue-600" />
-                <AlertDescription className="text-blue-800">
+                <AlertCircleDescription className="text-blue-800">
                   <strong>Hint {hintsUsed}:</strong>{' '}
                   {currentChallenge.hints[hintsUsed - 1]}
-                </AlertDescription>
-              </Alert>
+                </AlertCircleDescription>
+              </AlertCircle>
             )}
           </div>
         )}
@@ -757,13 +757,13 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
         </div>
 
         {/* Warning */}
-        <Alert className="mt-6 max-w-2xl mx-auto border-red-200 bg-red-50">
-          <Alert className="w-4 h-4 text-red-600" />
-          <AlertDescription className="text-red-800">
+        <AlertCircle className="mt-6 max-w-2xl mx-auto border-red-200 bg-red-50">
+          <AlertCircle className="w-4 h-4 text-red-600" />
+          <AlertCircleDescription className="text-red-800">
             Nuclear Mode is active. You must complete all challenges to dismiss the
             alarm. Snoozing is disabled.
-          </AlertDescription>
-        </Alert>
+          </AlertCircleDescription>
+        </AlertCircle>
       </CardContent>
     </Card>
   );

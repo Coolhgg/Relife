@@ -455,7 +455,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
   if (!session) {
     return (
       <div className="text-center py-12">
-        <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-500" />
+        <AlertCircleCircle className="w-12 h-12 mx-auto mb-4 text-red-500" />
         <h3 className="text-lg font-medium mb-2">Failed to Initialize</h3>
         <p className="text-gray-600 mb-4">
           Could not start the theme creation session.
@@ -584,10 +584,10 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
           {validationResult && (
             <div className="space-y-4">
               {validationResult.issues.map((issue, index) => (
-                <Alert key={index}>
-                  <AlertCircle className="w-4 h-4" />
-                  <AlertDescription>{issue.message}</AlertDescription>
-                </Alert>
+                <AlertCircle key={index}>
+                  <AlertCircleCircle className="w-4 h-4" />
+                  <AlertCircleDescription>{issue.message}</AlertCircleDescription>
+                </AlertCircle>
               ))}
               <div className="flex justify-end gap-2">
                 <Button
@@ -697,13 +697,13 @@ const AssignmentStep: React.FC<{
   onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
 }> = ({ _theme, _availableSounds, _onUpdate }) => (
   <div className="space-y-6">
-    <Alert>
+    <AlertCircle>
       <Info className="w-4 h-4" />
-      <AlertDescription>
+      <AlertCircleDescription>
         Assign your uploaded sounds to different categories. Each category needs at
         least one sound for basic functionality.
-      </AlertDescription>
-    </Alert>
+      </AlertCircleDescription>
+    </AlertCircle>
 
     <Tabs defaultValue="ui" className="w-full">
       <TabsList>

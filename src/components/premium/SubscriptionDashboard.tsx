@@ -186,19 +186,19 @@ export function SubscriptionDashboard({
     <div className={`space-y-6 ${className}`}>
       {/* Alert for subscription issues */}
       {data.subscription?.status === 'past_due' && (
-        <Alert className="border-orange-200 bg-orange-50">
-          <Alert className="h-4 w-4 text-orange-600" />
-          <AlertDescription className="text-orange-600">
+        <AlertCircle className="border-orange-200 bg-orange-50">
+          <AlertCircle className="h-4 w-4 text-orange-600" />
+          <AlertCircleDescription className="text-orange-600">
             Your subscription payment is past due. Please update your payment method to
             continue using premium features.
-          </AlertDescription>
-        </Alert>
+          </AlertCircleDescription>
+        </AlertCircle>
       )}
 
       {data.subscription?.cancelAtPeriodEnd && (
-        <Alert className="border-blue-200 bg-blue-50">
-          <Alert className="h-4 w-4 text-blue-600" />
-          <AlertDescription className="text-blue-600 flex items-center justify-between">
+        <AlertCircle className="border-blue-200 bg-blue-50">
+          <AlertCircle className="h-4 w-4 text-blue-600" />
+          <AlertCircleDescription className="text-blue-600 flex items-center justify-between">
             <span>
               Your subscription will end on{' '}
               {formatDate(data.subscription.currentPeriodEnd)}.
@@ -211,8 +211,8 @@ export function SubscriptionDashboard({
             >
               {actionLoading === 'reactivate' ? 'Processing...' : 'Reactivate'}
             </Button>
-          </AlertDescription>
-        </Alert>
+          </AlertCircleDescription>
+        </AlertCircle>
       )}
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

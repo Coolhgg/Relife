@@ -181,7 +181,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
       case 'warning':
       case 'degraded':
         return (
-          <Alert
+          <AlertCircle
             className="w-5 h-5 text-yellow-600 dark:text-yellow-400"
             aria-hidden="true"
           />

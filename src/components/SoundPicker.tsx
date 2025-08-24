@@ -398,7 +398,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={e => {
+                                onClick={(e: React.MouseEvent) => {
                                   e.stopPropagation();
                                   playSound(sound.id, sound.fileUrl);
                                 }}
@@ -440,7 +440,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={e => {
+                              onClick={(e: React.MouseEvent) => {
                                 e.stopPropagation();
                                 playSound(sound.id, sound.url);
                               }}

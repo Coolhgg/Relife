@@ -83,7 +83,7 @@ export const PushNotificationSettingsComponent: React.FC<
         className={`bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 ${className}`}
       >
         <div className="flex items-start gap-3">
-          <Alert className="w-6 h-6 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-1" />
+          <AlertCircle className="w-6 h-6 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-1" />
           <div>
             <h3 className="font-semibold text-yellow-800 dark:text-yellow-300 mb-2">
               Push Notifications Not Supported

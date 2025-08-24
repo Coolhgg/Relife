@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
-import { Alert, AlertDescription } from '../ui/alert';
+import { AlertCircle, AlertDescription } from '../ui/alert';
 import type { PaymentMethod, PaymentMethod } from '../../types/premium';
 
 interface PaymentMethodManagerProps {
@@ -187,10 +187,10 @@ export function PaymentMethodManager({
       </div>
 
       {error && (
-        <Alert className="border-red-200 bg-red-50">
+        <AlertCircle className="border-red-200 bg-red-50">
           <AlertCircle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-600">{error}</AlertDescription>
-        </Alert>
+          <AlertCircleDescription className="text-red-600">{error}</AlertCircleDescription>
+        </AlertCircle>
       )}
 
       {paymentMethods.length === 0 ? (

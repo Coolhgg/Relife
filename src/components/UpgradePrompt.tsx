@@ -231,7 +231,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => onUpgrade(featureInfo.tier)}
+              onClick={() => onUpgrade?.(featureInfo.tier)}
               className="bg-white text-orange-600 px-4 py-2 rounded-lg font-medium hover:bg-orange-50 transition-colors text-sm"
             >
               Upgrade Now
@@ -278,7 +278,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
             </div>
           </div>
           <button
-            onClick={() => onUpgrade(featureInfo.tier)}
+            onClick={() => onUpgrade?.(featureInfo.tier)}
             className={`bg-gradient-to-r ${requiredPlan.color} text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 w-full`}
           >
             <requiredPlan.icon className="h-4 w-4" />
@@ -394,7 +394,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                         </div>
 
                         <button
-                          onClick={() => onUpgrade(plan.tier)}
+                          onClick={() => onUpgrade?.(plan.tier)}
                           className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
                             isRequired
                               ? `bg-gradient-to-r ${plan.color} text-white hover:shadow-lg`
@@ -417,7 +417,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           {!showPricing && (
             <div className="text-center">
               <button
-                onClick={() => onUpgrade(featureInfo.tier)}
+                onClick={() => onUpgrade?.(featureInfo.tier)}
                 className={`bg-gradient-to-r ${requiredPlan.color} text-white px-8 py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 mx-auto`}
               >
                 <requiredPlan.icon className="h-5 w-5" />

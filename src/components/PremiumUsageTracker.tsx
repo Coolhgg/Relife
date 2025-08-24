@@ -134,7 +134,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
 
         {!unlimited && usage.percentage >= 90 && (
           <div className="flex items-center space-x-1 text-xs text-red-600">
-            <AlertCircle className="w-3 h-3" />
+            <AlertCircleCircle className="w-3 h-3" />
             <span>Approaching limit</span>
           </div>
         )}
@@ -196,7 +196,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
       {usageData.error ? (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
           <div className="flex items-center space-x-2">
-            <AlertCircle className="w-4 h-4" />
+            <AlertCircleCircle className="w-4 h-4" />
             <span>{usageData.error}</span>
           </div>
         </div>

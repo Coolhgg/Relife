@@ -233,7 +233,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     <div className="flex items-center gap-1">
                       <Brain size={12} />
                       <span>
-                        {alarm.smartOptimizations.filter(o => o.isEnabled).length}{' '}
+                        {alarm.smartOptimizations.filter((o: any) => o.isEnabled).length}{' '}
                         optimizations
                       </span>
                     </div>
@@ -243,7 +243,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     <div className="flex items-center gap-1">
                       <Zap size={12} />
                       <span>
-                        {alarm.conditionalRules.filter(r => r.isActive).length}{' '}
+                        {alarm.conditionalRules.filter((r: any) => r.isActive).length}{' '}
                         conditions
                       </span>
                     </div>
@@ -253,7 +253,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     <div className="flex items-center gap-1">
                       <MapPin size={12} />
                       <span>
-                        {alarm.locationTriggers.filter(t => t.isActive).length}{' '}
+                        {alarm.locationTriggers.filter((t: any) => t.isActive).length}{' '}
                         locations
                       </span>
                     </div>
@@ -597,14 +597,14 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                       <Switch
                         checked={
                           formData.smartOptimizations?.some(
-                            o => o.type === type && o.isEnabled
+                            (o: any) => o.type === type && o.isEnabled
                           ) || false
                         }
                         onCheckedChange={checked => {
                           const currentOptimizations =
                             formData.smartOptimizations || [];
                           const existingIndex = currentOptimizations.findIndex(
-                            o => o.type === type
+                            (o: any) => o.type === type
                           );
 
                           let newOptimizations;

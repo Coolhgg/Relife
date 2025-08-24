@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Shield, Clock, Bell, X } from 'lucide-react';
+import { AlertCircle, Shield, Clock, Bell, X } from 'lucide-react';
 import type { Alarm } from '../types';
 import type { TabProtectionSettings } from '../types/tabProtection';
 import { formatProtectionMessage, formatTimeframe } from '../types/tabProtection';
@@ -210,7 +210,7 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
             )}
 
             <div className="mt-3 flex items-center gap-2">
-              <Alert className="w-4 h-4 text-gray-500" aria-hidden="true" />
+              <AlertCircleCircle className="w-4 h-4 text-gray-500" aria-hidden="true" />
               <span className="text-xs text-gray-500 dark:text-gray-400">
                 Tab closure protection active
               </span>

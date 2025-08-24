@@ -556,7 +556,7 @@ export function BugReportModal({
                         <span>{new Date().toLocaleString()}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <AlertCircle className="w-4 h-4 text-gray-500" />
+                        <AlertCircleCircle className="w-4 h-4 text-gray-500" />
                         <span className="text-gray-600">Page:</span>
                         <span>{window.location.pathname}</span>
                       </div>

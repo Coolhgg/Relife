@@ -302,7 +302,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
   if (compact) {
     return (
       <div className={`flex flex-wrap gap-2 ${className}`}>
-        {achievements.slice(0, 8).map(achievement => (
+        {achievements.slice(0, 8).map((achievement: any) => (
           <AchievementCard key={achievement.id} achievement={achievement} />
         ))}
         {achievements.length > 8 && (
@@ -335,7 +335,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                 Unlocked Achievements
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                {unlockedAchievements.map(achievement => (
+                {unlockedAchievements.map((achievement: any) => (
                   <div key={achievement.id} className="relative">
                     <AchievementCard achievement={achievement} />
                     {onShare && (
@@ -365,7 +365,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                 In Progress
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                {lockedAchievements.map(achievement => (
+                {lockedAchievements.map((achievement: any) => (
                   <AchievementCard key={achievement.id} achievement={achievement} />
                 ))}
               </div>

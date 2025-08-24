@@ -80,14 +80,14 @@ export function BillingHistory({
       case 'failed':
         return (
           <Badge className="bg-red-100 text-red-800">
-            <AlertCircle className="w-3 h-3 mr-1" />
+            <AlertCircleCircle className="w-3 h-3 mr-1" />
             Failed
           </Badge>
         );
       case 'requires_action':
         return (
           <Badge className="bg-orange-100 text-orange-800">
-            <AlertCircle className="w-3 h-3 mr-1" />
+            <AlertCircleCircle className="w-3 h-3 mr-1" />
             Action Required
           </Badge>
         );
@@ -200,13 +200,13 @@ export function BillingHistory({
 
       {/* Failed Payments Alert */}
       {invoices.some(invoice => invoice.status === 'failed' || isPastDue(invoice)) && (
-        <Alert className="border-red-200 bg-red-50">
-          <AlertCircle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-600">
+        <AlertCircle className="border-red-200 bg-red-50">
+          <AlertCircleCircle className="h-4 w-4 text-red-600" />
+          <AlertCircleDescription className="text-red-600">
             You have failed or past due payments. Please update your payment method or
             contact support.
-          </AlertDescription>
-        </Alert>
+          </AlertCircleDescription>
+        </AlertCircle>
       )}
 
       {/* Invoice History */}

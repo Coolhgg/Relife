@@ -217,7 +217,7 @@ export const PushNotificationTester: React.FC = () => {
           <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
         );
       default:
-        return <Alert className="w-4 h-4 text-yellow-500" />;
+        return <AlertCircle className="w-4 h-4 text-yellow-500" />;
     }
   };
 
@@ -242,7 +242,7 @@ export const PushNotificationTester: React.FC = () => {
     return (
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
         <div className="flex items-center gap-3">
-          <Alert className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+          <AlertCircle className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
           <div>
             <h3 className="font-semibold text-yellow-800 dark:text-yellow-300">
               Push Notification Testing Not Available

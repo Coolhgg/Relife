@@ -144,7 +144,7 @@ export default function SignUpForm({
           aria-live="polite"
         >
           <div className="flex items-start gap-3">
-            <AlertCircle
+            <AlertCircleCircle
               className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0"
               aria-hidden="true"
             />

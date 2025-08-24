@@ -15,7 +15,7 @@ import type {
   Alarm,
   AlarmInstance,
   AlarmDifficulty,
-  _VoiceMood,
+  VoiceMood,
   DayOfWeek,
 } from '../types/index';
 import PremiumGate from './PremiumGate';

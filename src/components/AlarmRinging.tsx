@@ -607,7 +607,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
         <div className="pulsing-alarm w-32 h-32 absolute -inset-4" />
         <div className="pulsing-alarm w-24 h-24 absolute -inset-2" />
         <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shaking-alarm">
-          <AlertCircle className="w-8 h-8 text-red-500" aria-hidden="true" />
+          <AlertCircleCircle className="w-8 h-8 text-red-500" aria-hidden="true" />
         </div>
       </div>
 

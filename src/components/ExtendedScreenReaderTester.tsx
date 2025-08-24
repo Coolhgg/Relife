@@ -632,7 +632,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
                 <CheckCircle className="h-5 w-5 text-green-500" />
               )}
               {getTestStatus(currentTest.id) === 'error' && (
-                <AlertCircle className="h-5 w-5 text-red-500" />
+                <AlertCircleCircle className="h-5 w-5 text-red-500" />
               )}
               {getTestStatus(currentTest.id) === 'pending' && (
                 <Info className="h-5 w-5 text-gray-400" />
@@ -689,7 +689,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
                   <CheckCircle className="h-4 w-4 text-green-500" />
                 )}
                 {getTestStatus(test.id) === 'error' && (
-                  <AlertCircle className="h-4 w-4 text-red-500" />
+                  <AlertCircleCircle className="h-4 w-4 text-red-500" />
                 )}
               </div>
             </div>

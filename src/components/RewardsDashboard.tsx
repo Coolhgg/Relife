@@ -242,7 +242,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               Recent Achievements
             </h2>
             <div className="grid gap-3">
-              {rewardSystem.unlockedRewards.slice(0, 3).map(reward => {
+              {rewardSystem.unlockedRewards.slice(0, 3).map((reward: any) => {
                 const CategoryIcon = getCategoryIcon(reward.category);
                 return (
                   <div
@@ -368,7 +368,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               Unlocked Achievements ({rewardSystem.unlockedRewards.length})
             </h2>
             <div className="grid gap-3 md:grid-cols-2">
-              {rewardSystem.unlockedRewards.map(reward => {
+              {rewardSystem.unlockedRewards.map((reward: any) => {
                 const CategoryIcon = getCategoryIcon(reward.category);
                 return (
                   <div
@@ -418,7 +418,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                   reward =>
                     !rewardSystem.unlockedRewards.find(ur => ur.id === reward.id)
                 )
-                .map(reward => {
+                .map((reward: any) => {
                   const CategoryIcon = getCategoryIcon(reward.category);
                   return (
                     <div

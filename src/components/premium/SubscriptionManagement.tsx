@@ -283,14 +283,14 @@ export function SubscriptionManagement({
 
           {/* Cancellation Notice */}
           {subscription.cancelAtPeriodEnd && (
-            <Alert className="border-orange-200 bg-orange-50">
-              <Alert className="h-4 w-4 text-orange-600" />
-              <AlertDescription className="text-orange-600">
+            <AlertCircle className="border-orange-200 bg-orange-50">
+              <AlertCircle className="h-4 w-4 text-orange-600" />
+              <AlertCircleDescription className="text-orange-600">
                 Your subscription will end on{' '}
                 {formatDate(subscription.currentPeriodEnd)}. You can reactivate anytime
                 before this date.
-              </AlertDescription>
-            </Alert>
+              </AlertCircleDescription>
+            </AlertCircle>
           )}
 
           <div className="flex flex-wrap gap-3 pt-4">
@@ -338,7 +338,7 @@ export function SubscriptionManagement({
                 <DialogContent className="max-w-md">
                   <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
-                      <Alert className="w-5 h-5 text-red-600" />
+                      <AlertCircle className="w-5 h-5 text-red-600" />
                       Cancel Subscription
                     </DialogTitle>
                   </DialogHeader>

@@ -181,14 +181,14 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     switch (syncStatus) {
       case 'synced':
         return conflicts > 0 ? (
-          <AlertCircle className="w-4 h-4 text-orange-500" />
+          <AlertCircleCircle className="w-4 h-4 text-orange-500" />
         ) : (
           <CheckCircle className="w-4 h-4 text-green-500" />
         );
       case 'pending':
         return <RefreshCw className="w-4 h-4 text-yellow-500 animate-spin" />;
       case 'error':
-        return <AlertCircle className="w-4 h-4 text-red-500" />;
+        return <AlertCircleCircle className="w-4 h-4 text-red-500" />;
       default:
         return <Wifi className="w-4 h-4 text-green-500" />;
     }
@@ -196,7 +196,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
 
   const getDetailedStatusIcon = () => {
     if (pendingChanges > 0) return <Database className="w-4 h-4" />;
-    if (conflicts > 0) return <AlertCircle className="w-4 h-4" />;
+    if (conflicts > 0) return <AlertCircleCircle className="w-4 h-4" />;
     if (cacheStats && cacheStats.performance.hitRatio > 0.8)
       return <TrendingUp className="w-4 h-4" />;
     return <Activity className="w-4 h-4" />;
@@ -551,7 +551,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
           aria-labelledby="sync-error-title"
         >
           <div className="flex items-start gap-2">
-            <AlertCircle
+            <AlertCircleCircle
               className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"
               aria-hidden="true"
             />
@@ -586,7 +586,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
           aria-live="assertive"
         >
           <div className="flex items-start gap-2">
-            <AlertCircle
+            <AlertCircleCircle
               className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5"
               aria-hidden="true"
             />

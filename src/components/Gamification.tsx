@@ -514,7 +514,7 @@ export function Gamification({
           {unlockedAchievements.length > 0 && (
             <div className="space-y-3">
               <h3 className="font-bold text-lg">Unlocked Achievements</h3>
-              {unlockedAchievements.map(achievement => (
+              {unlockedAchievements.map((achievement: any) => (
                 <Card
                   key={achievement.id}
                   className="border-2 border-primary/20 cursor-pointer hover:bg-muted/50 transition-colors"
@@ -553,7 +553,7 @@ export function Gamification({
           {progressAchievements.length > 0 && (
             <div className="space-y-3">
               <h3 className="font-bold text-lg">In Progress</h3>
-              {progressAchievements.map(achievement => (
+              {progressAchievements.map((achievement: any) => (
                 <Card
                   key={achievement.id}
                   className="cursor-pointer hover:bg-muted/50 transition-colors"

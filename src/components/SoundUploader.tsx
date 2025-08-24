@@ -341,7 +341,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
       case 'ready':
         return <CheckCircle className="w-4 h-4 text-green-500" />;
       case 'error':
-        return <AlertCircle className="w-4 h-4 text-red-500" />;
+        return <AlertCircleCircle className="w-4 h-4 text-red-500" />;
       default:
         return <FileAudio className="w-4 h-4 text-gray-500" />;
     }
@@ -430,12 +430,12 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                       )}
 
                       {item.error && (
-                        <Alert className="mt-2">
-                          <AlertCircle className="w-4 h-4" />
-                          <AlertDescription className="text-sm">
+                        <AlertCircle className="mt-2">
+                          <AlertCircleCircle className="w-4 h-4" />
+                          <AlertCircleDescription className="text-sm">
                             {item.error}
-                          </AlertDescription>
-                        </Alert>
+                          </AlertCircleDescription>
+                        </AlertCircle>
                       )}
                     </div>
 

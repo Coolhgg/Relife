@@ -524,7 +524,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
                           : 'bg-blue-100 dark:bg-blue-900/30'
                     }`}
                   >
-                    <AlertCircle
+                    <AlertCircleCircle
                       className={`w-4 h-4 ${
                         insight.priority === 'high'
                           ? 'text-red-600 dark:text-red-400'

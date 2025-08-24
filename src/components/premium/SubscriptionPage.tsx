@@ -201,7 +201,7 @@ export function SubscriptionPage({
               {subscription.subscription.status === 'active' ? (
                 <CheckCircle className="w-5 h-5 text-green-600" />
               ) : (
-                <AlertCircle className="w-5 h-5 text-yellow-600" />
+                <AlertCircleCircle className="w-5 h-5 text-yellow-600" />
               )}
               <span className="font-medium capitalize">
                 {subscription.currentPlan?.displayName || subscription.userTier}
@@ -219,17 +219,17 @@ export function SubscriptionPage({
 
       {/* Alerts */}
       {error && (
-        <Alert className="border-red-200 bg-red-50">
-          <AlertCircle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-600">{error}</AlertDescription>
-        </Alert>
+        <AlertCircle className="border-red-200 bg-red-50">
+          <AlertCircleCircle className="h-4 w-4 text-red-600" />
+          <AlertCircleDescription className="text-red-600">{error}</AlertCircleDescription>
+        </AlertCircle>
       )}
 
       {success && (
-        <Alert className="border-green-200 bg-green-50">
+        <AlertCircle className="border-green-200 bg-green-50">
           <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-600">{success}</AlertDescription>
-        </Alert>
+          <AlertCircleDescription className="text-green-600">{success}</AlertCircleDescription>
+        </AlertCircle>
       )}
 
       {/* Main Content */}

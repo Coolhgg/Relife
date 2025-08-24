@@ -328,13 +328,13 @@ export function PaymentFlow({
 
             {/* Trial Info */}
             {trialDays && trialDays > 0 && (
-              <Alert className="border-blue-200 bg-blue-50">
-                <AlertCircle className="h-4 w-4 text-blue-600" />
-                <AlertDescription className="text-blue-800">
+              <AlertCircle className="border-blue-200 bg-blue-50">
+                <AlertCircleCircle className="h-4 w-4 text-blue-600" />
+                <AlertCircleDescription className="text-blue-800">
                   You'll get {trialDays} days free trial. Your card will be charged
                   after the trial ends.
-                </AlertDescription>
-              </Alert>
+                </AlertCircleDescription>
+              </AlertCircle>
             )}
 
             {/* Discount Code */}
@@ -379,10 +379,10 @@ export function PaymentFlow({
           </CardHeader>
           <CardContent className="space-y-6">
             {error && (
-              <Alert className="border-red-200 bg-red-50">
-                <AlertCircle className="h-4 w-4 text-red-600" />
-                <AlertDescription className="text-red-600">{error}</AlertDescription>
-              </Alert>
+              <AlertCircle className="border-red-200 bg-red-50">
+                <AlertCircleCircle className="h-4 w-4 text-red-600" />
+                <AlertCircleDescription className="text-red-600">{error}</AlertCircleDescription>
+              </AlertCircle>
             )}
 
             {/* Existing Payment Methods */}
