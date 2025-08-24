@@ -339,7 +339,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={(e: any) => {
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                           // auto: implicit any
                           e.stopPropagation();
                           handleThemePreview(theme.id);

@@ -118,7 +118,7 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
 
                   {!isAccessible && (
                     <button
-                      onClick={(e: any) => {
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onUpgrade?.();
                       }}

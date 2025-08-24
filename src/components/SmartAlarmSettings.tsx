@@ -301,7 +301,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           <input
                             type="checkbox"
                             checked={seasonalAdjustment}
-                            onChange={(e: any) =>
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                               setSeasonalAdjustment(e.target.checked)
                             }
                             className="sr-only peer"
@@ -377,7 +377,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     max="720"
                     step="15"
                     value={sleepGoal.targetDuration}
-                    onChange={(e: any) =>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setSleepGoal((prev: any) => ({
                         ...prev,
                         targetDuration: parseInt(e.target.value),
@@ -405,7 +405,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     <input
                       type="time"
                       value={sleepGoal.targetBedtime}
-                      onChange={(e: any) =>
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setSleepGoal((prev: any) => ({
                           ...prev,
                           targetBedtime: e.target.value,
@@ -419,7 +419,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     <input
                       type="time"
                       value={sleepGoal.targetWakeTime}
-                      onChange={(e: any) =>
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setSleepGoal((prev: any) => ({
                           ...prev,
                           targetWakeTime: e.target.value,
@@ -444,7 +444,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       <input
                         type="checkbox"
                         checked={sleepGoal.consistency}
-                        onChange={(e: any) =>
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           setSleepGoal((prev: any) => ({
                             ...prev,
                             consistency: e.target.checked,
@@ -466,7 +466,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       max="180"
                       step="15"
                       value={sleepGoal.weekendVariation}
-                      onChange={(e: any) =>
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setSleepGoal((prev: any) => ({
                           ...prev,
                           weekendVariation: parseInt(e.target.value),

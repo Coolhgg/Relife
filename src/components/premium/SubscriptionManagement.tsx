@@ -379,7 +379,7 @@ export function SubscriptionManagement({
                         <Textarea
                           id="feedback"
                           value={cancellationData.feedback}
-                          onChange={(e: any) =>
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setCancellationData((prev: any) => ({
                               ...prev,
                               feedback: e.target.value,

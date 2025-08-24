@@ -167,7 +167,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
         <div className="flex items-center justify-between">
           {hasAccess ? (
             <button
-              onClick={(e: any) => {
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.stopPropagation();
                 onClick?.();
               }}
@@ -178,7 +178,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
             </button>
           ) : (
             <button
-              onClick={(e: any) => {
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.stopPropagation();
                 handleUpgrade();
               }}

@@ -400,7 +400,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={(e: any) => {
+                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                   e.stopPropagation();
                                   playSound(sound.id, sound.fileUrl);
                                 }}
@@ -442,7 +442,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={(e: any) => {
+                              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                 e.stopPropagation();
                                 playSound(sound.id, sound.url);
                               }}
@@ -506,7 +506,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               min="100"
                               max="2000"
                               value={generatedSoundConfig.frequency}
-                              onChange={(e: any) =>
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                 setGeneratedSoundConfig((prev: any) => ({
                                   ...prev,
                                   frequency: parseInt(e.target.value),
@@ -526,7 +526,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               max="10"
                               step="0.5"
                               value={generatedSoundConfig.duration}
-                              onChange={(e: any) =>
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                 setGeneratedSoundConfig((prev: any) => ({
                                   ...prev,
                                   duration: parseFloat(e.target.value),

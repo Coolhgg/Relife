@@ -263,7 +263,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
 
                 {/* Favorite button */}
                 <button
-                  onClick={(e: any) => {
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     // auto: implicit any
                     e.stopPropagation();
                     toggleFavorite(quickTheme.id);
