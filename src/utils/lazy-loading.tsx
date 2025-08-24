@@ -74,6 +74,62 @@ export const SleepAnalytics = lazyWithPreload(
   () => false // Load on demand
 );
 
+// TODO: Performance optimization - Large dashboard components now lazy loaded
+// Analytics dashboards (heavy chart rendering)
+export const AnalyticsDashboard = lazyWithPreload(
+  () => import('../components/AnalyticsDashboard'),
+  () => window.location.pathname.includes('/analytics')
+);
+
+export const PersonaAnalyticsDashboard = lazyWithPreload(
+  () => import('../components/PersonaAnalyticsDashboard'),
+  () => localStorage.getItem('persona_analytics_enabled') === 'true'
+);
+
+export const PersonaFocusDashboard = lazyWithPreload(
+  () => import('../components/PersonaFocusDashboard'),
+  () => false // Load on demand for persona management
+);
+
+// TODO: Performance optimization - Theme management components (largest components)
+export const ThemeCreator = lazyWithPreload(
+  () => import('../components/ThemeCreator'),
+  () => false // Load only when theme creation is accessed
+);
+
+export const CustomThemeManager = lazyWithPreload(
+  () => import('../components/CustomThemeManager'),
+  () => false // Load only when custom theme management is needed
+);
+
+// TODO: Performance optimization - Premium and security dashboards
+export const PremiumDashboard = lazyWithPreload(
+  () => import('../components/PremiumDashboard'),
+  () => localStorage.getItem('subscription_active') === 'true'
+);
+
+export const AccessibilityDashboard = lazyWithPreload(
+  () => import('../components/AccessibilityDashboard'),
+  () => localStorage.getItem('accessibility_mode') === 'true'
+);
+
+export const ComprehensiveSecurityDashboard = lazyWithPreload(
+  () => import('../components/ComprehensiveSecurityDashboard'),
+  () => process.env.NODE_ENV === 'development' // Admin/dev feature
+);
+
+// TODO: Performance optimization - Smart alarm features
+export const SmartAlarmDashboard = lazyWithPreload(
+  () => import('../components/SmartAlarmDashboard'),
+  () => localStorage.getItem('smart_alarms_enabled') === 'true'
+);
+
+// TODO: Performance optimization - PWA and diagnostic components
+export const PWAStatusDashboard = lazyWithPreload(
+  () => import('../components/PWAStatusDashboard'),
+  () => false // Load on demand for PWA diagnostics
+);
+
 // HOC for lazy loading with error boundary
 export const withLazyLoading = <P extends object>(
   LazyComponent: LazyExoticComponent<ComponentType<P>>,
@@ -94,7 +150,23 @@ export const preloadRoute = (routePath: string) => {
     '/sleep': () => SleepTracker.preload(),
     '/settings': () => SmartAlarmSettings.preload(),
     '/voice': () => VoiceSettings.preload(),
-    '/analytics': () => SleepAnalytics.preload(),
+    '/analytics': () => {
+      SleepAnalytics.preload();
+      AnalyticsDashboard.preload();
+      PersonaAnalyticsDashboard.preload();
+    },
+    '/premium': () => PremiumDashboard.preload(),
+    '/themes': () => {
+      ThemeCreator.preload();
+      CustomThemeManager.preload();
+    },
+    '/accessibility': () => AccessibilityDashboard.preload(),
+    '/smart-alarms': () => SmartAlarmDashboard.preload(),
+    '/diagnostics': () => {
+      PWAStatusDashboard.preload();
+      ComprehensiveSecurityDashboard.preload();
+    },
+    '/persona': () => PersonaFocusDashboard.preload(),
   };
 
   const preloadFn = preloadMap[routePath];
