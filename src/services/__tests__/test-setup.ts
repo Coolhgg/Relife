@@ -105,14 +105,14 @@ Object.defineProperty(global, 'performance', {
 });
 
 // Mock PerformanceObserver
-global.PerformanceObserver = jest.fn().mockImplementation((callback: any) => // auto: implicit any ({
+global.PerformanceObserver = jest.fn().mockImplementation((callback: any) => ({ // auto: implicit any{
   observe: jest.fn(),
   disconnect: jest.fn(),
   takeRecords: jest.fn(() => []),
 })) as any;
 
 // Mock IntersectionObserver
-global.IntersectionObserver = jest.fn().mockImplementation((callback: any) => // auto: implicit any ({
+global.IntersectionObserver = jest.fn().mockImplementation((callback: any) => ({ // auto: implicit any{
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),

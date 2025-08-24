@@ -133,7 +133,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
 
   const updateParticles = useCallback(() => {
     setParticles((prevParticles: any) => // auto: implicit any
-      prevParticles.map((particle: any) => // auto: implicit any {
+      prevParticles.map((particle: any) => { // auto: implicit any
         const newParticle = { ...particle };
 
         // Update position
@@ -174,7 +174,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw particles
-    particles.forEach((particle: any) => // auto: implicit any {
+    particles.forEach((particle: any) => { // auto: implicit any
       const alpha = 1 - particle.life / particle.maxLife;
       ctx.fillStyle = `${particle.color}${Math.floor(alpha * 255)
         .toString(16)

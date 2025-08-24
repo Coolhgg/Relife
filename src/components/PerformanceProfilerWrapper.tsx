@@ -123,7 +123,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               🐌 Slow Components ({summary.slowComponents.length})
             </div>
             <div className="space-y-1 max-h-20 overflow-y-auto">
-              {summary.slowComponents.slice(0, 3).map((comp: any) => // auto: implicit any (
+              {summary.slowComponents.slice(0, 3).map((comp: any) => ({ // auto: implicit any
                 <div
                   key={comp.id}
                   className="text-xs bg-red-50 dark:bg-red-900/20 p-1 rounded"
@@ -145,7 +145,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               🔄 Frequent Renders
             </div>
             <div className="space-y-1 max-h-20 overflow-y-auto">
-              {summary.frequentComponents.slice(0, 3).map((comp: any) => // auto: implicit any (
+              {summary.frequentComponents.slice(0, 3).map((comp: any) => ({ // auto: implicit any
                 <div
                   key={comp.id}
                   className="text-xs bg-orange-50 dark:bg-orange-900/20 p-1 rounded"
@@ -166,7 +166,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
             <input
               type="checkbox"
               checked={autoRefresh}
-              onChange={(e: any) => // auto: implicit any setAutoRefresh(e.target.checked)}
+              onChange={(e: any) => s // auto: implicit anyetAutoRefresh(e.target.checked)}
               className="mr-1"
             />
             Auto-refresh
@@ -229,7 +229,7 @@ export const PerformanceProfilerWrapper: React.FC<PerformanceProfilerWrapperProp
     // Add keyboard shortcut for performance dashboard
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.shiftKey && event.key === 'P') {
-        setDashboardOpen((prev: any) => // auto: implicit any !prev);
+        setDashboardOpen((prev: any) => ! // auto: implicit anyprev);
         event.preventDefault();
       }
     };
@@ -277,7 +277,7 @@ export const PerformanceProfilerWrapper: React.FC<PerformanceProfilerWrapperProp
       {showDevTools && (
         <PerformanceDashboard
           isOpen={dashboardOpen}
-          onToggle={() => setDashboardOpen((prev: any) => // auto: implicit any !prev)}
+          onToggle={() => setDashboardOpen((prev: any) => ! // auto: implicit anyprev)}
         />
       )}
     </>

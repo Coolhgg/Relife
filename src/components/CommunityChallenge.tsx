@@ -114,11 +114,11 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
     let filtered = challenges;
 
     if (selectedType !== 'all') {
-      filtered = filtered.filter((c: any) => // auto: implicit any c.challengeType === selectedType);
+      filtered = filtered.filter((c: any) => c // auto: implicit any.challengeType === selectedType);
     }
 
     if (selectedDifficulty !== 'all') {
-      filtered = filtered.filter((c: any) => // auto: implicit any c.difficulty === selectedDifficulty);
+      filtered = filtered.filter((c: any) => c // auto: implicit any.difficulty === selectedDifficulty);
     }
 
     setFilteredChallenges(filtered);
@@ -419,7 +419,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               {/* Challenge Grid */}
               <div className="grid md:grid-cols-2 gap-4">
                 <AnimatePresence>
-                  {filteredChallenges.map((challenge: any) => // auto: implicit any (
+                  {filteredChallenges.map((challenge: any) => ({ // auto: implicit any
                     <motion.div
                       key={challenge.id}
                       layout
@@ -453,7 +453,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
           {activeTab === 'joined' && (
             <>
               <div className="grid md:grid-cols-2 gap-4">
-                {userChallenges.map((challenge: any) => // auto: implicit any (
+                {userChallenges.map((challenge: any) => ({ // auto: implicit any
                   <ChallengeCard
                     key={challenge.id}
                     challenge={challenge}

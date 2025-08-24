@@ -2196,17 +2196,17 @@ export function ThemeProvider({
     const syncService = cloudSyncServiceRef.current;
 
     // Listen for sync status changes
-    const unsubscribe = syncService.onStatusChange((status: any) => // auto: implicit any {
+    const unsubscribe = syncService.onStatusChange((status: any) => { // auto: implicit any
       setCloudSyncStatus(status);
       // Notify all registered listeners
-      syncListenersRef.current.forEach((listener: any) => // auto: implicit any listener(status));
+      syncListenersRef.current.forEach((listener: any) => l // auto: implicit anyistener(status));
     });
 
     // Initialize with current status
     setCloudSyncStatus(syncService.getStatus());
 
     // Start auto-sync if enabled
-    syncService.initialize().catch((error: any) => // auto: implicit any {
+    syncService.initialize().catch((error: any) => { // auto: implicit any
       console.error('Failed to initialize cloud sync:', error);
     });
 
@@ -2230,7 +2230,7 @@ export function ThemeProvider({
 
     // Debounce sync to avoid too frequent calls
     const timeoutId = setTimeout(() => {
-      syncService.updatePreferences(preferences).catch((error: any) => // auto: implicit any {
+      syncService.updatePreferences(preferences).catch((error: any) => { // auto: implicit any
         console.error('Failed to sync preferences:', error);
       });
     }, 1000);
@@ -2399,7 +2399,7 @@ export function ThemeProvider({
 
   const loadThemePreset = useCallback(
     async (presetId: string): Promise<void> => {
-      const preset = availableThemes.find((t: any) => // auto: implicit any t.id === presetId);
+      const preset = availableThemes.find((t: any) => t // auto: implicit any.id === presetId);
       if (preset) {
         setTheme(preset.theme);
         if (preset.personalization) {
@@ -2412,7 +2412,7 @@ export function ThemeProvider({
 
   const getThemeRecommendations = useCallback((): ThemePreset[] => {
     // This would use AI/ML in a real app
-    return availableThemes.filter((theme: any) => // auto: implicit any !theme.isDefault).slice(0, 3);
+    return availableThemes.filter((theme: any) => ! // auto: implicit anytheme.isDefault).slice(0, 3);
   }, [availableThemes]);
 
   const exportThemes = useCallback(async (): Promise<string> => {
@@ -2533,7 +2533,7 @@ export function ThemeProvider({
 
     if (enabled) {
       // Perform initial sync when enabling
-      syncService.sync().catch((error: any) => // auto: implicit any {
+      syncService.sync().catch((error: any) => { // auto: implicit any
         console.error('Failed to perform initial sync:', error);
       });
     }

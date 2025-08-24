@@ -151,7 +151,7 @@ export default function ForgotPasswordForm({
               id="reset-email"
               type="email"
               value={email}
-              onChange={(e: any) => // auto: implicit any handleEmailChange(e.target.value)}
+              onChange={(e: any) => h // auto: implicit anyandleEmailChange(e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationError
                   ? 'border-red-500'

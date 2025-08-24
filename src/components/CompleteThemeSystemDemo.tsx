@@ -83,7 +83,7 @@ export const CustomThemeCreator: React.FC = () => {
                 type="text"
                 placeholder="Theme name (e.g., 'My Perfect Morning')"
                 value={customTheme.name}
-                onChange={(e: any) => // auto: implicit any setCustomTheme({ ...customTheme, name: e.target.value })}
+                onChange={(e: any) => s // auto: implicit anyetCustomTheme({ ...customTheme, name: e.target.value })}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
               <textarea
@@ -214,7 +214,7 @@ export const CustomThemeCreator: React.FC = () => {
                       ...customTheme,
                       tags: e.target.value
                         .split(',')
-                        .map((tag: any) => // auto: implicit any tag.trim())
+                        .map((tag: any) => t // auto: implicit anyag.trim())
                         .filter(Boolean),
                     })
                   }
@@ -239,7 +239,7 @@ export const CustomThemeCreator: React.FC = () => {
                       <input
                         type="checkbox"
                         value={time}
-                        onChange={(e: any) => // auto: implicit any {
+                        onChange={(e: any) => { // auto: implicit any
                           if (e.target.checked) {
                             setCustomTheme({
                               ...customTheme,
@@ -248,7 +248,7 @@ export const CustomThemeCreator: React.FC = () => {
                           } else {
                             setCustomTheme({
                               ...customTheme,
-                              timeOfDay: customTheme.timeOfDay.filter((t: any) => // auto: implicit any t !== time),
+                              timeOfDay: customTheme.timeOfDay.filter((t: any) => t // auto: implicit any !== time),
                             });
                           }
                         }}
@@ -363,7 +363,7 @@ export const SmartThemesDemo: React.FC = () => {
                 <input
                   type="time"
                   value={testTime}
-                  onChange={(e: any) => // auto: implicit any setTestTime(e.target.value)}
+                  onChange={(e: any) => s // auto: implicit anyetTestTime(e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -372,7 +372,7 @@ export const SmartThemesDemo: React.FC = () => {
                 <input
                   type="date"
                   value={testDate.toISOString().split('T')[0]}
-                  onChange={(e: any) => // auto: implicit any setTestDate(new Date(e.target.value))}
+                  onChange={(e: any) => s // auto: implicit anyetTestDate(new Date(e.target.value))}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -552,11 +552,11 @@ export const AudioSetupDemo: React.FC = () => {
   const testSingleSound = async (soundId: string) => {
     try {
       const result = await soundEffectsService.testSound(soundId as any);
-      setTestResults((prev: any) => // auto: implicit any ({ ...prev, [soundId]: result }));
+      setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [soundId]: result }));
       return result;
     } catch (error) {
       console.error('Sound test failed:', error);
-      setTestResults((prev: any) => // auto: implicit any ({ ...prev, [soundId]: false }));
+      setTestResults((prev: any) => ({ // auto: implicit any{ ...prev, [soundId]: false }));
       return false;
     }
   };
@@ -754,7 +754,7 @@ export const CompleteThemeSystemDemo: React.FC = () => {
   });
 
   const handleAlarmUpdate = (updates: Partial<Alarm>) => {
-    setMockAlarm((prev: any) => // auto: implicit any ({ ...prev, ...updates }));
+    setMockAlarm((prev: any) => ({ // auto: implicit any{ ...prev, ...updates }));
   };
 
   return (

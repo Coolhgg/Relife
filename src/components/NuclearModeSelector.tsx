@@ -119,7 +119,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
     if (checked) {
       onChallengesChange([...selectedChallenges, challengeType]);
     } else {
-      onChallengesChange(selectedChallenges.filter((c: any) => // auto: implicit any c !== challengeType));
+      onChallengesChange(selectedChallenges.filter((c: any) => c // auto: implicit any !== challengeType));
     }
   };
 
@@ -132,7 +132,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
 
   const calculateEstimatedTime = () => {
     const totalTime = selectedChallenges.reduce((total, challengeType) => {
-      const challenge = challengeTypes.find((c: any) => // auto: implicit any c.type === challengeType);
+      const challenge = challengeTypes.find((c: any) => c // auto: implicit any.type === challengeType);
       return total + (challenge?.estimatedTime || 300);
     }, 0);
     return Math.round(totalTime / 60); // Convert to minutes
@@ -200,7 +200,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           </Alert>
 
           <div className="mt-4 grid grid-cols-2 gap-2">
-            {challengeTypes.slice(0, 4).map((challenge: any) => // auto: implicit any {
+            {challengeTypes.slice(0, 4).map((challenge: any) => { // auto: implicit any
               const Icon = challengeIcons[challenge.type];
               return (
                 <div
@@ -244,7 +244,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                 </DialogHeader>
 
                 <div className="space-y-4 max-h-96 overflow-y-auto">
-                  {challengeTypes.map((challenge: any) => // auto: implicit any {
+                  {challengeTypes.map((challenge: any) => { // auto: implicit any
                     const Icon = challengeIcons[challenge.type];
                     return (
                       <div key={challenge.type} className="p-4 border rounded-lg">
@@ -349,7 +349,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
             </div>
             <Slider
               value={[customDifficulty]}
-              onValueChange={(value: any) => // auto: implicit any onDifficultyChange(value[0])}
+              onValueChange={(value: any) => o // auto: implicit anynDifficultyChange(value[0])}
               min={1}
               max={10}
               step={1}
@@ -372,7 +372,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {challengeTypes.map((challenge: any) => // auto: implicit any {
+              {challengeTypes.map((challenge: any) => { // auto: implicit any
                 const Icon = challengeIcons[challenge.type];
                 const isSelected = selectedChallenges.includes(challenge.type);
 

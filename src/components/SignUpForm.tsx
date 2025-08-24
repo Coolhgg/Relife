@@ -91,7 +91,7 @@ export default function SignUpForm({
   };
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
-    setFormData((prev: any) => // auto: implicit any ({ ...prev, [field]: value }));
+    setFormData((prev: any) => ({ // auto: implicit any{ ...prev, [field]: value }));
 
     // Check password strength in real-time
     if (field === 'password') {
@@ -100,7 +100,7 @@ export default function SignUpForm({
 
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
-      setValidationErrors((prev: any) => // auto: implicit any ({ ...prev, [field]: undefined }));
+      setValidationErrors((prev: any) => ({ // auto: implicit any{ ...prev, [field]: undefined }));
     }
   };
 
@@ -175,7 +175,7 @@ export default function SignUpForm({
               id="name"
               type="text"
               value={formData.name}
-              onChange={(e: any) => // auto: implicit any handleInputChange('name', e.target.value)}
+              onChange={(e: any) => h // auto: implicit anyandleInputChange('name', e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.name
                   ? 'border-red-500'
@@ -216,7 +216,7 @@ export default function SignUpForm({
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e: any) => // auto: implicit any handleInputChange('email', e.target.value)}
+              onChange={(e: any) => h // auto: implicit anyandleInputChange('email', e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.email
                   ? 'border-red-500'
@@ -257,7 +257,7 @@ export default function SignUpForm({
               id="password"
               type={showPassword ? 'text' : 'password'}
               value={formData.password}
-              onChange={(e: any) => // auto: implicit any handleInputChange('password', e.target.value)}
+              onChange={(e: any) => h // auto: implicit anyandleInputChange('password', e.target.value)}
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.password
                   ? 'border-red-500'
@@ -366,7 +366,7 @@ export default function SignUpForm({
               id="confirmPassword"
               type={showConfirmPassword ? 'text' : 'password'}
               value={formData.confirmPassword}
-              onChange={(e: any) => // auto: implicit any handleInputChange('confirmPassword', e.target.value)}
+              onChange={(e: any) => h // auto: implicit anyandleInputChange('confirmPassword', e.target.value)}
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.confirmPassword
                   ? 'border-red-500'

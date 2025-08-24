@@ -34,7 +34,7 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
         now.getTime() + settings.protectionTiming.upcomingAlarmThreshold * 60 * 1000
       );
 
-      const upcoming = enabledAlarms.filter((alarm: any) => // auto: implicit any {
+      const upcoming = enabledAlarms.filter((alarm: any) => { // auto: implicit any
         const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
         // Check if alarm is set for today
@@ -188,7 +188,7 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
                 <ul className="space-y-1">
                   {upcomingAlarms
                     .slice(0, settings.visualSettings.maxAlarmsShown)
-                    .map((alarm: any) => // auto: implicit any (
+                    .map((alarm: any) => ({ // auto: implicit any
                       <li
                         key={alarm.id}
                         className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-2"

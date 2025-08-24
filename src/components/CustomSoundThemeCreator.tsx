@@ -596,7 +596,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
                 >
                   Fix Issues
                 </Button>
-                {validationResult.issues.every((issue: any) => // auto: implicit any issue.type === 'warning') && (
+                {validationResult.issues.every((issue: any) => i // auto: implicit anyssue.type === 'warning') && (
                   <Button
                     onClick={() => {
                       setShowValidationDialog(false);
@@ -627,7 +627,7 @@ const InfoStep: React.FC<{
       <Input
         id="theme-name"
         value={theme.name || ''}
-        onChange={(e: any) => // auto: implicit any onUpdate('name', e.target.value)}
+        onChange={(e: any) => o // auto: implicit anynUpdate('name', e.target.value)}
         placeholder="My Awesome Theme"
       />
     </div>
@@ -637,7 +637,7 @@ const InfoStep: React.FC<{
       <Input
         id="theme-display-name"
         value={theme.displayName || ''}
-        onChange={(e: any) => // auto: implicit any onUpdate('displayName', e.target.value)}
+        onChange={(e: any) => o // auto: implicit anynUpdate('displayName', e.target.value)}
         placeholder="My Awesome Theme (optional)"
       />
     </div>
@@ -666,7 +666,7 @@ const InfoStep: React.FC<{
       <Textarea
         id="theme-description"
         value={theme.description || ''}
-        onChange={(e: any) => // auto: implicit any onUpdate('description', e.target.value)}
+        onChange={(e: any) => o // auto: implicit anynUpdate('description', e.target.value)}
         placeholder="Describe your theme..."
         rows={4}
       />
@@ -682,9 +682,9 @@ const SoundsStep: React.FC<{
   <div>
     <SoundUploader
       userId={userId}
-      onSoundUploaded={(sound: any) => // auto: implicit any onSoundsUpdated([...uploadedSounds, sound])}
+      onSoundUploaded={(sound: any) => o // auto: implicit anynSoundsUpdated([...uploadedSounds, sound])}
       onSoundDeleted={(soundId: any) => // auto: implicit any
-        onSoundsUpdated(uploadedSounds.filter((s: any) => // auto: implicit any s.id !== soundId))
+        onSoundsUpdated(uploadedSounds.filter((s: any) => s // auto: implicit any.id !== soundId))
       }
       maxFiles={20}
     />
@@ -787,7 +787,7 @@ const MetadataStep: React.FC<{
             'tags',
             e.target.value
               .split(',')
-              .map((tag: any) => // auto: implicit any tag.trim())
+              .map((tag: any) => t // auto: implicit anyag.trim())
               .filter(Boolean)
           )
         }

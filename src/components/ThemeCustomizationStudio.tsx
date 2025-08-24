@@ -23,13 +23,13 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ color, onChange, label }) => 
       <input
         type="color"
         value={color}
-        onChange={(e: any) => // auto: implicit any onChange(e.target.value)}
+        onChange={(e: any) => o // auto: implicit anynChange(e.target.value)}
         className="color-picker-input"
       />
       <input
         type="text"
         value={color}
-        onChange={(e: any) => // auto: implicit any onChange(e.target.value)}
+        onChange={(e: any) => o // auto: implicit anynChange(e.target.value)}
         className="color-picker-text"
         placeholder="#000000"
       />
@@ -58,7 +58,7 @@ const AnimationControl: React.FC<AnimationControlProps> = ({
         <input
           type="checkbox"
           checked={enabled}
-          onChange={(e: any) => // auto: implicit any onChange(effect, e.target.checked)}
+          onChange={(e: any) => o // auto: implicit anynChange(effect, e.target.checked)}
         />
         {label}
       </label>
@@ -92,7 +92,7 @@ const ThemeCustomizationStudio: React.FC = () => {
 
   const handleColorChange = useCallback(
     (category: string, shade: string, color: string) => {
-      setCustomTheme((prev: any) => // auto: implicit any ({
+      setCustomTheme((prev: any) => ({ // auto: implicit any{
         ...prev,
         colors: {
           ...prev.colors,
@@ -107,7 +107,7 @@ const ThemeCustomizationStudio: React.FC = () => {
   );
 
   const handleTypographyChange = useCallback((property: string, value: any) => {
-    setCustomTheme((prev: any) => // auto: implicit any ({
+    setCustomTheme((prev: any) => ({ // auto: implicit any{
       ...prev,
       typography: {
         ...prev.typography,
@@ -118,7 +118,7 @@ const ThemeCustomizationStudio: React.FC = () => {
 
   const handleAnimationEffectChange = useCallback(
     (effect: keyof PremiumAnimationEffects, enabled: boolean) => {
-      setAnimationEffects((prev: any) => // auto: implicit any ({
+      setAnimationEffects((prev: any) => ({ // auto: implicit any{
         ...prev,
         [effect]: enabled,
       }));
@@ -278,7 +278,7 @@ const ThemeCustomizationStudio: React.FC = () => {
           <div className="export-controls">
             <select
               value={exportFormat}
-              onChange={(e: any) => // auto: implicit any setExportFormat(e.target.value as 'json' | 'css' | 'scss')}
+              onChange={(e: any) => s // auto: implicit anyetExportFormat(e.target.value as 'json' | 'css' | 'scss')}
               className="export-format-select"
             >
               <option value="json">JSON</option>
@@ -502,7 +502,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                             type="text"
                             value={shadow}
                             onChange={(e: any) => // auto: implicit any
-                              setCustomTheme((prev: any) => // auto: implicit any ({
+                              setCustomTheme((prev: any) => ({ // auto: implicit any{
                                 ...prev,
                                 effects: {
                                   ...prev.effects,
@@ -534,7 +534,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                             step="0.1"
                             value={value}
                             onChange={(e: any) => // auto: implicit any
-                              setCustomTheme((prev: any) => // auto: implicit any ({
+                              setCustomTheme((prev: any) => ({ // auto: implicit any{
                                 ...prev,
                                 effects: {
                                   ...prev.effects,

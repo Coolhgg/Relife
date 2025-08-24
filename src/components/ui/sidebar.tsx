@@ -92,7 +92,7 @@ function SidebarProvider({
 
   // Helper to toggle the sidebar.
   const toggleSidebar = React.useCallback(() => {
-    return isMobile ? setOpenMobile((open: any) => // auto: implicit any !open) : setOpen((open: any) => // auto: implicit any !open);
+    return isMobile ? setOpenMobile((open: any) => ! // auto: implicit anyopen) : setOpen((open: any) => ! // auto: implicit anyopen);
   }, [isMobile, setOpen, setOpenMobile]);
 
   // Adds a keyboard shortcut to toggle the sidebar.
@@ -266,7 +266,7 @@ function SidebarTrigger({
       variant="ghost"
       size="icon"
       className={cn('size-7', className)}
-      onClick={(event: any) => // auto: implicit any {
+      onClick={(event: any) => { // auto: implicit any
         onClick?.(event);
         toggleSidebar();
       }}

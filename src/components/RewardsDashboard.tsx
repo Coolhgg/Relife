@@ -242,7 +242,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               Recent Achievements
             </h2>
             <div className="grid gap-3">
-              {rewardSystem.unlockedRewards.slice(0, 3).map((reward: any) => // auto: implicit any {
+              {rewardSystem.unlockedRewards.slice(0, 3).map((reward: any) => { // auto: implicit any
                 const CategoryIcon = getCategoryIcon(reward.category);
                 return (
                   <div
@@ -368,7 +368,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               Unlocked Achievements ({rewardSystem.unlockedRewards.length})
             </h2>
             <div className="grid gap-3 md:grid-cols-2">
-              {rewardSystem.unlockedRewards.map((reward: any) => // auto: implicit any {
+              {rewardSystem.unlockedRewards.map((reward: any) => { // auto: implicit any
                 const CategoryIcon = getCategoryIcon(reward.category);
                 return (
                   <div
@@ -416,9 +416,9 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               {rewardSystem.availableRewards
                 .filter(
                   reward =>
-                    !rewardSystem.unlockedRewards.find((ur: any) => // auto: implicit any ur.id === reward.id)
+                    !rewardSystem.unlockedRewards.find((ur: any) => u // auto: implicit anyr.id === reward.id)
                 )
-                .map((reward: any) => // auto: implicit any {
+                .map((reward: any) => { // auto: implicit any
                   const CategoryIcon = getCategoryIcon(reward.category);
                   return (
                     <div
@@ -478,7 +478,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               AI-Powered Insights
             </h2>
             <div className="space-y-4">
-              {rewardSystem.aiInsights.map((insight: any) => // auto: implicit any (
+              {rewardSystem.aiInsights.map((insight: any) => ({ // auto: implicit any
                 <div
                   key={insight.id}
                   className={`p-4 rounded-lg border-2 ${getPriorityColor(insight.priority)}`}
@@ -589,7 +589,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
 
             {/* Identified Habits */}
             <div className="space-y-3">
-              {rewardSystem.habits.map((habit: any) => // auto: implicit any (
+              {rewardSystem.habits.map((habit: any) => ({ // auto: implicit any
                 <div
                   key={habit.id}
                   className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"

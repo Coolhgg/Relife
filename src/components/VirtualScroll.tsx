@@ -45,12 +45,12 @@ export function VirtualScroll<T>({
   const visibleRange = useMemo(() => {
     const startIndex = Math.max(
       0,
-      cumulativeHeights.findIndex((height: any) => // auto: implicit any height >= scrollTop) - 1
+      cumulativeHeights.findIndex((height: any) => h // auto: implicit anyeight >= scrollTop) - 1
     );
 
     const endIndex = Math.min(
       items.length - 1,
-      cumulativeHeights.findIndex((height: any) => // auto: implicit any height >= scrollTop + containerHeight)
+      cumulativeHeights.findIndex((height: any) => h // auto: implicit anyeight >= scrollTop + containerHeight)
     );
 
     return {
@@ -276,7 +276,7 @@ export const useInfiniteScroll = <T,>(
       if (newData.length < pageSize) {
         setHasMore(false);
       }
-      setData((prev: any) => // auto: implicit any [...prev, ...newData]);
+      setData((prev: any) => [ // auto: implicit any...prev, ...newData]);
     } catch (error) {
       console.error('Error loading more data:', error);
     } finally {

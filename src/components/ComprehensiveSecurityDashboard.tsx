@@ -271,7 +271,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                 <input
                   type="checkbox"
                   checked={autoRefresh}
-                  onChange={(e: any) => // auto: implicit any setAutoRefresh(e.target.checked)}
+                  onChange={(e: any) => s // auto: implicit anyetAutoRefresh(e.target.checked)}
                   className="alarm-toggle rounded border-white/30 text-primary-500 focus:ring-primary-300 bg-white/10"
                   aria-describedby="auto-refresh-desc"
                 />
@@ -588,7 +588,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {activeAlerts.map((alert: any) => // auto: implicit any (
+                {activeAlerts.map((alert: any) => ({ // auto: implicit any
                   <div
                     key={alert.id}
                     className="alarm-card glass-card backdrop-blur-lg border hover:transform hover:scale-[1.02] transition-all"
