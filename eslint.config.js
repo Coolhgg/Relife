@@ -366,10 +366,79 @@ export default tseslint.config([
     },
   },
 
+  // UI Component files - disable react-refresh rule for shadcn/ui patterns
+  {
+    files: [
+      'relife-campaign-dashboard/src/components/ui/**/*.{ts,tsx}',
+      'src/components/ui/**/*.{ts,tsx}',
+      '**/ui/**/*.{ts,tsx}',
+    ],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    plugins: {
+      react,
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        HeadersInit: 'readonly',
+        RequestInit: 'readonly',
+        Response: 'readonly',
+        Request: 'readonly',
+        fetch: 'readonly',
+        NotificationPermission: 'readonly',
+        EventListener: 'readonly',
+        EventListenerOrEventListenerObject: 'readonly',
+        NotificationOptions: 'readonly',
+      },
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^(_|unused|create.*|generate.*)',
+          caughtErrorsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unsafe-function-type': 'warn',
+      '@typescript-eslint/no-require-imports': 'error',
+      'react/react-in-jsx-scope': 'off',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      // Disable react-refresh rule for UI components that export variants
+      'react-refresh/only-export-components': 'off',
+      'no-constant-condition': 'warn',
+      'prefer-const': 'warn',
+      'no-console': 'off',
+      'no-undef': 'error',
+    },
+  },
+
   // Dashboard files with DOM globals
   {
     files: ['relife-campaign-dashboard/**/*.{ts,tsx}'],
-    ignores: ['relife-campaign-dashboard/main.ts'],
+    ignores: [
+      'relife-campaign-dashboard/main.ts',
+      'relife-campaign-dashboard/src/components/ui/**/*.{ts,tsx}',
+    ],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     plugins: {
       react,

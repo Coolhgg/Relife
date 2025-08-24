@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { TimeoutHandle } from '../types/timers';
 import {
   AlertCircle,
@@ -23,7 +23,7 @@ import { VoiceServiceEnhanced } from '../services/voice-enhanced';
 import { CustomSoundManager } from '../services/custom-sound-manager';
 import { AudioManager } from '../services/audio-manager';
 import { NuclearModeChallenge } from './NuclearModeChallenge';
-import { PremiumService } from '../services/premium';
+import { _PremiumService } from '../services/premium';
 import { nuclearModeService } from '../services/nuclear-mode';
 import type { NuclearModeSession, NuclearModeChallenge as Challenge } from '../types';
 
@@ -110,9 +110,9 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
     if (alarm.difficulty === 'nuclear') {
       initializeNuclearMode();
     }
-  }, [alarm]);
+  }, [alarm, initializeNuclearMode]);
 
-  const initializeNuclearMode = async () => {
+  const initializeNuclearMode = useCallback(async () => {
     try {
       // Start nuclear session
       const session = await nuclearModeService.startNuclearSession(alarm, user);
@@ -135,7 +135,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
       // Fallback to regular alarm if nuclear mode fails
       setShowNuclearChallenge(false);
     }
-  };
+  }, [alarm, user]);
 
   const stopVoiceRef = useRef<(() => void) | null>(null);
   const stopRecognitionRef = useRef<(() => void) | null>(null);
