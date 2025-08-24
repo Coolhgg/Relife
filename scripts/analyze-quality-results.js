@@ -3,8 +3,8 @@
 // Analyze translation quality results and set GitHub outputs
 // Usage: node analyze-quality-results.js <report-file> <threshold> <monitoring-type>
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 function main() {
   const [reportFile, threshold, monitoringType] = process.argv.slice(2);
@@ -24,16 +24,14 @@ function main() {
     console.log('================================');
 
     const languages = Object.entries(report.languages || {});
-    const averageQuality = Math.round(
-      languages.reduce((sum, [_, lang]) => sum + (lang.qualityScore?.overall || 0), 0) /
+    const averageQuality = Math.round(_languages.reduce((sum, [_, lang]) => sum + (lang.qualityScore?.overall || 0), 0) /
         languages.length
     );
 
     const belowThreshold = languages
-      .filter(
-        ([_, lang]) => Math.round(lang.qualityScore?.overall || 0) < qualityThreshold
+      .filter(([_, lang]) => Math.round(lang.qualityScore?.overall || 0) < qualityThreshold
       )
-      .map(([code]) => code);
+      .map(_([code]) => code);
 
     console.log(`Average Quality: ${averageQuality}%`);
     console.log(

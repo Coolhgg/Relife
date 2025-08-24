@@ -67,16 +67,13 @@ interface EmailTemplate {
 }
 
 interface TemplateLibraryProps {
-  onSelectTemplate: (template: EmailTemplate) => void;
+  onSelectTemplate: (_template: EmailTemplate) => void;
   onCreateNew: () => void;
   className?: string;
 }
 
-export function TemplateLibrary({
-  onSelectTemplate,
-  onCreateNew,
-  className,
-}: TemplateLibraryProps) {
+export function TemplateLibrary(_{
+  onSelectTemplate, _onCreateNew, _className, }: TemplateLibraryProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedPersona, setSelectedPersona] = useState<string>('all');
@@ -236,7 +233,7 @@ export function TemplateLibrary({
       }
     });
 
-  const getCategoryColor = (category: string) => {
+  const getCategoryColor = (_category: string) => {
     switch (category) {
       case 'welcome':
         return 'bg-green-100 text-green-800';
@@ -255,7 +252,7 @@ export function TemplateLibrary({
     }
   };
 
-  const getPersonaColor = (persona: string) => {
+  const getPersonaColor = (_persona: string) => {
     switch (persona) {
       case 'struggling_sam':
         return 'bg-emerald-100 text-emerald-800';
@@ -337,7 +334,7 @@ export function TemplateLibrary({
                   ))}
                 </SelectContent>
               </Select>
-              <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+              <Select value={sortBy} onValueChange={(_value: any) => setSortBy(value)}>
                 <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>
@@ -485,8 +482,7 @@ export function TemplateLibrary({
                 ))}
               </div>
 
-              {filteredTemplates.length === 0 && (
-                <div className="text-center py-12">
+              {filteredTemplates.length === 0 && (_<div className="text-center py-12">
                   <Mail className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                   <h3 className="font-medium text-gray-900 mb-2">No templates found</h3>
                   <p className="text-gray-500 mb-4">

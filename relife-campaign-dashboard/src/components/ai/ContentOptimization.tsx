@@ -65,7 +65,7 @@ interface ContentOptimizationProps {
   className?: string;
 }
 
-export function ContentOptimization({ className }: ContentOptimizationProps) {
+export function ContentOptimization(_{ className }: ContentOptimizationProps) {
   const [subjectLine, setSubjectLine] = useState(
     'Save 2 hours daily with smarter wake-ups'
   );
@@ -204,13 +204,13 @@ Ready to transform your mornings?`);
     setIsOptimizing(false);
   };
 
-  const getScoreColor = (score: number) => {
+  const getScoreColor = (_score: number) => {
     if (score >= 85) return 'text-green-600 bg-green-100';
     if (score >= 70) return 'text-yellow-600 bg-yellow-100';
     return 'text-red-600 bg-red-100';
   };
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = (_text: string) => {
     navigator.clipboard.writeText(text);
   };
 
@@ -281,7 +281,7 @@ Ready to transform your mornings?`);
                     <Label htmlFor="goal-select">Optimization Goal</Label>
                     <Select
                       value={optimizationGoal}
-                      onValueChange={(value: any) => setOptimizationGoal(value)}
+                      onValueChange={(_value: any) => setOptimizationGoal(value)}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -407,7 +407,7 @@ Ready to transform your mornings?`);
                             <div className="text-sm font-medium text-gray-700">
                               Key Improvements:
                             </div>
-                            {optimizedContent.improvements.map((improvement, index) => (
+                            {optimizedContent.improvements.map(_(improvement, _index) => (
                               <div
                                 key={index}
                                 className="flex items-start gap-2 text-sm"
@@ -474,8 +474,7 @@ Ready to transform your mornings?`);
                 </Button>
               </div>
 
-              {subjectLineVariations.length > 0 ? (
-                <div className="space-y-3">
+              {subjectLineVariations.length > 0 ? (_<div className="space-y-3">
                   {subjectLineVariations.map((variation, _index) => (
                     <Card key={variation.id}>
                       <CardContent className="p-4">
@@ -547,9 +546,8 @@ Ready to transform your mornings?`);
             </TabsContent>
 
             <TabsContent value="history" className="space-y-4">
-              {optimizationHistory.length > 0 ? (
-                <div className="space-y-3">
-                  {optimizationHistory.map((opt, index) => (
+              {optimizationHistory.length > 0 ? (_<div className="space-y-3">
+                  {optimizationHistory.map((opt, _index) => (
                     <Card key={index}>
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">

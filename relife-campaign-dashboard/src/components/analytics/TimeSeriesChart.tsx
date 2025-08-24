@@ -45,35 +45,30 @@ const metricConfig = {
     label: 'Email Opens',
     color: 'rgb(59, 130, 246)',
     backgroundColor: 'rgba(59, 130, 246, 0.1)',
-    format: (value: number) => value.toLocaleString(),
+    format: (_value: number) => value.toLocaleString(),
   },
   clicks: {
     label: 'Email Clicks',
     color: 'rgb(16, 185, 129)',
     backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    format: (value: number) => value.toLocaleString(),
+    format: (_value: number) => value.toLocaleString(),
   },
   conversions: {
     label: 'Conversions',
     color: 'rgb(139, 69, 19)',
     backgroundColor: 'rgba(139, 69, 19, 0.1)',
-    format: (value: number) => value.toLocaleString(),
+    format: (_value: number) => value.toLocaleString(),
   },
   revenue: {
     label: 'Revenue',
     color: 'rgb(217, 119, 6)',
     backgroundColor: 'rgba(217, 119, 6, 0.1)',
-    format: (value: number) => `$${value.toLocaleString()}`,
+    format: (_value: number) => `$${value.toLocaleString()}`,
   },
 };
 
 export function TimeSeriesChart({
-  data,
-  title,
-  metric,
-  timeframe,
-  className,
-}: TimeSeriesChartProps) {
+  data, _title, _metric, _timeframe, _className, }: TimeSeriesChartProps) {
   const config = metricConfig[metric];
 
   const chartData = {
@@ -127,7 +122,7 @@ export function TimeSeriesChart({
         cornerRadius: 8,
         displayColors: false,
         callbacks: {
-          label: function (context: any) {
+          label: function (_context: any) {
             return `${config.label}: ${config.format(context.parsed.y)}`;
           },
         },
@@ -160,7 +155,7 @@ export function TimeSeriesChart({
           font: {
             size: 12,
           },
-          callback: function (value: any) {
+          callback: function (_value: any) {
             return config.format(value);
           },
         },
@@ -208,9 +203,7 @@ export function TimeSeriesChart({
 }
 
 // Generate mock time series data
-export function generateMockTimeSeriesData(
-  timeframe: '7d' | '30d' | '90d' | '1y'
-): TimeSeriesDataPoint[] {
+export function generateMockTimeSeriesData(_timeframe: '7d' | '30d' | '90d' | '1y'): TimeSeriesDataPoint[] {
   const days =
     timeframe === '7d' ? 7 : timeframe === '30d' ? 30 : timeframe === '90d' ? 90 : 365;
   const data: TimeSeriesDataPoint[] = [];

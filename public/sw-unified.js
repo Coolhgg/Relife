@@ -136,7 +136,7 @@ const EMOTIONS = {
 // ==================== ADVANCED CACHE MANAGEMENT ====================
 
 // Cache performance metrics
-function updateCacheStats(hit, cacheSize = 0) {
+function updateCacheStats(_hit, _cacheSize = 0) {
   if (hit) {
     cacheStats.hits++;
   } else {
@@ -149,7 +149,7 @@ function updateCacheStats(hit, cacheSize = 0) {
 }
 
 // Intelligent cache cleanup based on usage and age
-async function performCacheCleanup(cacheName) {
+async function performCacheCleanup(_cacheName) {
   try {
     const cache = await caches.open(cacheName);
     const requests = await cache.keys();
@@ -215,7 +215,7 @@ async function performCacheCleanup(cacheName) {
 }
 
 // Enhanced cache put with access tracking
-async function smartCachePut(cache, request, response) {
+async function smartCachePut(_cache, _request, _response) {
   if (!response || !response.ok) return response;
 
   const clonedResponse = response.clone();
@@ -241,7 +241,7 @@ async function smartCachePut(cache, request, response) {
 }
 
 // Enhanced cache match with access tracking
-async function smartCacheMatch(cache, request) {
+async function smartCacheMatch(_cache, _request) {
   const response = await cache.match(request);
 
   if (response) {
@@ -299,7 +299,7 @@ async function warmCriticalCaches() {
 }
 
 // Conditional caching based on response headers
-function shouldCache(request, response) {
+function shouldCache(_request, _response) {
   // Don't cache if explicitly told not to
   const cacheControl = response.headers.get('cache-control');
   if (cacheControl && cacheControl.includes('no-cache')) {
@@ -394,7 +394,7 @@ self.addEventListener('activate', event => {
 
 // ==================== FETCH EVENT ====================
 self.addEventListener('fetch', event => {
-  const { request } = event;
+  const {_request} = event;
   const url = new URL(request.url);
 
   // Skip non-GET requests and chrome-extension requests
@@ -499,7 +499,7 @@ self.addEventListener('notificationclick', event => {
 
 // ==================== MESSAGE EVENT ====================
 self.addEventListener('message', async event => {
-  const { type, data } = event.data;
+  const {_type, _data} = event.data;
 
   switch (type) {
     case 'SCHEDULE_ALARM':
@@ -556,7 +556,7 @@ self.addEventListener('message', async event => {
 
 // ==================== CACHING STRATEGIES ====================
 
-async function networkFirst(request) {
+async function networkFirst(_request) {
   const cache = await caches.open(CACHES.API);
 
   try {
@@ -596,7 +596,7 @@ async function networkFirst(request) {
   }
 }
 
-async function cacheFirst(request) {
+async function cacheFirst(_request) {
   const cache = await caches.open(CACHES.ASSETS);
   const cachedResponse = await smartCacheMatch(cache, request);
 
@@ -654,7 +654,7 @@ function getRefreshThreshold(contentType) {
   return 6 * 60 * 60 * 1000; // 6 hours for other content
 }
 
-async function staleWhileRevalidate(request) {
+async function staleWhileRevalidate(_request) {
   const cache = await caches.open(CACHES.DYNAMIC);
   const cachedResponse = await smartCacheMatch(cache, request);
 
@@ -702,7 +702,7 @@ async function staleWhileRevalidate(request) {
   }
 }
 
-async function networkWithFallback(request) {
+async function networkWithFallback(_request) {
   try {
     const networkResponse = await fetch(request);
 
@@ -743,7 +743,7 @@ async function networkWithFallback(request) {
 
 // ==================== ANALYTICS HANDLING ====================
 
-async function handleAnalyticsRequest(request) {
+async function handleAnalyticsRequest(_request) {
   try {
     // Try network first
     const response = await fetch(request);
@@ -891,7 +891,7 @@ async function triggerAlarm(alarm) {
   }
 }
 
-function cancelAlarm(alarmId) {
+function cancelAlarm(_alarmId) {
   if (alarmTimeouts.has(alarmId)) {
     clearTimeout(alarmTimeouts.get(alarmId));
     alarmTimeouts.delete(alarmId);
@@ -937,7 +937,7 @@ function determineEmotionalContext(alarm) {
   return 'CALMING';
 }
 
-function getEmotionalMessage(emotionalContext) {
+function getEmotionalMessage(_emotionalContext) {
   const messages = {
     ENCOURAGING: "You've got this! Time to conquer your day! 💪",
     GENTLE: 'Good morning, beautiful soul. Rise gently and shine. 🌸',
@@ -953,7 +953,7 @@ function getEmotionalMessage(emotionalContext) {
 
 // ==================== PUSH NOTIFICATION HANDLING ====================
 
-async function handlePushNotification(data, type) {
+async function handlePushNotification(data, _type) {
   let notificationOptions;
 
   switch (type) {
@@ -1054,7 +1054,7 @@ async function handlePushNotification(data, type) {
 
 // ==================== NOTIFICATION CLICK HANDLING ====================
 
-async function handleNotificationClick(action, data) {
+async function handleNotificationClick(_action, data) {
   const clients = await self.clients.matchAll({ type: 'window' });
 
   switch (action) {
@@ -1139,7 +1139,7 @@ const syncState = {
 };
 
 // Enhanced data sync with conflict resolution
-async function performDataSync(dataType, options = {}) {
+async function performDataSync(dataType, _options = {}) {
   const startTime = Date.now();
   const syncId = `sync_${dataType}_${startTime}`;
 
@@ -1245,7 +1245,7 @@ async function getLocalDataForSync(dataType) {
 }
 
 // Enhanced batch sync with retry mechanism
-async function syncBatch(dataType, batch, options = {}) {
+async function syncBatch(dataType, batch, _options = {}) {
   const results = { success: 0, failed: 0, conflicts: 0, conflictDetails: [] };
 
   for (const item of batch) {
@@ -1289,7 +1289,7 @@ async function syncBatch(dataType, batch, options = {}) {
 }
 
 // Sync individual item with conflict detection
-async function syncSingleItem(dataType, item, options = {}) {
+async function syncSingleItem(dataType, _item, _options = {}) {
   // Simulate API call to sync individual item
   console.log(`📤 Syncing ${dataType} item:`, item.id);
 
@@ -1315,7 +1315,7 @@ async function syncSingleItem(dataType, item, options = {}) {
 }
 
 // Simulate API sync response (replace with real API calls)
-async function simulateApiSync(dataType, item) {
+async function simulateApiSync(dataType, _item) {
   // Simulate network delay
   await new Promise(resolve => setTimeout(resolve, 50 + Math.random() * 200));
 
@@ -1341,7 +1341,7 @@ async function simulateApiSync(dataType, item) {
 }
 
 // Handle sync conflicts with configurable resolution strategies
-async function handleSyncConflicts(dataType, conflicts) {
+async function handleSyncConflicts(dataType, _conflicts) {
   console.log(`⚠️ Handling ${conflicts.length} conflicts for ${dataType}`);
 
   for (const conflict of conflicts) {
@@ -1391,7 +1391,7 @@ async function handleSyncConflicts(dataType, conflicts) {
 }
 
 // Intelligent data merging for conflicts
-async function mergeConflictData(localData, serverData) {
+async function mergeConflictData(localData, _serverData) {
   const merged = { ...localData };
 
   // Merge based on timestamps - newer wins for most fields
@@ -1523,7 +1523,7 @@ async function syncEmotionalData() {
 
 // IndexedDB helpers for sync operations
 async function openIndexedDB() {
-  return new Promise((resolve, reject) => {
+  return new Promise(_(resolve, _reject) => {
     const request = indexedDB.open('RelifeOfflineDB', 1);
 
     request.onerror = () => reject(request.error);
@@ -1553,8 +1553,8 @@ async function openIndexedDB() {
 }
 
 // Get unsynced records from IndexedDB
-async function getUnsyncedRecords(db, storeName) {
-  return new Promise((resolve, reject) => {
+async function getUnsyncedRecords(db, _storeName) {
+  return new Promise(_(resolve, _reject) => {
     const transaction = db.transaction([storeName], 'readonly');
     const store = transaction.objectStore(storeName);
     const index = store.index('synced');
@@ -1566,7 +1566,7 @@ async function getUnsyncedRecords(db, storeName) {
 }
 
 // Mark item as synced in local storage
-async function markItemAsSynced(dataType, itemId) {
+async function markItemAsSynced(dataType, _itemId) {
   try {
     const db = await openIndexedDB();
     const transaction = db.transaction([getStoreName(dataType)], 'readwrite');
@@ -1587,7 +1587,7 @@ async function markItemAsSynced(dataType, itemId) {
 }
 
 // Update local data after conflict resolution
-async function updateLocalData(dataType, itemId, newData) {
+async function updateLocalData(dataType, _itemId, _newData) {
   try {
     const db = await openIndexedDB();
     const transaction = db.transaction([getStoreName(dataType)], 'readwrite');
@@ -1697,7 +1697,7 @@ async function simulateEmotionalDataUpload(_event) {
 }
 
 // Notify main thread of sync results
-async function notifyMainThread(syncType, results) {
+async function notifyMainThread(syncType, _results) {
   const clients = await self.clients.matchAll();
   const message = {
     type: 'SYNC_COMPLETE',
@@ -1786,7 +1786,7 @@ function getNextAlarmTime(alarm) {
   return null;
 }
 
-function createOfflineResponse(request) {
+function createOfflineResponse(_request) {
   const url = new URL(request.url);
 
   if (url.pathname.includes('/api/')) {
@@ -1850,13 +1850,13 @@ async function initializeAdvancedFeatures() {
   isOnline = navigator.onLine;
 
   // Set up network listeners
-  addEventListener('online', () => {
+  addEventListener(_'online', () => {
     isOnline = true;
     notifyClients('NETWORK_STATUS', { isOnline: true });
     processOfflineQueues();
   });
 
-  addEventListener('offline', () => {
+  addEventListener(_'offline', () => {
     isOnline = false;
     notifyClients('NETWORK_STATUS', { isOnline: false });
   });
@@ -1877,7 +1877,7 @@ async function processOfflineQueues() {
   }
 }
 
-async function notifyClients(type, data) {
+async function notifyClients(_type, data) {
   const clients = await self.clients.matchAll();
   clients.forEach(client => {
     client.postMessage({ type, data });
@@ -1885,7 +1885,7 @@ async function notifyClients(type, data) {
 }
 
 // Stub implementations for additional features
-async function storeScheduledAlarm(alarm, nextTime) {
+async function storeScheduledAlarm(alarm, _nextTime) {
   /* Implementation */
 }
 async function performCompleteSync() {

@@ -114,7 +114,7 @@ function generateAuthData() {
 /**
  * Generate realistic alarm data
  */
-function generateAlarmData(userId) {
+function generateAlarmData(_userId) {
   const hours = randomIntBetween(5, 23);
   const minutes = randomIntBetween(0, 59);
 

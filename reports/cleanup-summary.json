@@ -1,0 +1,319 @@
+{
+  "timestamp": "2025-08-24T22:51:46.548Z",
+  "config": {
+    "dryRun": false,
+    "backupFiles": true,
+    "maxFilesPerRun": 100,
+    "cleanupTypes": {
+      "unusedImports": true,
+      "unusedVariables": true,
+      "emptyImportLines": true,
+      "duplicateImports": true
+    },
+    "preservePatterns": [
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "preserveVariables": [
+      {},
+      {},
+      {},
+      {}
+    ]
+  },
+  "statistics": {
+    "filesProcessed": 70,
+    "importsRemoved": 4,
+    "variablesFixed": 799,
+    "linesRemoved": 4,
+    "backupsCreated": 70,
+    "errors": 0,
+    "skipped": 0
+  },
+  "processedFiles": 70,
+  "files": [
+    {
+      "path": "auto-fix-unused.js",
+      "changes": 5
+    },
+    {
+      "path": "email-campaigns/automation-config.js",
+      "changes": 7
+    },
+    {
+      "path": "email-campaigns/quick-setup.js",
+      "changes": 12
+    },
+    {
+      "path": "performance/k6/critical-endpoints-stress-test.js",
+      "changes": 1
+    },
+    {
+      "path": "public/sw-unified.js",
+      "changes": 43
+    },
+    {
+      "path": "relife-campaign-dashboard/src/App.tsx",
+      "changes": 6
+    },
+    {
+      "path": "relife-campaign-dashboard/src/backend/api.ts",
+      "changes": 1
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ai/ContentOptimization.tsx",
+      "changes": 9
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ai/PersonaPrediction.tsx",
+      "changes": 15
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/analytics/ABTesting.tsx",
+      "changes": 7
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/analytics/CohortAnalysis.tsx",
+      "changes": 9
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx",
+      "changes": 11
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/analytics/timeSeriesUtils.ts",
+      "changes": 1
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "changes": 18
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/email-designer/EmailPreview.tsx",
+      "changes": 13
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/email-designer/TemplateLibrary.tsx",
+      "changes": 8
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/accordion.tsx",
+      "changes": 9
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/alert-dialog.tsx",
+      "changes": 19
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/alert.tsx",
+      "changes": 7
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/aspect-ratio.tsx",
+      "changes": 1
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/avatar.tsx",
+      "changes": 6
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/badge.tsx",
+      "changes": 5
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/breadcrumb.tsx",
+      "changes": 16
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/button.tsx",
+      "changes": 6
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/calendar.tsx",
+      "changes": 8
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/card.tsx",
+      "changes": 14
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/carousel.tsx",
+      "changes": 30
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/chart.tsx",
+      "changes": 34
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/checkbox.tsx",
+      "changes": 2
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/collapsible.tsx",
+      "changes": 3
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/command.tsx",
+      "changes": 19
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/context-menu.tsx",
+      "changes": 32
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/dialog.tsx",
+      "changes": 17
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/drawer.tsx",
+      "changes": 17
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/dropdown-menu.tsx",
+      "changes": 33
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/form.tsx",
+      "changes": 21
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/hover-card.tsx",
+      "changes": 6
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/input-otp.tsx",
+      "changes": 12
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/input.tsx",
+      "changes": 3
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/label.tsx",
+      "changes": 2
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/menubar.tsx",
+      "changes": 38
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/navigation-menu.tsx",
+      "changes": 19
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/pagination.tsx",
+      "changes": 15
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/popover.tsx",
+      "changes": 7
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/progress.tsx",
+      "changes": 3
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/radio-group.tsx",
+      "changes": 4
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/resizable.tsx",
+      "changes": 6
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/scroll-area.tsx",
+      "changes": 6
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/select.tsx",
+      "changes": 22
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/separator.tsx",
+      "changes": 4
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/sheet.tsx",
+      "changes": 18
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/sidebar.tsx",
+      "changes": 81
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/skeleton.tsx",
+      "changes": 2
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/slider.tsx",
+      "changes": 7
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/sonner.tsx",
+      "changes": 1
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/switch.tsx",
+      "changes": 2
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/table.tsx",
+      "changes": 16
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/tabs.tsx",
+      "changes": 8
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/textarea.tsx",
+      "changes": 2
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/toggle-group.tsx",
+      "changes": 10
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/toggle.tsx",
+      "changes": 4
+    },
+    {
+      "path": "relife-campaign-dashboard/src/components/ui/tooltip.tsx",
+      "changes": 8
+    },
+    {
+      "path": "relife-campaign-dashboard/src/lib/hooks/use-form-field.ts",
+      "changes": 1
+    },
+    {
+      "path": "relife-campaign-dashboard/src/lib/hooks/use-sidebar.tsx",
+      "changes": 11
+    },
+    {
+      "path": "relife-campaign-dashboard/src/lib/utils.ts",
+      "changes": 1
+    },
+    {
+      "path": "relife-campaign-dashboard/src/services/mailchimp.ts",
+      "changes": 2
+    },
+    {
+      "path": "scripts/analyze-quality-results.js",
+      "changes": 2
+    },
+    {
+      "path": "scripts/analyze-translation-health.js",
+      "changes": 4
+    },
+    {
+      "path": "scripts/bundle-size-monitor.js",
+      "changes": 2
+    },
+    {
+      "path": "scripts/enhanced-commit-validator.js",
+      "changes": 9
+    }
+  ]
+}

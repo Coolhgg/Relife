@@ -14,9 +14,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-function Command({
-  className,
-  ...props
+function Command(_{
+  className, _...props
 }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
     <CommandPrimitive
@@ -30,11 +29,8 @@ function Command({
   );
 }
 
-function CommandDialog({
-  title = 'Command Palette',
-  description = 'Search for a command to run...',
-  children,
-  ...props
+function CommandDialog(_{
+  title = 'Command Palette', _description = 'Search for a command to run...', _children, _...props
 }: React.ComponentProps<typeof Dialog> & {
   title?: string;
   description?: string;
@@ -54,9 +50,8 @@ function CommandDialog({
   );
 }
 
-function CommandInput({
-  className,
-  ...props
+function CommandInput(_{
+  className, _...props
 }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
     <div
@@ -76,9 +71,8 @@ function CommandInput({
   );
 }
 
-function CommandList({
-  className,
-  ...props
+function CommandList(_{
+  className, _...props
 }: React.ComponentProps<typeof CommandPrimitive.List>) {
   return (
     <CommandPrimitive.List
@@ -92,7 +86,7 @@ function CommandList({
   );
 }
 
-function CommandEmpty({
+function CommandEmpty(_{
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Empty>) {
   return (
@@ -104,9 +98,8 @@ function CommandEmpty({
   );
 }
 
-function CommandGroup({
-  className,
-  ...props
+function CommandGroup(_{
+  className, _...props
 }: React.ComponentProps<typeof CommandPrimitive.Group>) {
   return (
     <CommandPrimitive.Group
@@ -120,9 +113,8 @@ function CommandGroup({
   );
 }
 
-function CommandSeparator({
-  className,
-  ...props
+function CommandSeparator(_{
+  className, _...props
 }: React.ComponentProps<typeof CommandPrimitive.Separator>) {
   return (
     <CommandPrimitive.Separator
@@ -133,9 +125,8 @@ function CommandSeparator({
   );
 }
 
-function CommandItem({
-  className,
-  ...props
+function CommandItem(_{
+  className, _...props
 }: React.ComponentProps<typeof CommandPrimitive.Item>) {
   return (
     <CommandPrimitive.Item
@@ -149,7 +140,7 @@ function CommandItem({
   );
 }
 
-function CommandShortcut({ className, ...props }: React.ComponentProps<'span'>) {
+function CommandShortcut(_{ className, _...props }: React.ComponentProps<'span'>) {
   return (
     <span
       data-slot="command-shortcut"

@@ -71,7 +71,7 @@ interface ABTestingProps {
   className?: string;
 }
 
-export function ABTesting({ className }: ABTestingProps) {
+export function ABTesting(_{ className }: ABTestingProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'create' | 'results'>(
     'overview'
   );
@@ -208,7 +208,7 @@ export function ABTesting({ className }: ABTestingProps) {
     }
   };
 
-  const getWinnerIndicator = (test: ABTest, variantIndex: number) => {
+  const getWinnerIndicator = (_test: ABTest, _variantIndex: number) => {
     if (!test.winner || test.status !== 'completed') return null;
     if (test.variants[variantIndex].name === test.winner) {
       return <Badge className="ml-2 bg-green-500 text-white">Winner</Badge>;
@@ -216,8 +216,7 @@ export function ABTesting({ className }: ABTestingProps) {
     return null;
   };
 
-  return (
-    <Card className={className}>
+  return (_<Card className={className}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -354,7 +353,7 @@ export function ABTesting({ className }: ABTestingProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <Tabs value={activeTab} onValueChange={(value: any) => setActiveTab(value)}>
+        <Tabs value={activeTab} onValueChange={(_value: any) => setActiveTab(value)}>
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="results">Results</TabsTrigger>
@@ -415,7 +414,7 @@ export function ABTesting({ className }: ABTestingProps) {
 
                   {/* Variants Comparison */}
                   <div className="grid grid-cols-2 gap-4">
-                    {test.variants.map((variant, index) => (
+                    {test.variants.map(_(variant, _index) => (
                       <div key={index} className="p-3 bg-gray-50 rounded">
                         <div className="flex items-center justify-between mb-2">
                           <h5 className="font-medium">{variant.name}</h5>
