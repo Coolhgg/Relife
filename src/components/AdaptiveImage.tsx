@@ -52,6 +52,25 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
     // Determine optimal image quality
     const finalQuality = quality === 'auto' ? imageQuality : quality;
 
+    // WebP support detection (cached)
+    const supportsWebP = useCallback((): boolean => {
+      if (typeof window === 'undefined') return false;
+
+      // Check cached result
+      const cached = sessionStorage.getItem('webp-support');
+      if (cached !== null) return cached === 'true';
+
+      // Test WebP support
+      const canvas = document.createElement('canvas');
+      canvas.width = 1;
+      canvas.height = 1;
+      const supported = canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+
+      // Cache result
+      sessionStorage.setItem('webp-support', supported.toString());
+      return supported;
+    }, []);
+
     // Generate image variants based on device capabilities
     const generateImageVariants = useCallback(
       (originalSrc: string): ImageVariant[] => {
@@ -128,25 +147,6 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
       },
       [finalQuality, src, supportsWebP]
     );
-
-    // WebP support detection (cached)
-    const supportsWebP = useCallback((): boolean => {
-      if (typeof window === 'undefined') return false;
-
-      // Check cached result
-      const cached = sessionStorage.getItem('webp-support');
-      if (cached !== null) return cached === 'true';
-
-      // Test WebP support
-      const canvas = document.createElement('canvas');
-      canvas.width = 1;
-      canvas.height = 1;
-      const supported = canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
-
-      // Cache result
-      sessionStorage.setItem('webp-support', supported.toString());
-      return supported;
-    }, []);
 
     // Intersection observer for lazy loading
     useEffect(() => {

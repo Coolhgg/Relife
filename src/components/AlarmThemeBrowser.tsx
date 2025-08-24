@@ -28,19 +28,19 @@ import {
   Eye,
   Clock,
   Cloud,
-  Zap,
+  _Zap,
   Volume2,
   Mic,
   Shuffle,
   TrendingUp,
-  Settings,
-  Download,
-  Upload,
+  _Settings,
+  _Download,
+  _Upload,
   Plus,
-  X,
+  _X,
   ChevronDown,
   Sun,
-  Moon,
+  _Moon,
   CloudRain,
   Snowflake,
   Wind,
@@ -55,6 +55,24 @@ interface AlarmThemeBrowserProps {
 
 type ViewMode = 'grid' | 'list' | 'collections';
 type SortMode = 'popularity' | 'recent' | 'alphabetical' | 'rating' | 'category';
+
+// Helper function for weather icons (used by both main component and ThemeCard)
+const getWeatherIcon = (weather: WeatherCondition) => {
+  switch (weather) {
+    case 'sunny':
+      return <Sun className="w-4 h-4" />;
+    case 'cloudy':
+      return <Cloud className="w-4 h-4" />;
+    case 'rainy':
+      return <CloudRain className="w-4 h-4" />;
+    case 'snowy':
+      return <Snowflake className="w-4 h-4" />;
+    case 'windy':
+      return <Wind className="w-4 h-4" />;
+    default:
+      return <Cloud className="w-4 h-4" />;
+  }
+};
 
 export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
   selectedTheme,
@@ -212,24 +230,8 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
   };
 
   // Helper functions
-  const getWeatherIcon = (weather: WeatherCondition) => {
-    switch (weather) {
-      case 'sunny':
-        return <Sun className="w-4 h-4" />;
-      case 'cloudy':
-        return <Cloud className="w-4 h-4" />;
-      case 'rainy':
-        return <CloudRain className="w-4 h-4" />;
-      case 'snowy':
-        return <Snowflake className="w-4 h-4" />;
-      case 'windy':
-        return <Wind className="w-4 h-4" />;
-      default:
-        return <Cloud className="w-4 h-4" />;
-    }
-  };
 
-  const getIntensityColor = (intensity: AlarmIntensity) => {
+  const _getIntensityColor = (intensity: AlarmIntensity) => {
     switch (intensity) {
       case 'gentle':
         return 'text-green-600 bg-green-100';
@@ -242,7 +244,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
     }
   };
 
-  const getMoodEmoji = (mood: ThemeMood) => {
+  const _getMoodEmoji = (mood: ThemeMood) => {
     switch (mood) {
       case 'peaceful':
         return '😌';

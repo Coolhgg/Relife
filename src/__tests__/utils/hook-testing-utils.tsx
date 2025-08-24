@@ -3,7 +3,7 @@
  * Provides renderHook wrapper with proper providers and mocking for comprehensive hook testing
  */
 
-import React, { ReactElement, ReactNode } from 'react';
+import React, { _ReactElement, ReactNode } from 'react';
 import {
   renderHook,
   RenderHookOptions,
@@ -65,7 +65,7 @@ export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
   theme = 'light',
   language = 'en',
   user = null,
-  initialEntries = ['/'],
+  _initialEntries = ['/'],
 }) => {
   const defaultQueryClient = new QueryClient({
     defaultOptions: {
@@ -189,7 +189,7 @@ export function renderHookWithProviders<TResult, TProps>(
 /**
  * Wait for hook to finish async operations
  */
-export const waitForHook = async (callback: () => void, timeout: number = 1000) => {
+export const waitForHook = async (callback: () => void, _timeout: number = 1000) => {
   await act(async () => {
     callback();
     // Allow time for async operations
@@ -255,7 +255,7 @@ export const mockSessionStorage = (() => {
  */
 export const mockGeolocation = {
   getCurrentPosition: vi.fn(
-    (success: PositionCallback, error?: PositionErrorCallback) => {
+    (success: PositionCallback, _error?: PositionErrorCallback) => {
       success({
         coords: {
           latitude: 40.7128,
@@ -268,6 +268,7 @@ export const mockGeolocation = {
           toJSON: () => ({}),
         },
         timestamp: Date.now(),
+        toJSON: () => ({}),
       });
     }
   ),

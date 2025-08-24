@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 import React, { useState, useEffect, useRef } from 'react';
-import { useMobileTouch } from '../hooks/useMobileTouch';
+import { useMobileBehavior, useHaptic } from '../hooks/useMobileTouch';
 import { usePWA } from '../hooks/usePWA';
 import { useCapacitor } from '../hooks/useCapacitor';
 import { useMobilePerformance } from '../hooks/useMobilePerformance';
@@ -27,9 +27,16 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
   const touchTestRef = useRef<HTMLButtonElement>(null);
 
   // Hook integrations
-  const { gestures, enableHaptic } = useMobileTouch();
-  const { isInstallable, isInstalled, isOnline, updateAvailable, canInstall, install } =
-    usePWA();
+  const { _isTouchDevice, _triggerHaptic } = useMobileBehavior();
+  const enableHaptic = useHaptic();
+  const {
+    isInstallable,
+    isInstalled,
+    isOnline,
+    updateAvailable,
+    canInstall,
+    _install,
+  } = usePWA();
   const {
     isCapacitorAvailable,
     deviceInfo,
@@ -218,7 +225,7 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
       try {
         await hapticImpact('light');
         updateTestResult('Haptic Feedback', 'pass', 'Haptic feedback works');
-      } catch (error) {
+      } catch (_error) {
         updateTestResult('Haptic Feedback', 'warning', 'Haptic feedback not available');
       }
 
@@ -243,7 +250,7 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
           'pass',
           'Notification scheduled successfully'
         );
-      } catch (error) {
+      } catch (_error) {
         updateTestResult(
           'Push Notifications',
           'warning',
@@ -330,13 +337,9 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
 
     // Test haptic feedback
     try {
-      if (enableHaptic) {
-        await enableHaptic('medium');
-        updateTestResult('Touch Haptics', 'pass', 'Haptic feedback available');
-      } else {
-        updateTestResult('Touch Haptics', 'warning', 'Haptic feedback not available');
-      }
-    } catch (error) {
+      enableHaptic('medium');
+      updateTestResult('Touch Haptics', 'pass', 'Haptic feedback available');
+    } catch (_error) {
       updateTestResult('Touch Haptics', 'warning', 'Haptic feedback failed');
     }
   };
@@ -392,7 +395,7 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
             'pass',
             'Notification sent successfully'
           );
-        } catch (error) {
+        } catch (_error) {
           updateTestResult(
             'Notification Display',
             'warning',
@@ -444,7 +447,7 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
           `Level: ${Math.round(battery.level * 100)}%, Charging: ${battery.charging ? 'Yes' : 'No'}`,
           `Charging time: ${battery.chargingTime === Infinity ? 'N/A' : battery.chargingTime + 's'}`
         );
-      } catch (error) {
+      } catch (_error) {
         updateTestResult('Battery API', 'warning', 'Battery API access failed');
       }
     } else {
