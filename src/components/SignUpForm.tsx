@@ -15,10 +15,8 @@ import { validateEmail, validatePassword } from '../utils/validation';
 import SecurityService from '../services/security';
 
 interface SignUpFormProps {
-  onSignUp: (email: string, password: string, name: string
-) => Promise<void>;
-  onSwitchToLogin: (
-) => void;
+  onSignUp: (email: string, password: string, name: string) => Promise<void>;
+  onSwitchToLogin: () => void;
   isLoading: boolean;
   error: string | null;
 }
@@ -82,8 +80,7 @@ export default function SignUpForm({
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent
-) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -93,11 +90,8 @@ export default function SignUpForm({
     await onSignUp(formData.email, formData.password, formData.name);
   };
 
-  const handleInputChange = (field: keyof typeof formData, value: string
-) => {
-    
-    setFormData((prev: any
-) => ({ ...prev, [field]: value }));
+  const handleInputChange = (field: keyof typeof formData, value: string) => {
+    setFormData((prev: any) => ({ ...prev, [field]: value }));
 
     // Check password strength in real-time
     if (field === 'password') {
@@ -106,14 +100,11 @@ export default function SignUpForm({
 
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
-      
-      setValidationErrors((prev: any
-) => ({ ...prev, [field]: undefined }));
+      setValidationErrors((prev: any) => ({ ...prev, [field]: undefined }));
     }
   };
 
-  const getPasswordStrengthDisplay = (
-) => {
+  const getPasswordStrengthDisplay = () => {
     if (!passwordStrength || !formData.password) {
       return { strength: 0, label: '', color: '', width: '0%' };
     }
@@ -184,9 +175,7 @@ export default function SignUpForm({
               id="name"
               type="text"
               value={formData.name}
-              
-              onChange={(e: any
-) => handleInputChange('name', e.target.value))
+              onChange={(e: any) => handleInputChange('name', e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.name
                   ? 'border-red-500'
@@ -227,9 +216,7 @@ export default function SignUpForm({
               id="email"
               type="email"
               value={formData.email}
-              
-              onChange={(e: any
-) => handleInputChange('email', e.target.value))
+              onChange={(e: any) => handleInputChange('email', e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.email
                   ? 'border-red-500'
@@ -270,9 +257,7 @@ export default function SignUpForm({
               id="password"
               type={showPassword ? 'text' : 'password'}
               value={formData.password}
-              
-              onChange={(e: any
-) => handleInputChange('password', e.target.value))
+              onChange={(e: any) => handleInputChange('password', e.target.value)}
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.password
                   ? 'border-red-500'
@@ -288,8 +273,7 @@ export default function SignUpForm({
             />
             <button
               type="button"
-              onClick={(
-) => setShowPassword(!showPassword)}
+              onClick={() => setShowPassword(!showPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
@@ -345,8 +329,7 @@ export default function SignUpForm({
                     <ul className="list-disc list-inside space-y-1">
                       {passwordStrength.feedback.suggestions
                         .slice(0, 2)
-                        .map((suggestion, index
-) => (
+                        .map((suggestion, index) => (
                           <li key={index}>{suggestion}</li>
                         ))}
                     </ul>
@@ -383,8 +366,9 @@ export default function SignUpForm({
               id="confirmPassword"
               type={showConfirmPassword ? 'text' : 'password'}
               value={formData.confirmPassword}
-              onChange={(e: any
-) => handleInputChange('confirmPassword', e.target.value)}
+              onChange={(e: any) =>
+                handleInputChange('confirmPassword', e.target.value)
+              }
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.confirmPassword
                   ? 'border-red-500'
@@ -400,8 +384,7 @@ export default function SignUpForm({
             />
             <button
               type="button"
-              onClick={(
-) => setShowConfirmPassword(!showConfirmPassword)}
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               aria-label={
                 showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'
