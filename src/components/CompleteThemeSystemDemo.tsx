@@ -85,14 +85,14 @@ export const CustomThemeCreator: React.FC = (
                 type="text"
                 placeholder="Theme name (e.g., 'My Perfect Morning')"
                 value={customTheme.name}
-                onChange={(e: any
+                onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => setCustomTheme({ ...customTheme, name: e.target.value })}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
               <textarea
                 placeholder="Describe your ideal wake-up experience..."
                 value={customTheme.description}
-                onChange={(e: any
+                onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => 
                   setCustomTheme({ ...customTheme, description: e.target.value })
                 }
@@ -148,7 +148,7 @@ export const CustomThemeCreator: React.FC = (
                         name="sound"
                         value={theme.id}
                         checked={customTheme.sound === theme.id}
-                        onChange={(e: any
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => 
                           setCustomTheme({
                             ...customTheme,
@@ -185,7 +185,7 @@ export const CustomThemeCreator: React.FC = (
                         name="voice"
                         value={voice}
                         checked={customTheme.voice === voice}
-                        onChange={(e: any
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => 
                           setCustomTheme({
                             ...customTheme,
@@ -216,7 +216,7 @@ export const CustomThemeCreator: React.FC = (
                 <input
                   type="text"
                   placeholder="morning, energetic, workout, peaceful"
-                  onChange={(e: any
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => 
                     setCustomTheme({
                       ...customTheme,
@@ -248,7 +248,7 @@ export const CustomThemeCreator: React.FC = (
                       <input
                         type="checkbox"
                         value={time}
-                        onChange={(e: any
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => { // auto: implicit any
                           if (e.target.checked) {
                             setCustomTheme({
@@ -381,7 +381,7 @@ export const SmartThemesDemo: React.FC = (
                 <input
                   type="time"
                   value={testTime}
-                  onChange={(e: any
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => setTestTime(e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
@@ -391,7 +391,7 @@ export const SmartThemesDemo: React.FC = (
                 <input
                   type="date"
                   value={testDate.toISOString().split('T')[0]}
-                  onChange={(e: any
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => setTestDate(new Date(e.target.value))}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
@@ -718,7 +718,7 @@ export const AudioSetupDemo: React.FC = (
               min="0"
               max="100"
               defaultValue="70"
-              onChange={(e: any
+              onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => 
                 soundEffectsService.setVolume('master', parseInt(e.target.value) / 100)
               }
@@ -732,7 +732,7 @@ export const AudioSetupDemo: React.FC = (
               min="0"
               max="100"
               defaultValue="50"
-              onChange={(e: any
+              onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => 
                 soundEffectsService.setVolume('ui', parseInt(e.target.value) / 100)
               }
@@ -746,7 +746,7 @@ export const AudioSetupDemo: React.FC = (
               min="0"
               max="100"
               defaultValue="100"
-              onChange={(e: any
+              onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => 
                 soundEffectsService.setVolume('alarm', parseInt(e.target.value) / 100)
               }
@@ -760,7 +760,7 @@ export const AudioSetupDemo: React.FC = (
               min="0"
               max="100"
               defaultValue="60"
-              onChange={(e: any
+              onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => 
                 soundEffectsService.setVolume('ambient', parseInt(e.target.value) / 100)
               }

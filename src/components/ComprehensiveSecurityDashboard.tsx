@@ -286,7 +286,7 @@ const ComprehensiveSecurityDashboard: React.FC = (
                   type="checkbox"
                   checked={autoRefresh}
                   
-                  onChange={(e: any
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => setAutoRefresh(e.target.checked)}
                   className="alarm-toggle rounded border-white/30 text-primary-500 focus:ring-primary-300 bg-white/10"
                   aria-describedby="auto-refresh-desc"

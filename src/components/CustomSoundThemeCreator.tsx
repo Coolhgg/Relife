@@ -647,7 +647,7 @@ const InfoStep: React.FC<{
       <Input
         id="theme-name"
         value={theme.name || ''}
-        onChange={(e: any
+        onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => onUpdate('name', e.target.value)}
         placeholder="My Awesome Theme"
       />
@@ -658,7 +658,7 @@ const InfoStep: React.FC<{
       <Input
         id="theme-display-name"
         value={theme.displayName || ''}
-        onChange={(e: any
+        onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => onUpdate('displayName', e.target.value)}
         placeholder="My Awesome Theme (optional)"
       />
@@ -689,7 +689,7 @@ const InfoStep: React.FC<{
       <Textarea
         id="theme-description"
         value={theme.description || ''}
-        onChange={(e: any
+        onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => onUpdate('description', e.target.value)}
         placeholder="Describe your theme..."
         rows={4}
@@ -820,7 +820,7 @@ const MetadataStep: React.FC<{
       <Input
         id="theme-tags"
         value={theme.tags?.join(', ') || ''}
-        onChange={(e: any
+        onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => 
           onUpdate(
             'tags',

@@ -70,7 +70,7 @@ function useAuth(): AuthHook {
         const csrfToken = SecurityService.generateCSRFToken();
 
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
           ...prev,
           user,
@@ -96,7 +96,7 @@ function useAuth(): AuthHook {
           { context: 'auth_initialization' }
         );
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
           ...prev,
           isInitialized: true,
@@ -119,7 +119,7 @@ function useAuth(): AuthHook {
         const csrfToken = SecurityService.generateCSRFToken();
 
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
           ...prev,
           user: userProfile,
@@ -138,7 +138,7 @@ function useAuth(): AuthHook {
       } else if (event === 'SIGNED_OUT') {
         stopSessionManagement();
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
           ...prev,
           user: null,
@@ -240,7 +240,7 @@ function useAuth(): AuthHook {
 
       if (data.session) {
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
           ...prev,
           sessionExpiry: new Date(Date.now() + SESSION_TIMEOUT_MS),
@@ -290,7 +290,7 @@ function useAuth(): AuthHook {
     // Rate limiting check
     if (!SecurityService.checkRateLimit('sign_in', 5, RATE_LIMIT_WINDOW_MS)) {
       
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
         ...prev,
         error: 'Too many sign-in attempts. Please try again in 15 minutes.',
@@ -300,7 +300,7 @@ function useAuth(): AuthHook {
     }
 
     
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
       ...prev,
       isLoading: true,
@@ -317,7 +317,7 @@ function useAuth(): AuthHook {
 
       if (error) {
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({ ...prev, isLoading: false, error }));
         analytics.trackError(new Error(error), 'sign_in_failed');
         return;
@@ -325,7 +325,7 @@ function useAuth(): AuthHook {
 
       if (user) {
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
           ...prev,
           user,
@@ -340,7 +340,7 @@ function useAuth(): AuthHook {
         });
       } else {
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
           ...prev,
           isLoading: false,
@@ -361,7 +361,7 @@ function useAuth(): AuthHook {
       );
 
       
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
         ...prev,
         isLoading: false,
@@ -378,7 +378,7 @@ function useAuth(): AuthHook {
     // Rate limiting check
     if (!SecurityService.checkRateLimit('sign_up', 3, RATE_LIMIT_WINDOW_MS)) {
       
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
         ...prev,
         error: 'Too many sign-up attempts. Please try again in 15 minutes.',
@@ -388,7 +388,7 @@ function useAuth(): AuthHook {
     }
 
     
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
       ...prev,
       isLoading: true,
@@ -405,7 +405,7 @@ function useAuth(): AuthHook {
 
       if (error) {
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({ ...prev, isLoading: false, error }));
         analytics.trackError(new Error(error), 'sign_up_failed');
         return;
@@ -413,7 +413,7 @@ function useAuth(): AuthHook {
 
       if (user) {
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
           ...prev,
           user,
@@ -428,7 +428,7 @@ function useAuth(): AuthHook {
         });
       } else {
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
           ...prev,
           isLoading: false,
@@ -449,7 +449,7 @@ function useAuth(): AuthHook {
       );
 
       
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
         ...prev,
         isLoading: false,
@@ -460,7 +460,7 @@ function useAuth(): AuthHook {
 
   const signOut = async (): Promise<void> => {
     
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({ ...prev, isLoading: true, error: null }));
 
     try {
@@ -471,13 +471,13 @@ function useAuth(): AuthHook {
 
       if (error) {
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({ ...prev, isLoading: false, error }));
         return;
       }
 
       
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
         ...prev,
         user: null,
@@ -500,7 +500,7 @@ function useAuth(): AuthHook {
       );
 
       
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
         ...prev,
         isLoading: false,
@@ -513,7 +513,7 @@ function useAuth(): AuthHook {
     // Rate limiting check
     if (!SecurityService.checkRateLimit('password_reset', 3, RATE_LIMIT_WINDOW_MS)) {
       
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
         ...prev,
         error: 'Too many password reset attempts. Please try again in 15 minutes.',
@@ -523,7 +523,7 @@ function useAuth(): AuthHook {
     }
 
     
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
       ...prev,
       isLoading: true,
@@ -541,14 +541,14 @@ function useAuth(): AuthHook {
 
       if (error) {
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({ ...prev, isLoading: false, error: error.message }));
         analytics.trackError(new Error(error.message), 'password_reset_failed');
         return;
       }
 
       
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
         ...prev,
         isLoading: false,
@@ -571,7 +571,7 @@ function useAuth(): AuthHook {
       );
 
       
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
         ...prev,
         isLoading: false,
@@ -582,7 +582,7 @@ function useAuth(): AuthHook {
 
   const clearError = (): void => {
     
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({ ...prev, error: null, forgotPasswordSuccess: false }));
   };
 
@@ -592,7 +592,7 @@ function useAuth(): AuthHook {
     }
 
     
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({ ...prev, isLoading: true, error: null }));
 
     try {
@@ -610,7 +610,7 @@ function useAuth(): AuthHook {
 
       if (error) {
         
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({ ...prev, isLoading: false, error: error.message }));
         return;
       }
@@ -622,7 +622,7 @@ function useAuth(): AuthHook {
       };
 
       
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
         ...prev,
         user: updatedUser,
@@ -648,7 +648,7 @@ function useAuth(): AuthHook {
       );
 
       
-      setAuthState((prev: any
+      setAuthState((prev: AuthState
 ) => ({
         ...prev,
         isLoading: false,

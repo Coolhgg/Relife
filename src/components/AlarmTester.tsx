@@ -577,7 +577,7 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
               id="battle-mode"
               checked={battleMode}
               
-              onChange={(e: any
+              onChange={(e: React.ChangeEvent<HTMLInputElement>
 ) => setBattleMode(e.target.checked)}
             />
             <label htmlFor="battle-mode" className="text-sm font-medium">
