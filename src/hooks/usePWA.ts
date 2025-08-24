@@ -265,7 +265,7 @@ export function useBackgroundSync() {
   const [pendingItems, setPendingItems] = useState<string[]>([]);
 
   const addToQueue = useCallback((item: string) => {
-    setPendingItems((prev: any) => [ // auto: implicit any...prev, item]);
+    setPendingItems((prev: any) => [...prev, item]);
     // Send to service worker for background sync
     pwaManager.sendMessageToSW({
       type: 'QUEUE_SYNC',
@@ -304,15 +304,15 @@ export function useAlarmPWA() {
 
   useEffect(() => {
     const handleAlarmTriggered = (data: any) => {
-      setAlarmEvents((prev: any) => [ // auto: implicit any...prev, { type: 'triggered', ...data }]);
+      setAlarmEvents((prev: any) => [...prev, { type: 'triggered', ...data }]);
     };
 
     const handleAlarmDismissed = (data: any) => {
-      setAlarmEvents((prev: any) => [ // auto: implicit any...prev, { type: 'dismissed', ...data }]);
+      setAlarmEvents((prev: any) => [...prev, { type: 'dismissed', ...data }]);
     };
 
     const handleAlarmSnoozed = (data: any) => {
-      setAlarmEvents((prev: any) => [ // auto: implicit any...prev, { type: 'snoozed', ...data }]);
+      setAlarmEvents((prev: any) => [...prev, { type: 'snoozed', ...data }]);
     };
 
     pwaManager.on('alarm-triggered', handleAlarmTriggered);

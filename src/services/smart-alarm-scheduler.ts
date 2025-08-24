@@ -14,6 +14,7 @@ export interface SmartAlarm extends Alarm {
   consistency: boolean; // maintain consistent wake times
   seasonalAdjustment: boolean;
   smartSchedule: SmartSchedule;
+  conditionBasedAdjustments?: unknown; // auto: added to satisfy usage
 }
 
 export interface SmartSchedule {

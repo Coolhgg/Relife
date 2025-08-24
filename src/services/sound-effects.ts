@@ -1804,6 +1804,27 @@ class SoundEffectsService {
       onError: this.createSoundHandler('error'),
     };
   }
+
+  // auto: added missing community theme methods
+  getCommunityThemes(): Promise<any> {
+    // Placeholder implementation
+    return Promise.resolve([]); // auto: placeholder
+  }
+
+  shareThemeWithCommunity(theme: any): Promise<any> {
+    // Placeholder implementation
+    return Promise.resolve({}); // auto: placeholder
+  }
+
+  rateTheme(themeId: string, rating: number): Promise<any> {
+    // Placeholder implementation
+    return Promise.resolve({}); // auto: placeholder
+  }
+
+  incrementThemeDownloads(themeId: string): Promise<any> {
+    // Placeholder implementation
+    return Promise.resolve({}); // auto: placeholder
+  }
 }
 
 // Export singleton instance

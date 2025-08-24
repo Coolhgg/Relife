@@ -132,7 +132,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
 
   const calculateEstimatedTime = () => {
     const totalTime = selectedChallenges.reduce((total, challengeType) => {
-      const challenge = challengeTypes.find((c: any) => c // auto: implicit any.type === challengeType);
+      const challenge = challengeTypes.find((c: any) => c.type === challengeType);
       return total + (challenge?.estimatedTime || 300);
     }, 0);
     return Math.round(totalTime / 60); // Convert to minutes
@@ -200,7 +200,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           </Alert>
 
           <div className="mt-4 grid grid-cols-2 gap-2">
-            {challengeTypes.slice(0, 4).map((challenge: any) => { // auto: implicit any
+            {challengeTypes.slice(0, 4).map((challenge: any) => { // auto
               const Icon = challengeIcons[challenge.type];
               return (
                 <div
@@ -244,7 +244,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                 </DialogHeader>
 
                 <div className="space-y-4 max-h-96 overflow-y-auto">
-                  {challengeTypes.map((challenge: any) => { // auto: implicit any
+                  {challengeTypes.map((challenge: any) => { // auto
                     const Icon = challengeIcons[challenge.type];
                     return (
                       <div key={challenge.type} className="p-4 border rounded-lg">
@@ -372,7 +372,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {challengeTypes.map((challenge: any) => { // auto: implicit any
+              {challengeTypes.map((challenge: any) => { // auto
                 const Icon = challengeIcons[challenge.type];
                 const isSelected = selectedChallenges.includes(challenge.type);
 

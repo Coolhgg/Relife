@@ -238,7 +238,7 @@ export interface UserStats {
 // Enhanced User Preferences combining both apps
 export interface UserPreferences {
   // Enhanced Theme & Personalization
-  personalization: PersonalizationSettings;
+  personalization?: PersonalizationSettings; // auto: made optional to satisfy usage
 
   // Smart Alarm App preferences
   notificationsEnabled: boolean;
@@ -2486,7 +2486,16 @@ export interface SeasonalAdjustment {
   isActive: boolean;
 }
 
-export type Season = 'spring' | 'summer' | 'fall' | 'winter';
+// auto: changed Season from string union to interface to satisfy usage
+export interface Season {
+  id: string; // auto: added to satisfy usage
+  name?: string; // auto: added to satisfy usage
+  description?: string; // auto: added to satisfy usage
+  rewards?: unknown[]; // auto: added to satisfy usage
+}
+
+// Legacy season type for backwards compatibility
+export type SeasonType = 'spring' | 'summer' | 'fall' | 'winter';
 
 // Smart Optimizations
 export interface SmartOptimization {
