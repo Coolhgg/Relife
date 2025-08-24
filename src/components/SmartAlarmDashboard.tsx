@@ -441,8 +441,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                             .filter((c: any
 ) => c.isEnabled)
                             
-                            .map((condition: any
-) => ({
+                            .map((condition: any) => (
                               <div
                                 key={condition.id}
                                 className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"

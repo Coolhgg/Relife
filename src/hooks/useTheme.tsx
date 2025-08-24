@@ -2477,8 +2477,7 @@ export function ThemeProvider({
 
   const getThemeRecommendations = useCallback((): ThemePreset[] => {
     // This would use AI/ML in a real app
-    return availableThemes.filter((theme: any
-) => !).slice(0, 3);
+    return availableThemes.filter((theme: any) => !theme.isDefault).slice(0, 3);
   }, [availableThemes]);
 
   const exportThemes = useCallback(async (): Promise<string> => {
