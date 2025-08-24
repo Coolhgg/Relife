@@ -58,12 +58,12 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
 
     // Set up listeners
     const handleOnline = () => {
-      setStatus(prev => ({ ...prev, isOnline: true }));
+      setStatus((prev: any) => ({ ...prev, isOnline: true })); // auto
       triggerSyncAnimation();
     };
 
     const handleOffline = () => {
-      setStatus(prev => ({ ...prev, isOnline: false }));
+      setStatus((prev: any) => ({ ...prev, isOnline: false })); // auto
     };
 
     OfflineManager.addOnlineListener(handleOnline);
@@ -177,7 +177,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
           <div className="flex items-center gap-2">
             {status.isOnline && (
               <button
-                onClick={e => {
+                onClick={(e: any) => { // auto
                   e.stopPropagation();
                   handleManualSync();
                 }}

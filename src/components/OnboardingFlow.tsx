@@ -79,7 +79,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     setIsLoading(true);
     try {
       const granted = await requestNotificationPermissions();
-      setAppState(prev => ({
+      setAppState((prev: any) => ({ // auto
         ...prev,
         permissions: {
           ...prev.permissions,
@@ -112,7 +112,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       // Stop the stream immediately
       stream.getTracks().forEach(track => track.stop());
 
-      setAppState(prev => ({
+      setAppState((prev: any) => ({ // auto
         ...prev,
         permissions: {
           ...prev.permissions,
@@ -126,7 +126,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       moveToStep('complete');
     } catch (error) {
       console.error('Microphone permission denied:', error);
-      setAppState(prev => ({
+      setAppState((prev: any) => ({ // auto
         ...prev,
         permissions: {
           ...prev.permissions,
