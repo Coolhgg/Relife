@@ -193,6 +193,15 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     });
   };
 
+  // TODO: Performance optimization - Context value should be memoized to prevent unnecessary re-renders
+  // const contextValue = useMemo(() => ({
+  //   track: trackEnhanced,
+  //   trackPageView: trackPageViewEnhanced,
+  //   trackFeatureUsage: trackFeatureUsageEnhanced,
+  //   trackError: trackErrorEnhanced,
+  //   trackPerformance: trackPerformanceEnhanced,
+  //   trackUserInteraction: trackUserInteractionEnhanced,
+  // }), [trackEnhanced, trackPageViewEnhanced, trackFeatureUsageEnhanced, trackErrorEnhanced, trackPerformanceEnhanced, trackUserInteractionEnhanced]);
   const contextValue: AnalyticsContextType = {
     track: trackEnhanced,
     trackPageView: trackPageViewEnhanced,

@@ -535,6 +535,12 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               id="alarm-time"
               type="time"
               value={formData.time}
+              // TODO: Performance optimization - Use useCallback for event handlers
+              // const handleTimeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+              //   const newTime = e.target.value;
+              //   setFormData(prev => ({ ...prev, time: newTime }));
+              //   announceFieldChange(...)
+              // }, []);
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const newTime = e.target.value;
                 setFormData((prev: any) => ({ ...prev, time: newTime }));
