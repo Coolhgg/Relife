@@ -9,7 +9,7 @@ import { createRequire } from 'module';
 // Load configurations
 const require = createRequire(import.meta.url);
 const {
-  PERSONA_CONVERTKIT_CONFIG,
+  PERSONA_CONVERTKIT_CONFIG: __PERSONA_CONVERTKIT_CONFIG,
   CONVERTKIT_FORM_TEMPLATES,
   CONVERTKIT_SEQUENCE_TEMPLATES,
 } = require('../src/config/convertkit-config.ts');
@@ -126,30 +126,26 @@ class ConvertKitSetup {
   }
 
   async createTag(name) {
-    try {
-      const response = await fetch(`${this.baseUrl}/tags`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          api_key: this.apiKey,
-          tag: { name: name },
-        }),
-      });
+    const response = await fetch(`${this.baseUrl}/tags`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        api_key: this.apiKey,
+        tag: { name: name },
+      }),
+    });
 
-      if (response.ok) {
-        const data = await response.json();
-        return data.tag;
-      } else {
-        // Tag might already exist, that's ok
-        const error = await response.json();
-        if (error.message && error.message.includes('already exists')) {
-          console.log(`  ℹ️  Tag already exists: ${name}`);
-          return { id: null, name: name };
-        }
-        throw new Error(`Failed to create tag: ${error.message}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data.tag;
+    } else {
+      // Tag might already exist, that's ok
+      const error = await response.json();
+      if (error.message && error.message.includes('already exists')) {
+        console.log(`  ℹ️  Tag already exists: ${name}`);
+        return { id: null, name: name };
       }
-    } catch (error) {
-      throw error;
+      throw new Error(`Failed to create tag: ${error.message}`);
     }
   }
 
@@ -174,40 +170,34 @@ class ConvertKitSetup {
   }
 
   async createForm(template) {
-    try {
-      const formData = {
-        api_key: this.apiKey,
-        form: {
-          name: template.name,
-          description: template.description,
-          sign_up_redirect_url: template.redirectUrl || '',
-          success_message: template.successMessage,
-          format: 'modal', // or 'inline', 'slide_in'
-          background_color: '#ffffff',
-          text_color: '#333333',
-          button_color: '#007cba',
-          button_text: 'Subscribe',
-          archived: false,
-        },
-      };
+    const formData = {
+      api_key: this.apiKey,
+      form: {
+        name: template.name,
+        description: template.description,
+        sign_up_redirect_url: template.redirectUrl || '',
+        success_message: template.successMessage,
+        format: 'modal', // or 'inline', 'slide_in'
+        background_color: '#ffffff',
+        text_color: '#333333',
+        button_color: '#007cba',
+        button_text: 'Subscribe',
+        archived: false,
+      },
+    };
 
-      const response = await fetch(`${this.baseUrl}/forms`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+    const response = await fetch(`${this.baseUrl}/forms`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
 
-      if (response.ok) {
-        const data = await response.json();
-        return data.form;
-      } else {
-        const error = await response.json();
-        throw new Error(
-          `Failed to create form: ${error.message || response.statusText}`
-        );
-      }
-    } catch (error) {
-      throw error;
+    if (response.ok) {
+      const data = await response.json();
+      return data.form;
+    } else {
+      const error = await response.json();
+      throw new Error(`Failed to create form: ${error.message || response.statusText}`);
     }
   }
 
@@ -235,32 +225,28 @@ class ConvertKitSetup {
   }
 
   async createSequence(template) {
-    try {
-      const sequenceData = {
-        api_secret: this.apiSecret,
-        course: {
-          name: template.name,
-          description: template.description,
-        },
-      };
+    const sequenceData = {
+      api_secret: this.apiSecret,
+      course: {
+        name: template.name,
+        description: template.description,
+      },
+    };
 
-      const response = await fetch(`${this.baseUrl}/courses`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(sequenceData),
-      });
+    const response = await fetch(`${this.baseUrl}/courses`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sequenceData),
+    });
 
-      if (response.ok) {
-        const data = await response.json();
-        return data.course;
-      } else {
-        const error = await response.json();
-        throw new Error(
-          `Failed to create sequence: ${error.message || response.statusText}`
-        );
-      }
-    } catch (error) {
-      throw error;
+    if (response.ok) {
+      const data = await response.json();
+      return data.course;
+    } else {
+      const error = await response.json();
+      throw new Error(
+        `Failed to create sequence: ${error.message || response.statusText}`
+      );
     }
   }
 
@@ -277,35 +263,31 @@ class ConvertKitSetup {
   }
 
   async createSequenceEmail(sequenceId, emailTemplate, position) {
-    try {
-      const emailData = {
-        api_secret: this.apiSecret,
-        email: {
-          subject: emailTemplate.subject,
-          content: this.generateEmailContent(emailTemplate),
-          delay: emailTemplate.delayHours * 60, // Convert hours to minutes
-          position: position,
-          public: false,
-        },
-      };
+    const emailData = {
+      api_secret: this.apiSecret,
+      email: {
+        subject: emailTemplate.subject,
+        content: this.generateEmailContent(emailTemplate),
+        delay: emailTemplate.delayHours * 60, // Convert hours to minutes
+        position: position,
+        public: false,
+      },
+    };
 
-      const response = await fetch(`${this.baseUrl}/courses/${sequenceId}/emails`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(emailData),
-      });
+    const response = await fetch(`${this.baseUrl}/courses/${sequenceId}/emails`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(emailData),
+    });
 
-      if (response.ok) {
-        const data = await response.json();
-        return data.email;
-      } else {
-        const error = await response.json();
-        throw new Error(
-          `Failed to create email: ${error.message || response.statusText}`
-        );
-      }
-    } catch (error) {
-      throw error;
+    if (response.ok) {
+      const data = await response.json();
+      return data.email;
+    } else {
+      const error = await response.json();
+      throw new Error(
+        `Failed to create email: ${error.message || response.statusText}`
+      );
     }
   }
 
@@ -394,37 +376,33 @@ class ConvertKitSetup {
   }
 
   async createWebhook(url, event) {
-    try {
-      const webhookData = {
-        api_secret: this.apiSecret,
-        webhook_url: url,
-        event: event,
-      };
+    const webhookData = {
+      api_secret: this.apiSecret,
+      webhook_url: url,
+      event: event,
+    };
 
-      const response = await fetch(`${this.baseUrl}/automations/hooks`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(webhookData),
-      });
+    const response = await fetch(`${this.baseUrl}/automations/hooks`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(webhookData),
+    });
 
-      if (response.ok) {
-        const data = await response.json();
-        return data.hook;
-      } else {
-        // Webhook might already exist, that's ok
-        const error = await response.json();
-        if (error.message && error.message.includes('already exists')) {
-          console.log(`  ℹ️  Webhook already exists for: ${event}`);
-          return { id: null, event: event };
-        }
-        throw new Error(`Failed to create webhook: ${error.message}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data.hook;
+    } else {
+      // Webhook might already exist, that's ok
+      const error = await response.json();
+      if (error.message && error.message.includes('already exists')) {
+        console.log(`  ℹ️  Webhook already exists for: ${event}`);
+        return { id: null, event: event };
       }
-    } catch (error) {
-      throw error;
+      throw new Error(`Failed to create webhook: ${error.message}`);
     }
   }
 
-  async generateConfigFile(forms, sequences) {
+  async generateConfigFile(_forms, _sequences) {
     const configContent = `// Auto-generated ConvertKit configuration
 // Generated on ${new Date().toISOString()}
 // DO NOT EDIT MANUALLY - Use scripts/setup-convertkit.js to regenerate
