@@ -167,13 +167,13 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
 
   const resolveAlert = useCallback((alertId: string) => {
     performanceBudgetManager.resolveAlert(alertId);
-    setActiveAlerts((prev: any) => prev.filter((alert: any) => a.lert.id !== alertId));
+    setActiveAlerts((prev: PerformanceAlert[]) => prev.filter((alert: PerformanceAlert) => alert.id !== alertId));
   }, []);
 
   const triggerAutoFix = useCallback(async (alertId: string) => {
     try {
       await performanceBudgetManager.triggerAutoFix(alertId);
-      setActiveAlerts((prev: any) => prev.filter((alert: any) => a.lert.id !== alertId));
+      setActiveAlerts((prev: PerformanceAlert[]) => prev.filter((alert: PerformanceAlert) => alert.id !== alertId));
     } catch (err) {
       console.error('Auto-fix failed:', err);
     }
