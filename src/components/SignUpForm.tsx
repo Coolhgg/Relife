@@ -175,7 +175,8 @@ export default function SignUpForm({
               id="name"
               type="text"
               value={formData.name}
-              onChange={(e: any) => handleInputChange('name', e.target.value)}
+              
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('name', e.target.value))
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.name
                   ? 'border-red-500'
@@ -216,7 +217,8 @@ export default function SignUpForm({
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e: any) => handleInputChange('email', e.target.value)}
+              
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('email', e.target.value))
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.email
                   ? 'border-red-500'
@@ -257,7 +259,8 @@ export default function SignUpForm({
               id="password"
               type={showPassword ? 'text' : 'password'}
               value={formData.password}
-              onChange={(e: any) => handleInputChange('password', e.target.value)}
+              
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('password', e.target.value))
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.password
                   ? 'border-red-500'
@@ -329,8 +332,9 @@ export default function SignUpForm({
                     <ul className="list-disc list-inside space-y-1">
                       {passwordStrength.feedback.suggestions
                         .slice(0, 2)
-                        .map((suggestion, index) => (
-                          <li key={index}>{suggestion}</li>
+                        .map((suggestion, index
+) => (
+                          <li key={index}>suggestion</li>
                         ))}
                     </ul>
                   </div>
@@ -366,9 +370,7 @@ export default function SignUpForm({
               id="confirmPassword"
               type={showConfirmPassword ? 'text' : 'password'}
               value={formData.confirmPassword}
-              onChange={(e: any) =>
-                handleInputChange('confirmPassword', e.target.value)
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('confirmPassword', e.target.value)}
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.confirmPassword
                   ? 'border-red-500'

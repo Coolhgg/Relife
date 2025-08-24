@@ -152,7 +152,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         <select
           id="font-size"
           value={preferences.fontSize}
-          onChange={(e: any
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>
 ) => {
             updatePreferences({ fontSize: e.target.value as any });
             announce(`Font size changed to ${e.target.value}`);
@@ -270,7 +270,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         <select
           id="focus-ring-color"
           value={preferences.focusRingColor}
-          onChange={(e: any
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>
 ) => {
             updatePreferences({ focusRingColor: e.target.value });
             announce(`Focus ring color changed to ${e.target.value}`);
@@ -473,7 +473,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           max="2.0"
           step="0.1"
           value={preferences.speechRate}
-          onChange={(e: any
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>
 ) => {
             const rate = parseFloat(e.target.value);
             updatePreferences({ speechRate: rate });
@@ -572,7 +572,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         <select
           id="long-press-delay"
           value={preferences.longPressDelay}
-          onChange={(e: any
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>
 ) => {
             const delay = parseInt(e.target.value);
             updatePreferences({ longPressDelay: delay });

@@ -387,7 +387,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedType}
-                  onChange={(e: any) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                     setSelectedType(e.target.value as SocialChallengeType | 'all')
                   }
                 >
@@ -403,7 +403,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedDifficulty}
-                  onChange={(e: any) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                     setSelectedDifficulty(
                       e.target.value as 'all' | 'easy' | 'medium' | 'hard'
                     )

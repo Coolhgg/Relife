@@ -7,6 +7,7 @@ import {
   PersonaDetectionResult,
 } from '../types/index';
 import { TimeoutHandle } from '../types/timers';
+import type { Metadata } from '../types/utility-types';
 
 // Define missing types based on what the component needs
 type UserPersona = {
@@ -51,7 +52,7 @@ export interface PersonaAnalyticsData {
   previousPersona?: UserPersona;
   conversionStep?: 'awareness' | 'consideration' | 'trial' | 'conversion' | 'retention';
   campaignSource?: 'email' | 'social' | 'organic' | 'paid' | 'referral';
-  metadata?: Record<string, any>;
+  metadata?: Metadata;
 }
 
 export interface CampaignPerformanceData {

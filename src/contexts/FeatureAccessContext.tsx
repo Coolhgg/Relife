@@ -294,20 +294,8 @@ export function withFeatureAccess<P extends object>(
   WrappedComponent: React.ComponentType<P>,
   userId: string,
   options?: {
-    onFeatureBlocked?: (
-      featureId: string,
-      _requiredTier?: any /* auto: placeholder param - adjust */
-    
-) => void;
-    onUpgradeRequired?: (
-      featureId: string,
-      _requiredTier?: any /* auto: placeholder param - adjust */
-    
-) => void;
-    onFeatureBlocked?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */
-) => void;
-    onUpgradeRequired?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */
-) => void;
+    onFeatureBlocked?: (featureId: string, requiredTier?: SubscriptionTier) => void;
+    onUpgradeRequired?: (featureId: string, requiredTier?: SubscriptionTier) => void;
   }
 ) {
   return function FeatureAccessWrappedComponent(props: P) {

@@ -180,7 +180,8 @@ const MathChallenge: React.FC<{
           <Input
             type="number"
             value={userAnswer}
-            onChange={(e: any) => setUserAnswer(e.target.value)}
+            
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserAnswer(e.target.value)}
             placeholder="Enter your answer"
             className="text-center text-2xl h-16"
             autoFocus

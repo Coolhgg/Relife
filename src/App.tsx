@@ -270,7 +270,7 @@ function AppContent() {
         const aiRewards = AIRewardsService.getInstance();
         const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
 
-        setAppState((prev: any) => ({
+        setAppState((prev: AppState) => ({ // type-safe replacement
           ...prev,
           rewardSystem,
         }));
@@ -300,7 +300,9 @@ function AppContent() {
       // Load alarms from offline storage first (faster)
       const offlineAlarms = await OfflineStorage.getAlarms();
       if (offlineAlarms.length > 0) {
-        setAppState((prev: any) => ({
+        setAppState((prev: AppState) => ({ // type-safe replacement
+          
+
           ...prev,
           alarms: offlineAlarms,
           isOnboarding: offlineAlarms.length === 0,
@@ -313,7 +315,9 @@ function AppContent() {
           const { alarms: savedAlarms } = await SupabaseService.loadUserAlarms(
             auth.user.id
           );
-          setAppState((prev: any) => ({
+          setAppState((prev: AppState) => ({ // type-safe replacement
+            
+
             ...prev,
             alarms: savedAlarms,
             isOnboarding: savedAlarms.length === 0,
@@ -341,7 +345,9 @@ function AppContent() {
           await refreshRewardsSystem(offlineAlarms);
         }
       } else {
-        setAppState((prev: any) => ({
+        setAppState((prev: AppState) => ({ // type-safe replacement
+          
+
           ...prev,
           alarms: offlineAlarms,
           isOnboarding: offlineAlarms.length === 0,
@@ -376,8 +382,8 @@ function AppContent() {
         analytics.trackAlarmAction('snooze', alarmId, { success: true, duration });
         analytics.trackFeatureUsage('alarm_snooze', 'completed', { duration });
 
-        setAppState((prev: any) => ({
-          ...prev,
+        setAppState((prev: AppState) => ({ // type-safe replacement
+           ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
@@ -404,8 +410,8 @@ function AppContent() {
           }
         );
         // Fallback: still hide the alarm even if snooze fails
-        setAppState((prev: any) => ({
-          ...prev,
+        setAppState((prev: AppState) => ({ // type-safe replacement
+           ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
@@ -422,7 +428,10 @@ function AppContent() {
       switch (type) {
         case 'ALARM_TRIGGERED':
           if (data.alarm) {
-            setAppState((prev: any) => ({ ...prev, activeAlarm: data.alarm }));
+            setAppState((prev: AppState) => ({ // type-safe replacement
+              ...prev, 
+              activeAlarm: data.alarm 
+            }));
           }
           break;
         case 'SYNC_START':
@@ -460,7 +469,10 @@ function AppContent() {
 
             // Handle specific actions
             if (data.action === 'dismiss' && appState.activeAlarm) {
-              setAppState((prev: any) => ({ ...prev, activeAlarm: null }));
+              setAppState((prev: AppState) => ({ // type-safe replacement
+                ...prev, 
+                activeAlarm: null 
+              }));
             } else if (data.action === 'snooze' && appState.activeAlarm) {
               // Trigger snooze functionality
               handleAlarmSnooze(appState.activeAlarm.id);
@@ -493,7 +505,10 @@ function AppContent() {
       console.log('App: Handling service worker alarm trigger:', alarm.id);
 
       // Update app state to show alarm as triggered
-      setAppState((prev: any) => ({
+      setAppState((prev: AppState
+) => ({
+        
+
         ...prev,
         activeAlarm: alarm,
         alarmTriggeredAt: new Date(),
@@ -709,8 +724,8 @@ function AppContent() {
         const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(
           auth.user.id
         );
-        setAppState((prev: any) => ({
-          ...prev,
+        setAppState((prev: AppState) => ({ // type-safe replacement
+           ...prev,
           alarms: updatedAlarms,
         }));
         await OfflineStorage.saveAlarms(updatedAlarms);
@@ -804,7 +819,10 @@ function AppContent() {
     const appAnalytics = AppAnalyticsService.getInstance();
     const emailService = EmailCampaignService.getInstance();
 
-    setAppState((prev: any) => ({
+    setAppState((prev: AppState
+) => ({
+      
+
       ...prev,
       user: auth.user,
     }));
@@ -1288,7 +1306,10 @@ function AppContent() {
       }
 
       const updatedAlarms = [...appState.alarms, newAlarm];
-      setAppState((prev: any) => ({
+      setAppState((prev: AppState
+) => ({
+        
+
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1411,7 +1432,10 @@ function AppContent() {
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState((prev: any) => ({
+      setAppState((prev: AppState
+) => ({
+        
+
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1490,7 +1514,10 @@ function AppContent() {
       const updatedAlarms = appState.alarms.filter(
         (alarm: any) => alarm.id !== alarmId
       );
-      setAppState((prev: any) => ({
+      setAppState((prev: AppState
+) => ({
+        
+
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1576,7 +1603,10 @@ function AppContent() {
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState((prev: any) => ({
+      setAppState((prev: AppState
+) => ({
+        
+
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1635,8 +1665,9 @@ function AppContent() {
       false // Not skipped
     );
 
-    setAppState((prev: any) => ({
-      ...prev,
+    setAppState((prev: AppState
+) => ({
+       ...prev,
       isOnboarding: false,
     }));
   };
@@ -1667,8 +1698,8 @@ function AppContent() {
           duration,
         });
 
-        setAppState((prev: any) => ({
-          ...prev,
+        setAppState((prev: AppState) => ({ // type-safe replacement
+           ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
@@ -1694,8 +1725,8 @@ function AppContent() {
           }
         );
         // Fallback: still dismiss the alarm even if logging fails
-        setAppState((prev: any) => ({
-          ...prev,
+        setAppState((prev: AppState) => ({ // type-safe replacement
+           ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
@@ -1795,9 +1826,10 @@ function AppContent() {
                 There was a problem with the alarm. It has been dismissed.
               </p>
               <button
-                onClick={() =>
-                  setAppState((prev: any) => ({
-                    ...prev,
+                onClick={(
+) =>
+                  setAppState((prev: AppState) => ({ // type-safe replacement
+                     ...prev,
                     activeAlarm: null,
                   }))
                 }
@@ -1843,8 +1875,8 @@ function AppContent() {
                   'navigation',
                   'advanced_scheduling_from_dashboard'
                 );
-                setAppState((prev: any) => ({
-                  ...prev,
+                setAppState((prev: AppState) => ({ // type-safe replacement
+                   ...prev,
                   currentView: 'advanced-scheduling',
                 }));
               }}
@@ -1909,7 +1941,9 @@ function AppContent() {
                   createdAt: battle.createdAt || new Date().toISOString(),
                   ...battle,
                 };
-                setAppState((prev: any) => ({
+                setAppState((prev: AppState) => ({ // type-safe replacement
+                  
+
                   ...prev,
                   activeBattles: [...(prev.activeBattles || []), completeBattle],
                 }));
@@ -2127,8 +2161,8 @@ function AppContent() {
                 onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
-                  setAppState((prev: any) => ({
-                    ...prev,
+                  setAppState((prev: AppState) => ({ // type-safe replacement
+                     ...prev,
                     currentView: 'dashboard',
                   }));
                   AccessibilityUtils.announcePageChange('Dashboard');
@@ -2178,8 +2212,8 @@ function AppContent() {
                   appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
                     totalAlarms: appState.alarms.length,
                   });
-                  setAppState((prev: any) => ({
-                    ...prev,
+                  setAppState((prev: AppState) => ({ // type-safe replacement
+                     ...prev,
                     currentView: 'alarms',
                   }));
                   AccessibilityUtils.announcePageChange('Alarms');
@@ -2230,7 +2264,9 @@ function AppContent() {
                     'navigation',
                     'advanced_scheduling_clicked'
                   );
-                  setAppState((prev: any) => ({
+                  setAppState((prev: AppState) => ({ // type-safe replacement
+                    
+
                     ...prev,
                     currentView: 'advanced-scheduling',
                   }));
@@ -2263,8 +2299,8 @@ function AppContent() {
                     hasRewards: !!appState.rewardSystem?.unlockedRewards.length,
                     activeBattles: appState.activeBattles?.length,
                   });
-                  setAppState((prev: any) => ({
-                    ...prev,
+                  setAppState((prev: AppState) => ({ // type-safe replacement
+                     ...prev,
                     currentView: 'gaming',
                   }));
                   AccessibilityUtils.announcePageChange('Gaming Hub');
@@ -2290,8 +2326,8 @@ function AppContent() {
                 onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
-                  setAppState((prev: any) => ({
-                    ...prev,
+                  setAppState((prev: AppState) => ({ // type-safe replacement
+                     ...prev,
                     currentView: 'settings',
                   }));
                   AccessibilityUtils.announcePageChange('Settings');
@@ -2317,8 +2353,8 @@ function AppContent() {
                 onClick={() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
-                  setAppState((prev: any) => ({
-                    ...prev,
+                  setAppState((prev: AppState) => ({ // type-safe replacement
+                     ...prev,
                     currentView: 'pricing',
                   }));
                   AccessibilityUtils.announcePageChange('Premium Plans');

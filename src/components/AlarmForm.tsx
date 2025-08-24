@@ -327,8 +327,9 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
       );
 
       if (result.success && result.customSound) {
-        setCustomSounds((prev: any) => [result.customSound!, ...prev]);
-        setFormData((prev: any) => ({
+        setCustomSounds((prev: boolean) => [result.customSound!, ...prev]);
+        setFormData((prev: any
+) => ({ 
           ...prev,
           soundType: 'custom',
           customSoundId: result.customSound!.id,
@@ -535,7 +536,8 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               id="alarm-time"
               type="time"
               value={formData.time}
-              onChange={(e: any) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>
+) => { // auto: implicit any
                 const newTime = e.target.value;
                 setFormData((prev: any) => ({ ...prev, time: newTime }));
                 announceFieldChange(
@@ -597,7 +599,8 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               id="alarm-label"
               type="text"
               value={formData.label}
-              onChange={(e: any) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>
+) => { // auto: implicit any
                 const newLabel = e.target.value;
                 setFormData((prev: any) => ({ ...prev, label: newLabel }));
                 announceFieldChange(
@@ -986,7 +989,8 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                           checked={
                             formData.nuclearChallenges?.includes(challenge.id) || false
                           }
-                          onChange={(e: any) => {
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>
+) => { // auto: implicit any
                             const challenges = formData.nuclearChallenges || [];
                             if (e.target.checked) {
                               setFormData((prev: any) => ({
@@ -1295,8 +1299,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   <select
                     id="snooze-interval"
                     value={formData.snoozeInterval}
-                    onChange={(e: any) =>
-                      setFormData((prev: any) => ({
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>
+) => 
+                      setFormData((prev: any
+) => ({ 
                         ...prev,
                         snoozeInterval: parseInt(e.target.value),
                       }));
@@ -1325,8 +1331,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   <select
                     id="max-snoozes"
                     value={formData.maxSnoozes}
-                    onChange={(e: any) =>
-                      setFormData((prev: any) => ({
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>
+) => 
+                      setFormData((prev: any
+) => ({ 
                         ...prev,
                         maxSnoozes: parseInt(e.target.value),
                       }));

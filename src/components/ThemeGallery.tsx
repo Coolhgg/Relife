@@ -550,7 +550,8 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             type="text"
             placeholder="Search themes..."
             value={searchQuery}
-            onChange={(e: any) => setSearchQuery(e.target.value)}
+            
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -559,7 +560,8 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         <div className="flex gap-2">
           <select
             value={selectedCategory}
-            onChange={(e: any) => setSelectedCategory(e.target.value)}
+            
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSelectedCategory(e.target.value)}
             className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {categories.map(category => (
@@ -571,7 +573,8 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
 
           <select
             value={sortBy}
-            onChange={(e: any) => setSortBy(e.target.value as any)}
+            
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSortBy(e.target.value as any)}
             className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="name">Sort by Name</option>
