@@ -210,6 +210,7 @@ export interface User {
   subscriptionStatus?: SubscriptionStatus; // Detailed subscription info
   createdAt: Date | string;
   // Premium subscription fields
+  subscriptionTier?: import('./premium').SubscriptionTier; // auto: legacy compatibility
   subscription?: import('./premium').Subscription;
   stripeCustomerId?: string;
   trialEndsAt?: Date;
@@ -2671,14 +2672,8 @@ export interface ConditionalRule {
   priority?: number;
 }
 
-// Missing WakeUpMood type
-export type WakeUpMood =
-  | 'energetic'
-  | 'peaceful'
-  | 'motivated'
-  | 'groggy'
-  | 'refreshed'
-  | 'tired';
+// WakeUpMood is now centralized in wake-up-mood.ts
+export { WakeUpMood } from './wake-up-mood';
 
 export interface LocationProgress {
   currentLocation?: Location;
@@ -3286,19 +3281,7 @@ export interface WakeUpPerformance {
   consistency: number; // compared to their usual performance
 }
 
-export type WakeUpMood =
-  | 'excellent'
-  | 'good'
-  | 'okay'
-  | 'tired'
-  | 'groggy'
-  | 'irritated'
-  | 'refreshed'
-  | 'energetic'
-  | 'anxious'
-  | 'peaceful'
-  | 'neutral'
-  | 'grumpy';
+// WakeUpMood moved to ./wake-up-mood.ts to avoid duplication
 
 export interface BattlePerformanceData {
   battleId: string;

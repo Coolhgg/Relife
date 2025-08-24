@@ -31,7 +31,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import type { Alarm, DayOfWeek, AlarmDifficulty, VoiceMood } from '../types/index';
-import { PremiumGate } from './PremiumGate';
+import PremiumGate from './PremiumGate';
 import { SubscriptionService } from '../services/subscription';
 import EnhancedSmartAlarmSettings from './EnhancedSmartAlarmSettings';
 import { type EnhancedSmartAlarm } from '../services/enhanced-smart-alarm-scheduler';

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useScreenReaderAnnouncements } from './useScreenReaderAnnouncements';
 import type { VoiceMood } from '../types';
+import { TimeoutHandle } from '../types/timers';
 import { getVoiceMoodConfig, formatTime } from '../utils';
 
 export interface FormFieldChange {
@@ -15,7 +16,7 @@ export interface FormFieldChange {
 export function useFormAnnouncements() {
   const { announce, announceFormValidation } = useScreenReaderAnnouncements();
   const fieldValues = useRef<Record<string, any>>({});
-  const announcementTimer = useRef<number | null>(null);
+  const announcementTimer = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
 
   // Announce form field changes with debouncing
   const announceFieldChange = useCallback(

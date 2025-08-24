@@ -1,5 +1,6 @@
 /// <reference types="node" />
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { TimeoutHandle } from '../types/timers';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Zap,
@@ -103,7 +104,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     'green' | 'yellow' | 'red' | 'critical'
   >('green');
 
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const requiredChallenges = 3; // Must complete 3 nuclear challenges to dismiss

@@ -6,12 +6,14 @@ interface AdvancedSchedulingDashboardProps {
   userId?: string;
   onScheduleAlarm?: (alarmData: any) => void;
   className?: string;
+  alarms?: unknown; // auto: widened to satisfy usage
 }
 
 const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = ({
   userId,
   onScheduleAlarm,
-  className = ''
+  className = '',
+  alarms // auto: added for prop compatibility
 }) => {
   const [activeTab, setActiveTab] = useState('overview');
 

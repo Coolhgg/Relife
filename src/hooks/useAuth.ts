@@ -6,6 +6,8 @@ import type { User } from '../types';
 import { ErrorHandler } from '../services/error-handler';
 import AnalyticsService from '../services/analytics';
 import SecurityService from '../services/security';
+import { TimeoutHandle } from '../types/timers';
+import { TimeoutHandle } from '../types/timers';
 
 interface AuthState {
   user: User | null;
@@ -42,7 +44,7 @@ function useAuth(): AuthHook {
     rateLimitRemaining: 10,
   });
 
-  const sessionTimerRef = useRef<number | null>(null);
+  const sessionTimerRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
   const lastActivityRef = useRef<Date>(new Date());
 
   // Security constants
@@ -181,7 +183,7 @@ function useAuth(): AuthHook {
   const stopSessionManagement = () => {
     if (sessionTimerRef.current) {
       clearInterval(sessionTimerRef.current);
-      sessionTimerRef.current = null;
+      sessionTimerRef.current = undefined; // auto: changed from null to undefined
     }
 
     // Remove activity listeners
