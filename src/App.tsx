@@ -1108,7 +1108,7 @@ function AppContent() {
 
       // Check if there are enabled alarms that could ring soon
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
-        const enabledAlarms = appState.alarms.filter((alarm: any) => a // auto: implicit anylarm.enabled);
+        const enabledAlarms = appState.alarms.filter((alarm: any) => alarm.enabled);
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold
           const now = new Date();
@@ -1384,7 +1384,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('edit', alarmId, { voiceMood: alarmData.voiceMood });
-      const existingAlarm = appState.alarms.find((a: any) => a // auto: implicit any.id === alarmId);
+      const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1484,8 +1484,8 @@ function AppContent() {
         await OfflineStorage.deleteAlarm(alarmId);
       }
 
-      const alarmToDelete = appState.alarms.find((a: any) => a // auto: implicit any.id === alarmId);
-      const updatedAlarms = appState.alarms.filter((alarm: any) => a // auto: implicit anylarm.id !== alarmId);
+      const alarmToDelete = appState.alarms.find((a: any) => a.id === alarmId);
+      const updatedAlarms = appState.alarms.filter((alarm: any) => alarm.id !== alarmId);
       setAppState((prev: any) => ({ // auto: implicit any
           
         ...prev,
@@ -1547,7 +1547,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('toggle', alarmId, { enabled });
-      const existingAlarm = appState.alarms.find((a: any) => a // auto: implicit any.id === alarmId);
+      const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1811,7 +1811,7 @@ function AppContent() {
       case 'dashboard':
         appAnalytics.trackPageView('dashboard', {
           totalAlarms: appState.alarms.length,
-          activeAlarms: appState.alarms.filter((a: any) => a // auto: implicit any.enabled).length,
+          activeAlarms: appState.alarms.filter((a: any) => a.enabled).length,
         });
         return (
           <ErrorBoundary context="Dashboard">
@@ -2053,7 +2053,7 @@ function AppContent() {
                     tabProtectionSettings.settings.visualSettings.showVisualWarning && (
                       <TabProtectionWarning
                         activeAlarm={appState.activeAlarm}
-                        enabledAlarms={appState.alarms.filter((alarm: any) => a // auto: implicit anylarm.enabled)}
+                        enabledAlarms={appState.alarms.filter((alarm: any) => alarm.enabled)}
                         settings={tabProtectionSettings.settings}
                       />
                     )}

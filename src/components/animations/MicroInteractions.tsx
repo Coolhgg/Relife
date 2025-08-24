@@ -488,7 +488,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
 
       // Remove ripple after animation
       setTimeout(() => {
-        setRipples((prev: any) => p // auto: implicit anyrev.filter((ripple: any) => r // auto: implicit anyipple.id !== newRipple.id));
+        setRipples((prev: any) => prev.filter((ripple: any) => r // auto: implicit anyipple.id !== newRipple.id));
       }, 600);
     }
 

@@ -97,7 +97,7 @@ export function ActiveAlarm({
     }
 
     const timer = setInterval(() => {
-      setTimeLeft((prev: any) => p // auto: implicit anyrev - 1);
+      setTimeLeft((prev: any) => prev - 1);
     }, 1000);
 
     return () => clearInterval(timer);

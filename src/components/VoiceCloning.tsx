@@ -95,7 +95,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
 
       // Start timer
       recordingTimerRef.current = setInterval(() => {
-        setRecordingTime((prev: any) => p // auto: implicit anyrev + 1);
+        setRecordingTime((prev: any) => prev + 1);
       }, 1000);
     } catch (error) {
       console.error('Error starting recording:', error);
@@ -177,7 +177,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
   };
 
   const removeSample = (sampleId: string) => {
-    setSamples((prev: any) => p // auto: implicit anyrev.filter((s: any) => s // auto: implicit any.id !== sampleId));
+    setSamples((prev: any) => prev.filter((s: any) => s // auto: implicit any.id !== sampleId));
 
     // Clean up audio and URL
     const audio = audioRefs.current.get(sampleId);

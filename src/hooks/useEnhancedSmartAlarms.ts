@@ -141,7 +141,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
       RealTimeSmartAdapter.stopMonitoringAlarm(id);
 
       // Remove from state (actual deletion would happen in the service)
-      setAlarms((prev: any) => p // auto: implicit anyrev.filter((alarm: any) => a // auto: implicit anylarm.id !== id));
+      setAlarms((prev: any) => prev.filter((alarm: any) => a.larm.id !== id));
 
       return true;
     } catch (err) {

@@ -439,7 +439,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
     if (confirm(`Are you sure you want to delete "${sound.name}"?`)) {
       const success = await customSoundManager.deleteCustomSound(sound.id, userId);
       if (success) {
-        setCustomSounds((prev: any) => p // auto: implicit anyrev.filter((s: any) => s // auto: implicit any.id !== sound.id));
+        setCustomSounds((prev: any) => prev.filter((s: any) => s // auto: implicit any.id !== sound.id));
         // If the deleted sound was selected, reset to voice-only
         if (formData.customSoundId === sound.id) {
           setFormData((prev: any) => ({ // auto: implicit any{

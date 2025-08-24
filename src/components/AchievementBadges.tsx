@@ -151,7 +151,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
   );
   const [hoveredAchievement, setHoveredAchievement] = useState<string | null>(null);
 
-  const unlockedAchievements = achievements.filter((a: any) => a // auto: implicit any.unlockedAt);
+  const unlockedAchievements = achievements.filter((a: any) => a.unlockedAt);
   const lockedAchievements = achievements.filter((a: any) => ! // auto: implicit anya.unlockedAt);
 
   const getBadgeVariant = (rarity: string) => {

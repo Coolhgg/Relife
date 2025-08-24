@@ -347,7 +347,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
               {voices.map(voice => {
                 const personality = PremiumVoiceService.getVoicePersonality(voice.id);
                 const isLocked =
-                  personality && !availableVoices.some((av: any) => a // auto: implicit anyv.id === voice.id);
+                  personality && !availableVoices.some((av: any) => a.v.id === voice.id);
 
                 return (
                   <VoiceCard

@@ -318,7 +318,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
     const timer = setTimeout(() => {
       if (currentTestIndex < currentTests.length - 1) {
-        setCurrentTestIndex((prev: any) => p // auto: implicit anyrev + 1);
+        setCurrentTestIndex((prev: any) => prev + 1);
       } else {
         setIsPlaying(false);
         setCurrentTestIndex(0);
@@ -354,7 +354,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
   const handleNext = () => {
     if (currentTestIndex < currentTests.length - 1) {
-      setCurrentTestIndex((prev: any) => p // auto: implicit anyrev + 1);
+      setCurrentTestIndex((prev: any) => prev + 1);
     }
   };
 

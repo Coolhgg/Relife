@@ -182,7 +182,7 @@ function AIWakeUpCoach() {
                     if (e.target.checked) {
                       setCoachingGoals((prev: any) => [ // auto: implicit any...prev, goal]);
                     } else {
-                      setCoachingGoals((prev: any) => p // auto: implicit anyrev.filter((g: any) => g // auto: implicit any !== goal));
+                      setCoachingGoals((prev: any) => prev.filter((g: any) => g // auto: implicit any !== goal));
                     }
                   }}
                 />

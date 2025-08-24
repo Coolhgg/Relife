@@ -220,13 +220,13 @@ export function RedesignedFeedbackModal({
 
   const nextStep = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep((prev: any) => p // auto: implicit anyrev + 1);
+      setCurrentStep((prev: any) => prev + 1);
     }
   };
 
   const prevStep = () => {
     if (currentStep > 0) {
-      setCurrentStep((prev: any) => p // auto: implicit anyrev - 1);
+      setCurrentStep((prev: any) => prev - 1);
     }
   };
 

@@ -229,7 +229,7 @@ export class OfflineManager {
     try {
       const alarms = await this.db.getAll('alarms');
       return alarms
-        .filter((alarm: any) => a // auto: implicit anylarm.operation !== 'delete')
+        .filter((alarm: any) => a.larm.operation !== 'delete')
         .map(({ syncStatus, lastModified, operation, ...alarm }) => alarm as Alarm);
     } catch (error) {
       console.error('Failed to get offline alarms:', error);
