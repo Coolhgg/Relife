@@ -132,7 +132,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
           type={type}
           placeholder={isFocused ? placeholder : ''}
           value={value}
-          onChange={e => onChange(e.target.value)}
+          onChange={(e: any) => // auto: implicit any onChange(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
           disabled={disabled}
@@ -232,7 +232,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<SelectOption | null>(
-    options.find(opt => opt.value === value) || null
+    options.find((opt: any) => // auto: implicit any opt.value === value) || null
   );
 
   const handleSelect = (option: SelectOption) => {
@@ -484,11 +484,11 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       const y = e.clientY - rect.top;
       const newRipple = { id: Date.now().toString(), x, y };
 
-      setRipples(prev => [...prev, newRipple]);
+      setRipples((prev: any) => // auto: implicit any [...prev, newRipple]);
 
       // Remove ripple after animation
       setTimeout(() => {
-        setRipples(prev => prev.filter(ripple => ripple.id !== newRipple.id));
+        setRipples((prev: any) => // auto: implicit any prev.filter((ripple: any) => // auto: implicit any ripple.id !== newRipple.id));
       }, 600);
     }
 
@@ -526,7 +526,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
     >
       {/* Ripple effects */}
       <AnimatePresence>
-        {ripples.map(ripple => (
+        {ripples.map((ripple: any) => // auto: implicit any (
           <motion.div
             key={ripple.id}
             className="absolute bg-white/30 rounded-full pointer-events-none"

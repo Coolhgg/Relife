@@ -254,7 +254,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
         themeDescription || `Custom theme based on ${baseTheme}`;
 
       setCurrentEditingTheme(customTheme);
-      setSavedThemes(prev => [...prev, customTheme]);
+      setSavedThemes((prev: any) => // auto: implicit any [...prev, customTheme]);
 
       // Save to localStorage
       const savedCustomThemes = JSON.parse(
@@ -306,7 +306,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
   };
 
   const handleColorChange = (colorKey: keyof ColorPaletteState, color: string) => {
-    setColorPalette(prev => ({
+    setColorPalette((prev: any) => // auto: implicit any ({
       ...prev,
       [colorKey]: color,
     }));
@@ -341,7 +341,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
       <input
         type="color"
         value={color}
-        onChange={e => onChange(e.target.value)}
+        onChange={(e: any) => // auto: implicit any onChange(e.target.value)}
         className="w-full h-32 rounded-md border border-gray-200 cursor-pointer"
       />
       <div className="mt-3 flex gap-2">
@@ -368,7 +368,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
         <input
           type="text"
           value={color}
-          onChange={e => onChange(e.target.value)}
+          onChange={(e: any) => // auto: implicit any onChange(e.target.value)}
           className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="#000000"
         />
@@ -486,7 +486,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                 <span>Based on</span>
                 <select
                   value={baseTheme}
-                  onChange={e => setBaseTheme(e.target.value as Theme)}
+                  onChange={(e: any) => // auto: implicit any setBaseTheme(e.target.value as Theme)}
                   className="px-3 py-1 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="light">Light Theme</option>
@@ -547,7 +547,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                     <input
                       type="text"
                       value={themeName}
-                      onChange={e => setThemeName(e.target.value)}
+                      onChange={(e: any) => // auto: implicit any setThemeName(e.target.value)}
                       placeholder="My Awesome Theme"
                       className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -558,7 +558,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                     </label>
                     <textarea
                       value={themeDescription}
-                      onChange={e => setThemeDescription(e.target.value)}
+                      onChange={(e: any) => // auto: implicit any setThemeDescription(e.target.value)}
                       placeholder="Describe your theme..."
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
@@ -611,7 +611,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                         <input
                           type="text"
                           value={color}
-                          onChange={e =>
+                          onChange={(e: any) => // auto: implicit any
                             handleColorChange(
                               key as keyof ColorPaletteState,
                               e.target.value
@@ -623,7 +623,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                       {showColorPicker === key && (
                         <ColorPicker
                           color={color}
-                          onChange={newColor =>
+                          onChange={(newColor: any) => // auto: implicit any
                             handleColorChange(key as keyof ColorPaletteState, newColor)
                           }
                           onClose={() => setShowColorPicker(null)}

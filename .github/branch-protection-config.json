@@ -14,7 +14,7 @@
         "🛡️ Quality Gates / build",
         "🛡️ Quality Gates / quality-gates-status",
         "Accessibility Testing / unit-a11y-tests",
-        "Accessibility Testing / e2e-a11y-tests", 
+        "Accessibility Testing / e2e-a11y-tests",
         "Accessibility Testing / lighthouse-audits",
         "Accessibility Testing / pa11y-audits",
         "Accessibility Testing / comprehensive-report"
@@ -64,10 +64,7 @@
         "accessibility_checklist": "Must complete accessibility testing checklist in PR template"
       },
       "artifacts": {
-        "required": [
-          "accessibility-summary.json",
-          "accessibility-report.html"
-        ],
+        "required": ["accessibility-summary.json", "accessibility-report.html"],
         "optional": [
           "lighthouse-report.html",
           "pa11y-results.json",
@@ -79,7 +76,7 @@
       "accessibility_reviewer": {
         "required_for": [
           "UI/UX changes",
-          "Component modifications", 
+          "Component modifications",
           "New interactive elements",
           "Form implementations",
           "Modal/dialog implementations"

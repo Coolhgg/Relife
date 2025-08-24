@@ -370,7 +370,11 @@ class AnalyticsService {
   /**
    * Track errors (to correlate with Sentry)
    */
-  trackError(error: Error, _contextName?: any /* auto: placeholder param - adjust */, context: EventProperties = {}): void {
+  trackError(
+    error: Error,
+    _contextName?: any /* auto: placeholder param - adjust */,
+    context: EventProperties = {}
+  ): void {
     this.track(ANALYTICS_EVENTS.ERROR_OCCURRED, {
       error_message: error.message,
       error_stack: error.stack?.substring(0, 500), // Truncate for performance

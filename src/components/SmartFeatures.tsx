@@ -760,9 +760,9 @@ export function SmartFeatures({
                 <Switch
                   id="weather-enabled"
                   checked={settings.weatherEnabled}
-                  onCheckedChange={checked =>
-                    handleSettingChange('weatherEnabled', checked)
-                  }
+                  onCheckedChange={(
+                    checked: any // auto: implicit any
+                  ) => handleSettingChange('weatherEnabled', checked)}
                 />
               </div>
 
@@ -776,9 +776,9 @@ export function SmartFeatures({
                 <Switch
                   id="location-enabled"
                   checked={settings.locationEnabled}
-                  onCheckedChange={checked =>
-                    handleSettingChange('locationEnabled', checked)
-                  }
+                  onCheckedChange={(
+                    checked: any // auto: implicit any
+                  ) => handleSettingChange('locationEnabled', checked)}
                 />
               </div>
 
@@ -792,9 +792,9 @@ export function SmartFeatures({
                 <Switch
                   id="fitness-enabled"
                   checked={settings.fitnessEnabled}
-                  onCheckedChange={checked =>
-                    handleSettingChange('fitnessEnabled', checked)
-                  }
+                  onCheckedChange={(
+                    checked: any // auto: implicit any
+                  ) => handleSettingChange('fitnessEnabled', checked)}
                 />
               </div>
 
@@ -808,9 +808,9 @@ export function SmartFeatures({
                 <Switch
                   id="adaptive-difficulty"
                   checked={settings.adaptiveDifficulty}
-                  onCheckedChange={checked =>
-                    handleSettingChange('adaptiveDifficulty', checked)
-                  }
+                  onCheckedChange={(
+                    checked: any // auto: implicit any
+                  ) => handleSettingChange('adaptiveDifficulty', checked)}
                 />
               </div>
 
@@ -823,7 +823,9 @@ export function SmartFeatures({
                   id="smart-wake-window"
                   type="number"
                   value={settings.smartWakeWindow}
-                  onChange={e =>
+                  onChange={(
+                    e: any // auto: implicit any
+                  ) =>
                     handleSettingChange(
                       'smartWakeWindow',
                       parseInt(e.target.value) || 30

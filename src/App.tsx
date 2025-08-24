@@ -250,7 +250,7 @@ function AppContent() {
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
     activeAlarm: appState.activeAlarm,
-    enabledAlarms: appState.alarms.filter(alarm => alarm.enabled),
+    enabledAlarms: appState.alarms.filter((alarm: any) => // auto: implicit any alarm.enabled),
     settings: tabProtectionSettings.settings,
   });
 
@@ -270,7 +270,7 @@ function AppContent() {
         const aiRewards = AIRewardsService.getInstance();
         const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
 
-        setAppState(prev => ({
+        setAppState((prev: any) => // auto: implicit any ({
           ...prev,
           rewardSystem,
         }));
@@ -300,7 +300,7 @@ function AppContent() {
       // Load alarms from offline storage first (faster)
       const offlineAlarms = await OfflineStorage.getAlarms();
       if (offlineAlarms.length > 0) {
-        setAppState(prev => ({
+        setAppState((prev: any) => // auto: implicit any ({
           ...prev,
           alarms: offlineAlarms,
           isOnboarding: offlineAlarms.length === 0,
@@ -313,7 +313,7 @@ function AppContent() {
           const { alarms: savedAlarms } = await SupabaseService.loadUserAlarms(
             auth.user.id
           );
-          setAppState(prev => ({
+          setAppState((prev: any) => // auto: implicit any ({
             ...prev,
             alarms: savedAlarms,
             isOnboarding: savedAlarms.length === 0,
@@ -341,7 +341,7 @@ function AppContent() {
           await refreshRewardsSystem(offlineAlarms);
         }
       } else {
-        setAppState(prev => ({
+        setAppState((prev: any) => // auto: implicit any ({
           ...prev,
           alarms: offlineAlarms,
           isOnboarding: offlineAlarms.length === 0,
@@ -376,7 +376,7 @@ function AppContent() {
         analytics.trackAlarmAction('snooze', alarmId, { success: true, duration });
         analytics.trackFeatureUsage('alarm_snooze', 'completed', { duration });
 
-        setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
+        setAppState((prev: any) => // auto: implicit any ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
       } catch (error) {
         const duration = performance.now() - startTime;
         analytics.trackAlarmAction('snooze', alarmId, {
@@ -400,7 +400,7 @@ function AppContent() {
           }
         );
         // Fallback: still hide the alarm even if snooze fails
-        setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
+        setAppState((prev: any) => // auto: implicit any ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
       }
     },
     [isOnline, setAppState]
@@ -414,7 +414,7 @@ function AppContent() {
       switch (type) {
         case 'ALARM_TRIGGERED':
           if (data.alarm) {
-            setAppState(prev => ({ ...prev, activeAlarm: data.alarm }));
+            setAppState((prev: any) => // auto: implicit any ({ ...prev, activeAlarm: data.alarm }));
           }
           break;
         case 'SYNC_START':
@@ -452,7 +452,7 @@ function AppContent() {
 
             // Handle specific actions
             if (data.action === 'dismiss' && appState.activeAlarm) {
-              setAppState(prev => ({ ...prev, activeAlarm: null }));
+              setAppState((prev: any) => // auto: implicit any ({ ...prev, activeAlarm: null }));
             } else if (data.action === 'snooze' && appState.activeAlarm) {
               // Trigger snooze functionality
               handleAlarmSnooze(appState.activeAlarm.id);
@@ -485,7 +485,7 @@ function AppContent() {
       console.log('App: Handling service worker alarm trigger:', alarm.id);
 
       // Update app state to show alarm as triggered
-      setAppState(prev => ({
+      setAppState((prev: any) => // auto: implicit any ({
         ...prev,
         activeAlarm: alarm,
         alarmTriggeredAt: new Date(),
@@ -701,7 +701,7 @@ function AppContent() {
         const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(
           auth.user.id
         );
-        setAppState(prev => ({ ...prev, alarms: updatedAlarms }));
+        setAppState((prev: any) => // auto: implicit any ({ ...prev, alarms: updatedAlarms }));
         await OfflineStorage.saveAlarms(updatedAlarms);
       }
     } catch (error) {
@@ -793,7 +793,7 @@ function AppContent() {
     const appAnalytics = AppAnalyticsService.getInstance();
     const emailService = EmailCampaignService.getInstance();
 
-    setAppState(prev => ({
+    setAppState((prev: any) => // auto: implicit any ({
       ...prev,
       user: auth.user,
     }));
@@ -1099,7 +1099,7 @@ function AppContent() {
 
       // Check if there are enabled alarms that could ring soon
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
-        const enabledAlarms = appState.alarms.filter(alarm => alarm.enabled);
+        const enabledAlarms = appState.alarms.filter((alarm: any) => // auto: implicit any alarm.enabled);
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold
           const now = new Date();
@@ -1110,7 +1110,7 @@ function AppContent() {
                 1000
           );
 
-          const upcomingAlarms = enabledAlarms.filter(alarm => {
+          const upcomingAlarms = enabledAlarms.filter((alarm: any) => // auto: implicit any {
             const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
             // Check if alarm is set for today
@@ -1277,7 +1277,7 @@ function AppContent() {
       }
 
       const updatedAlarms = [...appState.alarms, newAlarm];
-      setAppState(prev => ({
+      setAppState((prev: any) => // auto: implicit any ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1374,7 +1374,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('edit', alarmId, { voiceMood: alarmData.voiceMood });
-      const existingAlarm = appState.alarms.find(a => a.id === alarmId);
+      const existingAlarm = appState.alarms.find((a: any) => // auto: implicit any a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1395,11 +1395,11 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map(alarm =>
+      const updatedAlarms = appState.alarms.map((alarm: any) => // auto: implicit any
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState(prev => ({
+      setAppState((prev: any) => // auto: implicit any ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1473,9 +1473,9 @@ function AppContent() {
         await OfflineStorage.deleteAlarm(alarmId);
       }
 
-      const alarmToDelete = appState.alarms.find(a => a.id === alarmId);
-      const updatedAlarms = appState.alarms.filter(alarm => alarm.id !== alarmId);
-      setAppState(prev => ({
+      const alarmToDelete = appState.alarms.find((a: any) => // auto: implicit any a.id === alarmId);
+      const updatedAlarms = appState.alarms.filter((alarm: any) => // auto: implicit any alarm.id !== alarmId);
+      setAppState((prev: any) => // auto: implicit any ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1535,7 +1535,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('toggle', alarmId, { enabled });
-      const existingAlarm = appState.alarms.find(a => a.id === alarmId);
+      const existingAlarm = appState.alarms.find((a: any) => // auto: implicit any a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1556,11 +1556,11 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map(alarm =>
+      const updatedAlarms = appState.alarms.map((alarm: any) => // auto: implicit any
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState(prev => ({
+      setAppState((prev: any) => // auto: implicit any ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1619,7 +1619,7 @@ function AppContent() {
       false // Not skipped
     );
 
-    setAppState(prev => ({ ...prev, isOnboarding: false }));
+    setAppState((prev: any) => // auto: implicit any ({ ...prev, isOnboarding: false }));
   };
 
   const handleAlarmDismiss = (
@@ -1648,7 +1648,7 @@ function AppContent() {
           duration,
         });
 
-        setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
+        setAppState((prev: any) => // auto: implicit any ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
       } catch (error) {
         const duration = performance.now() - startTime;
         analytics.trackAlarmAction('dismiss', alarmId, {
@@ -1671,7 +1671,7 @@ function AppContent() {
           }
         );
         // Fallback: still dismiss the alarm even if logging fails
-        setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
+        setAppState((prev: any) => // auto: implicit any ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
       }
     };
 
@@ -1768,7 +1768,7 @@ function AppContent() {
                 There was a problem with the alarm. It has been dismissed.
               </p>
               <button
-                onClick={() => setAppState(prev => ({ ...prev, activeAlarm: null }))}
+                onClick={() => setAppState((prev: any) => // auto: implicit any ({ ...prev, activeAlarm: null }))}
                 className="bg-red-600 text-white px-4 py-2 rounded-lg"
               >
                 Back to Dashboard
@@ -1794,7 +1794,7 @@ function AppContent() {
       case 'dashboard':
         appAnalytics.trackPageView('dashboard', {
           totalAlarms: appState.alarms.length,
-          activeAlarms: appState.alarms.filter(a => a.enabled).length,
+          activeAlarms: appState.alarms.filter((a: any) => // auto: implicit any a.enabled).length,
         });
         return (
           <ErrorBoundary context="Dashboard">
@@ -1810,7 +1810,7 @@ function AppContent() {
                   'navigation',
                   'advanced_scheduling_from_dashboard'
                 );
-                setAppState(prev => ({ ...prev, currentView: 'advanced-scheduling' }));
+                setAppState((prev: any) => // auto: implicit any ({ ...prev, currentView: 'advanced-scheduling' }));
               }}
             />
           </ErrorBoundary>
@@ -1824,7 +1824,7 @@ function AppContent() {
             <AlarmList
               alarms={appState.alarms}
               onToggleAlarm={handleToggleAlarm}
-              onEditAlarm={alarm => {
+              onEditAlarm={(alarm: any) => // auto: implicit any {
                 appAnalytics.trackFeatureUsage('edit_alarm', 'button_clicked', {
                   alarmId: alarm.id,
                   alarmLabel: alarm.label,
@@ -1854,7 +1854,7 @@ function AppContent() {
               rewardSystem={appState.rewardSystem}
               activeBattles={appState.activeBattles || []}
               friends={appState.friends || []}
-              onCreateBattle={battle => {
+              onCreateBattle={(battle: any) => // auto: implicit any {
                 // Add battle to state with complete Battle object
                 const completeBattle: Battle = {
                   id: battle.id || Math.random().toString(36).substr(2, 9),
@@ -1873,7 +1873,7 @@ function AppContent() {
                   createdAt: battle.createdAt || new Date().toISOString(),
                   ...battle,
                 };
-                setAppState(prev => ({
+                setAppState((prev: any) => // auto: implicit any ({
                   ...prev,
                   activeBattles: [...(prev.activeBattles || []), completeBattle],
                 }));
@@ -1881,7 +1881,7 @@ function AppContent() {
                   battleType: completeBattle.type,
                 });
               }}
-              onJoinBattle={battleId => {
+              onJoinBattle={(battleId: any) => // auto: implicit any {
                 appAnalytics.trackFeatureUsage('battle_participation', 'joined', {
                   battleId,
                 });
@@ -1946,7 +1946,7 @@ function AppContent() {
           <ErrorBoundary context="PricingPage">
             <PricingPage
               user={auth.user as User}
-              onUpgrade={plan => {
+              onUpgrade={(plan: any) => // auto: implicit any {
                 appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
                   plan: plan.id,
                   price: plan.price,
@@ -2034,7 +2034,7 @@ function AppContent() {
                     tabProtectionSettings.settings.visualSettings.showVisualWarning && (
                       <TabProtectionWarning
                         activeAlarm={appState.activeAlarm}
-                        enabledAlarms={appState.alarms.filter(alarm => alarm.enabled)}
+                        enabledAlarms={appState.alarms.filter((alarm: any) => // auto: implicit any alarm.enabled)}
                         settings={tabProtectionSettings.settings}
                       />
                     )}
@@ -2089,7 +2089,7 @@ function AppContent() {
                 onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
-                  setAppState(prev => ({ ...prev, currentView: 'dashboard' }));
+                  setAppState((prev: any) => // auto: implicit any ({ ...prev, currentView: 'dashboard' }));
                   AccessibilityUtils.announcePageChange('Dashboard');
                 })}
                 className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
@@ -2106,14 +2106,14 @@ function AppContent() {
                         borderColor: 'transparent',
                       }
                 }
-                onMouseEnter={e => {
+                onMouseEnter={(e: any) => // auto: implicit any {
                   if (appState.currentView !== 'dashboard') {
                     e.currentTarget.style.backgroundColor =
                       'var(--theme-surface-hover)';
                     e.currentTarget.style.color = 'var(--theme-text-primary)';
                   }
                 }}
-                onMouseLeave={e => {
+                onMouseLeave={(e: any) => // auto: implicit any {
                   if (appState.currentView !== 'dashboard') {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = 'var(--theme-text-secondary)';
@@ -2137,7 +2137,7 @@ function AppContent() {
                   appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
                     totalAlarms: appState.alarms.length,
                   });
-                  setAppState(prev => ({ ...prev, currentView: 'alarms' }));
+                  setAppState((prev: any) => // auto: implicit any ({ ...prev, currentView: 'alarms' }));
                   AccessibilityUtils.announcePageChange('Alarms');
                 })}
                 className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
@@ -2154,14 +2154,14 @@ function AppContent() {
                         borderColor: 'transparent',
                       }
                 }
-                onMouseEnter={e => {
+                onMouseEnter={(e: any) => // auto: implicit any {
                   if (appState.currentView !== 'alarms') {
                     e.currentTarget.style.backgroundColor =
                       'var(--theme-surface-hover)';
                     e.currentTarget.style.color = 'var(--theme-text-primary)';
                   }
                 }}
-                onMouseLeave={e => {
+                onMouseLeave={(e: any) => // auto: implicit any {
                   if (appState.currentView !== 'alarms') {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = 'var(--theme-text-secondary)';
@@ -2186,7 +2186,7 @@ function AppContent() {
                     'navigation',
                     'advanced_scheduling_clicked'
                   );
-                  setAppState(prev => ({
+                  setAppState((prev: any) => // auto: implicit any ({
                     ...prev,
                     currentView: 'advanced-scheduling',
                   }));
@@ -2219,7 +2219,7 @@ function AppContent() {
                     hasRewards: !!appState.rewardSystem?.unlockedRewards.length,
                     activeBattles: appState.activeBattles?.length,
                   });
-                  setAppState(prev => ({ ...prev, currentView: 'gaming' }));
+                  setAppState((prev: any) => // auto: implicit any ({ ...prev, currentView: 'gaming' }));
                   AccessibilityUtils.announcePageChange('Gaming Hub');
                 })}
                 className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
@@ -2243,7 +2243,7 @@ function AppContent() {
                 onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
-                  setAppState(prev => ({ ...prev, currentView: 'settings' }));
+                  setAppState((prev: any) => // auto: implicit any ({ ...prev, currentView: 'settings' }));
                   AccessibilityUtils.announcePageChange('Settings');
                 })}
                 className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
@@ -2267,7 +2267,7 @@ function AppContent() {
                 onClick={() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
-                  setAppState(prev => ({ ...prev, currentView: 'pricing' }));
+                  setAppState((prev: any) => // auto: implicit any ({ ...prev, currentView: 'pricing' }));
                   AccessibilityUtils.announcePageChange('Premium Plans');
                 }}
                 className={`flex flex-col items-center py-2 rounded-lg transition-colors ${

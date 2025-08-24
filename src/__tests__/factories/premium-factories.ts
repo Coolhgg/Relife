@@ -328,65 +328,62 @@ export const _createTestVoice = (options: CreateVoiceOptions = {}): PremiumVoice
   };
 };
 
-const createTestVoicePersonality = (): SafeVoicePersonality =>
-  ({
-    energy: faker.number.int({ min: 1, max: 10 }),
-    humor: faker.number.int({ min: 1, max: 10 }),
-    intensity: faker.number.int({ min: 1, max: 10 }),
-    supportiveness: faker.number.int({ min: 1, max: 10 }),
-    directness: faker.number.int({ min: 1, max: 10 }),
-    creativity: faker.number.int({ min: 1, max: 10 }),
-    traits: randomSubset(
-      [
-        'encouraging',
-        'playful',
-        'direct',
-        'patient',
-        'witty',
-        'dramatic',
-        'calm',
-        'energetic',
-        'wise',
-        'sarcastic',
-      ],
-      2,
-      4
-    ),
-  });
+const createTestVoicePersonality = (): SafeVoicePersonality => ({
+  energy: faker.number.int({ min: 1, max: 10 }),
+  humor: faker.number.int({ min: 1, max: 10 }),
+  intensity: faker.number.int({ min: 1, max: 10 }),
+  supportiveness: faker.number.int({ min: 1, max: 10 }),
+  directness: faker.number.int({ min: 1, max: 10 }),
+  creativity: faker.number.int({ min: 1, max: 10 }),
+  traits: randomSubset(
+    [
+      'encouraging',
+      'playful',
+      'direct',
+      'patient',
+      'witty',
+      'dramatic',
+      'calm',
+      'energetic',
+      'wise',
+      'sarcastic',
+    ],
+    2,
+    4
+  ),
+});
 
-const createTestVoiceSample = (): SafeVoiceSample =>
-  ({
-    id: generateId('sample'),
-    text: faker.helpers.arrayElement([
-      "Rise and shine, champion! Today's your day to conquer the world!",
-      'Good morning, sleepyhead. Time to embrace the beautiful day ahead.',
-      'Wake up, warrior! Your dreams are waiting for you to make them reality!',
-      "Morning motivation coming right up! Let's make today absolutely legendary!",
-      "Time to get up and show the world what you're made of!",
-      "Another day, another chance to be awesome. Let's do this!",
-    ]),
-    audioUrl: generateUrl() + '/sample.mp3',
-    duration: faker.number.int({ min: 2, max: 10 }), // seconds
-    context: faker.helpers.arrayElement([
-      'wake_up', // auto: adjusted to match enum
-      'motivation',
-      'challenge', // auto: adjusted to match enum
-      'success', // auto: adjusted to match enum
-    ]),
-    emotion: faker.helpers.arrayElement(['excited', 'calm', 'determined', 'playful']),
-  });
+const createTestVoiceSample = (): SafeVoiceSample => ({
+  id: generateId('sample'),
+  text: faker.helpers.arrayElement([
+    "Rise and shine, champion! Today's your day to conquer the world!",
+    'Good morning, sleepyhead. Time to embrace the beautiful day ahead.',
+    'Wake up, warrior! Your dreams are waiting for you to make them reality!',
+    "Morning motivation coming right up! Let's make today absolutely legendary!",
+    "Time to get up and show the world what you're made of!",
+    "Another day, another chance to be awesome. Let's do this!",
+  ]),
+  audioUrl: generateUrl() + '/sample.mp3',
+  duration: faker.number.int({ min: 2, max: 10 }), // seconds
+  context: faker.helpers.arrayElement([
+    'wake_up', // auto: adjusted to match enum
+    'motivation',
+    'challenge', // auto: adjusted to match enum
+    'success', // auto: adjusted to match enum
+  ]),
+  emotion: faker.helpers.arrayElement(['excited', 'calm', 'determined', 'playful']),
+});
 
-const createTestVoiceFeatures = (): SafeVoiceFeatures =>
-  ({
-    emotionalAdaptation: faker.datatype.boolean({ probability: 0.7 }),
-    contextAwareness: faker.datatype.boolean({ probability: 0.6 }),
-    personalizedMessages: faker.datatype.boolean({ probability: 0.8 }),
-    multiLanguage: faker.datatype.boolean({ probability: 0.4 }),
-    customizable: faker.datatype.boolean({ probability: 0.5 }),
-    backgroundMusic: faker.datatype.boolean({ probability: 0.3 }),
-    voiceEffects: faker.datatype.boolean({ probability: 0.4 }),
-    realTimeGeneration: faker.datatype.boolean({ probability: 0.2 }),
-  });
+const createTestVoiceFeatures = (): SafeVoiceFeatures => ({
+  emotionalAdaptation: faker.datatype.boolean({ probability: 0.7 }),
+  contextAwareness: faker.datatype.boolean({ probability: 0.6 }),
+  personalizedMessages: faker.datatype.boolean({ probability: 0.8 }),
+  multiLanguage: faker.datatype.boolean({ probability: 0.4 }),
+  customizable: faker.datatype.boolean({ probability: 0.5 }),
+  backgroundMusic: faker.datatype.boolean({ probability: 0.3 }),
+  voiceEffects: faker.datatype.boolean({ probability: 0.4 }),
+  realTimeGeneration: faker.datatype.boolean({ probability: 0.2 }),
+});
 
 // ===============================
 // CUSTOM SOUND FACTORIES
@@ -493,45 +490,42 @@ export const _createTestAnalytics = (
   };
 };
 
-const createTestSleepInsights = (): SafeSleepInsights =>
-  ({
-    averageBedtime: faker.date.recent().toTimeString().slice(0, 5),
-    averageWakeTime: faker.date.recent().toTimeString().slice(0, 5),
-    averageSleepDuration: faker.number.float({ min: 6.0, max: 10.0, multipleOf: 0.1 }),
-    sleepEfficiency: faker.number.float({ min: 0.7, max: 0.98, multipleOf: 0.01 }),
-    consistencyScore: faker.number.int({ min: 60, max: 100 }),
-    optimalBedtime: faker.date.recent().toTimeString().slice(0, 5),
-    sleepDebt: faker.number.float({ min: -2.0, max: 2.0, multipleOf: 0.1 }),
-    weekendShift: faker.number.float({ min: -2.0, max: 3.0, multipleOf: 0.1 }),
-  });
+const createTestSleepInsights = (): SafeSleepInsights => ({
+  averageBedtime: faker.date.recent().toTimeString().slice(0, 5),
+  averageWakeTime: faker.date.recent().toTimeString().slice(0, 5),
+  averageSleepDuration: faker.number.float({ min: 6.0, max: 10.0, multipleOf: 0.1 }),
+  sleepEfficiency: faker.number.float({ min: 0.7, max: 0.98, multipleOf: 0.01 }),
+  consistencyScore: faker.number.int({ min: 60, max: 100 }),
+  optimalBedtime: faker.date.recent().toTimeString().slice(0, 5),
+  sleepDebt: faker.number.float({ min: -2.0, max: 2.0, multipleOf: 0.1 }),
+  weekendShift: faker.number.float({ min: -2.0, max: 3.0, multipleOf: 0.1 }),
+});
 
-const createTestWakeUpPatterns = (): SafeWakeUpPatterns =>
-  ({
-    mostCommonWakeTime: faker.date.recent().toTimeString().slice(0, 5),
-    wakeTimeVariability: faker.number.float({ min: 0.1, max: 2.0, multipleOf: 0.1 }),
-    snoozeFrequency: faker.number.float({ min: 0.1, max: 0.8, multipleOf: 0.01 }),
-    averageSnoozeCount: faker.number.float({ min: 0.5, max: 4.0, multipleOf: 0.1 }),
-    quickestWakeUp: faker.number.int({ min: 0, max: 60 }), // seconds
-    longestSnoozeSession: faker.number.int({ min: 5, max: 120 }), // minutes
-    weekdayVsWeekend: {
-      weekdayAvg: faker.date.recent().toTimeString().slice(0, 5),
-      weekendAvg: faker.date.recent().toTimeString().slice(0, 5),
-      difference: faker.number.float({ min: -2.0, max: 4.0, multipleOf: 0.1 }),
-    },
-  });
+const createTestWakeUpPatterns = (): SafeWakeUpPatterns => ({
+  mostCommonWakeTime: faker.date.recent().toTimeString().slice(0, 5),
+  wakeTimeVariability: faker.number.float({ min: 0.1, max: 2.0, multipleOf: 0.1 }),
+  snoozeFrequency: faker.number.float({ min: 0.1, max: 0.8, multipleOf: 0.01 }),
+  averageSnoozeCount: faker.number.float({ min: 0.5, max: 4.0, multipleOf: 0.1 }),
+  quickestWakeUp: faker.number.int({ min: 0, max: 60 }), // seconds
+  longestSnoozeSession: faker.number.int({ min: 5, max: 120 }), // minutes
+  weekdayVsWeekend: {
+    weekdayAvg: faker.date.recent().toTimeString().slice(0, 5),
+    weekendAvg: faker.date.recent().toTimeString().slice(0, 5),
+    difference: faker.number.float({ min: -2.0, max: 4.0, multipleOf: 0.1 }),
+  },
+});
 
-const createTestPerformanceMetrics = (): SafePerformanceMetrics =>
-  ({
-    completionRate: faker.number.float({ min: 0.6, max: 1.0, multipleOf: 0.01 }),
-    averageResponseTime: faker.number.int({ min: 5, max: 300 }), // seconds
-    streakRecord: faker.number.int({ min: 1, max: 100 }),
-    currentStreak: faker.number.int({ min: 0, max: 50 }),
-    improvementTrend: faker.number.float({ min: -0.2, max: 0.3, multipleOf: 0.01 }),
-    battlesWon: faker.number.int({ min: 0, max: 50 }),
-    totalBattles: faker.number.int({ min: 1, max: 100 }),
-    winRate: faker.number.float({ min: 0.1, max: 0.9, multipleOf: 0.01 }),
-    experienceGained: faker.number.int({ min: 100, max: 10000 }),
-  });
+const createTestPerformanceMetrics = (): SafePerformanceMetrics => ({
+  completionRate: faker.number.float({ min: 0.6, max: 1.0, multipleOf: 0.01 }),
+  averageResponseTime: faker.number.int({ min: 5, max: 300 }), // seconds
+  streakRecord: faker.number.int({ min: 1, max: 100 }),
+  currentStreak: faker.number.int({ min: 0, max: 50 }),
+  improvementTrend: faker.number.float({ min: -0.2, max: 0.3, multipleOf: 0.01 }),
+  battlesWon: faker.number.int({ min: 0, max: 50 }),
+  totalBattles: faker.number.int({ min: 1, max: 100 }),
+  winRate: faker.number.float({ min: 0.1, max: 0.9, multipleOf: 0.01 }),
+  experienceGained: faker.number.int({ min: 100, max: 10000 }),
+});
 
 const createTestAnalyticsRecommendation = () => ({
   id: generateId('recommendation'),
@@ -677,9 +671,22 @@ export const createTestPricing = _createTestPricing;
 // ===============================
 
 // auto: widened type - factory functions can return partial interfaces
-export type SafeVoicePersonality = Partial<VoicePersonality> & { energy: number; humor: number; };
-export type SafeVoiceSample = Partial<VoiceSample> & { id: string; text: string; audioUrl: string; duration: number; };
+export type SafeVoicePersonality = Partial<VoicePersonality> & {
+  energy: number;
+  humor: number;
+};
+export type SafeVoiceSample = Partial<VoiceSample> & {
+  id: string;
+  text: string;
+  audioUrl: string;
+  duration: number;
+};
 export type SafeVoiceFeatures = Partial<VoiceFeatures>;
-export type SafeSleepInsights = Partial<SleepInsights> & { averageSleepDuration?: number; sleepQualityScore?: number; };
-export type SafeWakeUpPatterns = Partial<WakeUpPatterns> & { averageWakeTime?: string; };
-export type SafePerformanceMetrics = Partial<PerformanceMetrics> & { wakeUpSuccessRate?: number; };
+export type SafeSleepInsights = Partial<SleepInsights> & {
+  averageSleepDuration?: number;
+  sleepQualityScore?: number;
+};
+export type SafeWakeUpPatterns = Partial<WakeUpPatterns> & { averageWakeTime?: string };
+export type SafePerformanceMetrics = Partial<PerformanceMetrics> & {
+  wakeUpSuccessRate?: number;
+};

@@ -622,7 +622,7 @@ class RealtimeService {
         .select('id')
         .eq('user_id', userId);
 
-      return alarms?.map(a => a.id).join(',') || '';
+      return alarms?.map((a: any) => // auto: implicit any a.id).join(',') || '';
     } catch (error) {
       console.error('Failed to get user alarm IDs:', error);
       return '';

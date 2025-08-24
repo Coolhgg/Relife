@@ -132,8 +132,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
   };
 
   const updateCondition = (id: string, updates: Partial<ConditionBasedAdjustment>) => {
-    setConditions(prev =>
-      prev.map(cond => (cond.id === id ? { ...cond, ...updates } : cond))
+    setConditions((prev: any) => // auto: implicit any
+      prev.map((cond: any) => // auto: implicit any (cond.id === id ? { ...cond, ...updates } : cond))
     );
   };
 
@@ -391,7 +391,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={smartEnabled}
-                      onChange={e => setSmartEnabled(e.target.checked)}
+                      onChange={(e: any) => // auto: implicit any setSmartEnabled(e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
@@ -414,7 +414,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         <input
                           type="checkbox"
                           checked={realTimeAdaptation}
-                          onChange={e => setRealTimeAdaptation(e.target.checked)}
+                          onChange={(e: any) => // auto: implicit any setRealTimeAdaptation(e.target.checked)}
                           className="sr-only peer"
                         />
                         <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -435,7 +435,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         <input
                           type="checkbox"
                           checked={dynamicWakeWindow}
-                          onChange={e => setDynamicWakeWindow(e.target.checked)}
+                          onChange={(e: any) => // auto: implicit any setDynamicWakeWindow(e.target.checked)}
                           className="sr-only peer"
                         />
                         <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -454,7 +454,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         max="1"
                         step="0.1"
                         value={sleepPatternWeight}
-                        onChange={e =>
+                        onChange={(e: any) => // auto: implicit any
                           setSleepPatternWeight(parseFloat(e.target.value))
                         }
                         className="w-full accent-purple-500"
@@ -476,7 +476,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         max="0.5"
                         step="0.05"
                         value={learningFactor}
-                        onChange={e => setLearningFactor(parseFloat(e.target.value))}
+                        onChange={(e: any) => // auto: implicit any setLearningFactor(parseFloat(e.target.value))}
                         className="w-full accent-purple-500"
                       />
                       <div className="flex justify-between text-xs text-white/60 mt-1">
@@ -496,7 +496,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                 Condition-Based Adjustments
               </h3>
 
-              {conditions.map(condition => {
+              {conditions.map((condition: any) => // auto: implicit any {
                 const Icon = conditionIcons[condition.type] || Settings;
                 return (
                   <div
@@ -523,7 +523,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                             <input
                               type="checkbox"
                               checked={condition.isEnabled}
-                              onChange={e =>
+                              onChange={(e: any) => // auto: implicit any
                                 updateCondition(condition.id, {
                                   isEnabled: e.target.checked,
                                 })

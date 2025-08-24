@@ -41,7 +41,7 @@ if (typeof global !== 'undefined') {
 
   // Mock window.matchMedia only if it doesn't exist
   if (!global.matchMedia) {
-    global.matchMedia = vi.fn().mockImplementation(query => ({
+    global.matchMedia = vi.fn().mockImplementation((query: any) => // auto: implicit any ({
       matches: false,
       media: query,
       onchange: null,
@@ -101,10 +101,10 @@ if (!global.IntersectionObserver) {
 
 // Mock animation frame functions only if they don't exist
 if (!global.requestAnimationFrame) {
-  global.requestAnimationFrame = vi.fn(cb => setTimeout(cb, 0));
+  global.requestAnimationFrame = vi.fn((cb: any) => // auto: implicit any setTimeout(cb, 0));
 }
 if (!global.cancelAnimationFrame) {
-  global.cancelAnimationFrame = vi.fn(id => clearTimeout(id));
+  global.cancelAnimationFrame = vi.fn((id: any) => // auto: implicit any clearTimeout(id));
 }
 
 // Mock window timer functions only if they don't exist or need enhancement

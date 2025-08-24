@@ -2,26 +2,26 @@ name: E2E Tests
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   workflow_dispatch:
     inputs:
       test_suite:
-        description: 'Test suite to run'
+        description: "Test suite to run"
         required: false
-        default: 'all'
+        default: "all"
         type: choice
         options:
-        - all
-        - desktop
-        - mobile
-        - auth
-        - dashboard
-        - alarms
-        - settings
+          - all
+          - desktop
+          - mobile
+          - auth
+          - dashboard
+          - alarms
+          - settings
   schedule:
-    - cron: '0 2 * * 0'  # Run at 2 AM every Sunday
+    - cron: "0 2 * * 0" # Run at 2 AM every Sunday
 
 env:
   # Test environment variables
@@ -32,11 +32,11 @@ jobs:
   e2e-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    
+
     strategy:
       fail-fast: false
       matrix:
-        project: 
+        project:
           - chromium
           - firefox
           - webkit
@@ -44,319 +44,319 @@ jobs:
           - mobile-safari
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
 
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v2
-      with:
-        bun-version: latest
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
-    - name: Install dependencies
-      run: bun install --frozen-lockfile
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
-    - name: Install Playwright Browsers
-      run: bun run test:e2e:install
+      - name: Install Playwright Browsers
+        run: bun run test:e2e:install
 
-    - name: Install system dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libwoff2dec-1.0-2 libwebpdemux2 libwebpmux3 libenchant-2-2 libevdev2 libgles2-mesa libx264-dev
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwoff2dec-1.0-2 libwebpdemux2 libwebpmux3 libenchant-2-2 libevdev2 libgles2-mesa libx264-dev
 
-    - name: Build application
-      run: bun run build
+      - name: Build application
+        run: bun run build
 
-    - name: Run E2E tests
-      run: |
-        if [ "${{ github.event.inputs.test_suite }}" = "desktop" ]; then
-          bun run test:e2e:desktop --project=${{ matrix.project }}
-        elif [ "${{ github.event.inputs.test_suite }}" = "mobile" ]; then
-          bun run test:e2e:mobile --project=${{ matrix.project }}
-        elif [ "${{ github.event.inputs.test_suite }}" = "auth" ]; then
-          bunx playwright test tests/e2e/specs/authentication.spec.ts --project=${{ matrix.project }}
-        elif [ "${{ github.event.inputs.test_suite }}" = "dashboard" ]; then
-          bunx playwright test tests/e2e/specs/dashboard.spec.ts --project=${{ matrix.project }}
-        elif [ "${{ github.event.inputs.test_suite }}" = "alarms" ]; then
-          bunx playwright test tests/e2e/specs/alarm-management.spec.ts --project=${{ matrix.project }}
-        elif [ "${{ github.event.inputs.test_suite }}" = "settings" ]; then
-          bunx playwright test tests/e2e/specs/settings.spec.ts --project=${{ matrix.project }}
-        else
-          bun run test:e2e:ci --project=${{ matrix.project }}
-        fi
-      env:
-        # Add any test environment variables here
-        PLAYWRIGHT_HTML_REPORT: playwright-report-${{ matrix.project }}
+      - name: Run E2E tests
+        run: |
+          if [ "${{ github.event.inputs.test_suite }}" = "desktop" ]; then
+            bun run test:e2e:desktop --project=${{ matrix.project }}
+          elif [ "${{ github.event.inputs.test_suite }}" = "mobile" ]; then
+            bun run test:e2e:mobile --project=${{ matrix.project }}
+          elif [ "${{ github.event.inputs.test_suite }}" = "auth" ]; then
+            bunx playwright test tests/e2e/specs/authentication.spec.ts --project=${{ matrix.project }}
+          elif [ "${{ github.event.inputs.test_suite }}" = "dashboard" ]; then
+            bunx playwright test tests/e2e/specs/dashboard.spec.ts --project=${{ matrix.project }}
+          elif [ "${{ github.event.inputs.test_suite }}" = "alarms" ]; then
+            bunx playwright test tests/e2e/specs/alarm-management.spec.ts --project=${{ matrix.project }}
+          elif [ "${{ github.event.inputs.test_suite }}" = "settings" ]; then
+            bunx playwright test tests/e2e/specs/settings.spec.ts --project=${{ matrix.project }}
+          else
+            bun run test:e2e:ci --project=${{ matrix.project }}
+          fi
+        env:
+          # Add any test environment variables here
+          PLAYWRIGHT_HTML_REPORT: playwright-report-${{ matrix.project }}
 
-    - name: Upload Playwright Report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: playwright-report-${{ matrix.project }}
-        path: playwright-report/
-        retention-days: 30
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-${{ matrix.project }}
+          path: playwright-report/
+          retention-days: 30
 
-    - name: Upload Test Screenshots
-      uses: actions/upload-artifact@v4
-      if: failure()
-      with:
-        name: test-screenshots-${{ matrix.project }}
-        path: test-results/
-        retention-days: 7
+      - name: Upload Test Screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-screenshots-${{ matrix.project }}
+          path: test-results/
+          retention-days: 7
 
   # Mobile-specific testing with real device simulation
   mobile-e2e:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
 
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v2
-      with:
-        bun-version: latest
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
-    - name: Install dependencies
-      run: bun install --frozen-lockfile
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
-    - name: Install Playwright Browsers
-      run: bun run test:e2e:install
+      - name: Install Playwright Browsers
+        run: bun run test:e2e:install
 
-    - name: Build application
-      run: bun run build
+      - name: Build application
+        run: bun run build
 
-    - name: Run Mobile E2E Tests
-      run: bunx playwright test tests/e2e/specs/mobile-experience.spec.ts --project="Mobile Chrome" --project="Mobile Safari"
+      - name: Run Mobile E2E Tests
+        run: bunx playwright test tests/e2e/specs/mobile-experience.spec.ts --project="Mobile Chrome" --project="Mobile Safari"
 
-    - name: Upload Mobile Test Report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: mobile-e2e-report
-        path: playwright-report/
-        retention-days: 30
+      - name: Upload Mobile Test Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-e2e-report
+          path: playwright-report/
+          retention-days: 30
 
   # Accessibility testing
   accessibility-tests:
     timeout-minutes: 20
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
 
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v2
-      with:
-        bun-version: latest
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
-    - name: Install dependencies
-      run: bun install --frozen-lockfile
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
-    - name: Install Playwright Browsers
-      run: bunx playwright install chromium
+      - name: Install Playwright Browsers
+        run: bunx playwright install chromium
 
-    - name: Build application
-      run: bun run build
+      - name: Build application
+        run: bun run build
 
-    - name: Run Accessibility Tests
-      run: |
-        # Run tests that include accessibility checks
-        bunx playwright test --project=chromium --grep="accessibility|a11y" || echo "No specific accessibility tests found"
+      - name: Run Accessibility Tests
+        run: |
+          # Run tests that include accessibility checks
+          bunx playwright test --project=chromium --grep="accessibility|a11y" || echo "No specific accessibility tests found"
 
-    - name: Upload Accessibility Report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: accessibility-report
-        path: playwright-report/
-        retention-days: 15
+      - name: Upload Accessibility Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: accessibility-report
+          path: playwright-report/
+          retention-days: 15
 
   # Performance testing
   performance-tests:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
-    
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
 
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v2
-      with:
-        bun-version: latest
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
-    - name: Install dependencies
-      run: bun install --frozen-lockfile
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
-    - name: Install Playwright Browsers
-      run: bunx playwright install chromium
+      - name: Install Playwright Browsers
+        run: bunx playwright install chromium
 
-    - name: Build application
-      run: bun run build
+      - name: Build application
+        run: bun run build
 
-    - name: Run Performance Tests
-      run: |
-        # Run tests with performance focus
-        bunx playwright test --project=chromium --grep="performance|load" || echo "No specific performance tests found"
+      - name: Run Performance Tests
+        run: |
+          # Run tests with performance focus
+          bunx playwright test --project=chromium --grep="performance|load" || echo "No specific performance tests found"
 
-    - name: Upload Performance Report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: performance-report
-        path: playwright-report/
-        retention-days: 15
+      - name: Upload Performance Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-report
+          path: playwright-report/
+          retention-days: 15
 
   # Test summary and notifications
   test-summary:
     if: always()
     needs: [e2e-tests, mobile-e2e, accessibility-tests]
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Download all artifacts
-      uses: actions/download-artifact@v4
-      with:
-        path: ./reports
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./reports
 
-    - name: Create test summary
-      run: |
-        echo "## E2E Test Results Summary" >> $GITHUB_STEP_SUMMARY
-        echo "### Test Execution Overview" >> $GITHUB_STEP_SUMMARY
-        
-        if [ -d "./reports" ]; then
-          echo "#### Available Reports:" >> $GITHUB_STEP_SUMMARY
-          ls -la ./reports/ | grep -E "playwright-report|mobile-e2e|accessibility" | while read line; do
-            echo "- $line" >> $GITHUB_STEP_SUMMARY
-          done
-        else
-          echo "No test reports found" >> $GITHUB_STEP_SUMMARY
-        fi
-        
-        echo "### Matrix Results" >> $GITHUB_STEP_SUMMARY
-        echo "- **Main E2E Tests**: ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Mobile Tests**: ${{ needs.mobile-e2e.result }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Accessibility Tests**: ${{ needs.accessibility-tests.result }}" >> $GITHUB_STEP_SUMMARY
-        
-        echo "### Quick Actions" >> $GITHUB_STEP_SUMMARY
-        echo "- 🔍 [View detailed reports in artifacts](#)" >> $GITHUB_STEP_SUMMARY
-        echo "- 🐛 [Debug failed tests locally](../blob/main/docs/e2e-testing.md#debugging)" >> $GITHUB_STEP_SUMMARY
-        echo "- 📱 [Run mobile tests](../actions/workflows/e2e-tests.yml)" >> $GITHUB_STEP_SUMMARY
+      - name: Create test summary
+        run: |
+          echo "## E2E Test Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "### Test Execution Overview" >> $GITHUB_STEP_SUMMARY
 
-    - name: Post PR Comment
-      if: github.event_name == 'pull_request'
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const { owner, repo } = context.repo;
-          const prNumber = context.payload.pull_request.number;
-          
-          const e2eResult = '${{ needs.e2e-tests.result }}';
-          const mobileResult = '${{ needs.mobile-e2e.result }}';
-          const a11yResult = '${{ needs.accessibility-tests.result }}';
-          
-          let emoji = '✅';
-          let status = 'passed';
-          
-          if (e2eResult === 'failure' || mobileResult === 'failure' || a11yResult === 'failure') {
-            emoji = '❌';
-            status = 'failed';
-          } else if (e2eResult === 'cancelled' || mobileResult === 'cancelled' || a11yResult === 'cancelled') {
-            emoji = '⚠️';
-            status = 'cancelled';
-          }
-          
-          const comment = `## ${emoji} E2E Test Results
-          
-          The end-to-end tests have **${status}**.
-          
-          ### Test Summary
-          | Test Suite | Result |
-          |------------|--------|
-          | Desktop E2E | ${e2eResult === 'success' ? '✅' : '❌'} ${e2eResult} |
-          | Mobile E2E | ${mobileResult === 'success' ? '✅' : mobileResult === 'skipped' ? '⏭️' : '❌'} ${mobileResult} |
-          | Accessibility | ${a11yResult === 'success' ? '✅' : '❌'} ${a11yResult} |
-          
-          ${status === 'failed' ? '### 🔍 Debugging\n- Check the uploaded artifacts for detailed test reports\n- Run tests locally with `bun run test:e2e:debug`\n- View screenshots in the test-screenshots artifacts' : ''}
-          
-          <details>
-          <summary>How to run tests locally</summary>
-          
-          \`\`\`bash
-          # Install dependencies
-          bun install
-          
-          # Run all E2E tests
-          bun run test:e2e
-          
-          # Run with UI for debugging
-          bun run test:e2e:ui
-          
-          # Run specific test file
-          bunx playwright test tests/e2e/specs/dashboard.spec.ts
-          \`\`\`
-          </details>`;
-          
-          github.rest.issues.createComment({
-            owner,
-            repo,
-            issue_number: prNumber,
-            body: comment
-          });
+          if [ -d "./reports" ]; then
+            echo "#### Available Reports:" >> $GITHUB_STEP_SUMMARY
+            ls -la ./reports/ | grep -E "playwright-report|mobile-e2e|accessibility" | while read line; do
+              echo "- $line" >> $GITHUB_STEP_SUMMARY
+            done
+          else
+            echo "No test reports found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "### Matrix Results" >> $GITHUB_STEP_SUMMARY
+          echo "- **Main E2E Tests**: ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Mobile Tests**: ${{ needs.mobile-e2e.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Accessibility Tests**: ${{ needs.accessibility-tests.result }}" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Quick Actions" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔍 [View detailed reports in artifacts](#)" >> $GITHUB_STEP_SUMMARY
+          echo "- 🐛 [Debug failed tests locally](../blob/main/docs/e2e-testing.md#debugging)" >> $GITHUB_STEP_SUMMARY
+          echo "- 📱 [Run mobile tests](../actions/workflows/e2e-tests.yml)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Post PR Comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request.number;
+
+            const e2eResult = '${{ needs.e2e-tests.result }}';
+            const mobileResult = '${{ needs.mobile-e2e.result }}';
+            const a11yResult = '${{ needs.accessibility-tests.result }}';
+
+            let emoji = '✅';
+            let status = 'passed';
+
+            if (e2eResult === 'failure' || mobileResult === 'failure' || a11yResult === 'failure') {
+              emoji = '❌';
+              status = 'failed';
+            } else if (e2eResult === 'cancelled' || mobileResult === 'cancelled' || a11yResult === 'cancelled') {
+              emoji = '⚠️';
+              status = 'cancelled';
+            }
+
+            const comment = `## ${emoji} E2E Test Results
+
+            The end-to-end tests have **${status}**.
+
+            ### Test Summary
+            | Test Suite | Result |
+            |------------|--------|
+            | Desktop E2E | ${e2eResult === 'success' ? '✅' : '❌'} ${e2eResult} |
+            | Mobile E2E | ${mobileResult === 'success' ? '✅' : mobileResult === 'skipped' ? '⏭️' : '❌'} ${mobileResult} |
+            | Accessibility | ${a11yResult === 'success' ? '✅' : '❌'} ${a11yResult} |
+
+            ${status === 'failed' ? '### 🔍 Debugging\n- Check the uploaded artifacts for detailed test reports\n- Run tests locally with `bun run test:e2e:debug`\n- View screenshots in the test-screenshots artifacts' : ''}
+
+            <details>
+            <summary>How to run tests locally</summary>
+
+            \`\`\`bash
+            # Install dependencies
+            bun install
+
+            # Run all E2E tests
+            bun run test:e2e
+
+            # Run with UI for debugging
+            bun run test:e2e:ui
+
+            # Run specific test file
+            bunx playwright test tests/e2e/specs/dashboard.spec.ts
+            \`\`\`
+            </details>`;
+
+            github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: prNumber,
+              body: comment
+            });
 
   # Cleanup old artifacts
   cleanup:
     if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
     steps:
-    - name: Delete old artifacts
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const { owner, repo } = context.repo;
-          const artifacts = await github.rest.actions.listArtifactsForRepo({
-            owner,
-            repo,
-          });
-          
-          const cutoff = new Date();
-          cutoff.setDate(cutoff.getDate() - 7); // Keep artifacts for 7 days
-          
-          for (const artifact of artifacts.data.artifacts) {
-            if (new Date(artifact.created_at) < cutoff) {
-              await github.rest.actions.deleteArtifact({
-                owner,
-                repo,
-                artifact_id: artifact.id,
-              });
-              console.log(`Deleted artifact: ${artifact.name}`);
+      - name: Delete old artifacts
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const artifacts = await github.rest.actions.listArtifactsForRepo({
+              owner,
+              repo,
+            });
+
+            const cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - 7); // Keep artifacts for 7 days
+
+            for (const artifact of artifacts.data.artifacts) {
+              if (new Date(artifact.created_at) < cutoff) {
+                await github.rest.actions.deleteArtifact({
+                  owner,
+                  repo,
+                  artifact_id: artifact.id,
+                });
+                console.log(`Deleted artifact: ${artifact.name}`);
+              }
             }
-          }

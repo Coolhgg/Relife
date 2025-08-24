@@ -607,7 +607,7 @@ export class SmartAlarmScheduler {
       const { data, error } = await query;
       if (error) throw error;
 
-      return data.map(item => ({
+      return data.map((item: any) => // auto: implicit any ({
         alarmId: item.alarm_id,
         optimizationType: item.optimization_type,
         oldTime: item.old_time,

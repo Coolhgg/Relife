@@ -425,7 +425,7 @@ export class PremiumService {
           premium: this.hasMinimumTier(tier, 'premium'),
           ultimate: this.hasMinimumTier(tier, 'ultimate'),
         },
-        featuresUnlocked: unlockedFeatures.map(f => f.id),
+        featuresUnlocked: unlockedFeatures.map((f: any) => // auto: implicit any f.id),
         featuresLocked: lockedFeatures.map(f => f.id),
       },
     };

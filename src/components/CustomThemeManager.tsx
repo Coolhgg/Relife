@@ -141,13 +141,13 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
         theme =>
           theme.name.toLowerCase().includes(query) ||
           theme.description.toLowerCase().includes(query) ||
-          theme.tags.some(tag => tag.toLowerCase().includes(query))
+          theme.tags.some((tag: any) => // auto: implicit any tag.toLowerCase().includes(query))
       );
     }
 
     // Apply category filter
     if (filterCategory !== 'all') {
-      filtered = filtered.filter(theme => theme.category === filterCategory);
+      filtered = filtered.filter((theme: any) => // auto: implicit any theme.category === filterCategory);
     }
 
     // Apply sorting
@@ -172,12 +172,12 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const handleThemeCreated = (theme: CustomSoundTheme) => {
-    setThemes(prev => [theme, ...prev]);
+    setThemes((prev: any) => // auto: implicit any [theme, ...prev]);
     setShowCreator(false);
   };
 
   const handleThemeUpdated = (theme: CustomSoundTheme) => {
-    setThemes(prev => prev.map(t => (t.id === theme.id ? theme : t)));
+    setThemes((prev: any) => // auto: implicit any prev.map((t: any) => // auto: implicit any (t.id === theme.id ? theme : t)));
     setEditingTheme(null);
   };
 
@@ -185,7 +185,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     try {
       const success = await soundEffectsService.deleteCustomTheme(themeId, userId);
       if (success) {
-        setThemes(prev => prev.filter(t => t.id !== themeId));
+        setThemes((prev: any) => // auto: implicit any prev.filter((t: any) => // auto: implicit any t.id !== themeId));
       }
     } catch (error) {
       console.error('Error deleting theme:', error);
@@ -206,7 +206,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
     const success = await soundEffectsService.saveCustomTheme(duplicatedTheme);
     if (success) {
-      setThemes(prev => [duplicatedTheme, ...prev]);
+      setThemes((prev: any) => // auto: implicit any [duplicatedTheme, ...prev]);
     }
   };
 
@@ -284,11 +284,11 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
   const handleExportMultipleThemes = async (themeIds: string[]) => {
     try {
-      const themesToExport = themes.filter(theme => themeIds.includes(theme.id));
+      const themesToExport = themes.filter((theme: any) => // auto: implicit any themeIds.includes(theme.id));
       const exportData = {
         version: '1.0',
         exportedAt: new Date().toISOString(),
-        themes: themesToExport.map(theme => ({
+        themes: themesToExport.map((theme: any) => // auto: implicit any ({
           ...theme,
           id: undefined,
           createdBy: undefined,
@@ -348,7 +348,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
           }
 
           // Check if theme with same name exists
-          const existingTheme = themes.find(t => t.name === themeData.name);
+          const existingTheme = themes.find((t: any) => // auto: implicit any t.name === themeData.name);
           let finalName = themeData.name;
           if (existingTheme) {
             finalName = `${themeData.name} (Imported)`;
@@ -376,7 +376,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
         }
 
         if (importedThemes.length > 0) {
-          setThemes(prev => [...importedThemes, ...prev]);
+          setThemes((prev: any) => // auto: implicit any [...importedThemes, ...prev]);
           console.log(`Successfully imported ${importedThemes.length} theme(s)`);
         } else {
           console.warn('No valid themes found in import file');
@@ -399,7 +399,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const toggleThemeSelection = (themeId: string) => {
-    setSelectedThemes(prev => {
+    setSelectedThemes((prev: any) => // auto: implicit any {
       const newSelection = new Set(prev);
       if (newSelection.has(themeId)) {
         newSelection.delete(themeId);
@@ -411,7 +411,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const selectAllThemes = () => {
-    setSelectedThemes(new Set(filteredThemes.map(t => t.id)));
+    setSelectedThemes(new Set(filteredThemes.map((t: any) => // auto: implicit any t.id)));
   };
 
   const clearSelection = () => {
@@ -435,7 +435,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
       const success = await soundEffectsService.shareThemeWithCommunity(updatedTheme);
       if (success) {
-        setThemes(prev => prev.map(t => (t.id === theme.id ? updatedTheme : t)));
+        setThemes((prev: any) => // auto: implicit any prev.map((t: any) => // auto: implicit any (t.id === theme.id ? updatedTheme : t)));
         if (onThemeUpdated) {
           onThemeUpdated(updatedTheme);
         }
@@ -453,8 +453,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
       const success = await soundEffectsService.rateTheme(themeId, userId, rating);
       if (success) {
         // Update local theme rating
-        setThemes(prev =>
-          prev.map(theme => {
+        setThemes((prev: any) => // auto: implicit any
+          prev.map((theme: any) => // auto: implicit any {
             if (theme.id === themeId) {
               return {
                 ...theme,
@@ -800,7 +800,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               <Input
                 placeholder="Search themes..."
                 value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
+                onChange={(e: any) => // auto: implicit any setSearchQuery(e.target.value)}
                 className="pl-10"
               />
             </div>
@@ -946,7 +946,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               : 'space-y-4'
           }
         >
-          {filteredThemes.map(theme =>
+          {filteredThemes.map((theme: any) => // auto: implicit any
             viewMode === 'grid' ? renderThemeCard(theme) : renderThemeListItem(theme)
           )}
         </div>

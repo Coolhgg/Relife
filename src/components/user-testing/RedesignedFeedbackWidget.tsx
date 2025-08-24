@@ -150,8 +150,8 @@ export function RedesignedFeedbackWidget({
   const handleFeedbackSubmitted = (feedbackId: string, rewardPoints: number) => {
     console.log('Feedback submitted:', feedbackId);
     if (enableGamification) {
-      setCurrentPoints(prev => prev + rewardPoints);
-      setRecentFeedbackCount(prev => prev + 1);
+      setCurrentPoints((prev: any) => // auto: implicit any prev + rewardPoints);
+      setRecentFeedbackCount((prev: any) => // auto: implicit any prev + 1);
     }
   };
 

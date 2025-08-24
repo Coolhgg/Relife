@@ -8,7 +8,7 @@ import { MonitoringIntegrationService } from './monitoring-integration';
 // Import types from the main application
 import type {
   User,
-  UserPreferences as _UserPreferences,
+  UserPreferences,
   VoiceMood,
   D1Database,
   KVNamespace,

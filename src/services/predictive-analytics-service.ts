@@ -763,7 +763,7 @@ export class PredictiveAnalyticsService {
     const insights: PredictiveInsight[] = [];
 
     // Analyze alarm frequency and distribution
-    const activeAlarms = alarms.filter(a => a.enabled);
+    const activeAlarms = alarms.filter((a: any) => // auto: implicit any a.enabled);
     if (activeAlarms.length > 5) {
       insights.push({
         id: this.generateInsightId(),

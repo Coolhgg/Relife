@@ -114,11 +114,11 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
     });
 
     const unsubscribeAlerts = performanceBudgetManager.onAlert(alert => {
-      setActiveAlerts(prev => {
-        const existing = prev.find(a => a.id === alert.id);
+      setActiveAlerts((prev: any) => // auto: implicit any {
+        const existing = prev.find((a: any) => // auto: implicit any a.id === alert.id);
         if (existing) {
           // Update existing alert
-          return prev.map(a => (a.id === alert.id ? alert : a));
+          return prev.map((a: any) => // auto: implicit any (a.id === alert.id ? alert : a));
         } else {
           // Add new alert
           return [...prev, alert];
@@ -167,13 +167,13 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
 
   const resolveAlert = useCallback((alertId: string) => {
     performanceBudgetManager.resolveAlert(alertId);
-    setActiveAlerts(prev => prev.filter(alert => alert.id !== alertId));
+    setActiveAlerts((prev: any) => // auto: implicit any prev.filter((alert: any) => // auto: implicit any alert.id !== alertId));
   }, []);
 
   const triggerAutoFix = useCallback(async (alertId: string) => {
     try {
       await performanceBudgetManager.triggerAutoFix(alertId);
-      setActiveAlerts(prev => prev.filter(alert => alert.id !== alertId));
+      setActiveAlerts((prev: any) => // auto: implicit any prev.filter((alert: any) => // auto: implicit any alert.id !== alertId));
     } catch (err) {
       console.error('Auto-fix failed:', err);
     }
