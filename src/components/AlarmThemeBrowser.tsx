@@ -343,8 +343,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                 type="text"
                 placeholder="Search themes, moods, or categories..."
                 value={searchQuery}
-                onChange={(e: any
-) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                            focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-lg"
               />
@@ -353,8 +352,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
             {/* Sort */}
             <select
               value={sortMode}
-              onChange={(e: any
-) => setSortMode(e.target.value as SortMode)} // type-safe replacement
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSortMode(e.target.value as SortMode)} // type-safe replacement
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                          focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 min-w-[150px]"
             >
@@ -400,8 +398,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedCategory}
-                    onChange={(e: any
-) => 
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                       setSelectedCategory(e.target.value as ThemeCategory | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -428,8 +425,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedIntensity}
-                    onChange={(e: any
-) => 
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                       setSelectedIntensity(e.target.value as AlarmIntensity | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -450,8 +446,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedTimeOfDay}
-                    onChange={(e: any
-) => 
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                       setSelectedTimeOfDay(e.target.value as TimeOfDay | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -474,8 +469,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                     <input
                       type="checkbox"
                       checked={showPremiumOnly}
-                      onChange={(e: any
-) => setShowPremiumOnly(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShowPremiumOnly(e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -487,8 +481,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                     <input
                       type="checkbox"
                       checked={showFavoritesOnly}
-                      onChange={(e: any
-) => setShowFavoritesOnly(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShowFavoritesOnly(e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">

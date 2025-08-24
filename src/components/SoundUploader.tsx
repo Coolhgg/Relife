@@ -688,8 +688,7 @@ const SoundEditForm: React.FC<{
         <Input
           id="sound-name"
           value={name}
-          onChange={(e: any
-) => setName(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setName(e.target.value)}
           placeholder="Sound name"
         />
       </div>
@@ -699,8 +698,7 @@ const SoundEditForm: React.FC<{
         <Textarea
           id="sound-description"
           value={description}
-          onChange={(e: any
-) => setDescription(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
           placeholder="Describe this sound..."
           rows={3}
         />
@@ -731,8 +729,7 @@ const SoundEditForm: React.FC<{
         <Input
           id="sound-tags"
           value={tags}
-          onChange={(e: any
-) => setTags(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTags(e.target.value)}
           placeholder="tag1, tag2, tag3"
         />
         <p className="text-sm text-gray-500 mt-1">Separate tags with commas</p>

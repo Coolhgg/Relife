@@ -382,8 +382,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
             <select
               value={timeRange}
               
-              onChange={(e: any
-) => onTimeRangeChange(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onTimeRangeChange(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
               <option value="7d">Last 7 days</option>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, ReactNode } from 'react';
 import UserTestingService from '../../services/user-testing';
+import type { Metadata } from '../../types/utility-types';
 
 interface ABTestWrapperProps {
   testId: string;
@@ -20,8 +21,7 @@ interface ABTestContextType {
   variant: string | null;
   trackConversion: (metric: string, value?: number
 ) => void;
-  trackEvent: (event: string, metadata?: Record<string, any>
-) => void;
+  trackEvent: (event: string, metadata?: Metadata) => void;
 }
 
 export const ABTestContext = React.createContext<ABTestContextType>({
@@ -82,8 +82,7 @@ export function ABTestWrapper({
     }
   };
 
-  const trackEvent = (event: string, metadata: Record<string, any> = {}
-) => {
+  const trackEvent = (event: string, metadata: Metadata = {}) => {
     if (variant) {
       userTestingService.trackEvent({
         type: 'custom',

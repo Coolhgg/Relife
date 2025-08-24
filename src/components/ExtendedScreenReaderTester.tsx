@@ -594,8 +594,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             <input
               type="checkbox"
               checked={preferences.autoAdvance}
-              onChange={(e: any
-) => 
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                 setPreferences((prev: any
 ) => ({ ...prev, autoAdvance: e.target.checked }))
               }
@@ -608,8 +607,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             <input
               type="checkbox"
               checked={preferences.simulatePremium}
-              onChange={(e: any
-) => 
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                 setPreferences((prev: any
 ) => ({ ...prev, simulatePremium: e.target.checked }))
               }
@@ -620,8 +618,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
           <select
             value={preferences.delayBetweenTests}
-            onChange={(e: any
-) => 
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
               setPreferences((prev: any
 ) => ({ 
                 ...prev,

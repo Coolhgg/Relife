@@ -228,7 +228,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     const success = await soundEffectsService.saveCustomTheme(duplicatedTheme);
     if (success) {
       setThemes((prev: any
-) => [ // auto: implicit anyduplicatedTheme, ...prev]);
+) => [ // auto: implicit any
+duplicatedTheme, ...prev]);
     }
   };
 
@@ -433,8 +434,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
   const toggleThemeSelection = (themeId: string
 ) => {
-    setSelectedThemes((prev: any
-) => { // auto: implicit any
+    setSelectedThemes((prev: any) => {
       const newSelection = new Set(prev);
       if (newSelection.has(themeId)) {
         newSelection.delete(themeId);
@@ -708,10 +708,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
                   userId
                     ? handleSetActiveTheme(theme)
                     : handleInstallCommunityTheme(theme)
-                }
-              >
-                {userId ? 'Use Theme' : 'Install'}
-              </Button>
+                }>userId ? 'Use Theme' : 'Install'</Button>
             </div>
           </div>
         </CardContent>
@@ -869,8 +866,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               <Input
                 placeholder="Search themes..."
                 value={searchQuery}
-                onChange={(e: any
-) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 className="pl-10"
               />
             </div>

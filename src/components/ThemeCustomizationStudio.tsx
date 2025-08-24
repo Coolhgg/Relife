@@ -25,15 +25,13 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ color, onChange, label }
       <input
         type="color"
         value={color}
-        onChange={(e: any
-) => onChange(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
         className="color-picker-input"
       />
       <input
         type="text"
         value={color}
-        onChange={(e: any
-) => onChange(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
         className="color-picker-text"
         placeholder="#000000"
       />
@@ -64,8 +62,7 @@ const AnimationControl: React.FC<AnimationControlProps> = ({
         <input
           type="checkbox"
           checked={enabled}
-          onChange={(e: any
-) => onChange(effect, e.target.checked)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(effect, e.target.checked)}
         />
         {label}
       </label>

@@ -139,8 +139,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
           type={type}
           placeholder={isFocused ? placeholder : ''}
           value={value}
-          onChange={(e: any
-) => onChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
           disabled={disabled}

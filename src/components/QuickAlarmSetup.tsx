@@ -120,8 +120,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
               id="time"
               type="time"
               value={time}
-              onChange={(e: any
-) => setTime(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTime(e.target.value)}
               className="mt-1"
             />
           </div>
@@ -131,8 +130,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
             <Input
               id="label"
               value={label}
-              onChange={(e: any
-) => setLabel(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLabel(e.target.value)}
               placeholder="Wake up!"
               className="mt-1"
             />

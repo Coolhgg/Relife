@@ -180,8 +180,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               type="checkbox"
               checked={autoRefresh}
               
-              onChange={(e: any
-) => setAutoRefresh(e.target.checked)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAutoRefresh(e.target.checked)}
               className="mr-1"
             />
             Auto-refresh

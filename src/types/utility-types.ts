@@ -72,6 +72,45 @@ export interface Settings extends Record<string, unknown> {} // type-safe replac
 export type TODO_TypeDefinitionNeeded = any; // TODO: type definition needed - mark for future typing
 export type Legacy_Any = any; // TODO: type definition needed - legacy any usage that needs proper typing
 
+// API specific response types
+export interface RetentionOffer {
+  discountPercentage: number;
+  durationMonths: number;
+  message?: string;
+}
+
+export interface AlarmHistoryData {
+  alarms: any[];
+  totalCount: number;
+  patterns?: any;
+}
+
+export interface SleepPatternData {
+  averageSleepTime: string;
+  averageWakeTime: string;
+  efficiency: number;
+  trends?: any;
+}
+
+export interface VoiceSettings {
+  voiceId: string;
+  speed: number;
+  pitch: number;
+  volume: number;
+}
+
+export interface EscalationStrategy {
+  steps: any[];
+  maxAttempts: number;
+  intervals: number[];
+}
+
+export interface MotivationalContent {
+  message: string;
+  type: string;
+  priority: number;
+}
+
 // Type guards
 export const isNotNull = <T>(value: T | null): value is T => value !== null;
 export const isNotUndefined = <T>(value: T | undefined): value is T => value !== undefined;

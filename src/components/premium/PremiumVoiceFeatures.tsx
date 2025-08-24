@@ -185,7 +185,7 @@ function AIWakeUpCoach() {
                   type="checkbox"
                   id={goal}
                   checked={coachingGoals.includes(goal)}
-                  onChange={(e: any
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>)
 ) => { // auto: implicit any
                     if (e.target.checked) {
                       setCoachingGoals((prev: any
@@ -296,14 +296,14 @@ function VoiceCommandRecognition() {
           <Input
             placeholder="Say this phrase..."
             value={newCommand.phrase}
-            onChange={(e: any
+            onChange={(e: React.ChangeEvent<HTMLInputElement>)
 ) => setNewCommand((prev: any
 ) => ({ ...prev, phrase: e.target.value }))}
           />
           <Input
             placeholder="To do this action..."
             value={newCommand.action}
-            onChange={(e: any
+            onChange={(e: React.ChangeEvent<HTMLInputElement>)
 ) => setNewCommand((prev: any
 ) => ({ ...prev, action: e.target.value }))}
           />
@@ -418,7 +418,7 @@ function PersonalizedAudioMessages() {
             <Input
               placeholder="Add a personal message..."
               value={newMessage}
-              onChange={(e: any
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>)
 ) => setNewMessage(e.target.value)}
             />
             <Button

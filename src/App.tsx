@@ -441,7 +441,10 @@ function AppContent() {
       switch (type) {
         case 'ALARM_TRIGGERED':
           if (data.alarm) {
-            setAppState((prev: AppState) => ({ // type-safe replacement ...prev, activeAlarm: data.alarm })); // auto: implicit any
+            setAppState((prev: AppState) => ({ // type-safe replacement
+              ...prev, 
+              activeAlarm: data.alarm 
+            }));
           }
           break;
         case 'SYNC_START':
@@ -479,7 +482,10 @@ function AppContent() {
 
             // Handle specific actions
             if (data.action === 'dismiss' && appState.activeAlarm) {
-              setAppState((prev: AppState) => ({ // type-safe replacement ...prev, activeAlarm: null })); // auto: implicit any
+              setAppState((prev: AppState) => ({ // type-safe replacement
+                ...prev, 
+                activeAlarm: null 
+              }));
             } else if (data.action === 'snooze' && appState.activeAlarm) {
               // Trigger snooze functionality
               handleAlarmSnooze(appState.activeAlarm.id);

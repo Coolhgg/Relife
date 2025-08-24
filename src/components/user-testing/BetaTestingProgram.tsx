@@ -419,9 +419,7 @@ export function BetaTestingProgram() {
                     <div>
                       <CardTitle className="flex items-center gap-2">
                         {program.name}
-                        <Badge className={getStatusColor(program.status)}>
-                          {getStatusIcon(program.status)}
-                          <span className="ml-1">{program.status}</span>
+                        <Badge className={getStatusColor(program.status)}>getStatusIcon(program.status)<span className="ml-1">{program.status}</span>
                         </Badge>
                       </CardTitle>
                       <p className="text-gray-600 mt-1">{program.description}</p>
@@ -544,9 +542,7 @@ export function BetaTestingProgram() {
                         </p>
                       </div>
                     </div>
-                    <Badge className={getStatusColor(tester.status)}>
-                      {tester.status}
-                    </Badge>
+                    <Badge className={getStatusColor(tester.status)}>tester.status</Badge>
                   </div>
 
                   <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t">
@@ -595,9 +591,7 @@ export function BetaTestingProgram() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge variant="outline">{item.type}</Badge>
-                      <Badge className={getStatusColor(item.status)}>
-                        {item.status}
-                      </Badge>
+                      <Badge className={getStatusColor(item.status)}>item.status</Badge>
                       {item.rating && (
                         <div className="flex items-center gap-1">
                           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
@@ -637,8 +631,7 @@ export function BetaTestingProgram() {
                 <Input
                   id="name"
                   value={newProgram.name}
-                  onChange={(e: any
-) => setNewProgram({ ...newProgram, name: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewProgram({ ...newProgram, name: e.target.value })}
                   className="mt-1"
                 />
               </div>
@@ -648,8 +641,7 @@ export function BetaTestingProgram() {
                   id="participants"
                   type="number"
                   value={newProgram.targetParticipants}
-                  onChange={(e: any
-) => 
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => 
                     setNewProgram({
                       ...newProgram,
                       targetParticipants: Number(e.target.value),
@@ -665,8 +657,7 @@ export function BetaTestingProgram() {
               <Textarea
                 id="description"
                 value={newProgram.description}
-                onChange={(e: any
-) => 
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => 
                   setNewProgram({ ...newProgram, description: e.target.value })
                 }
                 className="mt-1"
@@ -681,8 +672,7 @@ export function BetaTestingProgram() {
                   id="startDate"
                   type="date"
                   value={newProgram.startDate}
-                  onChange={(e: any
-) => 
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => 
                     setNewProgram({ ...newProgram, startDate: e.target.value })
                   }
                   className="mt-1"
@@ -694,8 +684,7 @@ export function BetaTestingProgram() {
                   id="endDate"
                   type="date"
                   value={newProgram.endDate}
-                  onChange={(e: any
-) => 
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => 
                     setNewProgram({ ...newProgram, endDate: e.target.value })
                   }
                   className="mt-1"
@@ -723,8 +712,7 @@ export function BetaTestingProgram() {
                     <div key={index} className="flex items-center gap-2">
                       <Input
                         value={item}
-                        onChange={(e: any
-) => updateArrayField(field, index, e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateArrayField(field, index, e.target.value)}
                         placeholder={`Add ${field.slice(0, -1)}...`}
                         className="flex-1"
                       />
@@ -771,8 +759,7 @@ export function BetaTestingProgram() {
               <Textarea
                 id="emails"
                 value={inviteEmails}
-                onChange={(e: any
-) => setInviteEmails(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInviteEmails(e.target.value)}
                 placeholder="Enter email addresses, one per line..."
                 className="mt-1"
                 rows={6}

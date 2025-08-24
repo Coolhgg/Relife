@@ -313,8 +313,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                       <Input
                         placeholder="Search sounds..."
                         value={searchQuery}
-                        onChange={(e: any
-) => setSearchQuery(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                         className="pl-10"
                       />
                     </div>
@@ -593,8 +592,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                           <Input
                             placeholder="https://example.com/sound.mp3"
                             value={urlInput}
-                            onChange={(e: any
-) => setUrlInput(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setUrlInput(e.target.value)}
                           />
                         </div>
 

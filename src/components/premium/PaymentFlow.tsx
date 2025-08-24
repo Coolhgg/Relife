@@ -476,8 +476,7 @@ export function PaymentFlow({
                     <Input
                       id="cardNumber"
                       value={formData.cardNumber}
-                      onChange={(e: any
-) => handleInputChange('cardNumber', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('cardNumber', e.target.value)}
                       placeholder="1234 5678 9012 3456"
                       maxLength={19}
                       className={validationErrors.cardNumber ? 'border-red-300' : ''}
@@ -494,7 +493,7 @@ export function PaymentFlow({
                     <Input
                       id="expiryDate"
                       value={formData.expiryDate}
-                      onChange={(e: any
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>)
 ) => handleInputChange('expiryDate', e.target.value)}
                       placeholder="MM/YY"
                       maxLength={5}
@@ -512,7 +511,7 @@ export function PaymentFlow({
                     <Input
                       id="cvc"
                       value={formData.cvc}
-                      onChange={(e: any
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>)
 ) => handleInputChange('cvc', e.target.value)}
                       placeholder="123"
                       maxLength={4}
@@ -530,7 +529,7 @@ export function PaymentFlow({
                     <Input
                       id="cardName"
                       value={formData.cardName}
-                      onChange={(e: any
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>)
 ) => handleInputChange('cardName', e.target.value)}
                       placeholder="John Doe"
                       className={validationErrors.cardName ? 'border-red-300' : ''}
@@ -554,7 +553,7 @@ export function PaymentFlow({
                       <Input
                         id="line1"
                         value={formData.billingAddress.line1}
-                        onChange={(e: any
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>)
 ) => 
                           handleInputChange('billingAddress.line1', e.target.value)
                         }
@@ -575,7 +574,7 @@ export function PaymentFlow({
                       <Input
                         id="line2"
                         value={formData.billingAddress.line2}
-                        onChange={(e: any
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>)
 ) => 
                           handleInputChange('billingAddress.line2', e.target.value)
                         }
@@ -588,7 +587,7 @@ export function PaymentFlow({
                       <Input
                         id="city"
                         value={formData.billingAddress.city}
-                        onChange={(e: any
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>)
 ) => 
                           handleInputChange('billingAddress.city', e.target.value)
                         }
@@ -607,7 +606,7 @@ export function PaymentFlow({
                       <Input
                         id="state"
                         value={formData.billingAddress.state}
-                        onChange={(e: any
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>)
 ) => 
                           handleInputChange('billingAddress.state', e.target.value)
                         }
@@ -620,7 +619,7 @@ export function PaymentFlow({
                       <Input
                         id="postalCode"
                         value={formData.billingAddress.postalCode}
-                        onChange={(e: any
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>)
 ) => 
                           handleInputChange('billingAddress.postalCode', e.target.value)
                         }
@@ -639,7 +638,7 @@ export function PaymentFlow({
                       <Input
                         id="country"
                         value={formData.billingAddress.country}
-                        onChange={(e: any
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>)
 ) => 
                           handleInputChange('billingAddress.country', e.target.value)
                         }
@@ -658,7 +657,7 @@ export function PaymentFlow({
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e: any
+                onChange={(e: React.ChangeEvent<HTMLInputElement>)
 ) => handleInputChange('email', e.target.value)}
                 placeholder="john@example.com"
                 className={validationErrors.email ? 'border-red-300' : ''}

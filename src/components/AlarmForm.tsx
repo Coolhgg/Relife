@@ -351,8 +351,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
       );
 
       if (result.success && result.customSound) {
-        setCustomSounds((prev: any
-) => [ // auto: implicit anyresult.customSound!, ...prev]);
+        setCustomSounds((prev: boolean) => [result.customSound!, ...prev]);
         setFormData((prev: any
 ) => ({ 
           ...prev,
