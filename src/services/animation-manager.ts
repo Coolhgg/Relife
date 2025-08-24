@@ -102,7 +102,9 @@ class AnimationManagerService {
         this.updatePerformanceMetrics(entries);
       });
 
-      this.performanceObserver.observe({ entryTypes: ['measure', 'navigation'] });
+      this.performanceObserver.observe({
+        entryTypes: ['measure', 'navigation'],
+      });
     }
 
     // Monitor frame rate

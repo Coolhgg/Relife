@@ -158,7 +158,9 @@ describe('useABTesting', () => {
     });
 
     await act(async () => {
-      await result.current.trackEvent('alarm_created', { alarmType: 'morning' });
+      await result.current.trackEvent('alarm_created', {
+        alarmType: 'morning',
+      });
     });
 
     expect(mockApiService.trackABTestEvent).toHaveBeenCalledWith(

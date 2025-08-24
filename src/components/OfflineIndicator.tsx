@@ -290,16 +290,16 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
         setSyncStatus('pending');
-        const response = await new Promise<{ success: boolean; message: string }>(
-          resolve => {
-            const channel = new MessageChannel();
-            channel.port1.onmessage = event => resolve(event.data);
-            navigator.serviceWorker.controller!.postMessage(
-              { type: 'OPTIMIZE_CACHE' },
-              [channel.port2]
-            );
-          }
-        );
+        const response = await new Promise<{
+          success: boolean;
+          message: string;
+        }>(resolve => {
+          const channel = new MessageChannel();
+          channel.port1.onmessage = event => resolve(event.data);
+          navigator.serviceWorker.controller!.postMessage({ type: 'OPTIMIZE_CACHE' }, [
+            channel.port2,
+          ]);
+        });
 
         if (response.success) {
           setSyncStatus('synced');
@@ -318,15 +318,16 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
         setSyncStatus('pending');
-        const response = await new Promise<{ success: boolean; message: string }>(
-          resolve => {
-            const channel = new MessageChannel();
-            channel.port1.onmessage = event => resolve(event.data);
-            navigator.serviceWorker.controller!.postMessage({ type: 'CLEAR_CACHE' }, [
-              channel.port2,
-            ]);
-          }
-        );
+        const response = await new Promise<{
+          success: boolean;
+          message: string;
+        }>(resolve => {
+          const channel = new MessageChannel();
+          channel.port1.onmessage = event => resolve(event.data);
+          navigator.serviceWorker.controller!.postMessage({ type: 'CLEAR_CACHE' }, [
+            channel.port2,
+          ]);
+        });
 
         if (response.success) {
           setSyncStatus('synced');

@@ -197,7 +197,9 @@ describe('SubscriptionDashboard', () => {
         <SubscriptionDashboard {...defaultProps} data={cancelingData} />
       );
 
-      const reactivateButton = screen.getByRole('button', { name: /reactivate/i });
+      const reactivateButton = screen.getByRole('button', {
+        name: /reactivate/i,
+      });
       await user.click(reactivateButton);
 
       expect(defaultProps.onReactivateSubscription).toHaveBeenCalled();
@@ -292,7 +294,9 @@ describe('SubscriptionDashboard', () => {
       const user = userEvent.setup();
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);
 
-      const cancelButton = screen.getByRole('button', { name: /cancel subscription/i });
+      const cancelButton = screen.getByRole('button', {
+        name: /cancel subscription/i,
+      });
       await user.click(cancelButton);
 
       expect(defaultProps.onCancelSubscription).toHaveBeenCalledWith(
@@ -371,7 +375,9 @@ describe('SubscriptionDashboard', () => {
 
       renderWithProviders(<SubscriptionDashboard {...failingProps} />);
 
-      const cancelButton = screen.getByRole('button', { name: /cancel subscription/i });
+      const cancelButton = screen.getByRole('button', {
+        name: /cancel subscription/i,
+      });
       await user.click(cancelButton);
 
       await waitFor(() => {
@@ -440,7 +446,10 @@ describe('SubscriptionDashboard', () => {
 
   describe('Responsive Behavior', () => {
     it('adapts layout for mobile screens', () => {
-      Object.defineProperty(window, 'innerWidth', { value: 375, writable: true });
+      Object.defineProperty(window, 'innerWidth', {
+        value: 375,
+        writable: true,
+      });
       window.dispatchEvent(new Event('resize'));
 
       renderWithProviders(<SubscriptionDashboard {...defaultProps} />);

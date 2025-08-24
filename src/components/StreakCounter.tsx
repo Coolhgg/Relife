@@ -22,9 +22,27 @@ const STREAK_FIRE_LEVELS = [
   { min: 3, max: 6, emoji: '🔥', color: '#f59e0b', label: 'Warming Up' },
   { min: 7, max: 13, emoji: '🔥🔥', color: '#f97316', label: 'On Fire' },
   { min: 14, max: 29, emoji: '🔥🔥🔥', color: '#ef4444', label: 'Blazing' },
-  { min: 30, max: 49, emoji: '🔥🔥🔥🔥', color: '#dc2626', label: 'Unstoppable' },
-  { min: 50, max: 99, emoji: '🔥🔥🔥🔥🔥', color: '#b91c1c', label: 'Legendary' },
-  { min: 100, max: Infinity, emoji: '🌟🔥🌟', color: '#7c3aed', label: 'Mythical' },
+  {
+    min: 30,
+    max: 49,
+    emoji: '🔥🔥🔥🔥',
+    color: '#dc2626',
+    label: 'Unstoppable',
+  },
+  {
+    min: 50,
+    max: 99,
+    emoji: '🔥🔥🔥🔥🔥',
+    color: '#b91c1c',
+    label: 'Legendary',
+  },
+  {
+    min: 100,
+    max: Infinity,
+    emoji: '🌟🔥🌟',
+    color: '#7c3aed',
+    label: 'Mythical',
+  },
 ];
 
 const MILESTONE_REWARDS = [

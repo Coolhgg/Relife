@@ -21,29 +21,36 @@ interface FeatureAccessContextValue {
   error: string | null;
 
   // Feature checking
-  hasFeatureAccess: (featureId: string) => boolean;
+  hasFeatureAccess: (featureId: string
+) => boolean;
   getFeatureUsage: (
     featureId: string
-  ) => { used: number; limit: number; remaining: number } | null;
+  
+) => { used: number; limit: number; remaining: number } | null;
 
   // Actions
-  trackFeatureAttempt: (featureId: string, context?: Record<string, any>) => void;
-  refreshFeatureAccess: () => Promise<void>;
+  trackFeatureAttempt: (featureId: string, context?: Record<string, any>
+) => void;
+  refreshFeatureAccess: (
+) => Promise<void>;
   grantTemporaryAccess: (
     featureId: string,
     durationMinutes: number,
     reason: string
-  ) => void;
+  
+) => void;
 
   // Callbacks
   onFeatureBlocked?: (
     featureId: string,
     _requiredTier?: any /* auto: placeholder param - adjust */
-  ) => void;
+  
+) => void;
   onUpgradeRequired?: (
     featureId: string,
     _requiredTier?: any /* auto: placeholder param - adjust */
-  ) => void;
+  
+) => void;
 }
 
 const FeatureAccessContext = createContext<FeatureAccessContextValue | null>(null);
@@ -54,11 +61,13 @@ interface FeatureAccessProviderProps {
   onFeatureBlocked?: (
     featureId: string,
     _requiredTier?: any /* auto: placeholder param - adjust */
-  ) => void;
+  
+) => void;
   onUpgradeRequired?: (
     featureId: string,
     _requiredTier?: any /* auto: placeholder param - adjust */
-  ) => void;
+  
+) => void;
   autoRefresh?: boolean;
   refreshInterval?: number;
 }
@@ -79,7 +88,8 @@ export function FeatureAccessProvider({
   const subscriptionService = SubscriptionService.getInstance();
 
   // Load initial feature access data
-  const loadFeatureAccess = useCallback(async () => {
+  const loadFeatureAccess = useCallback(async (
+) => {
     if (!userId) return;
 
     setIsLoading(true);
@@ -108,19 +118,23 @@ export function FeatureAccessProvider({
   }, [userId, subscriptionService]);
 
   // Initialize on mount
-  useEffect(() => {
+  useEffect((
+) => {
     loadFeatureAccess();
   }, [loadFeatureAccess]);
 
   // Auto-refresh feature access
-  useEffect(() => {
+  useEffect((
+) => {
     if (!autoRefresh || !userId) return;
 
-    const interval = setInterval(() => {
+    const interval = setInterval((
+) => {
       loadFeatureAccess();
     }, refreshInterval);
 
-    return () => clearInterval(interval);
+    return (
+) => clearInterval(interval);
   }, [autoRefresh, refreshInterval, loadFeatureAccess]);
 
   // Feature access checking functions
@@ -145,7 +159,8 @@ export function FeatureAccessProvider({
   );
 
   const getFeatureUsage = useCallback(
-    (featureId: string) => {
+    (featureId: string
+) => {
       if (!featureAccess) return null;
 
       const feature = featureAccess.features[featureId];
@@ -163,7 +178,8 @@ export function FeatureAccessProvider({
   );
 
   const getUpgradeRequirement = useCallback(
-    (featureId: string) => {
+    (featureId: string
+) => {
       if (!featureAccess) return null;
 
       const feature = featureAccess.features[featureId];
@@ -174,7 +190,8 @@ export function FeatureAccessProvider({
 
   // Actions
   const trackFeatureAttempt = useCallback(
-    async (featureId: string, context?: Record<string, any>) => {
+    async (featureId: string, context?: Record<string, any>
+) => {
       const hasAccess = hasFeatureAccess(featureId);
 
       await featureGateService.trackFeatureAttempt(
@@ -206,12 +223,14 @@ export function FeatureAccessProvider({
     ]
   );
 
-  const refreshFeatureAccess = useCallback(async () => {
+  const refreshFeatureAccess = useCallback(async (
+) => {
     await loadFeatureAccess();
   }, [loadFeatureAccess]);
 
   const grantTemporaryAccess = useCallback(
-    (featureId: string, durationMinutes: number, reason: string) => {
+    (featureId: string, durationMinutes: number, reason: string
+) => {
       featureGateService.grantTemporaryAccess(
         userId,
         featureId,
@@ -220,7 +239,8 @@ export function FeatureAccessProvider({
       );
 
       // Refresh feature access to reflect the temporary grant
-      setTimeout(() => {
+      setTimeout((
+) => {
         loadFeatureAccess();
       }, 1000);
     },
@@ -274,19 +294,20 @@ export function withFeatureAccess<P extends object>(
   WrappedComponent: React.ComponentType<P>,
   userId: string,
   options?: {
-<<<<<<< HEAD
     onFeatureBlocked?: (
       featureId: string,
       _requiredTier?: any /* auto: placeholder param - adjust */
-    ) => void;
+    
+) => void;
     onUpgradeRequired?: (
       featureId: string,
       _requiredTier?: any /* auto: placeholder param - adjust */
-    ) => void;
-=======
-    onFeatureBlocked?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */) => void;
-    onUpgradeRequired?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */) => void;
->>>>>>> origin/main
+    
+) => void;
+    onFeatureBlocked?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */
+) => void;
+    onUpgradeRequired?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */
+) => void;
   }
 ) {
   return function FeatureAccessWrappedComponent(props: P) {
@@ -307,7 +328,8 @@ interface ConditionalFeatureProps {
   feature: string;
   children: ReactNode;
   fallback?: ReactNode;
-  onBlocked?: () => void;
+  onBlocked?: (
+) => void;
 }
 
 export function ConditionalFeature({
@@ -322,7 +344,8 @@ export function ConditionalFeature({
   const hasAccess = checkAccess(feature);
 
   // Track the attempt when component mounts or feature changes
-  useEffect(() => {
+  useEffect((
+) => {
     trackFeatureAttempt(feature);
 
     if (!hasAccess && onBlocked) {
@@ -341,8 +364,7 @@ export function useFeatureAccess(feature: string) {
     hasAccess: context.hasFeatureAccess(feature),
     usage: context.getFeatureUsage(feature),
     requiredTier: context.getUpgradeRequirement(feature),
-    trackAttempt: (contextData?: Record<string, any>) =>
-      context.trackFeatureAttempt(feature, contextData),
+    trackAttempt: (contextData?: Record<string, any>) => context.trackFeatureAttempt(feature, contextData),
   };
 }
 

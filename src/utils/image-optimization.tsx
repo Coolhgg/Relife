@@ -26,7 +26,11 @@ export interface OptimizedImageData {
 
 class ImageOptimizer {
   private cache = new Map<string, OptimizedImageData>();
-  private loadQueue: Array<{ url: string; resolve: Function; reject: Function }> = [];
+  private loadQueue: Array<{
+    url: string;
+    resolve: Function;
+    reject: Function;
+  }> = [];
   private isProcessing = false;
   private observer?: IntersectionObserver;
 
@@ -251,7 +255,10 @@ class ImageOptimizer {
     }
 
     // Generate optimized sources
-    const optimizedSrc = this.getOptimizedSrc(src, { quality, format: finalFormat });
+    const optimizedSrc = this.getOptimizedSrc(src, {
+      quality,
+      format: finalFormat,
+    });
     const srcSet = this.generateSrcSet(src, sizes, finalFormat);
 
     // Generate placeholder if needed

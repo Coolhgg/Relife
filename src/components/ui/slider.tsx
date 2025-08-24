@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 import * as React from 'react';
 import * as SliderPrimitive from '@radix-ui/react-slider';
 

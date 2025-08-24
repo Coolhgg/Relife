@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 import * as React from 'react';
 /**
  * RTL testing utilities for validating direction-aware components
@@ -183,13 +183,17 @@ export const rtlTestScenarios = {
   ) => {
     describe('RTL Support', () => {
       test('renders correctly in LTR mode', () => {
-        const { container } = renderWithRTL(componentFactory(), { language: 'en' });
+        const { container } = renderWithRTL(componentFactory(), {
+          language: 'en',
+        });
         const element = container.firstChild as HTMLElement;
         testFn(element, false, 'en');
       });
 
       test('renders correctly in RTL mode', () => {
-        const { container } = renderWithRTL(componentFactory(), { language: 'ar' });
+        const { container } = renderWithRTL(componentFactory(), {
+          language: 'ar',
+        });
         const element = container.firstChild as HTMLElement;
         testFn(element, true, 'ar');
       });
@@ -229,7 +233,6 @@ export const rtlTestScenarios = {
           Object.defineProperty(window, 'matchMedia', {
             writable: true,
             value: vi.fn().mockImplementation((query: any) => ({
-              // auto: implicit any{
               matches: query.includes(breakpoint),
               media: query,
               onchange: null,
@@ -241,7 +244,9 @@ export const rtlTestScenarios = {
             })),
           });
 
-          const { container } = renderWithRTL(componentFactory(), { language: 'ar' });
+          const { container } = renderWithRTL(componentFactory(), {
+            language: 'ar',
+          });
           const element = container.firstChild as HTMLElement;
           testFn(element, true, breakpoint);
         });

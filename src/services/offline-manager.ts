@@ -94,35 +94,45 @@ export class OfflineManager {
         upgrade(db) {
           // Alarms store
           if (!db.objectStoreNames.contains('alarms')) {
-            const alarmStore = db.createObjectStore('alarms', { keyPath: 'id' });
+            const alarmStore = db.createObjectStore('alarms', {
+              keyPath: 'id',
+            });
             alarmStore.createIndex('syncStatus', 'syncStatus');
             alarmStore.createIndex('lastModified', 'lastModified');
           }
 
           // Voice cache store
           if (!db.objectStoreNames.contains('voiceCache')) {
-            const voiceStore = db.createObjectStore('voiceCache', { keyPath: 'id' });
+            const voiceStore = db.createObjectStore('voiceCache', {
+              keyPath: 'id',
+            });
             voiceStore.createIndex('alarmId', 'alarmId');
             voiceStore.createIndex('expiresAt', 'expiresAt');
           }
 
           // Sleep sessions store
           if (!db.objectStoreNames.contains('sleepSessions')) {
-            const sleepStore = db.createObjectStore('sleepSessions', { keyPath: 'id' });
+            const sleepStore = db.createObjectStore('sleepSessions', {
+              keyPath: 'id',
+            });
             sleepStore.createIndex('syncStatus', 'syncStatus');
             sleepStore.createIndex('createdAt', 'createdAt');
           }
 
           // Sync queue store
           if (!db.objectStoreNames.contains('syncQueue')) {
-            const syncStore = db.createObjectStore('syncQueue', { keyPath: 'id' });
+            const syncStore = db.createObjectStore('syncQueue', {
+              keyPath: 'id',
+            });
             syncStore.createIndex('type', 'type');
             syncStore.createIndex('timestamp', 'timestamp');
           }
 
           // Settings store
           if (!db.objectStoreNames.contains('settings')) {
-            const settingsStore = db.createObjectStore('settings', { keyPath: 'key' });
+            const settingsStore = db.createObjectStore('settings', {
+              keyPath: 'key',
+            });
             settingsStore.createIndex('syncStatus', 'syncStatus');
           }
         },
@@ -513,7 +523,8 @@ export class OfflineManager {
   static async getStatus(): Promise<SyncStatus> {
     const pendingOperations = this.db ? await this.db.count('syncQueue') : 0;
     const failedOperations = this.db
-      ? (await this.db.getAll('syncQueue')).filter((item: any) => i // auto: implicit anytem.retryCount > 0).length
+      ? (await this.db.getAll('syncQueue')).filter((item: any) => item.retryCount > 0)
+          .length
       : 0;
 
     return {

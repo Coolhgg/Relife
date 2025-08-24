@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 // Vitest globals are available globally, no need to import
 import * as React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
@@ -156,7 +156,9 @@ describe('AlarmForm', () => {
       render(<AlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText(/time/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       await user.clear(timeInput);
       await user.type(timeInput, '25:00');
@@ -174,7 +176,9 @@ describe('AlarmForm', () => {
       render(<AlarmForm {...defaultProps} />);
 
       const labelInput = screen.getByLabelText(/label/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       await user.clear(labelInput);
       await user.type(labelInput, 'A');
@@ -202,7 +206,9 @@ describe('AlarmForm', () => {
         await user.click(button);
       }
 
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
       await user.click(submitButton);
 
       await waitFor(() => {
@@ -219,7 +225,9 @@ describe('AlarmForm', () => {
       render(<AlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText(/time/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       await user.clear(timeInput);
       await user.type(timeInput, '25:00');
@@ -236,7 +244,9 @@ describe('AlarmForm', () => {
 
       const timeInput = screen.getByLabelText(/time/i);
       const labelInput = screen.getByLabelText(/label/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       await user.clear(timeInput);
       await user.type(timeInput, '25:00');
@@ -258,7 +268,9 @@ describe('AlarmForm', () => {
       render(<AlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText(/time/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       // Enter invalid time
       await user.clear(timeInput);
@@ -289,7 +301,9 @@ describe('AlarmForm', () => {
 
       const timeInput = screen.getByLabelText(/time/i);
       const labelInput = screen.getByLabelText(/label/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       await user.clear(timeInput);
       await user.type(timeInput, '08:30');
@@ -324,7 +338,9 @@ describe('AlarmForm', () => {
       render(<AlarmForm {...defaultProps} alarm={alarm} />);
 
       const labelInput = screen.getByLabelText(/label/i);
-      const submitButton = screen.getByRole('button', { name: /update alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /update alarm/i,
+      });
 
       await user.clear(labelInput);
       await user.type(labelInput, 'Updated Label');
@@ -357,7 +373,9 @@ describe('AlarmForm', () => {
       await user.click(screen.getByText('Sat').closest('button')!);
       await user.click(screen.getByText('Sun').closest('button')!);
 
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
       await user.click(submitButton);
 
       await waitFor(() => {
@@ -430,7 +448,9 @@ describe('AlarmForm', () => {
       render(<AlarmForm {...defaultProps} />);
 
       const timeInput = screen.getByLabelText(/time/i);
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       await user.clear(timeInput);
       await user.type(timeInput, '25:00');
@@ -450,7 +470,9 @@ describe('AlarmForm', () => {
       const user = userEvent.setup();
       render(<AlarmForm {...defaultProps} />);
 
-      const submitButton = screen.getByRole('button', { name: /create alarm/i });
+      const submitButton = screen.getByRole('button', {
+        name: /create alarm/i,
+      });
 
       // Rapidly click submit multiple times
       await user.click(submitButton);

@@ -718,7 +718,9 @@ export class VoiceProService {
     return 'unknown';
   }
 
-  private static extractEntities(transcript: string): { [key: string]: string } {
+  private static extractEntities(transcript: string): {
+    [key: string]: string;
+  } {
     const entities: { [key: string]: string } = {};
 
     // Extract time mentions

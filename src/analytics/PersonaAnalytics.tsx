@@ -78,7 +78,7 @@ class PersonaAnalyticsTracker {
     event: PersonaAnalyticsEvent;
     data: PersonaAnalyticsData | CampaignPerformanceData;
   }> = [];
-  private flushInterval: TimeoutHandle | undefined = undefined; // auto: changed from number | null to TimeoutHandle
+  private flushInterval: TimeoutHandle | undefined = undefined;
 
   private constructor() {
     this.sessionId = this.generateSessionId();
@@ -384,7 +384,11 @@ class PersonaAnalyticsTracker {
   }
 
   // Public API for getting analytics data
-  getSessionSummary(): { sessionId: string; userId?: string; eventsQueued: number } {
+  getSessionSummary(): {
+    sessionId: string;
+    userId?: string;
+    eventsQueued: number;
+  } {
     return {
       sessionId: this.sessionId,
       userId: this.userId,
@@ -491,9 +495,9 @@ export const usePersonaAnalytics = () => {
 };
 
 // Analytics Provider Component
-export const PersonaAnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const PersonaAnalyticsProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const analytics = usePersonaAnalytics();
 
   useEffect(() => {

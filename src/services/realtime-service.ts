@@ -438,7 +438,9 @@ class RealtimeService {
       };
 
       this.websocket.send(JSON.stringify(message));
-      this.performanceMonitor.trackCustomMetric('websocket_message_sent', 1, { type });
+      this.performanceMonitor.trackCustomMetric('websocket_message_sent', 1, {
+        type,
+      });
     } catch (error) {
       console.error('Failed to send WebSocket message:', error);
     }

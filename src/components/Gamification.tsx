@@ -68,7 +68,11 @@ const MOCK_ACHIEVEMENTS: Achievement[] = [
       { type: 'badge', value: 'Early Bird', description: 'Early Bird Badge' },
     ],
     requirements: [
-      { type: 'early_wake', value: 7, description: 'Wake before 6:00 AM for 7 days' },
+      {
+        type: 'early_wake',
+        value: 7,
+        description: 'Wake before 6:00 AM for 7 days',
+      },
     ],
   },
   {
@@ -82,7 +86,11 @@ const MOCK_ACHIEVEMENTS: Achievement[] = [
     progress: { current: 32, target: 50, percentage: 64 },
     rewards: [
       { type: 'experience', value: 1000, description: '1000 XP' },
-      { type: 'title', value: 'Battle Master', description: 'Battle Master Title' },
+      {
+        type: 'title',
+        value: 'Battle Master',
+        description: 'Battle Master Title',
+      },
       { type: 'theme', value: 'champion', description: 'Champion Theme' },
     ],
     requirements: [{ type: 'battles_won', value: 50, description: 'Win 50 battles' }],

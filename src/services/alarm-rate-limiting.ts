@@ -379,7 +379,12 @@ export class AlarmRateLimitingService {
     // Emit event for UI
     window.dispatchEvent(
       new CustomEvent('rate-limit-violation', {
-        detail: { userId, operation, escalation, violations: userLimits.violations },
+        detail: {
+          userId,
+          operation,
+          escalation,
+          violations: userLimits.violations,
+        },
       })
     );
 
@@ -758,7 +763,11 @@ export class AlarmRateLimitingService {
     operation: AlarmOperation,
     details: any
   ): Promise<void> {
-    console.log(`[AlarmRateLimit] Event: ${event}`, { userId, operation, details });
+    console.log(`[AlarmRateLimit] Event: ${event}`, {
+      userId,
+      operation,
+      details,
+    });
   }
 
   private startCleanupTimer(): void {

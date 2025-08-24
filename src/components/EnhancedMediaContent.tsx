@@ -268,7 +268,7 @@ export function EnhancedMediaContent({
 
   const playSound = useCallback(
     async (sound: CustomSound) => {
-      setPlayerState((prev: any) => ({ // auto: implicit any{ ...prev, loading: true, error: null }));
+      setPlayerState((prev: any) => ({ ...prev, loading: true, error: null }));
 
       try {
         // Stop current audio if playing
@@ -281,7 +281,7 @@ export function EnhancedMediaContent({
         const audioSource = await audioManager.playAudioFile(sound.fileUrl, {
           volume: playerState.volume,
           onEnded: () => {
-            setPlayerState((prev: any) => ({ // auto: implicit any{
+            setPlayerState((prev: any) => ({
               ...prev,
               isPlaying: false,
               currentTrack: null,
@@ -292,7 +292,8 @@ export function EnhancedMediaContent({
 
         if (audioSource) {
           currentAudioSource.current = audioSource;
-          setPlayerState((prev: any) => ({ // auto: implicit any{
+
+          setPlayerState((prev: any) => ({
             ...prev,
             isPlaying: true,
             currentTrack: sound.id,
@@ -306,7 +307,8 @@ export function EnhancedMediaContent({
           const updateTime = () => {
             if (currentAudioSource.current === audioSource) {
               const elapsed = (performance.now() - startTime) / 1000;
-              setPlayerState((prev: any) => ({ // auto: implicit any{
+
+              setPlayerState((prev: any) => ({
                 ...prev,
                 currentTime: Math.min(elapsed, sound.duration),
               }));
@@ -322,7 +324,8 @@ export function EnhancedMediaContent({
         }
       } catch (error) {
         console.error('Error playing sound:', error);
-        setPlayerState((prev: any) => ({ // auto: implicit any{
+
+        setPlayerState((prev: any) => ({
           ...prev,
           loading: false,
           error: error instanceof Error ? error.message : 'Unknown error',
@@ -344,7 +347,8 @@ export function EnhancedMediaContent({
       currentAudioSource.current.stop();
       currentAudioSource.current = null;
     }
-    setPlayerState((prev: any) => ({ // auto: implicit any{
+
+    setPlayerState((prev: any) => ({
       ...prev,
       isPlaying: false,
       currentTrack: null,
@@ -353,7 +357,8 @@ export function EnhancedMediaContent({
 
   const handleVolumeChange = useCallback((newVolume: number[]) => {
     const volume = newVolume[0] / 100;
-    setPlayerState((prev: any) => ({ // auto: implicit any{ ...prev, volume }));
+
+    setPlayerState((prev: any) => ({ ...prev, volume }));
 
     // Update current audio volume if playing
     // Note: Web Audio API doesn't allow real-time volume changes easily
@@ -364,7 +369,10 @@ export function EnhancedMediaContent({
     async (playlist: Playlist) => {
       if (playlist.sounds.length === 0) return;
 
-      setPlayerState((prev: any) => ({ // auto: implicit any{ ...prev, currentPlaylist: playlist.id }));
+      setPlayerState((prev: any) => ({
+        ...prev,
+        currentPlaylist: playlist.id,
+      }));
 
       // Start with the first sound
       const firstSound = playlist.sounds.sort((a, b) => a.order - b.order)[0];
@@ -396,7 +404,7 @@ export function EnhancedMediaContent({
     try {
       // Simulate upload progress
       const progressInterval = setInterval(() => {
-        setUploadProgress((prev: any) => { // auto: implicit any
+        setUploadProgress((prev: any) => {
           const next = prev + 10;
           if (next >= 100) {
             clearInterval(progressInterval);
@@ -610,7 +618,7 @@ export function EnhancedMediaContent({
                 <Input
                   placeholder="Search sounds..."
                   value={searchQuery}
-                  onChange={(e: any) => s // auto: implicit anyetSearchQuery(e.target.value)}
+                  onChange={(e: any) => setSearchQuery(e.target.value)}
                 />
               </div>
               <label htmlFor="category-filter" className="sr-only">
@@ -619,7 +627,7 @@ export function EnhancedMediaContent({
               <select
                 id="category-filter"
                 value={selectedCategory}
-                onChange={(e: any) => s // auto: implicit anyetSelectedCategory(e.target.value)}
+                onChange={(e: any) => setSelectedCategory(e.target.value)}
                 className="px-3 py-2 border rounded-md bg-background"
                 aria-label="Filter media by category"
               >

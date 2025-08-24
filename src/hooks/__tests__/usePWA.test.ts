@@ -680,7 +680,11 @@ describe('PWA Hooks', () => {
         const snoozeHandler = mockPWAManager.on.mock.calls.find(
           ([event]) => event === 'alarm-snoozed'
         )?.[1];
-        snoozeHandler?.({ alarmId: 'alarm-1', timestamp: Date.now(), duration: 300 });
+        snoozeHandler?.({
+          alarmId: 'alarm-1',
+          timestamp: Date.now(),
+          duration: 300,
+        });
       });
 
       expect(result.current.alarmEvents).toHaveLength(3);

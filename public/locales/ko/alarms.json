@@ -71,7 +71,7 @@
     "snoozesLeft": "스누즈 {{count}}번 남음",
     "snoozesLeft_plural": "스누즈 {{count}}번 남음",
     "noSnoozesLeft": "스누즈 기회 없음",
-    "voiceChallenge": ""일어났어요"라고 말하여 끄기",
+    "voiceChallenge": "\"일어났어요\"라고 말하여 끄기",
     "shakeToSnooze": "기기를 흔들어 스누즈",
     "challenges": {
       "math": "수학 문제를 풀어보세요",

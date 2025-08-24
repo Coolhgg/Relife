@@ -376,7 +376,9 @@ describe('AnalyticsService', () => {
 
       // Simulate user interactions
       analytics.track(ANALYTICS_EVENTS.ALARM_CREATED, { alarm_type: 'voice' });
-      analytics.track(ANALYTICS_EVENTS.ALARM_TRIGGERED, { alarm_id: 'alarm123' });
+      analytics.track(ANALYTICS_EVENTS.ALARM_TRIGGERED, {
+        alarm_id: 'alarm123',
+      });
 
       // Verify events were tracked
       expect(mockPostHog.capture).toHaveBeenCalledTimes(3); // APP_LAUNCHED + 2 custom events

@@ -114,7 +114,9 @@ describe('Dashboard', () => {
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
 
-      const morningButton = screen.getByRole('button', { name: /morning routine/i });
+      const morningButton = screen.getByRole('button', {
+        name: /morning routine/i,
+      });
       await user.click(morningButton);
 
       expect(mockProps.onQuickSetup).toHaveBeenCalledWith('morning');
@@ -144,7 +146,9 @@ describe('Dashboard', () => {
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
 
-      const deleteButton = screen.getByRole('button', { name: /delete alarm/i });
+      const deleteButton = screen.getByRole('button', {
+        name: /delete alarm/i,
+      });
       await user.click(deleteButton);
 
       // Confirm deletion in modal
@@ -262,7 +266,9 @@ describe('Dashboard', () => {
       render(<Dashboard {...mockProps} />);
 
       const addButton = screen.getByRole('button', { name: /add alarm/i });
-      const quickSetupButton = screen.getByRole('button', { name: /morning routine/i });
+      const quickSetupButton = screen.getByRole('button', {
+        name: /morning routine/i,
+      });
 
       // Tab navigation
       await user.tab();

@@ -71,7 +71,7 @@
     "snoozesLeft": "{{count}}টি স্নুজ বাকি",
     "snoozesLeft_plural": "{{count}}টি স্নুজ বাকি",
     "noSnoozesLeft": "আর স্নুজ বাকি নেই",
-    "voiceChallenge": "বন্ধ করতে "আমি জেগেছি" বলুন",
+    "voiceChallenge": "বন্ধ করতে \"আমি জেগেছি\" বলুন",
     "shakeToSnooze": "স্নুজ করতে ডিভাইস নাড়ান",
     "challenges": {
       "math": "গণিতের সমস্যা সমাধান করুন",

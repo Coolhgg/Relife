@@ -468,7 +468,9 @@ describe('useTheme Hook', () => {
         </ThemeProvider>
       );
 
-      const { result } = renderHook(() => useTheme(), { wrapper: wrapperWithSystem });
+      const { result } = renderHook(() => useTheme(), {
+        wrapper: wrapperWithSystem,
+      });
 
       expect(result.current.isSystemTheme).toBe(true);
     });

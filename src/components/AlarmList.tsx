@@ -211,7 +211,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
       </h2>
 
       <ul className="space-y-3" role="list" aria-label="List of alarms">
-        {alarms.map((alarm: any) => { // auto: implicit any
+        {alarms.map((alarm: any) => {
           const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
           return (
@@ -352,7 +352,8 @@ const AlarmList: React.FC<AlarmListProps> = ({
                                   {alarmOptimizations.get(alarm.id)?.adjustment > 0
                                     ? '+'
                                     : ''}
-                                  {alarmOptimizations.get(alarm.id)?.adjustment}min
+                                  {alarmOptimizations.get(alarm.id)?.adjustment}
+                                  min
                                 </span>
                               </div>
                             </div>

@@ -75,7 +75,9 @@ describe('PushNotificationService', () => {
       receive: 'granted',
     });
     (PushNotifications.register as jest.Mock).mockResolvedValue();
-    (PushNotifications.addListener as jest.Mock).mockReturnValue({ remove: jest.fn() });
+    (PushNotifications.addListener as jest.Mock).mockReturnValue({
+      remove: jest.fn(),
+    });
   });
 
   describe('initialize', () => {

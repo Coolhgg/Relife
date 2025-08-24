@@ -653,7 +653,9 @@ export class AlarmBackupRedundancyService {
     try {
       const { keys } = await Preferences.keys();
       const backupKeys = keys
-        .filter((key: any) => k // auto: implicit anyey.startsWith(AlarmBackupRedundancyService.BACKUP_PREFIX))
+        .filter((key: any) =>
+          key.startsWith(AlarmBackupRedundancyService.BACKUP_PREFIX)
+        )
         .sort()
         .reverse();
 

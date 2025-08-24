@@ -447,7 +447,11 @@ export class SleepAnalysisService {
   }
 
   private static findBestWakeTimeInWindow(
-    stages: Array<{ time: string; stage: 'light' | 'deep' | 'rem'; quality: number }>,
+    stages: Array<{
+      time: string;
+      stage: 'light' | 'deep' | 'rem';
+      quality: number;
+    }>,
     windowStart: number,
     windowEnd: number
   ): { timeInMinutes: number; stage: 'light' | 'deep' | 'rem' } | null {
@@ -537,7 +541,10 @@ export class SleepAnalysisService {
     return difficulties[stage];
   }
 
-  private static parseTimeString(timeStr: string): { hours: number; minutes: number } {
+  private static parseTimeString(timeStr: string): {
+    hours: number;
+    minutes: number;
+  } {
     const [hours, minutes] = timeStr.split(':').map(Number);
     return { hours, minutes };
   }

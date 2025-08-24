@@ -32,7 +32,8 @@ interface EnhancedUpgradePromptProps {
   variant?: 'modal' | 'inline' | 'banner' | 'fullscreen';
   /** Callback when user clicks upgrade */
   /** Callback when user dismisses prompt */
-  onDismiss?: () => void;
+  onDismiss?: (
+) => void;
   /** Custom title override */
   title?: string;
   /** Custom description override */
@@ -60,26 +61,35 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   showSocialProof = true,
   showUrgency = true,
   ctaText,
-}) => {
+}
+) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-  useEffect(() => {
+  useEffect((
+) => {
     setIsAnimating(true);
-    const timer = setTimeout(() => setIsAnimating(false), 500);
-    return () => clearTimeout(timer);
+    const timer = setTimeout((
+) => setIsAnimating(false), 500);
+    return (
+) => clearTimeout(timer);
   }, []);
 
   // Rotate testimonials every 4 seconds
-  useEffect(() => {
+  useEffect((
+) => {
     if (!showSocialProof) return;
-    const interval = setInterval(() => {
-      setCurrentTestimonial((prev: any) => ({ // auto: implicit anyprev + 1) % testimonials.length);
+    const interval = setInterval((
+) => {
+      
+      setCurrentTestimonial((prev: any) => (prev + 1) % testimonials.length)
     }, 4000);
-    return () => clearInterval(interval);
+    return (
+) => clearInterval(interval);
   }, [showSocialProof]);
 
-  const getFeatureInfo = (featureId: string) => {
+  const getFeatureInfo = (featureId: string
+) => {
     const featureMap: Record<
       string,
       {
@@ -190,7 +200,8 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   const displayTitle = title || `Unlock ${featureInfo.title}`;
   const displayDescription = description || featureInfo.description;
 
-  const getPricingInfo = () => {
+  const getPricingInfo = (
+) => {
     if (featureInfo.tier === 'pro') {
       return {
         monthly: { price: 9.99, savings: null },
@@ -205,10 +216,12 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
 
   const pricing = getPricingInfo();
 
-  const handleUpgrade = (_tier?: any /* auto: placeholder param - adjust */, interval: 'monthly' | 'yearly' = 'monthly') => {
+  const handleUpgrade = (_tier?: any /* auto: placeholder param - adjust */, interval: 'monthly' | 'yearly' = 'monthly'
+) => {
     // Add smooth transition effect
     setIsAnimating(true);
-    setTimeout(() => {
+    setTimeout((
+) => {
       onUpgrade(tier);
     }, 200);
   };
@@ -243,7 +256,8 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
               </span>
             )}
             <button
-              onClick={() => handleUpgrade(featureInfo.tier)}
+              onClick={(
+) => handleUpgrade(featureInfo.tier)}
               className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
             >
               {ctaText || 'Upgrade Now'}
@@ -276,7 +290,8 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
         <p className="text-gray-600 mb-4">{displayDescription}</p>
 
         <div className="space-y-2 mb-6">
-          {featureInfo.benefits.slice(0, 3).map((benefit, index) => (
+          {featureInfo.benefits.slice(0, 3).map((benefit, index
+) => (
             <div
               key={index}
               className="flex items-center justify-center text-sm text-gray-700"
@@ -288,7 +303,8 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
         </div>
 
         <button
-          onClick={() => handleUpgrade(featureInfo.tier)}
+          onClick={(
+) => handleUpgrade(featureInfo.tier)}
           className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
         >
           {ctaText ||
@@ -360,7 +376,8 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
               What you'll get:
             </h3>
             <div className="grid grid-cols-1 gap-3">
-              {featureInfo.benefits.map((benefit, index) => (
+              {featureInfo.benefits.map((benefit, index
+) => (
                 <div
                   key={index}
                   className="flex items-start space-x-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
@@ -380,7 +397,8 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-gray-900">What users are saying</h3>
                 <div className="flex items-center space-x-1">
-                  {[...Array(5)].map((_, i) => (
+                  {[...Array(5)].map((_, i
+) => (
                     <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
                   ))}
                   <span className="text-sm text-gray-600 ml-2">
@@ -398,7 +416,8 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                     {testimonials[currentTestimonial].title}
                   </cite>
                   <div className="flex space-x-1">
-                    {testimonials.map((_, index) => (
+                    {testimonials.map((_, index
+) => (
                       <div
                         key={index}
                         className={`w-2 h-2 rounded-full transition-colors ${
@@ -430,7 +449,8 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                       <span className="text-gray-600">/month</span>
                     </div>
                     <button
-                      onClick={() => handleUpgrade(featureInfo.tier, 'monthly')}
+                      onClick={(
+) => handleUpgrade(featureInfo.tier, 'monthly')}
                       className="w-full bg-gray-900 text-white py-3 px-6 rounded-xl font-medium hover:bg-gray-800 transition-colors"
                     >
                       Start Monthly Plan
@@ -465,7 +485,8 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                       </span>
                     </div>
                     <button
-                      onClick={() => handleUpgrade(featureInfo.tier, 'yearly')}
+                      onClick={(
+) => handleUpgrade(featureInfo.tier, 'yearly')}
                       className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
                     >
                       Start Yearly Plan

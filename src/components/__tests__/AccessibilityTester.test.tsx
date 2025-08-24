@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 // Vitest globals are available globally, no need to import
 /**
  * AccessibilityTester Component Tests
@@ -158,7 +158,9 @@ describe('AccessibilityTester', () => {
     it('identifies focus traps', () => {
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
-      const focusTrapTest = screen.getByRole('button', { name: /test focus traps/i });
+      const focusTrapTest = screen.getByRole('button', {
+        name: /test focus traps/i,
+      });
       expect(focusTrapTest).toBeInTheDocument();
     });
   });

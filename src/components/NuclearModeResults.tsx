@@ -134,12 +134,20 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
     if (score >= 90)
       return { label: 'Nuclear Master', color: 'text-purple-600', icon: Crown };
     if (score >= 80)
-      return { label: 'Explosive Expert', color: 'text-orange-600', icon: Medal };
+      return {
+        label: 'Explosive Expert',
+        color: 'text-orange-600',
+        icon: Medal,
+      };
     if (score >= 70)
       return { label: 'Bomb Specialist', color: 'text-blue-600', icon: Award };
     if (score >= 60)
       return { label: 'Blast Rookie', color: 'text-green-600', icon: Star };
-    return { label: 'Training Needed', color: 'text-gray-600', icon: RefreshCw };
+    return {
+      label: 'Training Needed',
+      color: 'text-gray-600',
+      icon: RefreshCw,
+    };
   };
 
   const formatDuration = (ms: number) => {

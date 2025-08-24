@@ -63,7 +63,9 @@ export function FeedbackModal({
 
   const takeScreenshot = async () => {
     try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+      });
       const video = document.createElement('video');
       video.srcObject = stream;
       video.play();
@@ -269,7 +271,7 @@ export function FeedbackModal({
                 <Input
                   id="title"
                   value={title}
-                  onChange={(e: any) => s // auto: implicit anyetTitle(e.target.value)}
+                  onChange={(e: any) => setTitle(e.target.value)}
                   placeholder="Brief summary of your feedback"
                   className="mt-1"
                   required
@@ -281,7 +283,7 @@ export function FeedbackModal({
                 <Textarea
                   id="description"
                   value={description}
-                  onChange={(e: any) => s // auto: implicit anyetDescription(e.target.value)}
+                  onChange={(e: any) => setDescription(e.target.value)}
                   placeholder="Provide more details about your feedback..."
                   className="mt-1 min-h-[100px]"
                   rows={4}

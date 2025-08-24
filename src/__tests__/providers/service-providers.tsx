@@ -364,7 +364,10 @@ export const ServiceTestProviders: React.FC<{
   securityService = {},
 }) => {
   const mockAlarmService = { ...createMockAlarmService(), ...alarmService };
-  const mockAnalyticsService = { ...createMockAnalyticsService(), ...analyticsService };
+  const mockAnalyticsService = {
+    ...createMockAnalyticsService(),
+    ...analyticsService,
+  };
   const mockBattleService = { ...createMockBattleService(), ...battleService };
   const mockSubscriptionService = {
     ...createMockSubscriptionService(),
@@ -376,8 +379,14 @@ export const ServiceTestProviders: React.FC<{
     ...notificationService,
   };
   const mockAudioService = { ...createMockAudioService(), ...audioService };
-  const mockStorageService = { ...createMockStorageService(), ...storageService };
-  const mockSecurityService = { ...createMockSecurityService(), ...securityService };
+  const mockStorageService = {
+    ...createMockStorageService(),
+    ...storageService,
+  };
+  const mockSecurityService = {
+    ...createMockSecurityService(),
+    ...securityService,
+  };
 
   return (
     <AlarmServiceContext.Provider value={mockAlarmService}>

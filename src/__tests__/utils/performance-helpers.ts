@@ -231,7 +231,9 @@ export const _reactPerformance = {
 
     const results = await performanceCore.benchmark(
       async () => {
-        const result = await reactPerformance.measureRender(renderComponent, { label });
+        const result = await reactPerformance.measureRender(renderComponent, {
+          label,
+        });
         return result.renderTime;
       },
       { iterations, name: label }

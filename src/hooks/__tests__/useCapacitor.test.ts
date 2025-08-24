@@ -80,7 +80,9 @@ describe('useCapacitor', () => {
     });
 
     mockLocalNotifications.areEnabled.mockResolvedValue({ value: true });
-    mockLocalNotifications.requestPermissions.mockResolvedValue({ display: 'granted' });
+    mockLocalNotifications.requestPermissions.mockResolvedValue({
+      display: 'granted',
+    });
     mockLocalNotifications.getPending.mockResolvedValue({ notifications: [] });
 
     mockPreferences.get.mockResolvedValue({ value: null });

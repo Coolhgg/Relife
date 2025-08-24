@@ -32,7 +32,11 @@ interface VoiceAnalytics {
     failedCommands: number;
     averageResponseTime: number;
     dailyUsage: { date: string; commands: number; success_rate: number }[];
-    topCommands: { command: string; usage_count: number; success_rate: number }[];
+    topCommands: {
+      command: string;
+      usage_count: number;
+      success_rate: number;
+    }[];
   };
   accuracy: {
     overallAccuracy: number;
@@ -43,7 +47,11 @@ interface VoiceAnalytics {
   };
   personalization: {
     preferredVoiceMood: string;
-    moodEffectiveness: { mood: string; success_rate: number; usage_count: number }[];
+    moodEffectiveness: {
+      mood: string;
+      success_rate: number;
+      usage_count: number;
+    }[];
     adaptationScore: number;
     learningProgress: number;
   };
@@ -258,7 +266,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
             <div className="flex items-center space-x-4">
               <select
                 value={timeRange}
-                onChange={(e: any) => s // auto: implicit anyetTimeRange(e.target.value as any)}
+                onChange={(e: any) => setTimeRange(e.target.value as any)}
                 className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="7d">Last 7 days</option>
@@ -513,7 +521,9 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                       <div
                         key={point.date}
                         className="bg-gradient-to-t from-green-500 to-green-400 rounded-t-lg w-2 hover:from-green-600 hover:to-green-500 transition-colors"
-                        style={{ height: `${(point.accuracy / 100) * 200}px` }}
+                        style={{
+                          height: `${(point.accuracy / 100) * 200}px`,
+                        }}
                         title={`${point.date}: ${point.accuracy.toFixed(1)}%`}
                       />
                     ))}
@@ -579,7 +589,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                     Voice Mood Effectiveness
                   </h3>
                   <div className="space-y-4">
-                    {analytics.personalization.moodEffectiveness.map((mood: any) => ({ // auto: implicit any
+                    {analytics.personalization.moodEffectiveness.map((mood: any) => (
                       <div
                         key={mood.mood}
                         className="p-4 bg-gradient-to-r from-slate-50 to-purple-50 rounded-xl"

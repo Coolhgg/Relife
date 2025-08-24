@@ -249,7 +249,9 @@ export class PWAManager {
 
       if (this.serviceWorkerRegistration.waiting) {
         // Tell the waiting service worker to skip waiting
-        this.serviceWorkerRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+        this.serviceWorkerRegistration.waiting.postMessage({
+          type: 'SKIP_WAITING',
+        });
         window.location.reload();
       }
     } catch (error) {

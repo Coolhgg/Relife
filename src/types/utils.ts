@@ -191,10 +191,10 @@ export type Discriminated<T, K extends keyof T> =
   T extends Record<K, infer D> ? T & Record<K, D> : never;
 
 // Brand utility functions
-export const createBrandedId =
-  <B>(prefix: string) =>
-  (id: string): Branded<string, B> =>
-    `${prefix}_${id}` as Branded<string, B>;
+export const createBrandedId = <B>(prefix: string) => {
+  /* TODO: implement */
+};
+(id: string): Branded<string, B> => `${prefix}_${id}` as Branded<string, B>;
 
 export const extractIdFromBranded = <B>(brandedId: Branded<string, B>): string =>
   brandedId.toString().split('_').slice(1).join('_');

@@ -312,7 +312,10 @@ describe('useAlarmRingingAnnouncements', () => {
     const { result } = renderHook(() => useAlarmRingingAnnouncements());
 
     const announcements = [
-      { type: 'ringing', alarm: { id: 'alarm-1', name: 'Alarm 1', time: '07:00' } },
+      {
+        type: 'ringing',
+        alarm: { id: 'alarm-1', name: 'Alarm 1', time: '07:00' },
+      },
       { type: 'volume', volume: 80 },
       { type: 'sound', soundName: 'Birds' },
     ];

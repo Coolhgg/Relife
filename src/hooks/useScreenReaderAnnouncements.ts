@@ -151,13 +151,17 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
 
         case 'custom':
           if (announcementText) {
-            screenReader.current.announce(announcementText, priority, { delay });
+            screenReader.current.announce(announcementText, priority, {
+              delay,
+            });
           }
           break;
 
         default:
           if (announcementText) {
-            screenReader.current.announce(announcementText, priority, { delay });
+            screenReader.current.announce(announcementText, priority, {
+              delay,
+            });
           }
           break;
       }

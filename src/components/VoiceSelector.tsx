@@ -123,7 +123,7 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
         {personality && personality.characteristics.length > 0 && (
           <div className="mb-3">
             <div className="flex flex-wrap gap-1">
-              {personality.characteristics.slice(0, 3).map((characteristic: any) => ({ // auto: implicit any
+              {personality.characteristics.slice(0, 3).map((characteristic: any) => (
                 <span
                   key={characteristic}
                   className={`px-2 py-1 rounded-full text-xs font-medium ${getCharacteristicColor(characteristic)}`}
@@ -235,7 +235,8 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
   const getFilteredVoices = () => {
     if (filter === 'all') return availableVoices;
 
-    return availableVoices.filter((voice: any) => { // auto: implicit any
+    return availableVoices.filter((voice: any) => {
+      // auto: implicit any
       const personality = PremiumVoiceService.getVoicePersonality(voice.id);
       if (!personality) {
         return filter === 'free';
@@ -248,7 +249,8 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
     const filteredVoices = getFilteredVoices();
     const categories: Record<string, VoiceMoodConfig[]> = {};
 
-    filteredVoices.forEach((voice: any) => { // auto: implicit any
+    filteredVoices.forEach((voice: any) => {
+      // auto: implicit any
       const personality = PremiumVoiceService.getVoicePersonality(voice.id);
       const category = personality?.category || 'basic';
 

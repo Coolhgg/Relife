@@ -1775,7 +1775,10 @@ export const AudioManager = {
     log(`❓ Mock AudioManager.isPlaying: ${options.assetId}`);
     const isCurrentlyPlaying =
       mockState.audio.currentlyPlaying === options.assetId && mockState.audio.isPlaying;
-    return Promise.resolve({ assetId: options.assetId, isPlaying: isCurrentlyPlaying });
+    return Promise.resolve({
+      assetId: options.assetId,
+      isPlaying: isCurrentlyPlaying,
+    });
   }),
 };
 

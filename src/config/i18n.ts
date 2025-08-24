@@ -706,7 +706,9 @@ export const formatDuration = (seconds: number, lang?: SupportedLanguage): strin
         seconds: remainingSeconds,
       });
     } else {
-      return formatMessage('common:time.seconds', { seconds: remainingSeconds });
+      return formatMessage('common:time.seconds', {
+        seconds: remainingSeconds,
+      });
     }
   } catch (error) {
     console.error('Failed to format duration:', error);

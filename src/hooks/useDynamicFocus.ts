@@ -36,7 +36,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
   } = options;
 
   const liveRegionRef = useRef<HTMLDivElement | null>(null);
-  const announcementTimeoutRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
+  const announcementTimeoutRef = useRef<TimeoutHandle | undefined>(undefined);
   const pendingAnnouncementsRef = useRef<string[]>([]);
   const lastFocusedRef = useRef<HTMLElement | null>(null);
 
@@ -78,7 +78,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
 
     if (announcementTimeoutRef.current) {
       clearTimeout(announcementTimeoutRef.current);
-      announcementTimeoutRef.current = undefined; // auto: changed from null to undefined
+      announcementTimeoutRef.current = undefined;
     }
   }, []);
 

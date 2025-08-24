@@ -128,7 +128,9 @@ export function useMobileBehavior() {
 
     if (isTouchDevice.current) {
       document.addEventListener('touchend', preventZoom, { passive: false });
-      document.addEventListener('touchmove', preventPullToRefresh, { passive: false });
+      document.addEventListener('touchmove', preventPullToRefresh, {
+        passive: false,
+      });
     }
 
     return () => {

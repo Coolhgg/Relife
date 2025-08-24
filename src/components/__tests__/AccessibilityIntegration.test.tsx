@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 // Vitest globals are available globally, no need to import
 /**
  * Integration Tests for Accessibility Components
@@ -59,7 +59,9 @@ describe('Accessibility Integration Tests', () => {
       );
 
       // Find elements that should be focusable
-      const dashboardButton = screen.getByRole('button', { name: /visual & display/i });
+      const dashboardButton = screen.getByRole('button', {
+        name: /visual & display/i,
+      });
       const testerDialog = screen.getByRole('dialog', {
         name: /accessibility tester/i,
       });
@@ -87,7 +89,9 @@ describe('Accessibility Integration Tests', () => {
       );
 
       // Enable high contrast in dashboard
-      const highContrastToggle = screen.getByRole('switch', { name: /high contrast/i });
+      const highContrastToggle = screen.getByRole('switch', {
+        name: /high contrast/i,
+      });
       await user.click(highContrastToggle);
 
       // Rerender with tester and verify it reflects the same preferences
@@ -124,7 +128,9 @@ describe('Accessibility Integration Tests', () => {
       });
 
       // Trigger an announcement from tester
-      const contrastButton = screen.getByRole('button', { name: /check contrast/i });
+      const contrastButton = screen.getByRole('button', {
+        name: /check contrast/i,
+      });
       await user.click(contrastButton);
 
       // Verify both announcements work without conflicts
@@ -293,7 +299,9 @@ describe('Accessibility Integration Tests', () => {
       const fontSizeSlider = screen.getByRole('slider', { name: /font size/i });
       expect(fontSizeSlider).toHaveAttribute('aria-describedby');
 
-      const contrastButton = screen.getByRole('button', { name: /check contrast/i });
+      const contrastButton = screen.getByRole('button', {
+        name: /check contrast/i,
+      });
       expect(contrastButton).toHaveAttribute('aria-describedby');
     });
   });
@@ -331,7 +339,9 @@ describe('Accessibility Integration Tests', () => {
       // Trigger a contrast check error (invalid colors)
       const colorInput1 = screen.getByLabelText(/foreground color/i);
       const colorInput2 = screen.getByLabelText(/background color/i);
-      const checkButton = screen.getByRole('button', { name: /check contrast/i });
+      const checkButton = screen.getByRole('button', {
+        name: /check contrast/i,
+      });
 
       await user.clear(colorInput1);
       await user.type(colorInput1, 'invalid-color');
@@ -385,7 +395,9 @@ describe('Accessibility Integration Tests', () => {
       );
 
       // Step 1: Configure accessibility preferences in dashboard
-      const highContrastToggle = screen.getByRole('switch', { name: /high contrast/i });
+      const highContrastToggle = screen.getByRole('switch', {
+        name: /high contrast/i,
+      });
       await user.click(highContrastToggle);
 
       const fontSizeSlider = screen.getByRole('slider', { name: /font size/i });
@@ -393,10 +405,14 @@ describe('Accessibility Integration Tests', () => {
       await user.keyboard('{ArrowRight}{ArrowRight}');
 
       // Step 2: Test configuration in tester
-      const contrastTest = screen.getByRole('button', { name: /check contrast/i });
+      const contrastTest = screen.getByRole('button', {
+        name: /check contrast/i,
+      });
       await user.click(contrastTest);
 
-      const keyboardTest = screen.getByRole('button', { name: /keyboard navigation/i });
+      const keyboardTest = screen.getByRole('button', {
+        name: /keyboard navigation/i,
+      });
       await user.click(keyboardTest);
 
       // Step 3: Verify results are properly displayed
@@ -405,7 +421,9 @@ describe('Accessibility Integration Tests', () => {
       });
 
       // Step 4: Reset and test again
-      const resetButton = screen.getByRole('button', { name: /reset.*default/i });
+      const resetButton = screen.getByRole('button', {
+        name: /reset.*default/i,
+      });
       await user.click(resetButton);
 
       // Verify settings were reset

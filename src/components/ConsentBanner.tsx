@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 // Consent Banner Component for GDPR/CCPA Compliance
 // Provides a user-friendly way to collect privacy consent
 
@@ -9,8 +9,10 @@ import PrivacyComplianceService, {
 } from '../services/privacy-compliance';
 
 interface ConsentBannerProps {
-  onConsentGiven: (consents: ConsentSettings) => void;
-  onConsentDenied: () => void;
+  onConsentGiven: (consents: ConsentSettings
+) => void;
+  onConsentDenied: (
+) => void;
   isVisible: boolean;
   userId?: string;
 }
@@ -35,7 +37,8 @@ export default function ConsentBanner({
 
   if (!isVisible) return null;
 
-  const handleAcceptAll = () => {
+  const handleAcceptAll = (
+) => {
     const allConsents: ConsentSettings = {
       analytics: true,
       performance: true,
@@ -49,7 +52,8 @@ export default function ConsentBanner({
     onConsentGiven(allConsents);
   };
 
-  const handleRejectAll = () => {
+  const handleRejectAll = (
+) => {
     const minimalConsents: ConsentSettings = {
       analytics: false,
       performance: false,
@@ -63,14 +67,17 @@ export default function ConsentBanner({
     onConsentDenied();
   };
 
-  const handleSavePreferences = () => {
+  const handleSavePreferences = (
+) => {
     privacyService.setBulkConsent(consents, 'banner', userId);
     onConsentGiven(consents);
   };
 
-  const handleConsentChange = (type: keyof ConsentSettings, value: boolean) => {
-    setConsents((prev: any) => ({
-      // auto: implicit any{
+  const handleConsentChange = (type: keyof ConsentSettings, value: boolean
+) => {
+    
+      setConsents((prev: any
+) => ({
       ...prev,
       [type]: value,
     }));
@@ -170,7 +177,8 @@ export default function ConsentBanner({
                 We use essential cookies and may collect anonymized usage data to
                 improve the app.
                 <button
-                  onClick={() => setShowDetails(true)}
+                  onClick={(
+) => setShowDetails(true)}
                   className="text-primary-600 dark:text-primary-400 hover:underline ml-1"
                 >
                   Learn more about our data practices
@@ -181,7 +189,8 @@ export default function ConsentBanner({
             // Detailed consent options
             <div className="space-y-6">
               <div className="grid gap-4">
-                {Object.entries(consentDescriptions).map(([key, config]) => (
+                {Object.entries(consentDescriptions).map(([key, config]
+) => (
                   <div
                     key={key}
                     className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-dark-700 rounded-lg"
@@ -193,9 +202,7 @@ export default function ConsentBanner({
                         checked={consents[key as keyof ConsentSettings]}
                         disabled={config.required}
                         onChange={(
-                          e: any // auto: implicit any
-                        ) =>
-                          handleConsentChange(
+                          e: any) => handleConsentChange(
                             key as keyof ConsentSettings,
                             e.target.checked
                           )
@@ -253,7 +260,8 @@ export default function ConsentBanner({
                 Accept All
               </button>
               <button
-                onClick={() => setShowDetails(true)}
+                onClick={(
+) => setShowDetails(true)}
                 className="flex items-center justify-center gap-2 flex-1 bg-gray-200 hover:bg-gray-300 dark:bg-dark-600 dark:hover:bg-dark-500 text-gray-900 dark:text-white px-6 py-3 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                 type="button"
               >
@@ -278,7 +286,8 @@ export default function ConsentBanner({
                 Save My Preferences
               </button>
               <button
-                onClick={() => setShowDetails(false)}
+                onClick={(
+) => setShowDetails(false)}
                 className="sm:w-auto bg-gray-200 hover:bg-gray-300 dark:bg-dark-600 dark:hover:bg-dark-500 text-gray-900 dark:text-white px-6 py-3 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                 type="button"
               >

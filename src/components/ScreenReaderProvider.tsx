@@ -153,8 +153,14 @@ export function ScreenReaderTester() {
 
   const testAnnouncements = [
     { message: 'This is a polite announcement', priority: 'polite' as const },
-    { message: 'This is an assertive announcement', priority: 'assertive' as const },
-    { message: 'Testing alarm creation announcement', priority: 'polite' as const },
+    {
+      message: 'This is an assertive announcement',
+      priority: 'assertive' as const,
+    },
+    {
+      message: 'Testing alarm creation announcement',
+      priority: 'polite' as const,
+    },
     { message: 'Testing navigation announcement', priority: 'polite' as const },
   ];
 

@@ -43,7 +43,7 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       const newAlarm = await AlarmService.createAlarm(alarmData);
-      setAlarms((prev: any) => [ // auto: implicit any...prev, newAlarm]);
+      setAlarms((prev: any) => [...prev, newAlarm]);
       setError(null);
       return newAlarm;
     } catch (error) {
@@ -59,8 +59,9 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       await AlarmService.updateAlarm(id, alarmData);
-      setAlarms((prev: any) => // auto: implicit any
-        prev.map((alarm: any) => ({ // auto: implicit anyalarm.id === id ? { ...alarm, ...alarmData } : alarm))
+
+      setAlarms((prev: any) =>
+        prev.map((alarm: any) => (alarm.id === id ? { ...alarm, ...alarmData } : alarm))
       );
       setError(null);
     } catch (error) {

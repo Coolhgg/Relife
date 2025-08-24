@@ -150,7 +150,10 @@ const mockStripe = {
 
   // Payment method creation
   createPaymentMethod: jest.fn(({ type, card, billing_details }: any) => {
-    console.log('💳 Mock Stripe createPaymentMethod', { type, billing_details });
+    console.log('💳 Mock Stripe createPaymentMethod', {
+      type,
+      billing_details,
+    });
 
     return Promise.resolve({
       paymentMethod: {

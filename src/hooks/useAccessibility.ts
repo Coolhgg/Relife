@@ -36,7 +36,8 @@ export const useAccessibility = () => {
     setIsInitialized(true);
 
     // Subscribe to changes
-    const unsubscribe = accessibilityService.current.subscribe((newPrefs: any) => { // auto: implicit any
+    const unsubscribe = accessibilityService.current.subscribe((newPrefs: any) => {
+      // auto
       setPreferences(newPrefs);
       setState(accessibilityService.current!.getState());
     });
@@ -230,7 +231,7 @@ export const useAccessibleTooltip = () => {
   }, []);
 
   const removeAllTooltips = useCallback(() => {
-    tooltipCleanupRef.current.forEach((cleanup: any) => c // auto: implicit anyleanup());
+    tooltipCleanupRef.current.forEach((cleanup: any) => cleanup());
     tooltipCleanupRef.current.clear();
   }, []);
 

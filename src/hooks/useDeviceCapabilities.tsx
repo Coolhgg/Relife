@@ -114,11 +114,11 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
     });
 
     const unsubscribeAlerts = performanceBudgetManager.onAlert(alert => {
-      setActiveAlerts((prev: any) => { // auto: implicit any
+      setActiveAlerts((prev: any) => {
         const existing = prev.find((a: any) => a.id === alert.id);
         if (existing) {
           // Update existing alert
-          return prev.map((a: any) => ({ // auto: implicit anya.id === alert.id ? alert : a));
+          return prev.map((a: any) => (a.id === alert.id ? alert : a));
         } else {
           // Add new alert
           return [...prev, alert];

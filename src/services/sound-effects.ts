@@ -1804,6 +1804,26 @@ class SoundEffectsService {
       onError: this.createSoundHandler('error'),
     };
   }
+
+  getCommunityThemes(): Promise<any> {
+    // Placeholder implementation
+    return Promise.resolve([]);
+  }
+
+  shareThemeWithCommunity(theme: any): Promise<any> {
+    // Placeholder implementation
+    return Promise.resolve({});
+  }
+
+  rateTheme(themeId: string, rating: number): Promise<any> {
+    // Placeholder implementation
+    return Promise.resolve({});
+  }
+
+  incrementThemeDownloads(themeId: string): Promise<any> {
+    // Placeholder implementation
+    return Promise.resolve({});
+  }
 }
 
 // Export singleton instance

@@ -1329,7 +1329,9 @@ export class PerformanceMonitoringAPI {
 
   private async cacheWebVitalsAggregation(vitals: WebVitalsData): Promise<void> {
     const key = `vitals:${vitals.session_id}:${Date.now()}`;
-    await this.env.KV.put(key, JSON.stringify(vitals), { expirationTtl: 86400 });
+    await this.env.KV.put(key, JSON.stringify(vitals), {
+      expirationTtl: 86400,
+    });
   }
 
   private async cacheAnalyticsEvent(
@@ -1369,7 +1371,9 @@ export class PerformanceMonitoringAPI {
 
     current.lastUpdated = new Date().toISOString();
 
-    await this.env.KV.put(realtimeKey, JSON.stringify(current), { expirationTtl: 60 });
+    await this.env.KV.put(realtimeKey, JSON.stringify(current), {
+      expirationTtl: 60,
+    });
   }
 
   private async checkPerformanceBudgets(vitals: WebVitalsData): Promise<void> {

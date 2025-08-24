@@ -337,7 +337,7 @@ export function ActiveAlarm({
                       <Input
                         type="number"
                         value={challengeAnswer}
-                        onChange={(e: any) => s // auto: implicit anyetChallengeAnswer(e.target.value)}
+                        onChange={(e: any) => setChallengeAnswer(e.target.value)}
                         placeholder="Your answer"
                         className="text-center text-lg"
                         autoFocus

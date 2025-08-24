@@ -181,7 +181,10 @@ describe('useAuth Hook', () => {
     it('should handle sign in errors', async () => {
       const { SupabaseService } = require('../../services/supabase');
       const errorMessage = 'Invalid credentials';
-      SupabaseService.signIn.mockResolvedValue({ user: null, error: errorMessage });
+      SupabaseService.signIn.mockResolvedValue({
+        user: null,
+        error: errorMessage,
+      });
 
       const { result } = renderHookWithProviders(() => useAuth());
 
@@ -251,7 +254,10 @@ describe('useAuth Hook', () => {
     it('should handle sign up errors', async () => {
       const { SupabaseService } = require('../../services/supabase');
       const errorMessage = 'Email already exists';
-      SupabaseService.signUp.mockResolvedValue({ user: null, error: errorMessage });
+      SupabaseService.signUp.mockResolvedValue({
+        user: null,
+        error: errorMessage,
+      });
 
       const { result } = renderHookWithProviders(() => useAuth());
 

@@ -626,7 +626,10 @@ export class PerformanceBudgetManager {
         'dom-budget',
         'warning',
         `DOM node count (${snapshot.rendering.domNodeCount}) exceeds budget (${budget.domNodes})`,
-        { domNodes: snapshot.rendering.domNodeCount, domBudget: budget.domNodes }
+        {
+          domNodes: snapshot.rendering.domNodeCount,
+          domBudget: budget.domNodes,
+        }
       );
     }
   }

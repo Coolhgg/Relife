@@ -706,7 +706,11 @@ export class MLAlarmOptimizer {
     return this.config.enabled;
   }
 
-  static getMLStats(): { patterns: number; predictions: number; accuracy: number } {
+  static getMLStats(): {
+    patterns: number;
+    predictions: number;
+    accuracy: number;
+  } {
     const totalPatterns = Array.from(this.behaviorData.values()).reduce(
       (sum, patterns) => sum + patterns.length,
       0

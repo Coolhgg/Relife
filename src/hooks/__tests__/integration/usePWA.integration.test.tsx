@@ -257,7 +257,9 @@ describe('PWA Hooks Integration Tests with Multiple Providers', () => {
         i18n: { language: 'es', exists: jest.fn().mockReturnValue(true) },
       });
 
-      const { result } = renderHook(() => useInstallPrompt(), { wrapper: TestWrapper });
+      const { result } = renderHook(() => useInstallPrompt(), {
+        wrapper: TestWrapper,
+      });
 
       await act(async () => {
         result.current.showPrompt();
@@ -272,7 +274,9 @@ describe('PWA Hooks Integration Tests with Multiple Providers', () => {
       i18nConfig.isRTL.mockReturnValue(true);
       i18nConfig.getCurrentLanguage.mockReturnValue('ar');
 
-      const { result } = renderHook(() => useInstallPrompt(), { wrapper: TestWrapper });
+      const { result } = renderHook(() => useInstallPrompt(), {
+        wrapper: TestWrapper,
+      });
 
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 50));

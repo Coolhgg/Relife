@@ -197,7 +197,9 @@ describe('RootErrorBoundary', () => {
         </RootErrorBoundary>
       );
 
-      const freshStartButton = screen.getByRole('button', { name: /fresh start/i });
+      const freshStartButton = screen.getByRole('button', {
+        name: /fresh start/i,
+      });
       fireEvent.click(freshStartButton);
 
       expect(testUtils.mockStorage.clear).toHaveBeenCalled();
@@ -218,7 +220,9 @@ describe('RootErrorBoundary', () => {
         </RootErrorBoundary>
       );
 
-      const reportButton = screen.getByRole('button', { name: /report error/i });
+      const reportButton = screen.getByRole('button', {
+        name: /report error/i,
+      });
       fireEvent.click(reportButton);
 
       expect(mockOpen).toHaveBeenCalledWith(

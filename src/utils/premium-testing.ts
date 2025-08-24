@@ -427,7 +427,8 @@ export class PremiumIntegrationExamples {
   static exampleFeatureGating = `
     import { PremiumGate } from '../components/PremiumGate';
 
-    const VoiceSettingsComponent = ({ userId }) => {
+    const VoiceSettingsComponent = ({ userId }
+) => {
       return (
         <div>
           <h3>Voice Settings</h3>
@@ -466,7 +467,8 @@ export class PremiumIntegrationExamples {
   static exampleVoiceService = `
     import { PremiumVoiceService } from '../services/premium-voice';
 
-    const generateWakeupMessage = async (userId, alarm) => {
+    const generateWakeupMessage = async (userId, alarm
+) => {
       try {
         // This automatically checks subscription and usage limits
         const audioUrl = await PremiumVoiceService.generateAlarmSpeech(
@@ -496,7 +498,8 @@ export class PremiumIntegrationExamples {
     import { useEffect, useState } from 'react';
     import { SubscriptionService } from '../services/subscription';
 
-    const usePremiumFeatures = (userId) => {
+    const usePremiumFeatures = (userId
+) => {
       const [subscriptionState, setSubscriptionState] = useState({
         tier: 'free',
         featureAccess: {},
@@ -504,8 +507,10 @@ export class PremiumIntegrationExamples {
         loading: true
       });
 
-      useEffect(() => {
-        const loadSubscriptionData = async () => {
+      useEffect((
+) => {
+        const loadSubscriptionData = async (
+) => {
           try {
             const [tier, featureAccess, usage] = await Promise.all([
               SubscriptionService.getUserTier(userId),

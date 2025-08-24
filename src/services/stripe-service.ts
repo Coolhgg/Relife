@@ -274,7 +274,10 @@ class StripeService {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         'Failed to update subscription',
-        { context: 'update_subscription', metadata: { subscriptionId, request } }
+        {
+          context: 'update_subscription',
+          metadata: { subscriptionId, request },
+        }
       );
 
       const subscriptionError: SubscriptionError = {
@@ -357,7 +360,10 @@ class StripeService {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         'Failed to cancel subscription',
-        { context: 'cancel_subscription', metadata: { subscriptionId, request } }
+        {
+          context: 'cancel_subscription',
+          metadata: { subscriptionId, request },
+        }
       );
 
       const subscriptionError: SubscriptionError = {
@@ -409,7 +415,10 @@ class StripeService {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         'Failed to add payment method',
-        { context: 'add_payment_method', metadata: { userId, paymentMethodId } }
+        {
+          context: 'add_payment_method',
+          metadata: { userId, paymentMethodId },
+        }
       );
       throw error;
     }
@@ -510,7 +519,10 @@ class StripeService {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         'Failed to create payment intent',
-        { context: 'create_payment_intent', metadata: { amount, currency, customerId } }
+        {
+          context: 'create_payment_intent',
+          metadata: { amount, currency, customerId },
+        }
       );
       throw error;
     }

@@ -207,7 +207,10 @@ class AdvancedAnalyticsService {
       };
 
       // Cache the results
-      this.analyticsCache.set(cacheKey, { data: analytics, timestamp: Date.now() });
+      this.analyticsCache.set(cacheKey, {
+        data: analytics,
+        timestamp: Date.now(),
+      });
 
       const duration = performance.now() - startTime;
       this.performanceMonitor.trackCustomMetric(
@@ -523,7 +526,7 @@ class AdvancedAnalyticsService {
       const liveMetrics = {
         todayAlarms: todayEvents?.length || 0,
         successfulWakeups:
-          todayEvents?.filter((e: any) => e // auto: implicit any.dismissed && !e.snoozed).length || 0,
+          todayEvents?.filter((e: any) => e.dismissed && !e.snoozed).length || 0,
         avgResponseTime: this.calculateAverageResponseTime(todayEvents || []),
         streak: await this.calculateCurrentStreak(userId),
       };
@@ -532,7 +535,7 @@ class AdvancedAnalyticsService {
         firstAlarm: todayEvents?.[0]?.fired_at,
         lastAlarm: todayEvents?.[todayEvents.length - 1]?.fired_at,
         mostEffectiveVoice: this.getMostEffectiveVoice(todayEvents || []),
-        totalSnoozed: todayEvents?.filter((e: any) => e // auto: implicit any.snoozed).length || 0,
+        totalSnoozed: todayEvents?.filter((e: any) => e.snoozed).length || 0,
       };
 
       // Get active insights (cached)
@@ -652,7 +655,10 @@ class AdvancedAnalyticsService {
         const date = new Date(event.fired_at);
         const weekKey = this.getWeekKey(date);
 
-        const current = weeklyAvgResponseTime.get(weekKey) || { total: 0, count: 0 };
+        const current = weeklyAvgResponseTime.get(weekKey) || {
+          total: 0,
+          count: 0,
+        };
         current.total += event.response_time;
         current.count += 1;
         weeklyAvgResponseTime.set(weekKey, current);
@@ -890,7 +896,10 @@ class AdvancedAnalyticsService {
 
     eventsData.forEach(event => {
       const mood = event.alarms?.voice_mood || 'motivational';
-      const current = moodEffectiveness.get(mood) || { successful: 0, total: 0 };
+      const current = moodEffectiveness.get(mood) || {
+        successful: 0,
+        total: 0,
+      };
       current.total += 1;
       if (event.dismissed && !event.snoozed) {
         current.successful += 1;

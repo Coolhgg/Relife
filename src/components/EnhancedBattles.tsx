@@ -135,7 +135,12 @@ const MOCK_SEASON: Season = {
       badge: 'Golden Sun',
       exclusiveContent: 'Champion Avatar Frame',
     },
-    { rank: 2, experience: 3000, title: 'Summer Runner-up', badge: 'Silver Moon' },
+    {
+      rank: 2,
+      experience: 3000,
+      title: 'Summer Runner-up',
+      badge: 'Silver Moon',
+    },
     { rank: 3, experience: 2000, title: 'Summer Bronze', badge: 'Bronze Star' },
   ],
   theme: 'Summer Vibes',
@@ -385,7 +390,7 @@ export function EnhancedBattles({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {MOCK_SEASON.rewards.map((reward: any) => ({ // auto: implicit any
+              {MOCK_SEASON.rewards.map((reward: any) => (
                 <div
                   key={reward.rank}
                   className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"

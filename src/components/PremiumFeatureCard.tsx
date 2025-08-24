@@ -168,7 +168,6 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
           {hasAccess ? (
             <button
               onClick={(e: any) => {
-                // auto: implicit any
                 e.stopPropagation();
                 onClick?.();
               }}
@@ -180,7 +179,6 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
           ) : (
             <button
               onClick={(e: any) => {
-                // auto: implicit any
                 e.stopPropagation();
                 handleUpgrade();
               }}

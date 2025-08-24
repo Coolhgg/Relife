@@ -14,6 +14,7 @@ export interface SmartAlarm extends Alarm {
   consistency: boolean; // maintain consistent wake times
   seasonalAdjustment: boolean;
   smartSchedule: SmartSchedule;
+  conditionBasedAdjustments?: unknown;
 }
 
 export interface SmartSchedule {
@@ -608,7 +609,6 @@ export class SmartAlarmScheduler {
       if (error) throw error;
 
       return data.map((item: any) => ({
-        // auto: implicit any{
         alarmId: item.alarm_id,
         optimizationType: item.optimization_type,
         oldTime: item.old_time,
@@ -653,7 +653,10 @@ export class SmartAlarmScheduler {
     };
   }
 
-  private static parseTimeString(timeStr: string): { hours: number; minutes: number } {
+  private static parseTimeString(timeStr: string): {
+    hours: number;
+    minutes: number;
+  } {
     const [hours, minutes] = timeStr.split(':').map(Number);
     return { hours, minutes };
   }

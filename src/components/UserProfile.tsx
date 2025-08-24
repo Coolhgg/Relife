@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // auto: added missing React import
+import React, { useState } from 'react';
 import {
   User,
   Mail,
@@ -42,9 +42,9 @@ export default function UserProfile({
 
   const handleInputChange = (field: string, value: any) => {
     if (field === 'name') {
-      setEditForm((prev: any) => ({ // auto: implicit any{ ...prev, name: value }));
+      setEditForm((prev: any) => ({ ...prev, name: value }));
     } else {
-      setEditForm((prev: any) => ({ // auto: implicit any{
+      setEditForm((prev: any) => ({
         ...prev,
         preferences: { ...prev.preferences, [field]: value },
       }));
@@ -80,7 +80,11 @@ export default function UserProfile({
     setSaveSuccess(false);
   };
 
-  const voiceMoodOptions: { value: VoiceMood; label: string; description: string }[] = [
+  const voiceMoodOptions: {
+    value: VoiceMood;
+    label: string;
+    description: string;
+  }[] = [
     {
       value: 'motivational',
       label: 'Motivational',
@@ -92,8 +96,16 @@ export default function UserProfile({
       label: 'Drill Sergeant',
       description: 'Intense and commanding',
     },
-    { value: 'sweet-angel', label: 'Sweet Angel', description: 'Kind and nurturing' },
-    { value: 'anime-hero', label: 'Anime Hero', description: 'Energetic and heroic' },
+    {
+      value: 'sweet-angel',
+      label: 'Sweet Angel',
+      description: 'Kind and nurturing',
+    },
+    {
+      value: 'anime-hero',
+      label: 'Anime Hero',
+      description: 'Energetic and heroic',
+    },
     {
       value: 'savage-roast',
       label: 'Savage Roast',

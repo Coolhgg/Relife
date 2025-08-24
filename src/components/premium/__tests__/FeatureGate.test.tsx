@@ -160,7 +160,9 @@ describe('FeatureGate', () => {
         'free'
       );
 
-      const upgradeButton = screen.getByRole('button', { name: /upgrade to premium/i });
+      const upgradeButton = screen.getByRole('button', {
+        name: /upgrade to premium/i,
+      });
       await user.click(upgradeButton);
 
       expect(mockUseFeatureGate.showUpgradeModal).toHaveBeenCalled();
@@ -202,7 +204,9 @@ describe('FeatureGate', () => {
 
       renderWithFeatureAccess(<FeatureGate {...defaultProps} />, 'free');
 
-      const upgradeButton = screen.getByRole('button', { name: /upgrade to basic/i });
+      const upgradeButton = screen.getByRole('button', {
+        name: /upgrade to basic/i,
+      });
       expect(upgradeButton).toHaveClass('bg-blue-600');
     });
 
@@ -212,7 +216,9 @@ describe('FeatureGate', () => {
 
       renderWithFeatureAccess(<FeatureGate {...defaultProps} />, 'premium');
 
-      const upgradeButton = screen.getByRole('button', { name: /upgrade to pro/i });
+      const upgradeButton = screen.getByRole('button', {
+        name: /upgrade to pro/i,
+      });
       expect(upgradeButton).toHaveClass('bg-yellow-600');
     });
   });
@@ -431,7 +437,9 @@ describe('Accessibility', () => {
   it('provides proper ARIA labels for upgrade prompts', () => {
     renderWithFeatureAccess(<FeatureGate {...defaultProps} />, 'free');
 
-    const upgradeButton = screen.getByRole('button', { name: /upgrade to premium/i });
+    const upgradeButton = screen.getByRole('button', {
+      name: /upgrade to premium/i,
+    });
     expect(upgradeButton).toHaveAccessibleName();
   });
 
@@ -450,7 +458,9 @@ describe('Accessibility', () => {
 
     renderWithFeatureAccess(<FeatureGate {...defaultProps} />, 'free');
 
-    const upgradeButton = screen.getByRole('button', { name: /upgrade to premium/i });
+    const upgradeButton = screen.getByRole('button', {
+      name: /upgrade to premium/i,
+    });
 
     // Should be focusable
     await user.tab();

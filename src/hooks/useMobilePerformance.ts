@@ -50,7 +50,7 @@ export const useMobilePerformance = () => {
       // Battery monitoring
       if ('getBattery' in navigator) {
         (navigator as any).getBattery().then((battery: any) => {
-          setMetrics((prev: any) => ({ // auto: implicit any{
+          setMetrics((prev: any) => ({
             ...prev,
             batteryLevel: battery.level,
             batteryCharging: battery.charging,
@@ -58,7 +58,7 @@ export const useMobilePerformance = () => {
 
           // Enable low battery mode
           if (battery.level < 0.2 && !battery.charging) {
-            setOptimizations((prev: any) => ({ // auto: implicit any{
+            setOptimizations((prev: any) => ({
               ...prev,
               lowBatteryMode: true,
               reducedAnimations: true,
@@ -94,7 +94,7 @@ export const useMobilePerformance = () => {
         newMetrics.devicePerformance = 'high';
       }
 
-      setMetrics((prev: any) => ({ // auto: implicit any{ ...prev, ...newMetrics }));
+      setMetrics((prev: any) => ({ ...prev, ...newMetrics }));
     };
 
     updateMetrics();
@@ -109,7 +109,7 @@ export const useMobilePerformance = () => {
       isLowPerformanceDevice ||
       (metrics.batteryLevel && metrics.batteryLevel < 0.3)
     ) {
-      setOptimizations((prev: any) => ({ // auto: implicit any{
+      setOptimizations((prev: any) => ({
         ...prev,
         reducedAnimations: true,
         backgroundSyncEnabled: false,
@@ -117,7 +117,7 @@ export const useMobilePerformance = () => {
     }
 
     if (metrics.networkSpeed === 'slow') {
-      setOptimizations((prev: any) => ({ // auto: implicit any{
+      setOptimizations((prev: any) => ({
         ...prev,
         lazyLoadingEnabled: true,
       }));
@@ -213,7 +213,7 @@ export const useMemoryMonitoring = () => {
   const [memoryPressure, setMemoryPressure] = useState<'low' | 'medium' | 'high'>(
     'low'
   );
-  const intervalRef = useRef<TimeoutHandle | undefined>(); // auto: changed from number to TimeoutHandle
+  const intervalRef = useRef<TimeoutHandle | undefined>();
 
   useEffect(() => {
     if (!('memory' in performance)) return;

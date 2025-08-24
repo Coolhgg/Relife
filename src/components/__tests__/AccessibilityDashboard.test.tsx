@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 // Vitest globals are available globally, no need to import
 /**
  * AccessibilityDashboard Component Tests
@@ -107,7 +107,9 @@ describe('AccessibilityDashboard', () => {
 
       await user.keyboard('{ArrowRight}');
 
-      const navigationTab = screen.getByRole('tab', { name: /navigation & focus/i });
+      const navigationTab = screen.getByRole('tab', {
+        name: /navigation & focus/i,
+      });
       expect(navigationTab).toHaveFocus();
 
       await user.keyboard('{Enter}');
@@ -119,7 +121,9 @@ describe('AccessibilityDashboard', () => {
 
       renderWithProviders(<AccessibilityDashboard />);
 
-      const touchTab = screen.getByRole('tab', { name: /touch & interaction/i });
+      const touchTab = screen.getByRole('tab', {
+        name: /touch & interaction/i,
+      });
       await user.click(touchTab);
 
       // Focus should be managed programmatically
@@ -264,7 +268,9 @@ describe('AccessibilityDashboard', () => {
       const user = userEvent.setup();
       renderWithProviders(<AccessibilityDashboard />);
 
-      const touchTab = screen.getByRole('tab', { name: /touch & interaction/i });
+      const touchTab = screen.getByRole('tab', {
+        name: /touch & interaction/i,
+      });
       await user.click(touchTab);
     });
 
@@ -297,7 +303,9 @@ describe('AccessibilityDashboard', () => {
 
       renderWithProviders(<AccessibilityDashboard />);
 
-      const resetButton = screen.getByRole('button', { name: /reset to defaults/i });
+      const resetButton = screen.getByRole('button', {
+        name: /reset to defaults/i,
+      });
       await user.click(resetButton);
 
       expect(mockAccessibilityPreferences.resetToDefaults).toHaveBeenCalled();
@@ -311,12 +319,16 @@ describe('AccessibilityDashboard', () => {
 
       renderWithProviders(<AccessibilityDashboard />);
 
-      const resetButton = screen.getByRole('button', { name: /reset to defaults/i });
+      const resetButton = screen.getByRole('button', {
+        name: /reset to defaults/i,
+      });
       await user.click(resetButton);
 
       expect(screen.getByText(/are you sure/i)).toBeInTheDocument();
 
-      const confirmButton = screen.getByRole('button', { name: /confirm reset/i });
+      const confirmButton = screen.getByRole('button', {
+        name: /confirm reset/i,
+      });
       await user.click(confirmButton);
 
       expect(mockAccessibilityPreferences.resetToDefaults).toHaveBeenCalled();
@@ -328,7 +340,9 @@ describe('AccessibilityDashboard', () => {
       const user = userEvent.setup();
       renderWithProviders(<AccessibilityDashboard />);
 
-      const testingTab = screen.getByRole('tab', { name: /screen reader testing/i });
+      const testingTab = screen.getByRole('tab', {
+        name: /screen reader testing/i,
+      });
       await user.click(testingTab);
     });
 
@@ -338,7 +352,9 @@ describe('AccessibilityDashboard', () => {
     });
 
     it('provides sample content for testing', () => {
-      const testButton = screen.getByRole('button', { name: /test sample content/i });
+      const testButton = screen.getByRole('button', {
+        name: /test sample content/i,
+      });
       expect(testButton).toBeInTheDocument();
     });
   });
@@ -377,7 +393,9 @@ describe('AccessibilityDashboard', () => {
     it('includes skip links for keyboard navigation', () => {
       renderWithProviders(<AccessibilityDashboard />);
 
-      const skipLink = screen.getByRole('link', { name: /skip to main content/i });
+      const skipLink = screen.getByRole('link', {
+        name: /skip to main content/i,
+      });
       expect(skipLink).toBeInTheDocument();
     });
   });

@@ -292,7 +292,9 @@ describe('GamingHub', () => {
       const createBattleButton = screen.getByTestId('create-battle');
       await user.click(createBattleButton);
 
-      expect(mockCallbacks.onCreateBattle).toHaveBeenCalledWith({ type: 'speed' });
+      expect(mockCallbacks.onCreateBattle).toHaveBeenCalledWith({
+        type: 'speed',
+      });
     });
 
     it('forwards battle joining from community hub', async () => {

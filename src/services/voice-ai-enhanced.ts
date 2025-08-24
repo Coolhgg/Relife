@@ -542,7 +542,8 @@ class VoiceAIEnhancedService {
       ],
     ];
 
-    personalities.forEach(([mood, personality]) => {
+    personalities.forEach(([mood, personality]
+) => {
       this.personalities.set(mood, personality);
     });
   }
@@ -666,7 +667,8 @@ class VoiceAIEnhancedService {
     let encouragement = '';
     if (learningData.length > 0) {
       const avgResponseTime =
-        learningData.reduce((sum, data) => sum + data.userResponse.responseTime, 0) /
+        learningData.reduce((sum, data
+) => sum + data.userResponse.responseTime, 0) /
         learningData.length;
 
       if (avgResponseTime > 60) {
@@ -900,7 +902,8 @@ class VoiceAIEnhancedService {
     }
 
     const avgEffectiveness =
-      moodMatches.reduce((sum, data) => {
+      moodMatches.reduce((sum, data
+) => {
         const effectiveness = data.outcomeSuccess
           ? Math.max(70, 100 - (data.userResponse.responseTime / 60) * 10)
           : 20;
@@ -1028,8 +1031,8 @@ class VoiceAIEnhancedService {
       if (error) throw error;
 
       const learningData =
-        data?.map((row: any) => ({
-          // auto: implicit any{
+        data?.map((row: any
+) => ({
           userId: row.user_id,
           voiceMood: row.voice_mood,
           context: row.context,
@@ -1121,7 +1124,8 @@ class VoiceAIEnhancedService {
 
   private analyzeUserPatterns(learningData: VoiceLearningData[]): any {
     const avgResponseTime =
-      learningData.reduce((sum, data) => sum + data.userResponse.responseTime, 0) /
+      learningData.reduce((sum, data
+) => sum + data.userResponse.responseTime, 0) /
       learningData.length;
 
     // Find best performing times
@@ -1135,10 +1139,13 @@ class VoiceAIEnhancedService {
     });
 
     const bestTimes = Array.from(timePerformance.entries())
-      .filter(([, stats]) => stats.total >= 2)
-      .sort(([, a], [, b]) => b.success / b.total - a.success / a.total)
+      .filter(([, stats]
+) => stats.total >= 2)
+      .sort(([, a], [, b]
+) => b.success / b.total - a.success / a.total)
       .slice(0, 3)
-      .map(([hour]) => `${hour}:00`);
+      .map(([hour]
+) => `${hour}:00`);
 
     const successRate =
       (learningData.filter(data => data.outcomeSuccess).length / learningData.length) *
@@ -1161,7 +1168,8 @@ class VoiceAIEnhancedService {
       });
 
     const mostSuccessful = Array.from(moodCounts.entries()).sort(
-      ([, a], [, b]) => b - a
+      ([, a], [, b]
+) => b - a
     )[0];
 
     return mostSuccessful ? mostSuccessful[0] : 'motivational';
@@ -1204,7 +1212,8 @@ class VoiceAIEnhancedService {
 
     if (learningData.length > 0) {
       const avgResponse =
-        learningData.reduce((sum, data) => sum + data.userResponse.responseTime, 0) /
+        learningData.reduce((sum, data
+) => sum + data.userResponse.responseTime, 0) /
         learningData.length;
       if (avgResponse < 30) {
         personalizations.push('Quick responder style');

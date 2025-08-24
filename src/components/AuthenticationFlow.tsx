@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // auto: added missing React import
+import React, { useState } from 'react';
 import { Clock } from 'lucide-react';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';

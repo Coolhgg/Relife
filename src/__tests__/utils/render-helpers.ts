@@ -1,10 +1,10 @@
 // React Testing Library render helpers with providers and contexts
 
-import React, { ReactElement, ReactNode } from 'react';
-import { render, RenderOptions, RenderResult } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { faker } from '@faker-js/faker';
-import { testConsole, TestUser, TestAlarm, TestTheme } from './index';
+import React, { ReactElement, ReactNode } from "react";
+import { render, RenderOptions, RenderResult } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
+import { faker } from "@faker-js/faker";
+import { testConsole, TestUser, TestAlarm, TestTheme } from "./index";
 
 // Mock providers for testing
 interface MockProviderProps {
@@ -26,15 +26,22 @@ const MockAuthProvider: React.FC<
     signIn: jest.fn(() => Promise.resolve({ user: user || null, error: null })),
     signOut: jest.fn(() => Promise.resolve({ error: null })),
     signUp: jest.fn(() => Promise.resolve({ user: user || null, error: null })),
-    updateProfile: jest.fn(() => Promise.resolve({ user: user || null, error: null })),
+    updateProfile: jest.fn(() =>
+      Promise.resolve({ user: user || null, error: null }),
+    ),
     resetPassword: jest.fn(() => Promise.resolve({ error: null })),
-    refreshSession: jest.fn(() => Promise.resolve({ user: user || null, error: null })),
+    refreshSession: jest.fn(() =>
+      Promise.resolve({ user: user || null, error: null }),
+    ),
   };
 
   return React.createElement(
-    'div',
-    { 'data-testid': 'mock-auth-provider', 'data-authenticated': isAuthenticated },
-    children
+    "div",
+    {
+      "data-testid": "mock-auth-provider",
+      "data-authenticated": isAuthenticated,
+    },
+    children,
   );
 };
 
@@ -52,79 +59,81 @@ const MockThemeProvider: React.FC<
       testConsole.debug(`Mock theme set to: ${themeId}`);
       return Promise.resolve();
     }),
-    createCustomTheme: jest.fn(() => Promise.resolve({ theme: null, error: null })),
+    createCustomTheme: jest.fn(() =>
+      Promise.resolve({ theme: null, error: null }),
+    ),
     deleteTheme: jest.fn(() => Promise.resolve({ error: null })),
     syncThemes: jest.fn(() => Promise.resolve({ themes: [], error: null })),
     isLoading: false,
-    isDarkMode: theme?.category === 'dark' || false,
+    isDarkMode: theme?.category === "dark" || false,
   };
 
   return React.createElement(
-    'div',
+    "div",
     {
-      'data-testid': 'mock-theme-provider',
-      'data-theme': theme?.name || 'default',
-      'data-dark-mode': mockThemeValue.isDarkMode,
+      "data-testid": "mock-theme-provider",
+      "data-theme": theme?.name || "default",
+      "data-dark-mode": mockThemeValue.isDarkMode,
     },
-    children
+    children,
   );
 };
 
 // Mock Subscription Context Provider
 const MockSubscriptionProvider: React.FC<
   MockProviderProps & {
-    tier?: 'free' | 'premium' | 'ultimate';
+    tier?: "free" | "premium" | "ultimate";
     isActive?: boolean;
   }
-> = ({ children, tier = 'free', isActive = true }) => {
+> = ({ children, tier = "free", isActive = true }) => {
   const mockSubscriptionValue = {
     tier,
     isActive,
     isLoading: false,
     subscription:
-      tier !== 'free'
+      tier !== "free"
         ? {
-            id: 'mock-subscription-id',
+            id: "mock-subscription-id",
             tier,
-            status: isActive ? 'active' : 'canceled',
+            status: isActive ? "active" : "canceled",
             current_period_start: new Date().toISOString(),
             current_period_end: new Date(
-              Date.now() + 30 * 24 * 60 * 60 * 1000
+              Date.now() + 30 * 24 * 60 * 60 * 1000,
             ).toISOString(),
             cancel_at_period_end: false,
           }
         : null,
     features: {
-      maxAlarms: tier === 'free' ? 5 : tier === 'premium' ? 50 : 100,
-      voiceCloning: tier === 'ultimate',
-      nuclearMode: tier !== 'free',
-      customThemes: tier !== 'free',
-      battleMode: tier !== 'free',
-      advancedAnalytics: tier === 'ultimate',
-      prioritySupport: tier === 'ultimate',
+      maxAlarms: tier === "free" ? 5 : tier === "premium" ? 50 : 100,
+      voiceCloning: tier === "ultimate",
+      nuclearMode: tier !== "free",
+      customThemes: tier !== "free",
+      battleMode: tier !== "free",
+      advancedAnalytics: tier === "ultimate",
+      prioritySupport: tier === "ultimate",
     },
     subscribe: jest.fn((newTier: string) => {
       testConsole.debug(`Mock subscription upgrade to: ${newTier}`);
       return Promise.resolve({ subscription: null, error: null });
     }),
     cancel: jest.fn(() => {
-      testConsole.debug('Mock subscription cancellation');
+      testConsole.debug("Mock subscription cancellation");
       return Promise.resolve({ error: null });
     }),
     reactivate: jest.fn(() => {
-      testConsole.debug('Mock subscription reactivation');
+      testConsole.debug("Mock subscription reactivation");
       return Promise.resolve({ error: null });
     }),
   };
 
   return React.createElement(
-    'div',
+    "div",
     {
-      'data-testid': 'mock-subscription-provider',
-      'data-tier': tier,
-      'data-active': isActive,
+      "data-testid": "mock-subscription-provider",
+      "data-tier": tier,
+      "data-active": isActive,
     },
-    children
+    children,
   );
 };
 
@@ -132,9 +141,9 @@ const MockSubscriptionProvider: React.FC<
 const MockI18nProvider: React.FC<
   MockProviderProps & {
     language?: string;
-    direction?: 'ltr' | 'rtl';
+    direction?: "ltr" | "rtl";
   }
-> = ({ children, language = 'en', direction = 'ltr' }) => {
+> = ({ children, language = "en", direction = "ltr" }) => {
   const mockI18nValue = {
     language,
     direction,
@@ -145,8 +154,8 @@ const MockI18nProvider: React.FC<
       if (options) {
         Object.entries(options).forEach(([param, value]) => {
           translated = translated.replace(
-            new RegExp(`{{${param}}}`, 'g'),
-            String(value)
+            new RegExp(`{{${param}}}`, "g"),
+            String(value),
           );
         });
       }
@@ -157,18 +166,18 @@ const MockI18nProvider: React.FC<
       return Promise.resolve();
     }),
     getAvailableLanguages: jest.fn(() => [
-      'en',
-      'es',
-      'fr',
-      'de',
-      'it',
-      'pt',
-      'ru',
-      'ar',
-      'hi',
-      'ja',
-      'ko',
-      'zh',
+      "en",
+      "es",
+      "fr",
+      "de",
+      "it",
+      "pt",
+      "ru",
+      "ar",
+      "hi",
+      "ja",
+      "ko",
+      "zh",
     ]),
     formatDate: jest.fn((date: Date) => date.toLocaleDateString(language)),
     formatTime: jest.fn((date: Date) => date.toLocaleTimeString(language)),
@@ -176,14 +185,14 @@ const MockI18nProvider: React.FC<
   };
 
   return React.createElement(
-    'div',
+    "div",
     {
-      'data-testid': 'mock-i18n-provider',
-      'data-language': language,
-      'data-direction': direction,
+      "data-testid": "mock-i18n-provider",
+      "data-language": language,
+      "data-direction": direction,
       dir: direction,
     },
-    children
+    children,
   );
 };
 
@@ -202,28 +211,28 @@ const MockPWAProvider: React.FC<
     isLoading: false,
     updateAvailable: false,
     install: jest.fn(() => {
-      testConsole.debug('Mock PWA installation');
+      testConsole.debug("Mock PWA installation");
       return Promise.resolve({ success: true, error: null });
     }),
     update: jest.fn(() => {
-      testConsole.debug('Mock PWA update');
+      testConsole.debug("Mock PWA update");
       return Promise.resolve({ success: true, error: null });
     }),
     share: jest.fn((data: any) => {
-      testConsole.debug('Mock PWA share', data);
+      testConsole.debug("Mock PWA share", data);
       return Promise.resolve({ success: true, error: null });
     }),
   };
 
   return React.createElement(
-    'div',
+    "div",
     {
-      'data-testid': 'mock-pwa-provider',
-      'data-installed': isInstalled,
-      'data-can-install': canInstall,
-      'data-online': isOnline,
+      "data-testid": "mock-pwa-provider",
+      "data-installed": isInstalled,
+      "data-can-install": canInstall,
+      "data-online": isOnline,
     },
-    children
+    children,
   );
 };
 
@@ -240,23 +249,28 @@ const MockAnalyticsProvider: React.FC<MockProviderProps> = ({ children }) => {
       (featureName: string, action: string, properties?: any) => {
         testConsole.debug(
           `Mock analytics feature usage: ${featureName}.${action}`,
-          properties
+          properties,
         );
-      }
+      },
     ),
     trackError: jest.fn((error: Error, context?: string) => {
       testConsole.debug(`Mock analytics error: ${error.message}`, context);
     }),
-    trackPerformance: jest.fn((metric: string, value: number, context?: string) => {
-      testConsole.debug(`Mock analytics performance: ${metric} = ${value}`, context);
-    }),
+    trackPerformance: jest.fn(
+      (metric: string, value: number, context?: string) => {
+        testConsole.debug(
+          `Mock analytics performance: ${metric} = ${value}`,
+          context,
+        );
+      },
+    ),
     trackUserInteraction: jest.fn(
       (element: string, action: string, properties?: any) => {
         testConsole.debug(
           `Mock analytics interaction: ${element}.${action}`,
-          properties
+          properties,
         );
-      }
+      },
     ),
     identify: jest.fn((userId: string, traits?: any) => {
       testConsole.debug(`Mock analytics identify: ${userId}`, traits);
@@ -266,41 +280,42 @@ const MockAnalyticsProvider: React.FC<MockProviderProps> = ({ children }) => {
     }),
     isEnabled: jest.fn(() => true),
     opt_out: jest.fn(() => {
-      testConsole.debug('Mock analytics opt out');
+      testConsole.debug("Mock analytics opt out");
     }),
     opt_in: jest.fn(() => {
-      testConsole.debug('Mock analytics opt in');
+      testConsole.debug("Mock analytics opt in");
     }),
   };
 
   return React.createElement(
-    'div',
-    { 'data-testid': 'mock-analytics-provider' },
-    children
+    "div",
+    { "data-testid": "mock-analytics-provider" },
+    children,
   );
 };
 
 // Mock Feature Access Context Provider
 const MockFeatureAccessProvider: React.FC<
   MockProviderProps & {
-    tier?: 'free' | 'premium' | 'ultimate';
+    tier?: "free" | "premium" | "ultimate";
     userId?: string;
   }
-> = ({ children, tier = 'free', userId = 'test-user-123' }) => {
+> = ({ children, tier = "free", userId = "test-user-123" }) => {
   const mockFeatureAccessValue = {
     featureAccess: {
       tier,
       limits: {
-        maxAlarms: tier === 'free' ? 5 : tier === 'premium' ? 50 : 100,
-        voiceCloning: tier === 'ultimate',
-        customThemes: tier !== 'free',
-        battleMode: tier !== 'free',
-        advancedAnalytics: tier === 'ultimate',
+        maxAlarms: tier === "free" ? 5 : tier === "premium" ? 50 : 100,
+        voiceCloning: tier === "ultimate",
+        customThemes: tier !== "free",
+        battleMode: tier !== "free",
+        advancedAnalytics: tier === "ultimate",
       },
       usage: {
-        alarms: faker.number.int({ min: 0, max: tier === 'free' ? 5 : 25 }),
+        alarms: faker.number.int({ min: 0, max: tier === "free" ? 5 : 25 }),
         themes: faker.number.int({ min: 0, max: 10 }),
-        voiceClones: tier === 'ultimate' ? faker.number.int({ min: 0, max: 5 }) : 0,
+        voiceClones:
+          tier === "ultimate" ? faker.number.int({ min: 0, max: 5 }) : 0,
       },
     },
     userTier: tier,
@@ -308,45 +323,51 @@ const MockFeatureAccessProvider: React.FC<
     error: null,
     hasFeatureAccess: jest.fn((featureId: string) => {
       const access =
-        tier !== 'free' || ['basic_alarms', 'themes_browse'].includes(featureId);
+        tier !== "free" ||
+        ["basic_alarms", "themes_browse"].includes(featureId);
       testConsole.debug(`Mock feature access check: ${featureId} = ${access}`);
       return access;
     }),
     getFeatureUsage: jest.fn((featureId: string) => {
       const usage = faker.number.int({ min: 0, max: 10 });
-      const limit = tier === 'free' ? 5 : tier === 'premium' ? 50 : 100;
+      const limit = tier === "free" ? 5 : tier === "premium" ? 50 : 100;
       return { used: usage, limit, remaining: limit - usage };
     }),
     getUpgradeRequirement: jest.fn((featureId: string) => {
-      if (tier === 'free') return 'premium';
+      if (tier === "free") return "premium";
       if (
-        tier === 'premium' &&
-        ['voice_cloning', 'advanced_analytics'].includes(featureId)
+        tier === "premium" &&
+        ["voice_cloning", "advanced_analytics"].includes(featureId)
       )
-        return 'ultimate';
+        return "ultimate";
       return null;
     }),
-    trackFeatureAttempt: jest.fn((featureId: string, context?: Record<string, any>) => {
-      testConsole.debug(`Mock feature attempt tracked: ${featureId}`, context);
-    }),
+    trackFeatureAttempt: jest.fn(
+      (featureId: string, context?: Record<string, any>) => {
+        testConsole.debug(
+          `Mock feature attempt tracked: ${featureId}`,
+          context,
+        );
+      },
+    ),
     refreshFeatureAccess: jest.fn(() => Promise.resolve()),
     grantTemporaryAccess: jest.fn(
       (featureId: string, durationMinutes: number, reason: string) => {
         testConsole.debug(
-          `Mock temporary access granted: ${featureId} for ${durationMinutes}min - ${reason}`
+          `Mock temporary access granted: ${featureId} for ${durationMinutes}min - ${reason}`,
         );
-      }
+      },
     ),
   };
 
   return React.createElement(
-    'div',
+    "div",
     {
-      'data-testid': 'mock-feature-access-provider',
-      'data-tier': tier,
-      'data-user-id': userId,
+      "data-testid": "mock-feature-access-provider",
+      "data-tier": tier,
+      "data-user-id": userId,
     },
-    children
+    children,
   );
 };
 
@@ -354,19 +375,19 @@ const MockFeatureAccessProvider: React.FC<
 const MockScreenReaderProvider: React.FC<
   MockProviderProps & {
     enabled?: boolean;
-    verbosity?: 'low' | 'medium' | 'high';
+    verbosity?: "low" | "medium" | "high";
   }
-> = ({ children, enabled = true, verbosity = 'medium' }) => {
+> = ({ children, enabled = true, verbosity = "medium" }) => {
   const mockScreenReaderValue = {
     isEnabled: enabled,
     verbosityLevel: verbosity,
     announce: jest.fn((message: string, priority?: string) => {
       testConsole.debug(
-        `Mock screen reader announcement: ${message} [${priority || 'polite'}]`
+        `Mock screen reader announcement: ${message} [${priority || "polite"}]`,
       );
     }),
     updateSettings: jest.fn((settings: any) => {
-      testConsole.debug('Mock screen reader settings updated', settings);
+      testConsole.debug("Mock screen reader settings updated", settings);
     }),
     describeElement: jest.fn((element: string) => {
       return `Mock description for ${element}`;
@@ -377,13 +398,13 @@ const MockScreenReaderProvider: React.FC<
   };
 
   return React.createElement(
-    'div',
+    "div",
     {
-      'data-testid': 'mock-screen-reader-provider',
-      'data-enabled': enabled,
-      'data-verbosity': verbosity,
+      "data-testid": "mock-screen-reader-provider",
+      "data-enabled": enabled,
+      "data-verbosity": verbosity,
     },
-    children
+    children,
   );
 };
 
@@ -396,10 +417,10 @@ const MockEnhancedThemeProvider: React.FC<
   }
 > = ({ children, theme, themes = [], personalization = {} }) => {
   const mockThemeValue = {
-    theme: theme || { id: 'default', name: 'Default', category: 'light' },
+    theme: theme || { id: "default", name: "Default", category: "light" },
     themeConfig: {
-      colors: { primary: '#3B82F6', secondary: '#8B5CF6' },
-      typography: { fontFamily: 'system-ui' },
+      colors: { primary: "#3B82F6", secondary: "#8B5CF6" },
+      typography: { fontFamily: "system-ui" },
       spacing: { unit: 4 },
       animations: { enabled: true },
     },
@@ -408,46 +429,58 @@ const MockEnhancedThemeProvider: React.FC<
       typographyPreferences: {},
       motionPreferences: { reduceMotion: false },
       soundPreferences: { enabled: true },
-      layoutPreferences: { density: 'medium' },
+      layoutPreferences: { density: "medium" },
       accessibilityPreferences: { highContrast: false },
       ...personalization,
     },
-    isDarkMode: theme?.category === 'dark' || false,
+    isDarkMode: theme?.category === "dark" || false,
     isSystemTheme: false,
     setTheme: jest.fn((newTheme: any) => {
       testConsole.debug(`Mock enhanced theme set to:`, newTheme);
     }),
     toggleTheme: jest.fn(() => {
-      testConsole.debug('Mock enhanced theme toggled');
+      testConsole.debug("Mock enhanced theme toggled");
     }),
     resetTheme: jest.fn(() => {
-      testConsole.debug('Mock enhanced theme reset');
+      testConsole.debug("Mock enhanced theme reset");
     }),
     updatePersonalization: jest.fn((updates: any) => {
-      testConsole.debug('Mock personalization updated', updates);
+      testConsole.debug("Mock personalization updated", updates);
     }),
     updateColorPreference: jest.fn((property: string, value: any) => {
-      testConsole.debug(`Mock color preference updated: ${property} = ${value}`);
+      testConsole.debug(
+        `Mock color preference updated: ${property} = ${value}`,
+      );
     }),
     updateTypographyPreference: jest.fn((property: string, value: any) => {
-      testConsole.debug(`Mock typography preference updated: ${property} = ${value}`);
+      testConsole.debug(
+        `Mock typography preference updated: ${property} = ${value}`,
+      );
     }),
     updateMotionPreference: jest.fn((property: string, value: any) => {
-      testConsole.debug(`Mock motion preference updated: ${property} = ${value}`);
+      testConsole.debug(
+        `Mock motion preference updated: ${property} = ${value}`,
+      );
     }),
     updateSoundPreference: jest.fn((property: string, value: any) => {
-      testConsole.debug(`Mock sound preference updated: ${property} = ${value}`);
+      testConsole.debug(
+        `Mock sound preference updated: ${property} = ${value}`,
+      );
     }),
     updateLayoutPreference: jest.fn((property: string, value: any) => {
-      testConsole.debug(`Mock layout preference updated: ${property} = ${value}`);
+      testConsole.debug(
+        `Mock layout preference updated: ${property} = ${value}`,
+      );
     }),
     updateAccessibilityPreference: jest.fn((property: string, value: any) => {
       testConsole.debug(
-        `Mock accessibility preference updated: ${property} = ${value}`
+        `Mock accessibility preference updated: ${property} = ${value}`,
       );
     }),
     availableThemes: themes,
-    createCustomTheme: jest.fn(() => Promise.resolve({ theme: null, error: null })),
+    createCustomTheme: jest.fn(() =>
+      Promise.resolve({ theme: null, error: null }),
+    ),
     saveThemePreset: jest.fn(() => Promise.resolve()),
     loadThemePreset: jest.fn(() => Promise.resolve()),
     themeAnalytics: {
@@ -459,27 +492,27 @@ const MockEnhancedThemeProvider: React.FC<
     exportThemes: jest.fn(() => Promise.resolve(JSON.stringify({ themes }))),
     importThemes: jest.fn(() => Promise.resolve(true)),
     syncThemes: jest.fn(() => Promise.resolve()),
-    cloudSyncStatus: { status: 'synced', lastSync: new Date() },
+    cloudSyncStatus: { status: "synced", lastSync: new Date() },
     enableCloudSync: jest.fn((enabled: boolean) => {
-      testConsole.debug(`Mock cloud sync ${enabled ? 'enabled' : 'disabled'}`);
+      testConsole.debug(`Mock cloud sync ${enabled ? "enabled" : "disabled"}`);
     }),
     forceCloudSync: jest.fn(() => Promise.resolve()),
     resetCloudData: jest.fn(() => Promise.resolve()),
     onCloudSyncStatusChange: jest.fn(() => () => {}),
     getCSSVariables: jest.fn(() => ({
-      '--color-primary': '#3B82F6',
-      '--color-secondary': '#8B5CF6',
+      "--color-primary": "#3B82F6",
+      "--color-secondary": "#8B5CF6",
     })),
   };
 
   return React.createElement(
-    'div',
+    "div",
     {
-      'data-testid': 'mock-enhanced-theme-provider',
-      'data-theme': theme?.name || 'default',
-      'data-dark-mode': mockThemeValue.isDarkMode,
+      "data-testid": "mock-enhanced-theme-provider",
+      "data-theme": theme?.name || "default",
+      "data-dark-mode": mockThemeValue.isDarkMode,
     },
-    children
+    children,
   );
 };
 
@@ -488,14 +521,14 @@ const MockPersonaAnalyticsProvider: React.FC<
   MockProviderProps & {
     currentPersona?: string;
   }
-> = ({ children, currentPersona = 'struggling_sam' }) => {
+> = ({ children, currentPersona = "struggling_sam" }) => {
   const mockPersonaAnalyticsValue = {
     currentPersona,
     personaConfidence: 0.85,
     trackPersonaAction: jest.fn((action: string, context?: any) => {
       testConsole.debug(
         `Mock persona action tracked: ${action} for ${currentPersona}`,
-        context
+        context,
       );
     }),
     updatePersonaDetection: jest.fn((factors: any) => {
@@ -503,19 +536,19 @@ const MockPersonaAnalyticsProvider: React.FC<
     }),
     getPersonaInsights: jest.fn(() => ({
       conversionLikelihood: faker.number.float({ min: 0.1, max: 0.9 }),
-      recommendedFeatures: ['basic_alarms', 'theme_browser'],
-      suggestedUpgrade: currentPersona === 'struggling_sam' ? null : 'premium',
+      recommendedFeatures: ["basic_alarms", "theme_browser"],
+      suggestedUpgrade: currentPersona === "struggling_sam" ? null : "premium",
     })),
     triggerPersonaRecalculation: jest.fn(() => Promise.resolve(currentPersona)),
   };
 
   return React.createElement(
-    'div',
+    "div",
     {
-      'data-testid': 'mock-persona-analytics-provider',
-      'data-current-persona': currentPersona,
+      "data-testid": "mock-persona-analytics-provider",
+      "data-current-persona": currentPersona,
     },
-    children
+    children,
   );
 };
 
@@ -526,16 +559,16 @@ interface AllProvidersProps {
   user?: TestUser | null;
   theme?: TestTheme;
   themes?: TestTheme[];
-  tier?: 'free' | 'premium' | 'ultimate';
+  tier?: "free" | "premium" | "ultimate";
   language?: string;
-  direction?: 'ltr' | 'rtl';
+  direction?: "ltr" | "rtl";
   isAuthenticated?: boolean;
   isOnline?: boolean;
   pwaInstalled?: boolean;
   // Enhanced provider options
   featureAccess?: boolean;
   screenReaderEnabled?: boolean;
-  screenReaderVerbosity?: 'low' | 'medium' | 'high';
+  screenReaderVerbosity?: "low" | "medium" | "high";
   enhancedTheme?: boolean;
   personaAnalytics?: boolean;
   currentPersona?: string;
@@ -544,29 +577,29 @@ interface AllProvidersProps {
 
 const AllProviders: React.FC<AllProvidersProps> = ({
   children,
-  initialRoute = '/',
+  initialRoute = "/",
   user = null,
   theme,
   themes = [],
-  tier = 'free',
-  language = 'en',
-  direction = 'ltr',
+  tier = "free",
+  language = "en",
+  direction = "ltr",
   isAuthenticated = false,
   isOnline = true,
   pwaInstalled = false,
   featureAccess = true,
   screenReaderEnabled = false,
-  screenReaderVerbosity = 'medium',
+  screenReaderVerbosity = "medium",
   enhancedTheme = false,
   personaAnalytics = false,
-  currentPersona = 'struggling_sam',
+  currentPersona = "struggling_sam",
   personalization = {},
 }) => {
   // Create router history with initial route
   const RouterWrapper = ({ children }: { children: ReactNode }) => {
-    if (initialRoute !== '/') {
+    if (initialRoute !== "/") {
       // Mock location for non-root routes
-      Object.defineProperty(window, 'location', {
+      Object.defineProperty(window, "location", {
         value: {
           ...window.location,
           pathname: initialRoute,
@@ -590,7 +623,7 @@ const AllProviders: React.FC<AllProvidersProps> = ({
     providerChain = React.createElement(
       MockPersonaAnalyticsProvider,
       { currentPersona },
-      providerChain
+      providerChain,
     );
   }
 
@@ -599,7 +632,7 @@ const AllProviders: React.FC<AllProvidersProps> = ({
     providerChain = React.createElement(
       MockScreenReaderProvider,
       { enabled: screenReaderEnabled, verbosity: screenReaderVerbosity },
-      providerChain
+      providerChain,
     );
   }
 
@@ -607,8 +640,8 @@ const AllProviders: React.FC<AllProvidersProps> = ({
   if (featureAccess) {
     providerChain = React.createElement(
       MockFeatureAccessProvider,
-      { tier, userId: user?.id || 'test-user-123' },
-      providerChain
+      { tier, userId: user?.id || "test-user-123" },
+      providerChain,
     );
   }
 
@@ -616,7 +649,7 @@ const AllProviders: React.FC<AllProvidersProps> = ({
   providerChain = React.createElement(
     MockPWAProvider,
     { isInstalled: pwaInstalled, isOnline },
-    providerChain
+    providerChain,
   );
 
   // Theme Provider (enhanced or standard)
@@ -624,13 +657,13 @@ const AllProviders: React.FC<AllProvidersProps> = ({
     providerChain = React.createElement(
       MockEnhancedThemeProvider,
       { theme, themes, personalization },
-      providerChain
+      providerChain,
     );
   } else {
     providerChain = React.createElement(
       MockThemeProvider,
       { theme, themes },
-      providerChain
+      providerChain,
     );
   }
 
@@ -638,21 +671,21 @@ const AllProviders: React.FC<AllProvidersProps> = ({
   providerChain = React.createElement(
     MockSubscriptionProvider,
     { tier, isActive: true },
-    providerChain
+    providerChain,
   );
 
   // Auth Provider
   providerChain = React.createElement(
     MockAuthProvider,
     { user, isAuthenticated },
-    providerChain
+    providerChain,
   );
 
   // I18n Provider
   providerChain = React.createElement(
     MockI18nProvider,
     { language, direction },
-    providerChain
+    providerChain,
   );
 
   // Router Wrapper
@@ -660,15 +693,15 @@ const AllProviders: React.FC<AllProvidersProps> = ({
 };
 
 // Enhanced custom render function with providers
-interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
+interface CustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
   // Provider options
   initialRoute?: string;
   user?: TestUser | null;
   theme?: TestTheme;
   themes?: TestTheme[];
-  tier?: 'free' | 'premium' | 'ultimate';
+  tier?: "free" | "premium" | "ultimate";
   language?: string;
-  direction?: 'ltr' | 'rtl';
+  direction?: "ltr" | "rtl";
   isAuthenticated?: boolean;
   isOnline?: boolean;
   pwaInstalled?: boolean;
@@ -676,7 +709,7 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   // Enhanced provider options
   featureAccess?: boolean;
   screenReaderEnabled?: boolean;
-  screenReaderVerbosity?: 'low' | 'medium' | 'high';
+  screenReaderVerbosity?: "low" | "medium" | "high";
   enhancedTheme?: boolean;
   personaAnalytics?: boolean;
   currentPersona?: string;
@@ -689,32 +722,32 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
 
 export const _renderWithProviders = (
   ui: ReactElement,
-  options: CustomRenderOptions = {}
+  options: CustomRenderOptions = {},
 ): RenderResult => {
   const {
-    initialRoute = '/',
+    initialRoute = "/",
     user = null,
     theme,
     themes = [],
-    tier = 'free',
-    language = 'en',
-    direction = 'ltr',
+    tier = "free",
+    language = "en",
+    direction = "ltr",
     isAuthenticated = false,
     isOnline = true,
     pwaInstalled = false,
     featureAccess = true,
     screenReaderEnabled = false,
-    screenReaderVerbosity = 'medium',
+    screenReaderVerbosity = "medium",
     enhancedTheme = false,
     personaAnalytics = false,
-    currentPersona = 'struggling_sam',
+    currentPersona = "struggling_sam",
     personalization = {},
     skipProviders = false,
     customWrapper,
     ...renderOptions
   } = options;
 
-  testConsole.debug('Rendering with enhanced providers', {
+  testConsole.debug("Rendering with enhanced providers", {
     initialRoute,
     hasUser: !!user,
     tier,
@@ -732,56 +765,59 @@ export const _renderWithProviders = (
   let Wrapper: React.ComponentType<{ children: ReactNode }>;
 
   if (skipProviders) {
-    Wrapper = ({ children }) => React.createElement('div', {}, children);
+    Wrapper = ({ children }) => React.createElement("div", {}, children);
   } else if (customWrapper) {
     Wrapper = customWrapper;
   } else {
-    Wrapper = ({ children }) =>
-      React.createElement(AllProviders, {
-        initialRoute,
-        user,
-        theme,
-        themes,
-        tier,
-        language,
-        direction,
-        isAuthenticated,
-        isOnline,
-        pwaInstalled,
-        featureAccess,
-        screenReaderEnabled,
-        screenReaderVerbosity,
-        enhancedTheme,
-        personaAnalytics,
-        currentPersona,
-        personalization,
-        children,
-      });
+    Wrapper = ({ children }) => { /* TODO: implement */ }
+    React.createElement(AllProviders, {
+      initialRoute,
+      user,
+      theme,
+      themes,
+      tier,
+      language,
+      direction,
+      isAuthenticated,
+      isOnline,
+      pwaInstalled,
+      featureAccess,
+      screenReaderEnabled,
+      screenReaderVerbosity,
+      enhancedTheme,
+      personaAnalytics,
+      currentPersona,
+      personalization,
+      children,
+    });
   }
 
   return render(ui, { wrapper: Wrapper, ...renderOptions });
 };
 
 // Convenience render functions for common scenarios
-export const _renderAsGuest = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderAsGuest = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   return _renderWithProviders(ui, {
     ...options,
     user: null,
     isAuthenticated: false,
-    tier: 'free',
+    tier: "free",
   });
 };
 
 export const _renderAsUser = (
   ui: ReactElement,
   user?: TestUser,
-  options: CustomRenderOptions = {}
+  options: CustomRenderOptions = {},
 ) => {
   const defaultUser: TestUser = user || {
-    id: 'test-user-123',
-    email: 'test@example.com',
-    name: 'Test User',
-    role: 'user',
+    id: "test-user-123",
+    email: "test@example.com",
+    name: "Test User",
+    role: "user",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -790,23 +826,25 @@ export const _renderAsUser = (
     ...options,
     user: defaultUser,
     isAuthenticated: true,
-    tier: user?.subscription?.tier || 'free',
+    tier: user?.subscription?.tier || "free",
   });
 };
 
 export const _renderAsPremiumUser = (
   ui: ReactElement,
-  options: CustomRenderOptions = {}
+  options: CustomRenderOptions = {},
 ) => {
   const premiumUser: TestUser = {
-    id: 'test-premium-user-123',
-    email: 'premium@example.com',
-    name: 'Premium User',
-    role: 'premium',
+    id: "test-premium-user-123",
+    email: "premium@example.com",
+    name: "Premium User",
+    role: "premium",
     subscription: {
-      tier: 'premium',
-      status: 'active',
-      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      tier: "premium",
+      status: "active",
+      current_period_end: new Date(
+        Date.now() + 30 * 24 * 60 * 60 * 1000,
+      ).toISOString(),
     },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -816,23 +854,25 @@ export const _renderAsPremiumUser = (
     ...options,
     user: premiumUser,
     isAuthenticated: true,
-    tier: 'premium',
+    tier: "premium",
   });
 };
 
 export const _renderAsUltimateUser = (
   ui: ReactElement,
-  options: CustomRenderOptions = {}
+  options: CustomRenderOptions = {},
 ) => {
   const ultimateUser: TestUser = {
-    id: 'test-ultimate-user-123',
-    email: 'ultimate@example.com',
-    name: 'Ultimate User',
-    role: 'premium',
+    id: "test-ultimate-user-123",
+    email: "ultimate@example.com",
+    name: "Ultimate User",
+    role: "premium",
     subscription: {
-      tier: 'ultimate',
-      status: 'active',
-      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      tier: "ultimate",
+      status: "active",
+      current_period_end: new Date(
+        Date.now() + 30 * 24 * 60 * 60 * 1000,
+      ).toISOString(),
     },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -842,63 +882,78 @@ export const _renderAsUltimateUser = (
     ...options,
     user: ultimateUser,
     isAuthenticated: true,
-    tier: 'ultimate',
+    tier: "ultimate",
   });
 };
 
-export const _renderMobile = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderMobile = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   // Set mobile viewport
-  Object.defineProperty(window, 'innerWidth', { value: 375, writable: true });
-  Object.defineProperty(window, 'innerHeight', { value: 667, writable: true });
+  Object.defineProperty(window, "innerWidth", { value: 375, writable: true });
+  Object.defineProperty(window, "innerHeight", { value: 667, writable: true });
 
   // Trigger resize event
-  window.dispatchEvent(new Event('resize'));
+  window.dispatchEvent(new Event("resize"));
 
   return _renderWithProviders(ui, options);
 };
 
-export const _renderTablet = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderTablet = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   // Set tablet viewport
-  Object.defineProperty(window, 'innerWidth', { value: 768, writable: true });
-  Object.defineProperty(window, 'innerHeight', { value: 1024, writable: true });
+  Object.defineProperty(window, "innerWidth", { value: 768, writable: true });
+  Object.defineProperty(window, "innerHeight", { value: 1024, writable: true });
 
   // Trigger resize event
-  window.dispatchEvent(new Event('resize'));
+  window.dispatchEvent(new Event("resize"));
 
   return _renderWithProviders(ui, options);
 };
 
-export const _renderDesktop = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderDesktop = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   // Set desktop viewport
-  Object.defineProperty(window, 'innerWidth', { value: 1200, writable: true });
-  Object.defineProperty(window, 'innerHeight', { value: 800, writable: true });
+  Object.defineProperty(window, "innerWidth", { value: 1200, writable: true });
+  Object.defineProperty(window, "innerHeight", { value: 800, writable: true });
 
   // Trigger resize event
-  window.dispatchEvent(new Event('resize'));
+  window.dispatchEvent(new Event("resize"));
 
   return _renderWithProviders(ui, options);
 };
 
-export const _renderOffline = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderOffline = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   return _renderWithProviders(ui, {
     ...options,
     isOnline: false,
   });
 };
 
-export const _renderRTL = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const _renderRTL = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {},
+) => {
   return _renderWithProviders(ui, {
     ...options,
-    direction: 'rtl',
-    language: 'ar',
+    direction: "rtl",
+    language: "ar",
   });
 };
 
 // Enhanced provider convenience functions
 export const _renderWithFeatureAccess = (
   ui: ReactElement,
-  tier: 'free' | 'premium' | 'ultimate' = 'premium',
-  options: CustomRenderOptions = {}
+  tier: "free" | "premium" | "ultimate" = "premium",
+  options: CustomRenderOptions = {},
 ) => {
   return _renderWithProviders(ui, {
     ...options,
@@ -906,10 +961,10 @@ export const _renderWithFeatureAccess = (
     featureAccess: true,
     isAuthenticated: true,
     user: options.user || {
-      id: 'test-user-123',
-      email: 'test@example.com',
-      name: 'Test User',
-      role: 'user',
+      id: "test-user-123",
+      email: "test@example.com",
+      name: "Test User",
+      role: "user",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
@@ -918,8 +973,8 @@ export const _renderWithFeatureAccess = (
 
 export const _renderWithScreenReader = (
   ui: ReactElement,
-  verbosity: 'low' | 'medium' | 'high' = 'medium',
-  options: CustomRenderOptions = {}
+  verbosity: "low" | "medium" | "high" = "medium",
+  options: CustomRenderOptions = {},
 ) => {
   return _renderWithProviders(ui, {
     ...options,
@@ -931,14 +986,14 @@ export const _renderWithScreenReader = (
 export const _renderWithEnhancedTheme = (
   ui: ReactElement,
   theme?: TestTheme,
-  options: CustomRenderOptions = {}
+  options: CustomRenderOptions = {},
 ) => {
   return _renderWithProviders(ui, {
     ...options,
     enhancedTheme: true,
     theme,
     personalization: {
-      colorPreferences: { primaryColor: '#3B82F6' },
+      colorPreferences: { primaryColor: "#3B82F6" },
       motionPreferences: { reduceMotion: false },
       accessibilityPreferences: { highContrast: false },
     },
@@ -947,8 +1002,8 @@ export const _renderWithEnhancedTheme = (
 
 export const _renderWithPersonaAnalytics = (
   ui: ReactElement,
-  persona: string = 'struggling_sam',
-  options: CustomRenderOptions = {}
+  persona: string = "struggling_sam",
+  options: CustomRenderOptions = {},
 ) => {
   return _renderWithProviders(ui, {
     ...options,
@@ -959,7 +1014,7 @@ export const _renderWithPersonaAnalytics = (
 
 export const _renderWithAllEnhancements = (
   ui: ReactElement,
-  options: CustomRenderOptions = {}
+  options: CustomRenderOptions = {},
 ) => {
   return _renderWithProviders(ui, {
     ...options,
@@ -968,17 +1023,17 @@ export const _renderWithAllEnhancements = (
     enhancedTheme: true,
     personaAnalytics: true,
     isAuthenticated: true,
-    tier: 'premium',
+    tier: "premium",
     user: options.user || {
-      id: 'test-user-123',
-      email: 'premium@example.com',
-      name: 'Premium User',
-      role: 'premium',
+      id: "test-user-123",
+      email: "premium@example.com",
+      name: "Premium User",
+      role: "premium",
       subscription: {
-        tier: 'premium',
-        status: 'active',
+        tier: "premium",
+        status: "active",
         current_period_end: new Date(
-          Date.now() + 30 * 24 * 60 * 60 * 1000
+          Date.now() + 30 * 24 * 60 * 60 * 1000,
         ).toISOString(),
       },
       createdAt: new Date().toISOString(),

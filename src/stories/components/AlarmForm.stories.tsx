@@ -1,5 +1,4 @@
-import React from 'react'; // auto: added missing React import
-/* global fn */
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 // import ... from '@storybook/test'; // Package not available in current setup
 import AlarmForm from '../../components/AlarmForm';

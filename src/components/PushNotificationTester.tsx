@@ -92,7 +92,7 @@ export const PushNotificationTester: React.FC = () => {
         duration,
       };
 
-      setTestResults((prev: any) => [ // auto: implicit anyresult, ...prev.slice(0, 9)]); // Keep last 10 results
+      setTestResults((prev: any) => [result, ...prev.slice(0, 9)]); // Keep last 10 results
     },
     []
   );
@@ -388,13 +388,13 @@ export const PushNotificationTester: React.FC = () => {
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {testResults.filter((r: any) => r // auto: implicit any.status === 'success').length}
+                {testResults.filter((r: any) => r.status === 'success').length}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Success</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-red-600 dark:text-red-400">
-                {testResults.filter((r: any) => r // auto: implicit any.status === 'error').length}
+                {testResults.filter((r: any) => r.status === 'error').length}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Errors</div>
             </div>
@@ -416,7 +416,7 @@ export const PushNotificationTester: React.FC = () => {
 
           {/* Results List */}
           <div className="space-y-3">
-            {testResults.map((result: any) => ({ // auto: implicit any
+            {testResults.map((result: any) => (
               <div
                 key={result.id}
                 className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg"

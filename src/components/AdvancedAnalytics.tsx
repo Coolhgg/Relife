@@ -788,7 +788,8 @@ export function AdvancedAnalytics({
                       <div className="text-right">
                         <div className="text-sm font-medium">Score: {battle.score}</div>
                         <div className="text-xs text-muted-foreground">
-                          {battle.mistakes} mistake{battle.mistakes !== 1 ? 's' : ''}
+                          {battle.mistakes} mistake
+                          {battle.mistakes !== 1 ? 's' : ''}
                         </div>
                       </div>
                       <div className="flex items-center gap-1">

@@ -189,8 +189,12 @@ export class MobileTouchService {
       pullDistance = 0;
     };
 
-    container.addEventListener('touchstart', handleTouchStart, { passive: false });
-    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchstart', handleTouchStart, {
+      passive: false,
+    });
+    container.addEventListener('touchmove', handleTouchMove, {
+      passive: false,
+    });
     container.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
@@ -230,7 +234,9 @@ class TouchGestureHandler {
     this.element.addEventListener('touchmove', this.handleTouchMove, {
       passive: !this.options.preventScroll,
     });
-    this.element.addEventListener('touchend', this.handleTouchEnd, { passive: true });
+    this.element.addEventListener('touchend', this.handleTouchEnd, {
+      passive: true,
+    });
     this.element.addEventListener('touchcancel', this.handleTouchCancel, {
       passive: true,
     });

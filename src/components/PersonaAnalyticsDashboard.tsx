@@ -102,7 +102,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const personaMetrics = useMemo((): PersonaMetrics[] => {
     const metrics = new Map<UserPersona, PersonaMetrics>();
 
-    analyticsData.forEach((data: any) => { // auto: implicit any
+    analyticsData.forEach((data: any) => {
       const existing = metrics.get(data.persona) || {
         persona: data.persona,
         detections: 0,
@@ -135,7 +135,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   // Calculate campaign metrics
   const campaignMetrics = useMemo((): CampaignMetrics[] => {
-    return campaignData.map((data: any) => ({ // auto: implicit any{
+    return campaignData.map((data: any) => ({
       campaign: data.campaignId,
       persona: data.persona,
       impressions: data.metrics.impressions,
@@ -354,13 +354,13 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: any) => // auto: implicit any
+                tickFormatter={(value: any) =>
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 } // Show only first name
               />
               <YAxis />
               <Tooltip
-                labelFormatter={(value: any) => P // auto: implicit anyERSONA_NAMES[value as UserPersona]}
+                labelFormatter={(value: any) => PERSONA_NAMES[value as UserPersona]}
                 formatter={(value: any) => [`${value.toFixed(1)}%`, 'Conversion Rate']}
               />
               <Bar dataKey="conversionRate" fill="#3B82F6" />
@@ -380,13 +380,13 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: any) => // auto: implicit any
+                tickFormatter={(value: any) =>
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 }
               />
               <YAxis />
               <Tooltip
-                labelFormatter={(value: any) => P // auto: implicit anyERSONA_NAMES[value as UserPersona]}
+                labelFormatter={(value: any) => PERSONA_NAMES[value as UserPersona]}
                 formatter={(value: any) => [`$${value.toLocaleString()}`, 'Revenue']}
               />
               <Bar dataKey="revenue" fill="#10B981" />
@@ -405,13 +405,13 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: any) => // auto: implicit any
+                tickFormatter={(value: any) =>
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 }
               />
               <YAxis domain={[0, 100]} />
               <Tooltip
-                labelFormatter={(value: any) => P // auto: implicit anyERSONA_NAMES[value as UserPersona]}
+                labelFormatter={(value: any) => PERSONA_NAMES[value as UserPersona]}
                 formatter={(value: any) => [`${value.toFixed(1)}%`, 'Avg Confidence']}
               />
               <Bar dataKey="avgConfidence" fill="#8B5CF6" />

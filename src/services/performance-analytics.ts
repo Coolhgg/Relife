@@ -43,11 +43,26 @@ class PerformanceAnalyticsService {
 
   // Performance thresholds based on Core Web Vitals
   private thresholds = {
-    FCP: { excellent: 1800, good: 3000, needsImprovement: 4000, poor: Infinity },
-    LCP: { excellent: 2500, good: 4000, needsImprovement: 5000, poor: Infinity },
+    FCP: {
+      excellent: 1800,
+      good: 3000,
+      needsImprovement: 4000,
+      poor: Infinity,
+    },
+    LCP: {
+      excellent: 2500,
+      good: 4000,
+      needsImprovement: 5000,
+      poor: Infinity,
+    },
     FID: { excellent: 100, good: 300, needsImprovement: 500, poor: Infinity },
     CLS: { excellent: 0.1, good: 0.25, needsImprovement: 0.4, poor: Infinity },
-    TTFB: { excellent: 800, good: 1800, needsImprovement: 2500, poor: Infinity },
+    TTFB: {
+      excellent: 800,
+      good: 1800,
+      needsImprovement: 2500,
+      poor: Infinity,
+    },
   };
 
   private constructor() {

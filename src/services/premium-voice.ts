@@ -95,7 +95,10 @@ export class PremiumVoiceService {
           `Premium personality ${alarm.voiceMood} requires Pro subscription, falling back to motivational`
         );
         // Create a modified alarm with fallback personality
-        const fallbackAlarm = { ...alarm, voiceMood: 'motivational' as VoiceMood };
+        const fallbackAlarm = {
+          ...alarm,
+          voiceMood: 'motivational' as VoiceMood,
+        };
         return await this.generateAlarmSpeech(fallbackAlarm, userId, customMessage);
       }
     }

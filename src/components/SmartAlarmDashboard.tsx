@@ -31,13 +31,15 @@ import {
 
 interface SmartAlarmDashboardProps {
   alarms: EnhancedSmartAlarm[];
-  onEditAlarm: (alarm: EnhancedSmartAlarm) => void;
+  onEditAlarm: (alarm: EnhancedSmartAlarm
+) => void;
 }
 
 const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
   alarms,
   onEditAlarm,
-}) => {
+}
+) => {
   const [alarmStatuses, setAlarmStatuses] = useState<Map<string, SmartAlarmStatus>>(
     new Map()
   );
@@ -47,16 +49,19 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
   const [loading, setLoading] = useState(false);
   const [selectedAlarm, setSelectedAlarm] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect((
+) => {
     loadDashboardData();
 
     // Set up real-time updates
     const interval = setInterval(loadDashboardData, 60000); // Update every minute
 
-    return () => clearInterval(interval);
+    return (
+) => clearInterval(interval);
   }, [alarms]);
 
-  const loadDashboardData = async () => {
+  const loadDashboardData = async (
+) => {
     setLoading(true);
     try {
       // Load alarm statuses
@@ -104,7 +109,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
     return 'text-red-400';
   };
 
-  const getConfidenceIcon = (confidence: number) => {
+  const getConfidenceIcon = (confidence: number
+) => {
     if (confidence >= 0.8) return <CheckCircle className="w-4 h-4 text-green-400" />;
     if (confidence >= 0.6) return <Eye className="w-4 h-4 text-yellow-400" />;
     return <Alert className="w-4 h-4 text-red-400" />;
@@ -153,7 +159,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
             <Zap className="w-6 h-6 text-yellow-400" />
             <span className="text-2xl font-bold text-white">
               {Array.from(alarmStatuses.values()).reduce(
-                (sum, s) => sum + s.adaptationCount,
+                (sum, s
+) => sum + s.adaptationCount,
                 0
               )}
             </span>
@@ -179,8 +186,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
           </button>
         </div>
 
-        {smartAlarms.map((alarm: any) => { // auto: implicit any
-          const status = alarmStatuses.get(alarm.id);
+        {smartAlarms.map((alarm: any
+) => { const status = alarmStatuses.get(alarm.id);
           const optimal = optimalTimes.get(alarm.id) || [];
           const isExpanded = selectedAlarm === alarm.id;
 
@@ -192,7 +199,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
               {/* Alarm Header */}
               <div
                 className="p-4 cursor-pointer hover:bg-white/5 transition-colors"
-                onClick={() => setSelectedAlarm(isExpanded ? null : alarm.id)}
+                onClick={(
+) => setSelectedAlarm(isExpanded ? null : alarm.id)}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -238,8 +246,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={(e: any) => { // auto: implicit any
-                        e.stopPropagation();
+                      onClick={(e: any
+) => { e.stopPropagation();
                         onEditAlarm(alarm);
                       }}
                       className="p-2 hover:bg-white/10 rounded-md text-white/60 hover:text-white transition-colors"
@@ -310,7 +318,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                         Active Factors
                       </h5>
                       <div className="space-y-1">
-                        {status.factors.map((factor, index) => (
+                        {status.factors.map((factor, index
+) => (
                           <div
                             key={index}
                             className="text-white/70 text-sm flex items-start gap-2"
@@ -332,7 +341,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                       </h5>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                        {optimal.slice(0, 6).map((slot, index) => (
+                        {optimal.slice(0, 6).map((slot, index
+) => (
                           <div
                             key={index}
                             className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"
@@ -412,7 +422,9 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                   {/* Active Conditions */}
                   {alarm.conditionBasedAdjustments &&
-                    alarm.conditionBasedAdjustments.filter((c: any) => c // auto: implicit any.isEnabled).length >
+                    
+                    alarm.conditionBasedAdjustments.filter((c: any
+) => c.isEnabled).length >
                       0 && (
                       <div className="bg-white/5 rounded-lg p-3">
                         <h5 className="text-white font-medium mb-3 flex items-center gap-2">
@@ -422,8 +434,10 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {alarm.conditionBasedAdjustments
-                            .filter((c: any) => c // auto: implicit any.isEnabled)
-                            .map((condition: any) => ({ // auto: implicit any
+                            .filter((c: any
+) => c.isEnabled)
+                            
+                            .map((condition: any) => (
                               <div
                                 key={condition.id}
                                 className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"

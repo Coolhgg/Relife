@@ -8,8 +8,8 @@ interface PricingPageProps {
   onSelectPlan?: (planId: string) => void;
   currentTier?: string;
   user?: User;
-  onUpgrade?: ((...args: any[]) => void) | undefined; // auto: widened function prop
-  onManageSubscription?: ((...args: any[]) => void) | undefined; // auto: widened function prop
+  onUpgrade?: ((...args: any[]) => void) | undefined;
+  onManageSubscription?: ((...args: any[]) => void) | undefined;
 }
 
 const PricingPage: React.FC<PricingPageProps> = ({

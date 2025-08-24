@@ -71,7 +71,7 @@
     "snoozesLeft": "Остался {{count}} повтор",
     "snoozesLeft_plural": "Осталось {{count}} повторов",
     "noSnoozesLeft": "Повторы закончились",
-    "voiceChallenge": "Скажите "Я проснулся" для отключения",
+    "voiceChallenge": "Скажите \"Я проснулся\" для отключения",
     "shakeToSnooze": "Потрясите устройство для повтора",
     "challenges": {
       "math": "Решите математическую задачу",

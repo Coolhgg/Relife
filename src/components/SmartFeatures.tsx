@@ -47,9 +47,12 @@ interface SmartFeaturesProps {
   fitnessChallenges: FitnessChallenge[];
   smartSettings: SmartAlarmSettings;
   contextualTasks: ContextualTask[];
-  onUpdateSettings?: (settings: Partial<SmartAlarmSettings>) => void;
-  onCreateLocationChallenge?: (challenge: Partial<LocationChallenge>) => void;
-  onConnectFitness?: (provider: string) => void;
+  onUpdateSettings?: (settings: Partial<SmartAlarmSettings>
+) => void;
+  onCreateLocationChallenge?: (challenge: Partial<LocationChallenge>
+) => void;
+  onConnectFitness?: (provider: string
+) => void;
 }
 
 // Mock data for smart features
@@ -168,7 +171,8 @@ const MOCK_SMART_SETTINGS: SmartAlarmSettings = {
   environmentalAdjustments: true,
 };
 
-const getWeatherIcon = (condition: string) => {
+const getWeatherIcon = (condition: string
+) => {
   switch (condition) {
     case 'sunny':
       return <Sun className="h-5 w-5 text-yellow-500" />;
@@ -183,7 +187,8 @@ const getWeatherIcon = (condition: string) => {
   }
 };
 
-const getLocationStatusColor = (status: LocationChallenge['status']) => {
+const getLocationStatusColor = (status: LocationChallenge['status']
+) => {
   switch (status) {
     case 'active':
       return 'bg-blue-100 text-blue-800';
@@ -235,7 +240,8 @@ export function SmartFeatures({
   const handleSettingChange = (
     key: keyof SmartAlarmSettings,
     value: boolean | number
-  ) => {
+  
+) => {
     const newSettings = { ...settings, [key]: value };
     setSettings(newSettings);
     onUpdateSettings?.(newSettings);
@@ -259,12 +265,14 @@ export function SmartFeatures({
     );
   };
 
-  const handleTabChange = (tabName: string) => {
+  const handleTabChange = (tabName: string
+) => {
     setSelectedTab(tabName);
     announceTabChange(tabName);
   };
 
-  const handleCreateLocationChallenge = () => {
+  const handleCreateLocationChallenge = (
+) => {
     announceCreateChallenge();
     onCreateLocationChallenge?.({
       name: 'New Challenge',
@@ -272,12 +280,14 @@ export function SmartFeatures({
     });
   };
 
-  const handleConnectFitness = (provider: string) => {
+  const handleConnectFitness = (provider: string
+) => {
     announceConnectFitnessApp(provider);
     onConnectFitness?.(provider);
   };
 
-  const handleNavigateToChallenge = (challenge: LocationChallenge) => {
+  const handleNavigateToChallenge = (challenge: LocationChallenge
+) => {
     announceNavigateToChallenge(challenge.name, challenge.targetLocation.name);
   };
 
@@ -286,7 +296,8 @@ export function SmartFeatures({
 
   const connectedIntegrations = fitnessIntegrations.filter(f => f.isConnected);
   const totalFitnessData = connectedIntegrations.reduce(
-    (acc, integration) => ({
+    (acc, integration
+) => ({
       steps: acc.steps + integration.data.steps,
       sleepHours: Math.max(acc.sleepHours, integration.data.sleepHours),
       activeMinutes: acc.activeMinutes + integration.data.activeMinutes,
@@ -297,13 +308,15 @@ export function SmartFeatures({
   );
 
   // Announce data updates when they change
-  useEffect(() => {
+  useEffect((
+) => {
     if (weatherData) {
       announceWeatherUpdate(weatherData);
     }
   }, [weatherData, announceWeatherUpdate]);
 
-  useEffect(() => {
+  useEffect((
+) => {
     if (totalFitnessData.steps > 0) {
       announceFitnessDataUpdate(totalFitnessData);
     }
@@ -315,7 +328,8 @@ export function SmartFeatures({
     announceFitnessDataUpdate,
   ]);
 
-  useEffect(() => {
+  useEffect((
+) => {
     // Announce location challenge status changes
     locationChallenges.forEach(challenge => {
       if (challenge.status === 'completed') {
@@ -326,7 +340,8 @@ export function SmartFeatures({
     });
   }, [locationChallenges, announceLocationChallengeStatus]);
 
-  useEffect(() => {
+  useEffect((
+) => {
     // Announce fitness challenge progress
     fitnessChallenges.forEach(challenge => {
       if (challenge.completed) {
@@ -335,7 +350,8 @@ export function SmartFeatures({
     });
   }, [fitnessChallenges, announceFitnessChallengeProgress]);
 
-  useEffect(() => {
+  useEffect((
+) => {
     // Announce fitness integration status
     fitnessIntegrations.forEach(integration => {
       if (integration.isConnected) {
@@ -387,7 +403,8 @@ export function SmartFeatures({
                   variant="ghost"
                   size="sm"
                   className="ml-auto text-xs"
-                  onClick={() => announceDetailedWeather(weatherData)}
+                  onClick={(
+) => announceDetailedWeather(weatherData)}
                   aria-label="Get detailed weather information"
                 >
                   Click to hear details
@@ -418,7 +435,8 @@ export function SmartFeatures({
               <div className="border-t pt-3">
                 <h4 className="font-medium mb-2">Tomorrow's Forecast</h4>
                 <div className="grid grid-cols-4 gap-2">
-                  {weatherData.forecast.map((forecast, index) => (
+                  {weatherData.forecast.map((forecast, index
+) => (
                     <div key={index} className="text-center p-2 bg-muted/50 rounded">
                       {getWeatherIcon(forecast.condition)}
                       <div className="text-xs mt-1">{forecast.time}</div>
@@ -516,7 +534,8 @@ export function SmartFeatures({
                         variant="ghost"
                         size="sm"
                         className="mt-1 text-xs p-0 h-auto"
-                        onClick={() => announceDetailedChallenge(challenge)}
+                        onClick={(
+) => announceDetailedChallenge(challenge)}
                         aria-label={`Get detailed information about ${challenge.name}`}
                       >
                         Click to hear details
@@ -549,7 +568,8 @@ export function SmartFeatures({
                     </div>
                     <Button
                       size="sm"
-                      onClick={() => handleNavigateToChallenge(challenge)}
+                      onClick={(
+) => handleNavigateToChallenge(challenge)}
                       aria-label={`Navigate to ${challenge.targetLocation.name}`}
                     >
                       Navigate
@@ -668,7 +688,8 @@ export function SmartFeatures({
               <Button
                 className="w-full"
                 variant="outline"
-                onClick={() => handleConnectFitness('google_fit')}
+                onClick={(
+) => handleConnectFitness('google_fit')}
                 aria-label="Connect additional fitness and health apps"
               >
                 <Smartphone className="h-4 w-4 mr-2" />
@@ -695,7 +716,8 @@ export function SmartFeatures({
                         variant="ghost"
                         size="sm"
                         className="mt-1 text-xs p-0 h-auto"
-                        onClick={() => announceDetailedFitnessChallenge(challenge)}
+                        onClick={(
+) => announceDetailedFitnessChallenge(challenge)}
                         aria-label={`Get detailed information about ${challenge.name}`}
                       >
                         Click to hear details
@@ -761,8 +783,9 @@ export function SmartFeatures({
                   id="weather-enabled"
                   checked={settings.weatherEnabled}
                   onCheckedChange={(
-                    checked: any // auto: implicit any
-                  ) => handleSettingChange('weatherEnabled', checked)}
+                    checked: any
+                  
+) => handleSettingChange('weatherEnabled', checked)}
                 />
               </div>
 
@@ -777,8 +800,9 @@ export function SmartFeatures({
                   id="location-enabled"
                   checked={settings.locationEnabled}
                   onCheckedChange={(
-                    checked: any // auto: implicit any
-                  ) => handleSettingChange('locationEnabled', checked)}
+                    checked: any
+                  
+) => handleSettingChange('locationEnabled', checked)}
                 />
               </div>
 
@@ -793,8 +817,9 @@ export function SmartFeatures({
                   id="fitness-enabled"
                   checked={settings.fitnessEnabled}
                   onCheckedChange={(
-                    checked: any // auto: implicit any
-                  ) => handleSettingChange('fitnessEnabled', checked)}
+                    checked: any
+                  
+) => handleSettingChange('fitnessEnabled', checked)}
                 />
               </div>
 
@@ -809,8 +834,9 @@ export function SmartFeatures({
                   id="adaptive-difficulty"
                   checked={settings.adaptiveDifficulty}
                   onCheckedChange={(
-                    checked: any // auto: implicit any
-                  ) => handleSettingChange('adaptiveDifficulty', checked)}
+                    checked: any
+                  
+) => handleSettingChange('adaptiveDifficulty', checked)}
                 />
               </div>
 
@@ -824,9 +850,7 @@ export function SmartFeatures({
                   type="number"
                   value={settings.smartWakeWindow}
                   onChange={(
-                    e: any // auto: implicit any
-                  ) =>
-                    handleSettingChange(
+                    e: any) => handleSettingChange(
                       'smartWakeWindow',
                       parseInt(e.target.value) || 30
                     )

@@ -110,7 +110,11 @@ export class AlarmAccessControl {
     action: AlarmAction,
     alarm?: Alarm,
     sessionId?: string
-  ): Promise<{ granted: boolean; reason?: string; context?: AccessControlContext }> {
+  ): Promise<{
+    granted: boolean;
+    reason?: string;
+    context?: AccessControlContext;
+  }> {
     try {
       // Get or validate session context
       const context = await this.getValidatedContext(userId, sessionId);
@@ -134,7 +138,10 @@ export class AlarmAccessControl {
           'denied',
           'user_blocked'
         );
-        return { granted: false, reason: 'Access blocked due to security violations' };
+        return {
+          granted: false,
+          reason: 'Access blocked due to security violations',
+        };
       }
 
       // Rate limiting per user

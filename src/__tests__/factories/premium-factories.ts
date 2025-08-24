@@ -650,15 +650,15 @@ export const createTestAnalytics = _createTestAnalytics;
 
 // Placeholder exports to satisfy imports - please refine
 export const _createTestSubscriptionPlan = (options: any = {}) => {
-  return {} as any; // auto: placeholder - please refine
+  return {} as any;
 };
 
 export const _createTestPaymentMethod = (options: any = {}) => {
-  return {} as any; // auto: placeholder - please refine
+  return {} as any;
 };
 
 export const _createTestPricing = (options: any = {}) => {
-  return {} as any; // auto: placeholder - please refine
+  return {} as any;
 };
 
 // Placeholder exports
@@ -670,7 +670,6 @@ export const createTestPricing = _createTestPricing;
 // SAFE TYPE WIDENINGS
 // ===============================
 
-// auto: widened type - factory functions can return partial interfaces
 export type SafeVoicePersonality = Partial<VoicePersonality> & {
   energy: number;
   humor: number;

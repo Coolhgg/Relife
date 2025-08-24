@@ -79,7 +79,12 @@ export class CustomSoundManager {
   ): Promise<SoundUploadResult> {
     try {
       // Stage 1: Validation
-      onProgress?.({ loaded: 0, total: 100, percentage: 0, stage: 'validating' });
+      onProgress?.({
+        loaded: 0,
+        total: 100,
+        percentage: 0,
+        stage: 'validating',
+      });
 
       const validation = await this.validateAudioFile(file);
       if (!validation.valid) {
@@ -87,7 +92,12 @@ export class CustomSoundManager {
       }
 
       // Stage 2: Upload to storage
-      onProgress?.({ loaded: 25, total: 100, percentage: 25, stage: 'uploading' });
+      onProgress?.({
+        loaded: 25,
+        total: 100,
+        percentage: 25,
+        stage: 'uploading',
+      });
 
       const fileName = `custom-sounds/${userId}/${Date.now()}-${this.sanitizeFileName(file.name)}`;
 
@@ -103,7 +113,12 @@ export class CustomSoundManager {
       }
 
       // Stage 3: Processing and metadata creation
-      onProgress?.({ loaded: 50, total: 100, percentage: 50, stage: 'processing' });
+      onProgress?.({
+        loaded: 50,
+        total: 100,
+        percentage: 50,
+        stage: 'processing',
+      });
 
       const { data: urlData } = supabase.storage
         .from('audio-files')
@@ -137,7 +152,12 @@ export class CustomSoundManager {
       }
 
       // Stage 5: Cache locally
-      onProgress?.({ loaded: 75, total: 100, percentage: 75, stage: 'caching' });
+      onProgress?.({
+        loaded: 75,
+        total: 100,
+        percentage: 75,
+        stage: 'caching',
+      });
 
       try {
         await this.audioManager.preloadCustomSoundFile(customSound);
@@ -146,7 +166,12 @@ export class CustomSoundManager {
         // Non-fatal error, don't fail the upload
       }
 
-      onProgress?.({ loaded: 100, total: 100, percentage: 100, stage: 'complete' });
+      onProgress?.({
+        loaded: 100,
+        total: 100,
+        percentage: 100,
+        stage: 'complete',
+      });
 
       return { success: true, customSound };
     } catch (error) {

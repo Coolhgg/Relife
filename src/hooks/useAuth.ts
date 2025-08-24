@@ -28,7 +28,10 @@ interface AuthHook extends AuthState {
   updateUserProfile: (updates: Partial<User>) => Promise<void>;
   refreshSession: () => Promise<void>;
   isSessionValid: () => boolean;
-  getRateLimitInfo: (action: string) => { remaining: number; resetTime: Date | null };
+  getRateLimitInfo: (action: string) => {
+    remaining: number;
+    resetTime: Date | null;
+  };
 }
 
 function useAuth(): AuthHook {
@@ -43,7 +46,7 @@ function useAuth(): AuthHook {
     rateLimitRemaining: 10,
   });
 
-  const sessionTimerRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
+  const sessionTimerRef = useRef<TimeoutHandle | undefined>(undefined);
   const lastActivityRef = useRef<Date>(new Date());
 
   // Security constants
@@ -58,7 +61,7 @@ function useAuth(): AuthHook {
         const user = await SupabaseService.getCurrentUser();
         const csrfToken = SecurityService.generateCSRFToken();
 
-        setAuthState((prev: any) => ({ // auto: implicit any{
+        setAuthState((prev: any) => ({
           ...prev,
           user,
           isInitialized: true,
@@ -82,7 +85,8 @@ function useAuth(): AuthHook {
           'Failed to initialize authentication',
           { context: 'auth_initialization' }
         );
-        setAuthState((prev: any) => ({ // auto: implicit any{
+
+        setAuthState((prev: any) => ({
           ...prev,
           isInitialized: true,
           error: 'Failed to initialize authentication',
@@ -102,7 +106,7 @@ function useAuth(): AuthHook {
         const userProfile = await SupabaseService.getCurrentUser();
         const csrfToken = SecurityService.generateCSRFToken();
 
-        setAuthState((prev: any) => ({ // auto: implicit any{
+        setAuthState((prev: any) => ({
           ...prev,
           user: userProfile,
           error: null,
@@ -119,7 +123,8 @@ function useAuth(): AuthHook {
         });
       } else if (event === 'SIGNED_OUT') {
         stopSessionManagement();
-        setAuthState((prev: any) => ({ // auto: implicit any{
+
+        setAuthState((prev: any) => ({
           ...prev,
           user: null,
           error: null,
@@ -182,7 +187,7 @@ function useAuth(): AuthHook {
   const stopSessionManagement = () => {
     if (sessionTimerRef.current) {
       clearInterval(sessionTimerRef.current);
-      sessionTimerRef.current = undefined; // auto: changed from null to undefined
+      sessionTimerRef.current = undefined;
     }
 
     // Remove activity listeners
@@ -213,7 +218,7 @@ function useAuth(): AuthHook {
       }
 
       if (data.session) {
-        setAuthState((prev: any) => ({ // auto: implicit any{
+        setAuthState((prev: any) => ({
           ...prev,
           sessionExpiry: new Date(Date.now() + SESSION_TIMEOUT_MS),
           csrfToken: SecurityService.generateCSRFToken(),
@@ -260,7 +265,7 @@ function useAuth(): AuthHook {
   const signIn = async (email: string, password: string): Promise<void> => {
     // Rate limiting check
     if (!SecurityService.checkRateLimit('sign_in', 5, RATE_LIMIT_WINDOW_MS)) {
-      setAuthState((prev: any) => ({ // auto: implicit any{
+      setAuthState((prev: any) => ({
         ...prev,
         error: 'Too many sign-in attempts. Please try again in 15 minutes.',
         rateLimitRemaining: 0,
@@ -268,7 +273,7 @@ function useAuth(): AuthHook {
       return;
     }
 
-    setAuthState((prev: any) => ({ // auto: implicit any{
+    setAuthState((prev: any) => ({
       ...prev,
       isLoading: true,
       error: null,
@@ -283,13 +288,13 @@ function useAuth(): AuthHook {
       const { user, error } = await SupabaseService.signIn(email, password);
 
       if (error) {
-        setAuthState((prev: any) => ({ // auto: implicit any{ ...prev, isLoading: false, error }));
+        setAuthState((prev: any) => ({ ...prev, isLoading: false, error }));
         analytics.trackError(new Error(error), 'sign_in_failed');
         return;
       }
 
       if (user) {
-        setAuthState((prev: any) => ({ // auto: implicit any{
+        setAuthState((prev: any) => ({
           ...prev,
           user,
           isLoading: false,
@@ -302,7 +307,7 @@ function useAuth(): AuthHook {
           method: 'email_password',
         });
       } else {
-        setAuthState((prev: any) => ({ // auto: implicit any{
+        setAuthState((prev: any) => ({
           ...prev,
           isLoading: false,
           error: 'Sign in failed. Please try again.',
@@ -321,7 +326,7 @@ function useAuth(): AuthHook {
         { context: 'sign_in', metadata: { email } }
       );
 
-      setAuthState((prev: any) => ({ // auto: implicit any{
+      setAuthState((prev: any) => ({
         ...prev,
         isLoading: false,
         error: 'An unexpected error occurred. Please try again.',
@@ -336,7 +341,7 @@ function useAuth(): AuthHook {
   ): Promise<void> => {
     // Rate limiting check
     if (!SecurityService.checkRateLimit('sign_up', 3, RATE_LIMIT_WINDOW_MS)) {
-      setAuthState((prev: any) => ({ // auto: implicit any{
+      setAuthState((prev: any) => ({
         ...prev,
         error: 'Too many sign-up attempts. Please try again in 15 minutes.',
         rateLimitRemaining: 0,
@@ -344,7 +349,7 @@ function useAuth(): AuthHook {
       return;
     }
 
-    setAuthState((prev: any) => ({ // auto: implicit any{
+    setAuthState((prev: any) => ({
       ...prev,
       isLoading: true,
       error: null,
@@ -359,13 +364,13 @@ function useAuth(): AuthHook {
       const { user, error } = await SupabaseService.signUp(email, password, name);
 
       if (error) {
-        setAuthState((prev: any) => ({ // auto: implicit any{ ...prev, isLoading: false, error }));
+        setAuthState((prev: any) => ({ ...prev, isLoading: false, error }));
         analytics.trackError(new Error(error), 'sign_up_failed');
         return;
       }
 
       if (user) {
-        setAuthState((prev: any) => ({ // auto: implicit any{
+        setAuthState((prev: any) => ({
           ...prev,
           user,
           isLoading: false,
@@ -378,7 +383,7 @@ function useAuth(): AuthHook {
           method: 'email_password',
         });
       } else {
-        setAuthState((prev: any) => ({ // auto: implicit any{
+        setAuthState((prev: any) => ({
           ...prev,
           isLoading: false,
           error: 'Account creation failed. Please try again.',
@@ -397,7 +402,7 @@ function useAuth(): AuthHook {
         { context: 'sign_up', metadata: { email, name } }
       );
 
-      setAuthState((prev: any) => ({ // auto: implicit any{
+      setAuthState((prev: any) => ({
         ...prev,
         isLoading: false,
         error: 'An unexpected error occurred. Please try again.',
@@ -406,7 +411,7 @@ function useAuth(): AuthHook {
   };
 
   const signOut = async (): Promise<void> => {
-    setAuthState((prev: any) => ({ // auto: implicit any{ ...prev, isLoading: true, error: null }));
+    setAuthState((prev: any) => ({ ...prev, isLoading: true, error: null }));
 
     try {
       const analytics = AnalyticsService.getInstance();
@@ -415,18 +420,20 @@ function useAuth(): AuthHook {
       const { error } = await SupabaseService.signOut();
 
       if (error) {
-        setAuthState((prev: any) => ({ // auto: implicit any{ ...prev, isLoading: false, error }));
+        setAuthState((prev: any) => ({ ...prev, isLoading: false, error }));
         return;
       }
 
-      setAuthState((prev: any) => ({ // auto: implicit any{
+      setAuthState((prev: any) => ({
         ...prev,
         user: null,
         isLoading: false,
         error: null,
       }));
 
-      analytics.trackFeatureUsage('user_sign_out_success', undefined, { userId });
+      analytics.trackFeatureUsage('user_sign_out_success', undefined, {
+        userId,
+      });
     } catch (error) {
       const analytics = AnalyticsService.getInstance();
       analytics.trackError(
@@ -440,7 +447,7 @@ function useAuth(): AuthHook {
         { context: 'sign_out' }
       );
 
-      setAuthState((prev: any) => ({ // auto: implicit any{
+      setAuthState((prev: any) => ({
         ...prev,
         isLoading: false,
         error: 'Failed to sign out. Please try again.',
@@ -451,7 +458,7 @@ function useAuth(): AuthHook {
   const resetPassword = async (email: string): Promise<void> => {
     // Rate limiting check
     if (!SecurityService.checkRateLimit('password_reset', 3, RATE_LIMIT_WINDOW_MS)) {
-      setAuthState((prev: any) => ({ // auto: implicit any{
+      setAuthState((prev: any) => ({
         ...prev,
         error: 'Too many password reset attempts. Please try again in 15 minutes.',
         rateLimitRemaining: 0,
@@ -459,7 +466,7 @@ function useAuth(): AuthHook {
       return;
     }
 
-    setAuthState((prev: any) => ({ // auto: implicit any{
+    setAuthState((prev: any) => ({
       ...prev,
       isLoading: true,
       error: null,
@@ -475,19 +482,25 @@ function useAuth(): AuthHook {
       });
 
       if (error) {
-        setAuthState((prev: any) => ({ // auto: implicit any{ ...prev, isLoading: false, error: error.message }));
+        setAuthState((prev: any) => ({
+          ...prev,
+          isLoading: false,
+          error: error.message,
+        }));
         analytics.trackError(new Error(error.message), 'password_reset_failed');
         return;
       }
 
-      setAuthState((prev: any) => ({ // auto: implicit any{
+      setAuthState((prev: any) => ({
         ...prev,
         isLoading: false,
         error: null,
         forgotPasswordSuccess: true,
       }));
 
-      analytics.trackFeatureUsage('password_reset_requested', undefined, { email });
+      analytics.trackFeatureUsage('password_reset_requested', undefined, {
+        email,
+      });
     } catch (error) {
       const analytics = AnalyticsService.getInstance();
       analytics.trackError(
@@ -501,7 +514,7 @@ function useAuth(): AuthHook {
         { context: 'password_reset', metadata: { email } }
       );
 
-      setAuthState((prev: any) => ({ // auto: implicit any{
+      setAuthState((prev: any) => ({
         ...prev,
         isLoading: false,
         error: 'Failed to send reset email. Please try again.',
@@ -510,7 +523,11 @@ function useAuth(): AuthHook {
   };
 
   const clearError = (): void => {
-    setAuthState((prev: any) => ({ // auto: implicit any{ ...prev, error: null, forgotPasswordSuccess: false }));
+    setAuthState((prev: any) => ({
+      ...prev,
+      error: null,
+      forgotPasswordSuccess: false,
+    }));
   };
 
   const updateUserProfile = async (updates: Partial<User>): Promise<void> => {
@@ -518,7 +535,7 @@ function useAuth(): AuthHook {
       throw new Error('No user logged in');
     }
 
-    setAuthState((prev: any) => ({ // auto: implicit any{ ...prev, isLoading: true, error: null }));
+    setAuthState((prev: any) => ({ ...prev, isLoading: true, error: null }));
 
     try {
       const analytics = AnalyticsService.getInstance();
@@ -534,7 +551,11 @@ function useAuth(): AuthHook {
         .eq('id', authState.user.id);
 
       if (error) {
-        setAuthState((prev: any) => ({ // auto: implicit any{ ...prev, isLoading: false, error: error.message }));
+        setAuthState((prev: any) => ({
+          ...prev,
+          isLoading: false,
+          error: error.message,
+        }));
         return;
       }
 
@@ -544,7 +565,7 @@ function useAuth(): AuthHook {
         ...updates,
       };
 
-      setAuthState((prev: any) => ({ // auto: implicit any{
+      setAuthState((prev: any) => ({
         ...prev,
         user: updatedUser,
         isLoading: false,
@@ -565,10 +586,13 @@ function useAuth(): AuthHook {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         'Failed to update profile',
-        { context: 'profile_update', metadata: { userId: authState.user.id, updates } }
+        {
+          context: 'profile_update',
+          metadata: { userId: authState.user.id, updates },
+        }
       );
 
-      setAuthState((prev: any) => ({ // auto: implicit any{
+      setAuthState((prev: any) => ({
         ...prev,
         isLoading: false,
         error: 'Failed to update profile. Please try again.',

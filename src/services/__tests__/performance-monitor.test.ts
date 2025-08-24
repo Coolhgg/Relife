@@ -512,7 +512,13 @@ describe('PerformanceMonitor', () => {
       const monitor = PerformanceMonitor.getInstance();
 
       // Setup test data
-      monitor.webVitals = { cls: 0.1, fid: 50, lcp: 2000, fcp: 1500, ttfb: 200 };
+      monitor.webVitals = {
+        cls: 0.1,
+        fid: 50,
+        lcp: 2000,
+        fcp: 1500,
+        ttfb: 200,
+      };
       monitor.trackUserAction('test-action');
 
       const report = monitor.generatePerformanceReport();

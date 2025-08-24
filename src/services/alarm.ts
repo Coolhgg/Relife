@@ -26,8 +26,8 @@ export class AlarmService {
 
       // Convert date strings back to Date objects and validate
       this.alarms = alarmData
+
         .map((alarm: any) => ({
-          // auto: implicit any{
           ...alarm,
           createdAt: new Date(alarm.createdAt),
           updatedAt: new Date(alarm.updatedAt),
@@ -36,7 +36,6 @@ export class AlarmService {
             : undefined,
         }))
         .filter((alarm: any) => {
-          // auto: implicit any
           // Additional validation for loaded alarms
           return (
             alarm.id &&

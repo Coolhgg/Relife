@@ -61,7 +61,9 @@ describe('Enhanced Factories', () => {
     });
 
     it('should create campaign with specified persona', () => {
-      const campaign = createTestEmailCampaign({ persona: 'professional_paula' });
+      const campaign = createTestEmailCampaign({
+        persona: 'professional_paula',
+      });
 
       expect(campaign.targetPersona).toBe('professional_paula');
     });

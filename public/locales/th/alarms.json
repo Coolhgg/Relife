@@ -71,7 +71,7 @@
     "snoozesLeft": "เหลือ Snooze {{count}} ครั้ง",
     "snoozesLeft_plural": "เหลือ Snooze {{count}} ครั้ง",
     "noSnoozesLeft": "ไม่เหลือ Snooze",
-    "voiceChallenge": "พูดว่า "ฉันตื่นแล้ว" เพื่อปิด",
+    "voiceChallenge": "พูดว่า \"ฉันตื่นแล้ว\" เพื่อปิด",
     "shakeToSnooze": "เขย่าเครื่องเพื่อ Snooze",
     "challenges": {
       "math": "แก้โจทย์คณิตศาสตร์",

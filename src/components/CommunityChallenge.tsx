@@ -114,11 +114,11 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
     let filtered = challenges;
 
     if (selectedType !== 'all') {
-      filtered = filtered.filter((c: any) => c // auto: implicit any.challengeType === selectedType);
+      filtered = filtered.filter((c: any) => c.challengeType === selectedType);
     }
 
     if (selectedDifficulty !== 'all') {
-      filtered = filtered.filter((c: any) => c // auto: implicit any.difficulty === selectedDifficulty);
+      filtered = filtered.filter((c: any) => c.difficulty === selectedDifficulty);
     }
 
     setFilteredChallenges(filtered);
@@ -387,7 +387,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedType}
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: any) =>
                     setSelectedType(e.target.value as SocialChallengeType | 'all')
                   }
                 >
@@ -403,7 +403,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedDifficulty}
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: any) =>
                     setSelectedDifficulty(
                       e.target.value as 'all' | 'easy' | 'medium' | 'hard'
                     )
@@ -419,7 +419,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               {/* Challenge Grid */}
               <div className="grid md:grid-cols-2 gap-4">
                 <AnimatePresence>
-                  {filteredChallenges.map((challenge: any) => ({ // auto: implicit any
+                  {filteredChallenges.map((challenge: any) => (
                     <motion.div
                       key={challenge.id}
                       layout
@@ -453,7 +453,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
           {activeTab === 'joined' && (
             <>
               <div className="grid md:grid-cols-2 gap-4">
-                {userChallenges.map((challenge: any) => ({ // auto: implicit any
+                {userChallenges.map((challenge: any) => (
                   <ChallengeCard
                     key={challenge.id}
                     challenge={challenge}

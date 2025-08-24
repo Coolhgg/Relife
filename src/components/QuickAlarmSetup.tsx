@@ -69,8 +69,8 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
   const [snoozeEnabled, setSnoozeEnabled] = useState(true);
 
   const toggleDay = (day: DayOfWeek) => {
-    setSelectedDays((prev: any) => // auto: implicit any
-      prev.includes(day) ? prev.filter((d: any) => d // auto: implicit any !== day) : [...prev, day]
+    setSelectedDays((prev: any) =>
+      prev.includes(day) ? prev.filter((d: any) => d !== day) : [...prev, day]
     );
   };
 
@@ -112,7 +112,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
               id="time"
               type="time"
               value={time}
-              onChange={(e: any) => s // auto: implicit anyetTime(e.target.value)}
+              onChange={(e: any) => setTime(e.target.value)}
               className="mt-1"
             />
           </div>
@@ -122,7 +122,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
             <Input
               id="label"
               value={label}
-              onChange={(e: any) => s // auto: implicit anyetLabel(e.target.value)}
+              onChange={(e: any) => setLabel(e.target.value)}
               placeholder="Wake up!"
               className="mt-1"
             />

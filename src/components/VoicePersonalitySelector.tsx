@@ -297,7 +297,6 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
           <div className="absolute bottom-2 right-2">
             <button
               onClick={(e: any) => {
-                // auto: implicit any
                 e.stopPropagation();
                 playPreview(personality.id as VoiceMood);
               }}

@@ -71,7 +71,7 @@
     "snoozesLeft": "{{count}} snooze left",
     "snoozesLeft_plural": "{{count}} snoozes left",
     "noSnoozesLeft": "No snoozes left",
-    "voiceChallenge": "Say "I'm awake" to dismiss",
+    "voiceChallenge": "Say \"I'm awake\" to dismiss",
     "shakeToSnooze": "Shake device to snooze",
     "challenges": {
       "math": "Solve the math problem",

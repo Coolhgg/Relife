@@ -215,8 +215,11 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                       id="sleep-date"
                       type="date"
                       value={sleepEntry.date}
-                      onChange={(e: any) => // auto: implicit any
-                        setSleepEntry((prev: any) => ({ // auto: implicit any{ ...prev, date: e.target.value }))
+                      onChange={(e: any) =>
+                        setSleepEntry((prev: any) => ({
+                          ...prev,
+                          date: e.target.value,
+                        }))
                       }
                       className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
                     />
@@ -235,8 +238,11 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                         id="bedtime"
                         type="time"
                         value={sleepEntry.bedtime}
-                        onChange={(e: any) => // auto: implicit any
-                          setSleepEntry((prev: any) => ({ // auto: implicit any{ ...prev, bedtime: e.target.value }))
+                        onChange={(e: any) =>
+                          setSleepEntry((prev: any) => ({
+                            ...prev,
+                            bedtime: e.target.value,
+                          }))
                         }
                         className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
                       />
@@ -254,8 +260,11 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                         id="wake-time"
                         type="time"
                         value={sleepEntry.wakeTime}
-                        onChange={(e: any) => // auto: implicit any
-                          setSleepEntry((prev: any) => ({ // auto: implicit any{ ...prev, wakeTime: e.target.value }))
+                        onChange={(e: any) =>
+                          setSleepEntry((prev: any) => ({
+                            ...prev,
+                            wakeTime: e.target.value,
+                          }))
                         }
                         className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
                       />
@@ -273,8 +282,8 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                       min="1"
                       max="10"
                       value={sleepEntry.quality}
-                      onChange={(e: any) => // auto: implicit any
-                        setSleepEntry((prev: any) => ({ // auto: implicit any{
+                      onChange={(e: any) =>
+                        setSleepEntry((prev: any) => ({
                           ...prev,
                           quality: parseInt(e.target.value),
                         }))

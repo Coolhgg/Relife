@@ -49,7 +49,7 @@
     "snoozesLeft": "{{count}} répétition restante",
     "snoozesLeft_plural": "{{count}} répétitions restantes",
     "noSnoozesLeft": "Aucune répétition restante",
-    "voiceChallenge": "Dites "Je suis réveillé" pour arrêter",
+    "voiceChallenge": "Dites \"Je suis réveillé\" pour arrêter",
     "shakeToSnooze": "Secouez l'appareil pour reporter",
     "challenges": {
       "math": "Résolvez le problème mathématique",

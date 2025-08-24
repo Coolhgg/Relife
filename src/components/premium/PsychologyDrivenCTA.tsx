@@ -52,7 +52,11 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
   animate = true,
   className = '',
 }) => {
-  const [timeLeft, setTimeLeft] = useState({ hours: 23, minutes: 47, seconds: 32 });
+  const [timeLeft, setTimeLeft] = useState({
+    hours: 23,
+    minutes: 47,
+    seconds: 32,
+  });
   const [userCount, setUserCount] = useState(10847);
   const [isHovered, setIsHovered] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -62,7 +66,8 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
     if (trigger !== 'urgency') return;
 
     const interval = setInterval(() => {
-      setTimeLeft((prev: any) => { // auto: implicit any
+      setTimeLeft((prev: any) => {
+        // auto
         if (prev.seconds > 0) {
           return { ...prev, seconds: prev.seconds - 1 };
         } else if (prev.minutes > 0) {

@@ -243,7 +243,9 @@ describe('FeatureComparison', () => {
         <FeatureComparison {...defaultProps} onUpgrade={mockOnUpgrade} />
       );
 
-      const upgradeButton = screen.getByRole('button', { name: /upgrade to premium/i });
+      const upgradeButton = screen.getByRole('button', {
+        name: /upgrade to premium/i,
+      });
       await user.click(upgradeButton);
 
       expect(mockOnUpgrade).toHaveBeenCalledWith('premium');

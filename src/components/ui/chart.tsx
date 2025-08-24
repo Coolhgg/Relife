@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 import * as React from 'react';
 import * as RechartsPrimitive from 'recharts';
 
@@ -266,7 +266,6 @@ function ChartLegendContent({
       )}
     >
       {payload.map((item: any) => {
-        // auto: implicit any
         const key = `${nameKey || item.dataKey || 'value'}`;
         const itemConfig = getPayloadConfigFromPayload(config, item, key);
 

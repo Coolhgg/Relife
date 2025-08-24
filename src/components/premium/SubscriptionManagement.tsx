@@ -219,7 +219,7 @@ export function SubscriptionManagement({
   };
 
   const handleAcceptRetentionOffer = (offerId: string) => {
-    setCancellationData((prev: any) => ({ // auto: implicit any{
+    setCancellationData((prev: any) => ({
       ...prev,
       retentionOfferAccepted: true,
     }));
@@ -354,8 +354,11 @@ export function SubscriptionManagement({
                         <Label htmlFor="reason">Reason for canceling</Label>
                         <Select
                           value={cancellationData.reason}
-                          onValueChange={(value: any) => // auto: implicit any
-                            setCancellationData((prev: any) => ({ // auto: implicit any{ ...prev, reason: value }))
+                          onValueChange={(value: any) =>
+                            setCancellationData((prev: any) => ({
+                              ...prev,
+                              reason: value,
+                            }))
                           }
                         >
                           <SelectTrigger>
@@ -376,8 +379,8 @@ export function SubscriptionManagement({
                         <Textarea
                           id="feedback"
                           value={cancellationData.feedback}
-                          onChange={(e: any) => // auto: implicit any
-                            setCancellationData((prev: any) => ({ // auto: implicit any{
+                          onChange={(e: any) =>
+                            setCancellationData((prev: any) => ({
                               ...prev,
                               feedback: e.target.value,
                             }))
@@ -397,7 +400,7 @@ export function SubscriptionManagement({
                               name="effectiveDate"
                               checked={cancellationData.effectiveDate === 'period_end'}
                               onChange={() =>
-                                setCancellationData((prev: any) => ({ // auto: implicit any{
+                                setCancellationData((prev: any) => ({
                                   ...prev,
                                   effectiveDate: 'period_end',
                                 }))
@@ -415,7 +418,7 @@ export function SubscriptionManagement({
                               name="effectiveDate"
                               checked={cancellationData.effectiveDate === 'immediate'}
                               onChange={() =>
-                                setCancellationData((prev: any) => ({ // auto: implicit any{
+                                setCancellationData((prev: any) => ({
                                   ...prev,
                                   effectiveDate: 'immediate',
                                 }))

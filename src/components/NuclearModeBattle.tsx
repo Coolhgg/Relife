@@ -104,7 +104,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     'green' | 'yellow' | 'red' | 'critical'
   >('green');
 
-  const timerRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
+  const timerRef = useRef<TimeoutHandle | undefined>(undefined);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const requiredChallenges = 3; // Must complete 3 nuclear challenges to dismiss
@@ -146,7 +146,8 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     }
 
     timerRef.current = setInterval(() => {
-      setTimeRemaining((prev: any) => { // auto: implicit any
+      setTimeRemaining((prev: any) => {
+        // auto
         if (prev <= 1) {
           handleChallengeTimeout();
           return 0;

@@ -184,7 +184,8 @@ export function PaymentFlow({
 
     if (field.startsWith('billingAddress.')) {
       const addressField = field.replace('billingAddress.', '');
-      setFormData((prev: any) => ({ // auto: implicit any{
+
+      setFormData((prev: any) => ({
         ...prev,
         billingAddress: {
           ...prev.billingAddress,
@@ -192,7 +193,7 @@ export function PaymentFlow({
         },
       }));
     } else {
-      setFormData((prev: any) => ({ // auto: implicit any{
+      setFormData((prev: any) => ({
         ...prev,
         [field]: value,
       }));
@@ -200,7 +201,7 @@ export function PaymentFlow({
 
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
-      setValidationErrors((prev: any) => ({ // auto: implicit any{
+      setValidationErrors((prev: any) => ({
         ...prev,
         [field]: '',
       }));
@@ -453,7 +454,9 @@ export function PaymentFlow({
                     <Input
                       id="cardNumber"
                       value={formData.cardNumber}
-                      onChange={(e: any) => h // auto: implicit anyandleInputChange('cardNumber', e.target.value)}
+                      onChange={(e: any) =>
+                        handleInputChange('cardNumber', e.target.value)
+                      }
                       placeholder="1234 5678 9012 3456"
                       maxLength={19}
                       className={validationErrors.cardNumber ? 'border-red-300' : ''}
@@ -470,7 +473,9 @@ export function PaymentFlow({
                     <Input
                       id="expiryDate"
                       value={formData.expiryDate}
-                      onChange={(e: any) => h // auto: implicit anyandleInputChange('expiryDate', e.target.value)}
+                      onChange={(e: any) =>
+                        handleInputChange('expiryDate', e.target.value)
+                      }
                       placeholder="MM/YY"
                       maxLength={5}
                       className={validationErrors.expiryDate ? 'border-red-300' : ''}
@@ -487,7 +492,7 @@ export function PaymentFlow({
                     <Input
                       id="cvc"
                       value={formData.cvc}
-                      onChange={(e: any) => h // auto: implicit anyandleInputChange('cvc', e.target.value)}
+                      onChange={(e: any) => handleInputChange('cvc', e.target.value)}
                       placeholder="123"
                       maxLength={4}
                       className={validationErrors.cvc ? 'border-red-300' : ''}
@@ -504,7 +509,9 @@ export function PaymentFlow({
                     <Input
                       id="cardName"
                       value={formData.cardName}
-                      onChange={(e: any) => h // auto: implicit anyandleInputChange('cardName', e.target.value)}
+                      onChange={(e: any) =>
+                        handleInputChange('cardName', e.target.value)
+                      }
                       placeholder="John Doe"
                       className={validationErrors.cardName ? 'border-red-300' : ''}
                     />
@@ -527,7 +534,7 @@ export function PaymentFlow({
                       <Input
                         id="line1"
                         value={formData.billingAddress.line1}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) =>
                           handleInputChange('billingAddress.line1', e.target.value)
                         }
                         placeholder="123 Main Street"
@@ -547,7 +554,7 @@ export function PaymentFlow({
                       <Input
                         id="line2"
                         value={formData.billingAddress.line2}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) =>
                           handleInputChange('billingAddress.line2', e.target.value)
                         }
                         placeholder="Apartment, suite, etc."
@@ -559,7 +566,7 @@ export function PaymentFlow({
                       <Input
                         id="city"
                         value={formData.billingAddress.city}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) =>
                           handleInputChange('billingAddress.city', e.target.value)
                         }
                         placeholder="New York"
@@ -577,7 +584,7 @@ export function PaymentFlow({
                       <Input
                         id="state"
                         value={formData.billingAddress.state}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) =>
                           handleInputChange('billingAddress.state', e.target.value)
                         }
                         placeholder="NY"
@@ -589,7 +596,7 @@ export function PaymentFlow({
                       <Input
                         id="postalCode"
                         value={formData.billingAddress.postalCode}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) =>
                           handleInputChange('billingAddress.postalCode', e.target.value)
                         }
                         placeholder="10001"
@@ -607,7 +614,7 @@ export function PaymentFlow({
                       <Input
                         id="country"
                         value={formData.billingAddress.country}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(e: any) =>
                           handleInputChange('billingAddress.country', e.target.value)
                         }
                         placeholder="US"
@@ -625,7 +632,7 @@ export function PaymentFlow({
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e: any) => h // auto: implicit anyandleInputChange('email', e.target.value)}
+                onChange={(e: any) => handleInputChange('email', e.target.value)}
                 placeholder="john@example.com"
                 className={validationErrors.email ? 'border-red-300' : ''}
               />

@@ -87,7 +87,11 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
           ? {
               scale: 1.02,
               y: -1,
-              transition: { type: 'spring' as const, stiffness: 120, damping: 20 },
+              transition: {
+                type: 'spring' as const,
+                stiffness: 120,
+                damping: 20,
+              },
             }
           : {}
       }
@@ -97,7 +101,11 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
           ? {
               scale: 0.98,
               y: 0,
-              transition: { type: 'spring' as const, stiffness: 300, damping: 30 },
+              transition: {
+                type: 'spring' as const,
+                stiffness: 300,
+                damping: 30,
+              },
             }
           : {}
       }
@@ -296,7 +304,11 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
           ? {
               y: -4,
               scale: 1.02,
-              transition: { type: 'spring' as const, stiffness: 120, damping: 20 },
+              transition: {
+                type: 'spring' as const,
+                stiffness: 120,
+                damping: 20,
+              },
               boxShadow: glowEffect
                 ? '0 20px 40px rgba(59, 130, 246, 0.15)'
                 : '0 20px 40px rgba(0, 0, 0, 0.1)',
@@ -308,7 +320,11 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
         pressEffect && onClick
           ? {
               scale: 0.98,
-              transition: { type: 'spring' as const, stiffness: 300, damping: 30 },
+              transition: {
+                type: 'spring' as const,
+                stiffness: 300,
+                damping: 30,
+              },
             }
           : {}
       }
@@ -524,7 +540,11 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             initial={{ opacity: 0, y: 10, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.9 }}
-            transition={{ type: 'spring' as const, stiffness: 120, damping: 20 }}
+            transition={{
+              type: 'spring' as const,
+              stiffness: 120,
+              damping: 20,
+            }}
           >
             <div className="bg-gray-900 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap">
               {tooltip}
@@ -609,7 +629,7 @@ export const AnimatedNotification: React.FC<NotificationProps> = ({
   useEffect(() => {
     const timer = setTimeout(onClose, duration);
     const interval = setInterval(() => {
-      setProgress((prev: any) => M // auto: implicit anyath.max(0, prev - 100 / (duration / 100)));
+      setProgress((prev: any) => Math.max(0, prev - 100 / (duration / 100)));
     }, 100);
 
     return () => {

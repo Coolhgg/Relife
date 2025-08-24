@@ -111,7 +111,12 @@ describe('Premium Integration Tests', () => {
         invoiceHistory: [],
         availablePlans: testPlans,
         discountCodes: [],
-        referralStats: { code: 'USER123', referrals: 0, rewards: 0, pendingRewards: 0 },
+        referralStats: {
+          code: 'USER123',
+          referrals: 0,
+          rewards: 0,
+          pendingRewards: 0,
+        },
       };
 
       const { rerender } = renderWithProviders(
@@ -253,7 +258,9 @@ describe('Premium Integration Tests', () => {
       ).toBeInTheDocument();
 
       // Click upgrade
-      const upgradeButton = screen.getByRole('button', { name: /upgrade to premium/i });
+      const upgradeButton = screen.getByRole('button', {
+        name: /upgrade to premium/i,
+      });
       await user.click(upgradeButton);
 
       expect(mockUseFeatureGate.showUpgradeModal).toHaveBeenCalled();
@@ -288,7 +295,12 @@ describe('Premium Integration Tests', () => {
         invoiceHistory: [],
         availablePlans: testPlans,
         discountCodes: [],
-        referralStats: { code: 'USER123', referrals: 2, rewards: 1, pendingRewards: 0 },
+        referralStats: {
+          code: 'USER123',
+          referrals: 2,
+          rewards: 1,
+          pendingRewards: 0,
+        },
       };
 
       const mockOnUpgrade = jest.fn();
@@ -349,7 +361,12 @@ describe('Premium Integration Tests', () => {
         invoiceHistory: [],
         availablePlans: testPlans,
         discountCodes: [],
-        referralStats: { code: 'USER123', referrals: 0, rewards: 0, pendingRewards: 0 },
+        referralStats: {
+          code: 'USER123',
+          referrals: 0,
+          rewards: 0,
+          pendingRewards: 0,
+        },
       };
 
       const mockOnCancel = jest.fn();
@@ -359,16 +376,22 @@ describe('Premium Integration Tests', () => {
       );
 
       // Navigate to settings/cancel area (might be in a menu or separate tab)
-      const moreOptionsButton = screen.getByRole('button', { name: /more options/i });
+      const moreOptionsButton = screen.getByRole('button', {
+        name: /more options/i,
+      });
       await user.click(moreOptionsButton);
 
-      const cancelButton = screen.getByRole('button', { name: /cancel subscription/i });
+      const cancelButton = screen.getByRole('button', {
+        name: /cancel subscription/i,
+      });
       await user.click(cancelButton);
 
       // Should show confirmation dialog
       expect(screen.getByText(/are you sure/i)).toBeInTheDocument();
 
-      const confirmCancelButton = screen.getByRole('button', { name: /yes, cancel/i });
+      const confirmCancelButton = screen.getByRole('button', {
+        name: /yes, cancel/i,
+      });
       await user.click(confirmCancelButton);
 
       expect(mockOnCancel).toHaveBeenCalled();
@@ -500,7 +523,12 @@ describe('Premium Integration Tests', () => {
         invoiceHistory: [],
         availablePlans: testPlans,
         discountCodes: [],
-        referralStats: { code: 'USER123', referrals: 0, rewards: 0, pendingRewards: 0 },
+        referralStats: {
+          code: 'USER123',
+          referrals: 0,
+          rewards: 0,
+          pendingRewards: 0,
+        },
       };
 
       renderWithProviders(<SubscriptionDashboard data={mockData} />);

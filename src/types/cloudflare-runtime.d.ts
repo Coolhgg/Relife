@@ -17,6 +17,7 @@ declare global {
   }
 
   interface KVNamespace {
+    [key: string]: any;
     get(key: string, type?: 'text' | 'json' | 'arrayBuffer' | 'stream'): Promise<any>;
     put(
       key: string,
@@ -24,6 +25,7 @@ declare global {
       options?: any
     ): Promise<void>;
     delete(key: string): Promise<void>;
+    list?(options?: any): Promise<any>;
   }
 
   interface DurableObjectNamespace {

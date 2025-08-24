@@ -5,10 +5,10 @@ import ErrorBoundary from '../ErrorBoundary';
 // Test utilities are now handled via vitest directly
 
 // Test component that throws errors
-const ThrowError: React.FC<{ shouldThrow?: boolean; errorMessage?: string }> = ({
-  shouldThrow = false,
-  errorMessage = 'Test error',
-}) => {
+const ThrowError: React.FC<{
+  shouldThrow?: boolean;
+  errorMessage?: string;
+}> = ({ shouldThrow = false, errorMessage = 'Test error' }) => {
   if (shouldThrow) {
     throw new Error(errorMessage);
   }

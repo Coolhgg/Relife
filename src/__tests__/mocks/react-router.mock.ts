@@ -335,7 +335,12 @@ export const _matchPath = vi.fn((pattern: any, pathname: string) => {
     return {
       params: {},
       pathname,
-      pattern: { path: patternPath, caseSensitive: false, end: true, ...pattern },
+      pattern: {
+        path: patternPath,
+        caseSensitive: false,
+        end: true,
+        ...pattern,
+      },
     };
   }
 

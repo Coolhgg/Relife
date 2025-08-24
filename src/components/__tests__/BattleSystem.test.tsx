@@ -121,7 +121,9 @@ describe('BattleSystem', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockOfflineGamingService.createBattle.mockResolvedValue({ id: 'new-battle-123' });
+    mockOfflineGamingService.createBattle.mockResolvedValue({
+      id: 'new-battle-123',
+    });
   });
 
   describe('Rendering', () => {
@@ -241,7 +243,9 @@ describe('BattleSystem', () => {
       const speedBattleCard = screen.getByText('Speed Battle').closest('button');
       await user.click(speedBattleCard!);
 
-      const createButton = screen.getByRole('button', { name: /create battle/i });
+      const createButton = screen.getByRole('button', {
+        name: /create battle/i,
+      });
       await user.click(createButton);
 
       expect(screen.getByText(/battle name is required/i)).toBeInTheDocument();
@@ -263,7 +267,9 @@ describe('BattleSystem', () => {
       const friendCheckbox = screen.getByLabelText('Friend One');
       await user.click(friendCheckbox);
 
-      const createButton = screen.getByRole('button', { name: /create battle/i });
+      const createButton = screen.getByRole('button', {
+        name: /create battle/i,
+      });
       await user.click(createButton);
 
       await waitFor(() => {
@@ -324,7 +330,9 @@ describe('BattleSystem', () => {
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       await user.click(trashTalkButton);
 
       const messageInput = screen.getByPlaceholderText(/send a message/i);
@@ -344,7 +352,9 @@ describe('BattleSystem', () => {
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       await user.click(trashTalkButton);
 
       const messageInput = screen.getByPlaceholderText(/send a message/i);
@@ -363,7 +373,9 @@ describe('BattleSystem', () => {
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       await user.click(trashTalkButton);
 
       const sendButton = screen.getByRole('button', { name: /send/i });
@@ -441,7 +453,9 @@ describe('BattleSystem', () => {
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       await user.click(trashTalkButton);
 
       const messageInput = screen.getByPlaceholderText(/send a message/i);
@@ -548,7 +562,9 @@ describe('BattleSystem', () => {
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       expect(trashTalkButton).toHaveAccessibleDescription();
 
       await user.click(trashTalkButton);
@@ -576,7 +592,9 @@ describe('BattleSystem', () => {
 
       await user.type(screen.getByLabelText(/battle name/i), 'Test Battle');
 
-      const createButton = screen.getByRole('button', { name: /create battle/i });
+      const createButton = screen.getByRole('button', {
+        name: /create battle/i,
+      });
       await user.click(createButton);
 
       await waitFor(() => {
@@ -597,7 +615,9 @@ describe('BattleSystem', () => {
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       await user.click(trashTalkButton);
 
       const messageInput = screen.getByPlaceholderText(/send a message/i);
@@ -640,7 +660,9 @@ describe('BattleSystem', () => {
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
-      const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
+      const trashTalkButton = screen.getByRole('button', {
+        name: /trash talk/i,
+      });
       await user.click(trashTalkButton);
 
       // Should use mobile dialog

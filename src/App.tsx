@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import React from 'react'; // auto: added missing React import
+import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import {
   Plus,
@@ -250,7 +250,7 @@ function AppContent() {
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
     activeAlarm: appState.activeAlarm,
-    enabledAlarms: appState.alarms.filter((alarm: any) => alarm.enabled), // auto: implicit any
+    enabledAlarms: appState.alarms.filter((alarm: any) => alarm.enabled),
     settings: tabProtectionSettings.settings,
   });
 
@@ -270,8 +270,7 @@ function AppContent() {
         const aiRewards = AIRewardsService.getInstance();
         const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
 
-        setAppState((prev: any) => ({ // auto: implicit any
-          
+        setAppState((prev: any) => ({
           ...prev,
           rewardSystem,
         }));
@@ -301,8 +300,7 @@ function AppContent() {
       // Load alarms from offline storage first (faster)
       const offlineAlarms = await OfflineStorage.getAlarms();
       if (offlineAlarms.length > 0) {
-        setAppState((prev: any) => ({ // auto: implicit any
-          
+        setAppState((prev: any) => ({
           ...prev,
           alarms: offlineAlarms,
           isOnboarding: offlineAlarms.length === 0,
@@ -315,8 +313,7 @@ function AppContent() {
           const { alarms: savedAlarms } = await SupabaseService.loadUserAlarms(
             auth.user.id
           );
-          setAppState((prev: any) => ({ // auto: implicit any
-          
+          setAppState((prev: any) => ({
             ...prev,
             alarms: savedAlarms,
             isOnboarding: savedAlarms.length === 0,
@@ -344,8 +341,7 @@ function AppContent() {
           await refreshRewardsSystem(offlineAlarms);
         }
       } else {
-        setAppState((prev: any) => ({ // auto: implicit any
-          
+        setAppState((prev: any) => ({
           ...prev,
           alarms: offlineAlarms,
           isOnboarding: offlineAlarms.length === 0,
@@ -380,8 +376,11 @@ function AppContent() {
         analytics.trackAlarmAction('snooze', alarmId, { success: true, duration });
         analytics.trackFeatureUsage('alarm_snooze', 'completed', { duration });
 
-        setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, activeAlarm: null, currentView: 'dashboard' }));
+        setAppState((prev: any) => ({
+          ...prev,
+          activeAlarm: null,
+          currentView: 'dashboard',
+        }));
       } catch (error) {
         const duration = performance.now() - startTime;
         analytics.trackAlarmAction('snooze', alarmId, {
@@ -405,8 +404,11 @@ function AppContent() {
           }
         );
         // Fallback: still hide the alarm even if snooze fails
-        setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, activeAlarm: null, currentView: 'dashboard' }));
+        setAppState((prev: any) => ({
+          ...prev,
+          activeAlarm: null,
+          currentView: 'dashboard',
+        }));
       }
     },
     [isOnline, setAppState]
@@ -420,7 +422,7 @@ function AppContent() {
       switch (type) {
         case 'ALARM_TRIGGERED':
           if (data.alarm) {
-            setAppState((prev: any) => ({ ...prev, activeAlarm: data.alarm })); // auto: implicit any
+            setAppState((prev: any) => ({ ...prev, activeAlarm: data.alarm }));
           }
           break;
         case 'SYNC_START':
@@ -458,7 +460,7 @@ function AppContent() {
 
             // Handle specific actions
             if (data.action === 'dismiss' && appState.activeAlarm) {
-              setAppState((prev: any) => ({ ...prev, activeAlarm: null })); // auto: implicit any
+              setAppState((prev: any) => ({ ...prev, activeAlarm: null }));
             } else if (data.action === 'snooze' && appState.activeAlarm) {
               // Trigger snooze functionality
               handleAlarmSnooze(appState.activeAlarm.id);
@@ -491,8 +493,7 @@ function AppContent() {
       console.log('App: Handling service worker alarm trigger:', alarm.id);
 
       // Update app state to show alarm as triggered
-      setAppState((prev: any) => ({ // auto: implicit any
-          
+      setAppState((prev: any) => ({
         ...prev,
         activeAlarm: alarm,
         alarmTriggeredAt: new Date(),
@@ -708,8 +709,10 @@ function AppContent() {
         const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(
           auth.user.id
         );
-        setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, alarms: updatedAlarms }));
+        setAppState((prev: any) => ({
+          ...prev,
+          alarms: updatedAlarms,
+        }));
         await OfflineStorage.saveAlarms(updatedAlarms);
       }
     } catch (error) {
@@ -801,8 +804,7 @@ function AppContent() {
     const appAnalytics = AppAnalyticsService.getInstance();
     const emailService = EmailCampaignService.getInstance();
 
-    setAppState((prev: any) => ({ // auto: implicit any
-          
+    setAppState((prev: any) => ({
       ...prev,
       user: auth.user,
     }));
@@ -1119,7 +1121,7 @@ function AppContent() {
                 1000
           );
 
-          const upcomingAlarms = enabledAlarms.filter((alarm: any) => { // auto: implicit any
+          const upcomingAlarms = enabledAlarms.filter((alarm: any) => {
             const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
             // Check if alarm is set for today
@@ -1286,8 +1288,7 @@ function AppContent() {
       }
 
       const updatedAlarms = [...appState.alarms, newAlarm];
-      setAppState((prev: any) => ({ // auto: implicit any
-          
+      setAppState((prev: any) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1405,12 +1406,11 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map((alarm: any) => // auto: implicit any
+      const updatedAlarms = appState.alarms.map((alarm: any) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState((prev: any) => ({ // auto: implicit any
-          
+      setAppState((prev: any) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1486,7 +1486,7 @@ function AppContent() {
 
       const alarmToDelete = appState.alarms.find((a: any) => a.id === alarmId);
       const updatedAlarms = appState.alarms.filter((alarm: any) => alarm.id !== alarmId);
-      setAppState((prev: any) => ({ // auto: implicit any
+      setAppState((prev: any) => ({
           
         ...prev,
         alarms: updatedAlarms,
@@ -1568,12 +1568,11 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map((alarm: any) => // auto: implicit any
+      const updatedAlarms = appState.alarms.map((alarm: any) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState((prev: any) => ({ // auto: implicit any
-          
+      setAppState((prev: any) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1632,8 +1631,10 @@ function AppContent() {
       false // Not skipped
     );
 
-    setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, isOnboarding: false }));
+    setAppState((prev: any) => ({
+      ...prev,
+      isOnboarding: false,
+    }));
   };
 
   const handleAlarmDismiss = (
@@ -1662,8 +1663,11 @@ function AppContent() {
           duration,
         });
 
-        setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, activeAlarm: null, currentView: 'dashboard' }));
+        setAppState((prev: any) => ({
+          ...prev,
+          activeAlarm: null,
+          currentView: 'dashboard',
+        }));
       } catch (error) {
         const duration = performance.now() - startTime;
         analytics.trackAlarmAction('dismiss', alarmId, {
@@ -1686,8 +1690,11 @@ function AppContent() {
           }
         );
         // Fallback: still dismiss the alarm even if logging fails
-        setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, activeAlarm: null, currentView: 'dashboard' }));
+        setAppState((prev: any) => ({
+          ...prev,
+          activeAlarm: null,
+          currentView: 'dashboard',
+        }));
       }
     };
 
@@ -1784,8 +1791,12 @@ function AppContent() {
                 There was a problem with the alarm. It has been dismissed.
               </p>
               <button
-                onClick={() => setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, activeAlarm: null }))}
+                onClick={() =>
+                  setAppState((prev: any) => ({
+                    ...prev,
+                    activeAlarm: null,
+                  }))
+                }
                 className="bg-red-600 text-white px-4 py-2 rounded-lg"
               >
                 Back to Dashboard
@@ -1827,8 +1838,10 @@ function AppContent() {
                   'navigation',
                   'advanced_scheduling_from_dashboard'
                 );
-                setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, currentView: 'advanced-scheduling' }));
+                setAppState((prev: any) => ({
+                  ...prev,
+                  currentView: 'advanced-scheduling',
+                }));
               }}
             />
           </ErrorBoundary>
@@ -1842,7 +1855,7 @@ function AppContent() {
             <AlarmList
               alarms={appState.alarms}
               onToggleAlarm={handleToggleAlarm}
-              onEditAlarm={(alarm: any) => { // auto: implicit any
+              onEditAlarm={(alarm: any) => {
                 appAnalytics.trackFeatureUsage('edit_alarm', 'button_clicked', {
                   alarmId: alarm.id,
                   alarmLabel: alarm.label,
@@ -1872,7 +1885,7 @@ function AppContent() {
               rewardSystem={appState.rewardSystem}
               activeBattles={appState.activeBattles || []}
               friends={appState.friends || []}
-              onCreateBattle={(battle: any) => { // auto: implicit any
+              onCreateBattle={(battle: any) => {
                 // Add battle to state with complete Battle object
                 const completeBattle: Battle = {
                   id: battle.id || Math.random().toString(36).substr(2, 9),
@@ -1891,8 +1904,7 @@ function AppContent() {
                   createdAt: battle.createdAt || new Date().toISOString(),
                   ...battle,
                 };
-                setAppState((prev: any) => ({ // auto: implicit any
-          
+                setAppState((prev: any) => ({
                   ...prev,
                   activeBattles: [...(prev.activeBattles || []), completeBattle],
                 }));
@@ -1900,7 +1912,7 @@ function AppContent() {
                   battleType: completeBattle.type,
                 });
               }}
-              onJoinBattle={(battleId: any) => { // auto: implicit any
+              onJoinBattle={(battleId: any) => {
                 appAnalytics.trackFeatureUsage('battle_participation', 'joined', {
                   battleId,
                 });
@@ -1965,7 +1977,7 @@ function AppContent() {
           <ErrorBoundary context="PricingPage">
             <PricingPage
               user={auth.user as User}
-              onUpgrade={(plan: any) => { // auto: implicit any
+              onUpgrade={(plan: any) => {
                 appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
                   plan: plan.id,
                   price: plan.price,
@@ -2108,8 +2120,10 @@ function AppContent() {
                 onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
-                  setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, currentView: 'dashboard' }));
+                  setAppState((prev: any) => ({
+                    ...prev,
+                    currentView: 'dashboard',
+                  }));
                   AccessibilityUtils.announcePageChange('Dashboard');
                 })}
                 className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
@@ -2126,14 +2140,14 @@ function AppContent() {
                         borderColor: 'transparent',
                       }
                 }
-                onMouseEnter={(e: any) => { // auto: implicit any
+                onMouseEnter={(e: any) => {
                   if (appState.currentView !== 'dashboard') {
                     e.currentTarget.style.backgroundColor =
                       'var(--theme-surface-hover)';
                     e.currentTarget.style.color = 'var(--theme-text-primary)';
                   }
                 }}
-                onMouseLeave={(e: any) => { // auto: implicit any
+                onMouseLeave={(e: any) => {
                   if (appState.currentView !== 'dashboard') {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = 'var(--theme-text-secondary)';
@@ -2157,8 +2171,10 @@ function AppContent() {
                   appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
                     totalAlarms: appState.alarms.length,
                   });
-                  setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, currentView: 'alarms' }));
+                  setAppState((prev: any) => ({
+                    ...prev,
+                    currentView: 'alarms',
+                  }));
                   AccessibilityUtils.announcePageChange('Alarms');
                 })}
                 className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
@@ -2175,14 +2191,14 @@ function AppContent() {
                         borderColor: 'transparent',
                       }
                 }
-                onMouseEnter={(e: any) => { // auto: implicit any
+                onMouseEnter={(e: any) => {
                   if (appState.currentView !== 'alarms') {
                     e.currentTarget.style.backgroundColor =
                       'var(--theme-surface-hover)';
                     e.currentTarget.style.color = 'var(--theme-text-primary)';
                   }
                 }}
-                onMouseLeave={(e: any) => { // auto: implicit any
+                onMouseLeave={(e: any) => {
                   if (appState.currentView !== 'alarms') {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = 'var(--theme-text-secondary)';
@@ -2207,8 +2223,7 @@ function AppContent() {
                     'navigation',
                     'advanced_scheduling_clicked'
                   );
-                  setAppState((prev: any) => ({ // auto: implicit any
-          
+                  setAppState((prev: any) => ({
                     ...prev,
                     currentView: 'advanced-scheduling',
                   }));
@@ -2241,8 +2256,10 @@ function AppContent() {
                     hasRewards: !!appState.rewardSystem?.unlockedRewards.length,
                     activeBattles: appState.activeBattles?.length,
                   });
-                  setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, currentView: 'gaming' }));
+                  setAppState((prev: any) => ({
+                    ...prev,
+                    currentView: 'gaming',
+                  }));
                   AccessibilityUtils.announcePageChange('Gaming Hub');
                 })}
                 className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
@@ -2266,8 +2283,10 @@ function AppContent() {
                 onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
-                  setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, currentView: 'settings' }));
+                  setAppState((prev: any) => ({
+                    ...prev,
+                    currentView: 'settings',
+                  }));
                   AccessibilityUtils.announcePageChange('Settings');
                 })}
                 className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
@@ -2291,8 +2310,10 @@ function AppContent() {
                 onClick={() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
-                  setAppState((prev: any) => ({ // auto: implicit any
-           ...prev, currentView: 'pricing' }));
+                  setAppState((prev: any) => ({
+                    ...prev,
+                    currentView: 'pricing',
+                  }));
                   AccessibilityUtils.announcePageChange('Premium Plans');
                 }}
                 className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
