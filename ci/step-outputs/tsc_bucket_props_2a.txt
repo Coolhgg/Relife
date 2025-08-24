@@ -1,0 +1,588 @@
+src/App.tsx(985,36): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/backend/cloudflare-functions.ts(881,45): error TS2339: Property 'list' does not exist on type 'KVNamespace'.
+src/components/AdaptiveAlarmList.tsx(337,10): error TS2339: Property 'state' does not exist on type 'AlarmListErrorBoundary'.
+src/components/AdaptiveAlarmList.tsx(349,14): error TS2339: Property 'state' does not exist on type 'AlarmListErrorBoundary'.
+src/components/AdaptiveAlarmList.tsx(350,38): error TS2339: Property 'props' does not exist on type 'AlarmListErrorBoundary'.
+src/components/AdaptiveAlarmList.tsx(351,37): error TS2339: Property 'state' does not exist on type 'AlarmListErrorBoundary'.
+src/components/AdaptiveAlarmList.tsx(352,47): error TS2339: Property 'state' does not exist on type 'AlarmListErrorBoundary'.
+src/components/AdaptiveAlarmList.tsx(359,33): error TS2339: Property 'setState' does not exist on type 'AlarmListErrorBoundary'.
+src/components/AdaptiveAlarmList.tsx(368,17): error TS2339: Property 'props' does not exist on type 'AlarmListErrorBoundary'.
+src/components/AdaptiveButton.tsx(92,9): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ sm: string; md: string; lg: string; }'.
+src/components/AdaptiveButton.tsx(93,9): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ primary: string; secondary: string; outline: string; ghost: string; }'.
+src/components/AdaptiveModal.tsx(98,14): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ sm: string; md: string; lg: string; xl: string; full: string; }'.
+src/components/AdaptiveModal.tsx(386,14): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ danger: string; warning: string; info: string; }'.
+src/components/AdaptiveSpinner.tsx(59,14): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ xs: string; sm: string; md: string; lg: string; xl: string; }'.
+src/components/AdaptiveSpinner.tsx(70,14): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ primary: string; secondary: string; white: string; gray: string; }'.
+src/components/AdaptiveSpinner.tsx(293,14): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ primary: string; secondary: string; outline: string; }'.
+src/components/AlarmForm.tsx(134,11): error TS2339: Property '_announceEnter' does not exist on type '{ announceFocus: any; announceEnter: any; announceExit: any; }'.
+src/components/BattleSystem.tsx(103,5): error TS2741: Property 'personalization' is missing in type '{ theme: "system"; soundEnabled: true; notificationsEnabled: true; voiceDismissalSensitivity: number; defaultVoiceMood: "motivational"; hapticFeedback: true; snoozeMinutes: number; maxSnoozes: number; rewardsEnabled: true; aiInsightsEnabled: true; personalizedMessagesEnabled: true; shareAchievements: true; }' but required in type 'UserPreferences'.
+src/components/BattleSystem.tsx(128,5): error TS2741: Property 'personalization' is missing in type '{ theme: "system"; soundEnabled: true; notificationsEnabled: true; voiceDismissalSensitivity: number; defaultVoiceMood: "motivational"; hapticFeedback: true; snoozeMinutes: number; maxSnoozes: number; rewardsEnabled: true; aiInsightsEnabled: true; personalizedMessagesEnabled: true; shareAchievements: true; }' but required in type 'UserPreferences'.
+src/components/BattleSystem.tsx(153,5): error TS2741: Property 'personalization' is missing in type '{ theme: "system"; soundEnabled: true; notificationsEnabled: true; voiceDismissalSensitivity: number; defaultVoiceMood: "motivational"; hapticFeedback: true; snoozeMinutes: number; maxSnoozes: number; rewardsEnabled: true; aiInsightsEnabled: true; personalizedMessagesEnabled: true; shareAchievements: true; }' but required in type 'UserPreferences'.
+src/components/BattleSystem.tsx(178,5): error TS2741: Property 'personalization' is missing in type '{ theme: "system"; soundEnabled: true; notificationsEnabled: true; voiceDismissalSensitivity: number; defaultVoiceMood: "motivational"; hapticFeedback: true; snoozeMinutes: number; maxSnoozes: number; rewardsEnabled: true; aiInsightsEnabled: true; personalizedMessagesEnabled: true; shareAchievements: true; }' but required in type 'UserPreferences'.
+src/components/CustomThemeManager.tsx(124,54): error TS2339: Property 'getCommunityThemes' does not exist on type 'SoundEffectsService'.
+src/components/CustomThemeManager.tsx(436,49): error TS2339: Property 'shareThemeWithCommunity' does not exist on type 'SoundEffectsService'.
+src/components/CustomThemeManager.tsx(453,49): error TS2339: Property 'rateTheme' does not exist on type 'SoundEffectsService'.
+src/components/CustomThemeManager.tsx(492,35): error TS2339: Property 'incrementThemeDownloads' does not exist on type 'SoundEffectsService'.
+src/components/EmotionalNudgeModal.tsx(39,8): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ happy: string; excited: string; sad: string; worried: string; lonely: string; proud: string; sleepy: string; }'.
+src/components/EmotionalNudgeModal.tsx(138,12): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ sad: string; worried: string; happy: string; excited: string; lonely: string; proud: string; sleepy: string; }'.
+src/components/EnhancedBattles.tsx(184,56): error TS2339: Property 'name' does not exist on type 'Season'.
+src/components/EnhancedBattles.tsx(186,32): error TS2339: Property 'description' does not exist on type 'Season'.
+src/components/EnhancedBattles.tsx(388,28): error TS2339: Property 'rewards' does not exist on type 'Season'.
+src/components/EnhancedSmartAlarmSettings.tsx(285,52): error TS2339: Property 'conditionBasedAdjustments' does not exist on type 'SmartAlarm'.
+src/components/ErrorBoundary.tsx(23,10): error TS2339: Property 'state' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(42,21): error TS2339: Property 'props' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(48,10): error TS2339: Property 'setState' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(55,10): error TS2339: Property 'props' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(59,10): error TS2339: Property 'setState' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(68,14): error TS2339: Property 'props' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(69,12): error TS2339: Property 'props' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(76,14): error TS2339: Property 'state' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(77,16): error TS2339: Property 'props' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(78,21): error TS2339: Property 'props' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(99,19): error TS2339: Property 'state' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(102,63): error TS2339: Property 'state' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(121,23): error TS2339: Property 'props' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(125,61): error TS2339: Property 'state' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(131,49): error TS2339: Property 'state' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(132,25): error TS2339: Property 'state' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(138,31): error TS2339: Property 'state' does not exist on type 'ErrorBoundary'.
+src/components/ErrorBoundary.tsx(150,17): error TS2339: Property 'props' does not exist on type 'ErrorBoundary'.
+src/components/Gamification.tsx(270,28): error TS2339: Property 'status' does not exist on type 'DailyChallenge'.
+src/components/Gamification.tsx(273,28): error TS2339: Property 'status' does not exist on type 'DailyChallenge'.
+src/components/HabitCelebration.tsx(183,18): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ streak_milestone: { icon: any; color: string; title: string; message: string; bgGradient: string; }; achievement_unlock: { icon: any; color: string; title: string; message: string; bgGradient: string; }; challenge_complete: { ...; }; comeback_success: { ...; }; weekend_success: { ...; }; monthly_perfect: { ...; }; }'.
+src/components/MediaContent.tsx(365,28): error TS2339: Property 'percentage' does not exist on type 'StorageInfo'.
+src/components/MediaContent.tsx(402,53): error TS2339: Property 'percentage' does not exist on type 'StorageInfo'.
+src/components/MobileAlarmCard.tsx(263,20): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ blue: string; green: string; red: string; }'.
+src/components/MobileTester.tsx(31,11): error TS2339: Property '_isTouchDevice' does not exist on type '{ isTouchDevice: any; triggerHaptic: (type?: "medium" | "light" | "success" | "error" | "warning" | "heavy") => Promise<void>; }'.
+src/components/MobileTester.tsx(31,27): error TS2339: Property '_triggerHaptic' does not exist on type '{ isTouchDevice: any; triggerHaptic: (type?: "medium" | "light" | "success" | "error" | "warning" | "heavy") => Promise<void>; }'.
+src/components/MobileTester.tsx(34,5): error TS2339: Property 'isInstallable' does not exist on type '{ capabilities: any; state: any; isOnline: any; isOffline: boolean; showInstallPrompt: any; updateServiceWorker: any; shouldShowInstallPrompt: boolean; }'.
+src/components/MobileTester.tsx(35,5): error TS2339: Property 'isInstalled' does not exist on type '{ capabilities: any; state: any; isOnline: any; isOffline: boolean; showInstallPrompt: any; updateServiceWorker: any; shouldShowInstallPrompt: boolean; }'.
+src/components/MobileTester.tsx(37,5): error TS2339: Property 'updateAvailable' does not exist on type '{ capabilities: any; state: any; isOnline: any; isOffline: boolean; showInstallPrompt: any; updateServiceWorker: any; shouldShowInstallPrompt: boolean; }'.
+src/components/MobileTester.tsx(38,5): error TS2339: Property 'canInstall' does not exist on type '{ capabilities: any; state: any; isOnline: any; isOffline: boolean; showInstallPrompt: any; updateServiceWorker: any; shouldShowInstallPrompt: boolean; }'.
+src/components/MobileTester.tsx(39,5): error TS2339: Property '_install' does not exist on type '{ capabilities: any; state: any; isOnline: any; isOffline: boolean; showInstallPrompt: any; updateServiceWorker: any; shouldShowInstallPrompt: boolean; }'.
+src/components/MobileTester.tsx(42,5): error TS2339: Property 'isCapacitorAvailable' does not exist on type '{ isInitialized: any; deviceFeatures: any; isNative: any; platform: any; }'.
+src/components/MobileTester.tsx(43,5): error TS2339: Property 'deviceInfo' does not exist on type '{ isInitialized: any; deviceFeatures: any; isNative: any; platform: any; }'.
+src/components/MobileTester.tsx(44,5): error TS2339: Property 'scheduleNotification' does not exist on type '{ isInitialized: any; deviceFeatures: any; isNative: any; platform: any; }'.
+src/components/MobileTester.tsx(45,5): error TS2339: Property 'hapticImpact' does not exist on type '{ isInitialized: any; deviceFeatures: any; isNative: any; platform: any; }'.
+src/components/MobileTester.tsx(46,5): error TS2339: Property 'networkStatus' does not exist on type '{ isInitialized: any; deviceFeatures: any; isNative: any; platform: any; }'.
+src/components/NuclearModeSelector.tsx(102,28): error TS2339: Property 'userTier' does not exist on type '{ hasAccess: boolean; upgradeUrl?: string | undefined; }'.
+src/components/NuclearModeSelector.tsx(204,28): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<NuclearChallengeType, React.ComponentType<any>>'.
+src/components/NuclearModeSelector.tsx(248,34): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<NuclearChallengeType, React.ComponentType<any>>'.
+src/components/NuclearModeSelector.tsx(376,30): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<NuclearChallengeType, React.ComponentType<any>>'.
+src/components/PerformanceDashboard.tsx(73,41): error TS2339: Property 'webVitals' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(74,52): error TS2339: Property 'webVitals' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(82,41): error TS2339: Property 'webVitals' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(83,52): error TS2339: Property 'webVitals' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(91,41): error TS2339: Property 'webVitals' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(92,52): error TS2339: Property 'webVitals' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(100,41): error TS2339: Property 'webVitals' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(101,52): error TS2339: Property 'webVitals' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(109,41): error TS2339: Property 'webVitals' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(110,52): error TS2339: Property 'webVitals' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(117,45): error TS2339: Property 'customMetrics' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(118,43): error TS2339: Property 'memoryUsage' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(119,38): error TS2339: Property 'errorCount' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PerformanceDashboard.tsx(120,45): error TS2339: Property 'slowResources' does not exist on type '{ currentSession: { webVitals: Partial<WebVitalsMetrics>; interactionCount: number; customMetricCount: number; }; historicalData: { totalSessions: number; averageWebVitals: Partial<...>; mostCommonInteractions: { ...; }[]; }; }'.
+src/components/PersonaDrivenUI.tsx(154,12): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ struggling_sam: { headline: string; subheadline: string; cta: string; socialProof: string; emphasis: string; colors: string; }; busy_ben: { headline: string; subheadline: string; cta: string; socialProof: string; emphasis: string; colors: string; }; professional_paula: { ...; }; enterprise_emma: { ...; }; student_...'.
+src/components/PersonaDrivenUI.tsx(269,12): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ struggling_sam: { steps: { title: string; description: string; icon: any; action: string; }[]; }; busy_ben: { steps: { title: string; description: string; icon: any; action: string; }[]; }; professional_paula: { ...; }; student_sarah: { ...; }; enterprise_emma: { ...; }; }'.
+src/components/PersonaDrivenUI.tsx(419,12): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ struggling_sam: { icon: string; title: string; description: string; }[]; busy_ben: { icon: string; title: string; description: string; }[]; professional_paula: { icon: string; title: string; description: string; }[]; enterprise_emma: { ...; }[]; student_sarah: { ...; }[]; lifetime_larry: { ...; }[]; }'.
+src/components/PremiumDashboard.tsx(217,12): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ free: { name: string; icon: any; color: string; }; premium: { name: string; icon: any; color: string; }; pro: { name: string; icon: any; color: string; }; lifetime: { name: string; icon: any; color: string; }; }'.
+src/components/PremiumFeatureTest.tsx(54,13): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
+src/components/PremiumFeatureTest.tsx(54,47): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
+src/components/PremiumGate.tsx(38,6): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
+src/components/PremiumGate.tsx(38,40): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
+src/components/PricingPage.tsx(151,23): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ monthly: number; yearly: number; }'.
+src/components/RTLLayout/RTLContainer.tsx(49,25): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ sm: string; md: string; lg: string; xl: string; '2xl': string; full: string; none: string; }'.
+src/components/RTLLayout/RTLContainer.tsx(55,9): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ none: string; sm: string; md: string; lg: string; xl: string; }'.
+src/components/RTLLayout/RTLFlex.tsx(80,12): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ start: string; end: string; center: string; between: string; around: string; evenly: string; }'.
+src/components/RTLLayout/RTLFlex.tsx(87,5): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ start: string; end: string; center: string; stretch: string; baseline: string; }'.
+src/components/RTLLayout/RTLForm.tsx(46,38): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ vertical: string; horizontal: string; inline: string; }'.
+src/components/RTLLayout/RTLForm.tsx(46,61): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ sm: string; md: string; lg: string; }'.
+src/components/RTLLayout/RTLForm.tsx(116,11): error TS2339: Property 'text' does not exist on type '{ form: any; isRTL: any; }'.
+src/components/RTLLayout/RTLGrid.tsx(165,14): error TS2339: Property 'sm' does not exist on type 'never'.
+src/components/RTLLayout/RTLGrid.tsx(166,37): error TS2339: Property 'sm' does not exist on type 'never'.
+src/components/RTLLayout/RTLGrid.tsx(206,16): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ start: string; end: string; center: string; stretch: string; }'.
+src/components/RTLLayout/RTLGrid.tsx(207,14): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ start: string; end: string; center: string; stretch: string; }'.
+src/components/RTLLayout/RTLGrid.tsx(208,19): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ start: string; end: string; center: string; stretch: string; }'.
+src/components/RTLLayout/RTLText.tsx(121,5): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ xs: string; sm: string; base: string; lg: string; xl: string; '2xl': string; '3xl': string; '4xl': string; '5xl': string; '6xl': string; }'.
+src/components/RTLLayout/RTLText.tsx(122,5): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ thin: string; light: string; normal: string; medium: string; semibold: string; bold: string; extrabold: string; black: string; }'.
+src/components/RTLLayout/RTLText.tsx(123,5): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ none: string; tight: string; snug: string; normal: string; relaxed: string; loose: string; }'.
+src/components/RTLLayout/RTLText.tsx(124,5): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ tighter: string; tight: string; normal: string; wide: string; wider: string; widest: string; }'.
+src/components/RootErrorBoundary.tsx(28,10): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(55,10): error TS2339: Property 'setState' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(74,21): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(75,21): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(85,10): error TS2339: Property 'setState' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(95,12): error TS2339: Property 'setState' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(109,14): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(110,69): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(112,27): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(113,26): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(128,14): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(139,21): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(160,21): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(167,27): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(187,34): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(191,48): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(193,25): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(208,21): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(227,61): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(236,29): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(240,25): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(246,31): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(251,25): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(257,31): error TS2339: Property 'state' does not exist on type 'RootErrorBoundary'.
+src/components/RootErrorBoundary.tsx(269,17): error TS2339: Property 'props' does not exist on type 'RootErrorBoundary'.
+src/components/SmartUpgradePrompt.tsx(155,18): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ celebration_offer: { icon: any; color: string; bgGradient: string; title: string; ctaText: string; }; feature_unlock: { icon: any; color: string; bgGradient: string; title: string; ctaText: string; }; social_proof: { ...; }; limited_time: { ...; }; habit_milestone: { ...; }; gentle_nudge: { ...; }; }'.
+src/components/SmartUpgradePrompt.tsx(201,22): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ streak_milestone: string; achievement_unlock: string; social_sharing: string; challenge_completion: string; habit_formation: string; feature_limitation: string; peer_influence: string; }'.
+src/components/SoundPicker.tsx(102,13): error TS2339: Property 'name' does not exist on type 'never'.
+src/components/SoundPicker.tsx(103,13): error TS2339: Property 'description' does not exist on type 'never'.
+src/components/SoundPicker.tsx(104,13): error TS2339: Property 'tags' does not exist on type 'never'.
+src/components/SoundPicker.tsx(107,41): error TS2339: Property 'category' does not exist on type 'never'.
+src/components/SoundPicker.tsx(363,42): error TS2339: Property 'id' does not exist on type 'never'.
+src/components/SoundPicker.tsx(371,79): error TS2339: Property 'name' does not exist on type 'never'.
+src/components/SoundPicker.tsx(373,44): error TS2339: Property 'category' does not exist on type 'never'.
+src/components/SoundPicker.tsx(376,40): error TS2339: Property 'description' does not exist on type 'never'.
+src/components/SoundPicker.tsx(378,44): error TS2339: Property 'description' does not exist on type 'never'.
+src/components/SoundPicker.tsx(382,63): error TS2339: Property 'fileSize' does not exist on type 'never'.
+src/components/SoundPicker.tsx(385,44): error TS2339: Property 'duration' does not exist on type 'never'.
+src/components/SoundPicker.tsx(386,61): error TS2339: Property 'duration' does not exist on type 'never'.
+src/components/SoundPicker.tsx(389,42): error TS2339: Property 'tags' does not exist on type 'never'.
+src/components/SoundPicker.tsx(389,56): error TS2339: Property 'tags' does not exist on type 'never'.
+src/components/SoundPicker.tsx(392,52): error TS2339: Property 'tags' does not exist on type 'never'.
+src/components/SoundPicker.tsx(403,51): error TS2339: Property 'id' does not exist on type 'never'.
+src/components/SoundPicker.tsx(403,61): error TS2339: Property 'fileUrl' does not exist on type 'never'.
+src/components/SoundPicker.tsx(406,57): error TS2339: Property 'id' does not exist on type 'never'.
+src/components/SpecializedErrorBoundaries.tsx(38,10): error TS2339: Property 'state' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(67,10): error TS2339: Property 'setState' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(73,10): error TS2339: Property 'props' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(77,10): error TS2339: Property 'setState' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(83,10): error TS2339: Property 'props' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(87,14): error TS2339: Property 'state' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(104,21): error TS2339: Property 'state' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(107,65): error TS2339: Property 'state' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(120,63): error TS2339: Property 'state' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(126,51): error TS2339: Property 'state' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(127,27): error TS2339: Property 'state' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(133,33): error TS2339: Property 'state' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(146,17): error TS2339: Property 'props' does not exist on type 'BaseSpecializedErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(204,14): error TS2339: Property 'state' does not exist on type 'FormErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(241,63): error TS2339: Property 'state' does not exist on type 'FormErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(247,51): error TS2339: Property 'state' does not exist on type 'FormErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(248,27): error TS2339: Property 'state' does not exist on type 'FormErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(254,33): error TS2339: Property 'state' does not exist on type 'FormErrorBoundary'.
+src/components/SpecializedErrorBoundaries.tsx(267,17): error TS2339: Property 'props' does not exist on type 'FormErrorBoundary'.
+src/components/SubscriptionModal.tsx(110,21): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ monthly: number; yearly: number; }'.
+src/components/TabProtectionWarning.tsx(151,27): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ 'top-right': string; 'top-left': string; 'bottom-right': string; 'bottom-left': string; 'top-center': string; 'bottom-center': string; }'.
+src/components/VoiceCloning.tsx(208,49): error TS2339: Property 'createVoiceClone' does not exist on type 'typeof PremiumVoiceService'.
+src/components/VoiceSelector.tsx(205,48): error TS2339: Property 'getAvailableVoices' does not exist on type 'typeof PremiumVoiceService'.
+src/components/VoiceSelector.tsx(215,49): error TS2339: Property 'canAccessVoice' does not exist on type 'typeof PremiumVoiceService'.
+src/components/VoiceSelector.tsx(223,33): error TS2339: Property 'testPremiumVoice' does not exist on type 'typeof PremiumVoiceService'.
+src/components/VoiceSelector.tsx(239,47): error TS2339: Property 'getVoicePersonality' does not exist on type 'typeof PremiumVoiceService'.
+src/components/VoiceSelector.tsx(252,47): error TS2339: Property 'getVoicePersonality' does not exist on type 'typeof PremiumVoiceService'.
+src/components/VoiceSelector.tsx(348,57): error TS2339: Property 'getVoicePersonality' does not exist on type 'typeof PremiumVoiceService'.
+src/components/animations/AnimationLibrary.tsx(79,11): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ primary: string; secondary: string; ghost: string; danger: string; }'.
+src/components/animations/AnimationLibrary.tsx(79,35): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ sm: string; md: string; lg: string; }'.
+src/components/animations/AnimationLibrary.tsx(177,21): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ xs: string; sm: string; md: string; lg: string; xl: string; }'.
+src/components/animations/AnimationLibrary.tsx(377,12): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ up: { y: number; }; down: { y: number; }; left: { x: number; }; right: { x: number; }; }'.
+src/components/animations/AnimationLibrary.tsx(435,11): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ sm: { container: string; thumb: string; }; md: { container: string; thumb: string; }; lg: { container: string; thumb: string; }; }'.
+src/components/animations/AnimationLibrary.tsx(435,36): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ blue: string; green: string; purple: string; red: string; }'.
+src/components/animations/AnimationLibrary.tsx(443,13): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ sm: { container: string; thumb: string; }; md: { container: string; thumb: string; }; lg: { container: string; thumb: string; }; }'.
+src/components/animations/AnimationLibrary.tsx(518,21): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ 'bottom-right': string; 'bottom-left': string; 'top-right': string; 'top-left': string; }'.
+src/components/animations/AnimationLibrary.tsx(540,13): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ md: string; lg: string; }'.
+src/components/animations/AnimationLibrary.tsx(540,28): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ blue: string; green: string; purple: string; red: string; }'.
+src/components/animations/AnimationLibrary.tsx(648,11): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ success: { bg: string; icon: string; progress: string; }; error: { bg: string; icon: string; progress: string; }; warning: { bg: string; icon: string; progress: string; }; info: { bg: string; icon: string; progress: string; }; }'.
+src/components/animations/AnimationLibrary.tsx(657,42): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ success: { bg: string; icon: string; progress: string; }; error: { bg: string; icon: string; progress: string; }; warning: { bg: string; icon: string; progress: string; }; info: { bg: string; icon: string; progress: string; }; }'.
+src/components/animations/AnimationLibrary.tsx(683,52): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ success: { bg: string; icon: string; progress: string; }; error: { bg: string; icon: string; progress: string; }; warning: { bg: string; icon: string; progress: string; }; info: { bg: string; icon: string; progress: string; }; }'.
+src/components/animations/MicroInteractions.tsx(504,11): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ primary: string; secondary: string; ghost: string; danger: string; }'.
+src/components/animations/MicroInteractions.tsx(504,35): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ sm: string; md: string; lg: string; }'.
+src/components/animations/MicroInteractions.tsx(624,22): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ sm: { checkbox: string; text: string; }; md: { checkbox: string; text: string; }; lg: { checkbox: string; text: string; }; }'.
+src/components/animations/MicroInteractions.tsx(694,51): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ sm: { checkbox: string; text: string; }; md: { checkbox: string; text: string; }; lg: { checkbox: string; text: string; }; }'.
+src/components/animations/MicroInteractions.tsx(786,71): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ sm: string; md: string; lg: string; }'.
+src/components/animations/MicroInteractions.tsx(794,49): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ blue: string; green: string; purple: string; red: string; yellow: string; }'.
+src/components/premium/BillingHistory.tsx(252,36): error TS2339: Property 'invoiceNumber' does not exist on type 'Invoice'.
+src/components/premium/BillingHistory.tsx(254,41): error TS2339: Property 'invoiceNumber' does not exist on type 'Invoice'.
+src/components/premium/EnhancedUpgradePrompt.tsx(194,21): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: React.ReactNode; benefits: string[]; color: string; gradient: string; }'.
+src/components/premium/EnhancedUpgradePrompt.tsx(246,56): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: React.ReactNode; benefits: string[]; color: string; gradient: string; }'.
+src/components/premium/EnhancedUpgradePrompt.tsx(291,52): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: React.ReactNode; benefits: string[]; color: string; gradient: string; }'.
+src/components/premium/EnhancedUpgradePrompt.tsx(295,39): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: React.ReactNode; benefits: string[]; color: string; gradient: string; }'.
+src/components/premium/EnhancedUpgradePrompt.tsx(295,82): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: React.ReactNode; benefits: string[]; color: string; gradient: string; }'.
+src/components/premium/EnhancedUpgradePrompt.tsx(433,64): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: React.ReactNode; benefits: string[]; color: string; gradient: string; }'.
+src/components/premium/EnhancedUpgradePrompt.tsx(468,64): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: React.ReactNode; benefits: string[]; color: string; gradient: string; }'.
+src/components/premium/FeatureUtils.tsx(233,3): error TS2339: Property 'tier' does not exist on type 'FeatureHighlightProps'.
+src/components/premium/FeatureUtils.tsx(327,11): error TS2339: Property 'getUpgradeRequirement' does not exist on type 'FeatureAccessContextValue'.
+src/components/premium/PaymentFlow.tsx(419,41): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
+src/components/premium/PaymentFlow.tsx(419,70): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
+src/components/premium/PaymentFlow.tsx(422,49): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
+src/components/premium/PaymentFlow.tsx(423,41): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
+src/components/premium/PaymentMethodManager.tsx(218,59): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
+src/components/premium/PaymentMethodManager.tsx(220,50): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
+src/components/premium/PaymentMethodManager.tsx(221,54): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
+src/components/premium/PaymentMethodManager.tsx(224,54): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
+src/components/premium/PaymentMethodManager.tsx(242,55): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
+src/components/premium/PaymentMethodManager.tsx(244,41): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
+src/components/premium/PaymentMethodManager.tsx(245,33): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
+src/components/premium/PremiumAlarmFeatures.tsx(635,30): error TS2339: Property 'getFeatureAccess' does not exist on type 'FeatureGateResult & FeatureGateActions'.
+src/components/premium/PremiumAlarmFeatures.tsx(641,30): error TS2339: Property 'getFeatureAccess' does not exist on type 'FeatureGateResult & FeatureGateActions'.
+src/components/premium/PremiumAlarmFeatures.tsx(647,30): error TS2339: Property 'getFeatureAccess' does not exist on type 'FeatureGateResult & FeatureGateActions'.
+src/components/premium/PremiumAlarmFeatures.tsx(653,30): error TS2339: Property 'getFeatureAccess' does not exist on type 'FeatureGateResult & FeatureGateActions'.
+src/components/premium/PremiumFeaturePreview.tsx(514,52): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ nuclearMode: () => any; premiumPersonalities: () => any; analytics: () => any; customVoices: () => any; }'.
+src/components/premium/PremiumVoiceFeatures.tsx(104,16): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ motivational: { name: string; description: string; sample: string; }; gentle: { name: string; description: string; sample: string; }; 'drill-sergeant': { name: string; description: string; sample: string; }; zen: { ...; }; }'.
+src/components/premium/PremiumVoiceFeatures.tsx(107,25): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ motivational: { name: string; description: string; sample: string; }; gentle: { name: string; description: string; sample: string; }; 'drill-sergeant': { name: string; description: string; sample: string; }; zen: { ...; }; }'.
+src/components/premium/PsychologyDrivenCTA.tsx(125,12): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ premium: { price: string; period: string; color: string; icon: any; badge: string; }; pro: { price: string; period: string; color: string; icon: any; badge: string; }; lifetime: { price: string; period: string; color: string; icon: any; badge: string; }; }'.
+src/components/premium/SubscriptionDashboard.tsx(288,49): error TS2339: Property 'features' does not exist on type 'BillingUsage'.
+src/components/premium/SubscriptionDashboard.tsx(303,17): error TS2339: Property 'activeTrial' does not exist on type 'SubscriptionDashboardData'.
+src/components/premium/SubscriptionDashboard.tsx(313,60): error TS2339: Property 'activeTrial' does not exist on type 'SubscriptionDashboardData'.
+src/components/premium/SubscriptionDashboard.tsx(318,36): error TS2339: Property 'activeTrial' does not exist on type 'SubscriptionDashboardData'.
+src/components/premium/SubscriptionDashboard.tsx(366,42): error TS2339: Property 'features' does not exist on type 'BillingUsage'.
+src/components/premium/SubscriptionPage.tsx(279,52): error TS2339: Property 'updateBillingDetails' does not exist on type 'SubscriptionHookState & SubscriptionHookActions'.
+src/components/premium/SubscriptionPage.tsx(352,52): error TS2339: Property 'updateBillingDetails' does not exist on type 'SubscriptionHookState & SubscriptionHookActions'.
+src/config/environment.ts(102,27): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(102,59): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(120,26): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(121,28): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(122,25): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(123,29): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(124,25): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(127,24): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(128,28): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(129,35): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(134,29): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(135,27): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(138,26): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(140,26): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(141,30): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(143,30): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(145,33): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(148,28): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(150,38): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(151,40): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(154,29): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(156,36): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(157,37): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(163,28): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(164,29): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(165,38): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(167,35): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(168,35): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(169,37): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(170,38): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(173,40): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(174,35): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(179,37): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(180,29): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(181,30): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(182,35): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(183,35): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(184,30): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(189,37): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(190,32): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(191,36): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(192,32): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(197,32): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(198,30): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(199,35): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(203,28): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(204,31): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(205,27): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/environment.ts(206,27): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/i18n.ts(322,20): error TS2339: Property 'Capacitor' does not exist on type 'Window & typeof globalThis'.
+src/config/i18n.ts(413,22): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/i18n.ts(443,28): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/i18n.ts(450,21): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/stripe.ts(20,25): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/stripe.ts(21,27): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/stripe.ts(22,26): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/config/stripe.ts(148,10): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ readonly free: { readonly name: "Free"; readonly price: 0; readonly priceId: null; readonly features: readonly ["Basic alarm functionality", "Up to 3 alarms", "Standard wake-up sounds", "Basic statistics"]; readonly limits: { ...; }; }; readonly basic: { ...; }; readonly premium: { ...; }; readonly pro: { ...; }; ...'.
+src/contexts/FeatureAccessContext.tsx(320,27): error TS2339: Property 'getUpgradeRequirement' does not exist on type 'FeatureAccessContextValue'.
+src/contexts/LanguageContext.tsx(104,18): error TS2339: Property 'Capacitor' does not exist on type 'Window & typeof globalThis'.
+src/hooks/useAccessibilityPreferences.ts(97,10): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ small: number; medium: number; large: number; 'extra-large': number; }'.
+src/hooks/useEnhancedCaching.ts(429,28): error TS2339: Property 'memoryUsage' does not exist on type 'CacheStats'.
+src/hooks/useFeatureGate.ts(44,57): error TS2339: Property 'onUpgradeRequired' does not exist on type 'UseFeatureGateOptions'.
+src/hooks/useFeatureGate.ts(199,39): error TS2339: Property 'requiredTier' does not exist on type '{ category: string; description: string; upgradeMessage: string; hasUsageLimit?: boolean | undefined; }'.
+src/hooks/useGamingAnnouncements.ts(266,9): error TS2741: Property 'team' is missing in type '{ speed: string; consistency: string; tasks: string; bragging: string; group: string; tournament: string; }' but required in type 'Record<BattleType, string>'.
+src/hooks/useGamingAnnouncements.ts(329,74): error TS2339: Property 'reason' does not exist on type 'ExperienceGain'.
+src/hooks/useGamingAnnouncements.ts(422,64): error TS2339: Property 'reason' does not exist on type 'ExperienceGain'.
+src/hooks/useMobileTouch.ts(126,25): error TS2339: Property 'webkitTapHighlightColor' does not exist on type 'CSSStyleDeclaration'.
+src/hooks/useTheme.tsx(2089,51): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<Theme, ThemeConfig>'.
+src/hooks/useTheme.tsx(2446,53): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<Theme, ThemeConfig>'.
+src/hooks/useTheme.tsx(2509,47): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<Theme, ThemeConfig>'.
+src/services/__tests__/test-setup.ts(18,60): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{}'.
+src/services/advanced-analytics.ts(509,10): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
+src/services/advanced-analytics.ts(818,8): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
+src/services/advanced-analytics.ts(834,8): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
+src/services/advanced-analytics.ts(851,8): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
+src/services/advanced-analytics.ts(971,8): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
+src/services/advanced-analytics.ts(1191,8): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
+src/services/advanced-conditions-helper.ts(154,30): error TS2339: Property 'conditionBasedAdjustments' does not exist on type 'SmartAlarm'.
+src/services/advanced-conditions-helper.ts(195,15): error TS2339: Property 'learningFactor' does not exist on type 'SmartAlarm'.
+src/services/advanced-conditions-helper.ts(195,39): error TS2339: Property 'sleepPatternWeight' does not exist on type 'SmartAlarm'.
+src/services/advanced-conditions-helper.ts(199,15): error TS2339: Property 'realTimeAdaptation' does not exist on type 'SmartAlarm'.
+src/services/advanced-conditions-helper.ts(233,30): error TS2339: Property 'conditionBasedAdjustments' does not exist on type 'SmartAlarm'.
+src/services/advanced-conditions-helper.ts(234,28): error TS2339: Property 'wakeUpFeedback' does not exist on type 'SmartAlarm'.
+src/services/advanced-conditions-helper.ts(235,37): error TS2339: Property 'adaptationHistory' does not exist on type 'SmartAlarm'.
+src/services/advanced-conditions-helper.ts(318,30): error TS2339: Property 'conditionBasedAdjustments' does not exist on type 'SmartAlarm'.
+src/services/advanced-conditions-helper.ts(340,32): error TS2339: Property 'learningFactor' does not exist on type 'SmartAlarm'.
+src/services/ai-rewards.ts(62,32): error TS2339: Property 'getUserBehavior' does not exist on type 'AnalyticsService'.
+src/services/alarm-access-control.ts(358,27): error TS2339: Property 'isPremium' does not exist on type 'UserPreferences'.
+src/services/alarm-access-control.ts(367,27): error TS2339: Property 'isPremium' does not exist on type 'UserPreferences'.
+src/services/alarm-api-security.ts(361,7): error TS7053: Element implicitly has an 'any' type because expression of type '"X-Response-Time"' can't be used to index type 'SecurityHeaders'.
+src/services/alarm-api-security.ts(362,7): error TS7053: Element implicitly has an 'any' type because expression of type '"X-Security-Level"' can't be used to index type 'SecurityHeaders'.
+src/services/alarm-battle-integration.ts(53,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/alarm-battle-integration.ts(65,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/alarm-battle-integration.ts(100,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/alarm-battle-integration.ts(115,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/alarm-battle-integration.ts(144,28): error TS2339: Property 'allowSnooze' does not exist on type 'BattleSettings'.
+src/services/alarm-battle-integration.ts(145,43): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/alarm-battle-integration.ts(155,41): error TS2339: Property 'maxSnoozes' does not exist on type 'BattleSettings'.
+src/services/alarm-battle-integration.ts(156,43): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/alarm-battle-integration.ts(161,39): error TS2339: Property 'maxSnoozes' does not exist on type 'BattleSettings'.
+src/services/alarm-battle-integration.ts(166,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/alarm-battle-integration.ts(173,43): error TS2339: Property 'maxSnoozes' does not exist on type 'BattleSettings'.
+src/services/alarm-battle-integration.ts(208,40): error TS2339: Property 'allowSnooze' does not exist on type 'BattleSettings'.
+src/services/alarm-battle-integration.ts(209,37): error TS2339: Property 'maxSnoozes' does not exist on type 'BattleSettings'.
+src/services/alarm-battle-integration.ts(217,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/alarm-battle-integration.ts(321,27): error TS2339: Property 'weatherBonus' does not exist on type 'BattleSettings'.
+src/services/alarm-battle-integration.ts(361,22): error TS2339: Property 'score' does not exist on type 'BattleParticipant'.
+src/services/alarm-battle-integration.ts(361,39): error TS2339: Property 'score' does not exist on type 'BattleParticipant'.
+src/services/alarm-battle-integration.ts(366,33): error TS2339: Property 'score' does not exist on type 'BattleParticipant'.
+src/services/alarm-battle-integration.ts(403,45): error TS2339: Property 'taskChallenge' does not exist on type 'BattleSettings'.
+src/services/alarm-battle-integration.ts(404,42): error TS2339: Property 'allowSnooze' does not exist on type 'BattleSettings'.
+src/services/alarm-enhanced.ts(482,26): error TS2339: Property 'playAlarmAudio' does not exist on type 'AudioManager'.
+src/services/alarm-integrity-monitor.ts(676,54): error TS2339: Property 'getTime' does not exist on type 'string | Date'.
+src/services/alarm-security-integration.ts(96,25): error TS2339: Property 'allowed' does not exist on type '{ granted: boolean; reason?: string | undefined; context?: AccessControlContext | undefined; }'.
+src/services/alarm-security-integration.ts(100,24): error TS2339: Property 'errors' does not exist on type '{ granted: boolean; reason?: string | undefined; context?: AccessControlContext | undefined; }'.
+src/services/alarm-security-integration.ts(204,25): error TS2339: Property 'allowed' does not exist on type '{ granted: boolean; reason?: string | undefined; context?: AccessControlContext | undefined; }'.
+src/services/alarm-security-integration.ts(208,24): error TS2339: Property 'errors' does not exist on type '{ granted: boolean; reason?: string | undefined; context?: AccessControlContext | undefined; }'.
+src/services/alarm-security-integration.ts(288,25): error TS2339: Property 'allowed' does not exist on type '{ granted: boolean; reason?: string | undefined; context?: AccessControlContext | undefined; }'.
+src/services/alarm-security-integration.ts(292,24): error TS2339: Property 'errors' does not exist on type '{ granted: boolean; reason?: string | undefined; context?: AccessControlContext | undefined; }'.
+src/services/alarm-security-integration.ts(426,25): error TS2339: Property 'allowed' does not exist on type '{ granted: boolean; reason?: string | undefined; context?: AccessControlContext | undefined; }'.
+src/services/alarm-security-integration.ts(430,24): error TS2339: Property 'errors' does not exist on type '{ granted: boolean; reason?: string | undefined; context?: AccessControlContext | undefined; }'.
+src/services/alarm.ts(696,36): error TS2339: Property 'unlinkAlarmFromBattle' does not exist on type 'AlarmBattleIntegrationService'.
+src/services/alarm.ts(818,39): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/alarm.ts(842,39): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/audio-manager.ts(417,9): error TS7053: Element implicitly has an 'any' type because expression of type 'VoiceMood' can't be used to index type '{ 'drill-sergeant': { rate: number; pitch: number; volume: number; }; 'sweet-angel': { rate: number; pitch: number; volume: number; }; 'anime-hero': { rate: number; pitch: number; volume: number; }; 'savage-roast': { ...; }; motivational: { ...; }; gentle: { ...; }; }'.
+src/services/audio-manager.ts(513,11): error TS7053: Element implicitly has an 'any' type because expression of type 'VoiceMood' can't be used to index type '{ 'drill-sergeant': { rate: number; pitch: number; volume: number; }; 'sweet-angel': { rate: number; pitch: number; volume: number; }; 'anime-hero': { rate: number; pitch: number; volume: number; }; 'savage-roast': { ...; }; motivational: { ...; }; gentle: { ...; }; }'.
+src/services/audio-manager.ts(752,27): error TS7053: Element implicitly has an 'any' type because expression of type 'VoiceMood' can't be used to index type '{ 'drill-sergeant': string[]; 'sweet-angel': string[]; 'anime-hero': string[]; 'savage-roast': string[]; motivational: string[]; gentle: string[]; }'.
+src/services/battle.ts(84,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/battle.ts(132,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/battle.ts(164,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/battle.ts(235,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/battle.ts(265,19): error TS2339: Property 'wakeTime' does not exist on type 'BattleParticipant'.
+src/services/battle.ts(266,19): error TS2339: Property 'score' does not exist on type 'BattleParticipant'.
+src/services/battle.ts(268,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/battle.ts(272,28): error TS2339: Property 'score' does not exist on type 'BattleParticipant'.
+src/services/battle.ts(276,69): error TS2339: Property 'wakeTime' does not exist on type 'BattleParticipant'.
+src/services/battle.ts(318,45): error TS2339: Property 'score' does not exist on type 'BattleParticipant'.
+src/services/battle.ts(318,62): error TS2339: Property 'score' does not exist on type 'BattleParticipant'.
+src/services/battle.ts(330,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/battle.ts(335,59): error TS2339: Property 'score' does not exist on type 'BattleParticipant'.
+src/services/battle.ts(351,28): error TS2339: Property 'winner' does not exist on type 'BattlePrize'.
+src/services/battle.ts(358,70): error TS2339: Property 'participation' does not exist on type 'BattlePrize'.
+src/services/battle.ts(361,30): error TS2339: Property 'participation' does not exist on type 'BattlePrize'.
+src/services/battle.ts(389,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/battle.ts(413,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/battle.ts(461,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/battle.ts(501,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/battle.ts(517,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/battle.ts(547,36): error TS2339: Property 'score' does not exist on type 'BattleParticipant'.
+src/services/critical-preloader.ts(271,27): error TS2339: Property 'loadAudioFile' does not exist on type 'LazyAudioLoader'.
+src/services/custom-sound-manager.ts(153,20): error TS2339: Property 'getInstance' does not exist on type 'ErrorHandlerService'.
+src/services/custom-sound-manager.ts(273,20): error TS2339: Property 'getInstance' does not exist on type 'ErrorHandlerService'.
+src/services/custom-sound-manager.ts(319,20): error TS2339: Property 'getInstance' does not exist on type 'ErrorHandlerService'.
+src/services/custom-sound-manager.ts(372,20): error TS2339: Property 'getInstance' does not exist on type 'ErrorHandlerService'.
+src/services/device-capabilities.ts(212,27): error TS2339: Property 'getParameter' does not exist on type 'RenderingContext'.
+src/services/device-capabilities.ts(212,43): error TS2339: Property 'RENDERER' does not exist on type 'RenderingContext'.
+src/services/device-capabilities.ts(345,27): error TS2339: Property 'getParameter' does not exist on type 'RenderingContext'.
+src/services/device-capabilities.ts(345,43): error TS2339: Property 'RENDERER' does not exist on type 'RenderingContext'.
+src/services/device-capabilities.ts(346,25): error TS2339: Property 'getParameter' does not exist on type 'RenderingContext'.
+src/services/device-capabilities.ts(346,41): error TS2339: Property 'VENDOR' does not exist on type 'RenderingContext'.
+src/services/email-campaigns.ts(647,47): error TS2339: Property 'getClient' does not exist on type 'typeof SupabaseService'.
+src/services/email-campaigns.ts(674,53): error TS2339: Property 'getClient' does not exist on type 'typeof SupabaseService'.
+src/services/email-campaigns.ts(722,53): error TS2339: Property 'getClient' does not exist on type 'typeof SupabaseService'.
+src/services/enhanced-location-service.ts(249,51): error TS2339: Property 'latitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(249,73): error TS2339: Property 'longitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(292,25): error TS2339: Property 'latitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(293,25): error TS2339: Property 'longitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(294,27): error TS2339: Property 'latitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(295,27): error TS2339: Property 'longitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(459,31): error TS2339: Property 'latitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(460,31): error TS2339: Property 'longitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(461,31): error TS2339: Property 'latitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(462,31): error TS2339: Property 'longitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(485,51): error TS2339: Property 'latitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(487,51): error TS2339: Property 'longitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(497,24): error TS2339: Property 'latitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(498,24): error TS2339: Property 'longitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(687,36): error TS2339: Property 'latitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(688,36): error TS2339: Property 'longitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(689,32): error TS2339: Property 'latitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(690,32): error TS2339: Property 'longitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(710,18): error TS2339: Property 'latitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(711,18): error TS2339: Property 'longitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(712,26): error TS2339: Property 'latitude' does not exist on type 'Location'.
+src/services/enhanced-location-service.ts(713,26): error TS2339: Property 'longitude' does not exist on type 'Location'.
+src/services/enhanced-offline-storage.ts(88,33): error TS2339: Property 'getAlarms' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(107,41): error TS2339: Property 'getPendingChanges' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(117,20): error TS2339: Property 'saveAlarms' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(199,41): error TS2339: Property 'getPendingChanges' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(309,24): error TS2339: Property 'saveAlarm' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(316,24): error TS2339: Property 'saveAlarm' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(433,20): error TS2339: Property 'saveAlarm' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(463,33): error TS2339: Property 'getAlarms' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(464,41): error TS2339: Property 'getPendingChanges' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(584,20): error TS2339: Property 'saveAlarms' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(662,41): error TS2339: Property 'getPendingChanges' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(674,41): error TS2339: Property 'getPendingChanges' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(709,32): error TS2339: Property 'getStorageStats' does not exist on type 'EnhancedOfflineStorage'.
+src/services/enhanced-offline-storage.ts(737,32): error TS2339: Property 'getStorageStats' does not exist on type 'EnhancedOfflineStorage'.
+src/services/feature-gate-service.ts(272,68): error TS2339: Property 'requiredTier' does not exist on type 'FeatureDefinition'.
+src/services/feature-gate-service.ts(277,36): error TS2339: Property 'requiredTier' does not exist on type 'FeatureDefinition'.
+src/services/feature-gate-service.ts(369,35): error TS2339: Property 'requiredTier' does not exist on type 'FeatureDefinition'.
+src/services/feature-gate-service.ts(380,38): error TS2339: Property 'requiredTier' does not exist on type 'FeatureAccessResult'.
+src/services/feature-gate-service.ts(472,59): error TS2339: Property 'requiredTier' does not exist on type 'FeatureDefinition'.
+src/services/feature-gate-service.ts(521,22): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ basic: string; premium: string; pro: string; enterprise: string; }'.
+src/services/feature-gate-service.ts(521,40): error TS2339: Property 'requiredTier' does not exist on type 'FeatureDefinition'.
+src/services/notification.ts(318,15): error TS2741: Property 'title' is missing in type '{ body: string; icon: string; badge: string; tag: string | undefined; requireInteraction: boolean; silent: boolean; data: Record<string, unknown>; }' but required in type 'NotificationOptions'.
+src/services/nuclear-mode.ts(242,24): error TS2339: Property 'userTier' does not exist on type '{ hasAccess: boolean; upgradeUrl?: string | undefined; feature?: PremiumFeature | undefined; }'.
+src/services/nuclear-mode.ts(322,41): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/nuclear-mode.ts(400,39): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/nuclear-mode.ts(470,43): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/nuclear-mode.ts(502,43): error TS2339: Property 'track' does not exist on type 'AppAnalyticsService'.
+src/services/offline-gaming.ts(276,23): error TS2339: Property 'score' does not exist on type 'BattleParticipant'.
+src/services/offline-gaming.ts(277,23): error TS2339: Property 'wakeTime' does not exist on type 'BattleParticipant'.
+src/services/performance-analytics.ts(278,39): error TS2339: Property 'renderTime' does not exist on type 'PerformanceEntry'.
+src/services/performance-analytics.ts(278,62): error TS2339: Property 'loadTime' does not exist on type 'PerformanceEntry'.
+src/services/performance-analytics.ts(287,39): error TS2339: Property 'processingStart' does not exist on type 'PerformanceEntry'.
+src/services/performance-budget-manager.ts(307,49): error TS2339: Property 'navigationStart' does not exist on type 'PerformanceNavigationTiming'.
+src/services/performance-budget-manager.ts(541,65): error TS2339: Property 'navigationStart' does not exist on type 'PerformanceNavigationTiming'.
+src/services/performance-monitor.ts(190,50): error TS2339: Property 'navigationStart' does not exist on type 'PerformanceNavigationTiming'.
+src/services/performance-monitor.ts(194,38): error TS2339: Property 'navigationStart' does not exist on type 'PerformanceNavigationTiming'.
+src/services/performance-monitor.ts(475,28): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/services/performance-monitor.ts(476,30): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/services/performance-monitor.ts(760,12): error TS2339: Property 'reports' does not exist on type 'PerformanceMonitor'.
+src/services/performance-monitor.ts(778,30): error TS2339: Property 'getPerformanceTrends' does not exist on type 'PerformanceMonitor'.
+src/services/premium-theme-animations.ts(89,12): error TS2339: Property 'createParallaxEffect' does not exist on type 'PremiumThemeAnimationService'.
+src/services/premium-theme-animations.ts(106,12): error TS2339: Property 'createPulsingButtons' does not exist on type 'PremiumThemeAnimationService'.
+src/services/premium-theme-animations.ts(110,12): error TS2339: Property 'createShimmerText' does not exist on type 'PremiumThemeAnimationService'.
+src/services/premium-theme-animations.ts(123,12): error TS2339: Property 'createRotatingIcons' does not exist on type 'PremiumThemeAnimationService'.
+src/services/premium-theme-animations.ts(127,12): error TS2339: Property 'createLiquidMotionBackground' does not exist on type 'PremiumThemeAnimationService'.
+src/services/premium-theme-animations.ts(131,12): error TS2339: Property 'createMouseGlowEffect' does not exist on type 'PremiumThemeAnimationService'.
+src/services/premium-theme-animations.ts(148,12): error TS2339: Property 'createMorphingBackground' does not exist on type 'PremiumThemeAnimationService'.
+src/services/premium-theme-animations.ts(152,12): error TS2339: Property 'createClickWaveEffect' does not exist on type 'PremiumThemeAnimationService'.
+src/services/premium-voice.ts(44,63): error TS2339: Property 'hasFeatureAccess' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(89,65): error TS2339: Property 'hasFeatureAccess' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(104,59): error TS2339: Property 'hasFeatureAccess' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(111,33): error TS2339: Property 'generateAlarmSpeech' does not exist on type 'typeof VoiceService'.
+src/services/premium-voice.ts(121,33): error TS2339: Property 'generateAlarmSpeech' does not exist on type 'typeof VoiceService'.
+src/services/premium-voice.ts(129,33): error TS2339: Property 'generateAlarmSpeech' does not exist on type 'typeof VoiceService'.
+src/services/premium-voice.ts(146,65): error TS2339: Property 'hasFeatureAccess' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(158,60): error TS2339: Property 'hasFeatureAccess' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(172,33): error TS2339: Property 'generateCustomMessage' does not exist on type 'typeof VoiceService'.
+src/services/premium-voice.ts(278,27): error TS2339: Property 'getUserTier' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(279,27): error TS2339: Property 'checkFeatureUsage' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(280,27): error TS2339: Property 'checkFeatureUsage' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(281,27): error TS2339: Property 'hasFeatureAccess' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(282,27): error TS2339: Property 'hasFeatureAccess' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(283,27): error TS2339: Property 'hasFeatureAccess' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(329,51): error TS2339: Property 'hasFeatureAccess' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(339,31): error TS2339: Property 'generateCustomMessage' does not exist on type 'typeof VoiceService'.
+src/services/premium-voice.ts(352,27): error TS2339: Property 'getUserTier' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(416,56): error TS2339: Property 'hasFeatureAccess' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(425,59): error TS2339: Property 'hasFeatureAccess' does not exist on type 'typeof SubscriptionService'.
+src/services/premium-voice.ts(444,33): error TS2339: Property 'generateCustomMessage' does not exist on type 'typeof VoiceService'.
+src/services/premium-voice.ts(453,33): error TS2339: Property 'generateCustomMessage' does not exist on type 'typeof VoiceService'.
+src/services/premium.ts(185,50): error TS2339: Property 'requiredTier' does not exist on type 'PremiumFeature'.
+src/services/premium.ts(198,12): error TS7053: Element implicitly has an 'any' type because expression of type 'SubscriptionTier' can't be used to index type '{ free: number; premium: number; ultimate: number; }'.
+src/services/premium.ts(198,39): error TS7053: Element implicitly has an 'any' type because expression of type 'SubscriptionTier' can't be used to index type '{ free: number; premium: number; ultimate: number; }'.
+src/services/premium.ts(260,41): error TS2339: Property 'requiredTier' does not exist on type 'PremiumFeature'.
+src/services/premium.ts(269,53): error TS2339: Property 'requiredTier' does not exist on type 'PremiumFeature'.
+src/services/premium.ts(284,53): error TS2339: Property 'tier' does not exist on type 'SubscriptionPlan'.
+src/services/premium.ts(376,61): error TS2339: Property 'requiredTier' does not exist on type 'PremiumFeature'.
+src/services/premium.ts(412,35): error TS2339: Property 'getFeaturesForTier' does not exist on type 'PremiumService'.
+src/services/scheduler-core.ts(400,20): error TS2339: Property 'updates' does not exist on type 'BulkScheduleOperation'.
+src/services/scheduler-core.ts(400,41): error TS2339: Property 'updates' does not exist on type 'BulkScheduleOperation'.
+src/services/scheduler-core.ts(405,36): error TS2339: Property 'updates' does not exist on type 'BulkScheduleOperation'.
+src/services/smart-notification-service.ts(625,12): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ alarm: string; reminder: string; optimization: string; insight: string; }'.
+src/services/smart-notification-service.ts(640,12): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ alarm: string; reminder: string; optimization: string; insight: string; }'.
+src/services/smart-notification-service.ts(695,20): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ alarm: number[]; reminder: number[]; optimization: number[]; insight: number[]; }'.
+src/services/sound-effects.ts(896,48): error TS2339: Property 'get' does not exist on type 'OfflineStorage'.
+src/services/sound-effects.ts(920,28): error TS2339: Property 'set' does not exist on type 'OfflineStorage'.
+src/services/sound-effects.ts(1034,28): error TS2339: Property 'set' does not exist on type 'OfflineStorage'.
+src/services/sound-effects.ts(1259,50): error TS2339: Property 'get' does not exist on type 'OfflineStorage'.
+src/services/sound-effects.ts(1270,28): error TS2339: Property 'set' does not exist on type 'OfflineStorage'.
+src/services/subscription-service.ts(425,38): error TS2339: Property 'resetDate' does not exist on type '{ used: number; limit: number; percentage: number; }'.
+src/services/subscription.ts(94,26): error TS2339: Property 'tier' does not exist on type 'Subscription'.
+src/services/subscription.ts(102,49): error TS2339: Property 'tier' does not exist on type 'SubscriptionPlan'.
+src/services/subscription.ts(142,24): error TS2339: Property 'elevenlabsCallsPerMonth' does not exist on type 'Promise<SubscriptionLimits>'.
+src/services/subscription.ts(146,24): error TS2339: Property 'aiInsightsPerDay' does not exist on type 'Promise<SubscriptionLimits>'.
+src/services/subscription.ts(150,24): error TS2339: Property 'customVoiceMessagesPerDay' does not exist on type 'Promise<SubscriptionLimits>'.
+src/services/subscription.ts(277,30): error TS2339: Property 'tier' does not exist on type 'Subscription'.
+src/services/supabase.ts(20,33): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/services/supabase.ts(21,37): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/services/user-testing.ts(184,33): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/services/voice-ai-enhanced.ts(70,41): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/services/voice-ai-enhanced.ts(71,37): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/services/voice-ai-enhanced.ts(608,54): error TS2339: Property 'subscription_tier' does not exist on type 'UserPreferences'.
+src/services/voice-ai-enhanced.ts(1021,53): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
+src/services/voice-ai-enhanced.ts(1051,47): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
+src/services/voice-ai-enhanced.ts(1103,49): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
+src/services/voice-biometrics.ts(942,47): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
+src/services/voice-biometrics.ts(962,47): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
+src/services/voice-enhanced.ts(147,27): error TS7053: Element implicitly has an 'any' type because expression of type 'VoiceMood' can't be used to index type '{ 'drill-sergeant': string[]; 'sweet-angel': string[]; 'anime-hero': string[]; 'savage-roast': string[]; motivational: string[]; gentle: string[]; }'.
+src/services/voice-pro.ts(611,27): error TS7053: Element implicitly has an 'any' type because expression of type 'VoiceMood' can't be used to index type '{ 'drill-sergeant': string[]; 'sweet-angel': string[]; 'anime-hero': string[]; 'savage-roast': string[]; motivational: string[]; gentle: string[]; }'.
+src/services/voice-recognition.ts(358,35): error TS2339: Property 'score' does not exist on type 'never'.
+src/services/voice-recognition.ts(358,59): error TS2339: Property 'intent' does not exist on type 'never'.
+src/services/voice.ts(36,58): error TS2339: Property 'generatePremiumAlarmMessage' does not exist on type 'typeof PremiumVoiceService'.
+src/services/voice.ts(107,27): error TS7053: Element implicitly has an 'any' type because expression of type 'VoiceMood' can't be used to index type '{ 'drill-sergeant': string[]; 'sweet-angel': string[]; 'anime-hero': string[]; 'savage-roast': string[]; motivational: string[]; gentle: string[]; }'.
+src/services/voice.ts(233,53): error TS2339: Property 'canAccessVoice' does not exist on type 'typeof PremiumVoiceService'.
+src/services/voice.ts(235,37): error TS2339: Property 'testPremiumVoice' does not exist on type 'typeof PremiumVoiceService'.
+src/types/email-campaigns.ts(562,3): error TS2741: Property 'targetPlan' is missing in type '{ id: "struggling_sam"; displayName: string; description: string; primaryColor: string; messagingTone: "supportive"; ctaStyle: "friendly"; conversionGoals: string[]; preferredChannels: ("email" | "in_app")[]; }' but required in type 'PersonaProfile'.
+src/types/email-campaigns.ts(572,3): error TS2741: Property 'targetPlan' is missing in type '{ id: "busy_ben"; displayName: string; description: string; primaryColor: string; messagingTone: "efficient"; ctaStyle: "urgent"; conversionGoals: string[]; preferredChannels: ("email" | "push")[]; }' but required in type 'PersonaProfile'.
+src/types/email-campaigns.ts(582,3): error TS2741: Property 'targetPlan' is missing in type '{ id: "professional_paula"; displayName: string; description: string; primaryColor: string; messagingTone: "sophisticated"; ctaStyle: "professional"; conversionGoals: string[]; preferredChannels: ("email" | ... 1 more ... | "in_app")[]; }' but required in type 'PersonaProfile'.
+src/types/email-campaigns.ts(592,3): error TS2741: Property 'targetPlan' is missing in type '{ id: "enterprise_emma"; displayName: string; description: string; primaryColor: string; messagingTone: "business_focused"; ctaStyle: "corporate"; conversionGoals: string[]; preferredChannels: ("email" | "in_app")[]; }' but required in type 'PersonaProfile'.
+src/types/email-campaigns.ts(602,3): error TS2741: Property 'targetPlan' is missing in type '{ id: "student_sarah"; displayName: string; description: string; primaryColor: string; messagingTone: "casual"; ctaStyle: "youthful"; conversionGoals: string[]; preferredChannels: ("email" | "push" | "sms")[]; }' but required in type 'PersonaProfile'.
+src/types/email-campaigns.ts(612,3): error TS2741: Property 'targetPlan' is missing in type '{ id: "lifetime_larry"; displayName: string; description: string; primaryColor: string; messagingTone: "value_focused"; ctaStyle: "exclusive"; conversionGoals: string[]; preferredChannels: ("email" | "in_app")[]; }' but required in type 'PersonaProfile'.
+src/types/index.ts(4002,5): error TS2741: Property 'premiumPersonalities' is missing in type '{ elevenlabsVoices: true; customVoiceMessages: true; voiceCloning: true; advancedAIInsights: true; personalizedChallenges: true; smartRecommendations: true; behaviorAnalysis: true; premiumThemes: true; ... 15 more ...; prioritySupport: true; }' but required in type 'PremiumFeatureAccess'.
+src/types/index.ts(4045,5): error TS2741: Property 'premiumPersonalities' is missing in type '{ elevenlabsVoices: true; customVoiceMessages: true; voiceCloning: true; advancedAIInsights: true; personalizedChallenges: true; smartRecommendations: true; behaviorAnalysis: true; premiumThemes: true; ... 15 more ...; prioritySupport: true; }' but required in type 'PremiumFeatureAccess'.
+src/types/user.ts(67,34): error TS2339: Property 'id' does not exist on type 'never'.
+src/utils/alarm-conversion.ts(31,25): error TS2339: Property 'id' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(32,29): error TS2339: Property 'userId' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(33,27): error TS2339: Property 'time' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(34,28): error TS2339: Property 'label' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(35,30): error TS2339: Property 'enabled' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(36,31): error TS2339: Property 'isActive' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(37,27): error TS2339: Property 'days' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(38,31): error TS2339: Property 'dayNames' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(39,32): error TS2339: Property 'voiceMood' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(40,28): error TS2339: Property 'sound' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(41,33): error TS2339: Property 'difficulty' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(42,36): error TS2339: Property 'snoozeEnabled' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(43,37): error TS2339: Property 'snoozeInterval' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(44,34): error TS2339: Property 'snoozeCount' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(45,33): error TS2339: Property 'maxSnoozes' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(46,36): error TS2339: Property 'lastTriggered' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(47,32): error TS2339: Property 'createdAt' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(48,32): error TS2339: Property 'updatedAt' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(49,31): error TS2339: Property 'battleId' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(50,37): error TS2339: Property 'weatherEnabled' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(51,36): error TS2339: Property 'smartFeatures' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(149,16): error TS2339: Property 'time' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(149,71): error TS2339: Property 'time' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(153,16): error TS2339: Property 'label' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(153,31): error TS2339: Property 'label' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(157,16): error TS2339: Property 'days' does not exist on type 'AdvancedAlarm'.
+src/utils/alarm-conversion.ts(157,30): error TS2339: Property 'days' does not exist on type 'AdvancedAlarm'.
+src/utils/fallback-strategies.tsx(222,10): error TS2339: Property 'state' does not exist on type 'FallbackErrorBoundary'.
+src/utils/fallback-strategies.tsx(234,14): error TS2339: Property 'state' does not exist on type 'FallbackErrorBoundary'.
+src/utils/fallback-strategies.tsx(235,16): error TS2339: Property 'props' does not exist on type 'FallbackErrorBoundary'.
+src/utils/fallback-strategies.tsx(237,16): error TS2339: Property 'props' does not exist on type 'FallbackErrorBoundary'.
+src/utils/fallback-strategies.tsx(240,49): error TS2339: Property 'state' does not exist on type 'FallbackErrorBoundary'.
+src/utils/fallback-strategies.tsx(251,33): error TS2339: Property 'setState' does not exist on type 'FallbackErrorBoundary'.
+src/utils/fallback-strategies.tsx(259,17): error TS2339: Property 'props' does not exist on type 'FallbackErrorBoundary'.
+src/utils/image-optimization.tsx(414,24): error TS2339: Property 'lazy' does not exist on type '{}'.
+src/utils/image-optimization.tsx(414,46): error TS2339: Property 'priority' does not exist on type '{}'.
+src/utils/screen-reader.ts(611,15): error TS2339: Property 'key' does not exist on type 'Event'.
+src/utils/screen-reader.ts(611,36): error TS2339: Property 'key' does not exist on type 'Event'.
+src/utils/voice-accessibility.ts(543,22): error TS2339: Property 'preferredVoice' does not exist on type 'VoiceAccessibilityState'.
+src/utils/voice-accessibility.ts(545,62): error TS2339: Property 'preferredVoice' does not exist on type 'VoiceAccessibilityState'.
