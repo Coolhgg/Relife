@@ -19,7 +19,7 @@ const PremiumGate: React.FC<PremiumGateProps> = ({
   feature,
   userTier = 'free',
   requiredTier = 'premium',
-  _mode,
+  mode,
   fallback,
   showUpgradePrompt = true,
   onUpgrade,

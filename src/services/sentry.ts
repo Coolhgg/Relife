@@ -86,7 +86,7 @@ class SentryService {
         replaysOnErrorSampleRate: 1.0,
 
         // Privacy and data filtering
-        beforeSend: (event) => {
+        beforeSend: event => {
           // Apply custom filtering if provided
           if (config.beforeSend) {
             const filtered = config.beforeSend(event);

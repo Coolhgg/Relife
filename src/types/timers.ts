@@ -1,7 +1,7 @@
 /**
  * Timer Types Utility
- * 
- * This file provides cross-platform timer types that work consistently 
+ *
+ * This file provides cross-platform timer types that work consistently
  * across Node.js and browser environments.
  */
 
@@ -24,12 +24,9 @@ export function safeClearTimeout(handle: MaybeTimeoutHandle): void {
 /**
  * Set a timeout with proper typing
  * @param callback Function to execute
- * @param delay Delay in milliseconds  
+ * @param delay Delay in milliseconds
  * @returns TimeoutHandle
  */
-export function safeSetTimeout(
-  callback: () => void, 
-  delay: number
-): TimeoutHandle {
+export function safeSetTimeout(callback: () => void, delay: number): TimeoutHandle {
   return setTimeout(callback, delay);
 }

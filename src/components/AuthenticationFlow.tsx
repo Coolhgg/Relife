@@ -17,7 +17,7 @@ interface AuthenticationFlowProps {
 type AuthView = 'login' | 'signup' | 'forgot-password';
 
 export default function AuthenticationFlow({
-  _onAuthSuccess,
+  onAuthSuccess,
   onSignUp,
   onSignIn,
   onForgotPassword,

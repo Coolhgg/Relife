@@ -18,7 +18,7 @@ export function PricingTable({
   onPlanSelect,
   onBillingIntervalChange,
   loading = false,
-  className = ''
+  className = '',
 }: PricingTableProps) {
   const [selectedInterval, setSelectedInterval] = useState(billingInterval);
 
@@ -67,11 +67,14 @@ export function PricingTable({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {plans.map((plan) => (
+        {plans.map(plan => (
           <div key={plan.id} className="border rounded-lg p-6 relative">
             <h3 className="text-lg font-semibold">{plan.name}</h3>
             <p className="text-3xl font-bold mt-2">
-              ${selectedInterval === 'month' ? plan.pricing.monthly.amount / 100 : plan.pricing.yearly.amount / 100}
+              $
+              {selectedInterval === 'month'
+                ? plan.pricing.monthly.amount / 100
+                : plan.pricing.yearly.amount / 100}
               <span className="text-sm font-normal text-gray-500">
                 /{selectedInterval}
               </span>

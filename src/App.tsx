@@ -88,7 +88,7 @@ class EmailCampaignService {
 
   async detectPersona(user: any): Promise<PersonaDetectionResult> {
     let persona: PersonaType = 'struggling_sam';
-    const tier = user?.subscriptionTier || 'free';
+    const tier = user?.subscriptionTier || user?.subscription?.tier || 'free';
 
     switch (tier) {
       case 'free':

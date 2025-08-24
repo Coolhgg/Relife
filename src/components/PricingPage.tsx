@@ -1,12 +1,13 @@
 // Pricing Page Component - Simplified Version
 import React, { useState } from 'react';
 import { ArrowLeft, Crown, Check } from 'lucide-react';
+import type { User } from '../types';
 
 interface PricingPageProps {
   onBack?: () => void;
   onSelectPlan?: (planId: string) => void;
   currentTier?: string;
-  user?: unknown; // auto: widened to satisfy usage
+  user?: User;
   onUpgrade?: ((...args: any[]) => void) | undefined; // auto: widened function prop
   onManageSubscription?: ((...args: any[]) => void) | undefined; // auto: widened function prop
 }
@@ -17,9 +18,11 @@ const PricingPage: React.FC<PricingPageProps> = ({
   currentTier = 'free',
   user, // auto: added for prop compatibility
   onUpgrade, // auto: added for prop compatibility
-  onManageSubscription // auto: added for prop compatibility
+  onManageSubscription, // auto: added for prop compatibility
 }) => {
-  const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
+  const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>(
+    'monthly'
+  );
 
   const plans = [
     {
@@ -31,10 +34,10 @@ const PricingPage: React.FC<PricingPageProps> = ({
         'Up to 5 alarms',
         'Basic voice moods',
         'Standard difficulty levels',
-        'Community support'
+        'Community support',
       ],
       popular: false,
-      tier: 'free'
+      tier: 'free',
     },
     {
       id: 'premium',
@@ -46,10 +49,10 @@ const PricingPage: React.FC<PricingPageProps> = ({
         'Premium voice personalities',
         'Nuclear mode challenges',
         'Advanced analytics',
-        'Priority support'
+        'Priority support',
       ],
       popular: true,
-      tier: 'premium'
+      tier: 'premium',
     },
     {
       id: 'pro',
@@ -61,11 +64,11 @@ const PricingPage: React.FC<PricingPageProps> = ({
         'Team collaboration',
         'API access',
         'White-label options',
-        'Dedicated support'
+        'Dedicated support',
       ],
       popular: false,
-      tier: 'pro'
-    }
+      tier: 'pro',
+    },
   ];
 
   const handlePlanSelect = (planId: string) => {
@@ -89,9 +92,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
         </div>
 
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Choose Your Plan
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Plan</h1>
           <p className="text-xl text-gray-600 mb-8">
             Unlock powerful features to transform your mornings
           </p>
@@ -125,7 +126,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
 
         {/* Plans Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {plans.map((plan) => (
+          {plans.map(plan => (
             <div
               key={plan.id}
               className={`bg-white rounded-lg shadow-lg relative ${
@@ -144,7 +145,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
               <div className="p-8">
                 <h3 className="text-2xl font-bold text-gray-900">{plan.name}</h3>
                 <p className="text-gray-600 mt-2">{plan.description}</p>
-                
+
                 <div className="mt-6">
                   <span className="text-4xl font-bold text-gray-900">
                     ${plan.price[billingInterval]}
@@ -172,12 +173,15 @@ const PricingPage: React.FC<PricingPageProps> = ({
                     currentTier === plan.tier
                       ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       : plan.popular
-                      ? 'bg-blue-500 text-white hover:bg-blue-600'
-                      : 'bg-gray-900 text-white hover:bg-gray-800'
+                        ? 'bg-blue-500 text-white hover:bg-blue-600'
+                        : 'bg-gray-900 text-white hover:bg-gray-800'
                   }`}
                 >
-                  {currentTier === plan.tier ? 'Current Plan' : 
-                   plan.id === 'free' ? 'Get Started' : 'Subscribe Now'}
+                  {currentTier === plan.tier
+                    ? 'Current Plan'
+                    : plan.id === 'free'
+                      ? 'Get Started'
+                      : 'Subscribe Now'}
                 </button>
               </div>
             </div>
@@ -187,7 +191,10 @@ const PricingPage: React.FC<PricingPageProps> = ({
         {/* FAQ or additional info could go here */}
         <div className="text-center mt-16">
           <p className="text-gray-600">
-            Need help choosing? <a href="#" className="text-blue-500 hover:underline">Contact our support team</a>
+            Need help choosing?{' '}
+            <a href="#" className="text-blue-500 hover:underline">
+              Contact our support team
+            </a>
           </p>
         </div>
       </div>

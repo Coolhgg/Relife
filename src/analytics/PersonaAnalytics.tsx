@@ -1,7 +1,11 @@
 /// <reference types="node" />
 /// <reference lib="dom" />
 import React, { useEffect, useCallback, useRef } from 'react';
-import { PersonaType, PersonaDetectionFactor } from '../types/index';
+import {
+  PersonaType,
+  PersonaDetectionFactor,
+  PersonaDetectionResult,
+} from '../types/index';
 import { TimeoutHandle } from '../types/timers';
 
 // Define missing types based on what the component needs
@@ -11,11 +15,8 @@ type UserPersona = {
   traits: string[];
 };
 
-type PersonaDetectionData = {
-  factors: PersonaDetectionFactor[];
-  confidence: number;
-  primaryPersona: PersonaType;
-  // auto: from usage
+interface PersonaDetectionData extends PersonaDetectionResult {
+  // Extended fields for analytics
   subscriptionTier?: string;
   ageRange?: string;
   usagePatterns?: Record<string, unknown>;
@@ -23,7 +24,7 @@ type PersonaDetectionData = {
   featurePreferences?: Record<string, unknown>;
   deviceType?: string;
   timeOfDay?: string;
-};
+}
 
 // Analytics Events for Persona Tracking
 export type PersonaAnalyticsEvent =
