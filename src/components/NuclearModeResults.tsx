@@ -4,7 +4,7 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { Separator } from './ui/separator';
-import { Alert, AlertDescription } from './ui/alert';
+import { AlertTriangle, AlertDescription } from './ui/alert';
 import {
   Trophy,
   Zap,
@@ -465,7 +465,7 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
 
         {/* Tips for Improvement */}
         {!isSuccess && (
-          <Alert className="border-blue-200 bg-blue-50">
+          <AlertTriangle className="border-blue-200 bg-blue-50">
             <Brain className="w-4 h-4 text-blue-600" />
             <AlertDescription className="text-blue-800">
               <strong>Tips for next time:</strong> Practice math problems, memory games,

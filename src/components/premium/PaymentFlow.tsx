@@ -15,7 +15,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Separator } from '../ui/separator';
-import { Alert, AlertDescription } from '../ui/alert';
+import { AlertTriangle, AlertDescription } from '../ui/alert';
 import { Badge } from '../ui/badge';
 import { TimeoutHandle } from '../types/timers';
 import type {
@@ -329,7 +329,7 @@ export function PaymentFlow({
 
             {/* Trial Info */}
             {trialDays && trialDays > 0 && (
-              <Alert className="border-blue-200 bg-blue-50">
+              <AlertTriangle className="border-blue-200 bg-blue-50">
                 <AlertCircle className="h-4 w-4 text-blue-600" />
                 <AlertDescription className="text-blue-800">
                   You'll get {trialDays} days free trial. Your card will be charged
@@ -380,7 +380,7 @@ export function PaymentFlow({
           </CardHeader>
           <CardContent className="space-y-6">
             {error && (
-              <Alert className="border-red-200 bg-red-50">
+              <AlertTriangle className="border-red-200 bg-red-50">
                 <AlertCircle className="h-4 w-4 text-red-600" />
                 <AlertDescription className="text-red-600">{error}</AlertDescription>
               </Alert>

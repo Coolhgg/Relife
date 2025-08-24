@@ -1,5 +1,5 @@
 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
-import { Alert, RefreshCw, Clock, Home, Bug, Zap } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Clock, Home, Bug, Zap } from 'lucide-react';
 import { ErrorHandler } from '../services/error-handler';
 import { TimeoutHandle } from '../types/timers';
 
@@ -132,7 +132,7 @@ export class RootErrorBoundary extends Component<Props, State> {
             {/* Error Icon */}
             <div className="text-center mb-6">
               <div className="w-20 h-20 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Alert className="w-10 h-10 text-red-600 dark:text-red-400" />
+                <AlertTriangle className="w-10 h-10 text-red-600 dark:text-red-400" />
               </div>
 
               {/* Recovery Animation */}
