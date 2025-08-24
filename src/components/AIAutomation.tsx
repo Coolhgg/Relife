@@ -5,10 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Avatar as _Avatar,
-  AvatarFallback as _AvatarFallback,
-} from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   Brain,
   Zap,
@@ -25,8 +22,8 @@ import {
   Bot,
   AlertCircle as _AlertCircle,
   CheckCircle,
-  ChevronRight as _ChevronRight,
-  Play as _Play,
+  ChevronRight,
+  Play,
   Pause as _Pause,
   RotateCcw,
 } from 'lucide-react';

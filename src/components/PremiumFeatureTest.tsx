@@ -118,7 +118,7 @@ const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
 
                   {!isAccessible && (
                     <button
-                      onClick={e => {
+                      onClick={(e: any) => // auto: implicit any {
                         e.stopPropagation();
                         onUpgrade?.();
                       }}

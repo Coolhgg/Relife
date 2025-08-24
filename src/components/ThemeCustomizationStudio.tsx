@@ -23,13 +23,13 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ color, onChange, label }) => 
       <input
         type="color"
         value={color}
-        onChange={e => onChange(e.target.value)}
+        onChange={(e: any) => // auto: implicit any onChange(e.target.value)}
         className="color-picker-input"
       />
       <input
         type="text"
         value={color}
-        onChange={e => onChange(e.target.value)}
+        onChange={(e: any) => // auto: implicit any onChange(e.target.value)}
         className="color-picker-text"
         placeholder="#000000"
       />
@@ -58,7 +58,7 @@ const AnimationControl: React.FC<AnimationControlProps> = ({
         <input
           type="checkbox"
           checked={enabled}
-          onChange={e => onChange(effect, e.target.checked)}
+          onChange={(e: any) => // auto: implicit any onChange(effect, e.target.checked)}
         />
         {label}
       </label>
@@ -92,7 +92,7 @@ const ThemeCustomizationStudio: React.FC = () => {
 
   const handleColorChange = useCallback(
     (category: string, shade: string, color: string) => {
-      setCustomTheme(prev => ({
+      setCustomTheme((prev: any) => // auto: implicit any ({
         ...prev,
         colors: {
           ...prev.colors,
@@ -107,7 +107,7 @@ const ThemeCustomizationStudio: React.FC = () => {
   );
 
   const handleTypographyChange = useCallback((property: string, value: any) => {
-    setCustomTheme(prev => ({
+    setCustomTheme((prev: any) => // auto: implicit any ({
       ...prev,
       typography: {
         ...prev.typography,
@@ -118,7 +118,7 @@ const ThemeCustomizationStudio: React.FC = () => {
 
   const handleAnimationEffectChange = useCallback(
     (effect: keyof PremiumAnimationEffects, enabled: boolean) => {
-      setAnimationEffects(prev => ({
+      setAnimationEffects((prev: any) => // auto: implicit any ({
         ...prev,
         [effect]: enabled,
       }));
@@ -265,7 +265,7 @@ const ThemeCustomizationStudio: React.FC = () => {
         <div className="studio-controls">
           <select
             value={previewMode}
-            onChange={e =>
+            onChange={(e: any) => // auto: implicit any
               setPreviewMode(e.target.value as 'desktop' | 'tablet' | 'mobile')
             }
             className="preview-mode-select"
@@ -278,7 +278,7 @@ const ThemeCustomizationStudio: React.FC = () => {
           <div className="export-controls">
             <select
               value={exportFormat}
-              onChange={e => setExportFormat(e.target.value as 'json' | 'css' | 'scss')}
+              onChange={(e: any) => // auto: implicit any setExportFormat(e.target.value as 'json' | 'css' | 'scss')}
               className="export-format-select"
             >
               <option value="json">JSON</option>
@@ -333,7 +333,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                             <ColorPicker
                               key={`${category}-${shade}`}
                               color={color}
-                              onChange={newColor =>
+                              onChange={(newColor: any) => // auto: implicit any
                                 handleColorChange(category, shade, newColor)
                               }
                               label={`${shade}`}
@@ -361,7 +361,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                           <input
                             type="text"
                             value={font}
-                            onChange={e =>
+                            onChange={(e: any) => // auto: implicit any
                               handleTypographyChange(
                                 `fontFamily.${type}`,
                                 e.target.value
@@ -384,7 +384,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                           <input
                             type="text"
                             value={value}
-                            onChange={e =>
+                            onChange={(e: any) => // auto: implicit any
                               handleTypographyChange(`fontSize.${size}`, e.target.value)
                             }
                             placeholder="e.g., 1rem"
@@ -403,7 +403,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                 <div className="animation-intensity">
                   <h4>Animation Intensity</h4>
                   <select
-                    onChange={e =>
+                    onChange={(e: any) => // auto: implicit any
                       animationService.setAnimationIntensity(e.target.value as any)
                     }
                     className="intensity-select"
@@ -501,8 +501,8 @@ const ThemeCustomizationStudio: React.FC = () => {
                           <input
                             type="text"
                             value={shadow}
-                            onChange={e =>
-                              setCustomTheme(prev => ({
+                            onChange={(e: any) => // auto: implicit any
+                              setCustomTheme((prev: any) => // auto: implicit any ({
                                 ...prev,
                                 effects: {
                                   ...prev.effects,
@@ -533,8 +533,8 @@ const ThemeCustomizationStudio: React.FC = () => {
                             max="1"
                             step="0.1"
                             value={value}
-                            onChange={e =>
-                              setCustomTheme(prev => ({
+                            onChange={(e: any) => // auto: implicit any
+                              setCustomTheme((prev: any) => // auto: implicit any ({
                                 ...prev,
                                 effects: {
                                   ...prev.effects,

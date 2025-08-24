@@ -152,7 +152,7 @@ export function BugReportModal({
   };
 
   const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove));
+    setTags(tags.filter((tag: any) => // auto: implicit any tag !== tagToRemove));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -165,7 +165,7 @@ export function BugReportModal({
       const bugData: Partial<BugReport> = {
         title: title.trim(),
         description: description.trim(),
-        steps: steps.filter(step => step.trim() !== ''),
+        steps: steps.filter((step: any) => // auto: implicit any step.trim() !== ''),
         expectedBehavior: expectedBehavior.trim(),
         actualBehavior: actualBehavior.trim(),
         severity,
@@ -266,7 +266,7 @@ export function BugReportModal({
                   <Input
                     id="title"
                     value={title}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={(e: any) => // auto: implicit any setTitle(e.target.value)}
                     placeholder="Brief summary of the bug"
                     className="mt-1"
                     required
@@ -278,7 +278,7 @@ export function BugReportModal({
                   <Textarea
                     id="description"
                     value={description}
-                    onChange={e => setDescription(e.target.value)}
+                    onChange={(e: any) => // auto: implicit any setDescription(e.target.value)}
                     placeholder="Describe the bug in detail..."
                     className="mt-1 min-h-[100px]"
                     rows={4}
@@ -371,7 +371,7 @@ export function BugReportModal({
                   <Textarea
                     id="expected"
                     value={expectedBehavior}
-                    onChange={e => setExpectedBehavior(e.target.value)}
+                    onChange={(e: any) => // auto: implicit any setExpectedBehavior(e.target.value)}
                     placeholder="Describe what you thought would happen..."
                     className="mt-1"
                     rows={3}
@@ -383,7 +383,7 @@ export function BugReportModal({
                   <Textarea
                     id="actual"
                     value={actualBehavior}
-                    onChange={e => setActualBehavior(e.target.value)}
+                    onChange={(e: any) => // auto: implicit any setActualBehavior(e.target.value)}
                     placeholder="Describe what actually happened instead..."
                     className="mt-1"
                     rows={3}
@@ -415,7 +415,7 @@ export function BugReportModal({
                           </div>
                           <Input
                             value={step}
-                            onChange={e => updateStep(index, e.target.value)}
+                            onChange={(e: any) => // auto: implicit any updateStep(index, e.target.value)}
                             placeholder={`Step ${index + 1}...`}
                             className="flex-1"
                           />
@@ -441,10 +441,10 @@ export function BugReportModal({
                   <div className="flex items-center gap-2 mt-2">
                     <Input
                       value={newTag}
-                      onChange={e => setNewTag(e.target.value)}
+                      onChange={(e: any) => // auto: implicit any setNewTag(e.target.value)}
                       placeholder="Add a tag..."
                       className="flex-1"
-                      onKeyDown={e =>
+                      onKeyDown={(e: any) => // auto: implicit any
                         e.key === 'Enter' && (e.preventDefault(), addTag())
                       }
                     />
@@ -459,7 +459,7 @@ export function BugReportModal({
                   </div>
                   {tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
-                      {tags.map(tag => (
+                      {tags.map((tag: any) => // auto: implicit any (
                         <Badge
                           key={tag}
                           variant="secondary"

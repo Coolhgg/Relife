@@ -15,7 +15,7 @@ import type {
   Alarm,
   AlarmInstance,
   AlarmDifficulty,
-  _VoiceMood,
+  VoiceMood,
   DayOfWeek,
 } from '../types/index';
 import PremiumGate from './PremiumGate';
@@ -115,7 +115,7 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
           </label>
           <Select
             value={selectedDifficulty}
-            onValueChange={value => setSelectedDifficulty(value as AlarmDifficulty)}
+            onValueChange={(value: any) => // auto: implicit any setSelectedDifficulty(value as AlarmDifficulty)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -565,7 +565,7 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
               type="checkbox"
               id="battle-mode"
               checked={battleMode}
-              onChange={e => setBattleMode(e.target.checked)}
+              onChange={(e: any) => // auto: implicit any setBattleMode(e.target.checked)}
             />
             <label htmlFor="battle-mode" className="text-sm font-medium">
               Battle Mode

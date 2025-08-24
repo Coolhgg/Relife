@@ -65,7 +65,7 @@ export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
   theme = 'light',
   language = 'en',
   user = null,
-  _initialEntries = ['/'],
+  initialEntries = ['/'],
 }) => {
   const defaultQueryClient = new QueryClient({
     defaultOptions: {
@@ -346,7 +346,7 @@ export const setupGlobalMocks = () => {
 
   // Setup matchMedia mock
   Object.defineProperty(window, 'matchMedia', {
-    value: vi.fn().mockImplementation(query => ({
+    value: vi.fn().mockImplementation((query: any) => // auto: implicit any ({
       matches: false,
       media: query,
       onchange: null,

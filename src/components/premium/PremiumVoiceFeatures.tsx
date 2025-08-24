@@ -119,8 +119,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.speed]}
-                onValueChange={value =>
-                  setVoiceSettings(prev => ({ ...prev, speed: value[0] }))
+                onValueChange={(value: any) => // auto: implicit any
+                  setVoiceSettings((prev: any) => // auto: implicit any ({ ...prev, speed: value[0] }))
                 }
                 min={0.5}
                 max={2.0}
@@ -134,8 +134,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.pitch]}
-                onValueChange={value =>
-                  setVoiceSettings(prev => ({ ...prev, pitch: value[0] }))
+                onValueChange={(value: any) => // auto: implicit any
+                  setVoiceSettings((prev: any) => // auto: implicit any ({ ...prev, pitch: value[0] }))
                 }
                 min={0.5}
                 max={2.0}
@@ -151,8 +151,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.volume]}
-                onValueChange={value =>
-                  setVoiceSettings(prev => ({ ...prev, volume: value[0] }))
+                onValueChange={(value: any) => // auto: implicit any
+                  setVoiceSettings((prev: any) => // auto: implicit any ({ ...prev, volume: value[0] }))
                 }
                 min={0.1}
                 max={1.0}
@@ -178,11 +178,11 @@ function AIWakeUpCoach() {
                   type="checkbox"
                   id={goal}
                   checked={coachingGoals.includes(goal)}
-                  onChange={e => {
+                  onChange={(e: any) => // auto: implicit any {
                     if (e.target.checked) {
-                      setCoachingGoals(prev => [...prev, goal]);
+                      setCoachingGoals((prev: any) => // auto: implicit any [...prev, goal]);
                     } else {
-                      setCoachingGoals(prev => prev.filter(g => g !== goal));
+                      setCoachingGoals((prev: any) => // auto: implicit any prev.filter((g: any) => // auto: implicit any g !== goal));
                     }
                   }}
                 />
@@ -244,7 +244,7 @@ function VoiceCommandRecognition() {
           <div className="mt-2">
             <Slider
               value={[sensitivity]}
-              onValueChange={value => setSensitivity(value[0])}
+              onValueChange={(value: any) => // auto: implicit any setSensitivity(value[0])}
               min={0.1}
               max={1.0}
               step={0.1}
@@ -283,12 +283,12 @@ function VoiceCommandRecognition() {
           <Input
             placeholder="Say this phrase..."
             value={newCommand.phrase}
-            onChange={e => setNewCommand(prev => ({ ...prev, phrase: e.target.value }))}
+            onChange={(e: any) => // auto: implicit any setNewCommand((prev: any) => // auto: implicit any ({ ...prev, phrase: e.target.value }))}
           />
           <Input
             placeholder="To do this action..."
             value={newCommand.action}
-            onChange={e => setNewCommand(prev => ({ ...prev, action: e.target.value }))}
+            onChange={(e: any) => // auto: implicit any setNewCommand((prev: any) => // auto: implicit any ({ ...prev, action: e.target.value }))}
           />
           <Button size="sm" className="w-full">
             Add Command
@@ -346,8 +346,8 @@ function PersonalizedAudioMessages() {
                 </span>
                 <Switch
                   checked={enabled}
-                  onCheckedChange={checked =>
-                    setMessageTypes(prev => ({ ...prev, [key]: checked }))
+                  onCheckedChange={(checked: any) => // auto: implicit any
+                    setMessageTypes((prev: any) => // auto: implicit any ({ ...prev, [key]: checked }))
                   }
                 />
               </div>
@@ -397,13 +397,13 @@ function PersonalizedAudioMessages() {
             <Input
               placeholder="Add a personal message..."
               value={newMessage}
-              onChange={e => setNewMessage(e.target.value)}
+              onChange={(e: any) => // auto: implicit any setNewMessage(e.target.value)}
             />
             <Button
               size="sm"
               onClick={() => {
                 if (newMessage.trim()) {
-                  setCustomMessages(prev => [...prev, newMessage]);
+                  setCustomMessages((prev: any) => // auto: implicit any [...prev, newMessage]);
                   setNewMessage('');
                 }
               }}
@@ -483,7 +483,7 @@ function VoiceControlledSnooze() {
           <div className="mt-2">
             <Slider
               value={[customSnoozeTime]}
-              onValueChange={value => setCustomSnoozeTime(value[0])}
+              onValueChange={(value: any) => // auto: implicit any setCustomSnoozeTime(value[0])}
               min={1}
               max={60}
               step={1}

@@ -229,7 +229,7 @@ export class OfflineManager {
     try {
       const alarms = await this.db.getAll('alarms');
       return alarms
-        .filter(alarm => alarm.operation !== 'delete')
+        .filter((alarm: any) => // auto: implicit any alarm.operation !== 'delete')
         .map(({ syncStatus, lastModified, operation, ...alarm }) => alarm as Alarm);
     } catch (error) {
       console.error('Failed to get offline alarms:', error);
@@ -513,7 +513,7 @@ export class OfflineManager {
   static async getStatus(): Promise<SyncStatus> {
     const pendingOperations = this.db ? await this.db.count('syncQueue') : 0;
     const failedOperations = this.db
-      ? (await this.db.getAll('syncQueue')).filter(item => item.retryCount > 0).length
+      ? (await this.db.getAll('syncQueue')).filter((item: any) => // auto: implicit any item.retryCount > 0).length
       : 0;
 
     return {

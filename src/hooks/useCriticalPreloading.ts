@@ -43,7 +43,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
   const analyzeAndPreload = useCallback(async () => {
     if (state.isAnalyzing) return;
 
-    setState(prev => ({ ...prev, isAnalyzing: true }));
+    setState((prev: any) => // auto: implicit any ({ ...prev, isAnalyzing: true }));
 
     try {
       const criticalAssets = await criticalPreloader.analyzeCriticalAssets(alarms);
@@ -57,7 +57,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
         }
       }
 
-      setState(prev => ({
+      setState((prev: any) => // auto: implicit any ({
         ...prev,
         criticalAssets,
         readinessStatus,
@@ -67,13 +67,13 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
       lastAnalysis.current = new Date();
     } catch (error) {
       console.error('Error analyzing critical assets:', error);
-      setState(prev => ({ ...prev, isAnalyzing: false }));
+      setState((prev: any) => // auto: implicit any ({ ...prev, isAnalyzing: false }));
     }
   }, [alarms, state.isAnalyzing]);
 
   const updateStats = useCallback(() => {
     const stats = criticalPreloader.getStats();
-    setState(prev => ({ ...prev, stats }));
+    setState((prev: any) => // auto: implicit any ({ ...prev, stats }));
   }, []);
 
   // Initial analysis and periodic re-analysis
@@ -318,7 +318,7 @@ export function usePreloadPerformance() {
       setPerformance(newPerformance);
 
       // Update history
-      setPerformanceHistory(prev => {
+      setPerformanceHistory((prev: any) => // auto: implicit any {
         const newEntry = {
           timestamp: new Date(),
           successRate: stats.successRate,

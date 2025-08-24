@@ -220,9 +220,9 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                   <input
                     type="checkbox"
                     checked={preferences.highContrastMode}
-                    onChange={e =>
-                      handlePreferenceChange('highContrastMode', e.target.checked)
-                    }
+                    onChange={(
+                      e: any // auto: implicit any
+                    ) => handlePreferenceChange('highContrastMode', e.target.checked)}
                     {...getMobileAccessibilityProps('input')}
                   />
                   <span>High Contrast Mode</span>
@@ -232,9 +232,9 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                   <input
                     type="checkbox"
                     checked={preferences.reducedMotion}
-                    onChange={e =>
-                      handlePreferenceChange('reducedMotion', e.target.checked)
-                    }
+                    onChange={(
+                      e: any // auto: implicit any
+                    ) => handlePreferenceChange('reducedMotion', e.target.checked)}
                     {...getMobileAccessibilityProps('input')}
                   />
                   <span>Reduced Motion</span>
@@ -244,9 +244,9 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                   <input
                     type="checkbox"
                     checked={preferences.colorBlindFriendly}
-                    onChange={e =>
-                      handlePreferenceChange('colorBlindFriendly', e.target.checked)
-                    }
+                    onChange={(
+                      e: any // auto: implicit any
+                    ) => handlePreferenceChange('colorBlindFriendly', e.target.checked)}
                     {...getMobileAccessibilityProps('input')}
                   />
                   <span>Color Blind Friendly</span>
@@ -259,7 +259,9 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                   <select
                     id="font-size"
                     value={preferences.fontSize}
-                    onChange={e =>
+                    onChange={(
+                      e: any // auto: implicit any
+                    ) =>
                       handlePreferenceChange(
                         'fontSize',
                         e.target.value as typeof preferences.fontSize
@@ -283,9 +285,9 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                   <input
                     type="checkbox"
                     checked={preferences.largerTouchTargets}
-                    onChange={e =>
-                      handlePreferenceChange('largerTouchTargets', e.target.checked)
-                    }
+                    onChange={(
+                      e: any // auto: implicit any
+                    ) => handlePreferenceChange('largerTouchTargets', e.target.checked)}
                     {...getMobileAccessibilityProps('input')}
                   />
                   <span>Larger Touch Targets</span>
@@ -295,9 +297,9 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                   <input
                     type="checkbox"
                     checked={preferences.hapticFeedback}
-                    onChange={e =>
-                      handlePreferenceChange('hapticFeedback', e.target.checked)
-                    }
+                    onChange={(
+                      e: any // auto: implicit any
+                    ) => handlePreferenceChange('hapticFeedback', e.target.checked)}
                     {...getMobileAccessibilityProps('input')}
                   />
                   <span>Haptic Feedback</span>
@@ -307,9 +309,9 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                   <input
                     type="checkbox"
                     checked={preferences.keyboardNavigation}
-                    onChange={e =>
-                      handlePreferenceChange('keyboardNavigation', e.target.checked)
-                    }
+                    onChange={(
+                      e: any // auto: implicit any
+                    ) => handlePreferenceChange('keyboardNavigation', e.target.checked)}
                     {...getMobileAccessibilityProps('input')}
                   />
                   <span>Keyboard Navigation</span>
@@ -319,7 +321,9 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                   <input
                     type="checkbox"
                     checked={preferences.screenReaderOptimized}
-                    onChange={e =>
+                    onChange={(
+                      e: any // auto: implicit any
+                    ) =>
                       handlePreferenceChange('screenReaderOptimized', e.target.checked)
                     }
                     {...getMobileAccessibilityProps('input')}

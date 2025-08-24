@@ -209,7 +209,7 @@ export function RedesignedFeedbackModal({
 
         const screenshotData = canvas.toDataURL('image/png');
         setScreenshot(screenshotData);
-        setFeedbackData(prev => ({ ...prev, screenshot: screenshotData }));
+        setFeedbackData((prev: any) => // auto: implicit any ({ ...prev, screenshot: screenshotData }));
 
         stream.getTracks().forEach(track => track.stop());
       });
@@ -220,13 +220,13 @@ export function RedesignedFeedbackModal({
 
   const nextStep = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep((prev: any) => // auto: implicit any prev + 1);
     }
   };
 
   const prevStep = () => {
     if (currentStep > 0) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev: any) => // auto: implicit any prev - 1);
     }
   };
 
@@ -364,7 +364,7 @@ export function RedesignedFeedbackModal({
             <button
               key={type.id}
               onClick={() =>
-                setFeedbackData(prev => ({ ...prev, type: type.id as any }))
+                setFeedbackData((prev: any) => // auto: implicit any ({ ...prev, type: type.id as any }))
               }
               className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
                 isSelected
@@ -411,7 +411,7 @@ export function RedesignedFeedbackModal({
               <button
                 key={reaction.value}
                 onClick={() =>
-                  setFeedbackData(prev => ({
+                  setFeedbackData((prev: any) => // auto: implicit any ({
                     ...prev,
                     emojiRating: reaction.value,
                     rating: reaction.value,
@@ -441,7 +441,7 @@ export function RedesignedFeedbackModal({
             {[1, 2, 3, 4, 5].map(star => (
               <button
                 key={star}
-                onClick={() => setFeedbackData(prev => ({ ...prev, rating: star }))}
+                onClick={() => setFeedbackData((prev: any) => // auto: implicit any ({ ...prev, rating: star }))}
                 className={`p-2 rounded-full transition-all duration-300 hover:scale-125 ${
                   star <= (feedbackData.rating || feedbackData.emojiRating)
                     ? 'text-yellow-400'
@@ -471,7 +471,7 @@ export function RedesignedFeedbackModal({
                 <button
                   key={mood.value}
                   onClick={() =>
-                    setFeedbackData(prev => ({
+                    setFeedbackData((prev: any) => // auto: implicit any ({
                       ...prev,
                       moodRating: mood.value,
                       rating: mood.value,
@@ -507,8 +507,8 @@ export function RedesignedFeedbackModal({
           <Input
             id="title"
             value={feedbackData.title}
-            onChange={e =>
-              setFeedbackData(prev => ({ ...prev, title: e.target.value }))
+            onChange={(e: any) => // auto: implicit any
+              setFeedbackData((prev: any) => // auto: implicit any ({ ...prev, title: e.target.value }))
             }
             placeholder="Brief summary of your feedback..."
             className="mt-2 text-lg"
@@ -523,8 +523,8 @@ export function RedesignedFeedbackModal({
           <Textarea
             id="description"
             value={feedbackData.description}
-            onChange={e =>
-              setFeedbackData(prev => ({ ...prev, description: e.target.value }))
+            onChange={(e: any) => // auto: implicit any
+              setFeedbackData((prev: any) => // auto: implicit any ({ ...prev, description: e.target.value }))
             }
             placeholder="Tell us more about your experience, what you liked, what could be improved..."
             className="mt-2 min-h-[120px] text-base"
@@ -552,8 +552,8 @@ export function RedesignedFeedbackModal({
             </div>
             <Switch
               checked={feedbackData.isAnonymous}
-              onCheckedChange={checked =>
-                setFeedbackData(prev => ({ ...prev, isAnonymous: checked }))
+              onCheckedChange={(checked: any) => // auto: implicit any
+                setFeedbackData((prev: any) => // auto: implicit any ({ ...prev, isAnonymous: checked }))
               }
             />
           </div>
@@ -578,7 +578,7 @@ export function RedesignedFeedbackModal({
               <button
                 key={category.id}
                 onClick={() =>
-                  setFeedbackData(prev => ({ ...prev, category: category.id as any }))
+                  setFeedbackData((prev: any) => // auto: implicit any ({ ...prev, category: category.id as any }))
                 }
                 className={`group relative p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
                   isSelected
@@ -649,7 +649,7 @@ export function RedesignedFeedbackModal({
                       size="sm"
                       onClick={() => {
                         setScreenshot(null);
-                        setFeedbackData(prev => ({ ...prev, screenshot: null }));
+                        setFeedbackData((prev: any) => // auto: implicit any ({ ...prev, screenshot: null }));
                       }}
                     >
                       <X className="w-4 h-4" />
@@ -678,10 +678,10 @@ export function RedesignedFeedbackModal({
                 <button
                   key={tag}
                   onClick={() => {
-                    setFeedbackData(prev => ({
+                    setFeedbackData((prev: any) => // auto: implicit any ({
                       ...prev,
                       tags: isSelected
-                        ? prev.tags.filter(t => t !== tag)
+                        ? prev.tags.filter((t: any) => // auto: implicit any t !== tag)
                         : [...prev.tags, tag],
                     }));
                   }}

@@ -266,7 +266,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       searchQuery &&
       !theme.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
       !theme.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      !theme.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      !theme.tags.some((tag: any) => // auto: implicit any tag.toLowerCase().includes(searchQuery.toLowerCase()))
     ) {
       return false;
     }
@@ -329,11 +329,11 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   };
 
   const deleteCustomTheme = (themeId: string) => {
-    const updatedThemes = customThemes.filter(t => t.id !== themeId);
+    const updatedThemes = customThemes.filter((t: any) => // auto: implicit any t.id !== themeId);
     setCustomThemes(updatedThemes);
 
     // Update localStorage
-    const savedThemes = updatedThemes.map(t => t.config).filter(Boolean);
+    const savedThemes = updatedThemes.map((t: any) => // auto: implicit any t.config).filter(Boolean);
     localStorage.setItem('custom-themes', JSON.stringify(savedThemes));
 
     setShowDeleteConfirm(null);
@@ -448,7 +448,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         {/* Tags */}
         {!isCompact && (
           <div className="flex flex-wrap gap-1 mb-3">
-            {themeCard.tags.slice(0, 3).map(tag => (
+            {themeCard.tags.slice(0, 3).map((tag: any) => // auto: implicit any (
               <span
                 key={tag}
                 className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
@@ -546,7 +546,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             type="text"
             placeholder="Search themes..."
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
+            onChange={(e: any) => // auto: implicit any setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -555,7 +555,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         <div className="flex gap-2">
           <select
             value={selectedCategory}
-            onChange={e => setSelectedCategory(e.target.value)}
+            onChange={(e: any) => // auto: implicit any setSelectedCategory(e.target.value)}
             className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {categories.map(category => (
@@ -567,7 +567,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
 
           <select
             value={sortBy}
-            onChange={e => setSortBy(e.target.value as any)}
+            onChange={(e: any) => // auto: implicit any setSortBy(e.target.value as any)}
             className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="name">Sort by Name</option>

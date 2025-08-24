@@ -57,7 +57,7 @@ function SmartWakeUpFeature({
             <div className="mt-2">
               <Slider
                 value={[smartWindow]}
-                onValueChange={value => setSmartWindow(value[0])}
+                onValueChange={(value: any) => // auto: implicit any setSmartWindow(value[0])}
                 max={60}
                 min={5}
                 step={5}

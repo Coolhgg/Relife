@@ -36,8 +36,14 @@ interface FeatureAccessContextValue {
   ) => void;
 
   // Callbacks
-  onFeatureBlocked?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */) => void;
-  onUpgradeRequired?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */) => void;
+  onFeatureBlocked?: (
+    featureId: string,
+    _requiredTier?: any /* auto: placeholder param - adjust */
+  ) => void;
+  onUpgradeRequired?: (
+    featureId: string,
+    _requiredTier?: any /* auto: placeholder param - adjust */
+  ) => void;
 }
 
 const FeatureAccessContext = createContext<FeatureAccessContextValue | null>(null);
@@ -45,8 +51,14 @@ const FeatureAccessContext = createContext<FeatureAccessContextValue | null>(nul
 interface FeatureAccessProviderProps {
   children: ReactNode;
   userId: string;
-  onFeatureBlocked?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */) => void;
-  onUpgradeRequired?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */) => void;
+  onFeatureBlocked?: (
+    featureId: string,
+    _requiredTier?: any /* auto: placeholder param - adjust */
+  ) => void;
+  onUpgradeRequired?: (
+    featureId: string,
+    _requiredTier?: any /* auto: placeholder param - adjust */
+  ) => void;
   autoRefresh?: boolean;
   refreshInterval?: number;
 }
@@ -262,8 +274,19 @@ export function withFeatureAccess<P extends object>(
   WrappedComponent: React.ComponentType<P>,
   userId: string,
   options?: {
+<<<<<<< HEAD
+    onFeatureBlocked?: (
+      featureId: string,
+      _requiredTier?: any /* auto: placeholder param - adjust */
+    ) => void;
+    onUpgradeRequired?: (
+      featureId: string,
+      _requiredTier?: any /* auto: placeholder param - adjust */
+    ) => void;
+=======
     onFeatureBlocked?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */) => void;
     onUpgradeRequired?: (featureId: string, _requiredTier?: any /* auto: placeholder param - adjust */) => void;
+>>>>>>> origin/main
   }
 ) {
   return function FeatureAccessWrappedComponent(props: P) {

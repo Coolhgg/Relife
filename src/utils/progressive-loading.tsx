@@ -425,15 +425,15 @@ export function useProgressiveLoad<T>(
   const [data, setData] = React.useState<T | null>(null);
 
   const load = React.useCallback(async () => {
-    setState(prev => ({ ...prev, isLoading: true, isError: false }));
+    setState((prev: any) => // auto: implicit any ({ ...prev, isLoading: true, isError: false }));
 
     try {
       const result = await progressiveLoader.loadComponent(id, loader, config);
       setData(result);
-      setState(prev => ({ ...prev, isLoading: false, isLoaded: true }));
+      setState((prev: any) => // auto: implicit any ({ ...prev, isLoading: false, isLoaded: true }));
       return result;
     } catch (error) {
-      setState(prev => ({
+      setState((prev: any) => // auto: implicit any ({
         ...prev,
         isLoading: false,
         isError: true,

@@ -905,7 +905,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
   const { alerts, suggestions, resolveAlert } = usePerformanceAlerts();
 
   const displayAlerts = alerts.slice(0, maxAlerts);
-  const criticalAlerts = alerts.filter(alert => alert.severity >= 4);
+  const criticalAlerts = alerts.filter((alert: any) => // auto: implicit any alert.severity >= 4);
 
   if (displayAlerts.length === 0 && (!showSuggestions || suggestions.length === 0)) {
     return null;
@@ -926,7 +926,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
         <div className="active-alerts mb-4">
           <h4 className="font-semibold text-gray-800 mb-2">Performance Alerts</h4>
           <div className="space-y-2">
-            {displayAlerts.map(alert => (
+            {displayAlerts.map((alert: any) => // auto: implicit any (
               <div
                 key={alert.id}
                 className={`alert-item p-3 rounded border-l-4 ${
@@ -965,7 +965,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
         <div className="optimization-suggestions">
           <h4 className="font-semibold text-gray-800 mb-2">Optimization Suggestions</h4>
           <div className="space-y-2">
-            {suggestions.slice(0, 3).map(suggestion => (
+            {suggestions.slice(0, 3).map((suggestion: any) => // auto: implicit any (
               <div
                 key={suggestion.id}
                 className={`suggestion-item p-3 rounded border ${

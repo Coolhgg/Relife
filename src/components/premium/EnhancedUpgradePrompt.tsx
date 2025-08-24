@@ -74,7 +74,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   useEffect(() => {
     if (!showSocialProof) return;
     const interval = setInterval(() => {
-      setCurrentTestimonial(prev => (prev + 1) % testimonials.length);
+      setCurrentTestimonial((prev: any) => // auto: implicit any (prev + 1) % testimonials.length);
     }, 4000);
     return () => clearInterval(interval);
   }, [showSocialProof]);

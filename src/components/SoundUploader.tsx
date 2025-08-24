@@ -196,7 +196,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
       isPlaying: false,
     }));
 
-    setUploadItems(prev => [...prev, ...newItems]);
+    setUploadItems((prev: any) => // auto: implicit any [...prev, ...newItems]);
 
     // Start uploading each file
     newItems.forEach(item => {
@@ -239,7 +239,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
         });
 
         // Add to uploaded sounds list
-        setUploadedSounds(prev => [...prev, result.customSound!]);
+        setUploadedSounds((prev: any) => // auto: implicit any [...prev, result.customSound!]);
         onSoundUploaded?.(result.customSound);
       } else {
         updateUploadItem(item.id, {
@@ -256,21 +256,21 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
   };
 
   const updateUploadItem = (id: string, updates: Partial<UploadItem>) => {
-    setUploadItems(prev =>
-      prev.map(item => (item.id === id ? { ...item, ...updates } : item))
+    setUploadItems((prev: any) => // auto: implicit any
+      prev.map((item: any) => // auto: implicit any (item.id === id ? { ...item, ...updates } : item))
     );
   };
 
   const removeUploadItem = (id: string) => {
-    setUploadItems(prev => {
-      const item = prev.find(i => i.id === id);
+    setUploadItems((prev: any) => // auto: implicit any {
+      const item = prev.find((i: any) => // auto: implicit any i.id === id);
       if (item?.previewUrl) {
         URL.revokeObjectURL(item.previewUrl);
       }
       if (item?.audio) {
         item.audio.pause();
       }
-      return prev.filter(i => i.id !== id);
+      return prev.filter((i: any) => // auto: implicit any i.id !== id);
     });
   };
 
@@ -278,7 +278,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
     try {
       const success = await customSoundManager.deleteCustomSound(sound.id, userId);
       if (success) {
-        setUploadedSounds(prev => prev.filter(s => s.id !== sound.id));
+        setUploadedSounds((prev: any) => // auto: implicit any prev.filter((s: any) => // auto: implicit any s.id !== sound.id));
         onSoundDeleted?.(sound.id);
       }
     } catch (error) {
@@ -295,7 +295,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
       updateUploadItem(item.id, { isPlaying: false });
     } else {
       // Stop all other previews
-      uploadItems.forEach(i => {
+      uploadItems.forEach((i: any) => // auto: implicit any {
         if (i.audio && i.isPlaying) {
           i.audio.pause();
           updateUploadItem(i.id, { isPlaying: false });
@@ -410,7 +410,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
             <div className="mt-6 space-y-3">
               <h4 className="font-medium">Uploading Files</h4>
               <ScrollArea className="h-64">
-                {uploadItems.map(item => (
+                {uploadItems.map((item: any) => // auto: implicit any (
                   <div
                     key={item.id}
                     className="flex items-center gap-3 p-3 border rounded-lg"
@@ -494,7 +494,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
           ) : (
             <ScrollArea className="h-96">
               <div className="space-y-3">
-                {uploadedSounds.map(sound => (
+                {uploadedSounds.map((sound: any) => // auto: implicit any (
                   <div
                     key={sound.id}
                     className="flex items-center gap-3 p-4 border rounded-lg hover:bg-gray-50"
@@ -552,9 +552,9 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                           </DialogHeader>
                           <SoundEditForm
                             sound={sound}
-                            onSave={updatedSound => {
-                              setUploadedSounds(prev =>
-                                prev.map(s =>
+                            onSave={(updatedSound: any) => // auto: implicit any {
+                              setUploadedSounds((prev: any) => // auto: implicit any
+                                prev.map((s: any) => // auto: implicit any
                                   s.id === updatedSound.id ? updatedSound : s
                                 )
                               );
@@ -607,7 +607,7 @@ const SoundEditForm: React.FC<{
           category,
           tags: tags
             .split(',')
-            .map(tag => tag.trim())
+            .map((tag: any) => // auto: implicit any tag.trim())
             .filter(Boolean),
         }
       );
@@ -620,7 +620,7 @@ const SoundEditForm: React.FC<{
           category,
           tags: tags
             .split(',')
-            .map(tag => tag.trim())
+            .map((tag: any) => // auto: implicit any tag.trim())
             .filter(Boolean),
         };
         onSave(updatedSound);
@@ -639,7 +639,7 @@ const SoundEditForm: React.FC<{
         <Input
           id="sound-name"
           value={name}
-          onChange={e => setName(e.target.value)}
+          onChange={(e: any) => // auto: implicit any setName(e.target.value)}
           placeholder="Sound name"
         />
       </div>
@@ -649,7 +649,7 @@ const SoundEditForm: React.FC<{
         <Textarea
           id="sound-description"
           value={description}
-          onChange={e => setDescription(e.target.value)}
+          onChange={(e: any) => // auto: implicit any setDescription(e.target.value)}
           placeholder="Describe this sound..."
           rows={3}
         />
@@ -679,7 +679,7 @@ const SoundEditForm: React.FC<{
         <Input
           id="sound-tags"
           value={tags}
-          onChange={e => setTags(e.target.value)}
+          onChange={(e: any) => // auto: implicit any setTags(e.target.value)}
           placeholder="tag1, tag2, tag3"
         />
         <p className="text-sm text-gray-500 mt-1">Separate tags with commas</p>

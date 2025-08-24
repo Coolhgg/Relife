@@ -76,7 +76,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
           await EnhancedSmartAlarmScheduler.createEnhancedSmartAlarm(alarmData);
 
         if (newAlarm) {
-          setAlarms(prev => [...prev, newAlarm]);
+          setAlarms((prev: any) => // auto: implicit any [...prev, newAlarm]);
 
           // Start monitoring if enabled
           if (newAlarm.enabled && newAlarm.realTimeAdaptation) {
@@ -108,8 +108,8 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         )) as EnhancedSmartAlarm;
 
         if (updatedAlarm) {
-          setAlarms(prev =>
-            prev.map(alarm => (alarm.id === id ? updatedAlarm : alarm))
+          setAlarms((prev: any) => // auto: implicit any
+            prev.map((alarm: any) => // auto: implicit any (alarm.id === id ? updatedAlarm : alarm))
           );
 
           // Update monitoring status
@@ -141,7 +141,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
       RealTimeSmartAdapter.stopMonitoringAlarm(id);
 
       // Remove from state (actual deletion would happen in the service)
-      setAlarms(prev => prev.filter(alarm => alarm.id !== id));
+      setAlarms((prev: any) => // auto: implicit any prev.filter((alarm: any) => // auto: implicit any alarm.id !== id));
 
       return true;
     } catch (err) {
@@ -163,8 +163,8 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
           alarmId
         )) as EnhancedSmartAlarm;
         if (updatedAlarm) {
-          setAlarms(prev =>
-            prev.map(alarm => (alarm.id === alarmId ? updatedAlarm : alarm))
+          setAlarms((prev: any) => // auto: implicit any
+            prev.map((alarm: any) => // auto: implicit any (alarm.id === alarmId ? updatedAlarm : alarm))
           );
         }
 
