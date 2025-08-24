@@ -9,15 +9,18 @@ import '@testing-library/jest-dom';
 // Extend Jest matchers
 expect.extend({
   toHaveBeenCalledWithObjectContaining(received: jest.Mock, expected: object) {
-    const pass = received.mock.calls.some((call: any) => // auto: implicit any
-      call.some(
-        arg =>
-          typeof arg === 'object' &&
-          arg !== null &&
-          Object.keys(expected).every(
-            key => arg.hasOwnProperty(key) && arg[key] === expected[key]
-          )
-      )
+    const pass = received.mock.calls.some(
+      (
+        call: any // auto: implicit any
+      ) =>
+        call.some(
+          arg =>
+            typeof arg === 'object' &&
+            arg !== null &&
+            Object.keys(expected).every(
+              key => arg.hasOwnProperty(key) && arg[key] === expected[key]
+            )
+        )
     );
 
     if (pass) {
@@ -105,14 +108,16 @@ Object.defineProperty(global, 'performance', {
 });
 
 // Mock PerformanceObserver
-global.PerformanceObserver = jest.fn().mockImplementation((callback: any) => ({ // auto: implicit any{
+global.PerformanceObserver = jest.fn().mockImplementation((callback: any) => ({
+  // auto: implicit any{
   observe: jest.fn(),
   disconnect: jest.fn(),
   takeRecords: jest.fn(() => []),
 })) as any;
 
 // Mock IntersectionObserver
-global.IntersectionObserver = jest.fn().mockImplementation((callback: any) => ({ // auto: implicit any{
+global.IntersectionObserver = jest.fn().mockImplementation((callback: any) => ({
+  // auto: implicit any{
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),

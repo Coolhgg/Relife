@@ -157,7 +157,8 @@ class SentryService {
       return 'sentry-not-initialized';
     }
 
-    return Sentry.withScope((scope: any) => { // auto: implicit any
+    return Sentry.withScope((scope: any) => {
+      // auto: implicit any
       // Set error level
       if (context.level) {
         scope.setLevel(context.level);
@@ -211,7 +212,8 @@ class SentryService {
       return 'sentry-not-initialized';
     }
 
-    return Sentry.withScope((scope: any) => { // auto: implicit any
+    return Sentry.withScope((scope: any) => {
+      // auto: implicit any
       scope.setLevel(level);
 
       if (context.tags) {

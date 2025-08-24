@@ -275,13 +275,17 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
 
   // Cleanup on unmount
   useEffect(() => {
+    const currentAudioRefs = audioRefs.current;
+    const currentIntervalRefs = intervalRefs.current;
     return () => {
-      audioRefs.current.forEach((audio: any) => { // auto: implicit any
+      currentAudioRefs.forEach((audio: any) => {
+        // auto: implicit any
         if (!audio.paused) {
           audio.pause();
         }
       });
-      intervalRefs.current.forEach((interval: any) => { // auto: implicit any
+      currentIntervalRefs.forEach((interval: any) => {
+        // auto: implicit any
         clearInterval(interval);
       });
     };
@@ -467,7 +471,8 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
 
     // Track progress
     const progressInterval = setInterval(() => {
-      setDemoProgress((prev: any) => { // auto: implicit any
+      setDemoProgress((prev: any) => {
+        // auto: implicit any
         const newProgress = prev + 100 / (totalDuration / 100);
         if (newProgress >= 100) {
           clearInterval(progressInterval);

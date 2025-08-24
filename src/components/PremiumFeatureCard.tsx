@@ -167,7 +167,8 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
         <div className="flex items-center justify-between">
           {hasAccess ? (
             <button
-              onClick={(e: any) => { // auto: implicit any
+              onClick={(e: any) => {
+                // auto: implicit any
                 e.stopPropagation();
                 onClick?.();
               }}
@@ -178,7 +179,8 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
             </button>
           ) : (
             <button
-              onClick={(e: any) => { // auto: implicit any
+              onClick={(e: any) => {
+                // auto: implicit any
                 e.stopPropagation();
                 handleUpgrade();
               }}

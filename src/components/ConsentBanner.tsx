@@ -69,7 +69,8 @@ export default function ConsentBanner({
   };
 
   const handleConsentChange = (type: keyof ConsentSettings, value: boolean) => {
-    setConsents((prev: any) => ({ // auto: implicit any{
+    setConsents((prev: any) => ({
+      // auto: implicit any{
       ...prev,
       [type]: value,
     }));
@@ -191,7 +192,9 @@ export default function ConsentBanner({
                         type="checkbox"
                         checked={consents[key as keyof ConsentSettings]}
                         disabled={config.required}
-                        onChange={(e: any) => // auto: implicit any
+                        onChange={(
+                          e: any // auto: implicit any
+                        ) =>
                           handleConsentChange(
                             key as keyof ConsentSettings,
                             e.target.checked
