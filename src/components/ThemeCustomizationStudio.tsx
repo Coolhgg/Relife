@@ -58,7 +58,9 @@ const AnimationControl: React.FC<AnimationControlProps> = ({
         <input
           type="checkbox"
           checked={enabled}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(effect, e.target.checked)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange(effect, e.target.checked)
+          }
         />
         {label}
       </label>
@@ -204,8 +206,8 @@ const ThemeCustomizationStudio: React.FC = () => {
       link.download = `custom-theme-${theme}.${exportFormat}`;
       link.click();
       URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Failed to export theme:', error);
+    } catch (_error) {
+      console._error('Failed to export theme:', _error);
     } finally {
       setIsExporting(false);
     }

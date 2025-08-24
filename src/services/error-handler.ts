@@ -11,7 +11,7 @@ export interface ErrorContext {
   action?: string;
   feature?: string;
   metadata?: Record<string, unknown>;
-  level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug';
+  level?: 'fatal' | '_error' | 'warning' | 'info' | 'debug';
   severity?: 'low' | 'medium' | 'high' | 'critical';
   tags?: Record<string, string>;
   fingerprint?: string[];
@@ -73,7 +73,7 @@ class ErrorHandlerService {
   private analyticsService: AnalyticsService;
   private errorMetrics: ErrorMetrics;
   private errorQueue: Array<{
-    error: Error;
+    _error: Error;
     context: ErrorContext;
     timestamp: number;
   }> = [];
@@ -109,28 +109,28 @@ class ErrorHandlerService {
   /**
    * Enhanced error handling with Sentry and Analytics integration
    */
-  handleError(error: Error, message?: string, context: ErrorContext = {}): string {
+  handleError(_error: Error, message?: string, context: ErrorContext = {}): string {
     const errorId = `err_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
     const timestamp = Date.now();
-    const severity = context.severity || this.determineSeverity(error, context);
-    const category = this.categorizeError(error, context);
-    const fingerprint = this.generateFingerprint(error, context);
+    const severity = context.severity || this.determineSeverity(_error, context);
+    const category = this.categorizeError(_error, context);
+    const fingerprint = this.generateFingerprint(_error, context);
 
     // Rate limiting check
     if (this.isRateLimited(fingerprint)) {
-      console.warn(`[ERROR-HANDLER] Rate limited error: ${fingerprint}`);
+      console.warn(`[ERROR-HANDLER] Rate limited _error: ${fingerprint}`);
       return errorId;
     }
 
     // Update metrics
-    this.updateErrorMetrics(error, context);
+    this.updateErrorMetrics(_error, context);
 
     // Enhanced console logging
     const logLevel = context.level || 'error';
     const logData = {
       errorId,
       message: message || error.message,
-      stack: error.stack,
+      stack: _error.stack,
       context,
       timestamp: new Date(timestamp).toISOString(),
       severity,
@@ -140,7 +140,7 @@ class ErrorHandlerService {
     switch (logLevel) {
       case 'fatal':
       case 'error':
-        console.error(
+        console._error(
           `🚨 [${severity?.toUpperCase() || 'ERROR'}] ${category.toUpperCase()}:`,
           logData
         );
@@ -169,23 +169,23 @@ class ErrorHandlerService {
           severity,
         };
 
-        this.sentryService.captureException(error, {
+        this.sentryService.captureException(_error, {
           component: context.component || 'unknown',
           action: context.action || 'unknown',
           metadata: sentryContext,
         });
       } catch (sentryError) {
-        console.warn('Failed to send error to Sentry:', sentryError);
+        console.warn('Failed to send _error to Sentry:', sentryError);
       }
     }
 
-    // Send to Analytics (for error tracking and analysis)
+    // Send to Analytics (for _error tracking and analysis)
     if (!context.suppressAnalytics && this.analyticsService.isReady()) {
       try {
         this.analyticsService.track(ANALYTICS_EVENTS.ERROR_OCCURRED, {
           errorId,
-          errorType: error.constructor.name,
-          errorMessage: error.message,
+          errorType: _error.constructor.name,
+          errorMessage: _error.message,
           component: context.component,
           action: context.action,
           feature: context.feature,
@@ -195,7 +195,7 @@ class ErrorHandlerService {
           timestamp: new Date(timestamp).toISOString(),
         });
       } catch (analyticsError) {
-        console.warn('Failed to send error to Analytics:', analyticsError);
+        console.warn('Failed to send _error to Analytics:', analyticsError);
       }
     }
 
@@ -203,7 +203,7 @@ class ErrorHandlerService {
     const errorEntry: ErrorEntry = {
       id: errorId,
       message: message || error.message,
-      stack: error.stack,
+      stack: _error.stack,
       context,
       timestamp: new Date(timestamp).toISOString(),
       severity,
@@ -218,7 +218,7 @@ class ErrorHandlerService {
     };
 
     this.storeErrorLocally(errorEntry);
-    this.addToBatchQueue(error, context, timestamp);
+    this.addToBatchQueue(_error, context, timestamp);
 
     // Trigger immediate processing for critical errors
     if (severity === 'critical') {
@@ -229,18 +229,18 @@ class ErrorHandlerService {
   }
 
   private determineSeverity(
-    error: Error,
+    _error: Error,
     context: ErrorContext
   ): 'low' | 'medium' | 'high' | 'critical' {
     const level = context.level || 'error';
 
     // Map level to severity if not explicitly provided
     if (level === 'fatal') return 'critical';
-    if (level === 'error') {
+    if (level === '_error') {
       // Critical errors
       if (
-        error.message.includes('ChunkLoadError') ||
-        error.message.includes('Network error') ||
+        _error.message.includes('ChunkLoadError') ||
+        _error.message.includes('Network _error') ||
         context.context?.includes('alarm_trigger') ||
         context.context?.includes('authentication')
       ) {
@@ -254,8 +254,8 @@ class ErrorHandlerService {
     return 'medium';
   }
 
-  private categorizeError(error: Error, context: ErrorContext): ErrorCategory {
-    const message = error.message.toLowerCase();
+  private categorizeError(_error: Error, context: ErrorContext): ErrorCategory {
+    const message = _error.message.toLowerCase();
     const contextStr = context.context?.toLowerCase() || '';
     const component = context.component?.toLowerCase() || '';
 
@@ -330,9 +330,9 @@ class ErrorHandlerService {
     return 'unknown';
   }
 
-  private generateFingerprint(error: Error, context: ErrorContext): string {
+  private generateFingerprint(_error: Error, context: ErrorContext): string {
     const message = error.message.replace(/\d+/g, 'X'); // Replace numbers
-    const stackTrace = error.stack?.split('\n')[0] || '';
+    const stackTrace = _error.stack?.split('\n')[0] || '';
     const contextStr = context.context || context.component || '';
 
     return btoa(`${message}:${stackTrace}:${contextStr}`).substring(0, 20);
@@ -358,7 +358,7 @@ class ErrorHandlerService {
     return false;
   }
 
-  private updateErrorMetrics(error: Error, context: ErrorContext): void {
+  private updateErrorMetrics(_error: Error, context: ErrorContext): void {
     const now = Date.now();
     const errorType = error.constructor.name;
     const component = context.component || 'unknown';
@@ -370,7 +370,7 @@ class ErrorHandlerService {
     this.errorMetrics.errorsByComponent[component] =
       (this.errorMetrics.errorsByComponent[component] || 0) + 1;
 
-    // Calculate error rate (errors per minute over last hour)
+    // Calculate _error rate (errors per minute over last hour)
     const oneHourAgo = now - 60 * 60 * 1000;
     const recentErrors = this.errorQueue.filter(e => e.timestamp > oneHourAgo).length;
     this.errorMetrics.errorRate = recentErrors / 60; // errors per minute
@@ -383,16 +383,16 @@ class ErrorHandlerService {
         const parsed = JSON.parse(stored);
         this.errorMetrics = { ...this.errorMetrics, ...parsed };
       }
-    } catch (error) {
-      console.warn('Failed to load error metrics from localStorage:', error);
+    } catch (_error) {
+      console.warn('Failed to load _error metrics from localStorage:', _error);
     }
   }
 
   private saveErrorMetrics(): void {
     try {
       localStorage.setItem('relife_error_metrics', JSON.stringify(this.errorMetrics));
-    } catch (error) {
-      console.warn('Failed to save error metrics to localStorage:', error);
+    } catch (_error) {
+      console.warn('Failed to save _error metrics to localStorage:', _error);
     }
   }
 
@@ -406,13 +406,13 @@ class ErrorHandlerService {
       );
 
       if (existingIndex !== -1) {
-        // Update existing error
+        // Update existing _error
         const existing = existingErrors[existingIndex];
         existing.count++;
         existing.lastSeen = newError.timestamp;
         existing.context = { ...existing.context, ...newError.context };
       } else {
-        // Add new error
+        // Add new _error
         existingErrors.push(newError);
       }
 
@@ -422,17 +422,17 @@ class ErrorHandlerService {
         .slice(0, 50);
 
       localStorage.setItem('relife_errors_v2', JSON.stringify(sortedErrors));
-    } catch (e) {
-      console.warn('Could not store error locally:', e);
+    } catch (_e) {
+      console.warn('Could not store _error locally:', e);
     }
   }
 
   private addToBatchQueue(
-    error: Error,
+    _error: Error,
     context: ErrorContext,
     timestamp: number
   ): void {
-    const queueEntry = { error, context, timestamp };
+    const queueEntry = { _error, context, timestamp };
     this.errorQueue.push(queueEntry);
 
     // Keep queue size manageable
@@ -460,7 +460,7 @@ class ErrorHandlerService {
 
     // Send to remote error reporting service if configured
     this.sendToRemoteService(batch).catch(error => {
-      console.warn('Failed to send error batch to remote service:', error);
+      console.warn('Failed to send _error batch to remote service:', _error);
       // Re-queue errors for retry (with exponential backoff)
       setTimeout(() => {
         this.errorQueue.unshift(...batch);
@@ -469,7 +469,7 @@ class ErrorHandlerService {
   }
 
   private async sendToRemoteService(
-    errors: Array<{ error: Error; context: ErrorContext; timestamp: number }>
+    errors: Array<{ _error: Error; context: ErrorContext; timestamp: number }>
   ): Promise<void> {
     if (!navigator.onLine) {
       throw new Error('No internet connection');
@@ -478,10 +478,10 @@ class ErrorHandlerService {
     const payload = {
       errors: errors.map(e => ({
         message: e.error.message,
-        stack: e.error.stack,
+        stack: e._error.stack,
         context: e.context,
         timestamp: new Date(e.timestamp).toISOString(),
-        type: e.error.constructor.name,
+        type: e._error.constructor.name,
       })),
       timestamp: Date.now(),
       sessionId: this.getSessionId(),
@@ -491,7 +491,7 @@ class ErrorHandlerService {
     };
 
     // Log for debugging - replace with actual remote service in production
-    console.log('🔄 Sending error batch to remote service:', payload);
+    console.log('🔄 Sending _error batch to remote service:', payload);
 
     // Simulate successful send
     return Promise.resolve();
@@ -501,8 +501,8 @@ class ErrorHandlerService {
     // Catch unhandled JavaScript errors
     window.addEventListener('error', event => {
       this.handleError(
-        new Error(event.message || 'Unknown error'),
-        'Global error handler',
+        new Error(_event.message || 'Unknown _error'),
+        'Global _error handler',
         {
           context: 'global_error',
           severity: 'high',
@@ -518,7 +518,7 @@ class ErrorHandlerService {
     // Catch unhandled promise rejections
     window.addEventListener('unhandledrejection', event => {
       this.handleError(
-        new Error(event.reason?.toString() || 'Unhandled promise rejection'),
+        new Error(_event.reason?.toString() || 'Unhandled promise rejection'),
         'Unhandled promise rejection',
         {
           context: 'unhandled_promise',
@@ -532,9 +532,9 @@ class ErrorHandlerService {
 
     // Catch resource loading errors
     window.addEventListener(
-      'error',
+      '_error',
       event => {
-        if (event.target && event.target !== window) {
+        if (event.target && _event.target !== window) {
           const target = event.target as HTMLElement;
           this.handleError(
             new Error(`Failed to load resource: ${target.tagName}`),
@@ -558,11 +558,11 @@ class ErrorHandlerService {
   wrapAsync<T>(promise: Promise<T>, context: ErrorContext = {}): Promise<T> {
     return promise.catch(error => {
       this.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'Async operation failed',
         context
       );
-      throw error;
+      throw _error;
     });
   }
 
@@ -577,13 +577,13 @@ class ErrorHandlerService {
           return this.wrapAsync(result, context);
         }
         return result;
-      } catch (error) {
+      } catch (_error) {
         this.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? error : new Error(String(_error)),
           'Function execution failed',
           context
         );
-        throw error;
+        throw _error;
       }
     }) as T;
   }
@@ -612,19 +612,19 @@ class ErrorHandlerService {
 
   getErrorAnalytics(): ErrorAnalytics {
     const errors = this.getStoredErrors();
-    const totalErrors = errors.reduce((sum, error) => sum + error.count, 0);
+    const totalErrors = errors.reduce((sum, _error) => sum + error.count, 0);
 
     const errorsByCategory = errors.reduce(
-      (acc, error) => {
-        acc[error.category] = (acc[error.category] || 0) + error.count;
+      (acc, _error) => {
+        acc[error.category] = (acc[_error.category] || 0) + _error.count;
         return acc;
       },
       {} as Record<ErrorCategory, number>
     );
 
     const errorsBySeverity = errors.reduce(
-      (acc, error) => {
-        acc[error.severity] = (acc[error.severity] || 0) + error.count;
+      (acc, _error) => {
+        acc[error.severity] = (acc[_error.severity] || 0) + _error.count;
         return acc;
       },
       {} as Record<string, number>
@@ -633,7 +633,7 @@ class ErrorHandlerService {
     const topErrors = errors
       .sort((a, b) => b.count - a.count)
       .slice(0, 10)
-      .map(error => ({ message: error.message, count: error.count }));
+      .map(error => ({ message: _error.message, count: _error.count }));
 
     const sessionCount = this.getSessionCount();
     const errorRate = totalErrors / Math.max(sessionCount, 1);
@@ -663,10 +663,10 @@ class ErrorHandlerService {
   }
 
   private getSessionId(): string {
-    let sessionId = sessionStorage.getItem('relife-error-session');
+    let sessionId = sessionStorage.getItem('relife-_error-session');
     if (!sessionId) {
       sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-      sessionStorage.setItem('relife-error-session', sessionId);
+      sessionStorage.setItem('relife-_error-session', sessionId);
     }
     return sessionId;
   }
@@ -685,7 +685,7 @@ class ErrorHandlerService {
   }
 
   private getSessionCount(): number {
-    const count = localStorage.getItem('relife-error-session-count');
+    const count = localStorage.getItem('relife-_error-session-count');
     return count ? parseInt(count, 10) : 1;
   }
 
@@ -693,8 +693,8 @@ class ErrorHandlerService {
    * Legacy method for backwards compatibility
    * @deprecated Use handleError instead
    */
-  logError(error: Error, context: ErrorContext = {}): string {
-    return this.handleError(error, undefined, context);
+  logError(_error: Error, context: ErrorContext = {}): string {
+    return this.handleError(_error, undefined, context);
   }
 
   // Cleanup method

@@ -130,7 +130,7 @@ export class SmartAlarmScheduler {
       };
 
       // Save to database
-      const { data, error } = await supabase.from('alarms').insert({
+      const { data, _error } = await supabase.from('alarms').insert({
         id: smartAlarm.id,
         user_id: this.userId,
         time: smartAlarm.time,
@@ -150,10 +150,10 @@ export class SmartAlarmScheduler {
         updated_at: smartAlarm.updatedAt,
       });
 
-      if (error) throw error;
+      if (_error) throw error;
       return smartAlarm;
-    } catch (error) {
-      console.error('Error creating smart alarm:', error);
+    } catch (_error) {
+      console._error('Error creating smart alarm:', _error);
       return null;
     }
   }
@@ -187,7 +187,7 @@ export class SmartAlarmScheduler {
         }
       }
 
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('alarms')
         .update({
           ...updates,
@@ -204,10 +204,10 @@ export class SmartAlarmScheduler {
         .select()
         .single();
 
-      if (error) throw error;
+      if (_error) throw error;
       return this.mapDatabaseToSmartAlarm(data);
-    } catch (error) {
-      console.error('Error updating smart alarm:', error);
+    } catch (_error) {
+      console._error('Error updating smart alarm:', _error);
       return null;
     }
   }
@@ -216,17 +216,17 @@ export class SmartAlarmScheduler {
     if (!this.userId) return null;
 
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('alarms')
         .select('*')
         .eq('id', alarmId)
         .eq('user_id', this.userId)
         .single();
 
-      if (error) throw error;
+      if (_error) throw error;
       return this.mapDatabaseToSmartAlarm(data);
-    } catch (error) {
-      console.error('Error fetching smart alarm:', error);
+    } catch (_error) {
+      console._error('Error fetching smart alarm:', _error);
       return null;
     }
   }
@@ -235,16 +235,16 @@ export class SmartAlarmScheduler {
     if (!this.userId) return [];
 
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('alarms')
         .select('*')
         .eq('user_id', this.userId)
         .order('time', { ascending: true });
 
-      if (error) throw error;
+      if (_error) throw error;
       return data.map(this.mapDatabaseToSmartAlarm);
-    } catch (error) {
-      console.error('Error fetching smart alarms:', error);
+    } catch (_error) {
+      console._error('Error fetching smart alarms:', _error);
       return [];
     }
   }
@@ -267,8 +267,8 @@ export class SmartAlarmScheduler {
       }
 
       return recommendation;
-    } catch (error) {
-      console.error('Error generating smart schedule:', error);
+    } catch (_error) {
+      console._error('Error generating smart schedule:', _error);
       return null;
     }
   }
@@ -329,8 +329,8 @@ export class SmartAlarmScheduler {
       });
 
       console.log('Sleep goal updated:', goal);
-    } catch (error) {
-      console.error('Error saving sleep goal:', error);
+    } catch (_error) {
+      console._error('Error saving sleep goal:', _error);
     }
   }
 
@@ -342,13 +342,13 @@ export class SmartAlarmScheduler {
     if (!this.userId) return;
 
     try {
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('user_preferences')
         .select('sleep_goal')
         .eq('user_id', this.userId)
         .single();
 
-      if (!error && data?.sleep_goal) {
+      if (!_error && data?.sleep_goal) {
         this.sleepGoal = data.sleep_goal;
       } else {
         // Set default sleep goal
@@ -361,8 +361,8 @@ export class SmartAlarmScheduler {
           adaptToLifestyle: true,
         };
       }
-    } catch (error) {
-      console.error('Error loading sleep goal:', error);
+    } catch (_error) {
+      console._error('Error loading sleep goal:', _error);
     }
   }
 
@@ -388,8 +388,8 @@ export class SmartAlarmScheduler {
       };
 
       return analysis;
-    } catch (error) {
-      console.error('Error analyzing user schedule:', error);
+    } catch (_error) {
+      console._error('Error analyzing _user schedule:', _error);
       return null;
     }
   }
@@ -586,8 +586,8 @@ export class SmartAlarmScheduler {
         accepted: optimization.accepted,
         created_at: new Date(),
       });
-    } catch (error) {
-      console.error('Error recording optimization:', error);
+    } catch (_error) {
+      console._error('Error recording optimization:', _error);
     }
   }
 
@@ -605,8 +605,8 @@ export class SmartAlarmScheduler {
         query = query.eq('alarm_id', alarmId);
       }
 
-      const { data, error } = await query;
-      if (error) throw error;
+      const { data, _error } = await query;
+      if (_error) throw error;
 
       return data.map((item: any) => ({
         alarmId: item.alarm_id,
@@ -617,8 +617,8 @@ export class SmartAlarmScheduler {
         effectiveDate: new Date(item.effective_date),
         accepted: item.accepted,
       }));
-    } catch (error) {
-      console.error('Error fetching optimization history:', error);
+    } catch (_error) {
+      console._error('Error fetching optimization history:', _error);
       return [];
     }
   }

@@ -37,39 +37,201 @@ import type {
 // ALARM STATE INTERFACE
 // =============================================================================
 
+/**
+ * Comprehensive state interface for alarm management in the Relife application.
+ *
+ * This interface manages all aspects of alarm functionality including:
+ * - Core alarm data and lifecycle management
+ * - Advanced scheduling with smart optimizations
+ * - Voice and audio settings
+ * - Battle mode integration for gamified wake-up experiences
+ * - Performance analytics and user behavior tracking
+ * - UI state for complex alarm management interfaces
+ *
+ * @interface AlarmState
+ * @example
+ * ```typescript
+ * const alarmState: AlarmState = {
+ *   alarms: [{
+ *     id: 'alarm_123',
+ *     time: '07:30',
+ *     label: 'Morning Workout',
+ *     days: [1, 2, 3, 4, 5], // Weekdays
+ *     voiceMood: 'motivational',
+ *     enabled: true
+ *   }],
+ *   isLoading: false,
+ *   activeAlarms: [],
+ *   // ... other properties
+ * };
+ * ```
+ */
 export interface AlarmState {
-  // Core alarm data
+  /**
+   * Complete list of all user-created alarms.
+   * @type {Alarm[]}
+   * @description Contains all alarms regardless of their enabled/disabled state
+   * @example [{ id: '1', time: '07:00', label: 'Work', enabled: true }]
+   */
   alarms: Alarm[];
+
+  /**
+   * Subset of alarms that are currently enabled and scheduled to trigger.
+   * @type {Alarm[]}
+   * @description Filtered from the main alarms array based on enabled status
+   * @example [{ id: '1', time: '07:00', enabled: true }]
+   */
   activeAlarms: Alarm[];
+
+  /**
+   * Calculated instances of upcoming alarm triggers with precise timing.
+   * @type {AlarmInstance[]}
+   * @description Generated instances that account for recurrence patterns and scheduling rules
+   * @example [{ alarmId: '1', scheduledFor: '2024-01-15T07:00:00Z', instance: 1 }]
+   */
   upcomingAlarms: AlarmInstance[];
-  
-  // Alarm management
+
+  /**
+   * Indicates if alarms are currently being loaded from storage/API.
+   * @type {boolean}
+   * @description Used to show loading spinners and prevent concurrent operations
+   * @default false
+   */
   isLoading: boolean;
+
+  /**
+   * Indicates if an alarm save operation is in progress.
+   * @type {boolean}
+   * @description Prevents form submission during save operations
+   * @default false
+   */
   isSaving: boolean;
+
+  /**
+   * Error message from the last failed alarm load operation.
+   * @type {string | null}
+   * @description null when no error, string message when load fails
+   * @example "Failed to load alarms: Network error"
+   */
   loadError: string | null;
+
+  /**
+   * Error message from the last failed alarm save operation.
+   * @type {string | null}
+   * @description null when no error, string message when save fails
+   * @example "Failed to save alarm: Validation error"
+   */
   saveError: string | null;
+
+  /**
+   * Timestamp of the last successful alarm data update.
+   * @type {Date | null}
+   * @description Used for cache invalidation and sync status
+   * @example new Date('2024-01-15T10:30:00Z')
+   */
   lastUpdated: Date | null;
-  
-  // Current alarm execution
-  currentlyTriggering: string[]; // alarm IDs
+
+  /**
+   * Array of alarm IDs that are currently triggering and playing.
+   * @type {string[]}
+   * @description Alarms actively ringing that require user interaction to dismiss
+   * @example ['alarm_123', 'alarm_456']
+   */
+  currentlyTriggering: string[];
+
+  /**
+   * Map of snoozed alarms with their snooze count and next trigger time.
+   * @type {Record<string, { snoozeCount: number; snoozeUntil: Date }>}
+   * @description Tracks snooze state for each alarm to enforce limits
+   * @example { 'alarm_123': { snoozeCount: 2, snoozeUntil: new Date('2024-01-15T07:15:00Z') } }
+   */
   snoozing: Record<string, { snoozeCount: number; snoozeUntil: Date }>;
-  dismissing: string[]; // alarm IDs being dismissed
-  
-  // Alarm creation/editing state
+
+  /**
+   * Array of alarm IDs currently in the process of being dismissed.
+   * @type {string[]}
+   * @description Prevents duplicate dismissal requests during async operations
+   * @example ['alarm_789']
+   */
+  dismissing: string[];
+
+  /**
+   * State management for alarm creation and editing workflows.
+   * @type {Object}
+   * @description Tracks form state, validation, and editing mode
+   */
   editing: {
+    /**
+     * ID of the alarm being edited, null for new alarm creation.
+     * @type {string | null}
+     * @example 'alarm_123' | null
+     */
     alarmId: string | null;
+
+    /**
+     * Indicates if the form is in creation mode (true) vs edit mode (false).
+     * @type {boolean}
+     * @default false
+     */
     isCreating: boolean;
+
+    /**
+     * Indicates if the form has unsaved changes.
+     * @type {boolean}
+     * @description Used to show unsaved changes warnings
+     * @default false
+     */
     isDirty: boolean;
+
+    /**
+     * Draft alarm data being edited, contains partial alarm properties.
+     * @type {Partial<Alarm> | null}
+     * @description Allows incremental form updates without affecting saved alarm
+     * @example { time: '08:00', label: 'Updated label' }
+     */
     draftAlarm: Partial<Alarm> | null;
+
+    /**
+     * Map of field names to validation error messages.
+     * @type {Record<string, string>}
+     * @description Used to display field-specific validation errors
+     * @example { time: 'Time is required', label: 'Label must be under 100 characters' }
+     */
     validationErrors: Record<string, string>;
   };
-  
-  // Advanced scheduling
-  schedulingConfigs: Record<string, SchedulingConfig>; // keyed by alarmId
+
+  /**
+   * Advanced scheduling configurations mapped by alarm ID.
+   * @type {Record<string, SchedulingConfig>}
+   * @description Stores complex scheduling rules, recurrence patterns, and optimization settings per alarm
+   * @example { 'alarm_123': { enableSmartAdjustments: true, maxDailyAdjustment: 30 } }
+   */
+  schedulingConfigs: Record<string, SchedulingConfig>;
+
+  /**
+   * Array of active smart optimizations applied across all alarms.
+   * @type {SmartOptimization[]}
+   * @description Global optimizations like sleep cycle analysis, weather integration, etc.
+   * @example [{ type: 'sleep_cycle', isEnabled: true, parameters: { sensitivity: 0.8 } }]
+   */
   enabledOptimizations: SmartOptimization[];
+
+  /**
+   * Location-based triggers that can modify alarm behavior.
+   * @type {LocationTrigger[]}
+   * @description Geofenced actions that enable/disable or adjust alarms based on location
+   * @example [{ id: '1', location: 'home', action: 'enable_alarm', radius: 100 }]
+   */
   locationTriggers: LocationTrigger[];
+
+  /**
+   * Conditional rules that automatically modify alarms based on external factors.
+   * @type {ConditionalRule[]}
+   * @description Rules like 'if raining, delay alarm by 15 minutes'
+   * @example [{ condition: 'weather', operator: 'equals', value: 'rain', action: 'adjust_time' }]
+   */
   conditionalRules: ConditionalRule[];
-  
+
   // Voice and audio
   voiceSettings: {
     defaultMood: VoiceMood;
@@ -78,14 +240,14 @@ export interface AlarmState {
     volume: number;
     speaking: boolean;
   };
-  
+
   // Battle mode integration
   battleState: {
     activeBattles: Record<string, string>; // alarmId -> battleId mapping
     battleResults: Record<string, BattleResult>;
     battleStats: BattleStats | null;
   };
-  
+
   // Performance and analytics
   performance: {
     successRate: number; // percentage of successful wake-ups
@@ -94,7 +256,7 @@ export interface AlarmState {
     weeklyPatterns: WeeklyAlarmPattern[];
     sleepQualityCorrelation: number;
   };
-  
+
   // Settings and preferences
   settings: {
     defaultSound: string;
@@ -107,7 +269,7 @@ export interface AlarmState {
     weatherIntegrationEnabled: boolean;
     calendarIntegrationEnabled: boolean;
   };
-  
+
   // UI state
   ui: {
     selectedAlarmId: string | null;
@@ -154,7 +316,7 @@ export interface UserState {
   // Core user data
   currentUser: User | null;
   profile: UserProfile | null;
-  
+
   // Authentication state
   auth: {
     isAuthenticated: boolean;
@@ -164,7 +326,7 @@ export interface UserState {
     expiresAt: Date | null;
     loginMethod: 'email' | 'google' | 'apple' | 'anonymous' | null;
   };
-  
+
   // User preferences
   preferences: {
     language: string;
@@ -180,7 +342,7 @@ export interface UserState {
     analyticsEnabled: boolean;
     marketingEmailsEnabled: boolean;
   };
-  
+
   // Privacy and security
   privacy: {
     dataProcessingConsent: boolean;
@@ -191,7 +353,7 @@ export interface UserState {
     biometricLoginEnabled: boolean;
     sessionTimeout: number; // minutes
   };
-  
+
   // User activity and streaks
   activity: {
     currentStreak: number; // days
@@ -205,7 +367,7 @@ export interface UserState {
     lastActive: Date | null;
     joinDate: Date | null;
   };
-  
+
   // Achievements and gamification
   achievements: {
     unlockedAchievements: Achievement[];
@@ -215,7 +377,7 @@ export interface UserState {
     progressToNextLevel: number;
     badges: Badge[];
   };
-  
+
   // Social features
   social: {
     friends: UserFriend[];
@@ -224,7 +386,7 @@ export interface UserState {
     sharePermissions: SharePermissions;
     communityParticipation: boolean;
   };
-  
+
   // Error states
   errors: {
     profileLoadError: string | null;
@@ -232,7 +394,7 @@ export interface UserState {
     authError: string | null;
     permissionError: string | null;
   };
-  
+
   // Loading states
   loading: {
     profile: boolean;
@@ -328,12 +490,12 @@ export interface SubscriptionState {
   currentSubscription: Subscription | null;
   subscriptionPlan: SubscriptionPlan | null;
   availablePlans: SubscriptionPlan[];
-  
+
   // Feature access
   featureAccess: FeatureAccess | null;
   featureUsage: Record<string, FeatureUsage>; // keyed by feature ID
   billingUsage: BillingUsage | null;
-  
+
   // Subscription status
   status: {
     isActive: boolean;
@@ -345,7 +507,7 @@ export interface SubscriptionState {
     cancelAtPeriodEnd: boolean;
     gracePeriodEndsAt: Date | null;
   };
-  
+
   // Trial information
   trial: {
     isInTrial: boolean;
@@ -356,7 +518,7 @@ export interface SubscriptionState {
     hasUsedTrial: boolean;
     eligibleForExtension: boolean;
   };
-  
+
   // Billing and payments
   billing: {
     paymentMethods: PaymentMethod[];
@@ -369,7 +531,7 @@ export interface SubscriptionState {
     currency: string;
     taxRate: number;
   };
-  
+
   // Discounts and promotions
   promotions: {
     activeDiscounts: UserDiscount[];
@@ -382,7 +544,7 @@ export interface SubscriptionState {
       pendingEarnings: number; // in cents
     };
   };
-  
+
   // Upgrade/downgrade management
   changes: {
     pendingChange: SubscriptionChange | null;
@@ -391,7 +553,7 @@ export interface SubscriptionState {
     lastUpgradePrompt: Date | null;
     upgradePromptFrequency: number; // days
   };
-  
+
   // Feature limitations and usage warnings
   limits: {
     reachedLimits: Set<string>; // feature IDs
@@ -399,7 +561,7 @@ export interface SubscriptionState {
     overageFees: OverageFee[];
     warningsShown: Set<string>; // feature IDs with warnings shown
   };
-  
+
   // UI state for subscription management
   ui: {
     showUpgradeModal: boolean;
@@ -410,7 +572,7 @@ export interface SubscriptionState {
     lastPaymentError: string | null;
     showUsageDetails: boolean;
   };
-  
+
   // Loading and error states
   loading: {
     subscription: boolean;
@@ -419,7 +581,7 @@ export interface SubscriptionState {
     invoices: boolean;
     featureAccess: boolean;
   };
-  
+
   errors: {
     subscriptionError: string | null;
     paymentError: string | null;
@@ -469,7 +631,7 @@ export interface AppState {
   alarm: AlarmState;
   user: UserState;
   subscription: SubscriptionState;
-  
+
   // Global app state
   app: {
     initialized: boolean;
@@ -481,7 +643,7 @@ export interface AppState {
     maintenanceMode: boolean;
     criticalError: string | null;
   };
-  
+
   // Navigation and routing
   navigation: {
     currentView: 'dashboard' | 'alarms' | 'settings' | 'profile' | 'subscription';
@@ -489,7 +651,7 @@ export interface AppState {
     navigationHistory: string[];
     modalStack: string[];
   };
-  
+
   // Performance monitoring
   performance: {
     startupTime: number;
@@ -513,21 +675,30 @@ export type AlarmAction =
   | { type: 'ALARM_CREATE_ERROR'; payload: string }
   | { type: 'ALARM_UPDATE_START'; payload: string }
   | { type: 'ALARM_UPDATE_SUCCESS'; payload: Alarm }
-  | { type: 'ALARM_UPDATE_ERROR'; payload: { id: string; error: string } }
+  | { type: 'ALARM_UPDATE_ERROR'; payload: { id: string; _error: string } }
   | { type: 'ALARM_DELETE'; payload: string }
   | { type: 'ALARM_TOGGLE'; payload: { id: string; enabled: boolean } }
   | { type: 'ALARM_TRIGGER'; payload: string }
   | { type: 'ALARM_SNOOZE'; payload: { id: string; snoozeUntil: Date } }
   | { type: 'ALARM_DISMISS'; payload: string }
-  | { type: 'SET_EDITING_ALARM'; payload: { alarmId: string | null; isCreating: boolean } }
+  | {
+      type: 'SET_EDITING_ALARM';
+      payload: { alarmId: string | null; isCreating: boolean };
+    }
   | { type: 'UPDATE_DRAFT_ALARM'; payload: Partial<Alarm> }
   | { type: 'SET_ALARM_VALIDATION_ERRORS'; payload: Record<string, string> }
-  | { type: 'UPDATE_SCHEDULING_CONFIG'; payload: { alarmId: string; config: SchedulingConfig } };
+  | {
+      type: 'UPDATE_SCHEDULING_CONFIG';
+      payload: { alarmId: string; _config: SchedulingConfig };
+    };
 
 // User actions
 export type UserAction =
   | { type: 'USER_LOGIN_START' }
-  | { type: 'USER_LOGIN_SUCCESS'; payload: { user: User; token: string; refreshToken: string } }
+  | {
+      type: 'USER_LOGIN_SUCCESS';
+      payload: { user: User; token: string; refreshToken: string };
+    }
   | { type: 'USER_LOGIN_ERROR'; payload: string }
   | { type: 'USER_LOGOUT' }
   | { type: 'USER_PROFILE_LOAD_START' }
@@ -540,7 +711,7 @@ export type UserAction =
   | { type: 'USER_FRIEND_ACCEPT'; payload: string }
   | { type: 'USER_CHALLENGE_JOIN'; payload: SocialChallenge };
 
-// Subscription actions  
+// Subscription actions
 export type SubscriptionAction =
   | { type: 'SUBSCRIPTION_LOAD_START' }
   | { type: 'SUBSCRIPTION_LOAD_SUCCESS'; payload: Subscription }
@@ -573,17 +744,17 @@ export const createAppSelectors = (state: AppState) => ({
   getAlarmById: (id: string) => state.alarm.alarms.find(alarm => alarm.id === id),
   isAlarmLoading: () => state.alarm.isLoading,
   getCurrentlyTriggeringAlarms: () => state.alarm.currentlyTriggering,
-  
+
   // User selectors
   isAuthenticated: () => state.user.auth.isAuthenticated,
   getCurrentUser: () => state.user.currentUser,
   getUserTier: () => state.subscription.status.tier,
   getCurrentStreak: () => state.user.activity.currentStreak,
   getUserAchievements: () => state.user.achievements.unlockedAchievements,
-  
+
   // Subscription selectors
   isPremiumUser: () => state.subscription.status.isPremium,
-  hasFeatureAccess: (featureId: string) => 
+  hasFeatureAccess: (featureId: string) =>
     state.subscription.featureAccess?.features[featureId]?.hasAccess ?? false,
   getSubscriptionStatus: () => state.subscription.status,
   getRemainingTrialDays: () => state.subscription.trial.trialDaysRemaining,
@@ -595,22 +766,28 @@ export const createAppSelectors = (state: AppState) => ({
 // =============================================================================
 
 export const validateAlarmState = (state: AlarmState): boolean => {
-  return Array.isArray(state.alarms) && 
-         typeof state.isLoading === 'boolean' &&
-         state.editing !== null &&
-         typeof state.editing === 'object';
+  return (
+    Array.isArray(state.alarms) &&
+    typeof state.isLoading === 'boolean' &&
+    state.editing !== null &&
+    typeof state.editing === 'object'
+  );
 };
 
 export const validateUserState = (state: UserState): boolean => {
-  return state.auth !== null &&
-         typeof state.auth === 'object' &&
-         typeof state.auth.isAuthenticated === 'boolean';
+  return (
+    state.auth !== null &&
+    typeof state.auth === 'object' &&
+    typeof state.auth.isAuthenticated === 'boolean'
+  );
 };
 
 export const validateSubscriptionState = (state: SubscriptionState): boolean => {
-  return state.status !== null &&
-         typeof state.status === 'object' &&
-         typeof state.status.isActive === 'boolean';
+  return (
+    state.status !== null &&
+    typeof state.status === 'object' &&
+    typeof state.status.isActive === 'boolean'
+  );
 };
 
 // Type guards

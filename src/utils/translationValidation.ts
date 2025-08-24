@@ -29,7 +29,7 @@ export interface ValidationIssue {
     | 'suspicious_translation';
   key: string;
   message: string;
-  severity: 'error' | 'warning' | 'info';
+  severity: '_error' | 'warning' | 'info';
 }
 
 // Known interpolation patterns
@@ -69,7 +69,7 @@ export class TranslationValidator {
           type: 'missing_key',
           key,
           message: `Missing translation for key: ${key}`,
-          severity: 'error',
+          severity: '_error',
         });
       }
     });
@@ -308,7 +308,7 @@ export class TranslationValidator {
       if (result.issues.length > 0) {
         result.issues.forEach(issue => {
           const icon =
-            issue.severity === 'error'
+            issue.severity === '_error'
               ? '❌'
               : issue.severity === 'warning'
                 ? '⚠️'
@@ -345,10 +345,10 @@ export const validateTranslationFile = async (
       translations,
       referenceTranslations
     );
-  } catch (error) {
-    console.error(
+  } catch (_error) {
+    console._error(
       `Failed to validate translation file ${fileName} for ${language}:`,
-      error
+      _error
     );
     return null;
   }

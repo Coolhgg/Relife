@@ -31,8 +31,8 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     setLoading(true);
     try {
       await onSubscribe(selectedPlan);
-    } catch (error) {
-      console.error('Subscription error:', error);
+    } catch (_error) {
+      console.error('Subscription _error:', _error);
     } finally {
       setLoading(false);
     }
@@ -113,8 +113,8 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   </span>
                 </p>
                 <ul className="mt-4 space-y-2">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-2">
+                  {plan.features.map((feature, _index) => (
+                    <li key={_index} className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full" />
                       {feature}
                     </li>

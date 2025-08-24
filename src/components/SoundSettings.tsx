@@ -118,8 +118,8 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
   const handleThemeChange = async (theme: SoundTheme) => {
     try {
       await setSoundTheme(theme);
-    } catch (error) {
-      console.error('Error changing theme:', error);
+    } catch (_error) {
+      console._error('Error changing theme:', _error);
     }
   };
 
@@ -127,8 +127,8 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
   const handleThemePreview = async (theme: SoundTheme) => {
     try {
       await previewTheme(theme);
-    } catch (error) {
-      console.error('Error previewing theme:', error);
+    } catch (_error) {
+      console._error('Error previewing theme:', _error);
     }
   };
 
@@ -150,8 +150,8 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
         isCustom: true,
       }));
       setCustomThemes(transformedThemes);
-    } catch (error) {
-      console.error('Error loading custom themes:', error);
+    } catch (_error) {
+      console._error('Error loading custom themes:', _error);
       setCustomThemes([]);
     }
   };
@@ -185,7 +185,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
       setTimeout(() => {
         setTestResults((prev: any) => ({ ...prev, [soundId]: null }));
       }, 3000);
-    } catch (error) {
+    } catch (_error) {
       setTestResults((prev: any) => ({ ...prev, [soundId]: false }));
     }
   };
@@ -197,7 +197,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
       'ui.click',
       'ui.hover',
       'ui.success',
-      'ui.error',
+      'ui._error',
       'notification.default',
       'notification.alarm',
       'notification.beep',

@@ -197,17 +197,17 @@ describe('Input - Accessibility Tests', () => {
       expect(input).toHaveClass('aria-invalid:ring-destructive/20');
     });
 
-    it('should associate with error messages via aria-describedby', async () => {
+    it('should associate with _error messages via aria-describedby', async () => {
       await axeRender(
         <div>
           <label htmlFor="error-input">Email</label>
           <Input
-            id="error-input"
+            id="_error-input"
             type="email"
             aria-invalid={true}
             aria-describedby="email-error"
           />
-          <div id="email-error" role="alert">
+          <div id="email-_error" role="alert">
             Please enter a valid email address
           </div>
         </div>,
@@ -215,7 +215,7 @@ describe('Input - Accessibility Tests', () => {
       );
 
       const input = screen.getByRole('textbox');
-      expect(input).toHaveAttribute('aria-describedby', 'email-error');
+      expect(input).toHaveAttribute('aria-describedby', 'email-_error');
 
       const errorMessage = screen.getByRole('alert');
       expect(errorMessage).toHaveTextContent('Please enter a valid email address');
@@ -228,10 +228,10 @@ describe('Input - Accessibility Tests', () => {
           <Input
             id="help-input"
             type="password"
-            aria-describedby="help-text error-text"
+            aria-describedby="help-text _error-text"
           />
           <div id="help-text">Must contain 8+ characters</div>
-          <div id="error-text" role="alert">
+          <div id="_error-text" role="alert">
             Password is required
           </div>
         </div>,
@@ -239,7 +239,7 @@ describe('Input - Accessibility Tests', () => {
       );
 
       const input = screen.getByLabelText('Password');
-      expect(input).toHaveAttribute('aria-describedby', 'help-text error-text');
+      expect(input).toHaveAttribute('aria-describedby', 'help-text _error-text');
     });
   });
 
@@ -291,7 +291,7 @@ describe('Input - Accessibility Tests', () => {
       await axeRender(
         <div>
           <label htmlFor="good-placeholder">Email Address</label>
-          <Input id="good-placeholder" type="email" placeholder="user@example.com" />
+          <Input id="good-placeholder" type="email" placeholder="_user@example.com" />
         </div>,
         { axeOptions: axeRulesets.forms }
       );

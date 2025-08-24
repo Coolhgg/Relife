@@ -38,7 +38,7 @@ interface SettingsPageProps {
   onUpdateProfile?: (updates: any) => Promise<void>;
   onSignOut?: () => void;
   isLoading?: boolean;
-  error?: string | null;
+  _error?: string | null;
 }
 
 const SettingsPage: React.FC<SettingsPageProps> = ({
@@ -46,7 +46,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   onUpdateProfile,
   onSignOut,
   isLoading = false,
-  error = null,
+  _error = null,
 }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [showErrorTest, setShowErrorTest] = useState(false);
@@ -254,11 +254,11 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {appState.user && (
           <section className="mb-6">
             <UserProfile
-              user={appState.user}
+              user={appState._user}
               onUpdateProfile={onUpdateProfile || (() => Promise.resolve())}
               onSignOut={onSignOut || (() => {})}
               isLoading={isLoading}
-              error={error}
+              error={_error}
             />
           </section>
         )}
@@ -865,8 +865,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   min="1"
                   max="10"
                   value={voiceSensitivity}
-                  
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleVoiceSensitivityChange(parseInt(e.target.value)))
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    handleVoiceSensitivityChange(parseInt(e.target.value))
+                  }
                   className="w-full h-2 bg-gray-200 dark:bg-dark-300 rounded-lg appearance-none cursor-pointer"
                   aria-describedby="sensitivity-help"
                   aria-valuemin={1}
@@ -917,7 +918,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
               role="region"
               aria-labelledby="sounds-heading"
             >
-              <SoundSettings userId={appState.user?.id} />
+              <SoundSettings userId={appState._user?.id} />
             </div>
           )}
         </section>
@@ -1017,8 +1018,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <select
                     id="snooze-duration"
                     value={snoozeDuration}
-                    
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSnoozeDurationChange(e.target.value))
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      handleSnoozeDurationChange(e.target.value)
+                    }
                     className="alarm-input"
                     aria-describedby="snooze-duration-desc"
                   >
@@ -1041,8 +1043,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <select
                     id="max-snoozes"
                     value={maxSnoozes}
-                    
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleMaxSnoozesChange(e.target.value))
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      handleMaxSnoozesChange(e.target.value)
+                    }
                     className="alarm-input"
                     aria-describedby="max-snoozes-desc"
                   >
@@ -1215,7 +1218,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                         Error Boundary Testing
                       </h4>
                       <p className="text-orange-800 dark:text-orange-200 text-sm mb-3">
-                        Test error boundaries by triggering intentional errors. This
+                        Test _error boundaries by triggering intentional errors. This
                         helps ensure the app handles errors gracefully.
                       </p>
                       <button

@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
-import { Alert, AlertDescription } from '../ui/alert';
+import { AlertTriangle, AlertDescription } from '../ui/alert';
 import type { Invoice, PaymentStatus } from '../../types/premium';
 
 interface BillingHistoryProps {
@@ -108,8 +108,8 @@ export function BillingHistory({
     try {
       setActionLoading(`download-${invoiceId}`);
       await onDownloadInvoice(invoiceId);
-    } catch (error) {
-      console.error('Failed to download invoice:', error);
+    } catch (_error) {
+      console._error('Failed to download invoice:', _error);
     } finally {
       setActionLoading(null);
     }
@@ -120,8 +120,8 @@ export function BillingHistory({
     try {
       setActionLoading(`pay-${invoiceId}`);
       await onPayInvoice(invoiceId);
-    } catch (error) {
-      console.error('Failed to pay invoice:', error);
+    } catch (_error) {
+      console._error('Failed to pay invoice:', _error);
     } finally {
       setActionLoading(null);
     }
@@ -200,7 +200,7 @@ export function BillingHistory({
 
       {/* Failed Payments Alert */}
       {invoices.some(invoice => invoice.status === 'failed' || isPastDue(invoice)) && (
-        <Alert className="border-red-200 bg-red-50">
+        <AlertTriangle className="border-red-200 bg-red-50">
           <AlertCircle className="h-4 w-4 text-red-600" />
           <AlertDescription className="text-red-600">
             You have failed or past due payments. Please update your payment method or

@@ -23,21 +23,21 @@ import {
  * Enhanced HTTP client with comprehensive error handling and monitoring
  */
 export class EnhancedHttpClient implements HttpClient {
-  private config: HttpClientConfig;
+  private _config: HttpClientConfig;
   private metrics: Map<string, HttpRequestMetrics> = new Map();
   private cache: Map<string, { data: unknown; timestamp: number }> = new Map();
   private circuitBreakers: Map<string, CircuitBreakerState> = new Map();
   private rateLimits: Map<string, { count: number; resetTime: number }> = new Map();
 
-  constructor(config: HttpClientConfig = {}) {
-    this.config = {
+  constructor(_config: HttpClientConfig = {}) {
+    this._config = {
       timeout: 10000,
       retries: 3,
       retryDelay: 1000,
-      validateStatus: (status) => status >= 200 && status < 300,
+      validateStatus: status => status >= 200 && status < 300,
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
       ...config,
     };
@@ -45,68 +45,68 @@ export class EnhancedHttpClient implements HttpClient {
 
   async get<T = unknown>(
     url: string,
-    config?: Partial<HttpRequestConfig>
+    _config?: Partial<HttpRequestConfig>
   ): Promise<ApiResponse<T>> {
-    return this.request<T>({ 
-      url, 
-      method: 'GET', 
-      ...config 
+    return this.request<T>({
+      url,
+      method: 'GET',
+      ..._config,
     });
   }
 
   async post<T = unknown>(
     url: string,
     data?: unknown,
-    config?: Partial<HttpRequestConfig>
+    _config?: Partial<HttpRequestConfig>
   ): Promise<ApiResponse<T>> {
-    return this.request<T>({ 
-      url, 
-      method: 'POST', 
-      data, 
-      ...config 
+    return this.request<T>({
+      url,
+      method: 'POST',
+      data,
+      ..._config,
     });
   }
 
   async put<T = unknown>(
     url: string,
     data?: unknown,
-    config?: Partial<HttpRequestConfig>
+    _config?: Partial<HttpRequestConfig>
   ): Promise<ApiResponse<T>> {
-    return this.request<T>({ 
-      url, 
-      method: 'PUT', 
-      data, 
-      ...config 
+    return this.request<T>({
+      url,
+      method: 'PUT',
+      data,
+      ..._config,
     });
   }
 
   async delete<T = unknown>(
     url: string,
-    config?: Partial<HttpRequestConfig>
+    _config?: Partial<HttpRequestConfig>
   ): Promise<ApiResponse<T>> {
-    return this.request<T>({ 
-      url, 
-      method: 'DELETE', 
-      ...config 
+    return this.request<T>({
+      url,
+      method: 'DELETE',
+      ..._config,
     });
   }
 
   async patch<T = unknown>(
     url: string,
     data?: unknown,
-    config?: Partial<HttpRequestConfig>
+    _config?: Partial<HttpRequestConfig>
   ): Promise<ApiResponse<T>> {
-    return this.request<T>({ 
-      url, 
-      method: 'PATCH', 
-      data, 
-      ...config 
+    return this.request<T>({
+      url,
+      method: 'PATCH',
+      data,
+      ..._config,
     });
   }
 
-  async request<T = unknown>(config: HttpRequestConfig): Promise<ApiResponse<T>> {
+  async request<T = unknown>(_config: HttpRequestConfig): Promise<ApiResponse<T>> {
     const startTime = Date.now();
-    const fullConfig = this.mergeConfig(config);
+    const fullConfig = this.mergeConfig(_config);
     const cacheKey = this.getCacheKey(fullConfig);
 
     try {
@@ -122,7 +122,7 @@ export class EnhancedHttpClient implements HttpClient {
       }
 
       // Check cache
-      if (fullConfig.method === 'GET' && this.config.cache?.enabled) {
+      if (fullConfig.method === 'GET' && this._config.cache?.enabled) {
         const cachedResponse = this.getFromCache<T>(cacheKey);
         if (cachedResponse) {
           return cachedResponse;
@@ -131,12 +131,12 @@ export class EnhancedHttpClient implements HttpClient {
 
       // Execute request with retries
       const response = await this.executeWithRetry<T>(fullConfig);
-      
+
       // Update circuit breaker on success
       this.recordSuccess(fullConfig.url);
 
       // Cache successful GET requests
-      if (fullConfig.method === 'GET' && this.config.cache?.enabled) {
+      if (fullConfig.method === 'GET' && this._config.cache?.enabled) {
         this.setCache(cacheKey, response);
       }
 
@@ -144,55 +144,58 @@ export class EnhancedHttpClient implements HttpClient {
       this.recordMetrics(fullConfig, response, startTime, Date.now(), true);
 
       return response;
-
-    } catch (error) {
+    } catch (_error) {
       const endTime = Date.now();
-      
+
       // Update circuit breaker on failure
       this.recordFailure(fullConfig.url);
 
       // Record error metrics
-      this.recordMetrics(fullConfig, null, startTime, endTime, false, error);
+      this.recordMetrics(fullConfig, null, startTime, endTime, false, _error);
 
       // Transform error to standardized format
-      const apiError = this.transformError(error, fullConfig);
-      
+      const apiError = this.transformError(_error, fullConfig);
+
       return {
         success: false,
-        error: apiError,
+        _error: apiError,
         timestamp: new Date().toISOString(),
         requestId: this.generateRequestId(),
       };
     }
   }
 
-  private mergeConfig(config: HttpRequestConfig): HttpRequestConfig {
+  private mergeConfig(_config: HttpRequestConfig): HttpRequestConfig {
     const baseURL = this.config.baseURL || '';
-    const url = config.url.startsWith('http') ? config.url : `${baseURL}${config.url}`;
-    
+    const url = config.url.startsWith('http')
+      ? _config.url
+      : `${baseURL}${_config.url}`;
+
     return {
       ...this.config,
       ...config,
       url,
       headers: {
         ...this.config.headers,
-        ...config.headers,
+        ..._config.headers,
       },
     };
   }
 
-  private async executeWithRetry<T>(config: HttpRequestConfig): Promise<ApiResponse<T>> {
-    const maxRetries = this.config.retries || 0;
+  private async executeWithRetry<T>(
+    _config: HttpRequestConfig
+  ): Promise<ApiResponse<T>> {
+    const maxRetries = this._config.retries || 0;
     let lastError: unknown;
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
-        const response = await this.executeRequest<T>(config);
+        const response = await this.executeRequest<T>(_config);
         return response;
-      } catch (error) {
-        lastError = error;
-        
-        if (attempt === maxRetries || !this.shouldRetry(error, attempt)) {
+      } catch (_error) {
+        lastError = _error;
+
+        if (attempt === maxRetries || !this.shouldRetry(_error, attempt)) {
           break;
         }
 
@@ -205,13 +208,13 @@ export class EnhancedHttpClient implements HttpClient {
     throw lastError;
   }
 
-  private async executeRequest<T>(config: HttpRequestConfig): Promise<ApiResponse<T>> {
+  private async executeRequest<T>(_config: HttpRequestConfig): Promise<ApiResponse<T>> {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), config.timeout);
+    const timeoutId = setTimeout(() => controller.abort(), _config.timeout);
 
     try {
       // Apply request interceptors
-      const processedConfig = await this.applyRequestInterceptors(config);
+      const processedConfig = await this.applyRequestInterceptors(_config);
 
       // Build fetch options
       const fetchOptions: RequestInit = {
@@ -226,11 +229,15 @@ export class EnhancedHttpClient implements HttpClient {
       }
 
       // Add query parameters for GET requests
-      const url = processedConfig.method === 'GET' && processedConfig.params
-        ? `${processedConfig.url}?${new URLSearchParams(
-            Object.entries(processedConfig.params).map(([key, value]) => [key, String(value)])
-          ).toString()}`
-        : processedConfig.url;
+      const url =
+        processedConfig.method === 'GET' && processedConfig.params
+          ? `${processedConfig.url}?${new URLSearchParams(
+              Object.entries(processedConfig.params).map(([key, value]) => [
+                key,
+                String(value),
+              ])
+            ).toString()}`
+          : processedConfig.url;
 
       // Execute request
       const response = await fetch(url, fetchOptions);
@@ -241,7 +248,7 @@ export class EnhancedHttpClient implements HttpClient {
 
       // Build standardized response
       const apiResponse: ApiResponse<T> = {
-        success: this.config.validateStatus?.(response.status) ?? response.ok,
+        success: this._config.validateStatus?.(response.status) ?? response.ok,
         data: responseData as T,
         timestamp: new Date().toISOString(),
         requestId: this.generateRequestId(),
@@ -255,7 +262,6 @@ export class EnhancedHttpClient implements HttpClient {
       }
 
       return processedResponse;
-
     } finally {
       clearTimeout(timeoutId);
     }
@@ -263,7 +269,7 @@ export class EnhancedHttpClient implements HttpClient {
 
   private async parseResponse(response: Response): Promise<unknown> {
     const contentType = response.headers.get('content-type');
-    
+
     if (contentType?.includes('application/json')) {
       return await response.json();
     } else if (contentType?.includes('text/')) {
@@ -273,11 +279,13 @@ export class EnhancedHttpClient implements HttpClient {
     }
   }
 
-  private async applyRequestInterceptors(config: HttpRequestConfig): Promise<HttpRequestConfig> {
-    let processedConfig = { ...config };
+  private async applyRequestInterceptors(
+    _config: HttpRequestConfig
+  ): Promise<HttpRequestConfig> {
+    let processedConfig = { ..._config };
 
-    if (this.config.interceptors) {
-      for (const interceptor of this.config.interceptors) {
+    if (this._config.interceptors) {
+      for (const interceptor of this._config.interceptors) {
         if (interceptor.request) {
           processedConfig = await interceptor.request(processedConfig);
         }
@@ -287,11 +295,13 @@ export class EnhancedHttpClient implements HttpClient {
     return processedConfig;
   }
 
-  private async applyResponseInterceptors<T>(response: ApiResponse<T>): Promise<ApiResponse<T>> {
+  private async applyResponseInterceptors<T>(
+    response: ApiResponse<T>
+  ): Promise<ApiResponse<T>> {
     let processedResponse = { ...response };
 
-    if (this.config.interceptors) {
-      for (const interceptor of this.config.interceptors) {
+    if (this._config.interceptors) {
+      for (const interceptor of this._config.interceptors) {
         if (interceptor.response) {
           processedResponse = await interceptor.response(processedResponse);
         }
@@ -301,22 +311,22 @@ export class EnhancedHttpClient implements HttpClient {
     return processedResponse;
   }
 
-  private shouldRetry(error: unknown, attempt: number): boolean {
-    if (error instanceof Error) {
+  private shouldRetry(_error: unknown, attempt: number): boolean {
+    if (_error instanceof Error) {
       // Don't retry on client errors (4xx)
-      if (error.message.includes('4')) {
+      if (_error.message.includes('4')) {
         return false;
       }
-      
+
       // Retry on network errors and 5xx server errors
-      return attempt < (this.config.retries || 0);
+      return attempt < (this._config.retries || 0);
     }
-    
+
     return false;
   }
 
   private calculateRetryDelay(attempt: number): number {
-    const baseDelay = this.config.retryDelay || 1000;
+    const baseDelay = this._config.retryDelay || 1000;
     return baseDelay * Math.pow(2, attempt); // Exponential backoff
   }
 
@@ -324,11 +334,11 @@ export class EnhancedHttpClient implements HttpClient {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  private getCacheKey(config: HttpRequestConfig): string {
-    const key = `${config.method}:${config.url}`;
-    if (config.params) {
+  private getCacheKey(_config: HttpRequestConfig): string {
+    const key = `${_config.method}:${_config.url}`;
+    if (_config.params) {
       const paramString = new URLSearchParams(
-        Object.entries(config.params).map(([k, v]) => [k, String(v)])
+        Object.entries(_config.params).map(([k, v]) => [k, String(v)])
       ).toString();
       return `${key}?${paramString}`;
     }
@@ -336,13 +346,13 @@ export class EnhancedHttpClient implements HttpClient {
   }
 
   private getFromCache<T>(key: string): ApiResponse<T> | null {
-    if (!this.config.cache?.enabled) return null;
+    if (!this._config.cache?.enabled) return null;
 
     const cached = this.cache.get(key);
     if (!cached) return null;
 
     const now = Date.now();
-    const ttl = this.config.cache.ttl || 300000; // 5 minutes default
+    const ttl = this._config.cache.ttl || 300000; // 5 minutes default
 
     if (now - cached.timestamp > ttl) {
       this.cache.delete(key);
@@ -353,10 +363,10 @@ export class EnhancedHttpClient implements HttpClient {
   }
 
   private setCache<T>(key: string, response: ApiResponse<T>): void {
-    if (!this.config.cache?.enabled) return;
+    if (!this._config.cache?.enabled) return;
 
-    const maxSize = this.config.cache.maxSize || 100;
-    
+    const maxSize = this._config.cache.maxSize || 100;
+
     if (this.cache.size >= maxSize) {
       // Remove oldest entry
       const oldestKey = this.cache.keys().next().value;
@@ -381,8 +391,9 @@ export class EnhancedHttpClient implements HttpClient {
   private recordFailure(url: string): void {
     // Simple circuit breaker implementation
     const failures = this.getFailureCount(url) + 1;
-    
-    if (failures >= 5) { // Threshold of 5 failures
+
+    if (failures >= 5) {
+      // Threshold of 5 failures
       this.circuitBreakers.set(url, 'OPEN');
     }
   }
@@ -397,14 +408,14 @@ export class EnhancedHttpClient implements HttpClient {
     // Simplified rate limiting implementation
     const now = Date.now();
     const limit = this.rateLimits.get(url);
-    
+
     if (!limit || now > limit.resetTime) {
       // Reset rate limit window
       this.rateLimits.set(url, {
         count: 1,
         resetTime: now + 60000, // 1 minute window
       });
-      
+
       return {
         limit: 100,
         remaining: 99,
@@ -413,7 +424,7 @@ export class EnhancedHttpClient implements HttpClient {
     }
 
     limit.count++;
-    
+
     return {
       limit: 100,
       remaining: Math.max(0, 100 - limit.count),
@@ -422,28 +433,28 @@ export class EnhancedHttpClient implements HttpClient {
   }
 
   private recordMetrics(
-    config: HttpRequestConfig,
+    _config: HttpRequestConfig,
     response: ApiResponse<unknown> | null,
     startTime: number,
     endTime: number,
     success: boolean,
-    error?: unknown
+    _error?: unknown
   ): void {
     const metrics: HttpRequestMetrics = {
       url: config.url,
-      method: config.method,
+      method: _config.method,
       statusCode: success ? 200 : 500,
       duration: endTime - startTime,
-      requestSize: this.calculateRequestSize(config),
+      requestSize: this.calculateRequestSize(_config),
       responseSize: this.calculateResponseSize(response),
       timestamp: new Date().toISOString(),
       success,
-      errorType: error instanceof Error ? error.name : undefined,
+      errorType: error instanceof Error ? _error.name : undefined,
       retryCount: 0, // This would need to be tracked
       fromCache: false, // This would need to be tracked
     };
 
-    this.metrics.set(`${config.method}:${config.url}:${Date.now()}`, metrics);
+    this.metrics.set(`${_config.method}:${_config.url}:${Date.now()}`, metrics);
 
     // Keep only last 1000 metrics
     if (this.metrics.size > 1000) {
@@ -452,9 +463,9 @@ export class EnhancedHttpClient implements HttpClient {
     }
   }
 
-  private calculateRequestSize(config: HttpRequestConfig): number {
-    if (!config.data) return 0;
-    return JSON.stringify(config.data).length;
+  private calculateRequestSize(_config: HttpRequestConfig): number {
+    if (!_config.data) return 0;
+    return JSON.stringify(_config.data).length;
   }
 
   private calculateResponseSize(response: ApiResponse<unknown> | null): number {
@@ -462,14 +473,14 @@ export class EnhancedHttpClient implements HttpClient {
     return JSON.stringify(response).length;
   }
 
-  private transformError(error: unknown, config: HttpRequestConfig): ApiError {
-    if (error instanceof Error) {
+  private transformError(_error: unknown, _config: HttpRequestConfig): ApiError {
+    if (_error instanceof Error) {
       return {
         code: 'HTTP_ERROR',
-        message: error.message,
+        message: _error.message,
         details: {
           url: config.url,
-          method: config.method,
+          method: _config.method,
           timestamp: new Date().toISOString(),
         },
       };
@@ -479,9 +490,9 @@ export class EnhancedHttpClient implements HttpClient {
       code: 'UNKNOWN_ERROR',
       message: 'An unknown error occurred',
       details: {
-        error: String(error),
+        _error: String(_error),
         url: config.url,
-        method: config.method,
+        method: _config.method,
         timestamp: new Date().toISOString(),
       },
     };
@@ -512,8 +523,8 @@ export class EnhancedHttpClient implements HttpClient {
 /**
  * Factory function to create HTTP client instances
  */
-export function createHttpClient(config?: HttpClientConfig): HttpClient {
-  return new EnhancedHttpClient(config);
+export function createHttpClient(_config?: HttpClientConfig): HttpClient {
+  return new EnhancedHttpClient(_config);
 }
 
 /**
@@ -533,26 +544,26 @@ export const httpClient = createHttpClient({
 /**
  * Create service-specific HTTP clients
  */
-export const createSupabaseClient = (config: { url: string; key: string }) =>
+export const createSupabaseClient = (_config: { url: string; key: string }) =>
   createHttpClient({
     baseURL: config.url,
     headers: {
-      'apikey': config.key,
-      'Authorization': `Bearer ${config.key}`,
+      apikey: _config.key,
+      Authorization: `Bearer ${_config.key}`,
       'Content-Type': 'application/json',
     },
   });
 
-export const createStripeClient = (config: { secretKey: string }) =>
+export const createStripeClient = (_config: { secretKey: string }) =>
   createHttpClient({
     baseURL: 'https://api.stripe.com/v1',
     headers: {
-      'Authorization': `Bearer ${config.secretKey}`,
+      Authorization: `Bearer ${_config.secretKey}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
 
-export const createConvertKitClient = (config: { apiKey: string }) =>
+export const createConvertKitClient = (_config: { apiKey: string }) =>
   createHttpClient({
     baseURL: 'https://api.convertkit.com/v3',
     headers: {

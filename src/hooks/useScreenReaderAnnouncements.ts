@@ -19,7 +19,7 @@ interface StateChangeAnnouncement {
     | 'alarm-update'
     | 'alarm-delete'
     | 'navigation'
-    | 'error'
+    | '_error'
     | 'success'
     | 'loading'
     | 'custom';
@@ -196,7 +196,7 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
     (fieldName: string, isValid: boolean, errorMessage?: string) => {
       if (!isValid && errorMessage) {
         announce({
-          type: 'error',
+          type: '_error',
           data: { fieldName, errorMessage },
           priority: 'assertive',
         });

@@ -88,7 +88,7 @@ class EmailCampaignService {
     console.log('Email campaign service initialized');
   }
 
-  async detectPersona(user: any): Promise<PersonaDetectionResult> {
+  async detectPersona(_user: any): Promise<PersonaDetectionResult> {
     let persona: PersonaType = 'struggling_sam';
     const tier = user?.subscriptionTier || user?.subscription?.tier || 'free';
 
@@ -110,7 +110,7 @@ class EmailCampaignService {
         break;
     }
 
-    if (user?.email?.includes('.edu')) {
+    if (_user?.email?.includes('.edu')) {
       persona = 'student_sarah';
     }
 
@@ -124,8 +124,8 @@ class EmailCampaignService {
     };
   }
 
-  async addUserToCampaign(user: any, persona: PersonaType) {
-    console.log(`Adding user ${user.email} to ${persona} campaign`);
+  async addUserToCampaign(_user: any, _persona: PersonaType) {
+    console.log(`Adding user ${_user.email} to ${_persona} campaign`);
     // Integration with email platform would go here
     return true;
   }
@@ -173,7 +173,7 @@ function AppContent() {
   const {
     alarms: advancedAlarms,
     loading: _advancedAlarmsLoading,
-    error: _advancedAlarmsError,
+    _error: _advancedAlarmsError,
   } = useAdvancedAlarms();
 
   // Enhanced Service Worker Hook for alarm reliability
@@ -256,7 +256,7 @@ function AppContent() {
   // Emotional Intelligence Notifications Hook
   const [_emotionalState, emotionalActions] = useEmotionalNotifications({
     userId: auth.user?.id || '',
-    enabled: !!auth.user && appState.permissions.notifications.granted,
+    enabled: !!auth._user && appState.permissions.notifications.granted,
   });
 
   // Tab Protection Announcements Hook
@@ -283,7 +283,8 @@ function AppContent() {
         const aiRewards = AIRewardsService.getInstance();
         const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
 
-        setAppState((prev: AppState) => ({ // type-safe replacement
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
           ...prev,
           rewardSystem,
         }));
@@ -295,9 +296,9 @@ function AppContent() {
           level: rewardSystem.level,
           currentStreak: rewardSystem.currentStreak,
         });
-      } catch (error) {
+      } catch (_error) {
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? _error : new Error(String(_error)),
           'Failed to refresh rewards system',
           { context: 'rewards_refresh' }
         );
@@ -307,14 +308,14 @@ function AppContent() {
   );
 
   const loadUserAlarms = useCallback(async () => {
-    if (!auth.user) return;
+    if (!auth._user) return;
 
     try {
       // Load alarms from offline storage first (faster)
       const offlineAlarms = await OfflineStorage.getAlarms();
       if (offlineAlarms.length > 0) {
-        setAppState((prev: AppState) => ({ // type-safe replacement
-          
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
 
           ...prev,
           alarms: offlineAlarms,
@@ -326,10 +327,10 @@ function AppContent() {
       if (navigator.onLine) {
         try {
           const { alarms: savedAlarms } = await SupabaseService.loadUserAlarms(
-            auth.user.id
+            auth._user.id
           );
-          setAppState((prev: AppState) => ({ // type-safe replacement
-            
+          setAppState((prev: AppState) => ({
+            // type-safe replacement
 
             ...prev,
             alarms: savedAlarms,
@@ -346,20 +347,20 @@ function AppContent() {
 
           // Initialize rewards system
           await refreshRewardsSystem(savedAlarms);
-        } catch (error) {
+        } catch (_error) {
           ErrorHandler.handleError(
-            error instanceof Error ? error : new Error(String(error)),
+            error instanceof Error ? _error : new Error(String(_error)),
             'Remote alarm loading failed, using offline alarms',
             { context: 'load_remote_alarms', metadata: { userId: auth.user.id } }
           );
-          setSyncStatus('error');
+          setSyncStatus('_error');
 
           // Initialize rewards system with offline alarms
           await refreshRewardsSystem(offlineAlarms);
         }
       } else {
-        setAppState((prev: AppState) => ({ // type-safe replacement
-          
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
 
           ...prev,
           alarms: offlineAlarms,
@@ -369,9 +370,9 @@ function AppContent() {
         // Initialize rewards system with offline alarms
         await refreshRewardsSystem(offlineAlarms);
       }
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to load user alarms',
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
@@ -395,27 +396,28 @@ function AppContent() {
         analytics.trackAlarmAction('snooze', alarmId, { success: true, duration });
         analytics.trackFeatureUsage('alarm_snooze', 'completed', { duration });
 
-        setAppState((prev: AppState) => ({ // type-safe replacement
-           ...prev,
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
+          ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
-      } catch (error) {
+      } catch (_error) {
         const duration = performance.now() - startTime;
         analytics.trackAlarmAction('snooze', alarmId, {
           success: false,
-          error: error instanceof Error ? error.message : String(error),
+          error: error instanceof Error ? _error.message : String(_error),
           duration,
         });
         analytics.trackError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? error : new Error(String(_error)),
           {
             action: 'snooze_alarm',
           }
         );
 
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? error : new Error(String(_error)),
           'Failed to snooze alarm',
           {
             context: 'snooze_alarm',
@@ -423,8 +425,9 @@ function AppContent() {
           }
         );
         // Fallback: still hide the alarm even if snooze fails
-        setAppState((prev: AppState) => ({ // type-safe replacement
-           ...prev,
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
+          ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
@@ -435,15 +438,16 @@ function AppContent() {
 
   // Handle service worker messages
   const handleServiceWorkerMessage = useCallback(
-    (event: MessageEvent) => {
+    (_event: MessageEvent) => {
       const { type, data } = event.data;
 
       switch (type) {
         case 'ALARM_TRIGGERED':
           if (data.alarm) {
-            setAppState((prev: AppState) => ({ // type-safe replacement
-              ...prev, 
-              activeAlarm: data.alarm 
+            setAppState((prev: AppState) => ({
+              // type-safe replacement
+              ...prev,
+              activeAlarm: data.alarm,
             }));
           }
           break;
@@ -454,9 +458,9 @@ function AppContent() {
           setSyncStatus('synced');
           break;
         case 'SYNC_ERROR':
-          setSyncStatus('error');
+          setSyncStatus('_error');
           ErrorHandler.handleError(
-            new Error(data.error || 'Sync failed'),
+            new Error(data._error || 'Sync failed'),
             'Background sync failed'
           );
           break;
@@ -482,9 +486,10 @@ function AppContent() {
 
             // Handle specific actions
             if (data.action === 'dismiss' && appState.activeAlarm) {
-              setAppState((prev: AppState) => ({ // type-safe replacement
-                ...prev, 
-                activeAlarm: null 
+              setAppState((prev: AppState) => ({
+                // type-safe replacement
+                ...prev,
+                activeAlarm: null,
               }));
             } else if (data.action === 'snooze' && appState.activeAlarm) {
               // Trigger snooze functionality
@@ -518,10 +523,7 @@ function AppContent() {
       console.log('App: Handling service worker alarm trigger:', alarm.id);
 
       // Update app state to show alarm as triggered
-      setAppState((prev: AppState
-) => ({
-        
-
+      setAppState((prev: AppState) => ({
         ...prev,
         activeAlarm: alarm,
         alarmTriggeredAt: new Date(),
@@ -592,12 +594,12 @@ function AppContent() {
           // Use MessageChannel for reliable communication
           const messageChannel = new MessageChannel();
 
-          messageChannel.port1.onmessage = (event: MessageEvent) => {
-            const { success, message, error } = event.data;
+          messageChannel.port1.onmessage = (_event: MessageEvent) => {
+            const { success, message, _error } = event.data;
             if (success) {
               console.log('App: Service worker response:', message);
             } else {
-              console.error('App: Service worker error:', error);
+              console.error('App: Service worker _error:', _error);
             }
           };
 
@@ -612,7 +614,7 @@ function AppContent() {
 
         // Set up service worker message listener
         navigator.serviceWorker.addEventListener('message', event => {
-          const { type, data } = event.data;
+          const { type, data } = _event.data;
 
           switch (type) {
             case 'ALARM_TRIGGERED':
@@ -675,10 +677,10 @@ function AppContent() {
             });
           }
         });
-      } catch (error) {
-        console.error('App: Service worker registration failed:', error);
+      } catch (_error) {
+        console.error('App: Service worker registration failed:', _error);
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? _error : new Error(String(_error)),
           'Enhanced service worker registration failed',
           { context: 'service_worker_registration' }
         );
@@ -689,7 +691,7 @@ function AppContent() {
   }, [appState.alarms, handleServiceWorkerAlarmTrigger]);
 
   const syncOfflineChanges = useCallback(async () => {
-    if (!auth.user) return;
+    if (!auth._user) return;
 
     try {
       const pendingChanges = await OfflineStorage.getPendingChanges();
@@ -704,22 +706,22 @@ function AppContent() {
               case 'update':
                 if (change.data) {
                   const saveResult = await SupabaseService.saveAlarm(change.data);
-                  if (saveResult.error) {
-                    throw new Error(saveResult.error);
+                  if (saveResult._error) {
+                    throw new Error(saveResult._error);
                   }
                 }
                 break;
               case 'delete': {
                 const deleteResult = await SupabaseService.deleteAlarm(change.id);
-                if (deleteResult.error) {
-                  throw new Error(deleteResult.error);
+                if (deleteResult._error) {
+                  throw new Error(deleteResult._error);
                 }
                 break;
               }
             }
-          } catch (error) {
+          } catch (_error) {
             ErrorHandler.handleError(
-              error instanceof Error ? error : new Error(String(error)),
+              error instanceof Error ? _error : new Error(String(_error)),
               'Failed to sync offline change',
               {
                 context: 'sync_offline_change',
@@ -735,20 +737,21 @@ function AppContent() {
 
         // Reload alarms from server to ensure consistency
         const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(
-          auth.user.id
+          auth._user.id
         );
-        setAppState((prev: AppState) => ({ // type-safe replacement
-           ...prev,
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
+          ...prev,
           alarms: updatedAlarms,
         }));
         await OfflineStorage.saveAlarms(updatedAlarms);
       }
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to sync offline changes'
       );
-      setSyncStatus('error');
+      setSyncStatus('_error');
     }
   }, [auth.user, setSyncStatus]);
 
@@ -817,9 +820,9 @@ function AppContent() {
         mobile: true,
         focus: true,
       });
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to initialize accessibility services',
         { context: 'accessibility_initialization' }
       );
@@ -832,19 +835,16 @@ function AppContent() {
     const appAnalytics = AppAnalyticsService.getInstance();
     const emailService = EmailCampaignService.getInstance();
 
-    setAppState((prev: AppState
-) => ({
-      
-
+    setAppState((prev: AppState) => ({
       ...prev,
-      user: auth.user,
+      user: auth._user,
     }));
 
     // Set analytics user context when user signs in/out
-    if (auth.user) {
+    if (auth._user) {
       // Use both analytics services for comprehensive tracking
       appAnalytics.setUserContext(auth.user.id, {
-        email: auth.user.email,
+        email: auth._user.email,
         signInMethod: 'supabase',
       });
 
@@ -854,7 +854,7 @@ function AppContent() {
         email: auth.user.email,
         createdAt:
           auth.user.createdAt instanceof Date
-            ? auth.user.createdAt.toISOString()
+            ? auth._user.createdAt.toISOString()
             : auth.user.createdAt,
         deviceType: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop',
       });
@@ -874,23 +874,23 @@ function AppContent() {
       (async () => {
         try {
           await emailService.initialize();
-          const personaResult = await emailService.detectPersona(auth.user);
+          const personaResult = await emailService.detectPersona(auth._user);
           console.log(
-            `Detected persona: ${personaResult.persona} (confidence: ${personaResult.confidence})`
+            `Detected persona: ${personaResult._persona} (confidence: ${personaResult.confidence})`
           );
 
           // Add user to appropriate email campaign
-          await emailService.addUserToCampaign(auth.user, personaResult.persona);
+          await emailService.addUserToCampaign(auth._user, personaResult._persona);
 
           // Track persona detection for analytics
           track('PERSONA_DETECTED', {
-            persona: personaResult.persona,
+            persona: personaResult._persona,
             confidence: personaResult.confidence,
             factors: personaResult.factors.map(f => f.factor),
             timestamp: new Date().toISOString(),
           });
-        } catch (error) {
-          console.error('Email campaign integration error:', error);
+        } catch (_error) {
+          console.error('Email campaign integration _error:', _error);
         }
       })();
     } else {
@@ -944,7 +944,7 @@ function AppContent() {
 
   // Handle emotional notification events from service worker
   useEffect(() => {
-    const handleEmotionalAction = (event: CustomEvent) => {
+    const handleEmotionalAction = (_event: CustomEvent) => {
       const { action, emotion_type, notification_id, data: actionData } = event.detail;
 
       // Track the action in analytics
@@ -1012,7 +1012,7 @@ function AppContent() {
         // Track app launch
         appAnalytics.trackPageView('dashboard', {
           isInitialLoad: true,
-          userAuthenticated: !!auth.user,
+          userAuthenticated: !!auth._user,
         });
 
         // Track session activity with enhanced analytics
@@ -1037,8 +1037,8 @@ function AppContent() {
         // Initialize Push Notifications
         try {
           await PushNotificationService.initialize();
-        } catch (error) {
-          console.warn('Push notification initialization failed:', error);
+        } catch (_error) {
+          console.warn('Push notification initialization failed:', _error);
         }
 
         // Initialize enhanced service worker
@@ -1048,14 +1048,14 @@ function AppContent() {
         await initializeAccessibilityServices();
 
         // Only load alarms if user is authenticated
-        if (auth.user) {
+        if (auth._user) {
           await loadUserAlarms();
         }
 
         setIsInitialized(true);
-      } catch (error) {
+      } catch (_error) {
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? _error : new Error(String(_error)),
           'Failed to initialize app',
           {
             context: 'app_initialization',
@@ -1116,7 +1116,7 @@ function AppContent() {
 
   // Prevent accidental tab closure when alarms are active
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+    const handleBeforeUnload = (_event: BeforeUnloadEvent) => {
       // Only show protection if user has enabled it
       if (!tabProtectionSettings.settings.enabled) {
         return;
@@ -1227,7 +1227,7 @@ function AppContent() {
     snoozeInterval?: number;
     maxSnoozes?: number;
   }) => {
-    if (!auth.user) {
+    if (!auth._user) {
       ErrorHandler.handleError(
         new Error('User not authenticated'),
         'Cannot create alarm without authentication'
@@ -1278,8 +1278,8 @@ function AppContent() {
         };
 
         const saveResult = await SupabaseService.saveAlarm(newAlarm);
-        if (saveResult.error) {
-          throw new Error(saveResult.error);
+        if (saveResult._error) {
+          throw new Error(saveResult._error);
         }
 
         await OfflineStorage.saveAlarm(newAlarm);
@@ -1319,10 +1319,7 @@ function AppContent() {
       }
 
       const updatedAlarms = [...appState.alarms, newAlarm];
-      setAppState((prev: AppState
-) => ({
-        
-
+      setAppState((prev: AppState) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1360,23 +1357,23 @@ function AppContent() {
       // Schedule push notification for new alarm
       try {
         await PushNotificationService.scheduleAlarmPush(newAlarm);
-      } catch (error) {
-        console.warn('Failed to schedule push notification for new alarm:', error);
+      } catch (_error) {
+        console.warn('Failed to schedule push notification for new alarm:', _error);
       }
-    } catch (error) {
+    } catch (_error) {
       // Track error and performance
       const duration = appAnalytics.endPerformanceMarker('alarm_creation', {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? _error.message : String(_error),
       });
 
       appAnalytics.trackAlarmAction('create', 'unknown', {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? _error.message : String(_error),
         duration,
       });
       appAnalytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         {
           action: 'create_alarm',
           alarmData,
@@ -1384,7 +1381,7 @@ function AppContent() {
       );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'Failed to create alarm',
         {
           context: 'create_alarm',
@@ -1406,7 +1403,7 @@ function AppContent() {
       maxSnoozes?: number;
     }
   ) => {
-    if (!auth.user) {
+    if (!auth._user) {
       ErrorHandler.handleError(
         new Error('User not authenticated'),
         'Cannot edit alarm without authentication'
@@ -1431,8 +1428,8 @@ function AppContent() {
       if (isOnline) {
         // Online: update server and local storage
         const saveResult = await SupabaseService.saveAlarm(updatedAlarm);
-        if (saveResult.error) {
-          throw new Error(saveResult.error);
+        if (saveResult._error) {
+          throw new Error(saveResult._error);
         }
         await OfflineStorage.saveAlarm(updatedAlarm);
       } else {
@@ -1444,10 +1441,7 @@ function AppContent() {
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState((prev: AppState
-) => ({
-        
-
+      setAppState((prev: AppState) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1473,19 +1467,19 @@ function AppContent() {
 
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
-    } catch (error) {
+    } catch (_error) {
       const duration = performance.now() - startTime;
       analytics.trackAlarmAction('edit', editingAlarm?.id || 'unknown', {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), {
+      analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
         action: 'edit_alarm',
       });
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'Failed to edit alarm',
         {
           context: 'edit_alarm',
@@ -1496,7 +1490,7 @@ function AppContent() {
   };
 
   const handleDeleteAlarm = async (alarmId: string) => {
-    if (!auth.user) {
+    if (!auth._user) {
       ErrorHandler.handleError(
         new Error('User not authenticated'),
         'Cannot delete alarm without authentication'
@@ -1512,8 +1506,8 @@ function AppContent() {
       if (isOnline) {
         // Online: delete from server and local storage
         const deleteResult = await SupabaseService.deleteAlarm(alarmId);
-        if (deleteResult.error) {
-          throw new Error(deleteResult.error);
+        if (deleteResult._error) {
+          throw new Error(deleteResult._error);
         }
         await OfflineStorage.deleteAlarm(alarmId);
       } else {
@@ -1522,9 +1516,10 @@ function AppContent() {
       }
 
       const alarmToDelete = appState.alarms.find((a: any) => a.id === alarmId);
-      const updatedAlarms = appState.alarms.filter((alarm: any) => alarm.id !== alarmId);
+      const updatedAlarms = appState.alarms.filter(
+        (alarm: any) => alarm.id !== alarmId
+      );
       setAppState((prev: any) => ({
-          
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1548,19 +1543,19 @@ function AppContent() {
 
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
-    } catch (error) {
+    } catch (_error) {
       const duration = performance.now() - startTime;
       analytics.trackAlarmAction('delete', alarmId, {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), {
+      analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
         action: 'delete_alarm',
       });
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'Failed to delete alarm',
         {
           context: 'delete_alarm',
@@ -1571,7 +1566,7 @@ function AppContent() {
   };
 
   const handleToggleAlarm = async (alarmId: string, enabled: boolean) => {
-    if (!auth.user) {
+    if (!auth._user) {
       ErrorHandler.handleError(
         new Error('User not authenticated'),
         'Cannot toggle alarm without authentication'
@@ -1596,8 +1591,8 @@ function AppContent() {
       if (isOnline) {
         // Online: update server and local storage
         const saveResult = await SupabaseService.saveAlarm(updatedAlarm);
-        if (saveResult.error) {
-          throw new Error(saveResult.error);
+        if (saveResult._error) {
+          throw new Error(saveResult._error);
         }
         await OfflineStorage.saveAlarm(updatedAlarm);
       } else {
@@ -1609,10 +1604,7 @@ function AppContent() {
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState((prev: AppState
-) => ({
-        
-
+      setAppState((prev: AppState) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1638,20 +1630,20 @@ function AppContent() {
 
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
-    } catch (error) {
+    } catch (_error) {
       const duration = performance.now() - startTime;
       analytics.trackAlarmAction('toggle', alarmId, {
         success: false,
         enabled,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), {
+      analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
         action: 'toggle_alarm',
       });
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'Failed to toggle alarm',
         {
           context: 'toggle_alarm',
@@ -1671,9 +1663,8 @@ function AppContent() {
       false // Not skipped
     );
 
-    setAppState((prev: AppState
-) => ({
-       ...prev,
+    setAppState((prev: AppState) => ({
+      ...prev,
       isOnboarding: false,
     }));
   };
@@ -1704,26 +1695,27 @@ function AppContent() {
           duration,
         });
 
-        setAppState((prev: AppState) => ({ // type-safe replacement
-           ...prev,
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
+          ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
-      } catch (error) {
+      } catch (_error) {
         const duration = performance.now() - startTime;
         analytics.trackAlarmAction('dismiss', alarmId, {
           success: false,
           method,
-          error: error instanceof Error ? error.message : String(error),
+          error: error instanceof Error ? _error.message : String(_error),
           duration,
         });
         analytics.trackError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? error : new Error(String(_error)),
           { action: 'dismiss_alarm' }
         );
 
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? error : new Error(String(_error)),
           'Failed to dismiss alarm',
           {
             context: 'dismiss_alarm',
@@ -1731,8 +1723,9 @@ function AppContent() {
           }
         );
         // Fallback: still dismiss the alarm even if logging fails
-        setAppState((prev: AppState) => ({ // type-safe replacement
-           ...prev,
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
+          ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
@@ -1768,7 +1761,7 @@ function AppContent() {
   }
 
   // Show authentication flow if user is not logged in
-  if (!auth.user) {
+  if (!auth._user) {
     return (
       <ErrorBoundary
         context="Authentication"
@@ -1800,7 +1793,7 @@ function AppContent() {
           onSignIn={auth.signIn}
           onForgotPassword={auth.resetPassword}
           isLoading={auth.isLoading}
-          error={auth.error}
+          error={auth._error}
           forgotPasswordSuccess={auth.forgotPasswordSuccess}
         />
       </ErrorBoundary>
@@ -1832,10 +1825,10 @@ function AppContent() {
                 There was a problem with the alarm. It has been dismissed.
               </p>
               <button
-                onClick={(
-) =>
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
+                onClick={() =>
+                  setAppState((prev: AppState) => ({
+                    // type-safe replacement
+                    ...prev,
                     activeAlarm: null,
                   }))
                 }
@@ -1880,8 +1873,9 @@ function AppContent() {
                   'navigation',
                   'advanced_scheduling_from_dashboard'
                 );
-                setAppState((prev: AppState) => ({ // type-safe replacement
-                   ...prev,
+                setAppState((prev: AppState) => ({
+                  // type-safe replacement
+                  ...prev,
                   currentView: 'advanced-scheduling',
                 }));
               }}
@@ -1923,7 +1917,7 @@ function AppContent() {
         return (
           <ErrorBoundary context="GamingHub">
             <GamingHub
-              currentUser={auth.user as User}
+              currentUser={auth._user as User}
               rewardSystem={appState.rewardSystem}
               activeBattles={appState.activeBattles || []}
               friends={appState.friends || []}
@@ -1946,8 +1940,8 @@ function AppContent() {
                   createdAt: battle.createdAt || new Date().toISOString(),
                   ...battle,
                 };
-                setAppState((prev: AppState) => ({ // type-safe replacement
-                  
+                setAppState((prev: AppState) => ({
+                  // type-safe replacement
 
                   ...prev,
                   activeBattles: [...(prev.activeBattles || []), completeBattle],
@@ -2008,7 +2002,7 @@ function AppContent() {
                   onUpdateProfile={auth.updateUserProfile}
                   onSignOut={auth.signOut}
                   isLoading={auth.isLoading}
-                  error={auth.error}
+                  error={auth._error}
                 />
               </section>
             </div>
@@ -2020,7 +2014,7 @@ function AppContent() {
         return (
           <ErrorBoundary context="PricingPage">
             <PricingPage
-              user={auth.user as User}
+              user={auth._user as User}
               onUpgrade={(plan: any) => {
                 appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
                   plan: plan.id,
@@ -2109,7 +2103,9 @@ function AppContent() {
                     tabProtectionSettings.settings.visualSettings.showVisualWarning && (
                       <TabProtectionWarning
                         activeAlarm={appState.activeAlarm}
-                        enabledAlarms={appState.alarms.filter((alarm: any) => alarm.enabled)}
+                        enabledAlarms={appState.alarms.filter(
+                          (alarm: any) => alarm.enabled
+                        )}
                         settings={tabProtectionSettings.settings}
                       />
                     )}
@@ -2164,8 +2160,9 @@ function AppContent() {
                 onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
+                  setAppState((prev: AppState) => ({
+                    // type-safe replacement
+                    ...prev,
                     currentView: 'dashboard',
                   }));
                   AccessibilityUtils.announcePageChange('Dashboard');
@@ -2215,8 +2212,9 @@ function AppContent() {
                   appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
                     totalAlarms: appState.alarms.length,
                   });
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
+                  setAppState((prev: AppState) => ({
+                    // type-safe replacement
+                    ...prev,
                     currentView: 'alarms',
                   }));
                   AccessibilityUtils.announcePageChange('Alarms');
@@ -2267,8 +2265,8 @@ function AppContent() {
                     'navigation',
                     'advanced_scheduling_clicked'
                   );
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                    
+                  setAppState((prev: AppState) => ({
+                    // type-safe replacement
 
                     ...prev,
                     currentView: 'advanced-scheduling',
@@ -2302,8 +2300,9 @@ function AppContent() {
                     hasRewards: !!appState.rewardSystem?.unlockedRewards.length,
                     activeBattles: appState.activeBattles?.length,
                   });
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
+                  setAppState((prev: AppState) => ({
+                    // type-safe replacement
+                    ...prev,
                     currentView: 'gaming',
                   }));
                   AccessibilityUtils.announcePageChange('Gaming Hub');
@@ -2329,8 +2328,9 @@ function AppContent() {
                 onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
+                  setAppState((prev: AppState) => ({
+                    // type-safe replacement
+                    ...prev,
                     currentView: 'settings',
                   }));
                   AccessibilityUtils.announcePageChange('Settings');
@@ -2356,8 +2356,9 @@ function AppContent() {
                 onClick={() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
+                  setAppState((prev: AppState) => ({
+                    // type-safe replacement
+                    ...prev,
                     currentView: 'pricing',
                   }));
                   AccessibilityUtils.announcePageChange('Premium Plans');

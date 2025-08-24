@@ -34,14 +34,14 @@ interface FeatureGateActions {
 interface UseFeatureGateOptions {
   userId: string;
   feature: string;
-  config?: Partial<FeatureGateConfig>;
+  _config?: Partial<FeatureGateConfig>;
   onAccessDenied?: (result: FeatureGateResult) => void;
 }
 
 function useFeatureGate(
   options: UseFeatureGateOptions
 ): FeatureGateResult & FeatureGateActions {
-  const { userId, feature, config = {}, onAccessDenied, onUpgradeRequired } = options;
+  const { userId, feature, _config = {}, onAccessDenied, onUpgradeRequired } = options;
 
   const subscription = useSubscription({ userId });
   const [gateResult, setGateResult] = useState<FeatureGateResult>({
@@ -62,7 +62,7 @@ function useFeatureGate(
     customMessage: '',
     redirectToUpgrade: true,
     trackUsage: true,
-    ...config,
+    ..._config,
   };
 
   // Feature access definitions

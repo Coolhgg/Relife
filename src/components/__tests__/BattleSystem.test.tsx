@@ -297,7 +297,7 @@ describe('BattleSystem', () => {
       expect(mockCallbacks.onJoinBattle).toHaveBeenCalledWith('battle-2');
     });
 
-    it('shows leave option for active battles user created', () => {
+    it('shows leave option for active battles _user created', () => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const leaveBattleButton = screen.getByText(/leave battle/i);
@@ -508,7 +508,7 @@ describe('BattleSystem', () => {
         ...mockActiveBattles[0],
         participants: [
           ...mockActiveBattles[0].participants,
-          createTestBattleParticipant({ userId: 'new-user-id' }),
+          createTestBattleParticipant({ userId: 'new-_user-id' }),
         ],
       };
 
@@ -611,7 +611,7 @@ describe('BattleSystem', () => {
     it('handles network errors gracefully', async () => {
       const user = userEvent.setup();
 
-      mockCallbacks.onSendTrashTalk.mockRejectedValue(new Error('Network error'));
+      mockCallbacks.onSendTrashTalk.mockRejectedValue(new Error('Network _error'));
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 

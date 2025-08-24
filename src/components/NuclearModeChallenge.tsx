@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
-import { Alert, AlertDescription } from './ui/alert';
+import { AlertTriangle, AlertDescription } from './ui/alert';
 import { Separator } from './ui/separator';
 import { Label } from './ui/label';
 import {
@@ -13,7 +13,7 @@ import {
   Target,
   CheckCircle,
   XCircle,
-  Alert,
+  AlertTriangle,
   Brain,
   Camera,
   Mic,
@@ -180,12 +180,15 @@ const MathChallenge: React.FC<{
           <Input
             type="number"
             value={userAnswer}
-            
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserAnswer(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setUserAnswer(e.target.value)
+            }
             placeholder="Enter your answer"
             className="text-center text-2xl h-16"
             autoFocus
-            onKeyPress={(e: React.SyntheticEvent) => e.key === 'Enter' && handleSubmit()}
+            onKeyPress={(e: React.SyntheticEvent) =>
+              e.key === 'Enter' && handleSubmit()
+            }
           />
 
           <Button
@@ -200,10 +203,10 @@ const MathChallenge: React.FC<{
 
       {errors > 0 && (
         <Alert className="border-red-200 bg-red-50">
-          <Alert className="w-4 h-4 text-red-600" />
+          <AlertTriangle className="w-4 h-4 text-red-600" />
           <AlertDescription className="text-red-800">
             {errors} error{errors !== 1 ? 's' : ''} made.
-            {errors >= 1 && ' One more error will reset the sequence!'}
+            {errors >= 1 && ' One more _error will reset the sequence!'}
           </AlertDescription>
         </Alert>
       )}
@@ -269,7 +272,7 @@ const MemoryChallenge: React.FC<{
         round: currentRound,
         sequence,
         userSequence: newUserSequence,
-        error: 'wrong_sequence',
+        _error: 'wrong_sequence',
       });
       return;
     }
@@ -323,9 +326,9 @@ const MemoryChallenge: React.FC<{
       </div>
 
       <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
-        {colors.map((color, index) => (
+        {colors.map((color, _index) => (
           <button
-            key={index}
+            key={_index}
             className={cn(
               'w-20 h-20 rounded-lg border-4 transition-all transform',
               color,
@@ -334,11 +337,11 @@ const MemoryChallenge: React.FC<{
                 : 'cursor-not-allowed',
               showingSequence &&
                 sequence[Math.floor((Date.now() % (sequence.length * 800)) / 800)] ===
-                  index
+                  _index
                 ? 'scale-110 border-white shadow-lg'
                 : 'border-gray-300'
             )}
-            onClick={() => handleColorClick(index)}
+            onClick={() => handleColorClick(_index)}
             disabled={gameState !== 'input'}
           />
         ))}
@@ -348,8 +351,8 @@ const MemoryChallenge: React.FC<{
         <div className="text-center">
           <div className="text-sm text-gray-600 mb-2">Your sequence:</div>
           <div className="flex gap-2 justify-center">
-            {userSequence.map((colorIndex, index) => (
-              <div key={index} className={cn('w-6 h-6 rounded', colors[colorIndex])} />
+            {userSequence.map((colorIndex, _index) => (
+              <div key={_index} className={cn('w-6 h-6 rounded', colors[colorIndex])} />
             ))}
           </div>
         </div>
@@ -386,7 +389,7 @@ const PhotoChallenge: React.FC<{
     },
   ];
 
-  const handlePhotoCapture = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoCapture = (_event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const newPhotos = [...photosTaken, file];
@@ -448,8 +451,8 @@ const PhotoChallenge: React.FC<{
           <div className="mt-6">
             <h5 className="text-sm font-medium text-gray-700 mb-2">Photos taken:</h5>
             <div className="flex gap-2 justify-center">
-              {photosTaken.map((_, index) => (
-                <CheckCircle key={index} className="w-6 h-6 text-green-500" />
+              {photosTaken.map((_, _index) => (
+                <CheckCircle key={_index} className="w-6 h-6 text-green-500" />
               ))}
             </div>
           </div>
@@ -554,18 +557,18 @@ const VoiceChallenge: React.FC<{
 
         {completedPhrases.length > 0 && (
           <div className="space-y-2">
-            {tongueTwisters.slice(0, currentPhrase + 1).map((phrase, index) => (
-              <div key={index} className="flex items-center gap-2 text-sm">
-                {completedPhrases[index] ? (
+            {tongueTwisters.slice(0, currentPhrase + 1).map((phrase, _index) => (
+              <div key={_index} className="flex items-center gap-2 text-sm">
+                {completedPhrases[_index] ? (
                   <CheckCircle className="w-5 h-5 text-green-500" />
-                ) : index === currentPhrase ? (
+                ) : _index === currentPhrase ? (
                   <Clock className="w-5 h-5 text-yellow-500" />
                 ) : (
                   <XCircle className="w-5 h-5 text-red-500" />
                 )}
                 <span
                   className={
-                    completedPhrases[index] ? 'text-green-600' : 'text-gray-600'
+                    completedPhrases[_index] ? 'text-green-600' : 'text-gray-600'
                   }
                 >
                   {phrase}
@@ -766,7 +769,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
 
         {/* Warning */}
         <Alert className="mt-6 max-w-2xl mx-auto border-red-200 bg-red-50">
-          <Alert className="w-4 h-4 text-red-600" />
+          <AlertTriangle className="w-4 h-4 text-red-600" />
           <AlertDescription className="text-red-800">
             Nuclear Mode is active. You must complete all challenges to dismiss the
             alarm. Snoozing is disabled.

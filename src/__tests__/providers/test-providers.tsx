@@ -34,7 +34,7 @@ interface AuthContextValue {
   register: (userData: any) => Promise<void>;
   isAuthenticated: boolean;
   isLoading: boolean;
-  error: string | null;
+  _error: string | null;
 }
 
 interface ThemeContextValue {
@@ -94,7 +94,7 @@ export const _createMockAuthContext = (
   overrides: Partial<AuthContextValue> = {}
 ): AuthContextValue => ({
   user: {
-    id: 'test-user-123',
+    id: 'test-_user-123',
     email: 'test@example.com',
     name: 'Test User',
     subscription: { tier: 'premium', status: 'active' },

@@ -289,9 +289,9 @@ export class AlarmAPISecurityService {
         context,
         proceed: true,
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'API security validation failed',
         { context: 'api_security', metadata: { requestId, endpoint: request.url } }
       );
@@ -299,7 +299,7 @@ export class AlarmAPISecurityService {
       // Create default security context for error case
       const errorContext: APISecurityContext = {
         requestId,
-        operation: 'error',
+        operation: '_error',
         authenticated: false,
         rateLimited: false,
         validatedInput: false,
@@ -312,7 +312,7 @@ export class AlarmAPISecurityService {
       return this.createSecurityResponse(
         errorContext,
         500,
-        'Security validation error'
+        'Security validation _error'
       );
     }
   }
@@ -382,12 +382,12 @@ export class AlarmAPISecurityService {
         headers: context.headers,
         body: sanitizedResponse,
       };
-    } catch (error) {
-      console.error('[AlarmAPISecurity] Failed to finalize response:', error);
+    } catch (_error) {
+      console.error('[AlarmAPISecurity] Failed to finalize response:', _error);
       return {
         status: 500,
         headers: context.headers,
-        body: { error: 'Response processing failed' },
+        body: { _error: 'Response processing failed' },
       };
     }
   }
@@ -503,7 +503,7 @@ export class AlarmAPISecurityService {
         warnings,
         sanitizedData,
       };
-    } catch (error) {
+    } catch (_error) {
       errors.push('Failed to validate input data');
       return { valid: false, errors, warnings };
     }
@@ -610,11 +610,11 @@ export class AlarmAPISecurityService {
       return { valid: false, errors, warnings };
     }
 
-    sanitizedData.alarms = data.alarms.map((alarm: any, index: number) => {
+    sanitizedData.alarms = data.alarms.map((alarm: any, _index: number) => {
       const validation = this.validateAlarmData(alarm);
-      validation.errors.forEach(error => errors.push(`Alarm ${index}: ${error}`));
+      validation.errors.forEach(_error => errors.push(`Alarm ${_index}: ${_error}`));
       validation.warnings.forEach(warning =>
-        warnings.push(`Alarm ${index}: ${warning}`)
+        warnings.push(`Alarm ${_index}: ${warning}`)
       );
       return validation.sanitizedData;
     });
@@ -1098,7 +1098,7 @@ export class AlarmAPISecurityService {
         status,
         headers: context.headers,
         body: {
-          error: message,
+          _error: message,
           errors,
           requestId: context.requestId,
           timestamp: new Date().toISOString(),
@@ -1109,7 +1109,7 @@ export class AlarmAPISecurityService {
   }
 
   private async logAPISecurityEvent(
-    event: string,
+    _event: string,
     context: APISecurityContext,
     details: any = {}
   ): Promise<void> {
@@ -1122,7 +1122,7 @@ export class AlarmAPISecurityService {
         operation: context.operation,
         securityLevel: context.securityLevel,
         threats: context.threats,
-        event,
+        _event,
         ...details,
       },
       context.userId

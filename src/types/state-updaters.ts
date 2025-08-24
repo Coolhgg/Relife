@@ -10,7 +10,7 @@
 export type StateUpdater<T> = (prev: T) => T;
 
 /**
- * Array state updater type 
+ * Array state updater type
  * Used for state that manages arrays
  */
 export type ArrayStateUpdater<T> = (prev: T[]) => T[];
@@ -47,7 +47,7 @@ export interface PreloadingStatus {
  */
 export interface AudioLoadingError {
   soundId: string;
-  error: string;
+  _error: string;
 }
 
 /**
@@ -68,11 +68,7 @@ export interface CacheDebugInfo {
     evictedAt: Date;
     reason: string;
   }>;
-  cacheErrors: Array<{
-    timestamp: Date;
-    error: string;
-    category: string;
-  }>;
+  cacheErrors: Array<{ timestamp: Date; _error: string; category: string }>;
 }
 
 /**

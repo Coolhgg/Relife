@@ -102,7 +102,9 @@ export class ApiService {
   /**
    * Get alarms with filtering
    */
-  async getAlarms(filters?: AlarmFilters): Promise<ApiResponse<PaginatedResponse<any>>> {
+  async getAlarms(
+    filters?: AlarmFilters
+  ): Promise<ApiResponse<PaginatedResponse<any>>> {
     return this.client.get('/api/alarms', { params: filters });
   }
 
@@ -185,7 +187,9 @@ export class ApiService {
   /**
    * Get tournaments with filtering
    */
-  async getTournaments(filters?: TournamentFilters): Promise<ApiResponse<PaginatedResponse<any>>> {
+  async getTournaments(
+    filters?: TournamentFilters
+  ): Promise<ApiResponse<PaginatedResponse<any>>> {
     return this.client.get('/api/tournaments', { params: filters });
   }
 
@@ -212,8 +216,8 @@ export class ApiService {
   /**
    * Report error
    */
-  async reportError(error: ErrorReportData): Promise<ApiResponse<void>> {
-    return this.client.post('/api/performance/errors', error);
+  async reportError(_error: ErrorReportData): Promise<ApiResponse<void>> {
+    return this.client.post('/api/performance/errors', _error);
   }
 
   /**

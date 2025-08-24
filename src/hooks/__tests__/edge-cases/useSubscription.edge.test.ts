@@ -35,7 +35,7 @@ jest.mock('../../../services/stripe-service', () => ({
   },
 }));
 
-jest.mock('../../../services/error-handler', () => ({
+jest.mock('../../../services/_error-handler', () => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
@@ -83,7 +83,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         });
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         await result.current.createSubscription('pro', 'pm_test_card');
@@ -113,7 +113,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         status: 'succeeded',
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         await result.current.processPayment({
@@ -136,7 +136,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         'invalid-payment-method-format', // Wrong format
       ]);
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         await result.current.loadPaymentMethods();
@@ -171,7 +171,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         });
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         // Fire multiple concurrent updates
@@ -211,7 +211,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         status: 'cancelled',
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         // Start upgrade
@@ -228,7 +228,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
       });
 
       // Should handle conflicting operations gracefully
-      expect(result.current.error).not.toContain('conflict');
+      expect(result.current._error).not.toContain('conflict');
     });
   });
 
@@ -249,7 +249,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         });
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         // Should retry automatically
@@ -267,13 +267,13 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         new Error('Rate limit exceeded')
       );
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         await result.current.createSubscription('pro', 'pm_test_card');
       });
 
-      expect(result.current.error).toContain('rate limit');
+      expect(result.current._error).toContain('rate limit');
 
       // Should provide retry mechanism
       await act(async () => {
@@ -302,7 +302,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         },
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         await result.current.createSubscription('pro', 'pm_test_card');
@@ -341,14 +341,14 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         metadata: 'not-an-object',
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         await result.current.refreshSubscription();
       });
 
       // Should handle corrupted data gracefully
-      expect(result.current.error).not.toContain('TypeError');
+      expect(result.current._error).not.toContain('TypeError');
       expect(result.current.subscription).toBeNull(); // Should fallback to null
     });
 
@@ -361,7 +361,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         created_at: '2023-01-01T00:00:00Z',
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         await result.current.refreshSubscription();
@@ -387,7 +387,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         });
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         // Enable aggressive polling
@@ -415,7 +415,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         return Promise.resolve({ id: 'sub-123', status: 'active' });
       });
 
-      const { result, unmount } = renderHook(() => useSubscription('user-123'));
+      const { result, unmount } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         result.current.enableAutoRefresh(500);
@@ -440,11 +440,11 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
 
       mockSubscriptionService.validatePromoCode.mockResolvedValue({
         valid: false,
-        error: 'expired',
+        _error: 'expired',
         expires_at: '2023-01-01T00:00:00Z',
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         await result.current.validatePromoCode('EXPIRED2023');
@@ -460,13 +460,13 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         new Error('Promo code usage limit exceeded')
       );
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         await result.current.applyPromoCode('LIMITREACHED');
       });
 
-      expect(result.current.error).toContain('usage limit');
+      expect(result.current._error).toContain('usage limit');
     });
 
     it('should handle concurrent promo code applications', async () => {
@@ -482,7 +482,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         });
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         // Try to apply multiple codes simultaneously
@@ -514,15 +514,15 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         });
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         // Fire 100 rapid updates
         const promises = Array(100)
           .fill(null)
-          .map((_, index) =>
+          .map((_, _index) =>
             result.current.updateSubscription('sub-123', {
-              metadata: { update: index },
+              metadata: { update: _index },
             })
           );
 
@@ -539,19 +539,19 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
       // Generate 1000 payment methods
       const largePaymentMethodCollection = Array(1000)
         .fill(null)
-        .map((_, index) => ({
-          id: `pm_${index}`,
+        .map((_, _index) => ({
+          id: `pm_${_index}`,
           type: 'card',
-          last4: `${index}`.padStart(4, '0'),
-          exp_month: (index % 12) + 1,
-          exp_year: 2025 + (index % 10),
+          last4: `${_index}`.padStart(4, '0'),
+          exp_month: (_index % 12) + 1,
+          exp_year: 2025 + (_index % 10),
         }));
 
       mockSubscriptionService.getPaymentMethods.mockResolvedValue(
         largePaymentMethodCollection
       );
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       const startTime = Date.now();
       await act(async () => {
@@ -579,7 +579,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         trial_end: trialEndDate.toISOString(),
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         await result.current.refreshSubscription();
@@ -603,7 +603,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
         current_period_end: renewalDate.toISOString(),
       });
 
-      const { result } = renderHook(() => useSubscription('user-123'));
+      const { result } = renderHook(() => useSubscription('_user-123'));
 
       await act(async () => {
         await result.current.refreshSubscription();

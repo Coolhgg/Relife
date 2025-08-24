@@ -185,7 +185,7 @@ describe('usePushNotifications', () => {
     )?.[1];
 
     await act(async () => {
-      errorListener?.({ error: 'Registration failed' });
+      errorListener?.({ _error: 'Registration failed' });
     });
 
     expect(onRegistrationError).toHaveBeenCalledWith('Registration failed');
@@ -380,7 +380,7 @@ describe('usePushNotifications', () => {
   });
 
   it('should handle errors gracefully', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
     mockPushNotifications.register.mockRejectedValue(new Error('Registration failed'));
 
     const { result } = renderHook(() => usePushNotifications());
@@ -389,7 +389,7 @@ describe('usePushNotifications', () => {
       await result.current.register();
     });
 
-    expect(result.current.error).toBe('Registration failed');
+    expect(result.current._error).toBe('Registration failed');
     expect(consoleSpy).toHaveBeenCalledWith(
       'Push notification registration failed:',
       expect.any(Error)
@@ -426,7 +426,7 @@ describe('usePushNotifications', () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     });
 
-    // Simulate permission change (e.g., user revoked in settings)
+    // Simulate permission change (e.g., _user revoked in settings)
     mockPushNotifications.checkPermissions.mockResolvedValue({
       receive: 'denied',
     });

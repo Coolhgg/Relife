@@ -249,7 +249,7 @@ describe('useAlarmRingingAnnouncements', () => {
   });
 
   it('should handle errors gracefully', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
     mockAnnouncementService.announceAssertive.mockRejectedValue(
       new Error('Announcement failed')
     );

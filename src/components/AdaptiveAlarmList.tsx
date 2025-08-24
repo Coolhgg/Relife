@@ -177,7 +177,7 @@ AlarmItem.displayName = 'AlarmItem';
 
 // Virtual list item renderer for performance optimization
 const VirtualAlarmItem = memo<{
-  index: number;
+  _index: number;
   style: React.CSSProperties;
   data: {
     alarms: Alarm[];
@@ -187,7 +187,7 @@ const VirtualAlarmItem = memo<{
     isLowEnd: boolean;
     shouldReduceAnimations: boolean;
   };
-}>(({ index, style, data }) => {
+}>(({ _index, style, data }) => {
   const {
     alarms,
     onToggleAlarm,
@@ -327,41 +327,38 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
 
 // Performance-optimized wrapper with error boundary
 interface AdaptiveAlarmListWrapperProps extends AdaptiveAlarmListProps {
-  fallback?: React.ComponentType<{ error: Error }>;
+  fallback?: React.ComponentType<{ _error: Error }>;
 }
 
 class AlarmListErrorBoundary extends React.Component<
-  {
-    children: React.ReactNode;
-    fallback?: React.ComponentType<{ error: Error }>;
-  },
-  { hasError: boolean; error: Error | null }
+  { children: React.ReactNode; fallback?: React.ComponentType<{ _error: Error }> },
+  { hasError: boolean; _error: Error | null }
 > {
   constructor(props: any) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, _error: null };
   }
 
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error };
+  static getDerivedStateFromError(_error: Error) {
+    return { hasError: true, _error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('AdaptiveAlarmList Error:', error, errorInfo);
+  componentDidCatch(_error: Error, errorInfo: React.ErrorInfo) {
+    console._error('AdaptiveAlarmList Error:', _error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
       const FallbackComponent = this.props.fallback;
-      if (FallbackComponent && this.state.error) {
-        return <FallbackComponent error={this.state.error} />;
+      if (FallbackComponent && this.state._error) {
+        return <FallbackComponent error={this.state._error} />;
       }
 
       return (
         <div className="p-4 text-center text-red-600">
           <p>Something went wrong with the alarm list.</p>
           <button
-            onClick={() => this.setState({ hasError: false, error: null })}
+            onClick={() => this.setState({ hasError: false, _error: null })}
             className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           >
             Try Again

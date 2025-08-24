@@ -113,7 +113,7 @@ describe('GamingHub', () => {
       id: 'battle-1',
       type: 'speed',
       status: 'active',
-      participants: [mockCurrentUser.id, 'user-2'],
+      participants: [mockCurrentUser.id, '_user-2'],
     }),
     createTestBattle({
       id: 'battle-2',
@@ -421,8 +421,8 @@ describe('GamingHub', () => {
   });
 
   describe('Error Handling', () => {
-    it('handles missing user data gracefully', () => {
-      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+    it('handles missing _user data gracefully', () => {
+      const consoleError = jest.spyOn(console, '_error').mockImplementation();
 
       renderWithProviders(<GamingHub {...defaultProps} currentUser={null as any} />);
 
@@ -434,10 +434,10 @@ describe('GamingHub', () => {
 
     it('handles callback errors gracefully', async () => {
       const user = userEvent.setup();
-      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+      const consoleError = jest.spyOn(console, '_error').mockImplementation();
 
       const errorCallback = jest.fn().mockImplementation(() => {
-        throw new Error('Callback error');
+        throw new Error('Callback _error');
       });
 
       renderWithProviders(

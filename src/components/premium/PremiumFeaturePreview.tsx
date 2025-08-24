@@ -26,8 +26,7 @@ interface PremiumFeaturePreviewProps {
   /** Feature to preview */
   feature: 'nuclearMode' | 'premiumPersonalities' | 'analytics' | 'customVoices';
   /** Callback when user wants to upgrade */
-  onUpgrade: (
-) => void;
+  onUpgrade: () => void;
   /** Whether to show as compact version */
   compact?: boolean;
   /** Custom className */
@@ -39,23 +38,18 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
   onUpgrade,
   compact = false,
   className = '',
-}
-) => {
+}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentDemo, setCurrentDemo] = useState(0);
   const [nuclearIntensity, setNuclearIntensity] = useState(0);
 
   // Nuclear mode animation effect
-  useEffect((
-) => {
+  useEffect(() => {
     if (feature === 'nuclearMode' && isPlaying) {
-      const interval = setInterval((
-) => {
-        
-      setNuclearIntensity((prev: any) => (prev + 1) % 100)
+      const interval = setInterval(() => {
+        setNuclearIntensity((prev: any) => (prev + 1) % 100);
       }, 50);
-      return (
-) => clearInterval(interval);
+      return () => clearInterval(interval);
     }
   }, [feature, isPlaying]);
 
@@ -154,8 +148,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
     },
   ];
 
-  const renderNuclearModePreview = (
-) => (
+  const renderNuclearModePreview = () => (
     <div
       className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-900 via-red-800 to-orange-900 text-white ${compact ? 'p-4' : 'p-6'}`}
     >
@@ -191,12 +184,11 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
 
         {/* Challenge selector */}
         <div className="grid grid-cols-1 gap-3 mb-4">
-          {nuclearChallenges.slice(0, compact ? 2 : 5).map((challenge, index
-) => (
+          {nuclearChallenges.slice(0, compact ? 2 : 5).map((challenge, _index) => (
             <div
               key={challenge.name}
               className={`flex items-center justify-between p-3 bg-red-800 bg-opacity-50 rounded-xl border border-red-700 transition-all duration-200 hover:bg-opacity-70 ${
-                currentDemo === index ? 'ring-2 ring-yellow-400' : ''
+                currentDemo === _index ? 'ring-2 ring-yellow-400' : ''
               }`}
             >
               <div className="flex items-center space-x-3">
@@ -217,8 +209,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
         {/* Demo controls */}
         <div className="flex items-center justify-between">
           <button
-            onClick={(
-) => setIsPlaying(!isPlaying)}
+            onClick={() => setIsPlaying(!isPlaying)}
             className="flex items-center space-x-2 bg-yellow-600 hover:bg-yellow-500 text-black px-4 py-2 rounded-xl font-medium transition-colors"
           >
             {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
@@ -246,8 +237,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
     </div>
   );
 
-  const renderPersonalitiesPreview = (
-) => (
+  const renderPersonalitiesPreview = () => (
     <div
       className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white ${compact ? 'p-4' : 'p-6'}`}
     >
@@ -272,15 +262,13 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
 
         {/* Personality cards */}
         <div className="grid grid-cols-2 gap-3 mb-4">
-          {premiumPersonalities.map((personality, index
-) => (
+          {premiumPersonalities.map((personality, _index) => (
             <div
               key={personality.id}
               className={`p-3 bg-gradient-to-br ${personality.color} bg-opacity-20 border border-white border-opacity-20 rounded-xl transition-all duration-200 hover:bg-opacity-30 cursor-pointer ${
-                currentDemo === index ? 'ring-2 ring-white' : ''
+                currentDemo === _index ? 'ring-2 ring-white' : ''
               }`}
-              onClick={(
-) => setCurrentDemo(index)}
+              onClick={() => setCurrentDemo(_index)}
             >
               <div className="flex items-center space-x-2 mb-2">
                 {personality.icon}
@@ -305,8 +293,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
         {/* Demo controls */}
         <div className="flex items-center justify-between">
           <button
-            onClick={(
-) => setIsPlaying(!isPlaying)}
+            onClick={() => setIsPlaying(!isPlaying)}
             className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 rounded-xl font-medium transition-all"
           >
             {isPlaying ? (
@@ -338,8 +325,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
     </div>
   );
 
-  const renderAnalyticsPreview = (
-) => (
+  const renderAnalyticsPreview = () => (
     <div
       className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-900 via-emerald-900 to-teal-900 text-white ${compact ? 'p-4' : 'p-6'}`}
     >
@@ -364,8 +350,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
 
         {/* Metrics grid */}
         <div className="grid grid-cols-2 gap-3 mb-4">
-          {analyticsMetrics.map((metric, index
-) => (
+          {analyticsMetrics.map((metric, _index) => (
             <div
               key={metric.label}
               className="p-3 bg-green-800 bg-opacity-30 border border-green-700 rounded-xl"
@@ -382,10 +367,9 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
 
         {/* Chart placeholder */}
         <div className="h-20 bg-green-800 bg-opacity-30 rounded-xl flex items-end justify-around p-3 mb-4">
-          {[65, 72, 45, 89, 76, 91, 82].map((height, index
-) => (
+          {[65, 72, 45, 89, 76, 91, 82].map((height, _index) => (
             <div
-              key={index}
+              key={_index}
               className="bg-gradient-to-t from-green-400 to-teal-400 rounded-t w-4 transition-all duration-500"
               style={{ height: `${height}%` }}
             />
@@ -395,8 +379,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
         {/* Demo controls */}
         <div className="flex items-center justify-between">
           <button
-            onClick={(
-) => setIsPlaying(!isPlaying)}
+            onClick={() => setIsPlaying(!isPlaying)}
             className="flex items-center space-x-2 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 text-white px-4 py-2 rounded-xl font-medium transition-all"
           >
             <BarChart3 className="w-4 h-4" />
@@ -424,8 +407,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
     </div>
   );
 
-  const renderCustomVoicesPreview = (
-) => (
+  const renderCustomVoicesPreview = () => (
     <div
       className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-900 via-cyan-900 to-teal-900 text-white ${compact ? 'p-4' : 'p-6'}`}
     >
@@ -494,8 +476,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
         {/* Demo controls */}
         <div className="flex items-center justify-between">
           <button
-            onClick={(
-) => setIsPlaying(!isPlaying)}
+            onClick={() => setIsPlaying(!isPlaying)}
             className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white px-4 py-2 rounded-xl font-medium transition-all"
           >
             <Volume2 className="w-4 h-4" />

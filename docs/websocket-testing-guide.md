@@ -1,13 +1,15 @@
 # WebSocket Real-time Types Testing Guide
 
-This comprehensive guide covers how to create unit tests and integration tests for the WebSocket real-time types in the Relife application.
+This comprehensive guide covers how to create unit tests and integration tests for the WebSocket
+real-time types in the Relife application.
 
 ## Overview
 
 The testing infrastructure provides three levels of testing for WebSocket functionality:
 
 1. **Unit Tests** - Test individual type guards, message validation, and utility functions
-2. **Integration Tests** - Test complete WebSocket flows including connection, authentication, messaging
+2. **Integration Tests** - Test complete WebSocket flows including connection, authentication,
+   messaging
 3. **Service Tests** - Test the WebSocket manager and service-level integrations
 
 ## Testing Infrastructure
@@ -53,7 +55,7 @@ describe('WebSocket Type Guards', () => {
       'alarm_triggered',
       WebSocketTypeMocks.createMockAlarmTriggeredPayload()
     );
-    
+
     const userMessage = WebSocketTypeMocks.createMockWebSocketMessage(
       'user_presence_update',
       WebSocketTypeMocks.createMockUserPresencePayload()
@@ -75,7 +77,7 @@ Validate that message payloads contain expected data structure:
 describe('Message Payload Validation', () => {
   it('should validate alarm triggered payload', () => {
     const payload = WebSocketTypeMocks.createMockAlarmTriggeredPayload();
-    
+
     expect(payload.alarm.id).toBeTruthy();
     expect(payload.triggeredAt).toBeInstanceOf(Date);
     expect(payload.location?.latitude).toBeGreaterThan(-90);
@@ -94,7 +96,7 @@ Validate WebSocket configuration objects:
 describe('WebSocket Configuration', () => {
   it('should validate complete WebSocket config', () => {
     const config = WebSocketTypeMocks.createMockWebSocketConfig();
-    
+
     expect(config.url).toMatch(/^wss?:\/\//);
     expect(config.timeout).toBeGreaterThan(0);
     expect(config.heartbeatInterval).toBeGreaterThan(0);
@@ -109,7 +111,11 @@ describe('WebSocket Configuration', () => {
 
 ```typescript
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { MockWebSocket, RealTimeTestUtils, setupRealTimeTesting } from '../realtime/realtime-testing-utilities';
+import {
+  MockWebSocket,
+  RealTimeTestUtils,
+  setupRealTimeTesting,
+} from '../realtime/realtime-testing-utilities';
 
 // Setup WebSocket testing environment
 setupRealTimeTesting();
@@ -122,7 +128,7 @@ describe('WebSocket Integration Tests', () => {
   afterEach(() => {
     RealTimeTestUtils.reset();
   });
-  
+
   // Tests here...
 });
 ```
@@ -133,7 +139,7 @@ describe('WebSocket Integration Tests', () => {
 describe('Connection Management', () => {
   it('should establish WebSocket connection successfully', async () => {
     const ws = new MockWebSocket('wss://test.relife.app/ws');
-    
+
     const connectionPromise = new Promise<WebSocketConnectionInfo>((resolve) => {
       ws.addEventListener('open', () => {
         resolve({
@@ -141,7 +147,7 @@ describe('Connection Management', () => {
           state: 'OPEN',
           url: ws.url,
           connectedAt: new Date(),
-          reconnectCount: 0
+          reconnectCount: 0,
         });
       });
     });
@@ -164,7 +170,7 @@ describe('Real-time Alarm Messages', () => {
     });
 
     const alarmPayload = WebSocketTypeMocks.createMockAlarmTriggeredPayload();
-    
+
     const messageReceived = new Promise<AlarmTriggeredPayload>((resolve) => {
       ws.addEventListener('message', (event: any) => {
         const message: WebSocketMessage<AlarmTriggeredPayload> = JSON.parse(event.data);
@@ -179,7 +185,7 @@ describe('Real-time Alarm Messages', () => {
       id: 'msg-123',
       type: 'alarm_triggered',
       payload: alarmPayload,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     const receivedPayload = await messageReceived;
@@ -200,7 +206,7 @@ describe('Authentication', () => {
     });
 
     const authPayload = WebSocketTypeMocks.createMockAuthPayload();
-    
+
     const authResponsePromise = new Promise<WebSocketAuthResponse>((resolve) => {
       ws.addEventListener('message', (event: any) => {
         const data = JSON.parse(event.data);
@@ -220,10 +226,12 @@ describe('Authentication', () => {
       }
     });
 
-    ws.send(JSON.stringify({
-      type: 'authentication_request',
-      payload: authPayload
-    }));
+    ws.send(
+      JSON.stringify({
+        type: 'authentication_request',
+        payload: authPayload,
+      })
+    );
 
     const authResponse = await authResponsePromise;
     expect(authResponse.success).toBe(true);
@@ -239,7 +247,7 @@ describe('Authentication', () => {
 ```typescript
 describe('WebSocket Manager Service Tests', () => {
   let wsManager: MockWebSocketManager;
-  
+
   beforeEach(() => {
     wsManager = new MockWebSocketManager();
   });
@@ -251,16 +259,16 @@ describe('WebSocket Manager Service Tests', () => {
     const sub1Id = wsManager.subscribe({
       type: 'alarm_updates',
       filters: { userId: 'user-123' },
-      priority: 'high'
+      priority: 'high',
     });
 
     const sub2Id = wsManager.subscribe({
       type: 'user_activity',
-      priority: 'normal'
+      priority: 'normal',
     });
 
     expect(wsManager.getSubscriptions()).toHaveLength(2);
-    
+
     const unsubscribed = wsManager.unsubscribe(sub1Id);
     expect(unsubscribed).toBe(true);
     expect(wsManager.getSubscriptions()).toHaveLength(1);
@@ -275,7 +283,7 @@ describe('Message Filtering', () => {
   it('should filter messages based on custom filters', async () => {
     const receivedMessages: any[] = [];
     const handlers: WebSocketEventHandlers = {
-      onMessage: (message) => receivedMessages.push(message)
+      onMessage: (message) => receivedMessages.push(message),
     };
 
     await wsManager.connect(config, handlers);
@@ -286,20 +294,20 @@ describe('Message Filtering', () => {
     });
 
     const mockConnection = MockWebSocket.findByUrl(config.url);
-    
+
     // Send alarm message (should pass)
     mockConnection?.simulateMessage({
       type: 'alarm_triggered',
-      payload: WebSocketTypeMocks.createMockAlarmTriggeredPayload()
+      payload: WebSocketTypeMocks.createMockAlarmTriggeredPayload(),
     });
 
     // Send user message (should be filtered out)
     mockConnection?.simulateMessage({
       type: 'user_presence_update',
-      payload: WebSocketTypeMocks.createMockUserPresencePayload()
+      payload: WebSocketTypeMocks.createMockUserPresencePayload(),
     });
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
     expect(receivedMessages).toHaveLength(1);
     expect(receivedMessages[0]?.type).toBe('alarm_triggered');
   });
@@ -326,7 +334,7 @@ describe('Connection Resilience', () => {
 
       ws.addEventListener('close', () => {
         connectionStates.push('disconnected');
-        
+
         if (reconnectionAttempts < 3) {
           reconnectionAttempts++;
           setTimeout(() => {
@@ -347,7 +355,7 @@ describe('Connection Resilience', () => {
     };
 
     createConnection();
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
 
     expect(connectionStates).toContain('connecting');
     expect(connectionStates).toContain('connected');
@@ -383,14 +391,14 @@ describe('Performance Testing', () => {
         id: `perf-test-${i}`,
         type: 'performance_test',
         payload: { messageNumber: i },
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
-      
+
       sentMessages.push(message);
       ws.send(JSON.stringify(message));
     }
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const totalTime = Date.now() - startTime;
     const messagesPerSecond = (receivedMessages.length / totalTime) * 1000;
@@ -413,7 +421,7 @@ import { WebSocketTypeMocks } from '../mocks/websocket-type-mocks';
 // Create mock configuration
 const config = WebSocketTypeMocks.createMockWebSocketConfig({
   url: 'wss://custom.test.com/ws',
-  timeout: 3000
+  timeout: 3000,
 });
 
 // Create mock device info
@@ -426,10 +434,7 @@ const userPayload = WebSocketTypeMocks.createMockUserPresencePayload();
 const aiPayload = WebSocketTypeMocks.createMockRecommendationPayload();
 
 // Create complete messages
-const alarmMessage = WebSocketTypeMocks.createMockWebSocketMessage(
-  'alarm_triggered',
-  alarmPayload
-);
+const alarmMessage = WebSocketTypeMocks.createMockWebSocketMessage('alarm_triggered', alarmPayload);
 
 // Create test scenarios
 const connectionScenario = WebSocketTypeMocks.createConnectionScenario('OPEN');
@@ -531,14 +536,14 @@ Tests are organized by category:
 ```typescript
 it('should handle multiple message types', async () => {
   const receivedMessages = new Map<string, any[]>();
-  
+
   const handlers: WebSocketEventHandlers = {
     onMessage: (message) => {
       if (!receivedMessages.has(message.type)) {
         receivedMessages.set(message.type, []);
       }
       receivedMessages.get(message.type)!.push(message);
-    }
+    },
   };
 
   await wsManager.connect(config, handlers);
@@ -546,14 +551,14 @@ it('should handle multiple message types', async () => {
 
   // Send different message types
   const messages = WebSocketTypeMocks.createMessageFlowScenario();
-  
+
   for (const messageGroup of Object.values(messages)) {
     for (const message of messageGroup) {
       mockConnection?.simulateMessage(message);
     }
   }
 
-  await new Promise(resolve => setTimeout(resolve, 200));
+  await new Promise((resolve) => setTimeout(resolve, 200));
 
   expect(receivedMessages.get('alarm_triggered')).toHaveLength(1);
   expect(receivedMessages.get('user_presence_update')).toHaveLength(1);
@@ -572,7 +577,7 @@ it('should handle subscription lifecycle', async () => {
   const subscriptions = [
     wsManager.subscribe({ type: 'alarm_updates', priority: 'high' }),
     wsManager.subscribe({ type: 'user_activity', priority: 'normal' }),
-    wsManager.subscribe({ type: 'system_notifications', priority: 'critical' })
+    wsManager.subscribe({ type: 'system_notifications', priority: 'critical' }),
   ];
 
   expect(wsManager.getSubscriptions()).toHaveLength(3);
@@ -583,10 +588,13 @@ it('should handle subscription lifecycle', async () => {
 
   // Verify remaining subscriptions
   const remaining = wsManager.getSubscriptions();
-  expect(remaining.some(s => s.type === 'alarm_updates')).toBe(true);
-  expect(remaining.some(s => s.type === 'system_notifications')).toBe(true);
-  expect(remaining.some(s => s.type === 'user_activity')).toBe(false);
+  expect(remaining.some((s) => s.type === 'alarm_updates')).toBe(true);
+  expect(remaining.some((s) => s.type === 'system_notifications')).toBe(true);
+  expect(remaining.some((s) => s.type === 'user_activity')).toBe(false);
 });
 ```
 
-This comprehensive testing guide provides everything needed to create robust unit and integration tests for your WebSocket real-time types. The combination of unit tests, integration tests, and service tests ensures complete coverage of the WebSocket functionality while providing maintainable and reliable test code.
+This comprehensive testing guide provides everything needed to create robust unit and integration
+tests for your WebSocket real-time types. The combination of unit tests, integration tests, and
+service tests ensures complete coverage of the WebSocket functionality while providing maintainable
+and reliable test code.

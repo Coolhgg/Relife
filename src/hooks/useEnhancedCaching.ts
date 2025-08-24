@@ -174,16 +174,18 @@ export function useCachePerformance() {
       setPerformance(newPerformance);
 
       // Update history
-      setPerformanceHistory((prev: { timestamp: Date; hitRate: number; accessTime: number; }[]) => {
-        const newEntry = {
-          timestamp: new Date(),
-          hitRate: newPerformance.hitRate,
-          accessTime: stats.averageAccessTime,
-        };
+      setPerformanceHistory(
+        (prev: { timestamp: Date; hitRate: number; accessTime: number }[]) => {
+          const newEntry = {
+            timestamp: new Date(),
+            hitRate: newPerformance.hitRate,
+            accessTime: stats.averageAccessTime,
+          };
 
-        const updated = [...prev, newEntry];
-        return updated.slice(-50); // Keep last 50 entries
-      });
+          const updated = [...prev, newEntry];
+          return updated.slice(-50); // Keep last 50 entries
+        }
+      );
     };
 
     updatePerformance();
@@ -244,10 +246,17 @@ export function useCacheWarming() {
       nextTime.setHours(targetHour, 0, 0, 0);
     }
 
-    setWarmingStatus((prev: { isActive: boolean; nextScheduledTime: Date | null; lastWarmingTime: Date | null; warmedEntriesCount: number; }) => ({
-      ...prev,
-      nextScheduledTime: nextTime,
-    }));
+    setWarmingStatus(
+      (prev: {
+        isActive: boolean;
+        nextScheduledTime: Date | null;
+        lastWarmingTime: Date | null;
+        warmedEntriesCount: number;
+      }) => ({
+        ...prev,
+        nextScheduledTime: nextTime,
+      })
+    );
   }, [warmingConfig.scheduleHours]);
 
   const enableSmartWarming = useCallback(() => {
@@ -375,15 +384,22 @@ export function useAutoOptimization(enabled: boolean = true) {
 
           const optimizationTime = performance.now() - startTime;
 
-          setOptimizationStatus((prev: { isEnabled: boolean; lastOptimization: Date | null; optimizationCount: number; averageOptimizationTime: number; }) => ({
-            ...prev,
-            lastOptimization: new Date(),
-            optimizationCount: prev.optimizationCount + 1,
-            averageOptimizationTime:
-              prev.averageOptimizationTime * 0.8 + optimizationTime * 0.2,
-          }));
-        } catch (error) {
-          console.error('Auto-optimization failed:', error);
+          setOptimizationStatus(
+            (prev: {
+              isEnabled: boolean;
+              lastOptimization: Date | null;
+              optimizationCount: number;
+              averageOptimizationTime: number;
+            }) => ({
+              ...prev,
+              lastOptimization: new Date(),
+              optimizationCount: prev.optimizationCount + 1,
+              averageOptimizationTime:
+                prev.averageOptimizationTime * 0.8 + optimizationTime * 0.2,
+            })
+          );
+        } catch (_error) {
+          console._error('Auto-optimization failed:', _error);
         }
       };
 
@@ -399,10 +415,17 @@ export function useAutoOptimization(enabled: boolean = true) {
   }, [enabled]);
 
   const toggleAutoOptimization = useCallback(() => {
-    setOptimizationStatus((prev: { isEnabled: boolean; lastOptimization: Date | null; optimizationCount: number; averageOptimizationTime: number; }) => ({
-      ...prev,
-      isEnabled: !prev.isEnabled,
-    }));
+    setOptimizationStatus(
+      (prev: {
+        isEnabled: boolean;
+        lastOptimization: Date | null;
+        optimizationCount: number;
+        averageOptimizationTime: number;
+      }) => ({
+        ...prev,
+        isEnabled: !prev.isEnabled,
+      })
+    );
   }, []);
 
   return {
@@ -436,35 +459,37 @@ export function useCacheDebugging() {
     const updateDebugInfo = () => {
       const stats = enhancedCacheManager.getStats();
 
-      setDebugInfo((prev: {
-        memoryUsage: number;
-        diskUsage: number;
-        hitRate: number;
-        compressionSavings: number;
-        topAccessedEntries: Array<{
-          id: string;
-          accessCount: number;
-          size: number;
-        }>;
-        recentEvictions: Array<{
-          id: string;
-          evictedAt: Date;
-          reason: string;
-        }>;
-        cacheErrors: Array<{
-          timestamp: Date;
-          error: string;
-          category: string;
-        }>;
-      }) => ({
-        ...prev,
-        memoryUsage: stats.memoryUsage,
-        diskUsage: stats.totalSize,
-        hitRate: stats.hitRate / (stats.hitRate + stats.missRate) || 0,
-        compressionSavings:
-          stats.compressionRatio > 1 ? (1 - 1 / stats.compressionRatio) * 100 : 0,
-        // topAccessedEntries and recentEvictions would need additional tracking
-      }));
+      setDebugInfo(
+        (prev: {
+          memoryUsage: number;
+          diskUsage: number;
+          hitRate: number;
+          compressionSavings: number;
+          topAccessedEntries: Array<{
+            id: string;
+            accessCount: number;
+            size: number;
+          }>;
+          recentEvictions: Array<{
+            id: string;
+            evictedAt: Date;
+            reason: string;
+          }>;
+          cacheErrors: Array<{
+            timestamp: Date;
+            _error: string;
+            category: string;
+          }>;
+        }) => ({
+          ...prev,
+          memoryUsage: stats.memoryUsage,
+          diskUsage: stats.totalSize,
+          hitRate: stats.hitRate / (stats.hitRate + stats.missRate) || 0,
+          compressionSavings:
+            stats.compressionRatio > 1 ? (1 - 1 / stats.compressionRatio) * 100 : 0,
+          // topAccessedEntries and recentEvictions would need additional tracking
+        })
+      );
     };
 
     updateDebugInfo();

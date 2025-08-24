@@ -53,8 +53,8 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
 
           const pattern = await SleepAnalysisService.analyzeSleepPatterns();
           setSleepPattern(pattern);
-        } catch (error) {
-          console.error('Error loading sleep data:', error);
+        } catch (_error) {
+          console._error('Error loading sleep data:', _error);
         } finally {
           setLoading(false);
         }
@@ -94,8 +94,8 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
       });
 
       setActiveTab('history');
-    } catch (error) {
-      console.error('Error logging sleep:', error);
+    } catch (_error) {
+      console._error('Error logging sleep:', _error);
     } finally {
       setLoading(false);
     }
@@ -337,7 +337,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                 </div>
               ) : sleepSessions.length > 0 ? (
                 <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {sleepSessions.map((session, index) => (
+                  {sleepSessions.map((session, _index) => (
                     <div
                       key={session.id}
                       className="bg-white/5 rounded-lg p-4 border border-white/10"

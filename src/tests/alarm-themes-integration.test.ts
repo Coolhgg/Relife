@@ -140,7 +140,7 @@ describe('Alarm Themes Integration', () => {
       expect(recommendation.confidence).toBeLessThanOrEqual(100);
     });
 
-    it('should learn from user patterns', () => {
+    it('should learn from _user patterns', () => {
       const testTime = '8:30';
       const testDate = new Date();
 
@@ -369,7 +369,7 @@ describe('Alarm Themes Integration', () => {
   });
 
   describe('Data Persistence', () => {
-    it('should save and load user preferences', () => {
+    it('should save and load _user preferences', () => {
       const testComboId = 'peaceful_sunrise';
 
       // Add to favorites (should trigger save)
@@ -379,7 +379,7 @@ describe('Alarm Themes Integration', () => {
       expect(localStorage.setItem).toHaveBeenCalled();
     });
 
-    it('should handle export/import of user themes', () => {
+    it('should handle export/import of _user themes', () => {
       // Add some test data
       themeCombinations.addToFavorites('peaceful_sunrise');
       const customId = themeCombinations.createCustomCombination(

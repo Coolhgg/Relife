@@ -26,7 +26,7 @@ jest.mock('../../../services/feature-gate-service', () => ({
   },
 }));
 
-jest.mock('../../../services/error-handler', () => ({
+jest.mock('../../../services/_error-handler', () => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
@@ -61,7 +61,7 @@ interface TestWrapperProps {
 
 const TestWrapper: React.FC<TestWrapperProps> = ({
   children,
-  userId = 'test-user-123',
+  userId = 'test-_user-123',
   featureAccess = null,
   userTier = 'free',
 }) => {
@@ -141,7 +141,7 @@ describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
       });
 
       expect(mockTrackFeatureAttempt).toHaveBeenCalledWith(
-        'test-user-123',
+        'test-_user-123',
         'premium_themes',
         false,
         expect.any(Object)
@@ -154,7 +154,7 @@ describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
       const CustomWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
         <AnalyticsProvider>
           <FeatureAccessProvider
-            userId="test-user-123"
+            userId="test-_user-123"
             onUpgradeRequired={mockOnUpgradeRequired}
           >
             {children}
@@ -328,12 +328,12 @@ describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
           // Simulate provider refresh
           const timer = setTimeout(() => setRefreshTrigger(1), 50);
           return () => clearTimeout(timer);
-        }, []);
+        }, [provider, refresh]);
 
         return (
           <AnalyticsProvider>
             <FeatureAccessProvider
-              userId="test-user-123"
+              userId="test-_user-123"
               autoRefresh={true}
               refreshInterval={100}
             >
@@ -359,11 +359,11 @@ describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
 
   describe('Error Handling Integration', () => {
     it('should handle FeatureAccessProvider errors gracefully', async () => {
-      // Mock service to throw error
+      // Mock service to throw _error
       const SubscriptionService =
         require('../../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
-      mockService.getFeatureAccess.mockRejectedValue(new Error('Network error'));
+      mockService.getFeatureAccess.mockRejectedValue(new Error('Network _error'));
 
       const { result } = renderHook(() => useFeatureGate('advanced_alarms'), {
         wrapper: props => <TestWrapper {...props} userTier="free" />,
@@ -375,15 +375,15 @@ describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
 
       // Hook should handle provider errors gracefully
       expect(result.current.hasAccess).toBe(false);
-      expect(result.current.error).toBeNull(); // Hook should not expose provider errors
+      expect(result.current._error).toBeNull(); // Hook should not expose provider errors
     });
 
-    it('should integrate error reporting through providers', async () => {
+    it('should integrate _error reporting through providers', async () => {
       const mockHandleError = jest.fn();
-      const ErrorHandler = require('../../../services/error-handler').ErrorHandler;
+      const ErrorHandler = require('../../../services/_error-handler').ErrorHandler;
       ErrorHandler.handleError = mockHandleError;
 
-      // Force provider error
+      // Force provider _error
       const SubscriptionService =
         require('../../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
@@ -413,7 +413,7 @@ describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
         children,
       }) => (
         <AnalyticsProvider>
-          <FeatureAccessProvider userId="test-user-123">
+          <FeatureAccessProvider userId="test-_user-123">
             {children}
           </FeatureAccessProvider>
         </AnalyticsProvider>

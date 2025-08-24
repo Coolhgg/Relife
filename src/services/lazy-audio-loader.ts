@@ -11,7 +11,7 @@ export interface LazyLoadQueueItem {
   callbacks: {
     onProgress?: (progress: AudioLoadProgress) => void;
     onComplete?: (entry: AudioCacheEntry) => void;
-    onError?: (error: Error) => void;
+    onError?: (_error: Error) => void;
   };
 }
 
@@ -64,7 +64,7 @@ export class LazyAudioLoader {
     callbacks?: {
       onProgress?: (progress: AudioLoadProgress) => void;
       onComplete?: (entry: AudioCacheEntry) => void;
-      onError?: (error: Error) => void;
+      onError?: (_error: Error) => void;
     }
   ): Promise<AudioCacheEntry> {
     const id = `sound_${sound.id}`;
@@ -81,7 +81,7 @@ export class LazyAudioLoader {
         this.totalRequests++;
         callbacks?.onComplete?.(existing);
         return existing;
-      } catch (error) {
+      } catch (_error) {
         // Not cached, continue with queuing
       }
     }
@@ -106,8 +106,8 @@ export class LazyAudioLoader {
             resolve(entry);
           },
           onError: error => {
-            callbacks?.onError?.(error);
-            reject(error);
+            callbacks?.onError?.(_error);
+            reject(_error);
           },
         },
       };
@@ -126,9 +126,9 @@ export class LazyAudioLoader {
   ): Promise<AudioCacheEntry[]> {
     const promises = playlist.sounds
       .sort((a, b) => a.order - b.order) // Load in play order
-      .map((playlistSound, index) => {
+      .map((playlistSound, _index) => {
         // First few sounds get higher priority
-        const adjustedPriority = index < 3 ? 'high' : priority;
+        const adjustedPriority = _index < 3 ? 'high' : priority;
 
         return this.queueSound(playlistSound.sound, adjustedPriority);
       });
@@ -175,8 +175,8 @@ export class LazyAudioLoader {
 
       try {
         await this.queueSound(alarm.customSound, priority);
-      } catch (error) {
-        console.warn(`Failed to queue sound for alarm ${alarm.id}:`, error);
+      } catch (_error) {
+        console.warn(`Failed to queue sound for alarm ${alarm.id}:`, _error);
       }
     }
   }
@@ -340,9 +340,9 @@ export class LazyAudioLoader {
       this.stats.totalBytesLoaded += result.metadata.size || 0;
 
       item.callbacks.onComplete?.(result);
-    } catch (error) {
+    } catch (_error) {
       this.stats.failedLoads++;
-      item.callbacks.onError?.(error as Error);
+      item.callbacks.onError?.(_error as Error);
     } finally {
       this.activeLoads.delete(item.id);
     }

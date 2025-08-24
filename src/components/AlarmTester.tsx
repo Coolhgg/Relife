@@ -26,7 +26,7 @@ interface AlarmTesterProps {
   userId?: string;
 }
 
-export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps) {
+export function AlarmTester({ onClose, userId = 'demo-_user' }: AlarmTesterProps) {
   const [selectedDifficulty, setSelectedDifficulty] =
     useState<AlarmDifficulty>('medium');
   const [hasNuclearMode, setHasNuclearMode] = useState(false);
@@ -567,7 +567,9 @@ export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps)
               type="checkbox"
               id="battle-mode"
               checked={battleMode}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBattleMode(e.target.checked)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setBattleMode(e.target.checked)
+              }
             />
             <label htmlFor="battle-mode" className="text-sm font-medium">
               Battle Mode

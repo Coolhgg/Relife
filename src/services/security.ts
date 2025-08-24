@@ -110,8 +110,8 @@ class SecurityService {
       };
 
       return btoa(JSON.stringify(result)); // Base64 encode the result
-    } catch (error) {
-      console.error('[SecurityService] Encryption failed:', error);
+    } catch (_error) {
+      console._error('[SecurityService] Encryption failed:', _error);
       throw new Error('Data encryption failed');
     }
   }
@@ -143,8 +143,8 @@ class SecurityService {
       }
 
       return JSON.parse(decryptedString);
-    } catch (error) {
-      console.error('[SecurityService] Decryption failed:', error);
+    } catch (_error) {
+      console._error('[SecurityService] Decryption failed:', _error);
       throw new Error('Data decryption failed');
     }
   }
@@ -156,9 +156,9 @@ class SecurityService {
     try {
       const encrypted = this.encryptData(data);
       localStorage.setItem(`${this.STORAGE_PREFIX}${key}`, encrypted);
-    } catch (error) {
-      console.error('[SecurityService] Secure storage set failed:', error);
-      throw error;
+    } catch (_error) {
+      console.error('[SecurityService] Secure storage set failed:', _error);
+      throw _error;
     }
   }
 
@@ -172,8 +172,8 @@ class SecurityService {
         return null;
       }
       return this.decryptData(encrypted);
-    } catch (error) {
-      console.error('[SecurityService] Secure storage get failed:', error);
+    } catch (_error) {
+      console._error('[SecurityService] Secure storage get failed:', _error);
       // Return null instead of throwing to handle corrupted data gracefully
       return null;
     }

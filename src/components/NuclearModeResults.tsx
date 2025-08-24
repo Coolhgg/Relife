@@ -4,7 +4,7 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { Separator } from './ui/separator';
-import { Alert, AlertDescription } from './ui/alert';
+import { AlertTriangle, AlertDescription } from './ui/alert';
 import {
   Trophy,
   Zap,
@@ -64,8 +64,8 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
       try {
         const userStats = await nuclearModeService.getNuclearStats(session.userId);
         setStats(userStats);
-      } catch (error) {
-        console.error('Error loading nuclear stats:', error);
+      } catch (_error) {
+        console._error('Error loading nuclear stats:', _error);
       } finally {
         setIsLoading(false);
       }
@@ -220,7 +220,7 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
 
         {/* Performance Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {performanceMetrics.map((metric, index) => {
+          {performanceMetrics.map((metric, _index) => {
             const Icon = metric.icon;
             return (
               <Card key={metric.label} className="text-center">
@@ -346,7 +346,7 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
-                {performance.achievements.map((achievement, index) => (
+                {performance.achievements.map((achievement, _index) => (
                   <Badge
                     key={achievement}
                     className="bg-yellow-100 text-yellow-800 px-3 py-2"
@@ -381,9 +381,9 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {session.challenges.map((attempt: NuclearChallengeAttempt, index) => (
+              {session.challenges.map((attempt: NuclearChallengeAttempt, _index) => (
                 <div
-                  key={index}
+                  key={_index}
                   className={cn(
                     'p-4 rounded-lg border',
                     attempt.successful
@@ -465,7 +465,7 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
 
         {/* Tips for Improvement */}
         {!isSuccess && (
-          <Alert className="border-blue-200 bg-blue-50">
+          <AlertTriangle className="border-blue-200 bg-blue-50">
             <Brain className="w-4 h-4 text-blue-600" />
             <AlertDescription className="text-blue-800">
               <strong>Tips for next time:</strong> Practice math problems, memory games,

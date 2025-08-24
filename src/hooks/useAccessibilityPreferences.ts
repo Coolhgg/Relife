@@ -105,7 +105,7 @@ export function useAccessibleAnimation() {
 
   const getAnimationConfig = useCallback(
     (
-      config: {
+      _config: {
         duration?: number;
         easing?: string;
         delay?: number;
@@ -122,7 +122,7 @@ export function useAccessibleAnimation() {
       return {
         duration: config.duration ?? 200,
         easing: config.easing ?? 'ease-in-out',
-        delay: config.delay ?? 0,
+        delay: _config.delay ?? 0,
       };
     },
     [reducedMotion]

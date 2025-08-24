@@ -48,7 +48,7 @@ import {
 } from './ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ScrollArea } from './ui/scroll-area';
-import { Alert, AlertDescription } from './ui/alert';
+import { AlertTriangle, AlertDescription } from './ui/alert';
 import { CustomSoundThemeCreator } from './CustomSoundThemeCreator';
 import { SoundPreviewSystem } from './SoundPreviewSystem';
 import { soundEffectsService } from '../services/sound-effects';
@@ -74,8 +74,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   className = '',
   onClose,
   onThemeUpdated,
-}
-) => {
+}) => {
   const [themes, setThemes] = useState<CustomSoundTheme[]>([]);
   const [filteredThemes, setFilteredThemes] = useState<CustomSoundTheme[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -111,8 +110,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     try {
       const userThemes = soundEffectsService.getCustomThemesByUser(userId);
       setThemes(userThemes);
-    } catch (error) {
-      console.error('Error loading themes:', error);
+    } catch (_error) {
+      console._error('Error loading themes:', _error);
     } finally {
       setIsLoading(false);
     }
@@ -125,8 +124,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
       const publicThemes = await soundEffectsService.getCommunityThemes();
       setCommunityThemes(publicThemes);
       setThemes(publicThemes);
-    } catch (error) {
-      console.error('Error loading community themes:', error);
+    } catch (_error) {
+      console._error('Error loading community themes:', _error);
     } finally {
       setIsLoadingCommunity(false);
     }
@@ -139,7 +138,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        theme => theme.name.toLowerCase().includes(query) ||
+        theme =>
+          theme.name.toLowerCase().includes(query) ||
           theme.description.toLowerCase().includes(query) ||
           theme.tags.some((tag: any) => tag.toLowerCase().includes(query))
       );
@@ -177,7 +177,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const handleThemeUpdated = (theme: CustomSoundTheme) => {
-    setThemes((prev: any) => prev.map((t: any) => ({
+    setThemes((prev: any) => prev.map((t: any) => (t.id === theme.id ? theme : t)));
     setEditingTheme(null);
   };
 
@@ -185,10 +185,10 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     try {
       const success = await soundEffectsService.deleteCustomTheme(themeId, userId);
       if (success) {
-        setThemes((prev: any) => prev.filter((t: any) => t
+        setThemes((prev: any) => prev.filter((t: any) => t.id !== themeId));
       }
-    } catch (error) {
-      console.error('Error deleting theme:', error);
+    } catch (_error) {
+      console._error('Error deleting theme:', _error);
     }
   };
 
@@ -206,17 +206,19 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
     const success = await soundEffectsService.saveCustomTheme(duplicatedTheme);
     if (success) {
-      setThemes((prev: any
-) => [ // auto: implicit any
-duplicatedTheme, ...prev]);
+      setThemes((prev: any) => [
+        // auto: implicit any
+        duplicatedTheme,
+        ...prev,
+      ]);
     }
   };
 
   const handleSetActiveTheme = async (theme: CustomSoundTheme) => {
     try {
       await soundEffectsService.setSoundTheme(theme.id);
-    } catch (error) {
-      console.error('Error setting active theme:', error);
+    } catch (_error) {
+      console._error('Error setting active theme:', _error);
     }
   };
 
@@ -279,8 +281,8 @@ duplicatedTheme, ...prev]);
       URL.revokeObjectURL(url);
 
       console.log(`Theme "${theme.name}" exported successfully`);
-    } catch (error) {
-      console.error('Error exporting theme:', error);
+    } catch (_error) {
+      console._error('Error exporting theme:', _error);
     }
   };
 
@@ -290,9 +292,7 @@ duplicatedTheme, ...prev]);
       const exportData = {
         version: '1.0',
         exportedAt: new Date().toISOString(),
-        themes: themesToExport
-      .map((theme: any
-) => ({
+        themes: themesToExport.map((theme: any) => ({
           ...theme,
           id: undefined,
           createdBy: undefined,
@@ -319,8 +319,8 @@ duplicatedTheme, ...prev]);
 
       console.log(`${themesToExport.length} themes exported successfully`);
       setSelectedThemes(new Set()); // Clear selection
-    } catch (error) {
-      console.error('Error exporting themes:', error);
+    } catch (_error) {
+      console._error('Error exporting themes:', _error);
     }
   };
 
@@ -329,7 +329,7 @@ duplicatedTheme, ...prev]);
     input.type = 'file';
     input.accept = '.json';
     input.onchange = async event => {
-      const file = (event.target as HTMLInputElement).files?.[0];
+      const file = (_event.target as HTMLInputElement).files?.[0];
       if (!file) return;
 
       try {
@@ -385,8 +385,8 @@ duplicatedTheme, ...prev]);
         } else {
           console.warn('No valid themes found in import file');
         }
-      } catch (error) {
-        console.error('Error importing theme:', error);
+      } catch (_error) {
+        console._error('Error importing theme:', _error);
         alert('Failed to import theme. Please check the file format.');
       }
     };
@@ -402,8 +402,7 @@ duplicatedTheme, ...prev]);
     handleExportMultipleThemes(Array.from(selectedThemes));
   };
 
-  const toggleThemeSelection = (themeId: string
-) => {
+  const toggleThemeSelection = (themeId: string) => {
     setSelectedThemes((prev: any) => {
       const newSelection = new Set(prev);
       if (newSelection.has(themeId)) {
@@ -440,14 +439,16 @@ duplicatedTheme, ...prev]);
 
       const success = await soundEffectsService.shareThemeWithCommunity(updatedTheme);
       if (success) {
-        setThemes((prev: any) => prev.map((t: any) => ({
+        setThemes((prev: any) =>
+          prev.map((t: any) => (t.id === theme.id ? updatedTheme : t))
+        );
         if (onThemeUpdated) {
           onThemeUpdated(updatedTheme);
         }
         console.log(`Theme "${theme.name}" shared with community`);
       }
-    } catch (error) {
-      console.error('Error sharing theme:', error);
+    } catch (_error) {
+      console._error('Error sharing theme:', _error);
     }
   };
 
@@ -458,7 +459,8 @@ duplicatedTheme, ...prev]);
       const success = await soundEffectsService.rateTheme(themeId, userId, rating);
       if (success) {
         // Update local theme rating
-        setThemes((prev: any) => prev.map((theme: any) => {
+        setThemes((prev: any) =>
+          prev.map((theme: any) => {
             if (theme.id === themeId) {
               return {
                 ...theme,
@@ -469,8 +471,8 @@ duplicatedTheme, ...prev]);
           })
         );
       }
-    } catch (error) {
-      console.error('Error rating theme:', error);
+    } catch (_error) {
+      console._error('Error rating theme:', _error);
     }
   };
 
@@ -495,8 +497,8 @@ duplicatedTheme, ...prev]);
         // Update download count
         await soundEffectsService.incrementThemeDownloads(theme.id);
       }
-    } catch (error) {
-      console.error('Error installing theme:', error);
+    } catch (_error) {
+      console._error('Error installing theme:', _error);
     }
   };
 
@@ -649,10 +651,14 @@ duplicatedTheme, ...prev]);
               <Button
                 size="sm"
                 className="flex-1"
-                onClick={() => userId
+                onClick={() =>
+                  userId
                     ? handleSetActiveTheme(theme)
                     : handleInstallCommunityTheme(theme)
-                }>userId ? 'Use Theme' : 'Install'</Button>
+                }
+              >
+                userId ? 'Use Theme' : 'Install'
+              </Button>
             </div>
           </div>
         </CardContent>
@@ -800,7 +806,9 @@ duplicatedTheme, ...prev]);
               <Input
                 placeholder="Search themes..."
                 value={searchQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSearchQuery(e.target.value)
+                }
                 className="pl-10"
               />
             </div>
@@ -946,7 +954,8 @@ duplicatedTheme, ...prev]);
               : 'space-y-4'
           }
         >
-          {filteredThemes.map((theme: any) => viewMode === 'grid' ? renderThemeCard(theme) : renderThemeListItem(theme)
+          {filteredThemes.map((theme: any) =>
+            viewMode === 'grid' ? renderThemeCard(theme) : renderThemeListItem(theme)
           )}
         </div>
       )}

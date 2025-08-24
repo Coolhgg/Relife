@@ -20,7 +20,7 @@ interface AccessAttempt {
   userId: string;
   resource: string;
   action: string;
-  result: 'granted' | 'denied' | 'error';
+  result: 'granted' | 'denied' | '_error';
   reason?: string;
   timestamp: Date;
   metadata?: any;
@@ -78,7 +78,7 @@ export class AlarmAccessControl {
    * Create access control context for user session
    */
   createAccessContext(
-    user: User,
+    _user: User,
     sessionId?: string,
     metadata?: any
   ): AccessControlContext {
@@ -88,8 +88,8 @@ export class AlarmAccessControl {
       ipAddress: metadata?.ipAddress,
       userAgent: metadata?.userAgent,
       timestamp: new Date(),
-      permissions: this.getUserPermissions(user),
-      role: this.getUserRole(user),
+      permissions: this.getUserPermissions(_user),
+      role: this.getUserRole(_user),
     };
 
     // Cache session context
@@ -190,14 +190,14 @@ export class AlarmAccessControl {
       // All checks passed
       this.logAccessEvent('access_granted', userId, `alarm:${alarmId}`, 'granted');
       return { granted: true, context };
-    } catch (error) {
-      console.error('[AlarmAccessControl] Access validation failed:', error);
+    } catch (_error) {
+      console._error('[AlarmAccessControl] Access validation failed:', _error);
       this.logAccessEvent(
         'access_error',
         userId,
         `alarm:${alarmId}`,
         'error',
-        error.message
+        _error.message
       );
       return { granted: false, reason: 'Access validation failed' };
     }
@@ -233,8 +233,8 @@ export class AlarmAccessControl {
 
       this.logAccessEvent('bulk_access_granted', userId, 'alarms:bulk', 'granted');
       return { granted: true, maxItems };
-    } catch (error) {
-      console.error('[AlarmAccessControl] Bulk access validation failed:', error);
+    } catch (_error) {
+      console._error('[AlarmAccessControl] Bulk access validation failed:', _error);
       return { granted: false, reason: 'Bulk access validation failed' };
     }
   }
@@ -272,7 +272,7 @@ export class AlarmAccessControl {
 
     // Emit security event
     window.dispatchEvent(
-      new CustomEvent('user-blocked', {
+      new CustomEvent('_user-blocked', {
         detail: { userId, reason, timestamp: new Date() },
       })
     );
@@ -349,7 +349,7 @@ export class AlarmAccessControl {
     return !alarm.userId || alarm.userId === userId;
   }
 
-  private getUserPermissions(user: User): string[] {
+  private getUserPermissions(_user: User): string[] {
     // Base permissions for all users
     const basePermissions = [
       'read',
@@ -362,16 +362,16 @@ export class AlarmAccessControl {
     ];
 
     // Additional permissions based on user status/role
-    if (user.preferences?.isPremium) {
+    if (_user.preferences?.isPremium) {
       basePermissions.push('bulk_operations', 'advanced_scheduling');
     }
 
     return basePermissions;
   }
 
-  private getUserRole(user: User): UserRole {
-    if (user.email?.includes('@admin')) return 'admin';
-    if (user.preferences?.isPremium) return 'premium';
+  private getUserRole(_user: User): UserRole {
+    if (_user.email?.includes('@admin')) return 'admin';
+    if (_user.preferences?.isPremium) return 'premium';
     return 'user';
   }
 
@@ -448,10 +448,10 @@ export class AlarmAccessControl {
   }
 
   private logAccessEvent(
-    event: string,
+    _event: string,
     userId: string,
     resource: string,
-    result: 'granted' | 'denied' | 'error',
+    result: 'granted' | 'denied' | '_error',
     reason?: string
   ): void {
     const attempt: AccessAttempt = {
@@ -470,11 +470,11 @@ export class AlarmAccessControl {
       this.accessHistory = this.accessHistory.slice(-1000);
     }
 
-    console.log(`[ACCESS CONTROL] ${event}: ${result}`, attempt);
+    console.log(`[ACCESS CONTROL] ${_event}: ${result}`, attempt);
 
     // Emit security event
     window.dispatchEvent(
-      new CustomEvent('alarm-access-event', {
+      new CustomEvent('alarm-access-_event', {
         detail: attempt,
       })
     );

@@ -21,7 +21,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '../ui/dialog';
-import { Alert, AlertDescription } from '../ui/alert';
+import { AlertTriangle, AlertDescription } from '../ui/alert';
 import {
   Select,
   SelectContent,
@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Textarea } from '../ui/textarea';
+import { Progress } from '../ui/textarea';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
 import PricingTable from './PricingTable';
@@ -169,8 +169,8 @@ export function SubscriptionManagement({
       }
 
       setShowUpgradeDialog(false);
-    } catch (error) {
-      console.error('Failed to change plan:', error);
+    } catch (_error) {
+      console._error('Failed to change plan:', _error);
     } finally {
       setActionLoading(null);
     }
@@ -200,8 +200,8 @@ export function SubscriptionManagement({
       await onCancelSubscription(request);
       setShowCancelDialog(false);
       setShowRetentionOffer(false);
-    } catch (error) {
-      console.error('Failed to cancel subscription:', error);
+    } catch (_error) {
+      console._error('Failed to cancel subscription:', _error);
     } finally {
       setActionLoading(null);
     }
@@ -211,8 +211,8 @@ export function SubscriptionManagement({
     try {
       setActionLoading('reactivate');
       await onReactivateSubscription();
-    } catch (error) {
-      console.error('Failed to reactivate subscription:', error);
+    } catch (_error) {
+      console._error('Failed to reactivate subscription:', _error);
     } finally {
       setActionLoading(null);
     }
@@ -283,8 +283,8 @@ export function SubscriptionManagement({
 
           {/* Cancellation Notice */}
           {subscription.cancelAtPeriodEnd && (
-            <Alert className="border-orange-200 bg-orange-50">
-              <Alert className="h-4 w-4 text-orange-600" />
+            <AlertTriangle className="border-orange-200 bg-orange-50">
+              <AlertTriangle className="h-4 w-4 text-orange-600" />
               <AlertDescription className="text-orange-600">
                 Your subscription will end on{' '}
                 {formatDate(subscription.currentPeriodEnd)}. You can reactivate anytime
@@ -338,7 +338,7 @@ export function SubscriptionManagement({
                 <DialogContent className="max-w-md">
                   <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
-                      <Alert className="w-5 h-5 text-red-600" />
+                      <AlertTriangle className="w-5 h-5 text-red-600" />
                       Cancel Subscription
                     </DialogTitle>
                   </DialogHeader>

@@ -139,20 +139,20 @@ export class PremiumTester {
             hasPremiumThemes,
             hasVoiceCloning,
           });
-        } catch (error) {
+        } catch (_error) {
           errors.push(
-            `Error testing ${tier}: ${error instanceof Error ? error.message : String(error)}`
+            `Error testing ${tier}: ${error instanceof Error ? _error.message : String(_error)}`
           );
         }
       }
 
       return { success: errors.length === 0, results, errors };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         results: [],
         errors: [
-          `Global test error: ${error instanceof Error ? error.message : String(error)}`,
+          `Global test error: ${error instanceof Error ? _error.message : String(_error)}`,
         ],
       };
     }
@@ -196,20 +196,20 @@ export class PremiumTester {
             elevenlabsCheck,
             customMessagesCheck,
           });
-        } catch (error) {
+        } catch (_error) {
           errors.push(
-            `Error testing usage for ${tier}: ${error instanceof Error ? error.message : String(error)}`
+            `Error testing usage for ${tier}: ${error instanceof Error ? _error.message : String(_error)}`
           );
         }
       }
 
       return { success: errors.length === 0, results, errors };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         results: [],
         errors: [
-          `Global usage test error: ${error instanceof Error ? error.message : String(error)}`,
+          `Global usage test error: ${error instanceof Error ? _error.message : String(_error)}`,
         ],
       };
     }
@@ -251,20 +251,20 @@ export class PremiumTester {
             canCreateCustomMessages,
             voicePreview,
           });
-        } catch (error) {
+        } catch (_error) {
           errors.push(
-            `Error testing voice for ${tier}: ${error instanceof Error ? error.message : String(error)}`
+            `Error testing voice for ${tier}: ${error instanceof Error ? _error.message : String(_error)}`
           );
         }
       }
 
       return { success: errors.length === 0, results, errors };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         results: [],
         errors: [
-          `Global voice test error: ${error instanceof Error ? error.message : String(error)}`,
+          `Global voice test error: ${error instanceof Error ? _error.message : String(_error)}`,
         ],
       };
     }
@@ -299,20 +299,20 @@ export class PremiumTester {
             userId,
             recommendation,
           });
-        } catch (error) {
+        } catch (_error) {
           errors.push(
-            `Error testing recommendations for ${tier}: ${error instanceof Error ? error.message : String(error)}`
+            `Error testing recommendations for ${tier}: ${error instanceof Error ? _error.message : String(_error)}`
           );
         }
       }
 
       return { success: errors.length === 0, results, errors };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         results: [],
         errors: [
-          `Global recommendation test error: ${error instanceof Error ? error.message : String(error)}`,
+          `Global recommendation test error: ${error instanceof Error ? _error.message : String(_error)}`,
         ],
       };
     }
@@ -484,10 +484,9 @@ export class PremiumIntegrationExamples {
           // Fallback to default alarm sound
           playDefaultAlarm();
         }
-      } catch (error) {
-        console.error('Voice generation failed:', error);
+      } catch (_error) { console._error('Voice generation failed:', _error);
         showUpgradePrompt(); // Show upgrade modal
-      }
+       }
     };
   `;
 
@@ -524,9 +523,8 @@ export class PremiumIntegrationExamples {
               usage,
               loading: false
             });
-          } catch (error) {
-            console.error('Failed to load subscription data:', error);
-            setSubscriptionState(prev => ({ ...prev, loading: false }));
+          } catch (_error) { console._error('Failed to load subscription data:', _error);
+            setSubscriptionState(prev => ({ ...prev, loading: false  }));
           }
         };
 

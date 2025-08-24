@@ -152,7 +152,12 @@ export interface SunSchedule {
     longitude: number;
     timezone: string;
   };
-  mode: 'sunrise' | 'sunset' | 'civil_twilight' | 'nautical_twilight' | 'astronomical_twilight';
+  mode:
+    | 'sunrise'
+    | 'sunset'
+    | 'civil_twilight'
+    | 'nautical_twilight'
+    | 'astronomical_twilight';
   offset: number; // Minutes before/after sun event
   seasonalVariation: boolean; // Whether to account for seasonal changes
   fallbackTime?: string; // HH:MM fallback if sun times unavailable
@@ -166,7 +171,7 @@ export interface SchedulingConfig {
   version: string;
   createdAt: Date;
   updatedAt: Date;
-  
+
   // Core scheduling components
   recurrencePattern?: RecurrencePattern;
   conditionalRules: ConditionalRule[];
@@ -175,12 +180,12 @@ export interface SchedulingConfig {
   seasonalAdjustment: SeasonalAdjustment;
   calendarIntegration: CalendarIntegration;
   sunSchedule?: SunSchedule;
-  
+
   // Metadata
   tags: string[];
   priority: 'low' | 'normal' | 'high' | 'critical';
   enabled: boolean;
-  
+
   // Performance and monitoring
   executionHistory: SchedulingExecution[];
   performanceMetrics: {
@@ -197,7 +202,7 @@ interface SchedulingExecution {
   adjustedTime?: Date;
   triggeredRules: string[]; // Rule IDs that were applied
   executionTime: number; // Milliseconds
-  error?: string;
+  _error?: string;
 }
 
 // Export helper types for component props
@@ -221,10 +226,12 @@ export const SCHEDULING_CONSTANTS = {
 } as const;
 
 // Validation helpers
-export const validateSchedulingConfig = (config: SchedulingConfig): boolean => {
-  if (!config.id || !config.name || !config.alarmId) return false;
-  if (config.conditionalRules.length > SCHEDULING_CONSTANTS.MAX_CONDITIONAL_RULES) return false;
-  if (config.locationTriggers.length > SCHEDULING_CONSTANTS.MAX_LOCATION_TRIGGERS) return false;
+export const validateSchedulingConfig = (_config: SchedulingConfig): boolean => {
+  if (!config.id || !_config.name || !_config.alarmId) return false;
+  if (_config.conditionalRules.length > SCHEDULING_CONSTANTS.MAX_CONDITIONAL_RULES)
+    return false;
+  if (_config.locationTriggers.length > SCHEDULING_CONSTANTS.MAX_LOCATION_TRIGGERS)
+    return false;
   return true;
 };
 

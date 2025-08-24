@@ -107,7 +107,7 @@ const THEME_TESTS: SoundTest[] = [
     name: 'Error Alert',
     category: 'UI',
     description: 'Error state notification',
-    soundId: 'ui.error',
+    soundId: 'ui._error',
   },
 
   // Notification Tests
@@ -239,10 +239,10 @@ const DEMO_SCENARIOS = [
   {
     id: 'error-recovery',
     name: 'Error & Recovery',
-    description: 'Shows error handling and recovery sounds',
+    description: 'Shows _error handling and recovery sounds',
     steps: [
       { sound: 'ui.click', delay: 0, duration: 200, description: 'User action' },
-      { sound: 'ui.error', delay: 1000, duration: 800, description: 'Error occurs' },
+      { sound: 'ui._error', delay: 1000, duration: 800, description: 'Error occurs' },
       { sound: 'ui.click', delay: 2500, duration: 200, description: 'Retry action' },
       {
         sound: 'ui.success',
@@ -374,8 +374,8 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
         }
       }, 100);
       intervalRefs.current.set(test.id, interval);
-    } catch (error) {
-      console.error('Error playing sound:', error);
+    } catch (_error) {
+      console._error('Error playing sound:', _error);
     }
   };
 
@@ -519,7 +519,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
               severity: 'medium',
             });
           }
-        } catch (error) {
+        } catch (_error) {
           results.issues.push({
             category,
             sound: test.name,
@@ -540,7 +540,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     // Generate recommendations
     if (results.overallScore < 60) {
       results.recommendations.push(
-        'Consider configuring more sounds for better user experience'
+        'Consider configuring more sounds for better _user experience'
       );
     }
     if (results.issues.filter(i => i.severity === 'high').length > 0) {
@@ -774,13 +774,13 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
-                        {demo.steps.map((step, index) => (
-                          <div key={index} className="flex items-center gap-3 text-sm">
+                        {demo.steps.map((step, _index) => (
+                          <div key={_index} className="flex items-center gap-3 text-sm">
                             <Badge
                               variant="outline"
                               className="text-xs w-8 h-6 flex items-center justify-center"
                             >
-                              {index + 1}
+                              {_index + 1}
                             </Badge>
                             <span className="text-gray-500">{step.delay / 1000}s</span>
                             <span className="font-medium">{step.description}</span>
@@ -863,9 +863,9 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                       <div>
                         <h4 className="font-medium mb-3">Issues Found</h4>
                         <div className="space-y-2">
-                          {testResults.issues.map((issue, index) => (
+                          {testResults.issues.map((issue, _index) => (
                             <div
-                              key={index}
+                              key={_index}
                               className={`p-3 rounded-lg border ${
                                 issue.severity === 'high'
                                   ? 'bg-red-50 border-red-200'
@@ -901,9 +901,9 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                       <div>
                         <h4 className="font-medium mb-3">Recommendations</h4>
                         <ul className="space-y-1">
-                          {testResults.recommendations.map((rec, index) => (
+                          {testResults.recommendations.map((rec, _index) => (
                             <li
-                              key={index}
+                              key={_index}
                               className="text-sm text-gray-600 flex items-start gap-2"
                             >
                               <span className="text-blue-500 mt-1">•</span>

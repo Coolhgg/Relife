@@ -2,6 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 // import ... from '@storybook/test'; // Package not available in current setup
 import AlarmForm from '../../components/AlarmForm';
+import type { Alarm, VoiceMood, AlarmDifficulty, User } from '../../types';
 
 // Mock data and types
 const mockUser = {
@@ -59,28 +60,69 @@ const meta: Meta<typeof AlarmForm> = {
   argTypes: {
     alarm: {
       control: { type: 'object' },
-      description: 'Existing alarm data for editing (null for new alarm)',
+      description:
+        'Existing alarm data for editing. Pass null for new alarm creation mode.',
+      table: {
+        type: {
+          summary: 'Alarm | null',
+          detail:
+            'Complete alarm object with id, time, label, days, voiceMood, etc. or null for new alarm',
+        },
+        defaultValue: { summary: 'null' },
+        category: 'Data',
+      },
     },
     userId: {
       control: { type: 'text' },
-      description: 'User ID for custom sound management',
+      description:
+        'User identifier required for custom sound management and personalization features.',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'Required prop' },
+        category: 'Required',
+      },
     },
     user: {
       control: { type: 'object' },
-      description: 'User object for premium feature checks',
+      description:
+        'Complete user object containing subscription information for premium feature access checks.',
+      table: {
+        type: {
+          summary: 'User',
+          detail:
+            'User object with id, email, subscriptionTier, and other profile data',
+        },
+        defaultValue: { summary: 'Required prop' },
+        category: 'Required',
+      },
     },
     onSave: {
       action: 'saved',
-      description: 'Callback when alarm is saved',
+      description:
+        'Callback function invoked when form is successfully submitted with alarm data.',
+      table: {
+        type: {
+          summary: '(data: AlarmFormSaveData) => void',
+          detail:
+            'Receives object with time, label, days, voiceMood, difficulty, and other alarm properties',
+        },
+        category: 'Events',
+      },
     },
     onCancel: {
       action: 'cancelled',
-      description: 'Callback when form is cancelled',
+      description:
+        'Callback function invoked when user cancels the form or presses escape key.',
+      table: {
+        type: { summary: '() => void' },
+        category: 'Events',
+      },
     },
   },
   args: {
-    onSave: fn(),
-    onCancel: fn(),
+    // Note: fn() would be imported from @storybook/test if available
+    onSave: (...args) => console.log('onSave called with:', args),
+    onCancel: () => console.log('onCancel called'),
     userId: 'test-user-123',
   },
 };
@@ -244,6 +286,9 @@ export const AccessibilityShowcase: Story = {
 // Interactive playground for testing different combinations
 export const InteractivePlayground: Story = {
   render: () => {
+    const handleSave = (data: any) => console.log('Save called with:', data);
+    const handleCancel = () => console.log('Cancel called');
+
     return (
       <div className="p-6 space-y-6">
         <h2 className="text-2xl font-bold">Alarm Form Playground</h2>
@@ -255,8 +300,8 @@ export const InteractivePlayground: Story = {
                 alarm={null}
                 user={mockUser}
                 userId="test-user-123"
-                onSave={fn()}
-                onCancel={fn()}
+                onSave={handleSave}
+                onCancel={handleCancel}
               />
             </div>
           </div>
@@ -269,10 +314,10 @@ export const InteractivePlayground: Story = {
                   difficulty: 'nuclear' as const,
                   nuclearChallenges: ['math_quiz'],
                 }}
-                user={mockPremiumUser}
+                _user={mockPremiumUser}
                 userId="test-premium-123"
-                onSave={fn()}
-                onCancel={fn()}
+                onSave={handleSave}
+                onCancel={handleCancel}
               />
             </div>
           </div>

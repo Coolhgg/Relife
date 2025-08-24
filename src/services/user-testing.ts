@@ -70,7 +70,7 @@ export interface ABTestVariant {
   name: string;
   description: string;
   percentage: number;
-  config: Record<string, any>;
+  _config: Record<string, any>;
 }
 
 export interface ABTestMetric {
@@ -84,7 +84,14 @@ export interface UsabilityEvent {
   id: string;
   sessionId: string;
   userId: string;
-  type: 'click' | 'scroll' | 'focus' | 'input' | 'navigation' | 'error' | 'performance';
+  type:
+    | 'click'
+    | 'scroll'
+    | 'focus'
+    | 'input'
+    | 'navigation'
+    | '_error'
+    | 'performance';
   element?: string;
   elementText?: string;
   page: string;
@@ -158,9 +165,9 @@ export class UserTestingService {
 
       this.isInitialized = true;
       console.log('✅ User Testing Service initialized successfully');
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to initialize User Testing Service',
         { context: 'user_testing_init', userId }
       );
@@ -191,9 +198,9 @@ export class UserTestingService {
 
       console.log(`🧪 Started ${testType} session:`, this.currentSession.sessionId);
       return this.currentSession.sessionId;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to start user testing session',
         { context: 'start_session', userId, testType }
       );
@@ -221,9 +228,9 @@ export class UserTestingService {
 
       console.log(`🧪 Ended session: ${this.currentSession.sessionId} (${duration}ms)`);
       this.currentSession = null;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to end user testing session',
         { context: 'end_session' }
       );
@@ -231,7 +238,7 @@ export class UserTestingService {
   }
 
   // Event Tracking
-  trackEvent(event: Partial<UsabilityEvent>): void {
+  trackEvent(_event: Partial<UsabilityEvent>): void {
     if (!this.currentSession) return;
 
     try {
@@ -257,8 +264,8 @@ export class UserTestingService {
       if (this.events.length % 10 === 0) {
         this.storeEvents();
       }
-    } catch (error) {
-      console.error('Failed to track event:', error);
+    } catch (_error) {
+      console._error('Failed to track _event:', _error);
     }
   }
 
@@ -287,14 +294,14 @@ export class UserTestingService {
   }
 
   trackError(
-    error: string,
+    _error: string,
     element?: string,
     metadata: Record<string, any> = {}
   ): void {
     this.trackEvent({
-      type: 'error',
+      type: '_error',
       element,
-      metadata: { error, ...metadata },
+      metadata: { _error, ...metadata },
     });
   }
 
@@ -341,9 +348,9 @@ export class UserTestingService {
 
       console.log('📝 Feedback submitted:', fullFeedback.id);
       return fullFeedback.id;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to submit feedback',
         { context: 'submit_feedback', feedback }
       );
@@ -387,9 +394,9 @@ export class UserTestingService {
 
       console.log('🐛 Bug report submitted:', fullBugReport.id);
       return fullBugReport.id;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to submit bug report',
         { context: 'submit_bug_report', bug }
       );
@@ -462,8 +469,8 @@ export class UserTestingService {
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         networkType: network.connectionType,
       };
-    } catch (error) {
-      console.error('Failed to get device info:', error);
+    } catch (_error) {
+      console._error('Failed to get device info:', _error);
       return {
         platform: 'unknown',
         model: 'unknown',
@@ -485,7 +492,7 @@ export class UserTestingService {
   private setupEventListeners(): void {
     // Global click tracking
     document.addEventListener('click', event => {
-      const target = event.target as HTMLElement;
+      const target = _event.target as HTMLElement;
       this.trackClick(this.getElementSelector(target), event.clientX, event.clientY, {
         tagName: target.tagName,
         className: target.className,
@@ -499,7 +506,7 @@ export class UserTestingService {
         filename: event.filename,
         lineno: event.lineno,
         colno: event.colno,
-        stack: event.error?.stack,
+        stack: _event._error?.stack,
       });
     });
 
@@ -515,7 +522,7 @@ export class UserTestingService {
           }
         });
         observer.observe({ entryTypes: ['measure', 'navigation', 'paint'] });
-      } catch (error) {
+      } catch (_error) {
         console.warn('PerformanceObserver not supported');
       }
     }
@@ -600,8 +607,8 @@ export class UserTestingService {
       logs.push(`Timestamp: ${new Date().toISOString()}`);
       logs.push(`Page: ${window.location.pathname}`);
       logs.push(`User Agent: ${navigator.userAgent}`);
-    } catch (error) {
-      logs.push(`Error getting logs: ${error}`);
+    } catch (_error) {
+      logs.push(`Error getting logs: ${_error}`);
     }
 
     return logs;
@@ -612,8 +619,8 @@ export class UserTestingService {
     try {
       const key = `user_testing_session_${session.id}`;
       localStorage.setItem(key, JSON.stringify(session));
-    } catch (error) {
-      console.error('Failed to store session:', error);
+    } catch (_error) {
+      console._error('Failed to store session:', _error);
     }
   }
 
@@ -621,8 +628,8 @@ export class UserTestingService {
     try {
       const key = `user_testing_events_${this.currentSession?.sessionId}`;
       localStorage.setItem(key, JSON.stringify(this.events));
-    } catch (error) {
-      console.error('Failed to store events:', error);
+    } catch (_error) {
+      console._error('Failed to store events:', _error);
     }
   }
 
@@ -630,8 +637,8 @@ export class UserTestingService {
     try {
       const key = `user_testing_feedback_${feedback.id}`;
       localStorage.setItem(key, JSON.stringify(feedback));
-    } catch (error) {
-      console.error('Failed to store feedback:', error);
+    } catch (_error) {
+      console._error('Failed to store feedback:', _error);
     }
   }
 
@@ -639,8 +646,8 @@ export class UserTestingService {
     try {
       const key = `user_testing_bug_${bug.id}`;
       localStorage.setItem(key, JSON.stringify(bug));
-    } catch (error) {
-      console.error('Failed to store bug report:', error);
+    } catch (_error) {
+      console._error('Failed to store bug report:', _error);
     }
   }
 
@@ -648,8 +655,8 @@ export class UserTestingService {
     try {
       const variants = Object.fromEntries(this.userVariants);
       localStorage.setItem('user_testing_variants', JSON.stringify(variants));
-    } catch (error) {
-      console.error('Failed to store user variants:', error);
+    } catch (_error) {
+      console._error('Failed to store _user variants:', _error);
     }
   }
 
@@ -661,8 +668,8 @@ export class UserTestingService {
         const variants = JSON.parse(storedVariants);
         this.userVariants = new Map(Object.entries(variants));
       }
-    } catch (error) {
-      console.error('Failed to load stored data:', error);
+    } catch (_error) {
+      console._error('Failed to load stored data:', _error);
     }
   }
 
@@ -679,14 +686,14 @@ export class UserTestingService {
           name: 'Blue Button',
           description: 'Original blue button',
           percentage: 50,
-          config: { color: 'blue' },
+          _config: { color: 'blue' },
         },
         {
           id: 'variant',
           name: 'Green Button',
           description: 'New green button',
           percentage: 50,
-          config: { color: 'green' },
+          _config: { color: 'green' },
         },
       ],
       startDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // Started yesterday

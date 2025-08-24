@@ -30,7 +30,7 @@ import type {
   RecommendationGeneratedPayload,
   WebSocketConnectionInfo,
   WebSocketConfig,
-  DEFAULT_REALTIME_CONFIG
+  DEFAULT_REALTIME_CONFIG,
 } from '../types/realtime';
 
 /**
@@ -64,7 +64,7 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
 
   constructor() {
     super();
-    this.config = { ...DEFAULT_REALTIME_CONFIG };
+    this._config = { ...DEFAULT_REALTIME_CONFIG };
 
     // Initialize feature implementations
     this.alarmFeatures = new AlarmRealtimeFeaturesImpl(this);
@@ -77,31 +77,31 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
   // CORE LIFECYCLE METHODS
   // ===============================
 
-  async initialize(config: RealtimeServiceConfig): Promise<void> {
+  async initialize(_config: RealtimeServiceConfig): Promise<void> {
     try {
-      this.config = { ...this.config, ...config };
-      
-      if (this.config.enableLogging) {
-        console.log('Initializing TypedRealtimeService with config:', this.config);
+      this.config = { ...this.config, ..._config };
+
+      if (this._config.enableLogging) {
+        console.log('Initializing TypedRealtimeService with _config:', this._config);
       }
 
       // Initialize WebSocket manager if enabled
-      if (this.config.websocket.enabled) {
+      if (this._config.websocket.enabled) {
         this.websocketManager = await this.initializeWebSocket();
       }
 
       // Initialize push notification manager if enabled
-      if (this.config.pushNotifications.enabled) {
+      if (this._config.pushNotifications.enabled) {
         this.pushManager = await this.initializePushNotifications();
       }
 
       // Initialize Supabase real-time if enabled
-      if (this.config.supabase.enabled) {
+      if (this._config.supabase.enabled) {
         await this.initializeSupabaseRealtime();
       }
 
       // Initialize sync coordinator if enabled
-      if (this.config.sync.enabled) {
+      if (this._config.sync.enabled) {
         this.syncCoordinator = await this.initializeSyncCoordinator();
       }
 
@@ -110,20 +110,24 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
       // Set up periodic tasks
       this.setupPeriodicTasks();
 
-      if (this.config.enableLogging) {
+      if (this._config.enableLogging) {
         console.log('TypedRealtimeService initialized successfully');
       }
-    } catch (error) {
+    } catch (_error) {
       const realtimeError: RealtimeServiceError = {
         type: 'configuration',
         code: 'INIT_FAILED',
-        message: `Failed to initialize real-time service: ${error instanceof Error ? error.message : String(error)}`,
+        message: `Failed to initialize real-time service: ${error instanceof Error ? _error.message : String(_error)}`,
         timestamp: new Date(),
         severity: 'critical',
         component: 'TypedRealtimeService',
         recoverable: false,
         userActionRequired: true,
-        suggestedActions: ['Check configuration', 'Verify network connectivity', 'Contact support']
+        suggestedActions: [
+          'Check configuration',
+          'Verify network connectivity',
+          'Contact support',
+        ],
       };
 
       this.handleError(realtimeError);
@@ -150,7 +154,7 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
       }
 
       // Subscribe to push notifications
-      if (this.pushManager && this.config.pushNotifications.autoSubscribe) {
+      if (this.pushManager && this._config.pushNotifications.autoSubscribe) {
         await this.pushManager.subscribe();
       }
 
@@ -158,21 +162,21 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
       this.updateConnectionStatus({ overall: 'connected' } as ConnectionStatus);
 
       this.emit('started');
-      
-      if (this.config.enableLogging) {
+
+      if (this._config.enableLogging) {
         console.log('TypedRealtimeService started successfully');
       }
-    } catch (error) {
+    } catch (_error) {
       const realtimeError: RealtimeServiceError = {
         type: 'network',
         code: 'START_FAILED',
-        message: `Failed to start real-time service: ${error instanceof Error ? error.message : String(error)}`,
+        message: `Failed to start real-time service: ${error instanceof Error ? _error.message : String(_error)}`,
         timestamp: new Date(),
         severity: 'high',
         component: 'TypedRealtimeService',
         recoverable: true,
         userActionRequired: false,
-        suggestedActions: ['Retry connection', 'Check network status']
+        suggestedActions: ['Retry connection', 'Check network status'],
       };
 
       this.handleError(realtimeError);
@@ -208,11 +212,11 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
       this.isRunning = false;
       this.emit('stopped');
 
-      if (this.config.enableLogging) {
+      if (this._config.enableLogging) {
         console.log('TypedRealtimeService stopped');
       }
-    } catch (error) {
-      console.error('Error stopping TypedRealtimeService:', error);
+    } catch (_error) {
+      console._error('Error stopping TypedRealtimeService:', _error);
     }
   }
 
@@ -221,23 +225,23 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
   }
 
   getConfig(): RealtimeServiceConfig {
-    return { ...this.config };
+    return { ...this._config };
   }
 
   async updateConfig(updates: Partial<RealtimeServiceConfig>): Promise<void> {
-    const oldConfig = { ...this.config };
-    this.config = { ...this.config, ...updates };
+    const oldConfig = { ...this._config };
+    this.config = { ...this._config, ...updates };
 
     // Restart components if their configuration changed
     if (this.isRunning) {
-      const needsRestart = this.hasSignificantConfigChange(oldConfig, this.config);
+      const needsRestart = this.hasSignificantConfigChange(oldConfig, this._config);
       if (needsRestart) {
         await this.stop();
         await this.start();
       }
     }
 
-    this.emit('configUpdated', this.config);
+    this.emit('configUpdated', this._config);
   }
 
   // ===============================
@@ -312,45 +316,51 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
 
   async getMetrics(): Promise<RealtimeServiceMetrics> {
     const now = new Date();
-    
+
     const baseMetrics: RealtimeServiceMetrics = {
       connections: {
-        websocket: this.websocketManager?.getMetrics() || {} as any,
+        websocket: this.websocketManager?.getMetrics() || ({} as any),
         supabase: {} as any, // Would be populated by actual Supabase connection
-        totalUptime: this.isRunning ? (now.getTime() - (this.connectionStatus?.lastStatusChange?.getTime() || now.getTime())) / 1000 : 0,
-        reconnections: 0
+        totalUptime: this.isRunning
+          ? (now.getTime() -
+              (this.connectionStatus?.lastStatusChange?.getTime() || now.getTime())) /
+            1000
+          : 0,
+        reconnections: 0,
       },
       messaging: {
         messagesSent: 0,
         messagesReceived: 0,
         messagesPerSecond: 0,
         averageLatency: this.websocketManager?.getConnectionInfo()?.latency || 0,
-        failureRate: 0
+        failureRate: 0,
       },
       features: {
         alarmEvents: 0,
         presenceUpdates: 0,
         notifications: 0,
         syncOperations: 0,
-        aiInteractions: 0
+        aiInteractions: 0,
       },
       performance: {
-        memoryUsage: process.memoryUsage ? process.memoryUsage().heapUsed / 1024 / 1024 : 0,
+        memoryUsage: process.memoryUsage
+          ? process.memoryUsage().heapUsed / 1024 / 1024
+          : 0,
         cpuUsage: 0,
         networkUsage: { sent: 0, received: 0 },
-        cacheHitRate: 95
+        cacheHitRate: 95,
       },
       health: {
         errorCount: 0,
         warningCount: 0,
         lastError: this.lastError?.timestamp,
-        healthScore: this.calculateHealthScore()
+        healthScore: this.calculateHealthScore(),
       },
       timeRange: {
         start: new Date(now.getTime() - 60000), // Last minute
         end: now,
-        duration: 60
-      }
+        duration: 60,
+      },
     };
 
     this.metrics = baseMetrics;
@@ -363,14 +373,14 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
       authentication: 'healthy' as const,
       subscriptions: 'healthy' as const,
       latency: 'healthy' as const,
-      errorRate: 'healthy' as const
+      errorRate: 'healthy' as const,
     };
 
     // Check WebSocket connection
     if (this.websocketManager) {
       const isConnected = this.websocketManager.isConnected();
       checks.connection = isConnected ? 'healthy' : 'unhealthy';
-      
+
       const connectionInfo = this.websocketManager.getConnectionInfo();
       if (connectionInfo?.latency && connectionInfo.latency > 1000) {
         checks.latency = 'degraded';
@@ -378,19 +388,23 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
     }
 
     // Check error rate
-    if (this.lastError && (Date.now() - this.lastError.timestamp.getTime()) < 300000) { // Last 5 minutes
+    if (this.lastError && Date.now() - this.lastError.timestamp.getTime() < 300000) {
+      // Last 5 minutes
       checks.errorRate = 'degraded';
     }
 
-    const overallStatus = Object.values(checks).every(status => status === 'healthy') ? 'healthy' : 
-                         Object.values(checks).some(status => status === 'unhealthy') ? 'unhealthy' : 'degraded';
+    const overallStatus = Object.values(checks).every(status => status === 'healthy')
+      ? 'healthy'
+      : Object.values(checks).some(status => status === 'unhealthy')
+        ? 'unhealthy'
+        : 'degraded';
 
     const result: HealthCheckResult = {
       overall: overallStatus,
       checks,
       metrics: await this.getMetrics(),
       recommendations: this.generateHealthRecommendations(checks),
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     this.emit('healthCheckCompleted', result);
@@ -402,22 +416,24 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
     return {
       system: {
         userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'Node.js',
-        platform: typeof navigator !== 'undefined' ? navigator.platform : process.platform,
-        onlineStatus: typeof navigator !== 'undefined' ? navigator.onLine : true
+        platform:
+          typeof navigator !== 'undefined' ? navigator.platform : process.platform,
+        onlineStatus: typeof navigator !== 'undefined' ? navigator.onLine : true,
       },
       capabilities: {
         webSocket: typeof WebSocket !== 'undefined',
         serviceWorker: typeof navigator !== 'undefined' && 'serviceWorker' in navigator,
         pushNotifications: typeof navigator !== 'undefined' && 'PushManager' in window,
-        backgroundSync: typeof navigator !== 'undefined' && 'serviceWorker' in navigator,
+        backgroundSync:
+          typeof navigator !== 'undefined' && 'serviceWorker' in navigator,
         webRTC: typeof RTCPeerConnection !== 'undefined',
-        indexedDB: typeof indexedDB !== 'undefined'
+        indexedDB: typeof indexedDB !== 'undefined',
       },
       configuration: {
         isValid: true,
         warnings: [],
         recommendations: [],
-        missingFeatures: []
+        missingFeatures: [],
       },
       connectivity: {
         websocketReachable: this.websocketManager?.isConnected() || false,
@@ -428,8 +444,8 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
           min: 50,
           max: 200,
           average: 100,
-          jitter: 25
-        }
+          jitter: 25,
+        },
       },
       performance: {
         initializationTime: 1000,
@@ -437,13 +453,13 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
         subscriptionTime: 200,
         messageProcessingTime: 10,
         memoryLeaks: false,
-        performanceScore: 85
+        performanceScore: 85,
       },
       errors: {
         recentErrors: this.lastError ? [this.lastError] : [],
         errorPatterns: [],
-        recoverySuccess: 90
-      }
+        recoverySuccess: 90,
+      },
     };
   }
 
@@ -456,9 +472,9 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
     return () => this.off('connectionStatusChanged', handler);
   }
 
-  onError(handler: (error: RealtimeServiceError) => void): () => void {
-    this.on('error', handler);
-    return () => this.off('error', handler);
+  onError(handler: (_error: RealtimeServiceError) => void): () => void {
+    this.on('_error', handler);
+    return () => this.off('_error', handler);
   }
 
   onMessage(handler: (message: RealtimeMessage) => void): () => void {
@@ -474,15 +490,15 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
     // Implementation would create and configure WebSocket manager
     // This is a placeholder - actual implementation would use a real WebSocket manager
     return {
-      connect: async () => ({} as WebSocketConnectionInfo),
+      connect: async () => ({}) as WebSocketConnectionInfo,
       disconnect: async () => {},
       send: async () => true,
       isConnected: () => this.isRunning,
       getConnectionInfo: () => null,
-      getMetrics: () => ({} as any),
+      getMetrics: () => ({}) as any,
       setHeartbeatInterval: () => {},
       addMessageFilter: () => {},
-      removeMessageFilter: () => {}
+      removeMessageFilter: () => {},
     };
   }
 
@@ -509,24 +525,27 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
   }
 
   private setupPeriodicTasks(): void {
-    if (this.config.enableMetrics) {
+    if (this._config.enableMetrics) {
       this.metricsInterval = setInterval(async () => {
         try {
           await this.getMetrics();
-        } catch (error) {
-          console.error('Failed to update metrics:', error);
+        } catch (_error) {
+          console._error('Failed to update metrics:', _error);
         }
       }, 30000);
     }
 
-    if (this.config.healthCheckInterval > 0) {
-      this.healthCheckInterval = setInterval(async () => {
-        try {
-          await this.performHealthCheck();
-        } catch (error) {
-          console.error('Health check failed:', error);
-        }
-      }, this.config.healthCheckInterval * 60 * 1000);
+    if (this._config.healthCheckInterval > 0) {
+      this.healthCheckInterval = setInterval(
+        async () => {
+          try {
+            await this.performHealthCheck();
+          } catch (_error) {
+            console._error('Health check failed:', _error);
+          }
+        },
+        this.config.healthCheckInterval * 60 * 1000
+      );
     }
   }
 
@@ -534,22 +553,25 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
     this.connectionStatus = {
       ...this.connectionStatus,
       ...status,
-      lastStatusChange: new Date()
+      lastStatusChange: new Date(),
     } as ConnectionStatus;
 
     this.emit('connectionStatusChanged', this.connectionStatus);
   }
 
-  private handleError(error: RealtimeServiceError): void {
+  private handleError(_error: RealtimeServiceError): void {
     this.lastError = error;
-    this.emit('error', error);
+    this.emit('error', _error);
 
-    if (this.config.enableLogging) {
-      console.error('TypedRealtimeService error:', error);
+    if (this._config.enableLogging) {
+      console.error('TypedRealtimeService _error:', _error);
     }
   }
 
-  private hasSignificantConfigChange(oldConfig: RealtimeServiceConfig, newConfig: RealtimeServiceConfig): boolean {
+  private hasSignificantConfigChange(
+    oldConfig: RealtimeServiceConfig,
+    newConfig: RealtimeServiceConfig
+  ): boolean {
     // Check if changes require restart
     return (
       oldConfig.websocket.enabled !== newConfig.websocket.enabled ||
@@ -562,8 +584,13 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
     let score = 100;
 
     if (!this.isRunning) score -= 50;
-    if (this.lastError && (Date.now() - this.lastError.timestamp.getTime()) < 300000) {
-      score -= this.lastError.severity === 'critical' ? 30 : this.lastError.severity === 'high' ? 20 : 10;
+    if (this.lastError && Date.now() - this.lastError.timestamp.getTime() < 300000) {
+      score -=
+        this.lastError.severity === 'critical'
+          ? 30
+          : this.lastError.severity === 'high'
+            ? 20
+            : 10;
     }
     if (!this.websocketManager?.isConnected()) score -= 20;
 
@@ -580,7 +607,7 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
       recommendations.push('Network latency is high, consider optimizing connection');
     }
     if (checks.errorRate === 'degraded') {
-      recommendations.push('Recent errors detected, check error logs');
+      recommendations.push('Recent errors detected, check _error logs');
     }
 
     return recommendations;
@@ -663,7 +690,7 @@ class AlarmRealtimeFeaturesImpl implements AlarmRealtimeFeatures {
     // Implementation would trigger emergency alarm
   }
 
-  async broadcastAlarmFailure(alarmId: string, error: string): Promise<void> {
+  async broadcastAlarmFailure(alarmId: string, _error: string): Promise<void> {
     // Implementation would broadcast alarm failure
   }
 }
@@ -675,7 +702,9 @@ class UserRealtimeFeaturesImpl implements UserRealtimeFeatures {
     // Implementation would update user presence
   }
 
-  subscribeToPresence(handler: (presence: UserPresenceUpdatePayload) => void): () => void {
+  subscribeToPresence(
+    handler: (presence: UserPresenceUpdatePayload) => void
+  ): () => void {
     const messageHandler = (message: RealtimeMessage) => {
       if (message.type === 'user_presence_update') {
         handler(message.payload as UserPresenceUpdatePayload);
@@ -695,7 +724,10 @@ class UserRealtimeFeaturesImpl implements UserRealtimeFeatures {
     // Implementation would track user activity
   }
 
-  subscribeToUserActivity(userId: string, handler: (activity: any) => void): () => void {
+  subscribeToUserActivity(
+    userId: string,
+    handler: (activity: any) => void
+  ): () => void {
     // Implementation would subscribe to user activity
     return () => {};
   }
@@ -721,7 +753,9 @@ class UserRealtimeFeaturesImpl implements UserRealtimeFeatures {
 class AIRealtimeFeaturesImpl implements AIRealtimeFeatures {
   constructor(private service: TypedRealtimeService) {}
 
-  subscribeToRecommendations(handler: (rec: RecommendationGeneratedPayload) => void): () => void {
+  subscribeToRecommendations(
+    handler: (rec: RecommendationGeneratedPayload) => void
+  ): () => void {
     const messageHandler = (message: RealtimeMessage) => {
       if (message.type === 'recommendation_generated') {
         handler(message.payload as RecommendationGeneratedPayload);
@@ -833,34 +867,39 @@ class SystemRealtimeFeaturesImpl implements SystemRealtimeFeatures {
  * Factory for creating TypedRealtimeService instances
  */
 export class TypedRealtimeServiceFactory {
-  static create(config: RealtimeServiceConfig): RealtimeService {
+  static create(_config: RealtimeServiceConfig): RealtimeService {
     const service = new TypedRealtimeService();
     return service;
   }
 
-  static createWithDefaults(overrides?: Partial<RealtimeServiceConfig>): RealtimeService {
-    const config = { ...DEFAULT_REALTIME_CONFIG, ...overrides };
-    return this.create(config);
+  static createWithDefaults(
+    overrides?: Partial<RealtimeServiceConfig>
+  ): RealtimeService {
+    const _config = { ...DEFAULT_REALTIME_CONFIG, ...overrides };
+    return this.create(_config);
   }
 
-  static validateConfig(config: RealtimeServiceConfig): { valid: boolean; errors: string[] } {
+  static validateConfig(_config: RealtimeServiceConfig): {
+    valid: boolean;
+    errors: string[];
+  } {
     const errors: string[] = [];
 
-    if (config.websocket.enabled && !config.websocket.config.url) {
+    if (config.websocket.enabled && !_config.websocket._config.url) {
       errors.push('WebSocket URL is required when WebSocket is enabled');
     }
 
-    if (config.pushNotifications.enabled && !config.pushNotifications.vapidKey) {
+    if (config.pushNotifications.enabled && !_config.pushNotifications.vapidKey) {
       errors.push('VAPID key is required when push notifications are enabled');
     }
 
-    if (config.sync.syncInterval < 1) {
+    if (_config.sync.syncInterval < 1) {
       errors.push('Sync interval must be at least 1 minute');
     }
 
     return {
       valid: errors.length === 0,
-      errors
+      errors,
     };
   }
 

@@ -149,7 +149,7 @@ export function useFormAnnouncements() {
       errorMessage += errorDescriptions.join(', ');
 
       announce({
-        type: 'error',
+        type: '_error',
         message: errorMessage,
         priority: 'assertive',
       });

@@ -794,8 +794,8 @@ class ThemeCombinationsService {
         const customCombos = JSON.parse(customCombosData);
         this.userCustomCombinations = new Map(Object.entries(customCombos));
       }
-    } catch (error) {
-      console.error('Failed to load user theme data:', error);
+    } catch (_error) {
+      console._error('Failed to load _user theme data:', _error);
     }
   }
 
@@ -809,8 +809,8 @@ class ThemeCombinationsService {
         'custom-theme-combinations',
         JSON.stringify(Object.fromEntries(this.userCustomCombinations))
       );
-    } catch (error) {
-      console.error('Failed to save user theme data:', error);
+    } catch (_error) {
+      console._error('Failed to save _user theme data:', _error);
     }
   }
 
@@ -886,8 +886,8 @@ class ThemeCombinationsService {
 
       this.saveUserData();
       return true;
-    } catch (error) {
-      console.error('Failed to import user themes:', error);
+    } catch (_error) {
+      console._error('Failed to import _user themes:', _error);
       return false;
     }
   }

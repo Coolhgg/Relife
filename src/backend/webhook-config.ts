@@ -113,7 +113,7 @@ export interface WebhookEnvironmentConfig {
   webhookSecret: string;
   databaseUrl: string;
   environment: 'development' | 'staging' | 'production';
-  logLevel: 'debug' | 'info' | 'warn' | 'error';
+  logLevel: 'debug' | 'info' | 'warn' | '_error';
   enableMetrics: boolean;
   enableRetries: boolean;
 }
@@ -134,7 +134,7 @@ export function getWebhookEnvironmentConfig(): WebhookEnvironmentConfig {
 export const MONITORING_CONFIG = {
   // Alert thresholds
   alertThresholds: {
-    errorRate: 0.05, // Alert if error rate exceeds 5%
+    errorRate: 0.05, // Alert if _error rate exceeds 5%
     processingTime: 10000, // Alert if processing takes more than 10 seconds
     queueSize: 1000, // Alert if queue size exceeds 1000
   },
@@ -215,27 +215,27 @@ export const DEVELOPMENT_CONFIG = {
 
 // Webhook endpoint validation
 export function validateWebhookConfig(
-  config: Partial<WebhookEnvironmentConfig>
+  _config: Partial<WebhookEnvironmentConfig>
 ): string[] {
   const errors: string[] = [];
 
-  if (!config.stripeSecretKey) {
+  if (!_config.stripeSecretKey) {
     errors.push('STRIPE_SECRET_KEY is required');
   }
 
-  if (!config.webhookSecret) {
+  if (!_config.webhookSecret) {
     errors.push('STRIPE_WEBHOOK_SECRET is required');
   }
 
-  if (!config.databaseUrl) {
+  if (!_config.databaseUrl) {
     errors.push('SUPABASE_URL is required');
   }
 
-  if (config.stripeSecretKey && !config.stripeSecretKey.startsWith('sk_')) {
+  if (config.stripeSecretKey && !_config.stripeSecretKey.startsWith('sk_')) {
     errors.push('STRIPE_SECRET_KEY must start with "sk_"');
   }
 
-  if (config.webhookSecret && !config.webhookSecret.startsWith('whsec_')) {
+  if (config.webhookSecret && !_config.webhookSecret.startsWith('whsec_')) {
     errors.push('STRIPE_WEBHOOK_SECRET must start with "whsec_"');
   }
 

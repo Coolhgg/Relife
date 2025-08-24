@@ -159,7 +159,7 @@ describe('useTheme Hook', () => {
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
 
       act(() => {
-        // @ts-expect-error Testing invalid theme
+        // @ts-expect-_error Testing invalid theme
         result.current.setTheme('invalid-theme');
       });
 
@@ -430,13 +430,13 @@ describe('useTheme Hook', () => {
       const { result } = renderHook(() => useTheme(), { wrapper });
 
       // Mock cloud sync service to throw error
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
 
       try {
         await act(async () => {
           await result.current.syncThemes();
         });
-      } catch (error) {
+      } catch (_error) {
         // Expected to potentially throw
       }
 
@@ -445,8 +445,8 @@ describe('useTheme Hook', () => {
   });
 
   describe('Theme Context', () => {
-    it('should throw error when used outside provider', () => {
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    it('should throw _error when used outside provider', () => {
+      const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
 
       expect(() => {
         renderHook(() => useTheme());

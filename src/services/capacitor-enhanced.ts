@@ -94,9 +94,9 @@ export class CapacitorEnhancedService {
       this.isInitialized = true;
       console.log('[Capacitor] Enhanced services initialized successfully');
       this.emit('initialized', { features: this.deviceFeatures });
-    } catch (error) {
-      console.error('[Capacitor] Failed to initialize services:', error);
-      throw error;
+    } catch (_error) {
+      console.error('[Capacitor] Failed to initialize services:', _error);
+      throw _error;
     }
   }
 
@@ -121,8 +121,8 @@ export class CapacitorEnhancedService {
       };
 
       console.log('[Capacitor] Device features detected:', this.deviceFeatures);
-    } catch (error) {
-      console.error('[Capacitor] Failed to detect device features:', error);
+    } catch (_error) {
+      console._error('[Capacitor] Failed to detect device features:', _error);
       // Fallback features
       this.deviceFeatures = {
         hasHaptics: false,
@@ -149,8 +149,8 @@ export class CapacitorEnhancedService {
 
       // Initialize badge
       await Badge.clear();
-    } catch (error) {
-      console.warn('[Capacitor] Core initialization warning:', error);
+    } catch (_error) {
+      console.warn('[Capacitor] Core initialization warning:', _error);
     }
   }
 
@@ -173,8 +173,8 @@ export class CapacitorEnhancedService {
         console.log('[Capacitor] Notification action:', action);
         this.handleNotificationAction(action);
       });
-    } catch (error) {
-      console.error('[Capacitor] Notification initialization failed:', error);
+    } catch (_error) {
+      console._error('[Capacitor] Notification initialization failed:', _error);
     }
   }
 
@@ -194,13 +194,13 @@ export class CapacitorEnhancedService {
     });
 
     App.addListener('appUrlOpen', event => {
-      console.log('[Capacitor] App opened via URL:', event);
-      this.emit('app-url-open', event);
+      console.log('[Capacitor] App opened via URL:', _event);
+      this.emit('app-url-open', _event);
     });
 
     App.addListener('backButton', event => {
-      console.log('[Capacitor] Back button pressed:', event);
-      this.emit('back-button', event);
+      console.log('[Capacitor] Back button pressed:', _event);
+      this.emit('back-button', _event);
     });
   }
 
@@ -216,8 +216,8 @@ export class CapacitorEnhancedService {
         console.log('[Capacitor] Network status changed:', status);
         this.emit('network-change', status);
       });
-    } catch (error) {
-      console.warn('[Capacitor] Network monitoring initialization failed:', error);
+    } catch (_error) {
+      console.warn('[Capacitor] Network monitoring initialization failed:', _error);
     }
   }
 
@@ -228,8 +228,8 @@ export class CapacitorEnhancedService {
     try {
       await StatusBar.setStyle({ style: Style.Dark });
       await StatusBar.setBackgroundColor({ color: '#667eea' });
-    } catch (error) {
-      console.warn('[Capacitor] Status bar configuration failed:', error);
+    } catch (_error) {
+      console.warn('[Capacitor] Status bar configuration failed:', _error);
     }
   }
 
@@ -239,8 +239,8 @@ export class CapacitorEnhancedService {
 
     try {
       await SplashScreen.hide();
-    } catch (error) {
-      console.warn('[Capacitor] Splash screen hide failed:', error);
+    } catch (_error) {
+      console.warn('[Capacitor] Splash screen hide failed:', _error);
     }
   }
 
@@ -275,9 +275,9 @@ export class CapacitorEnhancedService {
 
       console.log('[Capacitor] Alarm notification scheduled:', alarm.id);
       this.emit('alarm-scheduled', { alarm, notification });
-    } catch (error) {
-      console.error('[Capacitor] Failed to schedule alarm:', error);
-      throw error;
+    } catch (_error) {
+      console.error('[Capacitor] Failed to schedule alarm:', _error);
+      throw _error;
     }
   }
 
@@ -294,9 +294,9 @@ export class CapacitorEnhancedService {
 
       console.log('[Capacitor] Alarm notification cancelled:', alarmId);
       this.emit('alarm-cancelled', { alarmId });
-    } catch (error) {
-      console.error('[Capacitor] Failed to cancel alarm:', error);
-      throw error;
+    } catch (_error) {
+      console.error('[Capacitor] Failed to cancel alarm:', _error);
+      throw _error;
     }
   }
 
@@ -307,15 +307,15 @@ export class CapacitorEnhancedService {
     try {
       const pending = await LocalNotifications.getPending();
       return pending.notifications.filter((n: any) => n.extra?.type === 'alarm');
-    } catch (error) {
-      console.error('[Capacitor] Failed to get pending alarms:', error);
+    } catch (_error) {
+      console._error('[Capacitor] Failed to get pending alarms:', _error);
       return [];
     }
   }
 
   // Haptic feedback methods
   async triggerHapticFeedback(
-    type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
+    type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | '_error' = 'light'
   ): Promise<void> {
     if (!this.deviceFeatures?.hasHaptics) return;
 
@@ -340,8 +340,8 @@ export class CapacitorEnhancedService {
           await Haptics.notification({ type: NotificationType.ERROR });
           break;
       }
-    } catch (error) {
-      console.warn('[Capacitor] Haptic feedback failed:', error);
+    } catch (_error) {
+      console.warn('[Capacitor] Haptic feedback failed:', _error);
     }
   }
 
@@ -352,8 +352,8 @@ export class CapacitorEnhancedService {
     try {
       await KeepAwake.keepAwake();
       console.log('[Capacitor] Screen wake lock acquired');
-    } catch (error) {
-      console.warn('[Capacitor] Keep awake failed:', error);
+    } catch (_error) {
+      console.warn('[Capacitor] Keep awake failed:', _error);
     }
   }
 
@@ -364,8 +364,8 @@ export class CapacitorEnhancedService {
     try {
       await KeepAwake.allowSleep();
       console.log('[Capacitor] Screen wake lock released');
-    } catch (error) {
-      console.warn('[Capacitor] Allow sleep failed:', error);
+    } catch (_error) {
+      console.warn('[Capacitor] Allow sleep failed:', _error);
     }
   }
 
@@ -419,8 +419,8 @@ export class CapacitorEnhancedService {
     // Clear badge when app becomes active
     try {
       await Badge.clear();
-    } catch (error) {
-      console.warn('[Capacitor] Failed to clear badge:', error);
+    } catch (_error) {
+      console.warn('[Capacitor] Failed to clear badge:', _error);
     }
   }
 
@@ -431,8 +431,8 @@ export class CapacitorEnhancedService {
     if (this.deviceFeatures?.hasBackgroundMode) {
       try {
         await BackgroundMode.enable();
-      } catch (error) {
-        console.warn('[Capacitor] Failed to enable background mode:', error);
+      } catch (_error) {
+        console.warn('[Capacitor] Failed to enable background mode:', _error);
       }
     }
   }
@@ -455,31 +455,31 @@ export class CapacitorEnhancedService {
   }
 
   // Event handling
-  on(event: string, callback: Function): void {
-    if (!this.listeners.has(event)) {
-      this.listeners.set(event, []);
+  on(_event: string, callback: Function): void {
+    if (!this.listeners.has(_event)) {
+      this.listeners.set(_event, []);
     }
-    this.listeners.get(event)!.push(callback);
+    this.listeners.get(_event)!.push(callback);
   }
 
-  off(event: string, callback: Function): void {
-    const listeners = this.listeners.get(event);
+  off(_event: string, callback: Function): void {
+    const listeners = this.listeners.get(_event);
     if (listeners) {
-      const index = listeners.indexOf(callback);
-      if (index > -1) {
-        listeners.splice(index, 1);
+      const _index = listeners.indexOf(callback);
+      if (_index > -1) {
+        listeners.splice(_index, 1);
       }
     }
   }
 
-  private emit(event: string, data?: any): void {
-    const listeners = this.listeners.get(event);
+  private emit(_event: string, data?: any): void {
+    const listeners = this.listeners.get(_event);
     if (listeners) {
       listeners.forEach(callback => {
         try {
           callback(data);
-        } catch (error) {
-          console.error(`[Capacitor] Event listener error for ${event}:`, error);
+        } catch (_error) {
+          console.error(`[Capacitor] Event listener _error for ${_event}:`, _error);
         }
       });
     }

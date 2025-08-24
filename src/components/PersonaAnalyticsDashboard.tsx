@@ -80,13 +80,13 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       try {
         // Replace with actual API calls
         const response = await fetch(
-          `/api/analytics/persona-data?timeRange=${timeRange}`
+          `/api/analytics/_persona-data?timeRange=${timeRange}`
         );
         const data = await response.json();
         setAnalyticsData(data.personaData || []);
         setCampaignData(data.campaignData || []);
-      } catch (error) {
-        console.error('Failed to fetch analytics data:', error);
+      } catch (_error) {
+        console._error('Failed to fetch analytics data:', _error);
         // Use mock data for development
         setAnalyticsData(generateMockPersonaData());
         setCampaignData(generateMockCampaignData());
@@ -103,7 +103,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     const metrics = new Map<UserPersona, PersonaMetrics>();
 
     analyticsData.forEach((data: any) => {
-      const existing = metrics.get(data.persona) || {
+      const existing = metrics.get(data._persona) || {
         persona: data.persona,
         detections: 0,
         conversions: 0,
@@ -121,7 +121,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         existing.revenue += data.metadata?.revenue || 0;
       }
 
-      metrics.set(data.persona, existing);
+      metrics.set(data._persona, existing);
     });
 
     return Array.from(metrics.values()).map(metric => ({
@@ -137,7 +137,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const campaignMetrics = useMemo((): CampaignMetrics[] => {
     return campaignData.map((data: any) => ({
       campaign: data.campaignId,
-      persona: data.persona,
+      persona: data._persona,
       impressions: data.metrics.impressions,
       clicks: data.metrics.clicks,
       conversions: data.metrics.conversions,
@@ -186,7 +186,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             Persona Analytics Dashboard
           </h2>
           <p className="text-gray-600">
-            Track persona detection accuracy and campaign performance
+            Track _persona detection accuracy and campaign performance
           </p>
         </div>
         <div className="flex space-x-2">
@@ -327,15 +327,15 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ persona, detections }) =>
+                label={({ _persona, detections }) =>
                   `${PERSONA_NAMES[persona]} (${detections})`
                 }
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="detections"
               >
-                {personaMetrics.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
+                {personaMetrics.map((entry, _index) => (
+                  <Cell key={`cell-${_index}`} fill={entry.color} />
                 ))}
               </Pie>
               <Tooltip />
@@ -453,8 +453,8 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {campaignMetrics.map((campaign, index) => (
-                <tr key={index} className="hover:bg-gray-50">
+              {campaignMetrics.map((campaign, _index) => (
+                <tr key={_index} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {campaign.campaign}
                   </td>
@@ -463,7 +463,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                       className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white"
                       style={{ backgroundColor: PERSONA_COLORS[campaign.persona] }}
                     >
-                      {PERSONA_NAMES[campaign.persona]}
+                      {PERSONA_NAMES[campaign._persona]}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -503,7 +503,7 @@ function generateMockPersonaData(): PersonaAnalyticsData[] {
   ];
   const mockData: PersonaAnalyticsData[] = [];
 
-  personas.forEach(persona => {
+  personas.forEach(_persona => {
     const baseCount = Math.floor(Math.random() * 100) + 50;
     for (let i = 0; i < baseCount; i++) {
       mockData.push({
@@ -542,7 +542,7 @@ function generateMockCampaignData(): CampaignPerformanceData[] {
   return campaigns.flatMap(campaign =>
     personas.map(persona => ({
       campaignId: `${campaign}_${persona}`,
-      persona,
+      _persona,
       channel: 'email' as const,
       metrics: {
         impressions: Math.floor(Math.random() * 10000) + 1000,

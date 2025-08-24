@@ -13,7 +13,7 @@ interface AdaptiveImageProps {
   priority?: boolean; // For above-the-fold images
   placeholder?: 'blur' | 'empty' | string; // Blur, empty, or custom placeholder URL
   onLoad?: () => void;
-  onError?: (error: Event) => void;
+  onError?: (_error: Event) => void;
   sizes?: string; // Responsive image sizes
   quality?: 'auto' | 'low' | 'medium' | 'high';
 }
@@ -187,9 +187,9 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
 
     // Handle image error
     const handleError = useCallback(
-      (event: React.SyntheticEvent<HTMLImageElement>) => {
+      (_event: React.SyntheticEvent<HTMLImageElement>) => {
         setHasError(true);
-        onError?.(event.nativeEvent);
+        onError?.(_event.nativeEvent);
       },
       [onError]
     );

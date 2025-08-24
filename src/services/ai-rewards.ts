@@ -191,7 +191,7 @@ export class AIRewardsService {
     const dismissalMethods = alarmEvents
       .filter(e => e.dismissed)
       .reduce(
-        (acc, event) => {
+        (acc, _event) => {
           const method = event.dismissMethod || 'button';
           acc[method] = (acc[method] || 0) + 1;
           return acc;
@@ -712,8 +712,8 @@ export class AIRewardsService {
     let currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
 
-    for (const event of sortedEvents) {
-      const eventDate = new Date(event.firedAt);
+    for (const _event of sortedEvents) {
+      const eventDate = new Date(_event.firedAt);
       eventDate.setHours(0, 0, 0, 0);
 
       const daysDiff = Math.floor(
@@ -742,8 +742,8 @@ export class AIRewardsService {
     let currentStreak = 0;
     let lastDate: Date | null = null;
 
-    for (const event of dismissedEvents) {
-      const eventDate = new Date(event.firedAt);
+    for (const _event of dismissedEvents) {
+      const eventDate = new Date(_event.firedAt);
       eventDate.setHours(0, 0, 0, 0);
 
       if (!lastDate) {

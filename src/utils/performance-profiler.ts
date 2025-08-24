@@ -206,8 +206,8 @@ class PerformanceProfiler {
       });
 
       observer.observe({ entryTypes: ['measure', 'navigation', 'paint'] });
-    } catch (error) {
-      console.warn('Performance Observer not available:', error);
+    } catch (_error) {
+      console.warn('Performance Observer not available:', _error);
     }
   }
 
@@ -252,7 +252,7 @@ class PerformanceProfiler {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(reportData),
       }).catch(error => {
-        console.warn('Failed to report performance data:', error);
+        console.warn('Failed to report performance data:', _error);
       });
     }
   }
@@ -277,7 +277,7 @@ class PerformanceProfiler {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(reportData),
       }).catch(error => {
-        console.warn('Failed to report performance summary:', error);
+        console.warn('Failed to report performance summary:', _error);
       });
     }
   }

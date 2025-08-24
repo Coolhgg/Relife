@@ -49,7 +49,7 @@ export function useErrorLoadingAnnouncements() {
     (
       error: string,
       operation?: string,
-      severity: 'warning' | 'error' | 'critical' = 'error'
+      severity: 'warning' | 'error' | 'critical' = '_error'
     ) => {
       let message = '';
 
@@ -61,7 +61,7 @@ export function useErrorLoadingAnnouncements() {
           message = 'Error: ';
           break;
         case 'critical':
-          message = 'Critical error: ';
+          message = 'Critical _error: ';
           break;
       }
 
@@ -78,7 +78,7 @@ export function useErrorLoadingAnnouncements() {
 
   const announceNetworkError = useCallback(
     (operation?: string) => {
-      let message = 'Network connection error.';
+      let message = 'Network connection _error.';
       if (operation) {
         message += ` Unable to ${operation}.`;
       }
@@ -90,7 +90,7 @@ export function useErrorLoadingAnnouncements() {
 
   const announceValidationError = useCallback(
     (field: string, errorMessage: string) => {
-      announce(`Validation error in ${field}: ${errorMessage}`, 'assertive');
+      announce(`Validation _error in ${field}: ${errorMessage}`, 'assertive');
     },
     [announce]
   );
@@ -102,7 +102,7 @@ export function useErrorLoadingAnnouncements() {
 
       if (errorCount === 1) {
         const field = Object.keys(errors)[0];
-        announce(`Form error in ${field}: ${errors[field]}`, 'assertive');
+        announce(`Form _error in ${field}: ${errors[field]}`, 'assertive');
       } else {
         announce(
           `Form has ${errorCount} errors in the following fields: ${fields}. Please review and correct.`,
@@ -293,9 +293,9 @@ export function useErrorLoadingAnnouncements() {
     (
       operation: 'upload' | 'download' | 'delete' | 'read',
       filename: string,
-      error: string
+      _error: string
     ) => {
-      announce(`File ${operation} failed for ${filename}: ${error}`, 'assertive');
+      announce(`File ${operation} failed for ${filename}: ${_error}`, 'assertive');
     },
     [announce]
   );

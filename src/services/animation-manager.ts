@@ -78,8 +78,8 @@ class AnimationManagerService {
       try {
         const parsed = JSON.parse(savedPreferences);
         this.preferences = { ...this.preferences, ...parsed };
-      } catch (error) {
-        console.warn('Failed to load animation preferences:', error);
+      } catch (_error) {
+        console.warn('Failed to load animation preferences:', _error);
       }
     }
 
@@ -191,7 +191,7 @@ class AnimationManagerService {
     // Adjust for reduced motion
     if (this.preferences.reducedMotion) {
       return {
-        duration: config.duration * 0.3,
+        duration: _config.duration * 0.3,
         ease: 'easeOut',
         reduce: true,
       };
@@ -203,7 +203,7 @@ class AnimationManagerService {
       this.metrics.performanceScore < 50
     ) {
       return {
-        duration: config.duration * 0.5,
+        duration: _config.duration * 0.5,
         ease: 'easeInOut',
       };
     }
@@ -212,7 +212,7 @@ class AnimationManagerService {
       type: 'spring' as const,
       stiffness: config.stiffness,
       damping: config.damping,
-      duration: config.duration * speedMultiplier,
+      duration: _config.duration * speedMultiplier,
     };
   }
 

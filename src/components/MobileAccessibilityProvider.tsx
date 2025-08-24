@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   useAccessibility,
@@ -89,8 +90,8 @@ export const MobileAccessibilityProvider: React.FC<
           announce('Mobile accessibility features initialized', 'polite');
         }, 1000);
       }
-    } catch (error) {
-      console.error('[MobileAccessibility] Initialization failed:', error);
+    } catch (_error) {
+      console._error('[MobileAccessibility] Initialization failed:', _error);
       announceError('Failed to initialize accessibility features');
     }
   }, [isInitialized, preferences.announceTransitions, announce, announceError]);

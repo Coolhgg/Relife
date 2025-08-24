@@ -5,12 +5,12 @@ import SignUpForm from './SignUpForm';
 import ForgotPasswordForm from './ForgotPasswordForm';
 
 interface AuthenticationFlowProps {
-  onAuthSuccess: (user: any) => void;
+  onAuthSuccess: (_user: any) => void;
   onSignUp: (email: string, password: string, name: string) => Promise<void>;
   onSignIn: (email: string, password: string) => Promise<void>;
   onForgotPassword: (email: string) => Promise<void>;
   isLoading: boolean;
-  error: string | null;
+  _error: string | null;
   forgotPasswordSuccess: boolean;
 }
 
@@ -22,7 +22,7 @@ export default function AuthenticationFlow({
   onSignIn,
   onForgotPassword,
   isLoading,
-  error,
+  _error,
   forgotPasswordSuccess,
 }: AuthenticationFlowProps) {
   const [currentView, setCurrentView] = useState<AuthView>('login');
@@ -36,7 +36,7 @@ export default function AuthenticationFlow({
             onSwitchToSignUp={() => setCurrentView('signup')}
             onForgotPassword={() => setCurrentView('forgot-password')}
             isLoading={isLoading}
-            error={error}
+            error={_error}
           />
         );
       case 'signup':
@@ -45,7 +45,7 @@ export default function AuthenticationFlow({
             onSignUp={onSignUp}
             onSwitchToLogin={() => setCurrentView('login')}
             isLoading={isLoading}
-            error={error}
+            error={_error}
           />
         );
       case 'forgot-password':
@@ -54,7 +54,7 @@ export default function AuthenticationFlow({
             onResetPassword={onForgotPassword}
             onBackToLogin={() => setCurrentView('login')}
             isLoading={isLoading}
-            error={error}
+            error={_error}
             success={forgotPasswordSuccess}
           />
         );

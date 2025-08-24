@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * Adaptive Modal Component
  * Automatically adjusts visual complexity, animations, and interactions based on device capabilities
@@ -246,8 +247,8 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
 
     // Handle overlay click
     const handleOverlayClick = useCallback(
-      (event: React.MouseEvent) => {
-        if (closeOnOverlay && event.target === overlayRef.current) {
+      (_event: React.MouseEvent) => {
+        if (closeOnOverlay && _event.target === overlayRef.current) {
           onClose();
         }
       },

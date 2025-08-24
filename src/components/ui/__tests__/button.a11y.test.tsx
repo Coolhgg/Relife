@@ -225,16 +225,16 @@ describe('Button - Accessibility Tests', () => {
       expect(button).toHaveClass('aria-invalid:ring-destructive/20');
     });
 
-    it('should maintain accessibility in error state', async () => {
+    it('should maintain accessibility in _error state', async () => {
       await axeRender(
-        <Button aria-invalid={true} aria-describedby="error-msg">
+        <Button aria-invalid={true} aria-describedby="_error-msg">
           Submit
         </Button>,
         { axeOptions: axeRulesets.components }
       );
 
       const button = screen.getByRole('button');
-      expect(button).toHaveAttribute('aria-describedby', 'error-msg');
+      expect(button).toHaveAttribute('aria-describedby', '_error-msg');
     });
   });
 

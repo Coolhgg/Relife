@@ -63,9 +63,9 @@ class SubscriptionService {
       // Load subscription plans into cache
       await this.loadSubscriptionPlans();
       console.log('Subscription service initialized successfully');
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to initialize subscription service',
         { context: 'subscription_service_init' }
       );
@@ -84,11 +84,10 @@ class SubscriptionService {
 
       return Array.from(this.planCache.values())
         .filter(plan => plan.isActive)
-        .sort((a, b
-) => a.sortOrder - b.sortOrder);
-    } catch (error) {
+        .sort((a, b) => a.sortOrder - b.sortOrder);
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get subscription plans',
         { context: 'get_subscription_plans' }
       );
@@ -105,23 +104,23 @@ class SubscriptionService {
         return this.planCache.get(planId)!;
       }
 
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('subscription_plans')
         .select('*')
         .eq('id', planId)
         .eq('is_active', true)
         .single();
 
-      if (error || !data) {
+      if (_error || !data) {
         return null;
       }
 
       const plan = this.mapDatabasePlan(data);
       this.planCache.set(planId, plan);
       return plan;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get subscription plan',
         { context: 'get_subscription_plan', metadata: { planId } }
       );
@@ -135,9 +134,9 @@ class SubscriptionService {
   public async getUserSubscription(userId: string): Promise<Subscription | null> {
     try {
       return await this.stripeService.getUserSubscription(userId);
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get user subscription',
         { context: 'get_user_subscription', metadata: { userId } }
       );
@@ -157,9 +156,9 @@ class SubscriptionService {
       }
 
       return subscription.tier;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get user tier',
         { context: 'get_user_tier', metadata: { userId } }
       );
@@ -180,13 +179,13 @@ class SubscriptionService {
       // Validate the plan exists and is active
       const plan = await this.getSubscriptionPlan(request.planId);
       if (!plan) {
-        return { success: false, error: 'Invalid subscription plan' };
+        return { success: false, _error: 'Invalid subscription plan' };
       }
 
       // Check if user already has an active subscription
       const existingSubscription = await this.getUserSubscription(userId);
       if (existingSubscription && existingSubscription.status === 'active') {
-        return { success: false, error: 'User already has an active subscription' };
+        return { success: false, _error: 'User already has an active subscription' };
       }
 
       // Validate discount code if provided
@@ -198,7 +197,7 @@ class SubscriptionService {
         if (!discountValidation.valid) {
           return {
             success: false,
-            error: discountValidation.error || 'Invalid discount code',
+            error: discountValidation._error || 'Invalid discount code',
           };
         }
       }
@@ -206,17 +205,17 @@ class SubscriptionService {
       // Create subscription via Stripe
       const result = await this.stripeService.createSubscription(userId, request);
 
-      if (result.error) {
+      if (result._error) {
         analytics.trackError(
-          new Error(result.error.message),
+          new Error(result._error.message),
           'subscription_creation_failed',
           {
             userId,
             planId: request.planId,
-            errorCode: result.error.code,
+            errorCode: result._error.code,
           }
         );
-        return { success: false, error: result.error.userFriendlyMessage };
+        return { success: false, error: result._error.userFriendlyMessage };
       }
 
       // Record discount usage if applicable
@@ -239,15 +238,15 @@ class SubscriptionService {
         subscription: result.subscription,
         clientSecret: result.clientSecret,
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to create subscription',
         { context: 'create_subscription', metadata: { userId, request } }
       );
       return {
         success: false,
-        error: 'An unexpected error occurred. Please try again.',
+        error: 'An unexpected _error occurred. Please try again.',
       };
     }
   }
@@ -267,7 +266,7 @@ class SubscriptionService {
       if (request.planId) {
         const plan = await this.getSubscriptionPlan(request.planId);
         if (!plan) {
-          return { success: false, error: 'Invalid subscription plan' };
+          return { success: false, _error: 'Invalid subscription plan' };
         }
       }
 
@@ -277,8 +276,8 @@ class SubscriptionService {
         request
       );
 
-      if (result.error) {
-        return { success: false, error: result.error.userFriendlyMessage };
+      if (result._error) {
+        return { success: false, error: result._error.userFriendlyMessage };
       }
 
       // Update feature access cache
@@ -294,9 +293,9 @@ class SubscriptionService {
         success: true,
         subscription: result.subscription,
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to update subscription',
         {
           context: 'update_subscription',
@@ -305,7 +304,7 @@ class SubscriptionService {
       );
       return {
         success: false,
-        error: 'An unexpected error occurred. Please try again.',
+        error: 'An unexpected _error occurred. Please try again.',
       };
     }
   }
@@ -327,8 +326,8 @@ class SubscriptionService {
         request
       );
 
-      if (result.error) {
-        return { success: false, error: result.error.userFriendlyMessage };
+      if (result._error) {
+        return { success: false, error: result._error.userFriendlyMessage };
       }
 
       // Update feature access cache
@@ -346,9 +345,9 @@ class SubscriptionService {
         subscription: result.subscription,
         retentionOffer: result.retentionOffer,
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to cancel subscription',
         {
           context: 'cancel_subscription',
@@ -357,7 +356,7 @@ class SubscriptionService {
       );
       return {
         success: false,
-        error: 'An unexpected error occurred. Please try again.',
+        error: 'An unexpected _error occurred. Please try again.',
       };
     }
   }
@@ -385,9 +384,9 @@ class SubscriptionService {
       }
 
       return true;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to check feature access',
         { context: 'has_feature_access', metadata: { userId, featureId } }
       );
@@ -440,9 +439,9 @@ class SubscriptionService {
       this.featureCache.set(userId, featureAccess);
 
       return featureAccess;
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get feature access',
         { context: 'get_feature_access', metadata: { userId } }
       );
@@ -478,9 +477,9 @@ class SubscriptionService {
 
       // Clear cache to force refresh
       this.featureCache.delete(userId);
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to track feature usage',
         { context: 'track_feature_usage', metadata: { userId, featureId, amount } }
       );
@@ -512,8 +511,8 @@ class SubscriptionService {
       const limits = plan?.limits || this.getFreeTierLimits();
 
       // Map feature usage to billing format
-      usageData?.forEach((item: any
-) => { const limit = (limits as any)[item.feature] || item.limit_count;
+      usageData?.forEach((item: any) => {
+        const limit = (limits as any)[item.feature] || item.limit_count;
         usage[item.feature] = {
           used: item.usage_count,
           limit,
@@ -532,9 +531,9 @@ class SubscriptionService {
         overageCharges: [], // Implement overage logic if needed
         totalOverageAmount: 0,
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get user usage',
         { context: 'get_user_usage', metadata: { userId } }
       );
@@ -561,7 +560,7 @@ class SubscriptionService {
     try {
       const plan = await this.getSubscriptionPlan(planId);
       if (!plan || !plan.trialDays) {
-        return { success: false, error: 'No trial available for this plan' };
+        return { success: false, _error: 'No trial available for this plan' };
       }
 
       // Check if user already had a trial for this tier
@@ -573,7 +572,7 @@ class SubscriptionService {
         .single();
 
       if (existingTrial) {
-        return { success: false, error: 'Trial already used for this plan' };
+        return { success: false, _error: 'Trial already used for this plan' };
       }
 
       const startDate = new Date();
@@ -581,7 +580,7 @@ class SubscriptionService {
         startDate.getTime() + plan.trialDays * 24 * 60 * 60 * 1000
       );
 
-      const { data: trialData, error } = await supabase
+      const { data: trialData, _error } = await supabase
         .from('trials')
         .insert({
           user_id: userId,
@@ -594,8 +593,8 @@ class SubscriptionService {
         .select()
         .single();
 
-      if (error) {
-        throw error;
+      if (_error) {
+        throw _error;
       }
 
       // Clear feature cache
@@ -612,13 +611,13 @@ class SubscriptionService {
       });
 
       return { success: true, trial };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to start free trial',
         { context: 'start_free_trial', metadata: { userId, planId } }
       );
-      return { success: false, error: 'Failed to start trial. Please try again.' };
+      return { success: false, _error: 'Failed to start trial. Please try again.' };
     }
   }
 
@@ -630,7 +629,7 @@ class SubscriptionService {
     code: string
   ): Promise<DiscountValidationResult> {
     try {
-      const { data: discount, error } = await supabase
+      const { data: discount, _error } = await supabase
         .from('discounts')
         .select('*')
         .eq('code', code)
@@ -639,13 +638,13 @@ class SubscriptionService {
         .or(`valid_until.is.null,valid_until.gte.${new Date().toISOString()}`)
         .single();
 
-      if (error || !discount) {
-        return { valid: false, error: 'Invalid or expired discount code' };
+      if (_error || !discount) {
+        return { valid: false, _error: 'Invalid or expired discount code' };
       }
 
       // Check usage limits
       if (discount.max_uses && discount.current_uses >= discount.max_uses) {
-        return { valid: false, error: 'Discount code usage limit reached' };
+        return { valid: false, _error: 'Discount code usage limit reached' };
       }
 
       // Check per-customer usage limit
@@ -658,7 +657,7 @@ class SubscriptionService {
           .single();
 
         if (userUsage && userUsage.used_count >= discount.max_uses_per_customer) {
-          return { valid: false, error: 'You have already used this discount code' };
+          return { valid: false, _error: 'You have already used this discount code' };
         }
       }
 
@@ -674,7 +673,7 @@ class SubscriptionService {
         if (existingSubscription) {
           return {
             valid: false,
-            error: 'This discount is only available for first-time customers',
+            _error: 'This discount is only available for first-time customers',
           };
         }
       }
@@ -683,13 +682,13 @@ class SubscriptionService {
         valid: true,
         discount: this.mapDatabaseDiscount(discount),
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to validate discount code',
         { context: 'validate_discount_code', metadata: { userId, code } }
       );
-      return { valid: false, error: 'Failed to validate discount code' };
+      return { valid: false, _error: 'Failed to validate discount code' };
     }
   }
 
@@ -736,9 +735,9 @@ class SubscriptionService {
         discountCodes: userDiscounts,
         referralStats,
       };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to get subscription dashboard',
         { context: 'get_subscription_dashboard', metadata: { userId } }
       );
@@ -768,19 +767,19 @@ class SubscriptionService {
    */
 
   private async loadSubscriptionPlans(): Promise<void> {
-    const { data: plans, error } = await supabase
+    const { data: plans, _error } = await supabase
       .from('subscription_plans')
       .select('*')
       .eq('is_active', true)
       .order('sort_order');
 
-    if (error) {
-      throw error;
+    if (_error) {
+      throw _error;
     }
 
     this.planCache.clear();
-    plans?.forEach((plan: any
-) => { this.planCache.set(plan.id, this.mapDatabasePlan(plan));
+    plans?.forEach((plan: any) => {
+      this.planCache.set(plan.id, this.mapDatabasePlan(plan));
     });
   }
 
@@ -833,8 +832,7 @@ class SubscriptionService {
       .eq('user_id', userId);
 
     return (
-      data?.map((item: any
-) => ({
+      data?.map((item: any) => ({
         id: item.id,
         userId: item.user_id,
         discountId: item.discount_id,
@@ -855,10 +853,9 @@ class SubscriptionService {
       .eq('referrer_id', userId);
 
     const referrals = data?.length || 0;
-    const rewards = data?.filter((r: any
-) => r.status === 'rewarded').length || 0;
-    const pendingRewards = data?.filter((r: any
-) => r.status === 'converted').length || 0;
+    const rewards = data?.filter((r: any) => r.status === 'rewarded').length || 0;
+    const pendingRewards =
+      data?.filter((r: any) => r.status === 'converted').length || 0;
 
     return {
       code: `REF-${userId.slice(-8).toUpperCase()}`, // Generate referral code

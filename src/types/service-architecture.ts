@@ -46,26 +46,26 @@ export interface ServiceError {
 export interface BaseService {
   readonly name: string;
   readonly version: string;
-  
+
   // Lifecycle methods
-  initialize(config?: ServiceConfig): Promise<void>;
+  initialize(_config?: ServiceConfig): Promise<void>;
   start?(): Promise<void>;
   stop?(): Promise<void>;
   cleanup(): Promise<void>;
-  
+
   // Status and health
   isReady(): boolean;
   isInitialized(): boolean;
   getHealth(): Promise<ServiceHealth>;
-  
+
   // Configuration
   getConfig(): ServiceConfig;
-  updateConfig(config: Partial<ServiceConfig>): Promise<void>;
-  
+  updateConfig(_config: Partial<ServiceConfig>): Promise<void>;
+
   // Event handling
-  on?(event: string, handler: (...args: any[]) => void): void;
-  off?(event: string, handler: (...args: any[]) => void): void;
-  emit?(event: string, ...args: any[]): void;
+  on?(_event: string, handler: (...args: any[]) => void): void;
+  off?(_event: string, handler: (...args: any[]) => void): void;
+  emit?(_event: string, ...args: any[]): void;
 }
 
 // ============================================================================
@@ -134,12 +134,12 @@ export interface ServiceDescriptor {
   factory: ServiceFactory<any>;
   dependencies: string[];
   singleton: boolean;
-  config?: ServiceConfig;
+  _config?: ServiceConfig;
   tags?: string[];
 }
 
 export interface ServiceFactory<T extends BaseService> {
-  create(dependencies: ServiceMap, config: ServiceConfig): T;
+  create(dependencies: ServiceMap, _config: ServiceConfig): T;
 }
 
 export interface ServiceContainer {
@@ -207,10 +207,10 @@ export interface ServiceEvent {
 }
 
 export interface EventBus {
-  subscribe(eventType: string, handler: (event: ServiceEvent) => void): void;
-  unsubscribe(eventType: string, handler: (event: ServiceEvent) => void): void;
-  publish(event: ServiceEvent): void;
-  publishAsync(event: ServiceEvent): Promise<void>;
+  subscribe(eventType: string, handler: (_event: ServiceEvent) => void): void;
+  unsubscribe(eventType: string, handler: (_event: ServiceEvent) => void): void;
+  publish(_event: ServiceEvent): void;
+  publishAsync(_event: ServiceEvent): Promise<void>;
 }
 
 // ============================================================================
@@ -218,7 +218,7 @@ export interface EventBus {
 // ============================================================================
 
 export interface ServiceLifecycle {
-  phase: 'initializing' | 'starting' | 'running' | 'stopping' | 'stopped' | 'error';
+  phase: 'initializing' | 'starting' | 'running' | 'stopping' | 'stopped' | '_error';
   startTime?: Date;
   stopTime?: Date;
   initializationTime?: number;
@@ -315,7 +315,7 @@ export interface AlarmServiceInterface extends BaseService {
 }
 
 export interface AnalyticsServiceInterface extends BaseService {
-  track(event: string, properties?: Record<string, any>): Promise<void>;
+  track(_event: string, properties?: Record<string, any>): Promise<void>;
   identify(userId: string, traits?: Record<string, any>): Promise<void>;
   page(name: string, properties?: Record<string, any>): Promise<void>;
   flush(): Promise<void>;
@@ -331,7 +331,7 @@ export interface SubscriptionServiceInterface extends BaseService {
 }
 
 export interface BattleServiceInterface extends BaseService {
-  createBattle(config: any): Promise<any>;
+  createBattle(_config: any): Promise<any>;
   joinBattle(battleId: string, userId: string): Promise<any>;
   updateBattleProgress(battleId: string, progress: any): Promise<void>;
   getBattleHistory(userId: string): Promise<any[]>;
@@ -351,7 +351,7 @@ export interface PerformanceMonitorInterface extends BaseService {
   recordWebVital(name: string, value: number): void;
   setThreshold(metric: string, threshold: number): void;
   getMetrics(timeRange?: { start: Date; end: Date }): Promise<any>;
-  createAlert(config: any): Promise<string>;
+  createAlert(_config: any): Promise<string>;
 }
 
 // ============================================================================
@@ -359,20 +359,24 @@ export interface PerformanceMonitorInterface extends BaseService {
 // ============================================================================
 
 export function isBaseService(obj: any): obj is BaseService {
-  return obj && 
+  return (
+    obj &&
     typeof obj.name === 'string' &&
     typeof obj.version === 'string' &&
     typeof obj.initialize === 'function' &&
     typeof obj.cleanup === 'function' &&
     typeof obj.isReady === 'function' &&
-    typeof obj.getHealth === 'function';
+    typeof obj.getHealth === 'function'
+  );
 }
 
 export function isServiceConfig(obj: any): obj is ServiceConfig {
-  return obj && 
+  return (
+    obj &&
     typeof obj.enabled === 'boolean' &&
     typeof obj.environment === 'string' &&
-    ['development', 'staging', 'production'].includes(obj.environment);
+    ['development', 'staging', 'production'].includes(obj.environment)
+  );
 }
 
 // ============================================================================
@@ -382,7 +386,7 @@ export function isServiceConfig(obj: any): obj is ServiceConfig {
 export interface ServiceBuilder<T extends BaseService> {
   withName(name: string): ServiceBuilder<T>;
   withVersion(version: string): ServiceBuilder<T>;
-  withConfig(config: ServiceConfig): ServiceBuilder<T>;
+  withConfig(_config: ServiceConfig): ServiceBuilder<T>;
   withDependencies(dependencies: string[]): ServiceBuilder<T>;
   withTags(tags: string[]): ServiceBuilder<T>;
   withFactory(factory: ServiceFactory<T>): ServiceBuilder<T>;

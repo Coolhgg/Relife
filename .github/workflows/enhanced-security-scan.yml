@@ -1,0 +1,452 @@
+# Enhanced Security Scanning & Analysis
+# Comprehensive security automation including CodeQL, dependency scanning, and vulnerability tracking
+name: 🔐 Enhanced Security Analysis
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run daily security scans at 3 AM UTC
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    inputs:
+      scan-type:
+        description: "Type of security scan"
+        required: false
+        default: "full"
+        type: choice
+        options:
+          - full
+          - codeql-only
+          - dependencies-only
+          - quick
+
+# Permissions needed for security analysis
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: 1
+
+jobs:
+  # Job 1: CodeQL Security Analysis
+  codeql-analysis:
+    name: 🔍 CodeQL Analysis
+    runs-on: ubuntu-latest
+    if: github.event.inputs.scan-type != 'dependencies-only'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["javascript", "typescript"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          queries: +security-and-quality
+          config: |
+            paths-ignore:
+              - node_modules
+              - dist
+              - build
+              - coverage
+              - .storybook
+              - public
+            paths:
+              - src
+              - backend
+              - services
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build project for analysis
+        run: bun run build
+        env:
+          NODE_ENV: production
+          # Provide mock values for build
+          VITE_SUPABASE_URL: https://example.supabase.co
+          VITE_SUPABASE_ANON_KEY: mock_key_for_build
+          VITE_STRIPE_PUBLISHABLE_KEY: pk_test_mock
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
+
+  # Job 2: Advanced Dependency Scanning
+  dependency-scan:
+    name: 📦 Advanced Dependency Scan
+    runs-on: ubuntu-latest
+    if: github.event.inputs.scan-type != 'codeql-only'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Create security results directory
+        run: mkdir -p security-results
+
+      - name: Run npm audit with detailed output
+        run: |
+          echo "🔍 Running comprehensive npm audit..."
+          bun audit --json > security-results/npm-audit.json 2>/dev/null || true
+          bun audit > security-results/npm-audit.txt 2>&1 || true
+
+      - name: Analyze dependency vulnerabilities
+        run: |
+          echo "📊 Analyzing vulnerability patterns..."
+
+          # Count vulnerabilities by severity
+          if [ -f "security-results/npm-audit.json" ]; then
+            echo "Vulnerability Summary:" > security-results/vulnerability-summary.txt
+            echo "===================" >> security-results/vulnerability-summary.txt
+            
+            # Parse JSON and count by severity
+            cat security-results/npm-audit.json | bun -e "
+              const audit = JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8'));
+              if (audit.vulnerabilities) {
+                const counts = { critical: 0, high: 0, moderate: 0, low: 0, info: 0 };
+                Object.values(audit.vulnerabilities).forEach(vuln => {
+                  if (vuln.severity) counts[vuln.severity]++;
+                });
+                console.log('Critical:', counts.critical);
+                console.log('High:', counts.high);
+                console.log('Moderate:', counts.moderate);
+                console.log('Low:', counts.low);
+                console.log('Info:', counts.info);
+                console.log('Total:', Object.values(counts).reduce((a, b) => a + b, 0));
+              } else {
+                console.log('No vulnerabilities found');
+              }
+            " >> security-results/vulnerability-summary.txt || echo "No vulnerabilities found" >> security-results/vulnerability-summary.txt
+          fi
+
+      - name: Check for known security patterns
+        run: |
+          echo "🔎 Scanning for security anti-patterns..."
+
+          # Check for dangerous patterns
+          echo "Security Pattern Analysis:" > security-results/pattern-analysis.txt
+          echo "=========================" >> security-results/pattern-analysis.txt
+
+          # Check for eval usage
+          EVAL_COUNT=$(find src -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" | xargs grep -l "eval(" | wc -l || echo "0")
+          echo "Eval usage: $EVAL_COUNT files" >> security-results/pattern-analysis.txt
+
+          # Check for innerHTML usage
+          INNER_HTML_COUNT=$(find src -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" | xargs grep -l "innerHTML" | wc -l || echo "0")
+          echo "innerHTML usage: $INNER_HTML_COUNT files" >> security-results/pattern-analysis.txt
+
+          # Check for hardcoded secrets patterns
+          SECRET_PATTERNS=$(find src -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" | xargs grep -i -l "password\|secret\|key\|token" --exclude-dir=__tests__ | wc -l || echo "0")
+          echo "Potential hardcoded secrets: $SECRET_PATTERNS files" >> security-results/pattern-analysis.txt
+
+          # Check for HTTP usage (should be HTTPS)
+          HTTP_COUNT=$(find src -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" | xargs grep -l "http://" | wc -l || echo "0")
+          echo "HTTP usage (should be HTTPS): $HTTP_COUNT files" >> security-results/pattern-analysis.txt
+
+      - name: Generate security recommendations
+        run: |
+          echo "💡 Generating security recommendations..."
+
+          cat > security-results/recommendations.md << 'EOF'
+          # Security Recommendations
+
+          ## Automated Findings
+
+          Based on the security analysis, here are the key recommendations:
+
+          ### Dependencies
+          - Review all high and critical severity vulnerabilities
+          - Consider updating vulnerable packages when patches are available
+          - Monitor for new vulnerabilities in dependencies
+
+          ### Code Patterns
+          - Avoid using `eval()` and `innerHTML` for user-provided content
+          - Use Content Security Policy (CSP) headers
+          - Implement proper input validation and sanitization
+          - Use HTTPS for all external communications
+
+          ### Best Practices
+          - Regular security audits and dependency updates
+          - Implement proper authentication and authorization
+          - Use environment variables for sensitive configuration
+          - Regular security training for development team
+
+          ### Monitoring
+          - Set up continuous security monitoring
+          - Implement security alerts for new vulnerabilities
+          - Regular penetration testing and security reviews
+          EOF
+
+      - name: Upload security results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-analysis-${{ github.run_number }}
+          path: security-results/
+          retention-days: 30
+
+  # Job 3: Container Security Scan (if Dockerfile exists)
+  container-scan:
+    name: 🐳 Container Security
+    runs-on: ubuntu-latest
+    if: github.event.inputs.scan-type == 'full' && hashFiles('Dockerfile') != ''
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          echo "🐳 Building Docker image for security scan..."
+          docker build -t relife-security-scan:${{ github.sha }} .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "relife-security-scan:${{ github.sha }}"
+          format: "sarif"
+          output: "trivy-results.sarif"
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: "trivy-results.sarif"
+
+  # Job 4: Security Report Generation
+  security-report:
+    name: 📋 Security Report
+    runs-on: ubuntu-latest
+    needs: [codeql-analysis, dependency-scan]
+    if: always() && (needs.codeql-analysis.result != 'cancelled' || needs.dependency-scan.result != 'cancelled')
+
+    steps:
+      - name: Download security artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: security-analysis-*
+          merge-multiple: true
+          path: security-results/
+
+      - name: Generate comprehensive report
+        run: |
+          echo "📊 Generating comprehensive security report..."
+
+          cat > security-report.md << 'EOF'
+          # 🔐 Security Analysis Report
+
+          **Generated:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          **Commit:** ${{ github.sha }}
+          **Branch:** ${{ github.ref_name }}
+
+          ## 📋 Summary
+
+          This report provides a comprehensive security analysis of the Relife application.
+
+          ## 🔍 CodeQL Analysis
+          - **Status:** ${{ needs.codeql-analysis.result }}
+          - **Languages:** JavaScript, TypeScript
+          - **Query Suite:** security-and-quality
+
+          ## 📦 Dependency Analysis
+          - **Status:** ${{ needs.dependency-scan.result }}
+          - **Audit Results:** See artifacts for detailed vulnerability report
+
+          ## 🎯 Key Findings
+
+          EOF
+
+          # Add vulnerability summary if available
+          if [ -f "security-results/vulnerability-summary.txt" ]; then
+            echo "### Vulnerability Summary" >> security-report.md
+            echo '```' >> security-report.md
+            cat security-results/vulnerability-summary.txt >> security-report.md
+            echo '```' >> security-report.md
+            echo "" >> security-report.md
+          fi
+
+          # Add pattern analysis if available
+          if [ -f "security-results/pattern-analysis.txt" ]; then
+            echo "### Security Pattern Analysis" >> security-report.md
+            echo '```' >> security-report.md
+            cat security-results/pattern-analysis.txt >> security-report.md
+            echo '```' >> security-report.md
+            echo "" >> security-report.md
+          fi
+
+          cat >> security-report.md << 'EOF'
+          ## 📌 Recommendations
+
+          1. **Regular Updates**: Keep all dependencies up to date
+          2. **Security Monitoring**: Continue automated security scanning
+          3. **Code Review**: Implement security-focused code review process
+          4. **Training**: Provide security training for development team
+
+          ## 🔗 Resources
+
+          - [Security Results Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          - [CodeQL Documentation](https://codeql.github.com/)
+          - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+
+          EOF
+
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('security-report.md', 'utf8');
+
+            // Truncate report if too long for comment
+            const maxLength = 32000;
+            const truncatedReport = report.length > maxLength ? 
+              report.substring(0, maxLength) + "\n\n... (Report truncated. See workflow artifacts for full details)" : 
+              report;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existingComment = comments.find(comment => 
+              comment.user.type === 'Bot' && comment.body.includes('Security Analysis Report')
+            );
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: truncatedReport
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: truncatedReport
+              });
+            }
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report-${{ github.run_number }}
+          path: security-report.md
+          retention-days: 90
+
+  # Job 5: Security Alerts
+  security-alerts:
+    name: 🚨 Security Alerts
+    runs-on: ubuntu-latest
+    needs: [dependency-scan]
+    if: always() && github.event_name == 'schedule'
+
+    steps:
+      - name: Download security results
+        uses: actions/download-artifact@v4
+        with:
+          name: security-analysis-${{ github.run_number }}
+          path: security-results/
+
+      - name: Check for critical vulnerabilities
+        run: |
+          echo "🚨 Checking for critical security issues..."
+
+          CRITICAL_COUNT=0
+          HIGH_COUNT=0
+
+          # Parse vulnerability counts from summary
+          if [ -f "security-results/vulnerability-summary.txt" ]; then
+            CRITICAL_COUNT=$(grep "Critical:" security-results/vulnerability-summary.txt | awk '{print $2}' || echo "0")
+            HIGH_COUNT=$(grep "High:" security-results/vulnerability-summary.txt | awk '{print $2}' || echo "0")
+          fi
+
+          echo "Critical vulnerabilities: $CRITICAL_COUNT"
+          echo "High vulnerabilities: $HIGH_COUNT"
+
+          # Set output for notification
+          echo "CRITICAL_COUNT=$CRITICAL_COUNT" >> $GITHUB_ENV
+          echo "HIGH_COUNT=$HIGH_COUNT" >> $GITHUB_ENV
+
+      - name: Create security issue (if critical vulnerabilities found)
+        if: env.CRITICAL_COUNT > 0 || env.HIGH_COUNT > 5
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const criticalCount = process.env.CRITICAL_COUNT;
+            const highCount = process.env.HIGH_COUNT;
+
+            const issueTitle = `🚨 Critical Security Alert - ${criticalCount} Critical, ${highCount} High Severity Vulnerabilities`;
+            const issueBody = `
+            ## 🚨 Security Alert
+
+            **Automated security scan has detected critical vulnerabilities:**
+
+            - **Critical vulnerabilities:** ${criticalCount}
+            - **High severity vulnerabilities:** ${highCount}
+            - **Scan date:** ${new Date().toISOString()}
+            - **Branch:** ${context.ref}
+            - **Commit:** ${context.sha}
+
+            ## 🔧 Action Required
+
+            1. Review the [security analysis artifacts](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+            2. Update vulnerable dependencies immediately
+            3. Test the application after updates
+            4. Close this issue once vulnerabilities are resolved
+
+            ## 📊 Resources
+
+            - [Security Scan Results](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+            - [npm audit documentation](https://docs.npmjs.com/cli/v8/commands/npm-audit)
+            - [Security best practices](https://nodejs.org/en/docs/guides/security/)
+
+            /cc @Coolhgg
+            `;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: issueBody,
+              labels: ['security', 'critical', 'automated']
+            });

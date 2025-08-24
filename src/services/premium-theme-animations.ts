@@ -175,7 +175,7 @@ class PremiumThemeAnimationService {
         width: 100%;
         height: 120px;
         pointer-events: none;
-        z-index: -1;
+        z-_index: -1;
         overflow: hidden;
       }
 
@@ -210,10 +210,10 @@ class PremiumThemeAnimationService {
   private createFloatingCards(): void {
     const cards = document.querySelectorAll('.card, .alarm-card, [class*="card"]');
 
-    cards.forEach((card, index) => {
+    cards.forEach((card, _index) => {
       const element = card as HTMLElement;
-      element.style.animation = `cardFloat ${3 + index * 0.5}s ease-in-out infinite`;
-      element.style.animationDelay = `${index * 0.2}s`;
+      element.style.animation = `cardFloat ${3 + _index * 0.5}s ease-in-out infinite`;
+      element.style.animationDelay = `${_index * 0.2}s`;
     });
 
     this.injectStyles(`
@@ -316,7 +316,7 @@ class PremiumThemeAnimationService {
         width: 100%;
         height: 100%;
         pointer-events: none;
-        z-index: -1;
+        z-_index: -1;
         overflow: hidden;
       }
 
@@ -390,7 +390,7 @@ class PremiumThemeAnimationService {
           width: 100%;
           height: 100%;
           pointer-events: none;
-          z-index: -1;
+          z-_index: -1;
         }
 
         .star-particle {
@@ -417,7 +417,7 @@ class PremiumThemeAnimationService {
           width: 100%;
           height: 100%;
           pointer-events: none;
-          z-index: -1;
+          z-_index: -1;
           overflow: hidden;
         }
 
@@ -474,9 +474,9 @@ class PremiumThemeAnimationService {
         height: 200%;
         transform: translate(-50%, -50%);
         pointer-events: none;
-        z-index: -2;
+        z-_index: -2;
         opacity: 0.3;
-      }
+       }
 
       .galaxy-spiral {
         position: absolute;

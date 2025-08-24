@@ -83,7 +83,7 @@ export interface ConvertKitWebhookPayload {
 
 export class ConvertKitService {
   private static instance: ConvertKitService;
-  private config: ConvertKitConfig | null = null;
+  private _config: ConvertKitConfig | null = null;
   private baseUrl = 'https://api.convertkit.com/v3';
   private isAuthenticated = false;
 
@@ -99,9 +99,9 @@ export class ConvertKitService {
   /**
    * Initialize ConvertKit service with API credentials
    */
-  async initialize(config: ConvertKitConfig): Promise<boolean> {
+  async initialize(_config: ConvertKitConfig): Promise<boolean> {
     try {
-      this.config = config;
+      this.config = _config;
 
       // Test authentication
       const isValid = await this.testAuthentication();
@@ -111,12 +111,12 @@ export class ConvertKitService {
         await this.ensurePersonaTags();
         return true;
       } else {
-        console.error('❌ ConvertKit authentication failed');
+        console._error('❌ ConvertKit authentication failed');
         return false;
       }
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to initialize ConvertKit service'
       );
       return false;
@@ -127,11 +127,11 @@ export class ConvertKitService {
    * Test ConvertKit API authentication
    */
   async testAuthentication(): Promise<boolean> {
-    if (!this.config) return false;
+    if (!this._config) return false;
 
     try {
       const response = await fetch(
-        `${this.baseUrl}/account?api_secret=${this.config.apiSecret}`,
+        `${this.baseUrl}/account?api_secret=${this._config.apiSecret}`,
         {
           method: 'GET',
           headers: {
@@ -147,13 +147,13 @@ export class ConvertKitService {
         );
         return true;
       } else {
-        console.error(
+        console._error(
           `❌ ConvertKit auth failed: ${response.status} ${response.statusText}`
         );
         return false;
       }
-    } catch (error) {
-      console.error('❌ ConvertKit auth error:', error);
+    } catch (_error) {
+      console.error('❌ ConvertKit auth _error:', _error);
       return false;
     }
   }
@@ -168,7 +168,7 @@ export class ConvertKitService {
       const existingTags = await this.getAllTags();
       const existingTagNames = existingTags.map(tag => tag.name.toLowerCase());
 
-      for (const [personaKey, persona] of Object.entries(DEFAULT_PERSONAS)) {
+      for (const [personaKey, _persona] of Object.entries(DEFAULT_PERSONAS)) {
         const tagName = `persona:${personaKey}`;
         const displayTagName = `Persona: ${persona.displayName}`;
 
@@ -181,8 +181,8 @@ export class ConvertKitService {
           console.log(`✅ Created ConvertKit tag: ${tagName}`);
         }
       }
-    } catch (error) {
-      console.error('Failed to ensure persona tags:', error);
+    } catch (_error) {
+      console._error('Failed to ensure _persona tags:', _error);
     }
   }
 
@@ -190,18 +190,18 @@ export class ConvertKitService {
    * Add subscriber to ConvertKit with persona tagging
    */
   async addSubscriber(
-    user: User,
-    persona: PersonaType,
+    _user: User,
+    _persona: PersonaType,
     formId?: number
   ): Promise<ConvertKitSubscriber | null> {
-    if (!this.isAuthenticated || !this.config) {
+    if (!this.isAuthenticated || !this._config) {
       console.warn('ConvertKit service not authenticated');
       return null;
     }
 
     try {
       const subscriberData = {
-        api_key: this.config.apiKey,
+        api_key: this._config.apiKey,
         email: user.email,
         first_name: user.name || user.username,
         fields: {
@@ -229,16 +229,16 @@ export class ConvertKitService {
 
       if (response.ok) {
         const result = await response.json();
-        console.log(`✅ Added subscriber to ConvertKit: ${user.email} (${persona})`);
+        console.log(`✅ Added subscriber to ConvertKit: ${_user.email} (${_persona})`);
         return result.subscription;
       } else {
         const error = await response.text();
-        console.error(`❌ Failed to add subscriber: ${error}`);
+        console._error(`❌ Failed to add subscriber: ${_error}`);
         return null;
       }
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? _error : new Error(String(_error)),
         'Failed to add ConvertKit subscriber'
       );
       return null;
@@ -250,10 +250,10 @@ export class ConvertKitService {
    */
   async updateSubscriberPersona(
     email: string,
-    persona: PersonaType,
+    _persona: PersonaType,
     confidence: number = 0.8
   ): Promise<boolean> {
-    if (!this.isAuthenticated || !this.config) return false;
+    if (!this.isAuthenticated || !this._config) return false;
 
     try {
       // First get the subscriber
@@ -265,7 +265,7 @@ export class ConvertKitService {
 
       // Update fields
       const updateData = {
-        api_secret: this.config.apiSecret,
+        api_secret: this._config.apiSecret,
         fields: {
           persona: persona,
           persona_confidence: confidence,
@@ -283,15 +283,15 @@ export class ConvertKitService {
 
       if (response.ok) {
         // Also update tags
-        await this.tagSubscriber(subscriber.id, `persona:${persona}`);
-        console.log(`✅ Updated subscriber persona: ${email} -> ${persona}`);
+        await this.tagSubscriber(subscriber.id, `persona:${_persona}`);
+        console.log(`✅ Updated subscriber persona: ${email} -> ${_persona}`);
         return true;
       } else {
-        console.error(`❌ Failed to update subscriber: ${response.statusText}`);
+        console._error(`❌ Failed to update subscriber: ${response.statusText}`);
         return false;
       }
-    } catch (error) {
-      console.error('Failed to update subscriber persona:', error);
+    } catch (_error) {
+      console._error('Failed to update subscriber _persona:', _error);
       return false;
     }
   }
@@ -300,7 +300,7 @@ export class ConvertKitService {
    * Add tag to subscriber
    */
   async tagSubscriber(subscriberId: number, tagName: string): Promise<boolean> {
-    if (!this.isAuthenticated || !this.config) return false;
+    if (!this.isAuthenticated || !this._config) return false;
 
     try {
       const response = await fetch(`${this.baseUrl}/tags`, {
@@ -309,7 +309,7 @@ export class ConvertKitService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          api_key: this.config.apiKey,
+          api_key: this._config.apiKey,
           tag: {
             name: tagName,
             subscriber_id: subscriberId,
@@ -318,8 +318,8 @@ export class ConvertKitService {
       });
 
       return response.ok;
-    } catch (error) {
-      console.error('Failed to tag subscriber:', error);
+    } catch (_error) {
+      console._error('Failed to tag subscriber:', _error);
       return false;
     }
   }
@@ -328,7 +328,7 @@ export class ConvertKitService {
    * Add subscriber to sequence
    */
   async addToSequence(email: string, sequenceId: number): Promise<boolean> {
-    if (!this.isAuthenticated || !this.config) return false;
+    if (!this.isAuthenticated || !this._config) return false;
 
     try {
       const response = await fetch(
@@ -339,7 +339,7 @@ export class ConvertKitService {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            api_key: this.config.apiKey,
+            api_key: this._config.apiKey,
             email: email,
           }),
         }
@@ -349,11 +349,11 @@ export class ConvertKitService {
         console.log(`✅ Added ${email} to sequence ${sequenceId}`);
         return true;
       } else {
-        console.error(`❌ Failed to add to sequence: ${response.statusText}`);
+        console._error(`❌ Failed to add to sequence: ${response.statusText}`);
         return false;
       }
-    } catch (error) {
-      console.error('Failed to add to sequence:', error);
+    } catch (_error) {
+      console._error('Failed to add to sequence:', _error);
       return false;
     }
   }
@@ -362,11 +362,11 @@ export class ConvertKitService {
    * Get subscriber by email
    */
   async getSubscriber(email: string): Promise<ConvertKitSubscriber | null> {
-    if (!this.isAuthenticated || !this.config) return null;
+    if (!this.isAuthenticated || !this._config) return null;
 
     try {
       const response = await fetch(
-        `${this.baseUrl}/subscribers?api_secret=${this.config.apiSecret}&email_address=${encodeURIComponent(email)}`,
+        `${this.baseUrl}/subscribers?api_secret=${this._config.apiSecret}&email_address=${encodeURIComponent(email)}`,
         {
           method: 'GET',
         }
@@ -378,8 +378,8 @@ export class ConvertKitService {
       } else {
         return null;
       }
-    } catch (error) {
-      console.error('Failed to get subscriber:', error);
+    } catch (_error) {
+      console._error('Failed to get subscriber:', _error);
       return null;
     }
   }
@@ -388,11 +388,11 @@ export class ConvertKitService {
    * Get all tags
    */
   async getAllTags(): Promise<ConvertKitTag[]> {
-    if (!this.isAuthenticated || !this.config) return [];
+    if (!this.isAuthenticated || !this._config) return [];
 
     try {
       const response = await fetch(
-        `${this.baseUrl}/tags?api_key=${this.config.apiKey}`,
+        `${this.baseUrl}/tags?api_key=${this._config.apiKey}`,
         {
           method: 'GET',
         }
@@ -404,8 +404,8 @@ export class ConvertKitService {
       } else {
         return [];
       }
-    } catch (error) {
-      console.error('Failed to get tags:', error);
+    } catch (_error) {
+      console._error('Failed to get tags:', _error);
       return [];
     }
   }
@@ -414,7 +414,7 @@ export class ConvertKitService {
    * Create new tag
    */
   async createTag(name: string): Promise<ConvertKitTag | null> {
-    if (!this.isAuthenticated || !this.config) return null;
+    if (!this.isAuthenticated || !this._config) return null;
 
     try {
       const response = await fetch(`${this.baseUrl}/tags`, {
@@ -423,7 +423,7 @@ export class ConvertKitService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          api_key: this.config.apiKey,
+          api_key: this._config.apiKey,
           tag: {
             name: name,
           },
@@ -436,8 +436,8 @@ export class ConvertKitService {
       } else {
         return null;
       }
-    } catch (error) {
-      console.error('Failed to create tag:', error);
+    } catch (_error) {
+      console._error('Failed to create tag:', _error);
       return null;
     }
   }
@@ -446,11 +446,11 @@ export class ConvertKitService {
    * Get all forms
    */
   async getAllForms(): Promise<ConvertKitForm[]> {
-    if (!this.isAuthenticated || !this.config) return [];
+    if (!this.isAuthenticated || !this._config) return [];
 
     try {
       const response = await fetch(
-        `${this.baseUrl}/forms?api_key=${this.config.apiKey}`,
+        `${this.baseUrl}/forms?api_key=${this._config.apiKey}`,
         {
           method: 'GET',
         }
@@ -462,8 +462,8 @@ export class ConvertKitService {
       } else {
         return [];
       }
-    } catch (error) {
-      console.error('Failed to get forms:', error);
+    } catch (_error) {
+      console._error('Failed to get forms:', _error);
       return [];
     }
   }
@@ -472,11 +472,11 @@ export class ConvertKitService {
    * Get all sequences
    */
   async getAllSequences(): Promise<ConvertKitSequence[]> {
-    if (!this.isAuthenticated || !this.config) return [];
+    if (!this.isAuthenticated || !this._config) return [];
 
     try {
       const response = await fetch(
-        `${this.baseUrl}/sequences?api_key=${this.config.apiKey}`,
+        `${this.baseUrl}/sequences?api_key=${this._config.apiKey}`,
         {
           method: 'GET',
         }
@@ -488,8 +488,8 @@ export class ConvertKitService {
       } else {
         return [];
       }
-    } catch (error) {
-      console.error('Failed to get sequences:', error);
+    } catch (_error) {
+      console._error('Failed to get sequences:', _error);
       return [];
     }
   }
@@ -503,11 +503,11 @@ export class ConvertKitService {
     tagIds: number[] = [],
     scheduledAt?: Date
   ): Promise<ConvertKitBroadcast | null> {
-    if (!this.isAuthenticated || !this.config) return null;
+    if (!this.isAuthenticated || !this._config) return null;
 
     try {
       const broadcastData: any = {
-        api_secret: this.config.apiSecret,
+        api_secret: this._config.apiSecret,
         subject: subject,
         content: content,
         public: false,
@@ -534,11 +534,11 @@ export class ConvertKitService {
         console.log(`✅ Created broadcast: ${subject}`);
         return data.broadcast;
       } else {
-        console.error(`❌ Failed to create broadcast: ${response.statusText}`);
+        console._error(`❌ Failed to create broadcast: ${response.statusText}`);
         return null;
       }
-    } catch (error) {
-      console.error('Failed to send broadcast:', error);
+    } catch (_error) {
+      console._error('Failed to send broadcast:', _error);
       return null;
     }
   }
@@ -569,10 +569,10 @@ export class ConvertKitService {
           this.handleFormSubscribe(payload);
           break;
         default:
-          console.log(`Unhandled webhook event: ${eventType}`);
+          console.log(`Unhandled webhook _event: ${eventType}`);
       }
-    } catch (error) {
-      console.error('Failed to handle webhook:', error);
+    } catch (_error) {
+      console._error('Failed to handle webhook:', _error);
     }
   }
 
@@ -587,7 +587,7 @@ export class ConvertKitService {
   }
 
   private handleTagAdd(payload: ConvertKitWebhookPayload): void {
-    if (payload.tag?.name.startsWith('persona:')) {
+    if (payload.tag?.name.startsWith('_persona:')) {
       console.log(
         `🏷️ Persona tag added: ${payload.subscriber.email} -> ${payload.tag.name}`
       );
@@ -635,10 +635,10 @@ export class ConvertKitService {
       stats.totalForms = forms.length;
       stats.totalSequences = sequences.length;
       stats.personaTags = tags
-        .filter(tag => tag.name.startsWith('persona:'))
+        .filter(tag => tag.name.startsWith('_persona:'))
         .map(tag => tag.name);
-    } catch (error) {
-      console.error('Failed to get service stats:', error);
+    } catch (_error) {
+      console._error('Failed to get service stats:', _error);
     }
 
     return stats;

@@ -110,8 +110,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
       if (alarmMetrics) {
         setRecommendations(alarmMetrics.recommendedAdjustments);
       }
-    } catch (error) {
-      console.error('Error loading optimization data:', error);
+    } catch (_error) {
+      console._error('Error loading optimization data:', _error);
     } finally {
       setLoading(false);
     }
@@ -288,8 +288,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       alert(
                         '✅ Your custom configuration has been applied successfully!'
                       );
-                    } catch (error) {
-                      console.error('Setup failed:', error);
+                    } catch (_error) {
+                      console._error('Setup failed:', _error);
                       alert('❌ Setup failed. Please try again.');
                     } finally {
                       setLoading(false);
@@ -324,8 +324,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       setLoading(true);
                       try {
                         await QuickSetupScripts.setupNewUser(alarm.id);
-                        alert('✅ New user setup complete!');
-                      } catch (error) {
+                        alert('✅ New _user setup complete!');
+                      } catch (_error) {
                         alert('❌ Setup failed. Please try again.');
                       } finally {
                         setLoading(false);
@@ -358,7 +358,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         setConditions([]);
                         setSmartEnabled(false);
                         alert('✅ Settings reset to defaults');
-                      } catch (error) {
+                      } catch (_error) {
                         alert('❌ Reset failed. Please try again.');
                       } finally {
                         setLoading(false);
@@ -391,7 +391,9 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={smartEnabled}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSmartEnabled(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setSmartEnabled(e.target.checked)
+                      }
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
@@ -414,7 +416,9 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         <input
                           type="checkbox"
                           checked={realTimeAdaptation}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRealTimeAdaptation(e.target.checked)}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setRealTimeAdaptation(e.target.checked)
+                          }
                           className="sr-only peer"
                         />
                         <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -435,7 +439,9 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         <input
                           type="checkbox"
                           checked={dynamicWakeWindow}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDynamicWakeWindow(e.target.checked)}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setDynamicWakeWindow(e.target.checked)
+                          }
                           className="sr-only peer"
                         />
                         <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -597,9 +603,9 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                     </h3>
 
                     <div className="space-y-3">
-                      {optimalTimes.slice(0, 5).map((slot, index) => (
+                      {optimalTimes.slice(0, 5).map((slot, _index) => (
                         <div
-                          key={index}
+                          key={_index}
                           className="flex items-center justify-between p-3 bg-white/5 rounded-lg"
                         >
                           <div className="flex items-center gap-3">
@@ -651,9 +657,9 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       </h3>
 
                       <div className="space-y-3">
-                        {recommendations.map((rec, index) => (
+                        {recommendations.map((rec, _index) => (
                           <div
-                            key={index}
+                            key={_index}
                             className="flex items-start gap-3 p-3 bg-white/5 rounded-lg"
                           >
                             <div
@@ -762,9 +768,9 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       Sleep Quality Trend (7 days)
                     </h3>
                     <div className="flex items-end gap-2 h-32">
-                      {metrics.sleepDebtTrend.map((quality, index) => (
+                      {metrics.sleepDebtTrend.map((quality, _index) => (
                         <div
-                          key={index}
+                          key={_index}
                           className="flex-1 bg-white/20 rounded-t"
                           style={{ height: `${quality * 10}%` }}
                         />
@@ -778,13 +784,13 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       Most Effective Conditions
                     </h3>
                     <div className="space-y-2">
-                      {metrics.mostEffectiveConditions.map((condition, index) => (
+                      {metrics.mostEffectiveConditions.map((condition, _index) => (
                         <div
-                          key={index}
+                          key={_index}
                           className="flex items-center gap-3 p-2 bg-white/5 rounded"
                         >
                           <span className="text-purple-400 font-mono">
-                            #{index + 1}
+                            #{_index + 1}
                           </span>
                           <span className="text-white capitalize">
                             {condition.replace('_', ' ')}

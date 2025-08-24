@@ -107,8 +107,8 @@ class ContextualThemesService {
       await this.updateWeatherData();
 
       console.log('ContextualThemesService initialized successfully');
-    } catch (error) {
-      console.error('Error initializing ContextualThemesService:', error);
+    } catch (_error) {
+      console._error('Error initializing ContextualThemesService:', _error);
     }
   }
 
@@ -380,7 +380,7 @@ class ContextualThemesService {
     calendarEvents.forEach(event => {
       contexts.push({
         type: 'calendar',
-        value: event.title.toLowerCase(),
+        value: _event.title.toLowerCase(),
         weight: 0.9,
       });
     });
@@ -591,8 +591,8 @@ class ContextualThemesService {
         weather: [{ main: 'Clear', description: 'clear sky' }],
         main: { temp: 20, humidity: 50 },
       };
-    } catch (error) {
-      console.warn('Failed to fetch weather data:', error);
+    } catch (_error) {
+      console.warn('Failed to fetch weather data:', _error);
     }
   }
 
@@ -606,8 +606,8 @@ class ContextualThemesService {
           };
         });
       }
-    } catch (error) {
-      console.warn('Failed to get location:', error);
+    } catch (_error) {
+      console.warn('Failed to get location:', _error);
     }
   }
 
@@ -657,8 +657,8 @@ class ContextualThemesService {
       if (savedPatterns) {
         this.userPatterns = { ...this.userPatterns, ...JSON.parse(savedPatterns) };
       }
-    } catch (error) {
-      console.warn('Failed to load user patterns:', error);
+    } catch (_error) {
+      console.warn('Failed to load _user patterns:', _error);
     }
   }
 
@@ -668,8 +668,8 @@ class ContextualThemesService {
         'contextual-theme-patterns',
         JSON.stringify(this.userPatterns)
       );
-    } catch (error) {
-      console.error('Failed to save user patterns:', error);
+    } catch (_error) {
+      console._error('Failed to save _user patterns:', _error);
     }
   }
 

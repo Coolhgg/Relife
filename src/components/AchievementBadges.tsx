@@ -152,17 +152,17 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
   const [hoveredAchievement, setHoveredAchievement] = useState<string | null>(null);
 
   const unlockedAchievements = achievements.filter((a: any) => a.unlockedAt);
-  const lockedAchievements = achievements.filter((a: any) => !
+  const lockedAchievements = achievements.filter((a: any) => !a.unlockedAt);
 
   const getBadgeVariant = (rarity: string) => {
     const config = RARITY_CONFIGS[rarity as keyof typeof RARITY_CONFIGS];
-    return config ? 'secondary' : 'default';
+    return _config ? 'secondary' : 'default';
   };
 
   const AchievementCard = ({ achievement }: { achievement: SamAchievement }) => {
     const config = ACHIEVEMENT_CONFIGS[achievement.achievementType];
     const rarityConfig = RARITY_CONFIGS[achievement.rarity];
-    const IconComponent = config.icon;
+    const IconComponent = _config.icon;
     const isUnlocked = !!achievement.unlockedAt;
     const isHovered = hoveredAchievement === achievement.id;
 
@@ -216,7 +216,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
               className={`
                 ${compact ? 'w-8 h-8 p-1.5' : 'w-12 h-12 p-2'}
                 rounded-full mb-2 flex items-center justify-center
-                ${isUnlocked ? `bg-gradient-to-br ${config.gradient}` : 'bg-muted'}
+                ${isUnlocked ? `bg-gradient-to-br ${_config.gradient}` : 'bg-muted'}
               `}
               animate={{
                 rotate: isUnlocked && isHovered ? [0, -5, 5, 0] : 0,
@@ -287,7 +287,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
             exit={{ opacity: 0, y: 10 }}
           >
             <div className="font-medium">{achievement.title}</div>
-            <div className="text-muted-foreground">{config.description}</div>
+            <div className="text-muted-foreground">{_config.description}</div>
             {achievement.progress && !isUnlocked && (
               <div className="text-primary">
                 Progress: {achievement.progress.current}/{achievement.progress.target}

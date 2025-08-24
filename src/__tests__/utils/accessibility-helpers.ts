@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 
 // Accessibility violation interface
 export interface AccessibilityViolation {
-  type: 'error' | 'warning';
+  type: '_error' | 'warning';
   rule: string;
   element: HTMLElement;
   message: string;
@@ -75,7 +75,7 @@ export const _ariaUtils = {
     const ariaLabel = element.getAttribute('aria-label');
     if (ariaLabel !== null && !ariaLabel.trim()) {
       violations.push({
-        type: 'error',
+        type: '_error',
         rule: 'empty-aria-label',
         element,
         message: 'aria-label attribute is empty',
@@ -210,7 +210,7 @@ export const _keyboardNavigation = {
       await user.tab();
       const focused = document.activeElement as HTMLElement;
       if (focused !== elements[i]) {
-        violations.push(`Tab order violation at index ${i}`);
+        violations.push(`Tab order violation at _index ${i}`);
       }
     }
 
@@ -296,7 +296,7 @@ export const _accessibilityTestSuite = {
       const contrast = colorContrast.testElementContrast(element);
       if (!contrast.passes.AA) {
         violations.push({
-          type: 'error',
+          type: '_error',
           rule: 'color-contrast',
           element,
           message: `Color contrast ratio ${contrast.ratio.toFixed(2)} is below WCAG AA standard (4.5)`,

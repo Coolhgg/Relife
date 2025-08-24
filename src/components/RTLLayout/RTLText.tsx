@@ -72,7 +72,7 @@ const trackingClasses = {
   widest: 'tracking-widest',
 };
 
-export const RTLText: React.FC<RTLTextProps> = ({
+const RTLText: React.FC<RTLTextProps> = ({
   children,
   className,
   align = 'start',
@@ -147,3 +147,5 @@ export const RTLText: React.FC<RTLTextProps> = ({
     </Component>
   );
 };
+
+export default RTLText;

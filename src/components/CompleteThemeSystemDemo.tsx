@@ -17,8 +17,7 @@ import AlarmThemeBrowser from './AlarmThemeBrowser';
 import VisualAlarmDisplay from './VisualAlarmDisplay';
 
 // 🎨 CUSTOM THEME CREATION DEMO
-export const CustomThemeCreator: React.FC = (
-) => {
+export const CustomThemeCreator: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [customTheme, setCustomTheme] = useState({
     name: '',
@@ -30,8 +29,7 @@ export const CustomThemeCreator: React.FC = (
     timeOfDay: [] as string[],
   });
 
-  const handleCreateCustomTheme = (
-) => {
+  const handleCreateCustomTheme = () => {
     const newThemeId = themeCombinations.createCustomCombination(
       customTheme.name,
       customTheme.description,
@@ -85,15 +83,15 @@ export const CustomThemeCreator: React.FC = (
                 type="text"
                 placeholder="Theme name (e.g., 'My Perfect Morning')"
                 value={customTheme.name}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => setCustomTheme({ ...customTheme, name: e.target.value })}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setCustomTheme({ ...customTheme, name: e.target.value })
+                }
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
               <textarea
                 placeholder="Describe your ideal wake-up experience..."
                 value={customTheme.description}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => 
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setCustomTheme({ ...customTheme, description: e.target.value })
                 }
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 h-24"
@@ -109,8 +107,7 @@ export const CustomThemeCreator: React.FC = (
               {visualAlarmThemes.getAllThemes().map(theme => (
                 <div
                   key={theme.id}
-                  onClick={(
-) =>
+                  onClick={() =>
                     setCustomTheme({
                       ...customTheme,
                       visual: theme.id as VisualAlarmThemeId,
@@ -148,8 +145,7 @@ export const CustomThemeCreator: React.FC = (
                         name="sound"
                         value={theme.id}
                         checked={customTheme.sound === theme.id}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => 
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           setCustomTheme({
                             ...customTheme,
                             sound: e.target.value as SoundTheme,
@@ -185,8 +181,7 @@ export const CustomThemeCreator: React.FC = (
                         name="voice"
                         value={voice}
                         checked={customTheme.voice === voice}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => 
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           setCustomTheme({
                             ...customTheme,
                             voice: e.target.value as VoiceMood,
@@ -216,14 +211,12 @@ export const CustomThemeCreator: React.FC = (
                 <input
                   type="text"
                   placeholder="morning, energetic, workout, peaceful"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => 
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setCustomTheme({
                       ...customTheme,
                       tags: e.target.value
                         .split(',')
-                        .map((tag: any
-) => tag.trim())
+                        .map((tag: any) => tag.trim())
                         .filter(Boolean),
                     })
                   }
@@ -248,8 +241,8 @@ export const CustomThemeCreator: React.FC = (
                       <input
                         type="checkbox"
                         value={time}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => { // auto: implicit any
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          // auto: implicit any
                           if (e.target.checked) {
                             setCustomTheme({
                               ...customTheme,
@@ -258,8 +251,9 @@ export const CustomThemeCreator: React.FC = (
                           } else {
                             setCustomTheme({
                               ...customTheme,
-                              timeOfDay: customTheme.timeOfDay.filter((t: any
-) => t !== time),
+                              timeOfDay: customTheme.timeOfDay.filter(
+                                (t: any) => t !== time
+                              ),
                             });
                           }
                         }}
@@ -280,8 +274,7 @@ export const CustomThemeCreator: React.FC = (
       {/* Navigation */}
       <div className="flex justify-between mt-8">
         <button
-          onClick={(
-) => setCurrentStep(Math.max(1, currentStep - 1))}
+          onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
           disabled={currentStep === 1}
           className="px-6 py-2 text-gray-600 disabled:opacity-50"
         >
@@ -298,8 +291,7 @@ export const CustomThemeCreator: React.FC = (
           </button>
         ) : (
           <button
-            onClick={(
-) => setCurrentStep(Math.min(4, currentStep + 1))}
+            onClick={() => setCurrentStep(Math.min(4, currentStep + 1))}
             className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           >
             Next
@@ -311,34 +303,30 @@ export const CustomThemeCreator: React.FC = (
 };
 
 // 🧠 SMART CONTEXTUAL FEATURES DEMO
-export const SmartThemesDemo: React.FC = (
-) => {
+export const SmartThemesDemo: React.FC = () => {
   const [currentRecommendation, setCurrentRecommendation] =
     useState<ContextualThemeRecommendation | null>(null);
   const [testTime, setTestTime] = useState('07:00');
   const [testDate, setTestDate] = useState(new Date());
   const [learningData, setLearningData] = useState<any[]>([]);
 
-  useEffect((
-) => {
+  useEffect(() => {
     loadRecommendation();
   }, [testTime, testDate]);
 
-  const loadRecommendation = async (
-) => {
+  const loadRecommendation = async () => {
     try {
       const recommendation = await contextualThemes.getContextualRecommendation(
         testTime,
         testDate
       );
       setCurrentRecommendation(recommendation);
-    } catch (error) {
-      console.error('Failed to load recommendation:', error);
+    } catch (_error) {
+      console._error('Failed to load recommendation:', _error);
     }
   };
 
-  const simulateUsage = (
-) => {
+  const simulateUsage = () => {
     // Simulate user choosing a theme and recording the usage
     if (currentRecommendation) {
       contextualThemes.recordThemeUsage(
@@ -351,8 +339,7 @@ export const SmartThemesDemo: React.FC = (
       );
 
       // Update learning data display
-      setLearningData((prev: any
-) => 
+      setLearningData((prev: any) =>
         [
           ...prev,
           {
@@ -381,8 +368,9 @@ export const SmartThemesDemo: React.FC = (
                 <input
                   type="time"
                   value={testTime}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => setTestTime(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setTestTime(e.target.value)
+                  }
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -391,8 +379,9 @@ export const SmartThemesDemo: React.FC = (
                 <input
                   type="date"
                   value={testDate.toISOString().split('T')[0]}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => setTestDate(new Date(e.target.value))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setTestDate(new Date(e.target.value))
+                  }
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -413,9 +402,8 @@ export const SmartThemesDemo: React.FC = (
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="font-medium mb-2">Recent Learning Data</h4>
                 <div className="space-y-2 text-sm">
-                  {learningData.map((data, index
-) => (
-                    <div key={index} className="flex justify-between">
+                  {learningData.map((data, _index) => (
+                    <div key={_index} className="flex justify-between">
                       <span>
                         {data.time} on {data.date}
                       </span>
@@ -465,9 +453,8 @@ export const SmartThemesDemo: React.FC = (
               <div className="mt-4">
                 <h5 className="font-medium mb-2">Context Factors:</h5>
                 <div className="flex flex-wrap gap-2">
-                  {currentRecommendation.context.map((ctx, index
-) => (
-                    <span key={index} className="px-2 py-1 bg-white text-sm rounded">
+                  {currentRecommendation.context.map((ctx, _index) => (
+                    <span key={_index} className="px-2 py-1 bg-white text-sm rounded">
                       {ctx.type}: {ctx.value}
                     </span>
                   ))}
@@ -484,15 +471,12 @@ export const SmartThemesDemo: React.FC = (
 // 📱 APP INTEGRATION EXAMPLE
 export const AlarmFormIntegration: React.FC<{
   alarm: Alarm;
-  onAlarmUpdate: (alarm: Partial<Alarm>
-) => void;
-}> = ({ alarm, onAlarmUpdate }
-) => {
+  onAlarmUpdate: (alarm: Partial<Alarm>) => void;
+}> = ({ alarm, onAlarmUpdate }) => {
   const [selectedThemeCombination, setSelectedThemeCombination] = useState<string>('');
   const [showThemeBrowser, setShowThemeBrowser] = useState(false);
 
-  const handleThemeSelect = (combination: ThemeCombination
-) => {
+  const handleThemeSelect = (combination: ThemeCombination) => {
     // Update alarm with selected theme combination
     onAlarmUpdate({
       // Map to existing alarm properties
@@ -505,8 +489,7 @@ export const AlarmFormIntegration: React.FC<{
     setShowThemeBrowser(false);
   };
 
-  const handlePreview = async (combination: ThemeCombination
-) => {
+  const handlePreview = async (combination: ThemeCombination) => {
     // Preview the theme combination
     visualAlarmThemes.previewTheme(combination.visual, 3000);
     await soundEffectsService.previewTheme(combination.sound);
@@ -520,8 +503,7 @@ export const AlarmFormIntegration: React.FC<{
           Alarm Theme
         </label>
         <button
-          onClick={(
-) => setShowThemeBrowser(true)}
+          onClick={() => setShowThemeBrowser(true)}
           className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg
                      hover:border-blue-400 hover:bg-blue-50 transition-colors text-center"
         >
@@ -550,8 +532,7 @@ export const AlarmFormIntegration: React.FC<{
             <div className="p-4 border-b flex justify-between items-center">
               <h3 className="text-lg font-semibold">Choose Your Alarm Theme</h3>
               <button
-                onClick={(
-) => setShowThemeBrowser(false)}
+                onClick={() => setShowThemeBrowser(false)}
                 className="text-gray-500 hover:text-gray-700"
               >
                 ✕
@@ -572,48 +553,42 @@ export const AlarmFormIntegration: React.FC<{
 };
 
 // 🔊 AUDIO SETUP & TESTING
-export const AudioSetupDemo: React.FC = (
-) => {
+export const AudioSetupDemo: React.FC = () => {
   const [currentTheme, setCurrentTheme] = useState<SoundTheme>('default');
   const [testResults, setTestResults] = useState<{ [key: string]: boolean }>({});
   const [isTestingAll, setIsTestingAll] = useState(false);
 
-  const testSingleSound = async (soundId: string
-) => {
+  const testSingleSound = async (soundId: string) => {
     try {
       const result = await soundEffectsService.testSound(soundId as any);
-      
-      setTestResults((prev: any
-) => ({ ...prev, [soundId]: result }));
+
+      setTestResults((prev: any) => ({ ...prev, [soundId]: result }));
       return result;
-    } catch (error) {
-      console.error('Sound test failed:', error);
-      
-      setTestResults((prev: any
-) => ({ ...prev, [soundId]: false }));
+    } catch (_error) {
+      console._error('Sound test failed:', _error);
+
+      setTestResults((prev: any) => ({ ...prev, [soundId]: false }));
       return false;
     }
   };
 
-  const testAllSounds = async (
-) => {
+  const testAllSounds = async () => {
     setIsTestingAll(true);
     try {
       const results = await soundEffectsService.testAllSounds();
       setTestResults(results);
-    } catch (error) {
-      console.error('Failed to test all sounds:', error);
+    } catch (_error) {
+      console._error('Failed to test all sounds:', _error);
     } finally {
       setIsTestingAll(false);
     }
   };
 
-  const playThemePreview = async (theme: SoundTheme
-) => {
+  const playThemePreview = async (theme: SoundTheme) => {
     try {
       await soundEffectsService.previewTheme(theme);
-    } catch (error) {
-      console.error('Theme preview failed:', error);
+    } catch (_error) {
+      console._error('Theme preview failed:', _error);
     }
   };
 
@@ -634,8 +609,7 @@ export const AudioSetupDemo: React.FC = (
                     <p className="text-sm text-gray-600">{theme.description}</p>
                   </div>
                   <button
-                    onClick={(
-) => playThemePreview(theme.id)}
+                    onClick={() => playThemePreview(theme.id)}
                     className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
                   >
                     Preview
@@ -694,8 +668,7 @@ export const AudioSetupDemo: React.FC = (
                     )}
 
                     <button
-                      onClick={(
-) => testSingleSound(sound.id)}
+                      onClick={() => testSingleSound(sound.id)}
                       className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
                     >
                       Test
@@ -718,8 +691,7 @@ export const AudioSetupDemo: React.FC = (
               min="0"
               max="100"
               defaultValue="70"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => 
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 soundEffectsService.setVolume('master', parseInt(e.target.value) / 100)
               }
               className="w-full"
@@ -732,8 +704,7 @@ export const AudioSetupDemo: React.FC = (
               min="0"
               max="100"
               defaultValue="50"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => 
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 soundEffectsService.setVolume('ui', parseInt(e.target.value) / 100)
               }
               className="w-full"
@@ -746,8 +717,7 @@ export const AudioSetupDemo: React.FC = (
               min="0"
               max="100"
               defaultValue="100"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => 
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 soundEffectsService.setVolume('alarm', parseInt(e.target.value) / 100)
               }
               className="w-full"
@@ -760,8 +730,7 @@ export const AudioSetupDemo: React.FC = (
               min="0"
               max="100"
               defaultValue="60"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>
-) => 
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 soundEffectsService.setVolume('ambient', parseInt(e.target.value) / 100)
               }
               className="w-full"
@@ -774,8 +743,7 @@ export const AudioSetupDemo: React.FC = (
 };
 
 // 🚀 COMPLETE INTEGRATION EXAMPLE
-export const CompleteThemeSystemDemo: React.FC = (
-) => {
+export const CompleteThemeSystemDemo: React.FC = () => {
   const [activeDemo, setActiveDemo] = useState<
     'customize' | 'smart' | 'audio' | 'integration'
   >('customize');
@@ -796,11 +764,8 @@ export const CompleteThemeSystemDemo: React.FC = (
     updatedAt: new Date(),
   });
 
-  const handleAlarmUpdate = (updates: Partial<Alarm>
-) => {
-    
-      setMockAlarm((prev: any
-) => ({ ...prev, ...updates }));
+  const handleAlarmUpdate = (updates: Partial<Alarm>) => {
+    setMockAlarm((prev: any) => ({ ...prev, ...updates }));
   };
 
   return (
@@ -815,8 +780,7 @@ export const CompleteThemeSystemDemo: React.FC = (
         ].map(tab => (
           <button
             key={tab.id}
-            onClick={(
-) => setActiveDemo(tab.id as any)}
+            onClick={() => setActiveDemo(tab.id as any)}
             className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-md transition-colors
               ${
                 activeDemo === tab.id

@@ -47,7 +47,7 @@ const AnalyticsDashboard: React.FC = () => {
 
   useEffect(() => {
     trackPageView('analytics-dashboard', {
-      user_role: 'admin', // This would be dynamic based on user permissions
+      user_role: 'admin', // This would be dynamic based on _user permissions
       time_range: timeRange,
     });
 
@@ -203,7 +203,7 @@ const AnalyticsDashboard: React.FC = () => {
             Analytics Dashboard
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Comprehensive insights into user behavior and app performance
+            Comprehensive insights into _user behavior and app performance
           </p>
         </div>
 
@@ -238,7 +238,7 @@ const AnalyticsDashboard: React.FC = () => {
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {metrics.map((metric, index) => (
+        {metrics.map((metric, _index) => (
           <div
             key={metric.name}
             className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow"

@@ -73,8 +73,8 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
           // Load schedule analysis
           const analysis = await SmartAlarmScheduler.analyzeUserSchedule();
           setScheduleAnalysis(analysis);
-        } catch (error) {
-          console.error('Error loading smart alarm data:', error);
+        } catch (_error) {
+          console._error('Error loading smart alarm data:', _error);
         } finally {
           setLoading(false);
         }
@@ -207,7 +207,9 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={smartEnabled}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSmartEnabled(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setSmartEnabled(e.target.checked)
+                      }
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
@@ -229,7 +231,9 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           max="60"
                           step="5"
                           value={wakeWindow}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWakeWindow(parseInt(e.target.value))}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setWakeWindow(parseInt(e.target.value))
+                          }
                           className="flex-1 accent-purple-500"
                         />
                         <div className="text-white/60 text-sm min-w-[100px]">
@@ -261,7 +265,9 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           <input
                             type="checkbox"
                             checked={adaptiveEnabled}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAdaptiveEnabled(e.target.checked)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                              setAdaptiveEnabled(e.target.checked)
+                            }
                             className="sr-only peer"
                           />
                           <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -281,7 +287,9 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           <input
                             type="checkbox"
                             checked={consistency}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConsistency(e.target.checked)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                              setConsistency(e.target.checked)
+                            }
                             className="sr-only peer"
                           />
                           <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -575,9 +583,9 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       </h3>
 
                       <div className="space-y-3">
-                        {scheduleAnalysis.recommendations.map((rec, index) => (
+                        {scheduleAnalysis.recommendations.map((rec, _index) => (
                           <div
-                            key={index}
+                            key={_index}
                             className="flex items-start gap-3 p-3 bg-white/5 rounded-lg"
                           >
                             <div
@@ -590,7 +598,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                               }`}
                             >
                               {rec.impact === 'high' ? (
-                                <Alert className="w-4 h-4 text-red-400" />
+                                <AlertTriangle className="w-4 h-4 text-red-400" />
                               ) : rec.impact === 'medium' ? (
                                 <Info className="w-4 h-4 text-yellow-400" />
                               ) : (

@@ -77,7 +77,7 @@ export class MonitoringIntegrationService {
       return await this.handleDeploymentMonitoringRequest(request);
     }
 
-    return Response.json({ error: 'Monitoring endpoint not found' }, { status: 404 });
+    return Response.json({ _error: 'Monitoring endpoint not found' }, { status: 404 });
   }
 
   // Handle external monitoring service integrations
@@ -124,13 +124,13 @@ export class MonitoringIntegrationService {
       }
 
       return Response.json(
-        { error: 'External monitoring endpoint not found' },
+        { _error: 'External monitoring endpoint not found' },
         { status: 404, headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('External monitoring error:', error);
+    } catch (_error) {
+      console.error('External monitoring _error:', _error);
       return Response.json(
-        { error: 'External monitoring request failed' },
+        { _error: 'External monitoring request failed' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -168,13 +168,13 @@ export class MonitoringIntegrationService {
       }
 
       return Response.json(
-        { error: 'Deployment monitoring endpoint not found' },
+        { _error: 'Deployment monitoring endpoint not found' },
         { status: 404, headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Deployment monitoring error:', error);
+    } catch (_error) {
+      console.error('Deployment monitoring _error:', _error);
       return Response.json(
-        { error: 'Deployment monitoring request failed' },
+        { _error: 'Deployment monitoring request failed' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -187,7 +187,7 @@ export class MonitoringIntegrationService {
   ): Promise<Response> {
     if (!this.env.DATADOG_API_KEY) {
       return Response.json(
-        { error: 'DataDog API key not configured' },
+        { _error: 'DataDog API key not configured' },
         { status: 400, headers: corsHeaders }
       );
     }
@@ -220,7 +220,7 @@ export class MonitoringIntegrationService {
       });
 
       if (!response.ok) {
-        throw new Error(`DataDog API error: ${response.status}`);
+        throw new Error(`DataDog API _error: ${response.status}`);
       }
 
       const result = await response.json();
@@ -233,10 +233,10 @@ export class MonitoringIntegrationService {
         },
         { headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('DataDog forwarding error:', error);
+    } catch (_error) {
+      console.error('DataDog forwarding _error:', _error);
       return Response.json(
-        { error: 'Failed to forward metrics to DataDog' },
+        { _error: 'Failed to forward metrics to DataDog' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -249,7 +249,7 @@ export class MonitoringIntegrationService {
   ): Promise<Response> {
     if (!this.env.NEWRELIC_API_KEY) {
       return Response.json(
-        { error: 'New Relic API key not configured' },
+        { _error: 'New Relic API key not configured' },
         { status: 400, headers: corsHeaders }
       );
     }
@@ -259,7 +259,7 @@ export class MonitoringIntegrationService {
       const events = Array.isArray(data) ? data : [data];
 
       // Transform events to New Relic format
-      const newRelicEvents = events.map(event => ({
+      const newRelicEvents = events.map(_event => ({
         eventType: `RelifePerformance`,
         timestamp: Date.now(),
         appName: 'Relife Smart Alarm',
@@ -281,7 +281,7 @@ export class MonitoringIntegrationService {
       );
 
       if (!response.ok) {
-        throw new Error(`New Relic API error: ${response.status}`);
+        throw new Error(`New Relic API _error: ${response.status}`);
       }
 
       return Response.json(
@@ -291,10 +291,10 @@ export class MonitoringIntegrationService {
         },
         { headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('New Relic forwarding error:', error);
+    } catch (_error) {
+      console.error('New Relic forwarding _error:', _error);
       return Response.json(
-        { error: 'Failed to forward events to New Relic' },
+        { _error: 'Failed to forward events to New Relic' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -307,7 +307,7 @@ export class MonitoringIntegrationService {
   ): Promise<Response> {
     if (!this.env.AMPLITUDE_API_KEY) {
       return Response.json(
-        { error: 'Amplitude API key not configured' },
+        { _error: 'Amplitude API key not configured' },
         { status: 400, headers: corsHeaders }
       );
     }
@@ -321,7 +321,7 @@ export class MonitoringIntegrationService {
         event_type: event.event_name || 'performance_metric',
         user_id: event.user_id,
         device_id: event.session_id,
-        time: new Date(event.timestamp).getTime(),
+        time: new Date(_event.timestamp).getTime(),
         event_properties: {
           ...event.properties,
           environment: this.env.ENVIRONMENT,
@@ -343,7 +343,7 @@ export class MonitoringIntegrationService {
       });
 
       if (!response.ok) {
-        throw new Error(`Amplitude API error: ${response.status}`);
+        throw new Error(`Amplitude API _error: ${response.status}`);
       }
 
       const result = await response.json();
@@ -356,10 +356,10 @@ export class MonitoringIntegrationService {
         },
         { headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Amplitude forwarding error:', error);
+    } catch (_error) {
+      console.error('Amplitude forwarding _error:', _error);
       return Response.json(
-        { error: 'Failed to forward events to Amplitude' },
+        { _error: 'Failed to forward events to Amplitude' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -411,10 +411,10 @@ export class MonitoringIntegrationService {
         },
         { headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Alert webhook error:', error);
+    } catch (_error) {
+      console.error('Alert webhook _error:', _error);
       return Response.json(
-        { error: 'Failed to process alert webhook' },
+        { _error: 'Failed to process alert webhook' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -473,10 +473,10 @@ export class MonitoringIntegrationService {
         },
         { headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Deployment tracking error:', error);
+    } catch (_error) {
+      console.error('Deployment tracking _error:', _error);
       return Response.json(
-        { error: 'Failed to track deployment' },
+        { _error: 'Failed to track deployment' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -512,7 +512,7 @@ export class MonitoringIntegrationService {
         .bind(environment)
         .all();
 
-      // Get deployment success rate (based on error logs after deployments)
+      // Get deployment success rate (based on _error logs after deployments)
       const errorQuery = `
         SELECT
           COUNT(*) as error_count,
@@ -550,10 +550,10 @@ export class MonitoringIntegrationService {
       };
 
       return Response.json(metrics, { headers: corsHeaders });
-    } catch (error) {
-      console.error('Error getting deployment metrics:', error);
+    } catch (_error) {
+      console._error('Error getting deployment metrics:', _error);
       return Response.json(
-        { error: 'Failed to get deployment metrics' },
+        { _error: 'Failed to get deployment metrics' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -605,10 +605,10 @@ export class MonitoringIntegrationService {
         },
         { headers: corsHeaders }
       );
-    } catch (error) {
-      console.error('Deployment health tracking error:', error);
+    } catch (_error) {
+      console.error('Deployment health tracking _error:', _error);
       return Response.json(
-        { error: 'Failed to track deployment health' },
+        { _error: 'Failed to track deployment health' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -662,10 +662,10 @@ export class MonitoringIntegrationService {
           { headers: corsHeaders }
         );
       }
-    } catch (error) {
-      console.error('Error getting deployment status:', error);
+    } catch (_error) {
+      console._error('Error getting deployment status:', _error);
       return Response.json(
-        { error: 'Failed to get deployment status' },
+        { _error: 'Failed to get deployment status' },
         { status: 500, headers: corsHeaders }
       );
     }
@@ -730,8 +730,8 @@ export class MonitoringIntegrationService {
             alert_type: 'info',
           }),
         });
-      } catch (error) {
-        console.error('Failed to notify DataDog about deployment:', error);
+      } catch (_error) {
+        console._error('Failed to notify DataDog about deployment:', _error);
       }
     }
 
@@ -750,8 +750,8 @@ export class MonitoringIntegrationService {
             dateReleased: new Date().toISOString(),
           }),
         });
-      } catch (error) {
-        console.error('Failed to notify Sentry about deployment:', error);
+      } catch (_error) {
+        console._error('Failed to notify Sentry about deployment:', _error);
       }
     }
   }

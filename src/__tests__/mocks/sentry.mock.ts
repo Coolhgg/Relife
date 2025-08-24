@@ -34,8 +34,8 @@ const mockSentry = {
       setLevel: jest.fn((level: string) => {
         console.log(`📊 Mock Sentry setLevel: ${level}`);
       }),
-      setUser: jest.fn((user: any) => {
-        console.log('👤 Mock Sentry setUser', user);
+      setUser: jest.fn((_user: any) => {
+        console.log('👤 Mock Sentry setUser', _user);
       }),
       setExtra: jest.fn((key: string, extra: any) => {
         console.log(`➕ Mock Sentry setExtra: ${key}`, extra);
@@ -60,8 +60,8 @@ const mockSentry = {
     console.log(`📋 Mock Sentry global setContext: ${key}`, context);
   }),
 
-  setUser: jest.fn((user: any) => {
-    console.log('👤 Mock Sentry global setUser', user);
+  setUser: jest.fn((_user: any) => {
+    console.log('👤 Mock Sentry global setUser', _user);
   }),
 
   setLevel: jest.fn((level: string) => {
@@ -123,16 +123,16 @@ const mockSentry = {
     return (...args: any[]) => {
       try {
         return fn(...args);
-      } catch (error) {
-        mockSentry.captureException(error);
-        throw error;
+      } catch (_error) {
+        mockSentry.captureException(_error);
+        throw _error;
       }
     };
   }),
 
   // React integration
   ErrorBoundary: jest.fn(({ children, fallback, onError }: any) => {
-    // Mock error boundary component
+    // Mock _error boundary component
     return children;
   }),
 
@@ -157,7 +157,7 @@ const mockSentry = {
   // Severity levels
   Severity: {
     Fatal: 'fatal',
-    Error: 'error',
+    Error: '_error',
     Warning: 'warning',
     Log: 'log',
     Info: 'info',
@@ -192,7 +192,7 @@ const mockSentry = {
   }),
 
   // Event processors
-  addGlobalEventProcessor: jest.fn((processor: (event: any) => any) => {
+  addGlobalEventProcessor: jest.fn((processor: (_event: any) => any) => {
     console.log('🔄 Mock Sentry addGlobalEventProcessor');
   }),
 
@@ -206,8 +206,8 @@ const mockSentry = {
     });
   }),
 
-  _mockSetUser: jest.fn((user: any) => {
-    mockSentry.setUser(user);
+  _mockSetUser: jest.fn((_user: any) => {
+    mockSentry.setUser(_user);
   }),
 
   _mockClearContext: jest.fn(() => {

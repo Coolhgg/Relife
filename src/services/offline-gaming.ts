@@ -98,8 +98,8 @@ export class OfflineGamingService {
         this.gamingData.battles.length,
         'battles'
       );
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to initialize offline gaming', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to initialize offline gaming', {
         context: 'OfflineGamingService.initializeOfflineGaming',
       });
     }
@@ -113,8 +113,8 @@ export class OfflineGamingService {
     // Listen for service worker messages
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', event => {
-        if (event.data.type === 'GAMING_SYNC_COMPLETE') {
-          this.handleSyncComplete(event.data);
+        if (_event.data.type === 'GAMING_SYNC_COMPLETE') {
+          this.handleSyncComplete(_event.data);
         }
       });
     }
@@ -190,8 +190,8 @@ export class OfflineGamingService {
 
       console.log('[OfflineGaming] Created battle offline:', battle.id);
       return battle;
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to create battle offline', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to create battle offline', {
         context: 'OfflineGamingService.createBattle',
       });
       throw error;
@@ -242,8 +242,8 @@ export class OfflineGamingService {
 
       console.log('[OfflineGaming] Joined battle offline:', battleId);
       return true;
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to join battle offline', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to join battle offline', {
         context: 'OfflineGamingService.joinBattle',
         battleId,
         userId,
@@ -323,8 +323,8 @@ export class OfflineGamingService {
         'Winner:',
         winnerId
       );
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to complete battle offline', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to complete battle offline', {
         context: 'OfflineGamingService.completeBattle',
         battleId,
       });
@@ -382,8 +382,8 @@ export class OfflineGamingService {
         reward.type,
         reward.amount
       );
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to award offline reward', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to award offline reward', {
         context: 'OfflineGamingService.awardOfflineReward',
       });
     }
@@ -449,16 +449,16 @@ export class OfflineGamingService {
       if (offlineRewards && Array.isArray(offlineRewards)) {
         this.offlineRewards = offlineRewards;
       }
-    } catch (error) {
-      console.error('[OfflineGaming] Failed to load from storage:', error);
+    } catch (_error) {
+      console._error('[OfflineGaming] Failed to load from storage:', _error);
     }
   }
 
   private async saveToStorage(): Promise<void> {
     try {
       SecurityService.secureStorageSet(this.STORAGE_KEYS.GAMING_DATA, this.gamingData);
-    } catch (error) {
-      console.error('[OfflineGaming] Failed to save to storage:', error);
+    } catch (_error) {
+      console._error('[OfflineGaming] Failed to save to storage:', _error);
     }
   }
 
@@ -468,8 +468,8 @@ export class OfflineGamingService {
         this.STORAGE_KEYS.BATTLE_ACTIONS,
         this.pendingActions
       );
-    } catch (error) {
-      console.error('[OfflineGaming] Failed to save pending actions:', error);
+    } catch (_error) {
+      console._error('[OfflineGaming] Failed to save pending actions:', _error);
     }
   }
 
@@ -479,8 +479,8 @@ export class OfflineGamingService {
         this.STORAGE_KEYS.OFFLINE_REWARDS,
         this.offlineRewards
       );
-    } catch (error) {
-      console.error('[OfflineGaming] Failed to save offline rewards:', error);
+    } catch (_error) {
+      console._error('[OfflineGaming] Failed to save offline rewards:', _error);
     }
   }
 
@@ -500,8 +500,8 @@ export class OfflineGamingService {
         try {
           await this.syncBattleAction(action);
           action.synced = true;
-        } catch (error) {
-          console.error('[OfflineGaming] Failed to sync action:', action.id, error);
+        } catch (_error) {
+          console._error('[OfflineGaming] Failed to sync action:', action.id, _error);
         }
       }
 
@@ -510,8 +510,8 @@ export class OfflineGamingService {
         try {
           await this.syncOfflineReward(reward);
           reward.synced = true;
-        } catch (error) {
-          console.error('[OfflineGaming] Failed to sync reward:', reward.id, error);
+        } catch (_error) {
+          console._error('[OfflineGaming] Failed to sync reward:', reward.id, _error);
         }
       }
 
@@ -523,8 +523,8 @@ export class OfflineGamingService {
       await this.saveOfflineRewards();
 
       console.log('[OfflineGaming] Sync completed successfully');
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Gaming sync failed', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Gaming sync failed', {
         context: 'OfflineGamingService.syncWithServer',
       });
     }
@@ -593,8 +593,8 @@ export class OfflineGamingService {
       await this.saveOfflineRewards();
 
       console.log('[OfflineGaming] Cleared all offline gaming data');
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to clear offline gaming data', {
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to clear offline gaming data', {
         context: 'OfflineGamingService.clearOfflineData',
       });
     }

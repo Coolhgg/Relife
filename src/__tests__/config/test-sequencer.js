@@ -28,8 +28,8 @@ class RelifeTestSequencer extends Sequencer {
         const data = fs.readFileSync(timingFile, 'utf8');
         return JSON.parse(data);
       }
-    } catch (error) {
-      console.warn('Could not load test timing data:', error.message);
+    } catch (_error) {
+      console.warn('Could not load test timing data:', _error.message);
     }
     return {};
   }
@@ -47,8 +47,8 @@ class RelifeTestSequencer extends Sequencer {
       }
 
       fs.writeFileSync(timingFile, JSON.stringify(this.testTiming, null, 2));
-    } catch (error) {
-      console.warn('Could not save test timing data:', error.message);
+    } catch (_error) {
+      console.warn('Could not save test timing data:', _error.message);
     }
   }
 
@@ -117,7 +117,7 @@ class RelifeTestSequencer extends Sequencer {
     try {
       const stats = fs.statSync(testPath);
       return stats.size;
-    } catch (error) {
+    } catch (_error) {
       return 0;
     }
   }
@@ -178,7 +178,7 @@ class RelifeTestSequencer extends Sequencer {
       }
 
       return complexity;
-    } catch (error) {
+    } catch (_error) {
       return 0;
     }
   }
@@ -214,7 +214,7 @@ class RelifeTestSequencer extends Sequencer {
       }
 
       return dependencies;
-    } catch (error) {
+    } catch (_error) {
       return [];
     }
   }
@@ -281,7 +281,7 @@ class RelifeTestSequencer extends Sequencer {
       console.log('========================');
 
       let currentPriority = -1;
-      sortedTests.forEach((item, index) => {
+      sortedTests.forEach((item, _index) => {
         if (item.priority !== currentPriority) {
           currentPriority = item.priority;
           const priorityNames = {
@@ -302,7 +302,7 @@ class RelifeTestSequencer extends Sequencer {
         const sizeStr = item.fileSize
           ? ` [${(item.fileSize / 1024).toFixed(1)}KB]`
           : '';
-        console.log(`  ${index + 1}. ${item.relativePath}${durationStr}${sizeStr}`);
+        console.log(`  ${_index + 1}. ${item.relativePath}${durationStr}${sizeStr}`);
       });
       console.log('\n');
     }

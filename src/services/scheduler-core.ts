@@ -20,7 +20,7 @@ const ADVANCED_CONFIG_KEY = 'advanced_scheduling_config';
 const SCHEDULING_STATS_KEY = 'scheduling_statistics';
 
 export class SchedulerCore {
-  private static config: SchedulingConfig = {
+  private static _config: SchedulingConfig = {
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     defaultWakeWindow: 30,
     enableSmartAdjustments: true,
@@ -50,9 +50,9 @@ export class SchedulerCore {
       await this.loadStats();
       this.startSchedulingEngine();
       console.log('Advanced Alarm Scheduler initialized');
-    } catch (error) {
-      console.error('Failed to initialize Advanced Alarm Scheduler:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to initialize Advanced Alarm Scheduler:', _error);
+      throw _error;
     }
   }
 
@@ -60,10 +60,10 @@ export class SchedulerCore {
     try {
       const { value } = await Preferences.get({ key: ADVANCED_CONFIG_KEY });
       if (value) {
-        this.config = { ...this.config, ...JSON.parse(value) };
+        this.config = { ...this._config, ...JSON.parse(value) };
       }
-    } catch (error) {
-      console.error('Error loading scheduling config:', error);
+    } catch (_error) {
+      console._error('Error loading scheduling _config:', _error);
     }
   }
 
@@ -71,10 +71,10 @@ export class SchedulerCore {
     try {
       await Preferences.set({
         key: ADVANCED_CONFIG_KEY,
-        value: JSON.stringify(this.config),
+        value: JSON.stringify(this._config),
       });
-    } catch (error) {
-      console.error('Error saving scheduling config:', error);
+    } catch (_error) {
+      console._error('Error saving scheduling _config:', _error);
     }
   }
 
@@ -84,8 +84,8 @@ export class SchedulerCore {
       if (value) {
         this.stats = { ...this.stats, ...JSON.parse(value) };
       }
-    } catch (error) {
-      console.error('Error loading scheduling stats:', error);
+    } catch (_error) {
+      console._error('Error loading scheduling stats:', _error);
     }
   }
 
@@ -95,8 +95,8 @@ export class SchedulerCore {
         key: SCHEDULING_STATS_KEY,
         value: JSON.stringify(this.stats),
       });
-    } catch (error) {
-      console.error('Error saving scheduling stats:', error);
+    } catch (_error) {
+      console._error('Error saving scheduling stats:', _error);
     }
   }
 
@@ -105,14 +105,14 @@ export class SchedulerCore {
     this.schedulingEngine = setInterval(async () => {
       try {
         await this.processScheduledOptimizations();
-      } catch (error) {
-        console.error('Error in scheduling engine:', error);
+      } catch (_error) {
+        console._error('Error in scheduling engine:', _error);
       }
     }, 60000); // Run every minute
   }
 
   private static async processScheduledOptimizations(): Promise<void> {
-    if (!this.config.enableSmartAdjustments) {
+    if (!this._config.enableSmartAdjustments) {
       return;
     }
 
@@ -124,7 +124,7 @@ export class SchedulerCore {
         // Apply smart optimizations
         const optimizedAlarm = await AlarmExecutor.applySmartOptimizations(
           alarm,
-          this.config
+          this._config
         );
 
         // Apply seasonal adjustments
@@ -157,8 +157,8 @@ export class SchedulerCore {
           await this.updateAlarmFromOptimization(alarm, seasonallyAdjustedAlarm);
         }
       }
-    } catch (error) {
-      console.error('Error processing scheduled optimizations:', error);
+    } catch (_error) {
+      console._error('Error processing scheduled optimizations:', _error);
     }
   }
 
@@ -186,8 +186,8 @@ export class SchedulerCore {
       await this.saveStats();
 
       console.log(`Applied optimization to alarm "${optimized.label}"`);
-    } catch (error) {
-      console.error('Error updating optimized alarm:', error);
+    } catch (_error) {
+      console._error('Error updating optimized alarm:', _error);
     }
   }
 
@@ -210,7 +210,7 @@ export class SchedulerCore {
       // Apply optimizations using AlarmExecutor
       const optimizedAlarm = await AlarmExecutor.applySmartOptimizations(
         alarm,
-        this.config
+        this._config
       );
       const finalAlarm = AlarmExecutor.applySeasonalAdjustments(optimizedAlarm);
 
@@ -224,9 +224,9 @@ export class SchedulerCore {
       console.log(
         `Scheduled advanced alarm "${finalAlarm.label}" with ${nextOccurrences.length} occurrences`
       );
-    } catch (error) {
-      console.error('Error scheduling advanced alarm:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error scheduling advanced alarm:', _error);
+      throw _error;
     }
   }
 
@@ -234,9 +234,9 @@ export class SchedulerCore {
     try {
       await this.cancelAdvancedNotifications(alarmId);
       console.log(`Cancelled advanced alarm notifications for ID: ${alarmId}`);
-    } catch (error) {
-      console.error('Error cancelling advanced alarm:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error cancelling advanced alarm:', _error);
+      throw _error;
     }
   }
 
@@ -302,8 +302,8 @@ export class SchedulerCore {
           `Scheduled advanced alarm "${alarm.label}" for ${occurrence.toLocaleString()}`
         );
       }
-    } catch (error) {
-      console.error('Error scheduling advanced alarm notifications:', error);
+    } catch (_error) {
+      console._error('Error scheduling advanced alarm notifications:', _error);
     }
   }
 
@@ -318,8 +318,8 @@ export class SchedulerCore {
       }
 
       console.log(`Cancelled advanced alarm notifications for ID: ${alarmId}`);
-    } catch (error) {
-      console.error('Error cancelling advanced alarm notifications:', error);
+    } catch (_error) {
+      console._error('Error cancelling advanced alarm notifications:', _error);
     }
   }
 
@@ -347,9 +347,9 @@ export class SchedulerCore {
         default:
           throw new Error(`Unknown operation: ${operation.operation}`);
       }
-    } catch (error) {
+    } catch (_error) {
       results.errors.push(
-        `Bulk operation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Bulk operation failed: ${error instanceof Error ? _error.message : 'Unknown _error'}`
       );
       return results;
     }
@@ -382,10 +382,10 @@ export class SchedulerCore {
           userId: alarm.userId,
         });
         results.success++;
-      } catch (error) {
+      } catch (_error) {
         results.failed++;
         results.errors.push(
-          `Failed to create alarm "${alarm.label}": ${error instanceof Error ? error.message : 'Unknown error'}`
+          `Failed to create alarm "${alarm.label}": ${error instanceof Error ? _error.message : 'Unknown _error'}`
         );
       }
     }
@@ -407,10 +407,10 @@ export class SchedulerCore {
       try {
         await AlarmService.updateAlarm(update.id, update.data);
         results.success++;
-      } catch (error) {
+      } catch (_error) {
         results.failed++;
         results.errors.push(
-          `Failed to update alarm ${update.id}: ${error instanceof Error ? error.message : 'Unknown error'}`
+          `Failed to update alarm ${update.id}: ${error instanceof Error ? _error.message : 'Unknown _error'}`
         );
       }
     }
@@ -432,10 +432,10 @@ export class SchedulerCore {
       try {
         await AlarmService.deleteAlarm(alarmId);
         results.success++;
-      } catch (error) {
+      } catch (_error) {
         results.failed++;
         results.errors.push(
-          `Failed to delete alarm ${alarmId}: ${error instanceof Error ? error.message : 'Unknown error'}`
+          `Failed to delete alarm ${alarmId}: ${error instanceof Error ? _error.message : 'Unknown _error'}`
         );
       }
     }
@@ -473,10 +473,10 @@ export class SchedulerCore {
 
         await AlarmService.createAlarm(duplicateAlarm);
         results.success++;
-      } catch (error) {
+      } catch (_error) {
         results.failed++;
         results.errors.push(
-          `Failed to duplicate alarm ${alarmId}: ${error instanceof Error ? error.message : 'Unknown error'}`
+          `Failed to duplicate alarm ${alarmId}: ${error instanceof Error ? _error.message : 'Unknown _error'}`
         );
       }
     }
@@ -496,7 +496,7 @@ export class SchedulerCore {
       settings: this.config,
       metadata: {
         totalAlarms: alarms.length,
-        timezone: this.config.timeZone,
+        timezone: this._config.timeZone,
       },
     };
   }
@@ -519,12 +519,12 @@ export class SchedulerCore {
           // Adjust timezone if needed
           if (
             options.adjustTimeZones &&
-            data.settings.timeZone !== this.config.timeZone
+            data.settings.timeZone !== this._config.timeZone
           ) {
             alarm.time = this.convertTimeZone(
               alarm.time,
               data.settings.timeZone,
-              this.config.timeZone
+              this._config.timeZone
             );
           }
 
@@ -562,18 +562,18 @@ export class SchedulerCore {
             userId: alarm.userId,
           });
           results.success++;
-        } catch (error) {
+        } catch (_error) {
           results.failed++;
           results.errors.push(
-            `Failed to import alarm "${alarm.label}": ${error instanceof Error ? error.message : 'Unknown error'}`
+            `Failed to import alarm "${alarm.label}": ${error instanceof Error ? _error.message : 'Unknown _error'}`
           );
         }
       }
 
       return results;
-    } catch (error) {
+    } catch (_error) {
       results.errors.push(
-        `Import failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Import failed: ${error instanceof Error ? _error.message : 'Unknown _error'}`
       );
       return results;
     }
@@ -582,11 +582,11 @@ export class SchedulerCore {
   // ===== CONFIGURATION METHODS =====
 
   static getConfig(): SchedulingConfig {
-    return { ...this.config };
+    return { ...this._config };
   }
 
   static async updateConfig(updates: Partial<SchedulingConfig>): Promise<void> {
-    this.config = { ...this.config, ...updates };
+    this.config = { ...this._config, ...updates };
     await this.saveConfig();
   }
 

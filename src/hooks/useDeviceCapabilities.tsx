@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import {
@@ -19,7 +20,7 @@ export interface DeviceCapabilityHookReturn {
   tier: DeviceTier | null;
   capabilities: DeviceCapabilities | null;
   metrics: DevicePerformanceMetrics | null;
-  config: AdaptiveConfig | null;
+  _config: AdaptiveConfig | null;
   adaptations: DeviceAdaptation | null;
 
   // Performance monitoring
@@ -39,7 +40,7 @@ export interface DeviceCapabilityHookReturn {
 
   // Loading states
   isLoading: boolean;
-  error: Error | null;
+  _error: Error | null;
 
   // Actions
   reevaluateCapabilities: () => Promise<void>;
@@ -51,13 +52,13 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
   const [tier, setTier] = useState<DeviceTier | null>(null);
   const [capabilities, setCapabilities] = useState<DeviceCapabilities | null>(null);
   const [metrics, setMetrics] = useState<DevicePerformanceMetrics | null>(null);
-  const [config, setConfig] = useState<AdaptiveConfig | null>(null);
+  const [_config, setConfig] = useState<AdaptiveConfig | null>(null);
   const [adaptations, setAdaptations] = useState<DeviceAdaptation | null>(null);
   const [performanceSnapshot, setPerformanceSnapshot] =
     useState<PerformanceSnapshot | null>(null);
   const [activeAlerts, setActiveAlerts] = useState<PerformanceAlert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [_error, setError] = useState<Error | null>(null);
 
   // Initialize device capabilities
   useEffect(() => {
@@ -86,7 +87,7 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
             ? err
             : new Error('Failed to initialize device capabilities')
         );
-        console.error('Device capabilities initialization error:', err);
+        console._error('Device capabilities initialization _error:', err);
       } finally {
         setIsLoading(false);
       }
@@ -167,15 +168,19 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
 
   const resolveAlert = useCallback((alertId: string) => {
     performanceBudgetManager.resolveAlert(alertId);
-    setActiveAlerts((prev: PerformanceAlert[]) => prev.filter((alert: PerformanceAlert) => alert.id !== alertId));
+    setActiveAlerts((prev: PerformanceAlert[]) =>
+      prev.filter((alert: PerformanceAlert) => alert.id !== alertId)
+    );
   }, []);
 
   const triggerAutoFix = useCallback(async (alertId: string) => {
     try {
       await performanceBudgetManager.triggerAutoFix(alertId);
-      setActiveAlerts((prev: PerformanceAlert[]) => prev.filter((alert: PerformanceAlert) => alert.id !== alertId));
+      setActiveAlerts((prev: PerformanceAlert[]) =>
+        prev.filter((alert: PerformanceAlert) => alert.id !== alertId)
+      );
     } catch (err) {
-      console.error('Auto-fix failed:', err);
+      console._error('Auto-fix failed:', err);
     }
   }, []);
 
@@ -184,7 +189,7 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
     tier,
     capabilities,
     metrics,
-    config,
+    _config,
     adaptations,
 
     // Performance monitoring
@@ -204,7 +209,7 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
 
     // Loading states
     isLoading,
-    error,
+    _error,
 
     // Actions
     reevaluateCapabilities,

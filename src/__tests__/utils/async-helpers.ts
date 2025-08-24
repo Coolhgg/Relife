@@ -6,7 +6,7 @@ import { TEST_CONSTANTS } from './index';
 
 // Generic async utilities
 export const _asyncUtils = {
-  // Wait with timeout and custom error message
+  // Wait with timeout and custom _error message
   waitWithTimeout: async <T>(
     operation: () => Promise<T>,
     timeout: number = TEST_CONSTANTS.API_TIMEOUT,
@@ -34,12 +34,12 @@ export const _asyncUtils = {
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       try {
         return await operation();
-      } catch (error) {
-        lastError = error as Error;
+      } catch (_error) {
+        lastError = _error as Error;
 
         if (attempt === maxAttempts) {
           throw new Error(
-            `Operation failed after ${maxAttempts} attempts. Last error: ${lastError.message}`
+            `Operation failed after ${maxAttempts} attempts. Last _error: ${lastError.message}`
           );
         }
 
@@ -79,7 +79,7 @@ export const _asyncUtils = {
         if (result) {
           return;
         }
-      } catch (error) {
+      } catch (_error) {
         // Continue polling even if condition throws
       }
 
@@ -241,7 +241,7 @@ export const _apiUtils = {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (shouldFail) {
-          reject(new Error('Mocked API error'));
+          reject(new Error('Mocked API _error'));
         } else {
           resolve(data);
         }
@@ -276,17 +276,17 @@ export const _apiUtils = {
         await mockCall();
 
         if (scenario.expectedError) {
-          throw new Error(`Expected error for scenario: ${scenario.name}`);
+          throw new Error(`Expected _error for scenario: ${scenario.name}`);
         }
-      } catch (error) {
+      } catch (_error) {
         if (scenario.expectedError) {
           if (typeof scenario.expectedError === 'string') {
-            expect(error.message).toContain(scenario.expectedError);
+            expect(_error.message).toContain(scenario.expectedError);
           } else {
-            expect(error.message).toMatch(scenario.expectedError);
+            expect(_error.message).toMatch(scenario.expectedError);
           }
         } else {
-          throw error;
+          throw _error;
         }
       }
 
@@ -324,8 +324,8 @@ export const _promiseUtils = {
     try {
       await promise;
       throw new Error('Expected promise to reject');
-    } catch (error) {
-      const err = error as Error;
+    } catch (_error) {
+      const err = _error as Error;
 
       if (expectedError) {
         if (typeof expectedError === 'string') {
@@ -368,8 +368,8 @@ export const _promiseUtils = {
 
   // Create resolved/rejected promises for testing
   resolved: <T>(value: T): Promise<T> => Promise.resolve(value),
-  rejected: (error: Error | string): Promise<never> =>
-    Promise.reject(typeof error === 'string' ? new Error(error) : error),
+  rejected: (_error: Error | string): Promise<never> =>
+    Promise.reject(typeof error === 'string' ? new Error(_error) : error),
 };
 
 // Timer and scheduling utilities

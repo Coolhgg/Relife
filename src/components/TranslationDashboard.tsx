@@ -74,7 +74,7 @@ export const TranslationDashboard: React.FC = () => {
 
   useEffect(() => {
     loadDashboardData();
-  }, []);
+  }, [loadDashboardData]);
 
   const loadDashboardData = async () => {
     setLoading(true);
@@ -85,8 +85,8 @@ export const TranslationDashboard: React.FC = () => {
 
       setData(dashboardData.results || []);
       setStats(dashboardData.summary || null);
-    } catch (error) {
-      console.error('Failed to load dashboard data:', error);
+    } catch (_error) {
+      console._error('Failed to load dashboard data:', _error);
       // Fallback to mock data
       setData(generateMockData());
       setStats(generateMockStats());

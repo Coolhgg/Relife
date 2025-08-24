@@ -299,8 +299,8 @@ export class VoiceAccessibilityService {
       },
     ];
 
-    commands.forEach((command, index) => {
-      this.addCommand(`cmd-${index}`, {
+    commands.forEach((command, _index) => {
+      this.addCommand(`cmd-${_index}`, {
         ...command,
         enabled: true,
       });
@@ -338,8 +338,8 @@ export class VoiceAccessibilityService {
     };
 
     this.recognition.onerror = event => {
-      console.warn('Speech recognition error:', event.error);
-      this.provideFeedback(`Voice recognition error: ${event.error}`);
+      console.warn('Speech recognition error:', _event._error);
+      this.provideFeedback(`Voice recognition _error: ${_event._error}`);
       this.currentlyListening = false;
       this.state.isListening = false;
     };
@@ -468,8 +468,8 @@ export class VoiceAccessibilityService {
     try {
       command.action();
       this.provideFeedback(`Executed: ${command.description}`);
-    } catch (error) {
-      console.error('Error executing voice command:', error);
+    } catch (_error) {
+      console._error('Error executing voice command:', _error);
       this.provideFeedback(`Error executing command: ${command.description}`);
     }
   }
@@ -498,8 +498,8 @@ export class VoiceAccessibilityService {
 
     try {
       this.recognition.start();
-    } catch (error) {
-      console.warn('Could not start voice recognition:', error);
+    } catch (_error) {
+      console.warn('Could not start voice recognition:', _error);
       this.provideFeedback(
         'Could not start voice recognition. Please check microphone permissions.'
       );
@@ -557,7 +557,7 @@ export class VoiceAccessibilityService {
     const event = new CustomEvent('keyboard-navigate', {
       detail: { section, source: 'voice' },
     });
-    document.dispatchEvent(event);
+    document.dispatchEvent(_event);
   }
 
   private goBack(): void {
@@ -568,7 +568,7 @@ export class VoiceAccessibilityService {
     const event = new CustomEvent('alarm-action', {
       detail: { action: 'create', source: 'voice' },
     });
-    document.dispatchEvent(event);
+    document.dispatchEvent(_event);
   }
 
   private deleteAlarm(): void {
@@ -579,7 +579,7 @@ export class VoiceAccessibilityService {
       const event = new CustomEvent('alarm-action', {
         detail: { action: 'delete', target: selectedAlarm, source: 'voice' },
       });
-      document.dispatchEvent(event);
+      document.dispatchEvent(_event);
     } else {
       this.provideFeedback('No alarm selected. Please select an alarm first.');
     }
@@ -593,7 +593,7 @@ export class VoiceAccessibilityService {
       const event = new CustomEvent('alarm-action', {
         detail: { action: 'toggle', target: selectedAlarm, source: 'voice' },
       });
-      document.dispatchEvent(event);
+      document.dispatchEvent(_event);
     } else {
       this.provideFeedback('No alarm selected. Please select an alarm first.');
     }
@@ -607,7 +607,7 @@ export class VoiceAccessibilityService {
       const event = new CustomEvent('alarm-action', {
         detail: { action: 'edit', target: selectedAlarm, source: 'voice' },
       });
-      document.dispatchEvent(event);
+      document.dispatchEvent(_event);
     } else {
       this.provideFeedback('No alarm selected. Please select an alarm first.');
     }
@@ -621,7 +621,7 @@ export class VoiceAccessibilityService {
     }
 
     let alarmsList = `Found ${alarms.length} alarm${alarms.length > 1 ? 's' : ''}: `;
-    alarms.forEach((alarm, index) => {
+    alarms.forEach((alarm, _index) => {
       const timeElement = alarm.querySelector('[data-alarm-time]');
       const labelElement = alarm.querySelector('[data-alarm-label]');
       const statusElement = alarm.querySelector('[data-alarm-status]');
@@ -631,7 +631,7 @@ export class VoiceAccessibilityService {
       const status =
         statusElement?.getAttribute('data-active') === 'true' ? 'active' : 'inactive';
 
-      alarmsList += `${index + 1}: ${time}, ${label}, ${status}. `;
+      alarmsList += `${_index + 1}: ${time}, ${label}, ${status}. `;
     });
 
     this.provideFeedback(alarmsList);

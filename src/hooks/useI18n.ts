@@ -29,8 +29,8 @@ export const useI18n = (namespace?: string) => {
       }
 
       return translated;
-    } catch (error) {
-      console.error('Translation error:', error);
+    } catch (_error) {
+      console.error('Translation _error:', _error);
       return typeof optionsOrDefault === 'string' ? optionsOrDefault : key; // Fallback
     }
   };
@@ -179,7 +179,7 @@ export const useI18n = (namespace?: string) => {
     mainContent: t('common:accessibility.mainContent'),
     navigation: t('common:accessibility.navigation'),
     loading: t('common:accessibility.loading'),
-    error: t('common:accessibility.error'),
+    _error: t('common:accessibility._error'),
   });
 
   return {

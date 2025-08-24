@@ -119,7 +119,7 @@ export const _testUtils = {
    */
   createMockWithResponses: <T extends any[]>(responses: T) => {
     const mock = jest.fn();
-    responses.forEach((response, index) => {
+    responses.forEach((response, _index) => {
       mock.mockReturnValueOnce(response);
     });
     return mock;
@@ -149,7 +149,7 @@ export const _testUtils = {
    */
   generateTestData: {
     user: (overrides: any = {}) => ({
-      id: 'test-user-' + Math.random().toString(36).substr(2, 9),
+      id: 'test-_user-' + Math.random().toString(36).substr(2, 9),
       email: 'test@example.com',
       name: 'Test User',
       createdAt: new Date().toISOString(),

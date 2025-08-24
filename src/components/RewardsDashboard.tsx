@@ -314,8 +314,8 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                           </p>
                           <ul className="text-sm text-gray-600 space-y-1">
                             {rewardSystem.aiInsights[0].suggestedActions.map(
-                              (action, index) => (
-                                <li key={index} className="flex items-center gap-2">
+                              (action, _index) => (
+                                <li key={_index} className="flex items-center gap-2">
                                   <CheckCircle2 className="w-3 h-3 text-green-500" />
                                   {action}
                                 </li>
@@ -518,8 +518,8 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                         💡 Suggested actions:
                       </p>
                       <ul className="text-sm text-gray-600 space-y-1">
-                        {insight.suggestedActions.map((action, index) => (
-                          <li key={index} className="flex items-start gap-2">
+                        {insight.suggestedActions.map((action, _index) => (
+                          <li key={_index} className="flex items-start gap-2">
                             <ChevronRight className="w-3 h-3 mt-0.5 text-blue-500 flex-shrink-0" />
                             {action}
                           </li>
@@ -578,9 +578,9 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                   Key Traits
                 </p>
                 <div className="flex flex-wrap gap-1">
-                  {rewardSystem.niche.traits.map((trait, index) => (
+                  {rewardSystem.niche.traits.map((trait, _index) => (
                     <span
-                      key={index}
+                      key={_index}
                       className="inline-block px-2 py-1 bg-white/50 text-xs font-medium text-gray-700 rounded-full"
                     >
                       {trait}

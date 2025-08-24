@@ -16,7 +16,7 @@ export interface CulturalTheme {
     border: string;
     success: string;
     warning: string;
-    error: string;
+    _error: string;
     info: string;
   };
   gradients: {
@@ -64,7 +64,7 @@ export const REGIONAL_THEMES: Record<string, CulturalTheme> = {
       border: '#E5E7EB',
       success: '#10B981',
       warning: '#F59E0B',
-      error: '#EF4444',
+      _error: '#EF4444',
       info: '#3B82F6',
     },
     gradients: {
@@ -109,7 +109,7 @@ export const REGIONAL_THEMES: Record<string, CulturalTheme> = {
       border: '#CBD5E1',
       success: '#059669',
       warning: '#D97706',
-      error: '#DC2626',
+      _error: '#DC2626',
       info: '#1E3A8A',
     },
     gradients: {
@@ -154,7 +154,7 @@ export const REGIONAL_THEMES: Record<string, CulturalTheme> = {
       border: '#FED7AA',
       success: '#16A34A',
       warning: '#EAB308',
-      error: '#DC2626',
+      _error: '#DC2626',
       info: '#06B6D4',
     },
     gradients: {
@@ -200,7 +200,7 @@ export const REGIONAL_THEMES: Record<string, CulturalTheme> = {
       border: '#FED7AA',
       success: '#16A34A',
       warning: '#CA8A04',
-      error: '#DC2626',
+      _error: '#DC2626',
       info: '#0EA5E9',
     },
     gradients: {
@@ -245,7 +245,7 @@ export const REGIONAL_THEMES: Record<string, CulturalTheme> = {
       border: '#DDD6FE',
       success: '#047857',
       warning: '#CA8A04',
-      error: '#B91C1C',
+      _error: '#B91C1C',
       info: '#0369A1',
     },
     gradients: {
@@ -290,7 +290,7 @@ export const REGIONAL_THEMES: Record<string, CulturalTheme> = {
       border: '#FDE68A',
       success: '#0F766E',
       warning: '#D97706',
-      error: '#DC2626',
+      _error: '#DC2626',
       info: '#0369A1',
     },
     gradients: {
@@ -336,7 +336,7 @@ export const REGIONAL_THEMES: Record<string, CulturalTheme> = {
       border: '#E5E7EB',
       success: '#10B981',
       warning: '#F59E0B',
-      error: '#DC2626',
+      _error: '#DC2626',
       info: '#1E40AF',
     },
     gradients: {
@@ -381,7 +381,7 @@ export const REGIONAL_THEMES: Record<string, CulturalTheme> = {
       border: '#FECACA',
       success: '#16A34A',
       warning: '#D97706',
-      error: '#DC2626',
+      _error: '#DC2626',
       info: '#2563EB',
     },
     gradients: {
@@ -427,7 +427,7 @@ export const REGIONAL_THEMES: Record<string, CulturalTheme> = {
       border: '#FED7AA',
       success: '#059669',
       warning: '#F59E0B',
-      error: '#DC2626',
+      _error: '#DC2626',
       info: '#0EA5E9',
     },
     gradients: {
@@ -472,7 +472,7 @@ export const REGIONAL_THEMES: Record<string, CulturalTheme> = {
       border: '#BBF7D0',
       success: '#16A34A',
       warning: '#F59E0B',
-      error: '#DC2626',
+      _error: '#DC2626',
       info: '#0EA5E9',
     },
     gradients: {
@@ -517,7 +517,7 @@ export const REGIONAL_THEMES: Record<string, CulturalTheme> = {
       border: '#FED7AA',
       success: '#10B981',
       warning: '#F59E0B',
-      error: '#EF4444',
+      _error: '#EF4444',
       info: '#06B6D4',
     },
     gradients: {

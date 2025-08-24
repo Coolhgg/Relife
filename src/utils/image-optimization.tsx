@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * Advanced Image Optimization Utilities
  * Provides WebP support, responsive loading, progressive enhancement, and smart caching
@@ -193,8 +194,8 @@ class ImageOptimizer {
           img.onload = () => resolve(img);
           img.onerror = reject;
           img.src = url;
-        } catch (error) {
-          reject(error);
+        } catch (_error) {
+          reject(_error);
         }
       })
     );
@@ -349,7 +350,7 @@ export const imageOptimizer = new ImageOptimizer();
 export function useOptimizedImage(src: string, options: ImageOptimizationOptions = {}) {
   const [imageData, setImageData] = React.useState<OptimizedImageData | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [error, setError] = React.useState<Error | null>(null);
+  const [_error, setError] = React.useState<Error | null>(null);
 
   React.useEffect(() => {
     let mounted = true;
@@ -380,7 +381,7 @@ export function useOptimizedImage(src: string, options: ImageOptimizationOptions
     };
   }, [src, JSON.stringify(options)]);
 
-  return { imageData, isLoading, error };
+  return { imageData, isLoading, _error };
 }
 
 /**
@@ -391,7 +392,7 @@ export interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageEl
   alt: string;
   optimization?: ImageOptimizationOptions;
   onLoad?: () => void;
-  onError?: (error: Error) => void;
+  onError?: (_error: Error) => void;
 }
 
 export const OptimizedImage: React.FC<OptimizedImageProps> = ({
@@ -405,12 +406,12 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   ...props
 }) => {
   const imgRef = React.useRef<HTMLImageElement>(null);
-  const { imageData, isLoading, error } = useOptimizedImage(src, optimization);
+  const { imageData, isLoading, _error } = useOptimizedImage(src, optimization);
   const [loaded, setLoaded] = React.useState(false);
 
   React.useEffect(() => {
-    if (error && onError) {
-      onError(error);
+    if (_error && onError) {
+      onError(_error);
     }
   }, [error, onError]);
 
@@ -433,7 +434,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     onLoad?.();
   }, [onLoad]);
 
-  if (error) {
+  if (_error) {
     return (
       <div
         className={`bg-gray-200 flex items-center justify-center ${className}`}

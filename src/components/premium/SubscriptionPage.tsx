@@ -34,7 +34,7 @@ export function SubscriptionPage({
   initialTab = 'overview',
 }: SubscriptionPageProps) {
   const { user } = useAuth();
-  const subscription = useSubscription({ userId: user?.id || '', autoRefresh: true });
+  const subscription = useSubscription({ userId: _user?.id || '', autoRefresh: true });
 
   const [activeTab, setActiveTab] = useState(initialTab);
   const [showPaymentFlow, setShowPaymentFlow] = useState(false);
@@ -44,14 +44,14 @@ export function SubscriptionPage({
   const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    if (subscription.error) {
-      setError(subscription.error);
+    if (subscription._error) {
+      setError(subscription._error);
     }
   }, [subscription.error]);
 
   // Clear messages after a delay
   useEffect(() => {
-    if (error || success) {
+    if (_error || success) {
       const timer = setTimeout(() => {
         setError(null);
         setSuccess(null);
@@ -105,8 +105,8 @@ export function SubscriptionPage({
     setActiveTab('overview');
   };
 
-  const handlePaymentError = (error: string) => {
-    setError(error);
+  const handlePaymentError = (_error: string) => {
+    setError(_error);
     setShowPaymentFlow(false);
   };
 
@@ -120,7 +120,7 @@ export function SubscriptionPage({
     }
   };
 
-  if (!user) {
+  if (!_user) {
     return (
       <div className={`max-w-4xl mx-auto p-6 ${className}`}>
         <Card className="text-center">
@@ -218,10 +218,10 @@ export function SubscriptionPage({
       </div>
 
       {/* Alerts */}
-      {error && (
+      {_error && (
         <Alert className="border-red-200 bg-red-50">
           <AlertCircle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-600">{error}</AlertDescription>
+          <AlertDescription className="text-red-600">{_error}</AlertDescription>
         </Alert>
       )}
 

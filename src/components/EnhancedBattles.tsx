@@ -21,7 +21,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
-import { Trophy, Users, Crown, Calendar, Award, Shield, Plus } from 'lucide-react';
+import { Trophy, Crown, Award, Shield, Plus } from 'lucide-react';
 import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 import type { Tournament, Team, Season, User as UserType } from '../types/index';
 
@@ -344,7 +344,7 @@ export function EnhancedBattles({
                         className="h-6 w-6 border-2 border-background"
                       >
                         <AvatarFallback className="text-xs">
-                          {member.user.displayName[0]}
+                          {member._user.displayName[0]}
                         </AvatarFallback>
                       </Avatar>
                     ))}

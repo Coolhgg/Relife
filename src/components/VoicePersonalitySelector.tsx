@@ -146,7 +146,7 @@ const getPersonalityIcon = (mood: VoiceMood) => {
 export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> = ({
   selectedMood,
   onMoodChange,
-  user,
+  _user,
   showPreview = true,
 }) => {
   const [hasPreviewAccess, setHasPreviewAccess] = useState(false);
@@ -159,13 +159,13 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
 
   const checkPremiumAccess = async () => {
     const access = await SubscriptionService.hasFeatureAccess(
-      user.id,
+      _user.id,
       'premiumPersonalities'
     );
     setHasPremiumPersonalities(access);
 
     const previewAccess = await SubscriptionService.hasFeatureAccess(
-      user.id,
+      _user.id,
       'elevenlabsVoices'
     );
     setHasPreviewAccess(previewAccess);
@@ -348,7 +348,7 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
         ) : (
           <PremiumGate
             feature="premiumPersonalities"
-            userId={user.id}
+            userId={_user.id}
             title="🎭 Premium Voice Personalities"
             description="Unlock Demon Lord, AI Bot, Comedian, and Philosopher personalities with Pro subscription."
             mode="overlay"

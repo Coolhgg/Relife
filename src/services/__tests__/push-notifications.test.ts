@@ -422,7 +422,7 @@ describe('PushNotificationService', () => {
     });
   });
 
-  describe('error handling', () => {
+  describe('_error handling', () => {
     it('should handle permission request errors gracefully', async () => {
       mockNotification.requestPermission.mockRejectedValue(
         new Error('User denied permission')
@@ -437,13 +437,13 @@ describe('PushNotificationService', () => {
     it('should handle notification sending errors gracefully', async () => {
       await PushNotificationService.initialize();
 
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
 
-      // Mock sendPushToServer to throw an error
+      // Mock sendPushToServer to throw an _error
       const originalMethod = (PushNotificationService as any).sendPushToServer;
       (PushNotificationService as any).sendPushToServer = jest
         .fn()
-        .mockRejectedValue(new Error('Network error'));
+        .mockRejectedValue(new Error('Network _error'));
 
       await PushNotificationService.sendDailyMotivation('Test message');
 
@@ -460,9 +460,9 @@ describe('PushNotificationService', () => {
     it('should handle settings update errors gracefully', async () => {
       await PushNotificationService.initialize();
 
-      (Preferences.set as jest.Mock).mockRejectedValue(new Error('Storage error'));
+      (Preferences.set as jest.Mock).mockRejectedValue(new Error('Storage _error'));
 
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
 
       await PushNotificationService.updateSettings({ enabled: false });
 
@@ -511,8 +511,8 @@ describe('PushNotificationService - Integration Tests', () => {
     eventListeners = {};
 
     // Mock addEventListener and dispatchEvent
-    jest.spyOn(window, 'addEventListener').mockImplementation((event, listener) => {
-      if (!eventListeners[event]) {
+    jest.spyOn(window, 'addEventListener').mockImplementation((_event, listener) => {
+      if (!eventListeners[_event]) {
         eventListeners[event] = [];
       }
       eventListeners[event].push(listener as EventListener);
@@ -520,7 +520,7 @@ describe('PushNotificationService - Integration Tests', () => {
 
     jest.spyOn(window, 'dispatchEvent').mockImplementation(event => {
       const listeners = eventListeners[event.type] || [];
-      listeners.forEach(listener => listener(event));
+      listeners.forEach(listener => listener(_event));
       return true;
     });
   });

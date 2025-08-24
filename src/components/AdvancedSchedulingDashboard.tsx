@@ -1,6 +1,6 @@
 // Advanced Scheduling Dashboard - Simplified Version
 import React, { useState } from 'react';
-import { Calendar, Clock, Settings, TrendingUp } from 'lucide-react';
+import { Calendar, Clock, Settings } from 'lucide-react';
 import type { Alarm } from '../types';
 
 interface AdvancedSchedulingDashboardProps {
@@ -19,7 +19,7 @@ const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = 
   const [activeTab, setActiveTab] = useState('overview');
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: TrendingUp },
+    { id: 'overview', label: 'Overview', icon: Calendar },
     { id: 'calendar', label: 'Calendar', icon: Calendar },
     { id: 'smart-alarms', label: 'Smart Alarms', icon: Clock },
     { id: 'settings', label: 'Settings', icon: Settings },

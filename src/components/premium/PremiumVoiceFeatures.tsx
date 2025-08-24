@@ -178,11 +178,14 @@ function AIWakeUpCoach() {
                   type="checkbox"
                   id={goal}
                   checked={coachingGoals.includes(goal)}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { // auto: implicit any
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                    // auto: implicit any
                     if (e.target.checked) {
                       setCoachingGoals((prev: any) => [...prev, goal]);
                     } else {
-                      setCoachingGoals((prev: any) => prev.filter((g: any) => g
+                      setCoachingGoals((prev: any) =>
+                        prev.filter((g: any) => g !== goal)
+                      );
                     }
                   }}
                 />
@@ -261,9 +264,9 @@ function VoiceCommandRecognition() {
         <div>
           <Label>Custom Commands</Label>
           <div className="space-y-2 mt-2 max-h-40 overflow-y-auto">
-            {commands.map((command, index) => (
+            {commands.map((command, _index) => (
               <div
-                key={index}
+                key={_index}
                 className="flex items-center justify-between p-3 border rounded-lg"
               >
                 <div>
@@ -283,14 +286,16 @@ function VoiceCommandRecognition() {
           <Input
             placeholder="Say this phrase..."
             value={newCommand.phrase}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCommand((prev: any
-) => ({ ...prev, phrase: e.target.value }))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setNewCommand((prev: any) => ({ ...prev, phrase: e.target.value }))
+            }
           />
           <Input
             placeholder="To do this action..."
             value={newCommand.action}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewCommand((prev: any
-) => ({ ...prev, action: e.target.value }))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setNewCommand((prev: any) => ({ ...prev, action: e.target.value }))
+            }
           />
           <Button size="sm" className="w-full">
             Add Command
@@ -381,9 +386,9 @@ function PersonalizedAudioMessages() {
               </p>
             ) : (
               <div className="space-y-1 max-h-32 overflow-y-auto">
-                {customMessages.map((message, index) => (
+                {customMessages.map((message, _index) => (
                   <div
-                    key={index}
+                    key={_index}
                     className="flex items-center justify-between p-2 border rounded"
                   >
                     <span className="text-sm">{message}</span>
@@ -399,7 +404,9 @@ function PersonalizedAudioMessages() {
             <Input
               placeholder="Add a personal message..."
               value={newMessage}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setNewMessage(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setNewMessage(e.target.value)
+              }
             />
             <Button
               size="sm"
@@ -626,7 +633,7 @@ function VoiceProfileTraining() {
 export function PremiumVoiceFeatures({ className = '' }: PremiumVoiceFeaturesProps) {
   const { user } = useAuth();
 
-  if (!user) {
+  if (!_user) {
     return (
       <div className={`text-center py-8 ${className}`}>
         <p className="text-gray-600">Sign in to access premium voice features</p>
@@ -635,7 +642,7 @@ export function PremiumVoiceFeatures({ className = '' }: PremiumVoiceFeaturesPro
   }
 
   return (
-    <FeatureGate feature="voice_features" userId={user.id} showUpgradePrompt>
+    <FeatureGate feature="voice_features" userId={_user.id} showUpgradePrompt>
       <div className={`space-y-6 ${className}`}>
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold mb-2">Premium Voice & AI Features</h2>

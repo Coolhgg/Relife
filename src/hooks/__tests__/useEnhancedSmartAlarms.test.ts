@@ -136,7 +136,7 @@ describe('useEnhancedSmartAlarms', () => {
       const optimization = await result.current.optimizeAlarm({
         id: 'alarm-1',
         time: '07:00',
-        userId: 'user-123',
+        userId: '_user-123',
       });
 
       expect(optimization).toEqual({
@@ -150,7 +150,7 @@ describe('useEnhancedSmartAlarms', () => {
     expect(mockSmartAlarmScheduler.optimizeAlarmTiming).toHaveBeenCalledWith({
       id: 'alarm-1',
       time: '07:00',
-      userId: 'user-123',
+      userId: '_user-123',
     });
   });
 
@@ -165,7 +165,7 @@ describe('useEnhancedSmartAlarms', () => {
       const prediction = await result.current.predictOptimalWakeTime({
         currentBedtime: '23:00',
         desiredWakeTime: '07:00',
-        userId: 'user-123',
+        userId: '_user-123',
       });
 
       expect(prediction).toEqual({
@@ -178,11 +178,11 @@ describe('useEnhancedSmartAlarms', () => {
     expect(mockSmartAlarmScheduler.predictOptimalWakeTime).toHaveBeenCalledWith({
       currentBedtime: '23:00',
       desiredWakeTime: '07:00',
-      userId: 'user-123',
+      userId: '_user-123',
     });
   });
 
-  it('should analyze user behavior patterns', async () => {
+  it('should analyze _user behavior patterns', async () => {
     const { result } = renderHook(() => useEnhancedSmartAlarms());
 
     await act(async () => {
@@ -190,7 +190,7 @@ describe('useEnhancedSmartAlarms', () => {
     });
 
     await act(async () => {
-      await result.current.analyzeUserBehavior('user-123');
+      await result.current.analyzeUserBehavior('_user-123');
     });
 
     expect(result.current.behaviorAnalysis).toEqual({
@@ -201,7 +201,7 @@ describe('useEnhancedSmartAlarms', () => {
     });
 
     expect(mockSmartAlarmScheduler.analyzeUserBehavior).toHaveBeenCalledWith(
-      'user-123'
+      '_user-123'
     );
   });
 
@@ -228,7 +228,7 @@ describe('useEnhancedSmartAlarms', () => {
     });
 
     await act(async () => {
-      await result.current.generateRecommendations('user-123');
+      await result.current.generateRecommendations('_user-123');
     });
 
     expect(result.current.recommendations).toHaveLength(2);
@@ -239,11 +239,11 @@ describe('useEnhancedSmartAlarms', () => {
     });
 
     expect(mockSmartAlarmScheduler.generateSmartRecommendations).toHaveBeenCalledWith(
-      'user-123'
+      '_user-123'
     );
   });
 
-  it('should handle user feedback and adapt', async () => {
+  it('should handle _user feedback and adapt', async () => {
     const { result } = renderHook(() => useEnhancedSmartAlarms());
 
     await act(async () => {
@@ -295,7 +295,7 @@ describe('useEnhancedSmartAlarms', () => {
     });
 
     await act(async () => {
-      const preferences = await result.current.predictWakePreferences('user-123');
+      const preferences = await result.current.predictWakePreferences('_user-123');
 
       expect(preferences).toEqual({
         optimalTimeRange: { start: '06:30', end: '07:00' },
@@ -305,7 +305,7 @@ describe('useEnhancedSmartAlarms', () => {
       });
     });
 
-    expect(mockAIOptimizer.predictWakePreferences).toHaveBeenCalledWith('user-123');
+    expect(mockAIOptimizer.predictWakePreferences).toHaveBeenCalledWith('_user-123');
   });
 
   it('should track wake events for learning', async () => {
@@ -348,7 +348,7 @@ describe('useEnhancedSmartAlarms', () => {
     });
 
     await act(async () => {
-      await result.current.analyzeSleepPattern('user-123', 'week');
+      await result.current.analyzeSleepPattern('_user-123', 'week');
     });
 
     expect(result.current.sleepPattern).toEqual({
@@ -360,7 +360,7 @@ describe('useEnhancedSmartAlarms', () => {
     });
 
     expect(mockBehaviorAnalyzer.analyzeSleepPattern).toHaveBeenCalledWith(
-      'user-123',
+      '_user-123',
       'week'
     );
   });
@@ -382,18 +382,20 @@ describe('useEnhancedSmartAlarms', () => {
     });
 
     await act(async () => {
-      const changes = await result.current.detectBehaviorChanges('user-123');
+      const changes = await result.current.detectBehaviorChanges('_user-123');
 
       expect(changes.significantChanges).toBe(true);
       expect(changes.changes).toHaveLength(2);
       expect(changes.recommendedActions).toContain('adjust_alarm_timing');
     });
 
-    expect(mockBehaviorAnalyzer.detectBehaviorChanges).toHaveBeenCalledWith('user-123');
+    expect(mockBehaviorAnalyzer.detectBehaviorChanges).toHaveBeenCalledWith(
+      '_user-123'
+    );
   });
 
   it('should handle errors gracefully', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
     mockSmartAlarmScheduler.optimizeAlarmTiming.mockRejectedValue(
       new Error('Optimization failed')
     );
@@ -408,13 +410,13 @@ describe('useEnhancedSmartAlarms', () => {
       const optimization = await result.current.optimizeAlarm({
         id: 'alarm-1',
         time: '07:00',
-        userId: 'user-123',
+        userId: '_user-123',
       });
 
       expect(optimization).toBeNull();
     });
 
-    expect(result.current.error).toBe('Optimization failed');
+    expect(result.current._error).toBe('Optimization failed');
     expect(consoleSpy).toHaveBeenCalledWith(
       'Smart alarm optimization failed:',
       expect.any(Error)
@@ -431,10 +433,10 @@ describe('useEnhancedSmartAlarms', () => {
     });
 
     await act(async () => {
-      await result.current.resetLearningData('user-123');
+      await result.current.resetLearningData('_user-123');
     });
 
-    expect(mockSmartAlarmScheduler.resetLearningData).toHaveBeenCalledWith('user-123');
+    expect(mockSmartAlarmScheduler.resetLearningData).toHaveBeenCalledWith('_user-123');
     expect(result.current.behaviorAnalysis).toBeNull();
     expect(result.current.recommendations).toEqual([]);
     expect(result.current.wakeHistory).toEqual([]);

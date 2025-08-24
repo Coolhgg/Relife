@@ -195,8 +195,9 @@ const PremiumThemeShowcase: React.FC = () => {
               type="text"
               placeholder="Search themes..."
               value={searchTerm}
-              
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSearchTerm(e.target.value)
+              }
               className="search-input"
             />
             <span className="search-icon">🔍</span>
@@ -588,7 +589,7 @@ const PremiumThemeShowcase: React.FC = () => {
           border-radius: 6px;
           font-size: 0.8rem;
           font-weight: 600;
-          z-index: 2;
+          z-_index: 2;
         }
 
         .theme-preview {

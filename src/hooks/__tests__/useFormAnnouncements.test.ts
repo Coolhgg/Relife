@@ -33,7 +33,7 @@ const mockT = jest.fn((key, options) => {
     'form.validation.match': 'Passwords do not match',
     'form.error.summary': '{{count}} validation errors found',
     'form.success.submit': 'Form submitted successfully',
-    'form.error.submit': 'Form submission failed: {{error}}',
+    'form.error.submit': 'Form submission failed: { {_error }}',
     'form.field.changed': '{{field}} field updated',
     'form.progress.step': 'Step {{current}} of {{total}}: {{stepName}}',
     'form.autosave.saved': 'Changes saved automatically',
@@ -68,7 +68,7 @@ describe('useFormAnnouncements', () => {
     expect(typeof result.current.announceFieldChange).toBe('function');
   });
 
-  it('should announce single validation error', async () => {
+  it('should announce single validation _error', async () => {
     const { result } = renderHook(() => useFormAnnouncements());
 
     await act(async () => {
@@ -83,7 +83,7 @@ describe('useFormAnnouncements', () => {
     );
   });
 
-  it('should announce email validation error', async () => {
+  it('should announce email validation _error', async () => {
     const { result } = renderHook(() => useFormAnnouncements());
 
     await act(async () => {
@@ -96,7 +96,7 @@ describe('useFormAnnouncements', () => {
     );
   });
 
-  it('should announce password validation error with parameters', async () => {
+  it('should announce password validation _error with parameters', async () => {
     const { result } = renderHook(() => useFormAnnouncements());
 
     await act(async () => {
@@ -126,7 +126,7 @@ describe('useFormAnnouncements', () => {
       await result.current.announceValidationErrors(errors);
     });
 
-    expect(mockT).toHaveBeenCalledWith('form.error.summary', {
+    expect(mockT).toHaveBeenCalledWith('form._error.summary', {
       count: 3,
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
@@ -152,7 +152,7 @@ describe('useFormAnnouncements', () => {
     );
   });
 
-  it('should announce form submission error', async () => {
+  it('should announce form submission _error', async () => {
     const { result } = renderHook(() => useFormAnnouncements());
 
     await act(async () => {
@@ -160,7 +160,7 @@ describe('useFormAnnouncements', () => {
     });
 
     expect(mockT).toHaveBeenCalledWith('form.error.submit', {
-      error: 'Network connection failed',
+      _error: 'Network connection failed',
     });
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalledWith(
       'Form submission failed: Network connection failed'
@@ -303,7 +303,7 @@ describe('useFormAnnouncements', () => {
   });
 
   it('should handle errors gracefully', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
     mockAnnouncementService.announceAssertive.mockRejectedValue(
       new Error('Announcement failed')
     );
@@ -315,7 +315,7 @@ describe('useFormAnnouncements', () => {
     });
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      'Failed to announce form validation error:',
+      'Failed to announce form validation _error:',
       expect.any(Error)
     );
 
@@ -342,7 +342,7 @@ describe('useFormAnnouncements', () => {
 
     // Should batch announcements efficiently
     expect(mockAnnouncementService.announceAssertive).toHaveBeenCalled();
-    expect(mockT).toHaveBeenCalledWith('form.error.summary', { count: 2 });
+    expect(mockT).toHaveBeenCalledWith('form._error.summary', { count: 2 });
   });
 
   it('should handle dynamic form validation messages', async () => {
@@ -364,7 +364,7 @@ describe('useFormAnnouncements', () => {
     );
   });
 
-  it('should support conditional announcement based on user preferences', async () => {
+  it('should support conditional announcement based on _user preferences', async () => {
     const { result } = renderHook(() =>
       useFormAnnouncements({
         verbosity: 'minimal', // Only critical announcements

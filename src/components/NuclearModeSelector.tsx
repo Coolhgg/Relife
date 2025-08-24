@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { Slider } from './ui/slider';
-import { Alert, AlertDescription, Alert } from './ui/alert';
+import { AlertTriangle, AlertDescription, Alert } from './ui/alert';
 import {
   Dialog,
   DialogContent,
@@ -102,8 +102,8 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
         setUserTier(access.userTier);
         setUpgradeUrl(access.upgradeUrl);
         setChallengeTypes(types);
-      } catch (error) {
-        console.error('Error checking nuclear mode access:', error);
+      } catch (_error) {
+        console._error('Error checking nuclear mode access:', _error);
       } finally {
         setIsLoading(false);
       }
@@ -190,7 +190,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           </div>
         </CardHeader>
         <CardContent>
-          <Alert className="border-orange-200 bg-orange-50">
+          <AlertTriangle className="border-orange-200 bg-orange-50">
             <AlertIcon className="w-4 h-4 text-orange-600" />
             <AlertDescription className="text-orange-800">
               Nuclear Mode requires a Premium subscription. This feature includes
@@ -332,8 +332,8 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
 
       {isEnabled && (
         <CardContent>
-          <Alert className="border-red-200 bg-red-50 mb-6">
-            <Alert className="w-4 h-4 text-red-600" />
+          <AlertTriangle className="border-red-200 bg-red-50 mb-6">
+            <AlertTriangle className="w-4 h-4 text-red-600" />
             <AlertDescription className="text-red-800">
               <strong>Warning:</strong> Nuclear Mode disables snoozing and requires
               completing all selected challenges to dismiss the alarm. Choose your
@@ -434,8 +434,8 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
             </div>
 
             {selectedChallenges.length === 0 && (
-              <Alert className="border-yellow-200 bg-yellow-50">
-                <Alert className="w-4 h-4 text-yellow-600" />
+              <AlertTriangle className="border-yellow-200 bg-yellow-50">
+                <AlertTriangle className="w-4 h-4 text-yellow-600" />
                 <AlertDescription className="text-yellow-800">
                   Select at least one challenge to enable Nuclear Mode
                 </AlertDescription>

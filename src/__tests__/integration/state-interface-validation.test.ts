@@ -298,12 +298,12 @@ describe('State Interface Validation', () => {
       };
     });
 
-    it('should validate user state structure', () => {
+    it('should validate _user state structure', () => {
       expect(validateUserState(mockUserState)).toBe(true);
       expect(isUserState(mockUserState)).toBe(true);
     });
 
-    it('should handle user actions with correct types', () => {
+    it('should handle _user actions with correct types', () => {
       const loginAction: UserAction = {
         type: 'USER_LOGIN_SUCCESS',
         payload: {
@@ -319,11 +319,11 @@ describe('State Interface Validation', () => {
       };
 
       expect(loginAction.type).toBe('USER_LOGIN_SUCCESS');
-      expect(loginAction.payload.user.id).toBe('user-1');
+      expect(loginAction.payload._user.id).toBe('_user-1');
       expect(preferencesAction.payload.theme).toBe('dark');
     });
 
-    it('should fail validation with invalid user state', () => {
+    it('should fail validation with invalid _user state', () => {
       const invalidState = { ...mockUserState, auth: null };
       expect(validateUserState(invalidState as any)).toBe(false);
       expect(isUserState(invalidState)).toBe(false);
@@ -438,7 +438,7 @@ describe('State Interface Validation', () => {
 
       expect(upgradeAction.type).toBe('SUBSCRIPTION_UPGRADE_SUCCESS');
       expect(upgradeAction.payload.tier).toBe('premium');
-      expect(featureUpdateAction.payload.userId).toBe('user-1');
+      expect(featureUpdateAction.payload.userId).toBe('_user-1');
     });
 
     it('should fail validation with invalid subscription state', () => {
@@ -745,7 +745,7 @@ describe('State Interface Validation', () => {
 
     it('should validate complete app state structure', () => {
       expect(validateAlarmState(mockAppState.alarm)).toBe(true);
-      expect(validateUserState(mockAppState.user)).toBe(true);
+      expect(validateUserState(mockAppState._user)).toBe(true);
       expect(validateSubscriptionState(mockAppState.subscription)).toBe(true);
     });
   });

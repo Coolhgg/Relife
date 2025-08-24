@@ -3,7 +3,10 @@
  * Comprehensive typing for Supabase real-time subscriptions, database changes, and presence
  */
 
-import type { RealtimeChannel, RealtimeChannelSendResponse } from '@supabase/supabase-js';
+import type {
+  RealtimeChannel,
+  RealtimeChannelSendResponse,
+} from '@supabase/supabase-js';
 
 // ===============================
 // DATABASE CHANGE EVENTS
@@ -105,7 +108,7 @@ export interface AnalyticsEventChangePayload extends DatabaseChangePayload {
 }
 
 // Union type for all database changes
-export type DatabaseChange = 
+export type DatabaseChange =
   | AlarmChangePayload
   | UserSettingsChangePayload
   | UserPresenceChangePayload
@@ -119,9 +122,9 @@ export type DatabaseChange =
 export interface RealtimeChannelConfig {
   channelName: string;
   topic: string;
-  config?: {
-    broadcast?: { self?: boolean; ack?: boolean; };
-    presence?: { key?: string; };
+  _config?: {
+    broadcast?: { self?: boolean; ack?: boolean };
+    presence?: { key?: string };
     private?: boolean;
   };
   filters?: Array<{
@@ -150,10 +153,10 @@ export interface RealtimeSubscription {
 }
 
 export interface RealtimeChannelManager {
-  createChannel(config: RealtimeChannelConfig): RealtimeChannel;
+  createChannel(_config: RealtimeChannelConfig): RealtimeChannel;
   subscribeToTable<T>(
-    table: string, 
-    eventTypes: DatabaseEventType[], 
+    table: string,
+    eventTypes: DatabaseEventType[],
     handler: (payload: DatabaseChangePayload<T>) => void,
     filter?: string
   ): string;
@@ -208,7 +211,9 @@ export interface PresenceInfo {
 }
 
 export interface PresenceManager {
-  track(presenceInfo: Omit<PresenceInfo, 'joinedAt' | 'lastActivity'>): Promise<boolean>;
+  track(
+    presenceInfo: Omit<PresenceInfo, 'joinedAt' | 'lastActivity'>
+  ): Promise<boolean>;
   untrack(): Promise<boolean>;
   getPresenceState(): PresenceState;
   getOnlineUsers(): PresenceInfo[];
@@ -235,7 +240,7 @@ export interface BroadcastMessage<T = any> {
   expiresAt?: Date;
 }
 
-export type BroadcastMessageType = 
+export type BroadcastMessageType =
   | 'user_activity_update'
   | 'alarm_state_sync'
   | 'emergency_notification'
@@ -246,7 +251,10 @@ export type BroadcastMessageType =
   | 'custom_event';
 
 export interface BroadcastManager {
-  send<T>(message: BroadcastMessage<T>, channelName: string): Promise<RealtimeChannelSendResponse>;
+  send<T>(
+    message: BroadcastMessage<T>,
+    channelName: string
+  ): Promise<RealtimeChannelSendResponse>;
   subscribe<T>(
     channelName: string,
     messageType: BroadcastMessageType,
@@ -267,7 +275,7 @@ export interface BroadcastDeliveryStatus {
     userId: string;
     status: 'pending' | 'delivered' | 'acknowledged' | 'failed';
     timestamp?: Date;
-    error?: string;
+    _error?: string;
   }>;
 }
 
@@ -278,7 +286,10 @@ export interface BroadcastDeliveryStatus {
 export interface SyncCoordinator {
   requestSync(userId: string, itemTypes: string[]): Promise<string>;
   coordinateMultiDeviceSync(userId: string): Promise<SyncCoordinationResult>;
-  handleSyncConflict(conflictId: string, resolution: SyncConflictResolution): Promise<boolean>;
+  handleSyncConflict(
+    conflictId: string,
+    resolution: SyncConflictResolution
+  ): Promise<boolean>;
   getSyncStatus(syncId: string): Promise<SyncStatus>;
   onSyncRequired(handler: (userId: string, reason: SyncTriggerReason) => void): void;
   onConflictDetected(handler: (conflict: SyncConflict) => void): void;
@@ -317,7 +328,7 @@ export interface SyncConflictResolution {
   userChoice?: 'local' | 'remote' | 'merge';
 }
 
-export type SyncTriggerReason = 
+export type SyncTriggerReason =
   | 'user_login'
   | 'data_change_detected'
   | 'periodic_sync'
@@ -338,18 +349,16 @@ export interface SyncStatus {
     failedItems: number;
     percentage: number;
   };
-  itemDetails: Record<string, {
-    total: number;
-    processed: number;
-    failed: number;
-    conflicts: number;
-  }>;
-  errors: Array<{
-    itemType: string;
-    itemId: string;
-    error: string;
-    timestamp: Date;
-  }>;
+  itemDetails: Record<
+    string,
+    {
+      total: number;
+      processed: number;
+      failed: number;
+      conflicts: number;
+    }
+  >;
+  errors: Array<{ itemType: string; itemId: string; _error: string; timestamp: Date }>;
 }
 
 // ===============================
@@ -406,7 +415,13 @@ export interface RealtimeConnectionMetrics {
 // ===============================
 
 export interface RealtimeError {
-  type: 'connection' | 'subscription' | 'authentication' | 'rate_limit' | 'protocol' | 'unknown';
+  type:
+    | 'connection'
+    | 'subscription'
+    | 'authentication'
+    | 'rate_limit'
+    | 'protocol'
+    | 'unknown';
   code: string;
   message: string;
   channelName?: string;
@@ -424,8 +439,17 @@ export interface RealtimeRecoveryStrategy {
   backoffMultiplier: number;
   jitter: boolean;
   recoveryActions: Array<{
-    trigger: 'connection_lost' | 'subscription_failed' | 'rate_limited' | 'authentication_expired';
-    action: 'reconnect' | 'resubscribe' | 'wait_and_retry' | 'escalate_to_user' | 'fallback_to_polling';
+    trigger:
+      | 'connection_lost'
+      | 'subscription_failed'
+      | 'rate_limited'
+      | 'authentication_expired';
+    action:
+      | 'reconnect'
+      | 'resubscribe'
+      | 'wait_and_retry'
+      | 'escalate_to_user'
+      | 'fallback_to_polling';
     delay?: number;
     maxAttempts?: number;
   }>;

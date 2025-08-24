@@ -176,10 +176,10 @@ export class PerformanceBudgetManager {
   async initialize(): Promise<void> {
     try {
       // Wait for device capabilities to be ready
-      const config = await deviceCapabilities.initialize();
+      const _config = await deviceCapabilities.initialize();
 
       // Set up device-specific adaptations
-      this.adaptations = this.generateDeviceAdaptations(config.tier);
+      this.adaptations = this.generateDeviceAdaptations(_config.tier);
 
       // Initialize frame rate tracking
       this.frameRateTracker = new FrameRateTracker();
@@ -192,9 +192,9 @@ export class PerformanceBudgetManager {
       // Start monitoring
       this.startMonitoring();
 
-      console.log('Performance Budget Manager initialized for', config.tier, 'device');
-    } catch (error) {
-      console.error('Failed to initialize Performance Budget Manager:', error);
+      console.log('Performance Budget Manager initialized for', _config.tier, 'device');
+    } catch (_error) {
+      console._error('Failed to initialize Performance Budget Manager:', _error);
     }
   }
 
@@ -276,8 +276,8 @@ export class PerformanceBudgetManager {
           // Entry type not supported in this browser
         }
       }
-    } catch (error) {
-      console.warn('PerformanceObserver not supported:', error);
+    } catch (_error) {
+      console.warn('PerformanceObserver not supported:', _error);
     }
   }
 
@@ -820,8 +820,8 @@ export class PerformanceBudgetManager {
       try {
         await alert.autoFix();
         this.resolveAlert(alertId);
-      } catch (error) {
-        console.error('Auto-fix failed:', error);
+      } catch (_error) {
+        console._error('Auto-fix failed:', _error);
       }
     }
   }
@@ -830,9 +830,9 @@ export class PerformanceBudgetManager {
   onSnapshot(callback: (snapshot: PerformanceSnapshot) => void): () => void {
     this.listeners.push(callback);
     return () => {
-      const index = this.listeners.indexOf(callback);
-      if (index > -1) {
-        this.listeners.splice(index, 1);
+      const _index = this.listeners.indexOf(callback);
+      if (_index > -1) {
+        this.listeners.splice(_index, 1);
       }
     };
   }
@@ -840,9 +840,9 @@ export class PerformanceBudgetManager {
   onAlert(callback: (alert: PerformanceAlert) => void): () => void {
     this.alertListeners.push(callback);
     return () => {
-      const index = this.alertListeners.indexOf(callback);
-      if (index > -1) {
-        this.alertListeners.splice(index, 1);
+      const _index = this.alertListeners.indexOf(callback);
+      if (_index > -1) {
+        this.alertListeners.splice(_index, 1);
       }
     };
   }
@@ -851,8 +851,8 @@ export class PerformanceBudgetManager {
     this.listeners.forEach(callback => {
       try {
         callback(snapshot);
-      } catch (error) {
-        console.error('Error in performance snapshot listener:', error);
+      } catch (_error) {
+        console._error('Error in performance snapshot listener:', _error);
       }
     });
   }
@@ -861,8 +861,8 @@ export class PerformanceBudgetManager {
     this.alertListeners.forEach(callback => {
       try {
         callback(alert);
-      } catch (error) {
-        console.error('Error in performance alert listener:', error);
+      } catch (_error) {
+        console._error('Error in performance alert listener:', _error);
       }
     });
   }

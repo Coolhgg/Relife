@@ -85,8 +85,8 @@ function SleepQualityAnalysis({ data }: { data: AnalyticsData['sleepQuality'] })
 
         <div className="space-y-3">
           <h4 className="font-semibold">Contributing Factors</h4>
-          {data.factors.map((factor, index) => (
-            <div key={index} className="flex items-center justify-between">
+          {data.factors.map((factor, _index) => (
+            <div key={_index} className="flex items-center justify-between">
               <span className="text-sm">{factor.name}</span>
               <div className="flex items-center gap-2">
                 <Progress value={Math.abs(factor.impact)} className="w-20 h-2" />
@@ -208,9 +208,9 @@ function HabitTracking({ data }: { data: AnalyticsData['habits'] }) {
 
         <div className="space-y-3">
           <h4 className="font-semibold">Streak Tracking</h4>
-          {data.streaks.map((streak, index) => (
+          {data.streaks.map((streak, _index) => (
             <div
-              key={index}
+              key={_index}
               className="flex items-center justify-between p-3 border rounded-lg"
             >
               <div>
@@ -273,9 +273,9 @@ function AIInsights({ data }: { data: AnalyticsData['insights'] }) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {data.map((insight, index) => (
+        {data.map((insight, _index) => (
           <div
-            key={index}
+            key={_index}
             className={`p-4 rounded-lg border ${getInsightColor(insight.type)}`}
           >
             <div className="flex items-start gap-3">
@@ -439,7 +439,7 @@ export function PremiumAnalytics({ className = '' }: PremiumAnalyticsProps) {
     ],
   });
 
-  if (!user) {
+  if (!_user) {
     return (
       <div className={`text-center py-8 ${className}`}>
         <p className="text-gray-600">Sign in to access premium analytics</p>
@@ -448,7 +448,7 @@ export function PremiumAnalytics({ className = '' }: PremiumAnalyticsProps) {
   }
 
   return (
-    <FeatureGate feature="advanced_analytics" userId={user.id} showUpgradePrompt>
+    <FeatureGate feature="advanced_analytics" userId={_user.id} showUpgradePrompt>
       <div className={`space-y-6 ${className}`}>
         <div className="flex items-center justify-between">
           <div>

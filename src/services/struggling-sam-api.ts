@@ -64,7 +64,7 @@ class ApiClient {
     };
 
     try {
-      const response = await fetch(url, config);
+      const response = await fetch(url, _config);
 
       if (!response.ok) {
         throw new Error(
@@ -73,8 +73,8 @@ class ApiClient {
       }
 
       return await response.json();
-    } catch (error) {
-      console.error(`API Error for ${endpoint}:`, error);
+    } catch (_error) {
+      console._error(`API Error for ${endpoint}:`, _error);
       throw error;
     }
   }
@@ -115,8 +115,8 @@ export class StrugglingSamApiService {
   static async getUserStreak(userId: string): Promise<UserStreak | null> {
     try {
       return await apiClient.get<UserStreak>(`${API_ENDPOINTS.USER_STREAK}/${userId}`);
-    } catch (error) {
-      console.error('Error fetching user streak:', error);
+    } catch (_error) {
+      console._error('Error fetching _user streak:', _error);
       return null;
     }
   }
@@ -196,7 +196,7 @@ export class StrugglingSamApiService {
 
   static async getUserChallenges(userId: string): Promise<SocialChallenge[]> {
     return await apiClient.get<SocialChallenge[]>(
-      `${API_ENDPOINTS.CHALLENGES}/user/${userId}`
+      `${API_ENDPOINTS.CHALLENGES}/_user/${userId}`
     );
   }
 
@@ -305,11 +305,11 @@ export class StrugglingSamApiService {
   }
 
   static async getSuccessStories(
-    persona?: string,
+    _persona?: string,
     limit?: number
   ): Promise<SuccessStory[]> {
     const params = new URLSearchParams();
-    if (persona) params.append('persona', persona);
+    if (_persona) params.append('persona', _persona);
     if (limit) params.append('limit', limit.toString());
 
     const endpoint = `${API_ENDPOINTS.SUCCESS_STORIES}${params.toString() ? `?${params}` : ''}`;
@@ -335,8 +335,8 @@ export class StrugglingSamApiService {
       return await apiClient.get<UserABTest>(
         `${API_ENDPOINTS.AB_TEST_ASSIGNMENT}/${userId}`
       );
-    } catch (error) {
-      console.error('Error fetching A/B test assignment:', error);
+    } catch (_error) {
+      console._error('Error fetching A/B test assignment:', _error);
       return null;
     }
   }
@@ -389,7 +389,7 @@ export class StrugglingSamApiService {
     achievementsUnlocked: SamAchievement[];
     celebrationTriggered: boolean;
   }> {
-    return await apiClient.post('/api/struggling-sam/wake-up-event', {
+    return await apiClient.post('/api/struggling-sam/wake-up-_event', {
       userId,
       alarmTime,
       actualWakeTime,
@@ -409,10 +409,7 @@ export class StrugglingSamApiService {
     return await apiClient.get(`/api/struggling-sam/dashboard/${userId}`);
   }
 
-  static async healthCheck(): Promise<{
-    status: 'ok' | 'error';
-    timestamp: string;
-  }> {
+  static async healthCheck(): Promise<{ status: 'ok' | '_error'; timestamp: string }> {
     return await apiClient.get('/api/struggling-sam/health');
   }
 }

@@ -167,10 +167,7 @@ export const _languageScenarios = {
     t: jest.fn(() => '...'),
   },
 
-  error: {
-    error: 'Failed to load translations',
-    t: jest.fn((key: string) => key),
-  },
+  error: { _error: 'Failed to load translations', t: jest.fn((key: string) => key) },
 };
 
 // ===============================
@@ -190,7 +187,7 @@ export interface MockAlarmContextValue {
   bulkUpdateAlarms: jest.MockedFunction<(updates: any[]) => Promise<void>>;
   getUpcomingAlarms: jest.MockedFunction<() => any[]>;
   isLoading: boolean;
-  error: string | null;
+  _error: string | null;
   lastSyncTime: Date | null;
 }
 
@@ -291,10 +288,7 @@ export const _alarmScenarios = {
     alarms: [],
   },
 
-  error: {
-    error: 'Failed to load alarms',
-    alarms: [],
-  },
+  error: { _error: 'Failed to load alarms', alarms: [] },
 };
 
 // ===============================
@@ -315,7 +309,7 @@ export interface MockThemeContextValue {
   exportTheme: jest.MockedFunction<(id: string) => Promise<string>>;
   importTheme: jest.MockedFunction<(data: string) => Promise<void>>;
   isLoading: boolean;
-  error: string | null;
+  _error: string | null;
 }
 
 const defaultThemeValue: MockThemeContextValue = {
@@ -331,7 +325,7 @@ const defaultThemeValue: MockThemeContextValue = {
     accent: '#06b6d4',
     success: '#10b981',
     warning: '#f59e0b',
-    error: '#ef4444',
+    _error: '#ef4444',
   },
   fonts: {
     primary: 'Inter',

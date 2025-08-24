@@ -10,7 +10,7 @@ import { CacheProvider, getCacheManager } from './base/CacheManager';
 import {
   AlarmServiceInterface,
   ServiceConfig,
-  ServiceHealth
+  ServiceHealth,
 } from '../types/service-architecture';
 
 export interface AlarmServiceConfig extends ServiceConfig {
@@ -37,10 +37,10 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
   private cache: CacheProvider;
   private dependencies: AlarmServiceDependencies;
 
-  constructor(dependencies: AlarmServiceDependencies, config: AlarmServiceConfig) {
-    super('AlarmService', '2.0.0', config);
+  constructor(dependencies: AlarmServiceDependencies, _config: AlarmServiceConfig) {
+    super('AlarmService', '2.0.0', _config);
     this.dependencies = dependencies;
-    this.cache = getCacheManager().getProvider(config.caching?.strategy || 'memory');
+    this.cache = getCacheManager().getProvider(_config.caching?.strategy || 'memory');
   }
 
   // ============================================================================
@@ -55,37 +55,36 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
       enableBattleIntegration: true,
       enableSecurityLogging: true,
       enablePerformanceTracking: true,
-      ...super.getDefaultConfig?.() || {}
+      ...(super.getDefaultConfig?.() || {}),
     };
   }
 
   protected async doInitialize(): Promise<void> {
     const timerId = this.startTimer('initialize');
-    
+
     try {
       // Initialize cache if not already done
       await this.setupCache();
-      
+
       // Load initial alarms from storage
       await this.loadAlarmsFromStorage();
-      
+
       // Start alarm checking if enabled
-      if (this.config.enabled) {
+      if (this._config.enabled) {
         this.startAlarmChecker();
       }
-      
+
       // Set up event listeners
       this.setupEventListeners();
-      
+
       this.emit('alarms:initialized', {
-        alarmCount: this.alarms.size
+        alarmCount: this.alarms.size,
       });
-      
+
       this.recordMetric('initialize_duration', this.endTimer(timerId) || 0);
-      
-    } catch (error) {
-      this.handleError(error, 'Failed to initialize AlarmService');
-      throw error;
+    } catch (_error) {
+      this.handleError(_error, 'Failed to initialize AlarmService');
+      throw _error;
     }
   }
 
@@ -96,44 +95,43 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         clearInterval(this.checkInterval);
         this.checkInterval = null;
       }
-      
+
       // Save any pending changes
       await this.saveAlarmsToStorage();
-      
+
       // Clear cache
       await this.cache.clear();
-      
+
       // Clear in-memory alarms
       this.alarms.clear();
-      
-    } catch (error) {
-      this.handleError(error, 'Failed to cleanup AlarmService');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to cleanup AlarmService');
     }
   }
 
   public async getHealth(): Promise<ServiceHealth> {
     const baseHealth = await super.getHealth();
-    
+
     // Additional alarm-specific health checks
     const alarmCount = this.alarms.size;
     const cacheStats = await this.cache.stats();
-    
+
     // Determine if service is healthy based on alarm-specific criteria
     let status = baseHealth.status;
-    if (alarmCount > (this.config as AlarmServiceConfig).maxAlarmsPerUser * 10) {
+    if (alarmCount > (this._config as AlarmServiceConfig).maxAlarmsPerUser * 10) {
       status = 'degraded';
     }
-    
+
     return {
       ...baseHealth,
       status,
       metrics: {
-        ...baseHealth.metrics || {},
+        ...(baseHealth.metrics || {}),
         alarmCount,
         cacheHitRate: cacheStats.hitRate,
         pendingAlarms: this.getPendingAlarmsCount(),
-        nextAlarmTime: this.getNextAlarmTime()?.getTime() || 0
-      }
+        nextAlarmTime: this.getNextAlarmTime()?.getTime() || 0,
+      },
     };
   }
 
@@ -156,19 +154,19 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
     weatherEnabled?: boolean;
   }): Promise<Alarm> {
     const timerId = this.startTimer('createAlarm');
-    
+
     try {
       // Validate input
       this.validateAlarmData(alarmData);
-      
+
       // Check user alarm limit
       await this.checkUserAlarmLimit(alarmData.userId);
-      
+
       // Rate limiting check
-      if (!await this.checkRateLimit('create_alarm', alarmData.userId)) {
+      if (!(await this.checkRateLimit('create_alarm', alarmData.userId))) {
         throw new Error('Rate limit exceeded for alarm creation');
       }
-      
+
       const now = new Date();
       const newAlarm: Alarm = {
         id: generateAlarmId(),
@@ -178,10 +176,18 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         enabled: true,
         isActive: true,
         days: alarmData.days,
-        dayNames: alarmData.days.map(d => [
-          'sunday', 'monday', 'tuesday', 'wednesday',
-          'thursday', 'friday', 'saturday'
-        ][d] as any),
+        dayNames: alarmData.days.map(
+          d =>
+            [
+              'sunday',
+              'monday',
+              'tuesday',
+              'wednesday',
+              'thursday',
+              'friday',
+              'saturday',
+            ][d] as any
+        ),
         voiceMood: alarmData.voiceMood,
         sound: alarmData.sound || 'default',
         difficulty: (alarmData.difficulty || 'medium') as any,
@@ -194,103 +200,104 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         createdAt: now,
         updatedAt: now,
       };
-      
+
       // Validate complete alarm object
       if (!this.validateCompleteAlarm(newAlarm)) {
         throw new Error('Invalid alarm data after creation');
       }
-      
+
       // Store in memory and cache
       this.alarms.set(newAlarm.id, newAlarm);
       await this.cacheAlarm(newAlarm);
-      
+
       // Persist to storage
       await this.saveAlarmsToStorage();
-      
+
       // Schedule notification
       await this.scheduleNotification(newAlarm);
-      
+
       // Handle battle integration if enabled
       if (newAlarm.battleId && this.dependencies.battleIntegrationService) {
         await this.handleBattleIntegration('create', newAlarm);
       }
-      
+
       // Log security event
       await this.logSecurityEvent('alarm_created', {
         alarmId: newAlarm.id,
         userId: alarmData.userId,
         timestamp: now.toISOString(),
       });
-      
+
       // Track analytics
       await this.trackAnalyticsEvent('alarm_created', {
         alarmId: newAlarm.id,
         difficulty: newAlarm.difficulty,
         hasBattle: !!newAlarm.battleId,
-        voiceMood: newAlarm.voiceMood
+        voiceMood: newAlarm.voiceMood,
       });
-      
+
       this.recordMetric('createAlarm_duration', this.endTimer(timerId) || 0);
       this.emit('alarm:created', newAlarm);
-      
+
       return newAlarm;
-      
-    } catch (error) {
+    } catch (_error) {
       this.recordMetric('createAlarm_errors', 1);
-      this.handleError(error, 'Failed to create alarm', { alarmData });
+      this.handleError(_error, 'Failed to create alarm', { alarmData });
       throw error;
     }
   }
 
   public async updateAlarm(id: string, updates: Partial<Alarm>): Promise<Alarm> {
     const timerId = this.startTimer('updateAlarm');
-    
+
     try {
       const existingAlarm = await this.getAlarmById(id);
       if (!existingAlarm) {
         throw new Error(`Alarm with ID ${id} not found`);
       }
-      
+
       // Validate ownership if userId is provided
       if (updates.userId && existingAlarm.userId !== updates.userId) {
-        throw new Error('Access denied: cannot update alarm belonging to another user');
+        throw new Error(
+          'Access denied: cannot update alarm belonging to another _user'
+        );
       }
-      
+
       // Rate limiting check
-      if (!await this.checkRateLimit('update_alarm', existingAlarm.userId)) {
+      if (!(await this.checkRateLimit('update_alarm', existingAlarm.userId))) {
         throw new Error('Rate limit exceeded for alarm updates');
       }
-      
+
       const updatedAlarm: Alarm = {
         ...existingAlarm,
         ...updates,
         id, // Ensure ID cannot be changed
         updatedAt: new Date(),
       };
-      
+
       // Validate updated alarm
       if (!this.validateCompleteAlarm(updatedAlarm)) {
         throw new Error('Invalid updated alarm data');
       }
-      
+
       // Update in memory and cache
       this.alarms.set(id, updatedAlarm);
       await this.cacheAlarm(updatedAlarm);
-      
+
       // Persist to storage
       await this.saveAlarmsToStorage();
-      
+
       // Reschedule notification
       await this.cancelNotification(id);
       if (updatedAlarm.enabled) {
         await this.scheduleNotification(updatedAlarm);
       }
-      
+
       // Handle battle integration if enabled
       if (updatedAlarm.battleId && this.dependencies.battleIntegrationService) {
         await this.handleBattleIntegration('update', updatedAlarm);
       }
-      
+
       // Log security event
       await this.logSecurityEvent('alarm_updated', {
         alarmId: id,
@@ -298,63 +305,61 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         changes: Object.keys(updates),
         timestamp: new Date().toISOString(),
       });
-      
+
       this.recordMetric('updateAlarm_duration', this.endTimer(timerId) || 0);
       this.emit('alarm:updated', { id, alarm: updatedAlarm, changes: updates });
-      
+
       return updatedAlarm;
-      
-    } catch (error) {
+    } catch (_error) {
       this.recordMetric('updateAlarm_errors', 1);
-      this.handleError(error, 'Failed to update alarm', { id, updates });
+      this.handleError(_error, 'Failed to update alarm', { id, updates });
       throw error;
     }
   }
 
   public async deleteAlarm(id: string): Promise<boolean> {
     const timerId = this.startTimer('deleteAlarm');
-    
+
     try {
       const alarm = await this.getAlarmById(id);
       if (!alarm) {
         return false;
       }
-      
+
       // Rate limiting check
-      if (!await this.checkRateLimit('delete_alarm', alarm.userId)) {
+      if (!(await this.checkRateLimit('delete_alarm', alarm.userId))) {
         throw new Error('Rate limit exceeded for alarm deletion');
       }
-      
+
       // Cancel notification
       await this.cancelNotification(id);
-      
+
       // Remove from memory and cache
       this.alarms.delete(id);
       await this.cache.delete(`alarm:${id}`);
-      
+
       // Persist changes
       await this.saveAlarmsToStorage();
-      
+
       // Handle battle integration if enabled
       if (alarm.battleId && this.dependencies.battleIntegrationService) {
         await this.handleBattleIntegration('delete', alarm);
       }
-      
+
       // Log security event
       await this.logSecurityEvent('alarm_deleted', {
         alarmId: id,
         userId: alarm.userId,
         timestamp: new Date().toISOString(),
       });
-      
+
       this.recordMetric('deleteAlarm_duration', this.endTimer(timerId) || 0);
       this.emit('alarm:deleted', { id, alarm });
-      
+
       return true;
-      
-    } catch (error) {
+    } catch (_error) {
       this.recordMetric('deleteAlarm_errors', 1);
-      this.handleError(error, 'Failed to delete alarm', { id });
+      this.handleError(_error, 'Failed to delete alarm', { id });
       throw error;
     }
   }
@@ -362,23 +367,23 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
   public async getAlarms(): Promise<Alarm[]> {
     try {
       return Array.from(this.alarms.values());
-    } catch (error) {
-      this.handleError(error, 'Failed to get alarms');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to get alarms');
       return [];
     }
   }
 
   public async triggerAlarm(id: string): Promise<void> {
     const timerId = this.startTimer('triggerAlarm');
-    
+
     try {
       const alarm = await this.getAlarmById(id);
       if (!alarm) {
         throw new Error(`Alarm with ID ${id} not found`);
       }
-      
+
       const now = new Date();
-      
+
       // Create alarm instance for tracking
       const alarmInstance: AlarmInstance = {
         id: `instance_${Date.now()}_${id}`,
@@ -388,12 +393,12 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         snoozeCount: 0,
         battleId: alarm.battleId,
       };
-      
+
       // Handle battle integration
       if (alarm.battleId && this.dependencies.battleIntegrationService) {
         await this.handleBattleIntegration('trigger', alarm, alarmInstance);
       }
-      
+
       // Log alarm event
       await this.logAlarmEvent({
         id: `event_${Date.now()}`,
@@ -403,10 +408,10 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         snoozed: false,
         userAction: 'triggered',
       });
-      
+
       // Emit trigger event
       this.emit('alarm:triggered', { alarm, alarmInstance });
-      
+
       // Dispatch browser event for UI
       if (typeof window !== 'undefined') {
         window.dispatchEvent(
@@ -415,50 +420,49 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
           })
         );
       }
-      
+
       this.recordMetric('triggerAlarm_duration', this.endTimer(timerId) || 0);
-      
-    } catch (error) {
+    } catch (_error) {
       this.recordMetric('triggerAlarm_errors', 1);
-      this.handleError(error, 'Failed to trigger alarm', { id });
+      this.handleError(_error, 'Failed to trigger alarm', { id });
       throw error;
     }
   }
 
   public async snoozeAlarm(id: string, duration: number): Promise<void> {
     const timerId = this.startTimer('snoozeAlarm');
-    
+
     try {
       const alarm = await this.getAlarmById(id);
       if (!alarm) {
         throw new Error(`Alarm with ID ${id} not found`);
       }
-      
+
       if (!alarm.snoozeEnabled) {
         throw new Error('Snoozing is not enabled for this alarm');
       }
-      
+
       const newSnoozeCount = alarm.snoozeCount + 1;
       const maxSnoozes = alarm.maxSnoozes || Infinity;
-      
+
       if (newSnoozeCount > maxSnoozes) {
         throw new Error(`Maximum snoozes exceeded (${newSnoozeCount}/${maxSnoozes})`);
       }
-      
+
       // Update snooze count
       const updatedAlarm = {
         ...alarm,
         snoozeCount: newSnoozeCount,
         updatedAt: new Date(),
       };
-      
+
       this.alarms.set(id, updatedAlarm);
       await this.cacheAlarm(updatedAlarm);
-      
+
       // Schedule snooze notification
       const nextSnoozeTime = new Date(Date.now() + duration * 60 * 1000);
       await this.scheduleSnoozeNotification(updatedAlarm, nextSnoozeTime);
-      
+
       // Log alarm event
       await this.logAlarmEvent({
         id: `event_${Date.now()}`,
@@ -468,18 +472,27 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         snoozed: true,
         userAction: 'snoozed',
       });
-      
+
       // Handle battle integration
       if (alarm.battleId && this.dependencies.battleIntegrationService) {
-        await this.handleBattleIntegration('snooze', updatedAlarm, undefined, newSnoozeCount);
+        await this.handleBattleIntegration(
+          'snooze',
+          updatedAlarm,
+          undefined,
+          newSnoozeCount
+        );
       }
-      
+
       this.recordMetric('snoozeAlarm_duration', this.endTimer(timerId) || 0);
-      this.emit('alarm:snoozed', { id, alarm: updatedAlarm, duration, snoozeCount: newSnoozeCount });
-      
-    } catch (error) {
+      this.emit('alarm:snoozed', {
+        id,
+        alarm: updatedAlarm,
+        duration,
+        snoozeCount: newSnoozeCount,
+      });
+    } catch (_error) {
       this.recordMetric('snoozeAlarm_errors', 1);
-      this.handleError(error, 'Failed to snooze alarm', { id, duration });
+      this.handleError(_error, 'Failed to snooze alarm', { id, duration });
       throw error;
     }
   }
@@ -495,16 +508,16 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
       if (cached) {
         return cached;
       }
-      
+
       // Fallback to memory
       const alarm = this.alarms.get(id) || null;
       if (alarm) {
         await this.cacheAlarm(alarm);
       }
-      
+
       return alarm;
-    } catch (error) {
-      this.handleError(error, 'Failed to get alarm by ID', { id });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to get alarm by ID', { id });
       return null;
     }
   }
@@ -513,8 +526,8 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
     try {
       const allAlarms = await this.getAlarms();
       return allAlarms.filter(alarm => !alarm.userId || alarm.userId === userId);
-    } catch (error) {
-      this.handleError(error, 'Failed to get user alarms', { userId });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to get _user alarms', { userId });
       return [];
     }
   }
@@ -525,13 +538,13 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
 
   public async dismissAlarm(id: string, method: string): Promise<void> {
     const timerId = this.startTimer('dismissAlarm');
-    
+
     try {
       const alarm = await this.getAlarmById(id);
       if (!alarm) {
         throw new Error(`Alarm with ID ${id} not found`);
       }
-      
+
       // Reset snooze count and update last triggered
       const dismissalTime = new Date();
       const updatedAlarm = {
@@ -540,10 +553,10 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         lastTriggered: dismissalTime,
         updatedAt: dismissalTime,
       };
-      
+
       this.alarms.set(id, updatedAlarm);
       await this.cacheAlarm(updatedAlarm);
-      
+
       // Log alarm event
       await this.logAlarmEvent({
         id: `event_${Date.now()}`,
@@ -554,21 +567,26 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         userAction: 'dismissed',
         dismissMethod: method,
       });
-      
+
       // Handle battle integration
       if (alarm.battleId && this.dependencies.battleIntegrationService) {
-        await this.handleBattleIntegration('dismiss', updatedAlarm, undefined, undefined, method);
+        await this.handleBattleIntegration(
+          'dismiss',
+          updatedAlarm,
+          undefined,
+          undefined,
+          method
+        );
       }
-      
+
       // Reschedule for next occurrence
       await this.scheduleNotification(updatedAlarm);
-      
+
       this.recordMetric('dismissAlarm_duration', this.endTimer(timerId) || 0);
       this.emit('alarm:dismissed', { id, alarm: updatedAlarm, method });
-      
-    } catch (error) {
+    } catch (_error) {
       this.recordMetric('dismissAlarm_errors', 1);
-      this.handleError(error, 'Failed to dismiss alarm', { id, method });
+      this.handleError(_error, 'Failed to dismiss alarm', { id, method });
       throw error;
     }
   }
@@ -582,8 +600,8 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
       // Initialize cache if needed
       const cacheStats = await this.cache.stats();
       console.debug(`[AlarmService] Cache initialized with ${cacheStats.size} entries`);
-    } catch (error) {
-      this.handleError(error, 'Failed to setup cache');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to setup cache');
     }
   }
 
@@ -593,10 +611,10 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         console.warn('[AlarmService] No secure storage service available');
         return;
       }
-      
+
       const storage = this.dependencies.secureStorageService.getInstance();
       const alarmData = await storage.retrieveAlarms();
-      
+
       // Convert and validate loaded alarms
       alarmData.forEach((alarmObj: any) => {
         try {
@@ -604,21 +622,22 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
             ...alarmObj,
             createdAt: new Date(alarmObj.createdAt),
             updatedAt: new Date(alarmObj.updatedAt),
-            lastTriggered: alarmObj.lastTriggered ? new Date(alarmObj.lastTriggered) : undefined,
+            lastTriggered: alarmObj.lastTriggered
+              ? new Date(alarmObj.lastTriggered)
+              : undefined,
           };
-          
+
           if (this.validateCompleteAlarm(alarm)) {
             this.alarms.set(alarm.id, alarm);
           }
-        } catch (error) {
-          console.warn(`[AlarmService] Failed to load alarm ${alarmObj.id}:`, error);
+        } catch (_error) {
+          console.warn(`[AlarmService] Failed to load alarm ${alarmObj.id}:`, _error);
         }
       });
-      
+
       console.debug(`[AlarmService] Loaded ${this.alarms.size} alarms from storage`);
-      
-    } catch (error) {
-      this.handleError(error, 'Failed to load alarms from storage');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to load alarms from storage');
     }
   }
 
@@ -627,22 +646,21 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
       if (!this.dependencies.secureStorageService) {
         return;
       }
-      
+
       const storage = this.dependencies.secureStorageService.getInstance();
       const alarmsArray = Array.from(this.alarms.values());
       await storage.storeAlarms(alarmsArray);
-      
-    } catch (error) {
-      this.handleError(error, 'Failed to save alarms to storage');
+    } catch (_error) {
+      this.handleError(_error, 'Failed to save alarms to storage');
     }
   }
 
   private async cacheAlarm(alarm: Alarm): Promise<void> {
     try {
-      const cacheTimeout = (this.config as AlarmServiceConfig).cacheTimeout;
+      const cacheTimeout = (this._config as AlarmServiceConfig).cacheTimeout;
       await this.cache.set(`alarm:${alarm.id}`, alarm, cacheTimeout);
-    } catch (error) {
-      console.warn(`[AlarmService] Failed to cache alarm ${alarm.id}:`, error);
+    } catch (_error) {
+      console.warn(`[AlarmService] Failed to cache alarm ${alarm.id}:`, _error);
     }
   }
 
@@ -650,19 +668,21 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
     if (!data.time || !/^([01]?\d|2[0-3]):[0-5]\d$/.test(data.time)) {
       throw new Error('Invalid time format');
     }
-    
+
     if (!data.label || typeof data.label !== 'string' || data.label.length > 100) {
       throw new Error('Invalid label');
     }
-    
+
     if (!Array.isArray(data.days) || data.days.length === 0) {
       throw new Error('Invalid days array');
     }
-    
-    if (!data.days.every((day: any) => typeof day === 'number' && day >= 0 && day <= 6)) {
+
+    if (
+      !data.days.every((day: any) => typeof day === 'number' && day >= 0 && day <= 6)
+    ) {
       throw new Error('Invalid day values');
     }
-    
+
     if (!data.voiceMood) {
       throw new Error('Voice mood is required');
     }
@@ -686,10 +706,10 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
 
   private async checkUserAlarmLimit(userId?: string): Promise<void> {
     if (!userId) return;
-    
+
     const userAlarms = await this.getUserAlarms(userId);
-    const maxAlarms = (this.config as AlarmServiceConfig).maxAlarmsPerUser;
-    
+    const maxAlarms = (this._config as AlarmServiceConfig).maxAlarmsPerUser;
+
     if (userAlarms.length >= maxAlarms) {
       throw new Error(`Maximum alarm limit reached (${maxAlarms})`);
     }
@@ -699,7 +719,7 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
     if (!this.dependencies.securityService) {
       return true; // No rate limiting if security service unavailable
     }
-    
+
     const key = `${action}_${userId || 'anonymous'}`;
     return this.dependencies.securityService.checkRateLimit(key, 10, 60000);
   }
@@ -708,12 +728,12 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
     if (this.checkInterval) {
       clearInterval(this.checkInterval);
     }
-    
-    const interval = (this.config as AlarmServiceConfig).checkInterval;
+
+    const interval = (this._config as AlarmServiceConfig).checkInterval;
     this.checkInterval = setInterval(() => {
       this.checkForTriggeredAlarms();
     }, interval);
-    
+
     // Check immediately
     this.checkForTriggeredAlarms();
   }
@@ -724,32 +744,36 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
       const currentDay = now.getDay();
-      
+
       for (const alarm of this.alarms.values()) {
         if (!alarm.enabled || !alarm.days.includes(currentDay)) {
           continue;
         }
-        
+
         const [alarmHour, alarmMinute] = alarm.time.split(':').map(Number);
-        
+
         if (alarmHour === currentHour && alarmMinute === currentMinute) {
           await this.triggerAlarm(alarm.id);
         }
       }
-    } catch (error) {
-      this.handleError(error, 'Error checking for triggered alarms');
+    } catch (_error) {
+      this.handleError(_error, 'Error checking for triggered alarms');
     }
   }
 
   private async scheduleNotification(alarm: Alarm): Promise<void> {
-    if (!this.dependencies.capacitorService || !alarm.enabled || alarm.days.length === 0) {
+    if (
+      !this.dependencies.capacitorService ||
+      !alarm.enabled ||
+      alarm.days.length === 0
+    ) {
       return;
     }
-    
+
     try {
       const nextTime = getNextAlarmTime(alarm);
       if (!nextTime) return;
-      
+
       let notificationBody = 'Time to wake up!';
       if (alarm.snoozeEnabled) {
         notificationBody += ` (Snooze: ${alarm.snoozeInterval}min`;
@@ -758,22 +782,26 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         }
         notificationBody += ')';
       }
-      
+
       await this.dependencies.capacitorService.scheduleLocalNotification({
         id: parseInt(alarm.id.replace(/\D/g, '')),
         title: `🔔 ${alarm.label}`,
         body: notificationBody,
         schedule: nextTime,
       });
-      
-    } catch (error) {
-      this.handleError(error, 'Failed to schedule notification', { alarmId: alarm.id });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to schedule notification', {
+        alarmId: alarm.id,
+      });
     }
   }
 
-  private async scheduleSnoozeNotification(alarm: Alarm, snoozeTime: Date): Promise<void> {
+  private async scheduleSnoozeNotification(
+    alarm: Alarm,
+    snoozeTime: Date
+  ): Promise<void> {
     if (!this.dependencies.capacitorService) return;
-    
+
     try {
       await this.dependencies.capacitorService.scheduleLocalNotification({
         id: parseInt(alarm.id.replace(/\D/g, '')) + 10000, // Offset for snooze
@@ -781,46 +809,51 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         body: `Time to wake up! (Snooze ${alarm.snoozeCount}/${alarm.maxSnoozes === undefined ? '∞' : alarm.maxSnoozes})`,
         schedule: snoozeTime,
       });
-    } catch (error) {
-      this.handleError(error, 'Failed to schedule snooze notification', { alarmId: alarm.id });
+    } catch (_error) {
+      this.handleError(_error, 'Failed to schedule snooze notification', {
+        alarmId: alarm.id,
+      });
     }
   }
 
   private async cancelNotification(alarmId: string): Promise<void> {
     if (!this.dependencies.capacitorService) return;
-    
+
     try {
       await this.dependencies.capacitorService.cancelLocalNotification(
         parseInt(alarmId.replace(/\D/g, ''))
       );
-    } catch (error) {
-      console.warn(`[AlarmService] Failed to cancel notification for ${alarmId}:`, error);
+    } catch (_error) {
+      console.warn(
+        `[AlarmService] Failed to cancel notification for ${alarmId}:`,
+        _error
+      );
     }
   }
 
-  private async logAlarmEvent(event: AlarmEvent): Promise<void> {
+  private async logAlarmEvent(_event: AlarmEvent): Promise<void> {
     try {
       if (!this.dependencies.secureStorageService) return;
-      
+
       const storage = this.dependencies.secureStorageService.getInstance();
-      const existingEvents = await storage.retrieveAlarmEvents() || [];
-      
-      existingEvents.push(event);
-      
+      const existingEvents = (await storage.retrieveAlarmEvents()) || [];
+
+      existingEvents.push(_event);
+
       // Keep only last 100 events
       if (existingEvents.length > 100) {
         existingEvents.splice(0, existingEvents.length - 100);
       }
-      
+
       await storage.storeAlarmEvents(existingEvents);
-    } catch (error) {
-      console.warn('[AlarmService] Failed to log alarm event:', error);
+    } catch (_error) {
+      console.warn('[AlarmService] Failed to log alarm _event:', _error);
     }
   }
 
-  private async logSecurityEvent(event: string, details: any): Promise<void> {
-    if (!(this.config as AlarmServiceConfig).enableSecurityLogging) return;
-    
+  private async logSecurityEvent(_event: string, details: any): Promise<void> {
+    if (!(this._config as AlarmServiceConfig).enableSecurityLogging) return;
+
     try {
       const logEntry = {
         event,
@@ -828,29 +861,28 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
         timestamp: new Date().toISOString(),
         source: 'EnhancedAlarmService',
       };
-      
+
       // Emit event for external security monitoring
-      this.emit('security:event', logEntry);
-      
+      this.emit('security:_event', logEntry);
+
       // Log to browser console in development
-      if (this.config.debug) {
+      if (this._config.debug) {
         console.log('[ALARM SECURITY LOG]', logEntry);
       }
-      
-    } catch (error) {
-      console.warn('[AlarmService] Failed to log security event:', error);
+    } catch (_error) {
+      console.warn('[AlarmService] Failed to log security _event:', _error);
     }
   }
 
-  private async trackAnalyticsEvent(event: string, data: any): Promise<void> {
-    if (!(this.config as AlarmServiceConfig).enablePerformanceTracking) return;
-    
+  private async trackAnalyticsEvent(_event: string, data: any): Promise<void> {
+    if (!(this._config as AlarmServiceConfig).enablePerformanceTracking) return;
+
     try {
       if (this.dependencies.analyticsService) {
-        await this.dependencies.analyticsService.getInstance().track(event, data);
+        await this.dependencies.analyticsService.getInstance().track(_event, data);
       }
-    } catch (error) {
-      console.warn('[AlarmService] Failed to track analytics event:', error);
+    } catch (_error) {
+      console.warn('[AlarmService] Failed to track analytics _event:', _error);
     }
   }
 
@@ -861,12 +893,12 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
     snoozeCount?: number,
     method?: string
   ): Promise<void> {
-    if (!(this.config as AlarmServiceConfig).enableBattleIntegration) return;
-    
+    if (!(this._config as AlarmServiceConfig).enableBattleIntegration) return;
+
     try {
       const battleService = this.dependencies.battleIntegrationService;
       if (!battleService) return;
-      
+
       switch (action) {
         case 'create':
           await battleService.handleAlarmCreated(alarm);
@@ -887,14 +919,14 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
           }
           break;
       }
-    } catch (error) {
-      console.warn('[AlarmService] Battle integration error:', error);
+    } catch (_error) {
+      console.warn('[AlarmService] Battle integration _error:', _error);
     }
   }
 
   private setupEventListeners(): void {
     // Listen for configuration changes
-    this.on('service:config-updated', async (data) => {
+    this.on('service:_config-updated', async data => {
       if (data.serviceName === this.name) {
         // Restart alarm checker if interval changed
         if (this.checkInterval) {
@@ -905,24 +937,24 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
   }
 
   private getPendingAlarmsCount(): number {
-    return Array.from(this.alarms.values()).filter(alarm => 
-      alarm.enabled && alarm.days.length > 0
+    return Array.from(this.alarms.values()).filter(
+      alarm => alarm.enabled && alarm.days.length > 0
     ).length;
   }
 
   private getNextAlarmTime(): Date | null {
     const now = new Date();
     let nextTime: Date | null = null;
-    
+
     for (const alarm of this.alarms.values()) {
       if (!alarm.enabled || alarm.days.length === 0) continue;
-      
+
       const alarmNextTime = getNextAlarmTime(alarm);
       if (alarmNextTime && (!nextTime || alarmNextTime < nextTime)) {
         nextTime = alarmNextTime;
       }
     }
-    
+
     return nextTime;
   }
 
@@ -932,12 +964,12 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
 
   public async reset(): Promise<void> {
     await super.reset();
-    
+
     if (this.checkInterval) {
       clearInterval(this.checkInterval);
       this.checkInterval = null;
     }
-    
+
     this.alarms.clear();
     await this.cache.clear();
   }
@@ -947,7 +979,7 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
       ...super.getTestState(),
       alarmCount: this.alarms.size,
       cacheSize: this.cache.size?.() || 0,
-      hasCheckInterval: !!this.checkInterval
+      hasCheckInterval: !!this.checkInterval,
     };
   }
 }
@@ -955,7 +987,7 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
 // Factory function for dependency injection
 export const createAlarmService = (
   dependencies: AlarmServiceDependencies,
-  config: AlarmServiceConfig
+  _config: AlarmServiceConfig
 ): EnhancedAlarmService => {
-  return new EnhancedAlarmService(dependencies, config);
+  return new EnhancedAlarmService(dependencies, _config);
 };

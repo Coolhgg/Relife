@@ -18,14 +18,14 @@ interface SignUpFormProps {
   onSignUp: (email: string, password: string, name: string) => Promise<void>;
   onSwitchToLogin: () => void;
   isLoading: boolean;
-  error: string | null;
+  _error: string | null;
 }
 
 export default function SignUpForm({
   onSignUp,
   onSwitchToLogin,
   isLoading,
-  error,
+  _error,
 }: SignUpFormProps) {
   const [formData, setFormData] = useState({
     name: '',
@@ -137,7 +137,7 @@ export default function SignUpForm({
       </div>
 
       {/* Global Error Alert */}
-      {error && (
+      {_error && (
         <div
           className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
           role="alert"
@@ -152,7 +152,7 @@ export default function SignUpForm({
               <h3 className="font-medium text-red-800 dark:text-red-200 mb-1">
                 Account Creation Failed
               </h3>
-              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+              <p className="text-sm text-red-700 dark:text-red-300">{_error}</p>
             </div>
           </div>
         </div>
@@ -175,8 +175,9 @@ export default function SignUpForm({
               id="name"
               type="text"
               value={formData.name}
-              
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('name', e.target.value))
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleInputChange('name', e.target.value)
+              }
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.name
                   ? 'border-red-500'
@@ -185,13 +186,13 @@ export default function SignUpForm({
               placeholder="Enter your full name"
               autoComplete="name"
               aria-invalid={!!validationErrors.name}
-              aria-describedby={validationErrors.name ? 'name-error' : undefined}
+              aria-describedby={validationErrors.name ? 'name-_error' : undefined}
               required
             />
           </div>
           {validationErrors.name && (
             <p
-              id="name-error"
+              id="name-_error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"
@@ -217,8 +218,9 @@ export default function SignUpForm({
               id="email"
               type="email"
               value={formData.email}
-              
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('email', e.target.value))
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleInputChange('email', e.target.value)
+              }
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.email
                   ? 'border-red-500'
@@ -227,13 +229,13 @@ export default function SignUpForm({
               placeholder="Enter your email"
               autoComplete="email"
               aria-invalid={!!validationErrors.email}
-              aria-describedby={validationErrors.email ? 'email-error' : undefined}
+              aria-describedby={validationErrors.email ? 'email-_error' : undefined}
               required
             />
           </div>
           {validationErrors.email && (
             <p
-              id="email-error"
+              id="email-_error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"
@@ -259,8 +261,9 @@ export default function SignUpForm({
               id="password"
               type={showPassword ? 'text' : 'password'}
               value={formData.password}
-              
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('password', e.target.value))
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleInputChange('password', e.target.value)
+              }
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.password
                   ? 'border-red-500'
@@ -270,7 +273,7 @@ export default function SignUpForm({
               autoComplete="new-password"
               aria-invalid={!!validationErrors.password}
               aria-describedby={
-                validationErrors.password ? 'password-error' : 'password-strength'
+                validationErrors.password ? 'password-_error' : 'password-strength'
               }
               required
             />
@@ -332,9 +335,8 @@ export default function SignUpForm({
                     <ul className="list-disc list-inside space-y-1">
                       {passwordStrength.feedback.suggestions
                         .slice(0, 2)
-                        .map((suggestion, index
-) => (
-                          <li key={index}>suggestion</li>
+                        .map((suggestion, _index) => (
+                          <li key={_index}>suggestion</li>
                         ))}
                     </ul>
                   </div>
@@ -344,7 +346,7 @@ export default function SignUpForm({
 
           {validationErrors.password && (
             <p
-              id="password-error"
+              id="password-_error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"
@@ -370,7 +372,9 @@ export default function SignUpForm({
               id="confirmPassword"
               type={showConfirmPassword ? 'text' : 'password'}
               value={formData.confirmPassword}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('confirmPassword', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleInputChange('confirmPassword', e.target.value)
+              }
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationErrors.confirmPassword
                   ? 'border-red-500'
@@ -380,7 +384,7 @@ export default function SignUpForm({
               autoComplete="new-password"
               aria-invalid={!!validationErrors.confirmPassword}
               aria-describedby={
-                validationErrors.confirmPassword ? 'confirm-password-error' : undefined
+                validationErrors.confirmPassword ? 'confirm-password-_error' : undefined
               }
               required
             />
@@ -408,7 +412,7 @@ export default function SignUpForm({
             )}
           {validationErrors.confirmPassword && (
             <p
-              id="confirm-password-error"
+              id="confirm-password-_error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"

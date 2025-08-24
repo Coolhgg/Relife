@@ -119,7 +119,7 @@ class HealthTrackerIntegration {
   private lastSyncTime: Date | null = null;
 
   private constructor() {
-    this.config = this.getDefaultConfig();
+    this._config = this.getDefaultConfig();
   }
 
   public static getInstance(): HealthTrackerIntegration {
@@ -139,7 +139,7 @@ class HealthTrackerIntegration {
       await this.loadConfiguration();
       await this.loadHealthData();
 
-      if (this.config.enabled) {
+      if (this._config.enabled) {
         await this.syncHealthData();
         await this.analyzeCircadianRhythm();
         await this.generateHealthInsights();
@@ -149,9 +149,9 @@ class HealthTrackerIntegration {
       }
 
       this.isInitialized = true;
-    } catch (error) {
-      console.error('Failed to initialize HealthTrackerIntegration:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to initialize HealthTrackerIntegration:', _error);
+      throw _error;
     }
   }
 
@@ -168,7 +168,7 @@ class HealthTrackerIntegration {
     sleepCycles: number;
     expectedQuality: 'poor' | 'fair' | 'good' | 'excellent';
   } | null> {
-    if (!this.config.enabled || this.sleepHistory.length < 7) {
+    if (!this._config.enabled || this.sleepHistory.length < 7) {
       return null;
     }
 
@@ -329,7 +329,7 @@ class HealthTrackerIntegration {
   ): Promise<HealthInsight[]> {
     const insights: HealthInsight[] = [];
 
-    if (!this.config.enabled) return insights;
+    if (!this._config.enabled) return insights;
 
     // Sleep cycle alignment
     const sleepCycleInsight = this.analyzeSleepCycleAlignment(alarm);
@@ -350,10 +350,10 @@ class HealthTrackerIntegration {
    * Sync health data from connected devices
    */
   public async syncHealthData(): Promise<void> {
-    if (!this.config.enabled) return;
+    if (!this._config.enabled) return;
 
     try {
-      for (const device of this.config.connectedDevices) {
+      for (const device of this._config.connectedDevices) {
         if (device.isActive) {
           await this.syncFromDevice(device);
         }
@@ -361,8 +361,8 @@ class HealthTrackerIntegration {
 
       this.lastSyncTime = new Date();
       await this.saveHealthData();
-    } catch (error) {
-      console.error('Failed to sync health data:', error);
+    } catch (_error) {
+      console._error('Failed to sync health data:', _error);
     }
   }
 
@@ -393,7 +393,7 @@ class HealthTrackerIntegration {
     return {
       isEnabled: this.config.enabled,
       connectedDevices: this.config.connectedDevices.length,
-      activeDevices: this.config.connectedDevices.filter(d => d.isActive).length,
+      activeDevices: this._config.connectedDevices.filter(d => d.isActive).length,
       lastSyncTime: this.lastSyncTime,
       dataPoints: {
         sleepRecords: this.sleepHistory.length,
@@ -416,8 +416,8 @@ class HealthTrackerIntegration {
   /**
    * Update health configuration
    */
-  public async updateConfig(config: Partial<HealthConfig>): Promise<void> {
-    this.config = { ...this.config, ...config };
+  public async updateConfig(_config: Partial<HealthConfig>): Promise<void> {
+    this.config = { ...this.config, ..._config };
     await this.saveConfiguration();
   }
 
@@ -434,8 +434,8 @@ class HealthTrackerIntegration {
     this.activityHistory.push(mockActivityData);
 
     // Keep only recent data
-    this.sleepHistory = this.sleepHistory.slice(-this.config.dataRetentionDays);
-    this.activityHistory = this.activityHistory.slice(-this.config.dataRetentionDays);
+    this.sleepHistory = this.sleepHistory.slice(-this._config.dataRetentionDays);
+    this.activityHistory = this.activityHistory.slice(-this._config.dataRetentionDays);
 
     device.lastSync = new Date();
   }
@@ -630,7 +630,7 @@ class HealthTrackerIntegration {
   private startPeriodicSync(): void {
     setInterval(
       async () => {
-        if (this.config.enabled) {
+        if (this._config.enabled) {
           await this.syncHealthData();
         }
       },
@@ -668,7 +668,7 @@ class HealthTrackerIntegration {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(
         'health_tracker_config',
-        JSON.stringify(this.config, (key, value) => {
+        JSON.stringify(this._config, (key, value) => {
           if (value instanceof Date) {
             return { __type: 'Date', value: value.toISOString() };
           }
@@ -682,7 +682,7 @@ class HealthTrackerIntegration {
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem('health_tracker_config');
       if (saved) {
-        this.config = { ...this.config, ...JSON.parse(saved) };
+        this.config = { ...this._config, ...JSON.parse(saved) };
       }
     }
   }

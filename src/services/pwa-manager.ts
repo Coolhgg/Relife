@@ -133,15 +133,15 @@ export class PWAManager {
 
       console.log('[PWA] Service Worker registered successfully');
       this.emit('sw-registered', { registration });
-    } catch (error) {
-      console.error('[PWA] Service Worker registration failed:', error);
-      this.emit('sw-registration-failed', { error });
+    } catch (_error) {
+      console._error('[PWA] Service Worker registration failed:', _error);
+      this.emit('sw-registration-failed', { _error });
     }
   }
 
   // Setup install prompt handling
   private setupInstallPrompt() {
-    window.addEventListener('beforeinstallprompt', event => {
+    window.addEventListener('beforeinstallprompt', _event => {
       console.log('[PWA] Install prompt available');
       event.preventDefault();
 
@@ -176,7 +176,7 @@ export class PWAManager {
     if (!this.capabilities.serviceWorker) return;
 
     navigator.serviceWorker.addEventListener('message', event => {
-      const { type, data } = event.data;
+      const { type, data } = _event.data;
 
       switch (type) {
         case 'SYNC_COMPLETE':
@@ -224,9 +224,9 @@ export class PWAManager {
         this.emit('install-dismissed');
         return false;
       }
-    } catch (error) {
-      console.error('[PWA] Install prompt failed:', error);
-      this.emit('install-error', { error });
+    } catch (_error) {
+      console.error('[PWA] Install prompt failed:', _error);
+      this.emit('install-_error', { _error });
       return false;
     }
   }
@@ -254,9 +254,9 @@ export class PWAManager {
         });
         window.location.reload();
       }
-    } catch (error) {
-      console.error('[PWA] Service Worker update failed:', error);
-      throw error;
+    } catch (_error) {
+      console.error('[PWA] Service Worker update failed:', _error);
+      throw _error;
     }
   }
 
@@ -270,9 +270,9 @@ export class PWAManager {
       const permission = await Notification.requestPermission();
       this.emit('notification-permission-changed', { permission });
       return permission;
-    } catch (error) {
-      console.error('[PWA] Notification permission request failed:', error);
-      throw error;
+    } catch (_error) {
+      console.error('[PWA] Notification permission request failed:', _error);
+      throw _error;
     }
   }
 
@@ -299,9 +299,9 @@ export class PWAManager {
 
       this.emit('push-subscribed', { subscription });
       return subscription;
-    } catch (error) {
-      console.error('[PWA] Push subscription failed:', error);
-      throw error;
+    } catch (_error) {
+      console.error('[PWA] Push subscription failed:', _error);
+      throw _error;
     }
   }
 
@@ -313,8 +313,8 @@ export class PWAManager {
 
     try {
       return await this.serviceWorkerRegistration.pushManager.getSubscription();
-    } catch (error) {
-      console.error('[PWA] Failed to get push subscription:', error);
+    } catch (_error) {
+      console._error('[PWA] Failed to get push subscription:', _error);
       return null;
     }
   }
@@ -345,31 +345,31 @@ export class PWAManager {
   }
 
   // Event handling
-  on(event: string, callback: Function): void {
-    if (!this.eventListeners.has(event)) {
-      this.eventListeners.set(event, []);
+  on(_event: string, callback: Function): void {
+    if (!this.eventListeners.has(_event)) {
+      this.eventListeners.set(_event, []);
     }
-    this.eventListeners.get(event)!.push(callback);
+    this.eventListeners.get(_event)!.push(callback);
   }
 
-  off(event: string, callback: Function): void {
-    const listeners = this.eventListeners.get(event);
+  off(_event: string, callback: Function): void {
+    const listeners = this.eventListeners.get(_event);
     if (listeners) {
-      const index = listeners.indexOf(callback);
-      if (index > -1) {
-        listeners.splice(index, 1);
+      const _index = listeners.indexOf(callback);
+      if (_index > -1) {
+        listeners.splice(_index, 1);
       }
     }
   }
 
-  private emit(event: string, data?: any): void {
-    const listeners = this.eventListeners.get(event);
+  private emit(_event: string, data?: any): void {
+    const listeners = this.eventListeners.get(_event);
     if (listeners) {
       listeners.forEach(callback => {
         try {
           callback(data);
-        } catch (error) {
-          console.error(`[PWA] Event listener error for ${event}:`, error);
+        } catch (_error) {
+          console.error(`[PWA] Event listener _error for ${_event}:`, _error);
         }
       });
     }

@@ -42,7 +42,7 @@ const MockLanguageContext = React.createContext({
 });
 
 const MockAuthContext = React.createContext({
-  user: null,
+  _user: null,
   isLoading: false,
   signIn: vi.fn(),
   signOut: vi.fn(),
@@ -64,7 +64,7 @@ export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
   queryClient,
   theme = 'light',
   language = 'en',
-  user = null,
+  _user = null,
   initialEntries = ['/'],
 }) => {
   const defaultQueryClient = new QueryClient({
@@ -156,7 +156,7 @@ export function renderHookWithProviders<TResult, TProps>(
             queryClient={queryClient}
             theme={theme}
             language={language}
-            user={user}
+            user={_user}
             initialEntries={initialEntries}
           >
             {children}
@@ -170,7 +170,7 @@ export function renderHookWithProviders<TResult, TProps>(
         queryClient={queryClient}
         theme={theme}
         language={language}
-        user={user}
+        user={_user}
         initialEntries={initialEntries}
       >
         {children}
@@ -415,7 +415,7 @@ export const createMockUser = (overrides: Record<string, any> = {}) => ({
   id: 'test-user-123',
   email: 'test@example.com',
   name: 'Test User',
-  role: 'user',
+  role: '_user',
   preferences: {},
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
@@ -424,7 +424,7 @@ export const createMockUser = (overrides: Record<string, any> = {}) => ({
 
 export const createMockAlarm = (overrides: Record<string, any> = {}) => ({
   id: 'test-alarm-123',
-  userId: 'test-user-123',
+  userId: 'test-_user-123',
   time: '07:00',
   label: 'Test Alarm',
   isActive: true,

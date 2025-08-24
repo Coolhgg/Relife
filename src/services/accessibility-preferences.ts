@@ -208,8 +208,8 @@ class AccessibilityPreferencesService {
         const parsed = JSON.parse(stored);
         return { ...this.defaultPreferences, ...parsed };
       }
-    } catch (error) {
-      console.warn('Failed to load accessibility preferences:', error);
+    } catch (_error) {
+      console.warn('Failed to load accessibility preferences:', _error);
     }
 
     return { ...this.defaultPreferences };
@@ -224,8 +224,8 @@ class AccessibilityPreferencesService {
         'accessibility-preferences',
         JSON.stringify(this.preferences)
       );
-    } catch (error) {
-      console.warn('Failed to save accessibility preferences:', error);
+    } catch (_error) {
+      console.warn('Failed to save accessibility preferences:', _error);
     }
   }
 
@@ -439,8 +439,8 @@ class AccessibilityPreferencesService {
         // Set default speech rate
         const utterance = new SpeechSynthesisUtterance('');
         utterance.rate = this.preferences.speechRate;
-      } catch (error) {
-        console.warn('Speech synthesis configuration failed:', error);
+      } catch (_error) {
+        console.warn('Speech synthesis configuration failed:', _error);
       }
     }
   }
@@ -506,9 +506,9 @@ class AccessibilityPreferencesService {
   subscribe(listener: (prefs: AccessibilityPreferences) => void): () => void {
     this.listeners.push(listener);
     return () => {
-      const index = this.listeners.indexOf(listener);
-      if (index > -1) {
-        this.listeners.splice(index, 1);
+      const _index = this.listeners.indexOf(listener);
+      if (_index > -1) {
+        this.listeners.splice(_index, 1);
       }
     };
   }
@@ -520,8 +520,8 @@ class AccessibilityPreferencesService {
     this.listeners.forEach(listener => {
       try {
         listener(this.getPreferences());
-      } catch (error) {
-        console.error('Error in accessibility preference listener:', error);
+      } catch (_error) {
+        console._error('Error in accessibility preference listener:', _error);
       }
     });
   }

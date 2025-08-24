@@ -192,8 +192,8 @@ export class KeyboardNavigationService {
       },
     ];
 
-    shortcuts.forEach((shortcut, index) => {
-      this.addShortcut(`shortcut-${index}`, {
+    shortcuts.forEach((shortcut, _index) => {
+      this.addShortcut(`shortcut-${_index}`, {
         ...shortcut,
         enabled: true,
       });
@@ -315,28 +315,28 @@ export class KeyboardNavigationService {
   /**
    * Handle global keydown events
    */
-  private handleKeyDown(event: KeyboardEvent): void {
+  private handleKeyDown(_event: KeyboardEvent): void {
     // Check if keyboard navigation is enabled
     const preferences = this.accessibilityService.getPreferences();
-    if (!preferences.keyboardNavigation && !this.isGlobalShortcut(event)) {
+    if (!preferences.keyboardNavigation && !this.isGlobalShortcut(_event)) {
       return;
     }
 
     // Skip if typing in input fields (unless it's a global shortcut)
     if (
-      this.isTypingInInput(event.target as HTMLElement) &&
-      !this.isGlobalShortcut(event)
+      this.isTypingInInput(_event.target as HTMLElement) &&
+      !this.isGlobalShortcut(_event)
     ) {
       return;
     }
 
     const modifiers: string[] = [];
-    if (event.ctrlKey) modifiers.push('ctrl');
-    if (event.altKey) modifiers.push('alt');
-    if (event.shiftKey) modifiers.push('shift');
-    if (event.metaKey) modifiers.push('meta');
+    if (_event.ctrlKey) modifiers.push('ctrl');
+    if (_event.altKey) modifiers.push('alt');
+    if (_event.shiftKey) modifiers.push('shift');
+    if (_event.metaKey) modifiers.push('meta');
 
-    const shortcutKey = this.createShortcutKey(event.key, modifiers);
+    const shortcutKey = this.createShortcutKey(_event.key, modifiers);
     const shortcut = this.shortcuts.get(shortcutKey);
 
     if (shortcut && shortcut.enabled) {
@@ -353,7 +353,7 @@ export class KeyboardNavigationService {
   /**
    * Handle focus in events
    */
-  private handleFocusIn(event: FocusEvent): void {
+  private handleFocusIn(_event: FocusEvent): void {
     const element = event.target as HTMLElement;
     if (element && this.isFocusableElement(element)) {
       this.state.focusedElement = element;
@@ -372,14 +372,14 @@ export class KeyboardNavigationService {
   /**
    * Handle focus out events
    */
-  private handleFocusOut(event: FocusEvent): void {
+  private handleFocusOut(_event: FocusEvent): void {
     // Implementation for focus out handling
   }
 
   /**
    * Handle roving focus with arrow keys
    */
-  private handleRovingFocus(event: KeyboardEvent): void {
+  private handleRovingFocus(_event: KeyboardEvent): void {
     const preferences = this.accessibilityService.getPreferences();
 
     // Check if keyboard navigation and roving focus are enabled
@@ -398,7 +398,7 @@ export class KeyboardNavigationService {
 
     let nextIndex = currentIndex;
 
-    switch (event.key) {
+    switch (_event.key) {
       case 'ArrowRight':
       case 'ArrowDown':
         event.preventDefault();
@@ -502,17 +502,17 @@ export class KeyboardNavigationService {
   /**
    * Check if shortcut should work globally (even in input fields)
    */
-  private isGlobalShortcut(event: KeyboardEvent): boolean {
+  private isGlobalShortcut(_event: KeyboardEvent): boolean {
     const globalKeys = ['F1', 'Escape'];
     const globalWithModifiers = ['alt+h', 'alt+r', 'alt+d', 'alt+a', 'alt+s', 'alt+p'];
 
-    if (globalKeys.includes(event.key)) return true;
+    if (globalKeys.includes(_event.key)) return true;
 
     const modifiers: string[] = [];
-    if (event.ctrlKey) modifiers.push('ctrl');
-    if (event.altKey) modifiers.push('alt');
-    if (event.shiftKey) modifiers.push('shift');
-    if (event.metaKey) modifiers.push('meta');
+    if (_event.ctrlKey) modifiers.push('ctrl');
+    if (_event.altKey) modifiers.push('alt');
+    if (_event.shiftKey) modifiers.push('shift');
+    if (_event.metaKey) modifiers.push('meta');
 
     const shortcutString = `${modifiers.join('+')}${modifiers.length ? '+' : ''}${event.key.toLowerCase()}`;
     return globalWithModifiers.includes(shortcutString);
@@ -703,7 +703,7 @@ export class KeyboardNavigationService {
     const event = new CustomEvent('keyboard-navigate', {
       detail: { section, source: 'keyboard' },
     });
-    document.dispatchEvent(event);
+    document.dispatchEvent(_event);
 
     this.state.currentSection = section;
 
@@ -718,7 +718,7 @@ export class KeyboardNavigationService {
     const event = new CustomEvent('alarm-action', {
       detail: { action: 'create', source: 'keyboard' },
     });
-    document.dispatchEvent(event);
+    document.dispatchEvent(_event);
   }
 
   private toggleSelectedAlarm(): void {
@@ -729,7 +729,7 @@ export class KeyboardNavigationService {
       const event = new CustomEvent('alarm-action', {
         detail: { action: 'toggle', target: selectedAlarm, source: 'keyboard' },
       });
-      document.dispatchEvent(event);
+      document.dispatchEvent(_event);
     }
   }
 
@@ -741,7 +741,7 @@ export class KeyboardNavigationService {
       const event = new CustomEvent('alarm-action', {
         detail: { action: 'delete', target: selectedAlarm, source: 'keyboard' },
       });
-      document.dispatchEvent(event);
+      document.dispatchEvent(_event);
     }
   }
 
@@ -753,7 +753,7 @@ export class KeyboardNavigationService {
       const event = new CustomEvent('alarm-action', {
         detail: { action: 'edit', target: selectedAlarm, source: 'keyboard' },
       });
-      document.dispatchEvent(event);
+      document.dispatchEvent(_event);
     }
   }
 
@@ -804,7 +804,7 @@ export class KeyboardNavigationService {
     const event = new CustomEvent('show-shortcuts', {
       detail: { shortcuts },
     });
-    document.dispatchEvent(event);
+    document.dispatchEvent(_event);
   }
 
   private toggleScreenReaderMode(): void {
@@ -831,7 +831,7 @@ export class KeyboardNavigationService {
 
   private showHelp(): void {
     const event = new CustomEvent('show-help');
-    document.dispatchEvent(event);
+    document.dispatchEvent(_event);
     this.screenReader.announce('Help opened', 'polite');
   }
 

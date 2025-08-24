@@ -201,8 +201,8 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
         upgradeRecommendation: upgradeRec,
         loading: false,
       }));
-    } catch (error) {
-      console.error('Error loading dashboard data:', error);
+    } catch (_error) {
+      console._error('Error loading dashboard data:', _error);
 
       setState((prev: any) => ({ ...prev, loading: false }));
     }
@@ -272,9 +272,9 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
                 <div className="flex flex-wrap gap-2">
                   {state.upgradeRecommendation.benefits
                     .slice(0, 2)
-                    .map((benefit, index) => (
+                    .map((benefit, _index) => (
                       <span
-                        key={index}
+                        key={_index}
                         className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full"
                       >
                         {benefit}
@@ -337,7 +337,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
 
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {features.map((feature, index) => (
+        {features.map((feature, _index) => (
           <FeatureCard
             key={feature.title}
             icon={feature.icon}

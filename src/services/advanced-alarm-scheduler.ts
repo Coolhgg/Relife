@@ -67,8 +67,8 @@ export class AdvancedAlarmScheduler {
   // ===== SMART OPTIMIZATIONS =====
 
   static async applySmartOptimizations(alarm: Alarm): Promise<Alarm> {
-    const config = SchedulerCore.getConfig();
-    return AlarmExecutor.applySmartOptimizations(alarm, config);
+    const _config = SchedulerCore.getConfig();
+    return AlarmExecutor.applySmartOptimizations(alarm, _config);
   }
 
   static applySeasonalAdjustments(alarm: Alarm, date: Date = new Date()): Alarm {

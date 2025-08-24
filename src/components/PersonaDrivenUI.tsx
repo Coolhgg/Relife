@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 // Persona-Driven UI Components for Relife Alarm App
 // Adapts interface based on user persona and subscription tier
 
@@ -23,7 +24,7 @@ interface PersonaUIProps {
     | 'enterprise_emma'
     | 'student_sarah'
     | 'lifetime_larry';
-  onPersonaDetected?: (persona: string) => void;
+  onPersonaDetected?: (_persona: string) => void;
 }
 
 // Persona detection based on user behavior and preferences
@@ -83,7 +84,7 @@ export function usePersonaDetection(userId: string, userBehavior: any) {
     };
 
     const persona = detectPersona();
-    setDetectedPersona(persona);
+    setDetectedPersona(_persona);
   }, [userBehavior]);
 
   return detectedPersona;
@@ -99,7 +100,7 @@ export function PersonaDrivenPricingCard({
   currentTier: string;
   onUpgrade: (tier: string) => void;
 }) {
-  const getPersonaMessaging = (persona: string) => {
+  const getPersonaMessaging = (_persona: string) => {
     const messaging = {
       struggling_sam: {
         headline: 'Start Free, Upgrade When Ready',
@@ -182,7 +183,7 @@ export function PersonaDrivenOnboarding({
   const [step, setStep] = useState(0);
   const [preferences, setPreferences] = useState({});
 
-  const getPersonaOnboarding = (persona: string) => {
+  const getPersonaOnboarding = (_persona: string) => {
     const flows = {
       struggling_sam: {
         steps: [
@@ -310,7 +311,7 @@ export function PersonaDrivenOnboarding({
 
 // Persona-specific feature highlights
 export function PersonaFeatureHighlights({ userPersona }: { userPersona: string }) {
-  const getPersonaFeatures = (persona: string) => {
+  const getPersonaFeatures = (_persona: string) => {
     const features = {
       struggling_sam: [
         {
@@ -423,8 +424,8 @@ export function PersonaFeatureHighlights({ userPersona }: { userPersona: string 
 
   return (
     <div className="grid md:grid-cols-3 gap-4 my-6">
-      {features.map((feature, index) => (
-        <div key={index} className="p-4 bg-gray-50 rounded-lg text-center">
+      {features.map((feature, _index) => (
+        <div key={_index} className="p-4 bg-gray-50 rounded-lg text-center">
           <div className="text-3xl mb-2">{feature.icon}</div>
           <h4 className="font-semibold mb-1">{feature.title}</h4>
           <p className="text-sm text-gray-600">{feature.description}</p>
@@ -450,7 +451,7 @@ export function PersonaDrivenUI({
   }, [userPersona, onPersonaDetected]);
 
   return (
-    <div className="persona-driven-ui">
+    <div className="_persona-driven-ui">
       {showOnboarding && userPersona && (
         <PersonaDrivenOnboarding
           userPersona={userPersona}

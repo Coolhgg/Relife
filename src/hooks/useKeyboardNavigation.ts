@@ -122,17 +122,17 @@ export function useKeyboardNavigationEvents() {
       return;
     }
 
-    const handleKeyboardNavigate = (event: CustomEvent) => {
+    const handleKeyboardNavigate = (_event: CustomEvent) => {
       const { section } = event.detail;
       console.log(`Navigating to section: ${section} via keyboard`);
     };
 
-    const handleAlarmAction = (event: CustomEvent) => {
+    const handleAlarmAction = (_event: CustomEvent) => {
       const { action, target } = event.detail;
       console.log(`Alarm action: ${action}`, target);
     };
 
-    const handleShowShortcuts = (event: CustomEvent) => {
+    const handleShowShortcuts = (_event: CustomEvent) => {
       const { shortcuts } = event.detail;
       console.log('Keyboard shortcuts requested', shortcuts);
     };
@@ -197,8 +197,8 @@ export function useKeyboardFocusTrap(
       }) as HTMLElement[];
     };
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Tab') return;
+    const handleKeyDown = (_event: KeyboardEvent) => {
+      if (_event.key !== 'Tab') return;
 
       const focusableElements = getFocusableElements();
       if (focusableElements.length === 0) return;
@@ -206,7 +206,7 @@ export function useKeyboardFocusTrap(
       const firstElement = focusableElements[0];
       const lastElement = focusableElements[focusableElements.length - 1];
 
-      if (event.shiftKey) {
+      if (_event.shiftKey) {
         // Shift + Tab (backward)
         if (
           document.activeElement === firstElement ||
@@ -260,7 +260,7 @@ export function useRovingFocus(
     // Add roving focus attribute
     container.setAttribute('data-roving-focus', 'true');
 
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = (_event: KeyboardEvent) => {
       const target = event.target as HTMLElement;
       if (!container.contains(target)) return;
 
@@ -277,7 +277,7 @@ export function useRovingFocus(
       let nextIndex = currentIndex;
 
       if (orientation === 'horizontal') {
-        switch (event.key) {
+        switch (_event.key) {
           case 'ArrowRight':
             event.preventDefault();
             nextIndex = (currentIndex + 1) % focusableElements.length;
@@ -297,7 +297,7 @@ export function useRovingFocus(
             break;
         }
       } else {
-        switch (event.key) {
+        switch (_event.key) {
           case 'ArrowDown':
             event.preventDefault();
             nextIndex = (currentIndex + 1) % focusableElements.length;

@@ -134,27 +134,27 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(
 
     // Optimized event handlers
     const handleMouseEnter = useCallback(
-      (event: React.MouseEvent<HTMLButtonElement>) => {
+      (_event: React.MouseEvent<HTMLButtonElement>) => {
         if (canAnimate && !disabled && !loading) {
           startAnimation();
         }
-        onMouseEnter?.(event);
+        onMouseEnter?.(_event);
       },
       [canAnimate, disabled, loading, startAnimation, onMouseEnter]
     );
 
     const handleMouseLeave = useCallback(
-      (event: React.MouseEvent<HTMLButtonElement>) => {
+      (_event: React.MouseEvent<HTMLButtonElement>) => {
         if (canAnimate) {
           stopAnimation();
         }
-        onMouseLeave?.(event);
+        onMouseLeave?.(_event);
       },
       [canAnimate, stopAnimation, onMouseLeave]
     );
 
     const handleClick = useCallback(
-      (event: React.MouseEvent<HTMLButtonElement>) => {
+      (_event: React.MouseEvent<HTMLButtonElement>) => {
         if (loading || disabled) return;
 
         // Add haptic feedback on supported devices
@@ -164,10 +164,10 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(
 
         // Add ripple effect for enhanced devices
         if (canAnimate && tier === 'high-end') {
-          createRippleEffect(event, buttonRef.current);
+          createRippleEffect(_event, buttonRef.current);
         }
 
-        onClick?.(event);
+        onClick?.(_event);
       },
       [loading, disabled, isLowEnd, canAnimate, tier, onClick]
     );
@@ -239,7 +239,7 @@ AdaptiveButton.displayName = 'AdaptiveButton';
  * Create ripple effect for enhanced devices
  */
 function createRippleEffect(
-  event: React.MouseEvent<HTMLButtonElement>,
+  _event: React.MouseEvent<HTMLButtonElement>,
   element: HTMLButtonElement | null
 ) {
   if (!element) return;

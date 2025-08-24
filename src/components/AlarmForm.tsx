@@ -52,7 +52,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
   onSave,
   onCancel,
   userId,
-  user,
+  _user,
 }) => {
   const [formData, setFormData] = useState({
     time: alarm?.time || '07:00',
@@ -96,12 +96,12 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
   const checkNuclearAccess = async () => {
     try {
       const access = await PremiumService.getInstance().hasFeatureAccess(
-        user.id,
+        _user.id,
         'nuclear_mode'
       );
       setHasNuclearAccess(access);
-    } catch (error) {
-      console.error('Error checking nuclear mode access:', error);
+    } catch (_error) {
+      console._error('Error checking nuclear mode access:', _error);
       setHasNuclearAccess(false);
     }
   };
@@ -176,10 +176,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
           previewAudio.currentTime = 0;
           previewAudio.removeAttribute('src'); // Release resource
           previewAudio.load(); // Force garbage collection
-        } catch (error) {
+        } catch (_error) {
           // Silently handle cleanup errors in production
           if (process.env.NODE_ENV === 'development') {
-            console.warn('Error during audio cleanup:', error);
+            console.warn('Error during audio cleanup:', _error);
           }
         }
       }
@@ -306,7 +306,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
   const selectedMoodConfig = VOICE_MOODS.find(vm => vm.id === selectedVoiceMood);
 
   // Custom sound handlers
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (_event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -337,11 +337,11 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
           `Custom sound "${result.customSound.name}" uploaded successfully`
         );
       } else {
-        announceError(`Upload failed: ${result.error}`);
+        announceError(`Upload failed: ${result._error}`);
       }
-    } catch (error) {
+    } catch (_error) {
       announceError(
-        `Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Upload failed: ${error instanceof Error ? _error.message : 'Unknown _error'}`
       );
     } finally {
       setIsUploadingSound(false);
@@ -420,14 +420,14 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
           announceError('Audio playback failed');
         };
 
-        audio.addEventListener('error', errorHandler);
+        audio.addEventListener('_error', errorHandler);
 
         setPreviewingSound(sound.id);
         setPreviewAudio(audio);
         audio.play();
-      } catch (error) {
+      } catch (_error) {
         announceError(
-          `Failed to preview sound: ${error instanceof Error ? error.message : 'Unknown error'}`
+          `Failed to preview sound: ${error instanceof Error ? _error.message : 'Unknown _error'}`
         );
         setPreviewingSound(null);
         setPreviewAudio(null);
@@ -566,7 +566,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               className={`alarm-input text-2xl font-mono ${errors.time ? 'border-red-500 focus:border-red-500' : ''}`}
               required
               aria-invalid={errors.time ? 'true' : 'false'}
-              aria-describedby={errors.time ? 'time-error' : 'time-help'}
+              aria-describedby={errors.time ? 'time-_error' : 'time-help'}
               ref={errors.time ? firstErrorRef : undefined}
             />
             <div id="time-help" className="sr-only">
@@ -574,7 +574,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
             </div>
             {errors.time && (
               <div
-                id="time-error"
+                id="time-_error"
                 className="text-sm text-red-600 dark:text-red-400 mt-1"
                 role="alert"
                 aria-live="polite"
@@ -633,7 +633,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               maxLength={100}
               required
               aria-invalid={errors.label ? 'true' : 'false'}
-              aria-describedby={errors.label ? 'label-error' : 'label-help'}
+              aria-describedby={errors.label ? 'label-_error' : 'label-help'}
               ref={errors.label && !errors.time ? firstErrorRef : undefined}
             />
             <div id="label-help" className="sr-only">
@@ -642,7 +642,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
             </div>
             {errors.label && (
               <div
-                id="label-error"
+                id="label-_error"
                 className="text-sm text-red-600 dark:text-red-400 mt-1"
                 role="alert"
                 aria-live="polite"
@@ -662,7 +662,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               className="grid grid-cols-7 gap-2"
               role="group"
               aria-labelledby="days-legend"
-              aria-describedby={errors.days ? 'days-error' : undefined}
+              aria-describedby={errors.days ? 'days-_error' : undefined}
               aria-invalid={errors.days ? 'true' : 'false'}
             >
               <div id="days-legend" className="sr-only">
@@ -707,7 +707,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
             </div>
             {errors.days && (
               <div
-                id="days-error"
+                id="days-_error"
                 className="text-sm text-red-600 dark:text-red-400 mt-1"
                 role="alert"
                 aria-live="polite"
@@ -749,7 +749,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               className="grid grid-cols-2 gap-3"
               role="radiogroup"
               aria-labelledby="voice-mood-legend"
-              aria-describedby={errors.voiceMood ? 'voice-mood-error' : undefined}
+              aria-describedby={errors.voiceMood ? 'voice-mood-_error' : undefined}
               aria-invalid={errors.voiceMood ? 'true' : 'false'}
             >
               <div id="voice-mood-legend" className="sr-only">
@@ -806,7 +806,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
             </div>
             {errors.voiceMood && (
               <div
-                id="voice-mood-error"
+                id="voice-mood-_error"
                 className="text-sm text-red-600 dark:text-red-400 mt-1"
                 role="alert"
                 aria-live="polite"

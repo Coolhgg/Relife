@@ -63,7 +63,7 @@ export interface CustomThemeUISounds {
   click: CustomSoundAssignment;
   hover: CustomSoundAssignment;
   success: CustomSoundAssignment;
-  error: CustomSoundAssignment;
+  _error: CustomSoundAssignment;
   toggle?: CustomSoundAssignment;
   popup?: CustomSoundAssignment;
   slide?: CustomSoundAssignment;
@@ -99,7 +99,7 @@ export interface CustomThemeAmbientSounds {
 // Individual sound assignment
 export interface CustomSoundAssignment {
   type: CustomSoundType;
-  source: string; // file URL, built-in sound ID, or generated sound config
+  source: string; // file URL, built-in sound ID, or generated sound _config
   volume: number; // 0-1
   loop?: boolean;
   fadeIn?: number;
@@ -483,18 +483,18 @@ export interface UploadedFile {
   audioData?: AudioBuffer;
   analysis?: AudioAnalysis;
   error?: string;
-  status: 'uploading' | 'processing' | 'ready' | 'error';
+  status: 'uploading' | 'processing' | 'ready' | '_error';
 }
 
 export interface GeneratedSound {
   id: string;
   name: string;
-  config: GeneratedSoundConfig;
+  _config: GeneratedSoundConfig;
   audioBuffer?: AudioBuffer;
   audioUrl?: string;
   createdAt: Date;
   status: 'generating' | 'ready' | 'error';
-  error?: string;
+  _error?: string;
 }
 
 export interface SelectedBuiltInSound {
@@ -523,7 +523,7 @@ export interface ValidationResult {
 }
 
 export interface ValidationIssue {
-  type: 'error' | 'warning' | 'info';
+  type: '_error' | 'warning' | 'info';
   field: string;
   message: string;
   severity: 'critical' | 'high' | 'medium' | 'low';
@@ -665,7 +665,7 @@ export interface ImportResult {
 export interface ImportError {
   themeId?: string;
   fileName?: string;
-  error: string;
+  _error: string;
   type: 'validation' | 'format' | 'size' | 'corruption' | 'permission';
   recoverable: boolean;
 }

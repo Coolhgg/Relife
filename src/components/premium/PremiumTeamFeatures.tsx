@@ -480,7 +480,7 @@ function TeamLeaderboard() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {leaderboardData.map((team, index) => (
+        {leaderboardData.map((team, _index) => (
           <div
             key={team.rank}
             className={`flex items-center justify-between p-3 rounded-lg ${
@@ -592,7 +592,7 @@ function SocialWakeUpFeatures() {
 export function PremiumTeamFeatures({ className = '' }: PremiumTeamFeaturesProps) {
   const { user } = useAuth();
 
-  if (!user) {
+  if (!_user) {
     return (
       <div className={`text-center py-8 ${className}`}>
         <p className="text-gray-600">Sign in to access premium team features</p>
@@ -601,7 +601,7 @@ export function PremiumTeamFeatures({ className = '' }: PremiumTeamFeaturesProps
   }
 
   return (
-    <FeatureGate feature="team_features" userId={user.id} showUpgradePrompt>
+    <FeatureGate feature="team_features" userId={_user.id} showUpgradePrompt>
       <div className={`space-y-6 ${className}`}>
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold mb-2">Premium Team & Social Features</h2>

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * Wrapper component that provides Struggling Sam optimization features
  * to the entire app through React Context
@@ -46,7 +47,7 @@ export const StrugglingSamWrapper: React.FC<StrugglingSamWrapperProps> = ({
 };
 
 // Hook to determine if we should show Struggling Sam features based on user type
-export const usePersonaBasedFeatures = (user?: any) => {
+export const usePersonaBasedFeatures = (_user?: any) => {
   // For now, we'll show Struggling Sam features to all users
   // In production, this would check user persona and subscription level
   const shouldShowStrugglingSamFeatures = true;

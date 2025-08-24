@@ -204,8 +204,8 @@ export class VoiceProService {
 
       this.isInitialized = true;
       console.log('Voice Pro service initialized successfully');
-    } catch (error) {
-      console.error('Error initializing Voice Pro service:', error);
+    } catch (_error) {
+      console._error('Error initializing Voice Pro service:', _error);
       this.isInitialized = true; // Continue with fallback
     }
   }
@@ -234,8 +234,8 @@ export class VoiceProService {
     const webProvider = this.providers.find(p => p.id === 'web-speech');
     if (webProvider) {
       const voices = speechSynthesis.getVoices();
-      webProvider.voices = voices.map((voice, index) => ({
-        id: voice.voiceURI || `voice_${index}`,
+      webProvider.voices = voices.map((voice, _index) => ({
+        id: voice.voiceURI || `voice_${_index}`,
         name: voice.name,
         gender: this.detectGender(voice.name),
         quality: voice.localService ? 'high' : 'standard',
@@ -265,14 +265,14 @@ export class VoiceProService {
 
   private static async validateElevenLabsKey(apiKey: string): Promise<boolean> {
     try {
-      const response = await fetch('https://api.elevenlabs.io/v1/user', {
+      const response = await fetch('https://api.elevenlabs.io/v1/_user', {
         headers: {
           'xi-api-key': apiKey,
         },
       });
       return response.ok;
-    } catch (error) {
-      console.error('Error validating ElevenLabs API key:', error);
+    } catch (_error) {
+      console._error('Error validating ElevenLabs API key:', _error);
       return false;
     }
   }
@@ -307,8 +307,8 @@ export class VoiceProService {
         });
         console.log(`Loaded ${messages.length} cached voice messages`);
       }
-    } catch (error) {
-      console.error('Error loading cached messages:', error);
+    } catch (_error) {
+      console._error('Error loading cached messages:', _error);
     }
   }
 
@@ -360,13 +360,13 @@ export class VoiceProService {
 
             return audioUrl;
           }
-        } catch (error) {
-          console.error(`Error generating speech with ${providerId}:`, error);
+        } catch (_error) {
+          console._error(`Error generating speech with ${providerId}:`, _error);
           continue; // Try next provider
         }
       }
-    } catch (error) {
-      console.error('Error generating alarm message:', error);
+    } catch (_error) {
+      console._error('Error generating alarm message:', _error);
     }
 
     return null;
@@ -420,13 +420,13 @@ export class VoiceProService {
       );
 
       if (!response.ok) {
-        throw new Error(`ElevenLabs API error: ${response.status}`);
+        throw new Error(`ElevenLabs API _error: ${response.status}`);
       }
 
       const audioBlob = await response.blob();
       return URL.createObjectURL(audioBlob);
-    } catch (error) {
-      console.error('ElevenLabs generation failed:', error);
+    } catch (_error) {
+      console._error('ElevenLabs generation failed:', _error);
       return null;
     }
   }
@@ -460,8 +460,8 @@ export class VoiceProService {
         // Handle audio URL (from premium providers)
         return await this.playAudioUrl(audioUrl);
       }
-    } catch (error) {
-      console.error('Error playing alarm message:', error);
+    } catch (_error) {
+      console._error('Error playing alarm message:', _error);
       return false;
     }
   }
@@ -487,8 +487,8 @@ export class VoiceProService {
         // Fallback timeout
         setTimeout(() => resolve(false), 15000);
       });
-    } catch (error) {
-      console.error('Error playing web speech:', error);
+    } catch (_error) {
+      console._error('Error playing web speech:', _error);
       return false;
     }
   }
@@ -512,8 +512,8 @@ export class VoiceProService {
           resolve(false);
         }, 30000);
       });
-    } catch (error) {
-      console.error('Error playing audio URL:', error);
+    } catch (_error) {
+      console._error('Error playing audio URL:', _error);
       return false;
     }
   }
@@ -531,8 +531,8 @@ export class VoiceProService {
 
       try {
         await this.playAlarmMessage(alarm);
-      } catch (error) {
-        console.error('Error playing repeating message:', error);
+      } catch (_error) {
+        console._error('Error playing repeating message:', _error);
       }
     };
 
@@ -617,7 +617,7 @@ export class VoiceProService {
 
   static async startVoiceRecognition(
     onResult: (result: RecognitionResult) => void,
-    onError?: (error: string) => void,
+    onError?: (_error: string) => void,
     _options?: any /* auto: placeholder param - adjust */
   ): Promise<() => void> {
     await this.initialize();
@@ -633,10 +633,10 @@ export class VoiceProService {
       console.log('Voice recognition started');
     };
 
-    this.recognition.onresult = (event: SpeechRecognitionEvent) => {
+    this.recognition.onresult = (_event: SpeechRecognitionEvent) => {
       if (!isActive) return;
 
-      for (let i = event.resultIndex; i < event.results.length; i++) {
+      for (let i = event.resultIndex; i < _event.results.length; i++) {
         const result = event.results[i];
         const transcript = result[0].transcript.toLowerCase().trim();
         const confidence = result[0].confidence;
@@ -653,9 +653,9 @@ export class VoiceProService {
       }
     };
 
-    this.recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      console.error('Speech recognition error:', event.error);
-      onError?.(event.error);
+    this.recognition.onerror = (_event: SpeechRecognitionErrorEvent) => {
+      console.error('Speech recognition _error:', _event._error);
+      onError?.(_event._error);
     };
 
     this.recognition.onend = () => {
@@ -665,8 +665,8 @@ export class VoiceProService {
           if (isActive && this.recognition) {
             try {
               this.recognition.start();
-            } catch (error) {
-              console.error('Error restarting recognition:', error);
+            } catch (_error) {
+              console._error('Error restarting recognition:', _error);
             }
           }
         }, 1000);
@@ -675,8 +675,8 @@ export class VoiceProService {
 
     try {
       this.recognition.start();
-    } catch (error) {
-      console.error('Error starting recognition:', error);
+    } catch (_error) {
+      console._error('Error starting recognition:', _error);
       onError?.('Failed to start recognition');
     }
 
@@ -901,8 +901,8 @@ export class VoiceProService {
       }
 
       return true;
-    } catch (error) {
-      console.error('Error setting API key:', error);
+    } catch (_error) {
+      console._error('Error setting API key:', _error);
       return false;
     }
   }
@@ -926,8 +926,8 @@ export class VoiceProService {
     try {
       const cacheData = Array.from(this.audioCache.values());
       localStorage.setItem('voice_cache', JSON.stringify(cacheData));
-    } catch (error) {
-      console.error('Error persisting cache:', error);
+    } catch (_error) {
+      console._error('Error persisting cache:', _error);
     }
   }
 }

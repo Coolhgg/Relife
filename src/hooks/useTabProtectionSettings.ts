@@ -31,12 +31,12 @@ export const useTabProtectionSettings = (): UseTabProtectionSettingsReturn => {
 
   // Listen for settings changes from other tabs/windows
   useEffect(() => {
-    const handleSettingsChange = (event: CustomEvent<TabProtectionSettings>) => {
-      setSettings(event.detail);
+    const handleSettingsChange = (_event: CustomEvent<TabProtectionSettings>) => {
+      setSettings(_event.detail);
     };
 
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'tabProtectionSettings') {
+    const handleStorageChange = (_event: StorageEvent) => {
+      if (_event.key === 'tabProtectionSettings') {
         setSettings(getTabProtectionSettings());
       }
     };
@@ -165,8 +165,8 @@ export const useTabProtectionSettings = (): UseTabProtectionSettingsReturn => {
       setSettings(validatedSettings);
       saveTabProtectionSettings(validatedSettings);
       return true;
-    } catch (error) {
-      console.error('Failed to import settings:', error);
+    } catch (_error) {
+      console._error('Failed to import settings:', _error);
       return false;
     }
   }, []);

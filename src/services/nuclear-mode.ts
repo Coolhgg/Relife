@@ -257,14 +257,14 @@ export class NuclearModeService {
       challengeTypes: NuclearChallengeType[];
       customDifficulty?: number;
     }
-  ): Promise<{ success: boolean; alarm?: Alarm; error?: string }> {
+  ): Promise<{ success: boolean; alarm?: Alarm; _error?: string }> {
     try {
       // Check premium access
       const access = await this.canAccessNuclearMode(userId);
       if (!access.hasAccess) {
         return {
           success: false,
-          error: `Nuclear Mode requires Premium subscription. Upgrade at: ${access.upgradeUrl}`,
+          _error: `Nuclear Mode requires Premium subscription. Upgrade at: ${access.upgradeUrl}`,
         };
       }
 
@@ -300,15 +300,15 @@ export class NuclearModeService {
       };
 
       // Save to database
-      const { data, error } = await supabase
+      const { data, _error } = await supabase
         .from('alarms')
         .insert(nuclearAlarm)
         .select()
         .single();
 
-      if (error) {
-        ErrorHandler.handleError(error, 'Failed to create nuclear alarm');
-        return { success: false, error: 'Failed to create nuclear alarm' };
+      if (_error) {
+        ErrorHandler.handleError(_error, 'Failed to create nuclear alarm');
+        return { success: false, _error: 'Failed to create nuclear alarm' };
       }
 
       // Generate nuclear challenge configuration
@@ -326,12 +326,12 @@ export class NuclearModeService {
       });
 
       return { success: true, alarm: data };
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'Error creating nuclear alarm'
       );
-      return { success: false, error: 'Failed to create nuclear alarm' };
+      return { success: false, _error: 'Failed to create nuclear alarm' };
     }
   }
 
@@ -367,7 +367,7 @@ export class NuclearModeService {
   /**
    * Start a nuclear mode session when alarm triggers
    */
-  async startNuclearSession(alarm: Alarm, user: User): Promise<NuclearModeSession> {
+  async startNuclearSession(alarm: Alarm, _user: User): Promise<NuclearModeSession> {
     const challenges = await this.getChallengesForAlarm(alarm.id);
 
     const session: NuclearModeSession = {
@@ -398,7 +398,7 @@ export class NuclearModeService {
 
     // Track session start
     AppAnalyticsService.getInstance().track('nuclear_session_started', {
-      userId: user.id,
+      userId: _user.id,
       alarmId: alarm.id,
       challengeCount: challenges.length,
       difficulty: session.difficulty,
@@ -524,8 +524,8 @@ export class NuclearModeService {
         return JSON.parse(value);
       }
       return [];
-    } catch (error) {
-      console.error('Error getting nuclear challenges:', error);
+    } catch (_error) {
+      console._error('Error getting nuclear challenges:', _error);
       return [];
     }
   }
@@ -566,8 +566,8 @@ export class NuclearModeService {
         key: NUCLEAR_SESSIONS_KEY,
         value: JSON.stringify(sessions),
       });
-    } catch (error) {
-      console.error('Error saving nuclear session:', error);
+    } catch (_error) {
+      console._error('Error saving nuclear session:', _error);
     }
   }
 
@@ -584,8 +584,8 @@ export class NuclearModeService {
         return sessions.find(s => s.id === sessionId) || null;
       }
       return null;
-    } catch (error) {
-      console.error('Error getting nuclear session:', error);
+    } catch (_error) {
+      console._error('Error getting nuclear session:', _error);
       return null;
     }
   }
@@ -698,8 +698,8 @@ export class NuclearModeService {
       });
 
       return Math.round(improvement);
-    } catch (error) {
-      console.error('Error calculating improvement:', error);
+    } catch (_error) {
+      console._error('Error calculating improvement:', _error);
       return 0;
     }
   }
@@ -825,9 +825,9 @@ export class NuclearModeService {
             ? Math.max(...completedSessions.map(s => s.performance.rank))
             : 0,
       };
-    } catch (error) {
-      console.error('Error getting nuclear stats:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error getting nuclear stats:', _error);
+      throw _error;
     }
   }
 

@@ -24,7 +24,7 @@ const mockSubscription = {
   subscription: null,
   currentPlan: null,
   usage: null,
-  error: null,
+  _error: null,
   availablePlans: [],
   paymentMethods: [],
   invoiceHistory: [],
@@ -127,7 +127,7 @@ describe('useFeatureGate Hook', () => {
   });
 
   describe('Feature Access Control', () => {
-    it('should grant access when user has feature access', () => {
+    it('should grant access when _user has feature access', () => {
       mockSubscription.userTier = 'basic';
       mockSubscription.featureAccess = {
         userId: mockUserId,
@@ -156,7 +156,7 @@ describe('useFeatureGate Hook', () => {
       expect(result.current.requiredTier).toBeNull();
     });
 
-    it('should deny access when user lacks feature access', () => {
+    it('should deny access when _user lacks feature access', () => {
       mockSubscription.userTier = 'free';
       mockSubscription.featureAccess = {
         userId: mockUserId,
@@ -274,7 +274,7 @@ describe('useFeatureGate Hook', () => {
         useFeatureGate({
           userId: mockUserId,
           feature: 'unlimited_alarms',
-          config: { softGate: true },
+          _config: { softGate: true },
         })
       );
 
@@ -350,7 +350,7 @@ describe('useFeatureGate Hook', () => {
         useFeatureGate({
           userId: mockUserId,
           feature: 'unlimited_alarms',
-          config: { softGate: true },
+          _config: { softGate: true },
         })
       );
 
@@ -481,7 +481,7 @@ describe('useFeatureGate Hook', () => {
         useFeatureGate({
           userId: mockUserId,
           feature: 'unlimited_alarms',
-          config: { trackUsage: false },
+          _config: { trackUsage: false },
         })
       );
 
@@ -556,7 +556,7 @@ describe('useFeatureGate Hook', () => {
         useFeatureGate({
           userId: mockUserId,
           feature: 'unlimited_alarms',
-          config: { redirectToUpgrade: false },
+          _config: { redirectToUpgrade: false },
         })
       );
 
@@ -725,7 +725,7 @@ describe('useFeatureGate Hook', () => {
         useFeatureGate({
           userId: mockUserId,
           feature: 'unlimited_alarms',
-          config: {
+          _config: {
             customMessage,
           },
         })
@@ -749,7 +749,7 @@ describe('useFeatureGate Hook', () => {
         useFeatureGate({
           userId: mockUserId,
           feature: 'unlimited_alarms',
-          config: {
+          _config: {
             fallbackTier: 'premium',
           },
         })

@@ -19,8 +19,8 @@ export class VoiceService {
 
       this.isInitialized = true;
       console.log('Voice service initialized');
-    } catch (error) {
-      console.error('Error initializing voice service:', error);
+    } catch (_error) {
+      console._error('Error initializing voice service:', _error);
     }
   }
 
@@ -40,8 +40,8 @@ export class VoiceService {
         if (premiumMessage) {
           return premiumMessage;
         }
-      } catch (error) {
-        console.warn('Premium voice service failed, falling back to basic:', error);
+      } catch (_error) {
+        console.warn('Premium voice service failed, falling back to basic:', _error);
       }
     }
 
@@ -60,8 +60,8 @@ export class VoiceService {
         this.audioCache.set(cacheKey, audioUrl);
         return audioUrl;
       }
-    } catch (error) {
-      console.error('Error generating alarm message:', error);
+    } catch (_error) {
+      console._error('Error generating alarm message:', _error);
     }
 
     return null;
@@ -137,7 +137,7 @@ export class VoiceService {
         };
 
         utterance.onerror = event => {
-          console.error('Speech synthesis error:', event);
+          console._error('Speech synthesis _error:', _event);
           resolve(null);
         };
 
@@ -147,8 +147,8 @@ export class VoiceService {
         setTimeout(() => {
           resolve(null);
         }, 10000);
-      } catch (error) {
-        console.error('Error in text-to-speech:', error);
+      } catch (_error) {
+        console._error('Error in text-to-speech:', _error);
         resolve(null);
       }
     });
@@ -215,8 +215,8 @@ export class VoiceService {
     try {
       await Promise.allSettled(promises);
       console.log('Preloaded alarm messages');
-    } catch (error) {
-      console.error('Error preloading alarm messages:', error);
+    } catch (_error) {
+      console._error('Error preloading alarm messages:', _error);
     }
   }
 
@@ -235,8 +235,8 @@ export class VoiceService {
           await PremiumVoiceService.testPremiumVoice(mood, userId);
           return;
         }
-      } catch (error) {
-        console.warn('Premium voice test failed, falling back to basic:', error);
+      } catch (_error) {
+        console.warn('Premium voice test failed, falling back to basic:', _error);
       }
     }
 

@@ -124,7 +124,7 @@ export interface VisualAlarmTheme {
       | 'heavy'
       | 'success'
       | 'warning'
-      | 'error'
+      | '_error'
       | 'selection'
       | 'impact';
     touchRipple: boolean;

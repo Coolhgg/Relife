@@ -15,7 +15,7 @@ export interface PushNotificationStatus {
   currentToken: string | null;
   settings: PushNotificationSettings;
   isLoading: boolean;
-  error: string | null;
+  _error: string | null;
 }
 
 export interface UsePushNotificationsReturn {
@@ -41,7 +41,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
     currentToken: null,
     settings: PushNotificationService.getSettings(),
     isLoading: false,
-    error: null,
+    _error: null,
   });
 
   /**
@@ -56,14 +56,14 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         settings: PushNotificationService.getSettings(),
         isSupported:
           'serviceWorker' in navigator || (window as any).Capacitor?.isNativePlatform(),
-        error: null,
+        _error: null,
       }));
-    } catch (error) {
-      console.error('Error updating push notification status:', error);
+    } catch (_error) {
+      console.error('Error updating push notification status:', _error);
 
       setStatus((prev: any) => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? _error.message : 'Unknown _error',
       }));
     }
   }, []);
@@ -72,7 +72,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    * Initialize push notifications
    */
   const initialize = useCallback(async (): Promise<boolean> => {
-    setStatus((prev: any) => ({ ...prev, isLoading: true, error: null }));
+    setStatus((prev: any) => ({ ...prev, isLoading: true, _error: null }));
 
     try {
       track('push_notifications_initialize_attempt');
@@ -97,19 +97,19 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       }
 
       return success;
-    } catch (error) {
-      console.error('Error initializing push notifications:', error);
+    } catch (_error) {
+      console.error('Error initializing push notifications:', _error);
       const errorMessage =
-        error instanceof Error ? error.message : 'Initialization failed';
+        error instanceof Error ? _error.message : 'Initialization failed';
 
       setStatus((prev: any) => ({
         ...prev,
-        error: errorMessage,
+        _error: errorMessage,
         isLoading: false,
         isInitialized: false,
       }));
 
-      track('push_notifications_initialize_error', { error: errorMessage });
+      track('push_notifications_initialize_error', { _error: errorMessage });
 
       return false;
     }
@@ -119,7 +119,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    * Request notification permissions
    */
   const requestPermissions = useCallback(async (): Promise<boolean> => {
-    setStatus((prev: any) => ({ ...prev, isLoading: true, error: null }));
+    setStatus((prev: any) => ({ ...prev, isLoading: true, _error: null }));
 
     try {
       track('push_permissions_request_attempt');
@@ -138,18 +138,18 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       }
 
       return success;
-    } catch (error) {
-      console.error('Error requesting push permissions:', error);
+    } catch (_error) {
+      console.error('Error requesting push permissions:', _error);
       const errorMessage =
-        error instanceof Error ? error.message : 'Permission request failed';
+        error instanceof Error ? _error.message : 'Permission request failed';
 
       setStatus((prev: any) => ({
         ...prev,
-        error: errorMessage,
+        _error: errorMessage,
         isLoading: false,
       }));
 
-      track('push_permissions_error', { error: errorMessage });
+      track('push_permissions_error', { _error: errorMessage });
 
       return false;
     }
@@ -160,7 +160,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    */
   const updateSettings = useCallback(
     async (newSettings: Partial<PushNotificationSettings>): Promise<void> => {
-      setStatus((prev: any) => ({ ...prev, isLoading: true, error: null }));
+      setStatus((prev: any) => ({ ...prev, isLoading: true, _error: null }));
 
       try {
         track('push_settings_update', {
@@ -178,18 +178,18 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
           alarmReminders: status.settings.alarmReminders,
           dailyMotivation: status.settings.dailyMotivation,
         });
-      } catch (error) {
-        console.error('Error updating push settings:', error);
+      } catch (_error) {
+        console.error('Error updating push settings:', _error);
         const errorMessage =
-          error instanceof Error ? error.message : 'Settings update failed';
+          error instanceof Error ? _error.message : 'Settings update failed';
 
         setStatus((prev: any) => ({
           ...prev,
-          error: errorMessage,
+          _error: errorMessage,
           isLoading: false,
         }));
 
-        track('push_settings_update_error', { error: errorMessage });
+        track('push_settings_update_error', { _error: errorMessage });
       }
     },
     [
@@ -216,16 +216,16 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         await PushNotificationService.scheduleAlarmPush(alarm);
 
         track('push_alarm_scheduled', { alarmId: alarm.id });
-      } catch (error) {
-        console.error('Error scheduling alarm push:', error);
+      } catch (_error) {
+        console.error('Error scheduling alarm push:', _error);
         const errorMessage =
-          error instanceof Error ? error.message : 'Alarm scheduling failed';
+          error instanceof Error ? _error.message : 'Alarm scheduling failed';
 
-        setStatus((prev: any) => ({ ...prev, error: errorMessage }));
+        setStatus((prev: any) => ({ ...prev, _error: errorMessage }));
 
         track('push_alarm_schedule_error', {
           alarmId: alarm.id,
-          error: errorMessage,
+          _error: errorMessage,
         });
       }
     },
@@ -243,14 +243,14 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         await PushNotificationService.sendDailyMotivation(message);
 
         track('push_daily_motivation_sent');
-      } catch (error) {
-        console.error('Error sending daily motivation:', error);
+      } catch (_error) {
+        console.error('Error sending daily motivation:', _error);
         const errorMessage =
-          error instanceof Error ? error.message : 'Daily motivation failed';
+          error instanceof Error ? _error.message : 'Daily motivation failed';
 
-        setStatus((prev: any) => ({ ...prev, error: errorMessage }));
+        setStatus((prev: any) => ({ ...prev, _error: errorMessage }));
 
-        track('push_daily_motivation_error', { error: errorMessage });
+        track('push_daily_motivation_error', { _error: errorMessage });
       }
     },
     [track]
@@ -270,14 +270,14 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         await PushNotificationService.sendWeeklyProgress(stats);
 
         track('push_weekly_progress_sent');
-      } catch (error) {
-        console.error('Error sending weekly progress:', error);
+      } catch (_error) {
+        console.error('Error sending weekly progress:', _error);
         const errorMessage =
-          error instanceof Error ? error.message : 'Weekly progress failed';
+          error instanceof Error ? _error.message : 'Weekly progress failed';
 
-        setStatus((prev: any) => ({ ...prev, error: errorMessage }));
+        setStatus((prev: any) => ({ ...prev, _error: errorMessage }));
 
-        track('push_weekly_progress_error', { error: errorMessage });
+        track('push_weekly_progress_error', { _error: errorMessage });
       }
     },
     [track]
@@ -287,7 +287,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    * Test push notification
    */
   const testNotification = useCallback(async (): Promise<void> => {
-    setStatus((prev: any) => ({ ...prev, isLoading: true, error: null }));
+    setStatus((prev: any) => ({ ...prev, isLoading: true, _error: null }));
 
     try {
       track('push_test_notification_send');
@@ -297,18 +297,18 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       setStatus((prev: any) => ({ ...prev, isLoading: false }));
 
       track('push_test_notification_sent');
-    } catch (error) {
-      console.error('Error sending test notification:', error);
+    } catch (_error) {
+      console.error('Error sending test notification:', _error);
       const errorMessage =
-        error instanceof Error ? error.message : 'Test notification failed';
+        error instanceof Error ? _error.message : 'Test notification failed';
 
       setStatus((prev: any) => ({
         ...prev,
-        error: errorMessage,
+        _error: errorMessage,
         isLoading: false,
       }));
 
-      track('push_test_notification_error', { error: errorMessage });
+      track('push_test_notification_error', { _error: errorMessage });
     }
   }, [track]);
 
@@ -316,7 +316,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    * Unregister from push notifications
    */
   const unregister = useCallback(async (): Promise<void> => {
-    setStatus((prev: any) => ({ ...prev, isLoading: true, error: null }));
+    setStatus((prev: any) => ({ ...prev, isLoading: true, _error: null }));
 
     try {
       track('push_unregister_attempt');
@@ -335,18 +335,18 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       }));
 
       track('push_unregistered');
-    } catch (error) {
-      console.error('Error unregistering from push notifications:', error);
+    } catch (_error) {
+      console.error('Error unregistering from push notifications:', _error);
       const errorMessage =
-        error instanceof Error ? error.message : 'Unregistration failed';
+        error instanceof Error ? _error.message : 'Unregistration failed';
 
       setStatus((prev: any) => ({
         ...prev,
-        error: errorMessage,
+        _error: errorMessage,
         isLoading: false,
       }));
 
-      track('push_unregister_error', { error: errorMessage });
+      track('push_unregister_error', { _error: errorMessage });
     }
   }, [track, updateStatus]);
 
@@ -366,7 +366,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       await updateStatus();
 
       // Auto-initialize if supported and not explicitly disabled
-      if (status.isSupported && !status.isInitialized && !status.error) {
+      if (status.isSupported && !status.isInitialized && !status._error) {
         if (mounted) {
           await initialize();
         }
@@ -382,7 +382,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
 
   // Set up event listeners for push notification events
   useEffect(() => {
-    const handleNotificationAnalytics = (event: CustomEvent) => {
+    const handleNotificationAnalytics = (_event: CustomEvent) => {
       const { event: eventType, data } = event.detail;
       track(`push_notification_${eventType}`, data);
     };

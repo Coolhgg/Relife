@@ -50,7 +50,7 @@ export const RELIFE_BRAND = {
     secondary: '#8b5cf6',
     accent: '#10b981',
     warning: '#f59e0b',
-    error: '#ef4444',
+    _error: '#ef4444',
     success: '#22c55e',
     neutral: {
       50: '#f9fafb',
@@ -72,7 +72,7 @@ export const RELIFE_BRAND = {
 // Base email template generator with Relife branding
 export const generateBaseTemplate = (
   content: string,
-  persona: PersonaType,
+  _persona: PersonaType,
   ctaButton?: { text: string; url: string; color?: string }
 ): string => {
   const personaConfig = DEFAULT_PERSONAS[persona];

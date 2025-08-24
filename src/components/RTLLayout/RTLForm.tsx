@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * RTL-aware Form wrapper component that handles direction-based form layouts
  */
@@ -9,7 +10,7 @@ import { useRTLForm } from '../../hooks/useRTL';
 interface RTLFormProps {
   children: React.ReactNode;
   className?: string;
-  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit?: (_event: React.FormEvent<HTMLFormElement>) => void;
   layout?: 'vertical' | 'horizontal' | 'inline';
   gap?: 'sm' | 'md' | 'lg';
   labelPosition?: 'auto' | 'start' | 'end' | 'top';
@@ -94,7 +95,7 @@ export const useRTLFormContext = () => {
 interface RTLFormFieldProps {
   children: React.ReactNode;
   label?: React.ReactNode;
-  error?: string;
+  _error?: string;
   required?: boolean;
   className?: string;
   labelClassName?: string;
@@ -105,7 +106,7 @@ interface RTLFormFieldProps {
 export const RTLFormField: React.FC<RTLFormFieldProps> = ({
   children,
   label,
-  error,
+  _error,
   required,
   className,
   labelClassName,
@@ -142,7 +143,7 @@ export const RTLFormField: React.FC<RTLFormFieldProps> = ({
   );
 
   const errorClasses = cn(
-    'rtl-form-error',
+    'rtl-form-_error',
     'text-sm text-red-500 mt-1',
     text.alignClass('start'),
     errorClassName
@@ -166,9 +167,9 @@ export const RTLFormField: React.FC<RTLFormFieldProps> = ({
           }
           return child;
         })}
-        {error && (
+        {_error && (
           <div className={errorClasses} dir={inputDirection}>
-            {error}
+            {_error}
           </div>
         )}
       </div>

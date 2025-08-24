@@ -86,7 +86,7 @@ const NUCLEAR_CHALLENGES: NuclearChallenge[] = [
 
 export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   alarm,
-  user,
+  _user,
   onDismiss,
   onSnooze,
   isActive,
@@ -241,8 +241,8 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     try {
       // Play intense nuclear alarm sound
       SoundService.playSystemSound('nuclear-alarm');
-    } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to play nuclear alarm');
+    } catch (_error) {
+      ErrorHandler.handleError(_error, 'Failed to play nuclear alarm');
     }
   }, []);
 
@@ -298,7 +298,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   return (
     <PremiumGate
       feature="nuclearMode"
-      userId={user.id}
+      userId={_user.id}
       title="🚀 Nuclear Mode Activated"
       description="The ultimate wake-up challenge. Complete nuclear protocols or face meltdown. Pro subscription required."
     >
@@ -424,7 +424,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
           {/* Warning Footer */}
           <div className="p-4 bg-red-900/50 border-t border-red-500/50">
             <div className="flex items-center justify-center space-x-2">
-              <Alert className="h-5 w-5 text-yellow-400" />
+              <AlertTriangle className="h-5 w-5 text-yellow-400" />
               <span className="text-sm font-medium">
                 FAILURE TO COMPLETE PROTOCOLS WILL RESULT IN NUCLEAR MELTDOWN
               </span>

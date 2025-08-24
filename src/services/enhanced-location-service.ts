@@ -57,7 +57,7 @@ interface LocationPattern {
 }
 
 export class EnhancedLocationService {
-  private static config: LocationConfig = {
+  private static _config: LocationConfig = {
     enabled: false,
     highAccuracy: true,
     trackingInterval: 15,
@@ -81,11 +81,11 @@ export class EnhancedLocationService {
       await this.loadLocationHistory();
       await this.analyzeLocationPatterns();
 
-      if (this.config.enabled) {
+      if (this._config.enabled) {
         await this.startLocationTracking();
       }
-    } catch (error) {
-      console.error('Failed to initialize Enhanced Location Service:', error);
+    } catch (_error) {
+      console._error('Failed to initialize Enhanced Location Service:', _error);
     }
   }
 
@@ -93,10 +93,10 @@ export class EnhancedLocationService {
     try {
       const { value } = await Preferences.get({ key: LOCATION_CONFIG_KEY });
       if (value) {
-        this.config = { ...this.config, ...JSON.parse(value) };
+        this.config = { ...this._config, ...JSON.parse(value) };
       }
-    } catch (error) {
-      console.error('Error loading location config:', error);
+    } catch (_error) {
+      console._error('Error loading location _config:', _error);
     }
   }
 
@@ -118,8 +118,8 @@ export class EnhancedLocationService {
           ])
         );
       }
-    } catch (error) {
-      console.error('Error loading geofences:', error);
+    } catch (_error) {
+      console._error('Error loading geofences:', _error);
     }
   }
 
@@ -133,8 +133,8 @@ export class EnhancedLocationService {
           timestamp: new Date(point.timestamp),
         }));
       }
-    } catch (error) {
-      console.error('Error loading location history:', error);
+    } catch (_error) {
+      console._error('Error loading location history:', _error);
     }
   }
 
@@ -153,8 +153,8 @@ export class EnhancedLocationService {
         async () => {
           try {
             await this.updateCurrentLocation();
-          } catch (error) {
-            console.error('Error updating location:', error);
+          } catch (_error) {
+            console._error('Error updating location:', _error);
           }
         },
         this.config.trackingInterval * 60 * 1000
@@ -164,9 +164,9 @@ export class EnhancedLocationService {
       await this.updateCurrentLocation();
 
       console.log('Location tracking started');
-    } catch (error) {
-      console.error('Failed to start location tracking:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to start location tracking:', _error);
+      throw _error;
     }
   }
 
@@ -181,9 +181,9 @@ export class EnhancedLocationService {
   private static async updateCurrentLocation(): Promise<void> {
     try {
       const position = await Geolocation.getCurrentPosition({
-        enableHighAccuracy: this.config.highAccuracy,
+        enableHighAccuracy: this._config.highAccuracy,
         timeout: 10000,
-        maximumAge: this.config.batteryOptimization ? 300000 : 60000, // 5min or 1min
+        maximumAge: this._config.batteryOptimization ? 300000 : 60000, // 5min or 1min
       });
 
       this.lastKnownPosition = position;
@@ -202,9 +202,9 @@ export class EnhancedLocationService {
       this.locationHistory.push(historyPoint);
 
       // Maintain history size limit
-      if (this.locationHistory.length > this.config.maxLocationHistory) {
+      if (this.locationHistory.length > this._config.maxLocationHistory) {
         this.locationHistory = this.locationHistory.slice(
-          -this.config.maxLocationHistory
+          -this._config.maxLocationHistory
         );
       }
 
@@ -218,8 +218,8 @@ export class EnhancedLocationService {
 
       // Save history
       await this.saveLocationHistory();
-    } catch (error) {
-      console.error('Error updating current location:', error);
+    } catch (_error) {
+      console._error('Error updating current location:', _error);
     }
   }
 
@@ -249,9 +249,9 @@ export class EnhancedLocationService {
         `Geofence "${name}" created at ${location.latitude}, ${location.longitude}`
       );
       return geofence.id;
-    } catch (error) {
-      console.error('Error creating geofence:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error creating geofence:', _error);
+      throw _error;
     }
   }
 
@@ -267,9 +267,9 @@ export class EnhancedLocationService {
 
       Object.assign(geofence, updates);
       await this.saveGeofences();
-    } catch (error) {
-      console.error('Error updating geofence:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error updating geofence:', _error);
+      throw _error;
     }
   }
 
@@ -278,9 +278,9 @@ export class EnhancedLocationService {
       this.geofences.delete(geofenceId);
       await this.saveGeofences();
       console.log(`Geofence ${geofenceId} deleted`);
-    } catch (error) {
-      console.error('Error deleting geofence:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error deleting geofence:', _error);
+      throw _error;
     }
   }
 
@@ -329,9 +329,9 @@ export class EnhancedLocationService {
       geofence.lastTriggered = new Date();
       await this.saveGeofences();
 
-      console.log(`Geofence "${geofence.name}" ${eventType} event triggered`);
-    } catch (error) {
-      console.error(`Error handling geofence ${eventType} event:`, error);
+      console.log(`Geofence "${geofence.name}" ${eventType} _event triggered`);
+    } catch (_error) {
+      console._error(`Error handling geofence ${eventType} _event:`, _error);
     }
   }
 
@@ -357,8 +357,8 @@ export class EnhancedLocationService {
           await this.sendLocationNotification(geofence, trigger);
           break;
       }
-    } catch (error) {
-      console.error('Error executing geofence trigger:', error);
+    } catch (_error) {
+      console._error('Error executing geofence trigger:', _error);
     }
   }
 
@@ -373,8 +373,8 @@ export class EnhancedLocationService {
         console.log(
           `${enabled ? 'Enabled' : 'Disabled'} alarm ${alarmId} due to location trigger`
         );
-      } catch (error) {
-        console.error(`Error toggling alarm ${alarmId}:`, error);
+      } catch (_error) {
+        console._error(`Error toggling alarm ${alarmId}:`, _error);
       }
     }
   }
@@ -391,8 +391,8 @@ export class EnhancedLocationService {
         console.log(
           `Adjusting alarm ${alarmId} by ${adjustMinutes} minutes due to location`
         );
-      } catch (error) {
-        console.error(`Error adjusting alarm time for ${alarmId}:`, error);
+      } catch (_error) {
+        console._error(`Error adjusting alarm time for ${alarmId}:`, _error);
       }
     }
   }
@@ -410,8 +410,8 @@ export class EnhancedLocationService {
           `You have ${trigger.type === 'enter' ? 'entered' : 'exited'} ${geofence.name}`,
         schedule: new Date(),
       });
-    } catch (error) {
-      console.error('Error sending location notification:', error);
+    } catch (_error) {
+      console._error('Error sending location notification:', _error);
     }
   }
 
@@ -434,8 +434,8 @@ export class EnhancedLocationService {
       console.log(
         `Analyzed ${clusters.length} location clusters, ${this.locationPatterns.size} patterns identified`
       );
-    } catch (error) {
-      console.error('Error analyzing location patterns:', error);
+    } catch (_error) {
+      console._error('Error analyzing location patterns:', _error);
     }
   }
 
@@ -697,8 +697,8 @@ export class EnhancedLocationService {
           );
         }
       }
-    } catch (error) {
-      console.error('Error getting location-based recommendations:', error);
+    } catch (_error) {
+      console._error('Error getting location-based recommendations:', _error);
     }
 
     return recommendations;
@@ -769,8 +769,8 @@ export class EnhancedLocationService {
         key: GEOFENCES_KEY,
         value: JSON.stringify(dataObject),
       });
-    } catch (error) {
-      console.error('Error saving geofences:', error);
+    } catch (_error) {
+      console._error('Error saving geofences:', _error);
     }
   }
 
@@ -780,8 +780,8 @@ export class EnhancedLocationService {
         key: LOCATION_HISTORY_KEY,
         value: JSON.stringify(this.locationHistory),
       });
-    } catch (error) {
-      console.error('Error saving location history:', error);
+    } catch (_error) {
+      console._error('Error saving location history:', _error);
     }
   }
 
@@ -792,8 +792,8 @@ export class EnhancedLocationService {
         key: 'location_patterns',
         value: JSON.stringify(dataObject),
       });
-    } catch (error) {
-      console.error('Error saving location patterns:', error);
+    } catch (_error) {
+      console._error('Error saving location patterns:', _error);
     }
   }
 
@@ -817,8 +817,8 @@ export class EnhancedLocationService {
         key: `geofence_state_${geofenceId}`,
         value: inside ? 'inside' : 'outside',
       });
-    } catch (error) {
-      console.error('Error setting geofence state:', error);
+    } catch (_error) {
+      console._error('Error setting geofence state:', _error);
     }
   }
 
@@ -861,23 +861,23 @@ export class EnhancedLocationService {
         key: `geofence_dwell_${geofenceId}`,
         value: time.toISOString(),
       });
-    } catch (error) {
-      console.error('Error setting geofence dwell start:', error);
+    } catch (_error) {
+      console._error('Error setting geofence dwell start:', _error);
     }
   }
 
   private static async resetGeofenceDwellStart(geofenceId: string): Promise<void> {
     try {
       await Preferences.remove({ key: `geofence_dwell_${geofenceId}` });
-    } catch (error) {
-      console.error('Error resetting geofence dwell start:', error);
+    } catch (_error) {
+      console._error('Error resetting geofence dwell start:', _error);
     }
   }
 
   // ===== PUBLIC API =====
 
   static async enableLocationServices(enabled: boolean): Promise<void> {
-    this.config.enabled = enabled;
+    this._config.enabled = enabled;
 
     if (enabled) {
       await this.startLocationTracking();
@@ -887,7 +887,7 @@ export class EnhancedLocationService {
 
     await Preferences.set({
       key: LOCATION_CONFIG_KEY,
-      value: JSON.stringify(this.config),
+      value: JSON.stringify(this._config),
     });
   }
 
@@ -906,8 +906,8 @@ export class EnhancedLocationService {
         };
       }
       return null;
-    } catch (error) {
-      console.error('Error getting current position:', error);
+    } catch (_error) {
+      console._error('Error getting current position:', _error);
       return null;
     }
   }
@@ -935,7 +935,7 @@ export class EnhancedLocationService {
   }
 
   static isLocationEnabled(): boolean {
-    return this.config.enabled;
+    return this._config.enabled;
   }
 }
 
