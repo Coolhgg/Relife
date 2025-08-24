@@ -5,6 +5,7 @@ import {
 } from './enhanced-smart-alarm-scheduler';
 import { SleepAnalysisService } from './sleep-analysis';
 import { AlarmService } from './alarm';
+import { TimeoutHandle } from '../types/timers';
 
 export interface RealTimeAdaptationConfig {
   enabled: boolean;
@@ -48,7 +49,7 @@ export class RealTimeSmartAdapter {
     emergencyOverrideEnabled: true,
   };
 
-  private static adaptationIntervals = new Map<string, number>();
+  private static adaptationIntervals = new Map<string, TimeoutHandle>();
   private static alarmStatuses = new Map<string, SmartAlarmStatus>();
   private static isInitialized = false;
 

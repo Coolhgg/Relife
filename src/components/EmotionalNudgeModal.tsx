@@ -7,6 +7,7 @@ import type {
   EmotionType,
 } from '../types/emotional';
 import { useEmotionalNotificationResponse } from '../hooks/useEmotionalNotifications';
+import { TimeoutHandle } from '../types/timers';
 
 interface EmotionalNudgeModalProps {
   notification: EmotionalNotificationPayload | null;

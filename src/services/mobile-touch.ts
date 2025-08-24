@@ -1,5 +1,6 @@
 /// <reference lib="dom" />
 import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
+import { TimeoutHandle } from '../types/timers';
 
 export interface TouchGestureOptions {
   element: HTMLElement;
@@ -206,9 +207,9 @@ class TouchGestureHandler {
   private element: HTMLElement;
   private options: TouchGestureOptions;
   private startPoint: TouchPoint | null = null;
-  private longPressTimer: number | null = null;
+  private longPressTimer: TimeoutHandle | null = null;
   private lastTap = 0;
-  private tapTimeout: number | null = null;
+  private tapTimeout: TimeoutHandle | null = null;
 
   constructor(options: TouchGestureOptions) {
     this.element = options.element;

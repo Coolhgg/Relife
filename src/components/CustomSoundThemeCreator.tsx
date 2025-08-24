@@ -34,7 +34,7 @@ import {
   SelectValue,
 } from './ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { _Separator } from './ui/separator';
+import { Separator } from './ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { SoundUploader } from './SoundUploader';
 import { soundEffectsService } from '../services/sound-effects';

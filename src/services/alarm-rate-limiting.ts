@@ -6,6 +6,7 @@ import { Preferences } from '@capacitor/preferences';
 import SecurityService from './security';
 import SecurityMonitoringForensicsService from './security-monitoring-forensics';
 import { ErrorHandler } from './error-handler';
+import { TimeoutHandle } from '../types/timers';
 
 interface RateLimit {
   operation: AlarmOperation;
@@ -79,7 +80,7 @@ export class AlarmRateLimitingService {
   private userLimits: Map<string, UserRateLimits> = new Map();
   private adaptiveAdjustments: AdaptiveLimitAdjustment[] = [];
   private defaultLimits: Map<AlarmOperation, RateLimit>;
-  private cleanupTimer: number | null = null;
+  private cleanupTimer: TimeoutHandle | null = null;
 
   // Base rate limits by operation
   private readonly BASE_LIMITS: Record<AlarmOperation, RateLimit> = {

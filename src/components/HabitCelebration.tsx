@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import { TimeoutHandle } from '../types/timers';
 import {
   Trophy,
   Share2,
@@ -95,7 +96,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
   const [confettiPieces, setConfettiPieces] = useState<ConfettiPiece[]>([]);
   const [showRewards, setShowRewards] = useState(false);
   const [claimedRewards, setClaimedRewards] = useState<string[]>([]);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<TimeoutHandle>();
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Create confetti animation

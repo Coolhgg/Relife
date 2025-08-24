@@ -3,7 +3,7 @@
  * Provides renderHook wrapper with proper providers and mocking for comprehensive hook testing
  */
 
-import React, { _ReactElement, ReactNode } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import {
   renderHook,
   RenderHookOptions,

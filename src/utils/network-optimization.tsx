@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { TimeoutHandle } from '../types/timers';
 
 export interface NetworkRequest {
   id: string;
@@ -48,7 +49,7 @@ class NetworkOptimizer {
   private requestQueue: Map<string, NetworkRequest[]> = new Map();
   private cache = new Map<string, CacheEntry>();
   private inFlightRequests = new Map<string, Promise<any>>();
-  private batchTimers = new Map<string, number>();
+  private batchTimers = new Map<string, TimeoutHandle>();
   private stats: NetworkStats = {
     requestCount: 0,
     errorCount: 0,

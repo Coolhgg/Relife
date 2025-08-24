@@ -1,6 +1,6 @@
 import React from 'react'; // auto: added missing React import
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
+// import ... from '@storybook/test'; // Package not available in current setup
 import AlarmForm from '../../components/AlarmForm';
 
 // Mock data and types

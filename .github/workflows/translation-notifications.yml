@@ -6,38 +6,38 @@ name: 🔔 Translation Notifications
 on:
   schedule:
     # Check for maintenance needs every day at 1 PM UTC (distributed load)
-    - cron: '0 13 * * *'
+    - cron: "0 13 * * *"
     # Send weekly summary on Fridays at 5 PM UTC
-    - cron: '0 17 * * 5'
+    - cron: "0 17 * * 5"
     # Monthly maintenance reminder on the 15th at 3 PM UTC
-    - cron: '0 15 15 * *'
+    - cron: "0 15 15 * *"
   workflow_dispatch:
     inputs:
       notification_type:
-        description: 'Type of notification to send'
+        description: "Type of notification to send"
         required: false
-        default: 'daily-check'
+        default: "daily-check"
         type: choice
         options:
-          - 'daily-check'
-          - 'weekly-summary'
-          - 'monthly-maintenance'
-          - 'urgent-alert'
-          - 'quality-alert'
+          - "daily-check"
+          - "weekly-summary"
+          - "monthly-maintenance"
+          - "urgent-alert"
+          - "quality-alert"
       force_notify:
-        description: 'Force send notifications even if no issues'
+        description: "Force send notifications even if no issues"
         required: false
         default: false
         type: boolean
       test_mode:
-        description: 'Test mode (no actual notifications sent)'
+        description: "Test mode (no actual notifications sent)"
         required: false
         default: false
         type: boolean
 
 env:
-  NODE_VERSION: '20'
-  NOTIFICATIONS_DIR: '.github/translation-notifications'
+  NODE_VERSION: "20"
+  NOTIFICATIONS_DIR: ".github/translation-notifications"
   MIN_QUALITY_THRESHOLD: 70
   CRITICAL_QUALITY_THRESHOLD: 50
 
@@ -46,7 +46,7 @@ jobs:
   analyze-health:
     name: 🔍 Analyze Translation Health
     runs-on: ubuntu-latest
-    
+
     outputs:
       needs-attention: ${{ steps.health.outputs.needs-attention }}
       critical-issues: ${{ steps.health.outputs.critical-issues }}
@@ -54,7 +54,7 @@ jobs:
       maintenance-due: ${{ steps.health.outputs.maintenance-due }}
       notification-data: ${{ steps.health.outputs.notification-data }}
       notification-type: ${{ steps.determine-type.outputs.notification-type }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -65,7 +65,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: |
@@ -95,16 +95,16 @@ jobs:
         id: health
         run: |
           echo "🔍 Analyzing translation health for notifications..."
-          
+
           TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
           ANALYSIS_FILE="${{ env.NOTIFICATIONS_DIR }}/analysis-$TIMESTAMP.json"
-          
+
           # Run comprehensive analysis
           node scripts/advanced-translation-manager.mjs analyze \
             --format=json \
             --output="$ANALYSIS_FILE" \
             --monitoring-mode
-          
+
           # Analyze health and determine notification needs
           node scripts/analyze-translation-health.js \
             "$ANALYSIS_FILE" \
@@ -116,9 +116,9 @@ jobs:
         id: history
         run: |
           echo "📜 Checking notification history to prevent spam..."
-          
+
           HISTORY_FILE="${{ env.NOTIFICATIONS_DIR }}/history/notification-history.json"
-          
+
           # Load or create history
           if [[ -f "$HISTORY_FILE" ]]; then
             HISTORY=$(cat "$HISTORY_FILE")
@@ -126,7 +126,7 @@ jobs:
             HISTORY='[]'
             echo "$HISTORY" > "$HISTORY_FILE"
           fi
-          
+
           # Check if we should suppress notifications
           node scripts/check-notification-history.js \
             "$HISTORY_FILE" \
@@ -149,7 +149,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: analyze-health
     if: needs.analyze-health.outputs.needs-attention == 'true' || needs.analyze-health.outputs.maintenance-due == 'true' || github.event.inputs.force_notify == 'true'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -163,10 +163,10 @@ jobs:
       - name: Generate notification templates
         run: |
           echo "📝 Generating notification content..."
-          
+
           NOTIFICATION_TYPE="${{ needs.analyze-health.outputs.notification-type }}"
           CRITICAL_ISSUES="${{ needs.analyze-health.outputs.critical-issues }}"
-          
+
           # Load notification data
           if [[ -f "${{ env.NOTIFICATIONS_DIR }}/notification-data.json" ]]; then
             echo "Loading notification data..."
@@ -194,7 +194,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [analyze-health, generate-notifications]
     if: needs.analyze-health.outputs.needs-attention == 'true' || github.event.inputs.force_notify == 'true'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -211,7 +211,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            
+
             try {
               const notification = JSON.parse(fs.readFileSync('${{ env.NOTIFICATIONS_DIR }}/notification.json', 'utf8'));
               const content = fs.readFileSync('${{ env.NOTIFICATIONS_DIR }}/notification-content.md', 'utf8');
@@ -291,7 +291,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            
+
             try {
               const notification = JSON.parse(fs.readFileSync('${{ env.NOTIFICATIONS_DIR }}/notification.json', 'utf8'));
               const content = fs.readFileSync('${{ env.NOTIFICATIONS_DIR }}/notification-content.md', 'utf8');
@@ -312,7 +312,7 @@ jobs:
         run: |
           echo "🧪 TEST MODE - No actual notifications sent"
           echo "========================================"
-          
+
           if [[ -f "${{ env.NOTIFICATIONS_DIR }}/notification.json" ]]; then
             cat "${{ env.NOTIFICATIONS_DIR }}/notification.json" | jq -r '.title'
             echo ""
@@ -329,7 +329,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [analyze-health, generate-notifications, send-github-notifications]
     if: always() && (needs.generate-notifications.result == 'success' || github.event.inputs.force_notify == 'true')
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -346,17 +346,17 @@ jobs:
       - name: Update notification history
         run: |
           echo "📜 Updating notification history..."
-          
+
           mkdir -p ${{ env.NOTIFICATIONS_DIR }}/history
           HISTORY_FILE="${{ env.NOTIFICATIONS_DIR }}/history/notification-history.json"
-          
+
           # Load existing history or create new
           if [[ -f "$HISTORY_FILE" ]]; then
             HISTORY=$(cat "$HISTORY_FILE")
           else
             HISTORY='[]'
           fi
-          
+
           # Add new notification to history if content was generated
           if [[ -f "${{ env.NOTIFICATIONS_DIR }}/notification.json" ]]; then
             node scripts/update-notification-history.js \
@@ -372,9 +372,9 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
+
           git add ${{ env.NOTIFICATIONS_DIR }}/history/ || true
-          
+
           if ! git diff --cached --quiet; then
             git commit -m "📜 Update translation notification history - Type: ${{ needs.analyze-health.outputs.notification-type }}, Critical: ${{ needs.analyze-health.outputs.critical-issues }}, Maintenance: ${{ needs.analyze-health.outputs.maintenance-due }} [skip ci]"
             
@@ -388,9 +388,15 @@ jobs:
   notifications-summary:
     name: 📋 Notifications Summary
     runs-on: ubuntu-latest
-    needs: [analyze-health, generate-notifications, send-github-notifications, update-history]
+    needs:
+      [
+        analyze-health,
+        generate-notifications,
+        send-github-notifications,
+        update-history,
+      ]
     if: always()
-    
+
     steps:
       - name: Generate summary
         run: |
@@ -413,7 +419,7 @@ jobs:
           echo "- Force Notify: ${{ github.event.inputs.force_notify }}"
           echo "- Test Mode: ${{ github.event.inputs.test_mode }}"
           echo ""
-          
+
           # Overall status
           if [[ "${{ needs.analyze-health.outputs.critical-issues }}" -gt "0" ]]; then
             echo "🚨 Status: Critical issues detected - immediate attention required"

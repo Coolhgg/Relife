@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { TimeoutHandle } from '../types/timers';
 
 export interface ImageOptimizationOptions {
   quality?: number;

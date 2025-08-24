@@ -3,6 +3,7 @@ import type { Alarm } from '../types';
 import type { TabProtectionSettings } from '../types/tabProtection';
 import { formatProtectionMessage, formatTimeframe } from '../types/tabProtection';
 import AccessibilityUtils from '../utils/accessibility';
+import { TimeoutHandle } from '../types/timers';
 
 interface UseTabProtectionAnnouncementsProps {
   activeAlarm: Alarm | null;
@@ -16,8 +17,8 @@ export const useTabProtectionAnnouncements = ({
   settings,
 }: UseTabProtectionAnnouncementsProps) => {
   const previousActiveAlarm = useRef<Alarm | null>(null);
-  const previousEnabledCount = useRef<number>(0);
-  const lastAnnouncementTime = useRef<number>(0);
+  const previousEnabledCount = useRef<TimeoutHandle>(0);
+  const lastAnnouncementTime = useRef<TimeoutHandle>(0);
 
   // Announce when protection status changes
   useEffect(() => {

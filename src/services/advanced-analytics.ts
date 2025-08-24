@@ -615,7 +615,7 @@ class AdvancedAnalyticsService {
     eventsData: any[]
   ): Promise<TrendData> {
     // Group events by week and calculate consistency for each week
-    const weeklyConsistency = new Map<string, number>();
+    const weeklyConsistency = new Map<string, TimeoutHandle>();
 
     eventsData.forEach(event => {
       const date = new Date(event.fired_at);
@@ -676,7 +676,7 @@ class AdvancedAnalyticsService {
     eventsData: any[]
   ): Promise<TrendData> {
     // This would calculate how voice mood effectiveness changes over time
-    const weeklyEffectiveness = new Map<string, number>();
+    const weeklyEffectiveness = new Map<string, TimeoutHandle>();
 
     // Group by week and calculate success rate
     const weeklyData = new Map<string, { successful: number; total: number }>();

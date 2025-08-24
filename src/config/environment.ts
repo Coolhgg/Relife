@@ -56,8 +56,8 @@ export interface EnvironmentConfig {
       memory: number; // Memory usage (MB)
     };
     healthCheck: {
-      interval: number;
-      uptimeRobotKey?: string;
+      interval: TimeoutHandle;
+      uptimeBotKey?: string;
     };
   };
 
@@ -171,7 +171,7 @@ export function createEnvironmentConfig(): EnvironmentConfig {
       },
       healthCheck: {
         interval: parseInt(import.meta.env.VITE_HEALTH_CHECK_INTERVAL || '60000'),
-        uptimeRobotKey: import.meta.env.VITE_UPTIME_ROBOT_KEY || undefined,
+        uptimeBotKey: import.meta.env.VITE_UPTIME_ROBOT_KEY || undefined,
       },
     },
 

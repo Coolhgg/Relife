@@ -13,6 +13,7 @@ import {
 import { soundEffectsService, SoundTheme } from '../services/sound-effects';
 import { VoiceMood } from '../types';
 import { Play, Volume2, Eye, Heart, Star, Filter, Search } from 'lucide-react';
+import { TimeoutHandle } from '../types/timers';
 
 interface ThemeCombination {
   id: string;
@@ -535,7 +536,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                                 : mood === 'demon-lord'
                                   ? 'Dark and commanding'
                                   : mood === 'ai-robot'
-                                    ? 'Robotic and futuristic'
+                                    ? 'Botic and futuristic'
                                     : mood === 'comedian'
                                       ? 'Funny and entertaining'
                                       : 'Wise and thoughtful'}

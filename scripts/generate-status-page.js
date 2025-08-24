@@ -7,7 +7,7 @@ const fs = require('fs');
 
 function main() {
   const [summaryFile, outputFile] = process.argv.slice(2);
-  
+
   if (!summaryFile || !outputFile) {
     console.error('Usage: node generate-status-page.js <summary-file> <output-file>');
     process.exit(1);
@@ -18,9 +18,9 @@ function main() {
       console.error('Summary data not found');
       process.exit(1);
     }
-    
+
     const summary = JSON.parse(fs.readFileSync(summaryFile, 'utf8'));
-    
+
     // Generate public status page HTML
     const statusHtml = `<!DOCTYPE html>
 <html lang="en">
@@ -89,7 +89,9 @@ function main() {
         </div>
         
         <div class="languages-grid">
-            ${summary.languageBreakdown.map(lang => `
+            ${summary.languageBreakdown
+              .map(
+                lang => `
                 <div class="language-card">
                     <h4>${lang.code.toUpperCase()} - ${lang.name || lang.code}</h4>
                     <div class="progress-bar">
@@ -97,7 +99,9 @@ function main() {
                     </div>
                     <div style="font-size: 0.875rem; color: #64748b;">Quality: ${lang.quality}% • Completion: ${lang.completion}%</div>
                 </div>
-            `).join('')}
+            `
+              )
+              .join('')}
         </div>
         
         <div class="footer">
@@ -138,10 +142,9 @@ function main() {
     </script>
 </body>
 </html>`;
-    
+
     fs.writeFileSync(outputFile, statusHtml);
     console.log('✅ Generated public status page');
-    
   } catch (error) {
     console.error('Error generating status page:', error.message);
     process.exit(1);

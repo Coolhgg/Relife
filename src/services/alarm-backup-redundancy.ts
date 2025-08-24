@@ -7,6 +7,7 @@ import SecurityService from './security';
 import SecureAlarmStorageService from './secure-alarm-storage';
 import { ErrorHandler } from './error-handler';
 import type { Alarm, AlarmEvent } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 interface BackupMetadata {
   id: string;
@@ -54,8 +55,8 @@ export class AlarmBackupRedundancyService {
   private static readonly BACKUP_INTERVAL = 4 * 60 * 60 * 1000; // 4 hours
   private static readonly VERIFICATION_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
 
-  private backupTimer: number | null = null;
-  private verificationTimer: number | null = null;
+  private backupTimer: TimeoutHandle | null = null;
+  private verificationTimer: TimeoutHandle | null = null;
   private backupLocations: Map<string, BackupLocation> = new Map();
   private recoveryPoints: RecoveryPoint[] = [];
   private backupInProgress = false;

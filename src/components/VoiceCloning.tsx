@@ -40,7 +40,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const recordingTimerRef = useRef<number | null>(null);
+  const recordingTimerRef = useRef<TimeoutHandle | null>(null);
   const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
 
   // Check access on mount

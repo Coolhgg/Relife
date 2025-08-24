@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { TimeoutHandle } from '../types/timers';
 import {
   Brain,
   Clock,
   Activity,
   Zap,
   TrendingUp,
-  AlertTriangle,
+  Alert,
   CheckCircle,
   RefreshCw,
   Eye,
@@ -106,7 +107,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
   const getConfidenceIcon = (confidence: number) => {
     if (confidence >= 0.8) return <CheckCircle className="w-4 h-4 text-green-400" />;
     if (confidence >= 0.6) return <Eye className="w-4 h-4 text-yellow-400" />;
-    return <AlertTriangle className="w-4 h-4 text-red-400" />;
+    return <Alert className="w-4 h-4 text-red-400" />;
   };
 
   const smartAlarms = alarms.filter(alarm => alarm.smartEnabled);

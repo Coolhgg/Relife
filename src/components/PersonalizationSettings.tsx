@@ -65,7 +65,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
 
   const fontOptions = [
     { name: 'Inter', value: 'Inter, system-ui, sans-serif', category: 'modern' },
-    { name: 'Roboto', value: 'Roboto, system-ui, sans-serif', category: 'classic' },
+    { name: 'Boto', value: 'Boto, system-ui, sans-serif', category: 'classic' },
     {
       name: 'Open Sans',
       value: 'Open Sans, system-ui, sans-serif',

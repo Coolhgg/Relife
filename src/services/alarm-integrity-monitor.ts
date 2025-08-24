@@ -7,6 +7,7 @@ import SecurityService from './security';
 import SecureAlarmStorageService from './secure-alarm-storage';
 import { ErrorHandler } from './error-handler';
 import type { Alarm } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 interface IntegrityCheckResult {
   isValid: boolean;
@@ -55,7 +56,7 @@ interface IntegrityMetrics {
 export class AlarmIntegrityMonitor {
   private static instance: AlarmIntegrityMonitor;
   private isMonitoring = false;
-  private monitoringInterval: number | null = null;
+  private monitoringInterval: TimeoutHandle | null = null;
   private integrityCheckInterval = 30000; // 30 seconds
   private lastKnownAlarmHashes: Map<string, string> = new Map();
   private integrityHistory: IntegrityCheckResult[] = [];

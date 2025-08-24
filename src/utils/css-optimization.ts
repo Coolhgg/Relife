@@ -106,7 +106,7 @@ export function stylesToCSSString(styles: Record<string, any>): string {
  * Debounced style application for performance
  */
 export function createDebouncedStyler(delay: number = 16) {
-  let timeout: number | null = null;
+  let timeout: TimeoutHandle | null = null;
 
   return function (element: HTMLElement, styles: Record<string, string>) {
     if (timeout) {
@@ -125,7 +125,7 @@ export function createDebouncedStyler(delay: number = 16) {
 export class CSSCustomPropertiesManager {
   private cache = new Map<string, string>();
   private batchQueue: Array<{ property: string; value: string }> = [];
-  private batchTimeout: number | null = null;
+  private batchTimeout: TimeoutHandle | null = null;
 
   /**
    * Set a CSS custom property with caching

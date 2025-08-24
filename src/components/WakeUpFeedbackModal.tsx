@@ -11,6 +11,7 @@ import {
   Sun,
 } from 'lucide-react';
 import { type WakeUpFeedback } from '../services/enhanced-smart-alarm-scheduler';
+import { TimeoutHandle } from '../types/timers';
 
 interface WakeUpFeedbackModalProps {
   isOpen: boolean;

@@ -8,6 +8,7 @@ import { useTheme } from '../hooks/useTheme';
 import { Theme } from '../types';
 import ThemeCustomizationStudio from './ThemeCustomizationStudio';
 import PremiumThemeAnimationService from '../services/premium-theme-animations';
+import { TimeoutHandle } from '../types/timers';
 
 interface ThemeCardProps {
   themeId: Theme;

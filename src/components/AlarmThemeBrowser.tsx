@@ -17,6 +17,7 @@ import {
 } from '../services/theme-combinations';
 import { contextualThemes } from '../services/contextual-themes';
 import { visualAlarmThemes } from '../services/visual-alarm-themes';
+import { TimeoutHandle } from '../types/timers';
 import {
   Search,
   Filter,

@@ -5,6 +5,7 @@ import SecurityService from './security';
 import SecurityMonitoringForensicsService from './security-monitoring-forensics';
 import AlarmRateLimitingService from './alarm-rate-limiting';
 import { ErrorHandler } from './error-handler';
+import { TimeoutHandle } from '../types/timers';
 
 interface APIRequest {
   method: string;

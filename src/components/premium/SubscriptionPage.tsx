@@ -22,6 +22,7 @@ import PricingTable from './PricingTable';
 import PaymentFlow from './PaymentFlow';
 import SubscriptionManagement from './SubscriptionManagement';
 import type { SubscriptionPlan, BillingInterval } from '../../types/premium';
+import { TimeoutHandle } from '../types/timers';
 
 interface SubscriptionPageProps {
   className?: string;

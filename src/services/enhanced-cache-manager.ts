@@ -1,5 +1,6 @@
 import type { AudioCacheEntry, AudioMetadata } from './audio-manager';
 import type { CustomSound } from './types/media';
+import { TimeoutHandle } from '../types/timers';
 
 export interface CacheEntry extends AudioCacheEntry {
   accessCount: number;

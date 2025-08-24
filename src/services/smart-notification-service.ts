@@ -1,5 +1,6 @@
 /// <reference lib="dom" />
 import { Capacitor } from '@capacitor/core';
+import { TimeoutHandle } from '../types/timers';
 import {
   LocalNotifications,
   ScheduleOptions,

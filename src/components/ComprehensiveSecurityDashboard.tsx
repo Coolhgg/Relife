@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Shield,
-  AlertTriangle,
+  Alert,
   CheckCircle,
   XCircle,
   RefreshCw,
@@ -21,6 +21,7 @@ import AlarmSecurityIntegrationService from '../services/alarm-security-integrat
 import SecurityMonitoringForensicsService from '../services/security-monitoring-forensics';
 import _AlarmBackupRedundancyService from '../services/alarm-backup-redundancy';
 import _AlarmRateLimitingService from '../services/alarm-rate-limiting';
+import { TimeoutHandle } from '../types/timers';
 
 interface SecurityStatus {
   overall: 'secure' | 'warning' | 'critical' | 'compromised';
@@ -180,7 +181,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
       case 'warning':
       case 'degraded':
         return (
-          <AlertTriangle
+          <Alert
             className="w-5 h-5 text-yellow-600 dark:text-yellow-400"
             aria-hidden="true"
           />
@@ -418,7 +419,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
               {
                 key: 'alerts',
                 label: 'Alerts',
-                icon: AlertTriangle,
+                icon: Alert,
                 desc: 'Manage active security alerts',
               },
               {

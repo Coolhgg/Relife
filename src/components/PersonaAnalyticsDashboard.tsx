@@ -14,7 +14,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { UserPersona } from '../types/persona';
+import { UserPersona } from '../types';
 import {
   usePersonaAnalytics,
   PersonaAnalyticsData,

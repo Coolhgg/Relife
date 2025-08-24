@@ -4,6 +4,7 @@
 import React, { useState, useRef, useEffect, forwardRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { useEntranceAnimation, useHoverAnimation } from '../../hooks/useAnimations';
+import { TimeoutHandle } from '../types/timers';
 
 // ================================================================
 // ANIMATED FORM INPUTS

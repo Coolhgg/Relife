@@ -25,6 +25,7 @@ import { useAccessibilityPreferences } from '../hooks/useAccessibilityPreference
 import { useDynamicFocus } from '../hooks/useDynamicFocus';
 import { ScreenReaderTester } from './ScreenReaderProvider';
 import ExtendedScreenReaderTester from './ExtendedScreenReaderTester';
+import { TimeoutHandle } from '../types/timers';
 
 interface AccessibilityDashboardProps {
   onClose?: () => void;

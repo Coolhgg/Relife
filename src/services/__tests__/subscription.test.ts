@@ -10,7 +10,7 @@ import type {
   PremiumUsage,
   PremiumFeature,
 } from '../../types';
-import { SUBSCRIPTION_LIMITS } from '../../types';
+import { SubscriptionLimits } from '../../types';
 import {
   createTestUser,
   createTestSubscription,
@@ -341,7 +341,7 @@ describe('SubscriptionService', () => {
     it('should return correct limits for free tier', () => {
       const limits = SubscriptionService.getFeatureLimits('free');
 
-      expect(limits).toEqual(SUBSCRIPTION_LIMITS.free);
+      expect(limits).toEqual(SubscriptionLimits.free);
       expect(limits.maxAlarms).toBe(5);
       expect(limits.voiceGenerationsPerMonth).toBe(50);
     });
@@ -349,7 +349,7 @@ describe('SubscriptionService', () => {
     it('should return correct limits for premium tier', () => {
       const limits = SubscriptionService.getFeatureLimits('premium');
 
-      expect(limits).toEqual(SUBSCRIPTION_LIMITS.premium);
+      expect(limits).toEqual(SubscriptionLimits.premium);
       expect(limits.maxAlarms).toBe(50);
       expect(limits.voiceGenerationsPerMonth).toBe(500);
     });
@@ -357,7 +357,7 @@ describe('SubscriptionService', () => {
     it('should return correct limits for pro tier', () => {
       const limits = SubscriptionService.getFeatureLimits('pro');
 
-      expect(limits).toEqual(SUBSCRIPTION_LIMITS.pro);
+      expect(limits).toEqual(SubscriptionLimits.pro);
       expect(limits.maxAlarms).toBeNull(); // unlimited
       expect(limits.voiceGenerationsPerMonth).toBeNull(); // unlimited
     });

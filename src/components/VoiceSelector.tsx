@@ -3,6 +3,7 @@ import { Crown, Play, Lock, Info, Volume2, Star, Heart, Zap } from 'lucide-react
 import type { VoiceMood, VoiceMoodConfig, VoicePersonality, User } from '../types';
 import { PremiumVoiceService } from '../services/premium-voice';
 import { PremiumService } from '../services/premium';
+import { TimeoutHandle } from '../types/timers';
 
 interface VoiceSelectorProps {
   selectedVoice: VoiceMood;

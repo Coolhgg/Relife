@@ -1,101 +1,100 @@
 #!/usr/bin/env python3
 """
-Script to apply TimeoutHandle type fixes to files with timeout type conflicts
+Fix Timeout type conflicts across the codebase.
+Replace `number` with `TimeoutHandle` for setTimeout/setInterval returns.
 """
 
-import re
 import os
-import sys
+import re
+import glob
 
-def get_timeout_error_files():
-    """Get list of files with timeout type errors from the tsc output"""
-    timeout_files = []
+def fix_timeout_types_in_file(file_path):
+    """Fix timeout type issues in a single file."""
     
     try:
-        with open('ci/step-outputs/tsc_before.txt', 'r') as f:
-            content = f.read()
-            
-        # Find lines with Timeout type errors
-        timeout_pattern = r"src/([^(]+)\(\d+,\d+\): error TS\d+.*Type 'Timeout' is not assignable"
-        matches = re.findall(timeout_pattern, content)
-        
-        # Get unique files
-        unique_files = list(set(matches))
-        return unique_files
-    except FileNotFoundError:
-        print("tsc_before.txt not found")
-        return []
-
-def analyze_file_for_timeouts(filepath):
-    """Analyze a file to find timeout-related variable declarations and usages"""
-    try:
-        with open(filepath, 'r') as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        issues = []
-        lines = content.split('\n')
+        original_content = content
         
-        for i, line in enumerate(lines):
-            line_num = i + 1
-            
-            # Find declarations with number | null pattern that use setTimeout/setInterval
-            if re.search(r':\s*(number\s*\|\s*null|NodeJS\.Timeout)', line):
-                if any(keyword in line for keyword in ['timer', 'interval', 'timeout', 'Timer', 'Interval']):
-                    issues.append({
-                        'type': 'declaration',
-                        'line': line_num,
-                        'content': line.strip(),
-                        'pattern': 'number | null'
-                    })
-            
-            # Find setTimeout/setInterval assignments
-            if re.search(r'(setTimeout|setInterval)\s*\(', line):
-                issues.append({
-                    'type': 'assignment',
-                    'line': line_num,
-                    'content': line.strip()
-                })
+        # Add TimeoutHandle import if not present and setTimeout/setInterval is used
+        has_timeout_usage = re.search(r'setTimeout|setInterval', content)
+        has_timeout_import = 'TimeoutHandle' in content
         
-        return issues
+        if has_timeout_usage and not has_timeout_import:
+            # Find the last import statement
+            import_match = list(re.finditer(r"import.*?from ['\"][^'\"]+['\"];", content))
+            if import_match:
+                last_import = import_match[-1]
+                insertion_point = last_import.end()
+                content = (content[:insertion_point] + 
+                          "\nimport { TimeoutHandle } from '../types/timers';" +
+                          content[insertion_point:])
+        
+        # Fix common timeout type patterns
+        fixes = [
+            # useRef declarations for timeouts
+            (r'useRef<number \| null>', 'useRef<TimeoutHandle | null>'),
+            (r'useRef<number \| undefined>', 'useRef<TimeoutHandle | undefined>'),
+            (r'useRef<number>', 'useRef<TimeoutHandle>'),
+            
+            # Map declarations for timeouts  
+            (r'Map<([^,]+), number>', r'Map<\1, TimeoutHandle>'),
+            
+            # Variable declarations
+            (r': number \| null = null;', ': TimeoutHandle | null = null;'),
+            (r': number \| undefined', ': TimeoutHandle | undefined'),
+            
+            # Function parameters
+            (r'timeout: number', 'timeout: TimeoutHandle'),
+            (r'interval: number', 'interval: TimeoutHandle'),
+        ]
+        
+        for pattern, replacement in fixes:
+            content = re.sub(pattern, replacement, content)
+        
+        # Write back if changed
+        if content != original_content:
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(content)
+            return True
+            
     except Exception as e:
-        print(f"Error analyzing {filepath}: {e}")
-        return []
-
-def has_timeout_import(filepath):
-    """Check if file already imports TimeoutHandle"""
-    try:
-        with open(filepath, 'r') as f:
-            content = f.read()
-        return 'TimeoutHandle' in content
-    except:
+        print(f"Error processing {file_path}: {e}")
         return False
+    
+    return False
 
 def main():
-    print("Analyzing timeout type issues...")
+    """Main function to fix timeout types across the codebase."""
     
-    # Get files with timeout errors
-    error_files = get_timeout_error_files()
-    print(f"Found {len(error_files)} files with timeout errors")
+    # Find all TypeScript/JavaScript files
+    patterns = [
+        'src/**/*.ts',
+        'src/**/*.tsx',
+        'src/**/*.js',
+        'src/**/*.jsx'
+    ]
     
-    # Analyze each file
-    for file_path in error_files[:10]:  # Process first 10 files
-        full_path = f"src/{file_path}"
-        if os.path.exists(full_path):
-            print(f"\n=== {file_path} ===")
-            
-            # Check if already has import
-            if has_timeout_import(full_path):
-                print("  ✓ Already has TimeoutHandle import")
-                continue
-                
-            issues = analyze_file_for_timeouts(full_path)
-            
-            if issues:
-                print(f"  Found {len(issues)} issues:")
-                for issue in issues:
-                    print(f"    Line {issue['line']}: {issue['content']}")
-            else:
-                print("  No timeout patterns found")
+    files_to_process = []
+    for pattern in patterns:
+        files_to_process.extend(glob.glob(pattern, recursive=True))
+    
+    # Remove test files and other excluded files
+    files_to_process = [f for f in files_to_process if 
+                       not any(exclude in f for exclude in [
+                           '__tests__', '.test.', '.spec.', 'node_modules'
+                       ])]
+    
+    print(f"Processing {len(files_to_process)} files for timeout type fixes...")
+    
+    modified_count = 0
+    for file_path in files_to_process:
+        if fix_timeout_types_in_file(file_path):
+            modified_count += 1
+            print(f"Modified: {file_path}")
+    
+    print(f"\nCompleted: {modified_count} files modified")
 
 if __name__ == "__main__":
     main()

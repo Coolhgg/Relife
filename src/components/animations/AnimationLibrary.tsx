@@ -2,6 +2,7 @@
 // Comprehensive collection of smooth micro-interactions and delightful animations
 
 import React, { useState, useEffect, useRef } from 'react';
+import { TimeoutHandle } from '../types/timers';
 import {
   motion,
   AnimatePresence,

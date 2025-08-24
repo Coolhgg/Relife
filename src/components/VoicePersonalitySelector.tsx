@@ -18,6 +18,7 @@ import {
 import { PremiumGate } from './PremiumGate';
 import { SubscriptionService } from '../services/subscription';
 import type { VoiceMood, VoiceMoodConfig, User } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 interface VoicePersonalitySelectorProps {
   selectedMood: VoiceMood;
@@ -91,7 +92,7 @@ const PREMIUM_PERSONALITIES: VoiceMoodConfig[] = [
   },
   {
     id: 'ai-robot',
-    name: 'AI Robot',
+    name: 'AI Bot',
     description: 'Mechanical, precise, and systematic wake protocols',
     icon: '🤖',
     color: 'bg-gray-600',
@@ -349,7 +350,7 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
             feature="premiumPersonalities"
             userId={user.id}
             title="🎭 Premium Voice Personalities"
-            description="Unlock Demon Lord, AI Robot, Comedian, and Philosopher personalities with Pro subscription."
+            description="Unlock Demon Lord, AI Bot, Comedian, and Philosopher personalities with Pro subscription."
             mode="overlay"
           >
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -369,7 +370,7 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
             Unlock Premium Personalities
           </h4>
           <p className="text-gray-300 mb-4">
-            Get access to Demon Lord, AI Robot, Comedian, and Philosopher personalities
+            Get access to Demon Lord, AI Bot, Comedian, and Philosopher personalities
             with advanced AI-powered voice synthesis.
           </p>
           <div className="flex items-center justify-center space-x-4 text-sm text-gray-400">
@@ -379,7 +380,7 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
             </div>
             <div className="flex items-center">
               <Bot className="h-4 w-4 mr-1 text-gray-400" />
-              AI Robot
+              AI Bot
             </div>
             <div className="flex items-center">
               <Laugh className="h-4 w-4 mr-1 text-purple-400" />

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Bug, Zap, AlertTriangle, Database, Wifi, Brain, Volume2 } from 'lucide-react';
+import { Bug, Zap, Alert, Database, Wifi, Brain, Volume2 } from 'lucide-react';
+import { TimeoutHandle } from '../types/timers';
 
 interface ErrorBoundaryTestProps {
   onClose?: () => void;
@@ -121,7 +122,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
         <div className="mb-6">
           <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
             <div className="flex items-start gap-2">
-              <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+              <Alert className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-yellow-800 dark:text-yellow-200 text-sm font-medium">
                   Development Mode Only
@@ -201,7 +202,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
             onClick={() => triggerError('null-reference')}
             className="w-full flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-800 dark:text-gray-200 transition-colors"
           >
-            <AlertTriangle className="w-4 h-4" />
+            <Alert className="w-4 h-4" />
             <div className="text-left">
               <div className="font-medium">Null Reference Error</div>
               <div className="text-xs opacity-75">Common JavaScript error</div>

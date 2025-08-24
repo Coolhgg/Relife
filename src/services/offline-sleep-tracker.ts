@@ -5,6 +5,7 @@
 
 import { ErrorHandler } from './error-handler';
 import SecurityService from './security';
+import { TimeoutHandle } from '../types/timers';
 
 interface SleepSession {
   id: string;

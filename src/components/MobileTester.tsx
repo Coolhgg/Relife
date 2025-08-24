@@ -5,6 +5,7 @@ import { usePWA } from '../hooks/usePWA';
 import { useCapacitor } from '../hooks/useCapacitor';
 import { useMobilePerformance } from '../hooks/useMobilePerformance';
 import { useMobileAccessibilityContext } from './MobileAccessibilityProvider';
+import { TimeoutHandle } from '../types/timers';
 
 interface MobileTesterProps {
   isVisible: boolean;

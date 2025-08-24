@@ -1,6 +1,7 @@
 /// <reference types="node" />
 /// <reference lib="dom" />
 import type { PersonalizationSettings, Theme, ThemeConfig } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 export interface CloudSyncPreferences {
   theme: Theme;
@@ -32,7 +33,7 @@ class CloudSyncService {
   private preferences: CloudSyncPreferences | null = null;
   private options: CloudSyncOptions;
   private status: CloudSyncStatus;
-  private syncTimer: number | null = null;
+  private syncTimer: TimeoutHandle | null = null;
   private listeners: Set<(status: CloudSyncStatus) => void> = new Set();
   private deviceId: string;
   private apiEndpoint: string;

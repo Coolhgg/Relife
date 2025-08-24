@@ -7,6 +7,7 @@ import { SupabaseService } from './supabase';
 import { Preferences } from '@capacitor/preferences';
 import { CriticalPreloader } from './critical-preloader';
 import { AudioManager } from './audio-manager';
+import { TimeoutHandle } from '../types/timers';
 
 const ALARMS_KEY = 'smart_alarms';
 const ALARM_EVENTS_KEY = 'alarm_events';
@@ -15,7 +16,7 @@ const ALARM_TRIGGER_TOLERANCE = 60000; // 1 minute tolerance for missed alarms
 
 export class EnhancedAlarmService {
   private static alarms: Alarm[] = [];
-  private static checkInterval: number | null = null;
+  private static checkInterval: TimeoutHandle | null = null;
   private static isInitialized = false;
   private static currentUser: string | null = null;
   private static listeners: Array<(alarms: Alarm[]) => void> = [];

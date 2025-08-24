@@ -9,6 +9,7 @@ import type {
 import { Preferences } from '@capacitor/preferences';
 import MLAlarmOptimizer from './ml-alarm-optimizer';
 import EnhancedLocationService from './enhanced-location-service';
+import { TimeoutHandle } from '../types/timers';
 
 const ANALYTICS_CONFIG_KEY = 'predictive_analytics_config';
 const PATTERNS_CACHE_KEY = 'detected_patterns';
@@ -103,7 +104,7 @@ export class PredictiveAnalyticsService {
 
   private static detectedPatterns: Map<string, DetectedPattern> = new Map();
   private static insightsHistory: PredictiveInsight[] = [];
-  private static analysisSchedule: number | null = null;
+  private static analysisSchedule: TimeoutHandle | null = null;
   private static lastAnalysisDate: Date | null = null;
 
   // ===== INITIALIZATION =====

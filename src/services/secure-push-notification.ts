@@ -9,6 +9,7 @@ import type { Alarm } from '../types';
 import { NotificationService } from './notification';
 import SecurityService from './security';
 import { ErrorHandler } from './error-handler';
+import { TimeoutHandle } from '../types/timers';
 
 export interface SecurePushNotificationPayload {
   title: string;

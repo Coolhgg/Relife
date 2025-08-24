@@ -6,6 +6,7 @@ import { Preferences } from '@capacitor/preferences';
 import SecurityService from './security';
 import type { Alarm, AlarmEvent } from '../types';
 import { ErrorHandler } from './error-handler';
+import { TimeoutHandle } from '../types/timers';
 
 interface SecureAlarmData {
   alarms: Alarm[];
@@ -31,7 +32,7 @@ export class SecureAlarmStorageService {
   private static readonly MAX_BACKUPS = 5;
   private static readonly INTEGRITY_CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
-  private integrityCheckTimer: number | null = null;
+  private integrityCheckTimer: TimeoutHandle | null = null;
   private lastIntegrityCheck: Date | null = null;
   private tamperedDetectionCallbacks: Array<(details: any) => void> = [];
 

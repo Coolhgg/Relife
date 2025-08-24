@@ -6,7 +6,7 @@ import {
   Calendar,
   CreditCard,
   TrendingUp,
-  AlertTriangle,
+  Alert,
   Gift,
   Settings,
   Crown,
@@ -187,7 +187,7 @@ export function SubscriptionDashboard({
       {/* Alert for subscription issues */}
       {data.subscription?.status === 'past_due' && (
         <Alert className="border-orange-200 bg-orange-50">
-          <AlertTriangle className="h-4 w-4 text-orange-600" />
+          <Alert className="h-4 w-4 text-orange-600" />
           <AlertDescription className="text-orange-600">
             Your subscription payment is past due. Please update your payment method to
             continue using premium features.
@@ -197,7 +197,7 @@ export function SubscriptionDashboard({
 
       {data.subscription?.cancelAtPeriodEnd && (
         <Alert className="border-blue-200 bg-blue-50">
-          <AlertTriangle className="h-4 w-4 text-blue-600" />
+          <Alert className="h-4 w-4 text-blue-600" />
           <AlertDescription className="text-blue-600 flex items-center justify-between">
             <span>
               Your subscription will end on{' '}

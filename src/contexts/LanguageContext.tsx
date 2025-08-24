@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Device } from '@capacitor/device';
+import { TimeoutHandle } from '../types/timers';
 import {
   SUPPORTED_LANGUAGES,
   SupportedLanguage,

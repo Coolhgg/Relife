@@ -7,10 +7,11 @@ import AppAnalyticsService from './app-analytics';
 import SecureAlarmStorageService from './secure-alarm-storage';
 import SecurityService from './security';
 import { ErrorHandler } from './error-handler';
+import { TimeoutHandle } from '../types/timers';
 
 export class AlarmService {
   private static alarms: Alarm[] = [];
-  private static checkInterval: number | null = null;
+  private static checkInterval: TimeoutHandle | null = null;
 
   static async loadAlarms(userId?: string): Promise<Alarm[]> {
     try {

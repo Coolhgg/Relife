@@ -7,6 +7,7 @@
  */
 
 import { PersonalizationSettings } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 interface ContrastRatio {
   ratio: number;

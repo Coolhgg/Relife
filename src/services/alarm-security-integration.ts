@@ -13,6 +13,7 @@ import AlarmAPISecurityService from './alarm-api-security';
 import SecurityService from './security';
 import { ErrorHandler } from './error-handler';
 import type { Alarm, AlarmEvent } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 interface SecurityStatus {
   overall: 'secure' | 'warning' | 'critical' | 'compromised';

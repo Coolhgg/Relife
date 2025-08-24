@@ -29,6 +29,7 @@ import { useSettingsAnnouncements } from '../hooks/useSettingsAnnouncements';
 import { useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
 import { useTheme } from '../hooks/useTheme';
 import SoundSettings from './SoundSettings';
+import { TimeoutHandle } from '../types/timers';
 
 interface SettingsPageProps {
   appState: AppState;

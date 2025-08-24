@@ -3,6 +3,7 @@ import { audioManager } from './audio-manager';
 import { lazyAudioLoader } from './lazy-audio-loader';
 import type { Alarm, VoiceMood } from '../types';
 import type { CustomSound } from './types/media';
+import { TimeoutHandle } from '../types/timers';
 
 export interface CriticalAsset {
   id: string;
@@ -45,7 +46,7 @@ export interface PreloadStats {
 export class CriticalAssetPreloader {
   private static instance: CriticalAssetPreloader | null = null;
   private criticalAssets: Map<string, CriticalAsset> = new Map();
-  private preloadTimer: number | null = null;
+  private preloadTimer: TimeoutHandle | null = null;
   private isPreloading = false;
   private strategy: PreloadStrategy;
   private stats: PreloadStats = {

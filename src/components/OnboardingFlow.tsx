@@ -13,6 +13,7 @@ import {
 import type { AppState } from '../types';
 import { requestNotificationPermissions } from '../services/capacitor';
 import { useFocusRestoration } from '../hooks/useFocusRestoration';
+import { TimeoutHandle } from '../types/timers';
 
 interface OnboardingFlowProps {
   onComplete: () => void;

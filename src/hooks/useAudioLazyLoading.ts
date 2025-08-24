@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { lazyAudioLoader } from '../services/lazy-audio-loader';
 import type { AudioLoadProgress, AudioCacheEntry } from '../services/audio-manager';
 import type { CustomSound, Playlist, LoadingState } from '../services/types/media';
+import { TimeoutHandle } from '../types/timers';
 
 export interface AudioLoadingState {
   state: LoadingState;
@@ -243,7 +244,7 @@ export function useAlarmSoundPreloading(alarms: any[]) {
  */
 export function useLazyLoadingStats() {
   const [stats, setStats] = useState(lazyAudioLoader.getStats());
-  const intervalRef = useRef<number>();
+  const intervalRef = useRef<TimeoutHandle>();
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {

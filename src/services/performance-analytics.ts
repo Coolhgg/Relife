@@ -5,6 +5,7 @@
 import SentryService from './sentry';
 import AnalyticsService from './analytics';
 import AppAnalyticsService from './app-analytics';
+import { TimeoutHandle } from '../types/timers';
 
 export interface PerformanceMetric {
   name: string;

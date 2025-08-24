@@ -6,10 +6,13 @@
 const fs = require('fs');
 
 function main() {
-  const [qualityStatus, averageQuality, trend, monitoringType, languagesBelow] = process.argv.slice(2);
-  
+  const [qualityStatus, averageQuality, trend, monitoringType, languagesBelow] =
+    process.argv.slice(2);
+
   if (!qualityStatus || !averageQuality) {
-    console.error('Usage: node generate-notification-content.js <quality-status> <average-quality> <trend> <monitoring-type> <languages-below>');
+    console.error(
+      'Usage: node generate-notification-content.js <quality-status> <average-quality> <trend> <monitoring-type> <languages-below>'
+    );
     process.exit(1);
   }
 
@@ -33,7 +36,7 @@ Monitoring Type: ${monitoringType}
 The automated translation quality monitoring has detected the following:
 
 `;
-    
+
     // Add status-specific content
     switch (qualityStatus) {
       case 'needs-attention':
@@ -58,14 +61,16 @@ The automated translation quality monitoring has detected the following:
 `;
         break;
     }
-    
+
     // Add trend information
     switch (trend) {
       case 'declining':
-        content += '📉 **Trend Alert**: Quality has been declining recently. Consider investigating root causes.\n\n';
+        content +=
+          '📉 **Trend Alert**: Quality has been declining recently. Consider investigating root causes.\n\n';
         break;
       case 'improving':
-        content += '📈 **Positive Trend**: Quality is improving! Current practices are effective.\n\n';
+        content +=
+          '📈 **Positive Trend**: Quality is improving! Current practices are effective.\n\n';
         break;
     }
 
@@ -75,7 +80,7 @@ ${languages.map(lang => `- ${lang.toUpperCase()}`).join('\n')}
 
 `;
     }
-    
+
     content += `## 🔗 Resources
 - [View Detailed Report](https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
 - [Translation Dashboard](https://github.com/${process.env.GITHUB_REPOSITORY}/blob/main/src/components/TranslationDashboard.tsx)
@@ -85,7 +90,6 @@ ${languages.map(lang => `- ${lang.toUpperCase()}`).join('\n')}
 
     fs.writeFileSync('notification-content.md', content);
     console.log('✅ Generated notification content');
-    
   } catch (error) {
     console.error('Error generating notification content:', error.message);
     process.exit(1);

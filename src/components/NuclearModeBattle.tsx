@@ -4,7 +4,7 @@ import { TimeoutHandle } from '../types/timers';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Zap,
-  AlertTriangle,
+  Alert,
   Timer,
   Target,
   Skull,
@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { PremiumGate } from './PremiumGate';
 import type { Alarm, User, AlarmDifficulty } from '../types';
-import { SoundService } from '../services/sound';
+import { SoundService } from '../services/sound-effects';
 import { ErrorHandler } from '../services/error-handler';
 
 interface NuclearModeBattleProps {
@@ -423,7 +423,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
           {/* Warning Footer */}
           <div className="p-4 bg-red-900/50 border-t border-red-500/50">
             <div className="flex items-center justify-center space-x-2">
-              <AlertTriangle className="h-5 w-5 text-yellow-400" />
+              <Alert className="h-5 w-5 text-yellow-400" />
               <span className="text-sm font-medium">
                 FAILURE TO COMPLETE PROTOCOLS WILL RESULT IN NUCLEAR MELTDOWN
               </span>

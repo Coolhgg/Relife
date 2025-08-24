@@ -11,6 +11,7 @@ import {
   useScroll,
 } from 'framer-motion';
 import { useEffect, useRef, useState, useMemo } from 'react';
+import { TimeoutHandle } from '../types/timers';
 
 // ================================================================
 // ANIMATION CONFIGURATIONS
@@ -311,8 +312,8 @@ export const useCounterAnimation = (
 ) => {
   const [current, setCurrent] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const startTimeRef = useRef<number>(0);
-  const animationRef = useRef<number>(0);
+  const startTimeRef = useRef<TimeoutHandle>(0);
+  const animationRef = useRef<TimeoutHandle>(0);
 
   const animate = (timestamp: number) => {
     if (startTimeRef.current === 0) {

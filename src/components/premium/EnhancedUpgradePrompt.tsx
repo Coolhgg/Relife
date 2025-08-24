@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { TimeoutHandle } from '../types/timers';
 import {
   Crown,
   Star,
@@ -15,7 +16,7 @@ import {
   Flame,
   Brain,
   Laugh,
-  Robot,
+  Bot,
   Clock,
   Users,
   TrendingUp,
@@ -111,7 +112,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
         icon: <Brain className="w-8 h-8" />,
         benefits: [
           '🔥 Demon Lord: Dark, intimidating commands',
-          '🤖 AI Robot: Systematic wake protocols',
+          '🤖 AI Bot: Systematic wake protocols',
           '🎭 Comedian: Hilarious entertainment',
           '🧠 Philosopher: Contemplative wisdom',
           'Never get bored with variety',

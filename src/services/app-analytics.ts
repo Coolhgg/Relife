@@ -7,6 +7,7 @@ import AnalyticsService, { ANALYTICS_EVENTS } from './analytics';
 import SentryService from './sentry';
 import { ErrorHandler } from './error-handler';
 import type { Alarm, VoiceMood } from '../types';
+import { TimeoutHandle } from '../types/timers';
 
 export interface AppAnalyticsEvents {
   // Alarm Management
@@ -93,7 +94,7 @@ class AppAnalyticsService {
   private analytics: AnalyticsService;
   private sentry: SentryService;
   private sessionStartTime: number;
-  private performanceMarkers: Map<string, number> = new Map();
+  private performanceMarkers: Map<string, TimeoutHandle> = new Map();
 
   private constructor() {
     this.analyticsConfig = AnalyticsConfigService.getInstance();

@@ -20,6 +20,7 @@ import {
   Info,
 } from 'lucide-react';
 import ScreenReaderService from '../utils/screen-reader';
+import { TimeoutHandle } from '../types/timers';
 import {
   customTestCategories,
   customCategoryConfig,

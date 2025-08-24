@@ -10,7 +10,7 @@ import {
   ChevronRight,
   Info,
   CheckCircle,
-  AlertTriangle,
+  Alert,
 } from 'lucide-react';
 import {
   SmartAlarmScheduler,
@@ -588,7 +588,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                               }`}
                             >
                               {rec.impact === 'high' ? (
-                                <AlertTriangle className="w-4 h-4 text-red-400" />
+                                <Alert className="w-4 h-4 text-red-400" />
                               ) : rec.impact === 'medium' ? (
                                 <Info className="w-4 h-4 text-yellow-400" />
                               ) : (

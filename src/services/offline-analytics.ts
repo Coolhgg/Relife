@@ -6,6 +6,7 @@
 import { EnhancedOfflineStorage } from './enhanced-offline-storage';
 import { ErrorHandler } from './error-handler';
 import SecurityService from './security';
+import { TimeoutHandle } from '../types/timers';
 
 interface AnalyticsEvent {
   id: string;

@@ -47,6 +47,7 @@ import {
   usePlaylistLazyLoading,
 } from '../hooks/useAudioLazyLoading';
 import { useEnhancedCaching } from '../hooks/useEnhancedCaching';
+import { TimeoutHandle } from '../types/timers';
 import type {
   CustomSound,
   Playlist,

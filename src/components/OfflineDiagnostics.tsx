@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Activity,
-  AlertTriangle,
+  Alert,
   CheckCircle,
   Database,
   HardDrive,
@@ -19,6 +19,7 @@ import { Progress } from './ui/progress';
 import OfflineGamingService from '../services/offline-gaming';
 import OfflineAnalyticsService from '../services/offline-analytics';
 import OfflineSleepTracker from '../services/offline-sleep-tracker';
+import { TimeoutHandle } from '../types/timers';
 
 interface DiagnosticCheck {
   id: string;
@@ -443,9 +444,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
       case 'healthy':
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case 'warning':
-        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
+        return <Alert className="h-4 w-4 text-yellow-500" />;
       case 'error':
-        return <AlertTriangle className="h-4 w-4 text-red-500" />;
+        return <Alert className="h-4 w-4 text-red-500" />;
       case 'checking':
         return <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />;
     }

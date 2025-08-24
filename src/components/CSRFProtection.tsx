@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import SecurityService from '../services/security';
 import useAuth from '../hooks/useAuth';
+import { TimeoutHandle } from '../types/timers';
 
 interface CSRFProtectionProps {
   children: (csrfToken: string, isValid: boolean) => React.ReactNode;

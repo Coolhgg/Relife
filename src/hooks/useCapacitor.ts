@@ -4,8 +4,9 @@ import {
   DeviceFeatures,
   AlarmNotification,
 } from '../services/capacitor-enhanced';
-import { AppState } from '@capacitor/app';
-import { ConnectionStatus } from '@capacitor/network';
+// import ... from '@capacitor/app'; // Package not available in current setup
+// import ... from '@capacitor/network'; // Package not available in current setup
+import { TimeoutHandle } from '../types/timers';
 
 // Main Capacitor hook
 export function useCapacitor() {

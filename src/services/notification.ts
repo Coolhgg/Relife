@@ -1,5 +1,6 @@
 import type { Alarm } from '../types';
 import { getNextAlarmTime, getVoiceMoodConfig } from '../utils';
+import { TimeoutHandle } from '../types/timers';
 import {
   scheduleLocalNotification,
   cancelLocalNotification,

@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { TimeoutHandle } from '../types/timers';
 
 export interface FrameRateConfig {
   target: number; // Target FPS (e.g., 60, 30)

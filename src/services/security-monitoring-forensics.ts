@@ -5,6 +5,7 @@
 import { Preferences } from '@capacitor/preferences';
 import SecurityService from './security';
 import { ErrorHandler } from './error-handler';
+import { TimeoutHandle } from '../types/timers';
 
 interface SecurityEvent {
   id: string;
@@ -97,8 +98,8 @@ export class SecurityMonitoringForensicsService {
   private eventBuffer: SecurityEvent[] = [];
   private threatSignatures: Map<string, ThreatSignature> = new Map();
   private activeAlerts: Map<string, SecurityAlert> = new Map();
-  private analysisTimer: number | null = null;
-  private cleanupTimer: number | null = null;
+  private analysisTimer: TimeoutHandle | null = null;
+  private cleanupTimer: TimeoutHandle | null = null;
   private metrics: SecurityMetrics | null = null;
 
   private constructor() {

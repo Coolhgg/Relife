@@ -4,6 +4,7 @@
  */
 
 import { useRef, useCallback } from 'react';
+import { TimeoutHandle } from '../types/timers';
 
 interface FocusRestorationOptions {
   fallbackSelector?: string;

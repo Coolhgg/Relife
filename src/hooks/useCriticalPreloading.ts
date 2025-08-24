@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { criticalPreloader } from '../services/critical-preloader';
 import type { Alarm } from '../types';
+import { TimeoutHandle } from '../types/timers';
 import type {
   CriticalAsset,
   PreloadStats,
@@ -36,7 +37,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
     readinessStatus: new Map(),
   });
 
-  const statsUpdateInterval = useRef<number>();
+  const statsUpdateInterval = useRef<TimeoutHandle>();
   const lastAnalysis = useRef<Date>();
 
   const analyzeAndPreload = useCallback(async () => {

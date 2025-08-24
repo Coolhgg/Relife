@@ -3,6 +3,7 @@
 // Provides touch, gesture, and mobile screen reader optimizations
 
 import ScreenReaderService from './screen-reader';
+import { TimeoutHandle } from '../types/timers';
 
 export interface TouchGesture {
   name: string;

@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import {
-  AlertTriangle,
+  Alert,
   ArrowUpCircle,
   ArrowDownCircle,
   Calendar,
@@ -33,6 +33,7 @@ import { Textarea } from '../ui/textarea';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
 import PricingTable from './PricingTable';
+import { TimeoutHandle } from '../types/timers';
 import type {
   Subscription,
   SubscriptionPlan,
@@ -283,7 +284,7 @@ export function SubscriptionManagement({
           {/* Cancellation Notice */}
           {subscription.cancelAtPeriodEnd && (
             <Alert className="border-orange-200 bg-orange-50">
-              <AlertTriangle className="h-4 w-4 text-orange-600" />
+              <Alert className="h-4 w-4 text-orange-600" />
               <AlertDescription className="text-orange-600">
                 Your subscription will end on{' '}
                 {formatDate(subscription.currentPeriodEnd)}. You can reactivate anytime
@@ -337,7 +338,7 @@ export function SubscriptionManagement({
                 <DialogContent className="max-w-md">
                   <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
-                      <AlertTriangle className="w-5 h-5 text-red-600" />
+                      <Alert className="w-5 h-5 text-red-600" />
                       Cancel Subscription
                     </DialogTitle>
                   </DialogHeader>

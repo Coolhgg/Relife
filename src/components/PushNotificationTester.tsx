@@ -9,12 +9,13 @@ import {
   Bell,
   CheckCircle,
   XCircle,
-  AlertTriangle,
+  Alert,
   Smartphone,
   RefreshCw,
 } from 'lucide-react';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { useAnalytics } from '../hooks/useAnalytics';
+import { TimeoutHandle } from '../types/timers';
 
 interface TestResult {
   id: string;
@@ -216,7 +217,7 @@ export const PushNotificationTester: React.FC = () => {
           <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
         );
       default:
-        return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+        return <Alert className="w-4 h-4 text-yellow-500" />;
     }
   };
 
@@ -241,7 +242,7 @@ export const PushNotificationTester: React.FC = () => {
     return (
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
         <div className="flex items-center gap-3">
-          <AlertTriangle className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+          <Alert className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
           <div>
             <h3 className="font-semibold text-yellow-800 dark:text-yellow-300">
               Push Notification Testing Not Available

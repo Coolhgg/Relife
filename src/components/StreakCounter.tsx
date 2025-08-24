@@ -6,6 +6,7 @@ import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { Flame, Zap, Trophy, Share2, Calendar, Target } from 'lucide-react';
 import { UserStreak, StreakMilestone } from '../types/struggling-sam';
+import { TimeoutHandle } from '../types/timers';
 
 interface StreakCounterProps {
   userStreak: UserStreak;

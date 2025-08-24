@@ -74,7 +74,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         benefits: [
           'Celebrity chef motivation',
           'Zen master mindfulness',
-          'Robot companion efficiency',
+          'Bot companion efficiency',
           'Pirate captain adventure',
           'And 16+ more personalities',
         ],
