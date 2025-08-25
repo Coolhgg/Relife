@@ -1,6 +1,7 @@
 /// <reference lib="dom" />
 import React from 'react';
 import { useState, useEffect, useCallback, useReducer } from 'react';
+import { Provider } from 'react-redux';
 import {
   Plus,
   Clock,
@@ -19,6 +20,8 @@ import { rootReducer } from './reducers/rootReducer';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { useI18n } from './hooks/useI18n';
 import { useTheme } from './hooks/useTheme';
+import store from './store';
+import { initializeStoreWithPersistedState } from './store';
 
 import AlarmList from './components/AlarmList';
 import AlarmForm from './components/AlarmForm';
@@ -2414,12 +2417,20 @@ function AppContent() {
   );
 }
 
-// Main App component that provides the LanguageProvider
+// Main App component that provides the Redux store and LanguageProvider
 function App() {
+  // Initialize Redux store with persisted state on app start
+  React.useEffect(() => {
+    initializeStoreWithPersistedState();
+    console.log('🏪 Redux store initialized with DevTools and persistence');
+  }, []);
+
   return (
-    <LanguageProvider defaultLanguage="en" enableAutoDetect={true}>
-      <AppContent />
-    </LanguageProvider>
+    <Provider store={store}>
+      <LanguageProvider defaultLanguage="en" enableAutoDetect={true}>
+        <AppContent />
+      </LanguageProvider>
+    </Provider>
   );
 }
 

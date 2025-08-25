@@ -6,6 +6,7 @@ import RootErrorBoundary from './components/RootErrorBoundary.tsx';
 import { setupNotificationListeners } from './services/capacitor';
 import { ServiceWorkerManager } from './services/service-worker-manager';
 import { initializeApp } from './config/initializeApp';
+import { initializeStoreWithPersistedState } from './store';
 
 // Show loading screen while app initializes
 const showLoadingScreen = () => {
@@ -37,6 +38,10 @@ const startApp = async () => {
   try {
     // Initialize app (including i18n)
     await initializeApp();
+    
+    // Initialize Redux store with persisted state
+    // Note: This is also called in App.tsx but calling here ensures early initialization
+    initializeStoreWithPersistedState();
 
     // Initialize Capacitor listeners
     setupNotificationListeners();
