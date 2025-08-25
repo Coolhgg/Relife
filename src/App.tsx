@@ -3,13 +3,10 @@ import React from 'react';
 import { useState, useEffect, useCallback, useReducer } from 'react';
 import { Provider } from 'react-redux';
 import {
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+  Bell,
   Plus,
   Clock,
   Settings,
-  Bell,
   Brain,
   Gamepad2,
   LogOut,
