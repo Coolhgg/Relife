@@ -1,0 +1,278 @@
+# Business metric alerts for Relife Smart Alarm - Revenue, User Engagement, and Core Features
+groups:
+  - name: relife.business
+    rules:
+      # Revenue and Subscription Alerts
+      - alert: SubscriptionChurnRateHigh
+        expr: (rate(subscription_cancellations_total[24h]) / rate(subscription_activations_total[24h])) > 0.15
+        for: 1h
+        labels:
+          severity: critical
+          service: relife
+          category: revenue
+          team: product
+        annotations:
+          summary: "High subscription churn rate detected"
+          description: "Churn rate is {{ $value | humanizePercentage }}, above critical threshold of 15%"
+          impact: "Revenue loss and user retention issues"
+          runbook_url: "https://docs.relife.app/runbooks/business/subscription-churn"
+
+      - alert: PremiumConversionRateDropping
+        expr: (rate(premium_upgrades_total[24h]) / rate(user_registrations_total[24h])) < 0.05
+        for: 2h
+        labels:
+          severity: warning
+          service: relife
+          category: revenue
+          team: product
+        annotations:
+          summary: "Premium conversion rate dropping"
+          description: "Premium conversion rate is {{ $value | humanizePercentage }}, below 5% target"
+          impact: "Reduced revenue growth"
+          runbook_url: "https://docs.relife.app/runbooks/business/conversion-rate"
+
+      - alert: DailyRevenueDropSignificant
+        expr: sum(rate(revenue_usd[24h])) < sum(rate(revenue_usd[24h] offset 7d)) * 0.8
+        for: 3h
+        labels:
+          severity: critical
+          service: relife
+          category: revenue
+          team: product
+        annotations:
+          summary: "Daily revenue dropped significantly"
+          description: "Revenue is down {{ $value }}% compared to same day last week"
+          impact: "Critical revenue decline"
+          runbook_url: "https://docs.relife.app/runbooks/business/revenue-decline"
+
+      # User Engagement Alerts
+      - alert: DailyActiveUsersDecline
+        expr: daily_active_users < daily_active_users offset 7d * 0.85
+        for: 2h
+        labels:
+          severity: warning
+          service: relife
+          category: engagement
+          team: product
+        annotations:
+          summary: "Daily active users declining"
+          description: "DAU is {{ $value }}, down from {{ query \"daily_active_users offset 7d\" | first | value }} last week"
+          impact: "User engagement declining"
+          runbook_url: "https://docs.relife.app/runbooks/business/dau-decline"
+
+      - alert: UserRetentionRateDropping
+        expr: (user_retention_7d / user_registrations_total offset 7d) < 0.4
+        for: 4h
+        labels:
+          severity: warning
+          service: relife
+          category: engagement
+          team: product
+        annotations:
+          summary: "7-day user retention rate dropping"
+          description: "7-day retention rate is {{ $value | humanizePercentage }}, below 40% target"
+          impact: "Poor user retention affecting growth"
+          runbook_url: "https://docs.relife.app/runbooks/business/retention-rate"
+
+      - alert: SessionDurationDecreasing
+        expr: avg_over_time(session_duration_minutes[24h]) < avg_over_time(session_duration_minutes[24h] offset 7d) * 0.8
+        for: 3h
+        labels:
+          severity: warning
+          service: relife
+          category: engagement
+          team: product
+        annotations:
+          summary: "Average session duration decreasing"
+          description: "Session duration is {{ $value }} minutes, down from last week"
+          impact: "Reduced user engagement"
+          runbook_url: "https://docs.relife.app/runbooks/business/session-duration"
+
+      # Core Alarm Feature Alerts
+      - alert: AlarmCreationRateDropping
+        expr: rate(alarms_created_total[24h]) < rate(alarms_created_total[24h] offset 7d) * 0.7
+        for: 2h
+        labels:
+          severity: warning
+          service: relife
+          category: core_features
+          team: product
+        annotations:
+          summary: "Alarm creation rate dropping significantly"
+          description: "Users are creating {{ $value }} fewer alarms compared to last week"
+          impact: "Core feature usage declining"
+          runbook_url: "https://docs.relife.app/runbooks/business/alarm-creation"
+
+      - alert: WakeUpSuccessRatelow
+        expr: (rate(alarm_wake_up_success_total[24h]) / rate(alarm_triggers_total[24h])) < 0.75
+        for: 1h
+        labels:
+          severity: critical
+          service: relife
+          category: core_features
+          team: engineering
+        annotations:
+          summary: "Low wake-up success rate for alarms"
+          description: "Wake-up success rate is {{ $value | humanizePercentage }}, below 75% target"
+          impact: "Core product functionality failing users"
+          runbook_url: "https://docs.relife.app/runbooks/business/wake-up-success"
+
+      - alert: AlarmDismissRateHigh
+        expr: (rate(alarm_dismissed_immediately_total[24h]) / rate(alarm_triggers_total[24h])) > 0.35
+        for: 2h
+        labels:
+          severity: warning
+          service: relife
+          category: core_features
+          team: product
+        annotations:
+          summary: "High immediate alarm dismissal rate"
+          description: "{{ $value | humanizePercentage }} of alarms are being dismissed immediately"
+          impact: "Users may find alarms ineffective"
+          runbook_url: "https://docs.relife.app/runbooks/business/alarm-dismissal"
+
+      # Feature Usage Alerts
+      - alert: PremiumFeatureUsageLow
+        expr: (rate(premium_feature_usage_total[24h]) / sum(premium_subscribers_active)) < 0.3
+        for: 4h
+        labels:
+          severity: warning
+          service: relife
+          category: premium_features
+          team: product
+        annotations:
+          summary: "Low premium feature usage among subscribers"
+          description: "Only {{ $value | humanizePercentage }} of premium users are using premium features daily"
+          impact: "Poor premium feature adoption"
+          runbook_url: "https://docs.relife.app/runbooks/business/premium-usage"
+
+      - alert: GamificationEngagementDrop
+        expr: (rate(gamification_interactions_total[24h]) / daily_active_users) < 0.2
+        for: 3h
+        labels:
+          severity: warning
+          service: relife
+          category: engagement
+          team: product
+        annotations:
+          summary: "Gamification engagement dropping"
+          description: "Only {{ $value | humanizePercentage }} of DAU are engaging with gamification features"
+          impact: "Gamification not driving engagement"
+          runbook_url: "https://docs.relife.app/runbooks/business/gamification"
+
+      # Customer Support Alerts
+      - alert: SupportTicketVolumeSpike
+        expr: rate(support_tickets_created_total[1h]) > rate(support_tickets_created_total[1h] offset 24h) * 3
+        for: 30m
+        labels:
+          severity: warning
+          service: relife
+          category: support
+          team: support
+        annotations:
+          summary: "Support ticket volume spike detected"
+          description: "Support ticket creation rate has tripled compared to yesterday"
+          impact: "Potential product issue causing user frustration"
+          runbook_url: "https://docs.relife.app/runbooks/business/support-spike"
+
+      - alert: NegativeFeedbackIncrease
+        expr: (rate(feedback_negative_total[24h]) / rate(feedback_total[24h])) > 0.4
+        for: 2h
+        labels:
+          severity: critical
+          service: relife
+          category: satisfaction
+          team: product
+        annotations:
+          summary: "Negative feedback percentage increasing"
+          description: "{{ $value | humanizePercentage }} of feedback is negative, above 40% threshold"
+          impact: "User satisfaction declining"
+          runbook_url: "https://docs.relife.app/runbooks/business/negative-feedback"
+
+      # Business Intelligence Alerts
+      - alert: CohortsPerformanceDeclining
+        expr: cohort_retention_28d{cohort_age="4w"} < 0.15
+        for: 6h
+        labels:
+          severity: warning
+          service: relife
+          category: retention
+          team: growth
+        annotations:
+          summary: "Monthly cohort retention declining"
+          description: "4-week cohort retention is {{ $value | humanizePercentage }}, below 15% target"
+          impact: "Long-term user retention declining"
+          runbook_url: "https://docs.relife.app/runbooks/business/cohort-retention"
+
+      - alert: LowNetPromoterScore
+        expr: net_promoter_score_average < 30
+        for: 4h
+        labels:
+          severity: warning
+          service: relife
+          category: satisfaction
+          team: product
+        annotations:
+          summary: "Net Promoter Score below target"
+          description: "NPS is {{ $value }}, below target of 30"
+          impact: "User satisfaction and word-of-mouth declining"
+          runbook_url: "https://docs.relife.app/runbooks/business/nps-low"
+
+  # Platform and Integration Health
+  - name: relife.integrations
+    rules:
+      - alert: ThirdPartyServiceFailures
+        expr: rate(third_party_api_failures_total[5m]) > 0.1
+        for: 3m
+        labels:
+          severity: critical
+          service: relife
+          category: integrations
+          team: engineering
+        annotations:
+          summary: "High third-party service failure rate"
+          description: "{{ $value | humanizePercentage }} of third-party API calls are failing"
+          impact: "Core integrations not working"
+          runbook_url: "https://docs.relife.app/runbooks/integrations/api-failures"
+
+      - alert: PaymentProcessorIssues
+        expr: rate(payment_failures_total[10m]) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: payments
+          team: engineering
+        annotations:
+          summary: "Payment processor experiencing issues"
+          description: "{{ $value | humanizePercentage }} of payments are failing"
+          impact: "Revenue loss and customer frustration"
+          runbook_url: "https://docs.relife.app/runbooks/payments/processor-issues"
+
+      - alert: EmailDeliveryFailures
+        expr: rate(email_delivery_failures_total[15m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: communications
+          team: engineering
+        annotations:
+          summary: "High email delivery failure rate"
+          description: "{{ $value | humanizePercentage }} of emails are failing to deliver"
+          impact: "User communication disrupted"
+          runbook_url: "https://docs.relife.app/runbooks/communications/email-delivery"
+
+      - alert: PushNotificationDeliveryLow
+        expr: (rate(push_notifications_delivered_total[30m]) / rate(push_notifications_sent_total[30m])) < 0.8
+        for: 10m
+        labels:
+          severity: warning
+          service: relife
+          category: communications
+          team: engineering
+        annotations:
+          summary: "Push notification delivery rate low"
+          description: "Only {{ $value | humanizePercentage }} of push notifications are being delivered"
+          impact: "Users missing important notifications"
+          runbook_url: "https://docs.relife.app/runbooks/communications/push-delivery"

@@ -1,0 +1,386 @@
+# Mobile app performance and stability alerts for Relife Smart Alarm - iOS and Android
+groups:
+  - name: relife.mobile.stability
+    rules:
+      # Crash Detection Alerts
+      - alert: MobileCrashRateHigh
+        expr: (rate(mobile_crashes_total[1h]) / rate(mobile_sessions_total[1h])) > 0.01
+        for: 15m
+        labels:
+          severity: critical
+          service: relife
+          category: mobile_stability
+          team: mobile
+        annotations:
+          summary: "High mobile app crash rate detected"
+          description: "Crash rate is {{ $value | humanizePercentage }} on {{ $labels.platform }}, above 1% threshold"
+          impact: "Users experiencing app crashes"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/crash-rate"
+
+      - alert: CriticalCrashPattern
+        expr: increase(mobile_crashes_total{severity="critical"}[15m]) > 5
+        for: 5m
+        labels:
+          severity: critical
+          service: relife
+          category: mobile_stability
+          team: mobile
+        annotations:
+          summary: "Critical crash pattern detected on mobile"
+          description: "{{ $value }} critical crashes in 15 minutes on {{ $labels.platform }}"
+          impact: "Severe app instability"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/critical-crashes"
+
+      - alert: iOSSpecificCrashSpike
+        expr: rate(mobile_crashes_total{platform="ios"}[10m]) > rate(mobile_crashes_total{platform="ios"}[10m] offset 1h) * 5
+        for: 5m
+        labels:
+          severity: critical
+          service: relife
+          category: mobile_stability
+          platform: ios
+          team: mobile
+        annotations:
+          summary: "iOS crash rate spike detected"
+          description: "iOS crash rate has increased 5x compared to 1 hour ago"
+          impact: "iOS users experiencing instability"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/ios-crashes"
+
+      - alert: AndroidSpecificCrashSpike
+        expr: rate(mobile_crashes_total{platform="android"}[10m]) > rate(mobile_crashes_total{platform="android"}[10m] offset 1h) * 5
+        for: 5m
+        labels:
+          severity: critical
+          service: relife
+          category: mobile_stability
+          platform: android
+          team: mobile
+        annotations:
+          summary: "Android crash rate spike detected"
+          description: "Android crash rate has increased 5x compared to 1 hour ago"
+          impact: "Android users experiencing instability"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/android-crashes"
+
+      # Memory and Performance Alerts
+      - alert: MobileMemoryUsageHigh
+        expr: avg(mobile_memory_usage_mb) > 250
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_performance
+          team: mobile
+        annotations:
+          summary: "High mobile app memory usage"
+          description: "Average memory usage is {{ $value }}MB, above 250MB threshold"
+          impact: "App may be killed by OS on low-memory devices"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/memory-usage"
+
+      - alert: MobileCPUUsageExcessive
+        expr: avg(mobile_cpu_usage_percent) > 80
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_performance
+          team: mobile
+        annotations:
+          summary: "Excessive mobile CPU usage detected"
+          description: "Average CPU usage is {{ $value }}%, above 80% threshold"
+          impact: "Battery drain and device heating"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/cpu-usage"
+
+      - alert: MobileBatteryDrainHigh
+        expr: avg(mobile_battery_drain_rate) > 5
+        for: 10m
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_performance
+          team: mobile
+        annotations:
+          summary: "High battery drain rate detected"
+          description: "Battery drain rate is {{ $value }}% per hour, above 5% threshold"
+          impact: "Users experiencing rapid battery drain"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/battery-drain"
+
+      # App Launch and Responsiveness
+      - alert: MobileAppLaunchTimeSlow
+        expr: avg(mobile_app_launch_time_ms) > 3000
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_performance
+          team: mobile
+        annotations:
+          summary: "Slow mobile app launch time"
+          description: "Average app launch time is {{ $value }}ms, above 3 second threshold"
+          impact: "Poor user experience on app startup"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/launch-time"
+
+      - alert: MobileAppNotResponding
+        expr: rate(mobile_anr_events_total[5m]) > 0
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: mobile_stability
+          team: mobile
+        annotations:
+          summary: "Mobile app not responding events detected"
+          description: "{{ $value }} ANR events per second on {{ $labels.platform }}"
+          impact: "App becoming unresponsive"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/anr-events"
+
+      - alert: MobileFrameDropsHigh
+        expr: avg(mobile_frame_drops_per_second) > 2
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_performance
+          team: mobile
+        annotations:
+          summary: "High frame drop rate on mobile"
+          description: "Frame drop rate is {{ $value }} per second, above 2fps threshold"
+          impact: "Janky animations and poor user experience"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/frame-drops"
+
+  - name: relife.mobile.connectivity
+    rules:
+      # Network and Connectivity Issues
+      - alert: MobileNetworkErrorsHigh
+        expr: (rate(mobile_network_errors_total[5m]) / rate(mobile_network_requests_total[5m])) > 0.05
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_connectivity
+          team: mobile
+        annotations:
+          summary: "High mobile network error rate"
+          description: "Network error rate is {{ $value | humanizePercentage }} on mobile"
+          impact: "Mobile users experiencing connectivity issues"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/network-errors"
+
+      - alert: MobileOfflineModeIssues
+        expr: (rate(mobile_offline_sync_failures_total[10m]) / rate(mobile_offline_operations_total[10m])) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_connectivity
+          team: mobile
+        annotations:
+          summary: "Mobile offline mode sync issues"
+          description: "{{ $value | humanizePercentage }} of offline operations are failing to sync"
+          impact: "Data loss risk for offline users"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/offline-sync"
+
+      - alert: MobilePushNotificationDeliveryFails
+        expr: (rate(mobile_push_delivery_failures_total[15m]) / rate(mobile_push_notifications_sent_total[15m])) > 0.15
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_connectivity
+          team: mobile
+        annotations:
+          summary: "Mobile push notification delivery failing"
+          description: "{{ $value | humanizePercentage }} of mobile push notifications are failing"
+          impact: "Users missing alarm notifications"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/push-delivery"
+
+  - name: relife.mobile.features
+    rules:
+      # Alarm-specific Mobile Alerts
+      - alert: MobileAlarmTriggerFailures
+        expr: rate(mobile_alarm_trigger_failures_total[5m]) > 0.02
+        for: 3m
+        labels:
+          severity: critical
+          service: relife
+          category: mobile_alarms
+          team: mobile
+        annotations:
+          summary: "Mobile alarm trigger failures detected"
+          description: "{{ $value | humanizePercentage }} of mobile alarm triggers are failing"
+          impact: "Users not being woken up by their alarms"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/alarm-failures"
+
+      - alert: MobileAudioPlaybackIssues
+        expr: rate(mobile_audio_playback_errors_total[5m]) > 0.01
+        for: 5m
+        labels:
+          severity: critical
+          service: relife
+          category: mobile_alarms
+          team: mobile
+        annotations:
+          summary: "Mobile audio playback issues detected"
+          description: "{{ $value | humanizePercentage }} of audio playback attempts are failing"
+          impact: "Silent alarms not waking users"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/audio-playback"
+
+      - alert: MobileVibrationFailures
+        expr: rate(mobile_vibration_failures_total[5m]) > 0.05
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_alarms
+          team: mobile
+        annotations:
+          summary: "Mobile vibration failures detected"
+          description: "{{ $value | humanizePercentage }} of vibration triggers are failing"
+          impact: "Reduced alarm effectiveness"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/vibration-failures"
+
+      # Permission and Security Issues
+      - alert: MobilePermissionDeniedRate
+        expr: rate(mobile_permission_denied_total[10m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_permissions
+          team: mobile
+        annotations:
+          summary: "High mobile permission denial rate"
+          description: "{{ $value | humanizePercentage }} of permission requests are being denied"
+          impact: "App functionality limited by missing permissions"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/permissions"
+
+      - alert: MobileBackgroundExecutionLimited
+        expr: rate(mobile_background_execution_limited_total[15m]) > 0.1
+        for: 10m
+        labels:
+          severity: critical
+          service: relife
+          category: mobile_background
+          team: mobile
+        annotations:
+          summary: "Mobile background execution being limited"
+          description: "{{ $value | humanizePercentage }} of background operations are being limited"
+          impact: "Alarms may not trigger when app is backgrounded"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/background-execution"
+
+  - name: relife.mobile.store
+    rules:
+      # App Store Metrics
+      - alert: AppStoreRatingDeclining
+        expr: avg_over_time(app_store_rating[7d]) < 4.0
+        for: 6h
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_store
+          team: mobile
+        annotations:
+          summary: "App store rating declining"
+          description: "7-day average app store rating is {{ $value }}, below 4.0 stars"
+          impact: "Poor store visibility and download rates"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/app-rating"
+
+      - alert: AppStoreNegativeReviewsSpike
+        expr: rate(app_store_negative_reviews_total[24h]) > rate(app_store_negative_reviews_total[24h] offset 7d) * 2
+        for: 2h
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_store
+          team: mobile
+        annotations:
+          summary: "Spike in negative app store reviews"
+          description: "Negative review rate has doubled compared to last week"
+          impact: "Store reputation and downloads at risk"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/negative-reviews"
+
+      - alert: MobileVersionAdoptionSlow
+        expr: (mobile_latest_version_users / mobile_total_users) < 0.5
+        for: 72h
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_adoption
+          team: mobile
+        annotations:
+          summary: "Slow adoption of latest mobile version"
+          description: "Only {{ $value | humanizePercentage }} of users on latest version after 3 days"
+          impact: "Users missing latest features and fixes"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/version-adoption"
+
+      # Device and OS Compatibility
+      - alert: MobileOSCompatibilityIssues
+        expr: (rate(mobile_os_compatibility_errors_total[1h]) / rate(mobile_sessions_total[1h])) > 0.02
+        for: 30m
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_compatibility
+          team: mobile
+        annotations:
+          summary: "Mobile OS compatibility issues detected"
+          description: "{{ $value | humanizePercentage }} of sessions experiencing OS compatibility issues"
+          impact: "App not working properly on certain OS versions"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/os-compatibility"
+
+      - alert: MobileDeviceFragmentationIssues
+        expr: count by (device_model) (rate(mobile_crashes_total[1h])) > 10
+        for: 15m
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_compatibility
+          team: mobile
+        annotations:
+          summary: "High crash rate on specific device models"
+          description: "{{ $labels.device_model }} experiencing high crash rate"
+          impact: "Device-specific instability"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/device-specific"
+
+  - name: relife.mobile.business
+    rules:
+      # Mobile-specific Business Metrics
+      - alert: MobileConversionRateDrop
+        expr: (rate(mobile_premium_upgrades_total[24h]) / rate(mobile_sessions_total[24h])) < 0.001
+        for: 4h
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_business
+          team: mobile
+        annotations:
+          summary: "Mobile premium conversion rate dropping"
+          description: "Mobile conversion rate is {{ $value | humanizePercentage }}, below 0.1% target"
+          impact: "Lost revenue from mobile users"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/conversion-rate"
+
+      - alert: MobileInAppPurchaseFailures
+        expr: rate(mobile_iap_failures_total[10m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          service: relife
+          category: mobile_business
+          team: mobile
+        annotations:
+          summary: "Mobile in-app purchase failures high"
+          description: "{{ $value | humanizePercentage }} of IAP attempts are failing"
+          impact: "Revenue loss from failed purchases"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/iap-failures"
+
+      - alert: MobileUserEngagementDropping
+        expr: avg_over_time(mobile_daily_session_count[7d]) < avg_over_time(mobile_daily_session_count[7d] offset 7d) * 0.8
+        for: 12h
+        labels:
+          severity: warning
+          service: relife
+          category: mobile_business
+          team: mobile
+        annotations:
+          summary: "Mobile user engagement dropping"
+          description: "7-day mobile session average down {{ $value }}% from previous week"
+          impact: "Declining mobile user engagement"
+          runbook_url: "https://docs.relife.app/runbooks/mobile/engagement-drop"

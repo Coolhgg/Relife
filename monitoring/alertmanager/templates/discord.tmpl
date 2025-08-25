@@ -1,0 +1,260 @@
+{{ define "discord.default.title" }}
+{{- if eq .Status "firing" -}}
+🚨 {{ .CommonLabels.severity | upper }} Alert: {{ .CommonLabels.alertname }}
+{{- else -}}
+✅ Resolved: {{ .CommonLabels.alertname }}
+{{- end -}}
+{{ end }}
+
+{{ define "discord.default.description" }}
+{{ range .Alerts }}
+{{- if eq .Status "firing" }}
+**🔥 Alert Details:**
+**Summary:** {{ .Annotations.summary }}
+**Description:** {{ .Annotations.description }}
+**Service:** `{{ .Labels.service }}`
+**Severity:** `{{ .Labels.severity }}`
+**Category:** `{{ .Labels.category | default "general" }}`
+**Team:** `{{ .Labels.team | default "engineering" }}`
+**Started:** {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+{{- if .Annotations.impact }}
+**💥 Impact:** {{ .Annotations.impact }}
+{{- end }}
+
+{{- if .Annotations.runbook_url }}
+**📖 Runbook:** {{ .Annotations.runbook_url }}
+{{- end }}
+
+**🎯 Next Steps:**
+1. Acknowledge this alert
+2. Follow runbook procedures
+3. Update team on progress
+{{- else }}
+**✅ Issue Resolved**
+**Alert:** {{ .Annotations.summary }}
+**Duration:** {{ .StartsAt.Format "15:04" }} - {{ .EndsAt.Format "15:04" }} ({{ .EndsAt.Sub .StartsAt | humanize }})
+**Service:** `{{ .Labels.service }}`
+{{- end }}
+{{ end }}
+{{ end }}
+
+{{ define "discord.critical.title" }}
+🚨🚨 CRITICAL ALERT: {{ .CommonLabels.alertname }} 🚨🚨
+{{ end }}
+
+{{ define "discord.critical.description" }}
+{{ range .Alerts }}
+**🚨 CRITICAL ALERT - IMMEDIATE ACTION REQUIRED**
+
+**Alert:** {{ .Annotations.summary }}
+**Description:** {{ .Annotations.description }}
+**Service:** `{{ .Labels.service }}`
+**Instance:** `{{ .Labels.instance | default "N/A" }}`
+**Started:** {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+{{- if .Annotations.impact }}
+**🔥 BUSINESS IMPACT:** {{ .Annotations.impact }}
+{{- end }}
+
+{{- if .Annotations.runbook_url }}
+**📖 EMERGENCY PROCEDURES:** {{ .Annotations.runbook_url }}
+{{- end }}
+
+**🚨 IMMEDIATE ACTION PLAN:**
+```
+1. ✅ Acknowledge alert immediately
+2. 🔍 Follow emergency runbook
+3. 📢 Notify incident commander
+4. 🎯 Begin mitigation steps
+5. 📝 Update status every 15 minutes
+```
+
+**⏰ Escalation:** Auto-escalate in 15 minutes if not resolved
+**📞 Emergency Contact:** Page on-call engineer immediately
+{{ end }}
+{{ end }}
+
+{{ define "discord.business.title" }}
+📊 Business Metric Alert: {{ .CommonLabels.alertname }}
+{{ end }}
+
+{{ define "discord.business.description" }}
+{{ range .Alerts }}
+**📊 Business Intelligence Alert**
+
+**Metric:** {{ .Annotations.summary }}
+**Details:** {{ .Annotations.description }}
+**Service:** `{{ .Labels.service }}`
+**Category:** `{{ .Labels.category }}`
+**Team:** `{{ .Labels.team }}`
+**Detected:** {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+{{- if .Annotations.impact }}
+**💰 Business Impact:** {{ .Annotations.impact }}
+{{- end }}
+
+**📈 Analysis Required:**
+```
+• Review dashboard metrics
+• Analyze user behavior trends  
+• Check marketing campaign impact
+• Investigate external factors
+• Assess competitive landscape
+```
+
+{{- if .Annotations.runbook_url }}
+**📋 Analysis Playbook:** {{ .Annotations.runbook_url }}
+{{- end }}
+
+**👥 Stakeholders:** Product, Growth, Engineering teams
+{{ end }}
+{{ end }}
+
+{{ define "discord.mobile.title" }}
+📱 Mobile App Alert: {{ .CommonLabels.alertname }}
+{{ end }}
+
+{{ define "discord.mobile.description" }}
+{{ range .Alerts }}
+**📱 Mobile Application Alert**
+
+**Issue:** {{ .Annotations.summary }}
+**Details:** {{ .Annotations.description }}
+**Platform:** `{{ .Labels.platform | default "iOS/Android" }}`
+**App Version:** `{{ .Labels.app_version | default "Multiple versions" }}`
+**Detected:** {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+{{- if .Annotations.impact }}
+**📉 User Impact:** {{ .Annotations.impact }}
+{{- end }}
+
+**🔧 Mobile Team Checklist:**
+```
+☐ Check crash reporting tools
+☐ Review recent app releases  
+☐ Monitor app store reviews
+☐ Verify device compatibility
+☐ Test on affected platforms
+☐ Prepare hotfix if needed
+```
+
+{{- if .Annotations.runbook_url }}
+**📱 Mobile Response Guide:** {{ .Annotations.runbook_url }}
+{{- end }}
+
+**🎯 Priority:** Address mobile issues quickly to prevent app store rating impact
+{{ end }}
+{{ end }}
+
+{{ define "discord.security.title" }}
+🔒 SECURITY INCIDENT: {{ .CommonLabels.alertname }} 🔒
+{{ end }}
+
+{{ define "discord.security.description" }}
+{{ range .Alerts }}
+**🔒 SECURITY INCIDENT DETECTED**
+
+**Security Event:** {{ .Annotations.summary }}
+**Details:** {{ .Annotations.description }}
+**Source IP:** `{{ .Labels.source_ip | default "Unknown" }}`
+**Service:** `{{ .Labels.service }}`
+**Detected:** {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+{{- if .Annotations.impact }}
+**🚨 Security Impact:** {{ .Annotations.impact }}
+{{- end }}
+
+**🛡️ SECURITY RESPONSE PROTOCOL:**
+```
+🔍 INVESTIGATE (0-10 min):
+  ☐ Analyze attack pattern
+  ☐ Identify scope and impact
+  ☐ Check related logs
+
+🚫 CONTAIN (10-20 min):
+  ☐ Block malicious IPs
+  ☐ Disable compromised accounts
+  ☐ Isolate affected systems
+
+📝 DOCUMENT (ongoing):
+  ☐ Log all actions taken
+  ☐ Preserve evidence
+  ☐ Update incident timeline
+
+📞 ESCALATE (if needed):
+  ☐ Notify security team lead
+  ☐ Contact CISO for critical incidents
+  ☐ Prepare legal/compliance notifications
+```
+
+{{- if .Annotations.runbook_url }}
+**🛡️ Security Incident Procedures:** {{ .Annotations.runbook_url }}
+{{- end }}
+
+**⚠️ Remember:** Follow incident response procedures and maintain chain of custody for any evidence
+{{ end }}
+{{ end }}
+
+{{ define "discord.sla.title" }}
+📊 SLA VIOLATION: {{ .CommonLabels.alertname }}
+{{ end }}
+
+{{ define "discord.sla.description" }}
+{{ range .Alerts }}
+**📊 SERVICE LEVEL AGREEMENT VIOLATION**
+
+**SLA Breach:** {{ .Annotations.summary }}
+**Details:** {{ .Annotations.description }}
+**Service:** `{{ .Labels.service }}`
+**SLA Tier:** `{{ .Labels.sla_tier | default "Standard" }}`
+**Violation Started:** {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+{{- if .Annotations.impact }}
+**💼 Customer Impact:** {{ .Annotations.impact }}
+{{- end }}
+
+**📋 SLA VIOLATION RESPONSE:**
+```
+⏱️ IMMEDIATE (0-15 min):
+  ☐ Acknowledge SLA violation
+  ☐ Begin rapid resolution efforts
+  ☐ Notify customer success team
+
+📞 COMMUNICATION (15-30 min):
+  ☐ Prepare customer notifications
+  ☐ Update status page
+  ☐ Notify affected enterprise customers
+
+💰 FINANCIAL (post-resolution):
+  ☐ Calculate service credits owed
+  ☐ Update SLA violation tracking
+  ☐ Review customer impact assessment
+
+📈 PROCESS (24-48 hours):
+  ☐ Schedule post-incident review
+  ☐ Update SLA procedures if needed
+  ☐ Implement preventive measures
+```
+
+{{- if .Annotations.runbook_url }}
+**📊 SLA Response Procedures:** {{ .Annotations.runbook_url }}
+{{- end }}
+
+**⚠️ Note:** This violation may trigger customer credits and require executive notification
+{{ end }}
+{{ end }}
+
+{{ define "discord.color" }}
+{{- if eq .Status "firing" -}}
+  {{- if eq .CommonLabels.severity "critical" -}}
+    16711680
+  {{- else if eq .CommonLabels.severity "warning" -}}
+    16776960
+  {{- else -}}
+    4886754
+  {{- end -}}
+{{- else -}}
+  5763719
+{{- end -}}
+{{ end }}

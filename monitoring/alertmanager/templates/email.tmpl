@@ -1,0 +1,204 @@
+{{ define "email.default.subject" }}
+[{{ .CommonLabels.severity | upper }}] {{ .CommonLabels.alertname }} - {{ .CommonLabels.service }}
+{{ end }}
+
+{{ define "email.default.html" }}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relife Alert Notification</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .header.critical { background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); }
+        .header.warning { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .header.resolved { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .content { padding: 30px; line-height: 1.6; }
+        .alert-info { background-color: #f8f9fa; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #007bff; }
+        .critical-info { border-left-color: #dc3545; background-color: #f8d7da; }
+        .warning-info { border-left-color: #ffc107; background-color: #fff3cd; }
+        .resolved-info { border-left-color: #28a745; background-color: #d4edda; }
+        .details { margin: 15px 0; }
+        .label { font-weight: bold; color: #333; }
+        .value { color: #666; }
+        .impact { background-color: #fff8e1; padding: 15px; border-radius: 6px; border-left: 4px solid #ff9800; margin: 20px 0; }
+        .actions { background-color: #e3f2fd; padding: 20px; border-radius: 6px; margin: 20px 0; }
+        .footer { padding: 20px; background-color: #f8f9fa; text-align: center; color: #666; font-size: 14px; }
+        .button { display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; margin: 10px 5px; }
+        .button.critical { background-color: #dc3545; }
+        .button.warning { background-color: #ffc107; color: #333; }
+        .timeline { border-left: 2px solid #007bff; padding-left: 20px; margin: 20px 0; }
+        .timeline-item { margin-bottom: 15px; }
+        .code { background-color: #f8f9fa; padding: 10px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header {{ if eq .Status "firing" }}{{ .CommonLabels.severity }}{{ else }}resolved{{ end }}">
+            <h1 style="margin: 0; font-size: 24px;">
+                {{- if eq .Status "firing" }}
+                {{- if eq .CommonLabels.severity "critical" }}🚨{{ else if eq .CommonLabels.severity "warning" }}⚠️{{ else }}ℹ️{{ end }}
+                {{- else }}✅{{ end }}
+                Relife Monitoring Alert
+            </h1>
+            <p style="margin: 10px 0 0 0; opacity: 0.9;">{{ .CommonLabels.alertname }}</p>
+        </div>
+        
+        <div class="content">
+            {{ range .Alerts }}
+            <div class="alert-info {{ if eq .Status "firing" }}{{ .Labels.severity }}-info{{ else }}resolved-info{{ end }}">
+                <h2 style="margin-top: 0; color: #333;">
+                    {{- if eq .Status "firing" }}Alert Details{{ else }}Resolution Summary{{ end }}
+                </h2>
+                
+                <div class="details">
+                    <div class="label">Summary:</div>
+                    <div class="value">{{ .Annotations.summary }}</div>
+                </div>
+                
+                <div class="details">
+                    <div class="label">Description:</div>
+                    <div class="value">{{ .Annotations.description }}</div>
+                </div>
+                
+                <div class="details">
+                    <div class="label">Service:</div>
+                    <div class="value">{{ .Labels.service }}</div>
+                </div>
+                
+                <div class="details">
+                    <div class="label">Severity:</div>
+                    <div class="value">{{ .Labels.severity }}</div>
+                </div>
+                
+                <div class="details">
+                    <div class="label">Category:</div>
+                    <div class="value">{{ .Labels.category | default "general" }}</div>
+                </div>
+                
+                <div class="details">
+                    <div class="label">Responsible Team:</div>
+                    <div class="value">{{ .Labels.team | default "engineering" }}</div>
+                </div>
+                
+                {{- if eq .Status "firing" }}
+                <div class="details">
+                    <div class="label">Alert Started:</div>
+                    <div class="value">{{ .StartsAt.Format "Monday, January 2, 2006 at 15:04:05 UTC" }}</div>
+                </div>
+                {{- else }}
+                <div class="details">
+                    <div class="label">Duration:</div>
+                    <div class="value">{{ .StartsAt.Format "15:04" }} - {{ .EndsAt.Format "15:04" }} ({{ .EndsAt.Sub .StartsAt | humanize }})</div>
+                </div>
+                {{- end }}
+                
+                {{- if .Labels.instance }}
+                <div class="details">
+                    <div class="label">Instance:</div>
+                    <div class="value">{{ .Labels.instance }}</div>
+                </div>
+                {{- end }}
+            </div>
+            
+            {{- if .Annotations.impact }}
+            <div class="impact">
+                <h3 style="margin-top: 0; color: #e65100;">🔥 Business Impact</h3>
+                <p style="margin-bottom: 0;">{{ .Annotations.impact }}</p>
+            </div>
+            {{- end }}
+            
+            {{- if eq .Status "firing" }}
+            <div class="actions">
+                <h3 style="margin-top: 0; color: #1976d2;">🎯 Required Actions</h3>
+                {{- if eq .Labels.severity "critical" }}
+                <p><strong>CRITICAL ALERT - IMMEDIATE ACTION REQUIRED</strong></p>
+                <ol>
+                    <li>Acknowledge this alert immediately</li>
+                    <li>Follow emergency response procedures</li>
+                    <li>Notify incident commander</li>
+                    <li>Begin resolution steps per runbook</li>
+                    <li>Update stakeholders every 15 minutes</li>
+                </ol>
+                {{- else if eq .Labels.severity "warning" }}
+                <p><strong>Investigation and monitoring required</strong></p>
+                <ol>
+                    <li>Review alert details and context</li>
+                    <li>Follow troubleshooting procedures</li>
+                    <li>Monitor for escalation</li>
+                    <li>Update team on findings</li>
+                </ol>
+                {{- else }}
+                <p><strong>Informational alert - review and monitor</strong></p>
+                <ol>
+                    <li>Review the alert information</li>
+                    <li>Monitor for any escalation</li>
+                    <li>Consider preventive measures</li>
+                </ol>
+                {{- end }}
+                
+                {{- if .Annotations.runbook_url }}
+                <p>
+                    <a href="{{ .Annotations.runbook_url }}" class="button {{ .Labels.severity }}">
+                        📖 View Runbook
+                    </a>
+                </p>
+                {{- end }}
+            </div>
+            {{- end }}
+            
+            {{ end }}
+            
+            <div class="timeline">
+                <h3 style="color: #333;">📋 Alert Timeline</h3>
+                {{ range .Alerts }}
+                <div class="timeline-item">
+                    <strong>{{ .StartsAt.Format "15:04:05" }}</strong> - 
+                    {{- if eq .Status "firing" }}Alert fired{{ else }}Alert resolved{{ end }}
+                </div>
+                {{ end }}
+            </div>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                <h3 style="color: #333;">🔗 Quick Links</h3>
+                <p>
+                    <a href="https://grafana.relife.app" class="button">📊 Grafana Dashboard</a>
+                    <a href="https://logs.relife.app" class="button">📝 Application Logs</a>
+                    <a href="https://status.relife.app" class="button">🌐 Status Page</a>
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>
+                This alert was generated by Relife Monitoring System<br>
+                <small>Alert ID: {{ .GroupKey }} | Generated: {{ now.Format "2006-01-02 15:04:05 UTC" }}</small>
+            </p>
+            <p>
+                <a href="https://docs.relife.app/monitoring/alerts" style="color: #666;">Alert Documentation</a> |
+                <a href="https://relife.app/support" style="color: #666;">Support</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+{{ end }}
+
+{{ define "email.critical.subject" }}
+🚨 [CRITICAL] {{ .CommonLabels.alertname }} - IMMEDIATE ACTION REQUIRED - {{ .CommonLabels.service }}
+{{ end }}
+
+{{ define "email.security.subject" }}
+🔒 [SECURITY INCIDENT] {{ .CommonLabels.alertname }} - {{ .CommonLabels.service }}
+{{ end }}
+
+{{ define "email.sla.subject" }}
+📊 [SLA VIOLATION] {{ .CommonLabels.alertname }} - {{ .CommonLabels.service }}
+{{ end }}
+
+{{ define "email.resolved.subject" }}
+✅ [RESOLVED] {{ .CommonLabels.alertname }} - {{ .CommonLabels.service }}
+{{ end }}

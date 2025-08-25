@@ -1,0 +1,263 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Relife Smart Alarm - Comprehensive Monitoring Dashboard",
+    "tags": ["relife", "comprehensive", "business", "mobile", "security", "sla"],
+    "timezone": "UTC",
+    "refresh": "30s",
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["10s", "30s", "1m", "5m", "15m", "30m", "1h"],
+      "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "🚨 Active Alerts Overview",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 24, "x": 0, "y": 0 },
+        "targets": [
+          {
+            "expr": "ALERTS{alertstate=\"firing\"}",
+            "legendFormat": "{{alertname}} ({{severity}})",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1 },
+                { "color": "red", "value": 3 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "📊 Business KPIs",
+        "type": "stat",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+        "targets": [
+          {
+            "expr": "relife_business_daily_active_users",
+            "legendFormat": "Daily Active Users",
+            "refId": "A"
+          },
+          {
+            "expr": "relife_business_alarm_success_rate * 100",
+            "legendFormat": "Alarm Success Rate (%)",
+            "refId": "B"
+          },
+          {
+            "expr": "relife_business_premium_conversion_rate * 100",
+            "legendFormat": "Premium Conversion (%)",
+            "refId": "C"
+          },
+          {
+            "expr": "relife_business_revenue_daily_usd",
+            "legendFormat": "Daily Revenue (USD)",
+            "refId": "D"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "⚡ Performance Metrics",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+        "targets": [
+          {
+            "expr": "relife_performance_web_vitals_lcp_ms",
+            "legendFormat": "LCP (ms)",
+            "refId": "A"
+          },
+          {
+            "expr": "relife_performance_web_vitals_fid_ms",
+            "legendFormat": "FID (ms)",
+            "refId": "B"
+          },
+          {
+            "expr": "relife_performance_response_time_ms",
+            "legendFormat": "Response Time (ms)",
+            "refId": "C"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "axisLabel": "Milliseconds",
+              "axisPlacement": "left"
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "📱 Mobile App Health",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+        "targets": [
+          {
+            "expr": "relife_mobile_mobile_crash_rate_ios * 100",
+            "legendFormat": "iOS Crash Rate (%)",
+            "refId": "A"
+          },
+          {
+            "expr": "relife_mobile_mobile_crash_rate_android * 100",
+            "legendFormat": "Android Crash Rate (%)",
+            "refId": "B"
+          },
+          {
+            "expr": "relife_mobile_app_store_rating_ios",
+            "legendFormat": "iOS App Store Rating",
+            "refId": "C"
+          },
+          {
+            "expr": "relife_mobile_app_store_rating_android",
+            "legendFormat": "Android Play Store Rating",
+            "refId": "D"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "🔒 Security Metrics",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+        "targets": [
+          {
+            "expr": "rate(relife_security_auth_failed_attempts_rate[5m])",
+            "legendFormat": "Failed Login Attempts",
+            "refId": "A"
+          },
+          {
+            "expr": "relife_security_api_rate_limit_violations",
+            "legendFormat": "API Rate Limit Violations",
+            "refId": "B"
+          },
+          {
+            "expr": "relife_security_suspicious_login_patterns",
+            "legendFormat": "Suspicious Login Patterns",
+            "refId": "C"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "📈 SLA Performance",
+        "type": "gauge",
+        "gridPos": { "h": 8, "w": 8, "x": 0, "y": 20 },
+        "targets": [
+          {
+            "expr": "avg_over_time(up[5m]) * 100",
+            "legendFormat": "Uptime SLA (%)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 95,
+            "max": 100,
+            "thresholds": {
+              "steps": [
+                { "color": "red", "value": 95 },
+                { "color": "yellow", "value": 99 },
+                { "color": "green", "value": 99.9 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "💰 Revenue Trend",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 8, "x": 8, "y": 20 },
+        "targets": [
+          {
+            "expr": "relife_business_revenue_daily_usd",
+            "legendFormat": "Daily Revenue",
+            "refId": "A"
+          },
+          {
+            "expr": "avg_over_time(relife_business_revenue_daily_usd[7d])",
+            "legendFormat": "7-day Average",
+            "refId": "B"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "👥 User Engagement",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 8, "x": 16, "y": 20 },
+        "targets": [
+          {
+            "expr": "relife_business_daily_active_users",
+            "legendFormat": "Daily Active Users",
+            "refId": "A"
+          },
+          {
+            "expr": "relife_business_session_duration_minutes",
+            "legendFormat": "Avg Session Duration (min)",
+            "refId": "B"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "🎯 Alarm Performance",
+        "type": "stat",
+        "gridPos": { "h": 6, "w": 12, "x": 0, "y": 28 },
+        "targets": [
+          {
+            "expr": "relife_business_alarm_success_rate * 100",
+            "legendFormat": "Success Rate (%)",
+            "refId": "A"
+          },
+          {
+            "expr": "rate(relife_business_alarm_creation_rate[1h])",
+            "legendFormat": "Creation Rate (/hour)",
+            "refId": "B"
+          },
+          {
+            "expr": "(1 - relife_business_subscription_churn_rate) * 100",
+            "legendFormat": "Retention Rate (%)",
+            "refId": "C"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "steps": [
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 80 },
+                { "color": "green", "value": 95 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 10,
+        "title": "🏆 Top Alert Categories (24h)",
+        "type": "piechart",
+        "gridPos": { "h": 6, "w": 12, "x": 12, "y": 28 },
+        "targets": [
+          {
+            "expr": "sum by (category) (increase(ALERTS_total[24h]))",
+            "legendFormat": "{{category}}",
+            "refId": "A"
+          }
+        ]
+      }
+    ]
+  }
+}

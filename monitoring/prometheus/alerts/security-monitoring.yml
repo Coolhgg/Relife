@@ -1,0 +1,395 @@
+# Security monitoring alerts for Relife Smart Alarm - Authentication, API abuse, and security threats
+groups:
+  - name: relife.security.authentication
+    rules:
+      # Authentication Security Alerts
+      - alert: HighFailedLoginAttempts
+        expr: rate(auth_failed_attempts_total[5m]) > 5
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: security_auth
+          team: security
+        annotations:
+          summary: "High rate of failed login attempts"
+          description: "{{ $value }} failed login attempts per second from {{ $labels.source_ip | default 'unknown IP' }}"
+          impact: "Potential brute force attack"
+          runbook_url: "https://docs.relife.app/runbooks/security/failed-logins"
+
+      - alert: SuspiciousBruteForcePattern
+        expr: sum by (source_ip) (rate(auth_failed_attempts_total[1m])) > 10
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: security_auth
+          team: security
+        annotations:
+          summary: "Brute force attack pattern detected"
+          description: "{{ $value }} failed login attempts per second from IP {{ $labels.source_ip }}"
+          impact: "Active brute force attack"
+          runbook_url: "https://docs.relife.app/runbooks/security/brute-force"
+
+      - alert: AccountLockoutRateHigh
+        expr: rate(auth_account_lockouts_total[10m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: security_auth
+          team: security
+        annotations:
+          summary: "High account lockout rate detected"
+          description: "{{ $value }} accounts per second being locked out"
+          impact: "Users unable to access accounts"
+          runbook_url: "https://docs.relife.app/runbooks/security/account-lockouts"
+
+      - alert: UnusualLoginPatterns
+        expr: rate(auth_logins_unusual_location_total[15m]) > 0.05
+        for: 10m
+        labels:
+          severity: warning
+          service: relife
+          category: security_auth
+          team: security
+        annotations:
+          summary: "Unusual login location patterns detected"
+          description: "{{ $value }} logins per second from unusual locations"
+          impact: "Potential account compromise"
+          runbook_url: "https://docs.relife.app/runbooks/security/unusual-logins"
+
+      - alert: MultipleAccountsFromSameIP
+        expr: count by (source_ip) (auth_successful_logins_total) > 20
+        for: 15m
+        labels:
+          severity: warning
+          service: relife
+          category: security_auth
+          team: security
+        annotations:
+          summary: "Multiple accounts accessed from same IP"
+          description: "{{ $value }} different accounts logged in from IP {{ $labels.source_ip }}"
+          impact: "Potential account sharing or compromise"
+          runbook_url: "https://docs.relife.app/runbooks/security/multiple-accounts"
+
+      # Password and Account Security
+      - alert: PasswordResetRequestSpike
+        expr: rate(auth_password_reset_requests_total[5m]) > rate(auth_password_reset_requests_total[5m] offset 1h) * 5
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: security_auth
+          team: security
+        annotations:
+          summary: "Password reset request spike detected"
+          description: "Password reset requests increased 5x compared to 1 hour ago"
+          impact: "Potential credential stuffing attack"
+          runbook_url: "https://docs.relife.app/runbooks/security/password-reset-spike"
+
+      - alert: WeakPasswordAttempts
+        expr: rate(auth_weak_password_attempts_total[10m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: security_auth
+          team: security
+        annotations:
+          summary: "High rate of weak password attempts"
+          description: "{{ $value }} weak password attempts per second"
+          impact: "Users creating insecure accounts"
+          runbook_url: "https://docs.relife.app/runbooks/security/weak-passwords"
+
+  - name: relife.security.api
+    rules:
+      # API Security Alerts
+      - alert: APIRateLimitExceeded
+        expr: rate(api_rate_limit_exceeded_total[5m]) > 10
+        for: 2m
+        labels:
+          severity: warning
+          service: relife
+          category: security_api
+          team: engineering
+        annotations:
+          summary: "API rate limit frequently exceeded"
+          description: "{{ $value }} rate limit violations per second from {{ $labels.client_id | default 'unknown client' }}"
+          impact: "Potential API abuse"
+          runbook_url: "https://docs.relife.app/runbooks/security/api-rate-limit"
+
+      - alert: SuspiciousAPIUsagePattern
+        expr: sum by (source_ip) (rate(api_requests_total[1m])) > 100
+        for: 3m
+        labels:
+          severity: critical
+          service: relife
+          category: security_api
+          team: security
+        annotations:
+          summary: "Suspicious API usage pattern detected"
+          description: "{{ $value }} API requests per second from IP {{ $labels.source_ip }}"
+          impact: "Potential API abuse or DDoS"
+          runbook_url: "https://docs.relife.app/runbooks/security/api-abuse"
+
+      - alert: UnauthorizedAPIAccess
+        expr: rate(api_unauthorized_attempts_total[5m]) > 2
+        for: 3m
+        labels:
+          severity: critical
+          service: relife
+          category: security_api
+          team: security
+        annotations:
+          summary: "High rate of unauthorized API access attempts"
+          description: "{{ $value }} unauthorized API attempts per second from {{ $labels.source_ip }}"
+          impact: "Potential unauthorized access attempt"
+          runbook_url: "https://docs.relife.app/runbooks/security/unauthorized-api"
+
+      - alert: SQLInjectionAttempts
+        expr: rate(security_sql_injection_attempts_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          service: relife
+          category: security_api
+          team: security
+        annotations:
+          summary: "SQL injection attempts detected"
+          description: "{{ $value }} SQL injection attempts per second from {{ $labels.source_ip }}"
+          impact: "Active security attack"
+          runbook_url: "https://docs.relife.app/runbooks/security/sql-injection"
+
+      - alert: XSSAttempts
+        expr: rate(security_xss_attempts_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          service: relife
+          category: security_api
+          team: security
+        annotations:
+          summary: "XSS attack attempts detected"
+          description: "{{ $value }} XSS attempts per second from {{ $labels.source_ip }}"
+          impact: "Active security attack"
+          runbook_url: "https://docs.relife.app/runbooks/security/xss-attempts"
+
+      # Data Access and Privacy
+      - alert: UnusualDataAccessPatterns
+        expr: sum by (user_id) (rate(data_access_events_total[10m])) > 50
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: security_data
+          team: security
+        annotations:
+          summary: "Unusual data access patterns detected"
+          description: "User {{ $labels.user_id }} accessing {{ $value }} data points per second"
+          impact: "Potential data scraping or account compromise"
+          runbook_url: "https://docs.relife.app/runbooks/security/data-access"
+
+      - alert: BulkDataExport
+        expr: rate(data_export_large_total[15m]) > 0.1
+        for: 10m
+        labels:
+          severity: warning
+          service: relife
+          category: security_data
+          team: security
+        annotations:
+          summary: "Bulk data export activity detected"
+          description: "{{ $value }} large data exports per second"
+          impact: "Potential data exfiltration"
+          runbook_url: "https://docs.relife.app/runbooks/security/bulk-export"
+
+      - alert: PrivilegeEscalationAttempts
+        expr: rate(security_privilege_escalation_attempts_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          service: relife
+          category: security_access
+          team: security
+        annotations:
+          summary: "Privilege escalation attempts detected"
+          description: "{{ $value }} privilege escalation attempts from {{ $labels.user_id }}"
+          impact: "Potential security breach"
+          runbook_url: "https://docs.relife.app/runbooks/security/privilege-escalation"
+
+  - name: relife.security.infrastructure
+    rules:
+      # Infrastructure Security Alerts
+      - alert: DDoSAttackDetected
+        expr: sum(rate(http_requests_total[1m])) > 1000
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: security_infra
+          team: security
+        annotations:
+          summary: "Potential DDoS attack detected"
+          description: "{{ $value }} requests per second, above normal traffic levels"
+          impact: "Service availability at risk"
+          runbook_url: "https://docs.relife.app/runbooks/security/ddos-attack"
+
+      - alert: UnusualTrafficSources
+        expr: count by (country) (rate(http_requests_total[5m])) > 10 and on() count(count by (country) (rate(http_requests_total[5m]))) > 20
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: security_infra
+          team: security
+        annotations:
+          summary: "Traffic from unusual geographic sources"
+          description: "High traffic volume from {{ $labels.country }}"
+          impact: "Potential distributed attack"
+          runbook_url: "https://docs.relife.app/runbooks/security/unusual-traffic"
+
+      - alert: SSLCertificateExpiry
+        expr: (ssl_certificate_expiry_timestamp - time()) / 86400 < 30
+        for: 1h
+        labels:
+          severity: critical
+          service: relife
+          category: security_infra
+          team: security
+        annotations:
+          summary: "SSL certificate expiring soon"
+          description: "SSL certificate for {{ $labels.domain }} expires in {{ $value }} days"
+          impact: "Service will become inaccessible"
+          runbook_url: "https://docs.relife.app/runbooks/security/ssl-expiry"
+
+      - alert: UnknownUserAgents
+        expr: rate(http_requests_unknown_user_agents_total[10m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: security_infra
+          team: security
+        annotations:
+          summary: "High rate of requests from unknown user agents"
+          description: "{{ $value }} requests per second from unknown/suspicious user agents"
+          impact: "Potential bot or scraper activity"
+          runbook_url: "https://docs.relife.app/runbooks/security/unknown-agents"
+
+      # Payment and Financial Security
+      - alert: SuspiciousPaymentPatterns
+        expr: rate(payment_suspicious_patterns_total[15m]) > 0.01
+        for: 10m
+        labels:
+          severity: critical
+          service: relife
+          category: security_payment
+          team: security
+        annotations:
+          summary: "Suspicious payment patterns detected"
+          description: "{{ $value }} suspicious payment attempts per second"
+          impact: "Potential payment fraud"
+          runbook_url: "https://docs.relife.app/runbooks/security/payment-fraud"
+
+      - alert: PaymentChargebackRateHigh
+        expr: (rate(payment_chargebacks_total[24h]) / rate(payment_successful_total[24h])) > 0.01
+        for: 2h
+        labels:
+          severity: critical
+          service: relife
+          category: security_payment
+          team: security
+        annotations:
+          summary: "High payment chargeback rate"
+          description: "Chargeback rate is {{ $value | humanizePercentage }}, above 1% threshold"
+          impact: "Revenue loss and payment processor risk"
+          runbook_url: "https://docs.relife.app/runbooks/security/chargebacks"
+
+      - alert: FraudulentAccountCreation
+        expr: rate(user_registrations_flagged_total[10m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: security_fraud
+          team: security
+        annotations:
+          summary: "High rate of flagged account registrations"
+          description: "{{ $value | humanizePercentage }} of new accounts are being flagged as potentially fraudulent"
+          impact: "Potential fraud ring activity"
+          runbook_url: "https://docs.relife.app/runbooks/security/fraudulent-accounts"
+
+  - name: relife.security.compliance
+    rules:
+      # Compliance and Audit Alerts
+      - alert: GDPRDataDeletionBacklog
+        expr: gdpr_deletion_requests_pending > 100
+        for: 4h
+        labels:
+          severity: warning
+          service: relife
+          category: security_compliance
+          team: legal
+        annotations:
+          summary: "GDPR data deletion backlog growing"
+          description: "{{ $value }} pending GDPR deletion requests"
+          impact: "Compliance risk"
+          runbook_url: "https://docs.relife.app/runbooks/compliance/gdpr-deletion"
+
+      - alert: DataRetentionPolicyViolation
+        expr: data_retention_violations_total > 0
+        for: 1h
+        labels:
+          severity: critical
+          service: relife
+          category: security_compliance
+          team: legal
+        annotations:
+          summary: "Data retention policy violations detected"
+          description: "{{ $value }} data retention policy violations found"
+          impact: "Compliance and legal risk"
+          runbook_url: "https://docs.relife.app/runbooks/compliance/data-retention"
+
+      - alert: UnauthorizedDataAccess
+        expr: rate(audit_unauthorized_data_access_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          service: relife
+          category: security_audit
+          team: security
+        annotations:
+          summary: "Unauthorized data access detected"
+          description: "{{ $value }} unauthorized data access attempts from {{ $labels.user_id }}"
+          impact: "Data breach risk"
+          runbook_url: "https://docs.relife.app/runbooks/security/unauthorized-data"
+
+      # Security Monitoring Health
+      - alert: SecurityMonitoringDown
+        expr: up{job="security-monitoring"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: security_monitoring
+          team: security
+        annotations:
+          summary: "Security monitoring system is down"
+          description: "Security monitoring service is not responding"
+          impact: "No security alerting active"
+          runbook_url: "https://docs.relife.app/runbooks/security/monitoring-down"
+
+      - alert: AuditLogIngestionFailures
+        expr: rate(audit_log_ingestion_failures_total[5m]) > 0.01
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: security_audit
+          team: security
+        annotations:
+          summary: "Audit log ingestion failures"
+          description: "{{ $value | humanizePercentage }} of audit logs are failing to ingest"
+          impact: "Incomplete audit trail"
+          runbook_url: "https://docs.relife.app/runbooks/security/audit-ingestion"
