@@ -123,6 +123,86 @@ export interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
+// Default available themes constant to prevent recreation on renders
+const DEFAULT_AVAILABLE_THEMES: ThemePreset[] = [
+  {
+    id: 'light',
+    name: 'Light',
+    description: 'Clean and bright interface',
+    theme: 'light',
+    personalization: {},
+    preview: {
+      primaryColor: '#0ea5e9',
+      backgroundColor: '#ffffff',
+      textColor: '#0f172a',
+      cardColor: '#ffffff',
+      accentColor: '#ef4444',
+    },
+    tags: ['system', 'default'],
+    isDefault: true,
+    isPremium: false,
+    popularityScore: 100,
+  },
+  {
+    id: 'dark',
+    name: 'Dark',
+    description: 'Easy on the eyes dark interface',
+    theme: 'dark',
+    personalization: {},
+    preview: {
+      primaryColor: '#38bdf8',
+      backgroundColor: '#0f172a',
+      textColor: '#f8fafc',
+      cardColor: '#1e293b',
+      accentColor: '#f87171',
+    },
+    tags: ['system', 'default'],
+    isDefault: true,
+    isPremium: false,
+    popularityScore: 95,
+  },
+  {
+    id: 'high-contrast',
+    name: 'High Contrast',
+    description: 'Maximum contrast for accessibility',
+    theme: 'high-contrast',
+    personalization: {},
+    preview: {
+      primaryColor: '#000000',
+      backgroundColor: '#ffffff',
+      textColor: '#000000',
+      cardColor: '#ffffff',
+      accentColor: '#ff0000',
+    },
+    tags: ['accessibility'],
+    isDefault: false,
+    isPremium: false,
+    popularityScore: 60,
+  },
+  // Include premium themes
+  ...PREMIUM_THEME_PRESETS,
+];
+
+// Default theme analytics constant to prevent recreation on renders
+const DEFAULT_THEME_ANALYTICS: ThemeUsageAnalytics = {
+  mostUsedThemes: [],
+  timeSpentPerTheme: [],
+  switchFrequency: 0,
+  favoriteColors: [],
+  accessibilityFeatureUsage: [],
+  customizationActivity: [],
+};
+
+// Default cloud sync status factory function to get fresh state
+const getDefaultCloudSyncStatus = (): CloudSyncStatus => ({
+  isOnline: navigator.onLine,
+  isSyncing: false,
+  lastSyncTime: null,
+  hasConflicts: false,
+  pendingChanges: 0,
+  _error: null,
+});
+
 // Default theme configurations
 const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
   // Include premium themes
@@ -2046,83 +2126,12 @@ export function ThemeProvider({
   const [personalization, setPersonalizationState] = useState<PersonalizationSettings>(
     DEFAULT_PERSONALIZATION
   );
-  const [cloudSyncStatus, setCloudSyncStatus] = useState<CloudSyncStatus>({
-    isOnline: navigator.onLine,
-    isSyncing: false,
-    lastSyncTime: null,
-    hasConflicts: false,
-    pendingChanges: 0,
-    _error: null,
-  });
+  const [cloudSyncStatus, setCloudSyncStatus] = useState<CloudSyncStatus>(getDefaultCloudSyncStatus);
   const cloudSyncServiceRef = useRef<CloudSyncService | null>(null);
   const syncListenersRef = useRef<((status: CloudSyncStatus) => void)[]>([]);
   const persistenceServiceRef = useRef<ThemePersistenceService | null>(null);
-  const [availableThemes] = useState<ThemePreset[]>([
-    {
-      id: 'light',
-      name: 'Light',
-      description: 'Clean and bright interface',
-      theme: 'light',
-      personalization: {},
-      preview: {
-        primaryColor: '#0ea5e9',
-        backgroundColor: '#ffffff',
-        textColor: '#0f172a',
-        cardColor: '#ffffff',
-        accentColor: '#ef4444',
-      },
-      tags: ['system', 'default'],
-      isDefault: true,
-      isPremium: false,
-      popularityScore: 100,
-    },
-    {
-      id: 'dark',
-      name: 'Dark',
-      description: 'Easy on the eyes dark interface',
-      theme: 'dark',
-      personalization: {},
-      preview: {
-        primaryColor: '#38bdf8',
-        backgroundColor: '#0f172a',
-        textColor: '#f8fafc',
-        cardColor: '#1e293b',
-        accentColor: '#f87171',
-      },
-      tags: ['system', 'default'],
-      isDefault: true,
-      isPremium: false,
-      popularityScore: 95,
-    },
-    {
-      id: 'high-contrast',
-      name: 'High Contrast',
-      description: 'Maximum contrast for accessibility',
-      theme: 'high-contrast',
-      personalization: {},
-      preview: {
-        primaryColor: '#000000',
-        backgroundColor: '#ffffff',
-        textColor: '#000000',
-        cardColor: '#ffffff',
-        accentColor: '#ff0000',
-      },
-      tags: ['accessibility'],
-      isDefault: false,
-      isPremium: false,
-      popularityScore: 60,
-    },
-    // Include premium themes
-    ...PREMIUM_THEME_PRESETS,
-  ]);
-  const [themeAnalytics] = useState<ThemeUsageAnalytics>({
-    mostUsedThemes: [],
-    timeSpentPerTheme: [],
-    switchFrequency: 0,
-    favoriteColors: [],
-    accessibilityFeatureUsage: [],
-    customizationActivity: [],
-  });
+  const [availableThemes] = useState<ThemePreset[]>(DEFAULT_AVAILABLE_THEMES);
+  const [themeAnalytics] = useState<ThemeUsageAnalytics>(DEFAULT_THEME_ANALYTICS);
 
   // Initialize theme from enhanced persistence service
   useEffect(() => {
@@ -2960,7 +2969,7 @@ export function ThemeProvider({
     return theme === 'system' || theme === 'auto';
   }, [theme]);
 
-  const value: ThemeContextValue = {
+  const value = useMemo((): ThemeContextValue => ({
     theme,
     themeConfig,
     personalization,
@@ -3010,7 +3019,51 @@ export function ThemeProvider({
     setAnimationIntensity,
     setAnimationsEnabled,
     getDefaultAnimationEffects,
-  };
+  }), [
+    theme,
+    themeConfig,
+    personalization,
+    isDarkMode,
+    isSystemTheme,
+    setTheme,
+    toggleTheme,
+    resetTheme,
+    updatePersonalization,
+    updateColorPreference,
+    updateTypographyPreference,
+    updateMotionPreference,
+    updateSoundPreference,
+    updateLayoutPreference,
+    updateAccessibilityPreference,
+    availableThemes,
+    createCustomTheme,
+    saveThemePreset,
+    loadThemePreset,
+    themeAnalytics,
+    getThemeRecommendations,
+    exportThemes,
+    importThemes,
+    syncThemes,
+    cloudSyncStatus,
+    enableCloudSync,
+    forceCloudSync,
+    resetCloudData,
+    onCloudSyncStatusChange,
+    getCSSVariables,
+    getThemeClasses,
+    isAccessibleContrast,
+    applyThemeWithPerformance,
+    preloadTheme,
+    testThemeAccessibility,
+    getAccessibilityStatus,
+    announceThemeChange,
+    calculateContrastRatio,
+    simulateColorBlindness,
+    initializePremiumAnimations,
+    setAnimationIntensity,
+    setAnimationsEnabled,
+    getDefaultAnimationEffects,
+  ]);
 
   return <ThemeContext.Provider value={value}>children</ThemeContext.Provider>;
 }

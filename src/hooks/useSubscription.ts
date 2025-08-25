@@ -2,7 +2,7 @@
 // Premium Subscription React Hook for Relife Alarm App
 // Manages subscription state, feature access, and billing operations
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type {
 import { ErrorHandler } from '../services/error-handler';
   Subscription,
@@ -627,7 +627,7 @@ function useSubscription(
     [state.availablePlans]
   );
 
-  return {
+  return useMemo(() => ({
     // State
     ...state,
 
@@ -647,7 +647,24 @@ function useSubscription(
     clearError,
     resetUIState,
     comparePlans,
-  };
+  }), [
+    state,
+    createSubscription,
+    updateSubscription,
+    cancelSubscription,
+    hasFeatureAccess,
+    trackFeatureUsage,
+    getUpgradeRequirement,
+    addPaymentMethod,
+    removePaymentMethod,
+    setDefaultPaymentMethod,
+    startFreeTrial,
+    validateDiscountCode,
+    refreshSubscription,
+    clearError,
+    resetUIState,
+    comparePlans,
+  ]);
 }
 
 export default useSubscription;
