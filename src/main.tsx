@@ -5,7 +5,7 @@ import App from './App.tsx';
 import RootErrorBoundary from './components/RootErrorBoundary.tsx';
 import { setupNotificationListeners } from './services/capacitor';
 import { ServiceWorkerManager } from './services/service-worker-manager';
-import { initializeApp } from './config/initializeApp';
+import { initializeEnhancedApp, isAppInitialized } from './config/enhancedInitializeApp';
 import { initializeStoreWithPersistedState } from './store';
 
 // Show loading screen while app initializes
@@ -18,7 +18,8 @@ const showLoadingScreen = () => {
     <div class="text-center text-white">
       <div class="w-16 h-16 mx-auto mb-4 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
       <h2 class="text-xl font-semibold">Starting Relife Alarms...</h2>
-      <p class="text-primary-200 mt-2">Initializing multi-language support...</p>
+      <p class="text-primary-200 mt-2">Initializing enhanced services...</p>
+      <p class="text-primary-300 mt-1 text-sm">Setting up dependency injection container...</p>
     </div>
   `;
   document.body.appendChild(loadingElement);
@@ -36,8 +37,13 @@ const startApp = async () => {
   showLoadingScreen();
 
   try {
-    // Initialize app (including i18n)
-    await initializeApp();
+    // Initialize enhanced app with dependency injection (including i18n)
+    await initializeEnhancedApp({
+      environment: (process.env.NODE_ENV as any) || 'development',
+      enableHealthCheck: true,
+      enableDebugLogging: process.env.NODE_ENV === 'development',
+      skipNonCriticalServices: false,
+    });
     
     // Initialize Redux store with persisted state
     // Note: This is also called in App.tsx but calling here ensures early initialization

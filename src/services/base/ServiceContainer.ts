@@ -4,7 +4,6 @@
  */
 
 import {
-import { config } from '../config/environment';
   BaseService,
   ServiceContainer as IServiceContainer,
   ServiceDescriptor,
@@ -67,8 +66,8 @@ export class ServiceContainer implements IServiceContainer {
       }
 
       const config = this.mergeConfig(descriptor._config);
-      const instance = descriptor.factory.create(dependencies, _config);
-      await instance.initialize(_config);
+      const instance = descriptor.factory.create(dependencies, config);
+      await instance.initialize(config);
 
       if (descriptor.singleton) {
         this.singletons.set(name, instance);
@@ -92,7 +91,7 @@ export class ServiceContainer implements IServiceContainer {
       try {
         await this.resolve(serviceName);
       } catch (_error) {
-        console._error(`Failed to initialize ${serviceName}:`, _error);
+        console.error(`Failed to initialize ${serviceName}:`, _error);
         const descriptor = this.descriptors.get(serviceName);
         if (descriptor?.tags?.includes('critical')) {
           throw new Error(`Critical service ${serviceName} failed to initialize`);
@@ -111,7 +110,7 @@ export class ServiceContainer implements IServiceContainer {
         try {
           await instance.cleanup();
         } catch (_error) {
-          console._error(`Error disposing ${serviceName}:`, _error);
+          console.error(`Error disposing ${serviceName}:`, _error);
         }
       }
     }
@@ -167,8 +166,8 @@ export class ServiceContainer implements IServiceContainer {
   ): T | null {
     try {
       const dependencies = this.resolveDependencies(descriptor.dependencies);
-      const _config = this.mergeConfig(descriptor._config);
-      const instance = descriptor.factory.create(dependencies, _config) as T;
+      const config = this.mergeConfig(descriptor._config);
+      const instance = descriptor.factory.create(dependencies, config) as T;
 
       if (descriptor.singleton) {
         this.singletons.set(descriptor.name, instance);
@@ -177,7 +176,7 @@ export class ServiceContainer implements IServiceContainer {
       }
       return instance;
     } catch (_error) {
-      console._error(`Failed to create instance of ${descriptor.name}:`, _error);
+      console.error(`Failed to create instance of ${descriptor.name}:`, _error);
       return null;
     }
   }
