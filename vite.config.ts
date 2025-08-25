@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import { visualizer } from 'rollup-plugin-visualizer'
-import type { PluginOption } from 'vite'
+import { visualizer } from 'rollup-plugin-visualizer';
+import type { PluginOption } from 'vite';
 // import { splitVendorChunkPlugin } from 'vite' // Not available in current Vite version
 
 // https://vite.dev/config/
@@ -15,13 +15,17 @@ export default defineConfig({
     }),
     // Note: splitVendorChunkPlugin not available in current Vite version
     // Bundle analyzer
-    ...(process.env.ANALYZE ? [visualizer({
-      filename: 'dist/stats.html',
-      open: false,
-      gzipSize: true,
-      brotliSize: true,
-      template: 'treemap',
-    }) as PluginOption] : []),
+    ...(process.env.ANALYZE
+      ? [
+          visualizer({
+            filename: 'dist/stats.html',
+            open: false,
+            gzipSize: true,
+            brotliSize: true,
+            template: 'treemap',
+          }) as PluginOption,
+        ]
+      : []),
   ],
 
   // Resolve configuration

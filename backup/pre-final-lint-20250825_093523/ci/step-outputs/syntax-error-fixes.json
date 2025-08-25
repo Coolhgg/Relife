@@ -1,0 +1,246 @@
+{
+  "total_files": 26,
+  "files_processed": 26,
+  "files_with_fixes": 18,
+  "total_fixes": 21,
+  "files": [
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/__tests__/factories/support-factories.ts",
+      "fixes": [
+        {
+          "type": "merge_conflict",
+          "description": "Removed merge conflict marker",
+          "pattern": "=======\\n"
+        },
+        {
+          "type": "specific_fix",
+          "description": "Fixed NotificationSettings function declaration"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/__tests__/utils/render-helpers.ts",
+      "fixes": [
+        {
+          "type": "incomplete_arrow",
+          "description": "Fixed incomplete arrow function expression"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/AccessibilityDashboard.tsx",
+      "fixes": [
+        {
+          "type": "malformed_auto_comment",
+          "description": "Fixed malformed auto-comment in parameter type"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/AccessibilityTester.tsx",
+      "fixes": [
+        {
+          "type": "malformed_auto_comment",
+          "description": "Fixed malformed auto-comment in parameter type"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/AlarmForm.tsx",
+      "fixes": [],
+      "changed": false
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/ConsentBanner.tsx",
+      "fixes": [
+        {
+          "type": "malformed_auto_comment",
+          "description": "Fixed malformed auto-comment in parameter type"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/CustomSoundThemeCreator.tsx",
+      "fixes": [],
+      "changed": false
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/CustomThemeManager.tsx",
+      "fixes": [],
+      "changed": false
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/premium/EnhancedUpgradePrompt.tsx",
+      "fixes": [
+        {
+          "type": "pattern_fix",
+          "description": "Fixed pattern: =>\\s*\\(\\([^)]+\\)\\s*%[^)]*\\);...",
+          "pattern": "=>\\s*\\(\\([^)]+\\)\\s*%[^)]*\\);"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/premium/PaymentMethodManager.tsx",
+      "fixes": [
+        {
+          "type": "incomplete_arrow",
+          "description": "Fixed incomplete arrow function expression"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/premium/PremiumFeaturePreview.tsx",
+      "fixes": [
+        {
+          "type": "pattern_fix",
+          "description": "Fixed pattern: =>\\s*\\(\\([^)]+\\)\\s*%[^)]*\\);...",
+          "pattern": "=>\\s*\\(\\([^)]+\\)\\s*%[^)]*\\);"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/SettingsPage.tsx",
+      "fixes": [],
+      "changed": false
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/SignUpForm.tsx",
+      "fixes": [],
+      "changed": false
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/SmartAlarmDashboard.tsx",
+      "fixes": [],
+      "changed": false
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/SmartFeatures.tsx",
+      "fixes": [
+        {
+          "type": "malformed_auto_comment",
+          "description": "Fixed malformed auto-comment in parameter type"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/ui/sidebar.tsx",
+      "fixes": [
+        {
+          "type": "broken_comment",
+          "description": "Fixed broken auto-comment in expression"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/user-testing/BetaTestingProgram.tsx",
+      "fixes": [
+        {
+          "type": "map_expression_fix",
+          "description": "Fixed broken map expression formatting"
+        }
+      ],
+      "changed": false
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/components/VisualAlarmDisplay.tsx",
+      "fixes": [
+        {
+          "type": "malformed_auto_comment",
+          "description": "Fixed malformed auto-comment in parameter type"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/contexts/FeatureAccessContext.tsx",
+      "fixes": [
+        {
+          "type": "merge_conflict",
+          "description": "Removed merge conflict marker",
+          "pattern": "<<<<<<< HEAD\\n"
+        },
+        {
+          "type": "merge_conflict",
+          "description": "Removed merge conflict marker",
+          "pattern": ">>>>>>> .*\\n"
+        },
+        {
+          "type": "merge_conflict",
+          "description": "Removed merge conflict marker",
+          "pattern": "=======\\n"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/hooks/__tests__/useAdvancedAlarms.test.ts",
+      "fixes": [],
+      "changed": false
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/hooks/useTheme.tsx",
+      "fixes": [
+        {
+          "type": "broken_comment",
+          "description": "Fixed broken auto-comment in expression"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/services/__tests__/test-setup.ts",
+      "fixes": [
+        {
+          "type": "malformed_auto_comment",
+          "description": "Fixed malformed auto-comment in parameter type"
+        }
+      ],
+      "changed": true
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/services/revenue-analytics.ts",
+      "fixes": [],
+      "changed": false
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/services/subscription-service.ts",
+      "fixes": [
+        {
+          "type": "map_expression_fix",
+          "description": "Fixed broken map expression formatting"
+        }
+      ],
+      "changed": false
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/services/voice-ai-enhanced.ts",
+      "fixes": [
+        {
+          "type": "map_expression_fix",
+          "description": "Fixed broken map expression formatting"
+        }
+      ],
+      "changed": false
+    },
+    {
+      "file": "/project/workspace/Coolhgg/Relife/src/types/utils.ts",
+      "fixes": [
+        {
+          "type": "incomplete_arrow",
+          "description": "Fixed incomplete arrow function expression"
+        }
+      ],
+      "changed": true
+    }
+  ]
+}

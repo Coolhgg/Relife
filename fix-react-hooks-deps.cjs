@@ -9,7 +9,7 @@ import path from 'src/shims/path'; // auto: converted require to shim
 
 console.log('🔧 Starting React hooks dependencies cleanup...\n');
 
-let stats = {
+const stats = {
   filesProcessed: 0,
   depsFixed: 0,
   errors: 0,

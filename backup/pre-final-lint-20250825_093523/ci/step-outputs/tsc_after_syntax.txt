@@ -1,0 +1,1731 @@
+src/components/AchievementBadges.tsx(157,3): error TS1109: Expression expected.
+src/components/AchievementBadges.tsx(309,28): error TS1005: '}' expected.
+src/components/AchievementBadges.tsx(309,76): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/AchievementBadges.tsx(310,11): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AchievementBadges.tsx(345,24): error TS1005: '}' expected.
+src/components/AchievementBadges.tsx(345,65): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/AchievementBadges.tsx(361,19): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AchievementBadges.tsx(363,13): error TS1005: ')' expected.
+src/components/AchievementBadges.tsx(363,15): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/AchievementBadges.tsx(364,12): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AchievementBadges.tsx(378,36): error TS1005: '}' expected.
+src/components/AchievementBadges.tsx(378,84): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/AchievementBadges.tsx(379,19): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AchievementBadges.tsx(396,11): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/AchievementBadges.tsx(397,9): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/AchievementBadges.tsx(399,7): error TS1005: ')' expected.
+src/components/AchievementBadges.tsx(447,5): error TS1128: Declaration or statement expected.
+src/components/AchievementBadges.tsx(448,3): error TS1109: Expression expected.
+src/components/AchievementBadges.tsx(449,1): error TS1128: Declaration or statement expected.
+src/components/ActiveAlarm.tsx(101,5): error TS1005: ',' expected.
+src/components/ActiveAlarm.tsx(341,25): error TS1005: '}' expected.
+src/components/AdaptiveAlarmList.tsx(76,5): error TS1005: ',' expected.
+src/components/AdaptiveAlarmList.tsx(316,11): error TS1005: '}' expected.
+src/components/AdaptiveAlarmList.tsx(323,10): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/AdaptiveAlarmList.tsx(324,9): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AdaptiveModal.tsx(344,3): error TS1109: Expression expected.
+src/components/AdvancedAlarmScheduling.tsx(213,11): error TS1005: '}' expected.
+src/components/AdvancedAlarmScheduling.tsx(215,9): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/AdvancedAlarmScheduling.tsx(306,11): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/AdvancedAlarmScheduling.tsx(307,8): error TS1005: ',' expected.
+src/components/AdvancedAlarmScheduling.tsx(308,5): error TS1128: Declaration or statement expected.
+src/components/AdvancedAlarmScheduling.tsx(309,3): error TS1109: Expression expected.
+src/components/AdvancedAlarmScheduling.tsx(354,18): error TS1109: Expression expected.
+src/components/AdvancedAlarmScheduling.tsx(355,15): error TS1109: Expression expected.
+src/components/AdvancedAlarmScheduling.tsx(364,19): error TS1005: ')' expected.
+src/components/AdvancedAlarmScheduling.tsx(365,18): error TS1109: Expression expected.
+src/components/AdvancedAlarmScheduling.tsx(366,15): error TS1109: Expression expected.
+src/components/AdvancedAlarmScheduling.tsx(375,19): error TS2657: JSX expressions must have one parent element.
+src/components/AdvancedAlarmScheduling.tsx(388,17): error TS1005: ')' expected.
+src/components/AdvancedAlarmScheduling.tsx(388,19): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/AdvancedAlarmScheduling.tsx(398,19): error TS2657: JSX expressions must have one parent element.
+src/components/AdvancedAlarmScheduling.tsx(409,17): error TS1005: ')' expected.
+src/components/AdvancedAlarmScheduling.tsx(409,19): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/AdvancedAlarmScheduling.tsx(410,17): error TS17002: Expected corresponding JSX closing tag for 'AccordionContent'.
+src/components/AdvancedAlarmScheduling.tsx(411,15): error TS17002: Expected corresponding JSX closing tag for 'AccordionItem'.
+src/components/AdvancedAlarmScheduling.tsx(419,16): error TS1109: Expression expected.
+src/components/AdvancedAlarmScheduling.tsx(421,13): error TS1005: ')' expected.
+src/components/AdvancedAlarmScheduling.tsx(422,13): error TS17002: Expected corresponding JSX closing tag for 'Accordion'.
+src/components/AdvancedAlarmScheduling.tsx(423,11): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/AdvancedAlarmScheduling.tsx(425,9): error TS1005: ')' expected.
+src/components/AdvancedAlarmScheduling.tsx(829,7): error TS1128: Declaration or statement expected.
+src/components/AdvancedAlarmScheduling.tsx(830,5): error TS1109: Expression expected.
+src/components/AdvancedAlarmScheduling.tsx(831,3): error TS1109: Expression expected.
+src/components/AdvancedAlarmScheduling.tsx(1081,19): error TS1005: '}' expected.
+src/components/AdvancedAlarmScheduling.tsx(1098,11): error TS17002: Expected corresponding JSX closing tag for 'Tabs'.
+src/components/AdvancedAlarmScheduling.tsx(1107,9): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/AdvancedAlarmScheduling.tsx(1109,7): error TS1005: ')' expected.
+src/components/AdvancedAlarmScheduling.tsx(1136,5): error TS1128: Declaration or statement expected.
+src/components/AdvancedAlarmScheduling.tsx(1137,3): error TS1109: Expression expected.
+src/components/AdvancedAlarmScheduling.tsx(1138,1): error TS1128: Declaration or statement expected.
+src/components/AlarmForm.tsx(287,9): error TS1005: ',' expected.
+src/components/AlarmForm.tsx(335,12): error TS1005: ',' expected.
+src/components/AlarmForm.tsx(444,9): error TS1005: ',' expected.
+src/components/AlarmForm.tsx(543,32): error TS1003: Identifier expected.
+src/components/AlarmForm.tsx(543,44): error TS1005: ':' expected.
+src/components/AlarmForm.tsx(545,32): error TS1003: Identifier expected.
+src/components/AlarmForm.tsx(545,38): error TS1005: ':' expected.
+src/components/AlarmForm.tsx(547,19): error TS1003: Identifier expected.
+src/components/AlarmForm.tsx(549,16): error TS1005: ')' expected.
+src/components/AlarmForm.tsx(550,15): error TS1005: '}' expected.
+src/components/AlarmForm.tsx(605,32): error TS1003: Identifier expected.
+src/components/AlarmForm.tsx(605,45): error TS1005: ':' expected.
+src/components/AlarmForm.tsx(607,32): error TS1003: Identifier expected.
+src/components/AlarmForm.tsx(607,38): error TS1005: ':' expected.
+src/components/AlarmForm.tsx(609,19): error TS1003: Identifier expected.
+src/components/AlarmForm.tsx(611,16): error TS1005: ')' expected.
+src/components/AlarmForm.tsx(612,15): error TS1005: '}' expected.
+src/components/AlarmForm.tsx(866,19): error TS1005: ')' expected.
+src/components/AlarmForm.tsx(867,19): error TS1005: '}' expected.
+src/components/AlarmForm.tsx(1136,27): error TS1005: '}' expected.
+src/components/AlarmForm.tsx(1142,25): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/AlarmForm.tsx(1182,25): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AlarmForm.tsx(1184,19): error TS1005: ')' expected.
+src/components/AlarmForm.tsx(1192,17): error TS17002: Expected corresponding JSX closing tag for 'fieldset'.
+src/components/AlarmForm.tsx(1193,14): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AlarmForm.tsx(1208,13): error TS17002: Expected corresponding JSX closing tag for 'form'.
+src/components/AlarmForm.tsx(1372,11): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/AlarmForm.tsx(1375,7): error TS1005: ')' expected.
+src/components/AlarmForm.tsx(1387,5): error TS1128: Declaration or statement expected.
+src/components/AlarmForm.tsx(1388,3): error TS1109: Expression expected.
+src/components/AlarmForm.tsx(1389,1): error TS1128: Declaration or statement expected.
+src/components/AlarmManagement.tsx(245,9): error TS1005: ',' expected.
+src/components/AlarmManagement.tsx(308,25): error TS1005: ')' expected.
+src/components/AlarmManagement.tsx(309,24): error TS1109: Expression expected.
+src/components/AlarmManagement.tsx(310,21): error TS1109: Expression expected.
+src/components/AlarmManagement.tsx(321,25): error TS1005: ')' expected.
+src/components/AlarmManagement.tsx(322,24): error TS1109: Expression expected.
+src/components/AlarmManagement.tsx(323,21): error TS1109: Expression expected.
+src/components/AlarmManagement.tsx(357,25): error TS2657: JSX expressions must have one parent element.
+src/components/AlarmManagement.tsx(367,23): error TS1005: ')' expected.
+src/components/AlarmManagement.tsx(367,25): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/AlarmManagement.tsx(410,17): error TS1005: ')' expected.
+src/components/AlarmManagement.tsx(410,19): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/AlarmManagement.tsx(486,16): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AlarmManagement.tsx(487,15): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/AlarmManagement.tsx(488,11): error TS1005: ')' expected.
+src/components/AlarmManagement.tsx(488,13): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/AlarmManagement.tsx(489,11): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AlarmManagement.tsx(508,7): error TS1005: ')' expected.
+src/components/AlarmManagement.tsx(526,18): error TS1109: Expression expected.
+src/components/AlarmManagement.tsx(527,15): error TS1109: Expression expected.
+src/components/AlarmManagement.tsx(536,18): error TS1109: Expression expected.
+src/components/AlarmManagement.tsx(537,15): error TS1109: Expression expected.
+src/components/AlarmManagement.tsx(566,17): error TS2657: JSX expressions must have one parent element.
+src/components/AlarmManagement.tsx(576,15): error TS1005: ')' expected.
+src/components/AlarmManagement.tsx(576,17): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/AlarmManagement.tsx(656,18): error TS1109: Expression expected.
+src/components/AlarmManagement.tsx(657,15): error TS1109: Expression expected.
+src/components/AlarmManagement.tsx(694,13): error TS17002: Expected corresponding JSX closing tag for 'DialogContent'.
+src/components/AlarmManagement.tsx(695,11): error TS17002: Expected corresponding JSX closing tag for 'Dialog'.
+src/components/AlarmManagement.tsx(696,7): error TS1128: Declaration or statement expected.
+src/components/AlarmManagement.tsx(701,18): error TS1136: Property assignment expected.
+src/components/AlarmManagement.tsx(701,21): error TS1005: ';' expected.
+src/components/AlarmManagement.tsx(705,38): error TS1005: ',' expected.
+src/components/AlarmManagement.tsx(705,41): error TS1005: ',' expected.
+src/components/AlarmManagement.tsx(705,60): error TS1005: ',' expected.
+src/components/AlarmManagement.tsx(705,71): error TS1128: Declaration or statement expected.
+src/components/AlarmManagement.tsx(706,64): error TS1005: '{' expected.
+src/components/AlarmManagement.tsx(706,67): error TS1136: Property assignment expected.
+src/components/AlarmManagement.tsx(711,10): error TS1128: Declaration or statement expected.
+src/components/AlarmManagement.tsx(712,7): error TS1161: Unterminated regular expression literal.
+src/components/AlarmManagement.tsx(713,5): error TS1128: Declaration or statement expected.
+src/components/AlarmManagement.tsx(714,3): error TS1109: Expression expected.
+src/components/AlarmManagement.tsx(715,1): error TS1128: Declaration or statement expected.
+src/components/AlarmTester.tsx(569,14): error TS1109: Expression expected.
+src/components/AlarmTester.tsx(573,11): error TS1005: '}' expected.
+src/components/AlarmThemeBrowser.tsx(509,19): error TS1005: '}' expected.
+src/components/AlarmThemeBrowser.tsx(518,18): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/AlarmThemeBrowser.tsx(519,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AlarmThemeBrowser.tsx(539,19): error TS1005: '}' expected.
+src/components/AlarmThemeBrowser.tsx(549,18): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/AlarmThemeBrowser.tsx(550,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AlarmThemeBrowser.tsx(567,19): error TS1005: '}' expected.
+src/components/AlarmThemeBrowser.tsx(575,18): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/AlarmThemeBrowser.tsx(576,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AlarmThemeBrowser.tsx(593,19): error TS1005: '}' expected.
+src/components/AlarmThemeBrowser.tsx(601,18): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/AlarmThemeBrowser.tsx(602,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/AlarmThemeBrowser.tsx(811,11): error TS1005: '}' expected.
+src/components/AlarmThemeBrowser.tsx(820,10): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/AlarmThemeBrowser.tsx(821,9): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/BattleSystem.tsx(340,6): error TS1005: ':' expected.
+src/components/BattleSystem.tsx(640,29): error TS1005: '}' expected.
+src/components/CommunityChallenge.tsx(427,23): error TS1005: '}' expected.
+src/components/CommunityChallenge.tsx(433,21): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/CommunityChallenge.tsx(435,23): error TS17002: Expected corresponding JSX closing tag for 'AnimatePresence'.
+src/components/CommunityChallenge.tsx(436,21): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/CommunityChallenge.tsx(437,19): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/CommunityChallenge.tsx(438,17): error TS17015: Expected corresponding closing tag for JSX fragment.
+src/components/CommunityChallenge.tsx(438,20): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/CommunityChallenge.tsx(453,15): error TS1003: Identifier expected.
+src/components/CommunityChallenge.tsx(454,12): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/CommunityChallenge.tsx(464,21): error TS1005: '}' expected.
+src/components/CommunityChallenge.tsx(467,20): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/CommunityChallenge.tsx(468,19): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/CommunityChallenge.tsx(487,11): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/CommunityChallenge.tsx(488,9): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/CommunityChallenge.tsx(489,5): error TS1005: ')' expected.
+src/components/CommunityChallenge.tsx(490,3): error TS1109: Expression expected.
+src/components/CommunityChallenge.tsx(491,1): error TS1128: Declaration or statement expected.
+src/components/CompleteThemeSystemDemo.tsx(87,17): error TS1005: '}' expected.
+src/components/CompleteThemeSystemDemo.tsx(219,21): error TS1135: Argument expression expected.
+src/components/CompleteThemeSystemDemo.tsx(252,29): error TS1005: ',' expected.
+src/components/CompleteThemeSystemDemo.tsx(367,19): error TS1005: '}' expected.
+src/components/CompleteThemeSystemDemo.tsx(376,19): error TS1005: '}' expected.
+src/components/CompleteThemeSystemDemo.tsx(556,14): error TS1005: ':' expected.
+src/components/CompleteThemeSystemDemo.tsx(556,20): error TS1005: ',' expected.
+src/components/CompleteThemeSystemDemo.tsx(557,7): error TS1005: ')' expected.
+src/components/CompleteThemeSystemDemo.tsx(560,14): error TS1005: ':' expected.
+src/components/CompleteThemeSystemDemo.tsx(560,19): error TS1005: ',' expected.
+src/components/CompleteThemeSystemDemo.tsx(562,3): error TS1005: ')' expected.
+src/components/CompleteThemeSystemDemo.tsx(732,2): error TS1472: 'catch' or 'finally' expected.
+src/components/CompleteThemeSystemDemo.tsx(758,4): error TS1005: ')' expected.
+src/components/CompleteThemeSystemDemo.tsx(804,1): error TS1005: '}' expected.
+src/components/ComprehensiveSecurityDashboard.tsx(275,19): error TS1005: '}' expected.
+src/components/ComprehensiveSecurityDashboard.tsx(596,21): error TS1005: '}' expected.
+src/components/ComprehensiveSecurityDashboard.tsx(600,19): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/ComprehensiveSecurityDashboard.tsx(650,18): error TS1005: '}' expected.
+src/components/ComprehensiveSecurityDashboard.tsx(650,19): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/ComprehensiveSecurityDashboard.tsx(651,17): error TS17002: Expected corresponding JSX closing tag for 'section'.
+src/components/ComprehensiveSecurityDashboard.tsx(653,13): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/ComprehensiveSecurityDashboard.tsx(654,10): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/ComprehensiveSecurityDashboard.tsx(854,9): error TS17002: Expected corresponding JSX closing tag for 'main'.
+src/components/ComprehensiveSecurityDashboard.tsx(855,5): error TS1005: ')' expected.
+src/components/ComprehensiveSecurityDashboard.tsx(856,3): error TS1109: Expression expected.
+src/components/ComprehensiveSecurityDashboard.tsx(857,1): error TS1128: Declaration or statement expected.
+src/components/CustomSoundThemeCreator.tsx(601,21): error TS1005: ',' expected.
+src/components/CustomSoundThemeCreator.tsx(601,30): error TS1136: Property assignment expected.
+src/components/CustomSoundThemeCreator.tsx(601,33): error TS1005: ',' expected.
+src/components/CustomSoundThemeCreator.tsx(601,34): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/CustomSoundThemeCreator.tsx(602,53): error TS1005: '}' expected.
+src/components/CustomSoundThemeCreator.tsx(604,21): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/CustomSoundThemeCreator.tsx(604,22): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/CustomSoundThemeCreator.tsx(605,19): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/CustomSoundThemeCreator.tsx(607,21): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/CustomSoundThemeCreator.tsx(608,18): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/CustomSoundThemeCreator.tsx(610,13): error TS1005: ')' expected.
+src/components/CustomSoundThemeCreator.tsx(610,15): error TS17002: Expected corresponding JSX closing tag for 'DialogContent'.
+src/components/CustomSoundThemeCreator.tsx(611,12): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/CustomSoundThemeCreator.tsx(612,11): error TS17002: Expected corresponding JSX closing tag for 'Dialog'.
+src/components/CustomSoundThemeCreator.tsx(613,9): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/CustomSoundThemeCreator.tsx(614,5): error TS1005: ')' expected.
+src/components/CustomSoundThemeCreator.tsx(615,3): error TS1109: Expression expected.
+src/components/CustomSoundThemeCreator.tsx(616,1): error TS1128: Declaration or statement expected.
+src/components/CustomSoundThemeCreator.tsx(631,9): error TS1005: '}' expected.
+src/components/CustomSoundThemeCreator.tsx(641,9): error TS1005: '}' expected.
+src/components/CustomSoundThemeCreator.tsx(670,9): error TS1005: '}' expected.
+src/components/CustomSoundThemeCreator.tsx(686,7): error TS1005: '}' expected.
+src/components/CustomSoundThemeCreator.tsx(793,9): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(145,8): error TS1005: ')' expected.
+src/components/CustomThemeManager.tsx(151,5): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(176,26): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(182,9): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(183,8): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(184,20): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(192,7): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(213,5): error TS1137: Expression or comma expected.
+src/components/CustomThemeManager.tsx(291,7): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(298,11): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(305,10): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(305,11): error TS1134: Variable declaration expected.
+src/components/CustomThemeManager.tsx(305,12): error TS1134: Variable declaration expected.
+src/components/CustomThemeManager.tsx(306,8): error TS1472: 'catch' or 'finally' expected.
+src/components/CustomThemeManager.tsx(324,7): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(327,3): error TS1128: Declaration or statement expected.
+src/components/CustomThemeManager.tsx(446,9): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(447,8): error TS1128: Declaration or statement expected.
+src/components/CustomThemeManager.tsx(453,5): error TS1472: 'catch' or 'finally' expected.
+src/components/CustomThemeManager.tsx(453,7): error TS1005: ',' expected.
+src/components/CustomThemeManager.tsx(456,3): error TS1128: Declaration or statement expected.
+src/components/CustomThemeManager.tsx(979,1): error TS1128: Declaration or statement expected.
+src/components/Dashboard.tsx(368,17): error TS1005: '}' expected.
+src/components/Dashboard.tsx(370,15): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/Dashboard.tsx(402,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/Dashboard.tsx(403,13): error TS17002: Expected corresponding JSX closing tag for 'section'.
+src/components/Dashboard.tsx(404,9): error TS1005: ')' expected.
+src/components/Dashboard.tsx(404,11): error TS17002: Expected corresponding JSX closing tag for 'main'.
+src/components/Dashboard.tsx(529,5): error TS1128: Declaration or statement expected.
+src/components/Dashboard.tsx(530,3): error TS1109: Expression expected.
+src/components/Dashboard.tsx(531,1): error TS1128: Declaration or statement expected.
+src/components/EnhancedBattles.tsx(393,19): error TS1005: '}' expected.
+src/components/EnhancedBattles.tsx(395,17): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/EnhancedBattles.tsx(419,19): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/EnhancedBattles.tsx(420,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/EnhancedBattles.tsx(421,15): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/EnhancedBattles.tsx(422,13): error TS17002: Expected corresponding JSX closing tag for 'TabsContent'.
+src/components/EnhancedBattles.tsx(423,11): error TS17002: Expected corresponding JSX closing tag for 'Tabs'.
+src/components/EnhancedBattles.tsx(524,9): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/EnhancedBattles.tsx(525,5): error TS1005: ')' expected.
+src/components/EnhancedBattles.tsx(526,3): error TS1109: Expression expected.
+src/components/EnhancedDashboard.tsx(375,13): error TS1005: '}' expected.
+src/components/EnhancedDashboard.tsx(384,12): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/EnhancedDashboard.tsx(385,11): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/EnhancedDashboard.tsx(520,17): error TS1005: '}' expected.
+src/components/EnhancedDashboard.tsx(522,15): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/EnhancedDashboard.tsx(554,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/EnhancedDashboard.tsx(555,13): error TS17002: Expected corresponding JSX closing tag for 'section'.
+src/components/EnhancedDashboard.tsx(556,9): error TS1005: ')' expected.
+src/components/EnhancedDashboard.tsx(556,11): error TS17002: Expected corresponding JSX closing tag for 'main'.
+src/components/EnhancedDashboard.tsx(689,29): error TS1005: ',' expected.
+src/components/EnhancedDashboard.tsx(691,22): error TS1136: Property assignment expected.
+src/components/EnhancedDashboard.tsx(691,31): error TS1005: ',' expected.
+src/components/EnhancedDashboard.tsx(691,38): error TS1005: ';' expected.
+src/components/EnhancedDashboard.tsx(697,22): error TS1136: Property assignment expected.
+src/components/EnhancedDashboard.tsx(697,25): error TS1005: ';' expected.
+src/components/EnhancedDashboard.tsx(699,14): error TS1128: Declaration or statement expected.
+src/components/EnhancedDashboard.tsx(700,11): error TS1161: Unterminated regular expression literal.
+src/components/EnhancedDashboard.tsx(701,9): error TS1128: Declaration or statement expected.
+src/components/EnhancedDashboard.tsx(701,10): error TS1128: Declaration or statement expected.
+src/components/EnhancedDashboard.tsx(701,11): error TS1128: Declaration or statement expected.
+src/components/EnhancedDashboard.tsx(702,5): error TS1128: Declaration or statement expected.
+src/components/EnhancedDashboard.tsx(703,3): error TS1109: Expression expected.
+src/components/EnhancedDashboard.tsx(704,1): error TS1128: Declaration or statement expected.
+src/components/EnhancedMediaContent.tsx(273,11): error TS1005: ':' expected.
+src/components/EnhancedMediaContent.tsx(275,31): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(275,39): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(275,41): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(276,29): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(276,44): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(277,29): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(277,44): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(281,9): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(323,9): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(338,6): error TS1128: Declaration or statement expected.
+src/components/EnhancedMediaContent.tsx(340,3): error TS1128: Declaration or statement expected.
+src/components/EnhancedMediaContent.tsx(361,9): error TS1005: ')' expected.
+src/components/EnhancedMediaContent.tsx(370,13): error TS1005: ':' expected.
+src/components/EnhancedMediaContent.tsx(370,78): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(372,13): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(372,33): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(372,39): error TS1005: ',' expected.
+src/components/EnhancedMediaContent.tsx(372,40): error TS1005: ')' expected.
+src/components/EnhancedMediaContent.tsx(908,1): error TS1005: ',' expected.
+src/components/EnhancedSmartAlarmSettings.tsx(421,27): error TS1005: '}' expected.
+src/components/EnhancedSmartAlarmSettings.tsx(442,27): error TS1005: '}' expected.
+src/components/EnhancedSmartAlarmSettings.tsx(483,25): error TS1005: '}' expected.
+src/components/ExtendedScreenReaderTester.tsx(322,7): error TS1005: ',' expected.
+src/components/ExtendedScreenReaderTester.tsx(358,5): error TS1005: ',' expected.
+src/components/ExtendedScreenReaderTester.tsx(568,15): error TS1005: ')' expected.
+src/components/ExtendedScreenReaderTester.tsx(569,14): error TS1109: Expression expected.
+src/components/ExtendedScreenReaderTester.tsx(571,11): error TS1005: ',' expected.
+src/components/ExtendedScreenReaderTester.tsx(580,15): error TS1005: ')' expected.
+src/components/ExtendedScreenReaderTester.tsx(581,14): error TS1109: Expression expected.
+src/components/ExtendedScreenReaderTester.tsx(583,11): error TS1005: ',' expected.
+src/components/ExtendedScreenReaderTester.tsx(625,21): error TS1005: '}' expected.
+src/components/ExtendedScreenReaderTester.tsx(627,19): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/ExtendedScreenReaderTester.tsx(629,21): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/ExtendedScreenReaderTester.tsx(630,19): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/ExtendedScreenReaderTester.tsx(645,9): error TS1005: ')' expected.
+src/components/ExtendedScreenReaderTester.tsx(715,5): error TS1128: Declaration or statement expected.
+src/components/ExtendedScreenReaderTester.tsx(716,3): error TS1109: Expression expected.
+src/components/ExtendedScreenReaderTester.tsx(717,1): error TS1128: Declaration or statement expected.
+src/components/ForgotPasswordForm.tsx(155,15): error TS1005: '}' expected.
+src/components/HabitCelebration.tsx(131,11): error TS1005: ',' expected.
+src/components/HabitCelebration.tsx(132,12): error TS1005: ',' expected.
+src/components/HabitCelebration.tsx(133,12): error TS1005: ',' expected.
+src/components/HabitCelebration.tsx(134,19): error TS1005: ',' expected.
+src/components/HabitCelebration.tsx(135,20): error TS1005: ',' expected.
+src/components/HabitCelebration.tsx(136,9): error TS1135: Argument expression expected.
+src/components/HabitCelebration.tsx(136,10): error TS1005: ',' expected.
+src/components/HabitCelebration.tsx(136,11): error TS1134: Variable declaration expected.
+src/components/HabitCelebration.tsx(137,9): error TS1128: Declaration or statement expected.
+src/components/HabitCelebration.tsx(141,3): error TS1128: Declaration or statement expected.
+src/components/HabitCelebration.tsx(205,17): error TS1005: '}' expected.
+src/components/HabitCelebration.tsx(223,16): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/HabitCelebration.tsx(224,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/HabitCelebration.tsx(454,30): error TS1005: '}' expected.
+src/components/HabitCelebration.tsx(454,79): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/HabitCelebration.tsx(456,25): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/HabitCelebration.tsx(457,23): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/HabitCelebration.tsx(458,21): error TS17002: Expected corresponding JSX closing tag for 'motion.div'.
+src/components/HabitCelebration.tsx(459,17): error TS1005: ')' expected.
+src/components/HabitCelebration.tsx(459,19): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/HabitCelebration.tsx(460,16): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/HabitCelebration.tsx(461,15): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/HabitCelebration.tsx(471,13): error TS17002: Expected corresponding JSX closing tag for 'motion.div'.
+src/components/HabitCelebration.tsx(473,9): error TS17002: Expected corresponding JSX closing tag for 'AnimatePresence'.
+src/components/HabitCelebration.tsx(474,5): error TS1005: ')' expected.
+src/components/HabitCelebration.tsx(475,3): error TS1109: Expression expected.
+src/components/HabitCelebration.tsx(476,1): error TS1128: Declaration or statement expected.
+src/components/LoginForm.tsx(108,15): error TS1005: '}' expected.
+src/components/LoginForm.tsx(149,15): error TS1005: '}' expected.
+src/components/MediaContent.tsx(413,17): error TS1005: '}' expected.
+src/components/MobileAlarmCard.tsx(306,3): error TS1005: ',' expected.
+src/components/MobileAlarmCard.tsx(331,11): error TS1005: '}' expected.
+src/components/MobileAlarmCard.tsx(337,10): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/MobileAlarmCard.tsx(338,9): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/MobileNavigation.tsx(73,15): error TS1005: '}' expected.
+src/components/MobileNavigation.tsx(77,14): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/MobileNavigation.tsx(78,13): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/NuclearModeBattle.tsx(187,9): error TS1005: ',' expected.
+src/components/NuclearModeBattle.tsx(190,9): error TS1005: ',' expected.
+src/components/NuclearModeBattle.tsx(221,5): error TS1005: ',' expected.
+src/components/NuclearModeBattle.tsx(223,13): error TS1005: ')' expected.
+src/components/NuclearModeChallenge.tsx(142,9): error TS1005: ',' expected.
+src/components/NuclearModeChallenge.tsx(142,21): error TS1005: ')' expected.
+src/components/NuclearModeChallenge.tsx(180,13): error TS1005: '}' expected.
+src/components/NuclearModeSelector.tsx(123,5): error TS1005: ',' expected.
+src/components/NuclearModeSelector.tsx(353,15): error TS1005: '}' expected.
+src/components/OfflineDiagnostics.tsx(518,16): error TS1005: '}' expected.
+src/components/OfflineDiagnostics.tsx(518,87): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/OfflineDiagnostics.tsx(542,13): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/OfflineDiagnostics.tsx(543,11): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/OfflineDiagnostics.tsx(554,9): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/OfflineDiagnostics.tsx(555,5): error TS1005: ')' expected.
+src/components/OfflineDiagnostics.tsx(556,3): error TS1109: Expression expected.
+src/components/OfflineDiagnostics.tsx(557,1): error TS1128: Declaration or statement expected.
+src/components/PerformanceDashboard.tsx(129,3): error TS1005: ')' expected.
+src/components/PerformanceDashboard.tsx(129,4): error TS1128: Declaration or statement expected.
+src/components/PerformanceDashboard.tsx(129,8): error TS1005: ';' expected.
+src/components/PerformanceDashboard.tsx(250,13): error TS1005: ')' expected.
+src/components/PerformanceDashboard.tsx(250,24): error TS1136: Property assignment expected.
+src/components/PerformanceDashboard.tsx(254,15): error TS1005: ',' expected.
+src/components/PerformanceDashboard.tsx(311,19): error TS1005: '}' expected.
+src/components/PerformanceDashboard.tsx(320,18): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/PerformanceDashboard.tsx(321,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/PerformanceProfilerWrapper.tsx(131,19): error TS1005: '}' expected.
+src/components/PerformanceProfilerWrapper.tsx(133,17): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/PerformanceProfilerWrapper.tsx(139,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/PerformanceProfilerWrapper.tsx(141,11): error TS1005: ')' expected.
+src/components/PerformanceProfilerWrapper.tsx(142,10): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/PerformanceProfilerWrapper.tsx(156,19): error TS1005: '}' expected.
+src/components/PerformanceProfilerWrapper.tsx(158,17): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/PerformanceProfilerWrapper.tsx(164,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/PerformanceProfilerWrapper.tsx(166,11): error TS1005: ')' expected.
+src/components/PerformanceProfilerWrapper.tsx(170,9): error TS2657: JSX expressions must have one parent element.
+src/components/PerformanceProfilerWrapper.tsx(176,15): error TS1005: '}' expected.
+src/components/PerformanceProfilerWrapper.tsx(211,7): error TS1128: Declaration or statement expected.
+src/components/PerformanceProfilerWrapper.tsx(212,5): error TS1109: Expression expected.
+src/components/PerformanceProfilerWrapper.tsx(213,3): error TS1109: Expression expected.
+src/components/PerformanceProfilerWrapper.tsx(214,1): error TS1128: Declaration or statement expected.
+src/components/PerformanceProfilerWrapper.tsx(239,31): error TS1005: ')' expected.
+src/components/PerformanceProfilerWrapper.tsx(287,9): error TS1161: Unterminated regular expression literal.
+src/components/PerformanceProfilerWrapper.tsx(289,5): error TS1003: Identifier expected.
+src/components/PersonaAnalyticsDashboard.tsx(143,14): error TS1005: ';' expected.
+src/components/PersonaAnalyticsDashboard.tsx(144,18): error TS1005: ';' expected.
+src/components/PersonaAnalyticsDashboard.tsx(145,13): error TS1005: ';' expected.
+src/components/PersonaAnalyticsDashboard.tsx(146,18): error TS1005: ';' expected.
+src/components/PersonaAnalyticsDashboard.tsx(147,10): error TS1005: ';' expected.
+src/components/PersonaAnalyticsDashboard.tsx(148,21): error TS1005: ';' expected.
+src/components/PersonaAnalyticsDashboard.tsx(149,14): error TS1005: ';' expected.
+src/components/PersonaAnalyticsDashboard.tsx(150,5): error TS1109: Expression expected.
+src/components/PersonaAnalyticsDashboard.tsx(150,7): error TS1005: ',' expected.
+src/components/PersonaAnalyticsDashboard.tsx(151,20): error TS1005: ',' expected.
+src/components/PersonaAnalyticsDashboard.tsx(367,17): error TS1005: '}' expected.
+src/components/PersonaAnalyticsDashboard.tsx(393,17): error TS1005: '}' expected.
+src/components/PersonaAnalyticsDashboard.tsx(418,17): error TS1005: '}' expected.
+src/components/PersonaAnalyticsDashboard.tsx(495,1): error TS1128: Declaration or statement expected.
+src/components/PersonaFocusDashboard.tsx(262,12): error TS1005: ';' expected.
+src/components/PersonaFocusDashboard.tsx(263,18): error TS1005: ';' expected.
+src/components/PersonaFocusDashboard.tsx(264,21): error TS1005: ';' expected.
+src/components/PersonaFocusDashboard.tsx(265,11): error TS1005: ';' expected.
+src/components/PersonaFocusDashboard.tsx(266,5): error TS1109: Expression expected.
+src/components/PersonaFocusDashboard.tsx(266,6): error TS1005: ',' expected.
+src/components/PersonaFocusDashboard.tsx(266,7): error TS1134: Variable declaration expected.
+src/components/PersonaFocusDashboard.tsx(300,12): error TS1005: ';' expected.
+src/components/PersonaFocusDashboard.tsx(301,14): error TS1005: ';' expected.
+src/components/PersonaFocusDashboard.tsx(302,11): error TS1005: ';' expected.
+src/components/PersonaFocusDashboard.tsx(303,5): error TS1109: Expression expected.
+src/components/PersonaFocusDashboard.tsx(303,6): error TS1005: ',' expected.
+src/components/PersonaFocusDashboard.tsx(303,7): error TS1134: Variable declaration expected.
+src/components/PersonaFocusDashboard.tsx(336,3): error TS1128: Declaration or statement expected.
+src/components/PersonaFocusDashboard.tsx(370,15): error TS1005: '}' expected.
+src/components/PersonaFocusDashboard.tsx(445,26): error TS1005: '}' expected.
+src/components/PersonaFocusDashboard.tsx(445,69): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/PersonaFocusDashboard.tsx(446,13): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/PersonaFocusDashboard.tsx(457,1): error TS1128: Declaration or statement expected.
+src/components/PersonalizationSettings.tsx(388,13): error TS1005: '}' expected.
+src/components/PersonalizationSettings.tsx(424,13): error TS1005: '}' expected.
+src/components/PersonalizationSettings.tsx(483,13): error TS1005: '}' expected.
+src/components/PersonalizationSettings.tsx(513,11): error TS1005: '}' expected.
+src/components/PersonalizationSettings.tsx(534,13): error TS1005: '}' expected.
+src/components/PersonalizationSettings.tsx(548,13): error TS1005: '}' expected.
+src/components/PersonalizationSettings.tsx(564,11): error TS1005: '}' expected.
+src/components/PersonalizationSettings.tsx(579,11): error TS1005: '}' expected.
+src/components/PersonalizationSettings.tsx(621,13): error TS1005: '}' expected.
+src/components/PersonalizationSettings.tsx(635,13): error TS1005: '}' expected.
+src/components/PremiumDashboard.tsx(185,9): error TS1005: ':' expected.
+src/components/PremiumDashboard.tsx(186,13): error TS1005: ':' expected.
+src/components/PremiumDashboard.tsx(193,11): error TS1005: ',' expected.
+src/components/PremiumDashboard.tsx(195,16): error TS1138: Parameter declaration expected.
+src/components/PremiumDashboard.tsx(195,21): error TS1005: ',' expected.
+src/components/PremiumDashboard.tsx(195,28): error TS1005: ',' expected.
+src/components/PremiumDashboard.tsx(203,9): error TS1005: ';' expected.
+src/components/PremiumDashboard.tsx(204,5): error TS1128: Declaration or statement expected.
+src/components/PremiumDashboard.tsx(204,7): error TS1005: 'try' expected.
+src/components/PremiumDashboard.tsx(208,3): error TS1005: ')' expected.
+src/components/PremiumDashboard.tsx(222,4): error TS1005: ')' expected.
+src/components/PremiumDashboard.tsx(430,13): error TS1005: ')' expected.
+src/components/PremiumDashboard.tsx(431,12): error TS1109: Expression expected.
+src/components/PremiumDashboard.tsx(432,9): error TS1109: Expression expected.
+src/components/PremiumDashboard.tsx(433,7): error TS1003: Identifier expected.
+src/components/PremiumThemeSettings.tsx(221,9): error TS1005: ':' expected.
+src/components/PremiumThemeSettings.tsx(222,13): error TS1005: ':' expected.
+src/components/PremiumThemeSettings.tsx(225,8): error TS1005: ',' expected.
+src/components/PremiumThemeSettings.tsx(226,16): error TS1138: Parameter declaration expected.
+src/components/PremiumThemeSettings.tsx(226,21): error TS1005: ',' expected.
+src/components/PremiumThemeSettings.tsx(226,28): error TS1005: ',' expected.
+src/components/PremiumThemeSettings.tsx(231,9): error TS1005: ';' expected.
+src/components/PremiumThemeSettings.tsx(232,5): error TS1128: Declaration or statement expected.
+src/components/PremiumThemeSettings.tsx(232,7): error TS1005: 'try' expected.
+src/components/PremiumThemeSettings.tsx(236,3): error TS1005: ')' expected.
+src/components/PremiumThemeSettings.tsx(245,4): error TS1005: ')' expected.
+src/components/PremiumUsageTracker.tsx(51,9): error TS1005: ':' expected.
+src/components/PremiumUsageTracker.tsx(52,13): error TS1005: ':' expected.
+src/components/PremiumUsageTracker.tsx(52,72): error TS1005: ',' expected.
+src/components/PremiumUsageTracker.tsx(55,20): error TS1359: Identifier expected. 'false' is a reserved word that cannot be used here.
+src/components/PremiumUsageTracker.tsx(55,25): error TS1005: ':' expected.
+src/components/PremiumUsageTracker.tsx(57,7): error TS1005: ',' expected.
+src/components/PremiumUsageTracker.tsx(57,22): error TS1359: Identifier expected. 'new' is a reserved word that cannot be used here.
+src/components/PremiumUsageTracker.tsx(57,30): error TS1005: ',' expected.
+src/components/PremiumUsageTracker.tsx(57,32): error TS1005: ',' expected.
+src/components/PremiumUsageTracker.tsx(57,33): error TS1005: ')' expected.
+src/components/PremiumUsageTracker.tsx(58,7): error TS1005: ',' expected.
+src/components/PremiumUsageTracker.tsx(236,1): error TS1128: Declaration or statement expected.
+src/components/PushNotificationSettings.tsx(185,17): error TS1005: '}' expected.
+src/components/PushNotificationSettings.tsx(513,27): error TS1005: '}' expected.
+src/components/PushNotificationTester.tsx(96,5): error TS1137: Expression or comma expected.
+src/components/PushNotificationTester.tsx(424,17): error TS1005: '}' expected.
+src/components/PushNotificationTester.tsx(426,15): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/PushNotificationTester.tsx(461,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/PushNotificationTester.tsx(463,9): error TS1005: ')' expected.
+src/components/PushNotificationTester.tsx(484,5): error TS1128: Declaration or statement expected.
+src/components/PushNotificationTester.tsx(485,3): error TS1109: Expression expected.
+src/components/PushNotificationTester.tsx(486,1): error TS1128: Declaration or statement expected.
+src/components/QuickAlarmSetup.tsx(74,6): error TS1005: ':' expected.
+src/components/QuickAlarmSetup.tsx(116,15): error TS1005: '}' expected.
+src/components/QuickAlarmSetup.tsx(126,15): error TS1005: '}' expected.
+src/components/RewardsDashboard.tsx(466,19): error TS1005: ',' expected.
+src/components/RewardsDashboard.tsx(486,19): error TS1005: '}' expected.
+src/components/RewardsDashboard.tsx(488,17): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/RewardsDashboard.tsx(531,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/RewardsDashboard.tsx(542,9): error TS1005: ')' expected.
+src/components/RewardsDashboard.tsx(600,19): error TS1005: '}' expected.
+src/components/RewardsDashboard.tsx(602,17): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/RewardsDashboard.tsx(679,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/RewardsDashboard.tsx(690,9): error TS1005: ')' expected.
+src/components/RewardsDashboard.tsx(691,7): error TS1109: Expression expected.
+src/components/RewardsDashboard.tsx(753,5): error TS1128: Declaration or statement expected.
+src/components/RewardsDashboard.tsx(754,3): error TS1109: Expression expected.
+src/components/RewardsDashboard.tsx(755,1): error TS1128: Declaration or statement expected.
+src/components/SettingsPage.tsx(271,13): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(322,13): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(657,13): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(693,13): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(729,13): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(795,13): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(869,19): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(893,13): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(929,13): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(1019,21): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(1042,21): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(1064,13): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(1100,13): error TS1005: '}' expected.
+src/components/SettingsPage.tsx(1180,15): error TS1005: '}' expected.
+src/components/SignUpForm.tsx(97,15): error TS1005: ',' expected.
+src/components/SignUpForm.tsx(97,31): error TS1005: ',' expected.
+src/components/SignUpForm.tsx(98,42): error TS1005: ',' expected.
+src/components/SignUpForm.tsx(98,71): error TS1005: ',' expected.
+src/components/SignUpForm.tsx(105,3): error TS1005: ')' expected.
+src/components/SignUpForm.tsx(179,15): error TS1005: '}' expected.
+src/components/SignUpForm.tsx(220,15): error TS1005: '}' expected.
+src/components/SignUpForm.tsx(261,15): error TS1005: '}' expected.
+src/components/SignUpForm.tsx(370,15): error TS1005: '}' expected.
+src/components/SleepTracker.tsx(221,23): error TS1005: ')' expected.
+src/components/SleepTracker.tsx(222,22): error TS1109: Expression expected.
+src/components/SleepTracker.tsx(223,19): error TS1109: Expression expected.
+src/components/SleepTracker.tsx(241,25): error TS1005: ')' expected.
+src/components/SleepTracker.tsx(242,24): error TS1109: Expression expected.
+src/components/SleepTracker.tsx(243,21): error TS1109: Expression expected.
+src/components/SleepTracker.tsx(260,25): error TS1005: ')' expected.
+src/components/SleepTracker.tsx(261,24): error TS1109: Expression expected.
+src/components/SleepTracker.tsx(262,21): error TS1109: Expression expected.
+src/components/SmartAlarmDashboard.tsx(431,33): error TS1005: '}' expected.
+src/components/SmartAlarmDashboard.tsx(433,31): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/SmartAlarmDashboard.tsx(447,31): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/SmartAlarmDashboard.tsx(449,23): error TS1005: ')' expected.
+src/components/SmartAlarmDashboard.tsx(453,13): error TS1005: ',' expected.
+src/components/SmartAlarmDashboard.tsx(455,9): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/SmartAlarmDashboard.tsx(455,11): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/SmartAlarmDashboard.tsx(457,5): error TS1005: ')' expected.
+src/components/SmartAlarmDashboard.tsx(458,3): error TS1109: Expression expected.
+src/components/SmartAlarmDashboard.tsx(459,1): error TS1128: Declaration or statement expected.
+src/components/SmartAlarmSettings.tsx(233,27): error TS1005: '}' expected.
+src/components/SmartAlarmSettings.tsx(265,29): error TS1005: '}' expected.
+src/components/SmartAlarmSettings.tsx(285,29): error TS1005: '}' expected.
+src/components/SocialProof.tsx(59,13): error TS1005: ')' expected.
+src/components/SocialProof.tsx(70,13): error TS1005: ')' expected.
+src/components/SocialProof.tsx(81,13): error TS1005: ')' expected.
+src/components/SocialProof.tsx(95,19): error TS1005: ')' expected.
+src/components/SocialProof.tsx(406,2): error TS1005: ')' expected.
+src/components/SocialProof.tsx(408,1): error TS1005: '}' expected.
+src/components/SoundPicker.tsx(106,5): error TS1005: ',' expected.
+src/components/SoundPicker.tsx(350,19): error TS1005: '}' expected.
+src/components/SoundPicker.tsx(350,41): error TS1005: '...' expected.
+src/components/SoundPicker.tsx(351,19): error TS1003: Identifier expected.
+src/components/SoundPicker.tsx(565,28): error TS1109: Expression expected.
+src/components/SoundPicker.tsx(566,25): error TS1109: Expression expected.
+src/components/SoundPicker.tsx(587,19): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/SoundPicker.tsx(588,17): error TS17002: Expected corresponding JSX closing tag for 'DialogContent'.
+src/components/SoundPicker.tsx(589,15): error TS17002: Expected corresponding JSX closing tag for 'Dialog'.
+src/components/SoundPicker.tsx(590,13): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/SoundPicker.tsx(593,5): error TS1005: ')' expected.
+src/components/SoundPicker.tsx(594,3): error TS1109: Expression expected.
+src/components/SoundPicker.tsx(595,1): error TS1128: Declaration or statement expected.
+src/components/SoundSettings.tsx(150,13): error TS1005: ';' expected.
+src/components/SoundSettings.tsx(151,20): error TS1005: ';' expected.
+src/components/SoundSettings.tsx(152,17): error TS1005: ';' expected.
+src/components/SoundSettings.tsx(153,17): error TS1005: ';' expected.
+src/components/SoundSettings.tsx(154,7): error TS1109: Expression expected.
+src/components/SoundSettings.tsx(154,8): error TS1472: 'catch' or 'finally' expected.
+src/components/SoundSettings.tsx(154,9): error TS1128: Declaration or statement expected.
+src/components/SoundSettings.tsx(156,7): error TS1005: ',' expected.
+src/components/SoundSettings.tsx(182,9): error TS1005: ':' expected.
+src/components/SoundSettings.tsx(183,13): error TS1005: ':' expected.
+src/components/SoundSettings.tsx(183,46): error TS1005: ',' expected.
+src/components/SoundSettings.tsx(184,22): error TS1138: Parameter declaration expected.
+src/components/SoundSettings.tsx(184,27): error TS1005: ',' expected.
+src/components/SoundSettings.tsx(184,34): error TS1005: ',' expected.
+src/components/SoundSettings.tsx(187,18): error TS1138: Parameter declaration expected.
+src/components/SoundSettings.tsx(187,21): error TS1005: ')' expected.
+src/components/SoundSettings.tsx(189,15): error TS1005: ')' expected.
+src/components/SoundSettings.tsx(190,7): error TS1005: 'try' expected.
+src/components/SoundSettings.tsx(193,3): error TS1005: ')' expected.
+src/components/SoundSettings.tsx(296,13): error TS1005: '}' expected.
+src/components/SoundSettings.tsx(311,17): error TS1005: ',' expected.
+src/components/SoundSettings.tsx(311,26): error TS1005: ',' expected.
+src/components/SoundSettings.tsx(320,17): error TS1005: '}' expected.
+src/components/SoundSettings.tsx(327,15): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/SoundSettings.tsx(358,17): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/SoundSettings.tsx(359,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/SoundSettings.tsx(386,11): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/SoundSettings.tsx(411,20): error TS1109: Expression expected.
+src/components/SoundSettings.tsx(412,17): error TS1109: Expression expected.
+src/components/SoundSettings.tsx(425,21): error TS1005: '}' expected.
+src/components/SoundSettings.tsx(462,21): error TS1005: '}' expected.
+src/components/SoundSettings.tsx(483,20): error TS1109: Expression expected.
+src/components/SoundSettings.tsx(484,17): error TS1109: Expression expected.
+src/components/SoundSettings.tsx(497,21): error TS1005: '}' expected.
+src/components/SoundSettings.tsx(534,21): error TS1005: '}' expected.
+src/components/SoundSettings.tsx(784,9): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/SoundSettings.tsx(785,5): error TS1005: ')' expected.
+src/components/SoundSettings.tsx(786,3): error TS1109: Expression expected.
+src/components/SoundSettings.tsx(787,1): error TS1128: Declaration or statement expected.
+src/components/SoundThemeDemo.tsx(178,20): error TS1138: Parameter declaration expected.
+src/components/SoundThemeDemo.tsx(178,25): error TS1005: ',' expected.
+src/components/SoundThemeDemo.tsx(178,32): error TS1005: ')' expected.
+src/components/SoundThemeDemo.tsx(180,9): error TS1005: ':' expected.
+src/components/SoundThemeDemo.tsx(182,13): error TS1005: ':' expected.
+src/components/SoundThemeDemo.tsx(182,64): error TS1005: ',' expected.
+src/components/SoundThemeDemo.tsx(183,19): error TS1005: ',' expected.
+src/components/SoundThemeDemo.tsx(183,36): error TS1005: ',' expected.
+src/components/SoundThemeDemo.tsx(183,38): error TS1136: Property assignment expected.
+src/components/SoundThemeDemo.tsx(196,7): error TS1005: ')' expected.
+src/components/SoundThemeDemo.tsx(199,7): error TS1005: ')' expected.
+src/components/SoundThemeDemo.tsx(202,14): error TS1005: ')' expected.
+src/components/SoundThemeDemo.tsx(204,3): error TS1005: ',' expected.
+src/components/SoundThemeDemo.tsx(214,11): error TS1005: ',' expected.
+src/components/SoundThemeDemo.tsx(214,21): error TS1003: Identifier expected.
+src/components/SoundThemeDemo.tsx(214,33): error TS1138: Parameter declaration expected.
+src/components/SoundThemeDemo.tsx(216,5): error TS1005: ',' expected.
+src/components/SoundThemeDemo.tsx(216,16): error TS1138: Parameter declaration expected.
+src/components/SoundThemeDemo.tsx(216,19): error TS1005: ')' expected.
+src/components/SoundThemeDemo.tsx(218,13): error TS1005: ')' expected.
+src/components/SoundUploader.tsx(285,9): error TS1005: ',' expected.
+src/components/SoundUploader.tsx(285,35): error TS1005: ')' expected.
+src/components/SoundUploader.tsx(370,8): error TS17008: JSX element 'Card' has no corresponding closing tag.
+src/components/SoundUploader.tsx(415,16): error TS17008: JSX element 'ScrollArea' has no corresponding closing tag.
+src/components/SoundUploader.tsx(421,21): error TS1005: '}' expected.
+src/components/SoundUploader.tsx(423,19): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/SoundUploader.tsx(473,18): error TS1005: '}' expected.
+src/components/SoundUploader.tsx(473,19): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/SoundUploader.tsx(474,17): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/SoundUploader.tsx(477,9): error TS1128: Declaration or statement expected.
+src/components/SoundUploader.tsx(478,7): error TS1109: Expression expected.
+src/components/SoundUploader.tsx(482,9): error TS2657: JSX expressions must have one parent element.
+src/components/SoundUploader.tsx(508,21): error TS1005: '}' expected.
+src/components/SoundUploader.tsx(510,19): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/SoundUploader.tsx(584,19): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/SoundUploader.tsx(585,17): error TS17002: Expected corresponding JSX closing tag for 'ScrollArea'.
+src/components/SoundUploader.tsx(586,13): error TS1005: ')' expected.
+src/components/SoundUploader.tsx(586,15): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/SoundUploader.tsx(587,11): error TS1128: Declaration or statement expected.
+src/components/SoundUploader.tsx(587,12): error TS1128: Declaration or statement expected.
+src/components/SoundUploader.tsx(588,9): error TS1128: Declaration or statement expected.
+src/components/SoundUploader.tsx(589,7): error TS1109: Expression expected.
+src/components/SoundUploader.tsx(590,5): error TS1109: Expression expected.
+src/components/SoundUploader.tsx(591,3): error TS1109: Expression expected.
+src/components/SoundUploader.tsx(592,1): error TS1128: Declaration or statement expected.
+src/components/SoundUploader.tsx(621,9): error TS1135: Argument expression expected.
+src/components/SoundUploader.tsx(634,9): error TS1135: Argument expression expected.
+src/components/SoundUploader.tsx(652,11): error TS1005: '}' expected.
+src/components/SoundUploader.tsx(662,11): error TS1005: '}' expected.
+src/components/SoundUploader.tsx(692,11): error TS1005: '}' expected.
+src/components/SyncStatus.tsx(63,6): error TS1005: ')' expected.
+src/components/SyncStatus.tsx(67,6): error TS1005: ')' expected.
+src/components/SyncStatus.tsx(80,8): error TS1005: ',' expected.
+src/components/TabProtectionSettings.tsx(95,12): error TS1109: Expression expected.
+src/components/TabProtectionSettings.tsx(99,9): error TS1005: '}' expected.
+src/components/TabProtectionSettings.tsx(341,17): error TS1005: '}' expected.
+src/components/TabProtectionWarning.tsx(196,25): error TS1005: '}' expected.
+src/components/TabProtectionWarning.tsx(198,23): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/TabProtectionWarning.tsx(203,25): error TS17002: Expected corresponding JSX closing tag for 'ul'.
+src/components/TabProtectionWarning.tsx(204,23): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/TabProtectionWarning.tsx(211,19): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/TabProtectionWarning.tsx(212,15): error TS1005: ')' expected.
+src/components/TabProtectionWarning.tsx(213,14): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/TabProtectionWarning.tsx(232,5): error TS1005: ')' expected.
+src/components/TabProtectionWarning.tsx(233,3): error TS1109: Expression expected.
+src/components/TabProtectionWarning.tsx(234,1): error TS1128: Declaration or statement expected.
+src/components/ThemeCreator.tsx(345,9): error TS1005: '}' expected.
+src/components/ThemeCreator.tsx(372,11): error TS1005: '}' expected.
+src/components/ThemeCreator.tsx(490,19): error TS1005: '}' expected.
+src/components/ThemeCreator.tsx(551,23): error TS1005: '}' expected.
+src/components/ThemeCreator.tsx(562,23): error TS1005: '}' expected.
+src/components/ThemeCustomizationStudio.tsx(27,9): error TS1005: '}' expected.
+src/components/ThemeCustomizationStudio.tsx(33,9): error TS1005: '}' expected.
+src/components/ThemeCustomizationStudio.tsx(62,10): error TS1109: Expression expected.
+src/components/ThemeCustomizationStudio.tsx(64,7): error TS1005: '}' expected.
+src/components/ThemeCustomizationStudio.tsx(282,15): error TS1005: '}' expected.
+src/components/ThemeGallery.tsx(270,7): error TS1005: ')' expected.
+src/components/ThemeGallery.tsx(456,17): error TS1005: '}' expected.
+src/components/ThemeGallery.tsx(458,15): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/ThemeGallery.tsx(460,17): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/ThemeGallery.tsx(461,14): error TS1005: '}' expected.
+src/components/ThemeGallery.tsx(461,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/ThemeGallery.tsx(463,10): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/ThemeGallery.tsx(512,5): error TS1005: ')' expected.
+src/components/ThemeGallery.tsx(513,3): error TS1109: Expression expected.
+src/components/ThemeGallery.tsx(722,1): error TS1128: Declaration or statement expected.
+src/components/ThemeManager.tsx(300,21): error TS1005: '}' expected.
+src/components/ThemeManager.tsx(304,19): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/ThemeManager.tsx(328,21): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/ThemeManager.tsx(329,19): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/ThemeManager.tsx(341,13): error TS1005: ')' expected.
+src/components/ThemeManager.tsx(342,12): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/ThemeManager.tsx(371,11): error TS17015: Expected corresponding closing tag for JSX fragment.
+src/components/ThemeManager.tsx(373,21): error TS1005: ',' expected.
+src/components/ThemeManager.tsx(379,7): error TS1128: Declaration or statement expected.
+src/components/ThemeManager.tsx(379,9): error TS1109: Expression expected.
+src/components/ThemeManager.tsx(380,5): error TS1109: Expression expected.
+src/components/ThemeManager.tsx(381,3): error TS1128: Declaration or statement expected.
+src/components/ThemeManager.tsx(526,19): error TS1005: '}' expected.
+src/components/ThemeManager.tsx(529,17): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/ThemeManager.tsx(556,19): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/ThemeManager.tsx(557,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/ThemeManager.tsx(559,13): error TS1005: ')' expected.
+src/components/ThemeManager.tsx(568,10): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/ThemeManager.tsx(611,9): error TS17015: Expected corresponding closing tag for JSX fragment.
+src/components/ThemeManager.tsx(613,19): error TS1005: ',' expected.
+src/components/ThemeManager.tsx(613,74): error TS1128: Declaration or statement expected.
+src/components/ThemeManager.tsx(614,5): error TS1128: Declaration or statement expected.
+src/components/ThemeManager.tsx(614,7): error TS1109: Expression expected.
+src/components/ThemeManager.tsx(615,3): error TS1109: Expression expected.
+src/components/ThemeManager.tsx(616,1): error TS1128: Declaration or statement expected.
+src/components/TranslationDashboard.tsx(357,23): error TS1005: '}' expected.
+src/components/TranslationDashboard.tsx(360,21): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/TranslationDashboard.tsx(393,21): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/TranslationDashboard.tsx(395,15): error TS1005: ')' expected.
+src/components/TranslationDashboard.tsx(396,14): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/TranslationDashboard.tsx(405,24): error TS1005: '}' expected.
+src/components/TranslationDashboard.tsx(405,81): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/TranslationDashboard.tsx(455,18): error TS1005: '}' expected.
+src/components/TranslationDashboard.tsx(455,19): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/TranslationDashboard.tsx(457,14): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/TranslationDashboard.tsx(461,15): error TS2657: JSX expressions must have one parent element.
+src/components/TranslationDashboard.tsx(477,29): error TS1005: '}' expected.
+src/components/TranslationDashboard.tsx(479,27): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/TranslationDashboard.tsx(489,26): error TS1005: '}' expected.
+src/components/TranslationDashboard.tsx(489,27): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/TranslationDashboard.tsx(491,20): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/TranslationDashboard.tsx(506,27): error TS1005: '}' expected.
+src/components/TranslationDashboard.tsx(508,25): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/TranslationDashboard.tsx(518,25): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/TranslationDashboard.tsx(520,17): error TS1005: ')' expected.
+src/components/TranslationDashboard.tsx(534,27): error TS1005: '}' expected.
+src/components/TranslationDashboard.tsx(536,25): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/TranslationDashboard.tsx(546,25): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/TranslationDashboard.tsx(549,15): error TS1005: ')' expected.
+src/components/TranslationDashboard.tsx(550,13): error TS1109: Expression expected.
+src/components/TranslationDashboard.tsx(550,14): error TS1128: Declaration or statement expected.
+src/components/TranslationDashboard.tsx(621,11): error TS1128: Declaration or statement expected.
+src/components/TranslationDashboard.tsx(622,9): error TS1109: Expression expected.
+src/components/TranslationDashboard.tsx(625,14): error TS1005: ';' expected.
+src/components/TranslationDashboard.tsx(632,9): error TS1128: Declaration or statement expected.
+src/components/TranslationDashboard.tsx(633,7): error TS1109: Expression expected.
+src/components/TranslationDashboard.tsx(634,5): error TS1109: Expression expected.
+src/components/TranslationDashboard.tsx(635,3): error TS1109: Expression expected.
+src/components/TranslationDashboard.tsx(636,1): error TS1128: Declaration or statement expected.
+src/components/UserProfile.tsx(46,7): error TS1005: ')' expected.
+src/components/UserProfile.tsx(47,19): error TS1138: Parameter declaration expected.
+src/components/UserProfile.tsx(47,24): error TS1005: ',' expected.
+src/components/UserProfile.tsx(47,31): error TS1005: ',' expected.
+src/components/UserProfile.tsx(50,9): error TS1005: ';' expected.
+src/components/UserProfile.tsx(54,3): error TS1128: Declaration or statement expected.
+src/components/UserProfile.tsx(145,1): error TS1128: Declaration or statement expected.
+src/components/VirtualScroll.tsx(49,6): error TS1005: ')' expected.
+src/components/VirtualScroll.tsx(54,6): error TS1005: ')' expected.
+src/components/VoiceAnalyticsDashboard.tsx(262,17): error TS1005: '}' expected.
+src/components/VoiceAnalyticsDashboard.tsx(587,25): error TS1005: '}' expected.
+src/components/VoiceAnalyticsDashboard.tsx(589,23): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/VoiceAnalyticsDashboard.tsx(611,23): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/VoiceAnalyticsDashboard.tsx(614,15): error TS1005: ')' expected.
+src/components/VoiceAnalyticsDashboard.tsx(614,17): error TS17002: Expected corresponding JSX closing tag for 'motion.div'.
+src/components/VoiceAnalyticsDashboard.tsx(615,14): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/VoiceAnalyticsDashboard.tsx(705,13): error TS17002: Expected corresponding JSX closing tag for 'AnimatePresence'.
+src/components/VoiceAnalyticsDashboard.tsx(706,11): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/VoiceAnalyticsDashboard.tsx(708,5): error TS1005: ')' expected.
+src/components/VoiceAnalyticsDashboard.tsx(709,3): error TS1109: Expression expected.
+src/components/VoiceAnalyticsDashboard.tsx(710,1): error TS1128: Declaration or statement expected.
+src/components/VoiceCloning.tsx(99,7): error TS1005: ',' expected.
+src/components/VoiceCloning.tsx(183,5): error TS1005: ',' expected.
+src/components/VoiceCloning.tsx(208,7): error TS1005: ',' expected.
+src/components/VoiceCloning.tsx(422,21): error TS1005: '}' expected.
+src/components/VoiceCloning.tsx(424,19): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/VoiceCloning.tsx(454,19): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/VoiceCloning.tsx(456,13): error TS1005: ')' expected.
+src/components/VoiceCloning.tsx(457,12): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/VoiceCloning.tsx(508,5): error TS1005: ')' expected.
+src/components/VoiceCloning.tsx(509,3): error TS1109: Expression expected.
+src/components/VoiceCloning.tsx(510,1): error TS1128: Declaration or statement expected.
+src/components/VoiceSelector.tsx(131,19): error TS1005: '}' expected.
+src/components/VoiceSelector.tsx(133,17): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/VoiceSelector.tsx(135,19): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/VoiceSelector.tsx(136,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/VoiceSelector.tsx(143,11): error TS1005: ')' expected.
+src/components/VoiceSelector.tsx(144,10): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/VoiceSelector.tsx(184,5): error TS1005: ')' expected.
+src/components/VoiceSelector.tsx(185,3): error TS1109: Expression expected.
+src/components/VoiceSelector.tsx(186,1): error TS1128: Declaration or statement expected.
+src/components/VoiceSelector.tsx(355,17): error TS1005: ',' expected.
+src/components/VoiceSettings.tsx(220,19): error TS1005: '}' expected.
+src/components/VoiceSettings.tsx(227,17): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/VoiceSettings.tsx(240,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/VoiceSettings.tsx(326,23): error TS1005: '}' expected.
+src/components/VoiceSettings.tsx(333,33): error TS1005: '}' expected.
+src/components/VoiceSettings.tsx(333,88): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/VoiceSettings.tsx(335,27): error TS17002: Expected corresponding JSX closing tag for 'select'.
+src/components/VoiceSettings.tsx(336,25): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/VoiceSettings.tsx(337,23): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/VoiceSettings.tsx(338,19): error TS1005: ')' expected.
+src/components/VoiceSettings.tsx(340,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/VoiceSettings.tsx(340,17): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/VoiceSettings.tsx(462,9): error TS1005: ')' expected.
+src/components/VoiceSettings.tsx(477,7): error TS1128: Declaration or statement expected.
+src/components/VoiceSettings.tsx(478,5): error TS1109: Expression expected.
+src/components/VoiceSettings.tsx(479,3): error TS1109: Expression expected.
+src/components/VoiceSettings.tsx(480,1): error TS1128: Declaration or statement expected.
+src/components/WakeUpFeedbackModal.tsx(105,4): error TS1005: ')' expected.
+src/components/WakeUpFeedbackModal.tsx(168,19): error TS1005: '}' expected.
+src/components/WakeUpFeedbackModal.tsx(332,15): error TS1005: '}' expected.
+src/components/WakeUpFeedbackModal.tsx(368,1): error TS1005: '}' expected.
+src/components/animations/AnimationLibrary.tsx(613,5): error TS1005: ',' expected.
+src/components/animations/MicroInteractions.tsx(136,11): error TS1005: '}' expected.
+src/components/animations/MicroInteractions.tsx(236,4): error TS1005: ')' expected.
+src/components/animations/MicroInteractions.tsx(492,7): error TS1005: ',' expected.
+src/components/animations/MicroInteractions.tsx(534,13): error TS1005: '}' expected.
+src/components/animations/MicroInteractions.tsx(546,12): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/animations/MicroInteractions.tsx(547,11): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/premium/EnhancedUpgradePrompt.tsx(78,13): error TS1005: ')' expected.
+src/components/premium/EnhancedUpgradePrompt.tsx(498,2): error TS1005: ')' expected.
+src/components/premium/EnhancedUpgradePrompt.tsx(501,1): error TS1005: '}' expected.
+src/components/premium/PaymentFlow.tsx(457,23): error TS1005: '}' expected.
+src/components/premium/PaymentFlow.tsx(474,23): error TS1005: '}' expected.
+src/components/premium/PaymentFlow.tsx(491,23): error TS1005: '}' expected.
+src/components/premium/PaymentFlow.tsx(508,23): error TS1005: '}' expected.
+src/components/premium/PaymentFlow.tsx(629,17): error TS1005: '}' expected.
+src/components/premium/PremiumFeaturePreview.tsx(51,13): error TS1005: ')' expected.
+src/components/premium/PremiumFeaturePreview.tsx(54,3): error TS1005: ',' expected.
+src/components/premium/PremiumFeaturePreview.tsx(54,4): error TS1128: Declaration or statement expected.
+src/components/premium/PremiumFeaturePreview.tsx(54,26): error TS1005: ';' expected.
+src/components/premium/PremiumTeamFeatures.tsx(157,15): error TS1005: '}' expected.
+src/components/premium/PremiumTeamFeatures.tsx(159,13): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/premium/PremiumTeamFeatures.tsx(185,13): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/premium/PremiumTeamFeatures.tsx(186,11): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/premium/PremiumTeamFeatures.tsx(198,9): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/premium/PremiumTeamFeatures.tsx(199,5): error TS1005: ')' expected.
+src/components/premium/PremiumTeamFeatures.tsx(200,3): error TS1109: Expression expected.
+src/components/premium/PremiumTeamFeatures.tsx(312,15): error TS1005: '}' expected.
+src/components/premium/PremiumTeamFeatures.tsx(314,13): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/premium/PremiumTeamFeatures.tsx(333,13): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/premium/PremiumTeamFeatures.tsx(334,11): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/premium/PremiumTeamFeatures.tsx(340,9): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/premium/PremiumTeamFeatures.tsx(341,5): error TS1005: ')' expected.
+src/components/premium/PremiumTeamFeatures.tsx(342,3): error TS1109: Expression expected.
+src/components/premium/PremiumTeamFeatures.tsx(386,17): error TS1005: ')' expected.
+src/components/premium/PremiumTeamFeatures.tsx(388,15): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/premium/PremiumTeamFeatures.tsx(407,12): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/premium/PremiumTeamFeatures.tsx(408,11): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/premium/PremiumTeamFeatures.tsx(418,17): error TS1005: '}' expected.
+src/components/premium/PremiumTeamFeatures.tsx(420,15): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/premium/PremiumTeamFeatures.tsx(438,14): error TS1005: '}' expected.
+src/components/premium/PremiumTeamFeatures.tsx(438,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/premium/PremiumTeamFeatures.tsx(439,13): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/premium/PremiumTeamFeatures.tsx(459,7): error TS1128: Declaration or statement expected.
+src/components/premium/PremiumTeamFeatures.tsx(460,5): error TS1109: Expression expected.
+src/components/premium/PremiumTeamFeatures.tsx(461,3): error TS1109: Expression expected.
+src/components/premium/PremiumTeamFeatures.tsx(462,1): error TS1128: Declaration or statement expected.
+src/components/premium/PremiumTeamFeatures.tsx(567,16): error TS1109: Expression expected.
+src/components/premium/PremiumTeamFeatures.tsx(568,13): error TS1109: Expression expected.
+src/components/premium/PremiumVoiceFeatures.tsx(125,17): error TS1005: ')' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(125,25): error TS1005: ':' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(126,17): error TS1005: ',' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(126,25): error TS1005: ':' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(127,17): error TS1005: ',' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(127,26): error TS1005: ':' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(128,16): error TS1109: Expression expected.
+src/components/premium/PremiumVoiceFeatures.tsx(129,13): error TS1109: Expression expected.
+src/components/premium/PremiumVoiceFeatures.tsx(140,17): error TS1005: ')' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(140,25): error TS1005: ':' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(141,17): error TS1005: ',' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(141,25): error TS1005: ':' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(142,17): error TS1005: ',' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(142,26): error TS1005: ':' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(143,16): error TS1109: Expression expected.
+src/components/premium/PremiumVoiceFeatures.tsx(144,13): error TS1109: Expression expected.
+src/components/premium/PremiumVoiceFeatures.tsx(157,17): error TS1005: ')' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(157,25): error TS1005: ':' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(158,17): error TS1005: ',' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(158,25): error TS1005: ':' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(159,17): error TS1005: ',' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(159,26): error TS1005: ':' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(160,16): error TS1109: Expression expected.
+src/components/premium/PremiumVoiceFeatures.tsx(161,13): error TS1109: Expression expected.
+src/components/premium/PremiumVoiceFeatures.tsx(186,21): error TS1005: ',' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(287,12): error TS1109: Expression expected.
+src/components/premium/PremiumVoiceFeatures.tsx(292,12): error TS1109: Expression expected.
+src/components/premium/PremiumVoiceFeatures.tsx(296,9): error TS1005: '}' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(352,18): error TS1109: Expression expected.
+src/components/premium/PremiumVoiceFeatures.tsx(353,15): error TS1109: Expression expected.
+src/components/premium/PremiumVoiceFeatures.tsx(401,14): error TS1109: Expression expected.
+src/components/premium/PremiumVoiceFeatures.tsx(413,11): error TS1005: '}' expected.
+src/components/premium/PremiumVoiceFeatures.tsx(487,15): error TS1005: '}' expected.
+src/components/premium/PsychologyDrivenCTA.tsx(86,5): error TS1005: ',' expected.
+src/components/premium/SubscriptionManagement.tsx(347,21): error TS2657: JSX expressions must have one parent element.
+src/components/premium/SubscriptionManagement.tsx(361,27): error TS2657: JSX expressions must have one parent element.
+src/components/premium/SubscriptionManagement.tsx(371,25): error TS1005: ')' expected.
+src/components/premium/SubscriptionManagement.tsx(371,27): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/premium/SubscriptionManagement.tsx(430,21): error TS1005: ')' expected.
+src/components/premium/SubscriptionManagement.tsx(430,23): error TS17002: Expected corresponding JSX closing tag for 'DialogContent'.
+src/components/premium/SubscriptionManagement.tsx(485,20): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/premium/SubscriptionManagement.tsx(509,19): error TS17002: Expected corresponding JSX closing tag for 'Dialog'.
+src/components/premium/SubscriptionManagement.tsx(510,15): error TS1005: ')' expected.
+src/components/premium/SubscriptionManagement.tsx(510,17): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/premium/SubscriptionManagement.tsx(511,14): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/premium/SubscriptionManagement.tsx(527,13): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/premium/SubscriptionManagement.tsx(528,11): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/premium/SubscriptionManagement.tsx(529,9): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/premium/SubscriptionManagement.tsx(531,7): error TS1005: ')' expected.
+src/components/premium/SubscriptionManagement.tsx(615,5): error TS1128: Declaration or statement expected.
+src/components/premium/SubscriptionManagement.tsx(616,3): error TS1109: Expression expected.
+src/components/ui/sidebar.tsx(96,3): error TS1109: Expression expected.
+src/components/user-testing/BetaTestingProgram.tsx(227,5): error TS1005: ',' expected.
+src/components/user-testing/BetaTestingProgram.tsx(229,6): error TS1005: ')' expected.
+src/components/user-testing/BetaTestingProgram.tsx(400,21): error TS1005: '}' expected.
+src/components/user-testing/BetaTestingProgram.tsx(400,37): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/user-testing/BetaTestingProgram.tsx(495,17): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/user-testing/BetaTestingProgram.tsx(496,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/user-testing/BetaTestingProgram.tsx(497,13): error TS17002: Expected corresponding JSX closing tag for 'TabsContent'.
+src/components/user-testing/BetaTestingProgram.tsx(498,11): error TS17002: Expected corresponding JSX closing tag for 'Tabs'.
+src/components/user-testing/BetaTestingProgram.tsx(500,10): error TS17008: JSX element 'TabsContent' has no corresponding closing tag.
+src/components/user-testing/BetaTestingProgram.tsx(506,21): error TS1005: '}' expected.
+src/components/user-testing/BetaTestingProgram.tsx(506,36): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/user-testing/BetaTestingProgram.tsx(515,38): error TS1005: ',' expected.
+src/components/user-testing/BetaTestingProgram.tsx(558,17): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/user-testing/BetaTestingProgram.tsx(559,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/user-testing/BetaTestingProgram.tsx(561,9): error TS1005: ')' expected.
+src/components/user-testing/BetaTestingProgram.tsx(569,21): error TS1005: '}' expected.
+src/components/user-testing/BetaTestingProgram.tsx(569,34): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/user-testing/BetaTestingProgram.tsx(599,17): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/user-testing/BetaTestingProgram.tsx(600,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/user-testing/BetaTestingProgram.tsx(601,13): error TS17002: Expected corresponding JSX closing tag for 'TabsContent'.
+src/components/user-testing/BetaTestingProgram.tsx(602,9): error TS1128: Declaration or statement expected.
+src/components/user-testing/BetaTestingProgram.tsx(603,7): error TS1109: Expression expected.
+src/components/user-testing/BetaTestingProgram.tsx(606,15): error TS1005: ';' expected.
+src/components/user-testing/BetaTestingProgram.tsx(606,40): error TS1005: ';' expected.
+src/components/user-testing/BetaTestingProgram.tsx(620,19): error TS1005: '}' expected.
+src/components/user-testing/BetaTestingProgram.tsx(699,25): error TS1005: '}' expected.
+src/components/user-testing/BetaTestingProgram.tsx(728,7): error TS1128: Declaration or statement expected.
+src/components/user-testing/BetaTestingProgram.tsx(731,15): error TS1005: ';' expected.
+src/components/user-testing/BetaTestingProgram.tsx(731,38): error TS1005: ';' expected.
+src/components/user-testing/BetaTestingProgram.tsx(744,17): error TS1005: '}' expected.
+src/components/user-testing/BetaTestingProgram.tsx(768,7): error TS1128: Declaration or statement expected.
+src/components/user-testing/BetaTestingProgram.tsx(769,5): error TS1109: Expression expected.
+src/components/user-testing/BetaTestingProgram.tsx(770,3): error TS1109: Expression expected.
+src/components/user-testing/BugReportModal.tsx(156,3): error TS1005: ',' expected.
+src/components/user-testing/BugReportModal.tsx(169,9): error TS1005: ',' expected.
+src/components/user-testing/BugReportModal.tsx(169,25): error TS1005: ',' expected.
+src/components/user-testing/BugReportModal.tsx(170,23): error TS1005: ',' expected.
+src/components/user-testing/BugReportModal.tsx(173,19): error TS1005: ',' expected.
+src/components/user-testing/BugReportModal.tsx(177,7): error TS1135: Argument expression expected.
+src/components/user-testing/BugReportModal.tsx(270,21): error TS1005: '}' expected.
+src/components/user-testing/BugReportModal.tsx(282,21): error TS1005: '}' expected.
+src/components/user-testing/BugReportModal.tsx(375,21): error TS1005: '}' expected.
+src/components/user-testing/BugReportModal.tsx(387,21): error TS1005: '}' expected.
+src/components/user-testing/BugReportModal.tsx(419,29): error TS1005: '}' expected.
+src/components/user-testing/BugReportModal.tsx(445,23): error TS1005: '}' expected.
+src/components/user-testing/BugReportModal.tsx(467,27): error TS1005: '}' expected.
+src/components/user-testing/BugReportModal.tsx(470,25): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/user-testing/BugReportModal.tsx(479,27): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/user-testing/BugReportModal.tsx(480,24): error TS1005: '}' expected.
+src/components/user-testing/BugReportModal.tsx(480,25): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/user-testing/BugReportModal.tsx(482,20): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/user-testing/BugReportModal.tsx(484,17): error TS17002: Expected corresponding JSX closing tag for 'TabsContent'.
+src/components/user-testing/BugReportModal.tsx(485,15): error TS17002: Expected corresponding JSX closing tag for 'form'.
+src/components/user-testing/BugReportModal.tsx(601,13): error TS17002: Expected corresponding JSX closing tag for 'Tabs'.
+src/components/user-testing/BugReportModal.tsx(602,11): error TS17002: Expected corresponding JSX closing tag for 'DialogContent'.
+src/components/user-testing/BugReportModal.tsx(605,9): error TS17002: Expected corresponding JSX closing tag for 'Dialog'.
+src/components/user-testing/BugReportModal.tsx(606,5): error TS1005: ')' expected.
+src/components/user-testing/BugReportModal.tsx(607,3): error TS1109: Expression expected.
+src/components/user-testing/FeedbackModal.tsx(273,19): error TS1005: '}' expected.
+src/components/user-testing/FeedbackModal.tsx(285,19): error TS1005: '}' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(214,15): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(214,58): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(215,9): error TS1005: ')' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(216,7): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(219,4): error TS1472: 'catch' or 'finally' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(224,5): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(230,5): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(369,15): error TS1005: ')' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(369,26): error TS1136: Property assignment expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(373,17): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(445,28): error TS1136: Property assignment expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(452,15): error TS1005: ')' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(452,17): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/user-testing/RedesignedFeedbackModal.tsx(453,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/user-testing/RedesignedFeedbackModal.tsx(462,9): error TS1005: ')' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(495,7): error TS1128: Declaration or statement expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(496,5): error TS1109: Expression expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(513,13): error TS1005: ')' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(514,13): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(515,13): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(516,12): error TS1109: Expression expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(517,9): error TS1109: Expression expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(529,13): error TS1005: ')' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(530,13): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(531,13): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(531,20): error TS1005: ':' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(532,12): error TS1109: Expression expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(543,9): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(558,14): error TS1109: Expression expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(559,11): error TS1109: Expression expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(583,17): error TS1005: ')' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(583,28): error TS1136: Property assignment expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(587,19): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(653,24): error TS1005: ')' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(654,21): error TS1005: '}' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(685,25): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackModal.tsx(888,1): error TS1128: Declaration or statement expected.
+src/components/user-testing/RedesignedFeedbackWidget.tsx(154,7): error TS1005: ',' expected.
+src/components/user-testing/RedesignedFeedbackWidget.tsx(155,5): error TS1005: ',' expected.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(263,5): error TS2657: JSX expressions must have one parent element.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(510,26): error TS1005: '}' expected.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(510,77): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(545,20): error TS1005: ':' expected.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(545,21): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(546,19): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(551,16): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(552,15): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(553,13): error TS17002: Expected corresponding JSX closing tag for 'TabsContent'.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(554,11): error TS17002: Expected corresponding JSX closing tag for 'Tabs'.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(568,26): error TS1005: '}' expected.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(568,72): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(596,20): error TS1005: ':' expected.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(596,21): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(597,19): error TS17002: Expected corresponding JSX closing tag for 'CardContent'.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(602,16): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(603,15): error TS17002: Expected corresponding JSX closing tag for 'Card'.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(604,13): error TS17002: Expected corresponding JSX closing tag for 'TabsContent'.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(605,11): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(634,7): error TS1005: ')' expected.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(635,5): error TS1109: Expression expected.
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx(636,3): error TS1109: Expression expected.
+src/contexts/FeatureAccessContext.tsx(277,1): error TS1185: Merge conflict marker encountered.
+src/contexts/FeatureAccessContext.tsx(286,1): error TS1185: Merge conflict marker encountered.
+src/contexts/FeatureAccessContext.tsx(289,1): error TS1185: Merge conflict marker encountered.
+src/hooks/useABTesting.tsx(79,9): error TS1005: ':' expected.
+src/hooks/useABTesting.tsx(81,11): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(82,70): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(85,11): error TS1003: Identifier expected.
+src/hooks/useABTesting.tsx(90,7): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(90,13): error TS1005: ':' expected.
+src/hooks/useABTesting.tsx(90,73): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(91,13): error TS1005: ':' expected.
+src/hooks/useABTesting.tsx(91,86): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(93,21): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(93,38): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(93,40): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(95,13): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(95,55): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(96,13): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(96,32): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(98,22): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(98,51): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(98,53): error TS1005: ';' expected.
+src/hooks/useABTesting.tsx(101,11): error TS1128: Declaration or statement expected.
+src/hooks/useABTesting.tsx(121,9): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(122,17): error TS1005: ',' expected.
+src/hooks/useABTesting.tsx(128,5): error TS1128: Declaration or statement expected.
+src/hooks/useABTesting.tsx(128,7): error TS1005: 'try' expected.
+src/hooks/useABTesting.tsx(136,3): error TS1128: Declaration or statement expected.
+src/hooks/useABTesting.tsx(256,1): error TS1128: Declaration or statement expected.
+src/hooks/useAccessibility.ts(234,5): error TS1005: ',' expected.
+src/hooks/useAccessibility.ts(234,38): error TS1005: ')' expected.
+src/hooks/useAdvancedAlarms.ts(83,7): error TS1005: ',' expected.
+src/hooks/useAdvancedAlarms.ts(83,21): error TS1005: ')' expected.
+src/hooks/useAudioLazyLoading.ts(36,9): error TS1005: ':' expected.
+src/hooks/useAudioLazyLoading.ts(37,13): error TS1005: ':' expected.
+src/hooks/useAudioLazyLoading.ts(61,9): error TS1005: ',' expected.
+src/hooks/useAudioLazyLoading.ts(64,16): error TS1138: Parameter declaration expected.
+src/hooks/useAudioLazyLoading.ts(64,21): error TS1005: ',' expected.
+src/hooks/useAudioLazyLoading.ts(64,28): error TS1005: ',' expected.
+src/hooks/useAudioLazyLoading.ts(69,9): error TS1005: ';' expected.
+src/hooks/useAudioLazyLoading.ts(70,7): error TS1005: 'try' expected.
+src/hooks/useAudioLazyLoading.ts(77,3): error TS1128: Declaration or statement expected.
+src/hooks/useAudioLazyLoading.ts(77,4): error TS1128: Declaration or statement expected.
+src/hooks/useAudioLazyLoading.ts(77,23): error TS1005: ';' expected.
+src/hooks/useAudioLazyLoading.ts(93,1): error TS1128: Declaration or statement expected.
+src/hooks/useAuth.ts(287,18): error TS1005: ',' expected.
+src/hooks/useAuth.ts(287,65): error TS1005: ',' expected.
+src/hooks/useAuth.ts(288,15): error TS1005: ':' expected.
+src/hooks/useAuth.ts(291,7): error TS1005: ')' expected.
+src/hooks/useAuth.ts(311,7): error TS1005: 'try' expected.
+src/hooks/useAuth.ts(330,4): error TS1472: 'catch' or 'finally' expected.
+src/hooks/useAuth.ts(363,18): error TS1005: ',' expected.
+src/hooks/useAuth.ts(363,65): error TS1005: ',' expected.
+src/hooks/useAuth.ts(364,15): error TS1005: ':' expected.
+src/hooks/useAuth.ts(367,7): error TS1005: ')' expected.
+src/hooks/useAuth.ts(387,7): error TS1005: 'try' expected.
+src/hooks/useAuth.ts(406,4): error TS1472: 'catch' or 'finally' expected.
+src/hooks/useAuth.ts(411,9): error TS1005: ':' expected.
+src/hooks/useAuth.ts(412,13): error TS1005: ':' expected.
+src/hooks/useAuth.ts(412,55): error TS1005: ',' expected.
+src/hooks/useAuth.ts(413,13): error TS1005: ':' expected.
+src/hooks/useAuth.ts(413,40): error TS1005: ',' expected.
+src/hooks/useAuth.ts(415,13): error TS1005: ':' expected.
+src/hooks/useAuth.ts(415,56): error TS1005: ',' expected.
+src/hooks/useAuth.ts(419,15): error TS1005: ':' expected.
+src/hooks/useAuth.ts(422,7): error TS1005: ')' expected.
+src/hooks/useAuth.ts(427,10): error TS1005: ')' expected.
+src/hooks/useAuth.ts(430,7): error TS1005: ',' expected.
+src/hooks/useAuth.ts(449,4): error TS1005: ',' expected.
+src/hooks/useAuth.ts(451,9): error TS1005: ':' expected.
+src/hooks/useAuth.ts(479,18): error TS1005: ',' expected.
+src/hooks/useAuth.ts(479,80): error TS1005: ',' expected.
+src/hooks/useAuth.ts(480,15): error TS1005: ':' expected.
+src/hooks/useAuth.ts(483,7): error TS1005: ')' expected.
+src/hooks/useAuth.ts(488,10): error TS1005: ')' expected.
+src/hooks/useAuth.ts(491,7): error TS1005: 'try' expected.
+src/hooks/useAuth.ts(510,4): error TS1472: 'catch' or 'finally' expected.
+src/hooks/useAuth.ts(514,4): error TS1005: ')' expected.
+src/hooks/useAuth.ts(523,9): error TS1005: ':' expected.
+src/hooks/useAuth.ts(524,13): error TS1005: ':' expected.
+src/hooks/useAuth.ts(524,55): error TS1005: ',' expected.
+src/hooks/useAuth.ts(527,13): error TS1005: ':' expected.
+src/hooks/useAuth.ts(534,37): error TS1005: ',' expected.
+src/hooks/useAuth.ts(538,15): error TS1005: ':' expected.
+src/hooks/useAuth.ts(542,7): error TS1005: ')' expected.
+src/hooks/useAuth.ts(558,7): error TS1005: ',' expected.
+src/hooks/useAuth.ts(577,4): error TS1005: ',' expected.
+src/hooks/useAuth.ts(579,10): error TS1005: ':' expected.
+src/hooks/useAuth.ts(590,4): error TS1005: ',' expected.
+src/hooks/useAuth.ts(593,1): error TS1005: ')' expected.
+src/hooks/useAuth.ts(594,1): error TS1005: '}' expected.
+src/hooks/useCriticalPreloading.ts(48,9): error TS1005: ':' expected.
+src/hooks/useCriticalPreloading.ts(49,13): error TS1005: ':' expected.
+src/hooks/useCriticalPreloading.ts(49,83): error TS1005: ',' expected.
+src/hooks/useCriticalPreloading.ts(52,13): error TS1005: ':' expected.
+src/hooks/useCriticalPreloading.ts(52,40): error TS1005: ',' expected.
+src/hooks/useCriticalPreloading.ts(53,12): error TS1359: Identifier expected. 'const' is a reserved word that cannot be used here.
+src/hooks/useCriticalPreloading.ts(53,18): error TS1005: ',' expected.
+src/hooks/useCriticalPreloading.ts(53,24): error TS1005: ',' expected.
+src/hooks/useCriticalPreloading.ts(53,27): error TS1005: ',' expected.
+src/hooks/useCriticalPreloading.ts(60,7): error TS1005: ',' expected.
+src/hooks/useCriticalPreloading.ts(60,16): error TS1138: Parameter declaration expected.
+src/hooks/useCriticalPreloading.ts(60,21): error TS1005: ',' expected.
+src/hooks/useCriticalPreloading.ts(60,28): error TS1005: ',' expected.
+src/hooks/useCriticalPreloading.ts(65,9): error TS1005: ';' expected.
+src/hooks/useCriticalPreloading.ts(68,7): error TS1005: 'try' expected.
+src/hooks/useCriticalPreloading.ts(72,3): error TS1005: ')' expected.
+src/hooks/useCriticalPreloading.ts(72,4): error TS1128: Declaration or statement expected.
+src/hooks/useCriticalPreloading.ts(72,33): error TS1005: ';' expected.
+src/hooks/useCriticalPreloading.ts(77,9): error TS1005: ')' expected.
+src/hooks/useCriticalPreloading.ts(107,1): error TS1005: ',' expected.
+src/hooks/useDeviceCapabilities.tsx(174,3): error TS1005: ',' expected.
+src/hooks/useDeviceCapabilities.tsx(180,5): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(61,11): error TS1005: ':' expected.
+src/hooks/useEmotionalNotifications.ts(62,15): error TS1005: ':' expected.
+src/hooks/useEmotionalNotifications.ts(63,83): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(65,18): error TS1138: Parameter declaration expected.
+src/hooks/useEmotionalNotifications.ts(65,23): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(65,30): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(69,11): error TS1005: ';' expected.
+src/hooks/useEmotionalNotifications.ts(81,9): error TS1005: 'try' expected.
+src/hooks/useEmotionalNotifications.ts(95,5): error TS1128: Declaration or statement expected.
+src/hooks/useEmotionalNotifications.ts(95,6): error TS1128: Declaration or statement expected.
+src/hooks/useEmotionalNotifications.ts(95,25): error TS1005: ';' expected.
+src/hooks/useEmotionalNotifications.ts(146,11): error TS1005: ':' expected.
+src/hooks/useEmotionalNotifications.ts(149,18): error TS1138: Parameter declaration expected.
+src/hooks/useEmotionalNotifications.ts(149,23): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(149,30): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(155,11): error TS1005: ';' expected.
+src/hooks/useEmotionalNotifications.ts(161,7): error TS1128: Declaration or statement expected.
+src/hooks/useEmotionalNotifications.ts(161,9): error TS1005: 'try' expected.
+src/hooks/useEmotionalNotifications.ts(168,5): error TS1128: Declaration or statement expected.
+src/hooks/useEmotionalNotifications.ts(168,6): error TS1128: Declaration or statement expected.
+src/hooks/useEmotionalNotifications.ts(170,3): error TS1128: Declaration or statement expected.
+src/hooks/useEmotionalNotifications.ts(205,25): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(209,11): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(210,9): error TS1005: ')' expected.
+src/hooks/useEmotionalNotifications.ts(213,6): error TS1472: 'catch' or 'finally' expected.
+src/hooks/useEmotionalNotifications.ts(215,3): error TS1128: Declaration or statement expected.
+src/hooks/useEmotionalNotifications.ts(221,21): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(223,7): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(224,15): error TS1005: ')' expected.
+src/hooks/useEmotionalNotifications.ts(277,1): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(323,11): error TS1005: ':' expected.
+src/hooks/useEmotionalNotifications.ts(324,25): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(327,11): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(328,9): error TS1005: ',' expected.
+src/hooks/useEmotionalNotifications.ts(333,4): error TS1005: ')' expected.
+src/hooks/useEmotionalNotifications.ts(337,1): error TS1005: ')' expected.
+src/hooks/useEnhancedCaching.ts(61,9): error TS1005: ':' expected.
+src/hooks/useEnhancedCaching.ts(62,13): error TS1005: ',' expected.
+src/hooks/useEnhancedCaching.ts(62,33): error TS1005: ',' expected.
+src/hooks/useEnhancedCaching.ts(62,44): error TS1005: ',' expected.
+src/hooks/useEnhancedCaching.ts(63,21): error TS1138: Parameter declaration expected.
+src/hooks/useEnhancedCaching.ts(63,26): error TS1005: ',' expected.
+src/hooks/useEnhancedCaching.ts(63,33): error TS1005: ',' expected.
+src/hooks/useEnhancedCaching.ts(66,9): error TS1005: ';' expected.
+src/hooks/useEnhancedCaching.ts(67,7): error TS1005: 'try' expected.
+src/hooks/useEnhancedCaching.ts(71,3): error TS1005: ')' expected.
+src/hooks/useEnhancedCaching.ts(71,4): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedCaching.ts(71,19): error TS1005: ';' expected.
+src/hooks/useEnhancedCaching.ts(77,11): error TS1005: ':' expected.
+src/hooks/useEnhancedCaching.ts(78,15): error TS1005: ',' expected.
+src/hooks/useEnhancedCaching.ts(78,35): error TS1005: ',' expected.
+src/hooks/useEnhancedCaching.ts(78,53): error TS1005: ',' expected.
+src/hooks/useEnhancedCaching.ts(79,9): error TS1005: ',' expected.
+src/hooks/useEnhancedCaching.ts(79,17): error TS1005: ':' expected.
+src/hooks/useEnhancedCaching.ts(80,23): error TS1138: Parameter declaration expected.
+src/hooks/useEnhancedCaching.ts(80,28): error TS1005: ',' expected.
+src/hooks/useEnhancedCaching.ts(80,35): error TS1005: ',' expected.
+src/hooks/useEnhancedCaching.ts(83,5): error TS1005: ')' expected.
+src/hooks/useEnhancedCaching.ts(83,6): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedCaching.ts(85,3): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedCaching.ts(121,1): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedCaching.ts(233,5): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(29,13): error TS1005: ':' expected.
+src/hooks/useEnhancedServiceWorker.ts(29,62): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(41,9): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(41,14): error TS1005: ':' expected.
+src/hooks/useEnhancedServiceWorker.ts(42,18): error TS1138: Parameter declaration expected.
+src/hooks/useEnhancedServiceWorker.ts(42,23): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(42,30): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(45,11): error TS1005: ';' expected.
+src/hooks/useEnhancedServiceWorker.ts(47,5): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(47,7): error TS1005: 'try' expected.
+src/hooks/useEnhancedServiceWorker.ts(54,3): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(54,4): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(54,8): error TS1005: ';' expected.
+src/hooks/useEnhancedServiceWorker.ts(90,15): error TS1005: ':' expected.
+src/hooks/useEnhancedServiceWorker.ts(90,72): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(94,11): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(94,16): error TS1005: ':' expected.
+src/hooks/useEnhancedServiceWorker.ts(95,20): error TS1138: Parameter declaration expected.
+src/hooks/useEnhancedServiceWorker.ts(95,25): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(95,32): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(98,13): error TS1005: ';' expected.
+src/hooks/useEnhancedServiceWorker.ts(99,9): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(102,7): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(102,9): error TS1005: 'try' expected.
+src/hooks/useEnhancedServiceWorker.ts(110,5): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(110,6): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(112,3): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(120,15): error TS1005: ':' expected.
+src/hooks/useEnhancedServiceWorker.ts(120,72): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(124,11): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(124,16): error TS1005: ':' expected.
+src/hooks/useEnhancedServiceWorker.ts(125,20): error TS1138: Parameter declaration expected.
+src/hooks/useEnhancedServiceWorker.ts(125,25): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(125,32): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(128,13): error TS1005: ';' expected.
+src/hooks/useEnhancedServiceWorker.ts(129,9): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(132,7): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(132,9): error TS1005: 'try' expected.
+src/hooks/useEnhancedServiceWorker.ts(140,5): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(140,6): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(142,3): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(150,15): error TS1005: ':' expected.
+src/hooks/useEnhancedServiceWorker.ts(150,72): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(154,11): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(154,16): error TS1005: ':' expected.
+src/hooks/useEnhancedServiceWorker.ts(155,20): error TS1138: Parameter declaration expected.
+src/hooks/useEnhancedServiceWorker.ts(155,25): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(155,32): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(158,13): error TS1005: ';' expected.
+src/hooks/useEnhancedServiceWorker.ts(159,9): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(162,7): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(162,9): error TS1005: 'try' expected.
+src/hooks/useEnhancedServiceWorker.ts(170,5): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(170,6): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(172,3): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(179,13): error TS1005: ':' expected.
+src/hooks/useEnhancedServiceWorker.ts(179,73): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(181,22): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(181,44): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(182,18): error TS1138: Parameter declaration expected.
+src/hooks/useEnhancedServiceWorker.ts(182,23): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(182,30): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(187,11): error TS1005: ';' expected.
+src/hooks/useEnhancedServiceWorker.ts(190,7): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(190,9): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(197,5): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(197,7): error TS1005: 'try' expected.
+src/hooks/useEnhancedServiceWorker.ts(205,3): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(205,4): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(205,8): error TS1005: ';' expected.
+src/hooks/useEnhancedServiceWorker.ts(212,13): error TS1005: ':' expected.
+src/hooks/useEnhancedServiceWorker.ts(212,84): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(214,16): error TS1138: Parameter declaration expected.
+src/hooks/useEnhancedServiceWorker.ts(214,21): error TS1005: ',' expected.
+src/hooks/useEnhancedServiceWorker.ts(214,28): error TS1005: ')' expected.
+src/hooks/useEnhancedServiceWorker.ts(217,9): error TS1005: ';' expected.
+src/hooks/useEnhancedServiceWorker.ts(220,5): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(220,7): error TS1005: 'try' expected.
+src/hooks/useEnhancedServiceWorker.ts(228,3): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(228,4): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedServiceWorker.ts(228,8): error TS1005: ';' expected.
+src/hooks/useEnhancedServiceWorker.ts(282,1): error TS1128: Declaration or statement expected.
+src/hooks/useEnhancedSmartAlarms.ts(149,7): error TS1005: ',' expected.
+src/hooks/useFeatureGate.ts(262,16): error TS1005: ',' expected.
+src/hooks/useFeatureGate.ts(266,9): error TS1005: ',' expected.
+src/hooks/useFeatureGate.ts(268,14): error TS1005: ':' expected.
+src/hooks/useFeatureGate.ts(268,18): error TS1005: ',' expected.
+src/hooks/useFeatureGate.ts(272,5): error TS1005: ')' expected.
+src/hooks/useFeatureGate.ts(277,7): error TS1005: ')' expected.
+src/hooks/useFeatureGate.ts(280,4): error TS1128: Declaration or statement expected.
+src/hooks/useFeatureGate.ts(280,58): error TS1005: ';' expected.
+src/hooks/useMobilePerformance.ts(98,6): error TS1005: ')' expected.
+src/hooks/useMobilePerformance.ts(104,8): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(76,9): error TS1005: ':' expected.
+src/hooks/usePushNotifications.ts(77,13): error TS1003: Identifier expected.
+src/hooks/usePushNotifications.ts(79,7): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(79,13): error TS1005: ':' expected.
+src/hooks/usePushNotifications.ts(79,65): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(81,13): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(83,7): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(83,17): error TS1138: Parameter declaration expected.
+src/hooks/usePushNotifications.ts(83,22): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(83,29): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(87,9): error TS1005: ';' expected.
+src/hooks/usePushNotifications.ts(99,5): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(99,7): error TS1005: 'try' expected.
+src/hooks/usePushNotifications.ts(115,3): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(115,4): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(115,27): error TS1005: ';' expected.
+src/hooks/usePushNotifications.ts(123,9): error TS1005: ':' expected.
+src/hooks/usePushNotifications.ts(124,13): error TS1003: Identifier expected.
+src/hooks/usePushNotifications.ts(127,7): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(127,13): error TS1005: ':' expected.
+src/hooks/usePushNotifications.ts(127,65): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(129,13): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(131,7): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(131,17): error TS1138: Parameter declaration expected.
+src/hooks/usePushNotifications.ts(131,22): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(131,29): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(135,9): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(135,14): error TS1005: ':' expected.
+src/hooks/usePushNotifications.ts(136,15): error TS1003: Identifier expected.
+src/hooks/usePushNotifications.ts(139,7): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(139,14): error TS1005: ':' expected.
+src/hooks/usePushNotifications.ts(139,21): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(140,7): error TS1005: ')' expected.
+src/hooks/usePushNotifications.ts(155,3): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(155,4): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(155,27): error TS1005: ';' expected.
+src/hooks/usePushNotifications.ts(164,11): error TS1005: ':' expected.
+src/hooks/usePushNotifications.ts(165,15): error TS1003: Identifier expected.
+src/hooks/usePushNotifications.ts(165,37): error TS1138: Parameter declaration expected.
+src/hooks/usePushNotifications.ts(166,34): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(167,10): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(167,11): error TS1005: ')' expected.
+src/hooks/usePushNotifications.ts(175,15): error TS1003: Identifier expected.
+src/hooks/usePushNotifications.ts(175,38): error TS1138: Parameter declaration expected.
+src/hooks/usePushNotifications.ts(176,26): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(179,11): error TS1005: ')' expected.
+src/hooks/usePushNotifications.ts(180,9): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(193,5): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(193,6): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(201,3): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(225,15): error TS1003: Identifier expected.
+src/hooks/usePushNotifications.ts(225,42): error TS1138: Parameter declaration expected.
+src/hooks/usePushNotifications.ts(226,25): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(228,11): error TS1005: ')' expected.
+src/hooks/usePushNotifications.ts(252,15): error TS1003: Identifier expected.
+src/hooks/usePushNotifications.ts(252,44): error TS1138: Parameter declaration expected.
+src/hooks/usePushNotifications.ts(254,5): error TS1005: ')' expected.
+src/hooks/usePushNotifications.ts(254,6): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(256,3): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(279,15): error TS1003: Identifier expected.
+src/hooks/usePushNotifications.ts(279,43): error TS1138: Parameter declaration expected.
+src/hooks/usePushNotifications.ts(281,5): error TS1005: ')' expected.
+src/hooks/usePushNotifications.ts(281,6): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(283,3): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(291,9): error TS1005: ':' expected.
+src/hooks/usePushNotifications.ts(292,13): error TS1003: Identifier expected.
+src/hooks/usePushNotifications.ts(294,7): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(294,13): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(294,36): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(294,59): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(296,17): error TS1138: Parameter declaration expected.
+src/hooks/usePushNotifications.ts(296,22): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(296,29): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(298,13): error TS1003: Identifier expected.
+src/hooks/usePushNotifications.ts(299,7): error TS1005: ')' expected.
+src/hooks/usePushNotifications.ts(312,3): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(312,4): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(312,13): error TS1005: ';' expected.
+src/hooks/usePushNotifications.ts(320,9): error TS1005: ':' expected.
+src/hooks/usePushNotifications.ts(321,13): error TS1003: Identifier expected.
+src/hooks/usePushNotifications.ts(324,7): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(324,13): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(324,36): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(324,71): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(326,13): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(328,7): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(328,17): error TS1138: Parameter declaration expected.
+src/hooks/usePushNotifications.ts(328,22): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(328,29): error TS1005: ',' expected.
+src/hooks/usePushNotifications.ts(334,9): error TS1005: ';' expected.
+src/hooks/usePushNotifications.ts(337,5): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(337,7): error TS1005: 'try' expected.
+src/hooks/usePushNotifications.ts(350,3): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(350,4): error TS1128: Declaration or statement expected.
+src/hooks/usePushNotifications.ts(350,27): error TS1005: ';' expected.
+src/hooks/usePushNotifications.ts(431,1): error TS1128: Declaration or statement expected.
+src/hooks/useSubscription.ts(159,11): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(160,15): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(161,77): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(162,15): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(163,69): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(164,15): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(164,79): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(166,18): error TS1138: Parameter declaration expected.
+src/hooks/useSubscription.ts(166,23): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(166,30): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(179,11): error TS1005: ';' expected.
+src/hooks/useSubscription.ts(188,9): error TS1005: 'try' expected.
+src/hooks/useSubscription.ts(202,5): error TS1128: Declaration or statement expected.
+src/hooks/useSubscription.ts(205,3): error TS1128: Declaration or statement expected.
+src/hooks/useSubscription.ts(205,4): error TS1128: Declaration or statement expected.
+src/hooks/useSubscription.ts(205,14): error TS1005: ';' expected.
+src/hooks/useSubscription.ts(325,11): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(326,15): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(330,10): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(332,19): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(332,27): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(332,29): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(333,17): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(333,38): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(335,24): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(335,32): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(335,34): error TS1005: ';' expected.
+src/hooks/useSubscription.ts(347,9): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(348,16): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(348,22): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(349,9): error TS1005: ')' expected.
+src/hooks/useSubscription.ts(353,16): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(353,55): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(355,5): error TS1005: ')' expected.
+src/hooks/useSubscription.ts(355,6): error TS1128: Declaration or statement expected.
+src/hooks/useSubscription.ts(357,3): error TS1128: Declaration or statement expected.
+src/hooks/useSubscription.ts(367,11): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(368,15): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(372,10): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(374,19): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(374,27): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(374,29): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(375,17): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(375,38): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(377,24): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(377,32): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(377,34): error TS1005: ';' expected.
+src/hooks/useSubscription.ts(389,9): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(390,16): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(390,22): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(391,9): error TS1005: ')' expected.
+src/hooks/useSubscription.ts(395,16): error TS1005: ':' expected.
+src/hooks/useSubscription.ts(395,55): error TS1005: ',' expected.
+src/hooks/useSubscription.ts(397,5): error TS1005: ')' expected.
+src/hooks/useSubscription.ts(397,6): error TS1128: Declaration or statement expected.
+src/hooks/useSubscription.ts(399,3): error TS1128: Declaration or statement expected.
+src/hooks/useSubscription.ts(433,7): error TS1005: ')' expected.
+src/hooks/useSubscription.ts(433,9): error TS1005: 'try' expected.
+src/hooks/useSubscription.ts(436,6): error TS1472: 'catch' or 'finally' expected.
+src/hooks/useSubscription.ts(438,3): error TS1128: Declaration or statement expected.
+src/hooks/useSubscription.ts(562,9): error TS1005: ')' expected.
+src/hooks/useSubscription.ts(634,1): error TS1005: ',' expected.
+src/hooks/useTheme.tsx(2203,5): error TS1005: ',' expected.
+src/hooks/useTheme.tsx(2416,3): error TS1109: Expression expected.
+src/services/alarm-backup-redundancy.ts(658,19): error TS1005: ')' expected.
+src/services/email-campaigns.ts(487,7): error TS1005: ',' expected.
+src/services/offline-manager.ts(517,7): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(289,3): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(289,11): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(289,17): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(289,36): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(289,57): error TS1011: An element access expression should take an argument.
+src/services/revenue-analytics.ts(291,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(291,18): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(291,30): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(291,31): error TS1109: Expression expected.
+src/services/revenue-analytics.ts(291,33): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(291,37): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(293,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(293,43): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(295,10): error TS1359: Identifier expected. 'const' is a reserved word that cannot be used here.
+src/services/revenue-analytics.ts(295,16): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(295,22): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(295,25): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(300,5): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(300,12): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(300,19): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(306,3): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(306,10): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(306,16): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(306,43): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(306,76): error TS1011: An element access expression should take an argument.
+src/services/revenue-analytics.ts(307,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(307,40): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(308,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(308,48): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(309,17): error TS1005: '{' expected.
+src/services/revenue-analytics.ts(309,24): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(309,30): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(311,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(318,6): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(320,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(320,18): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(320,42): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(320,43): error TS1109: Expression expected.
+src/services/revenue-analytics.ts(320,45): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(320,49): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(322,10): error TS1359: Identifier expected. 'const' is a reserved word that cannot be used here.
+src/services/revenue-analytics.ts(322,16): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(322,24): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(322,27): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(327,5): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(327,9): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(327,42): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(328,12): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(328,19): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(334,3): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(334,10): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(334,16): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(334,37): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(334,46): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(335,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(339,47): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(341,16): error TS1005: '{' expected.
+src/services/revenue-analytics.ts(341,22): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(341,27): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(343,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(343,18): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(350,11): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(355,10): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(355,11): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(355,13): error TS1109: Expression expected.
+src/services/revenue-analytics.ts(356,17): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(357,17): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(358,18): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(359,5): error TS1109: Expression expected.
+src/services/revenue-analytics.ts(362,5): error TS1434: Unexpected keyword or identifier.
+src/services/revenue-analytics.ts(362,12): error TS1068: Unexpected token. A constructor, method, accessor, or property was expected.
+src/services/revenue-analytics.ts(366,16): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(366,23): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(366,31): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(366,34): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(379,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(384,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(384,10): error TS1434: Unexpected keyword or identifier.
+src/services/revenue-analytics.ts(384,39): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(384,59): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(384,73): error TS1109: Expression expected.
+src/services/revenue-analytics.ts(386,11): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(386,19): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(394,7): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(397,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(397,60): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(398,21): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(404,35): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(407,9): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(407,41): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(413,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(413,10): error TS1434: Unexpected keyword or identifier.
+src/services/revenue-analytics.ts(414,14): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(415,11): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(416,4): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(417,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(417,60): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(418,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(418,66): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(420,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(426,6): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(428,16): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(428,25): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(433,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(437,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(437,11): error TS1434: Unexpected keyword or identifier.
+src/services/revenue-analytics.ts(437,43): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(438,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(442,27): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(444,16): error TS1005: '{' expected.
+src/services/revenue-analytics.ts(444,22): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(444,27): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(446,9): error TS1003: Identifier expected.
+src/services/revenue-analytics.ts(446,14): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(446,24): error TS1005: '{' expected.
+src/services/revenue-analytics.ts(446,31): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(446,32): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(448,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(448,72): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(449,12): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(449,44): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(452,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(452,11): error TS1434: Unexpected keyword or identifier.
+src/services/revenue-analytics.ts(452,36): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(452,45): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(454,12): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(459,6): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(462,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(462,11): error TS1434: Unexpected keyword or identifier.
+src/services/revenue-analytics.ts(463,12): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(464,4): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(465,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(468,34): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(470,16): error TS1005: '{' expected.
+src/services/revenue-analytics.ts(470,22): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(470,27): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(472,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(474,22): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(476,21): error TS1005: '{' expected.
+src/services/revenue-analytics.ts(476,27): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(476,37): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(478,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(478,86): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(480,12): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(492,6): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(495,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(495,31): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(495,44): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(495,53): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(495,55): error TS1434: Unexpected keyword or identifier.
+src/services/revenue-analytics.ts(514,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(514,27): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(514,36): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(514,45): error TS1011: An element access expression should take an argument.
+src/services/revenue-analytics.ts(514,47): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(526,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(527,12): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(528,13): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(528,38): error TS1011: An element access expression should take an argument.
+src/services/revenue-analytics.ts(529,4): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(529,13): error TS1011: An element access expression should take an argument.
+src/services/revenue-analytics.ts(529,15): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(550,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(550,28): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(550,34): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(550,36): error TS1434: Unexpected keyword or identifier.
+src/services/revenue-analytics.ts(555,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(555,28): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(555,37): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(555,39): error TS1434: Unexpected keyword or identifier.
+src/services/revenue-analytics.ts(563,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(563,28): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(563,42): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(563,48): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(564,9): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(564,83): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(567,3): error TS1128: Declaration or statement expected.
+src/services/revenue-analytics.ts(567,38): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(567,47): error TS1005: ';' expected.
+src/services/revenue-analytics.ts(569,11): error TS1005: ':' expected.
+src/services/revenue-analytics.ts(569,54): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(570,10): error TS1359: Identifier expected. 'const' is a reserved word that cannot be used here.
+src/services/revenue-analytics.ts(570,16): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(570,20): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(570,23): error TS1005: ',' expected.
+src/services/revenue-analytics.ts(576,1): error TS1128: Declaration or statement expected.
+src/services/secure-alarm-storage.ts(340,19): error TS1005: ')' expected.
+src/services/secure-alarm-storage.ts(407,19): error TS1005: ')' expected.
+src/services/subscription-service.ts(839,9): error TS1005: ')' expected.
+src/services/subscription-service.ts(840,15): error TS1005: ';' expected.
+src/services/subscription-service.ts(841,19): error TS1005: ';' expected.
+src/services/subscription-service.ts(842,17): error TS1005: ';' expected.
+src/services/subscription-service.ts(843,18): error TS1005: ';' expected.
+src/services/subscription-service.ts(844,20): error TS1005: ';' expected.
+src/services/subscription-service.ts(845,19): error TS1005: ';' expected.
+src/services/subscription-service.ts(846,18): error TS1005: ';' expected.
+src/services/subscription-service.ts(847,7): error TS1109: Expression expected.
+src/services/subscription-service.ts(847,8): error TS1068: Unexpected token. A constructor, method, accessor, or property was expected.
+src/services/subscription-service.ts(847,9): error TS1068: Unexpected token. A constructor, method, accessor, or property was expected.
+src/services/subscription-service.ts(847,11): error TS1068: Unexpected token. A constructor, method, accessor, or property was expected.
+src/services/subscription-service.ts(848,5): error TS1128: Declaration or statement expected.
+src/services/subscription-service.ts(849,3): error TS1128: Declaration or statement expected.
+src/services/subscription-service.ts(851,3): error TS1128: Declaration or statement expected.
+src/services/subscription-service.ts(851,11): error TS1434: Unexpected keyword or identifier.
+src/services/subscription-service.ts(851,40): error TS1005: ',' expected.
+src/services/subscription-service.ts(851,49): error TS1005: ';' expected.
+src/services/subscription-service.ts(853,11): error TS1005: ':' expected.
+src/services/subscription-service.ts(856,33): error TS1005: ',' expected.
+src/services/subscription-service.ts(858,11): error TS1005: ':' expected.
+src/services/subscription-service.ts(858,40): error TS1005: ',' expected.
+src/services/subscription-service.ts(859,11): error TS1005: ':' expected.
+src/services/subscription-service.ts(859,82): error TS1005: ',' expected.
+src/services/subscription-service.ts(860,11): error TS1005: ':' expected.
+src/services/subscription-service.ts(860,90): error TS1005: ',' expected.
+src/services/subscription-service.ts(862,12): error TS1005: ':' expected.
+src/services/subscription-service.ts(867,6): error TS1005: ',' expected.
+src/services/subscription-service.ts(871,3): error TS1128: Declaration or statement expected.
+src/services/subscription-service.ts(871,31): error TS1005: ',' expected.
+src/services/subscription-service.ts(871,55): error TS1005: ';' expected.
+src/services/subscription-service.ts(871,57): error TS1434: Unexpected keyword or identifier.
+src/services/subscription-service.ts(896,3): error TS1128: Declaration or statement expected.
+src/services/subscription-service.ts(896,32): error TS1005: ',' expected.
+src/services/subscription-service.ts(896,45): error TS1005: ';' expected.
+src/services/subscription-service.ts(896,47): error TS1434: Unexpected keyword or identifier.
+src/services/subscription-service.ts(912,3): error TS1128: Declaration or statement expected.
+src/services/subscription-service.ts(912,35): error TS1005: ',' expected.
+src/services/subscription-service.ts(912,51): error TS1005: ';' expected.
+src/services/subscription-service.ts(912,53): error TS1434: Unexpected keyword or identifier.
+src/services/subscription-service.ts(936,1): error TS1128: Declaration or statement expected.
+src/test-setup.ts(105,1): error TS1005: ',' expected.
+src/test-setup.ts(108,1): error TS1005: ',' expected.
+src/utils/performance-alerts.tsx(910,3): error TS1005: ',' expected.
+src/utils/performance-alerts.tsx(934,17): error TS1005: '}' expected.
+src/utils/performance-alerts.tsx(944,15): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/utils/performance-alerts.tsx(961,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/utils/performance-alerts.tsx(963,9): error TS1005: ')' expected.
+src/utils/performance-alerts.tsx(976,17): error TS1005: '}' expected.
+src/utils/performance-alerts.tsx(986,15): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/utils/performance-alerts.tsx(1008,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/utils/performance-alerts.tsx(1010,9): error TS1005: ')' expected.
+src/utils/performance-alerts.tsx(1011,7): error TS1109: Expression expected.
+src/utils/performance-alerts.tsx(1012,5): error TS1128: Declaration or statement expected.
+src/utils/performance-alerts.tsx(1013,3): error TS1109: Expression expected.
+src/utils/performance-alerts.tsx(1014,1): error TS1128: Declaration or statement expected.
+src/utils/progressive-loading.tsx(430,9): error TS1005: ':' expected.
+src/utils/progressive-loading.tsx(431,13): error TS1005: ':' expected.
+src/utils/progressive-loading.tsx(431,79): error TS1005: ',' expected.
+src/utils/progressive-loading.tsx(433,7): error TS1005: ',' expected.
+src/utils/progressive-loading.tsx(433,16): error TS1138: Parameter declaration expected.
+src/utils/progressive-loading.tsx(433,21): error TS1005: ',' expected.
+src/utils/progressive-loading.tsx(433,28): error TS1005: ',' expected.
+src/utils/progressive-loading.tsx(434,14): error TS1005: ':' expected.
+src/utils/progressive-loading.tsx(434,20): error TS1005: ',' expected.
+src/utils/progressive-loading.tsx(435,7): error TS1005: ')' expected.
+src/utils/progressive-loading.tsx(444,4): error TS1128: Declaration or statement expected.
+src/utils/progressive-loading.tsx(444,26): error TS1005: ';' expected.
+src/utils/progressive-loading.tsx(466,1): error TS1128: Declaration or statement expected.

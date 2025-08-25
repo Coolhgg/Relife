@@ -1,0 +1,9 @@
+Context for useAdvancedAlarms.test.ts:
+
+Error around lines 117-143:
+- Missing test globals shim
+- beforeEach/afterEach outside describe block  
+- Hanging incomplete code fragments (lines 130-143)
+- Orphaned statements without proper structure
+
+Fix needed: Add globals, wrap in describe, clean hanging code

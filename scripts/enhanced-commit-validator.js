@@ -374,7 +374,7 @@ class EnhancedCommitValidator {
   }
 
   printResults(result) {
-    const {_parsed, _errors, _warnings, _info, _suggestions} = result;
+    const { _parsed, _errors, _warnings, _info, _suggestions } = result;
 
     this.log('\n🔍 Commit Message Analysis', 'cyan');
     this.log(`Subject: ${parsed.subject}`, 'blue');

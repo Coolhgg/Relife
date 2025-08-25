@@ -9,7 +9,7 @@ import path from 'src/shims/path'; // auto: converted require to shim
 
 console.log('🔧 Starting syntax errors cleanup...\n');
 
-let stats = {
+const stats = {
   filesProcessed: 0,
   errorsFixed: 0,
   errors: 0,
