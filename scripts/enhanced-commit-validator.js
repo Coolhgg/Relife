@@ -1,8 +1,3 @@
-import { parsed } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { errors } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { warnings } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { info } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { suggestions } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 #!/usr/bin/env node
 
 /**
@@ -322,7 +317,7 @@ class EnhancedCommitValidator {
     return issues;
   }
 
-  generateSuggestions(parsed, issues) {
+  generateSuggestions(parsed, _issues) {
     const suggestions = [];
 
     // Type-specific suggestions
@@ -379,7 +374,7 @@ class EnhancedCommitValidator {
   }
 
   printResults(result) {
-    const { _parsed, _errors, _warnings, _info, _suggestions } = result;
+    const { parsed, errors, warnings, info, suggestions } = result;
 
     this.log('\n🔍 Commit Message Analysis', 'cyan');
     this.log(`Subject: ${parsed.subject}`, 'blue');
