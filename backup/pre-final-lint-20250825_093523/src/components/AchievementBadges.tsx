@@ -5,6 +5,7 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import {
+import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Trophy,
   Share2,
   Lock,

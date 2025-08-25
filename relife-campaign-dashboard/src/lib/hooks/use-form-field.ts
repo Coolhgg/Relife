@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+import { id } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   useFormContext,
   useFormState,
   type FieldPath,

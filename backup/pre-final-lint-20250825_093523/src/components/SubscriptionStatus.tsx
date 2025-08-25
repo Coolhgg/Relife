@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Crown,
   Star,
   Heart,

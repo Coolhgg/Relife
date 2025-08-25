@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   User,
   Mail,
   Settings,

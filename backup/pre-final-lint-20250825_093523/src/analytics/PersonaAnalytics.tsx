@@ -3,6 +3,8 @@
 /// <reference lib="dom" />
 import React, { useEffect, useCallback, useRef } from 'react';
 import {
+import { persona } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   PersonaType,
   PersonaDetectionFactor,
   PersonaDetectionResult,

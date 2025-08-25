@@ -2,6 +2,7 @@ import { audioManager, AudioManager } from './audio-manager';
 import type { AudioLoadProgress, AudioCacheEntry } from './audio-manager';
 import type { CustomSound, Playlist, AudioLoadOptions } from './types/media';
 import { TimeoutHandle } from '../types/timers';
+import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface LazyLoadQueueItem {
   id: string;

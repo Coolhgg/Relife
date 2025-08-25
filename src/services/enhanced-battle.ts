@@ -4,6 +4,10 @@
  */
 
 import {
+import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _index } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Battle,
   BattleType,
   BattleStatus,

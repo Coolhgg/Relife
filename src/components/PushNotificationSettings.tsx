@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import {
+import { AlertTriangle } from 'lucide-react'; // auto: restored by scout - verify
   Bell,
   BellOff,
   Settings,

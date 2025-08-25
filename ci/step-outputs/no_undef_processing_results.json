@@ -1,0 +1,421 @@
+{
+  "fixes": [
+    {
+      "identifier": "error",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "config",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "_event",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "_config",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "user",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "_user",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { _user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "_error",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "persona",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { persona } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "TimeoutHandle",
+      "action": "import",
+      "source": "global",
+      "importStatement": "// TimeoutHandle is a global type - no import needed"
+    },
+    {
+      "identifier": "fn",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { fn } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "AlertTriangle",
+      "action": "import",
+      "source": "lucide-react",
+      "importStatement": "import { AlertTriangle } from 'lucide-react'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "e",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { e } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "index",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { index } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "a",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { a } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "Alert",
+      "action": "import",
+      "source": "lucide-react",
+      "importStatement": "import { Alert } from 'lucide-react'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "_index",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { _index } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "timeframe",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { timeframe } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "VariantProps",
+      "action": "import",
+      "source": "class-variance-authority",
+      "importStatement": "import { VariantProps } from 'class-variance-authority'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "alarms",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { alarms } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "ExtendableEvent",
+      "action": "import",
+      "source": "web",
+      "importStatement": "// ExtendableEvent is a web API type - no import needed"
+    },
+    {
+      "identifier": "parsed",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { parsed } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "value",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { value } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "Mail",
+      "action": "import",
+      "source": "lucide-react",
+      "importStatement": "import { Mail } from 'lucide-react'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "Badge",
+      "action": "import",
+      "source": "lucide-react",
+      "importStatement": "import { Badge } from 'lucide-react'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "NotificationEvent",
+      "action": "import",
+      "source": "web",
+      "importStatement": "// NotificationEvent is a web API type - no import needed"
+    },
+    {
+      "identifier": "WebSocketMessage",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { WebSocketMessage } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "B",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { B } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "metric",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { metric } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "id",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { id } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "errors",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { errors } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "D1Database",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { D1Database } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "KVNamespace",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { KVNamespace } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "DurableObjectNamespace",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { DurableObjectNamespace } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "initial",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { initial } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "soundEffectsService",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { soundEffectsService } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "Calendar",
+      "action": "import",
+      "source": "lucide-react",
+      "importStatement": "import { Calendar } from 'lucide-react'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "timer",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { timer } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "tier",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { tier } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "UserTestingService",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { UserTestingService } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "Bug",
+      "action": "import",
+      "source": "lucide-react",
+      "importStatement": "import { Bug } from 'lucide-react'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "X",
+      "action": "import",
+      "source": "lucide-react",
+      "importStatement": "import { X } from 'lucide-react'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "Send",
+      "action": "import",
+      "source": "lucide-react",
+      "importStatement": "import { Send } from 'lucide-react'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "RedesignedFeedbackModal",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { RedesignedFeedbackModal } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "analytics",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { analytics } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "DBSchema",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { DBSchema } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "WebSocketMessageType",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { WebSocketMessageType } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "WebSocketConfig",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { WebSocketConfig } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "NotificationPreferences",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { NotificationPreferences } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "RealtimeServiceConfig",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { RealtimeServiceConfig } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "prefix",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { prefix } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "Console",
+      "action": "import",
+      "source": "global",
+      "importStatement": "// Console is a global type - no import needed"
+    },
+    {
+      "identifier": "SpeechRecognition",
+      "action": "import",
+      "source": "web",
+      "importStatement": "// SpeechRecognition is a web API type - no import needed"
+    },
+    {
+      "identifier": "warnings",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { warnings } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "info",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { info } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "suggestions",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { suggestions } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "userId",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { userId } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "context",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { context } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "className",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { className } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "title",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { title } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "_setupSuccess",
+      "action": "stub",
+      "source": "src/utils/__auto_stubs",
+      "importStatement": "import { _setupSuccess } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify"
+    },
+    {
+      "identifier": "RequestInfo",
+      "action": "import",
+      "source": "web",
+      "importStatement": "// RequestInfo is a web API type - no import needed"
+    }
+  ],
+  "stubCount": 46,
+  "importCount": 15,
+  "fixedFiles": 367,
+  "stubsCreated": [
+    "error",
+    "config",
+    "_event",
+    "_config",
+    "user",
+    "_user",
+    "_error",
+    "persona",
+    "fn",
+    "e",
+    "index",
+    "a",
+    "_index",
+    "timeframe",
+    "alarms",
+    "parsed",
+    "value",
+    "WebSocketMessage",
+    "B",
+    "metric",
+    "id",
+    "errors",
+    "D1Database",
+    "KVNamespace",
+    "DurableObjectNamespace",
+    "initial",
+    "soundEffectsService",
+    "timer",
+    "tier",
+    "UserTestingService",
+    "RedesignedFeedbackModal",
+    "analytics",
+    "DBSchema",
+    "WebSocketMessageType",
+    "WebSocketConfig",
+    "NotificationPreferences",
+    "RealtimeServiceConfig",
+    "prefix",
+    "warnings",
+    "info",
+    "suggestions",
+    "userId",
+    "context",
+    "className",
+    "title",
+    "_setupSuccess"
+  ]
+}

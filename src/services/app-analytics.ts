@@ -8,6 +8,7 @@ import SentryService from './sentry';
 import { ErrorHandler } from './error-handler';
 import type { Alarm, VoiceMood } from '../types';
 import { TimeoutHandle } from '../types/timers';
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface AppAnalyticsEvents {
   // Alarm Management

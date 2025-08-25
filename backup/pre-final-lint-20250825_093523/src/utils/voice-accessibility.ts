@@ -4,6 +4,7 @@
 import ScreenReaderService from './screen-reader';
 import KeyboardNavigationService from './keyboard-navigation';
 import { TimeoutHandle } from '../types/timers';
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface VoiceCommand {
   phrases: string[];

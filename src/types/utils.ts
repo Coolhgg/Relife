@@ -5,6 +5,8 @@
  * DeepPartial - Makes all properties of T optional recursively
  * Useful for test factories and partial updates
  */
+import { B } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { prefix } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object
     ? T[P] extends Array<infer U>

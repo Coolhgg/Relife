@@ -5,6 +5,7 @@ import { TimeoutHandle } from '../types/timers';
 import { Zap } from 'lucide-react';
 // auto: restored by scout - verify import path
 import { Zap } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react'; // auto: restored by scout - verify
 
 interface ErrorBoundaryTestProps {
   onClose?: () => void;

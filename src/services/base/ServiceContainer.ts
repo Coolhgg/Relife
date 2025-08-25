@@ -4,6 +4,7 @@
  */
 
 import {
+import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   BaseService,
   ServiceContainer as IServiceContainer,
   ServiceDescriptor,

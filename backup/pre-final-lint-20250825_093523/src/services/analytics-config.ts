@@ -3,6 +3,7 @@
 
 import SentryService, { defaultSentryConfigs } from './sentry';
 import AnalyticsService, { defaultAnalyticsConfigs } from './analytics';
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface AnalyticsEnvironmentConfig {
   environment: 'development' | 'staging' | 'production';

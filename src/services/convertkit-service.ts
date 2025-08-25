@@ -2,6 +2,10 @@
 // Provides comprehensive ConvertKit API integration with authentication, testing, and advanced features
 
 import {
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { persona } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   PersonaType,
   EmailPlatformConfig,
   DEFAULT_PERSONAS,

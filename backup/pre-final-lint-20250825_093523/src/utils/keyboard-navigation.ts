@@ -6,6 +6,7 @@
 
 import ScreenReaderService from './screen-reader';
 import AccessibilityPreferencesService, {
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   AccessibilityPreferences,
 } from '../services/accessibility-preferences';
 

@@ -1,0 +1,1208 @@
+# No-Undef Analysis Report
+
+**Generated:** 2025-08-25T10:24:56.838Z
+**Total unique identifiers:** 61
+**Total occurrences:** 2127
+**Files with errors:** 367
+
+## Top 150 Identifiers by Occurrence (for processing)
+
+| Rank | Identifier | Count | Files | Sample Location |
+|------|------------|-------|-------|-----------------|
+| 1 | `error` | 690 | 140 | backup/pre-final-lint-20250825_093523/src/App.tsx:303 |
+| 2 | `config` | 288 | 46 | backup/pre-final-lint-20250825_093523/src/backend/webhook-config.ts:234 |
+| 3 | `_event` | 260 | 84 | backup/pre-final-lint-20250825_093523/src/App.tsx:619 |
+| 4 | `_config` | 232 | 32 | backup/pre-final-lint-20250825_093523/src/components/AchievementBadges.tsx:159 |
+| 5 | `user` | 158 | 44 | backup/pre-final-lint-20250825_093523/src/App.tsx:93 |
+| 6 | `_user` | 116 | 34 | backup/pre-final-lint-20250825_093523/src/backend/api.ts:324 |
+| 7 | `_error` | 76 | 40 | backup/pre-final-lint-20250825_093523/src/components/premium/PaymentFlow.tsx:382 |
+| 8 | `persona` | 48 | 10 | backup/pre-final-lint-20250825_093523/src/analytics/PersonaAnalytics.tsx:127 |
+| 9 | `TimeoutHandle` | 28 | 14 | backup/pre-final-lint-20250825_093523/src/components/AnalyticsProvider.tsx:40 |
+| 10 | `fn` | 26 | 4 | backup/pre-final-lint-20250825_093523/src/stories/components/Dashboard.stories.tsx:81 |
+| 11 | `AlertTriangle` | 18 | 14 | backup/pre-final-lint-20250825_093523/src/components/ErrorBoundaryTest.tsx:129 |
+| 12 | `e` | 12 | 6 | backup/pre-final-lint-20250825_093523/src/backend/performance-monitoring.ts:1444 |
+| 13 | `index` | 12 | 8 | backup/pre-final-lint-20250825_093523/src/components/AdaptiveAlarmList.tsx:199 |
+| 14 | `a` | 12 | 12 | backup/pre-final-lint-20250825_093523/src/components/MobileAlarmCard.tsx:302 |
+| 15 | `Alert` | 12 | 2 | backup/pre-final-lint-20250825_093523/src/components/NuclearModeChallenge.tsx:205 |
+| 16 | `_index` | 10 | 4 | backup/pre-final-lint-20250825_093523/src/services/enhanced-battle.ts:1038 |
+| 17 | `timeframe` | 9 | 2 | relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx:82 |
+| 18 | `VariantProps` | 8 | 8 | backup/pre-final-lint-20250825_093523/src/components/ui/alert.tsx:27 |
+| 19 | `alarms` | 8 | 2 | backup/pre-final-lint-20250825_093523/src/services/predictive-analytics-service.ts:604 |
+| 20 | `ExtendableEvent` | 6 | 2 | backup/pre-final-lint-20250825_093523/src/types/browser-apis.d.ts:43 |
+| 21 | `parsed` | 6 | 1 | scripts/enhanced-commit-validator.js:380 |
+| 22 | `value` | 5 | 1 | relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx:48 |
+| 23 | `Mail` | 4 | 4 | backup/pre-final-lint-20250825_093523/src/components/ForgotPasswordForm.tsx:148 |
+| 24 | `Badge` | 4 | 2 | backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx:319 |
+| 25 | `NotificationEvent` | 4 | 2 | backup/pre-final-lint-20250825_093523/src/types/browser-apis.d.ts:47 |
+| 26 | `WebSocketMessage` | 4 | 2 | backup/pre-final-lint-20250825_093523/src/types/realtime/index.ts:203 |
+| 27 | `B` | 4 | 2 | backup/pre-final-lint-20250825_093523/src/types/utils.ts:197 |
+| 28 | `metric` | 4 | 1 | relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx:77 |
+| 29 | `id` | 4 | 1 | relife-campaign-dashboard/src/lib/hooks/use-form-field.ts:42 |
+| 30 | `errors` | 3 | 1 | scripts/enhanced-commit-validator.js:389 |
+| 31 | `D1Database` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/backend/cloudflare-functions.ts:33 |
+| 32 | `KVNamespace` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/backend/cloudflare-functions.ts:34 |
+| 33 | `DurableObjectNamespace` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/backend/cloudflare-functions.ts:35 |
+| 34 | `initial` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/components/OfflineDiagnostics.tsx:471 |
+| 35 | `soundEffectsService` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/components/SoundSettings.tsx:143 |
+| 36 | `Calendar` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/components/StreakCounter.tsx:328 |
+| 37 | `timer` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/components/premium/EnhancedUpgradePrompt.tsx:71 |
+| 38 | `tier` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/components/premium/EnhancedUpgradePrompt.tsx:215 |
+| 39 | `UserTestingService` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx:111 |
+| 40 | `Bug` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx:144 |
+| 41 | `X` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx:260 |
+| 42 | `Send` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx:342 |
+| 43 | `RedesignedFeedbackModal` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx:404 |
+| 44 | `analytics` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/hooks/useAnalytics.ts:265 |
+| 45 | `DBSchema` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/services/offline-manager.ts:15 |
+| 46 | `WebSocketMessageType` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/types/realtime/index.ts:209 |
+| 47 | `WebSocketConfig` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/types/realtime/index.ts:293 |
+| 48 | `NotificationPreferences` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/types/realtime/index.ts:310 |
+| 49 | `RealtimeServiceConfig` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/types/realtime/index.ts:360 |
+| 50 | `prefix` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/types/utils.ts:197 |
+| 51 | `Console` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/utils/performance-alerts.tsx:455 |
+| 52 | `SpeechRecognition` | 2 | 2 | backup/pre-final-lint-20250825_093523/src/utils/voice-accessibility.ts:33 |
+| 53 | `warnings` | 2 | 1 | scripts/enhanced-commit-validator.js:397 |
+| 54 | `info` | 2 | 1 | scripts/enhanced-commit-validator.js:405 |
+| 55 | `suggestions` | 2 | 1 | scripts/enhanced-commit-validator.js:414 |
+| 56 | `userId` | 1 | 1 | performance/k6/critical-endpoints-stress-test.js:125 |
+| 57 | `context` | 1 | 1 | relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx:131 |
+| 58 | `className` | 1 | 1 | relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx:182 |
+| 59 | `title` | 1 | 1 | relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx:185 |
+| 60 | `_setupSuccess` | 1 | 1 | scripts/setup-cleanup-automation.mjs:253 |
+| 61 | `RequestInfo` | 1 | 1 | src/components/devtools/APIMonitorPanel.tsx:74 |
+
+## Files with Most Errors
+
+| File | Error Count |
+|------|-------------|
+| backup/pre-final-lint-20250825_093523/src/services/enhanced-performance-monitor.ts | 46 |
+| src/services/enhanced-performance-monitor.ts | 46 |
+| backup/pre-final-lint-20250825_093523/src/App.tsx | 42 |
+| src/App.tsx | 42 |
+| backup/pre-final-lint-20250825_093523/src/services/email-campaigns.ts | 39 |
+| src/services/email-campaigns.ts | 39 |
+| backup/pre-final-lint-20250825_093523/src/services/enhanced-battle.ts | 37 |
+| src/services/enhanced-battle.ts | 37 |
+| backup/pre-final-lint-20250825_093523/src/services/stripe-service.ts | 35 |
+| src/services/stripe-service.ts | 35 |
+| backup/pre-final-lint-20250825_093523/src/hooks/useAuth.ts | 28 |
+| src/hooks/useAuth.ts | 28 |
+| backup/pre-final-lint-20250825_093523/src/services/enhanced-voice.ts | 27 |
+| src/services/enhanced-voice.ts | 27 |
+| backup/pre-final-lint-20250825_093523/src/backend/stripe-webhooks.ts | 25 |
+| backup/pre-final-lint-20250825_093523/src/config/environment.ts | 25 |
+| src/backend/stripe-webhooks.ts | 25 |
+| src/config/environment.ts | 25 |
+| backup/pre-final-lint-20250825_093523/src/services/advanced-analytics.ts | 24 |
+| src/services/advanced-analytics.ts | 24 |
+| backup/pre-final-lint-20250825_093523/src/services/enhanced-analytics.ts | 23 |
+| src/services/enhanced-analytics.ts | 23 |
+| backup/pre-final-lint-20250825_093523/src/services/email-campaign.ts | 19 |
+| backup/pre-final-lint-20250825_093523/src/services/supabase.ts | 19 |
+| src/services/email-campaign.ts | 19 |
+| src/services/supabase.ts | 19 |
+| backup/pre-final-lint-20250825_093523/src/services/analytics.ts | 18 |
+| backup/pre-final-lint-20250825_093523/src/services/error-handler.ts | 18 |
+| relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx | 18 |
+| src/services/analytics.ts | 18 |
+| src/services/error-handler.ts | 18 |
+| backup/pre-final-lint-20250825_093523/src/services/subscription-service.ts | 16 |
+| src/services/subscription-service.ts | 16 |
+| backup/pre-final-lint-20250825_093523/src/services/enhanced-subscription.ts | 15 |
+| scripts/enhanced-commit-validator.js | 15 |
+| src/services/enhanced-subscription.ts | 15 |
+| backup/pre-final-lint-20250825_093523/src/services/convertkit-service.ts | 13 |
+| backup/pre-final-lint-20250825_093523/src/services/enhanced-calendar-service.ts | 13 |
+| src/services/convertkit-service.ts | 13 |
+| src/services/enhanced-calendar-service.ts | 13 |
+| backup/pre-final-lint-20250825_093523/src/stories/components/Dashboard.stories.tsx | 12 |
+| backup/pre-final-lint-20250825_093523/src/utils/progressive-loading.tsx | 12 |
+| src/stories/components/Dashboard.stories.tsx | 12 |
+| src/utils/progressive-loading.tsx | 12 |
+| backup/pre-final-lint-20250825_093523/src/services/alarm-rate-limiting.ts | 11 |
+| backup/pre-final-lint-20250825_093523/src/services/sentry.ts | 11 |
+| src/services/alarm-rate-limiting.ts | 11 |
+| src/services/sentry.ts | 11 |
+| backup/pre-final-lint-20250825_093523/src/hooks/useSubscription.ts | 10 |
+| backup/pre-final-lint-20250825_093523/src/services/offline-analytics.ts | 10 |
+| backup/pre-final-lint-20250825_093523/src/services/theme-persistence.ts | 10 |
+| backup/pre-final-lint-20250825_093523/src/services/user-testing.ts | 10 |
+| src/hooks/useSubscription.ts | 10 |
+| src/services/offline-analytics.ts | 10 |
+| src/services/theme-persistence.ts | 10 |
+| src/services/user-testing.ts | 10 |
+| backup/pre-final-lint-20250825_093523/src/components/SmartUpgradePrompt.tsx | 9 |
+| backup/pre-final-lint-20250825_093523/src/hooks/usePushNotifications.ts | 9 |
+| src/components/SmartUpgradePrompt.tsx | 9 |
+| src/hooks/usePushNotifications.ts | 9 |
+| backup/pre-final-lint-20250825_093523/src/analytics/PersonaAnalytics.tsx | 8 |
+| backup/pre-final-lint-20250825_093523/src/backend/performance-monitoring.ts | 8 |
+| backup/pre-final-lint-20250825_093523/src/backend/webhook-endpoint.ts | 8 |
+| backup/pre-final-lint-20250825_093523/src/components/HabitCelebration.tsx | 8 |
+| backup/pre-final-lint-20250825_093523/src/components/SubscriptionStatus.tsx | 8 |
+| backup/pre-final-lint-20250825_093523/src/components/ui/chart.tsx | 8 |
+| backup/pre-final-lint-20250825_093523/src/utils/http-client.ts | 8 |
+| backup/pre-final-lint-20250825_093523/src/utils/premium-testing.ts | 8 |
+| backup/pre-final-lint-20250825_093523/src/utils/voice-accessibility.ts | 8 |
+| src/analytics/PersonaAnalytics.tsx | 8 |
+| src/backend/performance-monitoring.ts | 8 |
+| src/backend/webhook-endpoint.ts | 8 |
+| src/components/HabitCelebration.tsx | 8 |
+| src/components/SubscriptionStatus.tsx | 8 |
+| src/components/ui/chart.tsx | 8 |
+| src/utils/http-client.ts | 8 |
+| src/utils/premium-testing.ts | 8 |
+| src/utils/voice-accessibility.ts | 8 |
+| backup/pre-final-lint-20250825_093523/src/components/AnalyticsProvider.tsx | 7 |
+| backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx | 7 |
+| backup/pre-final-lint-20250825_093523/src/hooks/useEnhancedServiceWorker.ts | 7 |
+| backup/pre-final-lint-20250825_093523/src/services/offline-manager.ts | 7 |
+| backup/pre-final-lint-20250825_093523/src/services/offline-storage.ts | 7 |
+| backup/pre-final-lint-20250825_093523/src/services/scheduler-core.ts | 7 |
+| backup/pre-final-lint-20250825_093523/src/services/security-monitoring-forensics.ts | 7 |
+| backup/pre-final-lint-20250825_093523/src/services/typed-realtime-service.ts | 7 |
+| backup/pre-final-lint-20250825_093523/src/services/voice-biometrics.ts | 7 |
+| backup/pre-final-lint-20250825_093523/src/types/user.ts | 7 |
+| backup/pre-final-lint-20250825_093523/src/utils/keyboard-navigation.ts | 7 |
+| src/components/AnalyticsProvider.tsx | 7 |
+| src/components/user-testing/RedesignedFeedbackWidget.tsx | 7 |
+| src/hooks/useEnhancedServiceWorker.ts | 7 |
+| src/services/offline-manager.ts | 7 |
+| src/services/offline-storage.ts | 7 |
+| src/services/scheduler-core.ts | 7 |
+| src/services/security-monitoring-forensics.ts | 7 |
+| src/services/typed-realtime-service.ts | 7 |
+| src/services/voice-biometrics.ts | 7 |
+| src/types/user.ts | 7 |
+| src/utils/keyboard-navigation.ts | 7 |
+| backup/pre-final-lint-20250825_093523/src/components/NuclearModeChallenge.tsx | 6 |
+| backup/pre-final-lint-20250825_093523/src/services/alarm.ts | 6 |
+| backup/pre-final-lint-20250825_093523/src/services/base/BaseService.ts | 6 |
+| backup/pre-final-lint-20250825_093523/src/services/enhanced-alarm.ts | 6 |
+| backup/pre-final-lint-20250825_093523/src/services/revenue-analytics.ts | 6 |
+| backup/pre-final-lint-20250825_093523/src/types/realtime/index.ts | 6 |
+| backup/pre-final-lint-20250825_093523/src/utils/mobile-accessibility.ts | 6 |
+| backup/pre-final-lint-20250825_093523/src/utils/service-worker-manager.ts | 6 |
+| src/components/NuclearModeChallenge.tsx | 6 |
+| src/services/alarm.ts | 6 |
+| src/services/base/BaseService.ts | 6 |
+| src/services/enhanced-alarm.ts | 6 |
+| src/services/revenue-analytics.ts | 6 |
+| src/types/realtime/index.ts | 6 |
+| src/utils/mobile-accessibility.ts | 6 |
+| src/utils/service-worker-manager.ts | 6 |
+| backup/pre-final-lint-20250825_093523/src/backend/cloudflare-functions.ts | 5 |
+| backup/pre-final-lint-20250825_093523/src/components/PushNotificationTester.tsx | 5 |
+| backup/pre-final-lint-20250825_093523/src/components/premium/SubscriptionPage.tsx | 5 |
+| backup/pre-final-lint-20250825_093523/src/services/push-notifications.ts | 5 |
+| backup/pre-final-lint-20250825_093523/src/services/smart-alarm-scheduler.ts | 5 |
+| backup/pre-final-lint-20250825_093523/src/services/voice-smart-integration.ts | 5 |
+| backup/pre-final-lint-20250825_093523/src/types/browser-apis.d.ts | 5 |
+| src/backend/cloudflare-functions.ts | 5 |
+| src/components/PushNotificationTester.tsx | 5 |
+| src/components/premium/SubscriptionPage.tsx | 5 |
+| src/services/push-notifications.ts | 5 |
+| src/services/smart-alarm-scheduler.ts | 5 |
+| src/services/voice-smart-integration.ts | 5 |
+| src/types/browser-apis.d.ts | 5 |
+| backup/pre-final-lint-20250825_093523/src/backend/api.ts | 4 |
+| backup/pre-final-lint-20250825_093523/src/components/AchievementBadges.tsx | 4 |
+| backup/pre-final-lint-20250825_093523/src/components/CommunityChallenge.tsx | 4 |
+| backup/pre-final-lint-20250825_093523/src/components/OfflineIndicator.tsx | 4 |
+| backup/pre-final-lint-20250825_093523/src/hooks/useAudioLazyLoading.ts | 4 |
+| backup/pre-final-lint-20250825_093523/src/services/analytics-config.ts | 4 |
+| backup/pre-final-lint-20250825_093523/src/services/audio-manager.ts | 4 |
+| backup/pre-final-lint-20250825_093523/src/services/predictive-analytics-service.ts | 4 |
+| backup/pre-final-lint-20250825_093523/src/services/realtime-service.ts | 4 |
+| backup/pre-final-lint-20250825_093523/src/services/secure-alarm-storage.ts | 4 |
+| backup/pre-final-lint-20250825_093523/src/utils/frame-rate-manager.tsx | 4 |
+| relife-campaign-dashboard/src/lib/hooks/use-form-field.ts | 4 |
+| src/backend/api.ts | 4 |
+| src/components/AchievementBadges.tsx | 4 |
+| src/components/CommunityChallenge.tsx | 4 |
+| src/components/OfflineIndicator.tsx | 4 |
+| src/hooks/useAudioLazyLoading.ts | 4 |
+| src/services/analytics-config.ts | 4 |
+| src/services/audio-manager.ts | 4 |
+| src/services/predictive-analytics-service.ts | 4 |
+| src/services/realtime-service.ts | 4 |
+| src/services/secure-alarm-storage.ts | 4 |
+| src/utils/frame-rate-manager.tsx | 4 |
+| backup/pre-final-lint-20250825_093523/src/backend/subscription-api.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/components/AlarmForm.tsx | 3 |
+| backup/pre-final-lint-20250825_093523/src/components/FriendsManager.tsx | 3 |
+| backup/pre-final-lint-20250825_093523/src/components/VoiceAnalyticsDashboard.tsx | 3 |
+| backup/pre-final-lint-20250825_093523/src/components/VoiceSelector.tsx | 3 |
+| backup/pre-final-lint-20250825_093523/src/config/stripe.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/hooks/useRealtime.tsx | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/advanced-conditions-helper.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/alarm-backup-redundancy.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/alarm-battle-integration.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/animation-manager.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/app-analytics.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/enhanced-offline-storage.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/mobile-performance.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/nuclear-mode.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/offline-gaming.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/offline-sleep-tracker.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/privacy-compliance.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/service-worker-manager.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/services/voice-ai-enhanced.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/types/utils.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/utils/performance-alerts.tsx | 3 |
+| backup/pre-final-lint-20250825_093523/src/utils/screen-reader.ts | 3 |
+| relife-campaign-dashboard/src/components/analytics/timeSeriesUtils.ts | 3 |
+| src/backend/subscription-api.ts | 3 |
+| src/components/AlarmForm.tsx | 3 |
+| src/components/FriendsManager.tsx | 3 |
+| src/components/VoiceAnalyticsDashboard.tsx | 3 |
+| src/components/VoiceSelector.tsx | 3 |
+| src/config/stripe.ts | 3 |
+| src/hooks/useRealtime.tsx | 3 |
+| src/services/advanced-conditions-helper.ts | 3 |
+| src/services/alarm-backup-redundancy.ts | 3 |
+| src/services/alarm-battle-integration.ts | 3 |
+| src/services/animation-manager.ts | 3 |
+| src/services/app-analytics.ts | 3 |
+| src/services/enhanced-offline-storage.ts | 3 |
+| src/services/mobile-performance.ts | 3 |
+| src/services/nuclear-mode.ts | 3 |
+| src/services/offline-gaming.ts | 3 |
+| src/services/offline-sleep-tracker.ts | 3 |
+| src/services/privacy-compliance.ts | 3 |
+| src/services/service-worker-manager.ts | 3 |
+| src/services/voice-ai-enhanced.ts | 3 |
+| src/types/utils.ts | 3 |
+| src/utils/performance-alerts.tsx | 3 |
+| src/utils/screen-reader.ts | 3 |
+| backup/pre-final-lint-20250825_093523/src/backend/webhook-config.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/components/ErrorBoundaryTest.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/components/ExtendedScreenReaderTester.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/components/OfflineDiagnostics.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/components/RealtimeDemo.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/components/SmartAlarmDashboard.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/components/UserProfile.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/components/premium/EnhancedUpgradePrompt.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/components/premium/FeatureUtils.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/components/premium/PaymentFlow.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/components/premium/PremiumAnalytics.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/components/premium/PremiumTeamFeatures.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/components/premium/PremiumVoiceFeatures.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/config/initializeApp.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/hooks/useAccessibilityPreferences.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/hooks/useFeatureGate.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/services/base/ServiceContainer.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/services/enhanced-cache-manager.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/services/lazy-audio-loader.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/services/performance-monitor.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/services/premium.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/services/secure-push-notification.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/services/sleep-analysis.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/services/sound-effects.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/services/struggling-sam-api.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/services/theme-performance.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/utils/fallback-strategies.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/utils/network-optimization.tsx | 2 |
+| backup/pre-final-lint-20250825_093523/src/utils/performance-profiler.ts | 2 |
+| src/backend/webhook-config.ts | 2 |
+| src/components/ErrorBoundaryTest.tsx | 2 |
+| src/components/ExtendedScreenReaderTester.tsx | 2 |
+| src/components/OfflineDiagnostics.tsx | 2 |
+| src/components/RealtimeDemo.tsx | 2 |
+| src/components/SmartAlarmDashboard.tsx | 2 |
+| src/components/UserProfile.tsx | 2 |
+| src/components/premium/EnhancedUpgradePrompt.tsx | 2 |
+| src/components/premium/FeatureUtils.tsx | 2 |
+| src/components/premium/PaymentFlow.tsx | 2 |
+| src/components/premium/PremiumAnalytics.tsx | 2 |
+| src/components/premium/PremiumTeamFeatures.tsx | 2 |
+| src/components/premium/PremiumVoiceFeatures.tsx | 2 |
+| src/config/initializeApp.ts | 2 |
+| src/hooks/useAccessibilityPreferences.ts | 2 |
+| src/hooks/useFeatureGate.ts | 2 |
+| src/services/base/ServiceContainer.ts | 2 |
+| src/services/enhanced-cache-manager.ts | 2 |
+| src/services/lazy-audio-loader.ts | 2 |
+| src/services/performance-monitor.ts | 2 |
+| src/services/premium.ts | 2 |
+| src/services/secure-push-notification.ts | 2 |
+| src/services/sleep-analysis.ts | 2 |
+| src/services/sound-effects.ts | 2 |
+| src/services/struggling-sam-api.ts | 2 |
+| src/services/theme-performance.ts | 2 |
+| src/utils/fallback-strategies.tsx | 2 |
+| src/utils/network-optimization.tsx | 2 |
+| src/utils/performance-profiler.ts | 2 |
+| backup/pre-final-lint-20250825_093523/src/backend/monitoring-integration.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/AdaptiveAlarmList.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/AlarmRinging.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/CustomThemeManager.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/EnhancedMediaContent.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/ForgotPasswordForm.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/LoginForm.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/MobileAlarmCard.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/NuclearModeBattle.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/PushNotificationSettings.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/SmartAlarmSettings.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/SoundSettings.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/SpecializedErrorBoundaries.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/StreakCounter.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/StrugglingSamWrapper.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/VisualAlarmDisplay.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/VoicePersonalitySelector.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/ui/alert.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/ui/badge.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/ui/button.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/ui/form.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/ui/input-otp.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/components/ui/toggle.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/contexts/LanguageContext.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/hooks/useAnalytics.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/hooks/useAnimations.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/hooks/useEnhancedSmartAlarms.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/alarm-access-control.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/alarm-api-security.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/alarm-enhanced.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/alarm-executor.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/alarm-security-integration.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/capacitor.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/contextual-themes.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/custom-sound-manager.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/emotional-intelligence.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/feature-gate-service.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/notification.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/premium-theme-animations.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/pwa-manager.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/pwa-service.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/voice-enhanced.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/voice-recognition-enhanced.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/services/voice.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/stories/Header.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/stories/Page.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/stories/ui/Button.stories.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/templates/email-templates.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/types/alarm-scheduling.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/utils/analysis-worker.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/utils/enhanced-focus.ts | 1 |
+| backup/pre-final-lint-20250825_093523/src/utils/image-optimization.tsx | 1 |
+| backup/pre-final-lint-20250825_093523/src/utils/pwa.ts | 1 |
+| performance/k6/critical-endpoints-stress-test.js | 1 |
+| scripts/setup-cleanup-automation.mjs | 1 |
+| src/backend/monitoring-integration.ts | 1 |
+| src/components/AdaptiveAlarmList.tsx | 1 |
+| src/components/AlarmRinging.tsx | 1 |
+| src/components/CustomThemeManager.tsx | 1 |
+| src/components/EnhancedMediaContent.tsx | 1 |
+| src/components/ForgotPasswordForm.tsx | 1 |
+| src/components/LoginForm.tsx | 1 |
+| src/components/MobileAlarmCard.tsx | 1 |
+| src/components/NuclearModeBattle.tsx | 1 |
+| src/components/PushNotificationSettings.tsx | 1 |
+| src/components/SmartAlarmSettings.tsx | 1 |
+| src/components/SoundSettings.tsx | 1 |
+| src/components/SpecializedErrorBoundaries.tsx | 1 |
+| src/components/StreakCounter.tsx | 1 |
+| src/components/StrugglingSamWrapper.tsx | 1 |
+| src/components/VisualAlarmDisplay.tsx | 1 |
+| src/components/VoicePersonalitySelector.tsx | 1 |
+| src/components/devtools/APIMonitorPanel.tsx | 1 |
+| src/components/ui/alert.tsx | 1 |
+| src/components/ui/badge.tsx | 1 |
+| src/components/ui/button.tsx | 1 |
+| src/components/ui/form.tsx | 1 |
+| src/components/ui/input-otp.tsx | 1 |
+| src/components/ui/toggle.tsx | 1 |
+| src/contexts/LanguageContext.tsx | 1 |
+| src/hooks/useAnalytics.ts | 1 |
+| src/hooks/useAnimations.ts | 1 |
+| src/hooks/useEnhancedSmartAlarms.ts | 1 |
+| src/services/alarm-access-control.ts | 1 |
+| src/services/alarm-api-security.ts | 1 |
+| src/services/alarm-enhanced.ts | 1 |
+| src/services/alarm-executor.ts | 1 |
+| src/services/alarm-security-integration.ts | 1 |
+| src/services/capacitor.ts | 1 |
+| src/services/contextual-themes.ts | 1 |
+| src/services/custom-sound-manager.ts | 1 |
+| src/services/emotional-intelligence.ts | 1 |
+| src/services/feature-gate-service.ts | 1 |
+| src/services/notification.ts | 1 |
+| src/services/premium-theme-animations.ts | 1 |
+| src/services/pwa-manager.ts | 1 |
+| src/services/pwa-service.ts | 1 |
+| src/services/voice-enhanced.ts | 1 |
+| src/services/voice-recognition-enhanced.ts | 1 |
+| src/services/voice.ts | 1 |
+| src/stories/Header.tsx | 1 |
+| src/stories/Page.tsx | 1 |
+| src/stories/ui/Button.stories.tsx | 1 |
+| src/templates/email-templates.ts | 1 |
+| src/types/alarm-scheduling.ts | 1 |
+| src/utils/analysis-worker.ts | 1 |
+| src/utils/enhanced-focus.ts | 1 |
+| src/utils/image-optimization.tsx | 1 |
+| src/utils/pwa.ts | 1 |
+
+## All Identifiers (Complete List)
+
+### 1. `error` (690 occurrences in 140 files)
+
+- **backup/pre-final-lint-20250825_093523/src/App.tsx:** 303:11, 354:13, 377:9, 411:18, 415:11, 415:36, 422:11, 422:36, 685:11, 726:15, 753:9, 827:9, 1060:11, 1371:16, 1376:16, 1380:9, 1380:34, 1388:9, 1388:34, 1478:16, 1481:28, 1481:53, 1486:9, 1486:34, 1554:16, 1557:28, 1557:53, 1562:9, 1562:34, 1642:16, 1645:28, 1645:53, 1650:9, 1650:34, 1713:18, 1717:11, 1717:36, 1722:11, 1722:36
+- **backup/pre-final-lint-20250825_093523/src/backend/performance-monitoring.ts:** 1425:20, 1426:18, 1431:23, 1432:24, 1478:24, 1479:22
+- **backup/pre-final-lint-20250825_093523/src/backend/stripe-webhooks.ts:** 140:13, 628:23, 639:23, 650:23, 663:23, 673:23, 682:23, 711:23
+- **backup/pre-final-lint-20250825_093523/src/backend/subscription-api.ts:** 289:24
+- **backup/pre-final-lint-20250825_093523/src/backend/webhook-endpoint.ts:** 105:14, 126:9
+- **backup/pre-final-lint-20250825_093523/src/components/AlarmForm.tsx:** 344:27, 430:39
+- **backup/pre-final-lint-20250825_093523/src/components/AnalyticsProvider.tsx:** 152:24, 153:22
+- **backup/pre-final-lint-20250825_093523/src/components/EnhancedMediaContent.tsx:** 331:18
+- **backup/pre-final-lint-20250825_093523/src/components/PushNotificationTester.tsx:** 152:30, 152:55, 197:16
+- **backup/pre-final-lint-20250825_093523/src/components/RealtimeDemo.tsx:** 343:10
+- **backup/pre-final-lint-20250825_093523/src/components/ui/form.tsx:** 133:16
+- **backup/pre-final-lint-20250825_093523/src/config/initializeApp.ts:** 26:7, 33:9
+- **backup/pre-final-lint-20250825_093523/src/hooks/useAudioLazyLoading.ts:** 83:16, 153:18, 153:43, 234:11
+- **backup/pre-final-lint-20250825_093523/src/hooks/useAuth.ts:** 84:11, 319:9, 319:34, 324:9, 395:9, 395:34, 400:9, 440:9, 440:34, 445:9, 507:9, 507:34, 512:9, 582:9, 582:34, 587:9
+- **backup/pre-final-lint-20250825_093523/src/hooks/useEnhancedServiceWorker.ts:** 53:16, 82:16, 110:18, 141:18, 172:18, 208:16, 232:16
+- **backup/pre-final-lint-20250825_093523/src/hooks/usePushNotifications.ts:** 66:16, 103:9, 144:9, 184:11, 222:11, 249:11, 276:11, 303:9, 341:9
+- **backup/pre-final-lint-20250825_093523/src/hooks/useSubscription.ts:** 190:11, 301:11, 301:36, 353:11, 400:11, 477:13, 493:11, 508:11, 529:18, 544:13
+- **backup/pre-final-lint-20250825_093523/src/services/advanced-analytics.ts:** 227:13, 524:25, 562:13, 833:23, 850:23, 872:23
+- **backup/pre-final-lint-20250825_093523/src/services/alarm-api-security.ts:** 294:9
+- **backup/pre-final-lint-20250825_093523/src/services/alarm-backup-redundancy.ts:** 186:9, 190:13, 377:9
+- **backup/pre-final-lint-20250825_093523/src/services/alarm-battle-integration.ts:** 69:16, 119:16
+- **backup/pre-final-lint-20250825_093523/src/services/alarm-rate-limiting.ts:** 294:9
+- **backup/pre-final-lint-20250825_093523/src/services/alarm-security-integration.ts:** 861:7
+- **backup/pre-final-lint-20250825_093523/src/services/alarm.ts:** 61:28, 90:9, 98:13
+- **backup/pre-final-lint-20250825_093523/src/services/analytics-config.ts:** 73:11, 73:36, 88:11, 88:36
+- **backup/pre-final-lint-20250825_093523/src/services/analytics.ts:** 380:22
+- **backup/pre-final-lint-20250825_093523/src/services/app-analytics.ts:** 135:9, 168:9, 189:9
+- **backup/pre-final-lint-20250825_093523/src/services/audio-manager.ts:** 1153:13
+- **backup/pre-final-lint-20250825_093523/src/services/base/BaseService.ts:** 332:31, 333:13, 367:9, 370:9, 479:15
+- **backup/pre-final-lint-20250825_093523/src/services/convertkit-service.ts:** 119:9, 241:9
+- **backup/pre-final-lint-20250825_093523/src/services/custom-sound-manager.ts:** 184:16
+- **backup/pre-final-lint-20250825_093523/src/services/email-campaign.ts:** 63:9, 178:9, 292:9, 396:9, 433:9
+- **backup/pre-final-lint-20250825_093523/src/services/email-campaigns.ts:** 65:9, 69:13, 297:9, 343:9, 526:9, 553:9, 625:9, 629:13, 663:9, 680:11, 703:9, 707:13, 759:9
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-alarm.ts:** 246:13, 316:13, 363:13, 428:13, 496:13, 590:13
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-battle.ts:** 321:13, 372:13, 427:13, 508:13, 1127:25, 1143:11, 1143:54, 1169:25, 1182:25, 1197:25
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-offline-storage.ts:** 135:18, 273:18, 618:16
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-subscription.ts:** 293:13, 356:13, 403:13, 610:13, 801:9, 838:9, 908:9
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-voice.ts:** 240:13, 299:13
+- **backup/pre-final-lint-20250825_093523/src/services/error-handler.ts:** 132:27, 205:27, 334:21, 363:23, 582:11, 582:36, 615:62, 619:13, 627:13
+- **backup/pre-final-lint-20250825_093523/src/services/feature-gate-service.ts:** 341:9
+- **backup/pre-final-lint-20250825_093523/src/services/nuclear-mode.ts:** 331:9, 331:34
+- **backup/pre-final-lint-20250825_093523/src/services/offline-analytics.ts:** 405:18
+- **backup/pre-final-lint-20250825_093523/src/services/offline-gaming.ts:** 197:13
+- **backup/pre-final-lint-20250825_093523/src/services/offline-manager.ts:** 374:28, 374:53
+- **backup/pre-final-lint-20250825_093523/src/services/offline-sleep-tracker.ts:** 266:13
+- **backup/pre-final-lint-20250825_093523/src/services/offline-storage.ts:** 61:13, 139:13, 161:13, 349:13, 374:13, 431:13
+- **backup/pre-final-lint-20250825_093523/src/services/premium.ts:** 228:9, 256:9
+- **backup/pre-final-lint-20250825_093523/src/services/push-notifications.ts:** 138:9, 346:9, 491:9
+- **backup/pre-final-lint-20250825_093523/src/services/revenue-analytics.ts:** 147:23, 251:23, 271:23, 343:23, 443:23, 469:23
+- **backup/pre-final-lint-20250825_093523/src/services/scheduler-core.ts:** 352:35, 388:55, 413:51, 438:49, 479:52, 568:57, 576:27
+- **backup/pre-final-lint-20250825_093523/src/services/secure-alarm-storage.ts:** 106:9, 218:9, 256:9, 260:13
+- **backup/pre-final-lint-20250825_093523/src/services/sleep-analysis.ts:** 116:25, 138:25
+- **backup/pre-final-lint-20250825_093523/src/services/smart-alarm-scheduler.ts:** 153:25, 207:25, 226:25, 244:25, 609:25
+- **backup/pre-final-lint-20250825_093523/src/services/stripe-service.ts:** 59:9, 63:13, 109:9, 113:13, 199:9, 205:9, 205:34, 212:18, 275:9, 285:18, 361:9, 371:18, 416:9, 423:13, 447:9, 451:13, 473:9, 520:9, 527:13, 559:9, 563:13, 590:9, 622:9, 649:9, 687:9, 712:9
+- **backup/pre-final-lint-20250825_093523/src/services/struggling-sam-api.ts:** 78:13
+- **backup/pre-final-lint-20250825_093523/src/services/subscription-service.ts:** 68:9, 72:13, 90:9, 123:9, 139:9, 161:9, 243:9, 298:9, 350:9, 389:9, 444:9, 482:9, 536:9, 616:9, 687:9, 740:9
+- **backup/pre-final-lint-20250825_093523/src/services/supabase.ts:** 107:30, 124:17, 187:15, 301:9, 508:9, 726:15, 830:47
+- **backup/pre-final-lint-20250825_093523/src/services/theme-persistence.ts:** 66:9, 151:9, 189:9, 218:9, 281:9, 319:9, 360:9, 364:13, 393:9, 421:9
+- **backup/pre-final-lint-20250825_093523/src/services/typed-realtime-service.ts:** 120:61, 134:13, 173:56, 183:13, 563:22
+- **backup/pre-final-lint-20250825_093523/src/services/user-testing.ts:** 174:9, 207:9, 211:13, 237:9, 357:9, 361:13, 403:9, 407:13
+- **backup/pre-final-lint-20250825_093523/src/services/voice-ai-enhanced.ts:** 1028:25, 1062:25
+- **backup/pre-final-lint-20250825_093523/src/services/voice-biometrics.ts:** 127:13, 264:13, 325:13, 954:25, 973:25
+- **backup/pre-final-lint-20250825_093523/src/services/voice-recognition-enhanced.ts:** 463:17
+- **backup/pre-final-lint-20250825_093523/src/services/voice-smart-integration.ts:** 263:13
+- **backup/pre-final-lint-20250825_093523/src/utils/http-client.ts:** 452:18
+- **backup/pre-final-lint-20250825_093523/src/utils/image-optimization.tsx:** 416:7
+- **backup/pre-final-lint-20250825_093523/src/utils/network-optimization.tsx:** 258:21, 262:13
+- **backup/pre-final-lint-20250825_093523/src/utils/premium-testing.ts:** 144:39, 155:33, 201:49, 212:39, 256:49, 267:39, 304:59, 315:48
+- **backup/pre-final-lint-20250825_093523/src/utils/progressive-loading.tsx:** 444:13, 503:26
+- **backup/pre-final-lint-20250825_093523/src/utils/service-worker-manager.ts:** 55:9, 202:23, 218:23
+- **src/App.tsx:** 306:11, 357:13, 380:9, 414:18, 418:11, 418:36, 425:11, 425:36, 688:11, 729:15, 756:9, 830:9, 1063:11, 1374:16, 1379:16, 1383:9, 1383:34, 1391:9, 1391:34, 1481:16, 1484:28, 1484:53, 1489:9, 1489:34, 1557:16, 1560:28, 1560:53, 1565:9, 1565:34, 1645:16, 1648:28, 1648:53, 1653:9, 1653:34, 1716:18, 1720:11, 1720:36, 1725:11, 1725:36
+- **src/backend/performance-monitoring.ts:** 1425:20, 1426:18, 1431:23, 1432:24, 1478:24, 1479:22
+- **src/backend/stripe-webhooks.ts:** 140:13, 628:23, 639:23, 650:23, 663:23, 673:23, 682:23, 711:23
+- **src/backend/subscription-api.ts:** 289:24
+- **src/backend/webhook-endpoint.ts:** 105:14, 126:9
+- **src/components/AlarmForm.tsx:** 344:27, 430:39
+- **src/components/AnalyticsProvider.tsx:** 152:24, 153:22
+- **src/components/EnhancedMediaContent.tsx:** 331:18
+- **src/components/PushNotificationTester.tsx:** 152:30, 152:55, 197:16
+- **src/components/RealtimeDemo.tsx:** 343:10
+- **src/components/ui/form.tsx:** 133:16
+- **src/config/initializeApp.ts:** 26:7, 33:9
+- **src/hooks/useAudioLazyLoading.ts:** 83:16, 153:18, 153:43, 234:11
+- **src/hooks/useAuth.ts:** 84:11, 319:9, 319:34, 324:9, 395:9, 395:34, 400:9, 440:9, 440:34, 445:9, 507:9, 507:34, 512:9, 582:9, 582:34, 587:9
+- **src/hooks/useEnhancedServiceWorker.ts:** 53:16, 82:16, 110:18, 141:18, 172:18, 208:16, 232:16
+- **src/hooks/usePushNotifications.ts:** 66:16, 103:9, 144:9, 184:11, 222:11, 249:11, 276:11, 303:9, 341:9
+- **src/hooks/useSubscription.ts:** 190:11, 301:11, 301:36, 353:11, 400:11, 477:13, 493:11, 508:11, 529:18, 544:13
+- **src/services/advanced-analytics.ts:** 227:13, 524:25, 562:13, 833:23, 850:23, 872:23
+- **src/services/alarm-api-security.ts:** 294:9
+- **src/services/alarm-backup-redundancy.ts:** 186:9, 190:13, 377:9
+- **src/services/alarm-battle-integration.ts:** 69:16, 119:16
+- **src/services/alarm-rate-limiting.ts:** 294:9
+- **src/services/alarm-security-integration.ts:** 861:7
+- **src/services/alarm.ts:** 61:28, 90:9, 98:13
+- **src/services/analytics-config.ts:** 73:11, 73:36, 88:11, 88:36
+- **src/services/analytics.ts:** 380:22
+- **src/services/app-analytics.ts:** 135:9, 168:9, 189:9
+- **src/services/audio-manager.ts:** 1153:13
+- **src/services/base/BaseService.ts:** 332:31, 333:13, 367:9, 370:9, 479:15
+- **src/services/convertkit-service.ts:** 119:9, 241:9
+- **src/services/custom-sound-manager.ts:** 184:16
+- **src/services/email-campaign.ts:** 63:9, 178:9, 292:9, 396:9, 433:9
+- **src/services/email-campaigns.ts:** 65:9, 69:13, 297:9, 343:9, 526:9, 553:9, 625:9, 629:13, 663:9, 680:11, 703:9, 707:13, 759:9
+- **src/services/enhanced-alarm.ts:** 246:13, 316:13, 363:13, 428:13, 496:13, 590:13
+- **src/services/enhanced-battle.ts:** 321:13, 372:13, 427:13, 508:13, 1127:25, 1143:11, 1143:54, 1169:25, 1182:25, 1197:25
+- **src/services/enhanced-offline-storage.ts:** 135:18, 273:18, 618:16
+- **src/services/enhanced-subscription.ts:** 293:13, 356:13, 403:13, 610:13, 801:9, 838:9, 908:9
+- **src/services/enhanced-voice.ts:** 240:13, 299:13
+- **src/services/error-handler.ts:** 132:27, 205:27, 334:21, 363:23, 582:11, 582:36, 615:62, 619:13, 627:13
+- **src/services/feature-gate-service.ts:** 341:9
+- **src/services/nuclear-mode.ts:** 331:9, 331:34
+- **src/services/offline-analytics.ts:** 405:18
+- **src/services/offline-gaming.ts:** 197:13
+- **src/services/offline-manager.ts:** 374:28, 374:53
+- **src/services/offline-sleep-tracker.ts:** 266:13
+- **src/services/offline-storage.ts:** 61:13, 139:13, 161:13, 349:13, 374:13, 431:13
+- **src/services/premium.ts:** 228:9, 256:9
+- **src/services/push-notifications.ts:** 138:9, 346:9, 491:9
+- **src/services/revenue-analytics.ts:** 147:23, 251:23, 271:23, 343:23, 443:23, 469:23
+- **src/services/scheduler-core.ts:** 352:35, 388:55, 413:51, 438:49, 479:52, 568:57, 576:27
+- **src/services/secure-alarm-storage.ts:** 106:9, 218:9, 256:9, 260:13
+- **src/services/sleep-analysis.ts:** 116:25, 138:25
+- **src/services/smart-alarm-scheduler.ts:** 153:25, 207:25, 226:25, 244:25, 609:25
+- **src/services/stripe-service.ts:** 59:9, 63:13, 109:9, 113:13, 199:9, 205:9, 205:34, 212:18, 275:9, 285:18, 361:9, 371:18, 416:9, 423:13, 447:9, 451:13, 473:9, 520:9, 527:13, 559:9, 563:13, 590:9, 622:9, 649:9, 687:9, 712:9
+- **src/services/struggling-sam-api.ts:** 78:13
+- **src/services/subscription-service.ts:** 68:9, 72:13, 90:9, 123:9, 139:9, 161:9, 243:9, 298:9, 350:9, 389:9, 444:9, 482:9, 536:9, 616:9, 687:9, 740:9
+- **src/services/supabase.ts:** 107:30, 124:17, 187:15, 301:9, 508:9, 726:15, 830:47
+- **src/services/theme-persistence.ts:** 66:9, 151:9, 189:9, 218:9, 281:9, 319:9, 360:9, 364:13, 393:9, 421:9
+- **src/services/typed-realtime-service.ts:** 120:61, 134:13, 173:56, 183:13, 563:22
+- **src/services/user-testing.ts:** 174:9, 207:9, 211:13, 237:9, 357:9, 361:13, 403:9, 407:13
+- **src/services/voice-ai-enhanced.ts:** 1028:25, 1062:25
+- **src/services/voice-biometrics.ts:** 127:13, 264:13, 325:13, 954:25, 973:25
+- **src/services/voice-recognition-enhanced.ts:** 463:17
+- **src/services/voice-smart-integration.ts:** 263:13
+- **src/utils/http-client.ts:** 452:18
+- **src/utils/image-optimization.tsx:** 416:7
+- **src/utils/network-optimization.tsx:** 258:21, 262:13
+- **src/utils/premium-testing.ts:** 144:39, 155:33, 201:49, 212:39, 256:49, 267:39, 304:59, 315:48
+- **src/utils/progressive-loading.tsx:** 444:13, 503:26
+- **src/utils/service-worker-manager.ts:** 55:9, 202:23, 218:23
+
+### 2. `config` (288 occurrences in 46 files)
+
+- **backup/pre-final-lint-20250825_093523/src/backend/webhook-config.ts:** 234:7, 238:7
+- **backup/pre-final-lint-20250825_093523/src/components/ExtendedScreenReaderTester.tsx:** 210:16, 224:16
+- **backup/pre-final-lint-20250825_093523/src/components/ui/chart.tsx:** 71:22, 137:11, 137:40, 153:66, 324:28, 325:7, 326:7, 326:34
+- **backup/pre-final-lint-20250825_093523/src/config/stripe.ts:** 16:19, 17:14, 18:18
+- **backup/pre-final-lint-20250825_093523/src/hooks/useAccessibilityPreferences.ts:** 123:19, 124:17
+- **backup/pre-final-lint-20250825_093523/src/hooks/useAnimations.ts:** 100:75
+- **backup/pre-final-lint-20250825_093523/src/hooks/useRealtime.tsx:** 107:16
+- **backup/pre-final-lint-20250825_093523/src/services/advanced-conditions-helper.ts:** 130:23, 131:27, 132:27
+- **backup/pre-final-lint-20250825_093523/src/services/alarm-executor.ts:** 88:48
+- **backup/pre-final-lint-20250825_093523/src/services/analytics.ts:** 148:15, 149:13, 150:20, 151:14, 152:31, 196:39, 215:30, 216:26, 230:22, 231:18, 232:21, 233:17, 570:24, 571:20, 602:20, 788:30, 791:13
+- **backup/pre-final-lint-20250825_093523/src/services/email-campaign.ts:** 36:21, 40:19, 41:22, 42:22, 43:21
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-analytics.ts:** 192:15, 193:13, 194:20, 195:14, 196:31, 808:18, 809:13, 810:11, 811:12, 812:29, 813:21, 814:27, 815:19, 816:20, 817:16, 818:25, 819:32, 820:24, 821:18
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-battle.ts:** 1260:18, 1261:23, 1262:31, 1263:22, 1264:24, 1265:24, 1266:27, 1267:26, 1268:27, 1269:19, 1270:31, 1271:31, 1272:24, 1273:22, 1274:25, 1275:27, 1276:27
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-performance-monitor.ts:** 533:15, 534:14, 535:18, 536:17, 539:20, 540:13, 1163:18, 1164:32, 1165:23, 1166:24, 1167:25, 1168:27, 1169:30, 1177:23, 1178:22, 1179:20, 1180:21, 1181:25, 1182:30, 1183:29, 1184:27, 1185:26, 1186:36, 1187:28, 1188:8
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-voice.ts:** 739:18, 740:19, 741:22, 742:21, 743:19, 744:18, 745:19, 746:20, 747:26, 748:25, 749:21, 750:23, 751:19, 752:18
+- **backup/pre-final-lint-20250825_093523/src/services/sentry.ts:** 61:19, 65:14, 66:22, 82:11, 85:35, 101:15
+- **backup/pre-final-lint-20250825_093523/src/services/sound-effects.ts:** 1253:7
+- **backup/pre-final-lint-20250825_093523/src/services/stripe-service.ts:** 47:40, 53:21
+- **backup/pre-final-lint-20250825_093523/src/services/typed-realtime-service.ts:** 888:9, 892:9
+- **backup/pre-final-lint-20250825_093523/src/types/alarm-scheduling.ts:** 230:8
+- **backup/pre-final-lint-20250825_093523/src/utils/frame-rate-manager.tsx:** 278:36, 279:32, 283:36, 544:20
+- **backup/pre-final-lint-20250825_093523/src/utils/http-client.ts:** 42:10, 170:17, 176:10, 444:12, 482:16, 494:14, 549:14
+- **backup/pre-final-lint-20250825_093523/src/utils/progressive-loading.tsx:** 308:47
+- **src/backend/webhook-config.ts:** 234:7, 238:7
+- **src/components/ExtendedScreenReaderTester.tsx:** 210:16, 224:16
+- **src/components/ui/chart.tsx:** 71:22, 137:11, 137:40, 153:66, 324:28, 325:7, 326:7, 326:34
+- **src/config/stripe.ts:** 16:19, 17:14, 18:18
+- **src/hooks/useAccessibilityPreferences.ts:** 123:19, 124:17
+- **src/hooks/useAnimations.ts:** 100:75
+- **src/hooks/useRealtime.tsx:** 107:16
+- **src/services/advanced-conditions-helper.ts:** 130:23, 131:27, 132:27
+- **src/services/alarm-executor.ts:** 88:48
+- **src/services/analytics.ts:** 148:15, 149:13, 150:20, 151:14, 152:31, 196:39, 215:30, 216:26, 230:22, 231:18, 232:21, 233:17, 570:24, 571:20, 602:20, 788:30, 791:13
+- **src/services/email-campaign.ts:** 36:21, 40:19, 41:22, 42:22, 43:21
+- **src/services/enhanced-analytics.ts:** 192:15, 193:13, 194:20, 195:14, 196:31, 808:18, 809:13, 810:11, 811:12, 812:29, 813:21, 814:27, 815:19, 816:20, 817:16, 818:25, 819:32, 820:24, 821:18
+- **src/services/enhanced-battle.ts:** 1260:18, 1261:23, 1262:31, 1263:22, 1264:24, 1265:24, 1266:27, 1267:26, 1268:27, 1269:19, 1270:31, 1271:31, 1272:24, 1273:22, 1274:25, 1275:27, 1276:27
+- **src/services/enhanced-performance-monitor.ts:** 533:15, 534:14, 535:18, 536:17, 539:20, 540:13, 1163:18, 1164:32, 1165:23, 1166:24, 1167:25, 1168:27, 1169:30, 1177:23, 1178:22, 1179:20, 1180:21, 1181:25, 1182:30, 1183:29, 1184:27, 1185:26, 1186:36, 1187:28, 1188:8
+- **src/services/enhanced-voice.ts:** 739:18, 740:19, 741:22, 742:21, 743:19, 744:18, 745:19, 746:20, 747:26, 748:25, 749:21, 750:23, 751:19, 752:18
+- **src/services/sentry.ts:** 61:19, 65:14, 66:22, 82:11, 85:35, 101:15
+- **src/services/sound-effects.ts:** 1253:7
+- **src/services/stripe-service.ts:** 47:40, 53:21
+- **src/services/typed-realtime-service.ts:** 888:9, 892:9
+- **src/types/alarm-scheduling.ts:** 230:8
+- **src/utils/frame-rate-manager.tsx:** 278:36, 279:32, 283:36, 544:20
+- **src/utils/http-client.ts:** 42:10, 170:17, 176:10, 444:12, 482:16, 494:14, 549:14
+- **src/utils/progressive-loading.tsx:** 308:47
+
+### 3. `_event` (260 occurrences in 84 files)
+
+- **backup/pre-final-lint-20250825_093523/src/App.tsx:** 619:34
+- **backup/pre-final-lint-20250825_093523/src/analytics/PersonaAnalytics.tsx:** 253:21, 317:21
+- **backup/pre-final-lint-20250825_093523/src/backend/cloudflare-functions.ts:** 137:9, 143:52
+- **backup/pre-final-lint-20250825_093523/src/backend/monitoring-integration.ts:** 324:24
+- **backup/pre-final-lint-20250825_093523/src/backend/subscription-api.ts:** 699:21, 704:38
+- **backup/pre-final-lint-20250825_093523/src/backend/webhook-endpoint.ts:** 68:53, 70:28, 75:40, 78:42, 84:16, 90:56
+- **backup/pre-final-lint-20250825_093523/src/components/CustomThemeManager.tsx:** 332:21
+- **backup/pre-final-lint-20250825_093523/src/components/OfflineDiagnostics.tsx:** 139:54
+- **backup/pre-final-lint-20250825_093523/src/components/OfflineIndicator.tsx:** 85:54, 95:54, 298:54, 326:54
+- **backup/pre-final-lint-20250825_093523/src/hooks/useAuth.ts:** 183:33, 206:36
+- **backup/pre-final-lint-20250825_093523/src/services/advanced-analytics.ts:** 241:36, 245:26, 247:36, 574:29, 624:29, 653:24, 655:31, 691:29, 696:31, 898:20, 904:31, 1041:31, 1051:31, 1054:33, 1232:20, 1235:31
+- **backup/pre-final-lint-20250825_093523/src/services/audio-manager.ts:** 126:21, 542:40
+- **backup/pre-final-lint-20250825_093523/src/services/contextual-themes.ts:** 383:16
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-analytics.ts:** 336:29, 561:23, 563:26, 698:63
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-cache-manager.ts:** 119:21, 171:25
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-calendar-service.ts:** 254:35, 318:34, 328:24, 387:18, 449:49, 542:25, 542:58, 554:35, 708:34, 740:35, 771:47, 775:28, 824:53
+- **backup/pre-final-lint-20250825_093523/src/services/error-handler.ts:** 504:19, 521:19, 537:29
+- **backup/pre-final-lint-20250825_093523/src/services/notification.ts:** 405:32
+- **backup/pre-final-lint-20250825_093523/src/services/offline-analytics.ts:** 187:13, 188:35, 243:28, 244:39, 272:19, 501:13, 506:13
+- **backup/pre-final-lint-20250825_093523/src/services/offline-gaming.ts:** 116:13, 117:35
+- **backup/pre-final-lint-20250825_093523/src/services/offline-manager.ts:** 185:41
+- **backup/pre-final-lint-20250825_093523/src/services/offline-sleep-tracker.ts:** 180:13, 181:35
+- **backup/pre-final-lint-20250825_093523/src/services/performance-monitor.ts:** 285:16, 291:17
+- **backup/pre-final-lint-20250825_093523/src/services/privacy-compliance.ts:** 315:18, 334:50, 492:31
+- **backup/pre-final-lint-20250825_093523/src/services/pwa-manager.ts:** 179:30
+- **backup/pre-final-lint-20250825_093523/src/services/pwa-service.ts:** 133:41
+- **backup/pre-final-lint-20250825_093523/src/services/realtime-service.ts:** 218:35
+- **backup/pre-final-lint-20250825_093523/src/services/security-monitoring-forensics.ts:** 145:29, 148:37, 151:31, 154:33, 164:19, 379:11, 908:38
+- **backup/pre-final-lint-20250825_093523/src/services/sentry.ts:** 92:49, 98:38
+- **backup/pre-final-lint-20250825_093523/src/services/service-worker-manager.ts:** 166:39, 227:15, 231:38
+- **backup/pre-final-lint-20250825_093523/src/services/user-testing.ts:** 499:22, 513:16
+- **backup/pre-final-lint-20250825_093523/src/services/voice-biometrics.ts:** 160:15, 161:25
+- **backup/pre-final-lint-20250825_093523/src/services/voice-enhanced.ts:** 183:53
+- **backup/pre-final-lint-20250825_093523/src/services/voice.ts:** 140:54
+- **backup/pre-final-lint-20250825_093523/src/utils/enhanced-focus.ts:** 296:32
+- **backup/pre-final-lint-20250825_093523/src/utils/fallback-strategies.tsx:** 147:34, 151:34
+- **backup/pre-final-lint-20250825_093523/src/utils/keyboard-navigation.ts:** 706:28, 721:28, 732:30, 744:30, 756:30, 807:28, 834:28
+- **backup/pre-final-lint-20250825_093523/src/utils/mobile-accessibility.ts:** 589:28, 596:28, 603:28, 610:28, 624:28, 631:28
+- **backup/pre-final-lint-20250825_093523/src/utils/progressive-loading.tsx:** 110:9
+- **backup/pre-final-lint-20250825_093523/src/utils/pwa.ts:** 95:28
+- **backup/pre-final-lint-20250825_093523/src/utils/service-worker-manager.ts:** 239:17, 251:30, 286:26
+- **backup/pre-final-lint-20250825_093523/src/utils/voice-accessibility.ts:** 341:49, 342:57, 560:28, 571:28, 582:30, 596:30, 610:30
+- **src/App.tsx:** 622:34
+- **src/analytics/PersonaAnalytics.tsx:** 253:21, 317:21
+- **src/backend/cloudflare-functions.ts:** 137:9, 143:52
+- **src/backend/monitoring-integration.ts:** 324:24
+- **src/backend/subscription-api.ts:** 699:21, 704:38
+- **src/backend/webhook-endpoint.ts:** 68:53, 70:28, 75:40, 78:42, 84:16, 90:56
+- **src/components/CustomThemeManager.tsx:** 332:21
+- **src/components/OfflineDiagnostics.tsx:** 139:54
+- **src/components/OfflineIndicator.tsx:** 85:54, 95:54, 298:54, 326:54
+- **src/hooks/useAuth.ts:** 183:33, 206:36
+- **src/services/advanced-analytics.ts:** 241:36, 245:26, 247:36, 574:29, 624:29, 653:24, 655:31, 691:29, 696:31, 898:20, 904:31, 1041:31, 1051:31, 1054:33, 1232:20, 1235:31
+- **src/services/audio-manager.ts:** 126:21, 542:40
+- **src/services/contextual-themes.ts:** 383:16
+- **src/services/enhanced-analytics.ts:** 336:29, 561:23, 563:26, 698:63
+- **src/services/enhanced-cache-manager.ts:** 119:21, 171:25
+- **src/services/enhanced-calendar-service.ts:** 254:35, 318:34, 328:24, 387:18, 449:49, 542:25, 542:58, 554:35, 708:34, 740:35, 771:47, 775:28, 824:53
+- **src/services/error-handler.ts:** 504:19, 521:19, 537:29
+- **src/services/notification.ts:** 405:32
+- **src/services/offline-analytics.ts:** 187:13, 188:35, 243:28, 244:39, 272:19, 501:13, 506:13
+- **src/services/offline-gaming.ts:** 116:13, 117:35
+- **src/services/offline-manager.ts:** 185:41
+- **src/services/offline-sleep-tracker.ts:** 180:13, 181:35
+- **src/services/performance-monitor.ts:** 285:16, 291:17
+- **src/services/privacy-compliance.ts:** 315:18, 334:50, 492:31
+- **src/services/pwa-manager.ts:** 179:30
+- **src/services/pwa-service.ts:** 133:41
+- **src/services/realtime-service.ts:** 218:35
+- **src/services/security-monitoring-forensics.ts:** 145:29, 148:37, 151:31, 154:33, 164:19, 379:11, 908:38
+- **src/services/sentry.ts:** 92:49, 98:38
+- **src/services/service-worker-manager.ts:** 166:39, 227:15, 231:38
+- **src/services/user-testing.ts:** 499:22, 513:16
+- **src/services/voice-biometrics.ts:** 160:15, 161:25
+- **src/services/voice-enhanced.ts:** 183:53
+- **src/services/voice.ts:** 140:54
+- **src/utils/enhanced-focus.ts:** 296:32
+- **src/utils/fallback-strategies.tsx:** 147:34, 151:34
+- **src/utils/keyboard-navigation.ts:** 706:28, 721:28, 732:30, 744:30, 756:30, 807:28, 834:28
+- **src/utils/mobile-accessibility.ts:** 589:28, 596:28, 603:28, 610:28, 624:28, 631:28
+- **src/utils/progressive-loading.tsx:** 110:9
+- **src/utils/pwa.ts:** 95:28
+- **src/utils/service-worker-manager.ts:** 239:17, 251:30, 286:26
+- **src/utils/voice-accessibility.ts:** 341:49, 342:57, 560:28, 571:28, 582:30, 596:30, 610:30
+
+### 4. `_config` (232 occurrences in 32 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/AchievementBadges.tsx:** 159:12, 165:27, 219:53, 290:53
+- **backup/pre-final-lint-20250825_093523/src/components/CommunityChallenge.tsx:** 148:27, 165:48, 167:70, 320:45
+- **backup/pre-final-lint-20250825_093523/src/components/HabitCelebration.tsx:** 237:70, 238:35, 254:46, 269:37, 276:45, 291:33, 423:45, 459:72
+- **backup/pre-final-lint-20250825_093523/src/components/SmartUpgradePrompt.tsx:** 176:70, 177:38, 208:48, 218:70, 223:49, 237:72, 376:45, 379:20, 406:72
+- **backup/pre-final-lint-20250825_093523/src/components/premium/FeatureUtils.tsx:** 92:84, 95:8
+- **backup/pre-final-lint-20250825_093523/src/config/environment.ts:** 224:14, 229:7, 231:33, 232:29, 233:32, 234:28, 235:29, 236:29, 237:30, 238:44, 251:8, 255:8, 260:42, 264:7, 265:10, 271:10, 279:43, 284:7, 285:10, 289:10, 293:9, 306:10, 312:10, 317:19, 323:8
+- **backup/pre-final-lint-20250825_093523/src/services/animation-manager.ts:** 194:19, 206:19, 215:17
+- **backup/pre-final-lint-20250825_093523/src/services/audio-manager.ts:** 516:28
+- **backup/pre-final-lint-20250825_093523/src/services/base/ServiceContainer.ts:** 69:64, 70:33
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-battle.ts:** 243:25, 246:26, 282:28, 595:13, 684:9, 753:38, 762:20
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-performance-monitor.ts:** 413:24, 416:45, 453:9, 454:26, 460:37, 462:21, 489:10, 490:7, 499:7, 870:9, 910:26, 936:23, 942:25, 973:23, 992:27, 1070:9, 1071:9, 1072:9, 1073:9, 1074:9, 1075:9
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-subscription.ts:** 226:54, 281:52, 333:59, 390:60, 434:54, 550:47, 713:26, 718:27
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-voice.ts:** 184:47, 190:35, 340:10, 345:47, 491:9, 495:26, 515:15, 636:33, 641:51, 646:40, 697:48
+- **backup/pre-final-lint-20250825_093523/src/services/offline-analytics.ts:** 159:11, 160:44
+- **backup/pre-final-lint-20250825_093523/src/services/struggling-sam-api.ts:** 67:41
+- **backup/pre-final-lint-20250825_093523/src/utils/progressive-loading.tsx:** 165:57, 196:13, 197:42, 255:44, 263:65, 432:72, 455:9, 458:47
+- **src/components/AchievementBadges.tsx:** 159:12, 165:27, 219:53, 290:53
+- **src/components/CommunityChallenge.tsx:** 148:27, 165:48, 167:70, 320:45
+- **src/components/HabitCelebration.tsx:** 237:70, 238:35, 254:46, 269:37, 276:45, 291:33, 423:45, 459:72
+- **src/components/SmartUpgradePrompt.tsx:** 176:70, 177:38, 208:48, 218:70, 223:49, 237:72, 376:45, 379:20, 406:72
+- **src/components/premium/FeatureUtils.tsx:** 92:84, 95:8
+- **src/config/environment.ts:** 224:14, 229:7, 231:33, 232:29, 233:32, 234:28, 235:29, 236:29, 237:30, 238:44, 251:8, 255:8, 260:42, 264:7, 265:10, 271:10, 279:43, 284:7, 285:10, 289:10, 293:9, 306:10, 312:10, 317:19, 323:8
+- **src/services/animation-manager.ts:** 194:19, 206:19, 215:17
+- **src/services/audio-manager.ts:** 516:28
+- **src/services/base/ServiceContainer.ts:** 69:64, 70:33
+- **src/services/enhanced-battle.ts:** 243:25, 246:26, 282:28, 595:13, 684:9, 753:38, 762:20
+- **src/services/enhanced-performance-monitor.ts:** 413:24, 416:45, 453:9, 454:26, 460:37, 462:21, 489:10, 490:7, 499:7, 870:9, 910:26, 936:23, 942:25, 973:23, 992:27, 1070:9, 1071:9, 1072:9, 1073:9, 1074:9, 1075:9
+- **src/services/enhanced-subscription.ts:** 226:54, 281:52, 333:59, 390:60, 434:54, 550:47, 713:26, 718:27
+- **src/services/enhanced-voice.ts:** 184:47, 190:35, 340:10, 345:47, 491:9, 495:26, 515:15, 636:33, 641:51, 646:40, 697:48
+- **src/services/offline-analytics.ts:** 159:11, 160:44
+- **src/services/struggling-sam-api.ts:** 67:41
+- **src/utils/progressive-loading.tsx:** 165:57, 196:13, 197:42, 255:44, 263:65, 432:72, 455:9, 458:47
+
+### 5. `user` (158 occurrences in 44 files)
+
+- **backup/pre-final-lint-20250825_093523/src/App.tsx:** 93:18, 93:44
+- **backup/pre-final-lint-20250825_093523/src/components/AlarmForm.tsx:** 94:7
+- **backup/pre-final-lint-20250825_093523/src/components/AlarmRinging.tsx:** 138:14
+- **backup/pre-final-lint-20250825_093523/src/components/StrugglingSamWrapper.tsx:** 54:23
+- **backup/pre-final-lint-20250825_093523/src/components/SubscriptionStatus.tsx:** 47:7, 210:12, 273:12, 283:12, 293:12, 431:10, 441:10, 451:10
+- **backup/pre-final-lint-20250825_093523/src/components/UserProfile.tsx:** 37:11, 75:13
+- **backup/pre-final-lint-20250825_093523/src/components/VoicePersonalitySelector.tsx:** 158:7
+- **backup/pre-final-lint-20250825_093523/src/components/VoiceSelector.tsx:** 204:7, 378:8
+- **backup/pre-final-lint-20250825_093523/src/services/alarm-access-control.ts:** 86:15
+- **backup/pre-final-lint-20250825_093523/src/services/alarm-battle-integration.ts:** 204:36
+- **backup/pre-final-lint-20250825_093523/src/services/alarm-rate-limiting.ts:** 559:13, 868:13, 870:18, 871:30, 872:29, 873:33
+- **backup/pre-final-lint-20250825_093523/src/services/alarm.ts:** 383:42, 394:44
+- **backup/pre-final-lint-20250825_093523/src/services/convertkit-service.ts:** 205:16, 206:21, 206:34, 208:20, 210:30, 211:24
+- **backup/pre-final-lint-20250825_093523/src/services/email-campaign.ts:** 81:20, 108:27, 342:16, 343:21, 343:34
+- **backup/pre-final-lint-20250825_093523/src/services/email-campaigns.ts:** 151:32, 196:24, 299:49, 347:19, 368:16, 369:21, 369:34, 375:20, 411:26, 414:20, 414:33, 418:21, 451:20, 452:25, 452:38, 457:24
+- **backup/pre-final-lint-20250825_093523/src/services/nuclear-mode.ts:** 376:15
+- **backup/pre-final-lint-20250825_093523/src/services/realtime-service.ts:** 309:17
+- **backup/pre-final-lint-20250825_093523/src/services/sentry.ts:** 135:11, 136:14, 137:17
+- **backup/pre-final-lint-20250825_093523/src/services/supabase.ts:** 311:11, 312:14, 313:13, 313:41, 314:17, 314:45, 315:20, 315:48
+- **backup/pre-final-lint-20250825_093523/src/services/voice-smart-integration.ts:** 246:9, 633:7, 691:20
+- **backup/pre-final-lint-20250825_093523/src/stories/Header.tsx:** 45:10
+- **backup/pre-final-lint-20250825_093523/src/types/user.ts:** 34:40, 35:10, 62:20, 65:9, 66:12, 70:15, 104:25
+- **src/App.tsx:** 96:18, 96:44
+- **src/components/AlarmForm.tsx:** 94:7
+- **src/components/AlarmRinging.tsx:** 138:14
+- **src/components/StrugglingSamWrapper.tsx:** 54:23
+- **src/components/SubscriptionStatus.tsx:** 47:7, 210:12, 273:12, 283:12, 293:12, 431:10, 441:10, 451:10
+- **src/components/UserProfile.tsx:** 37:11, 75:13
+- **src/components/VoicePersonalitySelector.tsx:** 158:7
+- **src/components/VoiceSelector.tsx:** 204:7, 378:8
+- **src/services/alarm-access-control.ts:** 86:15
+- **src/services/alarm-battle-integration.ts:** 204:36
+- **src/services/alarm-rate-limiting.ts:** 559:13, 868:13, 870:18, 871:30, 872:29, 873:33
+- **src/services/alarm.ts:** 383:42, 394:44
+- **src/services/convertkit-service.ts:** 205:16, 206:21, 206:34, 208:20, 210:30, 211:24
+- **src/services/email-campaign.ts:** 81:20, 108:27, 342:16, 343:21, 343:34
+- **src/services/email-campaigns.ts:** 151:32, 196:24, 299:49, 347:19, 368:16, 369:21, 369:34, 375:20, 411:26, 414:20, 414:33, 418:21, 451:20, 452:25, 452:38, 457:24
+- **src/services/nuclear-mode.ts:** 376:15
+- **src/services/realtime-service.ts:** 309:17
+- **src/services/sentry.ts:** 135:11, 136:14, 137:17
+- **src/services/supabase.ts:** 311:11, 312:14, 313:13, 313:41, 314:17, 314:45, 315:20, 315:48
+- **src/services/voice-smart-integration.ts:** 246:9, 633:7, 691:20
+- **src/stories/Header.tsx:** 45:10
+- **src/types/user.ts:** 34:40, 35:10, 62:20, 65:9, 66:12, 70:15, 104:25
+
+### 6. `_user` (116 occurrences in 34 files)
+
+- **backup/pre-final-lint-20250825_093523/src/backend/api.ts:** 324:60, 326:51, 342:14, 349:32
+- **backup/pre-final-lint-20250825_093523/src/backend/stripe-webhooks.ts:** 153:10, 199:31, 203:15, 263:9, 264:33, 270:17, 298:9, 299:33, 302:17, 314:9, 318:46, 321:17, 424:11, 425:50, 454:11, 455:58, 497:10
+- **backup/pre-final-lint-20250825_093523/src/components/FriendsManager.tsx:** 308:36, 316:63, 317:49
+- **backup/pre-final-lint-20250825_093523/src/components/RealtimeDemo.tsx:** 96:7
+- **backup/pre-final-lint-20250825_093523/src/components/VoiceAnalyticsDashboard.tsx:** 79:9, 85:10, 130:72
+- **backup/pre-final-lint-20250825_093523/src/components/premium/PremiumAnalytics.tsx:** 442:8, 451:55
+- **backup/pre-final-lint-20250825_093523/src/components/premium/PremiumTeamFeatures.tsx:** 595:8, 604:50
+- **backup/pre-final-lint-20250825_093523/src/components/premium/PremiumVoiceFeatures.tsx:** 636:8, 645:51
+- **backup/pre-final-lint-20250825_093523/src/components/premium/SubscriptionPage.tsx:** 37:50, 123:8
+- **backup/pre-final-lint-20250825_093523/src/hooks/useAuth.ts:** 69:26, 72:13, 76:13, 79:21, 296:11, 299:11, 306:19, 372:11, 375:11, 382:19
+- **backup/pre-final-lint-20250825_093523/src/services/alarm-rate-limiting.ts:** 529:54, 534:39, 569:25, 575:17
+- **backup/pre-final-lint-20250825_093523/src/services/alarm.ts:** 572:74
+- **backup/pre-final-lint-20250825_093523/src/services/email-campaigns.ts:** 493:12
+- **backup/pre-final-lint-20250825_093523/src/services/emotional-intelligence.ts:** 335:12
+- **backup/pre-final-lint-20250825_093523/src/services/stripe-service.ts:** 732:10, 750:58
+- **backup/pre-final-lint-20250825_093523/src/services/supabase.ts:** 284:11, 292:51
+- **backup/pre-final-lint-20250825_093523/src/stories/Page.tsx:** 16:15
+- **src/backend/api.ts:** 324:60, 326:51, 342:14, 349:32
+- **src/backend/stripe-webhooks.ts:** 153:10, 199:31, 203:15, 263:9, 264:33, 270:17, 298:9, 299:33, 302:17, 314:9, 318:46, 321:17, 424:11, 425:50, 454:11, 455:58, 497:10
+- **src/components/FriendsManager.tsx:** 308:36, 316:63, 317:49
+- **src/components/RealtimeDemo.tsx:** 96:7
+- **src/components/VoiceAnalyticsDashboard.tsx:** 79:9, 85:10, 130:72
+- **src/components/premium/PremiumAnalytics.tsx:** 442:8, 451:55
+- **src/components/premium/PremiumTeamFeatures.tsx:** 595:8, 604:50
+- **src/components/premium/PremiumVoiceFeatures.tsx:** 636:8, 645:51
+- **src/components/premium/SubscriptionPage.tsx:** 37:50, 123:8
+- **src/hooks/useAuth.ts:** 69:26, 72:13, 76:13, 79:21, 296:11, 299:11, 306:19, 372:11, 375:11, 382:19
+- **src/services/alarm-rate-limiting.ts:** 529:54, 534:39, 569:25, 575:17
+- **src/services/alarm.ts:** 572:74
+- **src/services/email-campaigns.ts:** 493:12
+- **src/services/emotional-intelligence.ts:** 335:12
+- **src/services/stripe-service.ts:** 732:10, 750:58
+- **src/services/supabase.ts:** 284:11, 292:51
+- **src/stories/Page.tsx:** 16:15
+
+### 7. `_error` (76 occurrences in 40 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/premium/PaymentFlow.tsx:** 382:14, 385:61
+- **backup/pre-final-lint-20250825_093523/src/components/premium/SubscriptionPage.tsx:** 54:9, 221:8, 224:55
+- **backup/pre-final-lint-20250825_093523/src/contexts/LanguageContext.tsx:** 287:7
+- **backup/pre-final-lint-20250825_093523/src/hooks/useRealtime.tsx:** 262:33, 282:5
+- **backup/pre-final-lint-20250825_093523/src/services/alarm-enhanced.ts:** 457:55
+- **backup/pre-final-lint-20250825_093523/src/services/base/BaseService.ts:** 183:54
+- **backup/pre-final-lint-20250825_093523/src/services/capacitor.ts:** 154:48
+- **backup/pre-final-lint-20250825_093523/src/services/convertkit-service.ts:** 236:55
+- **backup/pre-final-lint-20250825_093523/src/services/error-handler.ts:** 463:70, 561:59, 565:13, 636:33, 636:56
+- **backup/pre-final-lint-20250825_093523/src/services/lazy-audio-loader.ts:** 109:34, 110:20
+- **backup/pre-final-lint-20250825_093523/src/services/offline-storage.ts:** 325:80
+- **backup/pre-final-lint-20250825_093523/src/services/push-notifications.ts:** 237:49, 239:16
+- **backup/pre-final-lint-20250825_093523/src/services/realtime-service.ts:** 234:44, 235:38
+- **backup/pre-final-lint-20250825_093523/src/services/secure-push-notification.ts:** 219:56, 220:60
+- **backup/pre-final-lint-20250825_093523/src/services/sound-effects.ts:** 1288:64
+- **backup/pre-final-lint-20250825_093523/src/services/stripe-service.ts:** 169:21, 171:56, 174:68, 257:72, 332:72
+- **backup/pre-final-lint-20250825_093523/src/services/supabase.ts:** 228:15, 258:15
+- **backup/pre-final-lint-20250825_093523/src/services/voice-smart-integration.ts:** 245:40
+- **backup/pre-final-lint-20250825_093523/src/utils/analysis-worker.ts:** 195:39
+- **backup/pre-final-lint-20250825_093523/src/utils/performance-profiler.ts:** 255:60, 280:63
+- **src/components/premium/PaymentFlow.tsx:** 382:14, 385:61
+- **src/components/premium/SubscriptionPage.tsx:** 54:9, 221:8, 224:55
+- **src/contexts/LanguageContext.tsx:** 287:7
+- **src/hooks/useRealtime.tsx:** 262:33, 282:5
+- **src/services/alarm-enhanced.ts:** 457:55
+- **src/services/base/BaseService.ts:** 183:54
+- **src/services/capacitor.ts:** 154:48
+- **src/services/convertkit-service.ts:** 236:55
+- **src/services/error-handler.ts:** 463:70, 561:59, 565:13, 636:33, 636:56
+- **src/services/lazy-audio-loader.ts:** 109:34, 110:20
+- **src/services/offline-storage.ts:** 325:80
+- **src/services/push-notifications.ts:** 237:49, 239:16
+- **src/services/realtime-service.ts:** 234:44, 235:38
+- **src/services/secure-push-notification.ts:** 219:56, 220:60
+- **src/services/sound-effects.ts:** 1288:64
+- **src/services/stripe-service.ts:** 169:21, 171:56, 174:68, 257:72, 332:72
+- **src/services/supabase.ts:** 228:15, 258:15
+- **src/services/voice-smart-integration.ts:** 245:40
+- **src/utils/analysis-worker.ts:** 195:39
+- **src/utils/performance-profiler.ts:** 255:60, 280:63
+
+### 8. `persona` (48 occurrences in 10 files)
+
+- **backup/pre-final-lint-20250825_093523/src/analytics/PersonaAnalytics.tsx:** 127:7, 191:7, 215:7, 242:7, 266:7, 304:7
+- **backup/pre-final-lint-20250825_093523/src/services/convertkit-service.ts:** 173:44, 209:20, 214:27, 270:20
+- **backup/pre-final-lint-20250825_093523/src/services/email-campaign.ts:** 305:46, 316:56, 344:19, 371:56
+- **backup/pre-final-lint-20250825_093523/src/services/email-campaigns.ts:** 325:43, 348:11, 377:27, 420:18, 484:43, 500:47, 503:18, 511:45, 528:48
+- **backup/pre-final-lint-20250825_093523/src/templates/email-templates.ts:** 78:42
+- **src/analytics/PersonaAnalytics.tsx:** 127:7, 191:7, 215:7, 242:7, 266:7, 304:7
+- **src/services/convertkit-service.ts:** 173:44, 209:20, 214:27, 270:20
+- **src/services/email-campaign.ts:** 305:46, 316:56, 344:19, 371:56
+- **src/services/email-campaigns.ts:** 325:43, 348:11, 377:27, 420:18, 484:43, 500:47, 503:18, 511:45, 528:48
+- **src/templates/email-templates.ts:** 78:42
+
+### 9. `TimeoutHandle` (28 occurrences in 14 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/AnalyticsProvider.tsx:** 40:35, 41:35, 236:36, 263:28, 264:35
+- **backup/pre-final-lint-20250825_093523/src/components/VisualAlarmDisplay.tsx:** 46:36
+- **backup/pre-final-lint-20250825_093523/src/hooks/useFeatureGate.ts:** 212:27, 213:23
+- **backup/pre-final-lint-20250825_093523/src/services/advanced-analytics.ts:** 621:47, 685:49
+- **backup/pre-final-lint-20250825_093523/src/services/premium-theme-animations.ts:** 46:27
+- **backup/pre-final-lint-20250825_093523/src/services/theme-performance.ts:** 24:26, 272:18
+- **backup/pre-final-lint-20250825_093523/src/services/voice-ai-enhanced.ts:** 1155:43
+- **src/components/AnalyticsProvider.tsx:** 40:35, 41:35, 236:36, 263:28, 264:35
+- **src/components/VisualAlarmDisplay.tsx:** 46:36
+- **src/hooks/useFeatureGate.ts:** 212:27, 213:23
+- **src/services/advanced-analytics.ts:** 621:47, 685:49
+- **src/services/premium-theme-animations.ts:** 46:27
+- **src/services/theme-performance.ts:** 24:26, 272:18
+- **src/services/voice-ai-enhanced.ts:** 1155:43
+
+### 10. `fn` (26 occurrences in 4 files)
+
+- **backup/pre-final-lint-20250825_093523/src/stories/components/Dashboard.stories.tsx:** 81:17, 82:19, 83:27, 247:25, 248:27, 249:35, 265:25, 266:27, 267:35, 292:25, 293:27, 294:35
+- **backup/pre-final-lint-20250825_093523/src/stories/ui/Button.stories.tsx:** 51:14
+- **src/stories/components/Dashboard.stories.tsx:** 81:17, 82:19, 83:27, 247:25, 248:27, 249:35, 265:25, 266:27, 267:35, 292:25, 293:27, 294:35
+- **src/stories/ui/Button.stories.tsx:** 51:14
+
+### 11. `AlertTriangle` (18 occurrences in 14 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/ErrorBoundaryTest.tsx:** 129:16, 209:14
+- **backup/pre-final-lint-20250825_093523/src/components/NuclearModeBattle.tsx:** 427:16
+- **backup/pre-final-lint-20250825_093523/src/components/PushNotificationSettings.tsx:** 86:12
+- **backup/pre-final-lint-20250825_093523/src/components/PushNotificationTester.tsx:** 220:17, 245:12
+- **backup/pre-final-lint-20250825_093523/src/components/SmartAlarmDashboard.tsx:** 110:13
+- **backup/pre-final-lint-20250825_093523/src/components/SmartAlarmSettings.tsx:** 601:34
+- **backup/pre-final-lint-20250825_093523/src/components/SpecializedErrorBoundaries.tsx:** 199:6
+- **src/components/ErrorBoundaryTest.tsx:** 129:16, 209:14
+- **src/components/NuclearModeBattle.tsx:** 427:16
+- **src/components/PushNotificationSettings.tsx:** 86:12
+- **src/components/PushNotificationTester.tsx:** 220:17, 245:12
+- **src/components/SmartAlarmDashboard.tsx:** 110:13
+- **src/components/SmartAlarmSettings.tsx:** 601:34
+- **src/components/SpecializedErrorBoundaries.tsx:** 199:6
+
+### 12. `e` (12 occurrences in 6 files)
+
+- **backup/pre-final-lint-20250825_093523/src/backend/performance-monitoring.ts:** 1444:51, 1470:55
+- **backup/pre-final-lint-20250825_093523/src/services/error-handler.ts:** 426:55
+- **backup/pre-final-lint-20250825_093523/src/services/mobile-performance.ts:** 184:57, 193:58, 359:73
+- **src/backend/performance-monitoring.ts:** 1444:51, 1470:55
+- **src/services/error-handler.ts:** 426:55
+- **src/services/mobile-performance.ts:** 184:57, 193:58, 359:73
+
+### 13. `index` (12 occurrences in 8 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/AdaptiveAlarmList.tsx:** 199:24
+- **backup/pre-final-lint-20250825_093523/src/components/ui/input-otp.tsx:** 48:67
+- **backup/pre-final-lint-20250825_093523/src/utils/performance-alerts.tsx:** 719:83
+- **backup/pre-final-lint-20250825_093523/src/utils/screen-reader.ts:** 585:28, 653:21, 728:21
+- **src/components/AdaptiveAlarmList.tsx:** 199:24
+- **src/components/ui/input-otp.tsx:** 48:67
+- **src/utils/performance-alerts.tsx:** 719:83
+- **src/utils/screen-reader.ts:** 585:28, 653:21, 728:21
+
+### 14. `a` (12 occurrences in 12 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/MobileAlarmCard.tsx:** 302:58
+- **backup/pre-final-lint-20250825_093523/src/components/SmartAlarmDashboard.tsx:** 113:53
+- **backup/pre-final-lint-20250825_093523/src/components/VoiceSelector.tsx:** 357:54
+- **backup/pre-final-lint-20250825_093523/src/hooks/useEnhancedSmartAlarms.ts:** 144:60
+- **backup/pre-final-lint-20250825_093523/src/services/offline-manager.ts:** 250:33
+- **backup/pre-final-lint-20250825_093523/src/utils/performance-alerts.tsx:** 918:56
+- **src/components/MobileAlarmCard.tsx:** 302:58
+- **src/components/SmartAlarmDashboard.tsx:** 113:53
+- **src/components/VoiceSelector.tsx:** 357:54
+- **src/hooks/useEnhancedSmartAlarms.ts:** 144:60
+- **src/services/offline-manager.ts:** 250:33
+- **src/utils/performance-alerts.tsx:** 918:56
+
+### 15. `Alert` (12 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/NuclearModeChallenge.tsx:** 205:10, 211:11, 744:16, 750:17, 771:10, 777:11
+- **src/components/NuclearModeChallenge.tsx:** 205:10, 211:11, 744:16, 750:17, 771:10, 777:11
+
+### 16. `_index` (10 occurrences in 4 files)
+
+- **backup/pre-final-lint-20250825_093523/src/services/enhanced-battle.ts:** 1038:12, 1039:9, 1040:68
+- **backup/pre-final-lint-20250825_093523/src/services/offline-manager.ts:** 314:30, 518:35
+- **src/services/enhanced-battle.ts:** 1038:12, 1039:9, 1040:68
+- **src/services/offline-manager.ts:** 314:30, 518:35
+
+### 17. `timeframe` (9 occurrences in 2 files)
+
+- **relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx:** 82:11, 88:18, 90:18, 215:5, 215:30, 215:57
+- **relife-campaign-dashboard/src/components/analytics/timeSeriesUtils.ts:** 14:5, 14:30, 14:57
+
+### 18. `VariantProps` (8 occurrences in 8 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/ui/alert.tsx:** 27:34
+- **backup/pre-final-lint-20250825_093523/src/components/ui/badge.tsx:** 35:3
+- **backup/pre-final-lint-20250825_093523/src/components/ui/button.tsx:** 46:3
+- **backup/pre-final-lint-20250825_093523/src/components/ui/toggle.tsx:** 36:3
+- **src/components/ui/alert.tsx:** 27:34
+- **src/components/ui/badge.tsx:** 35:3
+- **src/components/ui/button.tsx:** 46:3
+- **src/components/ui/toggle.tsx:** 36:3
+
+### 19. `alarms` (8 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/services/predictive-analytics-service.ts:** 604:11, 610:70, 616:9, 766:26
+- **src/services/predictive-analytics-service.ts:** 604:11, 610:70, 616:9, 766:26
+
+### 20. `ExtendableEvent` (6 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/types/browser-apis.d.ts:** 43:12, 44:13, 107:29
+- **src/types/browser-apis.d.ts:** 43:12, 44:13, 107:29
+
+### 21. `parsed` (6 occurrences in 1 files)
+
+- **scripts/enhanced-commit-validator.js:** 380:26, 382:9, 383:25, 384:11, 384:44, 385:11
+
+### 22. `value` (5 occurrences in 1 files)
+
+- **relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx:** 48:33, 54:33, 60:33, 66:37, 164:34
+
+### 23. `Mail` (4 occurrences in 4 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/ForgotPasswordForm.tsx:** 148:16
+- **backup/pre-final-lint-20250825_093523/src/components/LoginForm.tsx:** 101:16
+- **src/components/ForgotPasswordForm.tsx:** 148:16
+- **src/components/LoginForm.tsx:** 101:16
+
+### 24. `Badge` (4 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx:** 319:28, 326:29
+- **src/components/user-testing/RedesignedFeedbackWidget.tsx:** 319:28, 326:29
+
+### 25. `NotificationEvent` (4 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/types/browser-apis.d.ts:** 47:22, 48:22
+- **src/types/browser-apis.d.ts:** 47:22, 48:22
+
+### 26. `WebSocketMessage` (4 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/types/realtime/index.ts:** 203:43, 211:5
+- **src/types/realtime/index.ts:** 203:43, 211:5
+
+### 27. `B` (4 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/types/utils.ts:** 197:31, 197:74
+- **src/types/utils.ts:** 197:31, 197:74
+
+### 28. `metric` (4 occurrences in 1 files)
+
+- **relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx:** 77:31, 99:39, 175:47, 176:49
+
+### 29. `id` (4 occurrences in 1 files)
+
+- **relife-campaign-dashboard/src/lib/hooks/use-form-field.ts:** 42:5, 44:20, 45:27, 46:23
+
+### 30. `errors` (3 occurrences in 1 files)
+
+- **scripts/enhanced-commit-validator.js:** 389:9, 391:7, 422:9
+
+### 31. `D1Database` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/backend/cloudflare-functions.ts:** 33:7
+- **src/backend/cloudflare-functions.ts:** 33:7
+
+### 32. `KVNamespace` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/backend/cloudflare-functions.ts:** 34:7
+- **src/backend/cloudflare-functions.ts:** 34:7
+
+### 33. `DurableObjectNamespace` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/backend/cloudflare-functions.ts:** 35:20
+- **src/backend/cloudflare-functions.ts:** 35:20
+
+### 34. `initial` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/OfflineDiagnostics.tsx:** 471:7
+- **src/components/OfflineDiagnostics.tsx:** 471:7
+
+### 35. `soundEffectsService` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/SoundSettings.tsx:** 143:32
+- **src/components/SoundSettings.tsx:** 143:32
+
+### 36. `Calendar` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/StreakCounter.tsx:** 328:16
+- **src/components/StreakCounter.tsx:** 328:16
+
+### 37. `timer` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/premium/EnhancedUpgradePrompt.tsx:** 71:7
+- **src/components/premium/EnhancedUpgradePrompt.tsx:** 71:7
+
+### 38. `tier` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/premium/EnhancedUpgradePrompt.tsx:** 215:17
+- **src/components/premium/EnhancedUpgradePrompt.tsx:** 215:17
+
+### 39. `UserTestingService` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx:** 111:30
+- **src/components/user-testing/RedesignedFeedbackWidget.tsx:** 111:30
+
+### 40. `Bug` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx:** 144:13
+- **src/components/user-testing/RedesignedFeedbackWidget.tsx:** 144:13
+
+### 41. `X` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx:** 260:22
+- **src/components/user-testing/RedesignedFeedbackWidget.tsx:** 260:22
+
+### 42. `Send` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx:** 342:20
+- **src/components/user-testing/RedesignedFeedbackWidget.tsx:** 342:20
+
+### 43. `RedesignedFeedbackModal` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/components/user-testing/RedesignedFeedbackWidget.tsx:** 404:8
+- **src/components/user-testing/RedesignedFeedbackWidget.tsx:** 404:8
+
+### 44. `analytics` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/hooks/useAnalytics.ts:** 265:7
+- **src/hooks/useAnalytics.ts:** 265:7
+
+### 45. `DBSchema` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/services/offline-manager.ts:** 15:29
+- **src/services/offline-manager.ts:** 15:29
+
+### 46. `WebSocketMessageType` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/types/realtime/index.ts:** 209:13
+- **src/types/realtime/index.ts:** 209:13
+
+### 47. `WebSocketConfig` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/types/realtime/index.ts:** 293:40
+- **src/types/realtime/index.ts:** 293:40
+
+### 48. `NotificationPreferences` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/types/realtime/index.ts:** 310:48
+- **src/types/realtime/index.ts:** 310:48
+
+### 49. `RealtimeServiceConfig` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/types/realtime/index.ts:** 360:39
+- **src/types/realtime/index.ts:** 360:39
+
+### 50. `prefix` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/types/utils.ts:** 197:40
+- **src/types/utils.ts:** 197:40
+
+### 51. `Console` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/utils/performance-alerts.tsx:** 455:43
+- **src/utils/performance-alerts.tsx:** 455:43
+
+### 52. `SpeechRecognition` (2 occurrences in 2 files)
+
+- **backup/pre-final-lint-20250825_093523/src/utils/voice-accessibility.ts:** 33:25
+- **src/utils/voice-accessibility.ts:** 33:25
+
+### 53. `warnings` (2 occurrences in 1 files)
+
+- **scripts/enhanced-commit-validator.js:** 397:9, 399:7
+
+### 54. `info` (2 occurrences in 1 files)
+
+- **scripts/enhanced-commit-validator.js:** 405:9, 407:7
+
+### 55. `suggestions` (2 occurrences in 1 files)
+
+- **scripts/enhanced-commit-validator.js:** 414:9, 416:7
+
+### 56. `userId` (1 occurrences in 1 files)
+
+- **performance/k6/critical-endpoints-stress-test.js:** 125:13
+
+### 57. `context` (1 occurrences in 1 files)
+
+- **relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx:** 131:54
+
+### 58. `className` (1 occurrences in 1 files)
+
+- **relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx:** 182:22
+
+### 59. `title` (1 occurrences in 1 files)
+
+- **relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx:** 185:57
+
+### 60. `_setupSuccess` (1 occurrences in 1 files)
+
+- **scripts/setup-cleanup-automation.mjs:** 253:5
+
+### 61. `RequestInfo` (1 occurrences in 1 files)
+
+- **src/components/devtools/APIMonitorPanel.tsx:** 74:34
+

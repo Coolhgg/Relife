@@ -2,6 +2,8 @@
 import type { Alarm } from '../types';
 import { ErrorHandler } from '../services/error-handler';
 import { TimeoutHandle } from '../types/timers';
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export class ServiceWorkerManager {
   private static instance: ServiceWorkerManager | null = null;

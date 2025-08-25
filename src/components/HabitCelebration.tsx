@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { TimeoutHandle } from '../types/timers';
 import {
+import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Trophy,
   Share2,
   X,

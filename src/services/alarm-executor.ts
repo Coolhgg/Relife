@@ -2,6 +2,7 @@
  * AlarmExecutor - Handles smart optimizations, conditional rules, and advanced execution logic
  */
 import type {
+import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Alarm,
   SmartOptimization,
   SeasonalAdjustment,

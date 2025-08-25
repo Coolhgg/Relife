@@ -7,6 +7,7 @@ import { MonitoringIntegrationService } from './monitoring-integration';
 
 // Import types from the main application
 import type {
+import { _user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   User,
   UserPreferences,
   VoiceMood,

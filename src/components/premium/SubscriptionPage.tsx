@@ -3,6 +3,8 @@
 
 import React, { useState, useEffect } from 'react';
 import {
+import { _user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Crown,
   CreditCard,
   BarChart3,

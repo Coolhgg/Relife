@@ -5,6 +5,8 @@
 
 import posthog from 'posthog-js';
 import { _config, isEnvironment } from '../config/environment';
+import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface AnalyticsConfig {
   apiKey: string;

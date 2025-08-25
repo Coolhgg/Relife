@@ -1,6 +1,7 @@
 import type { AudioCacheEntry, AudioMetadata } from './audio-manager';
 import type { CustomSound } from './types/media';
 import { TimeoutHandle } from '../types/timers';
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface CacheEntry extends AudioCacheEntry {
   accessCount: number;

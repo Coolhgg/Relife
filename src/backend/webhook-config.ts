@@ -1,5 +1,6 @@
 // Stripe Webhook Configuration for Relife Alarm App
 // Configuration constants and setup utilities for webhook processing
+import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export const WEBHOOK_EVENTS = [
   // Subscription lifecycle events

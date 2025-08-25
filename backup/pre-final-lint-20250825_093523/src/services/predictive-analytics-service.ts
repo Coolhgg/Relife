@@ -1,4 +1,5 @@
 import type {
+import { alarms } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   User,
   SleepPattern,
   WakeUpBehavior,

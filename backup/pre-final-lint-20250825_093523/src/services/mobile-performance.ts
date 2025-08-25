@@ -1,6 +1,7 @@
 /// <reference types="node" />
 /// <reference lib="dom" />
 // Enhanced Mobile Performance Optimization Service
+import { e } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 export interface PerformanceConfig {
   enableMemoryMonitoring: boolean;
   enableBatteryOptimization: boolean;

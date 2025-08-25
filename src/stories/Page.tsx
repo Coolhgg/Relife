@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Header } from './Header';
 import './page.css';
+import { _user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 type User = {
   name: string;

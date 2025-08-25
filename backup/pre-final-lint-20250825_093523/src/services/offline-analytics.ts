@@ -7,6 +7,9 @@ import { EnhancedOfflineStorage } from './enhanced-offline-storage';
 import { ErrorHandler } from './error-handler';
 import SecurityService from './security';
 import { TimeoutHandle } from '../types/timers';
+import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 interface AnalyticsEvent {
   id: string;

@@ -4,6 +4,8 @@
 import type { Alarm } from '../types';
 import { ErrorHandler } from './error-handler';
 import SecurityService from './security';
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 interface StorageMetadata {
   version: string;

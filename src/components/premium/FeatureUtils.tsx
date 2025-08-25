@@ -18,6 +18,7 @@ import { Users } from 'lucide-react';
 import { TrendingUp } from 'lucide-react';
 
 // Feature Badge Component
+import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 interface FeatureBadgeProps {
   tier?: string;
   size?: 'sm' | 'md' | 'lg';

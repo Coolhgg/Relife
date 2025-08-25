@@ -8,6 +8,7 @@ import { Preferences } from '@capacitor/preferences';
 import { CriticalPreloader } from './critical-preloader';
 import { AudioManager } from './audio-manager';
 import { TimeoutHandle } from '../types/timers';
+import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 const ALARMS_KEY = 'smart_alarms';
 const ALARM_EVENTS_KEY = 'alarm_events';

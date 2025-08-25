@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import {
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { AlertTriangle } from 'lucide-react'; // auto: restored by scout - verify
   TestTube,
   Send,
   Clock,

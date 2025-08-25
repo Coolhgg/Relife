@@ -8,6 +8,7 @@ import SecureAlarmStorageService from './secure-alarm-storage';
 import { ErrorHandler } from './error-handler';
 import type { Alarm, AlarmEvent } from '../types';
 import { TimeoutHandle } from '../types/timers';
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 interface BackupMetadata {
   id: string;

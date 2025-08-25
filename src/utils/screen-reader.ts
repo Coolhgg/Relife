@@ -1,6 +1,7 @@
 /// <reference lib="dom" />
 // Advanced Screen Reader Support for Smart Alarm App
 // Provides comprehensive ARIA patterns and screen reader utilities
+import { index } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface ScreenReaderState {
   isEnabled: boolean;

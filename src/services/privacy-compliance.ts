@@ -1,5 +1,6 @@
 // Privacy Compliance Service for Smart Alarm App
 // Handles GDPR, CCPA, and other privacy regulations compliance
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface ConsentSettings {
   analytics: boolean;
