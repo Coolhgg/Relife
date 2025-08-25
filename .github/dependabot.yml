@@ -1,144 +1,101 @@
-# Enhanced Dependabot configuration for automated dependency updates
-# Comprehensive security-focused dependency management
-
 version: 2
 
-# Global configuration
-registries:
-  npm-github:
-    type: npm-registry
-    url: https://npm.pkg.github.com
-    token: ${{secrets.GITHUB_TOKEN}}
-
 updates:
-  # NPM dependencies - Enhanced Security Focus
+  # Main project dependencies
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "daily" # More frequent for security updates
-      time: "09:00"
-      timezone: "America/Los_Angeles"
-    # Increased limits for security updates
-    open-pull-requests-limit: 15
-    # Security-first strategy
-    allow:
-      - dependency-type: "security-updates"
-      - dependency-type: "production"
-      - dependency-type: "development"
+      interval: "daily"
+      time: "04:00"
+      timezone: "UTC"
     reviewers:
-      - "@Coolhgg"
+      - "Coolhgg"
     assignees:
-      - "@Coolhgg"
-    # Enhanced commit messaging
-    commit-message:
-      prefix: "security" # Emphasize security
-      prefix-development: "deps-dev"
-      include: "scope"
-    # Security milestone assignment
-    milestone: "Security Updates"
-    # Enhanced PR labels
+      - "Coolhgg"
     labels:
       - "dependencies"
       - "security"
-      - "automated"
-    # Enhanced grouping strategy
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
     groups:
-      # Critical security dependencies - highest priority
-      security:
+      security-updates:
+        applies-to: "security-updates"
         patterns:
-          - "*security*"
-          - "*auth*"
-          - "*crypto*"
-          - "*ssl*"
-          - "*tls*"
-        priority: 10
-      # React ecosystem updates
-      react:
+          - "*"
+      react-ecosystem:
         patterns:
-          - "react*"
+          - "react"
+          - "react-*"
           - "@types/react*"
-          - "react-dom"
-          - "react-router*"
-      # Capacitor mobile framework
-      capacitor:
+      testing-tools:
         patterns:
-          - "@capacitor/*"
-          - "capacitor*"
-      # Testing dependencies
-      testing:
-        patterns:
-          - "jest*"
+          - "jest"
+          - "playwright"
+          - "vitest"
           - "@testing-library/*"
-          - "@types/jest"
-          - "vitest*"
-          - "playwright*"
-          - "@playwright/*"
-      # Build and development tools
+          - "msw"
       build-tools:
         patterns:
-          - "vite*"
-          - "@vitejs/*"
+          - "vite"
           - "typescript"
-          - "eslint*"
-          - "@typescript-eslint/*"
+          - "eslint"
           - "prettier"
-          - "@types/*"
-      # UI and styling libraries
-      ui:
+          - "@typescript-eslint/*"
+    open-pull-requests-limit: 10
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+        update-type: "security"
+
+  # Campaign dashboard dependencies
+  - package-ecosystem: "npm"
+    directory: "/relife-campaign-dashboard"
+    schedule:
+      interval: "daily"
+      time: "04:30"
+      timezone: "UTC"
+    reviewers:
+      - "Coolhgg"
+    assignees:
+      - "Coolhgg"
+    labels:
+      - "dependencies"
+      - "dashboard"
+    commit-message:
+      prefix: "deps(dashboard)"
+      include: "scope"
+    groups:
+      security-updates:
+        applies-to: "security-updates"
+        patterns:
+          - "*"
+      ui-components:
         patterns:
           - "@radix-ui/*"
           - "lucide-react"
           - "tailwindcss"
           - "class-variance-authority"
-          - "tailwind-merge"
-          - "framer-motion"
-          - "@headlessui/*"
-      # Analytics and monitoring
-      monitoring:
-        patterns:
-          - "@sentry/*"
-          - "posthog-js"
-          - "web-vitals"
-          - "@datadog/*"
-      # Backend and API dependencies
-      backend:
-        patterns:
-          - "supabase*"
-          - "@supabase/*"
-          - "stripe*"
-          - "@stripe/*"
-          - "express*"
-          - "fastify*"
-      # Utility libraries
-      utilities:
-        patterns:
-          - "lodash*"
-          - "date-fns"
-          - "zod"
-          - "yup"
-          - "validator"
-          - "uuid"
-    # Security-aware ignore strategy
-    ignore:
-      # Be more permissive with security updates
-      - dependency-name: "react"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "react-dom"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "node"
-        update-types: ["version-update:semver-major"]
-      # Ignore specific problematic packages
-      - dependency-name: "tmp"
-        # Known issues with tmp package
-      - dependency-name: "@lhci/cli"
-        # Lighthouse CI has known vulnerabilities
-      # Ignore beta/alpha versions unless security fixes
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-        versions: ["*-beta*", "*-alpha*", "*-rc*"]
-    # Vulnerability alerts - always allow
-    vulnerability-alerts:
-      enabled: true
+    open-pull-requests-limit: 5
+
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "UTC"
+    reviewers:
+      - "Coolhgg"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    open-pull-requests-limit: 3
 
   # Docker dependencies
   - package-ecosystem: "docker"
@@ -146,165 +103,14 @@ updates:
     schedule:
       interval: "weekly"
       day: "tuesday"
-      time: "10:00"
-      timezone: "America/Los_Angeles"
-    open-pull-requests-limit: 5
+      time: "04:00"
+      timezone: "UTC"
     reviewers:
-      - "@Coolhgg"
+      - "Coolhgg"
+    labels:
+      - "dependencies"
+      - "docker"
     commit-message:
       prefix: "docker"
       include: "scope"
-    labels:
-      - "docker"
-      - "dependencies"
-
-  # GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/.github/workflows"
-    schedule:
-      interval: "weekly"
-      day: "wednesday"
-      time: "11:00"
-      timezone: "America/Los_Angeles"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "@Coolhgg"
-    commit-message:
-      prefix: "ci"
-      include: "scope"
-    groups:
-      # Group GitHub Actions updates
-      github-actions:
-        patterns:
-          - "actions/*"
-          - "github/*"
-    labels:
-      - "github-actions"
-      - "ci/cd"
-
-  # Android Gradle dependencies - Enhanced Security
-  - package-ecosystem: "gradle"
-    directory: "/android"
-    schedule:
-      interval: "weekly" # More frequent for security
-      day: "tuesday"
-      time: "09:00"
-      timezone: "America/Los_Angeles"
-    open-pull-requests-limit: 8
-    reviewers:
-      - "@Coolhgg"
-    assignees:
-      - "@Coolhgg"
-    commit-message:
-      prefix: "android-deps"
-      include: "scope"
-    labels:
-      - "android"
-      - "dependencies"
-      - "mobile"
-    # Android-specific grouping
-    groups:
-      # Android security updates
-      android-security:
-        patterns:
-          - "*security*"
-          - "*auth*"
-          - "*crypto*"
-      # Capacitor Android plugins
-      capacitor-android:
-        patterns:
-          - "@capacitor/*"
-      # Core Android dependencies
-      android-core:
-        patterns:
-          - "androidx.*"
-          - "com.android.*"
-          - "com.google.android.*"
-    # Allow security updates even for major versions
-    allow:
-      - dependency-type: "security-updates"
-    ignore:
-      # Be conservative with major Android updates
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-    vulnerability-alerts:
-      enabled: true
-
-  # iOS CocoaPods dependencies (if present)
-  - package-ecosystem: "cocoapods"
-    directory: "/ios"
-    schedule:
-      interval: "weekly"
-      day: "wednesday"
-      time: "10:00"
-      timezone: "America/Los_Angeles"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "@Coolhgg"
-    commit-message:
-      prefix: "ios-deps"
-      include: "scope"
-    labels:
-      - "ios"
-      - "dependencies"
-      - "mobile"
-    allow:
-      - dependency-type: "security-updates"
-    vulnerability-alerts:
-      enabled: true
-
-  # Composer dependencies (PHP - if present)
-  - package-ecosystem: "composer"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "thursday"
-      time: "11:00"
-      timezone: "America/Los_Angeles"
-    open-pull-requests-limit: 5
-    allow:
-      - dependency-type: "security-updates"
-    vulnerability-alerts:
-      enabled: true
-
-  # Pip dependencies (Python - if present)
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "12:00"
-      timezone: "America/Los_Angeles"
-    open-pull-requests-limit: 5
-    allow:
-      - dependency-type: "security-updates"
-    vulnerability-alerts:
-      enabled: true
-
-  # Terraform dependencies (if present)
-  - package-ecosystem: "terraform"
-    directory: "/infrastructure"
-    schedule:
-      interval: "weekly"
-      day: "saturday"
-      time: "13:00"
-      timezone: "America/Los_Angeles"
-    open-pull-requests-limit: 3
-    allow:
-      - dependency-type: "security-updates"
-    vulnerability-alerts:
-      enabled: true
-
-  # Go modules (if present)
-  - package-ecosystem: "gomod"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "sunday"
-      time: "14:00"
-      timezone: "America/Los_Angeles"
-    open-pull-requests-limit: 5
-    allow:
-      - dependency-type: "security-updates"
-    vulnerability-alerts:
-      enabled: true
+    open-pull-requests-limit: 2

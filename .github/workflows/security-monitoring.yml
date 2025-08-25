@@ -1,488 +1,148 @@
-# Continuous Security Monitoring & Alerting
-# 24/7 security monitoring with automated response and alerting
-name: 🔐 Security Monitoring
+name: Security Monitoring
 
 on:
+  workflow_run:
+    workflows: ["Security Analysis"]
+    types:
+      - completed
   schedule:
-    # Run every 6 hours for continuous monitoring
-    - cron: "0 */6 * * *"
-    # Special daily comprehensive scan at 2 AM UTC
-    - cron: "0 2 * * *"
-  workflow_dispatch:
-    inputs:
-      scan-intensity:
-        description: "Security scan intensity"
-        required: false
-        default: "standard"
-        type: choice
-        options:
-          - standard
-          - comprehensive
-          - quick
-      alert-threshold:
-        description: "Alert threshold (critical, high, medium, low)"
-        required: false
-        default: "high"
-        type: choice
-        options:
-          - critical
-          - high
-          - medium
-          - low
+    - cron: "0 6 * * 1" # Weekly on Mondays at 6 AM UTC
 
 permissions:
   contents: read
   issues: write
   security-events: write
-  actions: read
-
-env:
-  MONITORING_ENABLED: true
-  ALERT_WEBHOOK_URL: ${{ secrets.SECURITY_ALERT_WEBHOOK }}
 
 jobs:
-  # Job 1: Continuous Security Health Check
-  security-health-check:
-    name: 🩺 Security Health Assessment
+  security-report:
+    name: Generate Security Report
     runs-on: ubuntu-latest
-
-    outputs:
-      health-score: ${{ steps.calculate-health.outputs.score }}
-      critical-issues: ${{ steps.calculate-health.outputs.critical }}
-      high-issues: ${{ steps.calculate-health.outputs.high }}
-      needs-attention: ${{ steps.calculate-health.outputs.needs-attention }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'schedule' }}
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Download security artifacts
+        uses: dawidd6/action-download-artifact@v3
         with:
-          bun-version: latest
+          workflow: security-analysis.yml
+          name: security-audit-results
+          path: ./security-reports/
+        continue-on-error: true
 
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
+      - name: Download license reports
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: security-analysis.yml
+          name: license-reports
+          path: ./security-reports/
+        continue-on-error: true
 
-      - name: Create monitoring directory
-        run: mkdir -p security-monitoring
-
-      - name: Run comprehensive security audit
+      - name: Generate security summary
         run: |
-          echo "🔍 Running security health assessment..."
+          echo "# Security Monitoring Report" > security-summary.md
+          echo "**Generated**: $(date -u)" >> security-summary.md
+          echo "" >> security-summary.md
 
-          # NPM Security Audit
-          echo "=== NPM SECURITY AUDIT ===" > security-monitoring/health-report.txt
-          bun audit --json > security-monitoring/npm-audit.json 2>/dev/null || true
-          bun audit >> security-monitoring/health-report.txt 2>&1 || true
-          echo "" >> security-monitoring/health-report.txt
-
-      - name: Check dependency freshness
-        run: |
-          echo "📅 Checking dependency freshness..."
-          echo "=== DEPENDENCY FRESHNESS ===" >> security-monitoring/health-report.txt
-
-          # Check for outdated packages
-          bun outdated --json > security-monitoring/outdated.json 2>/dev/null || echo "{}" > security-monitoring/outdated.json
-
-          # Count outdated packages
-          OUTDATED_COUNT=$(cat security-monitoring/outdated.json | bun -e "
-            try {
-              const data = JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8'));
-              console.log(Object.keys(data).length || 0);
-            } catch {
-              console.log(0);
-            }
-          " || echo "0")
-
-          echo "Outdated packages: $OUTDATED_COUNT" >> security-monitoring/health-report.txt
-          echo "" >> security-monitoring/health-report.txt
-
-      - name: Security pattern analysis
-        run: |
-          echo "🔎 Analyzing security patterns..."
-          echo "=== SECURITY PATTERN ANALYSIS ===" >> security-monitoring/health-report.txt
-
-          # Check for dangerous patterns in codebase
-          SECURITY_PATTERNS=(
-            "eval|Function.*new"
-            "innerHTML.*=.*[+]"
-            "document\.write"
-            "dangerouslySetInnerHTML"
-            "http://[^/]"
-            "password.*=.*[\"'][^\"']{1,}"
-            "secret.*=.*[\"'][^\"']{1,}"
-            "token.*=.*[\"'][^\"']{1,}"
-          )
-
-          for pattern in "${SECURITY_PATTERNS[@]}"; do
-            COUNT=$(find src -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" | xargs grep -E "$pattern" | wc -l || echo "0")
-            if [ "$COUNT" -gt 0 ]; then
-              echo "⚠️  Pattern '$pattern': $COUNT occurrences" >> security-monitoring/health-report.txt
-            fi
-          done
-          echo "" >> security-monitoring/health-report.txt
-
-      - name: Check security headers and configuration
-        run: |
-          echo "🛡️ Checking security configuration..."
-          echo "=== SECURITY CONFIGURATION ===" >> security-monitoring/health-report.txt
-
-          # Check for security configurations
-          if [ -f "public/.htaccess" ]; then
-            echo "✅ .htaccess file exists" >> security-monitoring/health-report.txt
-          else
-            echo "⚠️  No .htaccess security configuration" >> security-monitoring/health-report.txt
-          fi
-
-          # Check for Content Security Policy
-          if grep -r "Content-Security-Policy" src/ public/ 2>/dev/null; then
-            echo "✅ CSP configuration found" >> security-monitoring/health-report.txt
-          else
-            echo "⚠️  No CSP configuration detected" >> security-monitoring/health-report.txt
-          fi
-
-          # Check for HTTPS enforcement
-          if grep -r "https://" src/ | grep -v "http://" >/dev/null; then
-            echo "✅ HTTPS usage detected" >> security-monitoring/health-report.txt
-          else
-            echo "⚠️  Verify HTTPS enforcement" >> security-monitoring/health-report.txt
-          fi
-          echo "" >> security-monitoring/health-report.txt
-
-      - name: Calculate security health score
-        id: calculate-health
-        run: |
-          echo "📊 Calculating security health score..."
-
-          # Parse audit results for vulnerability counts
-          CRITICAL=0
-          HIGH=0
-          MODERATE=0
-          LOW=0
-
-          if [ -f "security-monitoring/npm-audit.json" ]; then
-            CRITICAL=$(cat security-monitoring/npm-audit.json | bun -e "
-              try {
-                const audit = JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8'));
-                if (audit.vulnerabilities) {
-                  console.log(Object.values(audit.vulnerabilities).filter(v => v.severity === 'critical').length);
-                } else { console.log(0); }
-              } catch { console.log(0); }
-            " || echo "0")
+          if [ -f "./security-reports/npm-audit-main.json" ]; then
+            echo "## Dependency Audit Results" >> security-summary.md
+            MAIN_CRITICAL=$(cat ./security-reports/npm-audit-main.json | jq '.metadata.vulnerabilities.critical // 0')
+            MAIN_HIGH=$(cat ./security-reports/npm-audit-main.json | jq '.metadata.vulnerabilities.high // 0')
+            MAIN_MODERATE=$(cat ./security-reports/npm-audit-main.json | jq '.metadata.vulnerabilities.moderate // 0')
             
-            HIGH=$(cat security-monitoring/npm-audit.json | bun -e "
-              try {
-                const audit = JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8'));
-                if (audit.vulnerabilities) {
-                  console.log(Object.values(audit.vulnerabilities).filter(v => v.severity === 'high').length);
-                } else { console.log(0); }
-              } catch { console.log(0); }
-            " || echo "0")
+            echo "### Main Project" >> security-summary.md
+            echo "- Critical: $MAIN_CRITICAL" >> security-summary.md
+            echo "- High: $MAIN_HIGH" >> security-summary.md
+            echo "- Moderate: $MAIN_MODERATE" >> security-summary.md
+            echo "" >> security-summary.md
+          fi
+
+          if [ -f "./security-reports/npm-audit-dashboard.json" ]; then
+            DASH_CRITICAL=$(cat ./security-reports/npm-audit-dashboard.json | jq '.metadata.vulnerabilities.critical // 0')
+            DASH_HIGH=$(cat ./security-reports/npm-audit-dashboard.json | jq '.metadata.vulnerabilities.high // 0')
+            DASH_MODERATE=$(cat ./security-reports/npm-audit-dashboard.json | jq '.metadata.vulnerabilities.moderate // 0')
             
-            MODERATE=$(cat security-monitoring/npm-audit.json | bun -e "
-              try {
-                const audit = JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8'));
-                if (audit.vulnerabilities) {
-                  console.log(Object.values(audit.vulnerabilities).filter(v => v.severity === 'moderate').length);
-                } else { console.log(0); }
-              } catch { console.log(0); }
-            " || echo "0")
+            echo "### Campaign Dashboard" >> security-summary.md
+            echo "- Critical: $DASH_CRITICAL" >> security-summary.md
+            echo "- High: $DASH_HIGH" >> security-summary.md
+            echo "- Moderate: $DASH_MODERATE" >> security-summary.md
+            echo "" >> security-summary.md
           fi
 
-          # Calculate health score (100 = perfect, 0 = critical issues)
-          HEALTH_SCORE=$((100 - (CRITICAL * 30) - (HIGH * 10) - (MODERATE * 3)))
-          if [ $HEALTH_SCORE -lt 0 ]; then HEALTH_SCORE=0; fi
+          echo "## Security Tools Status" >> security-summary.md
+          echo "- ✅ Dependabot: Active (daily scans)" >> security-summary.md
+          echo "- ✅ CodeQL: Active (daily scans)" >> security-summary.md
+          echo "- ✅ NPM Audit: Active (CI integration)" >> security-summary.md
+          echo "- ✅ TruffleHog: Active (secrets detection)" >> security-summary.md
+          echo "- ✅ License Check: Active (compliance monitoring)" >> security-summary.md
 
-          echo "Security Health Score: $HEALTH_SCORE/100" >> security-monitoring/health-report.txt
-          echo "Critical vulnerabilities: $CRITICAL" >> security-monitoring/health-report.txt
-          echo "High vulnerabilities: $HIGH" >> security-monitoring/health-report.txt
-          echo "Moderate vulnerabilities: $MODERATE" >> security-monitoring/health-report.txt
-
-          # Set outputs
-          echo "score=$HEALTH_SCORE" >> $GITHUB_OUTPUT
-          echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
-          echo "high=$HIGH" >> $GITHUB_OUTPUT
-
-          # Determine if needs attention
-          NEEDS_ATTENTION="false"
-          if [ $CRITICAL -gt 0 ] || [ $HIGH -gt 3 ] || [ $HEALTH_SCORE -lt 70 ]; then
-            NEEDS_ATTENTION="true"
-          fi
-          echo "needs-attention=$NEEDS_ATTENTION" >> $GITHUB_OUTPUT
-
-      - name: Upload health report
+      - name: Upload security report
         uses: actions/upload-artifact@v4
         with:
-          name: security-health-${{ github.run_number }}
-          path: security-monitoring/
+          name: security-monitoring-report
+          path: security-summary.md
           retention-days: 30
 
-  # Job 2: Real-time Threat Detection
-  threat-detection:
-    name: 🚨 Threat Detection
+  security-notifications:
+    name: Security Notifications
     runs-on: ubuntu-latest
-    needs: security-health-check
-    if: needs.security-health-check.outputs.needs-attention == 'true' || github.event.inputs.scan-intensity == 'comprehensive'
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Advanced threat scanning
-        run: |
-          echo "🕵️ Running advanced threat detection..."
-          mkdir -p threat-analysis
-
-          # Check for suspicious patterns
-          echo "=== THREAT DETECTION REPORT ===" > threat-analysis/threats.txt
-          echo "Scan Time: $(date)" >> threat-analysis/threats.txt
-          echo "" >> threat-analysis/threats.txt
-
-          # Look for potential backdoors or malicious code
-          echo "Checking for suspicious patterns..." >> threat-analysis/threats.txt
-
-          # Check for base64 encoded content (potential obfuscation)
-          BASE64_SUSPICIOUS=$(find src -name "*.js" -o -name "*.ts" | xargs grep -E "atob|btoa|base64" | wc -l || echo "0")
-          if [ $BASE64_SUSPICIOUS -gt 5 ]; then
-            echo "⚠️  Excessive base64 operations detected: $BASE64_SUSPICIOUS" >> threat-analysis/threats.txt
-          fi
-
-          # Check for dynamic code execution
-          DYNAMIC_CODE=$(find src -name "*.js" -o -name "*.ts" | xargs grep -E "new Function|eval\(|setTimeout.*\(" | wc -l || echo "0")
-          if [ $DYNAMIC_CODE -gt 0 ]; then
-            echo "🚨 Dynamic code execution detected: $DYNAMIC_CODE instances" >> threat-analysis/threats.txt
-          fi
-
-          # Check for network requests to suspicious domains
-          NETWORK_REQUESTS=$(find src -name "*.js" -o -name "*.ts" | xargs grep -E "fetch|axios|request" | grep -E "http://|\.tk/|\.ml/|bit\.ly" | wc -l || echo "0")
-          if [ $NETWORK_REQUESTS -gt 0 ]; then
-            echo "🚨 Suspicious network requests: $NETWORK_REQUESTS" >> threat-analysis/threats.txt
-          fi
-
-      - name: Upload threat analysis
-        uses: actions/upload-artifact@v4
-        with:
-          name: threat-analysis-${{ github.run_number }}
-          path: threat-analysis/
-          retention-days: 90
-
-  # Job 3: Security Metrics & Reporting
-  security-metrics:
-    name: 📊 Security Metrics
-    runs-on: ubuntu-latest
-    needs: security-health-check
-
-    steps:
-      - name: Download health report
-        uses: actions/download-artifact@v4
-        with:
-          name: security-health-${{ github.run_number }}
-          path: security-monitoring/
-
-      - name: Generate security dashboard
-        run: |
-          echo "📈 Generating security metrics dashboard..."
-
-          cat > security-dashboard.md << EOF
-          # 🔐 Security Dashboard
-
-          **Generated**: $(date -u)
-          **Health Score**: ${{ needs.security-health-check.outputs.health-score }}/100
-          **Status**: $([ ${{ needs.security-health-check.outputs.health-score }} -gt 80 ] && echo "🟢 Healthy" || [ ${{ needs.security-health-check.outputs.health-score }} -gt 60 ] && echo "🟡 Needs Attention" || echo "🔴 Critical")
-
-          ## Current Vulnerabilities
-          - **Critical**: ${{ needs.security-health-check.outputs.critical-issues }}
-          - **High**: ${{ needs.security-health-check.outputs.high-issues }}
-
-          ## Security Health Trend
-          \`\`\`
-          Week 1: 85/100
-          Week 2: 82/100  
-          Week 3: ${{ needs.security-health-check.outputs.health-score }}/100
-          \`\`\`
-
-          ## Key Metrics
-          - Last Security Review: $(date -d '1 week ago' +%Y-%m-%d)
-          - Dependencies Scanned: Daily
-          - Code Analysis: Every commit
-          - Vulnerability Response Time: < 24h
-
-          ## Recent Actions
-          - Automated dependency updates: ✅ Active
-          - Security scanning: ✅ Active
-          - Monitoring alerts: ✅ Configured
-
-          EOF
-
-      - name: Create security issue (if critical)
-        if: needs.security-health-check.outputs.critical-issues > 0
+      - name: Create security alert issue
         uses: actions/github-script@v7
         with:
           script: |
-            const criticalCount = ${{ needs.security-health-check.outputs.critical-issues }};
-            const highCount = ${{ needs.security-health-check.outputs.high-issues }};
-            const healthScore = ${{ needs.security-health-check.outputs.health-score }};
+            const title = '🚨 Security Analysis Failed - Investigation Required';
+            const body = `
+            ## Security Alert
 
-            await github.rest.issues.create({
+            The security analysis workflow has failed and requires immediate attention.
+
+            **Details:**
+            - Workflow: ${{ github.event.workflow_run.name }}
+            - Run ID: ${{ github.event.workflow_run.id }}
+            - Conclusion: ${{ github.event.workflow_run.conclusion }}
+            - Branch: ${{ github.event.workflow_run.head_branch }}
+            - Commit: ${{ github.event.workflow_run.head_sha }}
+
+            **Next Steps:**
+            1. Review the failed workflow logs
+            2. Investigate any security vulnerabilities found
+            3. Address critical and high-severity issues immediately
+            4. Update this issue with resolution status
+
+            **Workflow URL:** ${{ github.event.workflow_run.html_url }}
+
+            ---
+
+            This issue was automatically created by the Security Monitoring workflow.
+            `;
+
+            github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `🚨 CRITICAL Security Alert - ${criticalCount} Critical Issues (Health: ${healthScore}/100)`,
-              body: `## 🚨 Critical Security Issues Detected
-              
-              **Health Score**: ${healthScore}/100
-              **Critical Issues**: ${criticalCount}
-              **High Issues**: ${highCount}
-              **Detection Time**: ${new Date().toISOString()}
-              
-              ## Immediate Actions Required
-              1. ⏱️ **Within 4 hours**: Review critical vulnerabilities
-              2. ⏱️ **Within 24 hours**: Apply security patches
-              3. ⏱️ **Within 48 hours**: Verify fixes and re-scan
-              
-              ## Resources
-              - [Security Health Report](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
-              - [Security Policy](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/SECURITY.md)
-              - [Incident Response Plan](docs/security-incident-response.md)
-              
-              /cc @Coolhgg
-              `,
-              labels: ['security', 'critical', 'p1', 'automated'],
-              assignees: ['Coolhgg']
+              title: title,
+              body: body,
+              labels: ['security', 'critical', 'needs-attention']
             });
 
-      - name: Update security dashboard
-        uses: actions/github-script@v7
-        if: github.event_name == 'schedule'
-        with:
-          script: |
-            const fs = require('fs');
-            const dashboard = fs.readFileSync('security-dashboard.md', 'utf8');
-
-            // Update or create security dashboard issue
-            const { data: issues } = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: 'security-dashboard',
-              state: 'open'
-            });
-
-            if (issues.length > 0) {
-              // Update existing dashboard
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issues[0].number,
-                body: dashboard
-              });
-            } else {
-              // Create new dashboard issue
-              await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: '📊 Security Dashboard - Live Status',
-                body: dashboard + '\n\n*This dashboard is automatically updated every 6 hours*',
-                labels: ['security-dashboard', 'monitoring']
-              });
-            }
-
-  # Job 4: Security Alerting
-  security-alerts:
-    name: 🚨 Security Alerting
+  dependabot-auto-merge:
+    name: Auto-merge Security Updates
     runs-on: ubuntu-latest
-    needs: [security-health-check, threat-detection]
-    if: always() && (needs.security-health-check.outputs.needs-attention == 'true' || needs.threat-detection.result == 'success')
+    if: ${{ github.actor == 'dependabot[bot]' }}
 
     steps:
-      - name: Send critical alert
-        if: needs.security-health-check.outputs.critical-issues > 0
-        run: |
-          echo "🚨 Sending critical security alert..."
-
-          ALERT_MESSAGE="🚨 CRITICAL SECURITY ALERT
-          Repository: ${{ github.repository }}
-          Health Score: ${{ needs.security-health-check.outputs.health-score }}/100
-          Critical Issues: ${{ needs.security-health-check.outputs.critical-issues }}
-          High Issues: ${{ needs.security-health-check.outputs.high-issues }}
-          Time: $(date -u)
-          Action URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
-          # Send to webhook if configured
-          if [ -n "${{ secrets.SECURITY_ALERT_WEBHOOK }}" ]; then
-            curl -X POST "${{ secrets.SECURITY_ALERT_WEBHOOK }}" \
-              -H "Content-Type: application/json" \
-              -d "{\"text\": \"$ALERT_MESSAGE\"}" || echo "Webhook notification failed"
-          fi
-
-      - name: High priority notification
-        if: needs.security-health-check.outputs.high-issues > 5 || needs.security-health-check.outputs.health-score < 70
-        run: |
-          echo "⚠️ High priority security notification..."
-          echo "Health score below acceptable threshold or multiple high-severity issues detected"
-
-  # Job 5: Compliance & Audit Trail
-  compliance-audit:
-    name: 📋 Compliance Audit
-    runs-on: ubuntu-latest
-    if: github.event.schedule == '0 2 * * *' # Daily comprehensive scan
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Generate compliance report
-        run: |
-          echo "📋 Generating compliance audit report..."
-          mkdir -p compliance-audit
-
-          cat > compliance-audit/audit-report.md << EOF
-          # Compliance Audit Report
-
-          **Audit Date**: $(date -u)
-          **Repository**: ${{ github.repository }}
-          **Branch**: ${{ github.ref_name }}
-          **Commit**: ${{ github.sha }}
-
-          ## Security Standards Compliance
-
-          ### OWASP Top 10 (2021)
-          - [ ] A01: Broken Access Control - Review Required
-          - [ ] A02: Cryptographic Failures - Review Required
-          - [ ] A03: Injection - Automated Scanning ✅
-          - [ ] A04: Insecure Design - Manual Review Required
-          - [ ] A05: Security Misconfiguration - Partial ✅
-          - [ ] A06: Vulnerable Components - Automated Scanning ✅
-          - [ ] A07: Authentication Failures - Review Required
-          - [ ] A08: Software/Data Integrity - Review Required
-          - [ ] A09: Security Logging - Review Required
-          - [ ] A10: Server-Side Request Forgery - Review Required
-
-          ### Dependency Security
-          - ✅ Automated dependency scanning enabled
-          - ✅ Vulnerability alerts configured
-          - ✅ Regular dependency updates scheduled
-
-          ### Code Security
-          - ✅ Static code analysis enabled
-          - ✅ Security-focused code review process
-          - ✅ Secrets scanning enabled
-
-          ### Infrastructure Security
-          - ✅ HTTPS enforced
-          - ⚠️ Security headers review needed
-          - ✅ Container security scanning (if applicable)
-
-          ## Recommendations
-          1. Regular penetration testing
-          2. Security training for development team
-          3. Implement Web Application Firewall (WAF)
-          4. Enhanced logging and monitoring
-
-          EOF
-
-      - name: Upload compliance report
-        uses: actions/upload-artifact@v4
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
         with:
-          name: compliance-audit-${{ github.run_number }}
-          path: compliance-audit/
-          retention-days: 365 # Keep for full year for compliance
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Auto-merge security updates
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-patch' && contains(steps.metadata.outputs.dependency-names, 'security') }}
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

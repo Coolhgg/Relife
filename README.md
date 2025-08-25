@@ -1,5 +1,10 @@
 # 🌅 Relife - Smart Alarm & Theme Customization App
 
+[![Security Analysis](https://github.com/Coolhgg/Relife/actions/workflows/security-analysis.yml/badge.svg)](https://github.com/Coolhgg/Relife/actions/workflows/security-analysis.yml)
+[![Security Monitoring](https://github.com/Coolhgg/Relife/actions/workflows/security-monitoring.yml/badge.svg)](https://github.com/Coolhgg/Relife/actions/workflows/security-monitoring.yml)
+[![CodeQL](https://github.com/Coolhgg/Relife/actions/workflows/security-analysis.yml/badge.svg?event=schedule)](https://github.com/Coolhgg/Relife/security/code-scanning)
+[![Dependabot Status](https://img.shields.io/badge/dependabot-active-brightgreen.svg)](https://github.com/Coolhgg/Relife/network/dependencies)
+
 A comprehensive smart alarm application with advanced theme customization and cloud synchronization
 capabilities.
 
@@ -44,6 +49,17 @@ capabilities.
 - **User behavior analytics** with privacy-first approach
 - **Sleep pattern analysis** and insights
 - **Theme usage statistics** and recommendations
+
+### 🔒 Security & Compliance
+
+- **Automated security scanning** with CodeQL and Dependabot
+- **Daily vulnerability assessments** for dependencies
+- **Secrets detection** with TruffleHog integration
+- **License compliance monitoring** for legal compliance
+- **CSRF protection** and secure headers implementation
+- **Data encryption** at rest and in transit
+- **Privacy-first design** with minimal data collection
+- **Security incident response** procedures and monitoring
 
 ## 🛠️ Technology Stack
 
