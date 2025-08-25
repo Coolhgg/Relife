@@ -150,7 +150,7 @@ class AnalyticsService {
       environment: config.env,
       debug: config.features.debugMode,
       enableSessionRecording: config.features.sessionRecording,
-      enableHeatmaps: _config.features.heatmaps,
+      enableHeatmaps: config.features.heatmaps,
       disableInDevelopment: false, // We handle this here
       ...customConfig,
     };
@@ -160,7 +160,7 @@ class AnalyticsService {
       return;
     }
 
-    this.config = analyticsConfig;
+    this._config = analyticsConfig;
 
     try {
       posthog.init(analyticsConfig.apiKey, {
@@ -214,8 +214,8 @@ class AnalyticsService {
           posthog.register({
             app_environment: config.env,
             app_version: config.version,
-            app_build_time: _config.buildTime,
-            performance_monitoring_enabled: _config.performance.enabled,
+            app_build_time: config.buildTime,
+            performance_monitoring_enabled: config.performance.enabled,
           });
         },
       });
@@ -231,8 +231,8 @@ class AnalyticsService {
         version: config.version,
         build_time: config.buildTime,
         domain: config.domain,
-        performance_enabled: _config.performance.enabled,
-        features_enabled: Object.entries(_config.features)
+        performance_enabled: config.performance.enabled,
+        features_enabled: Object.entries(config.features)
           .filter(([_, enabled]) => enabled)
           .map(([feature]) => feature),
         timestamp: new Date().toISOString(),
@@ -341,7 +341,7 @@ class AnalyticsService {
    */
   trackFeatureUsage(
     featureName: string,
-    action?: any /* auto: placeholder param - adjust */,
+    action: string = 'used',
     properties: EventProperties = {}
   ): void {
     this.track('feature_used', {
@@ -373,11 +373,11 @@ class AnalyticsService {
    */
   trackError(
     _error: Error,
-    _contextName?: any /* auto: placeholder param - adjust */,
+    contextName?: string,
     context: EventProperties = {}
   ): void {
     this.track(ANALYTICS_EVENTS.ERROR_OCCURRED, {
-      error_message: error.message,
+      error_message: _error.message,
       error_stack: _error.stack?.substring(0, 500), // Truncate for performance
       error_name: _error.name,
       ...context,
@@ -569,7 +569,7 @@ class AnalyticsService {
       // App environment context
       app_environment: config.env,
       app_version: config.version,
-      performance_monitoring: _config.performance.enabled,
+      performance_monitoring: config.performance.enabled,
     };
   }
 
@@ -600,10 +600,10 @@ class AnalyticsService {
 
       // Environment context
       environment: config.env,
-      version: _config.version,
+      version: config.version,
 
       // Feature flags
-      features_enabled: Object.entries(_config.features)
+      features_enabled: Object.entries(config.features)
         .filter(([_, enabled]) => enabled)
         .map(([feature]) => feature),
     };
@@ -687,7 +687,7 @@ class AnalyticsService {
       budget,
       exceeds_budget: exceededBudget,
       percentage,
-      environment: _config.env,
+      environment: config.env,
     });
 
     if (exceededBudget) {
@@ -709,7 +709,7 @@ class AnalyticsService {
       flag,
       enabled,
       variant,
-      environment: _config.env,
+      environment: config.env,
       user_segment: this.getUserSegment(),
     });
   }
@@ -725,7 +725,7 @@ class AnalyticsService {
     this.track('business_metric', {
       metric,
       value,
-      environment: _config.env,
+      environment: config.env,
       timestamp: new Date().toISOString(),
       ...metadata,
     });
@@ -746,7 +746,7 @@ class AnalyticsService {
       threshold,
       actual,
       violation_percentage: ((actual - threshold) / threshold) * 100,
-      environment: _config.env,
+      environment: config.env,
       severity: this.calculateSeverity(actual, threshold),
     });
   }
@@ -789,7 +789,7 @@ export function createAnalyticsConfig(environment?: string): AnalyticsConfig {
 
   return {
     apiKey: config.analytics.posthog.apiKey,
-    host: _config.analytics.posthog.host,
+    host: config.analytics.posthog.host,
     environment: env as 'development' | 'staging' | 'production',
     debug: env === 'development',
     enableSessionRecording: env !== 'development',

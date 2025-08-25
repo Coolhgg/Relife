@@ -77,7 +77,7 @@ class MockAudio {
 
   removeEventListener(
     type: string,
-    listener?: EventListenerOrEventListenerObject | null
+    _listener??: EventListenerOrEventListenerObject | null
   ): void {
     (this as any)[`on${type}`] = null;
   }
