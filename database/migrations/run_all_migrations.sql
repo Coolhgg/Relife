@@ -1,7 +1,7 @@
--- Master Migration Script: Emotional Intelligence System
--- Description: Runs all emotional intelligence migrations in correct order
--- Version: 1.0.0
--- Usage: Execute this script to install the complete emotional intelligence system
+-- Master Migration Script: Emotional Intelligence & Reward System
+-- Description: Runs all system migrations in correct order
+-- Version: 1.1.0
+-- Usage: Execute this script to install the complete emotional intelligence and reward system
 
 -- ========================================
 -- SAFETY CHECKS AND PREREQUISITES
@@ -81,9 +81,9 @@ $$ LANGUAGE plpgsql;
 -- ========================================
 
 RAISE NOTICE '';
-RAISE NOTICE '=====================================';
-RAISE NOTICE 'EMOTIONAL INTELLIGENCE SYSTEM SETUP';
-RAISE NOTICE '=====================================';
+RAISE NOTICE '==============================================';
+RAISE NOTICE 'EMOTIONAL INTELLIGENCE & REWARD SYSTEM SETUP';
+RAISE NOTICE '==============================================';
 RAISE NOTICE '';
 RAISE NOTICE 'Starting migration process...';
 RAISE NOTICE 'Timestamp: %', CURRENT_TIMESTAMP;
@@ -222,6 +222,50 @@ EXCEPTION WHEN OTHERS THEN
 END $$;
 
 -- ========================================
+-- MIGRATION 007: Reward System
+-- ========================================
+
+RAISE NOTICE 'Applying Migration 007: Reward System...';
+
+DO $$
+BEGIN
+    -- Check if migration already applied
+    IF EXISTS (SELECT 1 FROM migration_history WHERE migration_name = '007_create_reward_system') THEN
+        RAISE NOTICE 'Migration 007 already applied, skipping...';
+    ELSE
+        -- Apply migration 007
+        \i 007_create_reward_system.sql
+        
+        -- Record migration
+        PERFORM record_migration('007_create_reward_system', 'rewards_v1.0.0');
+    END IF;
+EXCEPTION WHEN OTHERS THEN
+    RAISE EXCEPTION 'Migration 007 failed: %', SQLERRM;
+END $$;
+
+-- ========================================
+-- MIGRATION 008: Reward System Seed Data
+-- ========================================
+
+RAISE NOTICE 'Applying Migration 008: Reward System Seed Data...';
+
+DO $$
+BEGIN
+    -- Check if migration already applied
+    IF EXISTS (SELECT 1 FROM migration_history WHERE migration_name = '008_seed_reward_system_data') THEN
+        RAISE NOTICE 'Migration 008 already applied, skipping...';
+    ELSE
+        -- Apply migration 008
+        \i 008_seed_reward_system_data.sql
+        
+        -- Record migration
+        PERFORM record_migration('008_seed_reward_system_data', 'seed_data_v1.0.0');
+    END IF;
+EXCEPTION WHEN OTHERS THEN
+    RAISE EXCEPTION 'Migration 008 failed: %', SQLERRM;
+END $$;
+
+-- ========================================
 -- POST-MIGRATION VALIDATION
 -- ========================================
 
@@ -239,17 +283,17 @@ BEGIN
     -- Count created objects
     SELECT COUNT(*) INTO table_count
     FROM information_schema.tables 
-    WHERE table_name LIKE '%emotional%' 
+    WHERE (table_name LIKE '%emotional%' OR table_name LIKE '%reward%' OR table_name LIKE '%gift%' OR table_name LIKE '%ai_insights%' OR table_name LIKE '%habits%' OR table_name LIKE '%niche%')
     AND table_schema = 'public';
     
     SELECT COUNT(*) INTO function_count
     FROM information_schema.routines
-    WHERE routine_name LIKE '%emotional%'
+    WHERE (routine_name LIKE '%emotional%' OR routine_name LIKE '%reward%')
     AND routine_schema = 'public';
     
     SELECT COUNT(*) INTO view_count
     FROM information_schema.views
-    WHERE table_name LIKE '%emotional%'
+    WHERE (table_name LIKE '%emotional%' OR table_name LIKE '%reward%')
     AND table_schema = 'public';
     
     SELECT COUNT(*) INTO template_count
@@ -257,16 +301,16 @@ BEGIN
     
     SELECT COUNT(*) INTO index_count
     FROM pg_indexes
-    WHERE indexname LIKE '%emotional%';
+    WHERE (indexname LIKE '%emotional%' OR indexname LIKE '%reward%' OR indexname LIKE '%gift%' OR indexname LIKE '%insights%' OR indexname LIKE '%habits%' OR indexname LIKE '%niche%');
     
     -- Validation report
     RAISE NOTICE '';
     RAISE NOTICE 'Validation Results:';
-    RAISE NOTICE '- Tables created: % (expected: 7)', table_count;
+    RAISE NOTICE '- Tables created: % (expected: 14)', table_count;
     RAISE NOTICE '- Functions created: % (expected: ~15)', function_count;
     RAISE NOTICE '- Views created: % (expected: 7)', view_count;
     RAISE NOTICE '- Message templates: % (expected: ~140)', template_count;
-    RAISE NOTICE '- Indexes created: % (expected: ~50)', index_count;
+    RAISE NOTICE '- Indexes created: % (expected: ~100)', index_count;
     
     -- Check critical tables exist
     IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'emotional_notification_logs') THEN
@@ -275,6 +319,14 @@ BEGIN
     
     IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'user_emotional_profiles') THEN
         RAISE EXCEPTION 'Critical table user_emotional_profiles not found';
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'rewards') THEN
+        RAISE EXCEPTION 'Critical table rewards not found';
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'user_reward_analytics') THEN
+        RAISE EXCEPTION 'Critical table user_reward_analytics not found';
     END IF;
     
     -- Check templates were seeded
@@ -298,11 +350,13 @@ SELECT update_emotional_statistics();
 INSERT INTO emotional_analytics_events (event_type, event_data, event_timestamp)
 VALUES ('system_installation_completed', jsonb_build_object(
     'installed_at', CURRENT_TIMESTAMP,
-    'version', '1.0.0',
-    'migration_count', 6,
-    'tables_created', (SELECT COUNT(*) FROM information_schema.tables WHERE table_name LIKE '%emotional%'),
-    'functions_created', (SELECT COUNT(*) FROM information_schema.routines WHERE routine_name LIKE '%emotional%'),
-    'templates_seeded', (SELECT COUNT(*) FROM emotional_messages)
+    'version', '1.2.0',
+    'migration_count', 8,
+    'tables_created', (SELECT COUNT(*) FROM information_schema.tables WHERE (table_name LIKE '%emotional%' OR table_name LIKE '%reward%')),
+    'functions_created', (SELECT COUNT(*) FROM information_schema.routines WHERE (routine_name LIKE '%emotional%' OR routine_name LIKE '%reward%')),
+    'templates_seeded', (SELECT COUNT(*) FROM emotional_messages),
+    'rewards_seeded', (SELECT COUNT(*) FROM rewards WHERE rewards.id IS NOT NULL),
+    'gifts_seeded', (SELECT COUNT(*) FROM gift_catalog WHERE gift_catalog.id IS NOT NULL)
 ), CURRENT_TIMESTAMP);
 
 -- ========================================
@@ -310,19 +364,24 @@ VALUES ('system_installation_completed', jsonb_build_object(
 -- ========================================
 
 RAISE NOTICE '';
-RAISE NOTICE '=====================================';
+RAISE NOTICE '==============================================';
 RAISE NOTICE 'INSTALLATION COMPLETED SUCCESSFULLY!';
-RAISE NOTICE '=====================================';
+RAISE NOTICE '==============================================';
 RAISE NOTICE '';
-RAISE NOTICE 'Emotional Intelligence System v1.0.0 has been installed.';
+RAISE NOTICE 'Emotional Intelligence & Reward System v1.2.0 has been installed.';
 RAISE NOTICE '';
 RAISE NOTICE 'Components installed:';
-RAISE NOTICE '✓ Core database schema (7 tables)';
-RAISE NOTICE '✓ Performance indexes (~50 indexes)';
+RAISE NOTICE '✓ Core database schema (14 tables)';
+RAISE NOTICE '✓ Performance indexes (~100 indexes)';
 RAISE NOTICE '✓ Automated triggers and functions';
 RAISE NOTICE '✓ Message templates (~140 templates)';
 RAISE NOTICE '✓ Analytics views (7 views)';
 RAISE NOTICE '✓ Row-level security policies';
+RAISE NOTICE '✓ Comprehensive reward system (7 tables)';
+RAISE NOTICE '✓ AI insights and behavior analysis';
+RAISE NOTICE '✓ Gift catalog and inventory system';
+RAISE NOTICE '✓ Initial rewards and achievements (~25 items)';
+RAISE NOTICE '✓ Gift catalog with themes, sounds, and features (~20 items)';
 RAISE NOTICE '';
 RAISE NOTICE 'Next steps:';
 RAISE NOTICE '1. Update your application configuration to enable emotional notifications';
@@ -331,6 +390,10 @@ RAISE NOTICE '3. Set up background job processing for notification scheduling';
 RAISE NOTICE '4. Deploy emotional notification assets (icons, banners)';
 RAISE NOTICE '5. Update your service worker with emotional notification handling';
 RAISE NOTICE '6. Test the emotional intelligence service integration';
+RAISE NOTICE '7. Create seed data for initial rewards and achievements';
+RAISE NOTICE '8. Set up reward notification system and celebrations';
+RAISE NOTICE '9. Configure AI behavior analysis and insights generation';
+RAISE NOTICE '10. Test the complete reward system functionality';
 RAISE NOTICE '';
 RAISE NOTICE 'Documentation:';
 RAISE NOTICE '- Implementation guide: /project/workspace/Coolhgg/Relife/EMOTIONAL_NOTIFICATIONS_INTEGRATION_GUIDE.md';

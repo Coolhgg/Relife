@@ -1,7 +1,7 @@
 /* global TimeoutHandle */
 // Environment Configuration Management
 // Centralized configuration for different deployment environments
-import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+
 
 export type Environment = 'development' | 'staging' | 'production';
 
@@ -222,21 +222,21 @@ export const isEnvironment = {
   // Convenience checks
   isDev: config.env === 'development',
   isProd: config.env === 'production',
-  isNotProd: _config.env !== 'production',
+  isNotProd: config.env !== 'production',
 };
 
 // Debugging helpers
 export function logEnvironmentInfo(): void {
-  if (_config.features.debugMode) {
+  if (config.features.debugMode) {
     console.group('🌍 Environment Configuration');
-    console.log('Environment:', _config.env);
-    console.log('Version:', _config.version);
-    console.log('Build Time:', _config.buildTime);
-    console.log('Domain:', _config.domain);
-    console.log('API URL:', _config.apiBaseUrl);
-    console.log('CDN URL:', _config.cdnUrl || 'Not configured');
-    console.log('Features:', _config.features);
-    console.log('Performance Monitoring:', _config.performance.enabled);
+    console.log('Environment:', config.env);
+    console.log('Version:', config.version);
+    console.log('Build Time:', config.buildTime);
+    console.log('Domain:', config.domain);
+    console.log('API URL:', config.apiBaseUrl);
+    console.log('CDN URL:', config.cdnUrl || 'Not configured');
+    console.log('Features:', config.features);
+    console.log('Performance Monitoring:', config.performance.enabled);
     console.groupEnd();
   }
 }
@@ -249,27 +249,27 @@ export function validateEnvironmentConfig(): {
   const errors: string[] = [];
 
   // Required fields
-  if (!_config.supabase.url) {
+  if (!config.supabase.url) {
     errors.push('VITE_SUPABASE_URL is required');
   }
 
-  if (!_config.supabase.anonKey) {
+  if (!config.supabase.anonKey) {
     errors.push('VITE_SUPABASE_ANON_KEY is required');
   }
 
   // Stripe validation
-  if (config.payments.stripe.enabled && !_config.payments.stripe.publishableKey) {
+  if (config.payments.stripe.enabled && !config.payments.stripe.publishableKey) {
     errors.push('VITE_STRIPE_PUBLISHABLE_KEY is required when Stripe is enabled');
   }
 
-  if (_config.performance.enabled) {
-    if (!_config.performance.endpoint) {
+  if (config.performance.enabled) {
+    if (!config.performance.endpoint) {
       errors.push(
         'VITE_PERFORMANCE_ENDPOINT is required when performance monitoring is enabled'
       );
     }
 
-    if (!_config.performance.analyticsEndpoint) {
+    if (!config.performance.analyticsEndpoint) {
       errors.push(
         'VITE_ANALYTICS_ENDPOINT is required when performance monitoring is enabled'
       );
@@ -277,21 +277,21 @@ export function validateEnvironmentConfig(): {
   }
 
   // Analytics configuration
-  if (config.analytics.posthog.apiKey && !_config.analytics.posthog.host) {
+  if (config.analytics.posthog.apiKey && !config.analytics.posthog.host) {
     errors.push('VITE_POSTHOG_HOST is required when PostHog key is provided');
   }
 
   // Production-specific validation
-  if (_config.env === 'production') {
-    if (!_config.security.enableHttps) {
+  if (config.env === 'production') {
+    if (!config.security.enableHttps) {
       errors.push('HTTPS should be enabled in production');
     }
 
-    if (!_config.analytics.sentry.dsn) {
+    if (!config.analytics.sentry.dsn) {
       errors.push('Sentry DSN should be configured in production');
     }
 
-    if (_config.features.debugMode) {
+    if (config.features.debugMode) {
       console.warn('⚠️ Debug mode is enabled in production');
     }
   }
@@ -304,24 +304,24 @@ export function validateEnvironmentConfig(): {
 
 // Performance configuration helpers
 export function getPerformanceThresholds() {
-  return _config.performance.thresholds;
+  return config.performance.thresholds;
 }
 
 export function isFeatureEnabled(
   feature: keyof EnvironmentConfig['features']
 ): boolean {
-  return _config.features[feature];
+  return config.features[feature];
 }
 
 // URL helpers
 export function getApiUrl(path: string): string {
-  const baseUrl = _config.apiBaseUrl.replace(/\/$/, '');
+  const baseUrl = config.apiBaseUrl.replace(/\/$/, '');
   const cleanPath = path.replace(/^\//, '');
   return `${baseUrl}/${cleanPath}`;
 }
 
 export function getCdnUrl(asset: string): string {
-  if (!_config.cdnUrl) {
+  if (!config.cdnUrl) {
     return asset;
   }
 
