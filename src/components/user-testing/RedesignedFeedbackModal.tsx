@@ -1,6 +1,10 @@
 /// <reference lib="dom" />
 import React, { useState, useRef, useEffect } from 'react';
 import {
+// auto: restored by scout - verify import path
+import { Textarea } from '@/components/ui/textarea';
+// auto: restored by scout - verify import path
+import { Textarea } from '@/components/ui/textarea';
   Dialog,
   DialogContent,
   DialogHeader,

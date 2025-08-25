@@ -6,6 +6,10 @@ import SubscriptionService from './subscription-service';
 import { ErrorHandler } from './error-handler';
 import AnalyticsService from './analytics';
 import { TimeoutHandle } from '../types/timers';
+// auto: restored by scout - verify import path
+import { SubscriptionTier } from '@/types';
+// auto: restored by scout - verify import path
+import { SubscriptionTier } from '@/types';
 
 interface FeatureDefinition {
   id: string;

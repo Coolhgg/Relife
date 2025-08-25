@@ -1,3 +1,7 @@
+// auto: restored by scout - verify import path
+import React from 'react';
+// auto: restored by scout - verify import path
+import React from 'react';
 /**
  * Utility Types for TypeScript Coverage Enhancement
  *

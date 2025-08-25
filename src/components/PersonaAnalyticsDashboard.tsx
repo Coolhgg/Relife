@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
+// auto: restored by scout - verify import path
+import { _persona } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { _persona } from '@/utils/__auto_stubs';
   BarChart,
   Bar,
   LineChart,

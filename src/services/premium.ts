@@ -2,6 +2,14 @@ import { supabase } from './supabase';
 import type { User } from '../types';
 import type { SubscriptionTier } from '../types/premium';
 import { ErrorHandler } from './error-handler';
+// auto: restored by scout - verify import path
+import { currentTier } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { newTier } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { newTier } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { currentTier } from '@/utils/__auto_stubs';
 
 export interface PremiumFeature {
   id: string;

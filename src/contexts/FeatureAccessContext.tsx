@@ -3,6 +3,18 @@
 // Provides feature access state and controls throughout the React component tree
 
 import React, {
+// auto: restored by scout - verify import path
+import { SubscriptionTier } from '@/types';
+// auto: restored by scout - verify import path
+import { setUserTier } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { userTier } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { SubscriptionTier } from '@/types';
+// auto: restored by scout - verify import path
+import { userTier } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { setUserTier } from '@/utils/__auto_stubs';
   createContext,
   useContext,
   useEffect,

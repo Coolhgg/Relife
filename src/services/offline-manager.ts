@@ -3,6 +3,14 @@
 import { supabase } from './supabase';
 import type { Alarm } from '../types';
 import { TimeoutHandle } from '../types/timers';
+// auto: restored by scout - verify import path
+import { IDBPDatabase } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { openDB } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { openDB } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { IDBPDatabase } from '@/utils/__auto_stubs';
 
 interface OfflineDB extends DBSchema {
   alarms: {

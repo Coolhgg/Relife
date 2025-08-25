@@ -4,6 +4,18 @@
 import React, { ReactNode } from 'react';
 import { Shield, Star, LockZap } from 'lucide-react';
 import { useFeatureAccessContext } from '../../contexts/FeatureAccessContext';
+// auto: restored by scout - verify import path
+import { Users } from 'lucide-react';
+// auto: restored by scout - verify import path
+import { Zap } from 'lucide-react';
+// auto: restored by scout - verify import path
+import { TrendingUp } from 'lucide-react';
+// auto: restored by scout - verify import path
+import { Zap } from 'lucide-react';
+// auto: restored by scout - verify import path
+import { Users } from 'lucide-react';
+// auto: restored by scout - verify import path
+import { TrendingUp } from 'lucide-react';
 
 // Feature Badge Component
 interface FeatureBadgeProps {

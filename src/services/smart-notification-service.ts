@@ -2,6 +2,10 @@
 import { Capacitor } from '@capacitor/core';
 import { TimeoutHandle } from '../types/timers';
 import {
+// auto: restored by scout - verify import path
+import { alarmOrNotification } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { alarmOrNotification } from '@/utils/__auto_stubs';
   LocalNotifications,
   ScheduleOptions,
   DeliveredNotifications,

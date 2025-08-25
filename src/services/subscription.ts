@@ -1,5 +1,9 @@
 import { supabase, createClient } from './supabase';
 import type {
+// auto: restored by scout - verify import path
+import { SubscriptionTier } from '@/types';
+// auto: restored by scout - verify import path
+import { SubscriptionTier } from '@/types';
   Subscription,
   SubscriptionStatus,
   PremiumFeatureAccess,
