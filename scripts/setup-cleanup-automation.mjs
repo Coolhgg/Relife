@@ -5,9 +5,8 @@
  * Configures automated cleanup in development workflow
  */
 
-import { _execSync } from 'child_process';
-import { existsSync, writeFileSync } from 'fs';
-import { _readFileSync } from 'fs';
+import { execSync } from 'child_process';
+import { existsSync, writeFileSync, readFileSync } from 'fs';
 
 const colors = {
   reset: '\x1b[0m',
