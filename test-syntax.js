@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'src/shims/fs'; // auto: converted require to shim
+import path from 'src/shims/path'; // auto: converted require to shim
 
 // Simple syntax check by trying to parse as JavaScript
 const filePath = 'src/components/AlarmForm.tsx';

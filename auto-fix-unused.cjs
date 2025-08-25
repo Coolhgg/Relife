@@ -5,9 +5,9 @@
  * Focuses on fixing unused variables and imports automatically
  */
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import fs from 'src/shims/fs'; // auto: converted require to shim
+import path from 'src/shims/path'; // auto: converted require to shim
+import { __cjs as _child_process } from 'src/shims/child_process'; const { execSync } = _child_process; // auto: converted require to shim
 
 console.log('🔧 Starting automated fixes for unused variables and imports...\n');
 

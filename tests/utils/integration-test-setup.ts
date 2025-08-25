@@ -17,14 +17,14 @@ import {
 
 // Import additional mocks for new features (if available)
 try {
-  const {
+  import { __cjs as _test_mocks } from 'src/shims/test-mocks'; const {
     setupAllMocks,
     mockWebSocket,
     mockMediaRecorder,
     mockFileAPI,
     mockBiometricAPIs,
     mockSleepAPIs,
-  } = require('./test-mocks');
+  } = _test_mocks; // auto: converted require to shim
 
   // Setup all additional mocks for new features if available
   if (setupAllMocks) {
@@ -389,7 +389,7 @@ export const mockApiError = (
   status: number = 500,
   message: string = 'Server Error'
 ) => {
-  const { http, HttpResponse } = require('msw');
+  import { __cjs as _msw } from 'src/shims/msw'; const { http, HttpResponse } = _msw; // auto: converted require to shim
 
   server.use(
     http.all(endpoint, () => {
@@ -399,7 +399,7 @@ export const mockApiError = (
 };
 
 export const mockApiDelay = (endpoint: string, delay: number = 1000) => {
-  const { http, HttpResponse } = require('msw');
+  import { __cjs as _msw } from 'src/shims/msw'; const { http, HttpResponse } = _msw; // auto: converted require to shim
 
   server.use(
     http.all(endpoint, async () => {
@@ -415,7 +415,7 @@ export const mockRealtimeDelay = (endpoint: string, delay: number = 100) => {
 };
 
 export const mockApiSuccess = (endpoint: string, data: any) => {
-  const { http, HttpResponse } = require('msw');
+  import { __cjs as _msw } from 'src/shims/msw'; const { http, HttpResponse } = _msw; // auto: converted require to shim
 
   server.use(
     http.all(endpoint, () => {
@@ -427,7 +427,7 @@ export const mockApiSuccess = (endpoint: string, data: any) => {
 // New API mock helpers for advanced features (if enhanced mocks available)
 export const mockWebSocketServer = (url: string, responses: any[] = []) => {
   try {
-    const { mockWebSocket } = require('./test-mocks');
+    import { __cjs as _test_mocks } from 'src/shims/test-mocks'; const { mockWebSocket } = _test_mocks; // auto: converted require to shim
     const mockWS = mockWebSocket();
 
     // Simulate server responses
@@ -458,7 +458,7 @@ export const mockWebSocketServer = (url: string, responses: any[] = []) => {
 };
 
 export const mockTTSService = (audioUrl: string = 'blob:mock-tts-audio') => {
-  const { http, HttpResponse } = require('msw');
+  import { __cjs as _msw } from 'src/shims/msw'; const { http, HttpResponse } = _msw; // auto: converted require to shim
 
   server.use(
     http.post('*/api/voice/synthesize', () => {
@@ -475,7 +475,7 @@ export const mockTTSService = (audioUrl: string = 'blob:mock-tts-audio') => {
 };
 
 export const mockSleepAnalysisService = (analysisData: any) => {
-  const { http, HttpResponse } = require('msw');
+  import { __cjs as _msw } from 'src/shims/msw'; const { http, HttpResponse } = _msw; // auto: converted require to shim
 
   server.use(
     http.post('*/api/sleep/analyze', () => {
@@ -516,7 +516,7 @@ export const {
 
 // Additional helper exports for new features (if available)
 try {
-  const enhancedMocks = require('./test-mocks');
+  import { __cjs as enhancedMocks } from 'src/shims/test-mocks'; // auto: converted require to shim
 
   // Export enhanced mocks if available
   module.exports = {

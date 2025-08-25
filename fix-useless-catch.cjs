@@ -4,8 +4,8 @@
  * Script to fix no-useless-catch ESLint violations
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'src/shims/fs'; // auto: converted require to shim
+import path from 'src/shims/path'; // auto: converted require to shim
 
 console.log('🔧 Starting useless catch blocks cleanup...\n');
 

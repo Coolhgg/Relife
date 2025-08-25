@@ -5,8 +5,8 @@
  * Safely comments out identified dead code with TODO markers
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'src/shims/fs'; // auto: converted require to shim
+import path from 'src/shims/path'; // auto: converted require to shim
 
 // Track statistics
 const stats = {
