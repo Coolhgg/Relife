@@ -77,10 +77,10 @@ export abstract class BaseService implements IBaseService {
 
       this.emit('service:initialized', {
         serviceName: this.name,
-        _config: this._config,
+        _config: this.config,
       });
 
-      if (this._config.debug) {
+      if (this.config.debug) {
         console.log(`[${this.name}] Service initialized successfully`);
       }
     } catch (_error) {
@@ -135,7 +135,7 @@ export abstract class BaseService implements IBaseService {
 
       this.emit('service:cleanup', { serviceName: this.name });
 
-      if (this._config.debug) {
+      if (this.config.debug) {
         console.log(`[${this.name}] Service cleaned up successfully`);
       }
     } catch (_error) {
@@ -182,7 +182,7 @@ export abstract class BaseService implements IBaseService {
 
     // Check error rate in the last 5 minutes
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-    const recentErrors = this.errors.filter(error => _error.timestamp > fiveMinutesAgo);
+    const recentErrors = this.errors.filter(error => error.timestamp > fiveMinutesAgo);
 
     if (recentErrors.length > 10) {
       return 'unhealthy';
@@ -203,7 +203,7 @@ export abstract class BaseService implements IBaseService {
     const oneHourAgo = now - 60 * 60 * 1000;
 
     const recentErrors = this.errors.filter(
-      _error => _error.timestamp.getTime() > oneHourAgo
+      error => error.timestamp.getTime() > oneHourAgo
     );
 
     return {
@@ -227,23 +227,23 @@ export abstract class BaseService implements IBaseService {
   // ============================================================================
 
   public getConfig(): ServiceConfig {
-    return { ...this._config };
+    return { ...this.config };
   }
 
   public async updateConfig(_config: Partial<ServiceConfig>): Promise<void> {
-    const oldConfig = { ...this._config };
+    const oldConfig = { ...this.config };
     this.config = { ...this.config, ..._config };
 
     try {
       this.validateConfig();
-      await this.onConfigUpdate(oldConfig, this._config);
+      await this.onConfigUpdate(oldConfig, this.config);
       this.emit('service:_config-updated', {
         serviceName: this.name,
         oldConfig,
-        newConfig: this._config,
+        newConfig: this.config,
       });
     } catch (_error) {
-      this._config = oldConfig; // Rollback
+      this.config = oldConfig; // Rollback
       this.handleError(_error, 'Failed to update configuration');
       throw _error;
     }
@@ -251,13 +251,13 @@ export abstract class BaseService implements IBaseService {
 
   protected validateConfig(): void {
     if (
-      !this._config.environment ||
-      !['development', 'staging', 'production'].includes(this._config.environment)
+      !this.config.environment ||
+      !['development', 'staging', 'production'].includes(this.config.environment)
     ) {
-      throw new Error(`Invalid environment: ${this._config.environment}`);
+      throw new Error(`Invalid environment: ${this.config.environment}`);
     }
 
-    if (typeof this._config.enabled !== 'boolean') {
+    if (typeof this.config.enabled !== 'boolean') {
       throw new Error('Configuration must specify enabled as boolean');
     }
   }
@@ -331,7 +331,7 @@ export abstract class BaseService implements IBaseService {
     context?: Record<string, any>
   ): void {
     const serviceError: ServiceError = {
-      message: `${message}: ${error.message || _error}`,
+      message: `${message}: ${_error.message || _error}`,
       code: error.code || 'UNKNOWN_ERROR',
       timestamp: new Date(),
       severity: this.determineSeverity(_error),
@@ -350,15 +350,15 @@ export abstract class BaseService implements IBaseService {
     }
 
     // Emit error event
-    this.emit('service:_error', serviceError);
+    this.emit('service:error', serviceError);
 
     // Report to external error tracking if configured
-    if (this._config.errorHandling?.reportingEnabled) {
+    if (this.config.errorHandling?.reportingEnabled) {
       this.reportError(serviceError);
     }
 
-    if (this._config.debug) {
-      console._error(`[${this.name}] ${serviceError.message}`, _error);
+    if (this.config.debug) {
+      console.error(`[${this.name}] ${serviceError.message}`, _error);
     }
   }
 
@@ -387,7 +387,7 @@ export abstract class BaseService implements IBaseService {
   // ============================================================================
 
   protected async setupPerformanceTracking(): Promise<void> {
-    if (this._config.monitoring?.performanceTracking) {
+    if (this.config.monitoring?.performanceTracking) {
       // Performance tracker would be injected via DI
       this.performanceTracker = (globalThis as any).performanceTracker;
     }
@@ -502,7 +502,7 @@ export abstract class BaseService implements IBaseService {
     return {
       name: this.name,
       version: this.version,
-      config: this._config,
+      config: this.config,
       lifecycle: this.lifecycle,
       initialized: this.initialized,
       ready: this.ready,

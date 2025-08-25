@@ -8,7 +8,6 @@ import SecureAlarmStorageService from './secure-alarm-storage';
 import SecurityService from './security';
 import { ErrorHandler } from './error-handler';
 import { TimeoutHandle } from '../types/timers';
-import { ErrorHandler } from './error-handler';
 // Note: User data should be passed as parameters or retrieved from auth context
 
 export class AlarmService {
@@ -59,13 +58,13 @@ export class AlarmService {
       });
 
       return this.alarms;
-    } catch (_error) {
-      const wrappedError = error instanceof Error ? _error : new Error(String(_error));
+    } catch (error) {
+      const wrappedError = error instanceof Error ? error : new Error(String(error));
       ErrorHandler.handleError(wrappedError, 'Failed to load alarms', {
         context: 'alarm_loading',
         metadata: { userId },
       });
-      console.error('Error loading alarms:', _error);
+      console.error('Error loading alarms:', error);
       throw wrappedError;
     }
   }
@@ -87,16 +86,16 @@ export class AlarmService {
         alarmCount: this.alarms.length,
         timestamp: new Date().toISOString(),
       });
-    } catch (_error) {
+    } catch (error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        error instanceof Error ? error : new Error(String(error)),
         'Failed to save alarms',
         {
           context: 'alarm_saving',
           metadata: { userId, alarmCount: this.alarms.length },
         }
       );
-      console.error('Error saving alarms:', _error);
+      console.error('Error saving alarms:', error);
       throw error;
     }
   }
@@ -249,7 +248,7 @@ export class AlarmService {
     }
 
     if (userId && alarm.userId && alarm.userId !== userId) {
-      throw new Error('Access denied: cannot delete alarm belonging to another _user');
+      throw new Error('Access denied: cannot delete alarm belonging to another user');
     }
 
     await this.cancelNotification(alarmId);
@@ -304,7 +303,7 @@ export class AlarmService {
   static async dismissAlarm(
     alarmId: string,
     method: 'voice' | 'button' | 'shake' | 'challenge',
-    _user?: User
+    user?: User
   ): Promise<void> {
     const alarm = this.alarms.find(a => a.id === alarmId);
     if (!alarm) {
@@ -324,13 +323,13 @@ export class AlarmService {
       };
 
       this.alarms[alarmIndex] = updatedAlarm;
-      await this.saveAlarms(_user?.id);
+      await this.saveAlarms(user?.id);
 
       // Log security event
       this.logSecurityEvent('alarm_dismissed', {
         alarmId,
         method,
-        userId: _user?.id,
+        userId: user?.id,
         timestamp: dismissalTime.toISOString(),
       });
     }
@@ -349,7 +348,7 @@ export class AlarmService {
 
       await alarmBattleIntegration.handleAlarmDismissal(
         alarmInstance,
-        _user,
+        user,
         dismissalTime,
         method
       );
@@ -373,7 +372,7 @@ export class AlarmService {
   static async snoozeAlarm(
     alarmId: string,
     minutes?: number,
-    _user?: User
+    user?: User
   ): Promise<void> {
     const alarm = this.alarms.find(a => a.id === alarmId);
     if (!alarm) {
@@ -408,13 +407,13 @@ export class AlarmService {
       };
 
       this.alarms[alarmIndex] = updatedAlarm;
-      await this.saveAlarms(_user?.id);
+      await this.saveAlarms(user?.id);
 
       // Log security event
       this.logSecurityEvent('alarm_snoozed', {
         alarmId,
         snoozeCount: newSnoozeCount,
-        userId: _user?.id,
+        userId: user?.id,
         timestamp: snoozeTime.toISOString(),
       });
     }
@@ -432,7 +431,7 @@ export class AlarmService {
 
       await alarmBattleIntegration.handleAlarmSnooze(
         alarmInstance,
-        _user,
+        user,
         snoozeTime,
         newSnoozeCount
       );
@@ -487,26 +486,26 @@ export class AlarmService {
       });
 
       console.log(`Scheduled alarm "${alarm.label}" for ${nextTime.toLocaleString()}`);
-    } catch (_error) {
-      console._error('Error scheduling notification:', _error);
+    } catch (error) {
+      console.error('Error scheduling notification:', error);
     }
   }
 
   private static async cancelNotification(alarmId: string): Promise<void> {
     try {
       await cancelLocalNotification(parseInt(alarmId.replace(/\D/g, '')));
-    } catch (_error) {
-      console._error('Error cancelling notification:', _error);
+    } catch (error) {
+      console.error('Error cancelling notification:', error);
     }
   }
 
-  private static async logAlarmEvent(_event: AlarmEvent): Promise<void> {
+  private static async logAlarmEvent(event: AlarmEvent): Promise<void> {
     try {
       // Use secure storage for alarm events
       const secureStorage = SecureAlarmStorageService.getInstance();
       const existingEvents = await secureStorage.retrieveAlarmEvents();
 
-      existingEvents.push(_event);
+      existingEvents.push(event);
 
       // Keep only last 100 events
       if (existingEvents.length > 100) {
@@ -514,8 +513,8 @@ export class AlarmService {
       }
 
       await secureStorage.storeAlarmEvents(existingEvents);
-    } catch (_error) {
-      console._error('Error logging alarm _event:', _error);
+    } catch (error) {
+      console.error('Error logging alarm event:', error);
     }
   }
 
@@ -571,7 +570,7 @@ export class AlarmService {
             createdAt: new Date().toISOString(),
           };
 
-          await alarmBattleIntegration.handleAlarmTrigger(alarmInstance, _user);
+          await alarmBattleIntegration.handleAlarmTrigger(alarmInstance, user);
         }
 
         // Trigger alarm with enhanced data
@@ -763,7 +762,7 @@ export class AlarmService {
   /**
    * Log security events for audit trail
    */
-  private static logSecurityEvent(_event: string, details: any): void {
+  private static logSecurityEvent(event: string, details: any): void {
     const logEntry = {
       event,
       details,
@@ -773,7 +772,7 @@ export class AlarmService {
 
     // Emit custom event for security monitoring
     window.dispatchEvent(
-      new CustomEvent('alarm-security-_event', {
+      new CustomEvent('alarm-security-event', {
         detail: logEntry,
       })
     );
@@ -814,7 +813,7 @@ export const enhancedAlarmTracking = {
     // Validate ownership before tracking
     if (!AlarmService.validateAlarmOwnership(alarmId, userId)) {
       throw new Error(
-        'Access denied: cannot track performance for alarm not owned by _user'
+        'Access denied: cannot track performance for alarm not owned by user'
       );
     }
 

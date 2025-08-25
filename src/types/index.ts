@@ -240,3 +240,6 @@ export interface HealthCheckResponse {
   timestamp: string;
   version: string;
 }
+// Service Interface Exports
+export * from './service-interfaces';
+export * from './domain-service-interfaces';

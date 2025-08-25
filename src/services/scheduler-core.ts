@@ -10,8 +10,8 @@ import { ErrorHandler } from './error-handler';
   ScheduleExport,
   ScheduleImport,
 } from '../types/index';
-// import { AlarmService } from './alarm'; // Temporarily commented out due to parsing errors in alarm.ts
-import { AlarmService } from './alarm-stub';
+import { getService } from './ServiceBootstrap';
+import { IAlarmService } from '../types/service-interfaces';
 import { AlarmParser } from './alarm-parser';
 import { AlarmExecutor } from './alarm-executor';
 import { Preferences } from '@capacitor/preferences';
@@ -21,6 +21,9 @@ const ADVANCED_CONFIG_KEY = 'advanced_scheduling_config';
 const SCHEDULING_STATS_KEY = 'scheduling_statistics';
 
 export class SchedulerCore {
+  private static getAlarmService(): IAlarmService {
+    return getService<IAlarmService>('AlarmService');
+  }
   private static _config: SchedulingConfig = {
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     defaultWakeWindow: 30,
@@ -118,7 +121,7 @@ export class SchedulerCore {
     }
 
     try {
-      const alarms = await AlarmService.loadAlarms();
+      const alarms = await this.getAlarmService().loadAlarms();
       const activeAlarms = alarms.filter(alarm => alarm.isActive);
 
       for (const alarm of activeAlarms) {
@@ -168,7 +171,7 @@ export class SchedulerCore {
     optimized: Alarm
   ): Promise<void> {
     try {
-      await AlarmService.updateAlarm(original.id, {
+      await this.getAlarmService().updateAlarm(original.id, {
         time: optimized.time,
         label: optimized.label,
         days: optimized.days,
@@ -368,7 +371,7 @@ export class SchedulerCore {
 
     for (const alarm of operation.alarms) {
       try {
-        await AlarmService.createAlarm({
+        await this.getAlarmService().createAlarm({
           time: alarm.time,
           label: alarm.label,
           days: alarm.days,
@@ -406,7 +409,7 @@ export class SchedulerCore {
 
     for (const update of operation.updates) {
       try {
-        await AlarmService.updateAlarm(update.id, update.data);
+        await this.getAlarmService().updateAlarm(update.id, update.data);
         results.success++;
       } catch (_error) {
         results.failed++;
@@ -431,7 +434,7 @@ export class SchedulerCore {
 
     for (const alarmId of operation.alarmIds) {
       try {
-        await AlarmService.deleteAlarm(alarmId);
+        await this.getAlarmService().deleteAlarm(alarmId);
         results.success++;
       } catch (_error) {
         results.failed++;
@@ -454,7 +457,7 @@ export class SchedulerCore {
       return results;
     }
 
-    const existingAlarms = await AlarmService.loadAlarms();
+    const existingAlarms = await this.getAlarmService().loadAlarms();
 
     for (const alarmId of operation.alarmIds) {
       try {
@@ -488,7 +491,7 @@ export class SchedulerCore {
   // ===== IMPORT/EXPORT =====
 
   static async exportSchedule(): Promise<ScheduleExport> {
-    const alarms = await AlarmService.loadAlarms();
+    const alarms = await this.getAlarmService().loadAlarms();
 
     return {
       version: '1.0',
@@ -531,7 +534,7 @@ export class SchedulerCore {
 
           // Check for existing alarm if not overwriting
           if (!options.overwriteExisting) {
-            const existingAlarms = await AlarmService.loadAlarms();
+            const existingAlarms = await this.getAlarmService().loadAlarms();
             const exists = existingAlarms.some(
               existing => existing.label === alarm.label && existing.time === alarm.time
             );
@@ -548,7 +551,7 @@ export class SchedulerCore {
             alarm.id = this.generateUniqueId();
           }
 
-          await AlarmService.createAlarm({
+          await this.getAlarmService().createAlarm({
             time: alarm.time,
             label: alarm.label,
             days: alarm.days,
