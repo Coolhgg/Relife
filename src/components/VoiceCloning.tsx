@@ -1,10 +1,7 @@
 /// <reference types="node" />
 import React, { useState, useRef, useCallback } from 'react';
 import {
-// auto: restored by scout - verify import path
-import { BlobPart } from '@/utils/__auto_stubs';
-// auto: restored by scout - verify import path
-import { BlobPart } from '@/utils/__auto_stubs';
+// BlobPart is a native Web API type - no import needed
   Mic,
   Upload,
   Play,

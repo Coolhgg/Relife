@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Clock, Trash2, Edit, Copy, MoreVertical } from 'lucide-react';
 import {
-import { a } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   useTouchGestures,
   useHaptic,
   useLongPress,

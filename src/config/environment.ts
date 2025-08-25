@@ -1,7 +1,7 @@
 /* global TimeoutHandle */
 // Environment Configuration Management
 // Centralized configuration for different deployment environments
-
+// Removed stub import - this is the actual config implementation
 
 export type Environment = 'development' | 'staging' | 'production';
 

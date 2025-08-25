@@ -5,9 +5,9 @@
 
 import type { D1Database, KVNamespace } from '../types/index';
 
+import { ErrorHandler } from '../services/error-handler';
+
 // Environment bindings interface
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { e } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 interface Env {
   // Database connections
   DB: D1Database; // D1 SQL database

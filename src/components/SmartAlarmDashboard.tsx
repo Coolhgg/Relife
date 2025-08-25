@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TimeoutHandle } from '../types/timers';
+// Removed generic stub import - using specific implementations as needed
 import {
-import { AlertTriangle } from 'lucide-react'; // auto: restored by scout - verify
-import { a } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+  AlertTriangle,
   Brain,
   Clock,
   Activity,

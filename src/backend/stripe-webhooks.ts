@@ -5,9 +5,9 @@ import Stripe from 'stripe';
 import { supabase } from '../services/supabase';
 import { ErrorHandler } from '../services/error-handler';
 import AnalyticsService from '../services/analytics';
+import { ErrorHandler } from '../services/error-handler';
+// Note: _user should be passed as parameter or retrieved from auth context
 import type {
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Subscription,
   Invoice,
   Payment,

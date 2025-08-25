@@ -4,8 +4,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { soundEffectsService } from '../services/sound-effects';
 import {
-import { soundEffectsService } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Volume2,
   VolumeX,
   Volume1,

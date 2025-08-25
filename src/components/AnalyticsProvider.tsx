@@ -2,8 +2,8 @@
 /// <reference lib="dom" />
 import React, { createContext, useContext, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
+import { error } from 'src/utils/__auto_stubs';
 import {
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   useAnalytics,
   useEngagementAnalytics,
   usePerformanceAnalytics,

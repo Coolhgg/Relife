@@ -4,7 +4,7 @@
 // Enhanced with environment-specific configuration
 
 import posthog from 'posthog-js';
-import { config, isEnvironment } from '../config/environment';
+import { config as envConfig, isEnvironment } from '../config/environment';
 
 export interface AnalyticsConfig {
   apiKey: string;
