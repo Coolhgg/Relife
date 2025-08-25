@@ -473,7 +473,7 @@ export class EnhancedRecommendationEngine {
     }
     
     // Update features based on recent data
-    const features = this.extractBehavioralFeatures(alarms, alarmEvents);
+    const features = this.extractBehavioralFeatures(userId, alarms, alarmEvents);
     userVector.features = { ...userVector.features, ...features };
     
     // Update embedding (simplified - in production, use more sophisticated methods)
@@ -486,7 +486,7 @@ export class EnhancedRecommendationEngine {
   /**
    * Extract behavioral features from user data
    */
-  private extractBehavioralFeatures(alarms: Alarm[], alarmEvents: AlarmEvent[]): Partial<UserVector['features']> {
+  private extractBehavioralFeatures(userId: string, alarms: Alarm[], alarmEvents: AlarmEvent[]): Partial<UserVector['features']> {
     if (alarmEvents.length === 0) return {};
     
     const dismissedEvents = alarmEvents.filter(e => e.dismissed);
