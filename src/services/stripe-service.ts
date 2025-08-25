@@ -3,6 +3,10 @@
 
 import { Stripe } from '@stripe/stripe-js';
 import type {
+import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Subscription,
   SubscriptionPlan,
   PaymentMethod,

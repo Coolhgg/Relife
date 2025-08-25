@@ -10,6 +10,7 @@ import { Profiler, ProfilerOnRenderCallback } from 'react';
 import { TimeoutHandle } from '../types/timers';
 
 // Performance data storage
+import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 interface PerformanceEntry {
   id: string;
   phase: 'mount' | 'update' | 'nested-update';

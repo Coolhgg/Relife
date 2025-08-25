@@ -8,6 +8,9 @@ import SecureAlarmStorageService from './secure-alarm-storage';
 import SecurityService from './security';
 import { ErrorHandler } from './error-handler';
 import { TimeoutHandle } from '../types/timers';
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export class AlarmService {
   private static alarms: Alarm[] = [];

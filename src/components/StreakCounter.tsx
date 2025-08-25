@@ -7,6 +7,7 @@ import { Progress } from './ui/progress';
 import { Flame, Zap, Trophy, Share2 } from 'lucide-react';
 import { UserStreak, StreakMilestone } from '../types/struggling-sam';
 import { TimeoutHandle } from '../types/timers';
+import { Calendar } from 'lucide-react'; // auto: restored by scout - verify
 
 interface StreakCounterProps {
   userStreak: UserStreak;

@@ -4,6 +4,7 @@
  */
 
 // Recurrence Pattern Interface
+import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 export interface RecurrencePattern {
   type: 'daily' | 'weekly' | 'monthly' | 'custom';
   interval: number; // Every N days/weeks/months

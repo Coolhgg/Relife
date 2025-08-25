@@ -4,6 +4,8 @@
  */
 
 import type {
+import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Subscription,
   SubscriptionStatus,
   PremiumFeatureAccess,

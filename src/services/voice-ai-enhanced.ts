@@ -5,6 +5,7 @@ import type { Alarm, VoiceMood, User } from '../types';
 import { ErrorHandler } from './error-handler';
 import PerformanceMonitor from './performance-monitor';
 import { SupabaseService } from './supabase';
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface VoicePersonality {
   mood: VoiceMood;

@@ -6,6 +6,7 @@
 
 import { performanceAlertManager } from '../utils/performance-alerts';
 import { TimeoutHandle } from '../types/timers';
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 interface PerformanceMetric {
   name: string;

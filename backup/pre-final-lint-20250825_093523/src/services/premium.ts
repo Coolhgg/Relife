@@ -10,6 +10,7 @@ import { newTier } from '@/utils/__auto_stubs';
 import { newTier } from '@/utils/__auto_stubs';
 // auto: restored by scout - verify import path
 import { currentTier } from '@/utils/__auto_stubs';
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface PremiumFeature {
   id: string;

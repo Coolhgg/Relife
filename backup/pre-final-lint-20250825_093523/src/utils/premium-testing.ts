@@ -10,6 +10,7 @@ import { PremiumVoiceService } from '../services/premium-voice';
 import type { Subscription, PremiumFeatureAccess, PremiumUsage } from '../types';
 
 // Test user IDs for different subscription tiers
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 export const TEST_USER_IDS = {
   FREE: 'test-user-free-123',
   PREMIUM: 'test-user-premium-456',

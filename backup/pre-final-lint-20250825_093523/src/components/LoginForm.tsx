@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { Eye, EyeOff, Lock, ArrowRight, AlertCircle } from 'lucide-react';
+import { Mail } from 'lucide-react'; // auto: restored by scout - verify
 
 interface LoginFormProps {
   onLogin: (email: string, password: string) => Promise<void>;

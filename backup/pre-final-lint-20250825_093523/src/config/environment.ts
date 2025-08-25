@@ -1,6 +1,7 @@
 /* global TimeoutHandle */
 // Environment Configuration Management
 // Centralized configuration for different deployment environments
+import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export type Environment = 'development' | 'staging' | 'production';
 

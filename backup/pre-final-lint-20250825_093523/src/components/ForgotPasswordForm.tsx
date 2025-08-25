@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { ArrowLeft, ArrowRight, AlertCircle } from 'lucide-react';
+import { Mail } from 'lucide-react'; // auto: restored by scout - verify
 
 interface ForgotPasswordFormProps {
   onResetPassword: (email: string) => Promise<void>;

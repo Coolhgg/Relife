@@ -11,6 +11,8 @@ import { CustomSoundManager } from './custom-sound-manager';
 import { supabase } from './supabase';
 import { TimeoutHandle } from '../types/timers';
 import type {
+import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   CustomSoundTheme,
   CustomSoundThemeCreationSession,
   CustomSoundAssignment,

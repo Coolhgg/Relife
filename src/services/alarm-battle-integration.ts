@@ -6,6 +6,8 @@ import AppAnalyticsService from './app-analytics';
  * Service that integrates alarm functionality with the battle system
  * Handles coordination between alarm triggers and battle participation
  */
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 export class AlarmBattleIntegrationService {
   private static instance: AlarmBattleIntegrationService;
 

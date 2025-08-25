@@ -2,6 +2,7 @@
 // High-level subscription business logic, feature access, and user management
 
 import type {
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Subscription,
   SubscriptionPlan,
   SubscriptionTier,

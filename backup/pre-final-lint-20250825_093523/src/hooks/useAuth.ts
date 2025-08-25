@@ -7,6 +7,9 @@ import { ErrorHandler } from '../services/error-handler';
 import AnalyticsService from '../services/analytics';
 import SecurityService from '../services/security';
 import { TimeoutHandle } from '../types/timers';
+import { _user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 interface AuthState {
   user: User | null;

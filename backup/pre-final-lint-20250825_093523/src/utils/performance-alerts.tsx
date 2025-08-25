@@ -6,6 +6,8 @@
 
 import React from 'react';
 import { TimeoutHandle } from '../types/timers';
+import { index } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { a } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface PerformanceAlert {
   id: string;

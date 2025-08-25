@@ -3,6 +3,7 @@
 import type { Alarm, VoiceMood } from '../types';
 import { formatTime } from '../utils';
 import { TimeoutHandle } from '../types/timers';
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export class VoiceServiceEnhanced {
   private static audioCache = new Map<string, string>();

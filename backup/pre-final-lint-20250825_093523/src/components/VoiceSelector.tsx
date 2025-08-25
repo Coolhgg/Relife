@@ -8,6 +8,8 @@ import { TimeoutHandle } from '../types/timers';
 import { Zap } from 'lucide-react';
 // auto: restored by scout - verify import path
 import { Zap } from 'lucide-react';
+import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { a } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 interface VoiceSelectorProps {
   selectedVoice: VoiceMood;

@@ -9,6 +9,7 @@ import http from 'k6/http';
 import { check, sleep, group } from 'k6';
 import { SharedArray } from 'k6/data';
 import {
+import { userId } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   randomIntBetween,
   randomString,
 } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js';

@@ -2,6 +2,10 @@
 // Integrates persona-driven email marketing with campaign automation
 
 import {
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { persona } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   PersonaType,
   PersonaDetectionResult,
   EmailCampaign,

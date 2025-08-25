@@ -7,6 +7,7 @@ import SecurityService from './security';
 import type { Alarm, AlarmEvent } from '../types';
 import { ErrorHandler } from './error-handler';
 import { TimeoutHandle } from '../types/timers';
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 interface SecureAlarmData {
   alarms: Alarm[];

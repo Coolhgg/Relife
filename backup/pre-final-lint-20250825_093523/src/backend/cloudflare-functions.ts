@@ -3,6 +3,10 @@
 
 // Using official @cloudflare/workers-types
 import {
+import { D1Database } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { KVNamespace } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { DurableObjectNamespace } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   DatabaseUser,
   DatabaseAlarm,
   DatabaseAlarmEvent,

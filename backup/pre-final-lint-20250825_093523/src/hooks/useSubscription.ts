@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type {
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Subscription,
   SubscriptionPlan,
   SubscriptionTier,

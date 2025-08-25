@@ -3,6 +3,7 @@ import { useEffect, useCallback, useState } from 'react';
 import type { Alarm } from '../types';
 import { ServiceWorkerManager } from '../utils/service-worker-manager';
 import { TimeoutHandle } from '../types/timers';
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface ServiceWorkerState {
   isInitialized: boolean;

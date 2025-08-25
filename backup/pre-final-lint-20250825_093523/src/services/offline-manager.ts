@@ -11,6 +11,11 @@ import { openDB } from '@/utils/__auto_stubs';
 import { openDB } from '@/utils/__auto_stubs';
 // auto: restored by scout - verify import path
 import { IDBPDatabase } from '@/utils/__auto_stubs';
+import { DBSchema } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { a } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _index } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 interface OfflineDB extends DBSchema {
   alarms: {

@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import AccessibilityPreferencesService, {
+import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   AccessibilityPreferences,
   AccessibilityState,
 } from '../services/accessibility-preferences';

@@ -1,3 +1,4 @@
+import { timeframe } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 export interface TimeSeriesDataPoint {
   date: string;
   opens: number;

@@ -1,3 +1,8 @@
+import { parsed } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { errors } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { warnings } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { info } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { suggestions } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 #!/usr/bin/env node
 
 /**

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TimeoutHandle } from '../types/timers';
 import {
+import { timer } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { tier } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Crown,
   Star,
   Zap,

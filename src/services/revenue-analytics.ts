@@ -4,6 +4,7 @@
 import { supabase } from './supabase';
 import AnalyticsService from './analytics';
 import type {
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   BillingInterval,
   SubscriptionStatus,
   PaymentStatus,

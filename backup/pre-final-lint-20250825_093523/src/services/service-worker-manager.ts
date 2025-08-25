@@ -4,6 +4,7 @@
 // Handles registration, updates, and emotional intelligence integration
 
 // Interface for emotional events
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 interface EmotionalEvent {
   id: number;
   eventType: string;

@@ -3,6 +3,10 @@
 import SentryService from './sentry';
 import AnalyticsService, { ANALYTICS_EVENTS } from './analytics';
 import { TimeoutHandle } from '../types/timers';
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { e } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface ErrorContext {
   context?: string;

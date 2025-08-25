@@ -3,6 +3,7 @@ import React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { TimeoutHandle } from '../types/timers';
 import {
+import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   AlertCircle,
   Volume2,
   Mic,

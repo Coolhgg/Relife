@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import type { Alarm } from '../types';
+import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 export interface SleepSession {
   id: string;

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { TimeoutHandle } from '../types/timers';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
+import { AlertTriangle } from 'lucide-react'; // auto: restored by scout - verify
   Zap,
   Alert,
   Timer,

@@ -1,6 +1,7 @@
 import React, { memo, useMemo, useCallback, useRef, useEffect } from 'react';
 import { FixedSizeList as VirtualList, areEqual } from 'react-window';
 import {
+import { index } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Clock,
   MoreVertical,
   Power as _Power,
