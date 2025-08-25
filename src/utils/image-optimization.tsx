@@ -7,6 +7,7 @@
 import React from 'react';
 import { TimeoutHandle } from '../types/timers';
 import { ErrorHandler } from '../services/error-handler';
+import { AnyFn } from 'src/types/utility-types';
 
 export interface ImageOptimizationOptions {
   quality?: number;
@@ -30,8 +31,8 @@ class ImageOptimizer {
   private cache = new Map<string, OptimizedImageData>();
   private loadQueue: Array<{
     url: string;
-    resolve: Function;
-    reject: Function;
+    resolve: AnyFn;
+    reject: AnyFn;
   }> = [];
   private isProcessing = false;
   private observer?: IntersectionObserver;

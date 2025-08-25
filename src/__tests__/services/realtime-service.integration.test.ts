@@ -17,6 +17,7 @@ import type {
   WebSocketConnectionInfo,
   WebSocketEventHandlers,
 } from '../../types/websocket';
+import { AnyFn } from 'src/types/utility-types';
 
 import type {
   AlarmTriggeredPayload,
@@ -33,7 +34,7 @@ setupRealTimeTesting();
 class MockRealtimeService {
   private websocket: MockWebSocket | null = null;
   private config: WebSocketConfig;
-  private eventHandlers: Map<string, Function[]> = new Map();
+  private eventHandlers: Map<string, AnyFn[]> = new Map();
   private isConnected: boolean = false;
   private userId: string;
   private sessionId: string;
@@ -91,7 +92,7 @@ class MockRealtimeService {
     this.isConnected = false;
   }
 
-  on(eventType: string, handler: Function): () => void {
+  on(eventType: string, handler: AnyFn): () => void {
     if (!this.eventHandlers.has(eventType)) {
       this.eventHandlers.set(eventType, []);
     }

@@ -1,4 +1,5 @@
 import { Capacitor } from '@capacitor/core';
+import { AnyFn } from 'src/types/utility-types';
 import {
 // auto: restored by scout - verify import path
 import { KeepAwake } from '@capacitor/keep-awake';
@@ -479,14 +480,14 @@ export class CapacitorEnhancedService {
   }
 
   // Event handling
-  on(_event: string, callback: Function): void {
+  on(_event: string, callback: AnyFn): void {
     if (!this.listeners.has(_event)) {
       this.listeners.set(_event, []);
     }
     this.listeners.get(_event)!.push(callback);
   }
 
-  off(_event: string, callback: Function): void {
+  off(_event: string, callback: AnyFn): void {
     const listeners = this.listeners.get(_event);
     if (listeners) {
       const _index = listeners.indexOf(callback);

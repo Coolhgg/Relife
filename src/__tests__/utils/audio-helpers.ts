@@ -1,5 +1,6 @@
 /// <reference lib="dom" />
 import { waitFor, act } from '@testing-library/react';
+import { AnyFn } from 'src/types/utility-types';
 
 // Audio element mocking
 export const _audioMocks = {
@@ -30,15 +31,15 @@ export const _audioMocks = {
     };
 
     // Mock common event listeners
-    const eventListeners: { [key: string]: Function[] } = {};
-    mockAudio.addEventListener = jest.fn((_event: string, callback: Function) => {
+    const eventListeners: { [key: string]: AnyFn[] } = {};
+    mockAudio.addEventListener = jest.fn((_event: string, callback: AnyFn) => {
       if (!eventListeners[_event]) {
         eventListeners[event] = [];
       }
       eventListeners[event].push(callback);
     });
 
-    mockAudio.removeEventListener = jest.fn((_event: string, callback: Function) => {
+    mockAudio.removeEventListener = jest.fn((_event: string, callback: AnyFn) => {
       if (eventListeners[_event]) {
         const _index = eventListeners[event].indexOf(callback);
         if (_index > -1) {

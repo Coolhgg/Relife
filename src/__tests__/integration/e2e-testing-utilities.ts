@@ -5,6 +5,7 @@
 
 import { TestHelpers } from '../helpers/comprehensive-test-helpers';
 import { performanceMonitor } from '../performance/performance-testing-utilities';
+import { AnyFn } from 'src/types/utility-types';
 
 // E2E test configuration
 export interface E2ETestConfig {
@@ -116,7 +117,7 @@ export class E2ETestingUtils {
         return `screenshot-${timestamp}.png`;
       },
 
-      evaluate: async (fn: Function, ...args: any[]) => {
+      evaluate: async (fn: AnyFn, ...args: any[]) => {
         console.log(`[E2E] Evaluating function`);
         return fn(...args);
       },

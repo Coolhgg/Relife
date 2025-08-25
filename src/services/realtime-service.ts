@@ -10,6 +10,7 @@ import type { Alarm, User } from '../types';
 import { TimeoutHandle } from '../types/timers';
 import AnalyticsService from './analytics';
 import { ErrorHandler } from './error-handler';
+import { AnyFn } from 'src/types/utility-types';
 // Note: User data should be passed as parameters or retrieved from auth context
 
 export interface RealtimeConfig {
@@ -491,7 +492,7 @@ class RealtimeService {
   /**
    * Add event listener
    */
-  on(_event: string, callback: Function): void {
+  on(_event: string, callback: AnyFn): void {
     if (!this.eventListeners.has(_event)) {
       this.eventListeners.set(_event, new Set());
     }
@@ -501,7 +502,7 @@ class RealtimeService {
   /**
    * Remove event listener
    */
-  off(_event: string, callback: Function): void {
+  off(_event: string, callback: AnyFn): void {
     const listeners = this.eventListeners.get(_event);
     if (listeners) {
       listeners.delete(callback);

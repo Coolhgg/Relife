@@ -1,4 +1,5 @@
 import AnalyticsService from './analytics';
+import { AnyFn } from 'src/types/utility-types';
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
@@ -346,14 +347,14 @@ export class PWAManager {
   }
 
   // Event handling
-  on(_event: string, callback: Function): void {
+  on(_event: string, callback: AnyFn): void {
     if (!this.eventListeners.has(_event)) {
       this.eventListeners.set(_event, []);
     }
     this.eventListeners.get(_event)!.push(callback);
   }
 
-  off(_event: string, callback: Function): void {
+  off(_event: string, callback: AnyFn): void {
     const listeners = this.eventListeners.get(_event);
     if (listeners) {
       const _index = listeners.indexOf(callback);

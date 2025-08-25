@@ -38,6 +38,7 @@
  */
 
 import { vi } from 'vitest';
+import { AnyFn } from 'src/types/utility-types';
 
 // Environment variable check for real device testing
 const USE_REAL_DEVICE = process.env.USE_REAL_DEVICE === 'true';
@@ -228,10 +229,10 @@ const mockState = {
 // Event listener management
 const mockEventListeners = new Map<
   string,
-  Array<{ eventName: string; callback: Function; pluginName: string }>
+  Array<{ eventName: string; callback: AnyFn; pluginName: string }>
 >();
 
-const addMockListener = (pluginName: string, eventName: string, callback: Function) => {
+const addMockListener = (pluginName: string, eventName: string, callback: AnyFn) => {
   const key = `${pluginName}:${eventName}`;
   if (!mockEventListeners.has(key)) {
     mockEventListeners.set(key, []);
@@ -737,7 +738,7 @@ export const Geolocation = {
     });
   }),
 
-  watchPosition: vi.fn((options?: any, callback?: Function) => {
+  watchPosition: vi.fn((options?: any, callback?: AnyFn) => {
     log('👀 Mock Geolocation.watchPosition', options);
 
     const watchId = `mock-watch-${Math.random().toString(36).substr(2, 9)}`;

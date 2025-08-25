@@ -1,5 +1,7 @@
 // Sentry error tracking mock for testing
 
+import { AnyFn } from 'src/types/utility-types';
+
 /**
  * Comprehensive Sentry mock for testing error handling and monitoring
  * Provides all methods used in the application with proper jest mocks
@@ -119,7 +121,7 @@ const mockSentry = {
   }),
 
   // Browser specific
-  wrap: jest.fn((fn: Function) => {
+  wrap: jest.fn((fn: AnyFn) => {
     return (...args: any[]) => {
       try {
         return fn(...args);

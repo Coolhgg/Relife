@@ -4,6 +4,7 @@
  */
 
 import type { User } from '@supabase/supabase-js';
+import { AnyFn } from 'src/types/utility-types';
 
 // Mock Supabase Client
 export class MockSupabaseClient {
@@ -552,7 +553,7 @@ class MockSupabaseQueryBuilder {
 // Mock Realtime Channel
 class MockSupabaseRealtimeChannel {
   public name: string;
-  private subscriptions: Array<{ event: string; callback: Function }> = [];
+  private subscriptions: Array<{ event: string; callback: AnyFn }> = [];
   private static callHistory: Array<{
     method: string;
     args: any[];
@@ -577,7 +578,7 @@ class MockSupabaseRealtimeChannel {
     });
   }
 
-  on(_event: string, callback: Function) {
+  on(_event: string, callback: AnyFn) {
     MockSupabaseRealtimeChannel.logCall('channel.on', [this.name, _event]);
 
     this.subscriptions.push({ _event, callback });

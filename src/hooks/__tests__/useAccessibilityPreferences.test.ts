@@ -6,6 +6,7 @@ import { expect, test, jest } from '@jest/globals';
 
 import { renderHook, act } from '@testing-library/react';
 import { useAccessibilityPreferences } from '../useAccessibilityPreferences';
+import { AnyFn } from 'src/types/utility-types';
 
 // Mock the accessibility preferences service
 const mockService = {
@@ -85,7 +86,7 @@ describe('useAccessibilityPreferences', () => {
   });
 
   it('should update preferences and state when service notifies changes', () => {
-    let subscribeCallback: Function;
+    let subscribeCallback: AnyFn;
     mockService.subscribe.mockImplementation(callback => {
       subscribeCallback = callback;
       return jest.fn();
