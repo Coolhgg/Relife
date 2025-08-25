@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { TimeoutHandle } from '../types/timers';
 import {
-// auto: restored by scout - verify import path
-import { _persona } from '@/utils/__auto_stubs';
-// auto: restored by scout - verify import path
-import { _persona } from '@/utils/__auto_stubs';
+import AnalyticsService from '../services/analytics';
+// Note: persona should be derived from user analytics or context
   BarChart,
   Bar,
   XAxis,

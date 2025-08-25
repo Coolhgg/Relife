@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import useAuth from '../hooks/useAuth';
 import {
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Volume2,
   Crown,
   Lock,

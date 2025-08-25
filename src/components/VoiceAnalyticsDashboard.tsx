@@ -3,8 +3,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import useAuth from '../hooks/useAuth';
 import {
-import { _user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Mic,
   TrendingUp,
   BarChart3,

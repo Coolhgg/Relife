@@ -4,8 +4,8 @@ import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { TimeoutHandle } from '../types/timers';
+import { _config } from 'src/utils/__auto_stubs';
 import {
-import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Trophy,
   Share2,
   X,

@@ -8,7 +8,7 @@ import React from 'react';
 import { StrugglingSamProvider } from '../contexts/StrugglingsamContext';
 import EnhancedDashboard from './EnhancedDashboard';
 import type { Alarm } from '../types';
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import useAuth from '../hooks/useAuth';
 
 interface StrugglingSamWrapperProps {
   children?: React.ReactNode;

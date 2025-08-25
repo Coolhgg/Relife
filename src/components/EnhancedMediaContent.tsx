@@ -8,8 +8,8 @@ import { Progress } from './ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Textarea } from './ui/textarea';
 import { Slider } from './ui/slider';
+import { error } from 'src/utils/__auto_stubs';
 import {
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Music,
   Upload,
   Download,

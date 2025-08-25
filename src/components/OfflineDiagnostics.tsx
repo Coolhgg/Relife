@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { _event, initial } from 'src/utils/__auto_stubs';
 import {
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { initial } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Activity,
   Alert,
   CheckCircle,

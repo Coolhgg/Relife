@@ -4,8 +4,8 @@
 
 import { PerformanceMonitoringAPI } from './performance-monitoring';
 import type { D1Database, KVNamespace } from '../types/index';
+import AnalyticsService from '../services/analytics';
 import {
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   DatabaseUser,
   DatabaseAlarm,
   DatabaseAlarmEvent,

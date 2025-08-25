@@ -5,8 +5,8 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { TimeoutHandle } from '../types/timers';
+import { config } from '../config/environment';
 import {
-import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Crown,
   X,
   Sparkles,

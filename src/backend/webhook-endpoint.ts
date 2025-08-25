@@ -6,8 +6,8 @@ import { ErrorHandler } from '../services/error-handler';
 import AnalyticsService from '../services/analytics';
 
 // Configuration - these should come from environment variables
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import AnalyticsService from '../services/analytics';
+import { ErrorHandler } from '../services/error-handler';
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || '';
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || '';
 

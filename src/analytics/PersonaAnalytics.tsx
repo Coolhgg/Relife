@@ -2,9 +2,9 @@
 /// <reference types="node" />
 /// <reference lib="dom" />
 import React, { useEffect, useCallback, useRef } from 'react';
+import AnalyticsService from '../services/analytics';
+// Note: persona should be derived from user context or analytics service
 import {
-import { persona } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   PersonaType,
   PersonaDetectionFactor,
   PersonaDetectionResult,

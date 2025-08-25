@@ -7,11 +7,8 @@ import { Progress } from './ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
+import { Users } from 'lucide-react';
 import {
-// auto: restored by scout - verify import path
-import { Users } from 'lucide-react';
-// auto: restored by scout - verify import path
-import { Users } from 'lucide-react';
   Select,
   SelectContent,
   SelectItem,

@@ -3,9 +3,9 @@
 // Handles premium subscription, payments, and Stripe integration
 
 import Stripe from 'stripe';
+import { ErrorHandler } from '../services/error-handler';
+import AnalyticsService from '../services/analytics';
 import type {
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   CreateSubscriptionRequest,
   UpdateSubscriptionRequest,
   CancelSubscriptionRequest,

@@ -1,9 +1,8 @@
 /// <reference lib="dom" />
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
+import { user, error } from 'src/utils/__auto_stubs';
 import {
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   X,
   Clock,
   Tag,

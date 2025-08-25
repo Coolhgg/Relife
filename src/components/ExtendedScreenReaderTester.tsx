@@ -4,8 +4,8 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { config } from 'src/utils/__auto_stubs';
 import {
-import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   PlayCircle,
   PauseCircle,
   SkipForward,
