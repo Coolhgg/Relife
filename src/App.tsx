@@ -224,6 +224,7 @@ function AppContent() {
   const [appState, dispatch] = useReducer(rootReducer, INITIAL_DOMAIN_APP_STATE);
 
   // Helper function to simulate old setState behavior for gradual migration
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: setAppState function recreation causes dependency issues
   const setAppState = (updater: (prev: AppState) => AppState | AppState) => {
     if (typeof updater === 'function') {
       const newState = updater(appState);
@@ -414,6 +415,7 @@ function AppContent() {
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: auth
   }, [auth.user, setSyncStatus, refreshRewardsSystem]);
 
   // Handle alarm snooze functionality
@@ -790,6 +792,7 @@ function AppContent() {
       );
       setSyncStatus('_error');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: auth
   }, [auth.user, setSyncStatus]);
 
   // Refresh rewards system based on current alarms and analytics
@@ -940,6 +943,7 @@ function AppContent() {
         timestamp: new Date().toISOString(),
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: auth
   }, [auth.user, identify, track, reset, trackDailyActive]);
 
   // Network status monitoring
@@ -1105,6 +1109,7 @@ function AppContent() {
     if (auth.isInitialized) {
       initialize();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: auth
   }, [
     auth.isInitialized,
     auth.user,

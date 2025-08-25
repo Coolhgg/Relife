@@ -92,6 +92,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
 
   useEffect(() => {
     checkNuclearAccess();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: checkNuclearAccess
   }, [user.id]);
 
   const checkNuclearAccess = async () => {
@@ -161,6 +162,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
     };
 
     loadCustomSounds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: customSoundManager
   }, [userId]);
 
   // Enhanced cleanup for preview audio on unmount

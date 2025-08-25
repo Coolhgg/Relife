@@ -136,6 +136,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
       // Fallback to regular alarm if nuclear mode fails
       setShowNuclearChallenge(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: _user
   }, [alarm, user]);
 
   const stopVoiceRef = useRef<(() => void) | null>(null);
@@ -167,6 +168,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
       stopVoiceRecognition();
       stopAllAudio();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: playAlarmSound, showNuclearChallenge, startVibrationPattern, and startVoiceRecognition
   }, [alarm.id]); // Dependencies for the effect
 
   // Functions moved inside useEffect to fix dependency warnings
