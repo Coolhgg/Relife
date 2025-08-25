@@ -254,7 +254,7 @@ class EnhancedCommitValidator {
 
     // Check body line lengths
     const bodyLines = parsed.body.split('\n');
-    bodyLines.forEach(_(line, _index) => {
+    bodyLines.forEach((line, index) => {
       if (line.length > this.options.maxBodyLineLength) {
         issues.push({
           level: 'warning',
