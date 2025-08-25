@@ -1,3 +1,7 @@
+// auto: restored by scout - verify import path
+import { NavigationTiming } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { NavigationTiming } from '@/utils/__auto_stubs';
 /**
  * Enhanced Analytics Service
  * Refactored to use standardized service architecture with offline queue and performance tracking

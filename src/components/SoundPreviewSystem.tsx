@@ -2,6 +2,10 @@
 /// <reference lib="dom" />
 import React, { useState, useRef, useEffect } from 'react';
 import {
+// auto: restored by scout - verify import path
+import { Loader2 } from 'lucide-react';
+// auto: restored by scout - verify import path
+import { Loader2 } from 'lucide-react';
   Play,
   Pause,
   Square,

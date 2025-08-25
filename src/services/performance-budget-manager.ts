@@ -1,5 +1,9 @@
 /// <reference types="node" />
 import type {
+// auto: restored by scout - verify import path
+import { PerformanceEntryList } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { PerformanceEntryList } from '@/utils/__auto_stubs';
   PerformanceBudget,
   PerformanceThresholds,
   PerformanceAlert,

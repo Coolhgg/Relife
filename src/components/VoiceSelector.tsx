@@ -4,6 +4,10 @@ import type { VoiceMood, VoiceMoodConfig, VoicePersonality, User } from '../type
 import { PremiumVoiceService } from '../services/premium-voice';
 import { PremiumService } from '../services/premium';
 import { TimeoutHandle } from '../types/timers';
+// auto: restored by scout - verify import path
+import { Zap } from 'lucide-react';
+// auto: restored by scout - verify import path
+import { Zap } from 'lucide-react';
 
 interface VoiceSelectorProps {
   selectedVoice: VoiceMood;

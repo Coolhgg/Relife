@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Bug, Alert, Database, Wifi, Brain, Volume2 } from 'lucide-react';
 import { TimeoutHandle } from '../types/timers';
+// auto: restored by scout - verify import path
+import { Zap } from 'lucide-react';
+// auto: restored by scout - verify import path
+import { Zap } from 'lucide-react';
 
 interface ErrorBoundaryTestProps {
   onClose?: () => void;

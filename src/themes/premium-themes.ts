@@ -1,3 +1,11 @@
+// auto: restored by scout - verify import path
+import { ThemePreset } from '@/types';
+// auto: restored by scout - verify import path
+import { Theme } from '@/types';
+// auto: restored by scout - verify import path
+import { Theme } from '@/types';
+// auto: restored by scout - verify import path
+import { ThemePreset } from '@/types';
 /**
  * Premium Theme Configurations
  * Beautiful, sophisticated themes with advanced features

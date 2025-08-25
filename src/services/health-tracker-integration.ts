@@ -1,3 +1,7 @@
+// auto: restored by scout - verify import path
+import { Alarm } from '@/types';
+// auto: restored by scout - verify import path
+import { Alarm } from '@/types';
 /**
  * Health Tracker Integration Service
  *

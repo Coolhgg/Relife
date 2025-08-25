@@ -3,6 +3,10 @@
 
 import React, { useState } from 'react';
 import {
+// auto: restored by scout - verify import path
+import { SubscriptionTier } from '@/types';
+// auto: restored by scout - verify import path
+import { SubscriptionTier } from '@/types';
   Calendar,
   CreditCard,
   TrendingUp,

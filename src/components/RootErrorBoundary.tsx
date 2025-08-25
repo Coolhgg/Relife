@@ -2,6 +2,10 @@ import React, { Component, type ReactNode, type ErrorInfo } from 'react';
 import { Alert, RefreshCw, Clock, Home, Bug } from 'lucide-react';
 import { ErrorHandler } from '../services/error-handler';
 import { TimeoutHandle } from '../types/timers';
+// auto: restored by scout - verify import path
+import { Zap } from 'lucide-react';
+// auto: restored by scout - verify import path
+import { Zap } from 'lucide-react';
 
 interface Props {
   children: ReactNode;

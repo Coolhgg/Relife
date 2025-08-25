@@ -5,6 +5,10 @@ import React, { useState, useRef, useEffect, forwardRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { useEntranceAnimation, useHoverAnimation } from '../../hooks/useAnimations';
 import { TimeoutHandle } from '../types/timers';
+// auto: restored by scout - verify import path
+import { rippleId } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { rippleId } from '@/utils/__auto_stubs';
 
 // ================================================================
 // ANIMATED FORM INPUTS
