@@ -110,7 +110,7 @@ export class E2ETestingUtils {
         );
       },
 
-      screenshot: async (options: any = {}) => {
+      screenshot: async (_options: any = {}) => {
         console.log(`[E2E] Taking screenshot`);
         const timestamp = Date.now();
         return `screenshot-${timestamp}.png`;
