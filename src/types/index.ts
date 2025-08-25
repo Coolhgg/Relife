@@ -45,6 +45,9 @@ export * from './services/webhook-api';
 // Alarm scheduling interfaces
 export * from './alarm-scheduling';
 
+// Reward system interfaces
+export * from './reward-system';
+
 // Domain-specific state interfaces
 export * from './app-state';
 

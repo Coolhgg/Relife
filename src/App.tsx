@@ -3,9 +3,7 @@ import React from 'react';
 import { useState, useEffect, useCallback, useReducer } from 'react';
 import { Provider } from 'react-redux';
 import {
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+
   Plus,
   Clock,
   Settings,
@@ -14,6 +12,7 @@ import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - ve
   Gamepad2,
   LogOut,
   Crown,
+  Gift,
 } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood, User, Battle, DayOfWeek } from './types';
 import { INITIAL_DOMAIN_APP_STATE } from './constants/initialDomainState';
@@ -39,6 +38,8 @@ import PWAInstallPrompt from './components/PWAInstallPrompt';
 import GamingHub from './components/GamingHub';
 import EnhancedSettings from './components/EnhancedSettings';
 import PricingPage from './components/PricingPage';
+import RewardManager from './components/RewardManager';
+import GiftShop from './components/GiftShop';
 import { ScreenReaderProvider } from './components/ScreenReaderProvider';
 import TabProtectionWarning from './components/TabProtectionWarning';
 import { ThemeProvider } from './hooks/useTheme';
@@ -55,6 +56,7 @@ import EnhancedFocusService from './utils/enhanced-focus';
 import { PerformanceMonitor } from './services/performance-monitor';
 import AppAnalyticsService from './services/app-analytics';
 import AIRewardsService from './services/ai-rewards';
+import RewardService from './services/reward-service';
 import { SupabaseService } from './services/supabase';
 import { PushNotificationService } from './services/push-notifications';
 import useAuth from './hooks/useAuth';
@@ -288,8 +290,35 @@ function AppContent() {
   const refreshRewardsSystem = useCallback(
     async (alarms: Alarm[] = appState.alarms) => {
       try {
-        const aiRewards = AIRewardsService.getInstance();
-        const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
+        // Get the database-backed reward service
+        const rewardService = RewardService.getInstance();
+        
+        // Update user habits based on current alarms
+        await rewardService.updateUserHabits(auth._user?.id!, alarms);
+        
+        // Check and unlock any new rewards
+        await rewardService.checkAndUnlockRewards(auth._user?.id!);
+        
+        // Get the comprehensive reward system data from database
+        const rewards = await rewardService.getRewards();
+        const userRewards = await rewardService.getUserRewards(auth._user?.id!);
+        const insights = await rewardService.getUserInsights(auth._user?.id!);
+        const analytics = await rewardService.getUserAnalytics(auth._user?.id!);
+        const habits = await rewardService.getUserHabits(auth._user?.id!);
+        const nicheProfile = await rewardService.getUserNicheProfile(auth._user?.id!);
+        
+        // Build comprehensive reward system object
+        const rewardSystem = {
+          level: analytics?.level || 1,
+          totalPoints: analytics?.total_points || 0,
+          currentStreak: analytics?.current_streak || 0,
+          longestStreak: analytics?.longest_streak || 0,
+          availableRewards: rewards || [],
+          unlockedRewards: userRewards || [],
+          aiInsights: insights || [],
+          habits: habits || [],
+          niche: nicheProfile || { primary: 'general', confidence: 0.5, traits: [] },
+        };
 
         setAppState((prev: AppState) => ({
           // type-safe replacement
@@ -306,13 +335,13 @@ function AppContent() {
         });
       } catch (_error) {
         ErrorHandler.handleError(
-          error instanceof Error ? _error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Failed to refresh rewards system',
           { context: 'rewards_refresh' }
         );
       }
     },
-    [appState.alarms, setAppState]
+    [appState.alarms, setAppState, auth._user?.id]
   );
 
   const loadUserAlarms = useCallback(async () => {
@@ -2018,6 +2047,24 @@ function AppContent() {
             </div>
           </ErrorBoundary>
         );
+      case 'gift-shop':
+        appAnalytics.trackPageView('gift_shop');
+        appAnalytics.trackFeatureUsage('gift_shop', 'accessed');
+        return (
+          <ErrorBoundary context="GiftShop">
+            <GiftShop 
+              userId={auth._user?.id!}
+              onGiftPurchased={() => {
+                // Refresh reward system to update user points
+                refreshRewardsSystem();
+              }}
+              onGiftEquipped={() => {
+                // Could trigger additional effects or notifications
+                appAnalytics.trackFeatureUsage('gift_shop', 'gift_equipped');
+              }}
+            />
+          </ErrorBoundary>
+        );
       case 'pricing':
         appAnalytics.trackPageView('pricing');
         appAnalytics.trackFeatureUsage('pricing_page', 'accessed');
@@ -2047,13 +2094,14 @@ function AppContent() {
   return (
     <ThemeProvider defaultTheme="light" enableSystem={true}>
       <ScreenReaderProvider enabled={true} verbosity="medium">
-        <div
-          className="min-h-screen flex flex-col safe-top safe-bottom"
-          style={{
-            backgroundColor: 'var(--theme-background)',
-            color: 'var(--theme-text-primary)',
-          }}
-        >
+        <RewardManager>
+          <div
+            className="min-h-screen flex flex-col safe-top safe-bottom"
+            style={{
+              backgroundColor: 'var(--theme-background)',
+              color: 'var(--theme-text-primary)',
+            }}
+          >
           {/* Skip to main content */}
           <a
             href="#main-content"
@@ -2337,6 +2385,37 @@ function AppContent() {
               <button
                 onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
+                  appAnalytics.trackFeatureUsage('navigation', 'gift_shop_clicked', {
+                    currentLevel: appState.rewardSystem?.level,
+                    totalPoints: appState.rewardSystem?.totalPoints,
+                  });
+                  setAppState((prev: AppState) => ({
+                    // type-safe replacement
+                    ...prev,
+                    currentView: 'gift-shop',
+                  }));
+                  AccessibilityUtils.announcePageChange('Gift Shop');
+                })}
+                className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                  appState.currentView === 'gift-shop'
+                    ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                    : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                }`}
+                role="tab"
+                aria-selected={appState.currentView === 'gift-shop'}
+                aria-current={appState.currentView === 'gift-shop' ? 'page' : undefined}
+                aria-label="Gift Shop - Browse and purchase gifts with your points"
+                aria-controls="main-content"
+              >
+                <Gift className="w-5 h-5 mb-1" aria-hidden="true" />
+                <span className="text-xs font-medium">
+                  Shop
+                </span>
+              </button>
+
+              <button
+                onClick={createClickHandler(() => {
+                  const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
                   setAppState((prev: AppState) => ({
                     // type-safe replacement
@@ -2414,7 +2493,8 @@ function AppContent() {
 
           {/* PWA Install Prompt */}
           <PWAInstallPrompt onInstall={handlePWAInstall} onDismiss={handlePWADismiss} />
-        </div>
+          </div>
+        </RewardManager>
       </ScreenReaderProvider>
     </ThemeProvider>
   );
