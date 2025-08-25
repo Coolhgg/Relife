@@ -3,6 +3,14 @@
 
 import React, { useState } from 'react';
 import {
+// auto: restored by scout - verify import path
+import { SubscriptionTier } from '@/types';
+// auto: restored by scout - verify import path
+import { Textarea } from '@/components/ui/textarea';
+// auto: restored by scout - verify import path
+import { Textarea } from '@/components/ui/textarea';
+// auto: restored by scout - verify import path
+import { SubscriptionTier } from '@/types';
   Alert,
   ArrowUpCircle,
   ArrowDownCircle,
@@ -10,6 +18,7 @@ import {
   Gift,
   Settings,
   X,
+  AlertTriangle,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
@@ -21,7 +30,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '../ui/dialog';
-import { AlertTriangle, AlertDescription } from '../ui/alert';
+import { Alert, AlertDescription } from '../ui/alert';
 import {
   Select,
   SelectContent,
@@ -283,7 +292,7 @@ export function SubscriptionManagement({
 
           {/* Cancellation Notice */}
           {subscription.cancelAtPeriodEnd && (
-            <AlertTriangle className="border-orange-200 bg-orange-50">
+            <Alert className="border-orange-200 bg-orange-50">
               <AlertTriangle className="h-4 w-4 text-orange-600" />
               <AlertDescription className="text-orange-600">
                 Your subscription will end on{' '}

@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
+// auto: restored by scout - verify import path
+import { Textarea } from '@/components/ui/textarea';
+// auto: restored by scout - verify import path
+import { Textarea } from '@/components/ui/textarea';
   Palette,
   Info,
   Upload,

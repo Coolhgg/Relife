@@ -5,6 +5,10 @@ import RewardsDashboard from './RewardsDashboard';
 import CommunityHub from './CommunityHub';
 import BattleSystem from './BattleSystem';
 import type { User, Battle, RewardSystem } from '../types';
+// auto: restored by scout - verify import path
+import { Users } from 'lucide-react';
+// auto: restored by scout - verify import path
+import { Users } from 'lucide-react';
 
 interface GamingHubProps {
   currentUser: User;

@@ -5,9 +5,8 @@ import { CheckIcon, ChevronRightIcon, CircleIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
-function Menubar({
-  className,
-  ...props
+function Menubar(_{
+  className, _...props
 }: React.ComponentProps<typeof MenubarPrimitive.Root>) {
   return (
     <MenubarPrimitive.Root
@@ -21,31 +20,30 @@ function Menubar({
   );
 }
 
-function MenubarMenu({ ...props }: React.ComponentProps<typeof MenubarPrimitive.Menu>) {
+function MenubarMenu(_{ ...props }: React.ComponentProps<typeof MenubarPrimitive.Menu>) {
   return <MenubarPrimitive.Menu data-slot="menubar-menu" {...props} />;
 }
 
-function MenubarGroup({
+function MenubarGroup(_{
   ...props
 }: React.ComponentProps<typeof MenubarPrimitive.Group>) {
   return <MenubarPrimitive.Group data-slot="menubar-group" {...props} />;
 }
 
-function MenubarPortal({
+function MenubarPortal(_{
   ...props
 }: React.ComponentProps<typeof MenubarPrimitive.Portal>) {
   return <MenubarPrimitive.Portal data-slot="menubar-portal" {...props} />;
 }
 
-function MenubarRadioGroup({
+function MenubarRadioGroup(_{
   ...props
 }: React.ComponentProps<typeof MenubarPrimitive.RadioGroup>) {
   return <MenubarPrimitive.RadioGroup data-slot="menubar-radio-group" {...props} />;
 }
 
-function MenubarTrigger({
-  className,
-  ...props
+function MenubarTrigger(_{
+  className, _...props
 }: React.ComponentProps<typeof MenubarPrimitive.Trigger>) {
   return (
     <MenubarPrimitive.Trigger
@@ -59,12 +57,8 @@ function MenubarTrigger({
   );
 }
 
-function MenubarContent({
-  className,
-  align = 'start',
-  alignOffset = -4,
-  sideOffset = 8,
-  ...props
+function MenubarContent(_{
+  className, _align = 'start', _alignOffset = -4, _sideOffset = 8, _...props
 }: React.ComponentProps<typeof MenubarPrimitive.Content>) {
   return (
     <MenubarPortal>
@@ -83,11 +77,8 @@ function MenubarContent({
   );
 }
 
-function MenubarItem({
-  className,
-  inset,
-  variant = 'default',
-  ...props
+function MenubarItem(_{
+  className, _inset, _variant = 'default', _...props
 }: React.ComponentProps<typeof MenubarPrimitive.Item> & {
   inset?: boolean;
   variant?: 'default' | 'destructive';
@@ -106,11 +97,8 @@ function MenubarItem({
   );
 }
 
-function MenubarCheckboxItem({
-  className,
-  children,
-  checked,
-  ...props
+function MenubarCheckboxItem(_{
+  className, _children, _checked, _...props
 }: React.ComponentProps<typeof MenubarPrimitive.CheckboxItem>) {
   return (
     <MenubarPrimitive.CheckboxItem
@@ -132,10 +120,8 @@ function MenubarCheckboxItem({
   );
 }
 
-function MenubarRadioItem({
-  className,
-  children,
-  ...props
+function MenubarRadioItem(_{
+  className, _children, _...props
 }: React.ComponentProps<typeof MenubarPrimitive.RadioItem>) {
   return (
     <MenubarPrimitive.RadioItem
@@ -156,10 +142,8 @@ function MenubarRadioItem({
   );
 }
 
-function MenubarLabel({
-  className,
-  inset,
-  ...props
+function MenubarLabel(_{
+  className, _inset, _...props
 }: React.ComponentProps<typeof MenubarPrimitive.Label> & {
   inset?: boolean;
 }) {
@@ -173,9 +157,8 @@ function MenubarLabel({
   );
 }
 
-function MenubarSeparator({
-  className,
-  ...props
+function MenubarSeparator(_{
+  className, _...props
 }: React.ComponentProps<typeof MenubarPrimitive.Separator>) {
   return (
     <MenubarPrimitive.Separator
@@ -186,7 +169,7 @@ function MenubarSeparator({
   );
 }
 
-function MenubarShortcut({ className, ...props }: React.ComponentProps<'span'>) {
+function MenubarShortcut(_{ className, _...props }: React.ComponentProps<'span'>) {
   return (
     <span
       data-slot="menubar-shortcut"
@@ -196,15 +179,12 @@ function MenubarShortcut({ className, ...props }: React.ComponentProps<'span'>) 
   );
 }
 
-function MenubarSub({ ...props }: React.ComponentProps<typeof MenubarPrimitive.Sub>) {
+function MenubarSub(_{ ...props }: React.ComponentProps<typeof MenubarPrimitive.Sub>) {
   return <MenubarPrimitive.Sub data-slot="menubar-sub" {...props} />;
 }
 
-function MenubarSubTrigger({
-  className,
-  inset,
-  children,
-  ...props
+function MenubarSubTrigger(_{
+  className, _inset, _children, _...props
 }: React.ComponentProps<typeof MenubarPrimitive.SubTrigger> & {
   inset?: boolean;
 }) {
@@ -224,9 +204,8 @@ function MenubarSubTrigger({
   );
 }
 
-function MenubarSubContent({
-  className,
-  ...props
+function MenubarSubContent(_{
+  className, _...props
 }: React.ComponentProps<typeof MenubarPrimitive.SubContent>) {
   return (
     <MenubarPrimitive.SubContent

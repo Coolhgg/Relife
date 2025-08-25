@@ -266,6 +266,8 @@ function AppContent() {
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
     activeAlarm: appState.activeAlarm,
+    // TODO: Performance optimization - Move to useMemo to prevent re-renders
+    // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
     enabledAlarms: appState.alarms.filter((alarm: any) => alarm.enabled),
     settings: tabProtectionSettings.settings,
   });
@@ -1144,6 +1146,8 @@ function AppContent() {
 
       // Check if there are enabled alarms that could ring soon
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
+        // TODO: Performance optimization - Replace with useMemo for better performance
+        // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
         const enabledAlarms = appState.alarms.filter((alarm: any) => alarm.enabled);
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold

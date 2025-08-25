@@ -1,6 +1,10 @@
 /// <reference types="node" />
 import React, { useState, useRef, useCallback } from 'react';
 import {
+// auto: restored by scout - verify import path
+import { BlobPart } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { BlobPart } from '@/utils/__auto_stubs';
   Mic,
   Upload,
   Play,

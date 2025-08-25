@@ -3,6 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { Device } from '@capacitor/device';
 // import ... from '@capacitor/network'; // Package not available in current setup
 import { ErrorHandler } from './error-handler';
+// auto: restored by scout - verify import path
+import { Network } from '@capacitor/network';
+// auto: restored by scout - verify import path
+import { Network } from '@capacitor/network';
 
 // Types
 export interface UserTestSession {

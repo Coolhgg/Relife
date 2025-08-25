@@ -45,7 +45,13 @@ const Dashboard: React.FC<DashboardProps> = ({
   onQuickSetup,
   onNavigateToAdvanced,
 }) => {
+  // TODO: Performance optimization - Expensive computations should be memoized
+  // const nextAlarmData = useMemo(() => getTimeUntilNextAlarm(alarms), [alarms]);
+  // const { alarm: nextAlarm, timeUntil } = nextAlarmData;
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
+  
+  // TODO: Performance optimization - Filter operation creates new array every render
+  // const enabledAlarms = useMemo(() => alarms.filter(a => a.enabled), [alarms]);
   const enabledAlarms = alarms.filter((a: any) => a.enabled);
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);

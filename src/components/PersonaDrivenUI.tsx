@@ -4,6 +4,10 @@
 
 import React, { useState, useEffect } from 'react';
 import {
+// auto: restored by scout - verify import path
+import { _persona } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { _persona } from '@/utils/__auto_stubs';
   User,
   Clock,
   Star,

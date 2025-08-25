@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { Slider } from './ui/slider';
-import { AlertTriangle, AlertDescription, Alert } from './ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 import {
   Dialog,
   DialogContent,
@@ -32,6 +32,7 @@ import {
   Crown,
   Lock,
   Alert as AlertIcon,
+  AlertTriangle,
 } from 'lucide-react';
 import { nuclearModeService } from '../services/nuclear-mode';
 import { premiumService } from '../services/premium';
@@ -190,8 +191,8 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           </div>
         </CardHeader>
         <CardContent>
-          <AlertTriangle className="border-orange-200 bg-orange-50">
-            <AlertIcon className="w-4 h-4 text-orange-600" />
+          <Alert className="border-orange-200 bg-orange-50">
+            <AlertTriangle className="w-4 h-4 text-orange-600" />
             <AlertDescription className="text-orange-800">
               Nuclear Mode requires a Premium subscription. This feature includes
               extreme difficulty challenges with math problems, memory tests, physical
@@ -332,7 +333,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
 
       {isEnabled && (
         <CardContent>
-          <AlertTriangle className="border-red-200 bg-red-50 mb-6">
+          <Alert className="border-red-200 bg-red-50 mb-6">
             <AlertTriangle className="w-4 h-4 text-red-600" />
             <AlertDescription className="text-red-800">
               <strong>Warning:</strong> Nuclear Mode disables snoozing and requires
@@ -434,7 +435,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
             </div>
 
             {selectedChallenges.length === 0 && (
-              <AlertTriangle className="border-yellow-200 bg-yellow-50">
+              <Alert className="border-yellow-200 bg-yellow-50">
                 <AlertTriangle className="w-4 h-4 text-yellow-600" />
                 <AlertDescription className="text-yellow-800">
                   Select at least one challenge to enable Nuclear Mode

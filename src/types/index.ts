@@ -1,3 +1,31 @@
+// auto: restored by scout - verify import path
+import { HttpError } from '@/types';
+// auto: restored by scout - verify import path
+import { PaginatedResponse } from '@/types';
+// auto: restored by scout - verify import path
+import { HttpClient } from '@/types';
+// auto: restored by scout - verify import path
+import { ApiError } from '@/types';
+// auto: restored by scout - verify import path
+import { ApiResponse } from '@/types';
+// auto: restored by scout - verify import path
+import { WebhookPayload } from '@/types';
+// auto: restored by scout - verify import path
+import { PaginationParams } from '@/types';
+// auto: restored by scout - verify import path
+import { ApiResponse } from '@/types';
+// auto: restored by scout - verify import path
+import { HttpClient } from '@/types';
+// auto: restored by scout - verify import path
+import { HttpError } from '@/types';
+// auto: restored by scout - verify import path
+import { ApiError } from '@/types';
+// auto: restored by scout - verify import path
+import { PaginationParams } from '@/types';
+// auto: restored by scout - verify import path
+import { PaginatedResponse } from '@/types';
+// auto: restored by scout - verify import path
+import { WebhookPayload } from '@/types';
 /**
  * Centralized exports for all API and service interfaces
  * This file provides a single entry point for all TypeScript interfaces

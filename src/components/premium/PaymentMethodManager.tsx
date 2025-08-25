@@ -6,6 +6,10 @@ import { CreditCard, Trash2, Plus, Check, AlertCircle, Star } from 'lucide-react
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
 import {
+// auto: restored by scout - verify import path
+import { paymentMethodId } from '@/utils/__auto_stubs';
+// auto: restored by scout - verify import path
+import { paymentMethodId } from '@/utils/__auto_stubs';
   Dialog,
   DialogContent,
   DialogHeader,

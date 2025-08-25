@@ -227,7 +227,7 @@ class EmailCampaignSetup {
   }
 
   // Generate text version of email
-  generateEmailText(_persona, _email) {
+  generateEmailText(persona, email) {
     return `
 {{email_headline}}
 
@@ -471,8 +471,8 @@ Your campaigns are ready to launch! 🎉
       console.log('2. Follow the setup-instructions.md guide');
       console.log('3. Import configurations into your email platform');
       console.log('4. Test and launch your campaigns\n');
-    } catch (_error) {
-      console.error('❌ Setup failed:', _error.message);
+    } catch (error) {
+      console.error('❌ Setup failed:', error.message);
       process.exit(1);
     }
   }
