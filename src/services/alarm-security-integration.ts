@@ -14,7 +14,7 @@ import SecurityService from './security';
 import { ErrorHandler } from './error-handler';
 import type { Alarm, AlarmEvent } from '../types';
 import { TimeoutHandle } from '../types/timers';
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
 
 interface SecurityStatus {
   overall: 'secure' | 'warning' | 'critical' | 'compromised';

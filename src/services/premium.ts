@@ -2,15 +2,8 @@ import { supabase } from './supabase';
 import type { User } from '../types';
 import type { SubscriptionTier } from '../types/premium';
 import { ErrorHandler } from './error-handler';
-// auto: restored by scout - verify import path
-import { currentTier } from '@/utils/__auto_stubs';
-// auto: restored by scout - verify import path
-import { newTier } from '@/utils/__auto_stubs';
-// auto: restored by scout - verify import path
-import { newTier } from '@/utils/__auto_stubs';
-// auto: restored by scout - verify import path
-import { currentTier } from '@/utils/__auto_stubs';
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Removed stub imports - implementing tier management locally
+// getCurrentTier and setNewTier functions should be implemented here or imported from subscription service
 
 export interface PremiumFeature {
   id: string;

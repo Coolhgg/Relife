@@ -8,7 +8,7 @@ import { generateAlarmId, getNextAlarmTime } from '../utils';
 import { BaseService } from './base/BaseService';
 import { CacheProvider, getCacheManager } from './base/CacheManager';
 import {
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
   AlarmServiceInterface,
   ServiceConfig,
   ServiceHealth,

@@ -6,7 +6,7 @@ import SecurityMonitoringForensicsService from './security-monitoring-forensics'
 import AlarmRateLimitingService from './alarm-rate-limiting';
 import { ErrorHandler } from './error-handler';
 import { TimeoutHandle } from '../types/timers';
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
 
 interface APIRequest {
   method: string;

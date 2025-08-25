@@ -9,8 +9,8 @@ import { Network } from '@capacitor/network';
 import { Network } from '@capacitor/network';
 
 // Types
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
+import AnalyticsService from './analytics';
 export interface UserTestSession {
   id: string;
   userId: string;

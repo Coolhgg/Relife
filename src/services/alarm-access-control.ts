@@ -5,7 +5,7 @@ import SecurityService from './security';
 import { ErrorHandler } from './error-handler';
 import type { Alarm, User } from '../types';
 import { TimeoutHandle } from '../types/timers';
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Note: User data should come from auth context or be passed as parameter
 
 interface AccessControlContext {
   userId: string;

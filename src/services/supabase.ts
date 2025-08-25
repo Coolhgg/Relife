@@ -4,10 +4,8 @@ import type { Alarm, AlarmEvent, User as AppUser } from '../types';
 import { ErrorHandler } from './error-handler';
 import PerformanceMonitor from './performance-monitor';
 import { TimeoutHandle } from '../types/timers';
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
+// Note: User data should be passed as parameters or retrieved from auth context
 
 interface ConnectionPoolConfig {
   maxConnections: number;

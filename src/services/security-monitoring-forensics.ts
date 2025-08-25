@@ -6,7 +6,7 @@ import { Preferences } from '@capacitor/preferences';
 import SecurityService from './security';
 import { ErrorHandler } from './error-handler';
 import { TimeoutHandle } from '../types/timers';
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import AnalyticsService from './analytics';
 
 interface SecurityEvent {
   id: string;

@@ -7,7 +7,7 @@
 import { VisualAlarmThemeId, visualAlarmThemes } from './visual-alarm-themes';
 import { SoundTheme } from './sound-effects';
 import { VoiceMood } from '../types';
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import AnalyticsService from './analytics';
 
 export interface ContextualThemeRecommendation {
   visual: VisualAlarmThemeId;

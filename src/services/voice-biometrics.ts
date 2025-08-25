@@ -6,8 +6,8 @@ import { ErrorHandler } from './error-handler';
 import PerformanceMonitor from './performance-monitor';
 import { SupabaseService } from './supabase';
 import { TimeoutHandle } from '../types/timers';
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
+import AnalyticsService from './analytics';
 
 export interface VoicePrint {
   userId: string;

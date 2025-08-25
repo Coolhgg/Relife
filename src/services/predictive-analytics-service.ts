@@ -1,5 +1,5 @@
 import type {
-import { alarms } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Note: alarms should come from app state or be passed as parameter
   User,
   SleepPattern,
   WakeUpBehavior,

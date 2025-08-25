@@ -5,8 +5,8 @@ import { SupabaseService } from './supabase';
 import PerformanceMonitor from './performance-monitor';
 import { ErrorHandler } from './error-handler';
 import type { Alarm, User } from '../types';
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
+import AnalyticsService from './analytics';
 
 export interface AnalyticsInsight {
   id: string;

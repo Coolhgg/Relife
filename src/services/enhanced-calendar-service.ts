@@ -15,7 +15,7 @@ import { Alarm } from '../types';
  */
 
 import { Alarm } from '../types';
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import AnalyticsService from './analytics';
 
 export interface CalendarEvent {
   id: string;

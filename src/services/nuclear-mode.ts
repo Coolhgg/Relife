@@ -1,6 +1,6 @@
 import type {
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
+// Note: User data should come from auth context or be passed as parameter
   Alarm,
   NuclearModeChallenge,
   NuclearChallengeType,

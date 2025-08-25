@@ -7,8 +7,8 @@ import { EventEmitter } from 'events';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type {
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
+import { config } from '../config/environment';
   RealtimeService,
   RealtimeServiceConfig,
   ConnectionStatus,

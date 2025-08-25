@@ -8,9 +8,8 @@ import { formatTime } from '../utils';
 import { BaseService } from './base/BaseService';
 import { CacheProvider, getCacheManager } from './base/CacheManager';
 import {
-import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { config } from '../config/environment';
+import { ErrorHandler } from './error-handler';
   VoiceServiceInterface,
   ServiceConfig,
   ServiceHealth,

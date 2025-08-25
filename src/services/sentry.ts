@@ -2,9 +2,9 @@
 // Provides comprehensive error tracking, crash reporting, and performance monitoring
 
 import * as Sentry from '@sentry/react';
-import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { config } from '../config/environment';
+import AnalyticsService from './analytics';
+// Note: User data should come from auth context
 
 export interface SentryConfig {
   dsn: string;

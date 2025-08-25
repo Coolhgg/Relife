@@ -4,7 +4,7 @@
 
 import { AnimationControls, MotionValue } from 'framer-motion';
 import { TimeoutHandle } from '../types/timers';
-import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { config } from '../config/environment';
 
 export interface AnimationPreferences {
   reducedMotion: boolean;

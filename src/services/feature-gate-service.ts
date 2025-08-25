@@ -10,7 +10,7 @@ import { TimeoutHandle } from '../types/timers';
 import { SubscriptionTier } from '@/types';
 // auto: restored by scout - verify import path
 import { SubscriptionTier } from '@/types';
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
 
 interface FeatureDefinition {
   id: string;
