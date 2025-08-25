@@ -5,7 +5,7 @@ import { VoiceProService, RecognitionResult } from './voice-pro';
 import VoiceBiometricsService from './voice-biometrics';
 import { ErrorHandler } from './error-handler';
 import PerformanceMonitor from './performance-monitor';
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
 
 export interface EnhancedVoiceCommand {
   command: string;

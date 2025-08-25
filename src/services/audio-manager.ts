@@ -4,9 +4,9 @@ import type { Alarm, VoiceMood } from '../types';
 import type { CustomSound, Playlist, PlaylistSound } from './types/media';
 import { formatTime } from '../utils';
 import { TimeoutHandle } from '../types/timers';
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import AnalyticsService from './analytics';
+import { config } from '../config/environment';
+import { ErrorHandler } from './error-handler';
 
 export interface AudioCacheEntry {
   id: string;

@@ -1,21 +1,42 @@
 /// <reference lib="dom" />
-// import ... from 'idb'; // Package not available in current setup
+// Using native IndexedDB APIs instead of external IDB package
 import { supabase } from './supabase';
+import AnalyticsService from './analytics';
+import { ErrorHandler } from './error-handler';
 import type { Alarm } from '../types';
 import { TimeoutHandle } from '../types/timers';
-// auto: restored by scout - verify import path
-import { IDBPDatabase } from '@/utils/__auto_stubs';
-// auto: restored by scout - verify import path
-import { openDB } from '@/utils/__auto_stubs';
-// auto: restored by scout - verify import path
-import { openDB } from '@/utils/__auto_stubs';
-// auto: restored by scout - verify import path
-import { IDBPDatabase } from '@/utils/__auto_stubs';
-import { DBSchema } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { a } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _index } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+
+// Native IndexedDB interface extensions
+interface IDBPDatabase extends IDBDatabase {
+  // Add any additional methods needed
+}
+
+// Native IndexedDB helper function
+function openDB(name: string, version: number, options?: {
+  upgrade?(database: IDBDatabase, oldVersion: number, newVersion: number): void;
+}): Promise<IDBPDatabase> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(name, version);
+    
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result as IDBPDatabase);
+    
+    if (options?.upgrade) {
+      request.onupgradeneeded = (event) => {
+        const db = request.result;
+        options.upgrade!(db, event.oldVersion, event.newVersion || 0);
+      };
+    }
+  });
+}
+
+interface DBSchema {
+  [storeName: string]: {
+    key: any;
+    value: any;
+    indexes?: { [indexName: string]: any };
+  };
+}
 
 interface OfflineDB extends DBSchema {
   alarms: {

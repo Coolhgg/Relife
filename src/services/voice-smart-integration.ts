@@ -2,9 +2,8 @@
 // Comprehensive voice control with smart home, calendar, and advanced integrations
 
 import VoiceRecognitionEnhancedService, {
-import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
+// Note: User data should be passed as parameters or retrieved from auth context
   EnhancedVoiceCommand,
 } from './voice-recognition-enhanced';
 import VoiceAIEnhancedService from './voice-ai-enhanced';

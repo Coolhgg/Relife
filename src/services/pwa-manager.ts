@@ -1,4 +1,4 @@
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import AnalyticsService from './analytics';
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;

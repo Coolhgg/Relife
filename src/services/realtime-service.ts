@@ -8,9 +8,9 @@ import { ErrorHandler } from './error-handler';
 import PerformanceMonitor from './performance-monitor';
 import type { Alarm, User } from '../types';
 import { TimeoutHandle } from '../types/timers';
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import AnalyticsService from './analytics';
+import { ErrorHandler } from './error-handler';
+// Note: User data should be passed as parameters or retrieved from auth context
 
 export interface RealtimeConfig {
   enableWebSocket: boolean;

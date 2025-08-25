@@ -4,10 +4,9 @@ import { ErrorHandler } from './error-handler';
 import ConvertKitService, { ConvertKitConfig } from './convertkit-service';
 import { CONVERTKIT_IDS } from '../config/convertkit-generated';
 import { TimeoutHandle } from '../types/timers';
-import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { persona } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { config } from '../config/environment';
+import { ErrorHandler } from './error-handler';
+// Note: User and persona data should come from auth context or analytics service
 
 export interface EmailPlatformConfig {
   platform: 'convertkit' | 'mailchimp' | 'sendgrid';

@@ -2,7 +2,7 @@ import type { Alarm } from '../types';
 import { getNextAlarmTime, getVoiceMoodConfig } from '../utils';
 import { TimeoutHandle } from '../types/timers';
 import {
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import AnalyticsService from './analytics';
   scheduleLocalNotification,
   cancelLocalNotification,
   requestNotificationPermissions,

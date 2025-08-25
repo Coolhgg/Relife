@@ -1,19 +1,15 @@
-// auto: restored by scout - verify import path
-import { NavigationTiming } from '@/utils/__auto_stubs';
-// auto: restored by scout - verify import path
-import { NavigationTiming } from '@/utils/__auto_stubs';
 /**
  * Enhanced Analytics Service
  * Refactored to use standardized service architecture with offline queue and performance tracking
  */
 
 import posthog from 'posthog-js';
-import { _config, isEnvironment } from '../config/environment';
+import { config as envConfig, isEnvironment } from '../config/environment';
 import { BaseService } from './base/BaseService';
 import { CacheProvider, getCacheManager } from './base/CacheManager';
+// NavigationTiming is a native Web API type - available globally
 import {
-import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import AnalyticsService from './analytics';
   AnalyticsServiceInterface,
   ServiceConfig,
   ServiceHealth,

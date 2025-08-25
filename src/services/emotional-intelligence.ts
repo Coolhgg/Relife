@@ -1,7 +1,7 @@
 import { supabase } from './supabase';
 import { AnalyticsService } from './analytics';
 import type {
-import { _user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Note: User data should come from auth context or be passed as parameter
   EmotionalState,
   EmotionalContext,
   EmotionalMessage,

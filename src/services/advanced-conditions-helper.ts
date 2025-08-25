@@ -1,5 +1,5 @@
 import {
-import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { config } from '../config/environment';
   EnhancedSmartAlarmScheduler,
   type EnhancedSmartAlarm,
   type ConditionBasedAdjustment,

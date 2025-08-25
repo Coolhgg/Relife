@@ -7,8 +7,7 @@ import { NotificationService } from './notification';
 import SecurityService from './security';
 import SecurePushNotificationService from './secure-push-notification';
 import { ErrorHandler } from './error-handler';
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from './error-handler';
 
 export interface PushNotificationPayload {
   title: string;
