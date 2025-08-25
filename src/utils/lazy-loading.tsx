@@ -124,6 +124,28 @@ export const SmartAlarmDashboard = lazyWithPreload(
   () => localStorage.getItem('smart_alarms_enabled') === 'true'
 );
 
+// TODO: Performance optimization - Advanced analytics and scheduling
+export const AdvancedAnalytics = lazyWithPreload(
+  () => import('../components/AdvancedAnalytics'),
+  () => window.location.pathname.includes('/analytics') || window.location.pathname.includes('/advanced')
+);
+
+export const AdvancedAlarmScheduling = lazyWithPreload(
+  () => import('../components/AdvancedAlarmScheduling'),
+  () => localStorage.getItem('premium_features_enabled') === 'true' && window.location.pathname.includes('/scheduling')
+);
+
+// TODO: Performance optimization - Settings and theme browsing
+export const SettingsPage = lazyWithPreload(
+  () => import('../components/SettingsPage'),
+  () => window.location.pathname.includes('/settings')
+);
+
+export const AlarmThemeBrowser = lazyWithPreload(
+  () => import('../components/AlarmThemeBrowser'),
+  () => window.location.pathname.includes('/themes') || window.location.pathname.includes('/browse')
+);
+
 // TODO: Performance optimization - PWA and diagnostic components
 export const PWAStatusDashboard = lazyWithPreload(
   () => import('../components/PWAStatusDashboard'),
@@ -159,6 +181,13 @@ export const preloadRoute = (routePath: string) => {
     '/themes': () => {
       ThemeCreator.preload();
       CustomThemeManager.preload();
+      AlarmThemeBrowser.preload();
+    },
+    '/scheduling': () => AdvancedAlarmScheduling.preload(),
+    '/settings': () => SettingsPage.preload(),
+    '/advanced': () => {
+      AdvancedAnalytics.preload();
+      AdvancedAlarmScheduling.preload();
     },
     '/accessibility': () => AccessibilityDashboard.preload(),
     '/smart-alarms': () => SmartAlarmDashboard.preload(),
@@ -242,6 +271,10 @@ export default {
   OnboardingFlow,
   PerformanceDashboard,
   SleepAnalytics,
+  AdvancedAnalytics,
+  AdvancedAlarmScheduling,
+  SettingsPage,
+  AlarmThemeBrowser,
   withLazyLoading,
   preloadRoute,
   useRoutePreloading,
