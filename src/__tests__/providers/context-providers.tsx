@@ -54,7 +54,7 @@ export const FeatureAccessTestProvider: React.FC<{
   );
 };
 
-export const _useFeatureAccessTest = () => useContext(FeatureAccessTestContext);
+export const useFeatureAccessTest = () => useContext(FeatureAccessTestContext);
 
 // Feature Access Test Scenarios
 export const _featureAccessScenarios = {
@@ -139,7 +139,7 @@ export const LanguageTestProvider: React.FC<{
   );
 };
 
-export const _useLanguageTest = () => useContext(LanguageTestContext);
+export const useLanguageTest = () => useContext(LanguageTestContext);
 
 // Language Test Scenarios
 export const _languageScenarios = {
@@ -242,7 +242,7 @@ export const AlarmTestProvider: React.FC<{
   );
 };
 
-export const _useAlarmTest = () => useContext(AlarmTestContext);
+export const useAlarmTest = () => useContext(AlarmTestContext);
 
 // Alarm Test Scenarios
 export const _alarmScenarios = {
@@ -355,7 +355,7 @@ export const ThemeTestProvider: React.FC<{
   );
 };
 
-export const _useThemeTest = () => useContext(ThemeTestContext);
+export const useThemeTest = () => useContext(ThemeTestContext);
 
 // Theme Test Scenarios
 export const _themeScenarios = {

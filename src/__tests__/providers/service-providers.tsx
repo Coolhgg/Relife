@@ -415,15 +415,15 @@ export const ServiceTestProviders: React.FC<{
 // HOOK UTILITIES
 // ===============================
 
-export const _useAlarmServiceTest = () => useContext(AlarmServiceContext);
-export const _useAnalyticsServiceTest = () => useContext(AnalyticsServiceContext);
-export const _useBattleServiceTest = () => useContext(BattleServiceContext);
-export const _useSubscriptionServiceTest = () => useContext(SubscriptionServiceContext);
-export const _useVoiceServiceTest = () => useContext(VoiceServiceContext);
-export const _useNotificationServiceTest = () => useContext(NotificationServiceContext);
-export const _useAudioServiceTest = () => useContext(AudioServiceContext);
-export const _useStorageServiceTest = () => useContext(StorageServiceContext);
-export const _useSecurityServiceTest = () => useContext(SecurityServiceContext);
+export const useAlarmServiceTest = () => useContext(AlarmServiceContext);
+export const useAnalyticsServiceTest = () => useContext(AnalyticsServiceContext);
+export const useBattleServiceTest = () => useContext(BattleServiceContext);
+export const useSubscriptionServiceTest = () => useContext(SubscriptionServiceContext);
+export const useVoiceServiceTest = () => useContext(VoiceServiceContext);
+export const useNotificationServiceTest = () => useContext(NotificationServiceContext);
+export const useAudioServiceTest = () => useContext(AudioServiceContext);
+export const useStorageServiceTest = () => useContext(StorageServiceContext);
+export const useSecurityServiceTest = () => useContext(SecurityServiceContext);
 
 // ===============================
 // SERVICE SCENARIOS

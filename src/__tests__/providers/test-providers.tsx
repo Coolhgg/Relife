@@ -447,7 +447,7 @@ export const _renderWithProviders = (
 };
 
 // Utility Hooks for Testing
-export const _useTestContext = () => {
+export const useTestContext = () => {
   const featureAccess = React.useContext(FeatureAccessContext);
   const language = React.useContext(LanguageContext);
   const auth = React.useContext(AuthContext);
@@ -571,7 +571,7 @@ export const _renderWithScenario = (
 export const renderWithProviders = _renderWithProviders;
 export const renderWithScenario = _renderWithScenario;
 export const testScenarios = _testScenarios;
-export const useTestContext = _useTestContext;
+// Export alias is no longer needed as useTestContext is already exported directly
 export const createMockServices = _createMockServices;
 
 export default {
