@@ -882,6 +882,199 @@ export class AdvancedBehavioralIntelligence {
     const seasonMoodMap = { spring: 0.8, summer: 0.9, fall: 0.6, winter: 0.5 };
     return seasonMoodMap[season] || 0.7;
   }
+
+  // Parameter configuration methods for live updates
+  private parameters = {
+    analysisDepth: 'moderate' as 'surface' | 'moderate' | 'deep' | 'comprehensive',
+    learningRate: 0.3,
+    confidenceThreshold: 0.75,
+    psychologicalProfiling: true,
+    patternRecognitionSensitivity: 'medium' as 'low' | 'medium' | 'high',
+    contextualWeight: 0.6,
+    temporalAnalysisWindow: 30, // days
+    minimumDataPoints: 10,
+    enablePredictiveInsights: true,
+    crossReferenceLimit: 5,
+    adaptiveThreshold: true
+  };
+
+  /**
+   * Get current parameter configuration
+   */
+  async getCurrentParameters(): Promise<Record<string, any>> {
+    return { ...this.parameters };
+  }
+
+  /**
+   * Update parameter configuration with validation
+   */
+  async updateParameters(newParameters: Record<string, any>): Promise<boolean> {
+    try {
+      // Validate and apply parameters
+      for (const [key, value] of Object.entries(newParameters)) {
+        if (key in this.parameters) {
+          // Type-specific validation
+          switch (key) {
+            case 'analysisDepth':
+              if (['surface', 'moderate', 'deep', 'comprehensive'].includes(value)) {
+                this.parameters.analysisDepth = value;
+              }
+              break;
+            case 'learningRate':
+              if (typeof value === 'number' && value >= 0.1 && value <= 1.0) {
+                this.parameters.learningRate = value;
+              }
+              break;
+            case 'confidenceThreshold':
+              if (typeof value === 'number' && value >= 0.5 && value <= 0.95) {
+                this.parameters.confidenceThreshold = value;
+              }
+              break;
+            case 'patternRecognitionSensitivity':
+              if (['low', 'medium', 'high'].includes(value)) {
+                this.parameters.patternRecognitionSensitivity = value;
+              }
+              break;
+            case 'contextualWeight':
+              if (typeof value === 'number' && value >= 0 && value <= 1) {
+                this.parameters.contextualWeight = value;
+              }
+              break;
+            case 'temporalAnalysisWindow':
+              if (typeof value === 'number' && value >= 7 && value <= 365) {
+                this.parameters.temporalAnalysisWindow = value;
+              }
+              break;
+            case 'minimumDataPoints':
+              if (typeof value === 'number' && value >= 5 && value <= 50) {
+                this.parameters.minimumDataPoints = value;
+              }
+              break;
+            case 'crossReferenceLimit':
+              if (typeof value === 'number' && value >= 1 && value <= 20) {
+                this.parameters.crossReferenceLimit = value;
+              }
+              break;
+            default:
+              if (typeof this.parameters[key] === 'boolean' && typeof value === 'boolean') {
+                this.parameters[key] = value;
+              } else if (typeof this.parameters[key] === typeof value) {
+                this.parameters[key] = value;
+              }
+          }
+        }
+      }
+
+      console.log('[BehavioralIntelligence] Parameters updated:', this.parameters);
+      return true;
+    } catch (error) {
+      console.error('[BehavioralIntelligence] Error updating parameters:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Reset parameters to defaults
+   */
+  async resetParameters(): Promise<void> {
+    this.parameters = {
+      analysisDepth: 'moderate',
+      learningRate: 0.3,
+      confidenceThreshold: 0.75,
+      psychologicalProfiling: true,
+      patternRecognitionSensitivity: 'medium',
+      contextualWeight: 0.6,
+      temporalAnalysisWindow: 30,
+      minimumDataPoints: 10,
+      enablePredictiveInsights: true,
+      crossReferenceLimit: 5,
+      adaptiveThreshold: true
+    };
+  }
+
+  /**
+   * Get parameter constraints and descriptions
+   */
+  getParameterMetadata(): Record<string, any> {
+    return {
+      analysisDepth: {
+        type: 'select',
+        options: ['surface', 'moderate', 'deep', 'comprehensive'],
+        description: 'Depth of behavioral pattern analysis',
+        impact: 'performance'
+      },
+      learningRate: {
+        type: 'number',
+        min: 0.1,
+        max: 1.0,
+        step: 0.05,
+        description: 'Rate at which the system learns from new data',
+        impact: 'accuracy'
+      },
+      confidenceThreshold: {
+        type: 'number',
+        min: 0.5,
+        max: 0.95,
+        step: 0.05,
+        description: 'Minimum confidence required for insights',
+        impact: 'precision'
+      },
+      psychologicalProfiling: {
+        type: 'boolean',
+        description: 'Enable deep psychological trait analysis',
+        impact: 'privacy',
+        requiresConsent: true
+      },
+      patternRecognitionSensitivity: {
+        type: 'select',
+        options: ['low', 'medium', 'high'],
+        description: 'Sensitivity for detecting behavioral patterns',
+        impact: 'performance'
+      },
+      contextualWeight: {
+        type: 'number',
+        min: 0,
+        max: 1,
+        step: 0.1,
+        description: 'Weight given to contextual factors',
+        impact: 'accuracy'
+      },
+      temporalAnalysisWindow: {
+        type: 'number',
+        min: 7,
+        max: 365,
+        step: 7,
+        description: 'Time window for pattern analysis (days)',
+        impact: 'memory'
+      },
+      minimumDataPoints: {
+        type: 'number',
+        min: 5,
+        max: 50,
+        step: 1,
+        description: 'Minimum data points required for analysis',
+        impact: 'reliability'
+      },
+      enablePredictiveInsights: {
+        type: 'boolean',
+        description: 'Enable predictive behavioral insights',
+        impact: 'performance'
+      },
+      crossReferenceLimit: {
+        type: 'number',
+        min: 1,
+        max: 20,
+        step: 1,
+        description: 'Maximum cross-references per analysis',
+        impact: 'performance'
+      },
+      adaptiveThreshold: {
+        type: 'boolean',
+        description: 'Enable adaptive confidence thresholds',
+        impact: 'accuracy'
+      }
+    };
+  }
 }
 
 export default AdvancedBehavioralIntelligence;

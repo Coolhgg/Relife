@@ -939,6 +939,278 @@ export class AIRewardsService {
       this.rewardTemplates.set(key, template);
     });
   }
+
+  // Parameter configuration methods for live updates
+  private parameters = {
+    gamificationIntensity: 70, // 0-100
+    rewardFrequency: 'balanced' as 'minimal' | 'balanced' | 'frequent' | 'abundant',
+    personalizationLevel: 0.8, // 0-1
+    motivationStyle: 'positive' as 'neutral' | 'positive' | 'competitive' | 'achievement',
+    difficultyAdaptation: true,
+    socialFeatures: true,
+    streakMultiplier: 1.5, // 1.0-3.0
+    achievementThreshold: 'adaptive' as 'easy' | 'moderate' | 'challenging' | 'adaptive',
+    pointInflation: 'controlled' as 'none' | 'controlled' | 'moderate' | 'dynamic',
+    categoryWeights: {
+      consistency: 1.0,
+      achievement: 1.2,
+      explorer: 0.9,
+      social: 0.8,
+      milestone: 1.5
+    },
+    behaviorReinforcement: 0.7,
+    noveltyBonus: 0.3,
+    longTermMotivation: true,
+    instantGratification: 0.5,
+    progressTransparency: true,
+    customGoals: true,
+    seasonalEvents: true,
+    communityRewards: false,
+    premiumRewards: true,
+    analyticsTracking: true
+  };
+
+  /**
+   * Get current reward system configuration
+   */
+  async getCurrentConfiguration(): Promise<Record<string, any>> {
+    return { ...this.parameters };
+  }
+
+  /**
+   * Update reward system configuration with validation
+   */
+  async updateConfiguration(newParameters: Record<string, any>): Promise<boolean> {
+    try {
+      for (const [key, value] of Object.entries(newParameters)) {
+        if (key in this.parameters) {
+          switch (key) {
+            case 'gamificationIntensity':
+              if (typeof value === 'number' && value >= 0 && value <= 100) {
+                this.parameters.gamificationIntensity = value;
+              }
+              break;
+            case 'rewardFrequency':
+              if (['minimal', 'balanced', 'frequent', 'abundant'].includes(value)) {
+                this.parameters.rewardFrequency = value;
+              }
+              break;
+            case 'personalizationLevel':
+            case 'behaviorReinforcement':
+            case 'noveltyBonus':
+            case 'instantGratification':
+              if (typeof value === 'number' && value >= 0 && value <= 1) {
+                this.parameters[key] = value;
+              }
+              break;
+            case 'motivationStyle':
+              if (['neutral', 'positive', 'competitive', 'achievement'].includes(value)) {
+                this.parameters.motivationStyle = value;
+              }
+              break;
+            case 'streakMultiplier':
+              if (typeof value === 'number' && value >= 1.0 && value <= 3.0) {
+                this.parameters.streakMultiplier = value;
+              }
+              break;
+            case 'achievementThreshold':
+              if (['easy', 'moderate', 'challenging', 'adaptive'].includes(value)) {
+                this.parameters.achievementThreshold = value;
+              }
+              break;
+            case 'pointInflation':
+              if (['none', 'controlled', 'moderate', 'dynamic'].includes(value)) {
+                this.parameters.pointInflation = value;
+              }
+              break;
+            case 'categoryWeights':
+              if (typeof value === 'object' && value !== null) {
+                // Validate each weight is between 0.1 and 2.0
+                const validWeights: Record<string, number> = {};
+                for (const [category, weight] of Object.entries(value)) {
+                  if (typeof weight === 'number' && weight >= 0.1 && weight <= 2.0) {
+                    validWeights[category] = weight;
+                  }
+                }
+                this.parameters.categoryWeights = { ...this.parameters.categoryWeights, ...validWeights };
+              }
+              break;
+            default:
+              if (typeof this.parameters[key] === 'boolean' && typeof value === 'boolean') {
+                this.parameters[key] = value;
+              } else if (typeof this.parameters[key] === typeof value) {
+                this.parameters[key] = value;
+              }
+          }
+        }
+      }
+
+      console.log('[AIRewards] Configuration updated:', this.parameters);
+      return true;
+    } catch (error) {
+      console.error('[AIRewards] Error updating configuration:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Reset reward system configuration to defaults
+   */
+  async resetConfiguration(): Promise<void> {
+    this.parameters = {
+      gamificationIntensity: 70,
+      rewardFrequency: 'balanced',
+      personalizationLevel: 0.8,
+      motivationStyle: 'positive',
+      difficultyAdaptation: true,
+      socialFeatures: true,
+      streakMultiplier: 1.5,
+      achievementThreshold: 'adaptive',
+      pointInflation: 'controlled',
+      categoryWeights: {
+        consistency: 1.0,
+        achievement: 1.2,
+        explorer: 0.9,
+        social: 0.8,
+        milestone: 1.5
+      },
+      behaviorReinforcement: 0.7,
+      noveltyBonus: 0.3,
+      longTermMotivation: true,
+      instantGratification: 0.5,
+      progressTransparency: true,
+      customGoals: true,
+      seasonalEvents: true,
+      communityRewards: false,
+      premiumRewards: true,
+      analyticsTracking: true
+    };
+  }
+
+  /**
+   * Get reward system parameter metadata for UI configuration
+   */
+  getConfigurationMetadata(): Record<string, any> {
+    return {
+      gamificationIntensity: {
+        type: 'slider',
+        min: 0,
+        max: 100,
+        step: 5,
+        description: 'Overall intensity of gamification features',
+        impact: 'engagement'
+      },
+      rewardFrequency: {
+        type: 'select',
+        options: ['minimal', 'balanced', 'frequent', 'abundant'],
+        description: 'How often rewards are given',
+        impact: 'motivation'
+      },
+      personalizationLevel: {
+        type: 'slider',
+        min: 0,
+        max: 1,
+        step: 0.1,
+        description: 'Level of reward personalization',
+        impact: 'relevance'
+      },
+      motivationStyle: {
+        type: 'select',
+        options: ['neutral', 'positive', 'competitive', 'achievement'],
+        description: 'Style of motivational rewards',
+        impact: 'user_psychology'
+      },
+      difficultyAdaptation: {
+        type: 'boolean',
+        description: 'Automatically adjust reward difficulty',
+        impact: 'engagement'
+      },
+      socialFeatures: {
+        type: 'boolean',
+        description: 'Enable social comparison and sharing',
+        impact: 'social_engagement'
+      },
+      streakMultiplier: {
+        type: 'slider',
+        min: 1.0,
+        max: 3.0,
+        step: 0.1,
+        description: 'Multiplier for streak-based rewards',
+        impact: 'consistency'
+      },
+      achievementThreshold: {
+        type: 'select',
+        options: ['easy', 'moderate', 'challenging', 'adaptive'],
+        description: 'Difficulty level for achievement unlocks',
+        impact: 'achievement_rate'
+      },
+      pointInflation: {
+        type: 'select',
+        options: ['none', 'controlled', 'moderate', 'dynamic'],
+        description: 'Strategy for managing point value over time',
+        impact: 'long_term_engagement'
+      },
+      behaviorReinforcement: {
+        type: 'slider',
+        min: 0,
+        max: 1,
+        step: 0.1,
+        description: 'Strength of behavior reinforcement',
+        impact: 'habit_formation'
+      },
+      noveltyBonus: {
+        type: 'slider',
+        min: 0,
+        max: 1,
+        step: 0.05,
+        description: 'Bonus for trying new behaviors',
+        impact: 'exploration'
+      },
+      longTermMotivation: {
+        type: 'boolean',
+        description: 'Focus on long-term vs immediate rewards',
+        impact: 'sustainability'
+      },
+      instantGratification: {
+        type: 'slider',
+        min: 0,
+        max: 1,
+        step: 0.1,
+        description: 'Balance of instant vs delayed rewards',
+        impact: 'satisfaction'
+      },
+      progressTransparency: {
+        type: 'boolean',
+        description: 'Show detailed progress toward rewards',
+        impact: 'clarity'
+      },
+      customGoals: {
+        type: 'boolean',
+        description: 'Allow users to set custom reward goals',
+        impact: 'personalization'
+      },
+      seasonalEvents: {
+        type: 'boolean',
+        description: 'Enable seasonal and special event rewards',
+        impact: 'variety'
+      },
+      communityRewards: {
+        type: 'boolean',
+        description: 'Enable community-based rewards',
+        impact: 'social_engagement'
+      },
+      premiumRewards: {
+        type: 'boolean',
+        description: 'Include premium-tier rewards',
+        impact: 'monetization'
+      },
+      analyticsTracking: {
+        type: 'boolean',
+        description: 'Track detailed reward analytics',
+        impact: 'optimization'
+      }
+    };
+  }
 }
 
 export default AIRewardsService;
