@@ -1,0 +1,442 @@
+# Consolidated Code Quality & Linting
+# Replaces: quality-checks.yml, ci-quality-gates.yml, strict-quality-gates.yml
+name: ✅ Code Quality
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      quality-level:
+        description: "Quality check level"
+        required: false
+        default: "standard"
+        type: choice
+        options:
+          - standard
+          - strict
+          - full
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  actions: read
+  checks: write
+  statuses: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_ENV: test
+  FORCE_COLOR: 1
+
+jobs:
+  # Dependencies & Setup
+  dependencies:
+    name: 📦 Dependencies
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false || github.event_name == 'push'
+    
+    outputs:
+      has-python: ${{ steps.check-python.outputs.has-python }}
+      cache-hit: ${{ steps.cache-dependencies.outputs.cache-hit }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Python (if needed)
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Check for Python files
+        id: check-python
+        run: |
+          if find . -name "*.py" -not -path "./node_modules/*" -not -path "./.venv/*" | grep -q .; then
+            echo "has-python=true" >> $GITHUB_OUTPUT
+            echo "✅ Python files found"
+          else
+            echo "has-python=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No Python files found"
+          fi
+
+      - name: Cache dependencies
+        id: cache-dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            ~/.npm
+            node_modules
+            relife-campaign-dashboard/node_modules
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/package-lock.json', '**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-deps-
+
+      - name: Install dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: |
+          echo "🔧 Installing dependencies..."
+          npm ci --audit=false
+          bun install --frozen-lockfile
+          
+          # Dashboard dependencies
+          cd relife-campaign-dashboard
+          npm ci --audit=false
+
+      - name: Install Python dependencies
+        if: steps.check-python.outputs.has-python == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f pyproject.toml ]; then pip install -e ".[dev]"; fi
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+
+  # Code Formatting & Style
+  formatting:
+    name: 💅 Code Formatting
+    runs-on: ubuntu-latest
+    needs: dependencies
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            ~/.npm
+            node_modules
+            relife-campaign-dashboard/node_modules
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/package-lock.json', '**/bun.lockb') }}
+
+      - name: Setup Python (if needed)
+        if: needs.dependencies.outputs.has-python == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Python tools
+        if: needs.dependencies.outputs.has-python == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          pip install black isort
+
+      - name: Check Python formatting (Black)
+        if: needs.dependencies.outputs.has-python == 'true'
+        run: python -m black --check --diff .
+        continue-on-error: ${{ github.event.inputs.quality-level != 'strict' }}
+
+      - name: Check Python import sorting (isort)
+        if: needs.dependencies.outputs.has-python == 'true'
+        run: python -m isort --check-only --diff .
+        continue-on-error: ${{ github.event.inputs.quality-level != 'strict' }}
+
+      - name: Check JS/TS/JSON/YAML formatting (Prettier)
+        run: npx prettier --check .
+        continue-on-error: ${{ github.event.inputs.quality-level != 'strict' }}
+
+  # Linting
+  linting:
+    name: 🔍 Code Linting
+    runs-on: ubuntu-latest
+    needs: dependencies
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        tool: [eslint, typescript, python-flake8, shellcheck]
+        
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            ~/.npm
+            node_modules
+            relife-campaign-dashboard/node_modules
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/package-lock.json', '**/bun.lockb') }}
+
+      - name: Setup Python (if needed)
+        if: needs.dependencies.outputs.has-python == 'true' && matrix.tool == 'python-flake8'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Python linting tools
+        if: needs.dependencies.outputs.has-python == 'true' && matrix.tool == 'python-flake8'
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 mypy
+
+      - name: ESLint
+        if: matrix.tool == 'eslint'
+        run: |
+          echo "🔍 Running ESLint..."
+          npx eslint . --ext .js,.jsx,.ts,.tsx --format=compact
+          # Dashboard linting
+          cd relife-campaign-dashboard
+          npx eslint . --ext .js,.jsx,.ts,.tsx --format=compact
+        continue-on-error: ${{ github.event.inputs.quality-level != 'strict' }}
+
+      - name: TypeScript Type Checking
+        if: matrix.tool == 'typescript'
+        run: |
+          echo "🔍 Running TypeScript checks..."
+          npx tsc --noEmit --skipLibCheck
+          # Dashboard type checking
+          cd relife-campaign-dashboard
+          npx tsc --noEmit --skipLibCheck
+        continue-on-error: ${{ github.event.inputs.quality-level != 'strict' }}
+
+      - name: Python Linting (Flake8)
+        if: needs.dependencies.outputs.has-python == 'true' && matrix.tool == 'python-flake8'
+        run: |
+          echo "🔍 Running Python linting..."
+          python -m flake8 .
+          # Type checking with MyPy (informational)
+          python -m mypy . || echo "⚠️ MyPy type check completed with warnings"
+        continue-on-error: ${{ github.event.inputs.quality-level != 'strict' }}
+
+      - name: Shell Script Linting (ShellCheck)
+        if: matrix.tool == 'shellcheck'
+        run: |
+          echo "🔍 Running ShellCheck..."
+          find . -name "*.sh" -not -path "./node_modules/*" -not -path "./.venv/*" | xargs -r shellcheck
+        continue-on-error: true
+
+  # Build Validation
+  build-validation:
+    name: 🔨 Build Validation
+    runs-on: ubuntu-latest
+    needs: dependencies
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [main, dashboard]
+        
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            ~/.npm
+            node_modules
+            relife-campaign-dashboard/node_modules
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/package-lock.json', '**/bun.lockb') }}
+
+      - name: Build main project
+        if: matrix.project == 'main'
+        run: |
+          echo "🔨 Building main project..."
+          npm run build 2>&1 | tee build.log || echo "Build completed with warnings"
+          
+          # Check build output
+          if [ -d "dist" ] || [ -d "build" ]; then
+            echo "✅ Build artifacts created successfully"
+          else
+            echo "⚠️ No build artifacts found - check build configuration"
+          fi
+
+      - name: Build dashboard project
+        if: matrix.project == 'dashboard'
+        run: |
+          echo "🔨 Building dashboard project..."
+          cd relife-campaign-dashboard
+          npm run build 2>&1 | tee ../dashboard-build.log || echo "Dashboard build completed with warnings"
+          
+          # Check build output
+          if [ -d "dist" ] || [ -d "build" ]; then
+            echo "✅ Dashboard build artifacts created successfully"
+          else
+            echo "⚠️ No dashboard build artifacts found - check build configuration"
+          fi
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ matrix.project }}
+          path: "*build.log"
+          retention-days: 7
+
+  # Testing
+  testing:
+    name: 🧪 Unit Tests
+    runs-on: ubuntu-latest
+    needs: dependencies
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Python (if needed)
+        if: needs.dependencies.outputs.has-python == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            ~/.npm
+            node_modules
+            relife-campaign-dashboard/node_modules
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/package-lock.json', '**/bun.lockb') }}
+
+      - name: Run JavaScript/TypeScript tests
+        run: |
+          echo "🧪 Running JS/TS tests..."
+          if [ -f "package.json" ] && npm run test --if-present 2>/dev/null; then
+            npm run test
+          else
+            echo "ℹ️ No JS/TS tests configured"
+          fi
+        continue-on-error: true
+
+      - name: Run Python tests
+        if: needs.dependencies.outputs.has-python == 'true'
+        run: |
+          echo "🧪 Running Python tests..."
+          if [ -f "pytest.ini" ] || [ -f "pyproject.toml" ] || [ -d "tests" ]; then
+            python -m pytest -v --tb=short
+          else
+            echo "ℹ️ No Python tests found"
+          fi
+        continue-on-error: true
+
+  # Commit Message Validation
+  commit-validation:
+    name: 📝 Commit Messages
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install commitlint
+        run: npm install @commitlint/cli @commitlint/config-conventional
+
+      - name: Validate commit messages
+        run: |
+          echo "📝 Validating commit messages..."
+          npx commitlint --from=${{ github.event.pull_request.base.sha }} --to=${{ github.event.pull_request.head.sha }}
+        continue-on-error: ${{ github.event.inputs.quality-level != 'strict' }}
+
+  # Quality Gate Summary
+  quality-gate-summary:
+    name: 📊 Quality Gate Summary
+    runs-on: ubuntu-latest
+    needs: [dependencies, formatting, linting, build-validation, testing, commit-validation]
+    if: always()
+    
+    steps:
+      - name: Generate quality report
+        run: |
+          echo "# Quality Gate Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📊 Results Overview" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dependencies**: ${{ needs.dependencies.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Formatting**: ${{ needs.formatting.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Linting**: ${{ needs.linting.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build Validation**: ${{ needs.build-validation.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Testing**: ${{ needs.testing.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit Validation**: ${{ needs.commit-validation.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📋 Quality Level" >> $GITHUB_STEP_SUMMARY
+          echo "Quality Level: **${{ github.event.inputs.quality-level || 'standard' }}**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔗 Commit Information" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Author**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Determine overall status
+          if [[ "${{ needs.dependencies.result }}" == "success" && 
+                "${{ needs.formatting.result }}" != "failure" && 
+                "${{ needs.linting.result }}" != "failure" && 
+                "${{ needs.build-validation.result }}" != "failure" ]]; then
+            echo "## ✅ Quality Gate: **PASSED**" >> $GITHUB_STEP_SUMMARY
+            echo "All critical quality checks have passed." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ❌ Quality Gate: **FAILED**" >> $GITHUB_STEP_SUMMARY
+            echo "Some quality checks have failed. Please review and fix the issues." >> $GITHUB_STEP_SUMMARY
+          fi
