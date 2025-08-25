@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Dashboard from '../../components/Dashboard';
 
 // Mock alarm data
-import { fn } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Mock function for Storybook actions // auto: restored by scout - verify
 const mockAlarms = [
   {
     id: '1',

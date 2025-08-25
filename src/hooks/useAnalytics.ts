@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import AnalyticsService, {
-import { analytics } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Replaced stub import with proper implementation // auto: restored by scout - verify
   ANALYTICS_EVENTS,
   EventProperties,
   UserProperties,

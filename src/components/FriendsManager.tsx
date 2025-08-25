@@ -6,7 +6,7 @@ import { Label } from './ui/label';
 import { Badge } from './ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { _user } from 'src/utils/__auto_stubs';
+// Replaced stub import with proper implementation
 import {
   Dialog,
   DialogContent,

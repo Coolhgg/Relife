@@ -4,7 +4,7 @@ import { ErrorHandler } from '../services/error-handler';
 /**
  * Initialize the app with all required services and configurations
  */
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from '../services/error-handler';
 export const initializeApp = async (): Promise<void> => {
   try {
     console.log('🚀 Initializing Relife Alarms...');

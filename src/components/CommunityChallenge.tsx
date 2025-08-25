@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { _config } from 'src/utils/__auto_stubs';
+import { config } from '../config/environment';
 import {
   Users,
   Trophy,

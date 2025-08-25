@@ -6,7 +6,7 @@
 
 import type { User } from './index';
 import type { SubscriptionTier, Subscription } from './premium';
-import { user } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Remove or define proper types // auto: restored by scout - verify
 
 export interface SubscriptionInfo {
   tier?: SubscriptionTier | null;

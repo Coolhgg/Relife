@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 // import ... from '@storybook/test'; // Package not available in current setup
 import { Button } from '../../components/ui/button';
 import {
-import { fn } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Mock function for Storybook actions // auto: restored by scout - verify
   ChevronRight,
   Download,
   Heart,

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
-import { _config } from 'src/utils/__auto_stubs';
+import { config } from '../config/environment';
 import {
   Trophy,
   Share2,

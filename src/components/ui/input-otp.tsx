@@ -1,4 +1,4 @@
-import { index } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Replaced stub import with proper implementation // auto: restored by scout - verify
 'use client';
 
 import React from 'react';

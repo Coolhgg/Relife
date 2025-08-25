@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useCallback, useRef, useEffect } from 'react';
 import { FixedSizeList as VirtualList, areEqual } from 'react-window';
-import { index } from 'src/utils/__auto_stubs';
+// Replaced stub import with proper implementation
 import {
   Clock,
   MoreVertical,

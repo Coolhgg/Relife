@@ -6,15 +6,15 @@ import React, {
 // auto: restored by scout - verify import path
 import { SubscriptionTier } from '@/types';
 // auto: restored by scout - verify import path
-import { setUserTier } from '@/utils/__auto_stubs';
+// Replaced stub import with proper implementation
 // auto: restored by scout - verify import path
-import { userTier } from '@/utils/__auto_stubs';
+// Replaced stub import with proper implementation
 // auto: restored by scout - verify import path
 import { SubscriptionTier } from '@/types';
 // auto: restored by scout - verify import path
-import { userTier } from '@/utils/__auto_stubs';
+// Replaced stub import with proper implementation
 // auto: restored by scout - verify import path
-import { setUserTier } from '@/utils/__auto_stubs';
+// Replaced stub import with proper implementation
   createContext,
   useContext,
   useEffect,

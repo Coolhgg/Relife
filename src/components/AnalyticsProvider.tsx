@@ -2,7 +2,7 @@
 /// <reference lib="dom" />
 import React, { createContext, useContext, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
-import { error } from 'src/utils/__auto_stubs';
+import { ErrorHandler } from '../services/error-handler';
 import {
   useAnalytics,
   useEngagementAnalytics,

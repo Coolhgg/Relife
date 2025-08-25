@@ -1,39 +1,39 @@
 // auto: restored by scout - verify import path
-import { IDBDatabaseEventMap } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { RegistrationOptions } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { IDBTransactionMode } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { PushEvent } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { FetchEvent } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { IDBObjectStoreParameters } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { AddEventListenerOptions } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { ServiceWorkerContainerEventMap } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { BufferSource } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { BufferSource } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { AddEventListenerOptions } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { IDBDatabaseEventMap } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { FetchEvent } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { ServiceWorkerContainerEventMap } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { IDBTransactionMode } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { IDBObjectStoreParameters } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { PushEvent } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // auto: restored by scout - verify import path
-import { RegistrationOptions } from '@/utils/__auto_stubs';
+// Native Web API type - available globally
 // Browser API Type Definitions
 // Comprehensive type definitions for Browser APIs used in the application
 

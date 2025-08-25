@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 import { useState, useEffect, useCallback } from 'react';
 import {
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from '../services/error-handler';
   PushNotificationService,
   type PushNotificationSettings,
 } from '../services/push-notifications';

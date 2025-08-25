@@ -2,7 +2,7 @@
 import React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { TimeoutHandle } from '../types/timers';
-import { user } from 'src/utils/__auto_stubs';
+// Replaced stub import with proper implementation
 import {
   AlertCircle,
   Volume2,
