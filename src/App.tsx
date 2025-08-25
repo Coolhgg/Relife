@@ -78,66 +78,8 @@ import AdvancedSchedulingDashboard from './components/AdvancedSchedulingDashboar
 import { useUISound } from './hooks/useSoundEffects';
 import './App.css';
 
-// Email Campaign Integration
+// Email Campaign Integration - now using DI service
 import { PersonaType, PersonaDetectionResult } from './types';
-class EmailCampaignService {
-  private static instance: EmailCampaignService;
-  private isInitialized = false;
-
-  static getInstance() {
-    if (!this.instance) {
-      this.instance = new EmailCampaignService();
-    }
-    return this.instance;
-  }
-
-  async initialize() {
-    this.isInitialized = true;
-    console.log('Email campaign service initialized');
-  }
-
-  async detectPersona(_user: any): Promise<PersonaDetectionResult> {
-    let persona: PersonaType = 'struggling_sam';
-    const tier = user?.subscriptionTier || user?.subscription?.tier || 'free';
-
-    switch (tier) {
-      case 'free':
-        persona = 'struggling_sam';
-        break;
-      case 'basic':
-        persona = 'busy_ben';
-        break;
-      case 'premium':
-        persona = 'professional_paula';
-        break;
-      case 'pro':
-        persona = 'enterprise_emma';
-        break;
-      case 'student':
-        persona = 'student_sarah';
-        break;
-    }
-
-    if (_user?.email?.includes('.edu')) {
-      persona = 'student_sarah';
-    }
-
-    return {
-      persona,
-      confidence: 0.8,
-      factors: [
-        { factor: 'subscription_tier', weight: 0.8, value: tier, influence: 0.8 },
-      ],
-      updatedAt: new Date(),
-    };
-  }
-
-  async addUserToCampaign(_user: any, _persona: PersonaType) {
-    console.log(`Adding user ${_user.email} to ${_persona} campaign`);
-    // Integration with email platform would go here
-    return true;
-  }
-}
 
 // Inner App component that uses i18n hooks
 function AppContent() {
@@ -1039,10 +981,8 @@ function AppContent() {
     const initialize = async () => {
       try {
         // Initialize performance monitoring and analytics
-        const performanceMonitor = PerformanceMonitor.getInstance();
-        const appAnalytics = AppAnalyticsService.getInstance();
-
-        performanceMonitor.initialize();
+        await performanceService.initialize();
+        await analyticsService.initialize();
 
         // Start performance tracking
         appAnalytics.startPerformanceMarker('app_initialization');
