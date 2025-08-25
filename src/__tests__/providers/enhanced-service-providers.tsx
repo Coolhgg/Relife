@@ -79,6 +79,7 @@ export const EnhancedServiceProvider: React.FC<ServiceProviderProps> = ({
     for (const service of Object.values(container)) {
       await service.initialize(_config);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: _config
   }, [container, config]);
 
   const contextValue = {

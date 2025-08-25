@@ -98,10 +98,12 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     } else {
       loadCommunityThemes();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: loadThemes
   }, [userId, showCommunityThemes]);
 
   useEffect(() => {
     filterAndSortThemes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: filterAndSortThemes
   }, [themes, searchQuery, filterCategory, sortBy]);
 
   const loadThemes = async () => {

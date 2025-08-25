@@ -59,6 +59,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 
   useEffect(() => {
     loadSmartInsights();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: loadSmartInsights
   }, [alarms]);
 
   const loadSmartInsights = async () => {

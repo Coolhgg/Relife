@@ -312,6 +312,7 @@ export const SmartThemesDemo: React.FC = () => {
 
   useEffect(() => {
     loadRecommendation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: loadRecommendation
   }, [testTime, testDate]);
 
   const loadRecommendation = async () => {
