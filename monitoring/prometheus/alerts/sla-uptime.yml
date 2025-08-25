@@ -1,0 +1,290 @@
+# SLA and uptime monitoring alerts for Relife Smart Alarm
+groups:
+  - name: relife.sla.uptime
+    rules:
+      # Core Service Availability SLA (99.9% uptime)
+      - alert: ServiceUptimeSLAViolation
+        expr: avg_over_time(up[5m]) < 0.999
+        for: 1m
+        labels:
+          severity: critical
+          service: relife
+          category: sla
+          team: engineering
+          sla_tier: "tier1"
+        annotations:
+          summary: "Service uptime SLA violation"
+          description: "Service uptime {{ $value | humanizePercentage }} is below 99.9% SLA"
+          impact: "SLA breach - customer credits may be required"
+          runbook_url: "https://docs.relife.app/runbooks/sla/uptime-violation"
+
+      - alert: CriticalServiceDowntime
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: relife
+          category: sla
+          team: engineering
+        annotations:
+          summary: "Critical service downtime detected"
+          description: "{{ $labels.job }} service is completely down"
+          impact: "Complete service unavailability"
+          runbook_url: "https://docs.relife.app/runbooks/sla/service-down"
+
+      # Response Time SLA (95% < 2s, 99% < 5s)
+      - alert: ResponseTimeSLA95Violation
+        expr: histogram_quantile(0.95, response_time_seconds) > 2
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: sla
+          team: engineering
+          sla_tier: "tier2"
+        annotations:
+          summary: "Response time SLA violation (95th percentile)"
+          description: "95th percentile response time is {{ $value }}s, above 2s SLA"
+          impact: "Performance SLA breach"
+          runbook_url: "https://docs.relife.app/runbooks/sla/response-time"
+
+      - alert: ResponseTimeSLA99Violation
+        expr: histogram_quantile(0.99, response_time_seconds) > 5
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: sla
+          team: engineering
+          sla_tier: "tier1"
+        annotations:
+          summary: "Response time SLA violation (99th percentile)"
+          description: "99th percentile response time is {{ $value }}s, above 5s SLA"
+          impact: "Critical performance SLA breach"
+          runbook_url: "https://docs.relife.app/runbooks/sla/response-time-critical"
+
+      # Error Rate SLA (< 0.1% error rate)
+      - alert: ErrorRateSLAViolation
+        expr: (rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m])) > 0.001
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: sla
+          team: engineering
+          sla_tier: "tier1"
+        annotations:
+          summary: "Error rate SLA violation"
+          description: "Error rate {{ $value | humanizePercentage }} exceeds 0.1% SLA"
+          impact: "Reliability SLA breach"
+          runbook_url: "https://docs.relife.app/runbooks/sla/error-rate"
+
+      # Alarm-specific SLA (99.5% success rate)
+      - alert: AlarmSuccessSLAViolation
+        expr: (rate(alarm_success_total[5m]) / rate(alarm_triggers_total[5m])) < 0.995
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: sla
+          team: product
+          sla_tier: "tier1"
+        annotations:
+          summary: "Alarm success SLA violation"
+          description: "Alarm success rate {{ $value | humanizePercentage }} below 99.5% SLA"
+          impact: "Core feature SLA breach"
+          runbook_url: "https://docs.relife.app/runbooks/sla/alarm-success"
+
+  - name: relife.sla.business_hours
+    rules:
+      # Business hours specific SLAs (9 AM - 5 PM ET, Monday-Friday)
+      - alert: BusinessHoursUptimeSLA
+        expr: avg_over_time(up[5m]) < 0.9995 and on() (hour() >= 9 and hour() <= 17) and on() (day_of_week() >= 1 and day_of_week() <= 5)
+        for: 1m
+        labels:
+          severity: critical
+          service: relife
+          category: sla
+          team: engineering
+          sla_tier: "business_hours"
+        annotations:
+          summary: "Business hours uptime SLA violation"
+          description: "Business hours uptime {{ $value | humanizePercentage }} below 99.95% SLA"
+          impact: "Business hours SLA breach"
+          runbook_url: "https://docs.relife.app/runbooks/sla/business-hours"
+
+      - alert: BusinessHoursResponseTimeSLA
+        expr: histogram_quantile(0.95, response_time_seconds) > 1 and on() (hour() >= 9 and hour() <= 17) and on() (day_of_week() >= 1 and day_of_week() <= 5)
+        for: 2m
+        labels:
+          severity: warning
+          service: relife
+          category: sla
+          team: engineering
+          sla_tier: "business_hours"
+        annotations:
+          summary: "Business hours response time SLA violation"
+          description: "95th percentile response time {{ $value }}s above 1s business hours SLA"
+          impact: "Business hours performance SLA breach"
+          runbook_url: "https://docs.relife.app/runbooks/sla/business-hours-performance"
+
+  - name: relife.sla.geographical
+    rules:
+      # Geographical SLA monitoring
+      - alert: RegionalUptimeSLAViolation
+        expr: avg_over_time(up[5m]) by (region) < 0.995
+        for: 2m
+        labels:
+          severity: warning
+          service: relife
+          category: sla
+          team: engineering
+          sla_tier: "regional"
+        annotations:
+          summary: "Regional uptime SLA violation"
+          description: "Uptime in {{ $labels.region }} is {{ $value | humanizePercentage }}, below 99.5% regional SLA"
+          impact: "Regional service degradation"
+          runbook_url: "https://docs.relife.app/runbooks/sla/regional-uptime"
+
+      - alert: RegionalLatencySLAViolation
+        expr: avg_over_time(response_time_seconds[5m]) by (region) > 3
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: sla
+          team: engineering
+          sla_tier: "regional"
+        annotations:
+          summary: "Regional latency SLA violation"
+          description: "Average latency in {{ $labels.region }} is {{ $value }}s, above 3s regional SLA"
+          impact: "Regional performance degradation"
+          runbook_url: "https://docs.relife.app/runbooks/sla/regional-latency"
+
+  - name: relife.sla.premium
+    rules:
+      # Premium user SLA (higher standards)
+      - alert: PremiumUserSLAViolation
+        expr: (rate(premium_user_errors_total[5m]) / rate(premium_user_requests_total[5m])) > 0.0005
+        for: 1m
+        labels:
+          severity: critical
+          service: relife
+          category: sla
+          team: engineering
+          sla_tier: "premium"
+        annotations:
+          summary: "Premium user SLA violation"
+          description: "Premium user error rate {{ $value | humanizePercentage }} exceeds 0.05% SLA"
+          impact: "Premium service SLA breach"
+          runbook_url: "https://docs.relife.app/runbooks/sla/premium-errors"
+
+      - alert: PremiumFeatureAvailabilitySLA
+        expr: avg_over_time(premium_features_available[5m]) < 0.9995
+        for: 1m
+        labels:
+          severity: critical
+          service: relife
+          category: sla
+          team: product
+          sla_tier: "premium"
+        annotations:
+          summary: "Premium feature availability SLA violation"
+          description: "Premium feature availability {{ $value | humanizePercentage }} below 99.95% SLA"
+          impact: "Premium features unavailable"
+          runbook_url: "https://docs.relife.app/runbooks/sla/premium-features"
+
+  - name: relife.sla.monthly
+    rules:
+      # Monthly SLA tracking and warnings
+      - alert: MonthlySLABudgetWarning
+        expr: (1 - (avg_over_time(up[30d]))) > 0.0008  # More than 80% of monthly error budget used
+        for: 1h
+        labels:
+          severity: warning
+          service: relife
+          category: sla
+          team: engineering
+          sla_tier: "monthly"
+        annotations:
+          summary: "Monthly SLA error budget warning"
+          description: "{{ $value | humanizePercentage }} of monthly error budget used (80% threshold)"
+          impact: "Risk of monthly SLA violation"
+          runbook_url: "https://docs.relife.app/runbooks/sla/error-budget"
+
+      - alert: MonthlySLABudgetCritical
+        expr: (1 - (avg_over_time(up[30d]))) > 0.001  # Monthly error budget exhausted
+        for: 30m
+        labels:
+          severity: critical
+          service: relife
+          category: sla
+          team: engineering
+          sla_tier: "monthly"
+        annotations:
+          summary: "Monthly SLA error budget exhausted"
+          description: "Monthly error budget exhausted - {{ $value | humanizePercentage }} downtime this month"
+          impact: "Monthly SLA violation"
+          runbook_url: "https://docs.relife.app/runbooks/sla/budget-exhausted"
+
+  - name: relife.sla.dependencies
+    rules:
+      # Third-party dependency SLA impact
+      - alert: DependencyImpactingSLA
+        expr: avg_over_time(third_party_dependency_up[5m]) < 0.95
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: sla
+          team: engineering
+        annotations:
+          summary: "Third-party dependency impacting SLA"
+          description: "Dependency {{ $labels.dependency }} availability {{ $value | humanizePercentage }} may impact our SLA"
+          impact: "Service reliability at risk due to dependency"
+          runbook_url: "https://docs.relife.app/runbooks/sla/dependency-impact"
+
+      - alert: DatabaseSLAImpact
+        expr: avg_over_time(database_up[5m]) < 0.999
+        for: 1m
+        labels:
+          severity: critical
+          service: relife
+          category: sla
+          team: engineering
+        annotations:
+          summary: "Database availability impacting SLA"
+          description: "Database availability {{ $value | humanizePercentage }} below 99.9%"
+          impact: "Critical service dependency down"
+          runbook_url: "https://docs.relife.app/runbooks/sla/database-impact"
+
+  - name: relife.sla.health_checks
+    rules:
+      # Comprehensive health check SLA
+      - alert: HealthCheckSLAViolation
+        expr: avg_over_time(health_check_success[5m]) < 0.995
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: sla
+          team: engineering
+        annotations:
+          summary: "Health check SLA violation"
+          description: "Health check success rate {{ $value | humanizePercentage }} below 99.5%"
+          impact: "Service health degradation"
+          runbook_url: "https://docs.relife.app/runbooks/sla/health-checks"
+
+      - alert: DeepHealthCheckFailure
+        expr: deep_health_check_success < 1
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: sla
+          team: engineering
+        annotations:
+          summary: "Deep health check failures detected"
+          description: "Deep health check for {{ $labels.component }} is failing"
+          impact: "Component degradation detected"
+          runbook_url: "https://docs.relife.app/runbooks/sla/deep-health"

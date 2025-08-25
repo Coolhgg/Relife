@@ -1,0 +1,253 @@
+{{ define "slack.default.title" }}
+{{- if eq .Status "firing" -}}
+🚨 [{{ .CommonLabels.severity | upper }}] {{ .CommonLabels.alertname }}
+{{- else -}}
+✅ [RESOLVED] {{ .CommonLabels.alertname }}
+{{- end -}}
+{{ end }}
+
+{{ define "slack.default.text" }}
+{{ range .Alerts }}
+{{- if eq .Status "firing" }}
+*Alert:* {{ .Annotations.summary }}
+*Description:* {{ .Annotations.description }}
+*Service:* {{ .Labels.service }}
+*Severity:* {{ .Labels.severity }}
+*Category:* {{ .Labels.category | default "general" }}
+*Team:* {{ .Labels.team | default "engineering" }}
+*Started:* {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+{{- if .Annotations.runbook_url }}
+*Runbook:* {{ .Annotations.runbook_url }}
+{{- end }}
+{{- if .Annotations.impact }}
+*Impact:* {{ .Annotations.impact }}
+{{- end }}
+{{- else }}
+*Resolved:* {{ .Annotations.summary }}
+*Duration:* {{ .StartsAt.Format "15:04" }} - {{ .EndsAt.Format "15:04" }} ({{ .EndsAt.Sub .StartsAt | humanize }})
+{{- end }}
+{{ end }}
+{{ end }}
+
+{{ define "slack.critical.title" }}
+🚨🚨 [CRITICAL] {{ .CommonLabels.alertname }} - IMMEDIATE ACTION REQUIRED
+{{ end }}
+
+{{ define "slack.critical.text" }}
+{{ range .Alerts }}
+⚠️ *CRITICAL ALERT - IMMEDIATE ATTENTION REQUIRED* ⚠️
+
+*Alert:* {{ .Annotations.summary }}
+*Description:* {{ .Annotations.description }}
+*Service:* {{ .Labels.service }}
+*Instance:* {{ .Labels.instance | default "N/A" }}
+*Started:* {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+{{- if .Annotations.impact }}
+🔥 *Business Impact:* {{ .Annotations.impact }}
+{{- end }}
+
+{{- if .Annotations.runbook_url }}
+📖 *Immediate Action Guide:* {{ .Annotations.runbook_url }}
+{{- end }}
+
+*Next Steps:*
+1. Acknowledge this alert immediately
+2. Follow the runbook procedures
+3. Update #incidents channel with status
+4. Page on-call engineer if needed
+
+*Escalation:* If not resolved in 15 minutes, auto-escalate to senior engineer
+{{ end }}
+{{ end }}
+
+{{ define "slack.warning.title" }}
+⚠️ [WARNING] {{ .CommonLabels.alertname }}
+{{ end }}
+
+{{ define "slack.warning.text" }}
+{{ range .Alerts }}
+*Alert:* {{ .Annotations.summary }}
+*Description:* {{ .Annotations.description }}
+*Service:* {{ .Labels.service }}
+*Severity:* {{ .Labels.severity }}
+*Started:* {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+{{- if .Annotations.impact }}
+*Impact:* {{ .Annotations.impact }}
+{{- end }}
+
+{{- if .Annotations.runbook_url }}
+*Runbook:* {{ .Annotations.runbook_url }}
+{{- end }}
+
+*Action Required:* Monitor and investigate within 30 minutes
+{{ end }}
+{{ end }}
+
+{{ define "slack.business.title" }}
+📊 [BUSINESS] {{ .CommonLabels.alertname }}
+{{ end }}
+
+{{ define "slack.business.text" }}
+{{ range .Alerts }}
+📈 *Business Metric Alert*
+
+*Metric:* {{ .Annotations.summary }}
+*Details:* {{ .Annotations.description }}
+*Service:* {{ .Labels.service }}
+*Category:* {{ .Labels.category }}
+*Team:* {{ .Labels.team }}
+*Started:* {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+{{- if .Annotations.impact }}
+💰 *Business Impact:* {{ .Annotations.impact }}
+{{- end }}
+
+{{- if .Annotations.runbook_url }}
+📋 *Analysis Guide:* {{ .Annotations.runbook_url }}
+{{- end }}
+
+*Recommended Actions:*
+• Review business metrics dashboard
+• Analyze user behavior patterns
+• Check for external factors (marketing campaigns, etc.)
+• Consider A/B test impact
+{{ end }}
+{{ end }}
+
+{{ define "slack.mobile.title" }}
+📱 [MOBILE] {{ .CommonLabels.alertname }}
+{{ end }}
+
+{{ define "slack.mobile.text" }}
+{{ range .Alerts }}
+📱 *Mobile App Alert*
+
+*Issue:* {{ .Annotations.summary }}
+*Details:* {{ .Annotations.description }}
+*Platform:* {{ .Labels.platform | default "iOS/Android" }}
+*App Version:* {{ .Labels.app_version | default "Multiple" }}
+*Started:* {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+{{- if .Annotations.impact }}
+📉 *User Impact:* {{ .Annotations.impact }}
+{{- end }}
+
+{{- if .Annotations.runbook_url }}
+🔧 *Troubleshooting Guide:* {{ .Annotations.runbook_url }}
+{{- end }}
+
+*Mobile Team Actions:*
+• Check crash reporting tools (Crashlytics, Sentry)
+• Review recent app releases
+• Monitor app store reviews
+• Check device/OS compatibility matrix
+{{ end }}
+{{ end }}
+
+{{ define "slack.security.title" }}
+🔒 [SECURITY] {{ .CommonLabels.alertname }} - SECURITY INCIDENT
+{{ end }}
+
+{{ define "slack.security.text" }}
+{{ range .Alerts }}
+🔒 *SECURITY ALERT - IMMEDIATE INVESTIGATION REQUIRED*
+
+*Security Event:* {{ .Annotations.summary }}
+*Details:* {{ .Annotations.description }}
+*Source:* {{ .Labels.source_ip | default "Unknown" }}
+*Service:* {{ .Labels.service }}
+*Started:* {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+{{- if .Annotations.impact }}
+🚨 *Security Impact:* {{ .Annotations.impact }}
+{{- end }}
+
+{{- if .Annotations.runbook_url }}
+🛡️ *Security Response Guide:* {{ .Annotations.runbook_url }}
+{{- end }}
+
+*IMMEDIATE ACTIONS REQUIRED:*
+1. 🔍 Investigate the source and scope
+2. 🚫 Block malicious IPs if confirmed
+3. 📝 Document all findings
+4. 📞 Notify security team lead
+5. 🔐 Review access logs and permissions
+
+*Escalation:* Auto-escalate to CISO if not acknowledged in 10 minutes
+{{ end }}
+{{ end }}
+
+{{ define "slack.sla.title" }}
+📊 [SLA VIOLATION] {{ .CommonLabels.alertname }}
+{{ end }}
+
+{{ define "slack.sla.text" }}
+{{ range .Alerts }}
+📊 *SLA VIOLATION DETECTED*
+
+*SLA Breach:* {{ .Annotations.summary }}
+*Details:* {{ .Annotations.description }}
+*Service:* {{ .Labels.service }}
+*SLA Tier:* {{ .Labels.sla_tier | default "Standard" }}
+*Started:* {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+{{- if .Annotations.impact }}
+💼 *Business Impact:* {{ .Annotations.impact }}
+{{- end }}
+
+{{- if .Annotations.runbook_url }}
+📋 *SLA Response Procedures:* {{ .Annotations.runbook_url }}
+{{- end }}
+
+*SLA VIOLATION RESPONSE:*
+• 📝 Document incident start time
+• 🎯 Focus on rapid resolution
+• 📢 Communicate with affected customers
+• 📊 Calculate potential customer credits
+• 📈 Schedule post-incident review
+
+*Customer Impact:* This may require customer notifications and service credits
+{{ end }}
+{{ end }}
+
+{{ define "slack.resolved.title" }}
+✅ [RESOLVED] {{ .CommonLabels.alertname }}
+{{ end }}
+
+{{ define "slack.resolved.text" }}
+{{ range .Alerts }}
+✅ *Alert Resolved*
+
+*Issue:* {{ .Annotations.summary }}
+*Service:* {{ .Labels.service }}
+*Severity:* {{ .Labels.severity }}
+*Duration:* {{ .StartsAt.Format "15:04" }} - {{ .EndsAt.Format "15:04" }} ({{ .EndsAt.Sub .StartsAt | humanize }})
+
+{{- if eq .Labels.severity "critical" }}
+🎉 *Critical issue resolved!* Services should be back to normal.
+{{- else }}
+✅ *Issue resolved.* No further action required.
+{{- end }}
+
+*Follow-up Actions:*
+• Verify all services are functioning normally
+• Update any open incident tickets
+• Consider if post-mortem is needed
+{{ end }}
+{{ end }}
+
+{{ define "slack.color" }}
+{{- if eq .Status "firing" -}}
+  {{- if eq .CommonLabels.severity "critical" -}}
+    danger
+  {{- else if eq .CommonLabels.severity "warning" -}}
+    warning
+  {{- else -}}
+    #439FE0
+  {{- end -}}
+{{- else -}}
+  good
+{{- end -}}
+{{ end }}
