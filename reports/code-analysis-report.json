@@ -31,9 +31,7 @@
           "modulePath": "@capacitor/cli",
           "line": 1,
           "type": "named",
-          "imports": [
-            "CapacitorConfig"
-          ],
+          "imports": ["CapacitorConfig"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -62,9 +60,7 @@
           "modulePath": "eslint-plugin-react-hooks",
           "line": 3,
           "type": "default",
-          "imports": [
-            "reactHooks"
-          ],
+          "imports": ["reactHooks"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -74,9 +70,7 @@
           "modulePath": "eslint-plugin-react-refresh",
           "line": 4,
           "type": "default",
-          "imports": [
-            "reactRefresh"
-          ],
+          "imports": ["reactRefresh"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -86,9 +80,7 @@
           "modulePath": "eslint-plugin-react",
           "line": 5,
           "type": "default",
-          "imports": [
-            "react"
-          ],
+          "imports": ["react"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -98,9 +90,7 @@
           "modulePath": "typescript-eslint",
           "line": 6,
           "type": "default",
-          "imports": [
-            "tseslint"
-          ],
+          "imports": ["tseslint"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -117,9 +107,7 @@
           "modulePath": "eslint-plugin-react-hooks",
           "line": 3,
           "type": "default",
-          "imports": [
-            "reactHooks"
-          ],
+          "imports": ["reactHooks"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -129,9 +117,7 @@
           "modulePath": "eslint-plugin-react-refresh",
           "line": 4,
           "type": "default",
-          "imports": [
-            "reactRefresh"
-          ],
+          "imports": ["reactRefresh"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -141,9 +127,7 @@
           "modulePath": "eslint-plugin-react",
           "line": 5,
           "type": "default",
-          "imports": [
-            "react"
-          ],
+          "imports": ["react"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -153,9 +137,7 @@
           "modulePath": "typescript-eslint",
           "line": 6,
           "type": "default",
-          "imports": [
-            "tseslint"
-          ],
+          "imports": ["tseslint"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -184,9 +166,7 @@
           "modulePath": "k6/data",
           "line": 10,
           "type": "named",
-          "imports": [
-            "SharedArray"
-          ],
+          "imports": ["SharedArray"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -196,9 +176,7 @@
           "modulePath": "https://jslib.k6.io/k6-utils/1.2.0/index.js",
           "line": 11,
           "type": "named",
-          "imports": [
-            "randomIntBetween"
-          ],
+          "imports": ["randomIntBetween"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -221,9 +199,7 @@
           "modulePath": "k6/data",
           "line": 10,
           "type": "named",
-          "imports": [
-            "SharedArray"
-          ],
+          "imports": ["SharedArray"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -240,9 +216,7 @@
           "modulePath": "k6/data",
           "line": 10,
           "type": "named",
-          "imports": [
-            "SharedArray"
-          ],
+          "imports": ["SharedArray"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -277,9 +251,7 @@
           "modulePath": "@eslint/js",
           "line": 1,
           "type": "default",
-          "imports": [
-            "js"
-          ],
+          "imports": ["js"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -289,9 +261,7 @@
           "modulePath": "eslint-plugin-react-refresh",
           "line": 4,
           "type": "default",
-          "imports": [
-            "reactRefresh"
-          ],
+          "imports": ["reactRefresh"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -301,9 +271,7 @@
           "modulePath": "typescript-eslint",
           "line": 5,
           "type": "default",
-          "imports": [
-            "tseslint"
-          ],
+          "imports": ["tseslint"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -320,9 +288,7 @@
           "modulePath": "hono",
           "line": 2,
           "type": "named",
-          "imports": [
-            "Hono"
-          ],
+          "imports": ["Hono"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -332,9 +298,7 @@
           "modulePath": "hono/deno",
           "line": 3,
           "type": "named",
-          "imports": [
-            "serveStatic"
-          ],
+          "imports": ["serveStatic"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -357,9 +321,7 @@
           "modulePath": "@/components/ui/badge",
           "line": 11,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -382,9 +344,7 @@
           "modulePath": "@/components/ui/button",
           "line": 9,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -394,9 +354,7 @@
           "modulePath": "@/components/ui/input",
           "line": 10,
           "type": "named",
-          "imports": [
-            "Input"
-          ],
+          "imports": ["Input"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -406,9 +364,7 @@
           "modulePath": "@/components/ui/label",
           "line": 11,
           "type": "named",
-          "imports": [
-            "Label"
-          ],
+          "imports": ["Label"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -418,9 +374,7 @@
           "modulePath": "@/components/ui/textarea",
           "line": 12,
           "type": "named",
-          "imports": [
-            "Textarea"
-          ],
+          "imports": ["Textarea"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -430,9 +384,7 @@
           "modulePath": "@/components/ui/badge",
           "line": 13,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -442,9 +394,7 @@
           "modulePath": "@/components/ui/progress",
           "line": 14,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -470,12 +420,7 @@
           "modulePath": "@/components/ui/tabs",
           "line": 22,
           "type": "named",
-          "imports": [
-            "Tabs",
-            "TabsContent",
-            "TabsList",
-            "TabsTrigger"
-          ],
+          "imports": ["Tabs", "TabsContent", "TabsList", "TabsTrigger"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -557,9 +502,7 @@
           "modulePath": "@/components/ui/progress",
           "line": 11,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -610,12 +553,7 @@
           "modulePath": "@/components/ui/tabs",
           "line": 21,
           "type": "named",
-          "imports": [
-            "Tabs",
-            "TabsContent",
-            "TabsList",
-            "TabsTrigger"
-          ],
+          "imports": ["Tabs", "TabsContent", "TabsList", "TabsTrigger"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -632,9 +570,7 @@
           "modulePath": "@/components/ui/button",
           "line": 9,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -644,9 +580,7 @@
           "modulePath": "@/components/ui/input",
           "line": 10,
           "type": "named",
-          "imports": [
-            "Input"
-          ],
+          "imports": ["Input"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -656,9 +590,7 @@
           "modulePath": "@/components/ui/label",
           "line": 11,
           "type": "named",
-          "imports": [
-            "Label"
-          ],
+          "imports": ["Label"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -684,9 +616,7 @@
           "modulePath": "@/components/ui/badge",
           "line": 20,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -696,9 +626,7 @@
           "modulePath": "@/components/ui/textarea",
           "line": 21,
           "type": "named",
-          "imports": [
-            "Textarea"
-          ],
+          "imports": ["Textarea"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -750,10 +678,7 @@
           "modulePath": "class-variance-authority",
           "line": 3,
           "type": "named",
-          "imports": [
-            "cva",
-            "type VariantProps"
-          ],
+          "imports": ["cva", "type VariantProps"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -782,9 +707,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -794,10 +717,7 @@
           "modulePath": "class-variance-authority",
           "line": 4,
           "type": "named",
-          "imports": [
-            "cva",
-            "type VariantProps"
-          ],
+          "imports": ["cva", "type VariantProps"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -809,9 +729,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -827,9 +745,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -841,9 +757,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -859,9 +773,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -871,10 +783,7 @@
           "modulePath": "class-variance-authority",
           "line": 4,
           "type": "named",
-          "imports": [
-            "cva",
-            "type VariantProps"
-          ],
+          "imports": ["cva", "type VariantProps"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -886,9 +795,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -940,9 +847,7 @@
           "modulePath": "cmdk",
           "line": 5,
           "type": "named",
-          "imports": [
-            "Command as CommandPrimitive"
-          ],
+          "imports": ["Command as CommandPrimitive"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -971,9 +876,7 @@
           "modulePath": "vaul",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Drawer as DrawerPrimitive"
-          ],
+          "imports": ["Drawer as DrawerPrimitive"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1092,9 +995,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 5,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -1104,11 +1005,7 @@
           "modulePath": "@/lib/constants/sidebar-constants",
           "line": 11,
           "type": "named",
-          "imports": [
-            "SIDEBAR_WIDTH",
-            "SIDEBAR_WIDTH_MOBILE",
-            "SIDEBAR_WIDTH_ICON"
-          ],
+          "imports": ["SIDEBAR_WIDTH", "SIDEBAR_WIDTH_MOBILE", "SIDEBAR_WIDTH_ICON"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1120,9 +1017,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 5,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -1150,10 +1045,7 @@
           "modulePath": "sonner",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Toaster as Sonner",
-            "ToasterProps"
-          ],
+          "imports": ["Toaster as Sonner", "ToasterProps"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1194,9 +1086,7 @@
           "modulePath": "class-variance-authority",
           "line": 6,
           "type": "named",
-          "imports": [
-            "type VariantProps"
-          ],
+          "imports": ["type VariantProps"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1213,10 +1103,7 @@
           "modulePath": "class-variance-authority",
           "line": 4,
           "type": "named",
-          "imports": [
-            "cva",
-            "type VariantProps"
-          ],
+          "imports": ["cva", "type VariantProps"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1316,9 +1203,7 @@
           "modulePath": "react-dom/client",
           "line": 2,
           "type": "named",
-          "imports": [
-            "createRoot"
-          ],
+          "imports": ["createRoot"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1328,9 +1213,7 @@
           "modulePath": "./App.tsx",
           "line": 4,
           "type": "default",
-          "imports": [
-            "App"
-          ],
+          "imports": ["App"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1365,10 +1248,7 @@
           "modulePath": "./mailchimp",
           "line": 1,
           "type": "named",
-          "imports": [
-            "mailchimpService",
-            "MailchimpService"
-          ],
+          "imports": ["mailchimpService", "MailchimpService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1378,10 +1258,7 @@
           "modulePath": "./convertkit",
           "line": 2,
           "type": "named",
-          "imports": [
-            "convertKitService",
-            "ConvertKitService"
-          ],
+          "imports": ["convertKitService", "ConvertKitService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1391,10 +1268,7 @@
           "modulePath": "./activecampaign",
           "line": 3,
           "type": "named",
-          "imports": [
-            "activeCampaignService",
-            "ActiveCampaignService"
-          ],
+          "imports": ["activeCampaignService", "ActiveCampaignService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1404,10 +1278,7 @@
           "modulePath": "./ai",
           "line": 4,
           "type": "named",
-          "imports": [
-            "aiService",
-            "AIService"
-          ],
+          "imports": ["aiService", "AIService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1424,9 +1295,7 @@
           "modulePath": "@mailchimp/mailchimp_marketing",
           "line": 1,
           "type": "default",
-          "imports": [
-            "mailchimp"
-          ],
+          "imports": ["mailchimp"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1497,9 +1366,7 @@
           "modulePath": "fs",
           "line": 10,
           "type": "named",
-          "imports": [
-            "promises as fs"
-          ],
+          "imports": ["promises as fs"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1516,9 +1383,7 @@
           "modulePath": "path",
           "line": 2,
           "type": "default",
-          "imports": [
-            "path"
-          ],
+          "imports": ["path"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1583,9 +1448,7 @@
           "modulePath": "path",
           "line": 2,
           "type": "default",
-          "imports": [
-            "path"
-          ],
+          "imports": ["path"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1638,9 +1501,7 @@
           "modulePath": "dotenv",
           "line": 4,
           "type": "named",
-          "imports": [
-            "config"
-          ],
+          "imports": ["config"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1681,9 +1542,7 @@
           "modulePath": "./constants/initialDomainState",
           "line": 15,
           "type": "named",
-          "imports": [
-            "INITIAL_DOMAIN_APP_STATE"
-          ],
+          "imports": ["INITIAL_DOMAIN_APP_STATE"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1693,9 +1552,7 @@
           "modulePath": "./reducers/rootReducer",
           "line": 16,
           "type": "named",
-          "imports": [
-            "rootReducer"
-          ],
+          "imports": ["rootReducer"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1705,9 +1562,7 @@
           "modulePath": "./services/performance-monitor",
           "line": 49,
           "type": "named",
-          "imports": [
-            "PerformanceMonitor"
-          ],
+          "imports": ["PerformanceMonitor"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1717,10 +1572,7 @@
           "modulePath": "./types",
           "line": 74,
           "type": "named",
-          "imports": [
-            "PersonaType",
-            "PersonaDetectionResult"
-          ],
+          "imports": ["PersonaType", "PersonaDetectionResult"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1737,10 +1589,7 @@
           "modulePath": "msw",
           "line": 7,
           "type": "named",
-          "imports": [
-            "http",
-            "HttpResponse"
-          ],
+          "imports": ["http", "HttpResponse"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1847,9 +1696,7 @@
           "modulePath": "../performance/performance-testing-utilities",
           "line": 7,
           "type": "named",
-          "imports": [
-            "performanceMonitor"
-          ],
+          "imports": ["performanceMonitor"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1872,9 +1719,7 @@
           "modulePath": "../performance/performance-testing-utilities",
           "line": 16,
           "type": "named",
-          "imports": [
-            "MobilePerformanceTester"
-          ],
+          "imports": ["MobilePerformanceTester"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1927,10 +1772,7 @@
           "modulePath": "msw",
           "line": 6,
           "type": "named",
-          "imports": [
-            "http",
-            "HttpResponse"
-          ],
+          "imports": ["http", "HttpResponse"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1947,9 +1789,7 @@
           "modulePath": "./msw-handlers",
           "line": 9,
           "type": "named",
-          "imports": [
-            "handlers"
-          ],
+          "imports": ["handlers"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -1990,10 +1830,7 @@
           "modulePath": "./service-mocks",
           "line": 863,
           "type": "named",
-          "imports": [
-            "EnhancedMockAlarmService",
-            "createMockServiceContainer"
-          ],
+          "imports": ["EnhancedMockAlarmService", "createMockServiceContainer"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2003,10 +1840,7 @@
           "modulePath": "./service-mocks",
           "line": 872,
           "type": "named",
-          "imports": [
-            "EnhancedServiceProvider",
-            "useEnhancedAlarmService"
-          ],
+          "imports": ["EnhancedServiceProvider", "useEnhancedAlarmService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2041,10 +1875,7 @@
           "modulePath": "msw",
           "line": 6,
           "type": "named",
-          "imports": [
-            "http",
-            "HttpResponse"
-          ],
+          "imports": ["http", "HttpResponse"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2085,10 +1916,7 @@
           "modulePath": "./test-providers",
           "line": 13,
           "type": "named",
-          "imports": [
-            "TestProviders",
-            "TestProvidersOptions"
-          ],
+          "imports": ["TestProviders", "TestProvidersOptions"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2129,9 +1957,7 @@
           "modulePath": "../../components/ui/button",
           "line": 8,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2172,10 +1998,7 @@
           "modulePath": "util",
           "line": 6,
           "type": "named",
-          "imports": [
-            "TextEncoder",
-            "TextDecoder"
-          ],
+          "imports": ["TextEncoder", "TextDecoder"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2185,9 +2008,7 @@
           "modulePath": "resize-observer-polyfill",
           "line": 7,
           "type": "default",
-          "imports": [
-            "ResizeObserver"
-          ],
+          "imports": ["ResizeObserver"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2258,9 +2079,7 @@
           "modulePath": "./index",
           "line": 6,
           "type": "named",
-          "imports": [
-            "TEST_CONSTANTS"
-          ],
+          "imports": ["TEST_CONSTANTS"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2277,9 +2096,7 @@
           "modulePath": "../providers/test-providers",
           "line": 18,
           "type": "named",
-          "imports": [
-            "TestProviders"
-          ],
+          "imports": ["TestProviders"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2320,9 +2137,7 @@
           "modulePath": "./index",
           "line": 5,
           "type": "named",
-          "imports": [
-            "TEST_CONSTANTS"
-          ],
+          "imports": ["TEST_CONSTANTS"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2339,9 +2154,7 @@
           "modulePath": "react-router-dom",
           "line": 5,
           "type": "named",
-          "imports": [
-            "BrowserRouter"
-          ],
+          "imports": ["BrowserRouter"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2424,10 +2237,7 @@
           "modulePath": "@/components/ui/avatar",
           "line": 8,
           "type": "named",
-          "imports": [
-            "Avatar",
-            "AvatarFallback"
-          ],
+          "imports": ["Avatar", "AvatarFallback"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2462,12 +2272,7 @@
           "modulePath": "@/components/ui/card",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Card",
-            "CardContent",
-            "CardHeader",
-            "CardTitle"
-          ],
+          "imports": ["Card", "CardContent", "CardHeader", "CardTitle"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2477,9 +2282,7 @@
           "modulePath": "./NuclearModeBattle",
           "line": 18,
           "type": "named",
-          "imports": [
-            "NuclearModeBattle"
-          ],
+          "imports": ["NuclearModeBattle"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2496,10 +2299,7 @@
           "modulePath": "react-window",
           "line": 2,
           "type": "named",
-          "imports": [
-            "FixedSizeList as VirtualList",
-            "areEqual"
-          ],
+          "imports": ["FixedSizeList as VirtualList", "areEqual"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2540,9 +2340,7 @@
           "modulePath": "@/components/ui/textarea",
           "line": 64,
           "type": "named",
-          "imports": [
-            "Textarea"
-          ],
+          "imports": ["Textarea"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2571,9 +2369,7 @@
           "modulePath": "./NuclearModeSelector",
           "line": 26,
           "type": "default",
-          "imports": [
-            "NuclearModeSelector"
-          ],
+          "imports": ["NuclearModeSelector"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2583,9 +2379,7 @@
           "modulePath": "./UpgradePrompt",
           "line": 27,
           "type": "default",
-          "imports": [
-            "UpgradePrompt"
-          ],
+          "imports": ["UpgradePrompt"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2608,9 +2402,7 @@
           "modulePath": "../services/enhanced-smart-alarm-scheduler",
           "line": 37,
           "type": "named",
-          "imports": [
-            "type EnhancedSmartAlarm"
-          ],
+          "imports": ["type EnhancedSmartAlarm"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2627,9 +2419,7 @@
           "modulePath": "../services/premium",
           "line": 26,
           "type": "named",
-          "imports": [
-            "_PremiumService"
-          ],
+          "imports": ["_PremiumService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2646,9 +2436,7 @@
           "modulePath": "@/components/ui/button",
           "line": 2,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2658,9 +2446,7 @@
           "modulePath": "@/components/ui/badge",
           "line": 4,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2683,9 +2469,7 @@
           "modulePath": "../types",
           "line": 14,
           "type": "named",
-          "imports": [
-            "VoiceMood"
-          ],
+          "imports": ["VoiceMood"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2720,9 +2504,7 @@
           "modulePath": "./ui/textarea",
           "line": 25,
           "type": "named",
-          "imports": [
-            "Textarea"
-          ],
+          "imports": ["Textarea"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2745,9 +2527,7 @@
           "modulePath": "../services/CloudSyncService",
           "line": 2,
           "type": "named",
-          "imports": [
-            "CloudSyncStatus"
-          ],
+          "imports": ["CloudSyncStatus"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2770,9 +2550,7 @@
           "modulePath": "./MediaContent",
           "line": 23,
           "type": "named",
-          "imports": [
-            "MediaContent"
-          ],
+          "imports": ["MediaContent"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2789,9 +2567,7 @@
           "modulePath": "./VisualAlarmDisplay",
           "line": 17,
           "type": "default",
-          "imports": [
-            "VisualAlarmDisplay"
-          ],
+          "imports": ["VisualAlarmDisplay"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2808,9 +2584,7 @@
           "modulePath": "../services/alarm-backup-redundancy",
           "line": 22,
           "type": "default",
-          "imports": [
-            "_AlarmBackupRedundancyService"
-          ],
+          "imports": ["_AlarmBackupRedundancyService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2833,9 +2607,7 @@
           "modulePath": "./ui/separator",
           "line": 37,
           "type": "named",
-          "imports": [
-            "Separator"
-          ],
+          "imports": ["Separator"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2852,12 +2624,7 @@
           "modulePath": "./ui/tabs",
           "line": 49,
           "type": "named",
-          "imports": [
-            "Tabs",
-            "TabsContent",
-            "TabsList",
-            "TabsTrigger"
-          ],
+          "imports": ["Tabs", "TabsContent", "TabsList", "TabsTrigger"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2867,10 +2634,7 @@
           "modulePath": "./ui/alert",
           "line": 51,
           "type": "named",
-          "imports": [
-            "AlertTriangle",
-            "AlertDescription"
-          ],
+          "imports": ["AlertTriangle", "AlertDescription"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2887,9 +2651,7 @@
           "modulePath": "./StreakCounter",
           "line": 26,
           "type": "named",
-          "imports": [
-            "StreakCounter"
-          ],
+          "imports": ["StreakCounter"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2899,9 +2661,7 @@
           "modulePath": "./AchievementBadges",
           "line": 27,
           "type": "named",
-          "imports": [
-            "AchievementBadges"
-          ],
+          "imports": ["AchievementBadges"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2911,9 +2671,7 @@
           "modulePath": "./SocialProof",
           "line": 28,
           "type": "named",
-          "imports": [
-            "SocialProof"
-          ],
+          "imports": ["SocialProof"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2923,9 +2681,7 @@
           "modulePath": "./CommunityChallenge",
           "line": 29,
           "type": "named",
-          "imports": [
-            "CommunityChallenge"
-          ],
+          "imports": ["CommunityChallenge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2935,9 +2691,7 @@
           "modulePath": "./HabitCelebration",
           "line": 30,
           "type": "named",
-          "imports": [
-            "HabitCelebration"
-          ],
+          "imports": ["HabitCelebration"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2947,9 +2701,7 @@
           "modulePath": "./SmartUpgradePrompt",
           "line": 31,
           "type": "named",
-          "imports": [
-            "SmartUpgradePrompt"
-          ],
+          "imports": ["SmartUpgradePrompt"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2959,9 +2711,7 @@
           "modulePath": "../contexts/StrugglingsamContext",
           "line": 32,
           "type": "named",
-          "imports": [
-            "useStrugglingSam"
-          ],
+          "imports": ["useStrugglingSam"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -2971,9 +2721,7 @@
           "modulePath": "../hooks/useABTesting",
           "line": 33,
           "type": "named",
-          "imports": [
-            "useABTesting"
-          ],
+          "imports": ["useABTesting"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3002,9 +2750,7 @@
           "modulePath": "./StreakCounter",
           "line": 27,
           "type": "named",
-          "imports": [
-            "StreakCounter"
-          ],
+          "imports": ["StreakCounter"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3014,9 +2760,7 @@
           "modulePath": "./AchievementBadges",
           "line": 28,
           "type": "named",
-          "imports": [
-            "AchievementBadges"
-          ],
+          "imports": ["AchievementBadges"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3026,9 +2770,7 @@
           "modulePath": "./SocialProof",
           "line": 29,
           "type": "named",
-          "imports": [
-            "SocialProof"
-          ],
+          "imports": ["SocialProof"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3038,9 +2780,7 @@
           "modulePath": "./CommunityChallenge",
           "line": 30,
           "type": "named",
-          "imports": [
-            "CommunityChallenge"
-          ],
+          "imports": ["CommunityChallenge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3050,9 +2790,7 @@
           "modulePath": "./HabitCelebration",
           "line": 31,
           "type": "named",
-          "imports": [
-            "HabitCelebration"
-          ],
+          "imports": ["HabitCelebration"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3062,9 +2800,7 @@
           "modulePath": "./SmartUpgradePrompt",
           "line": 32,
           "type": "named",
-          "imports": [
-            "SmartUpgradePrompt"
-          ],
+          "imports": ["SmartUpgradePrompt"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3081,9 +2817,7 @@
           "modulePath": "./ui/input",
           "line": 5,
           "type": "named",
-          "imports": [
-            "Input"
-          ],
+          "imports": ["Input"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3093,9 +2827,7 @@
           "modulePath": "./ui/label",
           "line": 6,
           "type": "named",
-          "imports": [
-            "Label"
-          ],
+          "imports": ["Label"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3105,9 +2837,7 @@
           "modulePath": "./ui/textarea",
           "line": 9,
           "type": "named",
-          "imports": [
-            "Textarea"
-          ],
+          "imports": ["Textarea"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3117,9 +2847,7 @@
           "modulePath": "./ui/slider",
           "line": 10,
           "type": "named",
-          "imports": [
-            "Slider"
-          ],
+          "imports": ["Slider"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3129,9 +2857,7 @@
           "modulePath": "../services/audio-manager",
           "line": 43,
           "type": "named",
-          "imports": [
-            "audioManager"
-          ],
+          "imports": ["audioManager"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3141,9 +2867,7 @@
           "modulePath": "../services/lazy-audio-loader",
           "line": 44,
           "type": "named",
-          "imports": [
-            "lazyAudioLoader"
-          ],
+          "imports": ["lazyAudioLoader"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3153,10 +2877,7 @@
           "modulePath": "../hooks/useAudioLazyLoading",
           "line": 45,
           "type": "named",
-          "imports": [
-            "useAudioLazyLoading",
-            "usePlaylistLazyLoading"
-          ],
+          "imports": ["useAudioLazyLoading", "usePlaylistLazyLoading"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3166,9 +2887,7 @@
           "modulePath": "../hooks/useEnhancedCaching",
           "line": 49,
           "type": "named",
-          "imports": [
-            "useEnhancedCaching"
-          ],
+          "imports": ["useEnhancedCaching"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3283,9 +3002,7 @@
           "modulePath": "./ui/button",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3314,10 +3031,7 @@
           "modulePath": "../config/i18n",
           "line": 4,
           "type": "named",
-          "imports": [
-            "SUPPORTED_LANGUAGES",
-            "SupportedLanguage"
-          ],
+          "imports": ["SUPPORTED_LANGUAGES", "SupportedLanguage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3340,9 +3054,7 @@
           "modulePath": "@/components/ui/label",
           "line": 7,
           "type": "named",
-          "imports": [
-            "Label"
-          ],
+          "imports": ["Label"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3352,10 +3064,7 @@
           "modulePath": "@/components/ui/avatar",
           "line": 10,
           "type": "named",
-          "imports": [
-            "Avatar",
-            "AvatarFallback"
-          ],
+          "imports": ["Avatar", "AvatarFallback"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3365,9 +3074,7 @@
           "modulePath": "@/components/ui/textarea",
           "line": 11,
           "type": "named",
-          "imports": [
-            "Textarea"
-          ],
+          "imports": ["Textarea"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3402,10 +3109,7 @@
           "modulePath": "../hooks/useMobileTouch",
           "line": 7,
           "type": "named",
-          "imports": [
-            "useMobileBehavior",
-            "useHaptic"
-          ],
+          "imports": ["useMobileBehavior", "useHaptic"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3415,9 +3119,7 @@
           "modulePath": "../hooks/usePWA",
           "line": 8,
           "type": "named",
-          "imports": [
-            "usePWA"
-          ],
+          "imports": ["usePWA"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3427,9 +3129,7 @@
           "modulePath": "../hooks/useCapacitor",
           "line": 9,
           "type": "named",
-          "imports": [
-            "useCapacitor"
-          ],
+          "imports": ["useCapacitor"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3439,9 +3139,7 @@
           "modulePath": "../hooks/useMobilePerformance",
           "line": 10,
           "type": "named",
-          "imports": [
-            "useMobilePerformance"
-          ],
+          "imports": ["useMobilePerformance"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3451,9 +3149,7 @@
           "modulePath": "./MobileAccessibilityProvider",
           "line": 11,
           "type": "named",
-          "imports": [
-            "useMobileAccessibilityContext"
-          ],
+          "imports": ["useMobileAccessibilityContext"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3476,12 +3172,7 @@
           "modulePath": "./ui/card",
           "line": 2,
           "type": "named",
-          "imports": [
-            "Card",
-            "CardContent",
-            "CardHeader",
-            "CardTitle"
-          ],
+          "imports": ["Card", "CardContent", "CardHeader", "CardTitle"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3491,9 +3182,7 @@
           "modulePath": "./ui/badge",
           "line": 6,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3503,9 +3192,7 @@
           "modulePath": "./ui/separator",
           "line": 8,
           "type": "named",
-          "imports": [
-            "Separator"
-          ],
+          "imports": ["Separator"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3515,9 +3202,7 @@
           "modulePath": "./ui/label",
           "line": 9,
           "type": "named",
-          "imports": [
-            "Label"
-          ],
+          "imports": ["Label"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3527,9 +3212,7 @@
           "modulePath": "../services/nuclear-mode",
           "line": 37,
           "type": "named",
-          "imports": [
-            "nuclearModeService"
-          ],
+          "imports": ["nuclearModeService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3546,9 +3229,7 @@
           "modulePath": "./ui/badge",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3558,9 +3239,7 @@
           "modulePath": "./ui/button",
           "line": 4,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3570,9 +3249,7 @@
           "modulePath": "./ui/progress",
           "line": 5,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3582,9 +3259,7 @@
           "modulePath": "./ui/separator",
           "line": 6,
           "type": "named",
-          "imports": [
-            "Separator"
-          ],
+          "imports": ["Separator"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3594,10 +3269,7 @@
           "modulePath": "./ui/alert",
           "line": 7,
           "type": "named",
-          "imports": [
-            "AlertTriangle",
-            "AlertDescription"
-          ],
+          "imports": ["AlertTriangle", "AlertDescription"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3614,9 +3286,7 @@
           "modulePath": "./ui/checkbox",
           "line": 6,
           "type": "named",
-          "imports": [
-            "Checkbox"
-          ],
+          "imports": ["Checkbox"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3626,9 +3296,7 @@
           "modulePath": "./ui/label",
           "line": 7,
           "type": "named",
-          "imports": [
-            "Label"
-          ],
+          "imports": ["Label"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3638,9 +3306,7 @@
           "modulePath": "./ui/slider",
           "line": 8,
           "type": "named",
-          "imports": [
-            "Slider"
-          ],
+          "imports": ["Slider"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3650,9 +3316,7 @@
           "modulePath": "./ui/separator",
           "line": 19,
           "type": "named",
-          "imports": [
-            "Separator"
-          ],
+          "imports": ["Separator"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3662,9 +3326,7 @@
           "modulePath": "./ui/progress",
           "line": 20,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3674,9 +3336,7 @@
           "modulePath": "./ui/switch",
           "line": 21,
           "type": "named",
-          "imports": [
-            "Switch"
-          ],
+          "imports": ["Switch"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3686,9 +3346,7 @@
           "modulePath": "../services/premium",
           "line": 37,
           "type": "named",
-          "imports": [
-            "premiumService"
-          ],
+          "imports": ["premiumService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3705,9 +3363,7 @@
           "modulePath": "./ui/progress",
           "line": 18,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3784,9 +3440,7 @@
           "modulePath": "./PremiumGate",
           "line": 22,
           "type": "named",
-          "imports": [
-            "PremiumGate"
-          ],
+          "imports": ["PremiumGate"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3827,9 +3481,7 @@
           "modulePath": "../services/premium-theme-animations",
           "line": 10,
           "type": "default",
-          "imports": [
-            "PremiumThemeAnimationService"
-          ],
+          "imports": ["PremiumThemeAnimationService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3846,9 +3498,7 @@
           "modulePath": "../services/subscription",
           "line": 13,
           "type": "named",
-          "imports": [
-            "SubscriptionService"
-          ],
+          "imports": ["SubscriptionService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -3985,9 +3635,7 @@
           "modulePath": "../hooks/useScreenReaderAnnouncements",
           "line": 29,
           "type": "named",
-          "imports": [
-            "useFocusAnnouncements"
-          ],
+          "imports": ["useFocusAnnouncements"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4034,10 +3682,7 @@
           "modulePath": "./ui/card",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Card",
-            "CardContent"
-          ],
+          "imports": ["Card", "CardContent"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4047,9 +3692,7 @@
           "modulePath": "./ui/button",
           "line": 4,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4059,9 +3702,7 @@
           "modulePath": "./ui/badge",
           "line": 5,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4071,9 +3712,7 @@
           "modulePath": "./ui/progress",
           "line": 6,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4096,12 +3735,7 @@
           "modulePath": "./ui/card",
           "line": 15,
           "type": "named",
-          "imports": [
-            "Card",
-            "CardContent",
-            "CardHeader",
-            "CardTitle"
-          ],
+          "imports": ["Card", "CardContent", "CardHeader", "CardTitle"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4111,9 +3745,7 @@
           "modulePath": "./ui/input",
           "line": 17,
           "type": "named",
-          "imports": [
-            "Input"
-          ],
+          "imports": ["Input"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4123,9 +3755,7 @@
           "modulePath": "./ui/badge",
           "line": 18,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4135,9 +3765,7 @@
           "modulePath": "./ui/scroll-area",
           "line": 19,
           "type": "named",
-          "imports": [
-            "ScrollArea"
-          ],
+          "imports": ["ScrollArea"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4163,11 +3791,7 @@
           "modulePath": "./ui/collapsible",
           "line": 35,
           "type": "named",
-          "imports": [
-            "Collapsible",
-            "CollapsibleContent",
-            "CollapsibleTrigger"
-          ],
+          "imports": ["Collapsible", "CollapsibleContent", "CollapsibleTrigger"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4200,9 +3824,7 @@
           "modulePath": "./ui/switch",
           "line": 33,
           "type": "named",
-          "imports": [
-            "Switch"
-          ],
+          "imports": ["Switch"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4212,9 +3834,7 @@
           "modulePath": "./ui/separator",
           "line": 35,
           "type": "named",
-          "imports": [
-            "Separator"
-          ],
+          "imports": ["Separator"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4247,12 +3867,7 @@
           "modulePath": "./ui/dialog",
           "line": 35,
           "type": "named",
-          "imports": [
-            "Dialog",
-            "DialogContent",
-            "DialogHeader",
-            "DialogTitle"
-          ],
+          "imports": ["Dialog", "DialogContent", "DialogHeader", "DialogTitle"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4262,9 +3877,7 @@
           "modulePath": "./CustomSoundThemeCreator",
           "line": 42,
           "type": "default",
-          "imports": [
-            "CustomSoundThemeCreator"
-          ],
+          "imports": ["CustomSoundThemeCreator"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4287,9 +3900,7 @@
           "modulePath": "./ui/button",
           "line": 16,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4299,9 +3910,7 @@
           "modulePath": "./ui/input",
           "line": 17,
           "type": "named",
-          "imports": [
-            "Input"
-          ],
+          "imports": ["Input"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4311,9 +3920,7 @@
           "modulePath": "./ui/label",
           "line": 18,
           "type": "named",
-          "imports": [
-            "Label"
-          ],
+          "imports": ["Label"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4323,9 +3930,7 @@
           "modulePath": "./ui/textarea",
           "line": 19,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4335,9 +3940,7 @@
           "modulePath": "./ui/badge",
           "line": 20,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4347,9 +3950,7 @@
           "modulePath": "./ui/progress",
           "line": 21,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4359,10 +3960,7 @@
           "modulePath": "./ui/alert",
           "line": 22,
           "type": "named",
-          "imports": [
-            "Alert",
-            "AlertDescription"
-          ],
+          "imports": ["Alert", "AlertDescription"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4388,9 +3986,7 @@
           "modulePath": "./ui/scroll-area",
           "line": 30,
           "type": "named",
-          "imports": [
-            "ScrollArea"
-          ],
+          "imports": ["ScrollArea"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4429,9 +4025,7 @@
           "modulePath": "@/components/ui/badge",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4441,9 +4035,7 @@
           "modulePath": "@/components/ui/button",
           "line": 4,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4453,9 +4045,7 @@
           "modulePath": "@/components/ui/progress",
           "line": 5,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4580,9 +4170,7 @@
           "modulePath": "../types",
           "line": 13,
           "type": "named",
-          "imports": [
-            "Alarm"
-          ],
+          "imports": ["Alarm"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4611,9 +4199,7 @@
           "modulePath": "./PremiumGate",
           "line": 18,
           "type": "named",
-          "imports": [
-            "PremiumGate"
-          ],
+          "imports": ["PremiumGate"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4623,9 +4209,7 @@
           "modulePath": "../services/subscription",
           "line": 19,
           "type": "named",
-          "imports": [
-            "SubscriptionService"
-          ],
+          "imports": ["SubscriptionService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4642,9 +4226,7 @@
           "modulePath": "../services/premium",
           "line": 5,
           "type": "named",
-          "imports": [
-            "PremiumService"
-          ],
+          "imports": ["PremiumService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4667,9 +4249,7 @@
           "modulePath": "../services/enhanced-smart-alarm-scheduler",
           "line": 13,
           "type": "named",
-          "imports": [
-            "type WakeUpFeedback"
-          ],
+          "imports": ["type WakeUpFeedback"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4716,9 +4296,7 @@
           "modulePath": "../../services/capacitor",
           "line": 8,
           "type": "named",
-          "imports": [
-            "vibrate"
-          ],
+          "imports": ["vibrate"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4789,10 +4367,7 @@
           "modulePath": "../../hooks/useAnimations",
           "line": 6,
           "type": "named",
-          "imports": [
-            "useEntranceAnimation",
-            "useHoverAnimation"
-          ],
+          "imports": ["useEntranceAnimation", "useHoverAnimation"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4833,9 +4408,7 @@
           "modulePath": "../ui/button",
           "line": 14,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4845,9 +4418,7 @@
           "modulePath": "../ui/input",
           "line": 15,
           "type": "named",
-          "imports": [
-            "Input"
-          ],
+          "imports": ["Input"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4857,9 +4428,7 @@
           "modulePath": "../ui/label",
           "line": 16,
           "type": "named",
-          "imports": [
-            "Label"
-          ],
+          "imports": ["Label"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4869,9 +4438,7 @@
           "modulePath": "../ui/separator",
           "line": 17,
           "type": "named",
-          "imports": [
-            "Separator"
-          ],
+          "imports": ["Separator"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4888,10 +4455,7 @@
           "modulePath": "../ui/alert",
           "line": 15,
           "type": "named",
-          "imports": [
-            "Alert",
-            "AlertDescription"
-          ],
+          "imports": ["Alert", "AlertDescription"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4914,9 +4478,7 @@
           "modulePath": "./FeatureGate",
           "line": 27,
           "type": "named",
-          "imports": [
-            "FeatureGate"
-          ],
+          "imports": ["FeatureGate"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4939,9 +4501,7 @@
           "modulePath": "../ui/input",
           "line": 18,
           "type": "named",
-          "imports": [
-            "Input"
-          ],
+          "imports": ["Input"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4951,9 +4511,7 @@
           "modulePath": "../ui/label",
           "line": 19,
           "type": "named",
-          "imports": [
-            "Label"
-          ],
+          "imports": ["Label"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4963,9 +4521,7 @@
           "modulePath": "../ui/switch",
           "line": 20,
           "type": "named",
-          "imports": [
-            "Switch"
-          ],
+          "imports": ["Switch"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4975,12 +4531,7 @@
           "modulePath": "../ui/tabs",
           "line": 24,
           "type": "named",
-          "imports": [
-            "Tabs",
-            "TabsContent",
-            "TabsList",
-            "TabsTrigger"
-          ],
+          "imports": ["Tabs", "TabsContent", "TabsList", "TabsTrigger"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -4990,9 +4541,7 @@
           "modulePath": "./FeatureGate",
           "line": 25,
           "type": "named",
-          "imports": [
-            "FeatureGate"
-          ],
+          "imports": ["FeatureGate"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5002,9 +4551,7 @@
           "modulePath": "../../hooks/useAuth",
           "line": 27,
           "type": "default",
-          "imports": [
-            "useAuth"
-          ],
+          "imports": ["useAuth"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5021,9 +4568,7 @@
           "modulePath": "../ui/input",
           "line": 17,
           "type": "named",
-          "imports": [
-            "Input"
-          ],
+          "imports": ["Input"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5033,9 +4578,7 @@
           "modulePath": "../ui/switch",
           "line": 19,
           "type": "named",
-          "imports": [
-            "Switch"
-          ],
+          "imports": ["Switch"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5045,9 +4588,7 @@
           "modulePath": "../ui/textarea",
           "line": 28,
           "type": "named",
-          "imports": [
-            "Textarea"
-          ],
+          "imports": ["Textarea"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5057,9 +4598,7 @@
           "modulePath": "../ui/progress",
           "line": 29,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5069,9 +4608,7 @@
           "modulePath": "../ui/badge",
           "line": 30,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5081,9 +4618,7 @@
           "modulePath": "./FeatureGate",
           "line": 31,
           "type": "named",
-          "imports": [
-            "FeatureGate"
-          ],
+          "imports": ["FeatureGate"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5093,9 +4628,7 @@
           "modulePath": "../../hooks/useAuth",
           "line": 33,
           "type": "default",
-          "imports": [
-            "useAuth"
-          ],
+          "imports": ["useAuth"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5130,9 +4663,7 @@
           "modulePath": "../ui/textarea",
           "line": 32,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5142,9 +4673,7 @@
           "modulePath": "../ui/checkbox",
           "line": 34,
           "type": "named",
-          "imports": [
-            "Checkbox"
-          ],
+          "imports": ["Checkbox"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5161,9 +4690,7 @@
           "modulePath": "../../hooks/useSubscription",
           "line": 18,
           "type": "default",
-          "imports": [
-            "useSubscription"
-          ],
+          "imports": ["useSubscription"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5173,9 +4700,7 @@
           "modulePath": "../../hooks/useAuth",
           "line": 19,
           "type": "default",
-          "imports": [
-            "useAuth"
-          ],
+          "imports": ["useAuth"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5192,10 +4717,7 @@
           "modulePath": "../../../__tests__/factories/premium-factories",
           "line": 16,
           "type": "named",
-          "imports": [
-            "createTestSubscription",
-            "createTestPremiumFeature"
-          ],
+          "imports": ["createTestSubscription", "createTestPremiumFeature"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5278,9 +4800,7 @@
           "modulePath": "class-variance-authority",
           "line": 3,
           "type": "named",
-          "imports": [
-            "cva"
-          ],
+          "imports": ["cva"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5309,9 +4829,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -5321,9 +4839,7 @@
           "modulePath": "class-variance-authority",
           "line": 4,
           "type": "named",
-          "imports": [
-            "cva"
-          ],
+          "imports": ["cva"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5335,9 +4851,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -5353,9 +4867,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -5367,9 +4879,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -5385,9 +4895,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -5397,9 +4905,7 @@
           "modulePath": "class-variance-authority",
           "line": 4,
           "type": "named",
-          "imports": [
-            "cva"
-          ],
+          "imports": ["cva"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5411,9 +4917,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -5465,9 +4969,7 @@
           "modulePath": "cmdk",
           "line": 5,
           "type": "named",
-          "imports": [
-            "Command as CommandPrimitive"
-          ],
+          "imports": ["Command as CommandPrimitive"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5496,9 +4998,7 @@
           "modulePath": "vaul",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Drawer as DrawerPrimitive"
-          ],
+          "imports": ["Drawer as DrawerPrimitive"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5617,9 +5117,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 6,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -5631,9 +5129,7 @@
           "modulePath": "@radix-ui/react-slot",
           "line": 6,
           "type": "named",
-          "imports": [
-            "Slot"
-          ],
+          "imports": ["Slot"],
           "isUsed": false,
           "safeToRemove": true,
           "reasoning": "No usage found, safe to remove"
@@ -5661,10 +5157,7 @@
           "modulePath": "sonner",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Toaster as Sonner",
-            "ToasterProps"
-          ],
+          "imports": ["Toaster as Sonner", "ToasterProps"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5705,9 +5198,7 @@
           "modulePath": "class-variance-authority",
           "line": 6,
           "type": "named",
-          "imports": [
-            "type VariantProps"
-          ],
+          "imports": ["type VariantProps"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5724,9 +5215,7 @@
           "modulePath": "class-variance-authority",
           "line": 4,
           "type": "named",
-          "imports": [
-            "cva"
-          ],
+          "imports": ["cva"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5755,9 +5244,7 @@
           "modulePath": "../ui/switch",
           "line": 10,
           "type": "named",
-          "imports": [
-            "Switch"
-          ],
+          "imports": ["Switch"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5774,9 +5261,7 @@
           "modulePath": "../ui/button",
           "line": 10,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5786,9 +5271,7 @@
           "modulePath": "../ui/input",
           "line": 11,
           "type": "named",
-          "imports": [
-            "Input"
-          ],
+          "imports": ["Input"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5798,9 +5281,7 @@
           "modulePath": "../ui/textarea",
           "line": 12,
           "type": "named",
-          "imports": [
-            "Textarea"
-          ],
+          "imports": ["Textarea"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5810,9 +5291,7 @@
           "modulePath": "../ui/label",
           "line": 13,
           "type": "named",
-          "imports": [
-            "Label"
-          ],
+          "imports": ["Label"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5822,9 +5301,7 @@
           "modulePath": "../ui/badge",
           "line": 14,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5834,12 +5311,7 @@
           "modulePath": "../ui/card",
           "line": 15,
           "type": "named",
-          "imports": [
-            "Card",
-            "CardContent",
-            "CardHeader",
-            "CardTitle"
-          ],
+          "imports": ["Card", "CardContent", "CardHeader", "CardTitle"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5849,12 +5321,7 @@
           "modulePath": "../ui/tabs",
           "line": 16,
           "type": "named",
-          "imports": [
-            "Tabs",
-            "TabsContent",
-            "TabsList",
-            "TabsTrigger"
-          ],
+          "imports": ["Tabs", "TabsContent", "TabsList", "TabsTrigger"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5864,9 +5331,7 @@
           "modulePath": "../ui/switch",
           "line": 17,
           "type": "named",
-          "imports": [
-            "Switch"
-          ],
+          "imports": ["Switch"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5876,9 +5341,7 @@
           "modulePath": "../ui/separator",
           "line": 18,
           "type": "named",
-          "imports": [
-            "Separator"
-          ],
+          "imports": ["Separator"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5895,9 +5358,7 @@
           "modulePath": "../ui/button",
           "line": 10,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5907,9 +5368,7 @@
           "modulePath": "../ui/input",
           "line": 11,
           "type": "named",
-          "imports": [
-            "Input"
-          ],
+          "imports": ["Input"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5919,9 +5378,7 @@
           "modulePath": "../ui/textarea",
           "line": 12,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5931,10 +5388,7 @@
           "modulePath": "../ui/card",
           "line": 15,
           "type": "named",
-          "imports": [
-            "Card",
-            "CardContent"
-          ],
+          "imports": ["Card", "CardContent"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5973,9 +5427,7 @@
           "modulePath": "../ui/button",
           "line": 10,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5985,9 +5437,7 @@
           "modulePath": "../ui/input",
           "line": 11,
           "type": "named",
-          "imports": [
-            "Input"
-          ],
+          "imports": ["Input"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -5997,9 +5447,7 @@
           "modulePath": "../ui/textarea",
           "line": 12,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6009,9 +5457,7 @@
           "modulePath": "../ui/label",
           "line": 13,
           "type": "named",
-          "imports": [
-            "Label"
-          ],
+          "imports": ["Label"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6021,9 +5467,7 @@
           "modulePath": "../ui/badge",
           "line": 14,
           "type": "named",
-          "imports": [
-            "Badge"
-          ],
+          "imports": ["Badge"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6033,10 +5477,7 @@
           "modulePath": "../ui/card",
           "line": 15,
           "type": "named",
-          "imports": [
-            "Card",
-            "CardContent"
-          ],
+          "imports": ["Card", "CardContent"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6046,9 +5487,7 @@
           "modulePath": "../ui/progress",
           "line": 16,
           "type": "named",
-          "imports": [
-            "Progress"
-          ],
+          "imports": ["Progress"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6058,9 +5497,7 @@
           "modulePath": "../ui/slider",
           "line": 17,
           "type": "named",
-          "imports": [
-            "Slider"
-          ],
+          "imports": ["Slider"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6070,9 +5507,7 @@
           "modulePath": "../ui/switch",
           "line": 18,
           "type": "named",
-          "imports": [
-            "Switch"
-          ],
+          "imports": ["Switch"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6082,9 +5517,7 @@
           "modulePath": "../../hooks/useTheme",
           "line": 44,
           "type": "named",
-          "imports": [
-            "useTheme"
-          ],
+          "imports": ["useTheme"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6107,9 +5540,7 @@
           "modulePath": "../ui/button",
           "line": 4,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6119,9 +5550,7 @@
           "modulePath": "../ui/separator",
           "line": 6,
           "type": "named",
-          "imports": [
-            "Separator"
-          ],
+          "imports": ["Separator"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6162,9 +5591,7 @@
           "modulePath": "react-i18next",
           "line": 2,
           "type": "named",
-          "imports": [
-            "initReactI18next"
-          ],
+          "imports": ["initReactI18next"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6174,9 +5601,7 @@
           "modulePath": "i18next-browser-languagedetector",
           "line": 3,
           "type": "default",
-          "imports": [
-            "LanguageDetector"
-          ],
+          "imports": ["LanguageDetector"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6186,9 +5611,7 @@
           "modulePath": "i18next-http-backend",
           "line": 4,
           "type": "default",
-          "imports": [
-            "Backend"
-          ],
+          "imports": ["Backend"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6217,9 +5640,7 @@
           "modulePath": "./i18n",
           "line": 1,
           "type": "named",
-          "imports": [
-            "SupportedLanguage"
-          ],
+          "imports": ["SupportedLanguage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6272,9 +5693,7 @@
           "modulePath": "../../useAdvancedAlarms",
           "line": 3,
           "type": "named",
-          "imports": [
-            "useAdvancedAlarms"
-          ],
+          "imports": ["useAdvancedAlarms"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6315,9 +5734,7 @@
           "modulePath": "../../useAdvancedAlarms",
           "line": 4,
           "type": "named",
-          "imports": [
-            "useAdvancedAlarms"
-          ],
+          "imports": ["useAdvancedAlarms"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6364,9 +5781,7 @@
           "modulePath": "../useAdvancedAlarms",
           "line": 3,
           "type": "named",
-          "imports": [
-            "useAdvancedAlarms"
-          ],
+          "imports": ["useAdvancedAlarms"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6389,11 +5804,7 @@
           "modulePath": "../../__tests__/mocks/msw-setup",
           "line": 15,
           "type": "named",
-          "imports": [
-            "server",
-            "mockApiError",
-            "mockApiSuccess"
-          ],
+          "imports": ["server", "mockApiError", "mockApiSuccess"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6428,9 +5839,7 @@
           "modulePath": "../../services/feature",
           "line": 8,
           "type": "named",
-          "imports": [
-            "FeatureService"
-          ],
+          "imports": ["FeatureService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6440,9 +5849,7 @@
           "modulePath": "../../services/feature",
           "line": 10,
           "type": "named",
-          "imports": [
-            "FeatureService"
-          ],
+          "imports": ["FeatureService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6452,9 +5859,7 @@
           "modulePath": "../../services/feature",
           "line": 16,
           "type": "named",
-          "imports": [
-            "FeatureService"
-          ],
+          "imports": ["FeatureService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6663,9 +6068,7 @@
           "modulePath": "../config/i18n",
           "line": 3,
           "type": "named",
-          "imports": [
-            "SupportedLanguage"
-          ],
+          "imports": ["SupportedLanguage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6718,9 +6121,7 @@
           "modulePath": "./useScreenReaderAnnouncements",
           "line": 3,
           "type": "named",
-          "imports": [
-            "useScreenReaderAnnouncements"
-          ],
+          "imports": ["useScreenReaderAnnouncements"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6743,9 +6144,7 @@
           "modulePath": "../config/i18n",
           "line": 7,
           "type": "named",
-          "imports": [
-            "type SupportedLanguage"
-          ],
+          "imports": ["type SupportedLanguage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6810,10 +6209,7 @@
           "modulePath": "../themes/premium-themes",
           "line": 26,
           "type": "named",
-          "imports": [
-            "PREMIUM_THEMES",
-            "PREMIUM_THEME_PRESETS"
-          ],
+          "imports": ["PREMIUM_THEMES", "PREMIUM_THEME_PRESETS"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6860,9 +6256,7 @@
           "modulePath": "../constants/initialDomainState",
           "line": 7,
           "type": "named",
-          "imports": [
-            "INITIAL_ALARM_STATE"
-          ],
+          "imports": ["INITIAL_ALARM_STATE"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6879,9 +6273,7 @@
           "modulePath": "../constants/initialDomainState",
           "line": 7,
           "type": "named",
-          "imports": [
-            "INITIAL_DOMAIN_APP_STATE"
-          ],
+          "imports": ["INITIAL_DOMAIN_APP_STATE"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6898,9 +6290,7 @@
           "modulePath": "../constants/initialDomainState",
           "line": 7,
           "type": "named",
-          "imports": [
-            "INITIAL_SUBSCRIPTION_STATE"
-          ],
+          "imports": ["INITIAL_SUBSCRIPTION_STATE"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6917,9 +6307,7 @@
           "modulePath": "../constants/initialDomainState",
           "line": 7,
           "type": "named",
-          "imports": [
-            "INITIAL_USER_STATE"
-          ],
+          "imports": ["INITIAL_USER_STATE"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6942,10 +6330,7 @@
           "modulePath": "../capacitor",
           "line": 78,
           "type": "named",
-          "imports": [
-            "scheduleLocalNotification",
-            "cancelLocalNotification"
-          ],
+          "imports": ["scheduleLocalNotification", "cancelLocalNotification"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6962,9 +6347,7 @@
           "modulePath": "../../config/environment",
           "line": 3,
           "type": "named",
-          "imports": [
-            "_config"
-          ],
+          "imports": ["_config"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -6999,9 +6382,7 @@
           "modulePath": "../supabase",
           "line": 4,
           "type": "named",
-          "imports": [
-            "createClient"
-          ],
+          "imports": ["createClient"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7011,9 +6392,7 @@
           "modulePath": "../../__tests__/factories/premium-factories",
           "line": 18,
           "type": "named",
-          "imports": [
-            "createTestPremiumFeature"
-          ],
+          "imports": ["createTestPremiumFeature"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7023,9 +6402,7 @@
           "modulePath": "@faker-js/faker",
           "line": 19,
           "type": "named",
-          "imports": [
-            "faker"
-          ],
+          "imports": ["faker"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7060,9 +6437,7 @@
           "modulePath": "../../utils",
           "line": 6,
           "type": "named",
-          "imports": [
-            "formatTime"
-          ],
+          "imports": ["formatTime"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7115,9 +6490,7 @@
           "modulePath": "./error-handler",
           "line": 5,
           "type": "named",
-          "imports": [
-            "ErrorHandler"
-          ],
+          "imports": ["ErrorHandler"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7164,9 +6537,7 @@
           "modulePath": "./error-handler",
           "line": 8,
           "type": "named",
-          "imports": [
-            "ErrorHandler"
-          ],
+          "imports": ["ErrorHandler"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7195,9 +6566,7 @@
           "modulePath": "./secure-push-notification",
           "line": 7,
           "type": "default",
-          "imports": [
-            "SecurePushNotificationService"
-          ],
+          "imports": ["SecurePushNotificationService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7286,9 +6655,7 @@
           "modulePath": "./supabase",
           "line": 13,
           "type": "named",
-          "imports": [
-            "supabase"
-          ],
+          "imports": ["supabase"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7323,9 +6690,7 @@
           "modulePath": "../types",
           "line": 9,
           "type": "named",
-          "imports": [
-            "User"
-          ],
+          "imports": ["User"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7335,9 +6700,7 @@
           "modulePath": "./error-handler",
           "line": 10,
           "type": "named",
-          "imports": [
-            "ErrorHandler"
-          ],
+          "imports": ["ErrorHandler"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7378,9 +6741,7 @@
           "modulePath": "../config/convertkit-generated",
           "line": 5,
           "type": "named",
-          "imports": [
-            "CONVERTKIT_IDS"
-          ],
+          "imports": ["CONVERTKIT_IDS"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7415,9 +6776,7 @@
           "modulePath": "./supabase",
           "line": 18,
           "type": "named",
-          "imports": [
-            "SupabaseService"
-          ],
+          "imports": ["SupabaseService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7434,9 +6793,7 @@
           "modulePath": "./analytics",
           "line": 2,
           "type": "named",
-          "imports": [
-            "AnalyticsService"
-          ],
+          "imports": ["AnalyticsService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7453,9 +6810,7 @@
           "modulePath": "./base/BaseService",
           "line": 8,
           "type": "named",
-          "imports": [
-            "BaseService"
-          ],
+          "imports": ["BaseService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7490,9 +6845,7 @@
           "modulePath": "../types",
           "line": 1,
           "type": "named",
-          "imports": [
-            "Alarm"
-          ],
+          "imports": ["Alarm"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7502,9 +6855,7 @@
           "modulePath": "../types",
           "line": 17,
           "type": "named",
-          "imports": [
-            "Alarm"
-          ],
+          "imports": ["Alarm"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7521,9 +6872,7 @@
           "modulePath": "../types",
           "line": 1,
           "type": "named",
-          "imports": [
-            "Alarm"
-          ],
+          "imports": ["Alarm"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7540,9 +6889,7 @@
           "modulePath": "./offline-storage",
           "line": 7,
           "type": "default",
-          "imports": [
-            "OfflineStorage"
-          ],
+          "imports": ["OfflineStorage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7565,9 +6912,7 @@
           "modulePath": "./supabase",
           "line": 12,
           "type": "named",
-          "imports": [
-            "supabase"
-          ],
+          "imports": ["supabase"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7590,9 +6935,7 @@
           "modulePath": "../utils",
           "line": 7,
           "type": "named",
-          "imports": [
-            "formatTime"
-          ],
+          "imports": ["formatTime"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7602,9 +6945,7 @@
           "modulePath": "./base/BaseService",
           "line": 8,
           "type": "named",
-          "imports": [
-            "BaseService"
-          ],
+          "imports": ["BaseService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7614,10 +6955,7 @@
           "modulePath": "./base/CacheManager",
           "line": 9,
           "type": "named",
-          "imports": [
-            "CacheProvider",
-            "getCacheManager"
-          ],
+          "imports": ["CacheProvider", "getCacheManager"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7658,9 +6996,7 @@
           "modulePath": "../types",
           "line": 1,
           "type": "named",
-          "imports": [
-            "Alarm"
-          ],
+          "imports": ["Alarm"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7695,9 +7031,7 @@
           "modulePath": "./premium",
           "line": 11,
           "type": "named",
-          "imports": [
-            "premiumService"
-          ],
+          "imports": ["premiumService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7707,9 +7041,7 @@
           "modulePath": "./supabase",
           "line": 12,
           "type": "named",
-          "imports": [
-            "supabase"
-          ],
+          "imports": ["supabase"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7719,9 +7051,7 @@
           "modulePath": "./error-handler",
           "line": 13,
           "type": "named",
-          "imports": [
-            "ErrorHandler"
-          ],
+          "imports": ["ErrorHandler"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7731,9 +7061,7 @@
           "modulePath": "./app-analytics",
           "line": 14,
           "type": "default",
-          "imports": [
-            "AppAnalyticsService"
-          ],
+          "imports": ["AppAnalyticsService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7743,9 +7071,7 @@
           "modulePath": "@capacitor/preferences",
           "line": 15,
           "type": "named",
-          "imports": [
-            "Preferences"
-          ],
+          "imports": ["Preferences"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7762,9 +7088,7 @@
           "modulePath": "./enhanced-offline-storage",
           "line": 6,
           "type": "named",
-          "imports": [
-            "EnhancedOfflineStorage"
-          ],
+          "imports": ["EnhancedOfflineStorage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7781,9 +7105,7 @@
           "modulePath": "./enhanced-offline-storage",
           "line": 16,
           "type": "named",
-          "imports": [
-            "EnhancedOfflineStorage"
-          ],
+          "imports": ["EnhancedOfflineStorage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7836,9 +7158,7 @@
           "modulePath": "./ml-alarm-optimizer",
           "line": 10,
           "type": "default",
-          "imports": [
-            "MLAlarmOptimizer"
-          ],
+          "imports": ["MLAlarmOptimizer"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7861,9 +7181,7 @@
           "modulePath": "./premium",
           "line": 12,
           "type": "named",
-          "imports": [
-            "PremiumService"
-          ],
+          "imports": ["PremiumService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7873,9 +7191,7 @@
           "modulePath": "./supabase",
           "line": 14,
           "type": "named",
-          "imports": [
-            "supabase"
-          ],
+          "imports": ["supabase"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7892,9 +7208,7 @@
           "modulePath": "./supabase",
           "line": 1,
           "type": "named",
-          "imports": [
-            "supabase"
-          ],
+          "imports": ["supabase"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7917,9 +7231,7 @@
           "modulePath": "@capacitor/preferences",
           "line": 4,
           "type": "named",
-          "imports": [
-            "Preferences"
-          ],
+          "imports": ["Preferences"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7929,9 +7241,7 @@
           "modulePath": "./notification",
           "line": 6,
           "type": "named",
-          "imports": [
-            "NotificationService"
-          ],
+          "imports": ["NotificationService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -7960,9 +7270,7 @@
           "modulePath": "./alarm",
           "line": 7,
           "type": "named",
-          "imports": [
-            "AlarmService"
-          ],
+          "imports": ["AlarmService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8003,9 +7311,7 @@
           "modulePath": "./error-handler",
           "line": 11,
           "type": "named",
-          "imports": [
-            "ErrorHandler"
-          ],
+          "imports": ["ErrorHandler"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8022,9 +7328,7 @@
           "modulePath": "./error-handler",
           "line": 7,
           "type": "named",
-          "imports": [
-            "ErrorHandler"
-          ],
+          "imports": ["ErrorHandler"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8075,9 +7379,7 @@
           "modulePath": "./supabase",
           "line": 1,
           "type": "named",
-          "imports": [
-            "supabase"
-          ],
+          "imports": ["supabase"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8106,9 +7408,7 @@
           "modulePath": "./supabase",
           "line": 11,
           "type": "named",
-          "imports": [
-            "supabase"
-          ],
+          "imports": ["supabase"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8149,9 +7449,7 @@
           "modulePath": "./error-handler",
           "line": 4,
           "type": "named",
-          "imports": [
-            "ErrorHandler"
-          ],
+          "imports": ["ErrorHandler"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8161,9 +7459,7 @@
           "modulePath": "./performance-monitor",
           "line": 5,
           "type": "default",
-          "imports": [
-            "PerformanceMonitor"
-          ],
+          "imports": ["PerformanceMonitor"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8222,9 +7518,7 @@
           "modulePath": "uuid",
           "line": 2,
           "type": "named",
-          "imports": [
-            "v4 as uuidv4"
-          ],
+          "imports": ["v4 as uuidv4"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8247,9 +7541,7 @@
           "modulePath": "./error-handler",
           "line": 5,
           "type": "named",
-          "imports": [
-            "ErrorHandler"
-          ],
+          "imports": ["ErrorHandler"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8308,9 +7600,7 @@
           "modulePath": "./Button",
           "line": 5,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8333,9 +7623,7 @@
           "modulePath": "./Header",
           "line": 5,
           "type": "named",
-          "imports": [
-            "Header"
-          ],
+          "imports": ["Header"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8352,9 +7640,7 @@
           "modulePath": "./Button",
           "line": 3,
           "type": "named",
-          "imports": [
-            "Button"
-          ],
+          "imports": ["Button"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8371,9 +7657,7 @@
           "modulePath": "./Page",
           "line": 5,
           "type": "named",
-          "imports": [
-            "Page"
-          ],
+          "imports": ["Page"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8702,10 +7986,7 @@
           "modulePath": "../types",
           "line": 1,
           "type": "named",
-          "imports": [
-            "Alarm",
-            "AdvancedAlarm"
-          ],
+          "imports": ["Alarm", "AdvancedAlarm"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8830,9 +8111,7 @@
           "modulePath": "../config/i18n",
           "line": 12,
           "type": "default",
-          "imports": [
-            "i18n"
-          ],
+          "imports": ["i18n"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8842,9 +8121,7 @@
           "modulePath": "../config/i18n",
           "line": 13,
           "type": "named",
-          "imports": [
-            "type SupportedLanguage"
-          ],
+          "imports": ["type SupportedLanguage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8861,9 +8138,7 @@
           "modulePath": "../config/i18n",
           "line": 5,
           "type": "named",
-          "imports": [
-            "type SupportedLanguage"
-          ],
+          "imports": ["type SupportedLanguage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8976,9 +8251,7 @@
           "modulePath": "./base-page",
           "line": 2,
           "type": "named",
-          "imports": [
-            "BasePage"
-          ],
+          "imports": ["BasePage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -8995,9 +8268,7 @@
           "modulePath": "./base-page",
           "line": 2,
           "type": "named",
-          "imports": [
-            "BasePage"
-          ],
+          "imports": ["BasePage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9020,9 +8291,7 @@
           "modulePath": "./base-page",
           "line": 2,
           "type": "named",
-          "imports": [
-            "BasePage"
-          ],
+          "imports": ["BasePage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9045,9 +8314,7 @@
           "modulePath": "./base-page",
           "line": 2,
           "type": "named",
-          "imports": [
-            "BasePage"
-          ],
+          "imports": ["BasePage"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9082,9 +8349,7 @@
           "modulePath": "../fixtures/test-data",
           "line": 4,
           "type": "named",
-          "imports": [
-            "TestData"
-          ],
+          "imports": ["TestData"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9107,9 +8372,7 @@
           "modulePath": "../fixtures/test-data",
           "line": 4,
           "type": "named",
-          "imports": [
-            "TestData"
-          ],
+          "imports": ["TestData"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9144,9 +8407,7 @@
           "modulePath": "react-router-dom",
           "line": 27,
           "type": "named",
-          "imports": [
-            "BrowserRouter"
-          ],
+          "imports": ["BrowserRouter"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9169,9 +8430,7 @@
           "modulePath": "../../src/services/push-notifications",
           "line": 35,
           "type": "named",
-          "imports": [
-            "PushNotificationService"
-          ],
+          "imports": ["PushNotificationService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9181,9 +8440,7 @@
           "modulePath": "../e2e/fixtures/test-data",
           "line": 41,
           "type": "named",
-          "imports": [
-            "TestData"
-          ],
+          "imports": ["TestData"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9200,9 +8457,7 @@
           "modulePath": "@capacitor/local-notifications",
           "line": 9,
           "type": "named",
-          "imports": [
-            "LocalNotifications"
-          ],
+          "imports": ["LocalNotifications"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9212,9 +8467,7 @@
           "modulePath": "@capacitor/device",
           "line": 10,
           "type": "named",
-          "imports": [
-            "Device"
-          ],
+          "imports": ["Device"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9224,9 +8477,7 @@
           "modulePath": "@capacitor/preferences",
           "line": 11,
           "type": "named",
-          "imports": [
-            "Preferences"
-          ],
+          "imports": ["Preferences"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9249,9 +8500,7 @@
           "modulePath": "react-router-dom",
           "line": 21,
           "type": "named",
-          "imports": [
-            "BrowserRouter"
-          ],
+          "imports": ["BrowserRouter"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9261,9 +8510,7 @@
           "modulePath": "../utils/test-mocks",
           "line": 47,
           "type": "named",
-          "imports": [
-            "setupAllMocks"
-          ],
+          "imports": ["setupAllMocks"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9280,9 +8527,7 @@
           "modulePath": "../../src/services/push-notifications",
           "line": 35,
           "type": "named",
-          "imports": [
-            "PushNotificationService"
-          ],
+          "imports": ["PushNotificationService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9299,9 +8544,7 @@
           "modulePath": "react-router-dom",
           "line": 22,
           "type": "named",
-          "imports": [
-            "BrowserRouter"
-          ],
+          "imports": ["BrowserRouter"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9336,9 +8579,7 @@
           "modulePath": "../../src/services/capacitor",
           "line": 22,
           "type": "named",
-          "imports": [
-            "CapacitorService"
-          ],
+          "imports": ["CapacitorService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9361,9 +8602,7 @@
           "modulePath": "../../src/services/app-analytics",
           "line": 34,
           "type": "named",
-          "imports": [
-            "AppAnalyticsService"
-          ],
+          "imports": ["AppAnalyticsService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9373,9 +8612,7 @@
           "modulePath": "../e2e/fixtures/test-data",
           "line": 38,
           "type": "named",
-          "imports": [
-            "TestData"
-          ],
+          "imports": ["TestData"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9392,9 +8629,7 @@
           "modulePath": "../../src/services/app-analytics",
           "line": 33,
           "type": "named",
-          "imports": [
-            "AppAnalyticsService"
-          ],
+          "imports": ["AppAnalyticsService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9404,9 +8639,7 @@
           "modulePath": "../e2e/fixtures/test-data",
           "line": 37,
           "type": "named",
-          "imports": [
-            "TestData"
-          ],
+          "imports": ["TestData"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9423,9 +8656,7 @@
           "modulePath": "react-router-dom",
           "line": 22,
           "type": "named",
-          "imports": [
-            "BrowserRouter"
-          ],
+          "imports": ["BrowserRouter"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9442,9 +8673,7 @@
           "modulePath": "../../src/services/subscription",
           "line": 24,
           "type": "named",
-          "imports": [
-            "SubscriptionService"
-          ],
+          "imports": ["SubscriptionService"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9461,9 +8690,7 @@
           "modulePath": "../e2e/fixtures/test-data",
           "line": 41,
           "type": "named",
-          "imports": [
-            "TestData"
-          ],
+          "imports": ["TestData"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9492,9 +8719,7 @@
           "modulePath": "react-router-dom",
           "line": 21,
           "type": "named",
-          "imports": [
-            "BrowserRouter"
-          ],
+          "imports": ["BrowserRouter"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9504,9 +8729,7 @@
           "modulePath": "../utils/test-mocks",
           "line": 46,
           "type": "named",
-          "imports": [
-            "setupAllMocks"
-          ],
+          "imports": ["setupAllMocks"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9565,9 +8788,7 @@
           "modulePath": "react-router-dom",
           "line": 13,
           "type": "named",
-          "imports": [
-            "BrowserRouter"
-          ],
+          "imports": ["BrowserRouter"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9584,9 +8805,7 @@
           "modulePath": "msw/node",
           "line": 7,
           "type": "named",
-          "imports": [
-            "setupServer"
-          ],
+          "imports": ["setupServer"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9596,9 +8815,7 @@
           "modulePath": "../../src/__tests__/mocks/msw-handlers",
           "line": 10,
           "type": "named",
-          "imports": [
-            "handlers"
-          ],
+          "imports": ["handlers"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9627,9 +8844,7 @@
           "modulePath": "vite",
           "line": 1,
           "type": "named",
-          "imports": [
-            "defineConfig"
-          ],
+          "imports": ["defineConfig"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9639,9 +8854,7 @@
           "modulePath": "@vitejs/plugin-react",
           "line": 2,
           "type": "default",
-          "imports": [
-            "react"
-          ],
+          "imports": ["react"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"
@@ -9651,9 +8864,7 @@
           "modulePath": "vite",
           "line": 6,
           "type": "named",
-          "imports": [
-            "splitVendorChunkPlugin"
-          ],
+          "imports": ["splitVendorChunkPlugin"],
           "isUsed": false,
           "safeToRemove": false,
           "reasoning": "No usage found, but requires manual review"

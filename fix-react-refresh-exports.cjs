@@ -9,7 +9,7 @@ import path from 'src/shims/path'; // auto: converted require to shim
 
 console.log('🔧 Starting React refresh component exports cleanup...\n');
 
-let stats = {
+const stats = {
   filesProcessed: 0,
   exportsFixed: 0,
   errors: 0,

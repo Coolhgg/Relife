@@ -72,12 +72,14 @@ function analyzeFile(filePath) {
     };
 
     // Extract all import statements
-    const importRegex = /import\s+(?:(?:\{([^}]+)\})|(?:(\w+))|(?:\*\s+as\s+(\w+)))\s+from\s+['"]([^'"]+)['"]/g;
+    const importRegex =
+      /import\s+(?:(?:\{([^}]+)\})|(?:(\w+))|(?:\*\s+as\s+(\w+)))\s+from\s+['"]([^'"]+)['"]/g;
     let match;
 
     while ((match = importRegex.exec(content)) !== null) {
-      const [fullMatch, namedImports, defaultImport, namespaceImport, modulePath] = match;
-      
+      const [fullMatch, namedImports, defaultImport, namespaceImport, modulePath] =
+        match;
+
       const importInfo = {
         fullMatch,
         modulePath,
@@ -92,8 +94,8 @@ function analyzeFile(filePath) {
       if (namedImports) {
         importInfo.imports = namedImports
           .split(',')
-          .map(imp => imp.trim())
-          .filter(imp => imp.length > 0);
+          .map((imp) => imp.trim())
+          .filter((imp) => imp.length > 0);
       } else if (defaultImport) {
         importInfo.imports = [defaultImport];
       } else if (namespaceImport) {
@@ -105,12 +107,11 @@ function analyzeFile(filePath) {
 
     // Analyze usage of imported identifiers
     analyzeUsage(content, analysis);
-    
+
     stats.filesAnalyzed++;
     stats.importsAnalyzed += analysis.imports.length;
 
     return analysis;
-
   } catch (error) {
     stats.errors++;
     console.error(`Error analyzing ${filePath}:`, error.message);
@@ -131,7 +132,7 @@ function analyzeUsage(content, analysis) {
   for (const importInfo of analysis.imports) {
     // Check if this import should be preserved
     const shouldPreserve = shouldPreserveImport(importInfo, content);
-    
+
     if (shouldPreserve.preserve) {
       importInfo.isUsed = true;
       importInfo.reasoning = shouldPreserve.reason;
@@ -152,7 +153,7 @@ function analyzeUsage(content, analysis) {
       for (const pattern of patterns) {
         const matches = cleanContent.match(pattern) || [];
         // Filter out the import statement itself
-        const usageMatches = matches.filter(match => {
+        const usageMatches = matches.filter((match) => {
           const matchIndex = cleanContent.indexOf(match);
           return !isInImportStatement(content, matchIndex);
         });
@@ -161,13 +162,13 @@ function analyzeUsage(content, analysis) {
     }
 
     importInfo.isUsed = usageCount > 0;
-    
+
     if (!importInfo.isUsed) {
       importInfo.safeToRemove = determineSafety(importInfo, content);
-      importInfo.reasoning = importInfo.safeToRemove 
+      importInfo.reasoning = importInfo.safeToRemove
         ? 'No usage found, safe to remove'
         : 'No usage found, but requires manual review';
-      
+
       stats.unusedImportsFound++;
       if (importInfo.safeToRemove) {
         stats.safeToRemove++;
@@ -211,10 +212,12 @@ function isInImportStatement(content, position) {
   const lines = beforePosition.split('\n');
   const currentLine = lines[lines.length - 1];
   const nextLines = content.substring(position).split('\n').slice(0, 3);
-  
+
   // Check if we're in an import statement
-  return currentLine.trim().startsWith('import') || 
-         nextLines.some(line => line.includes('from '));
+  return (
+    currentLine.trim().startsWith('import') ||
+    nextLines.some((line) => line.includes('from '))
+  );
 }
 
 /**
@@ -222,9 +225,11 @@ function isInImportStatement(content, position) {
  */
 function determineSafety(importInfo, content) {
   // Never safe to remove if it's a type import or side-effect import
-  if (importInfo.modulePath.includes('types/') || 
-      importInfo.modulePath.endsWith('.d.ts') ||
-      importInfo.imports.length === 0) {
+  if (
+    importInfo.modulePath.includes('types/') ||
+    importInfo.modulePath.endsWith('.d.ts') ||
+    importInfo.imports.length === 0
+  ) {
     return false;
   }
 
@@ -237,7 +242,7 @@ function determineSafety(importInfo, content) {
     'date-fns',
   ];
 
-  return safeLibraries.some(lib => importInfo.modulePath.includes(lib));
+  return safeLibraries.some((lib) => importInfo.modulePath.includes(lib));
 }
 
 /**
@@ -245,15 +250,15 @@ function determineSafety(importInfo, content) {
  */
 function getFilesToAnalyze(directory) {
   const files = [];
-  
+
   function scanDirectory(dir) {
     try {
       const items = fs.readdirSync(dir);
-      
+
       for (const item of items) {
         const fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isDirectory()) {
           if (!CONFIG.ignoreDirectories.includes(item) && !item.startsWith('.')) {
             scanDirectory(fullPath);
@@ -269,7 +274,7 @@ function getFilesToAnalyze(directory) {
       console.warn(`Warning: Could not read directory ${dir}: ${error.message}`);
     }
   }
-  
+
   scanDirectory(directory);
   return files;
 }
@@ -283,17 +288,21 @@ function generateReport(analyses) {
     statistics: { ...stats },
     summary: {
       totalFiles: analyses.length,
-      filesWithUnusedImports: analyses.filter(a => a?.imports.some(imp => !imp.isUsed)).length,
+      filesWithUnusedImports: analyses.filter((a) =>
+        a?.imports.some((imp) => !imp.isUsed)
+      ).length,
       totalUnusedImports: stats.unusedImportsFound,
       safeToRemove: stats.safeToRemove,
       requiresReview: stats.requiresReview,
     },
-    fileAnalyses: analyses.filter(a => a !== null).map(analysis => ({
-      file: analysis.filePath,
-      totalImports: analysis.imports.length,
-      unusedImports: analysis.imports.filter(imp => !imp.isUsed),
-      safeRemovals: analysis.imports.filter(imp => !imp.isUsed && imp.safeToRemove),
-    })),
+    fileAnalyses: analyses
+      .filter((a) => a !== null)
+      .map((analysis) => ({
+        file: analysis.filePath,
+        totalImports: analysis.imports.length,
+        unusedImports: analysis.imports.filter((imp) => !imp.isUsed),
+        safeRemovals: analysis.imports.filter((imp) => !imp.isUsed && imp.safeToRemove),
+      })),
     recommendations: generateRecommendations(analyses),
   };
 
@@ -312,34 +321,38 @@ function generateReport(analyses) {
  */
 function generateRecommendations(analyses) {
   const recommendations = [];
-  
+
   // Group by module path for common unused imports
   const moduleGroups = {};
-  analyses.filter(a => a !== null).forEach(analysis => {
-    analysis.imports.filter(imp => !imp.isUsed).forEach(imp => {
-      if (!moduleGroups[imp.modulePath]) {
-        moduleGroups[imp.modulePath] = [];
-      }
-      moduleGroups[imp.modulePath].push({
-        file: analysis.filePath,
-        imports: imp.imports,
-        safeToRemove: imp.safeToRemove,
-      });
+  analyses
+    .filter((a) => a !== null)
+    .forEach((analysis) => {
+      analysis.imports
+        .filter((imp) => !imp.isUsed)
+        .forEach((imp) => {
+          if (!moduleGroups[imp.modulePath]) {
+            moduleGroups[imp.modulePath] = [];
+          }
+          moduleGroups[imp.modulePath].push({
+            file: analysis.filePath,
+            imports: imp.imports,
+            safeToRemove: imp.safeToRemove,
+          });
+        });
     });
-  });
 
   // Create recommendations for commonly unused imports
   Object.entries(moduleGroups)
-    .sort(([,a], [,b]) => b.length - a.length)
+    .sort(([, a], [, b]) => b.length - a.length)
     .forEach(([modulePath, occurrences]) => {
       if (occurrences.length >= 3) {
         recommendations.push({
           type: 'bulk-removal',
-          priority: occurrences.every(occ => occ.safeToRemove) ? 'high' : 'medium',
+          priority: occurrences.every((occ) => occ.safeToRemove) ? 'high' : 'medium',
           module: modulePath,
           affectedFiles: occurrences.length,
           description: `Module "${modulePath}" has unused imports in ${occurrences.length} files`,
-          action: occurrences.every(occ => occ.safeToRemove) 
+          action: occurrences.every((occ) => occ.safeToRemove)
             ? 'Safe to remove automatically'
             : 'Requires manual review',
         });
@@ -354,35 +367,35 @@ function generateRecommendations(analyses) {
  */
 async function main() {
   console.log('🔍 Starting Intelligent Code Analysis...\n');
-  
+
   const startTime = Date.now();
   const projectRoot = path.resolve(path.dirname(__dirname));
-  
+
   console.log(`📁 Analyzing project: ${projectRoot}`);
-  
+
   const files = getFilesToAnalyze(projectRoot);
   console.log(`Found ${files.length} files to analyze\n`);
-  
+
   const analyses = [];
-  
+
   // Analyze files with progress indicator
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const relativePath = path.relative(projectRoot, file);
-    
+
     if (i % 50 === 0 || i === files.length - 1) {
       process.stdout.write(`\r⏳ Analyzing... ${i + 1}/${files.length} files`);
     }
-    
+
     const analysis = analyzeFile(file);
     analyses.push(analysis);
   }
-  
+
   console.log('\n\n📊 Generating comprehensive report...');
-  
+
   const report = generateReport(analyses);
   const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-  
+
   console.log('\n✅ Analysis Complete!\n');
   console.log('📈 Statistics:');
   console.log(`  Files analyzed: ${stats.filesAnalyzed}`);
@@ -392,9 +405,9 @@ async function main() {
   console.log(`  Requires review: ${stats.requiresReview}`);
   console.log(`  Errors: ${stats.errors}`);
   console.log(`  Duration: ${duration}s`);
-  
+
   console.log(`\n💾 Detailed report saved to: ${CONFIG.reportPath}`);
-  
+
   if (report.recommendations.length > 0) {
     console.log('\n🎯 Top Recommendations:');
     report.recommendations.slice(0, 5).forEach((rec, i) => {

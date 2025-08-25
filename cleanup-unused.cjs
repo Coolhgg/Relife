@@ -7,7 +7,8 @@
 
 import fs from 'src/shims/fs'; // auto: converted require to shim
 import path from 'src/shims/path'; // auto: converted require to shim
-import { __cjs as _child_process } from 'src/shims/child_process'; const { execSync } = _child_process; // auto: converted require to shim
+import { __cjs as _child_process } from 'src/shims/child_process';
+const { execSync } = _child_process; // auto: converted require to shim
 
 // Track statistics
 const stats = {

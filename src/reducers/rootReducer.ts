@@ -29,7 +29,7 @@ export const rootReducer = (
     alarm: alarmReducer(state.alarm, action as any),
     user: userReducer(state.user, action as any),
     subscription: subscriptionReducer(state.subscription, action as any),
-    
+
     // Handle global app actions
     app: handleAppActions(state.app, action),
     navigation: handleNavigationActions(state.navigation, action),
@@ -48,8 +48,11 @@ function handleNavigationActions(navState: AppState['navigation'], action: AppAc
   return navState;
 }
 
-function handlePerformanceActions(perfState: AppState['performance'], action: AppAction) {
-  // Add performance tracking actions here in the future  
+function handlePerformanceActions(
+  perfState: AppState['performance'],
+  action: AppAction
+) {
+  // Add performance tracking actions here in the future
   return perfState;
 }
 

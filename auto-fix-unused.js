@@ -7,7 +7,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import {execSync} from 'child_process';
+import { execSync } from 'child_process';
 
 console.log('🔧 Starting automated fixes for unused variables and imports...\n');
 

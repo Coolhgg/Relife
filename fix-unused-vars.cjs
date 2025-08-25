@@ -6,7 +6,8 @@
 
 import fs from 'src/shims/fs'; // auto: converted require to shim
 import path from 'src/shims/path'; // auto: converted require to shim
-import { __cjs as _child_process } from 'src/shims/child_process'; const { execSync } = _child_process; // auto: converted require to shim
+import { __cjs as _child_process } from 'src/shims/child_process';
+const { execSync } = _child_process; // auto: converted require to shim
 
 console.log('🔧 Starting unused variables cleanup...\n');
 
@@ -71,7 +72,7 @@ const UNUSED_IMPORT_PATTERNS = [
   'Calendar',
 ];
 
-let stats = {
+const stats = {
   filesProcessed: 0,
   variablesFixed: 0,
   importsRemoved: 0,

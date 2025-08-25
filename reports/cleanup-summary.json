@@ -10,19 +10,8 @@
       "emptyImportLines": true,
       "duplicateImports": true
     },
-    "preservePatterns": [
-      {},
-      {},
-      {},
-      {},
-      {}
-    ],
-    "preserveVariables": [
-      {},
-      {},
-      {},
-      {}
-    ]
+    "preservePatterns": [{}, {}, {}, {}, {}],
+    "preserveVariables": [{}, {}, {}, {}]
   },
   "statistics": {
     "filesProcessed": 70,
