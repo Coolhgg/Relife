@@ -1,11 +1,9 @@
-import React from 'react';
 import * as React from 'react';
 import * as RechartsPrimitive from 'recharts';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 // Format: { THEME_NAME: CSS_SELECTOR }
-import { config } from '../config/environment';
 const THEMES = { light: '', dark: '.dark' } as const;
 
 export type ChartConfig = {
@@ -151,7 +149,7 @@ function ChartTooltipContent({
     }
 
     return <div className={cn('font-medium', labelClassName)}>{value}</div>;
-  }, [label, labelFormatter, payload, hideLabel, labelClassName, config, labelKey]);
+  }, [label, labelFormatter, payload, hideLabel, labelClassName, _config, labelKey]);
 
   if (!active || !payload?.length) {
     return null;
