@@ -1239,6 +1239,244 @@ class VoiceAIEnhancedService {
     }
     return Math.abs(hash).toString();
   }
+
+  // Parameter configuration methods for live updates
+  private parameters = {
+    personalityAdaptation: 0.7,
+    responseComplexity: 'moderate' as 'simple' | 'moderate' | 'complex' | 'adaptive',
+    emotionalIntelligence: 0.8,
+    voiceLearningRate: 0.4,
+    contextualAwareness: 0.75,
+    energyAdaptation: true,
+    formalityFlexibility: 0.6,
+    humorLevel: 'moderate' as 'none' | 'light' | 'moderate' | 'heavy',
+    empathyLevel: 'high' as 'low' | 'medium' | 'high',
+    motivationStyle: 'encouraging' as 'gentle' | 'encouraging' | 'assertive' | 'aggressive',
+    speechRate: 1.0, // 0.5 to 2.0
+    pitchVariation: 0.5, // 0 to 1
+    pauseDuration: 0.3, // seconds
+    vocabularyRichness: 'standard' as 'simple' | 'standard' | 'rich' | 'dynamic',
+    culturalSensitivity: true,
+    timeOfDayAdaptation: true,
+    moodSynchronization: 0.8,
+    responsePersonalization: true,
+    voiceCloning: false,
+    realTimeAdjustment: true
+  };
+
+  /**
+   * Get current parameter configuration
+   */
+  async getCurrentConfiguration(): Promise<Record<string, any>> {
+    return { ...this.parameters };
+  }
+
+  /**
+   * Update voice AI configuration with validation
+   */
+  async updateConfiguration(newParameters: Record<string, any>): Promise<boolean> {
+    try {
+      for (const [key, value] of Object.entries(newParameters)) {
+        if (key in this.parameters) {
+          switch (key) {
+            case 'personalityAdaptation':
+            case 'emotionalIntelligence':
+            case 'voiceLearningRate':
+            case 'contextualAwareness':
+            case 'formalityFlexibility':
+            case 'pitchVariation':
+            case 'moodSynchronization':
+              if (typeof value === 'number' && value >= 0 && value <= 1) {
+                this.parameters[key] = value;
+              }
+              break;
+            case 'responseComplexity':
+              if (['simple', 'moderate', 'complex', 'adaptive'].includes(value)) {
+                this.parameters.responseComplexity = value;
+              }
+              break;
+            case 'humorLevel':
+              if (['none', 'light', 'moderate', 'heavy'].includes(value)) {
+                this.parameters.humorLevel = value;
+              }
+              break;
+            case 'empathyLevel':
+              if (['low', 'medium', 'high'].includes(value)) {
+                this.parameters.empathyLevel = value;
+              }
+              break;
+            case 'motivationStyle':
+              if (['gentle', 'encouraging', 'assertive', 'aggressive'].includes(value)) {
+                this.parameters.motivationStyle = value;
+              }
+              break;
+            case 'speechRate':
+              if (typeof value === 'number' && value >= 0.5 && value <= 2.0) {
+                this.parameters.speechRate = value;
+              }
+              break;
+            case 'pauseDuration':
+              if (typeof value === 'number' && value >= 0.1 && value <= 2.0) {
+                this.parameters.pauseDuration = value;
+              }
+              break;
+            case 'vocabularyRichness':
+              if (['simple', 'standard', 'rich', 'dynamic'].includes(value)) {
+                this.parameters.vocabularyRichness = value;
+              }
+              break;
+            default:
+              if (typeof this.parameters[key] === 'boolean' && typeof value === 'boolean') {
+                this.parameters[key] = value;
+              } else if (typeof this.parameters[key] === typeof value) {
+                this.parameters[key] = value;
+              }
+          }
+        }
+      }
+
+      console.log('[VoiceAI] Configuration updated:', this.parameters);
+      return true;
+    } catch (error) {
+      console.error('[VoiceAI] Error updating configuration:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Reset configuration to defaults
+   */
+  async resetConfiguration(): Promise<void> {
+    this.parameters = {
+      personalityAdaptation: 0.7,
+      responseComplexity: 'moderate',
+      emotionalIntelligence: 0.8,
+      voiceLearningRate: 0.4,
+      contextualAwareness: 0.75,
+      energyAdaptation: true,
+      formalityFlexibility: 0.6,
+      humorLevel: 'moderate',
+      empathyLevel: 'high',
+      motivationStyle: 'encouraging',
+      speechRate: 1.0,
+      pitchVariation: 0.5,
+      pauseDuration: 0.3,
+      vocabularyRichness: 'standard',
+      culturalSensitivity: true,
+      timeOfDayAdaptation: true,
+      moodSynchronization: 0.8,
+      responsePersonalization: true,
+      voiceCloning: false,
+      realTimeAdjustment: true
+    };
+  }
+
+  /**
+   * Get voice AI parameter metadata for UI configuration
+   */
+  getConfigurationMetadata(): Record<string, any> {
+    return {
+      personalityAdaptation: {
+        type: 'slider',
+        min: 0,
+        max: 1,
+        step: 0.1,
+        description: 'How much the voice adapts to user personality',
+        impact: 'user_experience'
+      },
+      responseComplexity: {
+        type: 'select',
+        options: ['simple', 'moderate', 'complex', 'adaptive'],
+        description: 'Complexity level of voice responses',
+        impact: 'comprehension'
+      },
+      emotionalIntelligence: {
+        type: 'slider',
+        min: 0,
+        max: 1,
+        step: 0.1,
+        description: 'Emotional awareness and response capability',
+        impact: 'empathy'
+      },
+      voiceLearningRate: {
+        type: 'slider',
+        min: 0.1,
+        max: 1,
+        step: 0.05,
+        description: 'Rate at which voice adapts to user preferences',
+        impact: 'adaptation'
+      },
+      contextualAwareness: {
+        type: 'slider',
+        min: 0,
+        max: 1,
+        step: 0.05,
+        description: 'Awareness of situational context',
+        impact: 'relevance'
+      },
+      energyAdaptation: {
+        type: 'boolean',
+        description: 'Adapt voice energy to time of day and user state',
+        impact: 'engagement'
+      },
+      humorLevel: {
+        type: 'select',
+        options: ['none', 'light', 'moderate', 'heavy'],
+        description: 'Amount of humor in voice responses',
+        impact: 'personality'
+      },
+      empathyLevel: {
+        type: 'select',
+        options: ['low', 'medium', 'high'],
+        description: 'Level of empathetic responses',
+        impact: 'emotional_support'
+      },
+      motivationStyle: {
+        type: 'select',
+        options: ['gentle', 'encouraging', 'assertive', 'aggressive'],
+        description: 'Style of motivational messaging',
+        impact: 'motivation'
+      },
+      speechRate: {
+        type: 'slider',
+        min: 0.5,
+        max: 2.0,
+        step: 0.1,
+        description: 'Speed of voice delivery',
+        impact: 'comprehension'
+      },
+      pitchVariation: {
+        type: 'slider',
+        min: 0,
+        max: 1,
+        step: 0.1,
+        description: 'Amount of pitch variation for expressiveness',
+        impact: 'engagement'
+      },
+      vocabularyRichness: {
+        type: 'select',
+        options: ['simple', 'standard', 'rich', 'dynamic'],
+        description: 'Complexity of vocabulary used',
+        impact: 'comprehension'
+      },
+      culturalSensitivity: {
+        type: 'boolean',
+        description: 'Adapt language and references to cultural context',
+        impact: 'inclusivity'
+      },
+      voiceCloning: {
+        type: 'boolean',
+        description: 'Enable voice cloning for personalization',
+        impact: 'privacy',
+        requiresConsent: true
+      },
+      realTimeAdjustment: {
+        type: 'boolean',
+        description: 'Allow real-time voice parameter adjustments',
+        impact: 'performance'
+      }
+    };
+  }
 }
 
 export default VoiceAIEnhancedService;
