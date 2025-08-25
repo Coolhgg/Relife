@@ -1,0 +1,27 @@
+src/__tests__/integration/e2e-testing-utilities.ts:      evaluate: async (fn: Function, ...args: any[]) => {
+src/__tests__/mocks/capacitor.mock.ts:  Array<{ eventName: string; callback: Function; pluginName: string }>
+src/__tests__/mocks/capacitor.mock.ts:const addMockListener = (pluginName: string, eventName: string, callback: Function) => {
+src/__tests__/mocks/capacitor.mock.ts:  watchPosition: vi.fn((options?: any, callback?: Function) => {
+src/__tests__/mocks/platform-service-mocks.ts:  private subscriptions: Array<{ event: string; callback: Function }> = [];
+src/__tests__/mocks/platform-service-mocks.ts:  on(_event: string, callback: Function) {
+src/__tests__/mocks/sentry.mock.ts:  wrap: jest.fn((fn: Function) => {
+src/__tests__/mocks/stripe.mock.ts:          on: jest.fn((_event: string, handler: Function) => {
+src/__tests__/mocks/stripe.mock.ts:          off: jest.fn((_event: string, handler?: Function) => {
+src/__tests__/mocks/stripe.mock.ts:      on: jest.fn((_event: string, handler: Function) => {
+src/__tests__/realtime/realtime-testing-utilities.ts:  addEventListener(type: string, listener: Function) {
+src/__tests__/realtime/realtime-testing-utilities.ts:  removeEventListener(type: string, listener: Function) {
+src/__tests__/realtime/websocket-testing.ts:  addEventListener(type: string, listener: Function) {
+src/__tests__/realtime/websocket-testing.ts:  removeEventListener(type: string, listener: Function) {
+src/__tests__/services/realtime-service.integration.test.ts:  on(eventType: string, handler: Function): () => void {
+src/__tests__/utils/audio-helpers.ts:    const eventListeners: { [key: string]: Function[] } = {};
+src/__tests__/utils/audio-helpers.ts:    mockAudio.addEventListener = jest.fn((_event: string, callback: Function) => {
+src/__tests__/utils/audio-helpers.ts:    mockAudio.removeEventListener = jest.fn((_event: string, callback: Function) => {
+src/hooks/__tests__/useAccessibilityPreferences.test.ts:    let subscribeCallback: Function;
+src/services/capacitor-enhanced.ts:  on(_event: string, callback: Function): void {
+src/services/capacitor-enhanced.ts:  off(_event: string, callback: Function): void {
+src/services/pwa-manager.ts:  on(_event: string, callback: Function): void {
+src/services/pwa-manager.ts:  off(_event: string, callback: Function): void {
+src/services/realtime-service.ts:  on(_event: string, callback: Function): void {
+src/services/realtime-service.ts:  off(_event: string, callback: Function): void {
+src/utils/image-optimization.tsx:    resolve: Function;
+src/utils/image-optimization.tsx:    reject: Function;

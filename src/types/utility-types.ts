@@ -62,6 +62,7 @@ export interface BaseProps {
 }
 
 // Function types
+export type AnyFn = (...args: any[]) => any; // type-safe replacement for Function
 export type VoidFunction = () => void; // type-safe replacement for Function | any
 export type AsyncVoidFunction = () => Promise<void>; // type-safe replacement for async () => any
 export type CallbackFunction<T = unknown> = (arg: T) => void; // type-safe replacement for callback: any

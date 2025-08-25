@@ -3,6 +3,8 @@
  * Mock WebSocket implementation and testing utilities for real-time features
  */
 
+import { AnyFn } from 'src/types/utility-types';
+
 // WebSocket Mock Implementation
 export class MockWebSocket {
   static instances: MockWebSocket[] = [];
@@ -12,7 +14,7 @@ export class MockWebSocket {
   public readyState: number;
   public id: string;
 
-  private eventListeners: Map<string, Function[]> = new Map();
+  private eventListeners: Map<string, AnyFn[]> = new Map();
   private messageQueue: any[] = [];
 
   static readonly CONNECTING = 0;
@@ -35,14 +37,14 @@ export class MockWebSocket {
     }, 100);
   }
 
-  addEventListener(type: string, listener: Function) {
+  addEventListener(type: string, listener: AnyFn) {
     if (!this.eventListeners.has(type)) {
       this.eventListeners.set(type, []);
     }
     this.eventListeners.get(type)!.push(listener);
   }
 
-  removeEventListener(type: string, listener: Function) {
+  removeEventListener(type: string, listener: AnyFn) {
     const listeners = this.eventListeners.get(type);
     if (listeners) {
       const _index = listeners.indexOf(listener);

@@ -1,5 +1,7 @@
 // Stripe payment processing mock for testing
 
+import { AnyFn } from 'src/types/utility-types';
+
 /**
  * Comprehensive Stripe mock for testing payment functionality
  * Provides all methods used in the application with proper jest mocks
@@ -35,7 +37,7 @@ const mockStripe = {
           }),
 
           // Element events
-          on: jest.fn((_event: string, handler: Function) => {
+          on: jest.fn((_event: string, handler: AnyFn) => {
             console.log(`👂 Mock Stripe element event listener: ${type} - ${_event}`);
 
             // Simulate events for testing
@@ -53,7 +55,7 @@ const mockStripe = {
             }, 100);
           }),
 
-          off: jest.fn((_event: string, handler?: Function) => {
+          off: jest.fn((_event: string, handler?: AnyFn) => {
             console.log(
               `🔇 Mock Stripe element event listener removed: ${type} - ${_event}`
             );
@@ -298,7 +300,7 @@ const mockStripe = {
         return Promise.resolve({ applePay: true, googlePay: false });
       }),
 
-      on: jest.fn((_event: string, handler: Function) => {
+      on: jest.fn((_event: string, handler: AnyFn) => {
         console.log(`👂 Mock Stripe paymentRequest.on: ${_event}`);
 
         if (_event === 'paymentmethod') {
