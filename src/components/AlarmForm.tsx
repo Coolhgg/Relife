@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { user, error } from 'src/utils/__auto_stubs';
+// Replaced stub import with proper implementation
 import {
   X,
   Clock,

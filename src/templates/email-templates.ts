@@ -2,7 +2,7 @@
 // Professional email templates with persona-specific branding and A/B testing support
 
 import { PersonaType, DEFAULT_PERSONAS } from '../types/email-campaigns';
-import { persona } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Replace with proper service integration // auto: restored by scout - verify
 
 export interface EmailTemplateConfig {
   id: string;

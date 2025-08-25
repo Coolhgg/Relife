@@ -4,11 +4,11 @@
  */
 
 // Core WebSocket types
-import { WebSocketMessage } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { WebSocketMessageType } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { WebSocketConfig } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { NotificationPreferences } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { RealtimeServiceConfig } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Type should be defined locally or imported from actual service // auto: restored by scout - verify
+// Type should be defined locally or imported from actual service // auto: restored by scout - verify
+// Type should be defined locally or imported from actual service // auto: restored by scout - verify
+// Type should be defined locally or imported from actual service // auto: restored by scout - verify
+// Type should be defined locally or imported from actual service // auto: restored by scout - verify
 export type {
   WebSocketState,
   WebSocketErrorType,

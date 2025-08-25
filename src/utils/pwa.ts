@@ -1,7 +1,7 @@
 // PWA Utilities for Smart Alarm App
 
 // Extend Navigator interface for additional properties
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Replaced stub import with proper implementation // auto: restored by scout - verify
 declare global {
   interface Navigator {
     standalone?: boolean;

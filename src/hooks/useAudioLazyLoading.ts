@@ -5,7 +5,7 @@ import type { AudioLoadProgress, AudioCacheEntry } from '../services/audio-manag
 import type { CustomSound, Playlist, LoadingState } from '../services/types/media';
 import { TimeoutHandle } from '../types/timers';
 import type {
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from '../services/error-handler';
   PreloadingStatus,
   PerformanceHistoryEntry,
 } from '../types/state-updaters';

@@ -1,5 +1,5 @@
 // Web Worker for heavy sleep analysis computations
-import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from '../services/error-handler';
 class SleepAnalysisWorker {
   private worker: Worker | null = null;
   private jobQueue: Map<

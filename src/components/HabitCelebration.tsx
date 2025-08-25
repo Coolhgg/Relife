@@ -4,7 +4,7 @@ import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { TimeoutHandle } from '../types/timers';
-import { _config } from 'src/utils/__auto_stubs';
+import { config } from '../config/environment';
 import {
   Trophy,
   Share2,

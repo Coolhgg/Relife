@@ -1,6 +1,6 @@
 // Stripe Configuration
 import { _config } from './environment';
-import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { config } from './environment';
 
 export interface StripeConfig {
   publishableKey: string;

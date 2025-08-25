@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { config } from 'src/utils/__auto_stubs';
+import { config } from '../config/environment';
 import {
   PlayCircle,
   PauseCircle,

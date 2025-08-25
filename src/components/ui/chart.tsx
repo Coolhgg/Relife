@@ -5,7 +5,7 @@ import * as RechartsPrimitive from 'recharts';
 import { cn } from '@/lib/utils';
 
 // Format: { THEME_NAME: CSS_SELECTOR }
-import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { config } from '../config/environment';
 const THEMES = { light: '', dark: '.dark' } as const;
 
 export type ChartConfig = {

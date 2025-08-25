@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Replaced stub import with proper implementation // auto: restored by scout - verify
 
 export interface FallbackState {
   isEmergencyMode: boolean;

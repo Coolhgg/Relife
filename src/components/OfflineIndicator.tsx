@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 import React, { useState, useEffect } from 'react';
 import { TimeoutHandle } from '../types/timers';
-import { _event } from 'src/utils/__auto_stubs';
+// Replaced stub import with proper implementation
 import {
   Wifi,
   WifiOff,

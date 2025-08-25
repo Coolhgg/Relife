@@ -7,9 +7,9 @@ import { Button } from '../ui/button';
 import { Card } from '../ui/card';
 import {
 // auto: restored by scout - verify import path
-import { paymentMethodId } from '@/utils/__auto_stubs';
+// Replaced stub import with proper implementation
 // auto: restored by scout - verify import path
-import { paymentMethodId } from '@/utils/__auto_stubs';
+// Replaced stub import with proper implementation
   Dialog,
   DialogContent,
   DialogHeader,

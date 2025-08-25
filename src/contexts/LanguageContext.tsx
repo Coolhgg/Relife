@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, {
-import { _error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+import { ErrorHandler } from '../services/error-handler';
   createContext,
   useContext,
   useState,

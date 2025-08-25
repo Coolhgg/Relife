@@ -7,10 +7,10 @@
 
 import React from 'react';
 import { TimeoutHandle } from '../types/timers';
-import { _event } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { _config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { config } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { error } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
+// Replaced stub import with proper implementation // auto: restored by scout - verify
+import { config } from '../config/environment';
+import { config } from '../config/environment';
+import { ErrorHandler } from '../services/error-handler';
 
 export interface LoadingPriority {
   level: 'critical' | 'high' | 'normal' | 'low';

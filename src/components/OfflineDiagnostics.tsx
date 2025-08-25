@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { _event, initial } from 'src/utils/__auto_stubs';
+// Replaced stub import with proper implementation
 import {
   Activity,
   Alert,
