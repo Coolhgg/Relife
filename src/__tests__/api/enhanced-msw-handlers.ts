@@ -185,7 +185,7 @@ export class RequestInterceptor {
   static withDelay(
     delay: number
   ): HttpResponseResolver<PathParams, DefaultBodyType, any> {
-    return async info => {
+    return async _info => {
       await new Promise(resolve => setTimeout(resolve, delay));
       return HttpResponse.json({ success: true, delayed: true });
     };
@@ -195,7 +195,7 @@ export class RequestInterceptor {
     errorRate: number,
     errorStatus: number = 500
   ): HttpResponseResolver<PathParams, DefaultBodyType, any> {
-    return info => {
+    return _info => {
       if (Math.random() < errorRate) {
         return HttpResponse.json(
           { _error: 'Simulated _error', rate: errorRate },
@@ -334,7 +334,7 @@ export const enhancedHandlers = [
   // Alarm management endpoints
   http.get(`${CLOUDFLARE_API_URL}/api/alarms`, ({ request }) => {
     const url = new URL(request.url);
-    const userId = url.searchParams.get('userId');
+    const _userId = url.searchParams.get('_userId');
     const enabled = url.searchParams.get('enabled');
     const withBattles = url.searchParams.get('withBattles') === 'true';
 
@@ -413,7 +413,7 @@ export const enhancedHandlers = [
   http.get(`${CLOUDFLARE_API_URL}/api/battles`, ({ request }) => {
     const url = new URL(request.url);
     const status = url.searchParams.get('status');
-    const userId = url.searchParams.get('userId');
+    const _userId = url.searchParams.get('_userId');
 
     let battles = [
       MockDataFactory.createBattle(),
@@ -520,7 +520,7 @@ export const enhancedHandlers = [
 
   // Performance monitoring endpoints
   http.post(`${CLOUDFLARE_API_URL}/api/performance/metrics`, async ({ request }) => {
-    const body = (await request.json()) as any;
+    const _body = (await request.json()) as any;
 
     return HttpResponse.json({
       success: true,
@@ -533,7 +533,7 @@ export const enhancedHandlers = [
   }),
 
   http.post(`${CLOUDFLARE_API_URL}/api/performance/web-vitals`, async ({ request }) => {
-    const body = (await request.json()) as any;
+    const _body = (await request.json()) as any;
 
     return HttpResponse.json({
       success: true,
@@ -615,7 +615,7 @@ export const enhancedHandlers = [
     // Apply filters
     Object.entries(filters).forEach(([key, value]) => {
       if (key !== 'select') {
-        users = users.filter(user => _user[key] === value);
+        users = users.filter(_user => _user[key] === value);
       }
     });
 
@@ -700,8 +700,8 @@ export const enhancedHandlers = [
 
   // Webhook endpoint simulation
   http.post(`${CLOUDFLARE_API_URL}/api/stripe/webhooks`, async ({ request }) => {
-    const body = await request.text();
-    const signature = request.headers.get('stripe-signature');
+    const _body = await request.text();
+    const _signature = request.headers.get('stripe-_signature');
 
     return HttpResponse.json({
       received: true,
@@ -735,8 +735,8 @@ export const enhancedHandlers = [
 
   http.post(
     `${ELEVENLABS_URL}/v1/text-to-speech/:voice_id`,
-    async ({ params, request }) => {
-      const body = (await request.json()) as any;
+    async ({ _params, request }) => {
+      const _body = (await request.json()) as any;
 
       // Simulate audio generation delay
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -755,7 +755,7 @@ export const enhancedHandlers = [
   // ==================== ANALYTICS ENDPOINTS ====================
 
   http.post(`${ANALYTICS_URL}/capture/`, async ({ request }) => {
-    const body = (await request.json()) as any;
+    const _body = (await request.json()) as any;
 
     return HttpResponse.json({
       status: 1,
@@ -777,7 +777,7 @@ export const enhancedHandlers = [
 
   // Feature flag endpoints
   http.post(`${ANALYTICS_URL}/decide/`, async ({ request }) => {
-    const body = (await request.json()) as any;
+    const _body = (await request.json()) as any;
 
     return HttpResponse.json({
       featureFlags: {

@@ -67,7 +67,7 @@ export default async function globalSetup() {
       console.warn('This may cause tests to fail unexpectedly.\n');
     });
 
-    process.on('uncaughtException', error => {
+    process.on('uncaughtException', _error => {
       console._error('\n❌ Uncaught Exception in test environment:');
       console.error(_error);
       console._error('This will cause the test suite to terminate.\n');

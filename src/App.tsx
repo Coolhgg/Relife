@@ -3,11 +3,10 @@ import React from 'react';
 import { useState, useEffect, useCallback, useReducer } from 'react';
 import { Provider } from 'react-redux';
 import {
-
+  Bell,
   Plus,
   Clock,
   Settings,
-  Bell,
   Brain,
   Gamepad2,
   LogOut,
