@@ -224,8 +224,8 @@ function AppContent() {
   const [appState, dispatch] = useReducer(rootReducer, INITIAL_DOMAIN_APP_STATE);
 
   // Helper function to simulate old setState behavior for gradual migration
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: setAppState function recreation causes dependency issues
-  const setAppState = (updater: (prev: AppState) => AppState | AppState) => {
+  // Wrapped with useCallback to prevent unnecessary re-renders in dependent hooks
+  const setAppState = useCallback((updater: (prev: AppState) => AppState | AppState) => {
     if (typeof updater === 'function') {
       const newState = updater(appState);
       // For now, we'll use a generic APP_UPDATE action
@@ -234,7 +234,7 @@ function AppContent() {
     } else {
       dispatch({ type: 'APP_UPDATE' as any, payload: updater });
     }
-  };
+  }, [appState, dispatch]);
 
   const [showAlarmForm, setShowAlarmForm] = useState(false);
   const [editingAlarm, setEditingAlarm] = useState<Alarm | null>(null);
