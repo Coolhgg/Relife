@@ -240,7 +240,16 @@ function AppContent() {
         const rewardService = RewardService.getInstance();
 
         // Update user habits based on current alarms
-        await rewardService.updateUserHabits(auth.user?.id!, alarms);
+        // Update user habits based on current alarms
+        if (alarms.length > 0) {
+          const habitData = {
+            habit_name: "daily_alarms",
+            current_count: alarms.filter(a => a.enabled).length,
+            target_count: alarms.length,
+            last_activity: new Date().toISOString()
+          };
+          await rewardService.updateUserHabits(auth.user?.id!, habitData);
+        }
 
         // Check and unlock any new rewards
         await rewardService.checkAndUnlockRewards(auth.user?.id!);
@@ -255,15 +264,11 @@ function AppContent() {
 
         // Build comprehensive reward system object
         const rewardSystem = {
-          level: analytics?.level || 1,
-          totalPoints: analytics?.total_points || 0,
-          currentStreak: analytics?.current_streak || 0,
-          longestStreak: analytics?.longest_streak || 0,
-          availableRewards: rewards || [],
-          unlockedRewards: userRewards || [],
-          aiInsights: insights || [],
-          habits: habits || [],
-          niche: nicheProfile || { primary: 'general', confidence: 0.5, traits: [] },
+          points: analytics?.total_points || 0,
+          level: analytics?.current_level || 1,
+          experience: analytics?.total_points || 0, // Using points as experience
+          streakDays: analytics?.current_streak || 0,
+          unlockedRewards: (userRewards || []).map(r => r.reward_id || r.id || String(r)),
         };
 
         setAppState((prev: AppState) => ({
