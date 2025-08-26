@@ -1425,7 +1425,6 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarm.alarms.map((alarm: any) =>
       const updatedAlarms = appState.alarms.map((alarm: unknown) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
@@ -1504,8 +1503,6 @@ function AppContent() {
         await OfflineStorage.deleteAlarm(alarmId);
       }
 
-      const updatedAlarms = appState.alarm.alarms.filter(
-        (alarm: any) => alarm.id !== alarmId
       const alarmToDelete = appState.alarms.find((a: unknown) => a.id === alarmId);
       const updatedAlarms = appState.alarms.filter(
         (alarm: unknown) => alarm.id !== alarmId
@@ -1591,7 +1588,6 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarm.alarms.map((alarm: any) =>
       const updatedAlarms = appState.alarms.map((alarm: unknown) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
@@ -2027,8 +2023,6 @@ function AppContent() {
           <ErrorBoundary context="PricingPage">
             <PricingPage
               user={auth.user as User}
-              onUpgrade={(plan: any) => {
-              user={auth._user as User}
               onUpgrade={(plan: unknown) => {
                 appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
                   plan: plan.id,
@@ -2119,8 +2113,6 @@ function AppContent() {
                         .showVisualWarning && (
                         <TabProtectionWarning
                           activeAlarm={appState.activeAlarm}
-                          enabledAlarms={appState.alarm.alarms.filter(
-                            (alarm: any) => alarm.enabled
                           enabledAlarms={appState.alarms.filter(
                             (alarm: unknown) => alarm.enabled
                           )}
